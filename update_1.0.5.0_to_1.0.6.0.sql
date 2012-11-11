@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2010-07-19 - changed database_version
-UPDATE database_version SET version = 'Modified_1.0.6.0';
+UPDATE database_version SET version = 'modified_1.0.6.0';
 
 #DokuMan - 2010-08-05 - mark out of stock products red by default
 UPDATE configuration SET configuration_value = '<span style="color:red">***</span>', last_modified = NOW() WHERE configuration_key = 'STOCK_MARK_PRODUCT_OUT_OF_STOCK';
@@ -419,10 +419,6 @@ ALTER TABLE orders MODIFY customers_ip VARCHAR (39);
 ALTER TABLE whos_online MODIFY ip_address VARCHAR (39);
 ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39);
 
-#Web28 - 2012-07-16 - New order description using in checkout
-ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
-ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
-
 #Web28 - 2012-07-20 - add attributes_ean
 ALTER TABLE products_attributes ADD attributes_ean VARCHAR(64) NULL DEFAULT NULL;
 
@@ -459,5 +455,9 @@ UPDATE configuration SET set_function = 'xtc_cfg_select_option(array(\'image_man
 # vr - 2012-10-26 - add index idx_customers_id
 ALTER TABLE orders
   ADD INDEX idx_customers_id (customers_id);
+
+#Web28 - 2012-07-16 - New order description using in checkout
+ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
+ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
