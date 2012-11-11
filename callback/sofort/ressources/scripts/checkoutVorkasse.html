@@ -1,0 +1,135 @@
+{config_load file="$language/lang_$language.conf" section="checkout_success"}
+
+{$FORM_ACTION}
+<table width="100%" border="0" cellspacing="0" cellpadding="5">
+	<tr>
+		<td rowspan="14">
+			<!-- <img src="{$tpl_path}img/checkout_success.gif" alt="" /> -->
+		</td>
+		<td>
+			<table>
+				<tr>
+					<td>
+						<table>
+							<tr>
+								<td style="font-size: 1.2em; font-weight: bold;" valign="top">{$HEADING}</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td>
+						<table>
+							<tr>
+								<td class="main" valign="top">{$TEXT}</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="main" valign="top">
+						<table>
+						{if $HOLDER != ''}
+							<tr>
+								<td>{$HOLDER_TEXT}</td>
+								<td><b>{$HOLDER}</b></td>
+							</tr>
+						{/if}
+						{if $ACCOUNT_NUMBER != ''}
+							<tr>
+								<td>{$ACCOUNT_NUMBER_TEXT}</td>
+								<td><b>{$ACCOUNT_NUMBER}</b></td>
+							</tr>
+						{/if}
+						{if $BANK_CODE != ''}
+							<tr>
+								<td>{$BANK_CODE_TEXT}</td>
+								<td><b>{$BANK_CODE}</b></td>
+							</tr>
+						{/if}
+						{if $IBAN != ''}
+							<tr>
+								<td>{$IBAN_TEXT}</td>
+								<td><b>{$IBAN}</b></td>
+							</tr>
+						{/if}
+						{if $BIC != ''}
+							<tr>
+								<td>{$BIC_TEXT}</td>
+								<td><b>{$BIC}</b></td>
+							</tr>
+						{/if}
+						{if $AMOUNT != ''}
+							<tr>
+								<td>{$AMOUNT_TEXT}</td>
+								<td><b>{$AMOUNT}</b></td>
+							</tr>
+						{/if}
+						{if $REASON_1 != ''}
+							<tr>
+								<td>{$REASON_1_TEXT}</td>
+								<td><b>{$REASON_1}</b></td>
+							</tr>
+						{/if}
+						{if $REASON_2 != ''}
+							<tr>
+								<td>{$REASON_2_TEXT}</td>
+								<td><b>{$REASON_2}</b></td>
+							</tr>
+						{/if}
+						{if $REASONS_HINT != ''}
+							<tr>
+								<td colspan="2"><b><span style='color:red;'>{$REASONS_HINT}</span></b></td>
+							</tr>
+						{/if}
+						</table>
+					</td>
+				</tr>
+				<tr>
+					<td class="contentsTopics" valign="top">
+						<table width="100%" border="0" cellspacing="0" cellpadding="0">
+							<tr>
+								<td class="main" align="right" style="padding-top:20px;">{$BUTTON_CONTINUE}</td>
+							</tr>
+						</table>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<tr>
+		<td>
+			<table border="0" width="100%" cellspacing="0" cellpadding="0">
+				<tr>
+					<td>
+						<table border="0" width="100%" cellspacing="0" cellpadding="0">
+							<tr>
+								<td align="right"><img src="{$tpl_path}img/pixel_silver.gif" width="1" height="5" alt="" /></td>
+								<td><img src="{$tpl_path}img/pixel_silver.gif" width="100%" height="1" alt="" /></td>
+							</tr>
+						</table>
+					</td>
+					<td><img src="{$tpl_path}img/pixel_silver.gif" width="100%" height="1" alt="" /></td>
+					<td><img src="{$tpl_path}img/pixel_silver.gif" width="100%" height="1" alt="" /></td>
+					<td>
+						<table border="0" width="50%" cellspacing="0" cellpadding="0">
+							<tr>
+								<td><img src="{$tpl_path}img/pixel_silver.gif" width="100%" height="1" alt="" /></td>
+								<td class="onepxwidth"><img src="{$tpl_path}img/checkout_bullet.gif" alt="" /></td>
+							</tr>
+					  </table>
+					</td>
+				</tr>
+				<tr>
+					<td align="center" class="checkoutBarTo">{#text_shipping_info#}</td>
+					<td align="center" class="checkoutBarTo">{#text_payment_info#}</td>
+					<td align="center" class="checkoutBarTo">{#text_confirm#}</td>
+					<td align="center" class="checkoutBarCurrent">{#text_finished#}</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+</table>
+{$FORM_END}

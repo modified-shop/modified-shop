@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /cache/
+Disallow: /callback/
+Disallow: /download/
+Disallow: /export/
+Disallow: /import/
+Disallow: /inc/
+Disallow: /includes/
+Disallow: /lang/
+Disallow: /media/
+Disallow: /pub/
+Disallow: /shopstat/
+Disallow: /templates/
+Disallow: /templates_c/
