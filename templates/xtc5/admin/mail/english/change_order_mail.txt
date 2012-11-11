@@ -1,0 +1,22 @@
+
+Dear {$GENDER} {$LASTNAME},
+
+The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from {$ORDER_DATE}{/if} has been changed.
+
+{if $ORDER_LINK}Link to order:
+{$ORDER_LINK} {/if}
+
+{if $NOTIFY_COMMENTS}Note:{$NOTIFY_COMMENTS}{/if}
+
+New status: {$ORDER_STATUS}
+
+{if $PARCEL_COUNT}
+Your shipment consists of {$PARCEL_COUNT} parcel(s).{/if}
+
+{if $PARCEL_LINK}
+You can inform yourself about the delivery status with a click on the following package number(s):
+{$PARCEL_LINK}{/if}
+
+If you have any questions, please reply to this e-mail.
+
+

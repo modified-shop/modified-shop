@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Published by JAX-WS RI at http://jax-ws.dev.java.net. RI's version is JAX-WS RI 2.1.3-hudson-390-. -->
+<xs:schema xmlns:tns="http://dl.interfaces.services.iclear.de/" xmlns:xs="http://www.w3.org/2001/XMLSchema" version="1.0" targetNamespace="http://dl.interfaces.services.iclear.de/">
+	<xs:element name="WebServiceException" type="tns:WebServiceException"/>
+	<xs:element name="acceptOrder" type="tns:acceptOrder"/>
+	<xs:element name="acceptOrderRequest" type="tns:AcceptOrderRequest"/>
+	<xs:element name="acceptOrderResponse" type="tns:acceptOrderResponse"/>
+	<xs:complexType name="acceptOrder">
+		<xs:sequence>
+			<xs:element name="arg0" type="tns:AcceptOrderRequest" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AcceptOrderRequest">
+		<xs:sequence>
+			<xs:element name="requestID" type="xs:long"/>
+			<xs:element name="sessionID" type="xs:string"/>
+			<xs:element name="basketID" type="xs:string"/>
+			<xs:element name="currencyISO" type="xs:string"/>
+			<xs:element name="statusID" type="xs:long"/>
+			<xs:element name="statusMessage" type="xs:string"/>
+			<xs:element name="deliveryAddress" type="tns:DeliveryAddress"/>
+			<xs:element name="basketItems" type="tns:basketItem" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="DeliveryAddress">
+		<xs:complexContent>
+			<xs:extension base="tns:AddressBase">
+				<xs:sequence>
+					<xs:element name="deliveryReceiver" type="xs:string" minOccurs="0"/>
+					<xs:element name="deliveryStreet" type="xs:string"/>
+					<xs:element name="deliveryStreetNo" type="xs:string"/>
+					<xs:element name="deliveryZipcode" type="xs:string"/>
+					<xs:element name="deliveryCity" type="xs:string"/>
+					<xs:element name="deliveryCountryISO" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="AddressBase">
+		<xs:sequence>
+			<xs:element name="salutationID" type="xs:int"/>
+			<xs:element name="firstName" type="xs:string"/>
+			<xs:element name="lastName" type="xs:string"/>
+			<xs:element name="companyName" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="basketItem">
+		<xs:sequence>
+			<xs:element name="itemID" type="xs:string"/>
+			<xs:element name="title" type="xs:string"/>
+			<xs:element name="numOfArticle" type="xs:long"/>
+			<xs:element name="priceNet" type="xs:double"/>
+			<xs:element name="priceGros" type="xs:double"/>
+			<xs:element name="vatRate" type="xs:float"/>
+			<xs:element name="statusID" type="xs:long" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="acceptOrderResponse">
+		<xs:sequence>
+			<xs:element name="return" type="tns:AcceptOrderReturn" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AcceptOrderReturn">
+		<xs:complexContent>
+			<xs:extension base="tns:ICReturn">
+				<xs:sequence>
+					<xs:element name="basketID" type="xs:string"/>
+					<xs:element name="shopURL" type="xs:string"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="ICReturn">
+		<xs:sequence>
+			<xs:element name="sessionID" type="xs:string"/>
+			<xs:element name="statusID" type="xs:long"/>
+			<xs:element name="statusMessage" type="xs:string"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="WebServiceException">
+		<xs:sequence>
+			<xs:element name="message" type="xs:string" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+</xs:schema>

@@ -1,0 +1,8 @@
+# $Id$
+#
+# Disallow .php files for this folder
+
+<Files *.php>
+  Order Deny,Allow
+  Deny from all
+</Files>

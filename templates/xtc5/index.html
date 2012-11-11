@@ -1,0 +1,79 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+
+{* -- this part is only for test the xajax-support ------------------ *}
+{* -- ignore or remove this part in your final project -------------- *}
+{if $smarty.const.XAJAX_SUPPORT=='true' and $smarty.const.XAJAX_SUPPORT_TEST=='true'}
+  echo '<a href="#" onClick="xajax_xajax_support_test_get_servertime(new Date().toLocaleString());">xajax_support_test</a>';
+{/if}
+{* -- end of test xajax-support ------------------------------------- *}
+
+<div id="wrap">
+  <div id="header">
+    <div id="logo"><a href="{$index}"><img src="{$tpl_path}img/spacer.png" width="400" height="115" alt="{$store_name}" /></a></div>
+    <div id="search">{if isset($box_SEARCH)}{$box_SEARCH}{/if}</div>
+  </div>
+  <div id="topmenuwrap">
+    <ul id="topmenu">
+      <li><a href="{$index}">{if isset($LINK_INDEX)}{$LINK_INDEX}{else}{#link_index#}{/if}</a></li>
+      <li><a href="{$cart}">{#link_cart#}</a></li>
+      {if isset($account)}
+        <li><a href="{$account}">{#link_account#}</a></li>
+      {/if}
+      {if $smarty.session.customers_status.customers_status_id == '1'}
+        <li><a href="{$create_account}">{#new_customer#}</a></li>
+      {/if}
+      <li><a href="{$checkout}">{#link_checkout#}</a></li>
+      {if isset($smarty.session.customer_id)}
+        <li><a href="{$logoff}">{#link_logoff#}</a></li>
+      {else}
+        <li><a href="{$login}">{#link_login#}</a></li>
+      {/if}
+    </ul>
+    <div id="languages">{if isset($box_LANGUAGES)}{$box_LANGUAGES}{/if}</div>
+  </div>
+  <div id="breadcrumb">{if isset($navtrail)}{$navtrail}{/if}</div>
+  <div id="contentwrap">
+    {if !strstr($smarty.server.PHP_SELF, 'checkout')}
+      <div id="leftcol">
+        {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+        {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
+        {if isset($box_CONTENT)}{$box_CONTENT}{/if}
+        {if isset($box_INFORMATION)}{$box_INFORMATION}{/if}
+        {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+        {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+        {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+        {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+        {if isset($box_HISTORY)}{$box_HISTORY}{/if}
+      </div>
+    {/if}
+    <div id="content{if strpos($smarty.server.PHP_SELF, 'checkout')}full{/if}">
+    {if $home}
+        {if isset($BANNER)}{$BANNER}{/if}
+    {/if}
+    {if isset($main_content)}{$main_content}{/if}
+    </div>
+    {if !strstr($smarty.server.PHP_SELF, 'checkout')}
+      <div id="rightcol">
+        {if isset($box_CART)}{$box_CART}{/if}
+        {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+        {if isset($box_ADMIN)}{$box_ADMIN}{/if}
+        {if isset($box_NEWSLETTER)}{$box_NEWSLETTER}{/if}
+        {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
+        {if isset($box_INFOBOX)}{$box_INFOBOX}{/if}
+        {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+        {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
+        {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+      </div>
+    {/if}
+  </div>
+  <p class="footer">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009 by xtcModified eCommerce Shopsoftware</p>
+</div>
+{if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE=='true' and $smarty.session.customers_status.customers_status_id == '0')
+or $smarty.session.customers_status.customers_status_id != '0'}
+  {if $smarty.const.TRACKING_PIWIK_ACTIVE=='true'}
+    {piwik url=$smarty.const.TRACKING_PIWIK_LOCAL_PATH id=$smarty.const.TRACKING_PIWIK_ID goal=$smarty.const.TRACKING_PIWIK_GOAL}
+  {/if}
+  {if $smarty.const.TRACKING_GOOGLEANALYTICS_ACTIVE=='true'}
+    {googleanalytics account=$smarty.const.TRACKING_GOOGLEANALYTICS_ID trackorders=true}
+  {/if}
+{/if}

@@ -1,0 +1,104 @@
+<?php
+/* -----------------------------------------------------------------------------------------
+$Id: inputfilter.php 3333 2012-07-27 10:47:56Z gtb-modified $
+
+xtcModified - community made shopping
+http://www.xtc-modified.org
+
+Copyright (c) 2009 - 2012 xtcModified
+
+Released under the GNU General Public License
+---------------------------------------------------------------------------------------*/
+
+class Inputfilter {
+    private $params=false;
+    public function __construct()
+    {
+        $this->params=array();
+    }
+
+    public function validate($source)
+    {
+        $this->params=$source;
+        $this->inputValidate();
+        
+        return $this->params;
+    }
+
+    public function removeTags($value)
+    {
+        return strip_tags ($value) == $value ? $value : '';
+        //return preg_replace ('/<[^>]*>/', ' ', $value) == $value ? $value : ''; //alternative zu stip_tags
+    }
+
+    public function validateCPath($value)
+    {
+        return preg_replace('/[^0-9_]/','',$value);
+    }
+
+    public function validateNumeric($value)
+    {
+        return preg_replace('/[^0-9]/','',$value);
+    }
+
+    public function validateSigns($value)
+    {
+        return preg_replace('/[^0-9a-zA-Z_-]/','',$value);
+    }
+
+    public function validateSessionID($value)
+    {
+        return preg_replace('/[^0-9a-zA-Z]/','',$value);
+    }
+
+    private function inputValidate()
+    {
+        if (is_array($this->params)) {
+            foreach($this->params as $key => $value ) {
+                switch($key) {
+                  //remove tags
+                  case 'search':
+                  case 'search_email':   
+                  case 'searchoption':
+                  case 'search_optionsname':
+                  case 'product_search':
+                      $this->params[$key] = $this->removeTags($value);
+                      break;
+                  //numeric
+                  case 'page':
+                  case 'value_page':
+                  case 'option_page':
+                  case 'option_id':
+                  case 'value_id':
+                  case 'oID':
+                  case 'pID':
+                  case 'gID':
+                  case 'coID':
+                  case 'tID':
+                  case 'zID':
+                  case 'cID':
+                  case 'lID':
+                  case 'ID':
+                  case 'mID':
+                  case 'rID':
+                  case 'sID':
+                      $this->params[$key] = $this->validateNumeric($value);
+                      break;
+                  //0-9a-zA-Z _ -
+                  case 'action':
+                      $this->params[$key] = $this->validateSigns($value);
+                      break;
+                  //cPath
+                  case 'cPath':
+                      $this->params[$key] = $this->validateCPath($value);
+                      break;
+                  case 'info':
+                  case 'MODsid':
+                      $this->params[$key] = $this->validateSessionID($value);
+                      break;
+                }
+            }
+        }
+    }
+}
+?>

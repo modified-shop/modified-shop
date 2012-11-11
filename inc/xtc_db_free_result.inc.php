@@ -1,0 +1,22 @@
+<?php
+/* -----------------------------------------------------------------------------------------
+   $Id$   
+
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
+
+   Copyright (c) 2009 - 2012 xtcModified
+   -----------------------------------------------------------------------------------------
+   based on: 
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce(database.php,v 1.19 2003/03/22); www.oscommerce.com 
+   (c) 2003	 nextcommerce (xtc_db_free_result.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
+
+   Released under the GNU General Public License 
+   ---------------------------------------------------------------------------------------*/
+   
+  function xtc_db_free_result($db_query) {
+    return mysql_free_result($db_query);
+  }
+ ?>

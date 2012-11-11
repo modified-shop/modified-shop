@@ -1,0 +1,20 @@
+{config_load file="$language/lang_$language.conf" section="cross_selling"}
+<h2>{#heading_text#}</h2>
+{foreach name=aussen item=module_data from=$module_content}
+<h3>{$module_data.GROUP}</h3>
+<div class="hrproductpreview"></div>
+  {foreach item=products_data from=$module_data.PRODUCTS}
+    <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+      {if $products_data.PRODUCTS_IMAGE != ''}<td class="productPreviewImage"><a href="{$products_data.PRODUCTS_LINK}"><img src="{$products_data.PRODUCTS_IMAGE}" alt="{$products_data.PRODUCTS_NAME}" class="productImageBorder" /></a></td>{/if}
+      <td class="productPreviewContent">
+      <h2><a href="{$products_data.PRODUCTS_LINK}">{$products_data.PRODUCTS_NAME}</a></h2>
+      <p>{$products_data.PRODUCTS_SHORT_DESCRIPTION}</p>
+      <span class="price">{$products_data.PRODUCTS_PRICE}</span>&nbsp;<span class="taxandshippinginfo">({$products_data.PRODUCTS_TAX_INFO}{$products_data.PRODUCTS_SHIPPING_LINK})</span>
+      {if $products_data.PRODUCTS_VPE}<p class="vpe">{$products_data.PRODUCTS_VPE}</p>{/if}
+      </td>
+      </tr>
+    </table>
+<div class="hrproductpreview"></div>
+  {/foreach}
+{/foreach}

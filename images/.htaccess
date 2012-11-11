@@ -1,0 +1,11 @@
+# $Id$
+#
+# Allow just image file formats for this folder and subfolders
+
+# Enable this for extra security
+#php_flag engine off
+
+deny from all
+<FilesMatch "\.(png|jpe?g|gif|bmp)$">
+  allow from all
+</FilesMatch>

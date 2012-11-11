@@ -1,0 +1,74 @@
+<?php
+  /* --------------------------------------------------------------
+   $Id$
+
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
+
+   Copyright (c) 2009 - 2012 xtcModified
+   --------------------------------------------------------------*/
+
+  define('PHP_VERSION_MIN', '5.0.0');
+  define('PHP_VERSION_MAX', '5.3.99');
+
+  //BOF *************  check PHP-Version *************
+  //BOF - Dokuman - 2009-09-02: update PHP-Version check
+  //if (xtc_check_version()!=1) {
+    //$error_flag=true;
+    //$php_flag=true;
+    /*$message .='<strong>ATTENTION!, your PHP Version is to old, xtc:Modified requires atleast PHP 4.1.3.</strong><br /><br />Your php Version: <strong><?php echo phpversion(); ?></strong><br /><br />xtc:Modified wont work on this server, update PHP or change Server.'; */
+  //}
+  if (function_exists('version_compare')) {
+    if(version_compare(phpversion(), PHP_VERSION_MIN, "<")){
+      $error_flag = true;
+      $php_flag = true;
+      $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
+    }
+    if(version_compare(phpversion(), PHP_VERSION_MAX, ">")){
+      $error_flag = true;
+      $php_flag = true;
+      $message .= '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.';
+    }
+  } else {
+    $error_flag = true;
+    $php_flag = true;
+    $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
+  }
+  //EOF - Dokuman - 2009-09-02: update PHP-Version check
+  $status='<strong>OK</strong>';
+  if ($php_flag==true)
+    $status='<strong><font color="#ff0000">'.TEXT_ERROR.'</font></strong>';
+  $ok_message.='PHP VERSION ............................... '.$status.' ('.phpversion().')<br /><hr noshade />';
+  //EOF *************  check PHP-Version *************
+  
+  //BOF *************  check cURL-Support *************
+  $curl_version = array();
+  if (function_exists('curl_init')) {
+    $status='<strong>OK</strong>';
+    $curl_version = curl_version();
+  } else {
+    $status='<strong><font color="#ff0000">'.TEXT_WARNING.'</font></strong><br />'.TEXT_CURL_NOT_SUPPORTED;
+  }
+  $ok_message.='CURL VERSION ............................ '.$status.' ('.$curl_version['version'].')<br /><hr noshade />';
+  //EOF *************  check cURL-Support *************
+  
+  //BOF *************  check fsockopen *************
+  if (function_exists('fsockopen')) {
+    $status='<strong>OK</strong>';
+  } else {
+    $status='<strong><font color="#ff0000">'.TEXT_WARNING.'</font></strong><br />'.TEXT_FSOCKOPEN_NOT_SUPPORTED;
+  }
+  $ok_message.='FSOCKOPEN ................................. '.$status.'<br /><hr noshade />';
+  //EOF *************  check fsockopen *************
+  $gd=gd_info();
+  if ($gd['GD Version']=='')
+    $gd['GD Version']='<strong><font color="#ff0000">'.TEXT_ERROR.TEXT_NO_GDLIB_FOUND.'</font></strong>';
+  $status= '<strong>'.$gd['GD Version'].'</strong> ('.TEXT_GDLIBV2_SUPPORT.')';
+  // display GDlibversion
+  $ok_message.='GDlib VERSION .............................. '.$status.'<br /><hr noshade />';
+  if ($gd['GIF Read Support']==1 or $gd['GIF Support']==1) {
+    $status='<strong>OK</strong>';
+  } else {
+    $status='<strong><font color="#ff0000">'.TEXT_ERROR.'</font></strong><br />'.TEXT_GDLIB_MISSING_GIF_SUPPORT;
+  }
+  $ok_message.= TEXT_GDLIB_GIF_VERSION .' .............. '.$status.'<br /><hr noshade />';

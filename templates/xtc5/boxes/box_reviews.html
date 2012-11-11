@@ -1,0 +1,24 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<h2 class="boxheader"><a href="{$REVIEWS_LINK}">{#heading_reviews#}</a></h2>
+<div class="boxbody">
+  {if $RANDOM}
+    <p class="center">
+      <a href="{$PRODUCTS_LINK}">
+        {$PRODUCTS_IMAGE}
+      </a>
+    </p>
+    <p class="center">
+      <a href="{$PRODUCTS_LINK}">
+        <strong>{$PRODUCTS_NAME}</strong><br />
+        {$REVIEWS}
+      </a><br />
+      {$REVIEWS_IMAGE}
+    </p>
+  {else}
+    <p>
+      <a href="{$PRODUCTS_LINK}">
+        {$REVIEWS_WRITE_REVIEW}
+      </a>
+    </p>
+  {/if}
+</div>

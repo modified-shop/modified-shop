@@ -1,0 +1,37 @@
+{foreach name=aussen item=module_data from=$module_content}
+<table class="paymentblock" width="100%" border="0" cellspacing="0" cellpadding="6">
+  <tr>
+    <td class="header" width="1%">{$module_data.selection}</td>
+    <td class="header" width="84%"><label for="{$smarty.foreach.aussen.iteration}">{$module_data.module}</label></td>
+    <td class="header" width="15%" align="right">{$module_data.module_cost}</td>
+  </tr>
+  {if $module_data.description != ''}
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2" width="100%"><strong>{$module_data.description}</strong></td>
+  </tr>
+  {/if}
+  {if $module_data.error != ''}
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2">{$module_data.error}</td>
+  </tr>
+  {elseif $module_data.fields}
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="2">
+    <table border="0" cellspacing="0" cellpadding="0">
+    {foreach name=aussen item=method_data from=$module_data.fields}
+      <tr>
+        <td>{$method_data.title}</td>
+        <td>&nbsp;</td>
+        <td>{$method_data.field}</td>
+        <td>&nbsp;</td>
+       </tr>
+    {/foreach}
+    </table>
+    </td>
+  </tr>
+  {/if}
+</table>
+{/foreach}

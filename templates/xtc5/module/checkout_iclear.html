@@ -1,0 +1,7 @@
+{config_load file="$language/lang_$language.conf" section="checkout_confirmation"} {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+{config_load file="$language/modules/payment/iclear.conf" section="ic_order"}
+<div style="clear:both"></div>
+<h1>{#ic_heading#}</h1>
+{if $IC_PAYMENT_URL}
+    <iframe id="ic_payment" name="ic_payment" src="{$IC_PAYMENT_URL}" style="width: 98%; border: none; height: 700px; overflow: hidden; background-color: white;" frameborder="0" scrolling="no"></iframe>
+{/if}
