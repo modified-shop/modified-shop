@@ -24,10 +24,6 @@ DROP TABLE IF EXISTS gls_country_to_postal;
 DROP TABLE IF EXISTS gls_postal_to_weight;
 DROP TABLE IF EXISTS gls_weight;
 
-#Hendrik - 2010-08-29 - Xajax Support in Backend
-ALTER TABLE admin_access
-  ADD xajax INT(1) DEFAULT 1 NOT NULL;
-
 #DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany , 6 - Ireland/Taiwan, 7 - China, 8 - UK/GB
 INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$country / $city');
@@ -45,11 +41,6 @@ ALTER TABLE categories MODIFY listing_template varchar(64) NOT NULL DEFAULT '';
 ALTER TABLE manufacturers MODIFY manufacturers_name varchar(64) NOT NULL;
 #DokuMan - 2010-10-13 - enlarge field 'comments' from varchar(255) to text
 ALTER TABLE orders MODIFY comments text;
-
-#DokuMan - 2010-09-28 - display VAT description multilingually
-#Updating only the German tax rates here
-UPDATE tax_rates SET tax_description = '19%', last_modified = NOW() WHERE tax_description = 'MwSt 19%';
-UPDATE tax_rates SET tax_description = '7%', last_modified = NOW() WHERE tax_description = 'MwSt 7%';
 
 #DokuMan - 2010-10-13 - add index idx_categories_id
 ALTER TABLE products_to_categories
@@ -104,13 +95,6 @@ ALTER TABLE orders MODIFY billing_street_address VARCHAR(64);
 ALTER TABLE orders MODIFY billing_city VARCHAR(64);
 ALTER TABLE newsletter_recipients MODIFY customers_firstname VARCHAR(64);
 ALTER TABLE newsletter_recipients MODIFY customers_lastname VARCHAR(64);
-
-#Tomcraft - 2011-03-02 - Added status for cancelled orders
-#(Set next available number for status ID in both languages)
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
-  SELECT MAX(orders_status_id)+1, 1, 'Cancelled' FROM orders_status;
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
-  SELECT MAX(orders_status_id)+1, 2, 'Storniert' FROM orders_status;
 
 #Web28 - 2011-03-25 - Fix address_format_id Switzerland
 UPDATE countries SET address_format_id = 5 WHERE countries_id = 204 LIMIT 1;
@@ -371,11 +355,6 @@ INSERT INTO zones VALUES ('',105,'VT','Viterbo');
 UPDATE countries SET countries_iso_code_3 = 'AUD' WHERE countries_id = 13 LIMIT 1;
 UPDATE payment_moneybookers_countries SET mb_cID = 'AUD' WHERE osc_cID = 13 LIMIT 1;
 
-# hendrik - 2011-05-14 - independent invoice number and date
-ALTER TABLE orders
-  ADD ibn_billnr VARCHAR(32) default '',
-  ADD ibn_billdate DATE NOT NULL;
-
 #DokuMan - 2011-06-06 - Create the database table for storing the bank code
 DROP TABLE IF EXISTS banktransfer_blz;
 CREATE TABLE IF NOT EXISTS banktransfer_blz (
@@ -440,10 +419,6 @@ ALTER TABLE orders MODIFY customers_ip VARCHAR (39);
 ALTER TABLE whos_online MODIFY ip_address VARCHAR (39);
 ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39);
 
-#Web28 - 2012-07-16 - New order description using in checkout
-ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
-ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
-
 #Web28 - 2012-07-20 - add attributes_ean
 ALTER TABLE products_attributes ADD attributes_ean VARCHAR(64) NULL DEFAULT NULL;
 
@@ -469,34 +444,6 @@ UPDATE admin_access SET removeoldpics = 5 WHERE customers_id = 'groups';
 ALTER TABLE orders_products_attributes ADD orders_products_options_id INT(11) NOT NULL;
 ALTER TABLE orders_products_attributes ADD orders_products_options_values_id INT(11) NOT NULL;
 
-#DokuMan - 2012-08-28 - Track and Trace functionality
-DROP TABLE IF EXISTS carriers;
-CREATE TABLE carriers (
-  carrier_id int(4) NOT NULL AUTO_INCREMENT,
-  carrier_name varchar(10) NOT NULL,
-  carrier_tracking_link varchar(512) NOT NULL,
-  carrier_sort_order int(4) NOT NULL,
-  PRIMARY KEY (carrier_id)
-) ENGINE=MyISAM;
-
-INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order) VALUES
-(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', 10),
-(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', 20),
-(3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30),
-(4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40),
-(5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50),
-(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60);
-
-DROP TABLE IF EXISTS orders_tracking;
-CREATE TABLE IF NOT EXISTS orders_tracking (
-  ortra_id int(11) NOT NULL AUTO_INCREMENT,
-  ortra_order_id int(11) NOT NULL,
-  ortra_carrier_id int(11) NOT NULL,
-  ortra_parcel_id varchar(80) NOT NULL,
-  PRIMARY KEY (ortra_id),
-  KEY ortra_order_id (ortra_order_id)
-) ENGINE=MyISAM;
-
 #Web28 - 2012-08-31 - move admin options to new "Adminarea" page
 UPDATE configuration SET configuration_group_id = '1000', sort_order = '10', last_modified = NOW() WHERE configuration_key = 'PRICE_IS_BRUTTO';
 UPDATE configuration SET configuration_group_id = '1000', sort_order = '20', last_modified = NOW() WHERE configuration_key = 'USE_ADMIN_TOP_MENU';
@@ -508,5 +455,9 @@ UPDATE configuration SET set_function = 'xtc_cfg_select_option(array(\'image_man
 # vr - 2012-10-26 - add index idx_customers_id
 ALTER TABLE orders
   ADD INDEX idx_customers_id (customers_id);
+
+#Web28 - 2012-07-16 - New order description using in checkout
+ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
+ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
