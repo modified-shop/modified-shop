@@ -60,4 +60,8 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   KEY ortra_order_id (ortra_order_id)
 ) ENGINE=MyISAM;
 
+#DokuMan - 2012-11-12 - set new default template, if existing template was named "xtc5"
+UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
+WHERE configuration_key = 'CURRENT_TEMPLATE' AND configuration_value = 'xtc5';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

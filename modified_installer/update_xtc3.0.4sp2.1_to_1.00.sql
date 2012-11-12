@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS database_version (
 
 UPDATE database_version SET version = 'xtcM_1.0.0.0';
  
-UPDATE configuration SET configuration_value = 'xtc5', last_modified = NOW()
+UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
 WHERE configuration_key = 'CURRENT_TEMPLATE';
  
 ALTER TABLE products MODIFY products_discount_allowed decimal(4,2) DEFAULT '0' NOT NULL;

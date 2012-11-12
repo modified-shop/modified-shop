@@ -204,7 +204,7 @@ define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
 // define('IMAGE_BUTTON_LOGIN', 'Login');
 // EOF - vr - 2010-02-20 removed double definition
 define('IMAGE_BUTTON_SEND', 'Send'); //DokuMan - 2010-03-15 - Added button description for contact form
-define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-11-12 - used in template xtc5...shopping_cart.html
+define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-11-12 - used in modified default template ...shopping_cart.html
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
 define('SMALL_IMAGE_BUTTON_EDIT', 'Edit');

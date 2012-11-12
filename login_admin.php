@@ -15,7 +15,7 @@
   // USAGE: /login_admin.php?repair=seo_friendly
   // USAGE: /login_admin.php?repair=sess_write
   // USAGE: /login_admin.php?repair=sess_default
-  // USAGE: /login_admin.php?repair=xtc5_template
+  // USAGE: /login_admin.php?repair=default_template
   // USAGE: /login_admin.php?repair=gzip_off
 
   // USAGE: /login_admin.php?show_error=none
@@ -29,7 +29,7 @@
 $error = false;
 
 //allowed repair options
-$allwowed_repair_array = array('seo_friendly','sess_write','sess_default','xtc5_template','gzip_off');
+$allwowed_repair_array = array('seo_friendly','sess_write','sess_default','default_template','gzip_off');
 
 if (isset($_GET['repair']) && !empty($_GET['repair']) && !in_array($_GET['repair'],$allwowed_repair_array)) {
   $error = true;
@@ -155,14 +155,14 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
           die('Report: Die Session-Einstellungen wurden auf die Standardwerte zur&uuml;ckgesetzt.');
           break;
 
-        // set template to xtc5 (default template)
-        case 'xtc5_template':
+        // set template to modified default template
+        case 'default_template':
           xtc_db_query('
             UPDATE configuration
-            SET    configuration_value = "xtc5"
+            SET    configuration_value = "tpl_modified"
             WHERE  configuration_key = "CURRENT_TEMPLATE"
           ');
-          die('Report: CURRENT_TEMPLATE wurde auf das xtc5-Standardtemplate zur&uuml;ckgesetzt.');
+          die('Report: CURRENT_TEMPLATE wurde auf das modified Standardtemplate zur&uuml;ckgesetzt.');
           break;
 
         // turn off GZIP compression

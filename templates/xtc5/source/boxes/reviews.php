@@ -36,7 +36,7 @@
       $fsk_lock=''; 
     }
 
-    $random_select = "-- templates/xtc5/source/boxes/reviews.php
+    $random_select = "-- templates/.../source/boxes/reviews.php
                       SELECT r.reviews_id,
                              r.reviews_rating,
                              p.products_id,
@@ -74,7 +74,7 @@
     } else if (!empty($random_product)) {
       // display random review box, but only if there's something to display
       $random = true;
-      $review_query = "-- templates/xtc5/source/boxes/reviews.php
+      $review_query = "-- templates/.../source/boxes/reviews.php
                        SELECT substring(reviews_text, 1, 60) as reviews_text
                          FROM " . TABLE_REVIEWS_DESCRIPTION . "
                         WHERE reviews_id = '" . $random_product['reviews_id'] . "'
