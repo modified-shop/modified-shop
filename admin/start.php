@@ -304,7 +304,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <?php        
-                                    $feed = get_extern_content('http://www.modified-shop.org/feed/', 2);    
+                                    $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
                                     if ($feed && class_exists('SimpleXmlElement')) {
                                       $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
                                       $rss->addAttribute('encoding', 'UTF-8');
