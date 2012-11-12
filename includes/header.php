@@ -26,7 +26,9 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
+
+define('DIR_MODIFIED_INSTALLER', '_installer');
+
 //SET SHOP OFFLINE 503 STATUS CODE
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
 if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status_id'] != 0) {	   
@@ -285,7 +287,7 @@ require_once('inc/xtc_draw_separator.inc.php');
 
 // check if the 'install' directory exists, and warn of its existence
 if (WARN_INSTALL_EXISTENCE == 'true') {
-  if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/_installer')) {
+  if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/' . DIR_MODIFIED_INSTALLER)) {
     xtc_output_warning(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, dirname($_SERVER['SCRIPT_FILENAME']) . '/_installer'));
   }
 }

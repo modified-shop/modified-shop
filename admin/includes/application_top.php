@@ -28,8 +28,8 @@
    --------------------------------------------------------------*/
 
 // Define the project version
-define('PROJECT_VERSION', 'modified eCommerce Shopsystem v1.06 dated: 2012-10-18 Beta3');
-// DB version, used for updates (xtc_installer)
+define('PROJECT_VERSION', 'modified eCommerce Shopssoftware v1.06 dated: 2012-10-18 Beta3');
+// DB version, used for updates (_installer)
 define('DB_VERSION', 'xtcM_1.0.6.0');
 //Run Mode
 define('RUN_MODE_ADMIN',true);
