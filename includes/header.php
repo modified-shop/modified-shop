@@ -20,22 +20,22 @@
    Credit Class/Gift Vouchers/Discount Coupons (Version 5.10)
    http://www.oscommerce.com/community/contributions,282
    Copyright (c) Strider | Strider@oscworks.com
-   Copyright (c  Nick Stanko of UkiDev.com, nick@ukidev.com
+   Copyright (c) Nick Stanko of UkiDev.com, nick@ukidev.com
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
+
+define('DIR_MODIFIED_INSTALLER', 'modified_installer');
+
 //SET SHOP OFFLINE 503 STATUS CODE
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
-if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status_id'] != 0) {	   
-	header("HTTP/1.1 503 Service Temporarily Unavailable");
+if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status_id'] != 0) {     
+  header("HTTP/1.1 503 Service Temporarily Unavailable");
   header("Status: 503 Service Temporarily Unavailable");
 }
 
-?>
-<?php
 /******** SHOPGATE **********/
 include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php';
 /******** SHOPGATE **********/
@@ -64,7 +64,7 @@ include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php';
   created by Mario Zanier & Guido Winger and licensed under GNU/GPL.
   Information and contribution at http://www.xt-commerce.com
 -->
-<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ----- http://www.xtc-modified.org" />
+<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ----- http://www.modified-shop.org" />
 <?php
 //BOF - GTB - 2010-08-03 - Security Fix - Base
 /*<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />*/
@@ -336,7 +336,7 @@ require('includes/google_conversiontracking.js.php');
 
   // check if the 'install' directory exists, and warn of its existence
   if (WARN_INSTALL_EXISTENCE == 'true') {
-    if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/xtc_installer')) {
+    if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/' . DIR_MODIFIED_INSTALLER)) {
       xtc_output_warning(WARNING_INSTALL_DIRECTORY_EXISTS);
     }
   }
