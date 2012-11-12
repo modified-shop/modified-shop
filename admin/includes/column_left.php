@@ -35,9 +35,7 @@
   //---------------------------Ausgewählte Admin Sprache als Flagge
   echo ('<div id="lang_flag">' . xtc_image('../lang/' . $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div>');
   //---------------------------STARTSEITE
-  echo ('<li>');
-  echo ('<div class="dataTableHeadingContent"><a href="' . xtc_href_link('start.php', '', 'NONSSL') . '" id="current"><b>' . TEXT_ADMIN_START . '</b></a></div>');
-  echo ('</li>');
+  echo ('<li><a href="' . xtc_href_link('start.php', '', 'NONSSL') . '" id="current"><b>' . TEXT_ADMIN_START . '</b></a></li>');
   //---------------------------KUNDEN
   echo ('<li>');
   echo ('<div class="dataTableHeadingContent"><strong>'.BOX_HEADING_CUSTOMERS.'</strong></div>');
