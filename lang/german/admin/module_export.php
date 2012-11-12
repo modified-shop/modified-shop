@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('HEADING_TITLE_MODULES_EXPORT', 'XT-Module');
+define('HEADING_TITLE_MODULES_EXPORT', 'Module');
 
 
 define('TABLE_HEADING_MODULES', 'Module');
