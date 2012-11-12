@@ -273,9 +273,6 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_content.gif'); ?></td>
                     <td class="pageHeading"><?php echo HEADING_TITLE;?></td>
                   </tr>
-                  <tr>
-                    <td class="main" valign="top">XTC Tools</td>
-                  </tr>
                 </table>
               </td>
             </tr>
