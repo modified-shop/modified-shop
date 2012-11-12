@@ -27,7 +27,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('DIR_MODIFIED_INSTALLER', 'modified_installer');
+define('DIR_MODIFIED_INSTALLER', '_installer');
 
 //SET SHOP OFFLINE 503 STATUS CODE
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 

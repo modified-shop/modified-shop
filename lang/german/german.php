@@ -248,7 +248,7 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unbekannter Steuersatz');
  *
  */
 
-define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warnung: Das Installationverzeichnis ist noch vorhanden auf: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/modified_installer. Bitte l&ouml;schen Sie das Verzeichnis aus Gr&uuml;nden der Sicherheit!');
+define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warnung: Das Installationverzeichnis ist noch vorhanden auf: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/_installer. Bitte l&ouml;schen Sie das Verzeichnis aus Gr&uuml;nden der Sicherheit!');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warnung: xtcModified kann in die Konfigurationsdatei schreiben: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/includes/configure.php. Das stellt ein m&ouml;gliches Sicherheitsrisiko dar - bitte korrigieren Sie die Benutzerberechtigungen zu dieser Datei!');
 define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r die Sessions existiert nicht: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren bis das Verzeichnis erstellt wurde!');
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warnung: xtcModified kann nicht in das Sessions Verzeichnis schreiben: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren bis die richtigen Benutzerberechtigungen gesetzt wurden!');
