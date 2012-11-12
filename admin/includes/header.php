@@ -74,7 +74,7 @@
 
   <table border="0" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 5px;">
     <tr>
-      <td><?php echo xtc_image(DIR_WS_IMAGES . 'logo.gif', 'xtcModified').'<br />&nbsp;&nbsp;&nbsp;'.$languages_string ; ?></td>
+      <td><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware').'<br />&nbsp;&nbsp;&nbsp;'.$languages_string ; ?></td>
       <td valign="bottom" align="left" width="100%">
         <table border="0" cellspacing="0" cellpadding="2">
           <tr>
