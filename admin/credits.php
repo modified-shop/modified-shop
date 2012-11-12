@@ -108,8 +108,6 @@ require (DIR_WS_INCLUDES.'head.php');
                     </dd>
                   </dl>
                 </td>
-              </tr>
-              <tr>
                 <td width="50%" valign="top">
                   <dl>
                     <dt><?php echo TEXT_HEADING_SUPPORT; ?></dt>
