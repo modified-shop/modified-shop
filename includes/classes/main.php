@@ -177,7 +177,7 @@ class main {
                                           AND languages_id='" . (int)$_SESSION['languages_id'] . "'
                                         LIMIT 1
                                       ");
-    return xtc_db_fetch_array($shop_content_query,true);
+    return xtc_db_fetch_array($shop_content_query);
   }
 
   /**
