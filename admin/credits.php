@@ -49,10 +49,6 @@ require (DIR_WS_INCLUDES.'head.php');
         margin-left: 90px;
         font-size: 12px;
       }
-      a:link, a:hover, a:visited, a:active {
-        font-size: 12px;
-        text-decoration: underline;
-      }
     </style>
   </head>
   <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
