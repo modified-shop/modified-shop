@@ -248,7 +248,7 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unknown tax rate');
  *
  */
 
-define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warning: The installation directory is still available on: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/modified_installer. Please delete this directory for security reasons!');
+define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warning: The installation directory is still available on: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/_installer. Please delete this directory for security reasons!');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warning: xtcModified is able to write to the configuration directory: ' . dirname($_SERVER['SCRIPT_FILENAME']) . '/includes/configure.php. That represents a possible safety hazard - please correct the user access rights for this directory!');
 define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warning: Directory for sesssions doesn&acute;t exist: ' . xtc_session_save_path() . '. Sessions will not work until this directory has been created!');
 define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warning: xtcModified is not able to write into the session directory: ' . xtc_session_save_path() . '. Sessions will not work until the user access rights for this directory have been changed!');

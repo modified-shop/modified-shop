@@ -18,7 +18,7 @@
    --------------------------------------------------------------*/
 
   define('INSTALL_CHARSET', 'utf-8'); //
-  define('DIR_MODIFIED_INSTALLER', 'modified_installer');
+  define('DIR_MODIFIED_INSTALLER', '_installer');
   define('MODIFIED_SQL', 'modified_utf8.sql');
   
   /*######################################*/
