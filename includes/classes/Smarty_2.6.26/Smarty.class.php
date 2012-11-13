@@ -27,11 +27,11 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
  * @package Smarty
- * @version 2.6.26
- * Modiied for xt:Commerce v3.0.4 SP2.1 (c)2009 by Hetfield - www.MerZ-IT-SerVice.de
+ * @version 2.6.27
+ * Modified for xt:Commerce v3.0.4 SP2.1 (c)2009 by Hetfield - www.MerZ-IT-SerVice.de
  */
 
-/* $Id: Smarty.class.php 3163 2009-06-17 14:39:24Z monte.ohrt $ */
+/* $Id: Smarty.class.php 4660 2012-09-24 20:05:15Z uwe.tews@googlemail.com $ */
 
 /**
  * DIR_SEP isn't used anymore, but third party apps might
@@ -475,7 +475,7 @@ class Smarty
      *
      * @var string
      */
-    var $_version              = '2.6.26';
+    var $_version              = '2.6.27';
 
     /**
      * current template inclusion depth
@@ -1100,7 +1100,8 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        trigger_error("Smarty error: $error_msg", $error_type);
+        $msg = htmlentities($error_msg);
+        trigger_error("Smarty error: $msg", $error_type);
     }
 
 
@@ -1315,14 +1316,14 @@ class Smarty
             return;
         } else {
             error_reporting($_smarty_old_error_level);
-			// BOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
+            // BOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
             //if (isset($_smarty_results)) { return $_smarty_results; }
-			if (file_exists('includes/local/configure.php')) {
-    			if (isset($_smarty_results)) { return '<!-- Begin: '.$resource_name.' -->'.$_smarty_results.'<!-- End: '.$resource_name.' -->'; }
-  			} else {
-    			if (isset($_smarty_results)) { return $_smarty_results; }
-  			} 
-			// EOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
+            if (file_exists('includes/local/configure.php')) {
+                if (isset($_smarty_results)) { return '<!-- Begin: '.$resource_name.' -->'.$_smarty_results.'<!-- End: '.$resource_name.' -->'; }
+            } else {
+                if (isset($_smarty_results)) { return $_smarty_results; }
+            } 
+            // EOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
         }
     }
 
