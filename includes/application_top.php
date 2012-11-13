@@ -77,7 +77,7 @@ $php4_3_10 = (0 == version_compare(phpversion(), "4.3.10"));
 define('PHP4_3_10', $php4_3_10);
 
 // project version
-define('PROJECT_VERSION', 'Modified'); 
+define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
 
 define('TAX_DECIMAL_PLACES', 0);
 
