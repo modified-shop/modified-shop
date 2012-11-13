@@ -143,12 +143,12 @@ class ot_sofort
             } else {
                 $string = $this->percentage[$j];
             }
-            $discount_table = (split("[:,]" , $string));
+            $discount_table = preg_split("/[:,]/", $string);
             //print_r($discount_table);
             for ($i=0; $i<sizeof($discount_table); $i+=2) {
                 if ($this->amount >= $discount_table[$i]) {
                     $values[$j]['minimum'] = $discount_table[$i];
-                    $fees = split('&', $discount_table[$i+1]);
+                    $fees = explode('&', $discount_table[$i+1]);
                     $values[$j]['percent'] = $fees[0];
                     $values[$j]['fee'] = $fees[1]!=''?$fees[1]:0;
                 } else {
@@ -159,7 +159,7 @@ class ot_sofort
             if ($this->amount >= $values[$j]['minimum']) {
                 $od_amount = 0;
                 $tod_amount = 0;
-                $table = split("[,]" , $this->payment[$j]);
+                $table = preg_split("/[,]/", $this->payment[$j]);
                 for ($i = 0; $i < count($table); $i++) {
                     if ($payment == $table[$i]) $do = true;
                 }
