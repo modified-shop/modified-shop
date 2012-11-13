@@ -87,7 +87,7 @@ class Smarty
      *
      * @var string
      */
-    var $config_dir      =  'configs';
+    var $config_dir      =  'lang';
 
     /**
      * An array of directories searched for plugins.
