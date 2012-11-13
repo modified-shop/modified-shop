@@ -27,8 +27,8 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @author Andrei Zmievski <andrei@php.net>
  * @package Smarty
- * @version 2.6.26
- * Modiied for xt:Commerce v3.0.4 SP2.1 (c)2009 by Hetfield - www.MerZ-IT-SerVice.de
+ * @version 2.6.27
+ * Modified for xt:Commerce v3.0.4 SP2.1 (c)2009 by Hetfield - www.MerZ-IT-SerVice.de
  */
 
 /* $Id$ */
@@ -62,7 +62,6 @@ define('SMARTY_PHP_ALLOW',      3);
 // BOF - Tomcraft - 2011-01-13 - Added path to smarty plugin dir in active template
 define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty');
 // EOF - Tomcraft - 2011-01-13 - Added path to smarty plugin dir in active template
-
 /**
  * @package Smarty
  */
@@ -476,7 +475,7 @@ class Smarty
      *
      * @var string
      */
-    var $_version              = '2.6.26';
+    var $_version              = '2.6.27';
 
     /**
      * current template inclusion depth
@@ -1101,7 +1100,8 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        trigger_error("Smarty error: $error_msg", $error_type);
+        $msg = htmlentities($error_msg);
+        trigger_error("Smarty error: $msg", $error_type);
     }
 
 
@@ -1316,14 +1316,14 @@ class Smarty
             return;
         } else {
             error_reporting($_smarty_old_error_level);
-			// BOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
+            // BOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
             //if (isset($_smarty_results)) { return $_smarty_results; }
-			if (file_exists('includes/local/configure.php')) {
-    			if (isset($_smarty_results)) { return '<!-- Begin: '.$resource_name.' -->'.$_smarty_results.'<!-- End: '.$resource_name.' -->'; }
-  			} else {
-    			if (isset($_smarty_results)) { return $_smarty_results; }
-  			} 
-			// EOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
+            if (file_exists('includes/local/configure.php')) {
+                if (isset($_smarty_results)) { return '<!-- Begin: '.$resource_name.' -->'.$_smarty_results.'<!-- End: '.$resource_name.' -->'; }
+            } else {
+                if (isset($_smarty_results)) { return $_smarty_results; }
+            } 
+            // EOF - Tomcraft - 2009-05-26 - Modified for xt:Commerce v3.0.4 SP2.1
         }
     }
 
