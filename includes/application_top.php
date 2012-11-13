@@ -62,7 +62,7 @@ $php4_3_10 = (0 == version_compare(phpversion(), "4.3.10"));
 define('PHP4_3_10', $php4_3_10);
 
 // project version
-define('PROJECT_VERSION', 'Modified'); 
+define('PROJECT_VERSION', 'modified eCommerce Shopsystem v.1.06'); 
 
 define('TAX_DECIMAL_PLACES', 0);
 
@@ -412,7 +412,7 @@ define('WARN_SESSION_AUTO_START', 'true');
 define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 
 // Smarty Template Engine 
-require (DIR_WS_CLASSES.'Smarty_2.6.26/Smarty.class.php');
+require (DIR_WS_CLASSES.'Smarty_2.6.27/Smarty.class.php');
 
 if (isset ($_SESSION['customer_id'])) {
 $account_type_query = xtc_db_query("-- /includes/application_top.php
