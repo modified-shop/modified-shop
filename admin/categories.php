@@ -315,7 +315,10 @@ if ($_GET['action']) {
 						}
 					}
 				}
-				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$dest_category_id.'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+
+        $action = is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
+        $pID = is_array($_POST['multi_products']) && isset($_POST['multi_products']) ? '&pID='. end($_POST['multi_products']) : '';
+				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$dest_category_id.$pID.$action.'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
 			}
 			// --- MULTI COPY ENDS ---
 

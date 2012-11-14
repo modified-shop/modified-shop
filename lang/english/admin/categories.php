@@ -215,4 +215,7 @@ define('TEXT_ATTRIBUTE_COPY', 'Product attributes also copy');
 define('TEXT_ATTRIBUTE_COPY_INFO', 'Product attributes also copy <br/> Only single-copy (1 item) recommended ');
 
 define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Order description');
+
+define('TEXT_HOW_TO_LINK', '<b>Page view after copying / link</b>');
+define('TEXT_HOW_TO_LINK_INFO', 'Item entry screen <br/> (For multiple items to last in the list)');
 ?>
