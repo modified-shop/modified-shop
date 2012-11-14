@@ -297,13 +297,25 @@
                  <td class="categories_view_data">--</td>
                  <td class="categories_view_data">--</td>
                  <td class="categories_view_data">--</td>
-                 <td class="categories_view_data" style="text-align: center;">--</td>
+                 <?php
+                 if ( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
+                 ?>
+                   <td class="categories_view_data" style="text-align: center;">--</td>
+                 <?php
+                 }
+                 ?>
                  <td class="categories_view_data" style="text-align: left; padding-left: 5px;">
                    <?php
                    echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .$cPath_back.'&cID='.$categories['parent_id']). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) .' ..</a>';
                    ?>
                  </td>
-                 <td class="categories_view_data">--</td>
+                 <?php                 
+                 if (STOCK_CHECK == 'true') {
+                 ?>
+                   <td class="categories_view_data">--</td>
+                 <?php
+                 }
+                 ?>
                  <td class="categories_view_data">--</td>
                  <td class="categories_view_data">--</td>
                  <td class="categories_view_data">--</td>
@@ -670,6 +682,7 @@
               }
               $contents[] = array('text' => '<br />' . TEXT_CATEGORIES . '<br />' . xtc_draw_pull_down_menu('categories_id', xtc_get_category_tree('0','','0'), $current_category_id));
               $contents[] = array('text' => '<br />' . TEXT_HOW_TO_COPY . '<br />' . xtc_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . xtc_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE);
+              $contents[] = array('text' => '<br />' . TEXT_HOW_TO_LINK . '<br />' . '<input type="checkbox" name="link_to_product" value="link_to_product" checked="checked"><font size="1">'.TEXT_HOW_TO_LINK_INFO.'</font><br />');
               $contents[] = array('text' => '<br />' . TEXT_ATTRIBUTE_COPY . '<br />' . '<input type="checkbox" name="attr_copy" value="attr_copy"><font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br />');
               $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_COPY . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id) . '">' . BUTTON_CANCEL . '</a>');
               break;
@@ -869,6 +882,7 @@
                 }
                 $contents[] = array('text' => '<br />' . TEXT_SINGLECOPY_CATEGORY . '<br />' . xtc_draw_pull_down_menu('dest_category_id', $category_tree, $current_category_id) . '<br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_HOW_TO_COPY . '</strong><br />' . xtc_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . xtc_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE . '<br /><hr noshade>');
+                $contents[] = array('text' => '<br />' . TEXT_HOW_TO_LINK . '<br />' . '<input type="checkbox" name="link_to_product" value="link_to_product" checked="checked"><font size="1">'.TEXT_HOW_TO_LINK_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . '<input type="checkbox" name="attr_copy" value="attr_copy"><font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br /><hr noshade>');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
                 //close multi-action form
