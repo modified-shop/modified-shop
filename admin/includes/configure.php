@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -23,11 +23,11 @@
   define('HTTPS_CATALOG_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
   define('ENABLE_SSL_CATALOG', false); // secure webserver for catalog module
   define('USE_SSL_PROXY', false); // using SSL proxy?
-  define('DIR_FS_DOCUMENT_ROOT', '/web1/xtc-modified/'); // where the pages are located on the server
-  define('DIR_WS_ADMIN', '/xtc-modified/admin/');
-  define('DIR_FS_ADMIN', '/web1/xtc-modified/admin/'); // absolute pate required
-  define('DIR_WS_CATALOG', '/xtc-modified/');
-  define('DIR_FS_CATALOG', '/web1/xtc-modified/'); // absolute path required
+  define('DIR_FS_DOCUMENT_ROOT', '/web1/modified/'); // where the pages are located on the server
+  define('DIR_WS_ADMIN', '/modified/admin/');
+  define('DIR_FS_ADMIN', '/web1/modified/admin/'); // absolute pate required
+  define('DIR_WS_CATALOG', '/modified/');
+  define('DIR_FS_CATALOG', '/web1/modified/'); // absolute path required
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
   define('DIR_FS_CATALOG_ORIGINAL_IMAGES', DIR_FS_CATALOG_IMAGES .'product_images/original_images/');

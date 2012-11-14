@@ -1,4 +1,4 @@
-// xtcModified - SSEQ Filter Definiton - Backup
+// modified - SSEQ Filter Definiton - Backup
 // VARIABLE NAME         # SOURCE # TYPE # MIN                  # MAX        # XSS   # SQL   & 
    action                # GP     # REX  # /^[a-z_]{1,23}$/     #            # true  # true  & 
    address               # P!     # INT  # 1                    # 9999999999 # true  # true  & 

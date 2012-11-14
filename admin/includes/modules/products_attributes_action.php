@@ -2,15 +2,15 @@
 /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(new_attributes_change); www.oscommerce.com
-   (c) 2003	 nextcommerce (new_attributes_change.php,v 1.8 2003/08/14); www.nextcommerce.org
+   (c) 2003 nextcommerce (new_attributes_change.php,v 1.8 2003/08/14); www.nextcommerce.org
    (c) 2006  xt-commerce(new_attributes_select.php 901 2005-04-29); www.xt-commerce.com
 
    Released under the GNU General Public License
@@ -20,7 +20,7 @@
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-  $PHP_SELF = (!isset($PHP_SELF)) ? $_SERVER['SCRIPT_NAME'] : $PHP_SELF; //compatibility for xtcModified 1.06 files
+  $PHP_SELF = (!isset($PHP_SELF)) ? $_SERVER['SCRIPT_NAME'] : $PHP_SELF; //compatibility for modified 1.06 files
 
   switch($action) {
 

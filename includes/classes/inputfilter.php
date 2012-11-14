@@ -1,14 +1,14 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-$Id: inputfilter.php 3333 2012-07-27 10:47:56Z gtb-modified $
+   $Id: inputfilter.php 3333 2012-07-27 10:47:56Z gtb-modified $
 
-xtcModified - community made shopping
-http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
 
-Released under the GNU General Public License
----------------------------------------------------------------------------------------*/
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
 
 class Inputfilter {
     private $params=false;

@@ -2,17 +2,17 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_oe_customer_infos.inc.php
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
    XTC-Bestellbearbeitung:
    http://www.xtc-webservice.de / Matthias Hinsche
    info@xtc-webservice.de
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
    based on:
-   (c) 2003	 nextcommerce (xtc_get_products_price.inc.php,v 1.13 2003/08/20); www.nextcommerce.org
+   (c) 2003 nextcommerce (xtc_get_products_price.inc.php,v 1.13 2003/08/20); www.nextcommerce.org
    
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/

@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -146,7 +146,7 @@ if ($result !== false && (!isset($category) || empty($category['listing_template
   $files = array ();
   if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
     while (($file = readdir($dir)) !== false) {
-      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) && (substr($file, -5) == ".html") && ($file != "index.html") && (substr($file, 0, 1) !=".")) { //Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+      if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) && (substr($file, -5) == ".html") && ($file != "index.html") && (substr($file, 0, 1) !=".")) { //Tomcraft - 2010-02-04 - Prevent fetching other files than *.html
         // BOF - web28 - 2010-07-12 - sort templates array
         //$files[] = array ('id' => $file, 'text' => $file);
         $files[] = $file;

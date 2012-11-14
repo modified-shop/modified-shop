@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -29,5 +29,5 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  include(DIR_FS_CATALOG.DIR_WS_CLASSES.'order.php'); // xtcModified 1.06: Using frontend class
+  include(DIR_FS_CATALOG.DIR_WS_CLASSES.'order.php'); // modified 1.06: Using frontend class
 ?>

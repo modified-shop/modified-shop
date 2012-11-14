@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
   -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -42,7 +42,7 @@
   // EOF - Tomcraft - 2009-11-08 - FIX for PHP5.3 date_default_timezone_set
 
   // define the project version
-  define('PROJECT_VERSION', 'xtcModified');
+  define('PROJECT_VERSION', 'modified');
 
   define('TAX_DECIMAL_PLACES', 0); // Tomcraft - 2009-11-09 - Added missing definition for TAX_DECIMAL_PLACES
 

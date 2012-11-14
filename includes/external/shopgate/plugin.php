@@ -4,7 +4,7 @@ define('SHOPGATE_PLUGIN_VERSION', '2.0.31');
 /**
  * xtcModified Plugin für Shopgate
  */
-class ShopgateXtcModifiedPlugin extends ShopgatePlugin {
+class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 	private $pluginPath;
 

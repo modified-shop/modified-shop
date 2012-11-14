@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: set_php_self.inc.php 3800 2012-10-25 10:15:15Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
