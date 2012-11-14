@@ -8,5 +8,5 @@ include_once $shopgatePath.'/shopgate_library/shopgate.php';
 include_once('includes/application_top.php');
 include_once $shopgatePath.'/plugin.php';
 
-$ShopgateFramework = new ShopgateXtcModifiedPlugin();
+$ShopgateFramework = new ShopgateModifiedPlugin();
 $ShopgateFramework->handleRequest( $_REQUEST );
