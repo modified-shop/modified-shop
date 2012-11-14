@@ -57,7 +57,7 @@ include_once (DIR_WS_INCLUDES.'shopgate/base/includes/header.php');
 ?>
 <!--
 =========================================================
-Shopsoftware by modified eCommerce Shopsoftware (c) 2009-2012 [www.modified-shop.org]
+modified eCommerce Shopsoftware (c) 2009-2012 [www.modified-shop.org]
 =========================================================
 
 modified eCommerce Shopsoftware offers you highly scalable E-Commerce-Solutions and Services.
