@@ -59,10 +59,18 @@ include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php';
 */
 ?>
 <!--
-  This OnlineStore is brought to you by XT-Commerce, Community made shopping
-  XTC is a free open source e-Commerce System
-  created by Mario Zanier & Guido Winger and licensed under GNU/GPL.
-  Information and contribution at http://www.xt-commerce.com
+=========================================================
+Shopsoftware by modified eCommerce Shopsoftware (c) 2009-2012 [www.modified-shop.org]
+=========================================================
+
+modified eCommerce Shopsoftware offers you highly scalable E-Commerce-Solutions and Services.
+The Shopsoftware is redistributable under the GNU General Public License (Version 2) [http://www.gnu.org/licenses/gpl-2.0.html].
+based on: E-Commerce Engine Copyright (c) 2006 xt:Commerce, created by Mario Zanier & Guido Winger and licensed under GNU/GPL.
+Information and contribution at http://www.xt-commerce.com
+
+=========================================================
+Please visit our website: www.modified-shop.org
+=========================================================
 -->
 <meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ----- http://www.modified-shop.org" />
 <?php
