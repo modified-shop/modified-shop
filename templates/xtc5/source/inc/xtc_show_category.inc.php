@@ -2,20 +2,21 @@
   /* -----------------------------------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(categories.php,v 1.23 2002/11/12); www.oscommerce.com
-   (c) 2003   nextcommerce (xtc_show_category.inc.php,v 1.4 2003/08/13); www.nextcommerce.org 
+   (c) 2003 nextcommerce
+ (xtc_show_category.inc.php,v 1.4 2003/08/13); www.nextcommerce.org 
    (c) 2010  web28 (xtc_show_category.inc.php, v 2.1 2010/11/12); www.rpa-com.de
 
    Released under the GNU General Public License 

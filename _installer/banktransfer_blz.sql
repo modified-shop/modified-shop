@@ -1,10 +1,10 @@
-# -----------------------------------------------------------------------------------------
+#  -----------------------------------------------------------------------------------------
 #  $Id$
 #
-#  xtc-Modified
-#  http://www.xtc-modified.org
-#
-#  Copyright (c) 2012 xtc-Modified
+#  modified - community made shopping
+#  http://www.modified-shop.org
+
+#  Copyright (c) 2009 - 2012 modified
 #  -----------------------------------------------------------------------------------------
 
 -- Einträge für Bankleitzahlen für die Tabelle banktransfer_blz

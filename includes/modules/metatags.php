@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
    based on:
     (c) 2003 nextcommerce (metatags.php, v1.7 2003/08/14); www.nextcommerce.org
@@ -18,11 +18,11 @@
    ---------------------------------------------------------------------------------------
     AUTOMATISCHE METATAGS MULTILANGUAGE für xt:Commerce 3.04
    ---------------------------------------------------------------------------------------
-      Version 0.96n / 13. Dezember 2010 / DokuMan / xtcModified
+      Version 0.96n / 13. Dezember 2010 / DokuMan
 
     -  Unterstützung für Pagination
    ---------------------------------------------------------------------------------------
-      Version 0.96m / 26. August 2010 / DokuMan / xtcModified
+      Version 0.96m / 26. August 2010 / DokuMan
 
     -  Unterstützung für "canonical"-Tag
    ---------------------------------------------------------------------------------------

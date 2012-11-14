@@ -10,7 +10,7 @@
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(new_attributes_functions); www.oscommerce.com
-   (c) 2003	 nextcommerce (new_attributes_functions.php,v 1.8 2003/08/14); www.nextcommerce.org
+   (c) 2003 nextcommerce (new_attributes_functions.php,v 1.8 2003/08/14); www.nextcommerce.org
 
    Released under the GNU General Public License
    --------------------------------------------------------------

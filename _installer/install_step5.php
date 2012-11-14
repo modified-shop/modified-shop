@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    --------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (install_step5.php,v 1.25 2003/08/24); www.nextcommerce.org
@@ -99,7 +99,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>xtcModified Installer - STEP 5 / Write Config Files</title>
+    <title>modified Installer - STEP 5 / Write Config Files</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
@@ -218,10 +218,10 @@
                           $file_contents = '<?php' . "\n" .
                                            '/* --------------------------------------------------------------' . "\n" .
                                            '' . "\n" .
-                                           '  xtcModified - community made shopping' . "\n" .
-                                           '  http://www.xtc-modified.org' . "\n" .
+                                           '  modified - community made shopping' . "\n" .
+                                           '  http://www.modified-shop.org' . "\n" .
                                            '' . "\n" .
-                                           '   Copyright (c) 2009 - 2012 xtcModified' . "\n" .
+                                           '   Copyright (c) 2009 - 2012 modified' . "\n" .
                                            '  --------------------------------------------------------------' . "\n" .
                                            '  based on:' . "\n" .
                                            '  (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)' . "\n" .
@@ -284,10 +284,10 @@
                           $file_contents = '<?php' . "\n" .
                                            '/* --------------------------------------------------------------' . "\n" .
                                            '' . "\n" .
-                                           '  xtcModified - community made shopping' . "\n" .
-                                           '  http://www.xtc-modified.org' . "\n" .
+                                           '  modified - community made shopping' . "\n" .
+                                           '  http://www.modified-shop.org' . "\n" .
                                            '' . "\n" .
-                                           '   Copyright (c) 2009 - 2012 xtcModified' . "\n" .
+                                           '   Copyright (c) 2009 - 2012 modified' . "\n" .
                                            '  --------------------------------------------------------------' . "\n" .
                                            '  based on:' . "\n" .
                                            '  (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)' . "\n" .

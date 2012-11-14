@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    ----------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (index.php,v 1.18 2003/08/17); www.nextcommerce.org
@@ -77,7 +77,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <title>xtcModified Installer</title>
+    <title>modified Installer</title>
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
       table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
@@ -108,7 +108,7 @@
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td><img src="images/title_index.gif" width="705" height="180" border="0" alt="" /><br />
-              <br /><br /><div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?><br /><br /><a href="http://www.xtc-modified.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0" /></a></div><br /><br />
+              <br /><br /><div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?><br /><br /><a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0" /></a></div><br /><br />
             </td>
           </tr>
             <?php

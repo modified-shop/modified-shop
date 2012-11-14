@@ -1,26 +1,26 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id$
 
-   xtc-Modified 
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtc-Modified
+   Copyright (c) 2009 - 2012 modified
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(dp.php,v 1.4 2003/02/18 04:28:00); www.oscommerce.com 
-   (c) 2003	nextcommerce (dp.php,v 1.5 2003/08/13); www.nextcommerce.org
-   (c) 2009	shd-media (gls.php 899 27.05.2009);
+   (c) 2002-2003 osCommerce(dp.php,v 1.4 2003/02/18 04:28:00); www.oscommerce.com
+   (c) 2003 nextcommerce (dp.php,v 1.5 2003/08/13); www.nextcommerce.org
+   (c) 2009 shd-media (gls.php 899 27.05.2009);
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
    Third Party contributions:
-   GLS (German Logistic Service) based on DP (Deutsche Post)        
+   GLS (German Logistic Service) based on DP (Deutsche Post)
    (c) 2002 - 2003 TheMedia, Dipl.-Ing Thomas Pl&auml;nkers | http://www.themedia.at & http://www.oscommerce.at
-    
+
    GLS contribution made by shd-media (c) 2009 shd-media - www.shd-media.de
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_SHIPPING_GLS_TEXT_TITLE', 'GLS');

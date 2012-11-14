@@ -1,9 +1,9 @@
 <?php
 /* --------------------------------------------------------------
    $Id
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
-   Copyright (c) 2009 - 2012 xtcModified
+   modified - community made shopping
+   http://www.modified-shop.org
+   Copyright (c) 2009 - 2012 modified
    --------------------------------------------------------------
    Released under the GNU General Public License
 --------------------------------------------------------------*/

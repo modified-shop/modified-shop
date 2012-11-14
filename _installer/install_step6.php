@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtc-Modified
+   Copyright (c) 2009 - 2012 modified
    --------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (install_step6.php,v 1.29 2003/08/20); www.nextcommerce.org
@@ -624,7 +624,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>xtcModified Installer - STEP 6 / Shopinformation</title>
+    <title>modified Installer - STEP 6 / Shopinformation</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <?php require('includes/form_check.js.php'); ?>
     <style type="text/css">

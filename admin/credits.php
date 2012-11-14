@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
   $Id$
 
-  xtcModified - community made shopping
-  http://www.xtc-modified.org
+  modified - community made shopping
+  http://www.modified-shop.org
 
-  Copyright (c) 2011 xtcModified
+  Copyright (c) 2009 - 2012 modified
   --------------------------------------------------------------
   based on:
   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -14,7 +14,7 @@
   (c) 2006 XT-Commerce (credits.php 1263 2005-09-30)
 
   Released under the GNU General Public License
---------------------------------------------------------------*/
+  --------------------------------------------------------------*/
 
 require('includes/application_top.php');
 require (DIR_WS_INCLUDES.'head.php');

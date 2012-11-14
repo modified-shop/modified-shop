@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified - community made shopping
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 modified
    ----------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (english.php,v 1.8 2003/08/13); www.nextcommerce.com
@@ -14,7 +14,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   // Global
-  define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a> &copy; ' . date('Y') . ' provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General Public License</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
+  define('TEXT_FOOTER','<a href="http://www.modified-shop.org" target="_blank">modified Shop</a> &copy; ' . date('Y') . ' provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General Public License</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
 
   // Box names
   define('BOX_LANGUAGE','Language');
@@ -36,7 +36,7 @@
   define('TEXT_DB_ERROR_1','Please click on the <i>Back</i> graphic to review your database server settings.');
   define('TEXT_DB_ERROR_2','If you require help with your database server settings, please consult your hosting company.');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_UPGRADE','<strong>Only perform database upgrade on already installed xtcModified shop</strong>!');
+  define('TEXT_DB_UPGRADE','<strong>Only perform database upgrade on already installed modified shop</strong>!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL version is too old. The shop requires at least version: ');
@@ -78,18 +78,18 @@
 
   // index.php
   define('TITLE_SELECT_LANGUAGE','Select your language!');
-  define('TEXT_WELCOME_INDEX','<b>Welcome to xtcModified</b><br /><br />xtcModified is an open source e-commerce solution under on going development by the xtcModified Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br /> xtcModified combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, xtcModified can be installed on on any environment that supports PHP 5.0 and MySQL, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />xtcModified is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.');
+  define('TEXT_WELCOME_INDEX','<b>Welcome to modified</b><br /><br />modified is an open source e-commerce solution under on going development by the modified Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br /> modified combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, modified can be installed on on any environment that supports PHP 5.0 and MySQL, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />modified is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('TEXT_WELCOME_STEP1','<b>Main database and webserver settings</b><br /><br />Please enter your Database and webserver settings.<br />');
-  define('TEXT_WELCOME_STEP2','<b>Install database</b><br /><br />The xtcModified installer will automatically install the xtcModified database.');
+  define('TEXT_WELCOME_STEP2','<b>Install database</b><br /><br />The modified installer will automatically install the modified database.');
   // BOF - web28 - 2010.02.20 - NEW STEP2-4 Handling
-  define('TEXT_WELCOME_STEP2A','<b>Database installation has been disabled</b><br /><br />The installation of the xtcModified database in Step3 is skipped.');
+  define('TEXT_WELCOME_STEP2A','<b>Database installation has been disabled</b><br /><br />The installation of the modified database in Step3 is skipped.');
   // EOF - web28 - 2010.02.20 - NEW STEP2-4 Handling
   define('TEXT_WELCOME_STEP3','<b>Database import.</b><br /><br />');
-  define('TEXT_WELCOME_STEP4','<b>Configure xtcModified main files</b><br /><br /><b>If there are old configure files from a further installation, xtcModified wiill delete them</b><br /><br />The installer will set up the configuration files with the main parameters for database and file structur.<br /><br />You can choose between different session handling systems.');
+  define('TEXT_WELCOME_STEP4','<b>Configure modified main files</b><br /><br /><b>If there are old configure files from a further installation, modified wiill delete them</b><br /><br />The installer will set up the configuration files with the main parameters for database and file structur.<br /><br />You can choose between different session handling systems.');
   define('TEXT_WELCOME_STEP5','<b>Webserver Configuration</b><br /><br />');
-  define('TEXT_WELCOME_STEP6','<b>Basic shop configuration</b><br /><br />The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.<br /><br />If you wish, xtcModified can automatically setup the zones,tax-rates and tax-classes for delivering/selling within the European Union.<br />Just set <b>setup zones for EU</b> to <b>YES</b>.');
-  define('TEXT_WELCOME_STEP7','<b>Guest and default customers setup</b><br /><br />The xtcModified group- and pricesystem got nearly infinite possibilities of different prices.<br /><br />
+  define('TEXT_WELCOME_STEP6','<b>Basic shop configuration</b><br /><br />The installer will create the admin account and will perform some db actions.<br /> The given information for <b>Country</b> and <b>Post Code</b> are used for shipping and tax callculations.<br /><br />If you wish, modified can automatically setup the zones,tax-rates and tax-classes for delivering/selling within the European Union.<br />Just set <b>setup zones for EU</b> to <b>YES</b>.');
+  define('TEXT_WELCOME_STEP7','<b>Guest and default customers setup</b><br /><br />The modified group- and pricesystem got nearly infinite possibilities of different prices.<br /><br />
     <b>% discount on single product</b><br />
     %max can be set for every single product, and single customers group<br />
     if %max at product = 10.00% and %max for group = 5% -> 5% discount on product<br />
@@ -104,34 +104,34 @@
     user group 3 -> a special group price on product Y<br />
     user group 4 -> netto price on product Y<br />
   ');
-  define('TEXT_WELCOME_FINISHED','<b>xtcModified installation successful!</b>');
+  define('TEXT_WELCOME_FINISHED','<b>modified installation successful!</b>');
 
   // install_step1.php
   define('TITLE_CUSTOM_SETTINGS','Custom Settings');
-  define('TEXT_IMPORT_DB','Install xtcModified Database');
-  define('TEXT_IMPORT_DB_LONG','Install the xtcModified database structure which includes tables and sample data. <b>(Mandatory on initial setup!</b>');
+  define('TEXT_IMPORT_DB','Install modified Database');
+  define('TEXT_IMPORT_DB_LONG','Install the modified database structure which includes tables and sample data. <b>(Mandatory on initial setup!</b>');
   define('TEXT_AUTOMATIC','Automatic Configuration');
-  define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both xtcModified Shop and Administration Tool configuration files.');
+  define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both modified Shop and Administration Tool configuration files.');
   define('TITLE_DATABASE_SETTINGS','Database Settings');
   define('TEXT_DATABASE_SERVER','Database Server');
   define('TEXT_DATABASE_SERVER_LONG','The database server can be in the form of a hostname, such as <i>db1.myserver.com</i>, or as an IP address, such as <i>192.168.0.1</i>.');
   define('TEXT_USERNAME','Username');
-  define('TEXT_USERNAME_LONG','The username is used to connect to the database server. An example username is <i>mysql_10</i>.<br /><br />Note: If the xtcModified Database is to be imported (selected above), the account used to connect to the database server needs to have Create and Drop permissions.');
+  define('TEXT_USERNAME_LONG','The username is used to connect to the database server. An example username is <i>mysql_10</i>.<br /><br />Note: If the modified Database is to be imported (selected above), the account used to connect to the database server needs to have Create and Drop permissions.');
   define('TEXT_PASSWORD','Password');
   define('TEXT_PASSWORD_LONG','The password is used together with the username, which forms the database user account.');
   define('TEXT_DATABASE','Database');
-  define('TEXT_DATABASE_LONG','The database used to hold the catalog data. An example database name is <i>xtcModified</i>.<br /><b>ATTENTION:</b> xtcModified need an empty Database to perform Installation.');
+  define('TEXT_DATABASE_LONG','The database used to hold the catalog data. An example database name is <i>modified</i>.<br /><b>ATTENTION:</b> modified need an empty Database to perform Installation.');
   define('TITLE_WEBSERVER_SETTINGS','Webserver Settings');
   define('TEXT_WS_ROOT','Webserver Root Directory');
   define('TEXT_WS_ROOT_LONG','The directory where your web pages are being served from, usually <i>/home/myname/public_html</i>.');
-  define('TEXT_WS_XTC','Webserver "xtcModified" Directory');
-  define('TEXT_WS_XTC_LONG','The directory where your catalog pages are being served from (from the webserver root directory), usually <i>/home/myname/public_html<b>/xtcModified/</b></i>.');
+  define('TEXT_WS_XTC','Webserver "modified" Directory');
+  define('TEXT_WS_XTC_LONG','The directory where your catalog pages are being served from (from the webserver root directory), usually <i>/home/myname/public_html<b>/modified/</b></i>.');
   define('TEXT_WS_ADMIN','Webserver Administration Tool Directory');
-  define('TEXT_WS_ADMIN_LONG','The directory where your administration tool pages are being served from (from the webserver root directory), usually <i>/home/myname/public_html<b>/xtcModified/admin/</b></i>.');
+  define('TEXT_WS_ADMIN_LONG','The directory where your administration tool pages are being served from (from the webserver root directory), usually <i>/home/myname/public_html<b>/modified/admin/</b></i>.');
   define('TEXT_WS_CATALOG','WWW Catalog Directory');
-  define('TEXT_WS_CATALOG_LONG','The virtual directory where the xtcModified Catalog module resides, usually <i>/xtcModified/</i>.');
+  define('TEXT_WS_CATALOG_LONG','The virtual directory where the modified Catalog module resides, usually <i>/modified/</i>.');
   define('TEXT_WS_ADMINTOOL','WWW Administration Tool Directory');
-  define('TEXT_WS_ADMINTOOL_LONG','The virtual directory where the xtcModified Administration Tool resides, usually <i>/xtcModified/admin/</i>');
+  define('TEXT_WS_ADMINTOOL_LONG','The virtual directory where the modified Administration Tool resides, usually <i>/modified/admin/</i>');
   //BOF WEBSERVER INFO
   define('TITLE_WEBSERVER_INFO','The default paths should be altered only in exceptional cases!');
   define('TEXT_WS_ROOT_INFO','The path is automatically determined');
@@ -175,7 +175,7 @@
   //EOF - web28 - 2010-03-02 - New SSL-PROXY info
 
   // install_step5.php
-  define('TEXT_WS_CONFIGURATION_SUCCESS','<strong>xtcModified</strong> Webserver configuration was successful');
+  define('TEXT_WS_CONFIGURATION_SUCCESS','<strong>modified</strong> Webserver configuration was successful');
 
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator configuration');
@@ -199,7 +199,7 @@
   define('TEXT_EMAIL_FROM_LONG','(The e-mail adress used in (sent) e-mails)');
   define('TITLE_ZONE_CONFIG','Zone configuration');
   define('TEXT_ZONE','Set up zones for EU?');
-  define('TITLE_ZONE_CONFIG_NOTE','*Note; xtcModified can automatically setup the right Zone-Setup if your store is located within the EU.');
+  define('TITLE_ZONE_CONFIG_NOTE','*Note; modified can automatically setup the right Zone-Setup if your store is located within the EU.');
   define('TITLE_SHOP_CONFIG_NOTE','*Note; Information for basic Shop configuration');
   define('TITLE_ADMIN_CONFIG_NOTE','*Note; Information for Admin/Superuser');
   define('TEXT_ZONE_NO','No');
@@ -259,8 +259,8 @@
   define('SELECT_TAX_ERROR2','Show Tax -Default');
 
   // install_fnished.php
-  define('TEXT_SHOP_CONFIG_SUCCESS','<strong>xtcModified</strong> Shop configuration was successful.');
-  define('TEXT_TEAM','Thank you for chosing the xtcModified eCommerce Shopsoftware. Please viti the xtcModified developer team at <a href="http://www.xtc-modified.org">xtcModified support site</a>.<br /><br />If you like xtcModified, we would appreciate a small donation.<br />');
+  define('TEXT_SHOP_CONFIG_SUCCESS','<strong>modified</strong> Shop configuration was successful.');
+  define('TEXT_TEAM','Thank you for chosing the modified eCommerce Shopsoftware. Please viti the modified developer team at <a href="http://www.modified-shop.org">modified support site</a>.<br /><br />If you like modified, we would appreciate a small donation.<br />');
 
   // BOC flth new permission change system
   define ('FTP_CHANGE_PERM_EXPLAIN', 'To set the file and directory permissions, you can either use your FTP program or enter your FTP information here to have set the required access permissions automatically.');

@@ -172,7 +172,7 @@ if ($user=='' or $password=='')
 {
 ?>
 <html><head><title></title></head><body>
-<h3><a href="http://www.cao-faktura.de">CAO-Faktura - xtcModified Shopanbindung</a></h3>
+<h3><a href="http://www.cao-faktura.de">CAO-Faktura - modified Shopanbindung</a></h3>
 <h4>Mehr dazu im <a href="http://www.cao-faktura.de/index.php?option=com_forum&Itemid=44">Forum</a></h4>
 <h4>Version <?php echo $version_nr; ?> Stand : <?php echo $version_datum; ?></h4>
 <br><br>
