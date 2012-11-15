@@ -16,7 +16,7 @@
 define('MODULE_PAYMENT_MONEYBOOKERS_CSI_TEXT_TITLE', 'CartaSi');
 $_var = 'CartaSi via Moneybookers';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><b><font color="red">Please setup moneybookers.com configuration first! (Adv. Configuration -> xtcModified Partner -> Moneybookers.com)!</font></b>';
+  $_var.='<br /><br /><b><font color="red">Please setup moneybookers.com configuration first! (Adv. Configuration -> Partner -> Moneybookers.com)!</font></b>';
 }
 define('MODULE_PAYMENT_MONEYBOOKERS_CSI_TEXT_DESCRIPTION', $_var);
 define('MODULE_PAYMENT_MONEYBOOKERS_CSI_NOCURRENCY_ERROR', 'There\'s no Moneybookers accepted currency installed!');

@@ -14,7 +14,7 @@
 define('MODULE_PAYMENT_PAYPAL_TEXT_TITLE', 'PayPal');
 define('MODULE_PAYMENT_PAYPAL_TEXT_INFO','<img src="https://www.paypal.com/de_DE/DE/i/logo/lockbox_150x47.gif" />');
 define('MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION', 'After "confirm" your will be routet to PayPal to pay your order.<br />Back in shop you will get your order-mail.<br />PayPal is the safer way to pay online. We keep your details safe from others and can help you get your money back if something ever goes wrong.');
-define('MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration! (Adv. Configuration -> xtcModified Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125').'"><strong>PayPal</strong></a>)!');
+define('MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration! (Adv. Configuration -> Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125').'"><strong>PayPal</strong></a>)!');
 define('MODULE_PAYMENT_PAYPAL_ALLOWED_TITLE' , 'Allowed zones');
 define('MODULE_PAYMENT_PAYPAL_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this module (e.g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_PAYMENT_PAYPAL_STATUS_TITLE', 'Enable PayPal module');

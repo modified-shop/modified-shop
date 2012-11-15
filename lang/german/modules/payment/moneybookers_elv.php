@@ -16,7 +16,7 @@
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TEXT_TITLE', 'Bankeinzug');
 $_var = 'Bankeinzug &uuml;ber Moneybookers';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><b><font color="red">Bitte nehmen Sie zuerst die Einstellungen unter<br /> Erw. Konfiguration -> xtcModified Partner -> Moneybookers.com vor!</font></b>';
+  $_var.='<br /><br /><b><font color="red">Bitte nehmen Sie zuerst die Einstellungen unter<br /> Erw. Konfiguration -> Partner -> Moneybookers.com vor!</font></b>';
 }
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_TEXT_DESCRIPTION', $_var);
 define('MODULE_PAYMENT_MONEYBOOKERS_ELV_NOCURRENCY_ERROR', 'Es ist keine von Moneybookers akzeptierte W&auml;hrung installiert!');

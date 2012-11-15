@@ -102,7 +102,7 @@ define('BOX_CONFIGURATION_15', 'Sessions');
 define('BOX_CONFIGURATION_16', 'Meta-Tags/Searchengines');
 define('BOX_CONFIGURATION_17', 'Additional Modules');
 define('BOX_CONFIGURATION_18', 'VAT Reg No');
-define('BOX_CONFIGURATION_19', 'xtcModified Partner');
+define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Search-Options');
 define('BOX_CONFIGURATION_24', 'PIWIK &amp; Google Analytics');
 define('BOX_CONFIGURATION_40', 'Popup Window Options');
@@ -335,7 +335,7 @@ define('WARNING_NO_FILE_UPLOADED', 'Warnung: No file uploaded.');
 define('DELETE_ENTRY','Delete entry?');
 define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a Payment Module!');
 define('TEXT_SHIPPING_ERROR','<b>WARNING:</b> Please activate a Shipping Module!');
-define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>xtcModified Partner -> PayPal<strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
+define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>Partner -> PayPal<strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 
 define('TEXT_NETTO','net: ');
 
