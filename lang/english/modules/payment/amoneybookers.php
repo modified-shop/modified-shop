@@ -21,7 +21,7 @@
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_TITLE', 'Secure Payment through Moneybookers');
 $_var = 'Moneybookers';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><strong><font color="red">ATTENTION:</font></strong> Please setup moneybookers.com configuration first! (Adv. Configuration -> xtcModified Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31').'">Moneybookers.com</a>)!';
+  $_var.='<br /><br /><strong><font color="red">ATTENTION:</font></strong> Please setup moneybookers.com configuration first! (Adv. Configuration -> Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31').'">Moneybookers.com</a>)!';
 }
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_DESCRIPTION', $_var);
 define('MODULE_PAYMENT_AMONEYBOOKERS_NOCURRENCY_ERROR', 'There\'s no Moneybookers accepted currency installed!');
