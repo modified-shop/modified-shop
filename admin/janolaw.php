@@ -80,7 +80,7 @@ require('includes/application_top.php');
                     <td class="pageHeading">janolaw</td>
                   </tr>
                   <tr>
-                    <td class="main" valign="top">XT Modules</td>
+                    <td class="main" valign="top">Modules</td>
                   </tr>
                 </table>
               </td>
