@@ -108,7 +108,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
                   </tr>
                   <tr>
-                    <td class="main" valign="top">XT Configuration
+                    <td class="main" valign="top">Configuration
                       <?php
                         //BOF - web28 - 2010.05.30 - set/unset all flags
                         echo '<a class="button" style="margin-left:150px;" href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setallflags&flag=1&page='.$page) . '">'.BUTTON_SET.'</a>';

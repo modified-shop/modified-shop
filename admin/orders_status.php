@@ -118,7 +118,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td class="pageHeading"><?php echo BOX_ORDERS_STATUS; ?></td>
                   </tr>
                   <tr>
-                    <td class="main" valign="top">XT Configuration</td>
+                    <td class="main" valign="top">Configuration</td>
                   </tr>
                 </table>
               </td>

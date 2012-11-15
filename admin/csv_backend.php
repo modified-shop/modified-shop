@@ -83,7 +83,7 @@ require (DIR_WS_INCLUDES.'head.php');
     <td class="pageHeading">CSV Import/Export</td>
   </tr>
   <tr>
-    <td class="main" valign="top">XT Tools</td>
+    <td class="main" valign="top">Tools</td>
   </tr>
 </table></td>
       </tr>
