@@ -36,7 +36,7 @@
   define('TEXT_DB_ERROR_1','Please click on the <i>Back</i> graphic to review your database server settings.');
   define('TEXT_DB_ERROR_2','If you require help with your database server settings, please consult your hosting company.');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_UPGRADE','<strong>Only perform database upgrade on already installed xtcModified shop</strong>!');
+  define('TEXT_DB_UPGRADE','<strong>Only perform database upgrade on already installed modified eCommerce Shopsoftware</strong>!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL version is too old. The shop requires at least version: ');
@@ -111,7 +111,7 @@
   define('TEXT_IMPORT_DB','Install xtcModified Database');
   define('TEXT_IMPORT_DB_LONG','Install the xtcModified database structure which includes tables and sample data. <b>(Mandatory on initial setup!</b>');
   define('TEXT_AUTOMATIC','Automatic Configuration');
-  define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both xtcModified Shop and Administration Tool configuration files.');
+  define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both modified eCommerce Shopsoftware and Administration Tool configuration files.');
   define('TITLE_DATABASE_SETTINGS','Database Settings');
   define('TEXT_DATABASE_SERVER','Database Server');
   define('TEXT_DATABASE_SERVER_LONG','The database server can be in the form of a hostname, such as <i>db1.myserver.com</i>, or as an IP address, such as <i>192.168.0.1</i>.');
