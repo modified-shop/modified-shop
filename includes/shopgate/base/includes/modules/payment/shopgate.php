@@ -1,6 +1,6 @@
 <?php
 
-include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
+include_once DIR_FS_CATALOG.'includes/shopgate/base/shopgate_config.php';
 
 class shopgate {
 	var $code, $title, $description, $enabled;

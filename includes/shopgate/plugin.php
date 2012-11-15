@@ -33,7 +33,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 		
 		// initialize configuration
-		require_once(DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php');
+		require_once(DIR_FS_CATALOG.'includes/shopgate/base/shopgate_config.php');
 		$this->config = new ShopgateConfigModified();
 
 		// Fetch Country

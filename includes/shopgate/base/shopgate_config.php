@@ -1,6 +1,6 @@
 <?php
 
-include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
+include_once DIR_FS_CATALOG.'includes/shopgate/shopgate_library/shopgate.php';
 
 class ShopgateConfigModified extends ShopgateConfig {
 	protected $country;

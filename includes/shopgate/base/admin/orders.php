@@ -2,8 +2,8 @@
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
-include_once DIR_FS_CATALOG.'includes/external/shopgate/plugin.php';
+include_once DIR_FS_CATALOG.'includes/shopgate/shopgate_library/shopgate.php';
+include_once DIR_FS_CATALOG.'includes/shopgate/plugin.php';
 
 /**
  * Wrapper for setShopgateOrderlistStatus() with only one order.
