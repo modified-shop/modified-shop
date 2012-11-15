@@ -36,7 +36,7 @@
   define('TEXT_DB_ERROR_1','Bitte klicken Sie auf <i>Back</i> um Ihre Datenbankeinstellungen zu &uuml;berpr&uuml;fen.');
   define('TEXT_DB_ERROR_2','Wenn Sie Hilfe zu Ihrer Datenbank ben&ouml;tigen, wenden Sie sich bitte an Ihren Provider.');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_UPGRADE','<strong>Nur Datenbank Upgrade des bereits installierten xtcModified Shops durchf&uuml;hren!</strong>');
+  define('TEXT_DB_UPGRADE','<strong>Nur Datenbank Upgrade der bereits installierten modified eCommerce Shopsoftware durchf&uuml;hren!</strong>');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Ihre MySQL-Version ist zu alt. Der Shop ben&ouml;tigt mindestens die Version: ');
@@ -131,7 +131,7 @@
   define('TEXT_WS_ADMIN','Webserver Admin Verzeichnis');
   define('TEXT_WS_ADMIN_LONG','Das Verzeichnis, in welchem sich die Admin-Werkzeuge Ihres Shops befinden (vom Webserver root Verzeichnis), beispielsweise <i>/home/myname/public_html<b>/xtcModified/admin/</b></i>.');
   define('TEXT_WS_CATALOG','WWW Catalog Verzeichnis');
-  define('TEXT_WS_CATALOG_LONG','Das virtuelle Verzeichnis, in dem sich der xtcModified Shop befindet, relativ zum HTTP Server, bspw. <b>/</b> oder <b>/xtcModified/</b>.<br /><br />HTTP Server + WWW Catalog Verzeichnis ergeben die Shop-URL.');
+  define('TEXT_WS_CATALOG_LONG','Das virtuelle Verzeichnis, in dem sich die modified eCommerce Shopsoftware befindet, relativ zum HTTP Server, bspw. <b>/</b> oder <b>/xtcModified/</b>.<br /><br />HTTP Server + WWW Catalog Verzeichnis ergeben die Shop-URL.');
   define('TEXT_WS_ADMINTOOL','WWW Admin Verzeichnis');
   define('TEXT_WS_ADMINTOOL_LONG','Das virtuelle Verzeichnis, in dem sich die xtcModified Admin-Module befinden, beispielsweise <i>http://www.Ihre-Domain.de<b>/xtcModified/admin/</b></i>');
   //BOF WEBSERVER INFO
