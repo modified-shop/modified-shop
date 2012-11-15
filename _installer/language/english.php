@@ -14,7 +14,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   // Global
-  define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a> &copy; ' . date('Y') . ' provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General Public License</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
+  define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a> &copy; ' . date('Y') . ' provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
 
   // Box names
   define('BOX_LANGUAGE','Language');
