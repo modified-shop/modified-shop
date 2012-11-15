@@ -49,7 +49,7 @@ class MobileRedirect {
 
 	/**
 	 * The configuration of the Framework
-	 * @var array
+	 * @var ShopgateConfig
 	 */
 	private $config		= array();
 
@@ -58,13 +58,16 @@ class MobileRedirect {
 	 *
 	 * The host and the shop_number will added options-array
 	 */
-	public function __construct() {
+	public function __construct($shopgateConfig = null) {
 		try {
-			$this->config = ShopgateConfig::validateAndReturnConfig();
+			if(is_null($shopgateConfig)){
+				$shopgateConfig = new ShopgateConfig();
+			}
+			$this->config = $shopgateConfig;
 			$this->useHttps = isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] === "on" || $_SERVER["HTTPS"] == "1");
 
 			$this->addOption("host", $this->__getHostUrl());
-			$this->addOption("shop_number", $this->config["shop_number"]);
+			$this->addOption("shop_number", $this->config->getShopNumber());
 		} catch (Exception $e) {
 
 		}
@@ -102,9 +105,7 @@ class MobileRedirect {
 	private function __getHostUrl() {
 		$url = $this->useHttps ? MobileRedirect::HTTPS_HOST : MobileRedirect::HTTP_HOST;
 
-		if($this->config["server"] == "pg") $url = $this->useHttps ? MobileRedirect::HTTPS_PG_HOST : MobileRedirect::HTTP_PG_HOST;
-
-		if(defined("SHOPGATE_DEBUG") && SHOPGATE_DEBUG && isset($this->config["aws_public"])) $url = $this->config["aws_public"];
+		if($this->config->getServer() == "pg") $url = $this->useHttps ? MobileRedirect::HTTPS_PG_HOST : MobileRedirect::HTTP_PG_HOST;
 
 		return $url;
 	}
@@ -116,7 +117,7 @@ class MobileRedirect {
 	 */
 	private function __getJsUrl() {
 		return $this->__getHostUrl()
-			. "/mobile_header/".$this->config["shop_number"].".js";
+			. "/mobile_header/".$this->config->getShopNumber().".js";
 	}
 
 	/**
