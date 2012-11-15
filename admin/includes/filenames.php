@@ -91,4 +91,5 @@ define('FILENAME_REMOVEOLDPICS', 'removeoldpics.php');
 /******** SHOPGATE **********/
 define('FILENAME_SHOPGATE', 'shopgate.php');
 /******** SHOPGATE **********/
+define('FILENAME_JANOLAW','janolaw.php');
 ?>
