@@ -36,7 +36,7 @@
     define ('USED_FILES', '<br /><br />Folgende Dateien werden f&uuml;r das Upgrade auf die neueste Datenbank-Version verwendet:<br /><br />');
     define ('CURRENT_DB_VERSION', '<br />Ihre derzeitige Datenbank-Version ist: ');
     define ('FINAL_TEXT', 'Bitte l&ouml;schen Sie jetzt aus Sicherheitsgr&uuml;nden die Upgrade-Datei vom Server:<br /> ==> ');
-    define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a>' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl.txt" target="_blank">GNU General Public License</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
+    define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a>' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
     define('TEXT_TITLE','xtcModified Datenbankupgrade');
     define('OPTIMIZE_TABLE_OPTION','<br />Sie k&ouml;nnen die Datenbank auch folgenderma&szlig;en optimieren:<br />');
     define('ANALYZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/de/analyze-table.html" target="_blank">ANALYZE TABLE</a>): Statistiken &uuml;ber die Schl&uuml;sselverteilung erstellen (empfohlen).');
@@ -60,7 +60,7 @@
     define ('USED_FILES', '<br /><br />The following files will be used for the upgrade to the newest database version:<br /><br />');
     define ('CURRENT_DB_VERSION', '<br />Your current database version is: ');
     define ('FINAL_TEXT', 'Please delete the update file from your server now for security reasons:<br /> ==> ');
-    define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a>' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a href="http://www.fsf.org/licensing/licenses/gpl.txt" target="_blank">GNU General Public License</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
+    define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a>' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
     define('TEXT_TITLE','xtcModified database upgrade');
     define('OPTIMIZE_TABLE_OPTION','<br />You can also optimize the database as follows:<br />');
     define('ANALYZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/en/analyze-table.html" target="_blank">ANALYZE TABLE</a>): Create statistical date about the key distribution (recommended).');

@@ -26,7 +26,7 @@
   $smarty->assign('CONTENT_HEADING', '<div style="width:40px; height:100%; float:left;"><img src="http://images.modified-shop.org/copyright.gif" border="0" alt=""/></div>'.'modified eCommerce Shopsoftware');
   $main_content = get_external_content('http://www.modified-shop.org/copyright.php');
   if (!xtc_not_null($main_content)) {
-    $main_content = '<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the </span><a style="color:#555555;text-decoration:none;" href="http://www.fsf.org/licensing/licenses/gpl.txt" target="_blank">GNU General Public License</a>';  
+    $main_content = '<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the </span><a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a>';  
   }
   $smarty->assign('CONTENT_BODY', $main_content);
   $smarty->assign('BUTTON_CONTINUE', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');

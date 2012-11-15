@@ -36,7 +36,7 @@
     */
       ?>
       modified eCommerce Shopsoftware &copy; 2009-<?php echo date("Y"); ?> <a href="http://www.modified-shop.org" target="_blank">modified eCommerce Shopsystem</a><br />      
-      modified eCommerce Shopsoftware provides no warranty and is redistributable under the <a href="http://www.fsf.org/licenses/gpl.txt" target="_blank">GNU General Public License</a>
+      modified eCommerce Shopsoftware provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a>
     </td>
   </tr>
   <tr>
