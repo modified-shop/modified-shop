@@ -460,4 +460,9 @@ ALTER TABLE orders
 ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
 ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
 
+#Tomcraft - 2012-11-15 - Added janolaw module
+ALTER TABLE admin_access ADD janolaw INT(1) DEFAULT 0 NOT NULL;
+UPDATE admin_access SET janolaw = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET janolaw = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

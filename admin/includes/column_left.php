@@ -92,6 +92,9 @@
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['modules'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHIPPING . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['modules'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['module_export'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT) . '" class="menuBoxContentLink"> -' . BOX_MODULE_EXPORT . '</a></li>';
+  // BOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
+  if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['janolaw'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '"> -' . BOX_JANOLAW . '</a></li>';
+  // EOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
   echo ('</ul>');
   echo ('</li>');
 

@@ -469,5 +469,16 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require(DIR_FS_EXTERNAL . 'econda/emos.php');
 }
 
+// BOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
+require_once(DIR_FS_CATALOG.'includes/external/janolaw/janolaw.php');
+$coo_janolaw = new janolaw();
+if($coo_janolaw->get_status() == true) {
+  $coo_janolaw->get_page_content('agb', true, true, 'checkout-agb');
+  $coo_janolaw->get_page_content('datenschutzerklaerung', true, true, 'checkout-datenschutzerklaerung');
+  $coo_janolaw->get_page_content('impressum', true, true, 'checkout-impressum');
+  $coo_janolaw->get_page_content('widerrufsbelehrung', true, true, 'checkout-widerrufsbelehrung');
+}
+// EOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
+
 xtc_count_cart();
 ?>

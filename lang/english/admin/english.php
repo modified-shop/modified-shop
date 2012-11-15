@@ -163,6 +163,7 @@ define('BOX_PRODUCTS_VPE','Packing unit');
 define('BOX_CAMPAIGNS_REPORT','Campaign report');
 define('BOX_ORDERS_XSELL_GROUP','Cross-sell groups');
 define('BOX_REMOVEOLDPICS','Remove old pictures'); // Remove old pictures - franky_n - 20110105
+define('BOX_JANOLAW','janolaw AGB Hosting'); // Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
 
 define('TXT_GROUPS','<b>Groups</b>:');
 define('TXT_SYSTEM','System');

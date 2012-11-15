@@ -1353,3 +1353,44 @@ padding:0px;
 div.checkoutbox .small{
 font-size: 11px;
 }
+
+/************************************************
+www.Janolaw.de
+http://www.janolaw.de
+BASIC Template for AGB Hosting Content
+************************************************/
+/* janolaw BOF */
+.janolaw-absatz {
+	font-size: 12px;
+	margin: 8px 4px 4px 8px;        
+}
+.janolaw-paragraph {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	margin: 16px 4px 4px 8px;
+}
+#janolaw-paragraph {
+	font-size: 14px;
+	font-weight: bold;
+	text-align: center;
+	margin: 16px 4px 4px 8px;
+}
+.janolaw-text {
+	font-size: 12px;
+	margin: 8px 4px 4px 8px;
+}
+.janolaw-adress {
+	font-size: 12px;
+	margin: 8px 4px 4px 8px;
+}
+.janolaw-block {
+	font-size: 12px;
+	margin: 8px 4px 4px 8px;
+}
+#janolaw-footer{
+}
+
+#janolaw-body{
+}
+/* janolaw EOF */
