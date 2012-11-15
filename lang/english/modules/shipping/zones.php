@@ -2,21 +2,21 @@
 /* -----------------------------------------------------------------------------------------
    $Id$   
 
-   modified - community made shopping
-   http://www.modified-shop.org
+    xtc-Modified
+    http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+    Copyright (c) 2010 xtc-Modified
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(zones.php,v 1.3 2002/04/17); www.oscommerce.com 
-   (c) 2003 nextcommerce (zones.php,v 1.4 2003/08/13); www.nextcommerce.org
-   (c) 2003 xt-commerce.com (zones.php  2005-04-29); www.xt-commerce.com
+   (c) 2003	 nextcommerce (zones.php,v 1.4 2003/08/13); www.nextcommerce.org
+   (c) 2003  xt-commerce.com (zones.php  2005-04-29); www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-
-// CUSTOMIZE THIS SETTING
+   
+   // CUSTOMIZE THIS SETTING
 define('NUMBER_OF_ZONES',9);
 
 define('MODULE_SHIPPING_ZONES_TEXT_TITLE', 'Zone Rates');

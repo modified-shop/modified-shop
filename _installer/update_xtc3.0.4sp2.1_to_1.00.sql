@@ -1,14 +1,14 @@
-#  -----------------------------------------------------------------------------------------
+# -----------------------------------------------------------------------------------------
 #  $Id$
 #
-#  modified - community made shopping
-#  http://www.modified-shop.org
-
-#  Copyright (c) 2009 - 2012 modified
+#  xtc-Modified
+#  http://www.xtc-modified.org
+#
+#  Copyright (c) 2011 xtc-Modified
 #  -----------------------------------------------------------------------------------------
 
 # Execute the following SQL-queries to update the database schema
-# from xt:Commerce 3.0.4 SP2.1 to modified 1.00
+# from xt:Commerce 3.0.4 SP2.1 to xtcModified 1.00
 
 CREATE TABLE IF NOT EXISTS database_version (
   version VARCHAR(32) NOT NULL

@@ -2,15 +2,15 @@
   /* --------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project 
    (c) 2002-2003 osCommerce coding standards (a typical file) www.oscommerce.com
-   (c) 2003 nextcommerce (start.php,1.5 2004/03/17); www.nextcommerce.org
+   (c) 2003  nextcommerce (start.php,1.5 2004/03/17); www.nextcommerce.org
    (c) 2003 XT-Commerce
    
    Released under the GNU General Public License 
@@ -159,7 +159,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           <strong>ECONDA</strong>
                           <br />
                           <br />
-                          ECONDA Shop Monitor liefert Ihnen ab 29,90 Euro im Monat mehr als 120 wertvolle Statistiken zum Controlling Ihres modified-Shops, wie u.a:</p>
+                          ECONDA Shop Monitor liefert Ihnen ab 29,90 Euro im Monat mehr als 120 wertvolle Statistiken zum Controlling Ihres xtcModified-Shops, wie u.a:</p>
                           <ul>
                             <li>Kaufprozess- und Warenkorbanalysen</li>
                             <li>Alle Informationen zu Ihren Werbekampagnen (Adwords, Preisvergleicher, Affiliates, Banner, etc.), wie:
@@ -185,7 +185,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <table border="0" cellspacing="0" cellpadding="0" class="text_box">
                   <tbody>
                     <tr>
-                      <th colspan="3">Empfehlung von modified</th>
+                      <th colspan="3">Empfehlung von xtcModified</th>
                     </tr>
                     <tr>
                       <td class="text_box_image">
@@ -206,8 +206,8 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                       <td class="text_box_text">
                         <p><strong>ECONDA</strong> Shop Monitor kann durch die Eingabe Ihres pers&ouml;nlichen Aktivierungscodes, den Sie von ECONDA erhalten, gestartet werden. Der Aufwand zur Aktivierung von ECONDA ist damit gleich null. </p>
-                        <p>Da die Integration in modified optimal vorbereitet ist, <strong>sparen Sie bei ECONDA die Einrichtungsgeb&uuml;hr</strong>.</p>
-                        modified empfiehlt den ECONDA Shop Monitor, weil:
+                        <p>Da die Integration in xtcModified optimal vorbereitet ist, <strong>sparen Sie bei ECONDA die Einrichtungsgeb&uuml;hr</strong>.</p>
+                        xtcModified empfiehlt den ECONDA Shop Monitor, weil:
                         <ul class="text_box_text">
                           <li class="main">er deutlich mehr leistet, als alle frei verf&uuml;gbaren Tools, </li>
                           <li>er in allen Paketen die volle Funktionalit&auml;t bietet, </li>

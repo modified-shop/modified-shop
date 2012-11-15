@@ -2,15 +2,15 @@
 /* -----------------------------------------------------------------------------------------
    $Id$   
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(dp.php,v 1.36 2003/03/09 02:14:35); www.oscommerce.com 
-   (c) 2003 nextcommerce (dp.php,v 1.12 2003/08/24); www.nextcommerce.org
+   (c) 2003	 nextcommerce (dp.php,v 1.12 2003/08/24); www.nextcommerce.org
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 

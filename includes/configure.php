@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -22,9 +22,9 @@
   define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
   define('USE_SSL_PROXY', false); // using SSL proxy?
-  define('DIR_WS_CATALOG', '/modified/');
-  define('DIR_FS_DOCUMENT_ROOT', '/web1/modified/'); // absolute path required
-  define('DIR_FS_CATALOG', '/web1/modified/'); // absolute path required
+  define('DIR_WS_CATALOG', '/xtc-modified/');
+  define('DIR_FS_DOCUMENT_ROOT', '/web1/xtc-modified/'); // absolute path required
+  define('DIR_FS_CATALOG', '/web1/xtc-modified/'); // absolute path required
   define('DIR_WS_ADMIN', 'admin/');
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_WS_ORIGINAL_IMAGES', DIR_WS_IMAGES .'product_images/original_images/');
