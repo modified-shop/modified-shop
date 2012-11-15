@@ -1137,7 +1137,7 @@ ul#checkoutnavigation li.inactive .description {
   text-decoration:underline;
   outline:none;
 }
-/* XTC COPYRIGHT */
+/* COPYRIGHT */
 .copyright {
   margin:0 auto;
   width:970px;
@@ -1146,7 +1146,19 @@ ul#checkoutnavigation li.inactive .description {
   font-size:11px;
   padding:0 0 10px 0;
 }
-/* XTC ParseTime */
+.copyright span.cop_magenta {
+  color:#B0347E;
+}
+.copyright span.cop_grey {
+  color:#6D6D6D;
+}
+.copyright span.cop_gpl, .copyright a.cop_gpl {
+  color:#555555;
+}
+.copyright a {
+  text-decoration:none;
+}
+/* ParseTime */
 .parseTime {
   margin:0 auto;
   width:970px;
