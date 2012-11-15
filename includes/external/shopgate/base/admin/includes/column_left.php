@@ -14,8 +14,6 @@ if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
 		echo '<li><a href="' . xtc_href_link(FILENAME_SHOPGATE."?sg_option=register", '', 'NONSSL') . '" class="menuBoxCon"> -'.BOX_SHOPGATE_REGISTER.'</a></li>';
 	if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shopgate'] == '1'))
 		echo '<li><a href="' . xtc_href_link(FILENAME_SHOPGATE."?sg_option=config", '', 'NONSSL') . '" class="menuBoxCon"> -'.BOX_SHOPGATE_CONFIG.'</a></li>';
-	// if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shopgate'] == '1'))
-	//	echo '<lI><a href="' . xtc_href_link(FILENAME_SHOPGATE."?sg_option=qrcode", '', 'NONSSL') . '" class="menuBoxCon"> -'.BOX_SHOPGATE_QRCODE.'</a></li>';
 	if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shopgate'] == '1'))
 		echo '<li><a href="' . xtc_href_link(FILENAME_SHOPGATE."?sg_option=config_ext", '', 'NONSSL') . '" class="menuBoxCon"> -'.BOX_SHOPGATE_CONFIG_EXTENDED.'</a></li>';
 	if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['shopgate'] == '1'))

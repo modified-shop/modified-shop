@@ -3,33 +3,34 @@ require_once 'includes/application_top.php';
 
 defined( '_VALID_XTC' ) or die('Direct Access not allowed.');
 
-require(DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php');
-$shopgate_config = ShopgateConfig::getConfig();
+require(DIR_FS_CATALOG.'/includes/external/shopgate/shopgate_library/shopgate.php');
+require(DIR_FS_CATALOG.'/includes/external/shopgate/base/shopgate_config.php');
 $encodings = array('UTF-8', 'ISO-8859-1', 'ISO-8859-15');
+$error = array();
 
-if(
-	!file_exists(SHOPGATE_BASE_DIR.'/config/myconfig.php') &&
-	file_exists(SHOPGATE_BASE_DIR.'/../base/default_config.php'))
-{
-	include SHOPGATE_BASE_DIR.'/../base/default_config.php';
-}
-
-$message = "";
-
-if(isset($_GET['action']) && ($_GET["action"] === "save")) {
-	if(isset($_POST["_shopgate_config"])) {
-		$shopgate_config = array_merge($shopgate_config, $_POST["_shopgate_config"]);
-	}
-	$shopgate_config['plugin'] = "xtcmodified";
-
+if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 	try {
-		ShopgateConfig::setConfig($shopgate_config, false);
-		ShopgateConfig::saveConfig();
-
+		$shopgate_config = new ShopgateConfigModified($_POST["_shopgate_config"]);
+		$shopgate_config->saveFile(array_keys($_POST['_shopgate_config']));
 		xtc_redirect(FILENAME_SHOPGATE."?sg_option=".$_GET["sg_option"]);
 	} catch (ShopgateLibraryException $e) {
-		$message = $e->getMessage();
+		$message = 'Speichern der Konfiguration fehlgeschlagen. ';
+		switch ($e->getCode()) {
+			case ShopgateLibraryException::CONFIG_READ_WRITE_ERROR:
+				$message .= 'Bitte überprüfen Sie die Schreibrechte für die Konfigurationsdatei von Shopgate.';
+			break;
+			case ShopgateLibraryException::CONFIG_INVALID_VALUE:
+				$message .= 'Bitte überprüfen Sie ihre Eingaben. ('.$e->getAdditionalInformation().')';
+				foreach (explode(',', $e->getAdditionalInformation()) as $errorField) {
+					$error[$errorField] = true;
+				}
+			break;
+		}
+		$shopgate_config = $_POST['_shopgate_config']; // Formular-Eingaben beibehalten
 	}
+} else {
+	$shopgate_config = new ShopgateConfigModified();
+	$shopgate_config = $shopgate_config->toArray();
 }
 
 if($_GET["sg_option"] === "config") {
@@ -41,7 +42,7 @@ if($_GET["sg_option"] === "config") {
 		SELECT orders_status_id, orders_status_name
 		FROM orders_status os
 		JOIN languages l ON l.languages_id = os.language_id
-		WHERE l.code = '".strtoupper($_SESSION['language_code'])."'
+		WHERE " . (!empty($_SESSION['language']) ? ("UPPER(l.directory) = '".strtoupper($_SESSION['language'])."'") : ("UPPER(l.code) = '".strtoupper($shopgate_config['language'])."'")) ."
 		ORDER BY os.orders_status_id"
 	);
 
@@ -58,7 +59,7 @@ if($_GET["sg_option"] === "config") {
 		JOIN `".TABLE_LANGUAGES."` lng ON s.language_id = lng.languages_id
 		WHERE UPPER(lng.code) = '".strtoupper($_SESSION['language_code'])."' AND customers_status_id != '0'
 	");
-
+	
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCustomerGroups[] = $row;
 	}
@@ -122,8 +123,7 @@ if($_GET["sg_option"] === "config") {
 
 
 
-
-
+$shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 
 
 ?>
@@ -163,6 +163,10 @@ if($_GET["sg_option"] === "config") {
 			border: 1px solid #cccccc;
 			margin-bottom: 10px;
 			padding: 2px;
+		}
+		
+		td.shopgate_input.error div input {
+			border-color: red;
 		}
 	</style>
 </head>
@@ -204,7 +208,7 @@ if($_GET["sg_option"] === "config") {
 <?php if ($_GET["sg_option"] === "info"): ?>
 							<iframe src="http://www.shopgate.com/de/sell" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "help"): ?>
-							<iframe src="http://wiki.shopgate.com/XtcModified/de" class="shopgate_iframe"></iframe>
+							<iframe src="<?php echo $shopgateWikiLink; ?>" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "register"): ?>
 							<iframe src="https://www.shopgate.com/welcome/shop_register" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "config"): ?>
@@ -215,7 +219,7 @@ if($_GET["sg_option"] === "config") {
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_CUSTOMER_NUMBER; ?></b></td>
-												<td class="dataTableContent shopgate_input">
+												<td class="dataTableContent shopgate_input<?php echo empty($error['customer_number']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[customer_number]" value="<?php echo $shopgate_config["customer_number"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_CUSTOMER_NUMBER_DESCRIPTION; ?>
 													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
@@ -229,7 +233,7 @@ if($_GET["sg_option"] === "config") {
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_SHOP_NUMBER; ?></b></td>
-												<td class="dataTableContent shopgate_input">
+												<td class="dataTableContent shopgate_input<?php echo empty($error['shop_number']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[shop_number]" value="<?php echo $shopgate_config["shop_number"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_SHOP_NUMBER_DESCRIPTION; ?>
 													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
@@ -243,7 +247,7 @@ if($_GET["sg_option"] === "config") {
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_APIKEY; ?></b></td>
-												<td class="dataTableContent shopgate_input">
+												<td class="dataTableContent shopgate_input<?php echo empty($error['apikey']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[apikey]" value="<?php echo $shopgate_config["apikey"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_APIKEY_DESCRIPTION; ?>
 													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
@@ -257,7 +261,7 @@ if($_GET["sg_option"] === "config") {
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_ALIAS; ?></b></td>
-												<td class="dataTableContent shopgate_input">
+												<td class="dataTableContent shopgate_input<?php echo empty($error['alias']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[alias]" value="<?php echo $shopgate_config["alias"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_ALIAS_DESCRIPTION; ?>
 													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
@@ -271,7 +275,7 @@ if($_GET["sg_option"] === "config") {
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_CNAME; ?></b></td>
-												<td class="dataTableContent shopgate_input">
+												<td class="dataTableContent shopgate_input<?php echo empty($error['cname']) ? '' : ' error' ?>">
 													<div><input type="text" name="_shopgate_config[cname]" value="<?php echo $shopgate_config["cname"]?>" /></div>
 													<?php echo SHOPGATE_CONFIG_CNAME_DESCRIPTION; ?>
 													[<a	href="http://www.shopgate.com/merchant/" target="_blank">LINK</a>]
@@ -285,7 +289,7 @@ if($_GET["sg_option"] === "config") {
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_SERVER_TYPE; ?></b></td>
-												<td class="dataTableContent shopgate_input">
+												<td class="dataTableContent shopgate_input<?php echo empty($error['api_url']) ? '' : ' error' ?>">
 													<div>
 														<select name="_shopgate_config[server]">
 															<option value="live" <?php echo $shopgate_config["server"]=='live'?'selected=""':''?>>
@@ -299,7 +303,7 @@ if($_GET["sg_option"] === "config") {
 															</option>
 														</select>
 														<br />
-														<input type="text" name="_shopgate_config[server_custom_url]" value="<?php echo $shopgate_config["server_custom_url"]?>" /> <?php echo SHOPGATE_CONFIG_SERVER_TYPE_CUSTOM_URL; ?>
+														<input type="text" name="_shopgate_config[api_url]" value="<?php echo $shopgate_config["api_url"]?>" /> <?php echo SHOPGATE_CONFIG_SERVER_TYPE_CUSTOM_URL; ?>
 													</div>
 													<?php echo SHOPGATE_CONFIG_SERVER_TYPE_CUSTOM_URL; ?>
 												</td>
@@ -423,10 +427,10 @@ if($_GET["sg_option"] === "config") {
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_EXTENDED_CURRENCY; ?></b></td>
 												<td class="dataTableContent shopgate_input">
 													<div>
-														<select name="_shopgate_config[plugin_currency]">
+														<select name="_shopgate_config[currency]">
 															<?php foreach($sgCurrencies as $sgCurrencyCode => $sgCurrency): ?>
 															<option value="<?php echo $sgCurrencyCode?>"
-																<?php echo $shopgate_config["plugin_currency"]==$sgCurrencyCode?'selected=""':''?>>
+																<?php echo $shopgate_config["currency"]==$sgCurrencyCode?'selected=""':''?>>
 																<?php echo $sgCurrency ?>
 															</option>
 															<?php endforeach; ?>
@@ -445,9 +449,9 @@ if($_GET["sg_option"] === "config") {
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_EXTENDED_LANGUAGE; ?></b></td>
 												<td class="dataTableContent shopgate_input">
 													<div>
-														<select name="_shopgate_config[plugin_language]">
+														<select name="_shopgate_config[language]">
 															<?php foreach ($sgLanguages as $sgLanguage): ?>
-															<option value="<?php echo $sgLanguage["code"]?>" <?php echo $shopgate_config["plugin_language"]==$sgLanguage["code"]?'selected="selected"':''?>>
+															<option value="<?php echo $sgLanguage["code"]?>" <?php echo strtoupper($shopgate_config["language"])==strtoupper($sgLanguage["code"])?'selected="selected"':''?>>
 								        						<?php echo $sgLanguage['name']?>
 															</option>
 															<?php endforeach; ?>
@@ -466,9 +470,9 @@ if($_GET["sg_option"] === "config") {
 												<td width="300" class="dataTableContent"><b><?php echo SHOPGATE_CONFIG_EXTENDED_COUNTRY; ?></b></td>
 												<td class="dataTableContent shopgate_input">
 													<div>
-														<select name="_shopgate_config[plugin_country]">
+														<select name="_shopgate_config[country]">
 															<?php foreach ($sgCountries as $sgCountry): ?>
-															<option value="<?php echo $sgCountry["countries_iso_code_2"]?>" <?php echo $shopgate_config["plugin_country"]==$sgCountry["countries_iso_code_2"]?'selected="selected"':''?>>
+															<option value="<?php echo $sgCountry["countries_iso_code_2"]?>" <?php echo $shopgate_config["country"]==$sgCountry["countries_iso_code_2"]?'selected="selected"':''?>>
 																<?php echo $sgCountry["countries_name"]?>
 															</option>
 															<?php endforeach; ?>

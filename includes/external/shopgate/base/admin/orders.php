@@ -32,6 +32,6 @@ function setShopgateOrderlistStatus($orderIds, $status) {
 		return;
 	}
 	
-	$plugin = new ShopgateXtcModifiedPlugin();
+	$plugin = new ShopgateModifiedPlugin();
 	$plugin->updateOrdersStatus($orderIds, $status);
 }

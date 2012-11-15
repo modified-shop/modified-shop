@@ -4,7 +4,7 @@ define('MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION', 'Shopgate - Mobile Shopping.'
 define('MODULE_PAYMENT_SHOPGATE_TEXT_INFO','Orders are already paid at Shopgate.');
 
 define('MODULE_PAYMENT_SHOPGATE_TEXT_EMAIL_FOOTER', "");
-define('MODULE_PAYMENT_SHOPGATE_STATUS_TITLE' , 'Shopgate');
+define('MODULE_PAYMENT_SHOPGATE_STATUS_TITLE' , 'Shopgate payment module activated:');
 
 define('MODULE_PAYMENT_SHOPGATE_STATUS_DESC' , '');
 define('MODULE_PAYMENT_SHOPGATE_ALLOWED_TITLE' , '');

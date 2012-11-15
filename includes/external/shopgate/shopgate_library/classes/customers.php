@@ -190,8 +190,10 @@ class ShopgateCustomer extends ShopgateContainer {
 	 * @return ShopgateAddress[] List of customer's addresses, filtered by $type.
 	 */
 	public function getAddresses($type = ShopgateAddress::BOTH) {
+		if (empty($this->addresses)) return array();
+		
 		$addresses = array();
-
+		
 		foreach ($this->addresses as $address) {
 			if (($address->getAddressType() & $type) == $address->getAddressType()) {
 				$addresses[] = $address;
