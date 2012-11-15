@@ -2,10 +2,10 @@
   /* ----------------------------------------------------------------------------------------
    $Id: image_manipulator_GD2.php 3072 2012-06-18 15:01:13Z hhacker $
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2006 XT-Commerce (image_manipulator_GD2.php 950 2005-05-14)

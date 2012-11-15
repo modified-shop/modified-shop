@@ -14,11 +14,11 @@ include_once DIR_FS_CATALOG.'includes/external/shopgate/plugin.php';
  * @param int $status The ID of the order status that has been set in the shopping system.
  */
 function setShopgateOrderStatus($orderId, $status) {
-  if (empty($orderId)) {
-    return;
-  }
-  
-  setShopgateOrderlistStatus(array($orderId), $status);
+	if (empty($orderId)) {
+		return;
+	}
+	
+	setShopgateOrderlistStatus(array($orderId), $status);
 }
 
 /**
@@ -28,10 +28,10 @@ function setShopgateOrderStatus($orderId, $status) {
  * @param int $status The ID of the order status that has been set in the shopping system.
  */
 function setShopgateOrderlistStatus($orderIds, $status) {
-  if (empty($orderIds) || !is_array($orderIds)) {
-    return;
-  }
-  
-  $plugin = new ShopgateModifiedPlugin();
-  $plugin->updateOrdersStatus($orderIds, $status);
+	if (empty($orderIds) || !is_array($orderIds)) {
+		return;
+	}
+	
+	$plugin = new ShopgateXtcModifiedPlugin();
+	$plugin->updateOrdersStatus($orderIds, $status);
 }

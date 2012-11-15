@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2005 osCommerce(econda.php,v 1.42 2003/06/10); www.econda.de

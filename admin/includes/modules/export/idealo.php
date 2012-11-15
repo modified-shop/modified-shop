@@ -4,8 +4,8 @@
  */
 
 /* -----------------------------------------------------------------------------------------
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
    (c) idealo 2009, provided as is, no warranty
    -----------------------------------------------------------------------------------------

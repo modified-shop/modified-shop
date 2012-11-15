@@ -1,10 +1,10 @@
 # -----------------------------------------------------------------------------------------
 #  $Id$
 #
-#  modified - community made shopping
-#  http://www.modified-shop.org
+#  xtc-Modified
+#  http://www.xtc-modified.org
 #
-#  Copyright (c) 2009 - 2012 modified
+#  Copyright (c) 2010 xtc-Modified
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2009-09-08 - changed database_version

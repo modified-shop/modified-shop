@@ -2,10 +2,10 @@
   /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -17,5 +17,5 @@
    ---------------------------------------------------------------------------------------*/
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-include(DIR_FS_CATALOG.DIR_WS_FUNCTIONS.'sessions.php'); // modified 1.06: Using frontend function
+include(DIR_FS_CATALOG.DIR_WS_FUNCTIONS.'sessions.php'); // xtcModified 1.06: Using frontend function
 ?>

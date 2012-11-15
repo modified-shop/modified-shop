@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -21,7 +21,7 @@
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_TITLE', 'Sicher bezahlen &uuml;ber Moneybookers');
 $_var = 'Moneybookers';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie zuerst die Einstellungen unter Erw. Konfiguration -> modified Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31').'">Moneybookers.com</a> vor!';
+  $_var.='<br /><br /><strong><font color="red">ACHTUNG:</font></strong> Bitte nehmen Sie zuerst die Einstellungen unter Erw. Konfiguration -> xtcModified Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31').'">Moneybookers.com</a> vor!';
 }
 define('MODULE_PAYMENT_AMONEYBOOKERS_TEXT_DESCRIPTION', $_var);
 define('MODULE_PAYMENT_AMONEYBOOKERS_NOCURRENCY_ERROR', 'Es ist keine von Moneybookers akzeptierte W&auml;hrung installiert!');

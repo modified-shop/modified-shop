@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2006 xt:Commerce; www.xt-commerce.com
@@ -16,7 +16,7 @@
 define('MODULE_PAYMENT_MONEYBOOKERS_NETPAY_TEXT_TITLE', 'Netpay');
 $_var = 'Netpay &uuml;ber Moneybookers';
 if (_PAYMENT_MONEYBOOKERS_EMAILID=='') {
-  $_var.='<br /><br /><b><font color="red">Bitte nehmen Sie zuerst die Einstellungen unter<br /> Erw. Konfiguration -> modified Partner -> Moneybookers.com vor!</font></b>';
+  $_var.='<br /><br /><b><font color="red">Bitte nehmen Sie zuerst die Einstellungen unter<br /> Erw. Konfiguration -> xtcModified Partner -> Moneybookers.com vor!</font></b>';
 }
 define('MODULE_PAYMENT_MONEYBOOKERS_NETPAY_TEXT_DESCRIPTION', $_var);
 define('MODULE_PAYMENT_MONEYBOOKERS_NETPAY_NOCURRENCY_ERROR', 'Es ist keine von Moneybookers akzeptierte W&auml;hrung installiert!');

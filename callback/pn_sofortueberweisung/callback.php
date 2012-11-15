@@ -28,7 +28,7 @@
  * this file contains code based on:
  * (c) 2000 - 2001 The Exchange Project
  * (c) 2001 - 2003 osCommerce, Open Source E-Commerce Solutions
- * (c) 2003 nextcommerce (account_history_info.php,v 1.17 2003/08/17); www.nextcommerce.org
+ * (c) 2003	 nextcommerce (account_history_info.php,v 1.17 2003/08/17); www.nextcommerce.org
  * (c) 2003 - 2006 XT-Commerce
  * Released under the GNU General Public License
  ***********************************************************************************

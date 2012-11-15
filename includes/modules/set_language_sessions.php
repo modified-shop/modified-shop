@@ -5,7 +5,7 @@
    Modified - community made shopping
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 Modified
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

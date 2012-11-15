@@ -2,10 +2,10 @@
   /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2006 XT-Commerce (import.php 899 2009-09-13)
@@ -717,7 +717,7 @@
         $line .= $this->encode($export_data['products_fsk18']);
         $line .= $this->encode($export_data['products_price']);
         // group prices  Qantity:Price::Quantity:Price
-        //Bugfix already implemented, see http://www.modified-shop.org/wiki/Fehlermeldung_Export:_personal_offers_by_customers_status_doesn%27t_exist
+        //Bugfix already implemented, see http://www.xtc-modified.org/wiki/Fehlermeldung_Export:_personal_offers_by_customers_status_doesn%27t_exist
         for ($i=1; $i<count($this->Groups); $i++) {
           $price_query = "SELECT * FROM ".TABLE_PERSONAL_OFFERS_BY.$this->Groups[$i]['id']." WHERE products_id = '".$export_data['products_id']."'ORDER BY quantity";
           $price_query = xtc_db_query($price_query);

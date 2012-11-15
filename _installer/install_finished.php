@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    --------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (install_finished.php,v 1.5 2003/08/17); www.nextcommerce.org
@@ -26,7 +26,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>modified Installer - Finished</title>
+    <title>xtcModified Installer - Finished</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
@@ -70,7 +70,7 @@
                   <br />
                   <?php echo TEXT_TEAM; ?><br />
                   <br />
-                  <a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0"></a>
+                  <a href="http://www.xtc-modified.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0"></a>
                 </div>
                 <br />
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
@@ -93,6 +93,6 @@
       </tr>
     </table>
     <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/xtcmodified106tutf8.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
+    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.xtc-modified.org/xtcmodified106tutf8.gif' border='0' alt='xtcModified eCommerce Shopsoftware'></div>
   </body>
 </html>

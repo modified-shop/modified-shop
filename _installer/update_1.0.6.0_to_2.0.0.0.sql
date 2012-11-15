@@ -1,10 +1,10 @@
 # -----------------------------------------------------------------------------------------
 #  $Id: update_1.0.6.0_to_2.0.0.0.sql 3827 2012-10-30 19:16:40Z Tomcraft1980 $
 #
-#  modified - community made shopping
-#  http://www.modified-shop.org
+#  xtc-Modified
+#  http://www.xtc-modified.org
 #
-#  Copyright (c) 2009 - 2012 modified
+#  Copyright (c) 2011 xtc-Modified
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2012-11-11 - changed database_version

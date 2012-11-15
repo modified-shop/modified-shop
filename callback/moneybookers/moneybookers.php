@@ -2,16 +2,13 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xt:Commerce - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
-   --------------------------------------------------------------
-   based on:
-   (c) 2006 XT-Commerce
+   Copyright (c) 2009 xt:Commerce GmbH
 
    Released under the GNU General Public License
-   --------------------------------------------------------------*/
+   ---------------------------------------------------------------------------------------*/
 
  class moneybookers_callback {
 

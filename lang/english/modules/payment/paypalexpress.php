@@ -2,22 +2,22 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(paypal.php,v 1.7 2002/04/17); www.oscommerce.com
-   (c) 2003 nextcommerce (paypal.php,v 1.4 2003/08/13); www.nextcommerce.org
+   (c) 2003	 nextcommerce (paypal.php,v 1.4 2003/08/13); www.nextcommerce.org
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 define('MODULE_PAYMENT_PAYPALEXPRESS_TEXT_TITLE', 'PayPal Express Purchase (cart)');
 define('MODULE_PAYMENT_PAYPALEXPRESS_TEXT_DESCRIPTION', 'PayPal Express Purchase');
-define('MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration! (Adv. Configuration -> modified Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125').'">PayPal</a>)!');
+define('MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION', '<strong><font color="red">ATTENTION:</font></strong> Please setup PayPal configuration! (Adv. Configuration -> xtcModified Partner -> <a href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125').'">PayPal</a>)!');
 define('MODULE_PAYMENT_PAYPALEXPRESS_TEXT_INFO', '');
 define('MODULE_PAYMENT_PAYPALEXPRESS_STATUS_TITLE', 'Activate PayPal-Express module');
 define('MODULE_PAYMENT_PAYPALEXPRESS_STATUS_DESC', 'Do you want to accept PayPal Express payments?');

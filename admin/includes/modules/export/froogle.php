@@ -1,19 +1,19 @@
 <?php
-/* --------------------------------------------------------------
-   $Id$
-
-   modified - community made shopping
-   http://www.modified-shop.org
-
-   Copyright (c) 2009 - 2012 modified
-   --------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(cod.php,v 1.28 2003/02/14); www.oscommerce.com
-   (c) 2003 nextcommerce (invoice.php,v 1.6 2003/08/24); www.nextcommerce.org
-
-   Released under the GNU General Public License
-   --------------------------------------------------------------*/
+/* -----------------------------------------------------------------------------------------
+	$Id$
+	
+	XT-Commerce - community made shopping
+	http://www.xt-commerce.com
+	
+	Copyright (c) 2009 - 2012 xtcModified
+	-----------------------------------------------------------------------------------------
+	based on:
+	(c) 2000-2001 The Exchange Project (earlier name of osCommerce)
+	(c) 2002-2003 osCommerce(cod.php,v 1.28 2003/02/14); www.oscommerce.com
+	(c) 2003 nextcommerce (invoice.php,v 1.6 2003/08/24); www.nextcommerce.org
+	
+	Released under the GNU General Public License
+	---------------------------------------------------------------------------------------*/
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 define('MODULE_FROOGLE_TEXT_DESCRIPTION', 'Export - Froogle.de (Tab getrennt)');

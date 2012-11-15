@@ -2,13 +2,13 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 modified
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
-   (c) 2003 nextcommerce (write_customers_status.php,v 1.8 2003/08/1); www.nextcommerce.org
+   (c) 2003	 nextcommerce (write_customers_status.php,v 1.8 2003/08/1); www.nextcommerce.org
    
    Released under the GNU General Public License
    --------------------------------------------------------------------------------------- 
