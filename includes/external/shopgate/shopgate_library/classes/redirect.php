@@ -10,10 +10,10 @@
  * @author Shopgate GmbH, 35510 Butzbach, DE
  *
  */
-class ShopgateMobileRedirect extends ShopgateObject {
+interface ShopgateMobileRedirectInterface {
 	const SHOPGATE_STATIC = 'http://static.shopgate.com';
 	const SHOPGATE_STATIC_SSL = 'https://static-ssl.shopgate.com';
-
+	
 	/**
 	 * @var string the URL that is appended to the end of a shop alias (aka subdomain) if the shop is live
 	 */
@@ -40,6 +40,148 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	const DEFAULT_CACHE_TIME = 24;
 	
 	/**
+	 * Sets the description to be displayed to the left of the button.
+	 *
+	 * @param string $description
+	 */
+	public function setButtonDescription($description);
+	
+	/**
+	 * Sets the alias of the Shopgate shop
+	 *
+	 * @param string $alias
+	 */
+	public function setAlias($alias);
+	
+	/**
+	 * Sets the cname of the shop
+	 */
+	public function setCustomMobileUrl($cname);
+	
+	/**
+	 * Enables updating of the keywords that identify mobile devices from Shopgate Merchant API.
+	 *
+	 * @param int $cacheTime Time the keywords are cached in hours. Will be set to at least ShopgateMobileRedirectInterface::MIN_CACHE_TIME.
+	 */
+	public function enableKeywordUpdate($cacheTime = ShopgateMobileRedirectInterface::DEFAULT_CACHE_TIME);
+	
+	/**
+	 * Disables updating of the keywords that identify mobile devices from Shopgate Merchant API.
+	 */
+	public function disableKeywordUpdate();
+	
+	/**
+	 * Appends a new keyword to the redirect keywords list.
+	 *
+	 * @param string $keyword The redirect keyword to append.
+	 */
+	public function addRedirectKeyword($keyword);
+	
+	/**
+	 * Removes a keyword or an array of redirect keywords from the keywords list.
+	 *
+	 * @param string|string[] $keyword The redirect keyword or keywords to remove.
+	 */
+	public function removeRedirectKeyword($keyword);
+	
+	/**
+	 * Replaces the current list of redirect keywords with a given list.
+	 *
+	 * @param string[] $redirectKeywords The new list of redirect keywords.
+	 */
+	public function setRedirectKeywords(array $redirectKeywords);
+	
+	/**
+	 * Replaces the current list of skiüp redirect keywords with a given list.
+	 *
+	 * @param string[] $skipRedirectKeywords The new list of skip redirect keywords.
+	 */
+	public function setSkipRedirectKeywords(array $skipRedirectKeywords);
+	
+	/**
+	 * Switches to secure connection instead of checking server-side.
+	 *
+	 * This will cause slower download of nonsensitive material (the mobile header button images) from Shopgate.
+	 * Activate only if the secure connection is determined incorrectly (e.g. because of third-party components).
+	 */
+	public function setAlwaysUseSSL();
+	
+	/**
+	 * Detects by redirect keywords (and skip redirect keywords) if a request was sent by a mobile device.
+	 *
+	 * @return bool true if a mobile device could be detected, false otherwise.
+	 */
+	public function isMobileRequest();
+	
+	/**
+	 * Detects whether the customer wants to be redirected.
+	 *
+	 * @return bool true if the customer wants to be redirected, false otherwise.
+	 */
+	public function isRedirectAllowed();
+	
+	/**
+	 * Redirects to a given (valid) URL.
+	 *
+	 * If the $url parameter is no valid URL the method will simply return false and do nothing else.
+	 * Otherwise it will output the necessary redirection headers and stop script execution.
+	 *
+	 * @param string $url the URL to redirect to
+	 * @param bool $setCookie true to set the redirection cookie and activate redirection
+	 * @return false if the passed $url parameter is no valid URL
+	 */
+	public function redirect($url);
+	
+	/**
+	 * Returns the javascript and HTML for the mobile redirect button
+	 *
+	 * @return string
+	 */
+	public function getMobileHeader();
+
+	/**
+	 * Create a mobile-shop-url to the startmenu
+	 */
+	public function getShopUrl();
+
+	/**
+	 * Create a mobile-product-url to a item
+	 *
+	 * @param string $itemNumber
+	 */
+	public function getItemUrl($itemNumber);
+
+	/**
+	 * Create a mobile-category-url to a category
+	 *
+	 * @param string $categoryNumber
+	 */
+	public function getCategoryUrl($categoryNumber);
+
+	/**
+	 * Create a mobile-cms-url to a cms-page
+	 *
+	 * @param string $key
+	 */
+	public function getCmsUrl($key);
+
+	/**
+	 * Create a mobile-brand-url to a page with results for a specific manufacturer
+	 *
+	 * @param string $manufacturer
+	 */
+	public function getBrandUrl($manufacturerName);
+
+	/**
+	 * Create a mobile-search-url to a page with search results
+	 *
+	 * @param string $searchString
+	 */
+	public function getSearchUrl($searchString);
+}
+
+class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRedirectInterface {
+	/**
 	 * @var string alias name of shop at Shopgate, e.g. 'yourshop' to redirect to 'https://yourshop.shopgate.com'
 	 */
 	protected $alias = '';
@@ -48,6 +190,16 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	 * @var string your shops cname entry to redirect to
 	 */
 	protected $cname = '';
+	
+	/**
+	 * @var ShopgateMerchantApiInterface
+	 */
+	protected $merchantApi;
+	
+	/**
+	 * @var string The server type (live | pg | custom) to use for redirection.
+	 */
+	protected $serverType;
 
 	/**
 	 * @var string[] list of strings that cause redirection if they occur in the client's user agent
@@ -109,12 +261,23 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	 */
 	protected $buttonDescription;
 
-	public function initLibrary() {
+	/**
+	 * Instantiates the Shopgate mobile redirector.
+	 *
+	 * @param string $cacheFileWhitelist The path to the cache file where redirect keywords are saved.
+	 * @param string $cacheFileBlacklist The path to the cache file where skip redirect keywords are.
+	 * @param string $serverType The server type (live | pg | custom) to use redirection.
+	 * @param ShopgateMerchantApiInterface $merchantApi An instance of the ShopgateMerchantApi required for keyword updates or null.
+	 */
+	public function __construct($cacheFileWhitelist, $cacheFileBlacklist, $serverType, ShopgateMerchantApiInterface &$merchantApi = null) {
+		$this->merchantApi = $merchantApi;
+		$this->serverType = $serverType;
+		
 		$this->updateRedirectKeywords = false;
-		$this->redirectKeywordCacheTime = self::DEFAULT_CACHE_TIME;
-		$this->cacheFileWhitelist = ShopgateConfig::getRedirectKeywordsFilePath();
-		$this->cacheFileBlacklist = ShopgateConfig::getSkipRedirectKeywordsFilePath();
-
+		$this->redirectKeywordCacheTime = ShopgateMobileRedirectInterface::DEFAULT_CACHE_TIME;
+		$this->cacheFileWhitelist = $cacheFileWhitelist;
+		$this->cacheFileBlacklist = $cacheFileBlacklist;
+		
 		$this->useSecureConnection = isset($_SERVER["HTTPS"]) && ($_SERVER["HTTPS"] === "on" || $_SERVER["HTTPS"] == "1");
 
 		// mobile header options
@@ -128,55 +291,29 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	# general settings #
 	####################
 
-
-	/**
-	 * Sets the description to be displayed to the left of the button.
-	 *
-	 * @param string $description
-	 */
 	public function setButtonDescription($description) {
 		if (!empty($description)) $this->buttonDescription = $description;
 	}
 
-	/**
-	 * Sets the alias of the Shopgate shop
-	 *
-	 * @param string $alias
-	 */
 	public function setAlias($alias){
 		$this->alias = $alias;
 	}
 
-	/**
-	 * Sets the cname of the shop
-	 */
 	public function setCustomMobileUrl($cname){
 		$this->cname = $cname;
 	}
+	
+	
 
-	/**
-	 * Enables updating of the keywords that identify mobile devices from Shopgate Merchant API.
-	 *
-	 * @param int $cacheTime Time the keywords are cached in hours. Will be set to at least self::MIN_CACHE_TIME.
-	 */
-	public function enableKeywordUpdate($cacheTime = self::DEFAULT_CACHE_TIME) {
+	public function enableKeywordUpdate($cacheTime = ShopgateMobileRedirectInterface::DEFAULT_CACHE_TIME) {
 		$this->updateRedirectKeywords = true;
-		$this->redirectKeywordCacheTime = ($cacheTime >= self::MIN_CACHE_TIME) ? $cacheTime : self::MIN_CACHE_TIME;
-		$this->updateRedirectKeywords();
+		$this->redirectKeywordCacheTime = ($cacheTime >= ShopgateMobileRedirectInterface::MIN_CACHE_TIME) ? $cacheTime : ShopgateMobileRedirectInterface::MIN_CACHE_TIME;
 	}
 
-	/**
-	 * Disables updating of the keywords that identify mobile devices from Shopgate Merchant API.
-	 */
 	public function disableKeywordUpdate() {
 		$this->updateRedirectKeywords = false;
 	}
 
-	/**
-	 * Appends a new keyword to the redirect keywords list.
-	 *
-	 * @param string $keyword The redirect keyword to append.
-	 */
 	public function addRedirectKeyword($keyword){
 		if(is_array($keyword)){
 			$this->redirectKeywords = array_merge($this->redirectKeywords, $keyword);
@@ -185,11 +322,6 @@ class ShopgateMobileRedirect extends ShopgateObject {
 		}
 	}
 
-	/**
-	 * Removes a keyword or an array of redirect keywords from the keywords list.
-	 *
-	 * @param string|string[] $keyword The redirect keyword or keywords to remove.
-	 */
 	public function removeRedirectKeyword($keyword){
 		if(is_array($keyword)){
 			foreach($keyword as $word){
@@ -208,40 +340,22 @@ class ShopgateMobileRedirect extends ShopgateObject {
 		}
 	}
 
-	/**
-	 * Replaces the current list of redirect keywords with a given list.
-	 *
-	 * @param string[] $redirectKeywords The new list of redirect keywords.
-	 */
 	public function setRedirectKeywords(array $redirectKeywords){
 		$this->redirectKeywords = $redirectKeywords;
 	}
 
-	/**
-	 * Replaces the current list of skiüp redirect keywords with a given list.
-	 *
-	 * @param string[] $skipRedirectKeywords The new list of skip redirect keywords.
-	 */
 	public function setSkipRedirectKeywords(array $skipRedirectKeywords){
 		$this->skipRedirectKeywords = $skipRedirectKeywords;
 	}
 
-	/**
-	 * Switches to secure connection instead of checking server-side.
-	 *
-	 * This will cause slower download of nonsensitive material (the mobile header button images) from Shopgate.
-	 * Activate only if the secure connection is determined incorrectly (e.g. because of third-party components).
-	 */
 	public function setAlwaysUseSSL() {
 		$this->useSecureConnection = true;
 	}
 
-	/**
-	 * Detects by redirect keywords (and skip redirect keywords) if a request was sent by a mobile device.
-	 *
-	 * @return bool true if a mobile device could be detected, false otherwise.
-	 */
-	public function isMobileRequest(){
+	public function isMobileRequest() {
+		// try loading keywords
+		$this->updateRedirectKeywords();
+		
 		// find user agent
 		$userAgent = '';
 		if(!empty($_SERVER['HTTP_USER_AGENT'])){
@@ -256,32 +370,17 @@ class ShopgateMobileRedirect extends ShopgateObject {
 			(!empty($this->skipRedirectKeywords) ? !preg_match('/'.implode('|', $this->skipRedirectKeywords).'/', $userAgent) : true);
 	}
 
-	/**
-	 * Detects whether the customer wants to be redirected.
-	 *
-	 * @return bool true if the customer wants to be redirected, false otherwise.
-	 */
 	public function isRedirectAllowed() {
 		// if GET parameter is set create cookie and do not redirect
 		if (!empty($_GET['shopgate_redirect'])) {
-			setcookie(self::COOKIE_NAME, 1, time() + 604800, '/'); // expires after 7 days
+			setcookie(ShopgateMobileRedirectInterface::COOKIE_NAME, 1, time() + 604800, '/'); // expires after 7 days
 			return false;
 		}
 
 
-		return empty($_COOKIE[self::COOKIE_NAME]) ? true : false;
+		return empty($_COOKIE[ShopgateMobileRedirectInterface::COOKIE_NAME]) ? true : false;
 	}
 
-	/**
-	 * Redirects to a given (valid) URL.
-	 *
-	 * If the $url parameter is no valid URL the method will simply return false and do nothing else.
-	 * Otherwise it will output the necessary redirection headers and stop script execution.
-	 *
-	 * @param string $url the URL to redirect to
-	 * @param bool $setCookie true to set the redirection cookie and activate redirection
-	 * @return false if the passed $url parameter is no valid URL
-	 */
 	public function redirect($url) {
 		// validate url
 		if (!preg_match('#^(http|https)\://#', $url)) {
@@ -293,11 +392,6 @@ class ShopgateMobileRedirect extends ShopgateObject {
 		exit;
 	}
 
-	/**
-	 * Returns the javascript and HTML for the mobile redirect button
-	 *
-	 * @return string
-	 */
 	public function getMobileHeader() {
 		if (!file_exists($this->mobileHeaderTemplatePath)) {
 			return '';
@@ -309,9 +403,9 @@ class ShopgateMobileRedirect extends ShopgateObject {
 		}
 
 		// set parameters
-		$this->buttonOnImageSource = (($this->useSecureConnection) ? self::SHOPGATE_STATIC_SSL : self::SHOPGATE_STATIC).'/api/mobile_header/button_on.png';
-		$this->buttonOffImageSource = (($this->useSecureConnection) ? self::SHOPGATE_STATIC_SSL : self::SHOPGATE_STATIC).'/api/mobile_header/button_off.png';
-		$html = str_replace('{$cookieName}', self::COOKIE_NAME, $html);
+		$this->buttonOnImageSource = (($this->useSecureConnection) ? ShopgateMobileRedirectInterface::SHOPGATE_STATIC_SSL : ShopgateMobileRedirectInterface::SHOPGATE_STATIC).'/api/mobile_header/button_on.png';
+		$this->buttonOffImageSource = (($this->useSecureConnection) ? ShopgateMobileRedirectInterface::SHOPGATE_STATIC_SSL : ShopgateMobileRedirectInterface::SHOPGATE_STATIC).'/api/mobile_header/button_off.png';
+		$html = str_replace('{$cookieName}', ShopgateMobileRedirectInterface::COOKIE_NAME, $html);
 		$html = str_replace('{$buttonOnImageSource}',  $this->buttonOnImageSource,  $html);
 		$html = str_replace('{$buttonOffImageSource}', $this->buttonOffImageSource, $html);
 		$html = str_replace('{$buttonDescription}', $this->buttonDescription, $html);
@@ -327,7 +421,7 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	/**
 	 * Generates the root mobile Url for the redirect
 	 */
-	private function _getMobileUrl(){
+	protected function getMobileUrl(){
 		if(!empty($this->cname)){
 			return $this->cname;
 		} elseif(!empty($this->alias)){
@@ -343,13 +437,11 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	 *
 	 * @return string The URL that can be appended to the alias, e.g. ".shopgate.com"
 	 */
-	private function getShopgateUrl() {
-		$serverType = ShopgateConfig::getConfigField('server');
-
-		switch ($serverType) {
+	protected function getShopgateUrl() {
+		switch ($this->serverType) {
 			default: // fall through to "live"
-			case 'live':	return self::SHOPGATE_LIVE_ALIAS;
-			case 'pg':		return self::SHOPGATE_PG_ALIAS;
+			case 'live':	return ShopgateMobileRedirectInterface::SHOPGATE_LIVE_ALIAS;
+			case 'pg':		return ShopgateMobileRedirectInterface::SHOPGATE_PG_ALIAS;
 			case 'custom':	return '.localdev.cc/php/shopgate/index.php'; // for Shopgate development & testing
 		}
 	}
@@ -368,9 +460,12 @@ class ShopgateMobileRedirect extends ShopgateObject {
 		}
 		
 		// conditions for updating keywords
-		$updateDesired = $this->updateRedirectKeywords && (
-			(time() - ($redirectKeywordsFromFile['timestamp'] + ($this->redirectKeywordCacheTime * 3600)) > 0) ||
-			(time() - ($skipRedirectKeywordsFromFile['timestamp'] + ($this->redirectKeywordCacheTime * 3600)) > 0)
+		$updateDesired = (
+			$this->updateRedirectKeywords &&
+			(!empty($this->merchantApi)) && (
+				(time() - ($redirectKeywordsFromFile['timestamp'] + ($this->redirectKeywordCacheTime * 3600)) > 0) ||
+				(time() - ($skipRedirectKeywordsFromFile['timestamp'] + ($this->redirectKeywordCacheTime * 3600)) > 0)
+			)
 		);
 		
 		// strip timestamp, it's not needed anymore
@@ -381,7 +476,7 @@ class ShopgateMobileRedirect extends ShopgateObject {
 		if ($updateDesired) {
 			try {
 				// fetch keywords from Shopgate Merchant API
-				$keywordsFromApi = ShopgateMerchantApi::getInstance()->getMobileRedirectKeywords();
+				$keywordsFromApi = $this->merchantApi->getMobileRedirectKeywords();
 				$redirectKeywords = $keywordsFromApi['keywords'];
 				$skipRedirectKeywords = $keywordsFromApi['skipKeywords'];
 				
@@ -415,7 +510,7 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	 * @param string $file The file to read the keywords from.
 	 * @return array<'timestamp' => int, 'keywords' => string[])
 	 * 			An array with the 'timestamp' of the last update and the list of 'keywords'.
-	 * @throws ShopgateLibraryException when the file cannot be opened.
+	 * @throws ShopgateLibraryException in case the file cannot be opened.
 	 */
 	protected function loadKeywordsFromFile($file) {
 		$defaultReturn = array(
@@ -443,56 +538,27 @@ class ShopgateMobileRedirect extends ShopgateObject {
 	### mobile url generation ###
 	#############################
 
-	/**
-	 * Create a mobile-shop-url to the startmenu
-	 */
 	public function getShopUrl(){
-		return $this->_getMobileUrl();
+		return $this->getMobileUrl();
 	}
 
-	/**
-	 * Create a mobile-product-url to a item
-	 *
-	 * @param string $itemNumber
-	 */
 	public function getItemUrl($itemNumber){
-		return $this->_getMobileUrl().'/item/'.bin2hex($itemNumber);
+		return $this->getMobileUrl().'/item/'.bin2hex($itemNumber);
 	}
 
-	/**
-	 * Create a mobile-category-url to a category
-	 *
-	 * @param string $categoryNumber
-	 */
 	public function getCategoryUrl($categoryNumber){
-		return $this->_getMobileUrl().'/category/'.bin2hex($categoryNumber);
+		return $this->getMobileUrl().'/category/'.bin2hex($categoryNumber);
 	}
 
-	/**
-	 * Create a mobile-cms-url to a cms-page
-	 *
-	 * @param string $key
-	 */
 	public function getCmsUrl($key){
-		return $this->_getMobileUrl().'/cms/'.$key;
+		return $this->getMobileUrl().'/cms/'.$key;
 	}
 
-	/**
-	 * Create a mobile-brand-url to a page with results for a specific manufacturer
-	 *
-	 * @param string $manufacturer
-	 */
 	public function getBrandUrl($manufacturerName){
-		return $this->_getMobileUrl().'/brand/?q='.urlencode($manufacturerName);
+		return $this->getMobileUrl().'/brand/?q='.urlencode($manufacturerName);
 	}
 
-	/**
-	 * Create a mobile-search-url to a page with search results
-	 *
-	 * @param string $searchString
-	 */
 	public function getSearchUrl($searchString){
-		return $this->_getMobileUrl().'/search/?s='.urlencode($searchString);
+		return $this->getMobileUrl().'/search/?s='.urlencode($searchString);
 	}
-
 }

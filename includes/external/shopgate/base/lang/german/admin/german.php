@@ -84,12 +84,14 @@ define('SHOPGATE_CONFIG_EXTENDED_COUNTRY_DESCRIPTION', 'W&auml;hlen Sie das Land
 ### Erweiterte Konfiguration - Bestellstatus-Einstellungen ###
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_SETTINGS', 'Bestellstatus-Einstellungen');
 
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED', 'Zum Versand freigegeben');
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION', 'W&auml;hlen Sie den Status f&uuml;r Bestellungen, die zum Versand freigegeben sind.');
+define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED', 'Versand nicht blockiert');
+define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION',
+		'W&auml;hlen Sie den Status f&uuml;r Bestellungen, deren Versand bei Shopgate nicht blockiert ist.'
+);
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED', 'Versand blockiert');
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED_DESCRIPTION',
-		'W&auml;hlen Sie den Status f&uuml;r Bestellungen, die noch nicht versendet werden d&uuml;rfen.'
+		'W&auml;hlen Sie den Status f&uuml;r Bestellungen, deren Versand bei Shopgate blockiert ist.'
 );
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SENT', 'Versendet');

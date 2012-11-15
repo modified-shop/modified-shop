@@ -28,7 +28,7 @@ define('SHOPGATE_CONFIG_APIKEY_DESCRIPTION', 'You can find the API key at the &q
 define('SHOPGATE_CONFIG_ALIAS', 'Shop alias');
 define('SHOPGATE_CONFIG_ALIAS_DESCRIPTION', 'You can find the alias at the &quot;Integration&quot; section of your shop.');
 
-define('SHOPGATE_CONFIG_CNAME', 'Custom link to your mobile website (mit http(s)://)');
+define('SHOPGATE_CONFIG_CNAME', 'Custom URL to mobile webpage (CNAME) incl. http(s)://');
 define('SHOPGATE_CONFIG_CNAME_DESCRIPTION',
 		'Enter a custom URL (defined by CNAME) for your mobile website. You can find the URL at the &quot;Integration&quot; section of your shop '.
 		'after you activated this option in the &quot;Settings&quot; &equals;&gt; &quot;Mobile website / webapp&quot; section.'
@@ -79,11 +79,11 @@ define('SHOPGATE_CONFIG_EXTENDED_COUNTRY_DESCRIPTION', 'Choose the country for w
 ### Extended Configuration - Orders status settings ###
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_SETTINGS', 'Orders status settings');
 
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED', 'Shipping approved');
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION', 'Choose the status for orders that are approved for shipping.');
+define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED', 'Shipping not blocked');
+define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_APPROVED_DESCRIPTION', 'Choose the status for orders that are not blocked for shipping by Shopgate.');
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED', 'Shipping blocked');
-define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED_DESCRIPTION', 'Choose the status for orders that must not be shipped yet.');
+define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SHIPPING_BLOCKED_DESCRIPTION', 'Choose the status for orders that are blocked for shipping by Shopgate.');
 
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SENT', 'Shipped');
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SENT_DESCRIPTION', 'Choose the status you apply to orders that have been shipped.');
