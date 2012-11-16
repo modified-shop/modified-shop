@@ -2,15 +2,15 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2012 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(account_history_info.php,v 1.97 2003/05/19); www.oscommerce.com
-   (c) 2003   nextcommerce (account_history_info.php,v 1.17 2003/08/17); www.nextcommerce.org
+   (c) 2003 nextcommerce (account_history_info.php,v 1.17 2003/08/17); www.nextcommerce.org
    (c) 2006 XT-Commerce (account_history_info.php 1309 2005-10-17)
 
    Released under the GNU General Public License
@@ -73,32 +73,43 @@ if ($order->info['payment_method'] == 'paypal_ipn' && MODULE_PAYMENT_PAYPAL_IPN_
 }
 //EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 
-$history_block = ''; //DokuMan - 2010-09-18 - set undefined variable
 // Order History
-//BOF - 2009-11-24 - Dokuman - remove/replace unnecessary table
-//$history_block = '<table summary="order history">';
-//EOF - 2009-11-24 - Dokuman - remove/replace unnecessary table
-
-$statuses_query = xtc_db_query("select os.orders_status_name,
+$history_block = ''; //DokuMan - 2010-09-18 - set undefined variable
+$statuses_query = xtc_db_query("-- /account_history_info.php
+                                SELECT os.orders_status_name,
                                        osh.date_added,
                                        osh.comments
-                                from ".TABLE_ORDERS_STATUS." os,
+                                FROM ".TABLE_ORDERS_STATUS." os,
                                      ".TABLE_ORDERS_STATUS_HISTORY." osh
-                                where osh.orders_id = '".(int) $_GET['order_id']."'
-                                and osh.orders_status_id = os.orders_status_id
-                                and os.language_id = '".(int) $_SESSION['languages_id']."'
-                                order by osh.date_added");
+                                WHERE osh.orders_id = '".(int) $_GET['order_id']."'
+                                  AND osh.orders_status_id = os.orders_status_id
+                                  AND os.language_id = '".(int) $_SESSION['languages_id']."'
+                                ORDER BY osh.date_added");
 while ($statuses = xtc_db_fetch_array($statuses_query)) {
-//BOF - 2009-11-24 - Dokuman - remove/replace unnecessary table
-//  $history_block .= '              <tr>'."\n".'                <td style="vertical-align:top;">'.xtc_date_short($statuses['date_added']).'</td>'."\n".'                <td style="vertical-align:top;">'.$statuses['orders_status_name'].'</td>'."\n".'                <td style="vertical-align:top;">'. (empty ($statuses['comments']) ? '&nbsp;' : nl2br(htmlspecialchars($statuses['comments']))).'</td>'."\n".'              </tr>'."\n";
   $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) ? '&nbsp;' : nl2br(htmlspecialchars($statuses['comments']))) .'<br />';
-//EOF - 2009-11-24 - Dokuman - remove/replace unnecessary table
 }
-//BOF - 2009-11-24 - Dokuman - remove/replace unnecessary table
-//$history_block .= '</table>';
-//EOF - 2009-11-24 - Dokuman - remove/replace unnecessary table
-
 $smarty->assign('HISTORY_BLOCK', $history_block);
+
+// BOF - DokuMan - 2012-11-15 - Track & Trace functionality (show tracking numbers in customer account)
+// Order Tracking
+$tracking_block = '';
+$tracking_links_query = xtc_db_query("-- /account_history_info.php
+                                     SELECT ortra.ortra_id,
+                                            ortra.ortra_parcel_id,
+                                            carriers.carrier_name,
+                                            carriers.carrier_tracking_link
+                                       FROM ".TABLE_ORDERS_TRACKING." ortra, 
+                                            ".TABLE_CARRIERS ."
+                                      WHERE ortra_order_id = '".$order->info['order_id']."'
+                                        AND ortra.ortra_carrier_id = carriers.carrier_id");
+if (xtc_db_num_rows($tracking_links_query)) {
+  //$parcel_count = xtc_db_num_rows($tracking_links_query);
+  while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
+    $tracking_block .= $tracking_link['carrier_name'].': <a href="'.str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['ortra_parcel_id'].'</a><br />';
+  }
+}
+$smarty->assign('TRACKING_BLOCK', $tracking_block);
+// EOF - DokuMan - 2012-11-15 - Track & Trace functionality (show tracking numbers in customer account)
 
 // Download-Products
 if (DOWNLOAD_ENABLED == 'true') include (DIR_WS_MODULES.'downloads.php');
