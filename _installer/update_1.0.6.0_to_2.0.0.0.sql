@@ -39,16 +39,18 @@ CREATE TABLE carriers (
   carrier_name varchar(10) NOT NULL,
   carrier_tracking_link varchar(512) NOT NULL,
   carrier_sort_order int(4) NOT NULL,
+  carrier_date_added DATETIME,
+  carrier_last_modified DATETIME,
   PRIMARY KEY (carrier_id)
 ) ENGINE=MyISAM;
 
-INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order) VALUES
-(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', 10),
-(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', 20),
-(3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30),
-(4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40),
-(5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50),
-(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60);
+INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES
+(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', 10, now(), null),
+(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', 20, now(), null),
+(3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30, now(), null),
+(4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40, now(), null),
+(5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50, now(), null),
+(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60, now(), null);
 
 DROP TABLE IF EXISTS orders_tracking;
 CREATE TABLE IF NOT EXISTS orders_tracking (
@@ -59,6 +61,9 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   PRIMARY KEY (ortra_id),
   KEY ortra_order_id (ortra_order_id)
 ) ENGINE=MyISAM;
+
+ALTER TABLE admin_access
+  ADD parcel_carriers INT(1) DEFAULT 1 NOT NULL;
 
 #DokuMan - 2012-11-12 - set new default template, if existing template was named "xtc5"
 UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()

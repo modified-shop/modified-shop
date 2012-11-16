@@ -1171,6 +1171,8 @@ CREATE TABLE carriers (
   carrier_name varchar(10) NOT NULL,
   carrier_tracking_link varchar(512) NOT NULL,
   carrier_sort_order int(4) NOT NULL,
+  carrier_date_added DATETIME,
+  carrier_last_modified DATETIME,
   PRIMARY KEY (carrier_id)
 ) ENGINE=MyISAM;
 
@@ -1204,13 +1206,13 @@ INSERT INTO shipping_status VALUES (3, 1, '2 Weeks', '');
 INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '');
 
 #DokuMan - 2012-08-28 - Track and Trace functionality
-INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order) VALUES
-(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', 10),
-(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', 20),
-(3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30),
-(4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40),
-(5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50),
-(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60);
+INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES
+(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', 10, now(), null),
+(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', 20, now(), null),
+(3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30, now(), null),
+(4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40, now(), null),
+(5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50, now(), null),
+(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60, now(), null);
 
 # data
 INSERT INTO content_manager VALUES (1, 0, 0, '', 1, 'Shipping &amp; Returns', 'Shipping &amp; Returns', 'Put here your Shipping &amp; Returns information.', 0, 1, '', 1, 1, 0, '', '', '');
@@ -1247,8 +1249,8 @@ INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$c
 # EOF - DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 
 # Web28 - 2010-11-13 - add entry for listproducts
-INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1);
+INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1);
 
 # configuration_group_id 1
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_NAME', 'xtcModified', 1, 1, NULL, NOW(), NULL, NULL);

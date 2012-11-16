@@ -92,4 +92,5 @@ define('FILENAME_REMOVEOLDPICS', 'removeoldpics.php');
 define('FILENAME_SHOPGATE', 'shopgate.php');
 /******** SHOPGATE **********/
 define('FILENAME_JANOLAW','janolaw.php');
+define('FILENAME_PARCEL_CARRIERS', 'parcel_carriers.php'); //Dokuman - 2012-11-16 - Track & Trace functionality
 ?>

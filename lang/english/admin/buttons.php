@@ -101,4 +101,5 @@ define('BUTTON_VIEW_PRODUCT','View Product');
 define('BUTTON_BILL', 'New invoice number');   
 //EOF - hendrik - 2011-05-14 - independent invoice number and date  
 
+define('BUTTON_NEW_CARRIER', 'New carrier'); //Dokuman - 2012-11-16 - Track & Trace functionality
 ?>

@@ -97,4 +97,5 @@ define('BUTTON_VIEW_PRODUCT','Produktansicht');
 define('BUTTON_BILL', 'Neue Rechnungsnummer vergeben');   
 //EOF - hendrik - 2011-05-14 - independent invoice number and date  
 
+define('BUTTON_NEW_CARRIER', 'Neuer Paketdienstleister'); //Dokuman - 2012-11-16 - Track & Trace functionality
 ?>
