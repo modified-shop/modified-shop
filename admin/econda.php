@@ -36,7 +36,7 @@
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_EXTERN; ?>econda/style.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_EXTERNAL; ?>econda/style.css" />
 </head>
 <body>
     <!-- header //-->
@@ -60,7 +60,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <td style="border: 0px solid; border-color: #ffffff;">
                 <!--// BOF - GTB - 2011-02-01 - move Econda to External
                 <p><img src="../includes/econda/econda.jpg" width="688" height="150"></p> -->
-                <p><img src="<?php echo DIR_WS_EXTERN; ?>econda/econda.jpg" width="688" height="150"></p>
+                <p><img src="<?php echo DIR_WS_EXTERNAL; ?>econda/econda.jpg" width="688" height="150"></p>
                 <!--// EOF - GTB - 2011-02-01 - move Econda to External -->    
                 <p>&nbsp;</p>
                 <table border="0" cellspacing="0" cellpadding="0" class="text_box">
@@ -142,7 +142,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank">
                         <!--// BOF - GTB - 2011-02-01 - move Econda to External
                         <img src="../includes/econda/gfx/exitbereiche.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /> -->
-                        <img src="<?php echo DIR_WS_EXTERN; ?>econda/gfx/exitbereiche.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
+                        <img src="<?php echo DIR_WS_EXTERNAL; ?>econda/gfx/exitbereiche.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
                         <!--// EOF - GTB - 2011-02-01 - move Econda to External -->    
                         </a>
                         <br />
@@ -150,7 +150,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank">
                         <!--// BOF - GTB - 2011-02-01 - move Econda to External
                         <img src="../includes/econda/gfx/diff.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /> -->
-                        <img src="<?php echo DIR_WS_EXTERN; ?>econda/gfx/diff.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
+                        <img src="<?php echo DIR_WS_EXTERNAL; ?>econda/gfx/diff.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
                         <!--// EOF - GTB - 2011-02-01 - move Econda to External -->    
                         </a>
                       </td>
@@ -192,7 +192,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <a href ="http://http://www.econda.de/" target="_blank">
                         <!--// BOF - GTB - 2011-02-01 - move Econda to External
                         <img src="../includes/econda/gfx/searchConversion.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /> -->
-                        <img src="<?php echo DIR_WS_EXTERN; ?>econda/gfx/searchConversion.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
+                        <img src="<?php echo DIR_WS_EXTERNAL; ?>econda/gfx/searchConversion.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
                         <!--// EOF - GTB - 2011-02-01 - move Econda to External -->    
                         </a>
                         <br />
@@ -200,7 +200,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank">
                         <!--// BOF - GTB - 2011-02-01 - move Econda to External
                         <img src="../includes/econda/gfx/srcumsatz.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /> -->
-                        <img src="<?php echo DIR_WS_EXTERN; ?>econda/gfx/srcumsatz.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
+                        <img src="<?php echo DIR_WS_EXTERNAL; ?>econda/gfx/srcumsatz.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
                         <!--// EOF - GTB - 2011-02-01 - move Econda to External -->    
                         </a>
                       </td>
@@ -240,7 +240,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank">
                         <!--// BOF - GTB - 2011-02-01 - move Econda to External
                         <img src="../includes/econda/gfx/crtl.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /> -->
-                        <img src="<?php echo DIR_WS_EXTERN; ?>econda/gfx/crtl.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
+                        <img src="<?php echo DIR_WS_EXTERNAL; ?>econda/gfx/crtl.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" />
                         <!--// EOF - GTB - 2011-02-01 - move Econda to External -->    
                         </a>
                       </td>
