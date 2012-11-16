@@ -150,15 +150,15 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
 			<th colspan="3">Web-Controlling f&uuml;r Profis </th>
 			</tr>
 			<tr>
-			  <td class="text_box_image"><a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank"><img src="../includes/econda/gfx/exitbereiche.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>
+			  <td class="text_box_image"><a href ="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank"><img src="../includes/econda/gfx/exitbereiche.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>
                   <br />
                   <br />				
-                <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank"><img src="../includes/econda/gfx/diff.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>			  </td>
+                <a href ="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank"><img src="../includes/econda/gfx/diff.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>			  </td>
 				<td class="text_box_text">
-				    <p><strong>ECONDA</strong> ist exklusiver Web-Controlling Partner von xt:Commerce. 
+				    <p><strong>ECONDA</strong>
                       <br />
                       <br />
-                      ECONDA Shop Monitor liefert Ihnen ab 29,90 Euro im Monat mehr als 120 wertvolle Statistiken zum Controlling Ihres xt:C-Shops, wie u.a:				  </p>
+                      ECONDA Shop Monitor liefert Ihnen ab 49,90 Euro im Monat mehr als 120 wertvolle Statistiken zum Controlling Ihrer modified eCommerce Shopsoftware, wie u.a:				  </p>
 				    <ul>
 						<li>Kaufprozess- und Warenkorbanalysen</li>
 						<li>Alle Informationen zu Ihren Werbekampagnen (Adwords, Preisvergleicher, Affiliates, Banner, etc.), wie:
@@ -184,18 +184,18 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
 <table border="0" cellspacing="0" cellpadding="0" class="text_box">
 		<tbody>
 			<tr>
-			<th colspan="3">Empfehlung von xt:Commerce </th>
+			<th colspan="3">Empfehlung der modified eCommerce Shopsoftware</th>
 			</tr>
 			<tr>
-			  <td class="text_box_image"><a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank"><img src="../includes/econda/gfx/searchConversion.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>
+			  <td class="text_box_image"><a href ="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank"><img src="../includes/econda/gfx/searchConversion.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>
                   <br />
                   <br />	
 				
-                <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank"><img src="../includes/econda/gfx/srcumsatz.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>			  </td>
+                <a href ="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank"><img src="../includes/econda/gfx/srcumsatz.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>			  </td>
 				<td class="text_box_text">
 				    <p><strong>ECONDA</strong> Shop Monitor kann durch die Eingabe Ihres pers&ouml;nlichen Aktivierungscodes, den Sie von ECONDA erhalten, gestartet werden. Der Aufwand zur Aktivierung von ECONDA ist damit gleich null. </p>
-				    <p>Da die Integration in xt:Commerce optimal vorbereitet ist, <strong>sparen Sie bei ECONDA die Einrichtungsgeb&uuml;hr</strong>.</p>
-				    xt:Commerce empfiehlt den ECONDA Shop Monitor, weil:
+				    <p>Da die Integration in die modified eCommerce Shopsoftware optimal vorbereitet ist, <strong>sparen Sie bei ECONDA die Einrichtungsgeb&uuml;hr</strong>.</p>
+				    Die modified eCommerce Shopsoftware empfiehlt den ECONDA Shop Monitor, weil:
 				    <ul class="text_box_text">
 						<li class="main">er deutlich mehr leistet, als alle frei verf&uuml;gbaren Tools, </li>
 				        <li>er in allen Paketen die volle Funktionalit&auml;t bietet, </li>
@@ -207,8 +207,8 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
 			        <br />
 			        <strong>LINKS: </strong> </p>
 				    <ul>
-                      <li><a href="http://www.econda.de/webstatistiken/loesungen/shop_monitor_release_2006/live_demo/index.html" target="_new"> Online-Demo</a></li>
-                      <li><a href="http://www.econda.de/webstatistiken/loesungen/shop_monitor_release_2006/index.html" target="_new"> Weitere Informationen </a></li>
+                      <li><a href="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_new"> Online-Demo</a></li>
+                      <li><a href="http://www.econda.de/web-analyse/shop-monitor/" target="_new"> Weitere Informationen </a></li>
                       </p>
 				  </ul></td>
 					</ul>
@@ -223,12 +223,12 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
     </tr>
     <tr>
       <td class="text_box_image"><br />
-          <a href ="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank"><img src="../includes/econda/gfx/crtl.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a> </td>
+          <a href ="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank"><img src="../includes/econda/gfx/crtl.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a> </td>
       <td class="text_box_text"><p><strong>Jetzt kostenlos Testen und in 5 Minuten Ihre Statistiken sehen!</strong></p>
         <p>ECONDA bietet Ihnen gerne einen 14-t&auml;gigen, unverbindlichen und kostenlosen Test inkl. eines pers&ouml;nlichen Optimierungsgespr&auml;chs am Ende der Testphase. <br />
           Verwenden Sie bitte das folgende Formular, um einen Testaccount zu bestellen. Sie erhalten dann umgehend Ihren Aktivierungscode und Ihre Log-in Informationen von ECONDA. <br />
           <br />
-          <a href="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_blank">&gt;&gt; Jetzt 14-t&auml;gigen Testzugang f&uuml;r Ihren xt:Commerce Shop anfordern. </a></p>
+          <a href="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank">&gt;&gt; Jetzt 14-t&auml;gigen Testzugang f&uuml;r Ihre modified eCommerce Shopsoftware anfordern. </a></p>
         <ul>
           <p></p>
         </ul></td>
