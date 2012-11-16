@@ -20,7 +20,7 @@ require ('includes/application_top.php');
 
 require (DIR_WS_INCLUDES.'head.php'); 
 ?>
-  <link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_EXTERN; ?>econda/style.css" />
+  <link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_EXTERNAL; ?>econda/style.css" />
 </head>
 <body>
     <!-- header //-->
