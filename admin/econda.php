@@ -162,13 +162,13 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
 				    <ul>
 						<li>Kaufprozess- und Warenkorbanalysen</li>
 						<li>Alle Informationen zu Ihren Werbekampagnen (Adwords, Preisvergleicher, Affiliates, Banner, etc.), wie:
-						  <ul>
-						    <li>Welche Keywords bringen wirklich Umsatz?</li>
-						    <li>Welche Google Partner muss ich ausschlie&szlig;en?</li>
-						    <li>Wie kann ich Streuverluste vermeiden?</li>
-						    <li>Rechnen Preisvergleicher richtig ab?</li>
-						    <li>Welcher Newsletter / welche -meldung liefert wie viel Umsatz?</li>
-					      </ul>
+							<ul>
+								<li>Welche Keywords bringen wirklich Umsatz?</li>
+								<li>Welche Google Partner muss ich ausschlie&szlig;en?</li>
+								<li>Wie kann ich Streuverluste vermeiden?</li>
+								<li>Rechnen Preisvergleicher richtig ab?</li>
+								<li>Welcher Newsletter / welche -meldung liefert wie viel Umsatz?</li>
+							</ul>
 						</li>
 		
 						<li>Kunden und Besucher Live Tracking</li>
@@ -196,13 +196,13 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
 				    <p><strong>ECONDA</strong> Shop Monitor kann durch die Eingabe Ihres pers&ouml;nlichen Aktivierungscodes, den Sie von ECONDA erhalten, gestartet werden. Der Aufwand zur Aktivierung von ECONDA ist damit gleich null. </p>
 				    <p>Da die Integration in die modified eCommerce Shopsoftware optimal vorbereitet ist, <strong>sparen Sie bei ECONDA die Einrichtungsgeb&uuml;hr</strong>.</p>
 				    Die modified eCommerce Shopsoftware empfiehlt den ECONDA Shop Monitor, weil:
-				    <ul class="text_box_text">
-						<li class="main">er deutlich mehr leistet, als alle frei verf&uuml;gbaren Tools, </li>
-				        <li>er in allen Paketen die volle Funktionalit&auml;t bietet, </li>
-			          <li class="main">er keine Begrenzungen von Seiten, Produkten, o.&auml;. aufweist </li>
-			          <li class="main">er datenschutzrechtlich unbedenklich ist und </li>
-			          <li class="main">er f&uuml;r jeden Versandhandelsprofi unverzichtbar ist.</li>
-			      </ul>              
+						<ul class="text_box_text">
+							<li>er deutlich mehr leistet, als alle frei verf&uuml;gbaren Tools, </li>
+							<li>er in allen Paketen die volle Funktionalit&auml;t bietet, </li>
+							<li>er keine Begrenzungen von Seiten, Produkten, o.&auml;. aufweist </li>
+							<li>er datenschutzrechtlich unbedenklich ist und </li>
+							<li>er f&uuml;r jeden Versandhandelsprofi unverzichtbar ist.</li>
+						</ul>              
 			      <p><br />
 			        <br />
 			        <strong>LINKS: </strong> </p>
