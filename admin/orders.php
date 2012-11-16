@@ -255,12 +255,16 @@
                                                   and ortra.ortra_carrier_id = carriers.carrier_id");
           if (xtc_db_num_rows($tracking_links_query)) {
             $parcel_count = xtc_db_num_rows($tracking_links_query);
-            while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
-              $parcel_link .= '<a href="'.str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['ortra_parcel_id'].'</a><br />';
+            while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {              
+              $tracking_link['carrier_tracking_link'] = str_replace('$2',$lang_code,$tracking_link['carrier_tracking_link']);
+              $parcel_link = str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']);
+              $parcel_link_html .= '<a href="'.$parcel_link.'" target="_blank">'.$tracking_link['ortra_parcel_id'].'</a><br />';
+              $parcel_link_txt .= $parcel_link."\n\n";           
             }
           }
           $smarty->assign('PARCEL_COUNT', $parcel_count);
           $smarty->assign('PARCEL_LINK', $parcel_link);
+          $smarty->assign('PARCEL_LINK_TXT', $parcel_link_txt);
           // EOF - DokuMan - 2012-08-28 - Track & Trace functionality
 
           $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/admin/mail/'.$order->info['language'].'/change_order_mail.html');
