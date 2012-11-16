@@ -21,7 +21,7 @@
   define('TRACKING_ECONDA_ACTIVE_TITLE','ECONDA Shop Monitor aktivieren ?');
   define('TRACKING_ECONDA_ACTIVE_DESC','Wenn auf true gesetzt, wird der ECONDA Shop Monitor gestartet.');
   define('TRACKING_ECONDA_ID_TITLE','Aktivierungscode');
-  define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie von ECONDA erhalten.');
+  define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie von ECONDA erhalten.<br />Einen 14-t&auml;gigen, kostenlosen Testzugang k&ouml;nnen Sie <a href="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_new">[HIER]</a> anfordern!');
   if ($_GET['action']) {
     switch ($_GET['action']) {
       case 'save':
