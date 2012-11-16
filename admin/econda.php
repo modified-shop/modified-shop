@@ -155,7 +155,7 @@ define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie 
                   <br />				
                 <a href ="http://www.econda.de/web-analyse/shop-monitor/testen/" target="_blank"><img src="../includes/econda/gfx/diff.png" alt="" width="540" height="360" border ="0" style="width: 132px; height: 88px;" /></a>			  </td>
 				<td class="text_box_text">
-				    <p><strong>ECONDA</strong>
+				    <p><strong>ECONDA</strong> f&uuml;r Ihre modified eCommerce Shopsoftware
                       <br />
                       <br />
                       ECONDA Shop Monitor liefert Ihnen ab 49,90 Euro im Monat mehr als 120 wertvolle Statistiken zum Controlling Ihrer modified eCommerce Shopsoftware, wie u.a:				  </p>
