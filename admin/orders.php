@@ -249,7 +249,8 @@
                                                       ortra.ortra_parcel_id,
                                                       carriers.carrier_name,
                                                       carriers.carrier_tracking_link
-                                                 from ".TABLE_ORDERS_TRACKING." ortra, carriers
+                                                 from ".TABLE_ORDERS_TRACKING." ortra, 
+                                                      ".TABLE_CARRIERS."carriers
                                                 where ortra_order_id = '".xtc_db_input($oID)."'
                                                   and ortra.ortra_carrier_id = carriers.carrier_id");
           if (xtc_db_num_rows($tracking_links_query)) {

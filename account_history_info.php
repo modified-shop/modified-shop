@@ -99,7 +99,7 @@ $tracking_links_query = xtc_db_query("-- /account_history_info.php
                                             carriers.carrier_name,
                                             carriers.carrier_tracking_link
                                        FROM ".TABLE_ORDERS_TRACKING." ortra, 
-                                            ".TABLE_CARRIERS ."
+                                            ".TABLE_CARRIERS ." carriers
                                       WHERE ortra_order_id = '".$order->info['order_id']."'
                                         AND ortra.ortra_carrier_id = carriers.carrier_id");
 if (xtc_db_num_rows($tracking_links_query)) {
