@@ -209,11 +209,11 @@ require (DIR_WS_INCLUDES.'head.php');
                         <p>Da die Integration in die modified eCommerce Shopsoftware optimal vorbereitet ist, <strong>sparen Sie bei ECONDA die Einrichtungsgeb&uuml;hr</strong>.</p>
                         Die modified eCommerce Shopsoftware empfiehlt den ECONDA Shop Monitor, weil:
                         <ul class="text_box_text">
-                          <li class="main">er deutlich mehr leistet, als alle frei verf&uuml;gbaren Tools, </li>
+                          <li>er deutlich mehr leistet, als alle frei verf&uuml;gbaren Tools, </li>
                           <li>er in allen Paketen die volle Funktionalit&auml;t bietet, </li>
-                          <li class="main">er keine Begrenzungen von Seiten, Produkten, o.&auml;. aufweist </li>
-                          <li class="main">er datenschutzrechtlich unbedenklich ist und </li>
-                          <li class="main">er f&uuml;r jeden Versandhandelsprofi unverzichtbar ist.</li>
+                          <li>er keine Begrenzungen von Seiten, Produkten, o.&auml;. aufweist </li>
+                          <li>er datenschutzrechtlich unbedenklich ist und </li>
+                          <li>er f&uuml;r jeden Versandhandelsprofi unverzichtbar ist.</li>
                         </ul>              
                         <p>
                           <br />
