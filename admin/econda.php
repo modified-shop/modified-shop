@@ -10,7 +10,7 @@
    based on: 
    (c) 2000-2001 The Exchange Project 
    (c) 2002-2003 osCommerce coding standards (a typical file) www.oscommerce.com
-   (c) 2003  nextcommerce (start.php,1.5 2004/03/17); www.nextcommerce.org
+   (c) 2003 nextcommerce (start.php,1.5 2004/03/17); www.nextcommerce.org
    (c) 2003 XT-Commerce
    
    Released under the GNU General Public License 
@@ -21,7 +21,7 @@
   define('TRACKING_ECONDA_ACTIVE_TITLE','ECONDA Shop Monitor aktivieren ?');
   define('TRACKING_ECONDA_ACTIVE_DESC','Wenn auf true gesetzt, wird der ECONDA Shop Monitor gestartet.');
   define('TRACKING_ECONDA_ID_TITLE','Aktivierungscode');
-  define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie von ECONDA erhalten.<br />Einen 14-t&auml;gigen, kostenlosen Testzugang k&ouml;nnen Sie <a href="http://www.xt-commerce.com/index.php?option=com_philaform&form_id=3&Itemid=1" target="_new">[HIER]</a> anfordern!');
+  define('TRACKING_ECONDA_ID_DESC','Geben Sie ihren Aktivierungscode ein, den Sie von ECONDA erhalten.');
   if ($_GET['action']) {
     switch ($_GET['action']) {
       case 'save':
