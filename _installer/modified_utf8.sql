@@ -1207,8 +1207,8 @@ INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '');
 
 #DokuMan - 2012-08-28 - Track and Trace functionality
 INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES
-(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', 10, now(), null),
-(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', 20, now(), null),
+(1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', 10, now(), null),
+(2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', 20, now(), null),
 (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30, now(), null),
 (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40, now(), null),
 (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50, now(), null),
