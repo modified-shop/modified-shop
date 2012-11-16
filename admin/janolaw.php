@@ -130,7 +130,7 @@ require('includes/application_top.php');
                       <br />
                       Der AGB Hosting-Service von janolaw wird wahlweise f&uuml;r den Verkauf von klassischer Versandware oder Downloadprodukten angeboten.
                       <br /><br />
-                      <img src="images/janolaw/ehi_120x120.png" align="right" width="100px" height="100px" style="position:relative; left:-400px" />
+                      <img src="images/janolaw/ehi_120x120.png" align="right" width="100px" height="100px" style="position:relative; left:-200px" />
                       <font color="#0099cc">
                       <ul>
                         <li style="list-style-type: circle !important;"><strong>Anwaltlich gepr&uuml;fte Dokumente f&uuml;r Ihren Shop</strong></li>
