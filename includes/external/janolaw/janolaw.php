@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: janolaw.php 2011-11-24 xtcModified $
+   $Id$
 
    xtcModified - community made shopping
    http://www.xtc-modified.org
@@ -16,13 +16,16 @@
 class janolaw {
   var $m_user_id = false;
   var $m_shop_id = false;
-  
+
   var $m_cache_seconds = 7200; // new content reload after 2 hours
-  
-  function janolaw() { 
-    $this->m_user_id = xtc_cleanName(MODULE_JANOLAW_USER_ID);
-    $this->m_shop_id = xtc_cleanName(MODULE_JANOLAW_SHOP_ID);
-    
+
+  function janolaw() {
+    if(defined('MODULE_JANOLAW_USER_ID')) {
+      $this->m_user_id = xtc_cleanName(MODULE_JANOLAW_USER_ID);
+    }
+    if(defined('MODULE_JANOLAW_SHOP_ID')) {
+      $this->m_shop_id = xtc_cleanName(MODULE_JANOLAW_SHOP_ID);
+    }
     if($this->get_status() == true) {
       // phantom call for creating checkout cache-file
       $this->get_page_content('agb', true, true, 'checkout-agb');
@@ -31,7 +34,7 @@ class janolaw {
       $this->get_page_content('widerrufsbelehrung', true, true, 'checkout-widerrufsbelehrung');
     }
   }
-  
+
   function get_status() {
     if(defined('MODULE_JANOLAW_STATUS') == false || MODULE_JANOLAW_STATUS == 'False') {
       // module not found or not activated.
@@ -40,8 +43,8 @@ class janolaw {
     // module installed and active
     return true;
   }
-  
-  
+
+
   /**
    * write the content into files
    * $p_page_name can be agb, datenschutzerklaerung, impressum, wiederrufsbelehrung
@@ -59,7 +62,7 @@ class janolaw {
   function get_page_content($p_page_name, $p_include_mode=true, $p_html_format=true, $p_cache_filename='') {
 
     $c_page_name = xtc_cleanName($p_page_name);
-    
+
     if($p_include_mode) {
       $t_include_mode_suffix = '_include';
     } else {
@@ -71,14 +74,14 @@ class janolaw {
     } else {
       $t_format_suffix = 'txt';
     }
-    
-    
+
+
     if($p_cache_filename != '') {
       $t_cache_file = DIR_FS_CATALOG . 'media/content/'. xtc_cleanName($p_cache_filename) .'.'. $t_format_suffix;
     }
-    
-    $t_create_cache = false;    
-    
+
+    $t_create_cache = false;
+
     if(file_exists($t_cache_file) == false) {
       $t_create_cache = true;
     } elseif(filesize($t_cache_file) < 100) {
@@ -97,7 +100,7 @@ class janolaw {
                       $this->m_shop_id .'/'.
                       $c_page_name.
                       $t_include_mode_suffix.'.'.$t_format_suffix;
-      
+
       $urlcheck = false;
       if(function_exists('curl_init')) {
         $ch = curl_init();
@@ -115,13 +118,13 @@ class janolaw {
 
       if ($urlcheck == true) {
 
-        $t_content = '';          
+        $t_content = '';
 
         // load page from janolaw site
         if(function_exists('file_get_contents')) {
           $t_content .= @file_get_contents($t_source_url);
         }
-      
+
         if(empty($t_content) && function_exists('curl_init')) {
           $ch = curl_init();
           curl_setopt($ch, CURLOPT_URL, $t_source_url);
