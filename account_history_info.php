@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 [www.modified-shop.org]
+   Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -33,7 +33,7 @@ if (!isset ($_SESSION['customer_id'])) { xtc_redirect(xtc_href_link(FILENAME_LOG
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 }
-$customer_info_query = xtc_db_query("select customers_id from ".TABLE_ORDERS." where orders_id = '".(int) $_GET['order_id']."'");
+$customer_info_query = xtc_db_query("select customers_id from ".TABLE_ORDERS." where orders_id = '".(int)$_GET['order_id']."'");
 $customer_info = xtc_db_fetch_array($customer_info_query);
 if ($customer_info['customers_id'] != $_SESSION['customer_id']) { xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL')); }
 
@@ -51,9 +51,9 @@ if ($order->delivery != false) {
   if ($order->info['shipping_method']) { $smarty->assign('SHIPPING_METHOD', $order->info['shipping_method']); }
 }
 
-$order_total = $order->getTotalData((int)$_GET['order_id']);
+$order_total = $order->getTotalData($order->info['order_id']);
 
-$smarty->assign('order_data', $order->getOrderData((int)$_GET['order_id']));
+$smarty->assign('order_data', $order->getOrderData($order->info['order_id']));
 $smarty->assign('order_total', $order_total['data']);
 
 // Payment Method
@@ -64,7 +64,7 @@ if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'n
 
 //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 if ($order->info['payment_method'] == 'paypal_ipn' && MODULE_PAYMENT_PAYPAL_IPN_USE_ACCOUNT == 'True') {
-  $order_id = (int)$_GET['order_id'];
+  $order_id = $order->info['order_id'];
   $paypal_link = array();
   require (DIR_WS_CLASSES.'payment.php');
   $payment_modules = new payment('paypal_ipn');
@@ -81,7 +81,7 @@ $statuses_query = xtc_db_query("-- /account_history_info.php
                                        osh.comments
                                 FROM ".TABLE_ORDERS_STATUS." os,
                                      ".TABLE_ORDERS_STATUS_HISTORY." osh
-                                WHERE osh.orders_id = '".(int) $_GET['order_id']."'
+                                WHERE osh.orders_id = '".$order->info['order_id']."'
                                   AND osh.orders_status_id = os.orders_status_id
                                   AND os.language_id = '".(int) $_SESSION['languages_id']."'
                                 ORDER BY osh.date_added");
@@ -115,7 +115,6 @@ $smarty->assign('TRACKING_BLOCK', $tracking_block);
 if (DOWNLOAD_ENABLED == 'true') include (DIR_WS_MODULES.'downloads.php');
 
 // Stuff
-//$smarty->assign('ORDER_NUMBER', (int)$_GET['order_id']);
 $smarty->assign('ORDER_NUMBER', $order->info['order_id']); //DokuMan - 2011-08-31 - fix order_id assignment
 
 $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
@@ -125,8 +124,8 @@ $smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONS
 $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
 $smarty->assign('BILLING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'));
 //BOF - Tomcraft - 2010-04-03 - unified popups with scrollbars and make them resizable
-//$smarty->assign('BUTTON_PRINT', '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$_GET['order_id']).'\', \'popup\', \'toolbar=0, width=640, height=600\')"><img src="'.'templates/'.CURRENT_TEMPLATE.'/buttons/'.$_SESSION['language'].'/button_print.gif" alt="'.TEXT_PRINT.'" /></a>');
-$smarty->assign('BUTTON_PRINT', '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.(int)$_GET['order_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')"><img src="'.'templates/'.CURRENT_TEMPLATE.'/buttons/'.$_SESSION['language'].'/button_print.gif" alt="'.TEXT_PRINT.'" /></a>');
+//$smarty->assign('BUTTON_PRINT', '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$order->info['order_id']).'\', \'popup\', \'toolbar=0, width=640, height=600\')"><img src="'.'templates/'.CURRENT_TEMPLATE.'/buttons/'.$_SESSION['language'].'/button_print.gif" alt="'.TEXT_PRINT.'" /></a>');
+$smarty->assign('BUTTON_PRINT', '<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_ORDER, 'oID='.$order->info['order_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')"><img src="'.'templates/'.CURRENT_TEMPLATE.'/buttons/'.$_SESSION['language'].'/button_print.gif" alt="'.TEXT_PRINT.'" /></a>');
 //EOF - Tomcraft - 2010-04-03 - unified popups with scrollbars and make them resizable
 
 $from_history = preg_match("/page=/i", xtc_get_all_get_params()); // referer from account_history yes/no // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
