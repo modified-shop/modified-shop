@@ -43,7 +43,7 @@
     $icSysPath = $icCore->getPath();
     require $icSysPath . 'includes/configure.php';
       
-    define('PROJECT_VERSION', 'xt:Commerce v3.0.4 SP2');
+    define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
     $request_type = (getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
   
   if (version_compare(PHP_VERSION, '5.0.0', '>'))
