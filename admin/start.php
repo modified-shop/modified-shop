@@ -17,8 +17,8 @@
    --------------------------------------------------------------*/
 
 
-define('RSS_FEED_TITLE', 'modified eCommerce Shopsystem Support Forum - Ank&uuml;ndigungen / Neuigkeiten');
-define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsystem Support Forum');
+define('RSS_FEED_TITLE', 'modified eCommerce Shopsoftware Support Forum - Ank&uuml;ndigungen / Neuigkeiten');
+define('RSS_FEED_DESCRIPTION', 'Wichtige Informationen f&uuml;r die modified eCommerce Shopsoftware');
 define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
 define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtssprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
 
@@ -340,7 +340,7 @@ h1 {
 	  <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><span style="margin-left: 3px"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_ORDERS; ?> <?php echo TABLE_CAPTION_NEW_ORDERS_COMMENT; ?></strong></font></span></td>
 	  <td width="4%"><p style="margin-left: 3px"></p>
 	  </td>
-	  <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><span style="margin-left: 3px"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank"><b>modified eCommerce Shopsystem - Blog</b></a></font></span></td>
+	  <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><span style="margin-left: 3px"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank"><b>modified eCommerce Shopsoftware - Blog</b></a></font></span></td>
 	</tr>
 	<tr>
 	  <td style="background: #F9F0F1; border: 1px solid #b40076; height: 200px;" valign="top">
