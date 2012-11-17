@@ -127,7 +127,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <dt style="color: #d68000; font-weight: bold;"><?php echo TEXT_HEADING_BASED_ON; ?></dt>
               <dd>
                 <ul style="list-style: none; padding-left: 0px;">
-                  <li><?php echo '&copy;'.date('Y').'&nbsp;'; echo PROJECT_VERSION; ?> | http://www.modified-shop.org/</li>
+                  <li><?php echo '&copy;2009-'.date('Y').'&nbsp;'; echo PROJECT_VERSION; ?> | http://www.modified-shop.org/</li>
                   <li>&copy;2006 xt:Commerce V3.0.4 SP2.1 | http://www.xtcommerce.de/</li>
                   <li>&copy;2003 neXTCommerce</li>
                   <li>&copy;2002-2003 osCommerce (Milestone2) by Harald Ponce de Leon | http://www.oscommerce.com/</li>
