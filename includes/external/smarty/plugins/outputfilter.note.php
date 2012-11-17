@@ -22,7 +22,7 @@
 function smarty_outputfilter_note($tpl_output, &$smarty) {
   global $PHP_SELF;
   
-  $cop='<div class="copyright"><a '.((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'href="http://www.modified-shop.org" target="_blank"':'href="'.xtc_href_link('copyright.php').'"').'><span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></a><span class="cop_gpl">' . '&nbsp;' . '&copy;2009-' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the </span><a class="cop_gpl" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a></div>';
+  $cop='<div class="copyright"><a '.((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'href="http://www.modified-shop.org" target="_blank"':'href="'.xtc_href_link('copyright.php').'"').'><span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></a><span class="cop_gpl">' . '&nbsp;' . '&copy;2009-' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a class="cop_gpl" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a></span></div>';
 
   // making output W3C-Conform: replace ampersands, rest is covered by the modified shopstat_functions.php  
   $tpl_output = preg_replace("/&(?!(amp;|&|#[0-9]+;|[a-z0-9]+;))/i", "&amp;", $tpl_output);
