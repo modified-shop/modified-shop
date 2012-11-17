@@ -72,7 +72,7 @@ Information and contribution at http://www.xt-commerce.com
 Please visit our website: www.modified-shop.org
 =========================================================
 -->
-<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ----- http://www.modified-shop.org" />
+<meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ------ http://www.modified-shop.org" />
 <?php
 //BOF - GTB - 2010-08-03 - Security Fix - Base
 /*<base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />*/
