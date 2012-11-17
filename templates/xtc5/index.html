@@ -66,7 +66,7 @@
       </div>
     {/if}
   </div>
-  <p class="footer">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009 by xtcModified eCommerce Shopsoftware</p>
+  <p class="footer">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></p>
 </div>
 {if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE=='true' and $smarty.session.customers_status.customers_status_id == '0')
 or $smarty.session.customers_status.customers_status_id != '0'}
