@@ -19,7 +19,7 @@
 define('HEADING_TITLE', 'Credits');
 define('HEADING_SUBTITLE', 'Acknowledgements');
 define('TEXT_DB_VERSION','Database version:');
-define('TEXT_HEADING_GPL', 'Released under the GNU General Public License');
+define('TEXT_HEADING_GPL', 'Released under the GNU General Public License (Version 2)');
 
 define('TEXT_INFO_GPL', 'This program is distributed in the hope that it will be useful, but <strong>WITHOUT ANY WARRANTY</strong>;<br />without even the implied warranty of <strong>MERCHANTABILITY</strong> or <strong>FITNESS FOR A PARTICULAR PURPOSE</strong>.<br />See the GNU General Public License for more details.<br /><br /> You should have received a copy of the<br />GNU General Public License along with this program; if not, write to the<br />Free Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br />See <a style="font-size: 12px; text-decoration: underline;" href="http://www.gnu.org/copyleft/gpl.html" target="_blank">http://www.gnu.org/copyleft/gpl.html</a> for details. ');
 
