@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS database_version (
   version VARCHAR(32) NOT NULL
 ) ENGINE=myisam DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
 
-UPDATE database_version SET version = 'xtcM_1.0.0.0';
+UPDATE database_version SET version = 'MOD_1.0.0.0';
  
 UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
 WHERE configuration_key = 'CURRENT_TEMPLATE';

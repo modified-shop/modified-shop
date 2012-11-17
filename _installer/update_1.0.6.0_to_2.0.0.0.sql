@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2012-11-11 - changed database_version
-UPDATE database_version SET version = 'modified_2.0.0.0';
+UPDATE database_version SET version = 'MOD_2.0.0.0';
 
 
 #Hendrik - 2010-08-29 - Xajax Support in Backend

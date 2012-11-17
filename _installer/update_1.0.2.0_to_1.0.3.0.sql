@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2009-09-08 - changed database_version
-UPDATE database_version SET version = 'xtcM_1.0.3.0';
+UPDATE database_version SET version = 'MOD_1.0.3.0';
 
 #Dokuman - 2009-08-20 - Added Bulgaria and Romania to EU Zones (since 01.01.2007)
 UPDATE zones_to_geo_zones SET geo_zone_id= 5 WHERE zone_country_id IN (33,175);

@@ -27,7 +27,7 @@
   preg_match('/^([a-z]+)-?([^,;]*)/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang);
   if ($lang[1] == 'de') {
     // German definitions
-    define ('TITLE_UPGRADE','<br /><strong><h1>xtcModified-Datenbank Upgradevorgang</h1></strong>');
+    define ('TITLE_UPGRADE','<br /><strong><h1>modified eCommerce Shopsoftware Datenbank Upgradevorgang</h1></strong>');
     define ('SUBMIT_VALUE', 'Datenbankoperation durchf&uuml;hren');
     define ('CANCEL', 'Abbrechen');
     define ('SUCCESS_MESSAGE', '<br /><br /><strong>Datenbankoperation erfolgreich!</strong><br /><br />');
@@ -37,21 +37,21 @@
     define ('CURRENT_DB_VERSION', '<br />Ihre derzeitige Datenbank-Version ist: ');
     define ('FINAL_TEXT', 'Bitte l&ouml;schen Sie jetzt aus Sicherheitsgr&uuml;nden die Upgrade-Datei vom Server:<br /> ==> ');
     define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a style="text-decoration:none; color:#555555;" href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a></span>');
-    define('TEXT_TITLE','xtcModified Datenbankupgrade');
+    define('TEXT_TITLE','modified eCommerce Shopsoftware Datenbankupgrade');
     define('OPTIMIZE_TABLE_OPTION','<br />Sie k&ouml;nnen die Datenbank auch folgenderma&szlig;en optimieren:<br />');
     define('ANALYZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/de/analyze-table.html" target="_blank">ANALYZE TABLE</a>): Statistiken &uuml;ber die Schl&uuml;sselverteilung erstellen (empfohlen).');
     define('OPTIMIZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/de/optimize-table.html" target="_blank">OPTIMIZE TABLE</a>): Datenbanktabellen optimieren (empfohlen).');
     define('REFRESH_CUSTOMERS_BASKET','Warenk&ouml;rbe von Kunden l&ouml;schen, die &auml;lter als 1 Monat sind.');
     define('REFRESH_SESSION_DATA','Sessiondaten (Loginzeitpunkte) von Kunden l&ouml;schen, die &auml;lter als 1 Woche sind.');
     define('OPTIMIZE_TABLE_GAIN','Die Optimierung der Datenbank f&uuml;hrte zu einem Speicherplatzgewinn von: ');
-    define('REDIRECTED_FROM_INSTALLER','<strong>Ihre bereits bestehende Version von xtcModified muss gegebenenfalls noch auf das neueste Datenbank-Schema aktualisiert werden!</strong>');
+    define('REDIRECTED_FROM_INSTALLER','<strong>Ihre bereits bestehende Version der modified eCommerce Shopsoftware muss gegebenenfalls noch auf das neueste Datenbank-Schema aktualisiert werden!</strong>');
     define('TABLES_ANALYZED_MESSAGE','<li>Database wurde analysiert.</li>');
     define('TABLES_OPTIMIZED_MESSAGE','<li>Database wurde optimiert.</li>');
     define('CUSTOMERS_BASKETS_REFRESHED_MESSAGE','<li>Alte Warenk&ouml;rbe von Kunden wurden gel&ouml;scht.</li>');
     define('CUSTOMERS_SESSION_DATA_REFRESHED_MESSAGE','<li>Alte Sessiondaten von Kunden wurden gel&ouml;scht.</li>');
   } else {
     // English definitions
-    define ('TITLE_UPGRADE','<br /><strong><h1>xtcModified database upgrade process</h1></strong>');
+    define ('TITLE_UPGRADE','<br /><strong><h1>modified eCommerce Shopsoftware database upgrade process</h1></strong>');
     define ('SUBMIT_VALUE', 'Execute database operation');
     define ('CANCEL', 'Cancel');
     define ('SUCCESS_MESSAGE', '<br /><br /><strong>Database operation successful!</strong><br /><br />');
@@ -60,15 +60,14 @@
     define ('USED_FILES', '<br /><br />The following files will be used for the upgrade to the newest database version:<br /><br />');
     define ('CURRENT_DB_VERSION', '<br />Your current database version is: ');
     define ('FINAL_TEXT', 'Please delete the update file from your server now for security reasons:<br /> ==> ');
-    define('TEXT_FOOTER','<a href="http://www.xtc-modified.org" target="_blank">xtcModified</a>' . '&nbsp;' . '&copy;' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a>');
-    define('TEXT_TITLE','xtcModified database upgrade');
+    define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a style="text-decoration:none; color:#555555;" href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a></span>');
     define('OPTIMIZE_TABLE_OPTION','<br />You can also optimize the database as follows:<br />');
     define('ANALYZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/en/analyze-table.html" target="_blank">ANALYZE TABLE</a>): Create statistical date about the key distribution (recommended).');
     define('OPTIMIZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/en/optimize-table.html" target="_blank">OPTIMIZE TABLE</a>): Optimize database tables (recommended).');
     define('REFRESH_CUSTOMERS_BASKET','Delete customers baskets that are older than one month.');
     define('REFRESH_SESSION_DATA','Delete customers session data (login timestamps) that are older than one week.');
     define('OPTIMIZE_TABLE_GAIN','The optimization of the database saved: ');
-    define('REDIRECTED_FROM_INSTALLER','<strong>Your existing version of xtcModified might have to be upgraded to the newest database schema first!</strong>');
+    define('REDIRECTED_FROM_INSTALLER','<strong>Your existing version of the modified eCommerce Shopsoftware might have to be upgraded to the newest database schema first!</strong>');
     define('TABLES_ANALYZED_MESSAGE','<li>Database was analyzed.</li>');
     define('TABLES_OPTIMIZED_MESSAGE','<li>Database was optimized.</li>');
     define('CUSTOMERS_BASKETS_REFRESHED_MESSAGE','<li>Old customers baskets were deleted.</li>');
@@ -79,7 +78,7 @@
   xtc_db_connect() or die('Unable to connect to database server!');
   $version_query = xtc_db_query("SELECT version FROM " . TABLE_DATABASE_VERSION);
   $version_array = xtc_db_fetch_array($version_query);
-  $db_version = substr($version_array['version'], 5, 7); //return version, e.g. '1.0.5.0' when 'xtcM_1.0.5.0'
+  $db_version = substr($version_array['version'], 5, 7); //return version, e.g. '1.0.5.0' when 'MOD_1.0.5.0'
   $db_version_update = 'update_' . $db_version;
   $initialDBSize = get_db_size();
 

@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2010-02-03 - changed database_version
-UPDATE database_version SET version = 'xtcM_1.0.5.0';
+UPDATE database_version SET version = 'MOD_1.0.5.0';
 
 # BOF - Tomcraft - 2010-07-02 - Bugfix on r763 (Update Countries (delete Yugoslavia, add Serbia and Monetegro))
 TRUNCATE TABLE countries;
