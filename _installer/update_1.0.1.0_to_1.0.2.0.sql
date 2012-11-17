@@ -10,4 +10,4 @@ ALTER TABLE `content_manager` ADD FULLTEXT (
 );
 
 #Tomcraft - 2009-09-09 - changed database_version
-UPDATE database_version SET version = 'xtcM_1.0.2.0'
+UPDATE database_version SET version = 'MOD_1.0.2.0'

@@ -1,5 +1,5 @@
 #Tomcraft - 2010-02-03 - changed database_version
-UPDATE database_version SET version = 'xtcM_1.0.4.0';
+UPDATE database_version SET version = 'MOD_1.0.4.0';
 
 #vr - 2010-02-02 - Revised English Counties, thx to Chris
 delete from zones where zone_country_id = '222';
