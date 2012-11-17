@@ -16,8 +16,8 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-define('RSS_FEED_TITLE', 'modified eCommerce Shopsystem Support Forum - Ank&uuml;ndigungen / Neuigkeiten');
-define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsystem Support Forum');
+define('RSS_FEED_TITLE', 'modified eCommerce Shopsoftware Support Forum - Ank&uuml;ndigungen / Neuigkeiten');
+define('RSS_FEED_DESCRIPTION', 'Wichtige Informationen f&uuml;r die modified eCommerce Shopsoftware');
 define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
 define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtssprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
 
@@ -260,7 +260,7 @@ require (DIR_WS_INCLUDES.'head.php');
                               <tr>
                                 <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_USERS_ONLINE; ?></strong></td>
                                 <td width="4%"><p style="margin-left: 3px"></p></td>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank">modified eCommerce Shopsystem - Blog</a></font></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank">modified eCommerce Shopsoftware - Blog</a></font></td>
                               </tr>
                               <tr>
                                 <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;<em><font face="Verdana" color="#7691A2"><?php echo TABLE_CAPTION_USERS_ONLINE_HINT; ?></font></em>
