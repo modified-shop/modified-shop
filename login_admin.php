@@ -155,14 +155,14 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
           die('Report: Die Session-Einstellungen wurden auf die Standardwerte zur&uuml;ckgesetzt.');
           break;
 
-        // set template to modified default template
+        // set template to default template
         case 'default_template':
           xtc_db_query('
             UPDATE configuration
             SET    configuration_value = "tpl_modified"
             WHERE  configuration_key = "CURRENT_TEMPLATE"
           ');
-          die('Report: CURRENT_TEMPLATE wurde auf das modified Standardtemplate zur&uuml;ckgesetzt.');
+          die('Report: CURRENT_TEMPLATE wurde auf das Standardtemplate zur&uuml;ckgesetzt.');
           break;
 
         // turn off GZIP compression
