@@ -31,8 +31,8 @@ function xajax_support_test_get_servertime($clienttime) {
     $ret.= "client time: $ctime_text\n";
     $ret.= "\n";
     $ret.= "Technical support:\n";
-    $ret.= "http://www.xtc-modified.org/wiki/\n";
-    $ret.= "http://www.xtc-modified.org/forum/\n";
+    $ret.= "http://www.modified-shop.org/wiki/\n";
+    $ret.= "http://www.modified-shop.org/forum/\n";
   
     $objResponse = new xajaxResponse();
     $objResponse->alert( $ret );
