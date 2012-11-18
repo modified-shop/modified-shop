@@ -143,7 +143,7 @@ $order_totals = $order_total_modules->process();
 $payment_modules->before_process(); // DokuMan - 2011-05-09 - Load the Order Total Modules Before Loading the Payment Modules
 
 // check if tmp order id exists
-if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokuman - 2009-10-11 - Paypal fix for infinite loop see, http://www.xtc-modified.org/forum/topic.php?id=2235
+if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokuman - 2009-10-11 - Paypal fix for infinite loop see, http://www.modified-shop.org/forum/topic.php?id=2235
   $tmp = false;
   $insert_id = $_SESSION['tmp_oID'];
 } else {

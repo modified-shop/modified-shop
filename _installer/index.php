@@ -108,7 +108,7 @@
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td><img src="images/title_index.gif" width="705" height="180" border="0" alt="" /><br />
-              <br /><br /><div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?><br /><br /><a href="http://www.xtc-modified.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0" /></a></div><br /><br />
+              <br /><br /><div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?><br /><br /><a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0" /></a></div><br /><br />
             </td>
           </tr>
             <?php
