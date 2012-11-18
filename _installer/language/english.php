@@ -108,7 +108,7 @@
 
   // install_step1.php
   define('TITLE_CUSTOM_SETTINGS','Custom Settings');
-  define('TEXT_IMPORT_DB','Install modified eCommerce Shopsoftware Database');
+  define('TEXT_IMPORT_DB','Install the modified eCommerce Shopsoftware Database');
   define('TEXT_IMPORT_DB_LONG','Install the modified eCommerce Shopsoftware database structure which includes tables and sample data. <b>(Mandatory on initial setup!</b>');
   define('TEXT_AUTOMATIC','Automatic Configuration');
   define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both modified eCommerce Shopsoftware and Administration Tool configuration files.');
