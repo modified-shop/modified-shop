@@ -108,7 +108,7 @@
       }
       $accepted_file_upload_files_extensions = array("xls","xla","hlp","chm","ppt","ppz","pps","pot","doc","dot","pdf","rtf","swf","cab","tar","zip","au","snd","mp2","rpm","stream","wav","gif","jpeg","jpg","jpe","png","tiff","tif","bmp","csv","txt","rtf","tsv","mpeg","mpg","mpe","qt","mov","avi","movie","rar","7z");
       $accepted_file_upload_files_mime_types = array("application/msexcel","application/mshelp","application/mspowerpoint","application/msword","application/pdf","application/rtf","application/x-shockwave-flash","application/x-tar","application/zip","audio/basic","audio/x-mpeg","audio/x-pn-realaudio-plugin","audio/x-qt-stream","audio/x-wav","image/gif","image/jpeg","image/png","image/tiff","image/bmp","text/comma-separated-values","text/plain","text/rtf","text/tab-separated-values","video/mpeg","video/quicktime","video/x-msvideo","video/x-sgi-movie","application/x-rar-compressed","application/x-7z-compressed");
-      if ($content_file = &xtc_try_upload('file_upload', DIR_FS_CATALOG.'media/content/','',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
+      if ($content_file = &xtc_try_upload('file_upload', DIR_FS_CATALOG.'media/content/','644',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
         $content_file_name=$content_file->filename;
       }
 
@@ -182,7 +182,7 @@
       if ($select_file=='default') {
         $accepted_file_upload_files_extensions = array("xls","xla","hlp","chm","ppt","ppz","pps","pot","doc","dot","pdf","rtf","swf","cab","tar","zip","au","snd","mp2","rpm","stream","wav","gif","jpeg","jpg","jpe","png","tiff","tif","bmp","csv","txt","rtf","tsv","mpeg","mpg","mpe","qt","mov","avi","movie","rar","7z");
         $accepted_file_upload_files_mime_types = array("application/msexcel","application/mshelp","application/mspowerpoint","application/msword","application/pdf","application/rtf","application/x-shockwave-flash","application/x-tar","application/zip","audio/basic","audio/x-mpeg","audio/x-pn-realaudio-plugin","audio/x-qt-stream","audio/x-wav","image/gif","image/jpeg","image/png","image/tiff","image/bmp","text/comma-separated-values","text/plain","text/rtf","text/tab-separated-values","video/mpeg","video/quicktime","video/x-msvideo","video/x-sgi-movie","application/x-rar-compressed","application/x-7z-compressed");
-        if ($content_file = &xtc_try_upload('file_upload', DIR_FS_CATALOG.'media/products/','',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
+        if ($content_file = &xtc_try_upload('file_upload', DIR_FS_CATALOG.'media/products/','644',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
           $content_file_name = $content_file->filename;
           $old_filename = $content_file->filename;
           $timestamp = str_replace('.','',microtime());
