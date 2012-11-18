@@ -144,6 +144,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td width="100" rowspan="2"><img src="https://www.paypal.com/de_DE/DE/i/logo/logo_110x35.gif"></td>
                     <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
                   </tr>
+                  <tr>
+                    <td class="main" valign="top">Tools</td>
+                  </tr>
                   <?php if(!isset($_GET['view'])) { ?>
                     <tr>
                       <td class="main" valign="top"><a class="button" href="<?php echo xtc_href_link(FILENAME_PAYPAL, 'view=search'); ?>"><?php echo BUTTON_SEARCH; ?></a></td>
