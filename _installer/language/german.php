@@ -78,20 +78,20 @@
 
   // index.php
   define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus!');
-  define('TEXT_WELCOME_INDEX','<b>Willkommen zu xtcModified</b><br /><br />xtcModified ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom xtcModified Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />xtcModified ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.0) und MySQL zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />xtcModified ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
+  define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.0) und MySQL zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
   define('TEXT_WELCOME_STEP1','<b>Datenbank- und Webservereinstellungen</b><br /><br />Der Installer ben&ouml;tigt hier einige Informationen bez&uuml;glich Ihrer Datenbank und Ihrer Verzeichnisstruktur.');
-  define('TEXT_WELCOME_STEP2','<b>Datenbank Installation</b><br /><br />Der xtcModified Installer installiert automatisch die xtcModified-Datenbank.');
+  define('TEXT_WELCOME_STEP2','<b>Datenbank Installation</b><br /><br />Der modified eCommerce Shopsoftware Installer installiert automatisch die modified eCommerce Shopsoftware Datenbank.');
   // BOF - web28 - 2010.02.20 - NEW STEP2-4 Handling
-  define('TEXT_WELCOME_STEP2A','<b>Datenbank Installation wurde deaktiviert</b><br /><br />Die Installation der xtcModified-Datenbank in Step3 wird &uuml;bersprungen!.');
+  define('TEXT_WELCOME_STEP2A','<b>Datenbank Installation wurde deaktiviert</b><br /><br />Die Installation der modified eCommerce Shopsoftware Datenbank in Step3 wird &uuml;bersprungen!.');
   // EOF - web28 - 2010.02.20 - NEW STEP2-4 Handling
-  define('TEXT_WELCOME_STEP3','<b>Datenbank Import.</b><br /><br />Die Daten der xtcModified Datenbank werden automatisch in die Datenbank importiert.');
-  define('TEXT_WELCOME_STEP4','<b>Erstellen der xtcModified Konfiguration-Dateien</b><br /><br /><b>Wenn bereits configure Dateien aus einer fr&uuml;heren Installation vorhanden sind, wird xtcModified diese L&ouml;schen.</b><br /><br />Der Installer schreibt automatisch die Konfigurationsdateien f&uuml;r die Dateistruktur und die Datenbankanbindung.<br /><br />Sie k&ouml;nnen zwischen verschiedenen Session-Handling_systemen w&auml;hlen.');
+  define('TEXT_WELCOME_STEP3','<b>Datenbank Import.</b><br /><br />Die Daten der modified eCommerce Shopsoftware Datenbank werden automatisch in die Datenbank importiert.');
+  define('TEXT_WELCOME_STEP4','<b>Erstellen der modified eCommerce Shopsoftware Konfigurations-Dateien</b><br /><br /><b>Wenn bereits configure Dateien aus einer fr&uuml;heren Installation vorhanden sind, wird die modified eCommerce Shopsoftware diese L&ouml;schen.</b><br /><br />Der Installer schreibt automatisch die Konfigurationsdateien f&uuml;r die Dateistruktur und die Datenbankanbindung.<br /><br />Sie k&ouml;nnen zwischen verschiedenen Session-Handling_systemen w&auml;hlen.');
   define('TEXT_WELCOME_STEP5','<b>Webserver Konfiguration</b><br /><br />');
   // BOF - web28 - 2010-02-1014 - CORRECT TO GERMAN
-  define('TEXT_WELCOME_STEP6','<b>Grunds&auml;tzliche Shopkonfiguration</b><br /><br />Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand und Steuerberechnungen genutzt.<br /><br />Wenn Sie w&uuml;nschen, kann xtcModified automatisch die Zonen, Steuers&auml;tze und Steuerklassen f&uuml;r Versand und Verkauf innerhalb der EU einrichten.<br />Markieren Sie nur <b>automatisches Einstellen der Steuerzonen</b> - <b>Ja</b>.');
+  define('TEXT_WELCOME_STEP6','<b>Grunds&auml;tzliche Shopkonfiguration</b><br /><br />Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand und Steuerberechnungen genutzt.<br /><br />Wenn Sie w&uuml;nschen, kann die modified eCommerce Shopsoftware automatisch die Zonen, Steuers&auml;tze und Steuerklassen f&uuml;r Versand und Verkauf innerhalb der EU einrichten.<br />Markieren Sie nur <b>automatisches Einstellen der Steuerzonen</b> - <b>Ja</b>.');
   // EOF - web28 - 2010-02-1014 - CORRECT TO GERMAN
-  define('TEXT_WELCOME_STEP7','<b>Setup f&uuml;r G&auml;ste und Standardkunden</b><br /><br />Das xtcModified Gruppen und Preissystem bietet Ihnen unbegrenzte M&ouml;glichkeiten der Preisgebung.<br /><br />
+  define('TEXT_WELCOME_STEP7','<b>Setup f&uuml;r G&auml;ste und Standardkunden</b><br /><br />Das modified eCommerce Shopsoftware Gruppen und Preissystem bietet Ihnen unbegrenzte M&ouml;glichkeiten der Preisgebung.<br /><br />
     <b>% Rabatt auf ein einzelnes Produkt</b><br />
     %max kann f&uuml;r jedes einzelne Produkt und f&uuml;r jede einzelne Kundengruppe gesetzt werden.<br />
     wenn %max f&uuml;r Produkt = 10.00% jedoch %max f&uuml;r Gruppe = 5% -> 5% Rabatt auf das Produkt<br />
@@ -106,19 +106,19 @@
     Kundengruppe 3 -> ein spezielle Gruppenpreis f&uuml;r Produkt Y<br />
     Kundengruppe 4 -> Nettopreis f&uuml;r Produkt Y<br />
   ');
-  define('TEXT_WELCOME_FINISHED','<b>xtcModified Installation erfolgreich!</b><br /><br />Der Installer hat nun die Grundfunktionen Ihres Shops eingerichtet. Melden Sie sich im Catalog mit Ihrem Admin-Account an und wechseln in den Adminbereich, um die komplette Konfiguration Ihres Shops vorzunehmen.');
+  define('TEXT_WELCOME_FINISHED','<b>Die modified eCommerce Shopsoftware Installation war erfolgreich!</b><br /><br />Der Installer hat nun die Grundfunktionen Ihres Shops eingerichtet. Melden Sie sich im Shop mit Ihrem Admin-Account an und wechseln in den Adminbereich, um die komplette Konfiguration Ihres Shops vorzunehmen.');
 
   // install_step1.php
   define('TITLE_CUSTOM_SETTINGS','Installations Optionen');
-  define('TEXT_IMPORT_DB','xtcModified Datenbank Installation');
-  define('TEXT_IMPORT_DB_LONG','Installiert die xtcModified Datenbankstruktur mit den ben&ouml;tigten Tabellen. <b>(Zwingend bei Erstinstallation! Bestehende Tabellen werden dabei geleert!)</b>');
+  define('TEXT_IMPORT_DB','modified eCommerce Shopsoftware Datenbank Installation');
+  define('TEXT_IMPORT_DB_LONG','Installiert die modified eCommerce Shopsoftware Datenbankstruktur mit den ben&ouml;tigten Tabellen. <b>(Zwingend bei Erstinstallation! Bestehende Tabellen werden dabei geleert!)</b>');
   define('TEXT_AUTOMATIC','Konfigurations-Dateien erstellen');
   define('TEXT_AUTOMATIC_LONG','Ihre Informationen bez&uuml;glich Webserver und Datenbank werden automatisch in die ben&ouml;tigten Catalog und Admin Konfigurations-Dateien geschrieben, bestehende Dateien werden dabei &uuml;berschrieben!');
   define('TITLE_DATABASE_SETTINGS','Datenbank Informationen');
   define('TEXT_DATABASE_SERVER','Datenbankserver');
   define('TEXT_DATABASE_SERVER_LONG','Der Datenbankserver kann entweder in Form eines Hostnamens, wie zum Beispiel <i>db1.myserver.com</i> oder <i>localhost</i>, oder als IP-Adresse, wie <i>192.168.0.1</i> angegeben werden.');
   define('TEXT_USERNAME','Benutzername');
-  define('TEXT_USERNAME_LONG','Der Benutzername, der zum konnektieren der Datenbank ben&ouml;tigt wird, wie zum Beispiel <i>mysql_10</i>.<br /><br />Bemerkung: Wenn die xtcModified Datenbank Importiert werden soll (wenn oben ausgew&auml;hlt), muss der Benutzer CREATE und DROP Rechte f&uuml;r die Datenbank haben. Sollten hier Probleme auftreten, kann Ihnen Ihr Provider weiterhelfen.');
+  define('TEXT_USERNAME_LONG','Der Benutzername, der zum konnektieren der Datenbank ben&ouml;tigt wird, wie zum Beispiel <i>mysql_10</i>.<br /><br />Bemerkung: Wenn die modified eCommerce Shopsoftware Datenbank importiert werden soll (wenn oben ausgew&auml;hlt), muss der Benutzer CREATE und DROP Rechte f&uuml;r die Datenbank haben. Sollten hier Probleme auftreten, kann Ihnen Ihr Provider weiterhelfen.');
   define('TEXT_PASSWORD','Passwort');
   define('TEXT_PASSWORD_LONG','Das Passwort wird zusammen mit dem Benutzernamen zum Verbindungsaufbau zur Datenbank benutzt.');
   define('TEXT_DATABASE','Datenbank');
@@ -126,14 +126,14 @@
   define('TITLE_WEBSERVER_SETTINGS','Webserver Informationen');
   define('TEXT_WS_ROOT','Webserver Root Verzeichnis');
   define('TEXT_WS_ROOT_LONG','Das Verzeichnis, in das die Webseiten gespeichert werden, zum Beispiel <b>/home/myname/htdocs</b>.');
-  define('TEXT_WS_XTC','Webserver "xtcModified" Verzeichnis');
-  define('TEXT_WS_XTC_LONG','Das Verzeichnis, in das der Shop geladen wurde, relativ zum Webserver Root Verzeichnis, bspw. <b>/xtcModified/</b>.<br /><br />Webserver Root Verzeichnis + Webserver "xtcModified" Verzeichnis ergeben den vollst&auml;ndigen Pfad zum Shop.');
+  define('TEXT_WS_XTC','Webserver Shop Verzeichnis');
+  define('TEXT_WS_XTC_LONG','Das Verzeichnis, in das der Shop geladen wurde, relativ zum Webserver Root Verzeichnis, bspw. <b>/modified-shop/</b>.<br /><br />Webserver Root Verzeichnis + Webserver Shop Verzeichnis ergeben den vollst&auml;ndigen Pfad zum Shop.');
   define('TEXT_WS_ADMIN','Webserver Admin Verzeichnis');
-  define('TEXT_WS_ADMIN_LONG','Das Verzeichnis, in welchem sich die Admin-Werkzeuge Ihres Shops befinden (vom Webserver root Verzeichnis), beispielsweise <i>/home/myname/public_html<b>/xtcModified/admin/</b></i>.');
+  define('TEXT_WS_ADMIN_LONG','Das Verzeichnis, in welchem sich die Admin-Werkzeuge Ihres Shops befinden (vom Webserver root Verzeichnis), beispielsweise <i>/home/myname/public_html<b>/modified-shop/admin/</b></i>.');
   define('TEXT_WS_CATALOG','WWW Catalog Verzeichnis');
-  define('TEXT_WS_CATALOG_LONG','Das virtuelle Verzeichnis, in dem sich die modified eCommerce Shopsoftware befindet, relativ zum HTTP Server, bspw. <b>/</b> oder <b>/xtcModified/</b>.<br /><br />HTTP Server + WWW Catalog Verzeichnis ergeben die Shop-URL.');
+  define('TEXT_WS_CATALOG_LONG','Das virtuelle Verzeichnis, in dem sich die modified eCommerce Shopsoftware befindet, relativ zum HTTP Server, bspw. <b>/</b> oder <b>/modified-shop/</b>.<br /><br />HTTP Server + WWW Catalog Verzeichnis ergeben die Shop-URL.');
   define('TEXT_WS_ADMINTOOL','WWW Admin Verzeichnis');
-  define('TEXT_WS_ADMINTOOL_LONG','Das virtuelle Verzeichnis, in dem sich die xtcModified Admin-Module befinden, beispielsweise <i>http://www.Ihre-Domain.de<b>/xtcModified/admin/</b></i>');
+  define('TEXT_WS_ADMINTOOL_LONG','Das virtuelle Verzeichnis, in dem sich die modified eCommerce Shopsoftware Admin-Module befinden, beispielsweise <i>http://www.Ihre-Domain.de<b>/modified-shop/admin/</b></i>');
   //BOF WEBSERVER INFO
   define('TITLE_WEBSERVER_INFO','Die vorgegebenen Pfade sind nur in Ausnahmef&auml;llen zu &auml;ndern!');
   define('TEXT_WS_ROOT_INFO','Der Pfad wird automatisch ermittelt!');
@@ -177,7 +177,7 @@
   //EOF - web28 - 2010-03-02 - New SSL-PROXY info
 
   // install_step5.php
-  define('TEXT_WS_CONFIGURATION_SUCCESS','<strong>xtcModified</strong> Webserver Konfiguration war erfolgreich');
+  define('TEXT_WS_CONFIGURATION_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Webserver Konfiguration war erfolgreich');
 
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator Konfiguration');
@@ -201,9 +201,9 @@
   define('TEXT_EMAIL_FROM_LONG','Die E-Mail Adresse, die in den Bestellungen als From benutzt wird.');
   define('TITLE_ZONE_CONFIG','Zonen Konfiguration');
   define('TEXT_ZONE','automatisches Einstellen der Steuerzonen?');
-  define('TITLE_ZONE_CONFIG_NOTE','*Hinweis; xtcModified kann die Zonen automatisch aufsetzten, sofern Sich Ihr Shop in der EU befindet.');
-  define('TITLE_SHOP_CONFIG_NOTE','*Hinweis; Information for grundlegende Shopeinstellungen');
-  define('TITLE_ADMIN_CONFIG_NOTE','*Hinweis; Informationen f&uuml;r Admin/Superuser');
+  define('TITLE_ZONE_CONFIG_NOTE','*Hinweis: modified eCommerce Shopsoftware kann die Zonen automatisch aufsetzten, sofern Sich Ihr Shop in der EU befindet.');
+  define('TITLE_SHOP_CONFIG_NOTE','*Hinweis: Information for grundlegende Shopeinstellungen');
+  define('TITLE_ADMIN_CONFIG_NOTE','*Hinweis: Informationen f&uuml;r Admin/Superuser');
   define('TEXT_ZONE_NO','Nein');
   define('TEXT_ZONE_YES','Ja');
   define('TEXT_COMPANY','Firmenname');
@@ -261,8 +261,8 @@
   define('SELECT_TAX_ERROR2','Show Tax -Default');
 
   // install_fnished.php
-  define('TEXT_SHOP_CONFIG_SUCCESS','<strong>xtcModified</strong> Shop Konfiguration war erfolgreich');
-  define('TEXT_TEAM','Vielen Dank, dass Sie sich f&uuml;r die xtcModified eCommerce Shopsoftware entschieden haben. Besuchen Sie uns auf der <a href="http://www.xtc-modified.org">xtcModified Supportseite</a>.<br /><br />Alles Gute und viel Erfolg w&uuml;nscht Ihnen das gesamte xtcModified Team.<br /><br />Wenn Sie uns unterst&uuml;tzen wollen, w&uuml;rden wir uns &uuml;ber eine kleine Spende freuen.<br />');
+  define('TEXT_SHOP_CONFIG_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Konfiguration war erfolgreich');
+  define('TEXT_TEAM','Vielen Dank, dass Sie sich f&uuml;r die modified eCommerce Shopsoftware entschieden haben. Besuchen Sie uns auf der <a href="http://www.modified-shop.org">modified eCommerce Shopsoftware Supportseite</a>.<br /><br />Alles Gute und viel Erfolg w&uuml;nscht Ihnen das gesamte modified eCommerce Shopsoftware Team.<br /><br />Wenn Sie uns unterst&uuml;tzen wollen, w&uuml;rden wir uns &uuml;ber eine kleine Spende freuen.<br />');
 
   // BOC flth new permission change system
   define('FTP_CHANGE_PERM_EXPLAIN', 'Um die Datei- und Verzeichnisrechte zu setzen, benutzen Sie entweder Ihr FTP-Programm oder geben Sie Ihre FTP-Daten hier ein, um die ben&ouml;tigten Dateirechte automatisch setzen zu lassen.');
