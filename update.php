@@ -174,7 +174,7 @@ h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
     <td height="95" colspan="2" align="center">
       <table border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td width="1"><img src="http://www.xtc-modified.org/forum/Themes/xtcmodified/images/logo.png" alt="xtcModified" /></td>
+          <td width="1"><img src="http://www.modified-shop.org/forum/Themes/xtcmodified/images/logo.png" alt="xtcModified" /></td>
         </tr>
       </table>
     </td>
