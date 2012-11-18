@@ -31,7 +31,7 @@
 define('PROJECT_VERSION', 'modified eCommerce Shopssoftware v1.06 dated: 2012-11-??, beta');
 
 // DB version, used for updates (_installer)
-define('DB_VERSION', 'xtcM_1.0.6.0');
+define('DB_VERSION', 'MOD_1.0.6.0');
 //Run Mode
 define('RUN_MODE_ADMIN',true);
 
