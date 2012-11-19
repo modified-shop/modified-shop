@@ -12,29 +12,26 @@
   define('PHP_VERSION_MAX', '5.3.99');
 
   //BOF *************  check PHP-Version *************
-  //BOF - Dokuman - 2009-09-02: update PHP-Version check
-  //if (xtc_check_version()!=1) {
-    //$error_flag=true;
-    //$php_flag=true;
-    /*$message .='<strong>ATTENTION!, your PHP Version is to old, xtc:Modified requires atleast PHP 4.1.3.</strong><br /><br />Your php Version: <strong><?php echo phpversion(); ?></strong><br /><br />xtc:Modified wont work on this server, update PHP or change Server.'; */
-  //}
+  //BOF - Dokuman - 2012-11-19: remove irritating PHP-Version message
   if (function_exists('version_compare')) {
     if(version_compare(phpversion(), PHP_VERSION_MIN, "<")){
       $error_flag = true;
       $php_flag = true;
       $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
     }
+    /*
     if(version_compare(phpversion(), PHP_VERSION_MAX, ">")){
       $error_flag = true;
       $php_flag = true;
       $message .= '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.';
     }
+    */
+    //EOF - Dokuman - 2012-11-19: remove irritating PHP-Version message
   } else {
     $error_flag = true;
     $php_flag = true;
     $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
   }
-  //EOF - Dokuman - 2009-09-02: update PHP-Version check
   $status='<strong>OK</strong>';
   if ($php_flag==true)
     $status='<strong><font color="#ff0000">'.TEXT_ERROR.'</font></strong>';
