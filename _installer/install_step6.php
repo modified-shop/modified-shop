@@ -235,7 +235,7 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". ($email_from). "' WHERE configuration_key = 'EMAIL_SUPPORT_ADDRESS'");
 
       if ($zone_setup == 'yes') {
-        // Steuersätze des jeweiligen Landes einstellen!
+        // Steuersã³ºe des jeweiligen Landes einstellen!
         $tax_normal='';
         $tax_normal_text='';
         $tax_special='';
@@ -256,7 +256,7 @@
             $tax_special_text='6%';
             break;
           case '57':
-            // Dänemark
+            // Dã­¥mark
             $tax_normal='25.0000';
             $tax_normal_text='25%';
             $tax_special='25.0000';
@@ -355,7 +355,7 @@
             break;
         }
 
-        // Steuersätze / tax_rates
+        // Steuersã³ºe / tax_rates
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (1, 5, 1, 1, '".$tax_normal."', '".$tax_normal_text."', '', '')");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (2, 5, 2, 1, '".$tax_special."', '".$tax_special_text."', '', '')");
         xtc_db_query("INSERT INTO tax_rates (tax_rates_id, tax_zone_id, tax_class_id, tax_priority, tax_rate, tax_description, last_modified, date_added) VALUES (3, 6, 1, 1, '0.0000', 'EU-AUS-UST 0%', '', '')");
@@ -365,7 +365,7 @@
         xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (1, 'Standardsatz', '', '', now())");
         xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (2, 'erm&auml;&szlig;igter Steuersatz', '', NULL, now())");
 
-        // Steuersätze
+        // Steuersã³ºe
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (6, 'Steuerzone EU-Ausland', '', '', now())");
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (5, 'Steuerzone EU', 'Steuerzone f&uuml;r die EU', '', now())");
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (7, 'Steuerzone B2B', '', NULL, now())");
@@ -644,11 +644,11 @@
     <table width="800" style="border:30px solid #fff;" bgcolor="#f3f3f3" height="80%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
-	        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-	          <tr>
-	            <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
-	          </tr>
-	        </table>
+          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
+            </tr>
+          </table>
       </tr>
       <tr>
         <td align="center" valign="top">
