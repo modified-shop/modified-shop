@@ -19,6 +19,8 @@
 define('HEADING_TITLE', 'Sonderangebote');
 
 define('TABLE_HEADING_PRODUCTS', 'Artikel');
+define('TABLE_HEADING_PRODUCTS_QUANTITY', 'Artikelanzahl');
+define('TABLE_HEADING_EXPIRES_DATE', 'G&uuml;ltig bis');
 define('TABLE_HEADING_PRODUCTS_PRICE', 'Artikelpreis');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Aktion');

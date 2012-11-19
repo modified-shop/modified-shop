@@ -19,6 +19,8 @@
 define('HEADING_TITLE', 'Specials');
 
 define('TABLE_HEADING_PRODUCTS', 'Products');
+define('TABLE_HEADING_PRODUCTS_QUANTITY', 'Products Quantity');
+define('TABLE_HEADING_EXPIRES_DATE', 'Expiry Date');
 define('TABLE_HEADING_PRODUCTS_PRICE', 'Products Price');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Action');
