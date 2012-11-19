@@ -113,11 +113,11 @@
     <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
-	        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
-	          <tr>
-	            <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
-	          </tr>
-	        </table>
+          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+            <tr>
+              <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
+            </tr>
+          </table>
         </td>
       </tr>
       <tr>
