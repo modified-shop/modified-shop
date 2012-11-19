@@ -60,7 +60,7 @@ if (file_exists('includes/request_type.php')) {
   require_once(DIR_FS_INC . 'set_php_self.inc.php');
   $PHP_SELF = set_php_self();
 
-  //compatibility for xtcModified 1.06 files
+  //compatibility for modified eCommerce Shopsoftware 1.06 files
   define('DIR_WS_BASE', '');
 
   // include the list of project filenames

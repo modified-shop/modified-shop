@@ -77,7 +77,7 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <title>xtcModified Installer</title>
+    <title>modified eCommerce Shopsoftware Installer</title>
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
       table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
@@ -95,9 +95,9 @@
   <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td height="95" colspan="2" >
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
-            <td width="1"><img src="images/logo.gif" alt="" /></td>
+            <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
           </tr>
         </table>
       </td>

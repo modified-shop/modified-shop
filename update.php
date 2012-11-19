@@ -158,7 +158,7 @@ function sql_update($file) {
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>xtcModified Updater</title>
+<title>modified eCommerce Shopsoftware Updater</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <style type="text/css">
 body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
@@ -174,7 +174,7 @@ h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
     <td height="95" colspan="2" align="center">
       <table border="0" cellpadding="0" cellspacing="0">
         <tr>
-          <td width="1"><img src="http://www.modified-shop.org/forum/Themes/xtcmodified/images/logo.png" alt="xtcModified" /></td>
+          <td><img src="http://www.modified-shop.org/forum/Themes/modified/images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
         </tr>
       </table>
     </td>
