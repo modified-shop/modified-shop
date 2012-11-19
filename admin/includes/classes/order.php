@@ -29,5 +29,5 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  include(DIR_FS_CATALOG.DIR_WS_CLASSES.'order.php'); // xtcModified 1.06: Using frontend class
+  include(DIR_FS_CATALOG.DIR_WS_CLASSES.'order.php'); // modified eCommerce Shopsoftware 1.06: Using frontend class
 ?>

@@ -1,69 +1,69 @@
 <?php
-/*******************************************************************************************
-*                                                                                          *
-*  CAO-Faktura für Windows Version 1.4 (http://www.cao-faktura.de)                         *
-*  Copyright (C) 2009 Jan Pokrandt / Jan@JP-SOFT.de                                        *
-*                                                                                          *
-*  This program is free software; you can redistribute it and/or                           *
-*  modify it under the terms of the GNU General Public License                             *
-*  as published by the Free Software Foundation; either version 2                          *
-*  of the License, or any later version.                                                   *
-*                                                                                          *
-*  This program is distributed in the hope that it will be useful,                         *
-*  but WITHOUT ANY WARRANTY; without even the implied warranty of                          *
-*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                           *
-*  GNU General Public License for more details.                                            *
-*                                                                                          *
-*  You should have received a copy of the GNU General Public License                       *
-*  along with this program; if not, write to the Free Software                             *
-*  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.             *
-*                                                                                          *
-*  ******* This Scripts comes with ABSOLUTELY NO WARRANTY ***************                  *
-*                                                                                          *
-********************************************************************************************
-*                                                                                          *
-* Eine Entfernung oder Veraenderung dieses Dateiheaders ist nicht zulaessig !!!            *
-* Wenn Sie diese Datei veraendern dann fuegen Sie ihre eigenen Copyrightmeldungen          *
-* am Ende diese Headers an                                                                 *
-*                                                                                          *
-********************************************************************************************
-*                                                                                          *
-*  Programm     : CAO-Faktura                                                              *
-*  Modul        : cao_xtc.php                                                              *
-*  Stand        : 26.08.2009                                                               *
-*  Version      : 1.56                                                                     *
-*  Beschreibung : Script zum Datenaustausch CAO-Faktura <--> xtcModified-Shop              *
-*                                                                                          *
-*  based on:                                                                               *
-* (c) 2000 - 2001 The Exchange Project                                                     *
-* (c) 2001 - 2003 osCommerce, Open Source E-Commerce Solutions                             *
-* (c) 2001 - 2003 TheMedia, Dipl.-Ing Thomas Plänkers                                      *
-* (c) 2003 JP-Soft, Jan Pokrandt                                                           *
-* (c) 2003 IN-Solution, Henri Schmidhuber                                                  *
-* (c) 2003 www.websl.de, Karl Langmann                                                     *
-* (c) 2003 RV-Design Raphael Vullriede                                                     *
-* (c) 2004 XT-Commerce                                                                     *
-*                                                                                          *
-* Released under the GNU General Public License                                            *
-*                                                                                          *
-* History :                                                                                *
-*                                                                                          *
-* - 26.09.2005 JP Funktionen aus xml_export.php und cao_import.php erstellt                *
-* - 04.10.2005 JP/KL Version 1.44 released, Scripte komplett ueberarbeitet                 *
-* - 06.10.2005 KL/JP Bugfix bei xtc_set_time_limit                                         *
-* - 17.10.2005 JP Bugfixes fuer XTC 304                                                    *
-* - 21.10.2005 KL/JP Bugfix fuer XTC 2.x Spalte products_Ean angelegt                      *
-* - 23.10.2005 hartleib Fehlende $LangID in OrderUpdate hinzugefuegt                       *
-* - 02.11.2005 JP Fehler bei doppelter Funktion xtDBquery gefixt                           *
-* - 07.11.2005 JP Export Orders/VAT_ID implementiert                                       *
-* - 15.09.2006 xsell_update / erase durch Wolfgang eingebaut                               *
-*              siehe : http://www.cao-faktura.de/index.php?option=com_forum&               *
-*              Itemid=44&page=viewtopic&p=52192#52192                                      *
-* - 18.09.2006 JP Export Shop->CAO Artikel/PRODUCTS_EAN hinzugefuegt                       *
-*              Ansicht des Transfer-Logs eingebaut                                         *
-* - 16.04.2006 JP Export Products um Image1,Image2 und VPE erweitert                       *
-* - 15.12.2008 JP Bugfix SendOrders/order_comments                                         *
-*******************************************************************************************/
+/***********************************************************************************************
+*                                                                                              *
+*  CAO-Faktura für Windows Version 1.4 (http://www.cao-faktura.de)                             *
+*  Copyright (C) 2009 Jan Pokrandt / Jan@JP-SOFT.de                                            *
+*                                                                                              *
+*  This program is free software; you can redistribute it and/or                               *
+*  modify it under the terms of the GNU General Public License                                 *
+*  as published by the Free Software Foundation; either version 2                              *
+*  of the License, or any later version.                                                       *
+*                                                                                              *
+*  This program is distributed in the hope that it will be useful,                             *
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of                              *
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the                               *
+*  GNU General Public License for more details.                                                *
+*                                                                                              *
+*  You should have received a copy of the GNU General Public License                           *
+*  along with this program; if not, write to the Free Software                                 *
+*  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.                 *
+*                                                                                              *
+*  ******* This Scripts comes with ABSOLUTELY NO WARRANTY ***************                      *
+*                                                                                              *
+************************************************************************************************
+*                                                                                              *
+* Eine Entfernung oder Veraenderung dieses Dateiheaders ist nicht zulaessig !!!                *
+* Wenn Sie diese Datei veraendern dann fuegen Sie ihre eigenen Copyrightmeldungen              *
+* am Ende diese Headers an                                                                     *
+*                                                                                              *
+************************************************************************************************
+*                                                                                              *
+*  Programm     : CAO-Faktura                                                                  *
+*  Modul        : cao_xtc.php                                                                  *
+*  Stand        : 26.08.2009                                                                   *
+*  Version      : 1.56                                                                         *
+*  Beschreibung : Script zum Datenaustausch CAO-Faktura <--> modified eCommerce Shopsoftware   *
+*                                                                                              *
+*  based on:                                                                                   *
+* (c) 2000 - 2001 The Exchange Project                                                         *
+* (c) 2001 - 2003 osCommerce, Open Source E-Commerce Solutions                                 *
+* (c) 2001 - 2003 TheMedia, Dipl.-Ing Thomas Plänkers                                          *
+* (c) 2003 JP-Soft, Jan Pokrandt                                                               *
+* (c) 2003 IN-Solution, Henri Schmidhuber                                                      *
+* (c) 2003 www.websl.de, Karl Langmann                                                         *
+* (c) 2003 RV-Design Raphael Vullriede                                                         *
+* (c) 2004 XT-Commerce                                                                         *
+*                                                                                              *
+* Released under the GNU General Public License                                                *
+*                                                                                              *
+* History :                                                                                    *
+*                                                                                              *
+* - 26.09.2005 JP Funktionen aus xml_export.php und cao_import.php erstellt                    *
+* - 04.10.2005 JP/KL Version 1.44 released, Scripte komplett ueberarbeitet                     *
+* - 06.10.2005 KL/JP Bugfix bei xtc_set_time_limit                                             *
+* - 17.10.2005 JP Bugfixes fuer XTC 304                                                        *
+* - 21.10.2005 KL/JP Bugfix fuer XTC 2.x Spalte products_Ean angelegt                          *
+* - 23.10.2005 hartleib Fehlende $LangID in OrderUpdate hinzugefuegt                           *
+* - 02.11.2005 JP Fehler bei doppelter Funktion xtDBquery gefixt                               *
+* - 07.11.2005 JP Export Orders/VAT_ID implementiert                                           *
+* - 15.09.2006 xsell_update / erase durch Wolfgang eingebaut                                   *
+*              siehe : http://www.cao-faktura.de/index.php?option=com_forum&                   *
+*              Itemid=44&page=viewtopic&p=52192#52192                                          *
+* - 18.09.2006 JP Export Shop->CAO Artikel/PRODUCTS_EAN hinzugefuegt                           *
+*              Ansicht des Transfer-Logs eingebaut                                             *
+* - 16.04.2006 JP Export Products um Image1,Image2 und VPE erweitert                           *
+* - 15.12.2008 JP Bugfix SendOrders/order_comments                                             *
+***********************************************************************************************/
 
 if (!function_exists('xtDBquery')) {
 
@@ -1029,14 +1029,14 @@ function SendShopConfig ()
   {
       while (($file = readdir($dir)) != false)
       {
-// BOF - Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
 /*
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and
              ($file != "index.html"))
          {
 */
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
              $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
          } //if
      } // while
@@ -1051,14 +1051,14 @@ function SendShopConfig ()
   {
       while (($file = readdir($dir)) != false)
       {
-// BOF - Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
 /*
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) and
              ($file != "index.html"))
          {
 */
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_info/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
              $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
          } //if
      } // while
@@ -1073,14 +1073,14 @@ function SendShopConfig ()
   {
       while (($file = readdir($dir)) != false)
       {
-// BOF - Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
 /*
           if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and
              ($file != "index.html"))
          {
 */
            if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_options/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent xtcModified from fetching other files than *.html
+// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
              $schema .= "<TEMPLATE>" . $file . "</TEMPLATE>\n";
          } //if
      } // while

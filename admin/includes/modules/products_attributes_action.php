@@ -20,7 +20,7 @@
 
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-  $PHP_SELF = (!isset($PHP_SELF)) ? $_SERVER['SCRIPT_NAME'] : $PHP_SELF; //compatibility for xtcModified 1.06 files
+  $PHP_SELF = (!isset($PHP_SELF)) ? $_SERVER['SCRIPT_NAME'] : $PHP_SELF; //compatibility for modified eCommerce Shopsoftware 1.06 files
 
   switch($action) {
 

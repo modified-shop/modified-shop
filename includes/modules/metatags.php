@@ -18,11 +18,11 @@
    ---------------------------------------------------------------------------------------
     AUTOMATISCHE METATAGS MULTILANGUAGE für xt:Commerce 3.04
    ---------------------------------------------------------------------------------------
-      Version 0.96n / 13. Dezember 2010 / DokuMan / xtcModified
+      Version 0.96n / 13. Dezember 2010 / DokuMan / modified eCommerce Shopsoftware
 
     -  Unterstützung für Pagination
    ---------------------------------------------------------------------------------------
-      Version 0.96m / 26. August 2010 / DokuMan / xtcModified
+      Version 0.96m / 26. August 2010 / DokuMan / modified eCommerce Shopsoftware
 
     -  Unterstützung für "canonical"-Tag
    ---------------------------------------------------------------------------------------

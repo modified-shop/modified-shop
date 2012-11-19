@@ -304,7 +304,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-  <title>xtc:Modified Installer - STEP 7 / Success</title>
+  <title>modified eCommerce Shopsoftware Installer - STEP 7 / Success</title>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <?php require('includes/form_check.js.php'); ?>
   <style type="text/css">
@@ -324,9 +324,9 @@
   <table width="800" style="border:30px solid #fff;" bgcolor="#f3f3f3" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td height="95" colspan="2" >
-        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
-            <td><img src="images/logo.gif" alt="" /></td>
+            <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
           </tr>
         </table>
     </tr>

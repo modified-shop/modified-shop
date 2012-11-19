@@ -26,7 +26,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>xtcModified Installer - Finished</title>
+    <title>modified eCommerce Shopsoftware Installer - Finished</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
@@ -41,11 +41,11 @@
     <table width="800" style="border:30px solid #fff;" bgcolor="#f3f3f3" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
-          <table width="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-              <td><img src="images/logo.gif" alt="" /></td>
-            </tr>
-          </table>
+	        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+	          <tr>
+	            <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
+	          </tr>
+	        </table>
         </td>
       </tr>
       <tr>
