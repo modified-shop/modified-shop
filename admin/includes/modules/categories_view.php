@@ -603,7 +603,7 @@
                  <td class="categories_view_data">
                    <?php
                    // Show Max Allowed discount
-                   echo $products['products_discount_allowed'] . '%';
+                   echo $products['products_discount_allowed'] . ' %';
                    ?>
                  </td>
                  <td class="categories_view_data">
@@ -968,7 +968,7 @@
                     $tax_query = xtc_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_class_id = '" . $pInfo->products_tax_class_id . "' ");
                     $tax = xtc_db_fetch_array($tax_query);
                     $price = ($price*($tax[tax_rate]+100)/100);
-                    $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . ' - ' . TXT_NETTO . $currencies->format($price_netto);
+                    $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . '<br/>' . TXT_NETTO . $currencies->format($price_netto);
                   }
                   $contents[] = array('text' => '<div style="padding-left: 30px;">' . $price_string.  '</div><div style="padding-left: 30px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . '</div><div style="padding-left: 30px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
                   // END IN-SOLUTION
