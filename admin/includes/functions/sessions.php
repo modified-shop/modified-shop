@@ -17,5 +17,5 @@
    ---------------------------------------------------------------------------------------*/
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-include(DIR_FS_CATALOG.DIR_WS_FUNCTIONS.'sessions.php'); // xtcModified 1.06: Using frontend function
+include(DIR_FS_CATALOG.DIR_WS_FUNCTIONS.'sessions.php'); // modified eCommerce Shopsoftware 1.06: Using frontend function
 ?>

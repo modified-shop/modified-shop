@@ -99,7 +99,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>xtcModified Installer - STEP 5 / Write Config Files</title>
+    <title>modified eCommerce Shopsoftware Installer - STEP 5 / Write Config Files</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
@@ -114,11 +114,11 @@
     <table width="800" bgcolor="#f3f3f3" style="border:30px solid #fff;" height="80%" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
-          <table width="100%" border="0" cellpadding="0" cellspacing="0">
-            <tr>
-              <td><img src="images/logo.gif" alt="" /></td>
-            </tr>
-          </table>
+	        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+	          <tr>
+	            <td><img src="images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
+	          </tr>
+	        </table>
         </td>
       </tr>
       <tr>
@@ -218,10 +218,12 @@
                           $file_contents = '<?php' . "\n" .
                                            '/* --------------------------------------------------------------' . "\n" .
                                            '' . "\n" .
-                                           '  xtcModified - community made shopping' . "\n" .
-                                           '  http://www.xtc-modified.org' . "\n" .
+                                           '  modified eCommerce Shopsoftware' . "\n" .
+                                           '  http://www.modified.org-shop' . "\n" .
                                            '' . "\n" .
-                                           '   Copyright (c) 2009 - 2012 xtcModified' . "\n" .
+                                           '  Copyright (c) 2009 - 2012 modified eCommerce Shopsoftware' . "\n" .
+                                           '  Released under the GNU General Public License (Version 2)' . "\n" .
+                                           '  [http://www.gnu.org/licenses/gpl-2.0.html]' . "\n" .
                                            '  --------------------------------------------------------------' . "\n" .
                                            '  based on:' . "\n" .
                                            '  (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)' . "\n" .
@@ -284,10 +286,12 @@
                           $file_contents = '<?php' . "\n" .
                                            '/* --------------------------------------------------------------' . "\n" .
                                            '' . "\n" .
-                                           '  xtcModified - community made shopping' . "\n" .
-                                           '  http://www.xtc-modified.org' . "\n" .
+                                           '  modified eCommerce Shopsoftware' . "\n" .
+                                           '  http://www.modified.org-shop' . "\n" .
                                            '' . "\n" .
-                                           '   Copyright (c) 2009 - 2012 xtcModified' . "\n" .
+                                           '  Copyright (c) 2009 - 2012 modified eCommerce Shopsoftware' . "\n" .
+                                           '  Released under the GNU General Public License (Version 2)' . "\n" .
+                                           '  [http://www.gnu.org/licenses/gpl-2.0.html]' . "\n" .
                                            '  --------------------------------------------------------------' . "\n" .
                                            '  based on:' . "\n" .
                                            '  (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)' . "\n" .

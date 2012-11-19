@@ -17,7 +17,7 @@
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE',	'Shop online/offline');
-define('HEADING_SUB_TITLE',	'xtcModified');
+define('HEADING_SUB_TITLE',	'Configuration');
 define('BOX_SHOP_OFFLINE', 'Shop online/offline - all languages');
 define('SETTINGS_OFFLINE', 'Shop offline <br /><font color="red">(Only with Admin access data via the URL <a href="'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php" target="_blank"><font color="red">'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php</font></a>)</font>');
 define('SETTINGS_OFFLINE_MSG', 'Offline message');
