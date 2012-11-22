@@ -13,10 +13,6 @@
    (c) 2003 nextcommerce (language.php,v 1.6 2003/08/13); www.nextcommerce.org
    (c) 2006 XT-Commerce (language.php 962 2005-05-27)
 
-
-
-
-
    browser language detection logic
    Copyright phpMyAdmin (select_lang.lib.php3 v1.24 04/19/2002)
    Copyright Stephane Garin <sgarin@sgarin.com> (detect_language.php v0.1 04/02/2002)
@@ -72,7 +68,12 @@ if ( !class_exists( "language" ) ) {
                                'zh' => array('zh|chinese simplified', 'chinese_gb', 'zh'));
 
       $this->catalog_languages = array();
-      $languages_query = xtc_db_query("SELECT * FROM " . TABLE_LANGUAGES . " WHERE status = '1' ORDER BY sort_order");
+      $where = !defined('RUN_MODE_ADMIN') ? "WHERE status = '1'" : '';
+      $languages_query = xtc_db_query("SELECT * 
+                                         FROM " . TABLE_LANGUAGES . " 
+                                         $where 
+                                     ORDER BY sort_order"
+                                     );
       while ($languages = xtc_db_fetch_array($languages_query)) {
         $this->catalog_languages[$languages['code']] = array('id' => $languages['languages_id'],
                                                              'name' => $languages['name'],
@@ -88,15 +89,10 @@ if ( !class_exists( "language" ) ) {
 
       if ( (!empty($lng)) && (isset($this->catalog_languages[$lng])) ) {
         $this->language = $this->catalog_languages[$lng];
-      //BOF - DokuMan - 2011-01-21 - Fix language detection error
-      //} else {
-      //  $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
-      //}
       } elseif(isset($this->catalog_languages[DEFAULT_LANGUAGE])) {
         $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
       } else {
         $this->language = $this->catalog_languages[key($this->catalog_languages)];
-      //EOF - DokuMan - 2011-01-21 - Fix language detection error
       }
     }
 
