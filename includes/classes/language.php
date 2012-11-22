@@ -5,7 +5,7 @@
    xtcModified - community made shopping
    http://www.xtc-modified.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2010 xtcModified
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -13,7 +13,11 @@
    (c) 2003 nextcommerce (language.php,v 1.6 2003/08/13); www.nextcommerce.org
    (c) 2006 XT-Commerce (language.php 962 2005-05-27)
 
-   browser language detection logic
+
+
+
+
+    browser language detection logic
    Copyright phpMyAdmin (select_lang.lib.php3 v1.24 04/19/2002)
    Copyright Stephane Garin <sgarin@sgarin.com> (detect_language.php v0.1 04/02/2002)
 
@@ -88,25 +92,20 @@ if ( !class_exists( "language" ) ) {
       $this->language = '';
 
       if ( (!empty($lng)) && (isset($this->catalog_languages[$lng])) ) {
-        $this->language = $this->catalog_languages[$lng];
-      } elseif(isset($this->catalog_languages[DEFAULT_LANGUAGE])) {
-        $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
-      } else {
-        $this->language = $this->catalog_languages[key($this->catalog_languages)];
+        $this->language = $this->catalog_languages[$lng];        
+        } elseif(isset($this->catalog_languages[DEFAULT_LANGUAGE])) {
+          $this->language = $this->catalog_languages[DEFAULT_LANGUAGE];
+        } else {
+          $this->language = $this->catalog_languages[key($this->catalog_languages)];
       }
     }
 
     function get_browser_language() {
       $this->browser_languages = explode(',', (!empty($_SERVER['HTTP_ACCEPT_LANGUAGE']) ? $_SERVER['HTTP_ACCEPT_LANGUAGE'] : '')); //DokuMan - 2010-08-04 - use $_SERVER here for better windows environment compatiblity
-
-      //BOF - DokuMan - 2011-12-19 - precount for performance
-      //for ($i=0, $n=sizeof($this->browser_languages); $i<$n; $i++) {
-      $n=sizeof($this->browser_languages);
-      for ($i=0; $i<$n; $i++) {
-      //EOF - DokuMan - 2011-12-19 - precount for performance
+      for ($i=0, $n=sizeof($this->browser_languages); $i<$n; $i++) {
         reset($this->languages);
-        foreach($this->languages as $key => $value) { //Dokuman - 2011-07-26 - Change while with foreach for performance
-          if (preg_match('/^(' . $value[0] . ')(;q=[0-9]\\.[0-9])?$/i', $this->browser_languages[$i]) && isset($this->catalog_languages[$key])) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
+        while (list($key, $value) = each($this->languages)) {
+          if (preg_match('/^(' . $value[0] . ')(;q=[0-9]\\.[0-9])?$/i', $this->browser_languages[$i]) && isset($this->catalog_languages[$key])) {
             $this->language = $this->catalog_languages[$key];
             break 2;
           }
