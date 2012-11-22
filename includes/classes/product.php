@@ -37,6 +37,7 @@ class product {
                             p.products_vpe,
                             p.products_vpe_status,
                             p.products_vpe_value,
+                            p.products_model,
                             pd.products_name,
                             pd.products_short_description';
 
