@@ -249,17 +249,17 @@
                                                       ortra.ortra_parcel_id,
                                                       carriers.carrier_name,
                                                       carriers.carrier_tracking_link
-                                                 from ".TABLE_ORDERS_TRACKING." ortra, 
-                                                      ".TABLE_CARRIERS."carriers
+                                                 from ".TABLE_ORDERS_TRACKING." ortra,
+                                                      ".TABLE_CARRIERS." carriers
                                                 where ortra_order_id = '".xtc_db_input($oID)."'
                                                   and ortra.ortra_carrier_id = carriers.carrier_id");
           if (xtc_db_num_rows($tracking_links_query)) {
             $parcel_count = xtc_db_num_rows($tracking_links_query);
-            while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {              
+            while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
               $tracking_link['carrier_tracking_link'] = str_replace('$2',$lang_code,$tracking_link['carrier_tracking_link']);
               $parcel_link = str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']);
               $parcel_link_html .= '<a href="'.$parcel_link.'" target="_blank">'.$tracking_link['ortra_parcel_id'].'</a><br />';
-              $parcel_link_txt .= $parcel_link."\n\n";           
+              $parcel_link_txt .= $parcel_link."\n\n";
             }
           }
           $smarty->assign('PARCEL_COUNT', $parcel_count);
@@ -719,18 +719,19 @@ require (DIR_WS_INCLUDES.'head.php');
                 </tr>
                 <?php
                 $tracking_links_query = xtc_db_query("-- /admin/orders.php
-                                                     select ortra.ortra_id,
+                                                     SELECT ortra.ortra_id,
                                                             ortra.ortra_parcel_id,
                                                             carriers.carrier_name,
                                                             carriers.carrier_tracking_link
-                                                       from ".TABLE_ORDERS_TRACKING." ortra, carriers
-                                                      where ortra_order_id = '".xtc_db_input($oID)."'
-                                                        and ortra.ortra_carrier_id = carriers.carrier_id");
+                                                       FROM ".TABLE_ORDERS_TRACKING." ortra,
+                                                            ".TABLE_CARRIERS." carriers
+                                                      WHERE ortra_order_id = '".xtc_db_input($oID)."'
+                                                        AND ortra.ortra_carrier_id = carriers.carrier_id");
                 if (xtc_db_num_rows($tracking_links_query)) {
                   while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
                     echo '          <tr>'.PHP_EOL.'            <td class="smallText" align="left">'.$tracking_link['carrier_name'].'</td>'.PHP_EOL.'            <td class="smallText" align="left">';
                     echo '            <a href="'.str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank"><b>'.$tracking_link['ortra_parcel_id'].'</b></a></td>'.PHP_EOL.'            <td class="smallText" align="center">';
-                    echo '            <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&trackingid='.$tracking_link['ortra_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS)."</td>".PHP_EOL;
+                    echo '            <a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&trackingid='.$tracking_link['ortra_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS)."</td>".PHP_EOL;
                     echo '          <tr>'.PHP_EOL;
                   }
                 }
