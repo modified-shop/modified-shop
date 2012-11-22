@@ -292,6 +292,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           <tr class="dataTableHeadingRow">
                             <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
                             <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_PRODUCTS_QUANTITY; ?></td>
+                            <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_SPECIALS_QUANTITY; ?></td>
                             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></td>
                             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></td>
                             <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS; ?></td>
@@ -301,6 +302,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           $specials_query_raw = "-- /admin/specials.php
                                                   SELECT
                                                         p.products_id,
+                                                        p.products_quantity,
                                                         p.products_price,
                                                         p.products_tax_class_id,
                                                         s.specials_id,
@@ -347,6 +349,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             }
                               ?>
                               <td  class="dataTableContent"><?php echo $specials['products_name']; ?></td>
+                              <td  class="dataTableContent" align="center"><?php echo $specials['products_quantity']; ?></td>
                               <td  class="dataTableContent" align="center"><?php echo $specials['specials_quantity']; ?></td>
                               <td  class="dataTableContent" align="right"><?php echo (isset($specials['expires_date']) ? xtc_date_short($specials['expires_date']): '&nbsp;'); ?></td>
                               <td  class="dataTableContent" align="right">
