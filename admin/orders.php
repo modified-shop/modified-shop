@@ -57,7 +57,7 @@
     $orders_query = xtc_db_query("-- /admin/orders.php
                                   SELECT orders_id
                                     FROM ".TABLE_ORDERS."
-                                   WHERE orders_id = '".xtc_db_input($oID)."'");
+                                   WHERE orders_id = '".$oID."'");
     $order_exists = true;
     if (!xtc_db_num_rows($orders_query)) {
       $order_exists = false;
@@ -245,25 +245,25 @@
           $parcel_count = 0;
           $parcel_link ='';
           $tracking_links_query = xtc_db_query("-- /admin/orders.php
-                                               select ortra.ortra_id,
+                                               SELECT ortra.ortra_id,
                                                       ortra.ortra_parcel_id,
                                                       carriers.carrier_name,
                                                       carriers.carrier_tracking_link
-                                                 from ".TABLE_ORDERS_TRACKING." ortra,
+                                                 FROM ".TABLE_ORDERS_TRACKING." ortra,
                                                       ".TABLE_CARRIERS." carriers
-                                                where ortra_order_id = '".xtc_db_input($oID)."'
-                                                  and ortra.ortra_carrier_id = carriers.carrier_id");
+                                                WHERE ortra_order_id = '".$oID."'
+                                                  AND ortra.ortra_carrier_id = carriers.carrier_id");
           if (xtc_db_num_rows($tracking_links_query)) {
             $parcel_count = xtc_db_num_rows($tracking_links_query);
             while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
-              $tracking_link['carrier_tracking_link'] = str_replace('$2',$lang_code,$tracking_link['carrier_tracking_link']);
+              //$tracking_link['carrier_tracking_link'] = str_replace('$2',$lang_code,$tracking_link['carrier_tracking_link']); //TODO
               $parcel_link = str_replace('$1',$tracking_link['ortra_parcel_id'],$tracking_link['carrier_tracking_link']);
-              $parcel_link_html .= '<a href="'.$parcel_link.'" target="_blank">'.$tracking_link['ortra_parcel_id'].'</a><br />';
+              $parcel_link_html .= '<a href="'.$parcel_link.'" target="_blank">'.$parcel_link.'</a><br />';
               $parcel_link_txt .= $parcel_link."\n\n";
             }
           }
           $smarty->assign('PARCEL_COUNT', $parcel_count);
-          $smarty->assign('PARCEL_LINK', $parcel_link);
+          $smarty->assign('PARCEL_LINK_HTML', $parcel_link_html);
           $smarty->assign('PARCEL_LINK_TXT', $parcel_link_txt);
           // EOF - DokuMan - 2012-08-28 - Track & Trace functionality
 
@@ -369,19 +369,18 @@
       $parcel_number = xtc_db_prepare_input($_POST['parcel_number']);
       if ($parcel_number) {
         xtc_db_query("-- /admin/orders.php
-                      insert into ".TABLE_ORDERS_TRACKING." (ortra_order_id, ortra_carrier_id, ortra_parcel_id)
-                      VALUES ('".xtc_db_input($oID)."','".xtc_db_input($carrierID)."','".xtc_db_input($parcel_number)."')");
+                      INSERT INTO ".TABLE_ORDERS_TRACKING." (ortra_order_id, ortra_carrier_id, ortra_parcel_id)
+                      VALUES ('".$oID."','".xtc_db_input($carrierID)."','".xtc_db_input($parcel_number)."')");
       }
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=edit'));
       break;
 
     case 'deletetracking' :
       $tracking_id = xtc_db_prepare_input($_GET['trackingid']);
-      xtc_db_query("delete from ".TABLE_ORDERS_TRACKING." where ortra_id='".xtc_db_input($tracking_id)."'");
+      xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE ortra_id='".xtc_db_input($tracking_id)."'");
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=edit'));
       break;
     // EOF - DokuMan - 2012-08-28 - Track & Trace functionality
-
   }
 
 require (DIR_WS_INCLUDES.'head.php');
@@ -725,7 +724,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                             carriers.carrier_tracking_link
                                                        FROM ".TABLE_ORDERS_TRACKING." ortra,
                                                             ".TABLE_CARRIERS." carriers
-                                                      WHERE ortra_order_id = '".xtc_db_input($oID)."'
+                                                      WHERE ortra_order_id = '".$oID."'
                                                         AND ortra.ortra_carrier_id = carriers.carrier_id");
                 if (xtc_db_num_rows($tracking_links_query)) {
                   while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
