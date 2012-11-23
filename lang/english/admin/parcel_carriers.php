@@ -16,7 +16,7 @@ define('TABLE_HEADING_CARRIER_NAME', 'Name of the carrier');
 define('TABLE_HEADING_TRACKING_LINK', 'Track and Trace URL of the carrier');
 define('TABLE_HEADING_SORT_ORDER', 'Sort Order');
 define('TABLE_HEADING_ACTION', 'Action');
-
+define('TEXT_CARRIER_LINK_DESCRIPTION', '<b>Notice:</b> The URL is equipped with the placeholder sign <b>$1</b>. This placeholder sign will be replaced by the tracking number respectively the tracking ID later on, that was deposited in the particular order. When creating new carriers the position of the tracking ID in the URL has to be replaced by <b>$1</b>.');
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_CARRIER_NAME', 'Name of the carrier:');
 define('TEXT_INFO_CARRIER_TRACKING_LINK', 'Track and Trace URL of the carrier:');

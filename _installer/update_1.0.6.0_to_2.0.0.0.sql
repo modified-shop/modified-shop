@@ -36,7 +36,7 @@ ALTER TABLE orders
 DROP TABLE IF EXISTS carriers;
 CREATE TABLE carriers (
   carrier_id int(4) NOT NULL AUTO_INCREMENT,
-  carrier_name varchar(10) NOT NULL,
+  carrier_name varchar(12) NOT NULL,
   carrier_tracking_link varchar(512) NOT NULL,
   carrier_sort_order int(4) NOT NULL,
   carrier_date_added DATETIME,
@@ -50,7 +50,11 @@ INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_s
 (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', 30, now(), null),
 (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', 40, now(), null),
 (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', 50, now(), null),
-(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60, now(), null);
+(6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', 60, now(), null),
+(7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', 70, now(), null),
+(8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', 80, now(), null),
+(9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', 90, now(), null),
+(10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', 100, now(), null);
 
 DROP TABLE IF EXISTS orders_tracking;
 CREATE TABLE IF NOT EXISTS orders_tracking (
