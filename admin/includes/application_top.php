@@ -28,7 +28,7 @@
    --------------------------------------------------------------*/
 
 // Define the project version
-define('PROJECT_VERSION', 'modified eCommerce Shopssoftware v1.06 dated: 2012-10-18 Beta3');
+define('PROJECT_VERSION', 'modified eCommerce Shopssoftware v1.06 dated: 2012-11-23 Beta4');
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_1.0.6.0');
 //Run Mode

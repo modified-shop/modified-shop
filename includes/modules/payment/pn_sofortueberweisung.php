@@ -45,7 +45,7 @@ class pn_sofortueberweisung {
 	function pn_sofortueberweisung () {
 		global $order;
 		$this->code = 'pn_sofortueberweisung';
-		$this->version = 'pn_modified_v1.06_beta3';
+		$this->version = 'pn_modified_v1.06_beta4';
 		$this->title = MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_TEXT_TITLE;
 		if(MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_KS_STATUS == 'True') {
 			$this->title = MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_KS_TEXT_TITLE;
