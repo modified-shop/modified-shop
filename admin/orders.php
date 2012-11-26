@@ -561,12 +561,14 @@ require (DIR_WS_INCLUDES.'head.php');
 
               // Banktransfer - START
               $banktransfer_query = xtc_db_query("-- /admin/orders.php
-                                                  SELECT banktransfer_prz,
-                                                         banktransfer_status,
-                                                         banktransfer_owner,
+                                                  SELECT banktransfer_owner,
                                                          banktransfer_number,
                                                          banktransfer_bankname,
                                                          banktransfer_blz,
+                                                         banktransfer_iban,
+                                                         banktransfer_bic,
+                                                         banktransfer_status,
+                                                         banktransfer_prz,
                                                          banktransfer_fax
                                                     FROM ".TABLE_BANKTRANSFER."
                                                    WHERE orders_id = ".$oID);
@@ -591,6 +593,14 @@ require (DIR_WS_INCLUDES.'head.php');
                 <tr>
                   <td class="main"><?php echo TEXT_BANK_OWNER; ?></td>
                   <td class="main"><?php echo $banktransfer['banktransfer_owner']; ?></td>
+                </tr>
+                <tr>
+                  <td class="main"><?php echo TEXT_BANK_IBAN; ?></td>
+                  <td class="main"><?php echo $banktransfer['banktransfer_iban']; ?></td>
+                </tr>
+                <tr>
+                  <td class="main"><?php echo TEXT_BANK_BIC; ?></td>
+                  <td class="main"><?php echo $banktransfer['banktransfer_bic']; ?></td>
                 </tr>
                 <?php if ($banktransfer['banktransfer_status'] == 0) { ?>
                 <tr>

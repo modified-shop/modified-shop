@@ -20,6 +20,8 @@ define('TEXT_BANK_OWNER', 'Account Holder:');
 define('TEXT_BANK_NUMBER', 'Account Number:');
 define('TEXT_BANK_BLZ', 'Bank Code:');
 define('TEXT_BANK_NAME', 'Bank:');
+define('TEXT_BANK_IBAN', 'IBAN:'); //DokuMan - 2012-11-26 - added IBAN and BIC
+define('TEXT_BANK_BIC', 'BIC-Code:'); //DokuMan - 2012-11-26 - added IBAN and BIC
 define('TEXT_BANK_FAX', 'Collect Authorization will be approved via Fax');
 define('TEXT_BANK_STATUS', 'Verify Status:');
 define('TEXT_BANK_PRZ', 'Method of Verify:');

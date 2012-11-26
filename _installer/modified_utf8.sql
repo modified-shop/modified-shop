@@ -221,6 +221,8 @@ CREATE TABLE banktransfer (
   banktransfer_number VARCHAR(24) DEFAULT NULL,
   banktransfer_bankname VARCHAR(255) DEFAULT NULL,
   banktransfer_blz VARCHAR(8) DEFAULT NULL,
+  banktransfer_iban VARCHAR(34) DEFAULT NULL,
+  banktransfer_bic VARCHAR(11) DEFAULT NULL,
   banktransfer_status INT(11) DEFAULT NULL,
   banktransfer_prz CHAR(2) DEFAULT NULL,
   banktransfer_fax CHAR(2) DEFAULT NULL,

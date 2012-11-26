@@ -32,6 +32,8 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER', 'Kontoinhaber (*):');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER', 'Kontonummer (*):');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ', 'Bankleitzahl (*):');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME', 'Name der Bank:');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN', 'IBAN:');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC', 'BIC-Code der Bank:');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX', 'Einzugserm&auml;chtigung wird per Fax best&auml;tigt');
 
 // Note these MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_ERROR_X texts appear also in the URL, so no html-entities are allowed here

@@ -129,6 +129,10 @@
                                                  'field' => xtc_draw_input_field('banktransfer_number', (isset($_GET['banktransfer_number'])) ? $_GET['banktransfer_number'] : '', 'size="16" maxlength="32"')),
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME,
                                                  'field' => xtc_draw_input_field('banktransfer_bankname', (isset($_GET['banktransfer_bankname'])) ? $_GET['banktransfer_bankname'] : '')), //DokuMan - 2011-12-07 - preset banktransfer_bankname when user already entered a bank name
+                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN,
+                                                 'field' => xtc_draw_input_field('banktransfer_iban', (isset($_GET['banktransfer_iban'])) ? $_GET['banktransfer_iban'] : '')), //DokuMan - 2012-11-26 - added IBAN and BIC
+                                           array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC,
+                                                 'field' => xtc_draw_input_field('banktransfer_bic', (isset($_GET['banktransfer_bic'])) ? $_GET['banktransfer_bic'] : '')), //DokuMan - 2012-11-26 - added IBAN and BIC
                                            array('title' => '',
                                                  'field' => isset($_POST['recheckok']) ? xtc_draw_hidden_field('recheckok', $_POST['recheckok']) : '')
                                            ));
@@ -212,6 +216,8 @@
         $this->banktransfer_owner = xtc_db_prepare_input($_POST['banktransfer_owner']);
         $this->banktransfer_blz = xtc_db_prepare_input($_POST['banktransfer_blz']);
         $this->banktransfer_number = xtc_db_prepare_input($_POST['banktransfer_number']);
+        $this->banktransfer_iban = xtc_db_prepare_input(strtoupper($_POST['banktransfer_iban'])); //DokuMan - 2012-11-26 - added IBAN and BIC
+        $this->banktransfer_bic = xtc_db_prepare_input(strtoupper($_POST['banktransfer_bic'])); //DokuMan - 2012-11-26 - added IBAN and BIC
         $this->banktransfer_prz = $banktransfer_validation->PRZ;
         $this->banktransfer_status = $banktransfer_result;
       }
@@ -225,11 +231,15 @@
                               'fields' => array(array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER.'<br>'.
                                                                   MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ.'<br>'.
                                                                   MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER.'<br>'.
-                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME.'<br>',
+                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME.'<br>'.
+                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN.'<br>'.
+                                                                  MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC.'<br>',
                                                        'field' => $this->banktransfer_owner.'<br>'.
                                                                   $this->banktransfer_blz.'<br>'.
                                                                   $this->banktransfer_number.'<br>'.
-                                                                  $this->banktransfer_bankname.'<br>')
+                                                                  $this->banktransfer_bankname.'<br>'.
+                                                                  $this->banktransfer_iban.'<br>'. //DokuMan - 2012-11-26 - added IBAN and BIC
+                                                                  $this->banktransfer_bic.'<br>') //DokuMan - 2012-11-26 - added IBAN and BIC
                                                 ));
       }
       if (isset($_POST['banktransfer_fax']) && $_POST['banktransfer_fax'] == "on") {
@@ -245,6 +255,8 @@
       $process_button_string = xtc_draw_hidden_field('banktransfer_blz', $this->banktransfer_blz) .
                                xtc_draw_hidden_field('banktransfer_bankname', $this->banktransfer_bankname).
                                xtc_draw_hidden_field('banktransfer_number', $this->banktransfer_number) .
+                               xtc_draw_hidden_field('banktransfer_iban', $this->banktransfer_iban) . //DokuMan - 2012-11-26 - added IBAN and BIC
+                               xtc_draw_hidden_field('banktransfer_bic', $this->banktransfer_bic) . //DokuMan - 2012-11-26 - added IBAN and BIC
                                xtc_draw_hidden_field('banktransfer_owner', $this->banktransfer_owner) .
                                xtc_draw_hidden_field('banktransfer_status', $this->banktransfer_status) .
                                xtc_draw_hidden_field('banktransfer_prz', $this->banktransfer_prz) .
@@ -263,7 +275,26 @@
 
     function after_process() {
       global $insert_id, $_POST, $banktransfer_val, $banktransfer_owner, $banktransfer_bankname, $banktransfer_blz, $banktransfer_number, $banktransfer_status, $banktransfer_prz, $banktransfer_fax, $checkout_form_action, $checkout_form_submit;
-      xtc_db_query("INSERT INTO banktransfer (orders_id, banktransfer_blz, banktransfer_bankname, banktransfer_number, banktransfer_owner, banktransfer_status, banktransfer_prz) VALUES ('" . $insert_id . "', '" . $this->banktransfer_blz . "', '" . $this->banktransfer_bankname . "', '" . $this->banktransfer_number . "', '" . $this->banktransfer_owner ."', '" . $this->banktransfer_status ."', '" . $this->banktransfer_prz ."')");
+      xtc_db_query("INSERT INTO ".TABLE_BANKTRANSFER."
+                   ( orders_id,
+                     banktransfer_owner,
+                     banktransfer_number,
+                     banktransfer_bankname,
+                     banktransfer_blz,
+                     banktransfer_iban,
+                     banktransfer_bic,
+                     banktransfer_status,
+                     banktransfer_prz)
+                   VALUES ('" . $insert_id . "',
+                           '" . $this->banktransfer_owner ."',
+                           '" . $this->banktransfer_number . "',
+                           '" . $this->banktransfer_bankname . "',
+                           '" . $this->banktransfer_blz . "',
+                           '" . $this->banktransfer_iban . "',
+                           '" . $this->banktransfer_bic . "',
+                           '" . $this->banktransfer_status ."',
+                           '" . $this->banktransfer_prz ."')"
+                  );
       if (isset($_POST['banktransfer_fax'])) {
         xtc_db_query("UPDATE banktransfer SET banktransfer_fax = '" . $this->banktransfer_fax ."' WHERE orders_id = '" . $insert_id . "'");
       }
@@ -298,8 +329,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION', 'false',  '6', '2', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ', 'false', '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE', 'fax.html', '6', '0', now())");
-      xtc_db_query("CREATE TABLE IF NOT EXISTS banktransfer (orders_id int(11) NOT NULL default '0', banktransfer_owner varchar(64) default NULL, banktransfer_number varchar(24) default NULL, banktransfer_bankname varchar(255) default NULL, banktransfer_blz varchar(8) default NULL, banktransfer_status int(11) default NULL, banktransfer_prz char(2) default NULL, banktransfer_fax char(2) default NULL, KEY orders_id(orders_id)) ENGINE = MYISAM;");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER', '0',  '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER', '0', '6', '0', now())");
 
       // BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING', '', '6', '99', now())");
@@ -312,15 +342,15 @@
 
     function keys() {
       return array('MODULE_PAYMENT_BANKTRANSFER_STATUS',
-                   'MODULE_PAYMENT_BANKTRANSFER_ALLOWED',
-                   'MODULE_PAYMENT_BANKTRANSFER_ZONE',
-                   'MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID',
-                   'MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER',
-                   'MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ',
-                   'MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION',
-                   'MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER',
-                   'MODULE_PAYMENT_BANKTRANSFER_URL_NOTE',
-                   'MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING' );
+                    'MODULE_PAYMENT_BANKTRANSFER_ALLOWED',
+                    'MODULE_PAYMENT_BANKTRANSFER_ZONE',
+                    'MODULE_PAYMENT_BANKTRANSFER_ORDER_STATUS_ID',
+                    'MODULE_PAYMENT_BANKTRANSFER_SORT_ORDER',
+                    'MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ',
+                    'MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION',
+                    'MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER',
+                    'MODULE_PAYMENT_BANKTRANSFER_URL_NOTE',
+                    'MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING');
     }
   }
 ?>

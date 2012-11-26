@@ -96,4 +96,9 @@ INSERT INTO currencies VALUES
 (3, 'CHF', 'Schweizer Franken', 'CHF', '', '.', '', '2', 1.2044, '2012-11-26 00:00:00'),
 (4, 'GBP', 'Great Britain Pound', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
 
+# DokuMan - 2012-11-26 - added IBAN and BIC in banktransfer payment module
+ALTER TABLE banktransfer
+  ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz,
+  ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

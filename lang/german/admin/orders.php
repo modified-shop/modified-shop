@@ -20,6 +20,8 @@ define('TEXT_BANK_OWNER', 'Kontoinhaber:');
 define('TEXT_BANK_NUMBER', 'Kontonummer:');
 define('TEXT_BANK_BLZ', 'BLZ:');
 define('TEXT_BANK_NAME', 'Bank:');
+define('TEXT_BANK_IBAN', 'IBAN:'); //DokuMan - 2012-11-26 - added IBAN and BIC
+define('TEXT_BANK_BIC', 'BIC-Code:'); //DokuMan - 2012-11-26 - added IBAN and BIC
 define('TEXT_BANK_FAX', 'Einzugserm&auml;chtigung wird per Fax best&auml;tigt');
 define('TEXT_BANK_STATUS', 'Pr&uuml;fstatus:');
 define('TEXT_BANK_PRZ', 'Pr&uuml;fverfahren:');
