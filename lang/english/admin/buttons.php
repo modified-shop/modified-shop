@@ -1,22 +1,22 @@
 <?php
 /* --------------------------------------------------------------
-   $Id$   
-   
+   $Id$
+
    http://www.xtc-modified.org
-   Copyright (c) 2009 - 2012 xtcModified   
-   --------------------------------------------------------------   
+   Copyright (c) 2009 - 2012 xtcModified
+   --------------------------------------------------------------
    xtcModified - community made shopping
    http://www.xtc-modified.org
 
    Copyright (c) 2009 - 2012 xtcModified
    --------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(categories.php,v 1.22 2002/08/17); www.oscommerce.com 
-   (c) 2003	 nextcommerce (categories.php,v 1.10 2003/08/14); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(categories.php,v 1.22 2002/08/17); www.oscommerce.com
+   (c) 2003 nextcommerce (categories.php,v 1.10 2003/08/14); www.nextcommerce.org
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    --------------------------------------------------------------*/
 
 // buttons
@@ -37,6 +37,7 @@ define('BUTTON_STATUS_OFF', 'Status inactive');
 define('BUTTON_EDIT_ATTRIBUTES', 'Edit Attributes');
 define('BUTTON_INSERT', 'Insert');
 define('BUTTON_UPDATE', 'Update');
+define('BUTTON_CURRENCY_UPDATE', 'Update currency exchange rates');
 define('BUTTON_REVIEW_APPROVE', 'OK');
 define('BUTTON_SEND_EMAIL', 'Send E-Mail');
 define('BUTTON_SEND_COUPON', 'Send Coupon');
@@ -98,8 +99,8 @@ define('BUTTON_VIEW_PRODUCT','View Product');
 // EOF - web28 - 2010-08-21 - add  button view products
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('BUTTON_BILL', 'New invoice number');   
-//EOF - hendrik - 2011-05-14 - independent invoice number and date  
+define('BUTTON_BILL', 'New invoice number');
+//EOF - hendrik - 2011-05-14 - independent invoice number and date
 
 define('BUTTON_NEW_CARRIER', 'New carrier'); //Dokuman - 2012-11-16 - Track & Trace functionality
 ?>

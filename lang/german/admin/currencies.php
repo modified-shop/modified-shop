@@ -18,22 +18,22 @@
 
 define('HEADING_TITLE', 'W&auml;hrungen');
 
-define('TABLE_HEADING_CURRENCY_NAME', 'W&auml;hrung');
-define('TABLE_HEADING_CURRENCY_CODES', 'K&uuml;rzel');
-define('TABLE_HEADING_CURRENCY_VALUE', 'Wert');
+define('TABLE_HEADING_CURRENCY_NAME', 'Name der W&auml;hrung');
+define('TABLE_HEADING_CURRENCY_CODES', 'W&auml;hrungs&uuml;rzel');
+define('TABLE_HEADING_CURRENCY_VALUE', 'Wechselkurs');
 define('TABLE_HEADING_ACTION', 'Aktion');
 
 define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch');
-define('TEXT_INFO_CURRENCY_TITLE', 'Name:');
-define('TEXT_INFO_CURRENCY_CODE', 'K&uuml;rzel:');
-define('TEXT_INFO_CURRENCY_SYMBOL_LEFT', 'Symbol links:');
-define('TEXT_INFO_CURRENCY_SYMBOL_RIGHT', 'Symbol rechts:');
-define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Dezimalkomma:');
-define('TEXT_INFO_CURRENCY_THOUSANDS_POINT', 'Tausenderpunkt:');
+define('TEXT_INFO_CURRENCY_TITLE', 'Name der W&auml;hrung:');
+define('TEXT_INFO_CURRENCY_CODE', 'W&auml;hrungsk&uuml;rzel:');
+define('TEXT_INFO_CURRENCY_SYMBOL_LEFT', 'W&auml;hrungsymbol links:');
+define('TEXT_INFO_CURRENCY_SYMBOL_RIGHT', 'W&auml;hrungsymbol rechts:');
+define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Symbol f&uuml;r Dezimalkomma:');
+define('TEXT_INFO_CURRENCY_THOUSANDS_POINT', 'Symbol f&uuml;r Tausenderpunkt:');
 define('TEXT_INFO_CURRENCY_DECIMAL_PLACES', 'Dezimalstellen:');
 define('TEXT_INFO_CURRENCY_LAST_UPDATED', 'letzte &Auml;nderung:');
-define('TEXT_INFO_CURRENCY_VALUE', 'Wert:');
-define('TEXT_INFO_CURRENCY_EXAMPLE', 'Beispiel:');
+define('TEXT_INFO_CURRENCY_VALUE', 'Wechselkurs (bei Basisw&auml;hrung -> 1.00000000):');
+define('TEXT_INFO_CURRENCY_EXAMPLE', 'Umrechnungsbeispiel:');
 define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie die neue W&auml;hrung mit allen relevanten Daten ein');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese W&auml;hrung l&ouml;schen m&ouml;chten?');
 define('TEXT_INFO_HEADING_NEW_CURRENCY', 'neue W&auml;hrung');
