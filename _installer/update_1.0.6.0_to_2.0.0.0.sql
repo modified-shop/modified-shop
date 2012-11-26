@@ -10,7 +10,6 @@
 #Tomcraft - 2012-11-11 - changed database_version
 UPDATE database_version SET version = 'MOD_2.0.0.0';
 
-
 #Hendrik - 2010-08-29 - Xajax Support in Backend
 ALTER TABLE admin_access
   ADD xajax INT(1) DEFAULT 1 NOT NULL;
@@ -72,5 +71,29 @@ ALTER TABLE admin_access
 #DokuMan - 2012-11-12 - set new default template, if existing template was named "xtc5"
 UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
 WHERE configuration_key = 'CURRENT_TEMPLATE' AND configuration_value = 'xtc5';
+
+#DokuMan - 2012-11-26 - changed default currency float to .4 and changed 'code' as unique key
+DROP TABLE IF EXISTS currencies;
+CREATE TABLE currencies (
+  currencies_id INT NOT NULL AUTO_INCREMENT,
+  code CHAR(3) NOT NULL,
+  title VARCHAR(32) NOT NULL,
+  symbol_left VARCHAR(12),
+  symbol_right VARCHAR(12),
+  decimal_point CHAR(1),
+  thousands_point CHAR(1),
+  decimal_places CHAR(1),
+  value FLOAT(13,4),
+  last_updated DATETIME NULL,
+  PRIMARY KEY (currencies_id),
+  UNIQUE KEY code (code)
+) ENGINE=MyISAM;
+
+#DokuMan - 2012-11-26 - Added more shop currencies by default
+INSERT INTO currencies VALUES
+(1, 'EUR', 'Euro', '', '&euro;', ',', '.', '2', 1.0000, '2012-11-26 00:00:00'),
+(2, 'USD', 'United States Dollar', '$', '', '.', ',', '2', 1.2978, '2012-11-26 00:00:00'),
+(3, 'CHF', 'Schweizer Franken', 'CHF', '', '.', '', '2', 1.2044, '2012-11-26 00:00:00'),
+(4, 'GBP', 'Great Britain Pound', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
 
 # Keep an empty line at the end of this file for the db_updater to work properly

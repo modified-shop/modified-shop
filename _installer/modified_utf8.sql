@@ -342,16 +342,17 @@ CREATE TABLE countries (
 DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
   currencies_id INT NOT NULL AUTO_INCREMENT,
-  title VARCHAR(32) NOT NULL,
   code CHAR(3) NOT NULL,
+  title VARCHAR(32) NOT NULL,
   symbol_left VARCHAR(12),
   symbol_right VARCHAR(12),
   decimal_point CHAR(1),
   thousands_point CHAR(1),
   decimal_places CHAR(1),
-  value FLOAT(13,8),
+  value FLOAT(13,4),
   last_updated DATETIME NULL,
-  PRIMARY KEY (currencies_id)
+  PRIMARY KEY (currencies_id),
+  UNIQUE KEY code (code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers;
@@ -1913,7 +1914,13 @@ INSERT INTO countries VALUES (240,'Serbia','RS','SRB',1,1);
 INSERT INTO countries VALUES (241,'Montenegro','ME','MNE',1,1);
 # EOF - Tomcraft - 2010-07-02 - Added Serbia & Montenegro
 
-INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1.0000', NOW());
+# BOF - DokuMan - 2012-11-26 - Added more shop currencies by default
+INSERT INTO currencies VALUES
+(1, 'EUR', 'Euro', '', '&euro;', ',', '.', '2', 1.0000, '2012-11-26 00:00:00'),
+(2, 'USD', 'United States Dollar', '$', '', '.', ',', '2', 1.2978, '2012-11-26 00:00:00'),
+(3, 'CHF', 'Schweizer Franken', 'CHF', '', '.', '', '2', 1.2044, '2012-11-26 00:00:00'),
+(4, 'GBP', 'Great Britain Pound', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
+# EOF - DokuMan - 2012-11-26 - Added more shop currencies by default
 
 # BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages (status 1)
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'utf-8',1);
