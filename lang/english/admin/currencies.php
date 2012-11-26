@@ -32,7 +32,7 @@ define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Symbol for Decimal Point:');
 define('TEXT_INFO_CURRENCY_THOUSANDS_POINT', 'Symbol for Thousands Point:');
 define('TEXT_INFO_CURRENCY_DECIMAL_PLACES', 'Decimal Places:');
 define('TEXT_INFO_CURRENCY_LAST_UPDATED', 'Last Updated:');
-define('TEXT_INFO_CURRENCY_VALUE', 'Exchange rate (base currency is 1.00000000):');
+define('TEXT_INFO_CURRENCY_VALUE', 'Exchange rate (base currency is 1.0000):');
 define('TEXT_INFO_CURRENCY_EXAMPLE', 'Example Output:');
 define('TEXT_INFO_INSERT_INTRO', 'Please enter the new currency with its related data');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this currency?');

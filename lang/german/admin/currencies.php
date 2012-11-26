@@ -32,7 +32,7 @@ define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Symbol f&uuml;r Dezimalkomma:');
 define('TEXT_INFO_CURRENCY_THOUSANDS_POINT', 'Symbol f&uuml;r Tausenderpunkt:');
 define('TEXT_INFO_CURRENCY_DECIMAL_PLACES', 'Dezimalstellen:');
 define('TEXT_INFO_CURRENCY_LAST_UPDATED', 'letzte &Auml;nderung:');
-define('TEXT_INFO_CURRENCY_VALUE', 'Wechselkurs (bei Basisw&auml;hrung -> 1.00000000):');
+define('TEXT_INFO_CURRENCY_VALUE', 'Wechselkurs (bei Basisw&auml;hrung -> 1.0000):');
 define('TEXT_INFO_CURRENCY_EXAMPLE', 'Umrechnungsbeispiel:');
 define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie die neue W&auml;hrung mit allen relevanten Daten ein');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diese W&auml;hrung l&ouml;schen m&ouml;chten?');

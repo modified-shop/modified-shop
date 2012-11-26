@@ -28,8 +28,8 @@
       case 'insert':
       case 'save':
         if (isset($_GET['cID'])) $currency_id = xtc_db_prepare_input($_GET['cID']);
+        $code = xtc_db_prepare_input(strtoupper($_POST['code']));
         $title = xtc_db_prepare_input($_POST['title']);
-        $code = xtc_db_prepare_input($_POST['code']);
         $symbol_left = xtc_db_prepare_input($_POST['symbol_left']);
         $symbol_right = xtc_db_prepare_input($_POST['symbol_right']);
         $decimal_point = xtc_db_prepare_input($_POST['decimal_point']);
@@ -37,14 +37,14 @@
         $decimal_places = xtc_db_prepare_input($_POST['decimal_places']);
         $value = xtc_db_prepare_input($_POST['value']);
 
-        $sql_data_array = array('title' => $title,
-                                'code' => $code,
-                                'symbol_left' => $symbol_left,
-                                'symbol_right' => $symbol_right,
-                                'decimal_point' => $decimal_point,
-                                'thousands_point' => $thousands_point,
-                                'decimal_places' => $decimal_places,
-                                'value' => $value);
+        $sql_data_array = array('code' => $code,
+                                 'title' => $title,
+                                 'symbol_left' => $symbol_left,
+                                 'symbol_right' => $symbol_right,
+                                 'decimal_point' => $decimal_point,
+                                 'thousands_point' => $thousands_point,
+                                 'decimal_places' => $decimal_places,
+                                 'value' => $value);
 
         if ($action == 'insert') {
           xtc_db_perform(TABLE_CURRENCIES, $sql_data_array);
@@ -156,9 +156,10 @@ require (DIR_WS_INCLUDES.'head.php');
                           <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                         </tr>
                         <?php
-                        $currency_query_raw = "select currencies_id,
-                                                      title,
+                        $currency_query_raw = "-- admin/currencies.php
+                                               SELECT currencies_id,
                                                       code,
+                                                      title,
                                                       symbol_left,
                                                       symbol_right,
                                                       decimal_point,
@@ -166,8 +167,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                                       decimal_places,
                                                       value,
                                                       last_updated
-                                                 from " . TABLE_CURRENCIES . "
-                                                 order by title";
+                                                 FROM " . TABLE_CURRENCIES . "
+                                             ORDER BY title";
                         $currency_split = new splitPageResults($curr_page, MAX_DISPLAY_SEARCH_RESULTS, $currency_query_raw, $currency_query_numrows);
                         $currency_query = xtc_db_query($currency_query_raw);
                         while ($currency = xtc_db_fetch_array($currency_query)) {
@@ -186,7 +187,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             }
                             ?>
                             <td class="dataTableContent"><?php echo $currency['code']; ?></td>
-                            <td class="dataTableContent" align="right"><?php echo number_format($currency['value'], 8); ?></td>
+                            <td class="dataTableContent" align="right"><?php echo number_format($currency['value'], 4); ?></td>
                             <td class="dataTableContent" align="right"><?php if (isset($currency['last_updated'])) { echo xtc_date_short($currency['last_updated']);} else {echo '&nbsp;';} ?></td>
                             <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $curr_page . '&cID=' . $currency['currencies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                           </tr>
@@ -224,12 +225,12 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents = array('form' => xtc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $curr_page . '&cID=' . $cInfo->currencies_id . '&action=insert'));
                           $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . xtc_draw_input_field('title'));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code'));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code','','size="3" maxlength="3"'));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . xtc_draw_input_field('symbol_left'));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . xtc_draw_input_field('symbol_right'));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point'));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point'));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places'));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point','','size="1" maxlength="1"'));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point','','size="1" maxlength="1"'));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places','','size="1" maxlength="1"'));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . xtc_draw_input_field('value'));
                           $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
                           $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $curr_page . '&cID=' . $_GET['cID']) . '">' . BUTTON_CANCEL . '</a>');
@@ -239,12 +240,12 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents = array('form' => xtc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $curr_page . '&cID=' . $cInfo->currencies_id . '&action=save'));
                           $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . xtc_draw_input_field('title', $cInfo->title));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code', $cInfo->code));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code', $cInfo->code, 'size="3" maxlength="3"'));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . xtc_draw_input_field('symbol_left', $cInfo->symbol_left));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . xtc_draw_input_field('symbol_right', $cInfo->symbol_right));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point', $cInfo->decimal_point));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point', $cInfo->thousands_point));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places', $cInfo->decimal_places));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point', $cInfo->decimal_point,'size="1" maxlength="1"'));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point', $cInfo->thousands_point,'size="1" maxlength="1"'));
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places', $cInfo->decimal_places,'size="1" maxlength="1"'));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . xtc_draw_input_field('value', $cInfo->value));
                           if (DEFAULT_CURRENCY != $cInfo->code)
                             $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
@@ -268,7 +269,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             $contents[] = array('text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point);
                             $contents[] = array('text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places);
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_LAST_UPDATED . ' ' . xtc_date_short($cInfo->last_updated));
-                            $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8));
+                            $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 4));
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_EXAMPLE . '<br />' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
                           }
                           break;
