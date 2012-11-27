@@ -18,11 +18,9 @@
 
 include ('includes/application_top.php');
 
-// BOF - DokuMan - 2011-05-10 - add check for products_id
-if (!isset($_GET['products_id']) || !is_numeric($_GET['products_id'])) {
+if (!isset($_GET['products_id'])) { //DokuMan - 2012-11-27 - The products_id may be a string containing attributes
   xtc_redirect(xtc_href_link(FILENAME_REVIEWS));
 }
-// EOF - DokuMan - 2011-05-10 - add check for products_id
 
 // create smarty elements
 $smarty = new Smarty;
