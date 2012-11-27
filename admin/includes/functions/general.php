@@ -1973,11 +1973,7 @@
    * @return
    */
   function xtc_convert_linefeeds($from, $to, $string) {
-    if ((PHP_VERSION < "4.0.5") && is_array($from)) {
-      return preg_replace('/('.implode('|', $from).')/', $to, $string); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
-    } else {
-      return str_replace($from, $to, $string);
-    }
+    return str_replace($from, $to, $string);
   }
 
   // Return all customers statuses for a specified language_id and return an array(array())
