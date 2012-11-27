@@ -134,7 +134,7 @@
   }
 
   // Dadadadatenbank
-  $ml_meta_query = xtc_db_query("
+  $ml_meta_query = xtDBquery("
     select  content_meta_title,
             content_meta_description,
             content_meta_keywords
@@ -436,7 +436,7 @@ switch(basename($_SERVER['SCRIPT_NAME'])) { // Start Switch
     if(in_array(intval($_GET['coID']),$content_noIndex)) {
       $meta_robots = 'noindex, follow, noodp';
     }
-    $contents_meta_query = xtc_db_query("
+    $contents_meta_query = xtDBquery("
       select  content_meta_title,
               content_meta_description,
               content_meta_keywords,
