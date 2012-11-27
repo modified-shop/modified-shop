@@ -65,7 +65,9 @@ if (xtc_not_null($action)) {
       }
       for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
 
-          $cart_quantity = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
+          $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
+          $_POST['old_qty'][$i] = xtc_remove_non_numeric($_POST['old_qty'][$i]);
+          $_POST['products_id'][$i] = preg_replace('/[^0-9\{\}]/', '', $_POST['products_id'][$i]);
 		  
 		  if ($cart_quantity == 0) $_SESSION['cart']->remove($_POST['products_id'][$i]);
 		  
