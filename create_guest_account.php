@@ -38,7 +38,6 @@ require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php')
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_get_country_list.inc.php');
 require_once (DIR_FS_INC . 'xtc_validate_email.inc.php');
-//require_once (DIR_FS_INC . 'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_geo_zone_code.inc.php');
 // needs to be included earlier to set the success message in the messageStack
@@ -82,8 +81,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $telephone = xtc_db_prepare_input($_POST['telephone']);
   $fax = xtc_db_prepare_input($_POST['fax']);
   $newsletter = '';
-  $password = xtc_db_prepare_input($_POST['password']);
-  $confirmation = xtc_db_prepare_input($_POST['confirmation']);
+  //$password = xtc_db_prepare_input($_POST['password']); //Dokuman - 2012-11-27 - password handover not needed with guest accounts
+  //$confirmation = xtc_db_prepare_input($_POST['confirmation']); //Dokuman - 2012-11-27 - password handover not needed with guest accounts
 
   $error = false;
 

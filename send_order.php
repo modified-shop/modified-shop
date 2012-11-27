@@ -37,9 +37,12 @@
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   if (isset($_SESSION['paypal_express_new_customer']) && $_SESSION['paypal_express_new_customer'] == 'true' && isset($_SESSION['ACCOUNT_PASSWORD']) && $_SESSION['ACCOUNT_PASSWORD'] == 'true') {
-    require_once (DIR_FS_INC.'xtc_create_password.inc.php');
+    require_once (DIR_FS_INC.'xtc_create_random_value.inc.php');
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
-    $password_encrypted =  xtc_RandomString(10);
+    //BOF - DokuMan - 2012-11-27 - use xtc_create_random_value() function instead of xtc_RandomString
+    //$password_encrypted = xtc_RandomString(10);
+    $password_encrypted = xtc_create_random_value(10);
+    //EOF - DokuMan - 2012-11-27 - use xtc_create_random_value() function instead of xtc_RandomString
     $password = xtc_encrypt_password($password_encrypted);
     xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
     $smarty->assign('NEW_PASSWORD', $password_encrypted);
@@ -74,14 +77,14 @@
 
   //shipping method
   if ($order->info['shipping_class'] != '') {
-    $shipping_class = explode('_', $order->info['shipping_class']);    
+    $shipping_class = explode('_', $order->info['shipping_class']);
     include (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/shipping/'.$shipping_class[0].'.php');
     $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class[0].'_TEXT_TITLE'));
   }
   $smarty->assign('SHIPPING_METHOD', $shipping_method);
-  
+
   //payment method
-  if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
+  if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
     include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
     $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
   }
@@ -149,7 +152,7 @@
     $smarty->assign('PAYMENT_INFO_HTML', $payment_text);
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $payment_text));
   }
-  
+
   //allow duty-note in email
   if(isset($send_by_admin)) {
     require(DIR_FS_CATALOG.DIR_WS_CLASSES.'main.php');
@@ -209,10 +212,10 @@
 
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
-  
+
   //email attachments
   $email_attachments = defined('EMAIL_BILLING_ATTACHMENTS') ? EMAIL_BILLING_ATTACHMENTS : '';
-  
+
   // create subject
   $order_subject = str_replace('{$nr}', $insert_id, EMAIL_BILLING_SUBJECT_ORDER);
   $order_subject = str_replace('{$date}', xtc_date_long($order->info['date_purchased']), $order_subject); // Tomcraft - 2011-12-28 - Use date_puchased instead of current date in E-Mail subject
@@ -265,7 +268,7 @@
     $orders_status_id = ($order->info['orders_status']  < 1) ? '1' : $order->info['orders_status'];
 
     //web28 - 2011-03-20 - Fix order status
-    xtc_db_query("UPDATE ".TABLE_ORDERS." 
+    xtc_db_query("UPDATE ".TABLE_ORDERS."
                      SET orders_status = '".xtc_db_input($orders_status_id)."',
                          last_modified = now()
                    WHERE orders_id = '".xtc_db_input($insert_id)."'");

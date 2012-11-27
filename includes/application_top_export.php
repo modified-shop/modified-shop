@@ -94,6 +94,9 @@
   require_once(DIR_FS_INC . 'xtc_db_prepare_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
   require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
+  require_once(DIR_FS_INC . 'xtc_create_random_value.inc.php'); //for cao_xtc_functions.php
+  require_once(DIR_FS_INC . 'xtc_encrypt_password.inc.php'); //for cao_xtc_functions.php
+  require_once(DIR_FS_INC . 'xtc_create_password.inc.php'); //for cao_xtc_functions.php
 
   // make a connection to the database... now
   xtc_db_connect() or die('Unable to connect to database server!');
