@@ -299,7 +299,7 @@ CREATE TABLE configuration (
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
   use_function VARCHAR(255) NULL,
-  set_function VARCHAR(255) NULL,
+  set_function VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_group_id (configuration_group_id)
 ) ENGINE=MyISAM;
