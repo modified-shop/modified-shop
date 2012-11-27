@@ -45,9 +45,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $password = xtc_db_prepare_input($_POST['password']);
     $check_customer_query = xtc_db_query("select customers_password from ".TABLE_CUSTOMERS." where customers_id = '".(int) $_SESSION['customer_id']."'");
     $check_customer = xtc_db_fetch_array($check_customer_query);
-
     if (!xtc_validate_password($password, $check_customer['customers_password'])) {
-      $info_message = TEXT_LOGIN_ERROR;
+      $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
     } else {
 //EOF - 2009-08-25 - Require password to disable account
 
@@ -78,7 +77,6 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $_SESSION['cart']->reset();
 
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-  $smarty->assign('info_message', $info_message);
 //BOF - 2009-08-25 - Require password to disable account
   }
 //EOF - 2009-08-25 - Require password to disable account
@@ -89,6 +87,9 @@ $breadcrumb->add(NAVBAR_TITLE_2_ACCOUNT_DELETE, xtc_href_link(FILENAME_ACCOUNT_D
 
 require (DIR_WS_INCLUDES.'header.php');
 
+if ($messageStack->size('account_delete') > 0) {
+  $smarty->assign('error', $messageStack->output('account_delete'));
+}
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post'). xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
