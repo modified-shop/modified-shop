@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+//BOF - DokuMan - 2012-11-27 - use xtc_create_random_value() function instead of xtc_RandomString
+/*
   function xtc_RandomString($length) {
     $chars = array( 'a', 'A', 'b', 'B', 'c', 'C', 'd', 'D', 'e', 'E', 'f', 'F', 'g', 'G', 'h', 'H', 'i', 'I', 'j', 'J', 'k', 'K', 'l', 'L', 'm', 'M', 'n','N', 'o', 'O', 'p', 'P', 'q', 'Q', 'r', 'R', 's', 'S', 't', 'T',  'u', 'U', 'v','V', 'w', 'W', 'x', 'X', 'y', 'Y', 'z', 'Z', '1', '2', '3', '4', '5', '6', '7', '8', '9', '0');
 
@@ -29,14 +31,16 @@
 
     return $rand_str;
   }
+*/
+//EOF - DokuMan - 2012-11-27 - use xtc_create_random_value() function instead of xtc_RandomString
 
   function xtc_create_password($length) {
-    $pass=xtc_RandomString($length); //DokuMan - 2011-02-10 - corrected typo $lenght -> $length
-    //BOF - DokuMan - 2011-02-02 - added support for passwort+salt (SHA1)
-    //return md5($pass);
+  
+    require_once (DIR_FS_INC . 'xtc_create_random_value.inc.php');
     require_once (DIR_FS_INC . 'xtc_encrypt_password.inc.php');
 
+    $pass=xtc_create_random_value($length);
+
     return xtc_encrypt_password($pass);
-    //EOF - DokuMan - 2011-02-02 - added support for passwort+salt (SHA1)
   }
 ?>
