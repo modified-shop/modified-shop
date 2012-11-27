@@ -70,7 +70,7 @@
     $payment_unallowed = xtc_db_prepare_input($_POST['payment_unallowed']);
     $shipping_unallowed = xtc_db_prepare_input($_POST['shipping_unallowed']);
 
-    if ($customers_password == '') {
+    if ($customers_password_encrypted == '') { //DokuMan - 2012-11-27 - fix empty admin passwords in customer's email
       $customers_password_encrypted =  xtc_RandomString(8);
       $customers_password = xtc_encrypt_password($customers_password_encrypted);
     }
