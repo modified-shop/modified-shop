@@ -66,8 +66,11 @@ if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR
   error_reporting(0);
 }
 
+// include the list of project filenames
+require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
+
 // solve compatibility issues
-require_once (DIR_WS_FUNCTIONS.'compatibility.php');
+require_once (DIR_WS_FUNCTIONS.FILENAME_COMPATIBILITY);
 if (version_compare(PHP_VERSION,"5.2","<")) {
   require_once (DIR_FS_EXTERNAL . 'upgradephp/upgrade.php');
 }
@@ -95,9 +98,6 @@ define('LOCAL_EXE_GZIP', '/usr/bin/gzip');
 define('LOCAL_EXE_GUNZIP', '/usr/bin/gunzip');
 define('LOCAL_EXE_ZIP', '/usr/local/bin/zip');
 define('LOCAL_EXE_UNZIP', '/usr/local/bin/unzip');
-
-// include the list of project filenames
-require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
 
 // list of project database tables
 require_once ('../' . DIR_WS_INCLUDES . 'database_tables.php');

@@ -78,7 +78,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
   require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
-  require_once(DIR_WS_CLASSES.'class.inputfilter.php');
+  require_once(DIR_WS_CLASSES.FILENAME_INPUTFILTER);
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
