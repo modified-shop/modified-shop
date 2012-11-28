@@ -1,0 +1,41 @@
+<?php
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   xtcModified - community made shopping
+   http://www.xtc-modified.org
+
+   Copyright (c) 2010 xtcModified
+   -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce(german.php,v 1.119 2003/05/19); www.oscommerce.com
+   (c) 2003 nextcommerce (german.php,v 1.25 2003/08/25); www.nextcommerce.org
+   (c) 2006 XT-Commerce
+   
+   Released under the GNU General Public License 
+   ---------------------------------------------------------------------------------------*/
+
+
+   function xtc_input_validation($var,$type,$replace_char) {
+
+      switch($type) {
+                case 'cPath':
+                        $replace_param='/[^0-9_]/';
+                        break;
+                case 'int':
+                        $replace_param='/[^0-9]/';
+                        break;
+                case 'char':
+                        $replace_param='/[^a-zA-Z]/';
+                        break;
+                case 'products_id':
+                        $replace_param='/[^0-9\{\}]/';
+                        break;
+      }
+
+    $val=preg_replace($replace_param,$replace_char,$var);
+
+    return $val;
+   }
+?>

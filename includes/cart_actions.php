@@ -57,7 +57,7 @@ if (xtc_not_null($action)) {
   switch ($action) {
 
     case 'remove_product':
-      $prd_id = preg_replace('/[^0-9\{\}]/', '', $_GET['prd_id']);
+      $prd_id = xtc_input_validation($_GET['prd_id'], 'products_id', '');
       $_SESSION['cart'] -> remove($prd_id);
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
       break;
@@ -71,7 +71,9 @@ if (xtc_not_null($action)) {
 
           $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
           $_POST['old_qty'][$i] = xtc_remove_non_numeric($_POST['old_qty'][$i]);
-          $_POST['products_id'][$i] = preg_replace('/[^0-9\{\}]/', '', $_POST['products_id'][$i]);
+          $_POST['products_id'][$i] = xtc_input_validation($_POST['products_id'][$i], 'products_id', '');
+          
+          preg_replace('/[^0-9\{\}]/', '', $_POST['products_id'][$i]);
           
           if ($cart_quantity == 0) $_SESSION['cart']->remove($_POST['products_id'][$i]);
          
