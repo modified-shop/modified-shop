@@ -17,14 +17,14 @@
    ---------------------------------------------------------------------------------------*/
 
   class splitPageResults {
-    var $sql_query;
-    var $number_of_rows;
-    var $current_page_number;
-    var $number_of_pages;
-    var $number_of_rows_per_page;
+    public $sql_query;
+    public $number_of_rows;
+    public $current_page_number;
+    public $number_of_pages;
+    public $number_of_rows_per_page;
 
     // class constructor
-    function splitPageResults($query, $page, $max_rows, $count_key = '*') {
+    function __construct($query, $page, $max_rows) {
       $this->sql_query = $query;
 
       if (empty($page) || !is_numeric($page)) $page = 1;
@@ -44,17 +44,10 @@
       $pos_order_by = strpos(strtoupper($this->sql_query), ' ORDER BY', $pos_from);
       if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
 
-      if (strpos(strtoupper($this->sql_query), 'DISTINCT') || strpos(strtoupper($this->sql_query), 'GROUP BY')) {
-        $count_string = 'DISTINCT ' . xtc_db_input($count_key);
-        //$count_string = xtc_db_input($count_key);
-      } else {
-        $count_string = xtc_db_input($count_key);
-      }
-
       //BOF - DokuMan - 2010-08-26 - performance improvement
       //$count_query = xtDBquery($query);
       //$count = xtc_db_num_rows($count_query,true);
-      $reviews_count_query = xtc_db_query("select count(" . $count_string . ") as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
+      $reviews_count_query = xtc_db_query("select count(*) as total " . substr($query, $pos_from, ($pos_to - $pos_from)));
       $reviews_count = xtc_db_fetch_array($reviews_count_query);
       $count = $reviews_count['total'];
       //EOF - DokuMan - 2010-08-26 - performance improvement
