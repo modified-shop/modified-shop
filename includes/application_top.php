@@ -55,14 +55,14 @@ if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR
 require (DIR_WS_INCLUDES.'filenames.php');
 
 // Debug-Log-Class - thx to franky
-include_once(DIR_WS_CLASSES.'class.debug.php');
+include_once(DIR_WS_CLASSES.FILENAME_DEBUG);
 $log = new debug;
 
 // SSEQ-Lib integration - call SSEQ earlier
 require_once (DIR_FS_EXTERNAL . 'sseq-lib/seq_lib.php');
 
 // solve compatibility issues
-require_once (DIR_WS_FUNCTIONS.'compatibility.php');
+require_once (DIR_WS_FUNCTIONS.FILENAME_COMPATIBILITY);
 if (version_compare(PHP_VERSION,"5.2","<")) {
   require_once (DIR_FS_EXTERNAL . 'upgradephp/upgrade.php');
 }
@@ -220,7 +220,7 @@ if ((!isset($gzip_off) || !$gzip_off) && (GZIP_COMPRESSION == 'true') && ($ext_z
 }
 
 // security inputfilter for GET/POST/COOKIE
-require (DIR_WS_CLASSES.'class.inputfilter.php');
+require (DIR_WS_CLASSES.FILENAME_INPUTFILTER);
 $InputFilter = new InputFilter();
 
 $_GET = $InputFilter->process($_GET);
