@@ -19,7 +19,7 @@
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
-  $page = (isset($page) ? $page : '');
+  $page = (isset($_GET['page']) ? $_GET['page'] : '');
 
   if (xtc_not_null($action)) {
     switch ($action) {

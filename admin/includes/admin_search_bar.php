@@ -14,19 +14,19 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  $page = basename($_SERVER['SCRIPT_FILENAME']);
+  $page_filename = basename($_SERVER['SCRIPT_FILENAME']);
   $search_cus = '';
   $search_email = '';
   $search_ord = '';
   $search_cat = '';
-  if (strpos($page, 'customers.php') !== false) {
+  if (strpos($page_filename, 'customers.php') !== false) {
     $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
     $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
-  if (strpos($page, 'orders.php') !== false) {
+  if (strpos($page_filename, 'orders.php') !== false) {
     $search_ord = htmlentities(isset($_GET['oID']) ? $_GET['oID'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
-  if (strpos($page, 'categories.php') !== false){
+  if (strpos($page_filename, 'categories.php') !== false){
     $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
 ?>
