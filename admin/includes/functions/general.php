@@ -768,6 +768,17 @@
   }
 
   /**
+   * xtc_get_prid()
+   *
+   * @param mixed $uprid
+   * @return
+   */
+  function xtc_get_prid($uprid) {
+    $pieces = explode('{', $uprid);
+    return $pieces[0];
+  }
+
+  /**
    * xtc_get_languages()
    *
    * @return
