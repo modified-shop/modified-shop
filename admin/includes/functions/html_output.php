@@ -131,6 +131,40 @@
     return $output_string;
   }
 
+  ////
+  // Output a form
+  function xtc_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
+    $form = '<form name="' . $name . '" action="';
+    if ($parameters) {
+      $form .= xtc_href_link($action, $parameters);
+    } else {
+      $form .= xtc_href_link($action);
+    }
+    $form .= '" method="' . $method . '"';
+    if ($params) {
+      $form .= ' ' . $params;
+    }
+    $form .= '>';
+    return $form;
+  }
+
+  ////
+  // Output a form input field
+  function xtc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
+    $field = '<input type="' . $type . '" name="' . $name . '"';
+    if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
+      $field .= ' value="' . htmlspecialchars(trim($GLOBALS[$name])) . '"';
+    } elseif ($value != '') {
+      $field .= ' value="' . htmlspecialchars(trim($value)) . '"';
+    }
+    if ($parameters != '') {
+      $field .= ' ' . $parameters;
+    }
+    $field .= '>';
+    if ($required)
+      $field .= TEXT_FIELD_REQUIRED;
+    return $field;
+  }
 
   // Output a form small input field
   function xtc_draw_small_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
