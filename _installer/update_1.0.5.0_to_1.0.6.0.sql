@@ -13,17 +13,6 @@ UPDATE database_version SET version = 'MOD_1.0.6.0';
 #DokuMan - 2010-08-05 - mark out of stock products red by default
 UPDATE configuration SET configuration_value = '<span style="color:red">***</span>', last_modified = NOW() WHERE configuration_key = 'STOCK_MARK_PRODUCT_OUT_OF_STOCK';
 
-#DokuMan - 2010-08-17 - Replace GLS shipping module with newer version
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_STATUS';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_HANDLING';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_ALLOWED';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_SORT_ORDER';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_TAX_CLASS';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_ZONE';
-DROP TABLE IF EXISTS gls_country_to_postal;
-DROP TABLE IF EXISTS gls_postal_to_weight;
-DROP TABLE IF EXISTS gls_weight;
-
 #DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany , 6 - Ireland/Taiwan, 7 - China, 8 - UK/GB
 INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$country / $city');
