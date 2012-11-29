@@ -24,6 +24,7 @@ require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 
 $allowed_tags = '<h1><h2><h3><h4><p><br><em><strong><b><i><ol><ul><li>';
+$module_content = array();
 
 // create smarty elements
 $info_smarty = new Smarty;
@@ -34,7 +35,7 @@ if (isset($_GET['pID']) && $_GET['pID']!='') {
   $_GET['products_id'] = xtc_get_prid($_GET['pID']);
   $info_smarty->assign('noprint',true);
 }
-if (isset($_GET['products_id']) && $_GET['products_id']!='') {  
+if (isset($_GET['products_id']) && $_GET['products_id']!='') {
   $product = new product((int)$_GET['products_id']);
 }
 if (!is_object($product) || !$product->isProduct()) {
@@ -203,7 +204,7 @@ if (!is_object($product) || !$product->isProduct()) {
   //canonical_link -> set canonical tag in /template/.../module/print_product_info.html
   $canonical_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'],$request_type,false);
   $info_smarty->assign('CanonicalLink', $canonical_link);
-  
+
   //include modules
   if ($_SESSION['customers_status']['customers_status_graduated_prices'] == 1) {
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
