@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 # Execute the following SQL-queries to update the database schema
-# from xt:Commerce 3.0.4 SP2.1 to Modified 1.0.1.0
+# from xt:Commerce 3.0.4 SP2.1 to modified eCommerce Shopsoftware 1.0.1.0
 
 CREATE TABLE IF NOT EXISTS database_version (
   version VARCHAR(32) NOT NULL
