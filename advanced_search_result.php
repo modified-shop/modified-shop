@@ -36,7 +36,7 @@ $pfrom = $_GET['pfrom'] = isset($_GET['pfrom']) && !empty($_GET['pfrom']) ? stri
 $pto = $_GET['pto'] = isset($_GET['pto']) && !empty($_GET['pto']) ? stripslashes($_GET['pto']) : false;
 $manufacturers_id  = $_GET['manufacturers_id'] = isset($_GET['manufacturers_id']) && xtc_not_null($_GET['manufacturers_id']) ? (int)$_GET['manufacturers_id'] : false;
 $categories_id = $_GET['categories_id'] = isset($_GET['categories_id']) && xtc_not_null($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
-$_GET['inc_subcat'] = isset($_GET['inc_subcat']) && xtc_not_null($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : 0;
+$_GET['inc_subcat'] = isset($_GET['inc_subcat']) && xtc_not_null($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
 // reset error
 $errorno = 0;
 
@@ -87,7 +87,7 @@ if ($errorno) {
 
   //include subcategories if needed
   if ($categories_id !== false) {
-    if ($_GET['inc_subcat'] == '1') {
+    if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
       $subcategories_array = array();
       xtc_get_subcategories($subcategories_array, $categories_id);
       $subcat_join = " LEFT OUTER JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." AS p2c ON (p.products_id = p2c.products_id) ";
