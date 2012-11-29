@@ -20,6 +20,7 @@
     xtc_redirect('../', '', 'NONSSL'); //redirect back to shop
   }
 
+  const XTCOMMERCE304_FILE = 'update_xtc3.0.4sp2.1_to_1.0.1.0.sql';
   $restore_query = '';
   $used_files_display = '';
 
@@ -80,8 +81,14 @@
   xtc_db_connect() or die('Unable to connect to database server!');
   $version_query = xtc_db_query("SELECT version FROM " . TABLE_DATABASE_VERSION);
   $version_array = xtc_db_fetch_array($version_query);
-  $db_version = substr($version_array['version'], 5, 7); //return version, e.g. '1.0.5.0' when 'MOD_1.0.5.0'
-  $db_version_update = 'update_' . $db_version;
+  if (strstr($version_array['version'], 'xtcM')) { //xtcM for old version upgrades
+    $db_version_update = 'update_' . substr($version_array['version'], 5, 7); //return version, e.g. '1.0.5.0' when 'xtcM_1.0.5.0'
+  } elseif (strstr($version_array['version'], 'MOD')){ //MOD for new version upgrades
+    $db_version_update = 'update_' . substr($version_array['version'], 4, 7); //return version, e.g. '1.0.5.0' when 'MOD_1.0.5.0'
+  } else {
+    $db_version_update = '';
+    $version_array['version'] = 'xt:Commerce';
+  }
   $initialDBSize = get_db_size();
 
   // get all SQL update_files
@@ -93,6 +100,11 @@
   }
   closedir($ordner);
   sort($farray);
+
+  //DB seems to be an old xtCommerce installation, so include XTCOMMERCE304_FILE here
+  if ($db_version_update == '') {
+    array_unshift($farray, XTCOMMERCE304_FILE); // add filename to beginning of sorted array
+  }
 
   // drop unnecessary SQL update_files less than "$db_version"
   foreach($farray as $key => $item) {
@@ -189,12 +201,12 @@
     </style>
   </head>
   <body>
-    <table width="800" style="border:30px solid #fff;" bgcolor="#f3f3f3" border="0" align="center" cellpadding="0" cellspacing="0">
+    <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="10" cellspacing="0">
       <tr>
-        <td height="95" colspan="2" >
+        <td colspan="2" >
           <table width="100%" border="0" cellpadding="0" cellspacing="0">
             <tr>
-              <td><img src="images/logo.gif" alt="" /></td>
+              <td><img src="images/logo.png" width="254" height="78" alt="" /></td>
             </tr>
           </table>
       </tr>
