@@ -49,6 +49,7 @@
     define('TABLES_OPTIMIZED_MESSAGE','<li>Database wurde optimiert.</li>');
     define('CUSTOMERS_BASKETS_REFRESHED_MESSAGE','<li>Alte Warenk&ouml;rbe von Kunden wurden gel&ouml;scht.</li>');
     define('CUSTOMERS_SESSION_DATA_REFRESHED_MESSAGE','<li>Alte Sessiondaten von Kunden wurden gel&ouml;scht.</li>');
+    define('TEXT_REMINDER_REINSTALL_MODULES','<p style="color:red;font-weight:bold">Beim Upgrade von v1.06 auf v2.00 m&uuml;ssen alle ben&ouml;tigten Zahlungsmodule und die Versandmodule "DP" und "GLS" bei Bedarf neu installiert werden. Bitte notieren Sie vor dem Update ggf. Ihre eigenen Einstellungsoptinen der Module.</p>');
   } else {
     // English definitions
     define ('TITLE_UPGRADE','<br /><strong><h1>modified eCommerce Shopsoftware database upgrade process</h1></strong>');
@@ -72,6 +73,7 @@
     define('TABLES_OPTIMIZED_MESSAGE','<li>Database was optimized.</li>');
     define('CUSTOMERS_BASKETS_REFRESHED_MESSAGE','<li>Old customers baskets were deleted.</li>');
     define('CUSTOMERS_SESSION_DATA_REFRESHED_MESSAGE','<li>Old customers session data were deleted.</li>');
+    define('TEXT_REMINDER_REINSTALL_MODULES','<p style="color:red;font-weight:bold">After upgrading from v1.06 to v2.00 you have to reinstall all payment modules and the shipping modules "DP" and "GLS" if required. Please write down your customized settings of the modules prior to the update.</p>');
   }
 
   // get DB version and size
@@ -85,7 +87,7 @@
   // get all SQL update_files
   $ordner = opendir('.');
   while($datei = readdir($ordner)) {
-    if(preg_match('/update_[0-9].[0-9].[0-9].[0-9]/i', $datei)) { //accept only sql files with scheme "update_x.x.x.x"
+    if(preg_match('/^update_[0-9].[0-9].[0-9].[0-9]/i', $datei)) { //accept only sql files that start(!) with scheme "update_x.x.x.x"
       $farray[] = $datei;
     }
   }
@@ -287,6 +289,9 @@
                   }
                   //HTML-input form
                   if (!isset($_POST['submit'])) {
+                    if (strstr($used_files_display, 'update_1.0.6.0_to_2')) {
+                      echo TEXT_REMINDER_REINSTALL_MODULES; // display notification when upgrading from v1.06 to v2.00
+                    }
                     echo OPTIMIZE_TABLE_OPTION;
                     echo '<br /><form method="post" action="'.basename($_SERVER['SCRIPT_FILENAME']) .'">';
                     echo '<input type="checkbox" name="truncate_customers_basket" value="1" checked="checked"/>'.REFRESH_CUSTOMERS_BASKET.'<br />';

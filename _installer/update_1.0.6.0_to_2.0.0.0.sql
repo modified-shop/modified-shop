@@ -10,6 +10,19 @@
 #Tomcraft - 2012-11-11 - changed database_version
 UPDATE database_version SET version = 'MOD_2.0.0.0';
 
+#DokuMan - 2012-11-29 - Uninstall Modules according to /_RELEASE README.txt before upgrading
+# Uninstall all (!) payment modules due to "exlusion config for shipping modules"
+DELETE FROM configuration WHERE configuration_key LIKE 'MODULE_PAYMENT_%';
+
+# Uninstall shipping module "dp", i.e replace GLS shipping module with newer version
+DELETE FROM configuration WHERE configuration_key LIKE 'MODULE_SHIPPING_DP_%';
+
+# Uninstall payment module "gls", i.e replace GLS shipping module with newer version
+DROP TABLE IF EXISTS gls_country_to_postal;
+DROP TABLE IF EXISTS gls_postal_to_weight;
+DROP TABLE IF EXISTS gls_weight;
+DELETE FROM configuration WHERE configuration_key LIKE 'MODULE_SHIPPING_GLS_%';
+
 #Hendrik - 2010-08-29 - Xajax Support in Backend
 ALTER TABLE admin_access
   ADD xajax INT(1) DEFAULT 1 NOT NULL;
