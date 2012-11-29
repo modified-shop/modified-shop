@@ -8,13 +8,14 @@
 #  -----------------------------------------------------------------------------------------
 
 # Execute the following SQL-queries to update the database schema
-# from xt:Commerce 3.0.4 SP2.1 to xtcModified 1.00
+# from xt:Commerce 3.0.4 SP2.1 to Modified 1.0.1.0
 
 CREATE TABLE IF NOT EXISTS database_version (
   version VARCHAR(32) NOT NULL
-) ENGINE=myisam DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
+) ENGINE=myisam;
 
-UPDATE database_version SET version = 'MOD_1.0.0.0';
+# Set database Version to minimum Version 1.0.1.0 (1.0.0.0 not allowed)
+INSERT INTO database_version VALUES ('MOD_1.0.1.0');
  
 UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
 WHERE configuration_key = 'CURRENT_TEMPLATE';
