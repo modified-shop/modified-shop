@@ -87,7 +87,7 @@ if ($errorno) {
 
   //include subcategories if needed
   if ($categories_id !== false) {
-    if ($_GET['inc_subcat'] == '1') {
+    if (isset($_GET['inc_subcat']) && $_GET['inc_subcat'] == '1') {
       $subcategories_array = array();
       xtc_get_subcategories($subcategories_array, $categories_id);
       $subcat_join = " LEFT OUTER JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." AS p2c ON (p.products_id = p2c.products_id) ";
