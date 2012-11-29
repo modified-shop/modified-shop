@@ -96,10 +96,11 @@
 
       $class = 'class="pageResults"';
 
-      //BOF - DokuMan - 2010-08-26 - also check for ampersand
-      //if (xtc_not_null($parameters) && (substr($parameters, -1) != '&')) $parameters .= '&';
-      if (xtc_not_null($parameters) && (substr($parameters, -1) != '&') && (substr($parameters, -5) != '&amp;')) $parameters .= '&';
-      //EOF - DokuMan - 2010-08-26 - also check for ampersand
+      $parameters = str_replace('&amp;', '&', $parameters);
+      if (xtc_not_null($parameters) && (substr($parameters, -1) != '&')) {
+        $parameters = ltrim($parameters,'&'); //remove left standing '&'
+        $parameters .= '&'; //add '&' added to the right
+      } 
 
       // previous button - not displayed on first page
       if ($this->current_page_number > 1) $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type) . '" class="pageResults" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
