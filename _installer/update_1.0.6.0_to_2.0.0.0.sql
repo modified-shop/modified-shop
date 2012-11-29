@@ -14,7 +14,7 @@ UPDATE database_version SET version = 'MOD_2.0.0.0';
 # Uninstall all (!) payment modules due to "exlusion config for shipping modules"
 DELETE FROM configuration WHERE configuration_key LIKE 'MODULE_PAYMENT_%';
 
-# Uninstall shipping module "dp", i.e replace GLS shipping module with newer version
+# Uninstall shipping module "dp", i.e replace DP shipping module with newer version
 DELETE FROM configuration WHERE configuration_key LIKE 'MODULE_SHIPPING_DP_%';
 
 # Uninstall payment module "gls", i.e replace GLS shipping module with newer version
