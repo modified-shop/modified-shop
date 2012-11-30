@@ -24,18 +24,19 @@
       header("Status: 503 Service Temporarily Unavailable");
       header("Connection: Close");
     }
-    // show the full sql error + full query only to logged-in admins or _error_reporting.all
-    if ((isset($_SESSION['customers_status']['customers_status_id']) && $_SESSION['customers_status']['customers_status_id'] == 0) || (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all'))) {
-      die('<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br /><small><font color="#ff0000">[XT SQL Error]</font></small><br /><br /></strong></font>');
-    } else {
-      die('<font color="#ff0000"><strong>Es ist ein Fehler aufgetreten!<br />There was an error!<br />Il y avait une erreur!</strong></font>');
-    }
     
     // Send an email to the shop owner if a sql error occurs
     if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {      
       $subject = 'DATA BASE ERROR AT - ' . STORE_NAME;
       $message = '<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br />Request URL: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'<br /><br /><small><font color="#ff0000">[XT SQL Error]</font></small><br /><br /></strong></font>';
       xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, '', '', STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, '', '', $subject, nl2br($message), $message);
+    }
+    
+    // show the full sql error + full query only to logged-in admins or _error_reporting.all
+    if ((isset($_SESSION['customers_status']['customers_status_id']) && $_SESSION['customers_status']['customers_status_id'] == 0) || (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all'))) {
+      die('<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br /><small><font color="#ff0000">[XT SQL Error]</font></small><br /><br /></strong></font>');
+    } else {
+      die('<font color="#ff0000"><strong>Es ist ein Fehler aufgetreten!<br />There was an error!<br />Il y avait une erreur!</strong></font>');
     }
     
     //and display an info message for the shop customer and redirect him
