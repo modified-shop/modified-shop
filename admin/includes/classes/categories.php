@@ -226,7 +226,10 @@ class categories {
                                      SET categories_image = ''
                                    WHERE categories_id    = '".(int) $categories_id."'");
     }
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); //web28 2012-04-14 new redirect
+    //web28 2012-11-30 new redirect
+    if ($action == 'insert') {
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
+    }
   } // insert_category ends
 
   // ----------------------------------------------------------------------------------------------------- //
@@ -1131,6 +1134,38 @@ class categories {
     }
     return $input;
 
+  }
+
+  // ----------------------------------------------------------------------------------------------------- //
+
+  function get_categories_desc_fields ($category_id, $language_id) {
+    if (!empty($category_id)) {
+      if (empty($language)) {
+        $language = $_SESSION['languages_id'];
+      }
+      $category_query = xtc_db_query("SELECT *
+                                        FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                       WHERE categories_id = '".$category_id."'
+                                         AND language_id = '".$language_id."'
+                                    ");
+      return xtc_db_fetch_array($category_query);
+    }
+  }
+
+  // ----------------------------------------------------------------------------------------------------- //
+
+  function get_products_desc_fields ($product_id, $language_id) {
+    if (!empty($product_id)) {
+      if (empty($language)) {
+        $language = $_SESSION['languages_id'];
+      }
+      $product_query = xtc_db_query("SELECT *
+                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
+                                      WHERE products_id = '" . $product_id . "'
+                                        AND language_id = '" . $language_id . "'
+                                    ");
+      return xtc_db_fetch_array($product_query);
+    }
   }
   // ----------------------------------------------------------------------------------------------------- //
 } // class categories ENDS
