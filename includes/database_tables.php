@@ -114,8 +114,8 @@ define('TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES', 'payment_AMONEYBOOKERS_currenci
 define('TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES', 'payment_AMONEYBOOKERS_countries');
 
 // Sofortüberweisung
-define('TABLE_PAYMENT_IPAYMENT', 'payment_ipayment');
-define('TABLE_PAYMENT_IPAYMENT_LOG', 'payment_ipayment_log');
+  /* removed */ //define('TABLE_PAYMENT_IPAYMENT', 'payment_ipayment');
+  /* removed */ //define('TABLE_PAYMENT_IPAYMENT_LOG', 'payment_ipayment_log');
 // EOF - 2010-01-20 vr - revised unified version based on database_tables.php and admin/incudes/application_top.php
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
