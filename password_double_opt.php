@@ -32,11 +32,21 @@ $case = 'double_opt';
 $info_message = TEXT_PASSWORD_FORGOTTEN;
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in')) {
+  //BOF - DokuMan - 2012-12-03 - allow new passwords only for customers (not guests) by account type
+  /*
   $check_customer_query = xtc_db_query("SELECT customers_email_address, 
                                                customers_id 
                                           FROM ".TABLE_CUSTOMERS." 
                                          WHERE customers_email_address = '".xtc_db_input($_POST['email'])."' 
                                            AND customers_status != ". DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
+  */
+  $check_customer_query = xtc_db_query("SELECT customers_email_address, 
+                                             customers_id 
+                                        FROM ".TABLE_CUSTOMERS." 
+                                       WHERE customers_email_address = '".xtc_db_input($_POST['email'])."' 
+                                         AND account_type = 0");
+  //EOF - DokuMan - 2012-12-03 - allow new passwords only for customers (not guests) by account type
+
   $check_customer = xtc_db_fetch_array($check_customer_query);
 
   $vlcode = xtc_random_charcode(32);
