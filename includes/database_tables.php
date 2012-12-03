@@ -119,8 +119,8 @@ define('TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES', 'payment_AMONEYBOOKERS_countries
 // EOF - 2010-01-20 vr - revised unified version based on database_tables.php and admin/incudes/application_top.php
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-define('TABLE_PAYPAL', 'paypal');
-define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
+//define('TABLE_PAYPAL', 'paypal');
+//define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 /******** SHOPGATE **********/
