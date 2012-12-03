@@ -62,12 +62,12 @@ class amoneybookers {
 
     if ($this->enabled) {
 
-      $result = xtc_db_query("SELECT mb_currID FROM payment_amoneybookers_currencies");
+      $result = xtc_db_query("SELECT mb_currID FROM ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES);
       while (list ($currID) = mysql_fetch_row($result)) {
         $this->mbCurrencies[] = $currID;
       }
 
-      $result = xtc_db_query("SELECT code FROM currencies");
+      $result = xtc_db_query("SELECT code FROM ".TABLE_CURRENCIES);
       while (list ($currID) = mysql_fetch_row($result)) {
         $this->aCurrencies[] = $currID;
       }
@@ -201,7 +201,7 @@ class amoneybookers {
   function payment_action() {
     global $order, $xtPrice,$insert_id;
 
-    $result = xtc_db_query("SELECT code FROM languages WHERE languages_id = '" . $_SESSION['languages_id'] . "'");
+    $result = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id = '" . $_SESSION['languages_id'] . "'");
     list ($lang_code) = mysql_fetch_row($result);
     $mbLanguage = strtoupper($lang_code);
     if ($mbLanguage == "US") {
@@ -216,11 +216,11 @@ class amoneybookers {
       $mbCurrency = MODULE_PAYMENT_AMONEYBOOKERS_CURRENCY;
     }
 
-    $result = xtc_db_query("SELECT mb_cID FROM payment_amoneybookers_countries, countries WHERE (xtc_cID = countries_id) AND (countries_id = '{$order->billing['country']['id']}')");
+    $result = xtc_db_query("SELECT mb_cID FROM ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES.", ".TABLE_COUNTRIES." WHERE (xtc_cID = countries_id) AND (countries_id = '{$order->billing['country']['id']}')");
     list ($mbCountry) = mysql_fetch_row($result);
 
     $this->transaction_id = $this->generate_trid();
-    $result = xtc_db_query("INSERT INTO payment_moneybookers (mb_TRID, mb_DATE) VALUES ('{$this->transaction_id}', NOW())");
+    $result = xtc_db_query("INSERT INTO ".TABLE_PAYMENT_MONEYBOOKERS." (mb_TRID, mb_DATE) VALUES ('{$this->transaction_id}', NOW())");
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
       $total = $order->info['total'] + $order->info['tax'];
     } else {
@@ -272,7 +272,7 @@ class amoneybookers {
     // return strtr($process_button_string, "áéíóöõúüûÁÉÍÓÖÕÚÜÛ", "aeiooouuuAEIOOOUUU");
 
     // insert data
-    xtc_db_query("UPDATE payment_moneybookers SET mb_ORDERID = '" . $insert_id . "' WHERE mb_TRID = '" . $this->transaction_id . "'");
+    xtc_db_query("UPDATE ".TABLE_PAYMENT_MONEYBOOKERS." SET mb_ORDERID = '" . $insert_id . "' WHERE mb_TRID = '" . $this->transaction_id . "'");
     xtc_redirect($this->form_action_url.'?'.$data);
   }
 
@@ -290,7 +290,7 @@ class amoneybookers {
   function admin_order($oID) {
     $oID = (int) $oID;
 
-    $query = "SELECT * FROM payment_moneybookers WHERE mb_ORDERID = '" . $oID . "'";
+    $query = "SELECT * FROM ".TABLE_PAYMENT_MONEYBOOKERS." WHERE mb_ORDERID = '" . $oID . "'";
     $query = xtc_db_query($query);
 
     $data = xtc_db_fetch_array($query);
@@ -329,244 +329,244 @@ class amoneybookers {
 
   function install() {
     $this->remove();
-    xtc_db_query("CREATE TABLE payment_amoneybookers_currencies (mb_currID char(3) NOT NULL default '',mb_currName varchar(255) NOT NULL default '',PRIMARY KEY  (mb_currID))");
-    xtc_db_query("CREATE TABLE payment_amoneybookers_countries (xtc_cID int(11) NOT NULL default '0',mb_cID char(3) NOT NULL default '',PRIMARY KEY  (xtc_cID))");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (2, 'ALB')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (3, 'ALG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (4, 'AME')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (5, 'AND')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (6, 'AGL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (7, 'ANG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (9, 'ANT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (10, 'ARG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (11, 'ARM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (12, 'ARU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (13, 'AUS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (14, 'AUT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (15, 'AZE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (16, 'BMS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (17, 'BAH')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (18, 'BAN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (19, 'BAR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (20, 'BLR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (21, 'BGM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (22, 'BEL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (23, 'BEN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (24, 'BER')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (26, 'BOL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (27, 'BOS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (28, 'BOT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (30, 'BRA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (32, 'BRU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (33, 'BUL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (34, 'BKF')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (35, 'BUR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (36, 'CAM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (37, 'CMR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (38, 'CAN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (39, 'CAP')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (40, 'CAY')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (41, 'CEN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (42, 'CHA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (43, 'CHL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (44, 'CHN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (47, 'COL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (49, 'CON')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (51, 'COS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (52, 'COT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (53, 'CRO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (54, 'CUB')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (55, 'CYP')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (56, 'CZE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (57, 'DEN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (58, 'DJI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (59, 'DOM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (60, 'DRP')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (62, 'ECU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (64, 'EL_')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (65, 'EQU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (66, 'ERI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (67, 'EST')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (68, 'ETH')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (70, 'FAR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (71, 'FIJ')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (72, 'FIN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (73, 'FRA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (75, 'FRE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (78, 'GAB')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (79, 'GAM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (80, 'GEO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (81, 'GER')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (82, 'GHA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (83, 'GIB')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (84, 'GRC')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (85, 'GRL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (87, 'GDL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (88, 'GUM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (89, 'GUA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (90, 'GUI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (91, 'GBS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (92, 'GUY')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (93, 'HAI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (95, 'HON')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (96, 'HKG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (97, 'HUN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (98, 'ICE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (99, 'IND')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (101, 'IRN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (102, 'IRA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (103, 'IRE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (104, 'ISR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (105, 'ITA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (106, 'JAM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (107, 'JAP')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (108, 'JOR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (109, 'KAZ')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (110, 'KEN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (112, 'SKO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (113, 'KOR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (114, 'KUW')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (115, 'KYR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (116, 'LAO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (117, 'LAT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (141, 'MCO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (119, 'LES')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (120, 'LIB')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (121, 'LBY')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (122, 'LIE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (123, 'LIT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (124, 'LUX')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (125, 'MAC')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (126, 'F.Y')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (127, 'MAD')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (128, 'MLW')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (129, 'MLS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (130, 'MAL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (131, 'MLI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (132, 'MLT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (134, 'MAR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (135, 'MRT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (136, 'MAU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (138, 'MEX')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (140, 'MOL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (142, 'MON')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (143, 'MTT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (144, 'MOR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (145, 'MOZ')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (76, 'PYF')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (147, 'NAM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (149, 'NEP')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (150, 'NED')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (151, 'NET')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (152, 'CDN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (153, 'NEW')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (154, 'NIC')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (155, 'NIG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (69, 'FLK')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (160, 'NWY')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (161, 'OMA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (162, 'PAK')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (164, 'PAN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (165, 'PAP')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (166, 'PAR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (167, 'PER')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (168, 'PHI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (170, 'POL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (171, 'POR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (172, 'PUE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (173, 'QAT')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (175, 'ROM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (176, 'RUS')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (177, 'RWA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (178, 'SKN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (179, 'SLU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (180, 'ST.')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (181, 'WES')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (182, 'SAN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (183, 'SAO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (184, 'SAU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (185, 'SEN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (186, 'SEY')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (187, 'SIE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (188, 'SIN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (189, 'SLO')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (190, 'SLV')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (191, 'SOL')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (192, 'SOM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (193, 'SOU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (195, 'SPA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (196, 'SRI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (199, 'SUD')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (200, 'SUR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (202, 'SWA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (203, 'SWE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (204, 'SWI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (205, 'SYR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (206, 'TWN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (207, 'TAJ')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (208, 'TAN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (209, 'THA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (210, 'TOG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (212, 'TON')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (213, 'TRI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (214, 'TUN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (215, 'TUR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (216, 'TKM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (217, 'TCI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (219, 'UGA')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (231, 'BRI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (221, 'UAE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (222, 'GBR')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (223, 'UNI')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (225, 'URU')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (226, 'UZB')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (227, 'VAN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (229, 'VEN')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (230, 'VIE')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (232, 'US_')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (235, 'YEM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (236, 'YUG')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (238, 'ZAM')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_countries VALUES (239, 'ZIM')");
+    xtc_db_query("CREATE TABLE ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." (mb_currID char(3) NOT NULL default '',mb_currName varchar(255) NOT NULL default '',PRIMARY KEY  (mb_currID))");
+    xtc_db_query("CREATE TABLE ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." (xtc_cID int(11) NOT NULL default '0',mb_cID char(3) NOT NULL default '',PRIMARY KEY  (xtc_cID))");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (2, 'ALB')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (3, 'ALG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (4, 'AME')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (5, 'AND')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (6, 'AGL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (7, 'ANG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (9, 'ANT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (10, 'ARG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (11, 'ARM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (12, 'ARU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (13, 'AUS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (14, 'AUT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (15, 'AZE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (16, 'BMS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (17, 'BAH')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (18, 'BAN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (19, 'BAR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (20, 'BLR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (21, 'BGM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (22, 'BEL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (23, 'BEN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (24, 'BER')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (26, 'BOL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (27, 'BOS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (28, 'BOT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (30, 'BRA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (32, 'BRU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (33, 'BUL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (34, 'BKF')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (35, 'BUR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (36, 'CAM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (37, 'CMR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (38, 'CAN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (39, 'CAP')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (40, 'CAY')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (41, 'CEN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (42, 'CHA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (43, 'CHL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (44, 'CHN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (47, 'COL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (49, 'CON')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (51, 'COS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (52, 'COT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (53, 'CRO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (54, 'CUB')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (55, 'CYP')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (56, 'CZE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (57, 'DEN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (58, 'DJI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (59, 'DOM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (60, 'DRP')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (62, 'ECU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (64, 'EL_')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (65, 'EQU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (66, 'ERI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (67, 'EST')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (68, 'ETH')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (70, 'FAR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (71, 'FIJ')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (72, 'FIN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (73, 'FRA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (75, 'FRE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (78, 'GAB')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (79, 'GAM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (80, 'GEO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (81, 'GER')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (82, 'GHA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (83, 'GIB')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (84, 'GRC')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (85, 'GRL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (87, 'GDL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (88, 'GUM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (89, 'GUA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (90, 'GUI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (91, 'GBS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (92, 'GUY')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (93, 'HAI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (95, 'HON')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (96, 'HKG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (97, 'HUN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (98, 'ICE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (99, 'IND')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (101, 'IRN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (102, 'IRA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (103, 'IRE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (104, 'ISR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (105, 'ITA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (106, 'JAM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (107, 'JAP')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (108, 'JOR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (109, 'KAZ')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (110, 'KEN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (112, 'SKO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (113, 'KOR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (114, 'KUW')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (115, 'KYR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (116, 'LAO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (117, 'LAT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (141, 'MCO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (119, 'LES')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (120, 'LIB')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (121, 'LBY')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (122, 'LIE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (123, 'LIT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (124, 'LUX')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (125, 'MAC')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (126, 'F.Y')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (127, 'MAD')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (128, 'MLW')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (129, 'MLS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (130, 'MAL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (131, 'MLI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (132, 'MLT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (134, 'MAR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (135, 'MRT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (136, 'MAU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (138, 'MEX')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (140, 'MOL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (142, 'MON')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (143, 'MTT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (144, 'MOR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (145, 'MOZ')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (76, 'PYF')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (147, 'NAM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (149, 'NEP')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (150, 'NED')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (151, 'NET')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (152, 'CDN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (153, 'NEW')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (154, 'NIC')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (155, 'NIG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (69, 'FLK')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (160, 'NWY')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (161, 'OMA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (162, 'PAK')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (164, 'PAN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (165, 'PAP')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (166, 'PAR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (167, 'PER')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (168, 'PHI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (170, 'POL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (171, 'POR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (172, 'PUE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (173, 'QAT')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (175, 'ROM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (176, 'RUS')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (177, 'RWA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (178, 'SKN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (179, 'SLU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (180, 'ST.')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (181, 'WES')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (182, 'SAN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (183, 'SAO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (184, 'SAU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (185, 'SEN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (186, 'SEY')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (187, 'SIE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (188, 'SIN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (189, 'SLO')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (190, 'SLV')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (191, 'SOL')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (192, 'SOM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (193, 'SOU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (195, 'SPA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (196, 'SRI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (199, 'SUD')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (200, 'SUR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (202, 'SWA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (203, 'SWE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (204, 'SWI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (205, 'SYR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (206, 'TWN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (207, 'TAJ')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (208, 'TAN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (209, 'THA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (210, 'TOG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (212, 'TON')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (213, 'TRI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (214, 'TUN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (215, 'TUR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (216, 'TKM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (217, 'TCI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (219, 'UGA')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (231, 'BRI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (221, 'UAE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (222, 'GBR')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (223, 'UNI')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (225, 'URU')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (226, 'UZB')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (227, 'VAN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (229, 'VEN')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (230, 'VIE')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (232, 'US_')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (235, 'YEM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (236, 'YUG')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (238, 'ZAM')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES." VALUES (239, 'ZIM')");
     //
     //#
     //# Dumping data for table `payment_amoneybookers_currencies`
     //#
     //
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('AUD', 'Australian Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('BGN', 'Bulgarian Lev')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('CAD', 'Canadian Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('CHF', 'Swiss Franc')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('CZK', 'Czech Koruna')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('DKK', 'Danish Krone')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('EEK', 'Estonian Koruna')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('EUR', 'Euro')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('GBP', 'Pound Sterling')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('HKD', 'Hong Kong Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('HUF', 'Forint')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('ILS', 'Shekel')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('ISK', 'Iceland Krona')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('JPY', 'Yen')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('KRW', 'South-Korean Won')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('LVL', 'Latvian Lat')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('MYR', 'Malaysian Ringgit')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('NOK', 'Norwegian Krone')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('NZD', 'New Zealand Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('PLN', 'Zloty')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('SEK', 'Swedish Krona')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('SGD', 'Singapore Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('SKK', 'Slovak Koruna')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('THB', 'Baht')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('TWD', 'New Taiwan Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('USD', 'US Dollar')");
-    xtc_db_query("INSERT INTO payment_amoneybookers_currencies VALUES ('ZAR', 'South-African Rand')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('AUD', 'Australian Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('BGN', 'Bulgarian Lev')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('CAD', 'Canadian Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('CHF', 'Swiss Franc')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('CZK', 'Czech Koruna')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('DKK', 'Danish Krone')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('EEK', 'Estonian Koruna')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('EUR', 'Euro')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('GBP', 'Pound Sterling')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('HKD', 'Hong Kong Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('HUF', 'Forint')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('ILS', 'Shekel')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('ISK', 'Iceland Krona')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('JPY', 'Yen')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('KRW', 'South-Korean Won')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('LVL', 'Latvian Lat')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('MYR', 'Malaysian Ringgit')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('NOK', 'Norwegian Krone')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('NZD', 'New Zealand Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('PLN', 'Zloty')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('SEK', 'Swedish Krona')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('SGD', 'Singapore Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('SKK', 'Slovak Koruna')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('THB', 'Baht')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('TWD', 'New Taiwan Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('USD', 'US Dollar')");
+    xtc_db_query("INSERT INTO ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES." VALUES ('ZAR', 'South-African Rand')");
 
-    $result = xtc_db_query("SELECT mb_currID FROM payment_amoneybookers_currencies");
+    $result = xtc_db_query("SELECT mb_currID FROM ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES);
     while (list ($currID) = mysql_fetch_row($result)) {
       $this->mbCurrencies[] = $currID;
     }
 
-    $result = xtc_db_query("SELECT code FROM currencies");
+    $result = xtc_db_query("SELECT code FROM ".TABLE_CURRENCIES);
     while (list ($currID) = mysql_fetch_row($result)) {
       $this->aCurrencies[] = $currID;
     }
@@ -578,7 +578,7 @@ class amoneybookers {
       $this->defLang = "EN";
     }
 
-    xtc_db_query("CREATE TABLE IF NOT EXISTS payment_moneybookers (mb_TRID varchar(255) NOT NULL default '',mb_ERRNO smallint(3) unsigned NOT NULL default '0',mb_ERRTXT varchar(255) NOT NULL default '',mb_DATE datetime NOT NULL default '0000-00-00 00:00:00',mb_MBTID bigint(18) unsigned NOT NULL default '0',mb_STATUS tinyint(1) NOT NULL default '0',mb_ORDERID int(11) unsigned NOT NULL default '0',PRIMARY KEY  (mb_TRID))");
+    xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_PAYMENT_MONEYBOOKERS." (mb_TRID varchar(255) NOT NULL default '',mb_ERRNO smallint(3) unsigned NOT NULL default '0',mb_ERRTXT varchar(255) NOT NULL default '',mb_DATE datetime NOT NULL default '0000-00-00 00:00:00',mb_MBTID bigint(18) unsigned NOT NULL default '0',mb_STATUS tinyint(1) NOT NULL default '0',mb_ORDERID int(11) unsigned NOT NULL default '0',PRIMARY KEY  (mb_TRID))");
 
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_AMONEYBOOKERS_STATUS', 'True',  '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID', '', '6', '1', now())");
@@ -599,14 +599,14 @@ class amoneybookers {
 
   function remove() {
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
-    xtc_db_query("DROP TABLE IF EXISTS payment_amoneybookers_currencies");
-    xtc_db_query("DROP TABLE IF EXISTS payment_amoneybookers_countries");
+    xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES);
+    xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES);
 
     // Check if other moneybookers modules activated otherwise drop payment_moneybookers
     $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_PAYMENT_MONEYBOOKERS_%'");
     $moneybookers_activated = xtc_db_num_rows($check_query);
     if ($moneybookers_activated == 0) {
-      xtc_db_query("DROP TABLE IF EXISTS payment_moneybookers");
+      xtc_db_query("DROP TABLE IF EXISTS ".TABLE_PAYMENT_MONEYBOOKERS);
     }
   }
 
@@ -656,7 +656,7 @@ class amoneybookers {
     while (xtc_db_num_rows($result)) {
       $trid = xtc_create_random_value(16, "digits");
       $trid = 'XTC' . $trid;
-      $result = xtc_db_query("SELECT mb_TRID FROM payment_moneybookers WHERE mb_TRID = '".$trid."'");
+      $result = xtc_db_query("SELECT mb_TRID FROM ".TABLE_PAYMENT_MONEYBOOKERS." WHERE mb_TRID = '".$trid."'");
     }
     return $trid;
   }

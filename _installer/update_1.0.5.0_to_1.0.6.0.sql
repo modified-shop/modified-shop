@@ -342,7 +342,7 @@ INSERT INTO zones VALUES ('',105,'VT','Viterbo');
 
 #DokuMan - 2011-05-09 - Fix Australian Dollar currency from 'AUS' to 'AUD'
 UPDATE countries SET countries_iso_code_3 = 'AUD' WHERE countries_id = 13 LIMIT 1;
-UPDATE payment_moneybookers_countries SET mb_cID = 'AUD' WHERE osc_cID = 13 LIMIT 1;
+UPDATE payment_amoneybookers_countries SET mb_cID = 'AUD' WHERE osc_cID = 13 LIMIT 1;
 
 #DokuMan - 2011-06-06 - Create the database table for storing the bank code
 DROP TABLE IF EXISTS banktransfer_blz;
