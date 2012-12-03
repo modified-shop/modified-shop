@@ -106,9 +106,9 @@
       $order_gs = xtc_db_fetch_array($order_gs_query);
       $pp_order_gs+= ($order_gs['SUM(value)'] < 0) ? $order_gs['SUM(value)'] : $order_gs['SUM(value)']*(-1) ;
       //  customers bonus
-      $order_gs_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_bonus_fee'");
-      $order_gs = xtc_db_fetch_array($order_gs_query);
-      $pp_order_gs-=$order_gs['SUM(value)'];
+      //$order_gs_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_bonus_fee'");
+      //$order_gs = xtc_db_fetch_array($order_gs_query);
+      //$pp_order_gs-=$order_gs['SUM(value)'];
       $pp_order_fee=0;
       $order_fee_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_payment'");
       $order_fee = xtc_db_fetch_array($order_fee_query);

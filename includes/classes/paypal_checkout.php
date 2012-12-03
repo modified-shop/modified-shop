@@ -186,9 +186,9 @@ if (defined('PAYPAL_API_VERSION')) {
             $order_gs+= ($order_totals[$i]['value'] < 0) ? $order_totals[$i]['value'] : $order_totals[$i]['value'] *(-1);
             break;
           ///  customers bonus
-          case 'ot_bonus_fee':
-            $order_gs+= ($order_totals[$i]['value'] < 0) ? $order_totals[$i]['value'] : $order_totals[$i]['value'] *(-1);
-            break;
+          //case 'ot_bonus_fee':
+          //  $order_gs+= ($order_totals[$i]['value'] < 0) ? $order_totals[$i]['value'] : $order_totals[$i]['value'] *(-1);
+          //  break;
           case 'ot_payment':
             if($order_totals[$i]['value'] < 0) {
               // Rabatt aus Fremd Modul
@@ -335,9 +335,9 @@ if (defined('PAYPAL_API_VERSION')) {
             $order_gs+= ($order_totals[$i]['value'] < 0) ? $order_totals[$i]['value'] : $order_totals[$i]['value'] *(-1);
             break;
           ///  customers bonus
-          case 'ot_bonus_fee':
-            $order_gs+= ($order_totals[$i]['value'] < 0) ? $order_totals[$i]['value'] : $order_totals[$i]['value'] *(-1);
-            break;
+          //case 'ot_bonus_fee':
+          //  $order_gs+= ($order_totals[$i]['value'] < 0) ? $order_totals[$i]['value'] : $order_totals[$i]['value'] *(-1);
+          //  break;
           case 'ot_payment':
             if($order_totals[$i]['value'] < 0) {
               // Rabatt aus Fremd Modul
