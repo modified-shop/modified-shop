@@ -110,8 +110,8 @@ define('TABLE_ZONES_TO_GEO_ZONES', 'zones_to_geo_zones');
 // EOF Tomcraft - 2011-02-01 - Commented out left over table definition from payment module Luupay which was removed in r346
 // Moneybookers
 define('TABLE_PAYMENT_MONEYBOOKERS', 'payment_moneybookers');
-define('TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES', 'payment_AMONEYBOOKERS_currencies');
-define('TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES', 'payment_AMONEYBOOKERS_countries');
+define('TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES', 'payment_amoneybookers_currencies');
+define('TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES', 'payment_amoneybookers_countries');
 
 // Sofortüberweisung
   /* removed */ //define('TABLE_PAYMENT_IPAYMENT', 'payment_ipayment');
