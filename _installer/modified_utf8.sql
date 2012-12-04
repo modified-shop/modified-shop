@@ -226,7 +226,7 @@ CREATE TABLE banktransfer (
   banktransfer_status INT(11) DEFAULT NULL,
   banktransfer_prz CHAR(2) DEFAULT NULL,
   banktransfer_fax CHAR(2) DEFAULT NULL,
-  KEY orders_id (orders_id)
+  KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
 
@@ -338,7 +338,7 @@ CREATE TABLE countries (
   address_format_id INT NOT NULL,
   status INT(1) DEFAULT 1 NULL,
   PRIMARY KEY (countries_id),
-  KEY IDX_COUNTRIES_NAME (countries_name)
+  KEY idx_countries_name (countries_name)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS currencies;
@@ -354,7 +354,7 @@ CREATE TABLE currencies (
   value FLOAT(13,4),
   last_updated DATETIME NULL,
   PRIMARY KEY (currencies_id),
-  UNIQUE KEY code (code)
+  UNIQUE KEY idx_code (code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers;
@@ -430,7 +430,7 @@ CREATE TABLE customers_ip (
   customers_advertiser VARCHAR(30) DEFAULT NULL,
   customers_referer_url VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (customers_ip_id),
-  KEY customers_id (customers_id)
+  KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_status;
@@ -809,7 +809,7 @@ CREATE TABLE products_description (
   products_viewed INT(5) DEFAULT 0,
   products_order_description text,
   PRIMARY KEY (products_id,language_id),
-  KEY products_name (products_name)
+  KEY idx_products_name (products_name)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_images;
@@ -860,7 +860,7 @@ CREATE TABLE products_graduated_prices (
   products_id INT(11) NOT NULL DEFAULT 0,
   quantity INT(11) NOT NULL DEFAULT 0,
   unitprice DECIMAL(15,4) NOT NULL DEFAULT 0.0000,
-  KEY products_id (products_id)
+  KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;
 
 # DokuMan - 2010-10-13 add index idx_categories_id
@@ -916,7 +916,7 @@ CREATE TABLE shop_configuration (
   configuration_key VARCHAR(255) NOT NULL DEFAULT '',
   configuration_value TEXT NOT NULL,
   PRIMARY KEY (configuration_id),
-  KEY configuration_key (configuration_key)
+  KEY idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM;
 
 INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE', '');
@@ -1023,7 +1023,7 @@ CREATE TABLE content_manager (
   content_meta_description TEXT,
   content_meta_keywords TEXT,
   PRIMARY KEY (content_id),
-  FULLTEXT (content_meta_title,content_meta_description,content_meta_keywords)
+  FULLTEXT idx_content_meta (content_meta_title,content_meta_description,content_meta_keywords)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS media_content;
@@ -1111,7 +1111,7 @@ CREATE TABLE coupon_gv_customer (
   customer_id INT(5) NOT NULL DEFAULT 0,
   amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
   PRIMARY KEY (customer_id),
-  KEY customer_id (customer_id)
+  KEY idx_customer_id (customer_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupon_gv_queue;
@@ -1124,7 +1124,7 @@ CREATE TABLE coupon_gv_queue (
   ipaddr VARCHAR(32) NOT NULL DEFAULT '',
   release_flag CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (unique_id),
-  KEY uid (unique_id,customer_id,order_id)
+  KEY idx_uid (unique_id,customer_id,order_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupon_redeem_track;
@@ -1164,7 +1164,7 @@ CREATE TABLE coupons_description (
   language_id TINYINT NOT NULL DEFAULT 1,
   coupon_name VARCHAR(32) NOT NULL DEFAULT '',
   coupon_description text,
-  KEY coupon_id (coupon_id)
+  KEY idx_coupon_id (coupon_id)
 ) ENGINE=MyISAM;
 
 #DokuMan - 2012-08-28 - Track and Trace functionality
@@ -1187,7 +1187,7 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   ortra_carrier_id int(11) NOT NULL,
   ortra_parcel_id varchar(80) NOT NULL,
   PRIMARY KEY (ortra_id),
-  KEY ortra_order_id (ortra_order_id)
+  KEY idx_ortra_order_id (ortra_order_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS personal_offers_by_customers_status_0;

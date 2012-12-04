@@ -101,19 +101,20 @@ UPDATE configuration SET configuration_value = ';', last_modified = NOW() WHERE 
 #Tomcraft - 2010-02-16 - Update Countries (delete Yugoslavia, add Serbia and Monetegro)
 # Fixed in update_1.0.4.0_to_1.0.5.0.sql
 
+#DokuMan - Add indexes with db_upgrade.php
 #vr - 2010-03-01 - Additional index on specials, thx to Georg
-ALTER TABLE specials
-  ADD INDEX idx_specials_products_id (products_id);
+#ALTER TABLE specials
+#  ADD INDEX idx_specials_products_id (products_id);
 
 #vr - 2010-04-21 - Additional indices on orders_products
-ALTER TABLE orders_products
-  ADD INDEX orders_id (orders_id),
-  ADD INDEX products_id (products_id);
+#ALTER TABLE orders_products
+#  ADD INDEX idx_orders_id (orders_id),
+#  ADD INDEX idx_products_id (products_id);
 
 #vr - 2010-04-21 - Additional indices on products_attributes
-ALTER TABLE products_attributes
-  ADD INDEX products_id (products_id),
-  ADD INDEX options (options_id, options_values_id);
+#ALTER TABLE products_attributes
+#  ADD INDEX idx_products_id (products_id),
+#  ADD INDEX idx_options (options_id, options_values_id);
 
 #DokuMan - 2010-06-28 - Added http_referer to table whos_online
 ALTER TABLE whos_online
