@@ -326,6 +326,8 @@
 
       // Paypal Express Modul
       if(isset($_POST['paypaldelete'])) {
+        if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
+        if(!defined('TABLE_PAYPAL_STATUS_HISTORY'))define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
         $query = xtc_db_query("-- /admin/orders.php
                                SELECT *
                                  FROM " . TABLE_PAYPAL . "
