@@ -114,4 +114,10 @@ ALTER TABLE banktransfer
   ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz,
   ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
 
+# DokuMan - 2012-12-04 - rename moneybookers tables to amoneybookers
+ALTER TABLE payment_moneybookers_currencies
+  RENAME TO payment_amoneybookers_currencies;
+ALTER TABLE payment_moneybookers_countries
+  RENAME TO payment_amoneybookers_countries;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
