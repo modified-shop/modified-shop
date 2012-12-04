@@ -31,22 +31,23 @@ ALTER TABLE manufacturers MODIFY manufacturers_name varchar(64) NOT NULL;
 #DokuMan - 2010-10-13 - enlarge field 'comments' from varchar(255) to text
 ALTER TABLE orders MODIFY comments text;
 
+#DokuMan - Add indexes with db_upgrade.php
+# vr - 2012-10-26 - add index idx_customers_id
+#ALTER TABLE orders
+#  ADD INDEX idx_customers_id (customers_id);
+
 #DokuMan - 2010-10-13 - add index idx_categories_id
-ALTER TABLE products_to_categories
-  ADD INDEX idx_categories_id (categories_id,products_id);
+#ALTER TABLE products_to_categories
+#  ADD INDEX idx_categories_id (categories_id,products_id);
 
 #DokuMan - 2010-10-14 - keep index naming convention (idx_)
-ALTER TABLE orders_products
-  DROP INDEX orders_id,
-  DROP INDEX products_id,
-  ADD INDEX idx_orders_id (orders_id),
-  ADD INDEX idx_products_id (products_id);
+#ALTER TABLE orders_products
+#  ADD INDEX idx_orders_id (orders_id),
+#  ADD INDEX idx_products_id (products_id);
 
-ALTER TABLE products_attributes
-  DROP INDEX products_id,
-  DROP INDEX options,
-  ADD INDEX idx_products_id (products_id),
-  ADD INDEX idx_options (options_id, options_values_id);
+#ALTER TABLE products_attributes
+#  ADD INDEX idx_products_id (products_id),
+#  ADD INDEX idx_options (options_id, options_values_id);
 
 #DokuMan - 2010-11-08 - remove unsupported payment module qenta
 DROP TABLE IF EXISTS payment_qenta;
@@ -440,10 +441,6 @@ UPDATE configuration SET configuration_group_id = '1000', sort_order = '21', las
 
 #Web28 - 2012-09-28 - add image_manipulator_GD2_advanced.php (supports transparent png)
 UPDATE configuration SET set_function = 'xtc_cfg_select_option(array(\'image_manipulator_GD2.php\', \'image_manipulator_GD2_advanced.php\',\'image_manipulator_GD1.php\'),' WHERE configuration_key = 'IMAGE_MANIPULATOR';
-
-# vr - 2012-10-26 - add index idx_customers_id
-ALTER TABLE orders
-  ADD INDEX idx_customers_id (customers_id);
 
 #Web28 - 2012-07-16 - New order description using in checkout
 ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
