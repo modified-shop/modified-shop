@@ -36,15 +36,15 @@
     define ('UPGRADE_NOT_NECESSARY', 'Kein Datenbankupgrade notwendig, sie sind auf dem aktuellesten Stand!');
     define ('USED_FILES', '<br /><br />Folgende Dateien werden f&uuml;r das Upgrade auf die neueste Datenbank-Version verwendet:<br /><br />');
     define ('CURRENT_DB_VERSION', '<br />Ihre derzeitige Datenbank-Version ist: ');
-    define ('FINAL_TEXT', 'Bitte l&ouml;schen Sie jetzt aus Sicherheitsgr&uuml;nden die Upgrade-Datei vom Server:<br /> ==> ');
+    define ('FINAL_TEXT', 'Bitte l&ouml;schen Sie jetzt aus Sicherheitsgr&uuml;nden die Upgrade-Datei vom Server:<br /> ==&gt; ');
     define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a></span>');
     define('TEXT_TITLE','modified eCommerce Shopsoftware Datenbankupgrade');
     define('OPTIMIZE_TABLE_OPTION','<br />Sie k&ouml;nnen die Datenbank auch folgenderma&szlig;en optimieren:<br />');
     define('ANALYZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/de/analyze-table.html" target="_blank">ANALYZE TABLE</a>): Statistiken &uuml;ber die Schl&uuml;sselverteilung erstellen (empfohlen).');
     define('OPTIMIZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/de/optimize-table.html" target="_blank">OPTIMIZE TABLE</a>): Datenbanktabellen optimieren (empfohlen).');
-    define('PROCESS_INDEXES','<b>Neugenerierung der Datenbank-Indices:</b><br/>Aufrund von Performancegründen muss das Löschen und neu Anlegen aller Indices getrennt in 2 Schritten erfolgen.<br/>');
-    define('REBUILD_INDEXES','Verarbeitung der Indices durchführen.');
-    define('DELETE_INDEXES','Indices aller Datenbanktabellen löschen (1. Schritt)');
+    define('PROCESS_INDEXES','<b>Neugenerierung der Datenbank-Indices:</b><br/>Aufrund von Performancegr&uuml;nden muss das L&ouml;schen und neu Anlegen aller Indices getrennt in 2 Schritten erfolgen.<br/>');
+    define('REBUILD_INDEXES','Verarbeitung der Indices durchf&uuml;hren.');
+    define('DELETE_INDEXES','Indices aller Datenbanktabellen l&ouml;schen (1. Schritt)');
     define('CREATE_INDEXES','Indices aller Datenbanktabellen neu aufbauen (2. Schritt)');
     define('REFRESH_CUSTOMERS_BASKET','Warenk&ouml;rbe von Kunden l&ouml;schen, die &auml;lter als 1 Monat sind.');
     define('REFRESH_SESSION_DATA','Sessiondaten (Loginzeitpunkte) von Kunden l&ouml;schen, die &auml;lter als 1 Woche sind.');
@@ -53,10 +53,10 @@
     define('TABLES_ANALYZED_MESSAGE','<li>Database wurde analysiert.</li>');
     define('TABLES_OPTIMIZED_MESSAGE','<li>Database wurde optimiert.</li>');
     define('REBUILD_INDEXES_MESSAGE','<li>Indices wurden neu aufgebaut.</li>');
-    define('DELETED_INDEXES_MESSAGE','<li style="color:red;font-weight:bold">Indices wurden gelöscht (Schritt 1). Bitte legen Sie nun die Indices neu an (Schritt 2).</li>');
+    define('DELETED_INDEXES_MESSAGE','<li style="color:red;font-weight:bold">Indices wurden gel&ouml;scht (Schritt 1). Bitte legen Sie nun die Indices neu an (Schritt 2).</li>');
     define('CUSTOMERS_BASKETS_REFRESHED_MESSAGE','<li>Alte Warenk&ouml;rbe von Kunden wurden gel&ouml;scht.</li>');
     define('CUSTOMERS_SESSION_DATA_REFRESHED_MESSAGE','<li>Alte Sessiondaten von Kunden wurden gel&ouml;scht.</li>');
-    define('TEXT_REMINDER_REINSTALL_MODULES','<p style="color:red;font-weight:bold">Beim Upgrade von v1.06 auf v2.00 m&uuml;ssen alle ben&ouml;tigten Zahlungsmodule und die Versandmodule "DP" und "GLS" bei Bedarf neu installiert werden. Bitte notieren Sie vor dem Update ggf. Ihre eigenen Einstellungsoptinen der Module.</p>');
+    define('TEXT_REMINDER_REINSTALL_MODULES','<p style="color:red;font-weight:bold">Beim Upgrade von v1.06 auf v2.00 m&uuml;ssen alle ben&ouml;tigten Zahlungsmodule und die Versandmodule &quot;DP&quot; und &quot;GLS&quot; bei Bedarf neu installiert werden. Bitte notieren Sie vor dem Update ggf. Ihre eigenen Einstellungsoptinen der Module.</p>');
   } else {
     // English definitions
     define ('TITLE_UPGRADE','<br /><strong><h1>modified eCommerce Shopsoftware database upgrade process</h1></strong>');
@@ -67,7 +67,7 @@
     define ('UPGRADE_NOT_NECESSARY', 'Database upgrade not necessary, you are up to date!');
     define ('USED_FILES', '<br /><br />The following files will be used for the upgrade to the newest database version:<br /><br />');
     define ('CURRENT_DB_VERSION', '<br />Your current database version is: ');
-    define ('FINAL_TEXT', 'Please delete the update file from your server now for security reasons:<br /> ==> ');
+    define ('FINAL_TEXT', 'Please delete the update file from your server now for security reasons:<br /> ==&gt; ');
     define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y') . '&nbsp;' . 'provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a></span>');
     define('OPTIMIZE_TABLE_OPTION','<br />You can also optimize the database as follows:<br />');
     define('ANALYZE_TABLE','(<a href="http://dev.mysql.com/doc/refman/5.1/en/analyze-table.html" target="_blank">ANALYZE TABLE</a>): Create statistical date about the key distribution (recommended).');
@@ -86,7 +86,7 @@
     define('DELETED_INDEXES_MESSAGE','<li style="color:red;font-weight:bold">Indices were deleted (Step1). Please rebuild the indices now (Step 2).</li>');
     define('CUSTOMERS_BASKETS_REFRESHED_MESSAGE','<li>Old customers baskets were deleted.</li>');
     define('CUSTOMERS_SESSION_DATA_REFRESHED_MESSAGE','<li>Old customers session data were deleted.</li>');
-    define('TEXT_REMINDER_REINSTALL_MODULES','<p style="color:red;font-weight:bold">After upgrading from v1.06 to v2.00 you have to reinstall all payment modules and the shipping modules "DP" and "GLS" if required. Please write down your customized settings of the modules prior to the update.</p>');
+    define('TEXT_REMINDER_REINSTALL_MODULES','<p style="color:red;font-weight:bold">After upgrading from v1.06 to v2.00 you have to reinstall all payment modules and the shipping modules &quot;DP&quot; and &quot;GLS&quot; if required. Please write down your customized settings of the modules prior to the update.</p>');
   }
 
   // get DB version and size
