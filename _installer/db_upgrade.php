@@ -20,7 +20,7 @@
     xtc_redirect('../', '', 'NONSSL'); //redirect back to shop
   }
 
-  const XTCOMMERCE304_FILE = 'update_xtc3.0.4sp2.1_to_1.0.1.0.sql';
+  define('XTCOMMERCE304_FILE','update_xtc3.0.4sp2.1_to_1.0.1.0.sql');
   $restore_query = '';
   $used_files_display = '';
 
