@@ -96,7 +96,7 @@ DROP TABLE IF EXISTS campaigns;
 CREATE TABLE campaigns (
   campaigns_id INT(11) NOT NULL AUTO_INCREMENT,
   campaigns_name VARCHAR(32) NOT NULL DEFAULT '',
-  campaigns_refid VARCHAR(64) DEFAULT NULL,
+  campaigns_refID VARCHAR(64) DEFAULT NULL,
   campaigns_leads INT(11) NOT NULL DEFAULT 0,
   date_added DATETIME DEFAULT NULL,
   last_modified DATETIME DEFAULT NULL,
@@ -2877,7 +2877,7 @@ INSERT INTO payment_amoneybookers_countries VALUES (9, 'ANT');
 INSERT INTO payment_amoneybookers_countries VALUES (10, 'ARG');
 INSERT INTO payment_amoneybookers_countries VALUES (11, 'ARM');
 INSERT INTO payment_amoneybookers_countries VALUES (12, 'ARU');
-INSERT INTO payment_amoneybookers_countries VALUES (13, 'AUD');
+INSERT INTO payment_amoneybookers_countries VALUES (13, 'AUS');
 INSERT INTO payment_amoneybookers_countries VALUES (14, 'AUT');
 INSERT INTO payment_amoneybookers_countries VALUES (15, 'AZE');
 INSERT INTO payment_amoneybookers_countries VALUES (16, 'BMS');
