@@ -95,7 +95,7 @@ DROP TABLE IF EXISTS campaigns;
 CREATE TABLE campaigns (
   campaigns_id INT(11) NOT NULL AUTO_INCREMENT,
   campaigns_name VARCHAR(32) NOT NULL DEFAULT '',
-  campaigns_refid VARCHAR(64) DEFAULT NULL,
+  campaigns_refID VARCHAR(64) DEFAULT NULL,
   campaigns_leads INT(11) NOT NULL DEFAULT 0,
   date_added DATETIME DEFAULT NULL,
   last_modified DATETIME DEFAULT NULL,
@@ -615,6 +615,7 @@ CREATE TABLE orders (
   refferers_id VARCHAR(32) NOT NULL,
   conversion_type INT(1) DEFAULT 0 NOT NULL,
   orders_ident_key VARCHAR(128),
+
 
   #BOF - hendrik - 2011-05-14 - independent invoice number and date
   ibn_billnr VARCHAR(32) default '',
@@ -1240,9 +1241,11 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'PRICE_PRECISION', '4', 1, 28, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CC_KEYCHAIN', 'changeme', 1, 29, NULL, NOW(), NULL, NULL);
 
+
 #Web28 - 2012-08-28 - Constants for checkout options
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'false', 1, 40, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CHECKOUT_SHOW_PRODUCTS_IMAGES', 'true', 1, 41, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+
 
 # BOF - hendrik - 2011-05-14 - independent billingnumber and date
 #INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'IBN_BILLNR', '1', '1', '99', NULL, NOW(), NULL, NULL);
@@ -2827,7 +2830,7 @@ INSERT INTO payment_moneybookers_countries VALUES (9, 'ANT');
 INSERT INTO payment_moneybookers_countries VALUES (10, 'ARG');
 INSERT INTO payment_moneybookers_countries VALUES (11, 'ARM');
 INSERT INTO payment_moneybookers_countries VALUES (12, 'ARU');
-INSERT INTO payment_moneybookers_countries VALUES (13, 'AUD');
+INSERT INTO payment_moneybookers_countries VALUES (13, 'AUS');
 INSERT INTO payment_moneybookers_countries VALUES (14, 'AUT');
 INSERT INTO payment_moneybookers_countries VALUES (15, 'AZE');
 INSERT INTO payment_moneybookers_countries VALUES (16, 'BMS');
