@@ -47,13 +47,14 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
   $date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
   $days = " and p.products_date_added > '".$date_new_products."' ";
 }
-//BOF - web28 - 2010.06.09 - added p.products_shippingtime
+//BOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
 $products_new_query_raw = "select distinct
                             p.products_id,
                             p.products_fsk18,
                             pd.products_name,
                             pd.products_short_description,
                             p.products_image,
+                            p.products_quantity,
                             p.products_price,
                             p.products_vpe,
                             p.products_vpe_status,
@@ -78,7 +79,7 @@ $products_new_query_raw = "select distinct
                             ".$fsk_lock."
                             ".$days."
                            order by p.products_date_added DESC ";
-//EOF - web28 - 2010.06.09 - added p.products_shippingtime
+//EOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
 
 $products_new_split = new splitPageResults($products_new_query_raw, isset($_GET['page']) ? $_GET['page'] : 1, MAX_DISPLAY_PRODUCTS_NEW, 'p.products_id');
 //BOF - Hetfield - 2009-08-11 - no longer empty site products_new.php
@@ -101,13 +102,14 @@ if (($products_new_split->number_of_rows > 0)) {
     //EOF - Hetfield - 2009-08-11 - products_new uses now the product class
   }
 } else {
-    //BOF - web28 - 2010.06.09 - added p.products_shippingtime
+    //BOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
   $new_products_query = "select distinct
                             p.products_id,
                             p.products_fsk18,
                             pd.products_name,
                             pd.products_short_description,
                             p.products_image,
+                            p.products_quantity,
                             p.products_price,
                             p.products_vpe,
                             p.products_vpe_status,
@@ -132,7 +134,7 @@ if (($products_new_split->number_of_rows > 0)) {
                             ".$fsk_lock."
                            order by p.products_date_added DESC limit 10";
 
-  //EOF - web28 - 2010.06.09 - added p.products_shippingtime
+  //EOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
 
   $new_products_query = xtDBquery($new_products_query);
   while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
