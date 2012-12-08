@@ -95,6 +95,9 @@
   // BOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
   if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($admin_access['janolaw'] == '1')) echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '"> -' . BOX_JANOLAW . '</a></li>';
   // EOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
+  // BOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
+  if (($_SESSION['customers_status']['customers_status_id'] == '0' && $admin_access['haendlerbund'] == '1')) echo '<li><a href="' . xtc_href_link("haendlerbund.php", '') . '" class="menuBoxContentLink"> -' . 'AGB Service' . '</a></li>';
+  // EOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
   echo ('</ul>');
   echo ('</li>');
 

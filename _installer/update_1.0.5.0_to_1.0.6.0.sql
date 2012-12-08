@@ -447,11 +447,16 @@ ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAUL
 ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
 
 #Tomcraft - 2012-11-15 - Added janolaw module
-ALTER TABLE admin_access ADD janolaw INT(1) DEFAULT 0 NOT NULL;
+ALTER TABLE admin_access ADD janolaw INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET janolaw = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET janolaw = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Web28 - 2012-11-26 - define set_function to NULL
-ALTER TABLE configuration CHANGE set_function set_function VARCHAR( 255 ) NULL; 
+ALTER TABLE configuration CHANGE set_function set_function VARCHAR( 255 ) NULL;
+
+#Tomcraft - 2012-12-08 - Added haendlerbund module
+ALTER TABLE admin_access ADD haendlerbund INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET haendlerbund = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET haendlerbund = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
