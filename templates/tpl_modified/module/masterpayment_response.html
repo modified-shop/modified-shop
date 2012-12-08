@@ -1,0 +1,23 @@
+<link type="text/css" rel="stylesheet" href="templates/{$tpl_path}/css/masterpayment.css" />
+
+<div class="masterpayment_box">
+
+    {if $masterpayment_method_title!=''}
+        <h4>{$masterpayment_method_title}</h4>
+        
+        <p />
+    {/if}
+    
+    	<div align="center" class="masterpayment_{$smarty.get.response}_box_outer">
+    
+            <div class="masterpayment_{$smarty.get.response}_box_inner">
+            
+                <p>
+                    {$masterpayment_message}
+                </p>
+                           
+            </div>
+        
+   		</div>      
+	
+</div>
