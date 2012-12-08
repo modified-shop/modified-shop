@@ -203,7 +203,7 @@ class MasterpaymentCallback extends MasterpaymentActions
 	
 	function getCustomerLanguage() 
 	{	
-		$_mlanguage = 'default';
+		$_mlanguage = 'english';
 			
 		$select_olanguage_query = xtc_db_query("select language from " . TABLE_ORDERS . " where orders_id = '".mysql_escape_string($this->order_ID)."'");
 		$fetch_olanguage = xtc_db_fetch_array($select_olanguage_query);
