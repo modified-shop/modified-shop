@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: html_output.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    xtcModified - community made shopping
    http://www.xtc-modified.org
@@ -192,8 +192,8 @@
 
   ////
   // Output a form filefield
-  function xtc_draw_file_field($name, $required = false) {
-    $field = xtc_draw_input_field($name, '', '', $required, 'file');
+  function xtc_draw_file_field($name, $required = false,$parameters = '') {
+    $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
     return $field;
   }
 
