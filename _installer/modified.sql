@@ -75,12 +75,12 @@ CREATE TABLE customers_memo (
 
 DROP TABLE IF EXISTS products_xsell;
 CREATE TABLE products_xsell (
-  id INT(10) NOT NULL AUTO_INCREMENT,
+  ID int(10) NOT NULL auto_increment,
   products_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   products_xsell_grp_name_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   xsell_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
   sort_order INT(10) UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (id)
+  PRIMARY KEY (ID)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_xsell_grp_name;
@@ -106,7 +106,7 @@ CREATE TABLE campaigns (
 DROP TABLE IF EXISTS campaigns_ip;
 CREATE TABLE campaigns_ip (
   user_ip VARCHAR(15) NOT NULL,
-  TIME DATETIME NOT NULL,
+  time DATETIME NOT NULL,
   campaign VARCHAR(32) NOT NULL
 ) ENGINE=MyISAM;
 
