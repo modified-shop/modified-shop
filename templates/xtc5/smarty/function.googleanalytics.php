@@ -24,7 +24,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 function smarty_function_googleanalytics($params, &$smarty) {
-
+  global $PHP_SELF;
+  
   if (!isset($params['account'])) {
     return false;
   }
