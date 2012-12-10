@@ -94,4 +94,5 @@ define('FILENAME_SHOPGATE', 'shopgate.php');
 /******** SHOPGATE **********/
 define('FILENAME_JANOLAW','janolaw.php');
 define('FILENAME_PARCEL_CARRIERS', 'parcel_carriers.php'); //Dokuman - 2012-11-16 - Track & Trace functionality
+define('FILENAME_HAENDLERBUND', 'haendlerbund.php'); //Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 ?>

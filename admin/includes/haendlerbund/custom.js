@@ -163,7 +163,7 @@ Ajax.prototype.doRequest=function() {
       }
     } else {
       if (_this.onError) {
-        _this.onError("["+xmlHttpRequest.status+" "+xmlHttpRequest.statusText+"] Es trat ein Fehler bei der Datenbertragung auf.");
+        _this.onError("["+xmlHttpRequest.status+" "+xmlHttpRequest.statusText+"] Es trat ein Fehler bei der Daten&uuml;bertragung auf.");
       }
     }
   }

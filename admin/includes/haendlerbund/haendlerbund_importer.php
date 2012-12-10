@@ -226,6 +226,14 @@
 		   
 		   $return .= '<div class="content" id="container">
     <div class="title_hb">
+      <h5 class="title_hb">Händlerbund Mitgliedschaft</h5>
+  
+    </div>
+	<br />
+        Sie ben&ouml;tigen f&uuml;r die Verwendung dieser Schnittstellen eine H&auml;ndlerbund Mitgliedschaft, welche Sie hier beantragen k&ouml;nnen:<br /><br />&gt;&gt;&gt; <a target="_blank" href="https://partner.haendlerbund.de/partnerdoor.php?partnerid=partner_modified&bannerid=64" style="color: #3581C1; font-family: Arial,Helvetica,sans-serif; font-size: 12px; text-decoration: underline;">Jetzt Mitglied werden</a> &lt;&lt;&lt;
+	<br />
+	<br />
+    <div class="title_hb">
       <h5 class="title_hb">Schnittstellen-Konfiguration</h5>
   
     </div>
