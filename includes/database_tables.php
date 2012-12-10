@@ -92,6 +92,7 @@ define('TABLE_PRODUCTS_XSELL', 'products_xsell');
 define('TABLE_PRODUCTS_XSELL_GROUPS', 'products_xsell_grp_name');
 define('TABLE_REVIEWS', 'reviews');
 define('TABLE_REVIEWS_DESCRIPTION', 'reviews_description');
+define('TABLE_SHOP_CONFIGURATION', 'shop_configuration');
   /* removed */ //define('TABLE_SERVER_TRACKING', 'server_tracking');
 define('TABLE_SESSIONS', 'sessions');
 define('TABLE_SHIPPING_STATUS', 'shipping_status');

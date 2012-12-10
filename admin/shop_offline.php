@@ -24,8 +24,8 @@
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
 
   if(isset($_POST['go'])) {
-    xtc_db_query("UPDATE ". "shop_configuration" ." SET configuration_value= '" . $_POST['shop_offline']. "' WHERE configuration_key = 'SHOP_OFFLINE'");
-    xtc_db_query("UPDATE ". "shop_configuration" ." SET configuration_value= '" . $_POST['offline_msg'] . "' WHERE configuration_key = 'SHOP_OFFLINE_MSG'");
+    xtc_db_query("UPDATE ". TABLE_SHOP_CONFIGURATION ." SET configuration_value= '" . $_POST['shop_offline']. "' WHERE configuration_key = 'SHOP_OFFLINE'");
+    xtc_db_query("UPDATE ". TABLE_SHOP_CONFIGURATION ." SET configuration_value= '" . $_POST['offline_msg'] . "' WHERE configuration_key = 'SHOP_OFFLINE_MSG'");
     xtc_redirect(xtc_href_link('shop_offline.php'));
   }
   
