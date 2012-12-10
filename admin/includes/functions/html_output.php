@@ -192,8 +192,8 @@
 
   ////
   // Output a form filefield
-  function xtc_draw_file_field($name, $required = false) {
-    $field = xtc_draw_input_field($name, '', '', $required, 'file');
+  function xtc_draw_file_field($name, $required = false,$parameters = '') {
+    $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
     return $field;
   }
 
@@ -278,22 +278,17 @@
     return $field;
   }
 
-  // output 2 Soring arrows
+  /**
+   * xtc_sorting()
+   *
+   * @param string $page, $sort
+   * @return string (2 sorting arrows)
+   */
   function xtc_sorting($page,$sort) {
-    switch ($page) {
-      case FILENAME_CUSTOMERS:
-        $nav='<br /><a href="'.xtc_href_link(FILENAME_CUSTOMERS,'sorting='.$sort.'&'.xtc_get_all_get_params(array('action','sorting'))).'">';
-        $nav.=xtc_image(DIR_WS_ICONS . 'sort_down.gif', '', '20' ,'20').'</a>';
-        $nav.='<a href="'.xtc_href_link(FILENAME_CUSTOMERS,'sorting='.$sort.'-desc&'.xtc_get_all_get_params(array('action','sorting'))).'">';
-        $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', '', '20' ,'20').'</a>';
-        break;
-      case FILENAME_CATEGORIES:
-        $nav='<br /><div><a href="'.xtc_href_link(FILENAME_CATEGORIES,'sorting='.$sort.'&'.xtc_get_all_get_params(array('action','sorting'))).'">';
-        $nav.=xtc_image(DIR_WS_ICONS . 'sort_down.gif', '', '20' ,'20').'</a>';
-        $nav.='<a href="'.xtc_href_link(FILENAME_CATEGORIES,'sorting='.$sort.'-desc&'.xtc_get_all_get_params(array('action','sorting'))).'">';
-        $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', '', '20' ,'20').'</a></div>';
-        break;
-    }
+    $nav= '<br /><a href="'.xtc_href_link($page,'sorting='.$sort.'&'.xtc_get_all_get_params(array('action','sorting'))).'">';
+    $nav.= xtc_image(DIR_WS_ICONS . 'sort_down.gif', '', '20' ,'20').'</a>';
+    $nav.= '<a href="'.xtc_href_link($page,'sorting='.$sort.'-desc&'.xtc_get_all_get_params(array('action','sorting'))).'">';
+    $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', '', '20' ,'20').'</a>';    
     return $nav;
   }
 ?>
