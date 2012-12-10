@@ -1,3 +1,4 @@
-ALTER TABLE campaigns CHANGE campaigns_refid campaigns_refID VARCHAR( 64 ) NULL DEFAULT NULL ;
-ALTER TABLE products_xsell CHANGE id ID` INT( 10 ) NOT NULL AUTO_INCREMENT;
-ALTER TABLE campaigns_ip CHANGE TIME time DATETIME NOT NULL; 
+ALTER TABLE `campaigns` CHANGE `campaigns_refid` `campaigns_refID` VARCHAR( 64 ) NULL DEFAULT NULL;
+ALTER TABLE `products_xsell` CHANGE `id` `ID` INT( 10 ) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `campaigns_ip` CHANGE `TIME` `time` DATETIME NOT NULL;
+ALTER TABLE `module_newsletter` CHANGE `DATE` `date` DATETIME DEFAULT NULL;
