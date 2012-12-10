@@ -910,7 +910,7 @@ li.plupload_droptext { background: transparent; text-align: center; vertical-ali
 .swMain ul.anchor li { position: relative; display:block; margin: 0; padding: 0; border-left: 1px solid #d5d5d5; float: left; }
 .swMain ul.anchor li:first-child { border-left: none; }
 .swMain ul.anchor li a { display: block; position: relative; float: left; margin: 0; height: 38px; width: 180px; text-decoration: none; outline-style: none; z-index: 99; cursor: pointer; background: url(../images/leftNavBg.png) repeat-x 0 0; }
-.swMain ul.anchor li a.wFirst { width: 181px; }
+.swMain ul.anchor li a.wFirst { width: 211px; }
 
 .swMain ul.anchor li a .stepNumber { position:relative; float:left; width:30px; text-align: center; padding:5px; padding-top:0; }
 .swMain ul.anchor li a .stepDesc { position:relative; display:block; float:left; text-align: left; padding: 8px 12px 8px 35px; }
@@ -922,7 +922,7 @@ li.plupload_droptext { background: transparent; text-align: center; vertical-ali
 .swMain ul.anchor li a.error:hover { color:#000 !important; }
 
 .swMain .buttonNext { display:block; float:right; margin: 8px 12px 0 12px; padding: 6px 12px; }
-.swMain .buttonDisabled { color: #D5D5D5!important; cursor: text; background: #F1F1F1!important; margin-top: 8px!important; border: 1px solid #E1E1E1; }
+.swMain .buttonDisabled { color: #D5D5D5!important; cursor: text; background: #F1F1F1!important; /* margin-top: 8px!important; */ border: 1px solid #E1E1E1; }
 .swMain .buttonPrevious { display:block; float:right; margin: 8px 0px 0 0px; padding: 6px 12px; }
 .swMain .buttonFinish { display:block; float:right; margin: 8px 12px 0 0px; padding: 6px 12px; }
 
