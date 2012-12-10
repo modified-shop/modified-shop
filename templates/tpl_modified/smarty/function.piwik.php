@@ -22,7 +22,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 function smarty_function_piwik($params, &$smarty) {
-
+  global $PHP_SELF;
+  
   $url = isset($params['url']) ? $params['url'] : false;
   $id = isset($params['id']) ? (int)$params['id'] : false;
   $goal = isset($params['goal']) ? (int)$params['goal'] : false;
