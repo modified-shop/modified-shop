@@ -107,7 +107,7 @@ CREATE TABLE campaigns (
 DROP TABLE IF EXISTS campaigns_ip;
 CREATE TABLE campaigns_ip (
   user_ip VARCHAR(15) NOT NULL,
-  time DATETIME NOT NULL,
+  TIME DATETIME NOT NULL,
   campaign VARCHAR(32) NOT NULL
 ) ENGINE=MyISAM;
 
