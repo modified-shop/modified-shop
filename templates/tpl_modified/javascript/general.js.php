@@ -121,7 +121,7 @@ function getParam(url, name) {
     });
     $(function() {
       $('#tabbed_product_info').tabs({
-	      fx: { opacity: 'toggle' }
+	      fx: { opacity: 'toggle' },
 	      cookie: {
           // store cookie for a day, without, it would be a session cookie
           expires: 1
