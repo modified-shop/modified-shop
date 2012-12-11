@@ -111,6 +111,7 @@ function getParam(url, name) {
     echo '<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>';
     //EOF - DokuMan - 2011-05-12 - load jQuery default library jquery-ui.js from faster Google CDN
 ?>
+  <script src="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.cookie.js" type="text/javascript"></script>
   <script type="text/javascript">
   //<![CDATA[
     //Laden einer CSS Datei mit jquery
@@ -119,7 +120,13 @@ function getParam(url, name) {
       $("head").append("<style type='text/css'>"+css+"<\/style>");
     });
     $(function() {
-      $('#tabbed_product_info').tabs({ fx: { opacity: 'toggle' } });
+      $('#tabbed_product_info').tabs({
+	      fx: { opacity: 'toggle' }
+	      cookie: {
+          // store cookie for a day, without, it would be a session cookie
+          expires: 1
+	      }
+      });
       $("#accordion_product_info").accordion({ autoHeight: false });
     });
   //]]>
