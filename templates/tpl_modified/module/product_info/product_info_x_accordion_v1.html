@@ -99,7 +99,8 @@
   {/if}
   {if $MODULE_products_media != ''}<h3><a href="#">{#products_media#}</a></h3><div>{$MODULE_products_media}</div>{/if}
   {if $MODULE_products_reviews != ''}<h3><a href="#">{#products_reviews#}</a></h3><div>{$MODULE_products_reviews}</div>{/if}
-  {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<h3><a href="#">{#cross_selling#}</a></h3><div>{$MODULE_cross_selling} {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+  {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<h3><a href="#">{#cross_selling#}</a></h3><div>{$MODULE_cross_selling}
+  {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
   {if $MODULE_also_purchased != ''}<h3><a href="#">{#also_purchased#}</a></h3><div>{$MODULE_also_purchased}</div>{/if}
 </div>
 {*END ACCORDION*}
