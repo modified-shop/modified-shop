@@ -1,22 +1,17 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: content_manager.php 2811 2012-05-01 12:01:22Z web28 $
+   $Id: content_manager.php 4143 2012-12-18 14:55:48Z Tomcraft1980 $
 
    xtcModified - community made shopping
    http://www.xtc-modified.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2012 xtcModified
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommercecoding standards www.oscommerce.com
    (c) 2003 nextcommerce (content_manager.php,v 1.18 2003/08/25); www.nextcommerce.org
    (c) 2006 XT-Commerce (content_manager.php 1304 2005-10-12)
-
-   Released under the GNU General Public License
-   --------------------------------------------------------------
-   Third Party contribution:
-   SPAW PHP WYSIWYG editor  Copyright: Solmetra (c)2003 All rights reserved. | www.solmetra.com
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
@@ -971,24 +966,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                           <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit_products_content&coID='.$content_array[$ii]['id']); ?>">
                                             <?php
                                             echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
-                                          // display preview button if filetype
-                                          // .gif,.jpg,.png,.html,.htm,.txt,.tif,.bmp
-                                          // BOF - Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
-                                          if (  preg_match('/.gif/i',$content_array[$ii]['file'])
-                                              or
-                                                preg_match('/.jpg/i',$content_array[$ii]['file'])
-                                              or
-                                                preg_match('/.png/i',$content_array[$ii]['file'])
-                                              or
-                                                preg_match('/.html/i',$content_array[$ii]['file'])
-                                              or
-                                                preg_match('/.htm/i',$content_array[$ii]['file'])
-                                              or
-                                                preg_match('/.txt/i',$content_array[$ii]['file'])
-                                              or
-                                                preg_match('/.bmp/i',$content_array[$ii]['file'])
-                                             ) {
-                                            // EOF - Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
+                                          // display preview button if filetype in array
+                                          $allowed_filetypes = array('.gif','.jpg','.png','.html','.htm','.txt','.bmp'); 
+                                          if (in_array(substr($content_array[$ii]['file'], 0, strrpos($content_array[$ii]['file'], '.') - 1), $allowed_filetypes)) {
                                             ?>
                                             <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link(FILENAME_CONTENT_PREVIEW,'pID=media&coID='.$content_array[$ii]['id']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
                                               <?php
