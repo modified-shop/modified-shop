@@ -601,7 +601,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                       <tr>
                                         <td valign="top" class="main" ><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
                                         <td class="main">
-                                          <div style="width: 370px; border: 1px solid; border-right: 1px solid; border-color: #ff0000; background:#FFCC33;">
+                                          <div style="width: 380px; border: 1px solid; border-right: 1px solid; border-color: #ff0000; background:#FFCC33;">
                                             <?php
                                             for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
                                               if (strstr($content['group_ids'],'c_'.$customers_statuses_array[$i]['id'].'_group')) {
@@ -783,7 +783,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                       $customers_statuses_array=array_merge(array(array('id'=>'all','text'=>TXT_ALL)),$customers_statuses_array);
                                       ?>
                                         <td class="main">
-                                          <div style="width: 370px; border: 1px solid; border-right: 1px solid; border-color: #ff0000; background:#FFCC33;">
+                                          <div style="width: 380px; border: 1px solid; border-right: 1px solid; border-color: #ff0000; background:#FFCC33;">
                                             <?php
                                               for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
                                                 if (strstr($content['group_ids'],'c_'.$customers_statuses_array[$i]['id'].'_group')) {
