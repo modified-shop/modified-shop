@@ -131,7 +131,7 @@ ErrorDocument 500 /sitemap.html?error=500
   RewriteRule ^sitemap(.*)\.html$ shop_content.php?coID=8 [QSA,L]
 
   ##----------------------------------------------------------------------------------
-  ##-- When working with SEO-Urls you can decide, wheter to use a colon ":" or a dash "-" symbol
+  ##-- When working with SEO-Urls you can decide, whether to use a colon ":" or a dash "-" symbol
   ##-- (Windows Servers might have problems with colon as delimiter!)
   ##-- Change the delimiter symbol also in file "/inc/shopstat_functions.inc.php"
   ##----------------------------------------------------------------------------------
