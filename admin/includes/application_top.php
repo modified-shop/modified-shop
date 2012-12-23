@@ -380,6 +380,3 @@ if (xtc_check_permission($pagename) == '0') {
 
 // Include Template Engine
 require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'Smarty_2.6.27/Smarty.class.php');
-
-// xs:booster
-define('FILENAME_XTBOOSTER','xtbooster.php');
