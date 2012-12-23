@@ -391,6 +391,3 @@ if (xtc_check_permission($pagename) == '0') {
 
 // Smarty Template Engine
 require (DIR_FS_EXTERNAL . 'smarty/Smarty.class.php');
-
-// xs:booster
-define('FILENAME_XTBOOSTER', 'xtbooster.php');
