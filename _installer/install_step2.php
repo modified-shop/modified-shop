@@ -219,9 +219,7 @@
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>                    
                     <td align="right">
-                      <a href="install_step1.php?db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>">
-                        <img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel">
-                      </a>
+                      <a href="install_step1.php?db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a>
                       <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif">
                     </td>                    
                   </tr>

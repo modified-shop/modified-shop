@@ -362,7 +362,7 @@
 
                           // REM - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure
 
-                          // BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL
+                          //BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL
                           $step = ($_POST['install_db'] == 1) ? 'install_step6' : 'install_finished';
                           //EOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL
                         ?>
@@ -377,13 +377,13 @@
                         <br />
                         <table border="0" width="100%" cellspacing="0" cellpadding="0">
                           <tr>
-                          <?php //// BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL?>
+                          <?php //BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>
                             <td align="center">
                               <a href="<?php echo $step;?>.php?lg=<?php echo $lang; ?>">
                                 <img src="buttons/<?php echo $lang;?>/button_continue.gif" border="0">
                               </a>
                             </td>
-                          <?php //// BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL?>
+                          <?php //EOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>
                           </tr>
                         </table>
                         <br />
