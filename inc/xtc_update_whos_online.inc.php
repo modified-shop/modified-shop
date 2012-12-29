@@ -30,7 +30,7 @@
                                       where customers_id = '" . $wo_customer_id . "'");
       $customer = xtc_db_fetch_array($customer_query);
 
-      $wo_full_name = xtc_db_input($customer['customers_firstname'] . ' ' . $customer['customers_lastname']);
+      $wo_full_name = xtc_db_prepare_input($customer['customers_firstname'] . ' ' . $customer['customers_lastname']);
     } else {
       $wo_customer_id = '';
       //BOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
@@ -53,54 +53,39 @@
     //EOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
 
     //BOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
-    $wo_ip_address = xtc_db_input($_SERVER['REMOTE_ADDR']);
-    $wo_last_page_url = xtc_db_input($_SERVER['REQUEST_URI']);
-    $wo_referer = xtc_db_input(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '---');
+    $wo_ip_address = xtc_db_prepare_input($_SERVER['REMOTE_ADDR']);
+    $wo_last_page_url = xtc_db_prepare_input($_SERVER['REQUEST_URI']);
+    $wo_referer = xtc_db_prepare_input(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '---');
     //EOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
-
+    
     $current_time = time();
-    $xx_mins_ago = ($current_time - 900);
+    $time_last_click = 900;
+    if (defined('WHOS_ONLINE_TIME_LAST_CLICK')) {
+      $time_last_click = (int)WHOS_ONLINE_TIME_LAST_CLICK;
+    }
+    $xx_mins_ago = (time() - $time_last_click);
 
     // remove entries that have expired
     xtc_db_query("delete from " . TABLE_WHOS_ONLINE . " where time_last_click < '" . $xx_mins_ago . "'");
 
     $stored_customer_query = xtc_db_query("select count(*) as count from " . TABLE_WHOS_ONLINE . " where session_id = '" . $wo_session_id . "'");
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
+    
+    $sql_data_array = array('customer_id' => $wo_customer_id,
+                            'full_name' => $wo_full_name,                              
+                            'ip_address' => $wo_ip_address,
+                            'time_entry' => $current_time,
+                            'time_last_click' => $current_time,
+                            'last_page_url' => $wo_last_page_url,
+                            'http_referer' => $wo_referer        
+                            );
 
     if ($stored_customer['count'] > 0) {
-        xtc_db_query("
-        update " . TABLE_WHOS_ONLINE . "
-        set customer_id = '" . $wo_customer_id . "',
-        full_name = '" . $wo_full_name . "',
-        ip_address = '" . $wo_ip_address . "',
-        time_last_click = '" . time() . "',
-        last_page_url = '" . $wo_last_page_url . "',
-        http_referer = '" . $wo_referer . "'
-        where session_id = '" . $wo_session_id . "'");
-    } else {
-    //BOF - Dokuman - 2009-10-28 - Who is online: added http_referer
-    //xtc_db_query("insert into " . TABLE_WHOS_ONLINE . " (customer_id, full_name, session_id, ip_address, time_entry, time_last_click, last_page_url) values ('" . $wo_customer_id . "', '" . $wo_full_name . "', '" . $wo_session_id . "', '" . $wo_ip_address . "', '" . $current_time . "', '" . $current_time . "', '" . $wo_last_page_url . "')");
-      xtc_db_query("
-      insert into " . TABLE_WHOS_ONLINE . "
-        (customer_id,
-        full_name,
-        session_id,
-        ip_address,
-        time_entry,
-        time_last_click,
-        last_page_url,
-        http_referer)
-      values (
-      '" . $wo_customer_id . "',
-      '" . $wo_full_name . "',
-      '" . $wo_session_id . "',
-      '" . $wo_ip_address . "',
-      '" . $current_time . "',
-      '" . $current_time . "',
-      '" . $wo_last_page_url . "',
-      '" . $wo_referer . "')"
-      );
-    //BOF - Dokuman - 2009-10-28 - Who is online: added http_referer
+      xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array,'update', "session_id = '".$wo_session_id."'");          
+    } else {      
+      $sql_data_array['session_id'] = $wo_session_id;
+      xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array);
     }
+
   }
 ?>
