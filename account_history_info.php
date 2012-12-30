@@ -82,6 +82,7 @@ $statuses_query = xtc_db_query("-- /account_history_info.php
                                 FROM ".TABLE_ORDERS_STATUS." os,
                                      ".TABLE_ORDERS_STATUS_HISTORY." osh
                                 WHERE osh.orders_id = '".$order->info['order_id']."'
+                                  AND osh.customer_notified = 1
                                   AND osh.orders_status_id = os.orders_status_id
                                   AND os.language_id = '".(int) $_SESSION['languages_id']."'
                                 ORDER BY osh.date_added");
