@@ -459,4 +459,14 @@ ALTER TABLE admin_access ADD haendlerbund INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET haendlerbund = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET haendlerbund = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#Web28 - 2012-12-30 - set new sort_order by configuration_group_id 5 , Customer Details
+UPDATE configuration SET configuration_group_id = '5', sort_order = '10', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_GENDER';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '20', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_DOB';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '30', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_COMPANY';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '50', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_SUBURB';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '60', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_STATE';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '100', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_OPTIONS';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '110', last_modified = NOW() WHERE configuration_key = 'DELETE_GUEST_ACCOUNT';
+
+
 # Keep an empty line at the end of this file for the db_updater to work properly
