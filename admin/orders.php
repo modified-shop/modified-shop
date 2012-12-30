@@ -236,7 +236,10 @@
           $smarty->assign('NAME', $check_status['customers_name']);
           $smarty->assign('ORDER_NR', $order->info['order_id']);
           $smarty->assign('ORDER_ID', $oID);
-          $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
+	        //send no order link to customers with guest account
+	        if ($check_status['customers_status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
+	          $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
+	        }
           $smarty->assign('ORDER_DATE', xtc_date_long($check_status['date_purchased']));
           $smarty->assign('NOTIFY_COMMENTS', nl2br($notify_comments));
           $smarty->assign('ORDER_STATUS', $orders_status_array[$status]);
