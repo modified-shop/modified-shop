@@ -138,4 +138,6 @@ define('TEXT_ORDER_STATUS', 'Bestellstatus:');
 
 define('TABLE_HEADING_ORDERS_ID', 'Best.Nr.');
 define('TEXT_SHIPPING_TO', 'Versand nach');
+
+define('TABLE_HEADING_COMMENTS_SENT', 'Kommentar versandt');
 ?>
