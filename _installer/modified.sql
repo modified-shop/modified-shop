@@ -675,7 +675,7 @@ CREATE TABLE orders_status_history (
   date_added DATETIME NOT NULL,
   customer_notified INT(1) DEFAULT 0,
   comments text,
-  comments_send INT(1) DEFAULT 0,
+  comments_sent INT(1) DEFAULT 0,
   PRIMARY KEY (orders_status_history_id)
 ) ENGINE=MyISAM;
 

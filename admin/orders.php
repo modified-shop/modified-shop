@@ -240,7 +240,7 @@ switch ($action) {
                               'date_added' => 'now()',
                               'customer_notified' => $customer_notified,
                               'comments' => $comments,
-                              'comments_send' => ($_POST['notify_comments'] == 'on' ? 1 : 0)
+                              'comments_sent' => ($_POST['notify_comments'] == 'on' ? 1 : 0)
                               );
       xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
       $order_updated = true;
