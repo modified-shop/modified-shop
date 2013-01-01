@@ -142,4 +142,6 @@ define('TABLE_HEADING_TRACKING', 'Sendungsverfolgung:');
 define('TABLE_HEADING_CARRIER', 'Paketdienstleister');
 define('TABLE_HEADING_PARCEL_LINK', 'Sendungsnummer');
 define('TABLE_HEADING_REMOVE_LINK', 'Nummer hinzuf&uuml;gen/entfernen');
+
+define('TABLE_HEADING_COMMENTS_SENT', 'Kommentar versandt');
 ?>

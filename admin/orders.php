@@ -186,7 +186,8 @@
                                           SELECT customers_name,
                                                  customers_email_address,
                                                  orders_status,
-                                                 date_purchased
+                                                 date_purchased,
+                                                 customers_id
                                             FROM ".TABLE_ORDERS."
                                            WHERE orders_id = ".$oID
                                         );
@@ -202,17 +203,11 @@
         $customer_notified = 0;
         if ($_POST['notify'] == 'on') {
           $notify_comments = ($_POST['notify_comments'] == 'on') ? $comments : '';
-          $orders_query = xtc_db_query("-- /admin/orders.php
-                                        SELECT customers_id
-                                          FROM ".TABLE_ORDERS."
-                                         WHERE orders_id = ".$oID
-                                      );
-          $order_cid = xtc_db_fetch_array($orders_query);
           $gender_query = xtc_db_query("-- /admin/orders.php
                                         SELECT customers_gender,
                                                customers_lastname
                                           FROM " . TABLE_CUSTOMERS . "
-                                         WHERE customers_id = ".$order_cid['customers_id']
+                                         WHERE customers_id = ".$check_status['customers_id']
                                       );
           $gender = xtc_db_fetch_array($gender_query);
           if ($gender['customers_gender']=='f') {
@@ -296,7 +291,8 @@
                                 'orders_status_id' => $status,
                                 'date_added' => 'now()',
                                 'customer_notified' => $customer_notified,
-                                'comments' => $comments
+                                'comments' => $comments,
+                                'comments_sent' => ($_POST['notify_comments'] == 'on' ? 1 : 0)
                                 );
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
         $order_updated = true;
@@ -775,13 +771,15 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_STATUS; ?></b></td>
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
+                  <td class="smallText" align="center"><b><?php echo TABLE_HEADING_COMMENTS_SENT; ?></b></td>
                 </tr>
                 <?php
                   $orders_history_query = xtc_db_query("-- /admin/orders.php
                                                         SELECT orders_status_id,
                                                                date_added,
                                                                customer_notified,
-                                                               comments
+                                                               comments,
+                                                               comments_sent
                                                           FROM ".TABLE_ORDERS_STATUS_HISTORY."
                                                           WHERE orders_id = ".$oID."
                                                        ORDER BY date_added");
@@ -805,7 +803,14 @@ require (DIR_WS_INCLUDES.'head.php');
                         echo '<font color="#FF0000">'.TEXT_VALIDATING.'</font>';
                       }
                       echo '</td>'.PHP_EOL;
-                      echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'.PHP_EOL.'                </tr>'.PHP_EOL;
+                      echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 
+                      echo '                  <td class="smallText'.$class.'" align="center">';
+                      if ($orders_history['comments_sent'] == '1') {
+                        echo xtc_image(DIR_WS_ICONS.'tick.gif', ICON_TICK).'</td>'.PHP_EOL;
+                      } else {
+                        echo xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                      }
+                      echo '</tr>'.PHP_EOL;
                     }
                   } else {
                     echo '                <tr>'.PHP_EOL.'            <td class="smallText" colspan="5">'.TEXT_NO_ORDER_HISTORY.'</td>'.PHP_EOL.'                </tr>'.PHP_EOL;

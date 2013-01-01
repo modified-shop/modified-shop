@@ -142,4 +142,6 @@ define('TABLE_HEADING_TRACKING', 'Shipment tracking system:');
 define('TABLE_HEADING_CARRIER', 'Carrier');
 define('TABLE_HEADING_PARCEL_LINK', 'Tracking number');
 define('TABLE_HEADING_REMOVE_LINK', 'Add/delete number');
+
+define('TABLE_HEADING_COMMENTS_SENT', 'Comment is sent');
 ?>

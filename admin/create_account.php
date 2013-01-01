@@ -453,7 +453,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             if (isset($entry_gender_error) && $entry_gender_error == true) {
                               echo xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE.'&nbsp;'.ENTRY_GENDER_ERROR;
                             } else {
-                              echo ($customers_gender == 'm') ? MALE : FEMALE;
+                              //echo ($customers_gender == 'm') ? MALE : FEMALE; //web28 2012-12-31 - fix twice display
                               echo xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE;
                             }
                           } else {

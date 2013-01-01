@@ -78,7 +78,8 @@ $history_block = ''; //DokuMan - 2010-09-18 - set undefined variable
 $statuses_query = xtc_db_query("-- /account_history_info.php
                                 SELECT os.orders_status_name,
                                        osh.date_added,
-                                       osh.comments
+                                       osh.comments,
+                                       osh.comments_sent
                                 FROM ".TABLE_ORDERS_STATUS." os,
                                      ".TABLE_ORDERS_STATUS_HISTORY." osh
                                 WHERE osh.orders_id = '".$order->info['order_id']."'
@@ -87,7 +88,7 @@ $statuses_query = xtc_db_query("-- /account_history_info.php
                                   AND os.language_id = '".(int) $_SESSION['languages_id']."'
                                 ORDER BY osh.date_added");
 while ($statuses = xtc_db_fetch_array($statuses_query)) {
-  $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) ? '&nbsp;' : nl2br(htmlspecialchars($statuses['comments']))) .'<br />';
+  $history_block .= xtc_date_short($statuses['date_added']). '&nbsp;<strong>' .$statuses['orders_status_name']. '</strong>&nbsp;' . (empty ($statuses['comments']) || empty($statuses['comments_sent']) ? '&nbsp;' : nl2br(htmlspecialchars($statuses['comments']))) .'<br />';
 }
 $smarty->assign('HISTORY_BLOCK', $history_block);
 
