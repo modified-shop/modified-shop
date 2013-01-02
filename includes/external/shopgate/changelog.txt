@@ -1,6 +1,13 @@
 '''Deutsch'''
 
 
+'''Version 2.1.8'''
+* Fehler bei der Sortierung von Produkten und Kategorien mit negativen Sortierungsindizes behoben
+
+'''Version 2.1.7'''
+* Inkompatibilitätsproblem mit älteren MySQL-Versionen behoben
+* nutzt die Shopgate Library 2.1.12
+
 '''Version 2.1.6'''
 * Fehler beim Export der Artikelnummern für Varianten behoben
 * Debuglogging erweitert
@@ -65,6 +72,13 @@
 
 '''English'''
 
+
+'''Version 2.1.8'''
+* fixed issue in sorting products and categories with negative sort order indices
+
+'''Version 2.1.7'''
+* fixed an incompatiblity issue with older MySQL versions
+* uses Shopgate Library 2.1.12
 
 '''Version 2.1.6'''
 * fixed error in export of item numbers for variations
