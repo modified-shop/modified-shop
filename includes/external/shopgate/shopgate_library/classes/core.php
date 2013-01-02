@@ -3,7 +3,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.1.8');
+define('SHOPGATE_LIBRARY_VERSION', '2.1.12');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 define('SHOPGATE_ITUNES_URL', 'http://itunes.apple.com/de/app/shopgate-eine-app-alle-shops/id365287459?mt=8');
@@ -178,8 +178,9 @@ class ShopgateLibraryException extends Exception {
 	 * @param int $code One of the constants defined in ShopgateLibraryException.
 	 * @param string $additionalInformation More detailed information on what exactly went wrong.
 	 * @param boolean $appendAdditionalInformationOnMessage Set true to output the additional information to the response. Set false to log it silently.
+	 * @param boolean $writeLog true to create a log entry in the error log, false otherwise.
 	 */
-	public function __construct($code, $additionalInformation = null, $appendAdditionalInformationToMessage = false) {
+	public function __construct($code, $additionalInformation = null, $appendAdditionalInformationToMessage = false, $writeLog = true) {
 		// Set code and message
 		$logMessage = self::buildLogMessageFor($code, $additionalInformation);
 		if (isset(self::$errorMessages[$code])) {
@@ -197,14 +198,18 @@ class ShopgateLibraryException extends Exception {
 		$this->additionalInformation = $additionalInformation;
 
 		// Log the error
-		if (ShopgateLogger::getInstance()->log($code.' - '.$logMessage) === false) {
-			$message .= ' (unable to log)';
+		if (empty($writeLog)) {
+			$message .= ' (logging disabled for this message)';
+		} else {
+			if (ShopgateLogger::getInstance()->log($code.' - '.$logMessage) === false) {
+				$message .= ' (unable to log)';
+			}
 		}
 
 		// Call default Exception class constructor
 		parent::__construct($message, $code);
 	}
-
+	
 	/**
 	 * Returns the saved additional information.
 	 *
@@ -572,7 +577,7 @@ class ShopgateBuilder {
 		}
 		
 		// instantiate API stuff
-		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey(), time());
+		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey());
 		$merchantApi = new ShopgateMerchantApi($authService, $this->config->getShopNumber(), $this->config->getApiUrl());
 		$pluginApi = new ShopgatePluginApi($this->config, $authService, $merchantApi, $plugin);
 		
@@ -592,7 +597,7 @@ class ShopgateBuilder {
 	 * @return ShopgateMerchantApi
 	 */
 	public function &buildMerchantApi() {
-		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey(), time());
+		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey());
 		$merchantApi = new ShopgateMerchantApi($authService, $this->config->getShopNumber(), $this->config->getApiUrl());
 		
 		return $merchantApi;
@@ -1044,6 +1049,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			'use_stock' 				=> "0",
 			'stock_quantity' 			=> "",
 			'active_status'				=> self::PRODUCT_STATUS_STOCK,
+			'minimum_order_quantity'	=> "0",
+			'maximum_order_quantity'	=> "0",
+			'minimum_order_amount'		=> "0.00",
 			'ean' 						=> "",
 			'isbn' 						=> "",
 			'pzn'						=> "",
@@ -1228,11 +1236,13 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			"P", "SAMP", "SELECT", "SMALL", "STRIKE", "STRONG", "STYLE", "SUB", "SUP",
 			"TABLE", "TD", "TEXTAREA", "TH", "TITLE", "TR", "TT", "UL", "U", "VAR"
 		);
-
-		// make them all lowercase
+		
 		foreach ($allowedTags as &$t) $t = strtolower($t);
 		foreach ($removeTags as &$t) $t = strtolower($t);
 		foreach ($additionalAllowedTags as &$t) $t = strtolower($t);
+		
+		// some tags must be removed completely (including content)
+		$string = preg_replace('/<\s*script.*\/script>/s', '', $string);
 
 		// add the additional allowed tags to the list
 		$allowedTags = array_merge($allowedTags, $additionalAllowedTags);
@@ -1263,12 +1273,12 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				$this->log("Call Function {$method}", ShopgateLogger::LOGTYPE_DEBUG);
 				$result = call_user_func_array( array( $this, $method ), $arguments );
 
-				if( ShopgateLogger::getInstance()->isDebugEnabled()
-				&& is_array($result) && is_array( $arguments[0]) ) {
+// 				if( ShopgateLogger::getInstance()->isDebugEnabled()
+// 				&& is_array($result) && is_array( $arguments[0]) ) {
 					
-					$diff = array_diff_assoc($result, $arguments[0]);
-					$this->log("Changed Data:\n". print_r($diff, true), ShopgateLogger::LOGTYPE_DEBUG);
-				}
+// 					$diff = array_diff_assoc($result, $arguments[0]);
+// 					$this->log("Changed Data:\n". print_r($diff, true), ShopgateLogger::LOGTYPE_DEBUG);
+// 				}
 
 				$arguments[0] = $result;
 			}

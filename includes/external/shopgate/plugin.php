@@ -1,5 +1,5 @@
 <?php
-define('SHOPGATE_PLUGIN_VERSION', '2.1.6');
+define('SHOPGATE_PLUGIN_VERSION', '2.1.8');
 
 /**
  * Modified eCommerce Plugin für Shopgate
@@ -107,7 +107,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$row["url_image"] = HTTP_SERVER.DIR_WS_CATALOG.DIR_WS_IMAGES."categories/".$item["categories_image"];
 			}
 
-			if(!empty($item["sort_order"])){
+			if (!empty($item["sort_order"]) || ((string) $item['sort_order'] === '0')) {
 				if(!$this->config->getReverseCategoriesSortOrder()){
 					$row["order_index"] = $item["sort_order"];
 				} else {
@@ -543,7 +543,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				}
 			}
 				
-			if(!empty($sort)) {
+			if (!empty($sort) || ((string) $sort === '0')) {
 				$sort += $addToOrderIndex;
 				$catNumber = "=>".$sort;
 			}

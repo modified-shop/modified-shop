@@ -547,11 +547,39 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	 * @var string
 	 */
 	private $apiUrl;
-
+	
+	private $curlOpt = array();
+	
 	public function __construct(ShopgateAuthentificationServiceInterface &$authService, $shopNumber, $apiUrl) {
 		$this->authService = $authService;
 		$this->shopNumber = $shopNumber;
 		$this->apiUrl = $apiUrl;
+		$this->curlOpt = $this->getCurlOptArray();
+	}
+	
+	/**
+	 * Returns an array of curl-options for requests
+	 *
+	 * @return mixed[]
+	 */
+	protected function getCurlOptArray() {
+		$opt = array();
+
+		$opt[CURLOPT_HEADER] = false;
+		$opt[CURLOPT_USERAGENT] = 'ShopgatePlugin/'.(defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'called outside plugin');
+		$opt[CURLOPT_SSL_VERIFYPEER] = false;
+		$opt[CURLOPT_RETURNTRANSFER] = true;
+		$opt[CURLOPT_HTTPHEADER] = array(
+				'X-Shopgate-Library-Version: '. SHOPGATE_LIBRARY_VERSION,
+				'X-Shopgate-Plugin-Version: '.(defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'called outside plugin'),
+				$this->authService->buildAuthUserHeader(),
+				$this->authService->buildMerchantApiAuthTokenHeader()
+		);
+		
+		$opt[CURLOPT_TIMEOUT] = 30; // Default timeout 30sec
+		$opt[CURLOPT_POST] = true;
+		
+		return $opt;
 	}
 	
 	/**
@@ -567,33 +595,28 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 
 		$this->log('Sending request to "'.$this->apiUrl.'": '.ShopgateLogger::getInstance()->cleanParamsForLog($data), ShopgateLogger::LOGTYPE_REQUEST);
 
+		$this->authService->startNewSession();
+		
 		$curl = curl_init($this->apiUrl);
-		curl_setopt($curl, CURLOPT_HEADER, false);
-		curl_setopt($curl, CURLOPT_USERAGENT, 'ShopgatePlugin/'.(defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'called outside plugin'));
-		curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-				'X-Shopgate-Library-Version: '. SHOPGATE_LIBRARY_VERSION,
-				'X-Shopgate-Plugin-Version: '.(defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'called outside plugin'),
-				$this->authService->buildAuthUserHeader(),
-				$this->authService->buildAuthTokenHeader()
-		));
-		curl_setopt($curl, CURLOPT_POST, true);
+		
 		curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($data));
-
+		curl_setopt_array($curl, $this->curlOpt);
+		
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
 		curl_close($curl);
 
 		// check the result
 		if (!$response) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::MERCHANT_API_NO_CONNECTION);
+			// exception without logging - this might cause spamming your logs and we will know when our API is offline anyways
+			throw new ShopgateLibraryException(ShopgateLibraryException::MERCHANT_API_NO_CONNECTION, null, false, false);
 		}
 
 		$decodedResponse = $this->jsonDecode($response, true);
 
 		if (empty($decodedResponse)) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::MERCHANT_API_INVALID_RESPONSE, 'Response: '.$response, true);
+			// exception without logging - this might cause spamming your logs and we will know when our API is offline anyways
+			throw new ShopgateLibraryException(ShopgateLibraryException::MERCHANT_API_INVALID_RESPONSE, 'Response: '.$response, true, false);
 		}
 
 		if ($decodedResponse['error'] != 0) {
@@ -678,6 +701,9 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	}
 	
 	public function getMobileRedirectKeywords(){
+		// Set timeout to 1 second
+		$this->curlOpt[CURLOPT_TIMEOUT] = 1;
+		
 		$data = array(
 				'action' => 'get_mobile_redirect_keywords',
 		);
@@ -835,19 +861,40 @@ class ShopgateAuthentificationService extends ShopgateObject implements Shopgate
 	private $customerNumber;
 	private $apiKey;
 	private $timestamp;
-
-	public function __construct($customerNumber, $apiKey, $timestamp) {
+	
+	public function __construct($customerNumber, $apiKey) {
 		$this->customerNumber = $customerNumber;
 		$this->apiKey = $apiKey;
-		$this->timestamp = $timestamp;
+		
+		$this->startNewSession();
 	}
-
+	
+	public function startNewSession() {
+		$this->timestamp = time();
+	}
+	
+	public function buildAuthUser() {
+		return $this->customerNumber.'-'.$this->getTimestamp();
+	}
+	
 	public function buildAuthUserHeader() {
-		return self::HEADER_X_SHOPGATE_AUTH_USER .': '. $this->customerNumber.'-'.$this->timestamp;
+		return self::HEADER_X_SHOPGATE_AUTH_USER .': '. $this->buildAuthUser();
 	}
-
-	public function buildAuthTokenHeader() {
-		return self::HEADER_X_SHOPGATE_AUTH_TOKEN.': '.sha1("SMA-{$this->customerNumber}-{$this->timestamp}-{$this->apiKey}");
+	
+	public function buildAuthToken($prefix = 'SMA') {
+		return $this->buildCustomAuthToken($prefix, $this->customerNumber, $this->getTimestamp(), $this->apiKey);
+	}
+	
+	public function buildAuthTokenHeader($prefix = 'SMA') {
+		return self::HEADER_X_SHOPGATE_AUTH_TOKEN.': '.$this->buildAuthToken();
+	}
+	
+	public function buildMerchantApiAuthTokenHeader() {
+		return $this->buildAuthTokenHeader('SMA');
+	}
+	
+	public function buildPluginApiAuthTokenHeader() {
+		return $this->buildAuthTokenHeader('SPA');
 	}
 
 	public function checkAuthentification() {
@@ -872,17 +919,38 @@ class ShopgateAuthentificationService extends ShopgateObject implements Shopgate
 		$timestamp = $matches['timestamp'];
 
 		// request shouldn't be older than 30 minutes or more than 30 minutes in the future
-		if ((($this->timestamp - $timestamp) > (30*60)) || ($timestamp - $this->timestamp) > (30*60)) {
+		if (abs($this->getTimestamp() - $timestamp) > (30*60)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::AUTHENTICATION_FAILED, 'Request too old or too far in the future.');
 		}
 		
 		// create the authentification-password
-		$generatedPassword = sha1("SPA-{$customer_number}-{$timestamp}-{$this->apiKey}");
+		$generatedPassword = $this->buildCustomAuthToken('SPA', $customer_number, $timestamp, $this->apiKey);
 
 		// compare customer-number and auth-password and make sure, the API key was set in the configuration
 		if (($customer_number != $this->customerNumber) || ($token != $generatedPassword) || (empty($this->apiKey))) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::AUTHENTICATION_FAILED, 'Invalid authentication data.');
 		}
+	}
+	
+	/**
+	 * Return current timestamp
+	 *
+	 * @return int
+	 */
+	protected function getTimestamp() {
+		return $this->timestamp;
+	}
+	
+	/**
+	 * Generates the auth token with the given parameters.
+	 *
+	 * @param string $prefix
+	 * @param string $customerNumber
+	 * @param int $timestamp
+	 * @param string $apiKey
+	 */
+	protected function buildCustomAuthToken($prefix, $customerNumber, $timestamp, $apiKey) {
+		return sha1("{$prefix}-{$customerNumber}-{$timestamp}-{$apiKey}");
 	}
 }
 
@@ -1304,17 +1372,44 @@ interface ShopgateAuthentificationServiceInterface {
 	const PHP_X_SHOPGATE_AUTH_TOKEN = 'HTTP_X_SHOPGATE_AUTH_TOKEN';
 
 	/**
+	 * @return string The auth user string.
+	 */
+	public function buildAuthUser();
+	
+	/**
 	 * @return string The X-Shopgate-Auth-User HTTP header for an outgoing request.
 	 */
 	public function buildAuthUserHeader();
+	
+	/**
+	 * @param $prefix string SMA|SPA
+	 * @return string The auth token string.
+	 */
+	public function buildAuthToken($prefix = 'SMA');
+
+	/**
+	 * @param $prefix string SMA|SPA
+	 * @return string The X-Shopgate-Auth-Token HTTP header.
+	 */
+	public function buildAuthTokenHeader($prefix = 'SMA');
 
 	/**
 	 * @return string The X-Shopgate-Auth-Token HTTP header for an outgoing request.
 	 */
-	public function buildAuthTokenHeader();
-
+	public function buildMerchantApiAuthTokenHeader();
+	
+	/**
+	 * @return string The X-Shopgate-Auth-Token HTTP header for an incoming request.
+	 */
+	public function buildPluginApiAuthTokenHeader();
+	
 	/**
 	 * @throws ShopgateLibraryException if authentication fails
 	 */
 	public function checkAuthentification();
+
+	/**
+	 * Start a new Authentication session
+	 */
+	public function startNewSession();
 }

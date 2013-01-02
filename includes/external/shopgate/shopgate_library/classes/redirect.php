@@ -500,10 +500,11 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 	protected function saveKeywordsToFile($keywords, $file) {
 		array_unshift($keywords, time()); // add timestamp to first line
 		if (!@file_put_contents($file, implode("\n", $keywords))) {
-			$this->log(ShopgateLibraryException::buildLogMessageFor(ShopgateLibraryException::FILE_READ_WRITE_ERROR, 'Could not write to "'.$file.'".'));
+			// no logging - this could end up in spamming the logs
+			// $this->log(ShopgateLibraryException::buildLogMessageFor(ShopgateLibraryException::FILE_READ_WRITE_ERROR, 'Could not write to "'.$file.'".'));
 		}
 	}
-				
+	
 	/**
 	 * Reads redirect keywords from file.
 	 *
@@ -520,7 +521,8 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		
 		$cacheFile = @fopen($file, 'a+');
 		if (empty($cacheFile)) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::FILE_READ_WRITE_ERROR, 'Could not read file "'.$file.'".');
+			// exception without logging
+			throw new ShopgateLibraryException(ShopgateLibraryException::FILE_READ_WRITE_ERROR, 'Could not read file "'.$file.'".', false, false);
 		}
 		
 		$keywordsFromFile = explode("\n", @fread($cacheFile, filesize($file)));
