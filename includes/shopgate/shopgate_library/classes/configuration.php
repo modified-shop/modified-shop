@@ -175,6 +175,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	### Options regarding shop system specific settings ###
 	#######################################################
 	/**
+	 * @var string The ISO 3166 ALPHA-2 code of the language the plugin uses for export.
+	 */
+	protected $language;
+	
+	/**
+	 * @var string The ISO 4217 code of the currency the plugin uses for export.
+	 */
+	protected $currency;
+	
+	/**
 	 * @var int The capacity (number of lines) of the buffer used for the export actions.
 	 */
 	protected $export_buffer_capacity;
@@ -292,6 +302,9 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_mobile_website = 0;
 		$this->enable_cron = 0;
 		$this->enable_clear_logfile = 1;
+		
+		$this->language = 'DE';
+		$this->currency = 'EUR';
 		
 		$this->export_buffer_capacity = 100;
 		$this->max_attributes = 50;
@@ -583,6 +596,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->enable_clear_logfile;
 	}
 	
+	public function getLanguage() {
+		return $this->language;
+	}
+	
+	public function getCurrency() {
+		return $this->currency;
+	}
+	
 	public function getExportBufferCapacity() {
 		return $this->export_buffer_capacity;
 	}
@@ -793,6 +814,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function setEnableClearLogfile($value) {
 		$this->enable_clear_logfile = $value;
+	}
+	
+	public function setLanguage($value) {
+		$this->language = $value;
+	}
+	
+	public function setCurrency($value) {
+		$this->currency = $value;
 	}
 	
 	public function setExportBufferCapacity($value) {
@@ -1050,6 +1079,126 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 */
 	public static function __callStatic($name, $arguments) {
 		return call_user_func_array(array('ShopgateConfigOld', $name), $arguments);
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function setConfig(array $newConfig, $validate = true) {
+		return ShopgateConfigOld::setConfig($newConfig, $validate);
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function validateAndReturnConfig() {
+		return ShopgateConfigOld::validateAndReturnConfig();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getConfig() {
+		return ShopgateConfigOld::getConfig();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getConfigField($field) {
+		return ShopgateConfigOld::getConfigField($field);
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getLogFilePath($type = ShopgateLogger::LOGTYPE_ERROR) {
+		return ShopgateConfigOld::getLogFilePath($type = ShopgateLogger::LOGTYPE_ERROR);
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getItemsCsvFilePath() {
+		return ShopgateConfigOld::getItemsCsvFilePath();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getCategoriesCsvFilePath() {
+		return ShopgateConfigOld::getCategoriesCsvFilePath();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getReviewsCsvFilePath() {
+		return ShopgateConfigOld::getReviewsCsvFilePath();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getPagesCsvFilePath() {
+		return ShopgateConfigOld::getPagesCsvFilePath();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getRedirectKeywordsFilePath() {
+		return ShopgateConfigOld::getRedirectKeywordsFilePath();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function getSkipRedirectKeywordsFilePath() {
+		return ShopgateConfigOld::getSkipRedirectKeywordsFilePath();
+	}
+	
+	/**
+	 * This is for compatibility reasons only. The use of ShopgateConfigOld is deprecated!
+	 *
+	 * @deprecated
+	 * @throws ShopgateLibraryException whenever a ShopgateLibraryException is thrown by ShopgateConfigOld's method.
+	 */
+	public static function saveConfig() {
+		return ShopgateConfigOld::saveConfig();
 	}
 }
 
@@ -1592,15 +1741,25 @@ interface ShopgateConfigInterface {
 	public function getEnableClearLogfile();
 
 	/**
-	 * @return int The maximum number of attributes per product that are created. If the number is exceeded, attributes should be converted to options.
+	 * @return string The ISO 3166 ALPHA-2 code of the language the plugin uses for export.
 	 */
-	public function getMaxAttributes();
+	public function getLanguage();
+	
+	/**
+	 * @return string The ISO 4217 code of the currency the plugin uses for export.
+	 */
+	public function getCurrency();
 
 	/**
 	 * @return int The capacity (number of lines) of the buffer used for the export actions.
 	 */
 	public function getExportBufferCapacity();
 
+	/**
+	 * @return int The maximum number of attributes per product that are created. If the number is exceeded, attributes should be converted to options.
+	 */
+	public function getMaxAttributes();
+	
 	/**
 	 * @return string The path to the folder where the export CSV files are stored and retrieved from.
 	 */
@@ -1852,14 +2011,24 @@ interface ShopgateConfigInterface {
 	public function setEnableClearLogfile($value);
 
 	/**
-	 * @param int $value The maximum number of attributes per product that are created. If the number is exceeded, attributes should be converted to options.
+	 * @param string The ISO 3166 ALPHA-2 code of the language the plugin uses for export.
 	 */
-	public function setMaxAttributes($value);
-
+	public function setLanguage($value);
+	
+	/**
+	 * @param string The ISO 4217 code of the currency the plugin uses for export.
+	 */
+	public function setCurrency($value);
+	
 	/**
 	 * @param int The capacity (number of lines) of the buffer used for the export actions.
 	 */
 	public function setExportBufferCapacity($value);
+
+	/**
+	 * @param int $value The maximum number of attributes per product that are created. If the number is exceeded, attributes should be converted to options.
+	 */
+	public function setMaxAttributes($value);
 
 	/**
 	 * @param string $value The path to the folder where the export CSV files are stored and retrieved from.

@@ -209,8 +209,17 @@ class shopgate {
 	 * @param string $columnName
 	 * @param string $table
 	 */
-	private function checkColumn( $columnName, $table = TABLE_ORDERS_SHOPGATE_ORDER ) {
-		$qry = xtc_db_query("show columns from `{$table}` WHERE field = '{$columnName}'");
-		return xtc_db_num_rows($qry) == 0;
+	private function checkColumn($columnName, $table = TABLE_ORDERS_SHOPGATE_ORDER) {
+		$result = xtc_db_query("show columns from `{$table}`");
+		
+		$exists = false;
+		while ($field = xtc_db_fetch_array($result)) {
+			if ($field['Field'] == $columnName) {
+				$exists = true;
+				break;
+			}
+		}
+		
+		return !$exists;
 	}
 }
