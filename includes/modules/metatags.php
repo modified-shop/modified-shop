@@ -172,7 +172,7 @@
 //  Aufräumen: Umlaute und Sonderzeichen wandeln.
 // ---------------------------------------------------------------------------------------
   function metaNoEntities($Text){
-    $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+    $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,strtoupper($_SESSION['language_charset']));
     $translation_table = array_flip($translation_table);
     $Return= strtr($Text,$translation_table);
     return preg_replace( '/&#(\d+);/me',"chr('\\1')",$Return);
@@ -183,7 +183,7 @@
       return $Text;
     }
     //EOF web28 2011-12-02 UFT-8
-    $translation_table=get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
+    $translation_table=get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,strtoupper($_SESSION['language_charset']));
     $translation_table[chr(38)] = '&';
     return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&amp;",strtr($Text,$translation_table));
   }
