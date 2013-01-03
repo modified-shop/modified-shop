@@ -1,6 +1,6 @@
 <?php
 
-$shopgatePath = dirname(__FILE__).'/includes/external/shopgate';
+$shopgatePath = dirname(__FILE__).'/includes/shopgate';
 date_default_timezone_set("Europe/Berlin");
 
 include_once $shopgatePath.'/shopgate_library/shopgate.php';
