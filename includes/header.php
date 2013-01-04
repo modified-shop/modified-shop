@@ -42,7 +42,9 @@ elseif (isset($error) && ($error == CATEGORIE_NOT_FOUND || $error == TEXT_PRODUC
 }
 
 /******** SHOPGATE **********/
-include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php';
+if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
+  include_once (DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php');
+}
 /******** SHOPGATE **********/
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -317,7 +319,9 @@ echo '<body>';
 }
 
 /******** SHOPGATE **********/
-echo $shopgateMobileHeader;
+if (isset($shopgateMobileHeader)) {
+  echo $shopgateMobileHeader;
+}
 /******** SHOPGATE **********/
 
 // econda tracking
