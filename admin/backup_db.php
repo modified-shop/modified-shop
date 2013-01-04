@@ -135,7 +135,7 @@ $Id$
               if (!isset($rows[$column])) {
                 $insert.='NULL,';
               } else if ($rows[$column]!='') {
-                $insert.='\''.mysql_escape_string($rows[$column]).'\',';
+                $insert.='\''.mysql_real_escape_string($rows[$column]).'\',';
               } else {
                 $insert.='\'\',';
               }
@@ -153,7 +153,7 @@ $Id$
               if (!isset($rows[$column])) {
                 $values[] ='NULL';
               } else if ($rows[$column]!='') {
-                $values[] ='\''.mysql_escape_string($rows[$column]).'\'';
+                $values[] ='\''.mysql_real_escape_string($rows[$column]).'\'';
               } else {
                 $values[] ='\'\'';
               }
