@@ -199,6 +199,7 @@
 	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_impressum') ");			  
 	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_agb') ");
 	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_widerruf') ");
+	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_rueckgabe') ");
 	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_versandinfo') ");
 	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_datenschutz') ");
 	  xtc_db_query("INSERT INTO configuration ( configuration_key ) VALUES  ( 'haendlerbund_batteriegesetz') ");
@@ -226,7 +227,7 @@
 		   
 		   $return .= '<div class="content" id="container">
     <div class="title_hb">
-      <h5 class="title_hb">Händlerbund Mitgliedschaft</h5>
+      <h5 class="title_hb">H&auml;ndlerbund Mitgliedschaft</h5>
   
     </div>
 	<br />
