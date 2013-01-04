@@ -248,7 +248,7 @@ switch ($action) {
     if ($order_updated) {
         if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
           /******* SHOPGATE **********/
-          include_once DIR_FS_CATALOG.DIR_WS_INCLUDES.'shopgate/base/admin/orders.php';
+          include_once DIR_FS_CATALOG.'includes/shopgate/base/admin/orders.php';
           setShopgateOrderStatus($oID, $status);
           /******* SHOPGATE **********/
         }

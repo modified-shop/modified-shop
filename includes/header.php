@@ -41,8 +41,11 @@ elseif (isset($error) && ($error == CATEGORIE_NOT_FOUND || $error == TEXT_PRODUC
   header("Status: 410 Gone"); // FAST CGI 
 }
 
-// SHOPGATE
-include_once (DIR_WS_INCLUDES.'shopgate/base/includes/header.php');
+/******** SHOPGATE **********/
+if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
+  include_once (DIR_FS_CATALOG.'includes/shopgate/base/includes/header.php');
+}
+/******** SHOPGATE **********/
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -267,8 +270,11 @@ function resize() {
 <body<?php if(strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) echo ' onload="resize();"'; ?>>
 <?php
 
-// SHOPGATE
-echo $shopgateMobileHeader;
+/******** SHOPGATE **********/
+if (isset($shopgateMobileHeader)) {
+  echo $shopgateMobileHeader;
+}
+/******** SHOPGATE **********/
 
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE=='true') { ?>

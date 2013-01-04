@@ -23,7 +23,9 @@
    ---------------------------------------------------------------------------------------*/
 
 /******* SHOPGATE **********/
-include_once (DIR_WS_INCLUDES.'shopgate/base/includes/header.php');
+if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
+  include_once DIR_FS_CATALOG.'includes/shopgate/base/includes/modules/product_info.php';
+}
 /******* SHOPGATE **********/
 
 //include needed functions
