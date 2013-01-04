@@ -64,8 +64,8 @@ if (isset($cPath) && xtc_not_null($cPath)) {
   }
 }
 
-require (DIR_WS_INCLUDES.'header.php');
 include (DIR_WS_MODULES.'default.php');
+require (DIR_WS_INCLUDES.'header.php'); //web28 - 2013-01-04 - load header.php after default.php because of error handling status code
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;

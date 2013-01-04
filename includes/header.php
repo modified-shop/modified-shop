@@ -35,6 +35,11 @@ if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status
   header("HTTP/1.1 503 Service Temporarily Unavailable");
   header("Status: 503 Service Temporarily Unavailable");
 }
+//SET 410 STATUS CODE
+elseif (isset($error) && ($error == CATEGORIE_NOT_FOUND || $error == TEXT_PRODUCT_NOT_FOUND)) {
+  header("HTTP/1.0 410 Gone"); 
+  header("Status: 410 Gone"); // FAST CGI 
+}
 
 /******** SHOPGATE **********/
 include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php';
