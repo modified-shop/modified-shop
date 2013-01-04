@@ -58,7 +58,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 	*/
 	function checkRequestAccess() 
 	{		
-		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".mysql_escape_string($this->order_ID)."' limit 1");
+		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."' limit 1");
 		$result_check = xtc_db_fetch_array($check_order);
 			
 		if($result_check['a_orders'] > 0)
