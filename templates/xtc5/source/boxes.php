@@ -17,6 +17,8 @@
   require_once (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/inc/gunnart_productRedirect.inc.php');
 // EOF - Tomcraft - 2009-10-27 - Prevent duplicate content, see: http://www.gunnart.de/tipps-und-tricks/doppelten-content-vermeiden-productredirect-fuer-xtcommerce/
 
+
+
   define('DIR_WS_BOXES',DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
 
 //BOC require boxes
@@ -51,6 +53,7 @@
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_id'] == 0) {
     require_once(DIR_WS_BOXES . 'admin.php');
+    $smarty->assign('is_admin', true);
   }
 // -----------------------------------------------------------------------------------------
 //	Produkt-Detailseiten
