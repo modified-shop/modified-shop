@@ -23,7 +23,7 @@
    ---------------------------------------------------------------------------------------*/
 
 /******* SHOPGATE **********/
-include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/header.php';
+include_once DIR_FS_EXTERNAL.'/shopgate/base/includes/modules/product_info.php';
 /******* SHOPGATE **********/
 
 //include needed functions
