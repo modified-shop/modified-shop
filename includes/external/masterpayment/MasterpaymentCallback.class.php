@@ -79,7 +79,7 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{	
 		$retval = false;
 			
-		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".mysql_escape_string($this->order_ID)."' limit 1");
+		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."' limit 1");
 		$result_check = xtc_db_fetch_array($check_order);
 			
 		if($result_check['a_orders'] == 1)
@@ -194,7 +194,7 @@ class MasterpaymentCallback extends MasterpaymentActions
 	
 	function getCustomerId() 
 	{		
-		$select_customerid = xtc_db_query("select customers_id from " . TABLE_ORDERS . " where orders_id = '".mysql_escape_string($this->order_ID)."' limit 1");
+		$select_customerid = xtc_db_query("select customers_id from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."' limit 1");
 		$_customer_id = xtc_db_fetch_array($select_customerid);
 			
 		return $_customer_id['customers_id'];		
@@ -205,7 +205,7 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{	
 		$_mlanguage = 'english';
 			
-		$select_olanguage_query = xtc_db_query("select language from " . TABLE_ORDERS . " where orders_id = '".mysql_escape_string($this->order_ID)."'");
+		$select_olanguage_query = xtc_db_query("select language from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."'");
 		$fetch_olanguage = xtc_db_fetch_array($select_olanguage_query);
 		
 		if(isset($fetch_olanguage['language']) && !empty($fetch_olanguage['language'])) 

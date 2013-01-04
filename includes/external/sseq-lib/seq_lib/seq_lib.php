@@ -504,7 +504,7 @@ function SEQ_MYSQL($string_ = '', $type_ = '', $minvalue_ = null, $maxvalue_ = n
     }
     /* fallback if mysql is not available yet */
     if (mysql_error()) {
-        $P_ESCAPE_FUNC = create_function('$match_','return mysql_escape_string($match_);');
+        $P_ESCAPE_FUNC = create_function('$match_','return mysql_real_escape_string($match_);');
         $sec_value = $P_ESCAPE_FUNC($orig);
     }
 
