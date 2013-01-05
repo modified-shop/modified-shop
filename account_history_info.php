@@ -29,7 +29,10 @@ require_once (DIR_FS_INC.'xtc_display_tax_value.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
 
 //security checks
-if (!isset ($_SESSION['customer_id'])) { xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL')); }
+// BOC added query string order_id to login.php to be able to redirect to account_history_info after login for link in change_order_mail, noRiddle
+//if (!isset ($_SESSION['customer_id'])) { xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL')); }
+if (!isset ($_SESSION['customer_id'])) { xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'order_id=' .(int)$_GET['order_id'], 'SSL')); }
+// EOC added query string order_id to login.php, noRiddle
 if (!isset ($_GET['order_id']) || (isset ($_GET['order_id']) && !is_numeric($_GET['order_id']))) {
    xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY, '', 'SSL'));
 }
