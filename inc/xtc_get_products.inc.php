@@ -19,6 +19,9 @@
 require(DIR_FS_CATALOG.'includes/classes/xtcPrice.php');   
 
 function unserialize_session_data( $session_data ) {
+  //check for suhosin.session.encrypt
+  if (suhosin_check()) return 'ENCRYPTED';
+ 
   //check for correct session value  
   if (strpos($session_data, 'customers_status|') === false) $session_data = '';
    
@@ -90,5 +93,14 @@ function attributes_price($products_id,$session) {
     }
   }
   return $attributes_price;
+}
+
+function suhosin_check()
+{
+  if ( extension_loaded( "suhosin" ) && ini_get( "suhosin.session.encrypt" ) ) {
+    // suhosin is active and suhosin.session.encrypt is On    
+    return true;      
+  }
+  return false;
 }
 ?>
