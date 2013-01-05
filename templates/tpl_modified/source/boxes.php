@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_id'] == 0) {
     require_once(DIR_WS_BOXES . 'admin.php');
+    $smarty->assign('is_admin', true);
   }
 // -----------------------------------------------------------------------------------------
 //	Produkt-Detailseiten
