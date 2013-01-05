@@ -23,7 +23,10 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+  // BOC added review_prod_id as query string for redirect from login.php to products_reviews_write.php in case customer clicked reviews button, noRiddle
+  //xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'review_prod_id=' .(int)$product->data['products_id'], 'SSL'));
+  // EOC added for reviews, noRiddle
 }
 
 if (isset ($_GET['action']) && $_GET['action'] == 'process') {
