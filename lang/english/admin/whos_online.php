@@ -32,4 +32,5 @@ define('TABLE_HEADING_SHOPPING_CART', 'Users Shopping Cart');
 define('TEXT_SHOPPING_CART_SUBTOTAL', 'Subtotal');
 define('TEXT_NUMBER_OF_CUSTOMERS', 'Currently there are %s customers online');
 define('TEXT_EMPTY_CART', 'Users Shopping Cart is empty');
+define('TEXT_SESSION_IS_ENCRYPTED', '<hr><b>Note</b>:<br />The basket contents may not be displayed.<br />The session is encrypted with Suhosin<br />(suhosin.session.encrypt = On)<br />To turn off encryption, contact your provider.');
 ?>

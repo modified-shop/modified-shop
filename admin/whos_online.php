@@ -116,6 +116,13 @@
                           //BOF web28 2010-12-03 added Hostname to whois online
                           $whos_online_hostname = '<div style="font-weight: normal; font-style: italic;"> ('.@gethostbyaddr($whos_online['ip_address']).')</div>';
                           //EOF web28 2010-12-03 added Hostname to whois online
+
+                          // last_page_url
+                          if (preg_match('/^(.*)' . xtc_session_name() . '=[a-z,0-9]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
+                            $last_page_url = $array[1] . $array[2];
+                          } else {
+                            $last_page_url = $whos_online['last_page_url'];
+                          }
                           ?>
                           <td class="dataTableContent" align="center"><?php echo gmdate('H:i:s', $time_online); ?></td>
                           <td class="dataTableContent" align="center"><?php echo $whos_online['customer_id']; ?></td>
@@ -124,15 +131,7 @@
                           <td class="dataTableContent" align="center"><?php echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')'; ?></td>
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
-                          <td class="dataTableContent"><?php
-                            if (preg_match('/^(.*)' . xtc_session_name() . '=[a-z,0-9]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
-                              echo $array[1] . $array[2];
-                            } else {
-                              echo $whos_online['last_page_url'];
-                            }
-                            ?>
-                            &nbsp;
-                          </td>
+                          <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
                           <td class="dataTableContent"><?php echo htmlentities($whos_online['http_referer']); ?></td>
                         </tr>
                         <?php
@@ -173,6 +172,9 @@
                           $contents[] = array('align' => 'right', 'text'  => TEXT_SHOPPING_CART_SUBTOTAL . ' ' . $user_session['cart']->total . ' ' . $user_session['currency']);
                         } else {
                           $contents[] = array('text' => TEXT_EMPTY_CART);
+                        }
+                        if ($user_session == 'ENCRYPTED') {
+                          $contents[] = array('text' => TEXT_SESSION_IS_ENCRYPTED);
                         }
                       }
                     }
