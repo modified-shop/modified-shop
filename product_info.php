@@ -32,7 +32,7 @@ if (!isset($_GET['products_id']) && !isset($_GET['info']) && !isset($_GET['actio
     xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL'));
 }
 
-// include boxes
+/* web28 -2013-01-07 - comment out because cPath is allready set in includes/application_top.php or includes/modules/set_ids_by_url_parameters.php
 if (isset($_GET['products_id'])) {
   $cat = xtc_db_query("SELECT categories_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id='".(int) $_GET['products_id']."'");
   $catData = xtc_db_fetch_array($cat);
@@ -40,7 +40,9 @@ if (isset($_GET['products_id'])) {
   if ($catData['categories_id'])
     $cPath = xtc_input_validation(xtc_get_path($catData['categories_id']), 'cPath', '');
 }
+*/
 
+// include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
