@@ -45,7 +45,7 @@
   //BOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
   include(DIR_FS_CATALOG.'/includes/configure.php');
   $upgrade = true;;
-  if (DB_SERVER_USERNAME == 'root' && DB_SERVER_PASSWORD == 'root' && DB_DATABASE == 'xtc_modified') {
+  if (DB_SERVER_USERNAME == 'root' && DB_SERVER_PASSWORD == 'root' && DB_DATABASE == 'modified-shop') {
     $upgrade = false;
   }
   if (isset($_POST['db_upgrade']) && ($_POST['db_upgrade'] == true)) {
