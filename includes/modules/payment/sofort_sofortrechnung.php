@@ -264,7 +264,7 @@ class sofort_sofortrechnung extends sofort{
 		$billingNameAdditive = '';
 		
 		//get billing-salutation: 2=masculine, 3=feminine
-		//xtc_modified-Bug: only $order->customer has a gender
+		//modified eCommerce Shopsoftware Bug: only $order->customer has a gender
 		$billingSalutation = $this->_getGenderFromAddressBook($order->billing['firstname'], $order->billing['lastname'], $order->billing['company'], $order->billing['street_address'],
 			$order->billing['postcode'], $order->billing['city'], $order->billing['country_id'], $order->billing['zone_id']);
 		
