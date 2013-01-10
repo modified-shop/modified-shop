@@ -7,11 +7,6 @@
 
    Copyright (c) 2009 - 2012 xtcModified
    -----------------------------------------------------------------------------------------
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
-
-   Copyright (c) 2009 - 2012 xtcModified
-   -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(categories.php,v 1.23 2002/11/12); www.oscommerce.com
