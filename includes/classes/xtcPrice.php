@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtcPrice.php 1402 2010-10-03 16:48:20Z dokuman $
+   $Id$
 
    modified - community made shopping
    http://www.modified-shop.org
@@ -56,15 +56,8 @@ class xtcPrice {
     // select Currencies
     $currencies_query = xtDBquery("SELECT * FROM " . TABLE_CURRENCIES);
     while ($currencies = xtc_db_fetch_array($currencies_query, true)) {
-      $this->currencies[$currencies['code']] = array(
-        'title' => $currencies['title'],
-        'symbol_left' => $currencies['symbol_left'],
-        'symbol_right' => $currencies['symbol_right'],
-        'decimal_point' => $currencies['decimal_point'],
-        'thousands_point' => $currencies['thousands_point'],
-        'decimal_places' => $currencies['decimal_places'],
-        'value' => $currencies['value']
-      );
+      // direct array assignment
+      $this->currencies[$currencies['code']] = $currencies;
     }
     // if the currency in user's preference is not existing use default
     if (!isset($this->currencies[$this->actualCurr])) {
@@ -76,25 +69,9 @@ class xtcPrice {
                                            FROM " . TABLE_CUSTOMERS_STATUS . "
                                           WHERE customers_status_id = '" . $this->actualGroup . "'
                                             AND language_id = '" . (int) $_SESSION['languages_id'] . "'");
-    $customers_status_value = xtc_db_fetch_array($customers_status_query, true);
-    $this->cStatus = array(
-      'customers_status_id' => $this->actualGroup,
-      'customers_status_name' => $customers_status_value['customers_status_name'],
-      'customers_status_image' => $customers_status_value['customers_status_image'],
-      'customers_status_public' => $customers_status_value['customers_status_public'],
-      'customers_status_discount' => $customers_status_value['customers_status_discount'],
-      'customers_status_ot_discount_flag' => $customers_status_value['customers_status_ot_discount_flag'],
-      'customers_status_ot_discount' => $customers_status_value['customers_status_ot_discount'],
-      'customers_status_graduated_prices' => $customers_status_value['customers_status_graduated_prices'],
-      'customers_status_show_price' => $customers_status_value['customers_status_show_price'],
-      'customers_status_show_price_tax' => $customers_status_value['customers_status_show_price_tax'],
-      'customers_status_add_tax_ot' => $customers_status_value['customers_status_add_tax_ot'],
-      'customers_status_payment_unallowed' => $customers_status_value['customers_status_payment_unallowed'],
-      'customers_status_shipping_unallowed' => $customers_status_value['customers_status_shipping_unallowed'],
-      'customers_status_discount_attributes' => $customers_status_value['customers_status_discount_attributes'],
-      'customers_fsk18' => $customers_status_value['customers_fsk18'],
-      'customers_fsk18_display' => $customers_status_value['customers_fsk18_display']
-    );
+    $customers_status_array = xtc_db_fetch_array($customers_status_query, true);
+    // direct array assignment
+    $this->cStatus = $customers_status_array;
     
     // prefetch tax rates for standard zone
     $zones_query = xtDBquery("SELECT tax_class_id as class FROM " . TABLE_TAX_CLASS);
