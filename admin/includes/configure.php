@@ -23,11 +23,11 @@
   define('HTTPS_CATALOG_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
   define('ENABLE_SSL_CATALOG', false); // secure webserver for catalog module
   define('USE_SSL_PROXY', false); // using SSL proxy?
-  define('DIR_FS_DOCUMENT_ROOT', '/web1/xtc-modified/'); // where the pages are located on the server
-  define('DIR_WS_ADMIN', '/xtc-modified/admin/');
-  define('DIR_FS_ADMIN', '/web1/xtc-modified/admin/'); // absolute pate required
-  define('DIR_WS_CATALOG', '/xtc-modified/');
-  define('DIR_FS_CATALOG', '/web1/xtc-modified/'); // absolute path required
+  define('DIR_FS_DOCUMENT_ROOT', '/web1/modified-shop/'); // where the pages are located on the server
+  define('DIR_WS_ADMIN', '/modified-shop/admin/');
+  define('DIR_FS_ADMIN', '/web1/modified-shop/admin/'); // absolute pate required
+  define('DIR_WS_CATALOG', '/modified-shop/');
+  define('DIR_FS_CATALOG', '/web1/modified-shop/'); // absolute path required
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
   define('DIR_FS_CATALOG_ORIGINAL_IMAGES', DIR_FS_CATALOG_IMAGES .'product_images/original_images/');
