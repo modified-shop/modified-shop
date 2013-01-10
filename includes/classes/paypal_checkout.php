@@ -1056,7 +1056,7 @@ if (defined('PAYPAL_API_VERSION')) {
         $i++;
       }
       if($express_call && PAYPAL_EXP_WARN!='') {
-        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(PAYPAL_EXP_WARN,0,127))).
+        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(html_entity_decode((PAYPAL_EXP_WARN),0,127))).
                         '&L_NUMBER'.$i.'='.
                         '&L_QTY'.$i.'=0'.
                         '&L_AMT'.$i.'=0';
@@ -1064,7 +1064,7 @@ if (defined('PAYPAL_API_VERSION')) {
       }
       if($express_call && PAYPAL_EXP_VORL!='' && PAYPAL_EXP_VERS!=0) {
         $products_sum_amt+=PAYPAL_EXP_VERS;
-        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(PAYPAL_EXP_VORL,0,127))).
+        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(html_entity_decode(PAYPAL_EXP_VORL),0,127))).
                         '&L_NUMBER'.$i.'='.
                         '&L_QTY'.$i.'=1'.
                         '&L_AMT'.$i.'='.urlencode(number_format(PAYPAL_EXP_VERS, $xtPrice->get_decimal_places($order->info['currency']), '.', ','));
@@ -1519,9 +1519,6 @@ if (defined('PAYPAL_API_VERSION')) {
     }
   /*************************************************************/
     function mn_iconv($t1,$t2,$string){
-      if(function_exists('mb_convert_encoding')) {
-        return mb_convert_encoding($string, $t1, 'HTML-ENTITIES'); 
-      }
       // Stand: 29.04.2009
       if(function_exists('iconv')) {
         return iconv($t1, $t2, $string);
