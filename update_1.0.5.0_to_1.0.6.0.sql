@@ -13,17 +13,6 @@ UPDATE database_version SET version = 'MOD_1.0.6.0';
 #DokuMan - 2010-08-05 - mark out of stock products red by default
 UPDATE configuration SET configuration_value = '<span style="color:red">***</span>', last_modified = NOW() WHERE configuration_key = 'STOCK_MARK_PRODUCT_OUT_OF_STOCK';
 
-#DokuMan - 2010-08-17 - Replace GLS shipping module with newer version
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_STATUS';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_HANDLING';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_ALLOWED';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_SORT_ORDER';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_TAX_CLASS';
-DELETE FROM configuration WHERE configuration_key = 'MODULE_SHIPPING_GLS_ZONE';
-DROP TABLE IF EXISTS gls_country_to_postal;
-DROP TABLE IF EXISTS gls_postal_to_weight;
-DROP TABLE IF EXISTS gls_weight;
-
 #DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany , 6 - Ireland/Taiwan, 7 - China, 8 - UK/GB
 INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$country / $city');
@@ -455,17 +444,35 @@ UPDATE configuration SET set_function = 'xtc_cfg_select_option(array(\'image_man
 # vr - 2012-10-26 - add index idx_customers_id
 ALTER TABLE orders
   ADD INDEX idx_customers_id (customers_id);
-
+  
 #Web28 - 2012-07-16 - New order description using in checkout
 ALTER TABLE products_description ADD products_order_description TEXT NULL DEFAULT '';
 ALTER TABLE orders_products ADD products_order_description TEXT NULL DEFAULT '';
 
 #Tomcraft - 2012-11-15 - Added janolaw module
-ALTER TABLE admin_access ADD janolaw INT(1) DEFAULT 0 NOT NULL;
+ALTER TABLE admin_access ADD janolaw INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET janolaw = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET janolaw = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Web28 - 2012-11-26 - define set_function to NULL
-ALTER TABLE configuration CHANGE set_function set_function VARCHAR( 255 ) NULL; 
+ALTER TABLE configuration CHANGE set_function set_function VARCHAR( 255 ) NULL;
+
+#Tomcraft - 2012-12-08 - Added haendlerbund module
+ALTER TABLE admin_access ADD haendlerbund INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET haendlerbund = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET haendlerbund = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#Web28 - 2012-12-30 - set new sort_order by configuration_group_id 5 , Customer Details
+UPDATE configuration SET configuration_group_id = '5', sort_order = '10', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_GENDER';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '20', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_DOB';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '30', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_COMPANY';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '50', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_SUBURB';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '60', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_STATE';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '100', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_OPTIONS';
+UPDATE configuration SET configuration_group_id = '5', sort_order = '110', last_modified = NOW() WHERE configuration_key = 'DELETE_GUEST_ACCOUNT';
+
+#Web28 - 2012-12-31 - add comments_sent for correct representation of the comments in the customers account 
+ALTER TABLE orders_status_history ADD comments_sent INT( 1 )  NULL DEFAULT '0';
+UPDATE orders_status_history SET comments_sent = '1' WHERE customer_notified = '1';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
