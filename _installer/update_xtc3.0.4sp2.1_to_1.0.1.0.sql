@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS database_version (
 # Set database Version to minimum Version 1.0.1.0 (1.0.0.0 not allowed)
 INSERT INTO database_version VALUES ('MOD_1.0.1.0');
  
-UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
+UPDATE configuration SET configuration_value = 'xtc5', last_modified = NOW()
 WHERE configuration_key = 'CURRENT_TEMPLATE';
  
 ALTER TABLE products MODIFY products_discount_allowed decimal(4,2) DEFAULT '0' NOT NULL;

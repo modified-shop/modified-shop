@@ -159,7 +159,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
         case 'default_template':
           xtc_db_query('
             UPDATE configuration
-            SET    configuration_value = "tpl_modified"
+            SET    configuration_value = "xtc5"
             WHERE  configuration_key = "CURRENT_TEMPLATE"
           ');
           die('Report: CURRENT_TEMPLATE wurde auf das Standardtemplate zur&uuml;ckgesetzt.');

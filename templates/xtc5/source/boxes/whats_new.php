@@ -51,7 +51,7 @@
   }
 
   // get random product data
-  $random_product = xtc_random_select("-- templates/tpl_modified/source/boxes/whats_new.php
+  $random_product = xtc_random_select("-- templates/xtc5/source/boxes/whats_new.php
                                        SELECT distinct
                                               p.products_id,
                                               p.products_image,
