@@ -1056,7 +1056,7 @@ if (defined('PAYPAL_API_VERSION')) {
         $i++;
       }
       if($express_call && PAYPAL_EXP_WARN!='') {
-        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(html_entity_decode((PAYPAL_EXP_WARN),0,127))).
+        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(html_entity_decode(PAYPAL_EXP_WARN),0,127))).
                         '&L_NUMBER'.$i.'='.
                         '&L_QTY'.$i.'=0'.
                         '&L_AMT'.$i.'=0';
