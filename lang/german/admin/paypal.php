@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id
+   $Id$
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
    Copyright (c) 2003 XT-Commerce
