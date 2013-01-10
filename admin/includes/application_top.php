@@ -2,14 +2,16 @@
 /* --------------------------------------------------------------
    $Id$
 
-   http://www.xtc-modified.org
-   Copyright (c) 2009 - 2012 xtcModified
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(application_top.php,v 1.158 2003/03/22); www.oscommerce.com
    (c) 2003 nextcommerce (application_top.php,v 1.46 2003/08/24); www.nextcommerce.org
-   (c) 2006 XT-Commerce 8application_top.php 1323 2005-10-27) ; www.xt-commerce.com
+   (c) 2006 XT-Commerce (application_top.php 1323 2005-10-27) ; www.xt-commerce.com
 
    Released under the GNU General Public License
    --------------------------------------------------------------

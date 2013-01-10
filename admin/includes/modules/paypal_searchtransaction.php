@@ -2,8 +2,10 @@
 /* --------------------------------------------------------------
    $Id$
 
-   http://www.xtc-modified.org
-   Copyright (c) 2009 - 2012 xtcModified
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) Copyright 2003-2007 xt:Commerce (Winger/Zanier), www.xt-commerce.com

@@ -2,14 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_oe_get_options_values_name.inc.php
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   XTC-Bestellbearbeitung:
-   http://www.xtc-webservice.de / Matthias Hinsche
-   info@xtc-webservice.de
-
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -17,7 +13,15 @@
    (c) 2003	 nextcommerce (xtc_get_products_name.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
+   -----------------------------------------------------------------------------------------
+   Third Party contribution:
+
+   XTC-Bestellbearbeitung:
+   http://www.xtc-webservice.de / Matthias Hinsche
+   info@xtc-webservice.de
+
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
   function xtc_oe_get_options_values_name($products_options_values_id, $language = '') {
