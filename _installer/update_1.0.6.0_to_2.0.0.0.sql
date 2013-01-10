@@ -81,10 +81,6 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
 ALTER TABLE admin_access
   ADD parcel_carriers INT(1) DEFAULT 1 NOT NULL;
 
-#DokuMan - 2012-11-12 - set new default template, if existing template was named "xtc5"
-UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW()
-WHERE configuration_key = 'CURRENT_TEMPLATE' AND configuration_value = 'xtc5';
-
 #DokuMan - 2012-11-26 - changed default currency float to .4 and changed 'code' as unique key
 DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
