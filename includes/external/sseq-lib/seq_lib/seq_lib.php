@@ -1133,7 +1133,7 @@ function SEQ_SANITIZE($sanitizeList_ = '', $isFile_ = false) {
 
             if (!$paramSource_) {$paramSource_ = ini_get('variables_order');}
 
-            $source = strtolower($paramSource_); //required for xtcModified thx to GTB
+            $source = strtolower($paramSource_); //required for modified eCommerce Shopsoftware thx to GTB
 
             if (strpos($source, 'g') !== false) {
                 _seq_traverse_n_check_($_GET, $varname, $actions, $sql, $xss, '_GET');
