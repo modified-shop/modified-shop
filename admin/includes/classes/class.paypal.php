@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id: class.paypal.php 1718 2011-01-29 00:49:50Z dokuman $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    @copyright Copyright 2003-2007 xt:Commerce (Winger/Zanier), www.xt-commerce.com

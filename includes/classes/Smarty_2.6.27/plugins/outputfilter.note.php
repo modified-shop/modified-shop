@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: outputfilter.note.php 1554 2010-12-05 15:23:03Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2006 xt:Commerce (campaigns.php 1117 2005-07-25)

@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: paypal_checkout.php 3417 2012-08-11 12:09:26Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2003-2007 xt:Commerce (Winger/Zanier), www.xt-commerce.com

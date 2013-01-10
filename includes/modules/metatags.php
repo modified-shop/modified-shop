@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: metatags.php 2756 2012-04-15 11:58:14Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
     (c) 2003 nextcommerce (metatags.php, v1.7 2003/08/14); www.nextcommerce.org

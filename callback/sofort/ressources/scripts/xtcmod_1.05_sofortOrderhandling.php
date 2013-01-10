@@ -459,13 +459,13 @@ class SofortOrderhandling{
 		}
 		// GV Code End
 		
-		//XTC-Modified Start
+		//modified eCommerce Shopsoftware Start
 		if(@isset($_SESSION['xtb0']))
 		{
 			define('XTB_CHECKOUT_PROCESS', __LINE__);
 			require 'xtbcallback.php';
 		}
-		//XTC-Modified End
+		//modified eCommerce Shopsoftware End
 	}
 	
 	
@@ -540,7 +540,7 @@ class SofortOrderhandling{
 	
 	
 	/**
-	 * do something, after order was successfully inserted (xtc3 + xtc-mod: nothing to do here)
+	 * do something, after order was successfully inserted (xtc3 + modified-shop: nothing to do here)
 	 */
 	public function doSpecialThingsAfterSuccessfulInsertion() {
 		return true;

@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id: security_check.php 3561 2012-08-29 18:11:38Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (security_check.php,v 1.2 2003/08/23); www.nextcommerce.org

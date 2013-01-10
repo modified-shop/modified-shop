@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id: products_attributes.php 3220 2012-07-15 15:40:20Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2011 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)

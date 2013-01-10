@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: function.piwik.php 2147 2011-09-01 07:15:14Z dokuman $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2011 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2011 WEB-Shop Software (function.piwik.php 1871) http://www.webs.de/

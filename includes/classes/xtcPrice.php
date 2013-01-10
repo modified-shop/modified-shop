@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   modified - community made shopping
+   modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009-2013 modified eCommerce Shopsoftware
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)

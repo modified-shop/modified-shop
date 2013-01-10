@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_update_whos_online.inc.php 3952 2012-11-15 00:20:51Z Tomcraft1980 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)

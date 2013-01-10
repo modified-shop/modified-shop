@@ -1,14 +1,14 @@
 # -----------------------------------------------------------------------------------------
 #  $Id: update_xtc3.0.4sp2.1_to_1.00.sql 2113 2011-08-26 16:37:30Z Tomcraft1980 $
 #
-#  xtc-Modified
-#  http://www.xtc-modified.org
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
 #
-#  Copyright (c) 2011 xtc-Modified
+#  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
 # Execute the following SQL-queries to update the database schema
-# from xt:Commerce 3.0.4 SP2.1 to xtcModified 1.00
+# from xt:Commerce 3.0.4 SP2.1 to modified eCommerce Shopsoftware 1.00
 
 CREATE TABLE IF NOT EXISTS database_version (
   version VARCHAR(32) NOT NULL

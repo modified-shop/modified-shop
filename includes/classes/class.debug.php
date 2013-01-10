@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
   $Id: class.debug.php 2172 2011-09-06 17:44:57Z dokuman $
 
-  xtcModified - community made shopping
-  http://www.xtc-modified.org
+  modified eCommerce Shopsoftware
+  http://www.modified-shop.org
 
-  Copyright (c) 2011 xtcModified
+  Copyright (c) 2009 - 2013 [www.modified-shop.org]
   -----------------------------------------------------------------------------------------
   based on:
   Debug log class by Franky, Firebug/FirePHP/DeveloperCompanion debugger by DokuMan

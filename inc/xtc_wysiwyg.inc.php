@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_wysiwyg.inc.php 2867 2012-05-14 11:57:08Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2005 XT-Commerce & H.H.G. group

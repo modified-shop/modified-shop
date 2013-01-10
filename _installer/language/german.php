@@ -2,10 +2,10 @@
   /* --------------------------------------------------------------
    $Id: german.php 3072 2012-06-18 15:01:13Z hhacker $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    ----------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (german.php,v 1.8 2003/08/13); www.nextcommerce.com

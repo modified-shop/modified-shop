@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id: start.php 2585 2012-01-03 14:25:49Z dokuman $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2011 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (start.php,v 1.1 2003/08/19); www.nextcommerce.org

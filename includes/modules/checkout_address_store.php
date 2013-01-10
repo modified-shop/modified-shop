@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: checkout_address_store.php 3783 2012-10-17 11:29:42Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
      Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

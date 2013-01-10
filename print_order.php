@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: print_order.php 3113 2012-06-22 16:23:20Z web28 $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2003 nextcommerce (print_order.php,v 1.5 2003/08/24); www.nextcommerce.org

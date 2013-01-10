@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: ot_payment.php 3481 2012-08-22 07:07:50Z dokuman $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (C) 2007 Estelco - Ebusiness & more - http://www.estelco.de

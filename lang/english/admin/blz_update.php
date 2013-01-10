@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id: blz_update.php 3499 2012-08-23 09:12:40Z dokuman $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
 
    Released under the GNU General Public License

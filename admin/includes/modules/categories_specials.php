@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
    $Id: categories_specials.php 2360 2011-11-18 15:10:57Z franky-n-xtcm $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
 
    Released under the GNU General Public License

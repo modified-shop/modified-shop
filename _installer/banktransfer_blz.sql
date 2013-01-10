@@ -1,10 +1,10 @@
 # -----------------------------------------------------------------------------------------
 #  $Id: banktransfer_blz.sql 3024 2012-06-13 07:29:13Z dokuman $
 #
-#  xtc-Modified
-#  http://www.xtc-modified.org
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
 #
-#  Copyright (c) 2012 xtc-Modified
+#  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
 -- Einträge für Bankleitzahlen für die Tabelle banktransfer_blz

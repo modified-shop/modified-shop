@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: vat_validation.php 3198 2012-07-11 09:41:52Z dokuman $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2006 XT-Commerce (vat_validation.php 1283 2005-10-05)

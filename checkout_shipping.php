@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: checkout_shipping.php 2454 2011-12-06 14:44:38Z franky-n-xtcm $
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2010 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)

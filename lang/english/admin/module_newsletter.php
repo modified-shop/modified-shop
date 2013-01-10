@@ -2,10 +2,10 @@
 /* --------------------------------------------------------------
   $Id: module_newsletter.php 2515 2011-12-12 16:15:44Z dokuman $
 
-  xtcModified - community made shopping
-  http://www.xtc-modified.org
+  modified eCommerce Shopsoftware
+  http://www.modified-shop.org
 
-  Copyright (c) 2011 xtcModified
+  Copyright (c) 2009 - 2013 [www.modified-shop.org]
   --------------------------------------------------------------
   based on:
   (c) 2006 xt:Commerce
