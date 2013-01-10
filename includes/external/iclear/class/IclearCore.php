@@ -224,7 +224,7 @@ class IclearCore {
     if(defined('IC_SYSTEM_TYPE') && IC_SYSTEM_TYPE) {
       $this->systemID = IC_SYSTEM_TYPE;
     } else {
-      // BOF - DokuMan - 2011-09-08 - set systemid & cloneid for xtcModified
+      // BOF - DokuMan - 2011-09-08 - set systemid & cloneid for modified eCommerce Shopsoftware
       /*
       if(is_dir($root.'includes/languages')) {
         // looks like an osc version
@@ -292,7 +292,7 @@ class IclearCore {
         $this->systemID = 'shopware-3.5.x';
       }
     */
-    // EOF - DokuMan - 2011-09-08 - set systemid & cloneid for xtcModified
+    // EOF - DokuMan - 2011-09-08 - set systemid & cloneid for modified eCommerce Shopsoftware
     }
     $this->systemID = 'xtc304sp2';
     $this->cloneID = 'modified';
