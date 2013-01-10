@@ -1,10 +1,10 @@
 # -----------------------------------------------------------------------------------------
 #  $Id$
 #
-#  xtc-Modified
-#  http://www.xtc-modified.org
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
 #
-#  Copyright (c) 2010 xtc-Modified
+#  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2009-09-08 - changed database_version

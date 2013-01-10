@@ -2,14 +2,15 @@
 /* -----------------------------------------------------------------------------------------
    $Id$
 
-   xt:Commerce - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 xt:Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(moneybookers.php,v 1.00 2003/10/27); www.oscommerce.com
+   (c) 2009 xt:Commerce
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------

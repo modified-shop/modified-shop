@@ -256,7 +256,7 @@ class IclearCore {
             }
           }
         } else if (is_dir($root.'shopstat') && (is_dir($root.'includes/classes/Smarty_2.6.22') || is_dir($root.'includes/classes/Smarty_2.6.26'))) {
-          // xtcmodified
+          // modified eCommerce Shopsoftware
           $this->systemID = 'xtc304sp2';
           $this->cloneID = 'modified';
         }else if(is_dir($root.'includes/classes/Smarty_2.6.26')) {

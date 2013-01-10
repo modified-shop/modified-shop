@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id$   
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2003	 nextcommerce (xtc_format_filesize.inc.php,v 1.1 2003/08/25); www.nextcommerce.org

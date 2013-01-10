@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_set_ibillnr.php
 
-   xtcModified - community made shopping
-   http://www.xtc-modified.org
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 xtcModified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    hendrik - 2011-05-14 - independent invoice number and date 
 

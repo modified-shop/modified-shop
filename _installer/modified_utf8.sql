@@ -1,10 +1,10 @@
 # -----------------------------------------------------------------------------------------
 #  $Id$
 #
-#  xtc-Modified
-#  http://www.xtc-modified.org
+#  modified eCommerce Shopsoftware
+#  http://www.modified-shop.org
 #
-#  Copyright (c) 2010 xtc-Modified
+#  Copyright (c) 2009 - 2013 [www.modified-shop.org]
 #  -----------------------------------------------------------------------------------------
 #  Third Party Contributions:
 #  Customers status v3.x (c) 2002-2003 Elari elari@free.fr
