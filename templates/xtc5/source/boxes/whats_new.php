@@ -43,6 +43,8 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
    $date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
    $days = " and p.products_date_added > '".$date_new_products."' ";
 }
+
+$random_product = array();
 if (isset($_GET['products_id']) && 
 		xtc_not_null($_GET['products_id']) &&
 		$random_product = xtc_random_select("select distinct
@@ -68,7 +70,7 @@ if (isset($_GET['products_id']) &&
 	$random_product['products_name'] = xtc_get_products_name($random_product['products_id']);
 }
 
-if (is_array($random_product) && xtc_not_null($random_product['products_name'])) {
+if (sizeof($random_product)>0 && xtc_not_null($random_product['products_name'])) {
 
 	$box_smarty->assign('box_content',$product->buildDataArray($random_product));
 	$box_smarty->assign('LINK_NEW_PRODUCTS',xtc_href_link(FILENAME_PRODUCTS_NEW));
