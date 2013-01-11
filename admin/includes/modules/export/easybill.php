@@ -144,7 +144,7 @@
                    'MODULE_EASYBILL_STATUS_CHANGE'
                   );
       $payment = $this->getPaymentInstalled();
-      return array_merge($key, $payment);
+      return array_merge($key, (is_array($payment)?$payment:array()));
     }
 
   }
