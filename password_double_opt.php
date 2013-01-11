@@ -31,7 +31,7 @@ require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 $case = 'double_opt';
 $info_message = TEXT_PASSWORD_FORGOTTEN;
 
-if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in')) {
+if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && $_POST) {
   //BOF - DokuMan - 2012-12-03 - allow new passwords only for customers (not guests) by account type
   /*
   $check_customer_query = xtc_db_query("SELECT customers_email_address, 
