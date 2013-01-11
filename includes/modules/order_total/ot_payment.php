@@ -39,7 +39,8 @@ class ot_payment
         $this->include_shipping = MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING;
         $this->include_tax = MODULE_ORDER_TOTAL_PAYMENT_INC_TAX;
         $this->calculate_tax = MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX;
-        $this->howto_calc = MODULE_ORDER_TOTAL_PAYMENT_HOWTO_CALC;
+        // is not used
+        // $this->howto_calc = MODULE_ORDER_TOTAL_PAYMENT_HOWTO_CALC;
         $this->tax_class = MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS;
         $this->output = array();
         $this->amount = 0;
