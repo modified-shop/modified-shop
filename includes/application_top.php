@@ -41,8 +41,8 @@ if (file_exists('includes/local/configure.php')) {
 
 // set the level of error reporting
 if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
-  error_reporting(E_ALL & ~E_NOTICE);
-  //error_reporting(-1); // Development value
+  //error_reporting(E_ALL & ~E_NOTICE);
+  error_reporting(-1); // Development value
 } else {
   error_reporting(0);
 }
