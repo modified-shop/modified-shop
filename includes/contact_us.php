@@ -156,6 +156,15 @@
       $city     = stripslashes($address_data['entry_city']);
       // EOF - Dokuman - 2010-10-14: preallocate additional fields on contact form correctly
       // EOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
+    } elseif (!$error) {
+      $customers_name = '';
+      $email_address = '';
+      $phone = '';
+      $company = '';
+      $street = '';
+      $postcode = '';
+      $city = '';
+      $fax = '';
     }
 
     // BOF - Tomcraft - 2009-11-05 - Advanced contact form (product question)
