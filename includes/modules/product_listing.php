@@ -24,6 +24,7 @@ require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SEARCH_RESULTS, 'p.products_id');
 $module_content = array ();
+$category = array();
 
 if ($listing_split->number_of_rows > 0) {
 
@@ -89,7 +90,7 @@ if ($listing_split->number_of_rows > 0) {
 if ($result != false) {
 
 	// get default template
-	if (array_key_exists('listing_template', $category) && ($category['listing_template'] == '' or $category['listing_template'] == 'default')) {
+	if (!array_key_exists('listing_template', $category) || $category['listing_template'] == '' || $category['listing_template'] == 'default')) {
 		$files = array ();
 		if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
 			while (($file = readdir($dir)) !== false) {
