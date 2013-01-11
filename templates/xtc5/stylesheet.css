@@ -1156,9 +1156,6 @@ span.cop_magenta {
 span.cop_grey {
   color:#6D6D6D;
 }
-span.cop_gpl, .copyright a.cop_gpl {
-  color:#555555;
-}
 /* ParseTime */
 .parseTime {
   margin:0 auto;
