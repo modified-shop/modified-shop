@@ -43,7 +43,9 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
    $date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
    $days = " and p.products_date_added > '".$date_new_products."' ";
 }
-if ($random_product = xtc_random_select("select distinct
+if (isset($_GET['products_id']) && 
+		xtc_not_null($_GET['products_id']) &&
+		$random_product = xtc_random_select("select distinct
                                            p.products_id,
                                            p.products_image,
                                            p.products_tax_class_id,
