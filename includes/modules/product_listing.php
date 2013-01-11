@@ -38,43 +38,43 @@ if ($listing_split->number_of_rows > 0) {
 	if (GROUP_CHECK == 'true') {
 		$group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
 	}
-	$category_query = xtDBquery("select
-		                                    cd.categories_description,
-		                                    cd.categories_name,
-                                        cd.categories_heading_title,
-		                                    c.listing_template,
-		                                    c.categories_image from ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd
-		                                    where c.categories_id = '".$current_category_id."'
-		                                    and cd.categories_id = '".$current_category_id."'
-		                                    ".$group_check."
-		                                    and cd.language_id = '".$_SESSION['languages_id']."'");
+	$category_query = xtDBquery("select cd.categories_description,
+																			cd.categories_name,
+																			cd.categories_heading_title,
+																			c.listing_template,
+																			c.categories_image from ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd
+																			where c.categories_id = '".$current_category_id."'
+																			and cd.categories_id = '".$current_category_id."'
+																			".$group_check."
+																			and cd.language_id = '".$_SESSION['languages_id']."'");
+	if (xtc_db_num_rows($category_query)>0) {
+		$category = xtc_db_fetch_array($category_query,true);
+		$image = '';	
+		if ($category['categories_image'] != '') {
+			$image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];		
+			if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
+		}
+	
+		if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+			$manu_query = xtDBquery("select manufacturers_image, manufacturers_name from ".TABLE_MANUFACTURERS." where manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
+			$manu = xtc_db_fetch_array($manu_query,true);
+			$category['categories_name'] = $manu['manufacturers_name'];
+		
+			if ($manu['manufacturers_image'] != '') {
+				$image = DIR_WS_IMAGES.$manu['manufacturers_image'];
+				if(!file_exists($image)) $image = '';           
+			}    
+		
+		}
+		//EOF -web28- 2010-08-06 - BUGFIX no manufacturers image displayed
+	
+		$module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
+		$module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
 
-	$category = xtc_db_fetch_array($category_query,true);
-	$image = '';	
-	if ($category['categories_image'] != '') {
-		$image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];		
-		if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
+		$module_smarty->assign('CATEGORIES_IMAGE', $image);
+		$module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
 	}
-  
-	if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-		$manu_query = xtDBquery("select manufacturers_image, manufacturers_name from ".TABLE_MANUFACTURERS." where manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
-		$manu = xtc_db_fetch_array($manu_query,true);
-    $category['categories_name'] = $manu['manufacturers_name'];
-    
-    if ($manu['manufacturers_image'] != '') {
-      $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
-      if(!file_exists($image)) $image = '';           
-    }    
-    
-  }
-	//EOF -web28- 2010-08-06 - BUGFIX no manufacturers image displayed
-  
-	$module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
-	$module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
-
-	$module_smarty->assign('CATEGORIES_IMAGE', $image);
-	$module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
-
+	
 	$rows = 0;
 	$listing_query = xtDBquery($listing_split->sql_query);
 	while ($listing = xtc_db_fetch_array($listing_query, true)) {
