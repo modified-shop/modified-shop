@@ -133,7 +133,7 @@ class ot_payment
                     $values[$j]['minimum'] = $discount_table[$i];
                     $fees = preg_split('/&/', $discount_table[$i+1]);
                     $values[$j]['percent'] = $fees[0];
-                    $values[$j]['fee'] = $fees[1]!=''?$fees[1]:0;
+                    $values[$j]['fee'] = ((isset($fees[1]) && $fees[1]!='')?$fees[1]:0);
                 } else {
                     break;
                 }
