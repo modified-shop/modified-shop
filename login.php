@@ -106,7 +106,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 $breadcrumb->add(NAVBAR_TITLE_LOGIN, xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 require (DIR_WS_INCLUDES.'header.php');
 
-if ($_GET['info_message']) $info_message = $_GET['info_message'];
+if (isset($_GET['info_message'])) $info_message = $_GET['info_message'];
 $smarty->assign('info_message', $info_message);
 $smarty->assign('account_option', ACCOUNT_OPTIONS);
 $smarty->assign('BUTTON_NEW_ACCOUNT', '<a href="'.xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
