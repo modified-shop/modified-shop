@@ -138,49 +138,52 @@ class ot_payment
                     break;
                 }
             }
-            
-            if (is_array($values[$j])) {
-              if ($this->amount >= $values[$j]['minimum']) {
-                  $od_amount = 0;
-                  $tod_amount = 0;
-                  $table = preg_split("/[,]/" , $this->payment[$j]);
-                  for ($i = 0; $i < count($table); $i++) {
-                      if ($payment == $table[$i]) $do = true;
-                  }
-                  if ($do) {
-                      // Calculate tax reduction if necessary
-                      if($this->calculate_tax == 'true') {
-                          // Calculate tax group deductions
-                          reset($order->info['tax_groups']);
-                          while (list($key, $value) = each($order->info['tax_groups'])) {
-                              if (strpos($key, $shipping_tax . '%')) {
-                                  $god_amount = $this->get_discount(($value - $tod_shipping), $values[$j]['percent']);
-                              } else {
-                                  $god_amount = $this->get_discount($value, $values[$j]['percent']);
-                              }
-                              if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
-                                  foreach($this->amounts as $key2=>$value2) {
-                                      if (strpos($key, $key2 . '%')) {
-                                          $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
-                                      }
-                                  }
-                              }
-                              $order->info['tax_groups'][$key] -= $god_amount;
-                              $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
-                          }
-                          // Calculate main tax reduction
-                          //$tod_amount = $this->get_discount(($order->info['tax'] - $tod_shipping), $values[$j]['percent']); // FIX web28 - falsche Steuerkorrektur
-                          $order->info['tax'] -= $tod_amount;
-                      }
-                      $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
-                  }
-              }
-              $this->discount['sum'] -= $values[$j]['discount'];
-              $this->discount['amount' . $j] = -$values[$j]['discount'];
-              $this->discount['pro' . $j] = $values[$j]['percent'];
-              $this->discount['fee' . $j] = $values[$j]['fee'];
-              if ($do && MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') break;
+
+            if ($this->amount >= $values[$j]['minimum']) {
+                $od_amount = 0;
+                $tod_amount = 0;
+                $table = preg_split("/[,]/" , $this->payment[$j]);
+                for ($i = 0; $i < count($table); $i++) {
+                    if ($payment == $table[$i]) $do = true;
+                }
+                if ($do) {
+                    // Calculate tax reduction if necessary
+                    if($this->calculate_tax == 'true') {
+                        // Calculate tax group deductions
+                        reset($order->info['tax_groups']);
+                        while (list($key, $value) = each($order->info['tax_groups'])) {
+                            if (strpos($key, $shipping_tax . '%')) {
+                                $god_amount = $this->get_discount(($value - $tod_shipping), $values[$j]['percent']);
+                            } else {
+                                $god_amount = $this->get_discount($value, $values[$j]['percent']);
+                            }
+                            if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
+                                foreach($this->amounts as $key2=>$value2) {
+                                    if (strpos($key, $key2 . '%')) {
+                                        $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
+                                    }
+                                }
+                            }
+                            $order->info['tax_groups'][$key] -= $god_amount;
+                            $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
+                        }
+                        // Calculate main tax reduction
+                        //$tod_amount = $this->get_discount(($order->info['tax'] - $tod_shipping), $values[$j]['percent']); // FIX web28 - falsche Steuerkorrektur
+                        $order->info['tax'] -= $tod_amount;
+                    }
+                    $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
+                }
             }
+            (!isset($this->discount['sum'])?$this->discount['sum']='':'');
+            (!isset($this->discount['amount' . $j])?$this->discount['amount' . $j]='':'');
+            (!isset($this->discount['pro' . $j])?$this->discount['pro' . $j]='':'');
+            (!isset($this->discount['fee' . $j])?$this->discount['fee' . $j]='':'');
+            
+            $this->discount['sum'] -= (isset($values[$j]['discount'])?$values[$j]['discount']:'');
+            $this->discount['amount' . $j] = (isset($values[$j]['discount'])?-$values[$j]['discount']:'');
+            $this->discount['pro' . $j] = (isset($values[$j]['percent'])?$values[$j]['percent']:'');
+            $this->discount['fee' . $j] = (isset($values[$j]['fee'])?$values[$j]['fee']:'');
+            if ($do && MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') break;
         }
     }
 
