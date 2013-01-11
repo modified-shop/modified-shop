@@ -53,21 +53,19 @@ require (DIR_WS_INCLUDES.'header.php');
 $smarty->assign('PRODUCTS_NAME', $product_info['products_name']);
 
 $data_reviews = array ();
-$reviews_query = xtc_db_query("select reviews_rating,
-                                      reviews_id,
-                                      customers_name,
-                                      date_added,
-                                      last_modified,
-                                      reviews_read 
-                               from ".TABLE_REVIEWS."
-                               where products_id = '".(int) $_GET['products_id']."'
-                               order by reviews_id DESC");
+$reviews_query = xtc_db_query("SELECT * 
+                                 FROM ".TABLE_REVIEWS."
+                                WHERE products_id = '".(int) $_GET['products_id']."'
+                             ORDER BY reviews_id DESC");
 if (xtc_db_num_rows($reviews_query)) {
 	$row = 0;
 	while ($reviews = xtc_db_fetch_array($reviews_query)) {
 		$row ++;
-		$data_reviews[] = array ('ID' => $reviews['reviews_id'], 'AUTHOR' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, $get_params.'&reviews_id='.$reviews['reviews_id']).'">'.$reviews['customers_name'].'</a>', 'DATE' => xtc_date_short($reviews['date_added']), 'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating'])), 'TEXT' => $reviews['reviews_text']);
-
+		$data_reviews[] = array ('ID' => $reviews['reviews_id'], 
+														 'AUTHOR' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, $get_params.'&reviews_id='.$reviews['reviews_id']).'">'.$reviews['customers_name'].'</a>', 
+														 'DATE' => xtc_date_short($reviews['date_added']), 
+														 'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating'])), 
+														 'TEXT' => $reviews['reviews_text']);
 	}
 }
 $smarty->assign('module_content', $data_reviews);
