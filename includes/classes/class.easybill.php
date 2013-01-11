@@ -535,7 +535,7 @@
       }
         
       $payment->documentID = $documentID;
-      $payment->amount = ($this->info['total']*100);
+      $payment->amount = floatval($this->info['total']*100);
       $payment->paymentdate = date('Y-m-d');
       $payment->paymenttype = $payment_method;
       $payment->notice = '';
