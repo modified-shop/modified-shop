@@ -70,7 +70,7 @@ if (isset($_GET['products_id']) &&
 	$random_product['products_name'] = xtc_get_products_name($random_product['products_id']);
 }
 
-if ((sizeof($random_product)>0) && xtc_not_null($random_product['products_name'])) {
+if (array_key_exists('products_name', (is_array($random_product)?$random_product:array()))) {
 
 	$box_smarty->assign('box_content',$product->buildDataArray($random_product));
 	$box_smarty->assign('LINK_NEW_PRODUCTS',xtc_href_link(FILENAME_PRODUCTS_NEW));
