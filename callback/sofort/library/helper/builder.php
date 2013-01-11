@@ -17,7 +17,7 @@ class Text extends Element {
 	}
 	
 	public function render() {
-		return $this->escape ? htmlspecialchars($this->text) : $this->text;
+		return $this->escape ? encode_htmlspecialchars($this->text) : $this->text;
 	}
 }
 

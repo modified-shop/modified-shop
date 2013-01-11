@@ -10,9 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
-$_GET['lng'] = htmlspecialchars($_GET['lng']);
-$_GET['type'] = htmlspecialchars($_GET['type']);
-$_GET['modul'] = htmlspecialchars($_GET['modul']);
+$_GET['lng'] = encode_htmlspecialchars($_GET['lng']);
+$_GET['type'] = encode_htmlspecialchars($_GET['type']);
+$_GET['modul'] = encode_htmlspecialchars($_GET['modul']);
 
 require('includes/configure.php');
 include(DIR_FS_LANGUAGES . $_GET['lng'] . '/modules/' . $_GET['type'] . '/' . $_GET['modul'] . '.php');

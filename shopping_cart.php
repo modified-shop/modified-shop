@@ -242,7 +242,7 @@ if ($_SESSION['cart']->show_total() > 0 ) {
     $smarty->assign('info_message', $_SESSION['paypal_warten']); //Tomcraft - 2009-12-08 - fixed duplicate error messages in shopping cart
   } else {
     if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-      $smarty->assign('info_message', str_replace('+', ' ', htmlspecialchars($_GET['info_message'])));
+      $smarty->assign('info_message', str_replace('+', ' ', encode_htmlspecialchars($_GET['info_message'])));
     }
     if (isset($o_paypal) && is_object($o_paypal)) {
       $smarty->assign('BUTTON_PAYPAL', $o_paypal->build_express_checkout_button());
@@ -256,12 +256,12 @@ if ($_SESSION['cart']->show_total() > 0 ) {
   // empty cart
   $cart_empty = true;
   //if ($_GET['info_message'])
-  //  $smarty->assign('info_message', str_replace('+', ' ', htmlspecialchars($_GET['info_message'])));
+  //  $smarty->assign('info_message', str_replace('+', ' ', encode_htmlspecialchars($_GET['info_message'])));
   $smarty->assign('cart_empty', $cart_empty);
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 }
 if (isset($_GET['info_message'])) {
-  $smarty->assign('info_message', str_replace('+', ' ', htmlspecialchars($_GET['info_message'])));
+  $smarty->assign('info_message', str_replace('+', ' ', encode_htmlspecialchars($_GET['info_message'])));
 }
 //BOF - web28 - 2011-05-15 - new continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false) {

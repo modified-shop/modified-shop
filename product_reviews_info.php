@@ -58,7 +58,7 @@ $breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_RE
 
 xtc_db_query("update ".TABLE_REVIEWS." set reviews_read = reviews_read+1 where reviews_id = '".$reviews['reviews_id']."'");
 
-$reviews_text = xtc_break_string(htmlspecialchars($reviews['reviews_text']), 60, '-<br />');
+$reviews_text = xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 60, '-<br />');
 
 require (DIR_WS_INCLUDES.'header.php');
 

@@ -281,7 +281,7 @@
                                 $cInfo = new objectInfo($cInfo_array);
                               }
                               if ($configuration['set_function']) {
-                                eval('$value_field = ' . $configuration['set_function'] . '"' . htmlspecialchars($configuration['configuration_value']) . '");');
+                                eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
                               } else {
                                 if ( $configuration['configuration_key'] == 'SMTP_PASSWORD') {
                                   $value_field = xtc_draw_password_field($configuration['configuration_key'], $configuration['configuration_value']);
