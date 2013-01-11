@@ -18,14 +18,15 @@
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 $result = true;
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SEARCH_RESULTS, 'p.products_id');
 $module_content = array ();
+
 if ($listing_split->number_of_rows > 0) {
 
-	//BOF - web28 - 2011-03-27 - FIX page search results -> urlencode($_GET['keywords'])
 	$navigation = '
 		<table border="0" width="100%" cellspacing="0" cellpadding="2">
 		  <tr>
@@ -33,7 +34,7 @@ if ($listing_split->number_of_rows > 0) {
 		    <td class="smallText" align="right">'.TEXT_RESULT_PAGE.' '.$listing_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y', 'keywords')).(isset($_GET['keywords'])?'&keywords='. urlencode($_GET['keywords']):'')).'</td>
 		  </tr>
 		</table>';
-  //EOF - web28 - 2011-03-27 - FIX page search results -> urlencode($_GET['keywords'])
+
 	if (GROUP_CHECK == 'true') {
 		$group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
 	}
@@ -52,18 +53,13 @@ if ($listing_split->number_of_rows > 0) {
 	$image = '';	
 	if ($category['categories_image'] != '') {
 		$image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];		
-// BOF - Tomcraft - 2009-10-30 - noimage.gif is displayed, when no image is defined
 		if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
-// EOF - Tomcraft - 2009-10-30 - noimage.gif is displayed, when no image is defined
 	}
   
-  //BOF -web28- 2010-08-06 - BUGFIX no manufacturers image displayed
 	if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-		// BOF - web28 - 2011-05-06 - FIX display manufacturers_name 
 		$manu_query = xtDBquery("select manufacturers_image, manufacturers_name from ".TABLE_MANUFACTURERS." where manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
 		$manu = xtc_db_fetch_array($manu_query,true);
     $category['categories_name'] = $manu['manufacturers_name'];
-    // EOF - web28 - 2011-05-06 - FIX display manufacturers_name    
     
     if ($manu['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
@@ -86,34 +82,26 @@ if ($listing_split->number_of_rows > 0) {
 		$module_content[] =  $product->buildDataArray($listing);		
 	}
 } else {
-
 	// no product found
 	$result = false;
-
-}
-// get default template
-if ($category['listing_template'] == '' or $category['listing_template'] == 'default') {
-	$files = array ();
-	if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
-		while (($file = readdir($dir)) !== false) {
-// BOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
-			//if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-			if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-// EOF - Tomcraft - 2010-02-04 - Prevent modified eCommerce Shopsoftware from fetching other files than *.html
-// BOF - web28 - 2010-07-12 - sort templates array
-				//$files[] = array ('id' => $file, 'text' => $file);
-				$files[] = $file;
-			} //if
-		} // while
-		closedir($dir);
-	}
-	sort($files);
-	//$category['listing_template'] = $files[0]['id'];
-	$category['listing_template'] = $files[0];
-// EOF - web28 - 2010-07-12 - sort templates array
 }
 
 if ($result != false) {
+
+	// get default template
+	if ($category['listing_template'] == '' or $category['listing_template'] == 'default') {
+		$files = array ();
+		if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
+			while (($file = readdir($dir)) !== false) {
+				if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
+					$files[] = $file;
+				}
+			}
+			closedir($dir);
+		}
+		sort($files);
+		$category['listing_template'] = $files[0];
+	}
 
 	$module_smarty->assign('MANUFACTURER_DROPDOWN', (isset($manufacturer_dropdown) ? $manufacturer_dropdown : ''));
 	$module_smarty->assign('language', $_SESSION['language']);
@@ -128,10 +116,7 @@ if ($result != false) {
 		$module_smarty->caching = 1;
 		$module_smarty->cache_lifetime = CACHE_LIFETIME;
 		$module_smarty->cache_modified_check = CACHE_CHECK;
-		//BOF - web28 - 2011-03-27 - FIX page search results -> urlencode($_GET['keywords'])
-		//$cache_id = $current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name'].'_'.$_SESSION['currency'].'_'.$_GET['manufacturers_id'].'_'.$_GET['filter_id'].'_'.$_GET['page'].'_'.$_GET['keywords'].'_'.$_GET['categories_id'].'_'.$_GET['pfrom'].'_'.$_GET['pto'].'_'.$_GET['x'].'_'.$_GET['y'];
 		$cache_id = $current_category_id.'_'.$_SESSION['language'].'_'.$_SESSION['customers_status']['customers_status_name'].'_'.$_SESSION['currency'].'_'.$_GET['manufacturers_id'].'_'.$_GET['filter_id'].'_'.$_GET['page'].'_'.urlencode($_GET['keywords']).'_'.$_GET['categories_id'].'_'.$_GET['pfrom'].'_'.$_GET['pto'].'_'.$_GET['x'].'_'.$_GET['y'];
-		//EOF - web28 - 2011-03-27 - FIX page search results -> urlencode($_GET['keywords'])
     $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'], $cache_id);
 	}
 	$smarty->assign('main_content', $module);
