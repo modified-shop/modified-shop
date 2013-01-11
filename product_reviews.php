@@ -57,8 +57,8 @@ $reviews_query = xtc_db_query("SELECT *
                                  FROM ".TABLE_REVIEWS." r
                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                                  			ON r.reviews_id= rd.reviews_id
-                                WHERE products_id = '".(int) $_GET['products_id']."'
-                             ORDER BY reviews_id DESC");
+                                WHERE r.products_id = '".(int) $_GET['products_id']."'
+                             ORDER BY r.reviews_id DESC");
 if (xtc_db_num_rows($reviews_query)) {
 	$row = 0;
 	while ($reviews = xtc_db_fetch_array($reviews_query)) {
