@@ -462,6 +462,9 @@ if (!$tmp) {
   $order_totals = $order_total_modules->apply_credit();
   include ('send_order.php');
 
+  /* easyBill */
+  include(DIR_WS_MODULES.'module.easybill.php');
+
   // load the after_process function from the payment modules
   $payment_modules->after_process();
 

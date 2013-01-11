@@ -77,7 +77,8 @@
       while ($totals = xtc_db_fetch_array($totals_query)) {
         $this->totals[] = array('title' => $totals['title'],
                                 'text' => $totals['text'],
-                                'value'=> $totals['value']
+                                'value'=> $totals['value'],
+                                'class'=> $totals['class']
                                );
       }
 

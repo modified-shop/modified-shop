@@ -285,7 +285,7 @@ switch ($action) {
 
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
-  // BMC Delete CC info Start
+
   // Remove CVV Number
   case 'deleteccinfo' :
     xtc_db_query("UPDATE ".TABLE_ORDERS." SET cc_cvv = null WHERE orders_id = ".$oID);
@@ -304,7 +304,12 @@ switch ($action) {
       $aBUY->process_order();
     }
     break;
-  // BMC Delete CC Info End
+    
+	/* easyBill */
+	case 'easybill':	
+    include (DIR_WS_MODULES.'easybill.action.php');
+		xtc_redirect( xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
+		break;
 }
 
   require (DIR_WS_INCLUDES.'head.php');
@@ -443,6 +448,10 @@ require (DIR_WS_INCLUDES.'header.php');
                 <td class="main"><?php echo get_payment_name($order->info['payment_method']) . ' ('.$order->info['payment_method'].')'; ?></td>
               </tr>
               <?php
+              
+              /* easyBill */
+              include (DIR_WS_MODULES.'easybill.info.php');
+              
               // CC - START
               if ($order->info['cc_type'] || $order->info['cc_owner'] || $order->info['cc_number']) {
                 ?>
@@ -751,6 +760,10 @@ require (DIR_WS_INCLUDES.'header.php');
             <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page='.$_GET['page'].'&oID='.$oID); ?>"><?php echo BUTTON_BACK;?></a>
           </td>
         </tr>
+        <?php
+        	/* easyBill */
+          include (DIR_WS_MODULES.'easybill.button.php');
+        ?>
       </table>
       <!-- EOC BUTTONS BLOCK -->
 <?php
