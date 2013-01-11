@@ -132,14 +132,14 @@ class ot_payment
                 if ($this->amount >= $discount_table[$i]) {
                     $values[$j]['minimum'] = $discount_table[$i];
                     $fees = preg_split('/&/', $discount_table[$i+1]);
-                    $values[$j]['percent'] = $fees[0];
+                    $values[$j]['percent'] = (isset($fees[0])?$fees[0]:'');
                     $values[$j]['fee'] = ((isset($fees[1]) && $fees[1]!='')?$fees[1]:0);
                 } else {
                     break;
                 }
             }
 
-            if ($this->amount >= $values[$j]['minimum']) {
+            if (isset($values[$j]['minimum']) && $this->amount >= $values[$j]['minimum']) {
                 $od_amount = 0;
                 $tod_amount = 0;
                 $table = preg_split("/[,]/" , $this->payment[$j]);
