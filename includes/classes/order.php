@@ -158,7 +158,7 @@
                           'date_purchased' => $order['date_purchased'],
                           'orders_status' => $order_status,
                           'last_modified' => $order['last_modified'],
-                          'total' => strip_tags($order_total['text']),
+                          'total' => $order_total['value'],
                           // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
                           'pp_total' => $order_total['value'],
                           'pp_shipping' => $shipping_method['value'],
