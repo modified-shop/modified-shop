@@ -73,21 +73,6 @@ if ($listing_split->number_of_rows > 0) {
 
 		$module_smarty->assign('CATEGORIES_IMAGE', $image);
 		$module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
-
-		// get default template
-		if ($category['listing_template'] == '' or $category['listing_template'] == 'default') {
-			$files = array ();
-			if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
-				while (($file = readdir($dir)) !== false) {
-					if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
-						$files[] = $file;
-					}
-				}
-				closedir($dir);
-			}
-			sort($files);
-			$category['listing_template'] = $files[0];
-		}
 	}
 	
 	$rows = 0;
@@ -102,6 +87,21 @@ if ($listing_split->number_of_rows > 0) {
 }
 
 if ($result != false) {
+
+	// get default template
+	if (array_key_exists('listing_template', $category) && ($category['listing_template'] == '' or $category['listing_template'] == 'default')) {
+		$files = array ();
+		if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
+			while (($file = readdir($dir)) !== false) {
+				if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/'.$file) and (substr($file, -5) == ".html") and ($file != "index.html") and (substr($file, 0, 1) !=".")) {
+					$files[] = $file;
+				}
+			}
+			closedir($dir);
+		}
+		sort($files);
+		$category['listing_template'] = $files[0];
+	}
 
 	$module_smarty->assign('MANUFACTURER_DROPDOWN', (isset($manufacturer_dropdown) ? $manufacturer_dropdown : ''));
 	$module_smarty->assign('language', $_SESSION['language']);
