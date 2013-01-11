@@ -44,6 +44,8 @@ if (!is_object($product) || !$product->isProduct()) {
 } else {
   // defaults
   $hide_qty = 0;  
+  $module_content = '';
+  
   // Get manufacturer name etc. for the product page
   $manufacturer_query = xtc_db_query("SELECT m.manufacturers_id,
                                              m.manufacturers_name,
