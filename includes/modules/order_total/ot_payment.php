@@ -67,9 +67,9 @@ class ot_payment
         if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
             $this->xtc_order_total();
             $this->calculate_credit();
-            if ($this->discount['sum']!=0) {
+            if (isset($this->discount['sum']) && $this->discount['sum']!=0) {
                 for ($i=1; $i<=$this->num; $i++) {
-                    if ($this->discount['amount' . $i]!=0) {
+                    if (isset($this->discount['amount' . $i]) && $this->discount['amount' . $i]!=0) {
                         $this->output[] = array('title' =>
                         ($this->discount['pro' . $i] != 0.0 ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' .
                         ($this->discount['fee' . $i] != 0 ? ($this->discount['pro' . $i] != 0.0 ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ':'') : '') .
