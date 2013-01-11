@@ -16,7 +16,7 @@
 //included by shop_content.php
 
   //use contact_us.php language file
-  require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
+  //require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
   
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
@@ -149,6 +149,15 @@
       $city     = stripslashes($address_data['entry_city']);
       // EOF - Dokuman - 2010-10-14: preallocate additional fields on contact form correctly
       // EOF - Tomcraft - 2009-11-05 - Advanced contact form (additional fields)
+    } elseif (!$error) {
+    	$customers_name = '';
+    	$email_address = '';
+    	$phone = '';
+    	$company = '';
+    	$street = '';
+    	$postcode = '';
+    	$city = '';
+    	$fax = '';
     }
 
     // BOF - Tomcraft - 2009-11-05 - Advanced contact form (product question)
