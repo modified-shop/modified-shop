@@ -395,7 +395,7 @@ h1 {
           $rss->addAttribute('encoding', 'UTF-8');
           ?>
           <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-            <div style="width:40px; height:100%; float:left;"><img src='http://images.modified-shop.org/copyright.gif' border='0' alt=''></div><a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo utf8_decode($rss->channel->title); ?></a>
+            <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo utf8_decode($rss->channel->title); ?></a>
             <br/>
             <?php echo utf8_decode($rss->channel->description); ?>
           </div>
@@ -414,7 +414,7 @@ h1 {
         } else {
         ?>
           <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-            <div style="width:40px; height:100%; float:left;"><img src='http://images.modified-shop.org/copyright.gif' border='0' alt=''></div><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
+            <a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
             <br/>
             <?php echo RSS_FEED_DESCRIPTION; ?>
           </div>
