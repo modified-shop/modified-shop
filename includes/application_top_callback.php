@@ -24,7 +24,7 @@
   define('PAGE_PARSE_START_TIME', microtime());
 
   // set the level of error reporting
-  //error_reporting(E_ALL & ~E_NOTICE);
+  //error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
   error_reporting(0);
   //  error_reporting(E_ALL);
 
@@ -142,6 +142,7 @@ require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
+require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
 //require_once (DIR_FS_INC.'xtc_js_lang.php');
 
 

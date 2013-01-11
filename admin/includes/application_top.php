@@ -56,7 +56,7 @@ if (file_exists('includes/local/configure.php')) {
 
 // set the level of error reporting
 if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
-  error_reporting(E_ALL & ~E_NOTICE);
+  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
   //error_reporting(-1); // Development value
 } else {
   error_reporting(0);
@@ -120,6 +120,7 @@ require_once(DIR_FS_INC . 'xtc_get_qty.inc.php');
 require_once(DIR_FS_INC . 'xtc_product_link.inc.php');
 require_once(DIR_FS_INC . 'xtc_cleanName.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_top_level_domain.inc.php');
+require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 
 // design layout (wide of boxes in pixels) (default: 125)
 define('BOX_WIDTH', 125);

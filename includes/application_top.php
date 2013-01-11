@@ -41,7 +41,7 @@ if (file_exists('includes/local/configure.php')) {
 
 // set the level of error reporting
 if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
-  //error_reporting(E_ALL & ~E_NOTICE);
+  //error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
   error_reporting(-1); // Development value
 } else {
   error_reporting(0);
@@ -159,7 +159,7 @@ require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
-
+require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
 
