@@ -52,7 +52,7 @@ $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CON
 if ($_GET['coID'] != 7) {
 	require (DIR_WS_INCLUDES.'header.php');
 }
-if ($_GET['coID'] == 7 && $_GET['action'] == 'success') {
+if ($_GET['coID'] == 7 && isset($_GET['action']) && $_GET['action'] == 'success') {
 	require (DIR_WS_INCLUDES.'header.php');
 }
 

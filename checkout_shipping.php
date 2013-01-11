@@ -85,7 +85,7 @@ if (!isset ($_SESSION['sendto'])) {
 }
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-if($_SESSION['payment'] == 'paypalexpress') {
+if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
   unset($_SESSION['payment']);
   unset($_SESSION['nvpReqArray']);
   unset($_SESSION['reshash']);

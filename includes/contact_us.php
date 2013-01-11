@@ -16,7 +16,7 @@
 //included by shop_content.php
 
   //use contact_us.php language file
-  require (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
+  require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
   
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
