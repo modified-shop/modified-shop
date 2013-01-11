@@ -58,10 +58,11 @@
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
           // price with tax
           $shipping_tax = 0;
+          $shipping_tax_description = '';
           if (array_key_exists($module, $GLOBALS) && is_object($module)) {
             $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+            $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           }
-          $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $tax = $xtPrice->xtcFormat(xtc_add_tax($order->info['shipping_cost'], $shipping_tax),false,0,false)-$order->info['shipping_cost'];
           $tax = $xtPrice->xtcFormat($tax,false,0,true);
           $order->info['shipping_cost'] = xtc_add_tax($order->info['shipping_cost'], $shipping_tax);
