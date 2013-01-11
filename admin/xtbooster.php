@@ -182,16 +182,16 @@
         if(is_array($e))  {
           foreach($e as $item) {
             ?>
-            <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo htmlspecialchars($item->ShortMessage)." - ".htmlspecialchars($item->LongMessage).""." (".htmlspecialchars($item->ErrorCode).")";?></div>
+            <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo encode_htmlspecialchars($item->ShortMessage)." - ".encode_htmlspecialchars($item->LongMessage).""." (".encode_htmlspecialchars($item->ErrorCode).")";?></div>
             <?php
           }
         } elseif(is_object($e)) {
           $item=$e;  ?>
-          <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo htmlspecialchars($item->ShortMessage)." - ".htmlspecialchars($item->LongMessage).""." (".htmlspecialchars($item->ErrorCode).")";?></div>
+          <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo encode_htmlspecialchars($item->ShortMessage)." - ".encode_htmlspecialchars($item->LongMessage).""." (".encode_htmlspecialchars($item->ErrorCode).")";?></div>
           <?php
         } else {
           ?>
-          <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo htmlspecialchars($r['ERROR_MSG'])." (".$r['ERROR_CODE'].")";?></div>
+          <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo encode_htmlspecialchars($r['ERROR_MSG'])." (".$r['ERROR_CODE'].")";?></div>
           <?php
         }
       }
@@ -582,17 +582,17 @@
               foreach($e as $item) {
                 // if(is_array($item)) print_r($item);
                 ?>
-                <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo htmlspecialchars($item->ShortMessage)." - ".htmlspecialchars($item->LongMessage).""." (".htmlspecialchars($item->ErrorCode).")";?></div>
+                <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo encode_htmlspecialchars($item->ShortMessage)." - ".encode_htmlspecialchars($item->LongMessage).""." (".encode_htmlspecialchars($item->ErrorCode).")";?></div>
                 <?php
               }
             } elseif(is_object($e)) {
               $item=$e;
               ?>
-              <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo htmlspecialchars($item->ShortMessage)." - ".htmlspecialchars($item->LongMessage).""." (".htmlspecialchars($item->ErrorCode).")";?></div>
+              <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo encode_htmlspecialchars($item->ShortMessage)." - ".encode_htmlspecialchars($item->LongMessage).""." (".encode_htmlspecialchars($item->ErrorCode).")";?></div>
               <?php
             } else {
               ?>
-              <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo htmlspecialchars($r['ERROR_MSG'])." (".$r['ERROR_CODE'].")";?></div>
+              <div class="smallText" style="padding:4px;background-color:red;color:white;font-weight:bold;"><?php echo TXT_ERROR?>: <?php echo encode_htmlspecialchars($r['ERROR_MSG'])." (".$r['ERROR_CODE'].")";?></div>
               <?php
             }
           }
@@ -1076,22 +1076,22 @@
                                             </td>
                                           </tr>
                                           <tr id="TR_EMAILTEMPLATE_FROM_NAME" style="display:<?php echo $email_display?>">
-                                            <td class="dataTableContent"><strong><?php echo TXT_EMAIL_TEMPLATE_FROM_NAME?>:</strong></td><td class="dataTableContent"><input size="40" maxlength="255" type="text" name="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_NAME" id="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_NAME" value="<?php echo htmlspecialchars(stripslashes($from_name)); ?>"></td>
+                                            <td class="dataTableContent"><strong><?php echo TXT_EMAIL_TEMPLATE_FROM_NAME?>:</strong></td><td class="dataTableContent"><input size="40" maxlength="255" type="text" name="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_NAME" id="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_NAME" value="<?php echo encode_htmlspecialchars(stripslashes($from_name)); ?>"></td>
                                           </tr>
                                           <tr id="TR_EMAILTEMPLATE_FROM_ADDR" style="display:<?php echo $email_display?>">
-                                            <td class="dataTableContent"><strong><?php echo TXT_EMAIL_TEMPLATE_FROM_ADDR?>:</strong></td><td class="dataTableContent"><input size="40" maxlength="255" type="text" name="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_ADDR" id="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_ADDR" value="<?php echo htmlspecialchars(stripslashes($from_addr)); ?>"></td>
+                                            <td class="dataTableContent"><strong><?php echo TXT_EMAIL_TEMPLATE_FROM_ADDR?>:</strong></td><td class="dataTableContent"><input size="40" maxlength="255" type="text" name="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_ADDR" id="MODULE_XTBOOSTER_EMAILTEMPLATE_FROM_ADDR" value="<?php echo encode_htmlspecialchars(stripslashes($from_addr)); ?>"></td>
                                           </tr>
                                           <tr id="TR_EMAILTEMPLATE_SUBJECT" style="display:<?php echo $email_display?>">
                                             <td class="dataTableContent"><strong><?php echo TXT_EMAIL_TEMPLATE_SUBJECT?>:</strong></td>
-                                            <td class="dataTableContent"><input size="40" maxlength="255" type="text" name="MODULE_XTBOOSTER_EMAILTEMPLATE_SUBJECT" id="MODULE_XTBOOSTER_EMAILTEMPLATE_SUBJECT" value="<?php echo htmlspecialchars(stripslashes($subject)); ?>"></td>
+                                            <td class="dataTableContent"><input size="40" maxlength="255" type="text" name="MODULE_XTBOOSTER_EMAILTEMPLATE_SUBJECT" id="MODULE_XTBOOSTER_EMAILTEMPLATE_SUBJECT" value="<?php echo encode_htmlspecialchars(stripslashes($subject)); ?>"></td>
                                           </tr>
                                           <tr id="TR_EMAILTEMPLATE_MSG" style="display:<?php echo $email_display?>">
                                             <td class="dataTableContent" colspan="2"><strong><?php echo TXT_EMAIL_TEMPLATE_MSG?>:</strong></td>
                                           </tr>
                                           <tr>
                                             <td class="dataTableContent" colspan="2">
-                                              <div id="DIV_TXT_MAIL" style="display:block"><textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE' id='MODULE_XTBOOSTER_EMAILTEMPLATE' cols="80" rows="12" wrap="virtual"><?php echo htmlspecialchars(stripslashes($emailtemplate)); ?></textarea></div>
-                                              <div id="DIV_HTML_MAIL" style="display:block"><textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' id='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' cols="80" rows="12" wrap="virtual"><?php echo htmlspecialchars(stripslashes($emailtemplate_html)); ?></textarea></div>
+                                              <div id="DIV_TXT_MAIL" style="display:block"><textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE' id='MODULE_XTBOOSTER_EMAILTEMPLATE' cols="80" rows="12" wrap="virtual"><?php echo encode_htmlspecialchars(stripslashes($emailtemplate)); ?></textarea></div>
+                                              <div id="DIV_HTML_MAIL" style="display:block"><textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' id='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' cols="80" rows="12" wrap="virtual"><?php echo encode_htmlspecialchars(stripslashes($emailtemplate_html)); ?></textarea></div>
                                             </td>
                                             <script type="text/javascript">
                                               // erst hier, denn oben sind die divs & das Textarea nicht sichtbar
@@ -1165,7 +1165,7 @@
                                       <td class="dataTableContent" colspan="2">
                                         <table cellpadding="2" cellspacing="0" style="border:0px;width:100%;">
                                           <tr>
-                                            <td class="dataTableContent" colspan="2"><textarea name='MODULE_XTBOOSTER_TRADETEMPLATE' id='MODULE_XTBOOSTER_TRADETEMPLATE' cols="150" rows="10" wrap="virtual"><?php echo htmlspecialchars($tradetemplate); ?></textarea></td>
+                                            <td class="dataTableContent" colspan="2"><textarea name='MODULE_XTBOOSTER_TRADETEMPLATE' id='MODULE_XTBOOSTER_TRADETEMPLATE' cols="150" rows="10" wrap="virtual"><?php echo encode_htmlspecialchars($tradetemplate); ?></textarea></td>
                                           </tr>
                                         </table>
                                       </td>
@@ -1793,7 +1793,7 @@
                                         </tr>
                                         <tr class="attributes<?php echo $rowi++%2==0?'-even':'-odd'; ?>">
                                           <td class="smallText" style="font-weight:bold;" valign="top"><?php echo TXT_TITLE?>:</td>
-                                          <td class="smallText"><input type="text" name="add[TITLE]" value="<?php echo htmlspecialchars(strip_tags($x['products_name']))?>" size="30" maxlength="55"></td>
+                                          <td class="smallText"><input type="text" name="add[TITLE]" value="<?php echo encode_htmlspecialchars(strip_tags($x['products_name']))?>" size="30" maxlength="55"></td>
                                         </tr>
                                         <tr class="attributes<?php echo $rowi++%2==0?'-even':'-odd'; ?>">
                                           <td class="smallText" style="font-weight:bold;"valign="top"><?php echo TXT_SUBTITLE?>:</td>
@@ -1850,7 +1850,7 @@
                                               $desc=preg_replace("/src=(['\"])/([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i", "/src=\\1".HTTP_CATALOG_SERVER."/\\2/",$desc); 
                                               $desc=preg_replace("/src=(['\"])([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i", "/src=\\1".HTTP_CATALOG_SERVER.DIR_WS_CATALOG."\\2/",$desc);
                                             }
-                                            // $desc = htmlspecialchars($desc);
+                                            // $desc = encode_htmlspecialchars($desc);
                                             echo xtc_draw_textarea_field('add[DESCRIPTION]', 'soft', '103', '20', $desc); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
                                             //echo "<script type= \"text/javascript\"> $('add[DESCRIPTION]').value = \"".addslashes($desc)."\"; </script>\n";
                                             ?>

@@ -132,7 +132,7 @@
                 <td class="dataTableContent"  align="center"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                 <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                 <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
-                <td class="dataTableContent"><?php echo htmlentities($whos_online['http_referer']); ?></td>
+                <td class="dataTableContent"><?php echo encode_htmlentities($whos_online['http_referer']); ?></td>
               </tr>
               <?php
                 }

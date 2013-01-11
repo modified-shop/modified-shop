@@ -304,7 +304,7 @@
                                 $configuration_key_desc  = '&nbsp;';                                            // description = empty
                               }
                               if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
-                                $configuration_key_desc = htmlentities($configuration_key_desc);
+                                $configuration_key_desc = encode_htmlentities($configuration_key_desc);
                               }
                               echo '
                                     <tr>
