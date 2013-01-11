@@ -202,7 +202,7 @@ $smarty->assign('info_message', $info_message);
 $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL'))); // web28 - 2010-09-21 - change NONSSL -> SSL 
 //BOF - web28 - 2010-02-09: SHOW EMAIL  IN INPUT FIELD
 //$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input($_POST['email'])));
-$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) || isset($_POST['email'])) ?(xtc_db_input($_GET['email']) !='' ? xtc_db_input($_GET['email']) : xtc_db_input($_POST['email'])):'')));
+$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) && xtc_db_input($_GET['email'])!='') ? xtc_db_input($_GET['email']):((isset($_POST['email']) && xtc_db_input($_POST['email']))?xtc_db_input($_POST['email']):''))));
 //EOF - web28 - 2010-02-09: SHOW EMAIL IN INPUT FIELD
 // BOF - Tomcraft - 2010-01-24 - unified the captcha field size.
 //$smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="6" maxlength="6"', 'text', false));
