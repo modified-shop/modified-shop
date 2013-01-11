@@ -31,7 +31,7 @@ require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 $case = 'double_opt';
 $info_message = TEXT_PASSWORD_FORGOTTEN;
 
-if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in')) {
+if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && $_POST) {
   $check_customer_query = xtc_db_query("SELECT customers_email_address, 
                                                customers_id 
                                           FROM ".TABLE_CUSTOMERS." 
