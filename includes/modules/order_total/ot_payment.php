@@ -39,7 +39,8 @@ class ot_payment
         $this->include_shipping = MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING;
         $this->include_tax = MODULE_ORDER_TOTAL_PAYMENT_INC_TAX;
         $this->calculate_tax = MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX;
-        $this->howto_calc = MODULE_ORDER_TOTAL_PAYMENT_HOWTO_CALC;
+        // is not used
+        // $this->howto_calc = MODULE_ORDER_TOTAL_PAYMENT_HOWTO_CALC;
         $this->tax_class = MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS;
         $this->output = array();
         $this->amount = 0;
@@ -66,9 +67,9 @@ class ot_payment
         if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
             $this->xtc_order_total();
             $this->calculate_credit();
-            if ($this->discount['sum']!=0) {
+            if (isset($this->discount['sum']) && $this->discount['sum']!=0) {
                 for ($i=1; $i<=$this->num; $i++) {
-                    if ($this->discount['amount' . $i]!=0) {
+                    if (isset($this->discount['amount' . $i]) && $this->discount['amount' . $i]!=0) {
                         $this->output[] = array('title' =>
                         ($this->discount['pro' . $i] != 0.0 ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' .
                         ($this->discount['fee' . $i] != 0 ? ($this->discount['pro' . $i] != 0.0 ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ':'') : '') .
@@ -132,14 +133,14 @@ class ot_payment
                 if ($this->amount >= $discount_table[$i]) {
                     $values[$j]['minimum'] = $discount_table[$i];
                     $fees = preg_split('/&/', $discount_table[$i+1]);
-                    $values[$j]['percent'] = $fees[0];
-                    $values[$j]['fee'] = $fees[1]!=''?$fees[1]:0;
+                    $values[$j]['percent'] = (isset($fees[0])?$fees[0]:'');
+                    $values[$j]['fee'] = ((isset($fees[1]) && $fees[1]!='')?$fees[1]:0);
                 } else {
                     break;
                 }
             }
 
-            if ($this->amount >= $values[$j]['minimum']) {
+            if (isset($values[$j]['minimum']) && $this->amount >= $values[$j]['minimum']) {
                 $od_amount = 0;
                 $tod_amount = 0;
                 $table = preg_split("/[,]/" , $this->payment[$j]);
@@ -174,10 +175,15 @@ class ot_payment
                     $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
                 }
             }
-            $this->discount['sum'] -= $values[$j]['discount'];
-            $this->discount['amount' . $j] = -$values[$j]['discount'];
-            $this->discount['pro' . $j] = $values[$j]['percent'];
-            $this->discount['fee' . $j] = $values[$j]['fee'];
+            (!isset($this->discount['sum'])?$this->discount['sum']='':'');
+            (!isset($this->discount['amount' . $j])?$this->discount['amount' . $j]='':'');
+            (!isset($this->discount['pro' . $j])?$this->discount['pro' . $j]='':'');
+            (!isset($this->discount['fee' . $j])?$this->discount['fee' . $j]='':'');
+            
+            $this->discount['sum'] -= (isset($values[$j]['discount'])?$values[$j]['discount']:'');
+            $this->discount['amount' . $j] = (isset($values[$j]['discount'])?-$values[$j]['discount']:'');
+            $this->discount['pro' . $j] = (isset($values[$j]['percent'])?$values[$j]['percent']:'');
+            $this->discount['fee' . $j] = (isset($values[$j]['fee'])?$values[$j]['fee']:'');
             if ($do && MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') break;
         }
     }
