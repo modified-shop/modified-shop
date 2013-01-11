@@ -29,10 +29,11 @@ require_once (DIR_FS_INC.'xtc_render_vvcode.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-//BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+
 $inp = 'true';
-//EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
+$del = '';
+$info_message = '';
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {    
 	
@@ -119,7 +120,6 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	} else {
 	    //BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 	    //$info_message = TEXT_WRONG_CODE;
-	    $info_message = '';
 	    if (!xtc_validate_email(trim($_POST['email']))) $info_message .= ERROR_EMAIL;
 		if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) $info_message .= ERROR_VVCODE;		
 		//EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
@@ -202,15 +202,15 @@ $smarty->assign('info_message', $info_message);
 $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL'))); // web28 - 2010-09-21 - change NONSSL -> SSL 
 //BOF - web28 - 2010-02-09: SHOW EMAIL  IN INPUT FIELD
 //$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input($_POST['email'])));
-$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', (xtc_db_input($_GET['email']) !='' ? xtc_db_input($_GET['email']) : xtc_db_input($_POST['email']))));
+$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) || isset($_POST['email'])) ?(xtc_db_input($_GET['email']) !='' ? xtc_db_input($_GET['email']) : xtc_db_input($_POST['email'])):'')));
 //EOF - web28 - 2010-02-09: SHOW EMAIL IN INPUT FIELD
 // BOF - Tomcraft - 2010-01-24 - unified the captcha field size.
 //$smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="6" maxlength="6"', 'text', false));
 $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="8" maxlength="6"', 'text', false));
 // EOF - Tomcraft - 2010-01-24 - unified the captcha field size.
 //BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
-if($_POST['check'] == 'inp') {$inp = 'true'; $del = '';}
-if($_POST['check'] == 'del') {$inp = ''; $del = 'true';}	
+if(isset($_POST['check']) && $_POST['check'] == 'inp') {$inp = 'true'; $del = '';}
+if(isset($_POST['check']) && $_POST['check'] == 'del') {$inp = ''; $del = 'true';}	
 $smarty->assign('CHECK_INP', xtc_draw_radio_field('check', 'inp', $inp));
 //EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 $smarty->assign('CHECK_DEL', xtc_draw_radio_field('check', 'del', $del));
