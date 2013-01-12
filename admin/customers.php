@@ -997,8 +997,8 @@ function check_form() {
                 // EOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
               }
               // EOF - Dokuman - 2011-08-26 - show error code of VAT ID check FROM DB (only in 'edit' process, not in 'update')
+              echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
               ?>
-              <tr>
                 <td class="main"><?php echo ENTRY_VAT_ID; ?></td>
                 <td class="main">
                   <?php
