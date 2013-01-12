@@ -28,4 +28,6 @@ define('TEXT_MODULE_DIRECTORY', 'Modul Verzeichnis:');
 
 define('TABLE_HEADING_FILENAME','Modulname (f&uuml;r internen Gebrauch)');
 define('ERROR_EXPORT_FOLDER_NOT_WRITEABLE','export/ Verzeichniss nicht beschreibbar!');
+define('TEXT_MODULE_INFO','Bitte &uuml;berpr&uuml;fen Sie die Module beim jeweiligen Hersteller auf die aktuellste Version!');
+
 ?>

@@ -18,9 +18,9 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 define('MODULE_FROOGLE_TEXT_DESCRIPTION', 'Export - Froogle.de (Tab getrennt)');
-define('MODULE_FROOGLE_TEXT_TITLE', 'Froogle.de - TXT');
+define('MODULE_FROOGLE_TEXT_TITLE', 'Froogle.de - TXT <b>[VERALTET - Entspricht nicht den aktuellen Spezifikationen]</b>');
 define('MODULE_FROOGLE_FILE_TITLE' , '<hr noshade>Dateiname');
-define('MODULE_FROOGLE_FILE_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportadatei am Server gespeichert werden soll.<br>(Verzeichnis export/)');
+define('MODULE_FROOGLE_FILE_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportdatei am Server gespeichert werden soll.<br>(Verzeichnis export/)');
 define('MODULE_FROOGLE_STATUS_DESC','Modulstatus') ;
 define('MODULE_FROOGLE_STATUS_TITLE','Status');
 define('MODULE_FROOGLE_CURRENCY_TITLE','W&auml;hru ng');

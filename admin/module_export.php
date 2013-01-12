@@ -144,15 +144,10 @@ require (DIR_WS_INCLUDES.'head.php');
           <table border="0" width="100%" cellspacing="0" cellpadding="2">
             <tr>
               <td width="100%">
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></td>
-                    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main" valign="top">Modules</td>
-                  </tr>
-                </table>
+                <div style="float:left; width:80px;"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
+                <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
+                <div class="main">Modules</div>
+                <div style="clear:both;margin:10px 0 5px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
               </td>
             </tr>
             <tr>

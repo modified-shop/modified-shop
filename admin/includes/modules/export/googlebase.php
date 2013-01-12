@@ -30,7 +30,7 @@
    ---------------------------------------------------------------------------------------*/
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-define('MODULE_GOOGLEBASE_TEXT_TITLE', 'Google Base - TXT / XML<br/>Exportmodul f&uuml;r Google Base / inkl. Felder "Zustand" und "Versandkosten"');
+define('MODULE_GOOGLEBASE_TEXT_TITLE', 'Google Base - TXT / XML<br/>Exportmodul f&uuml;r Google Base / inkl. Felder "Zustand" und "Versandkosten" <b>[VERALTET - Entspricht nicht den aktuellen Spezifikationen]</b>');
 define('MODULE_GOOGLEBASE_TEXT_DESCRIPTION', 'Export - Google Base (Tab getrennt)');
 define('MODULE_GOOGLEBASE_FILE_TITLE' , '<hr noshade>Dateiname');
 define('MODULE_GOOGLEBASE_FILE_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportdatei am Server gespeichert werden soll.<br />(Verzeichnis export/)');

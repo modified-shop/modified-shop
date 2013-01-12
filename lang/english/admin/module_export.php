@@ -28,4 +28,7 @@ define('TEXT_MODULE_DIRECTORY', 'Module Directory:');
 
 define('TABLE_HEADING_FILENAME','Modulname (for internal usage)');
 define('ERROR_EXPORT_FOLDER_NOT_WRITEABLE','export/ Folder not writeable!');
+
+define('TEXT_MODULE_INFO','Please check the manufacturer of the modules for the latest version!');
+
 ?>
