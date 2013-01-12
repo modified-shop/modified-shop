@@ -75,7 +75,7 @@
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></td>
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_FULL_NAME; ?></td>
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_IP_ADDRESS; ?></td>
-                          <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_COUNTRY; ?></td>
+                          <!--td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_COUNTRY; ?></td-->
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_ENTRY_TIME; ?></td>
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_LAST_CLICK; ?></td>
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?></td>
@@ -109,12 +109,12 @@
 
                           //BOF - DokuMan - 2011-03-16 - added GEOIP-function (show customers country)
                           $geoip_data = array();
-                          $geoip_response = xtc_get_geoip_data($whos_online['ip_address']);
-                          $geoip_data = @unserialize($geoip_response);
+                          //$geoip_response = xtc_get_geoip_data($whos_online['ip_address']);
+                          //$geoip_data = @unserialize($geoip_response);
                           //BOF - DokuMan - 2011-03-16 - added GEOIP-function (show customers country)
 
                           //BOF web28 2010-12-03 added Hostname to whois online
-                          $whos_online_hostname = '<div style="font-weight: normal; font-style: italic;"> ('.@gethostbyaddr($whos_online['ip_address']).')</div>';
+                          //$whos_online_hostname = '<div style="font-weight: normal; font-style: italic;"> ('.@gethostbyaddr($whos_online['ip_address']).')</div>';
                           //EOF web28 2010-12-03 added Hostname to whois online
 
                           // last_page_url
@@ -127,8 +127,8 @@
                           <td class="dataTableContent" align="center"><?php echo gmdate('H:i:s', $time_online); ?></td>
                           <td class="dataTableContent" align="center"><?php echo $whos_online['customer_id']; ?></td>
                           <td class="dataTableContent" align="center"><?php echo $whos_online['full_name']; ?></td>
-                          <td class="dataTableContent" align="center"><a href="http://whois.domaintools.com/<?php echo $whos_online['ip_address']; ?>" style="font-weight:bold; text-decoration:underline;" target="_blank"><?php echo $whos_online['ip_address']; ?></a><?php echo $whos_online_hostname; ?></td>
-                          <td class="dataTableContent" align="center"><?php echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')'; ?></td>
+                          <td class="dataTableContent" align="center"><a href="<?php echo WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address']; ?>" style="font-weight:bold; text-decoration:underline;" target="_blank"><?php echo $whos_online['ip_address']; ?></a><?php echo (isset($whos_online_hostname) ? $whos_online_hostname : ''); ?></td>
+                          <!--td class="dataTableContent" align="center"><?php echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')'; ?></td-->
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                           <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
