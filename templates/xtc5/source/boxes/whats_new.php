@@ -22,6 +22,7 @@
 $box_smarty = new smarty;
 $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 $box_content = '';
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_random_select.inc.php');
 require_once (DIR_FS_INC.'xtc_rand.inc.php');
@@ -44,33 +45,29 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
    $days = " and p.products_date_added > '".$date_new_products."' ";
 }
 
-$random_product = array();
 if (isset($_GET['products_id']) && 
 		xtc_not_null($_GET['products_id']) &&
-		$random_product = xtc_random_select("select distinct
-                                           p.products_id,
-                                           p.products_image,
-                                           p.products_tax_class_id,
-                                           p.products_vpe,
-                                           p.products_vpe_status,
-                                           p.products_vpe_value,
-                                           p.products_price
-                                           from ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_TO_CATEGORIES." p2c, ".TABLE_CATEGORIES." c
-                                           where p.products_status=1
-                                           and p.products_id = p2c.products_id
-                                           and p.products_id !='".(int) $_GET['products_id']."'
-                                           and c.categories_id = p2c.categories_id
-                                           ".$group_check."
-                                           ".$fsk_lock."
-                                           ".$days."
-                                           and c.categories_status=1 order by
-                                           p.products_date_added desc limit ".MAX_RANDOM_SELECT_NEW)) {
-//EOF - Hetfield - 2009-08-11 - #BUGFIX 0000374: Box Whats New 30 Tage BUG
-	$whats_new_price = $xtPrice->xtcGetPrice($random_product['products_id'], $format = true, 1, $random_product['products_tax_class_id'], $random_product['products_price']);
+		$random_product = xtc_random_select("SELECT DISTINCT p.products_id,
+																												 p.products_image,
+																												 p.products_tax_class_id,
+																												 p.products_vpe,
+																												 p.products_vpe_status,
+																												 p.products_vpe_value,
+																												 p.products_price
+																										FROM ".TABLE_PRODUCTS." p
+																									  JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+																									  		 ON p.products_id = p2c.products_id
+																									  JOIN ".TABLE_CATEGORIES." c
+																									  		 ON c.categories_id = p2c.categories_id
+																									 WHERE p.products_status=1
+																										 AND p.products_id !='".(int) $_GET['products_id']."'
+																										 AND c.categories_status=1
+																												 ".$group_check."
+																												 ".$fsk_lock."
+																												 ".$days."
+																								ORDER BY p.products_date_added DESC
+																								   LIMIT ".MAX_RANDOM_SELECT_NEW)) {
 	$random_product['products_name'] = xtc_get_products_name($random_product['products_id']);
-}
-
-if (array_key_exists('products_name', (is_array($random_product)?$random_product:array()))) {
 
 	$box_smarty->assign('box_content',$product->buildDataArray($random_product));
 	$box_smarty->assign('LINK_NEW_PRODUCTS',xtc_href_link(FILENAME_PRODUCTS_NEW));
