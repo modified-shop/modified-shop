@@ -185,6 +185,22 @@
         xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
         xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$orders_id.'&action=edit'));
         break;
+      case 'delete_confirm_adressbook' :
+        $customers_id = xtc_db_prepare_input($_GET['cID']);
+
+        xtc_db_query("-- admin/customers.php
+                      DELETE FROM ".TABLE_ADDRESS_BOOK."
+                            WHERE address_book_id = '".(int) $_GET['address_book_id']."'
+                              AND customers_id = '".xtc_db_input($customers_id)."'"
+                                  );
+        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete_confirm_adressbook')).'cID='.(int)$customers_id));
+        break;
+      case 'update_default_adressbook' :
+        $customers_id = xtc_db_prepare_input($_GET['cID']);
+
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_default_address_id='".(int) $_GET['default']."' WHERE customers_id = '".xtc_db_input($customers_id)."'");
+        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'update_default_adressbook', 'default')).'cID='.$customers_id.'&action=address_book'));
+        break;
       case 'statusconfirm' :
         $customers_id = xtc_db_prepare_input($_GET['cID']);
         $customer_updated = false;
@@ -225,6 +241,7 @@
         $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
         $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
         $default_address_id = xtc_db_prepare_input($_POST['default_address_id']);
+        $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
         $entry_street_address = xtc_db_prepare_input($_POST['entry_street_address']);
         $entry_suburb = xtc_db_prepare_input($_POST['entry_suburb']);
         $entry_postcode = xtc_db_prepare_input($_POST['entry_postcode']);
@@ -239,7 +256,12 @@
         $shipping_unallowed = xtc_db_prepare_input($_POST['shipping_unallowed']);
         $password = xtc_db_prepare_input($_POST['entry_password']);
         if ($memo_text != '' && $memo_title != '') {
-          $sql_data_array = array ('customers_id' => (int)$_GET['cID'], 'memo_date' => date("Y-m-d"), 'memo_title' => $memo_title, 'memo_text' => $memo_text, 'poster_id' => (int)$_SESSION['customer_id']);
+          $sql_data_array = array ('customers_id' => (int)$_GET['cID'], 
+                                   'memo_date' => date("Y-m-d"), 
+                                   'memo_title' => $memo_title, 
+                                   'memo_text' => $memo_text, 
+                                   'poster_id' => (int)$_SESSION['customer_id']
+                                  );
           xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
         }
         $error = false; // reset error flag
@@ -459,7 +481,7 @@
 
           // if new password is set
           if ($password != "") {
-            $sql_data_array=array_merge($sql_data_array,array('customers_password' => xtc_encrypt_password($password)));
+            $sql_data_array['customers_password'] = xtc_encrypt_password($password);
           }
 
           if (ACCOUNT_GENDER == 'true')
@@ -467,7 +489,8 @@
           if (ACCOUNT_DOB == 'true')
             $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
 
-          xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."'");
+          //xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."'");
+          xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND customers_default_address_id = '".$address_book_id."'");
 
           xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
                            SET customers_info_date_account_last_modified = now()
@@ -483,10 +506,15 @@
                                    'entry_postcode' => $entry_postcode,
                                    'entry_city' => $entry_city,
                                    'entry_country_id' => $entry_country_id,
-                                   'address_last_modified' => 'now()');
+                                   'address_last_modified' => 'now()'
+                                   );
+
+          if (ACCOUNT_GENDER == 'true')
+            $sql_data_array['entry_gender'] = $customers_gender;
 
           if (ACCOUNT_COMPANY == 'true')
             $sql_data_array['entry_company'] = $entry_company;
+
           if (ACCOUNT_SUBURB == 'true')
             $sql_data_array['entry_suburb'] = $entry_suburb;
 
@@ -499,8 +527,14 @@
               $sql_data_array['entry_state'] = $entry_state;
             }
           }
-
-          xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND address_book_id = '".xtc_db_input($default_address_id)."'");
+          if ($address_book_id == 0) {
+            $sql_data_array['address_date_added'] = 'now()';
+            $sql_data_array['customers_id'] = $customers_id;
+            xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'insert');
+          } else {
+            //xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND address_book_id = '".xtc_db_input($default_address_id)."'");
+            xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND address_book_id = '".xtc_db_input($address_book_id)."'");
+          }  
           xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.(int)$customers_id));
         } elseif ($error == true) {
           $cInfo = new objectInfo($_POST);
@@ -563,7 +597,8 @@
      LEFT JOIN ".TABLE_ADDRESS_BOOK." a
             ON c.customers_default_address_id = a.address_book_id
          WHERE a.customers_id = c.customers_id
-           AND c.customers_id = ".(int)$_GET['cID']);
+           AND c.customers_id = ".(int)$_GET['cID']
+           );
         $customers = xtc_db_fetch_array($customers_query);
         $cInfo = new objectInfo($customers);
     }
@@ -703,6 +738,13 @@ require (DIR_WS_INCLUDES.'head.php');
           <table border="0" width="100%" cellspacing="0" cellpadding="2">
             <?php
             if ($action == 'edit' || $action == 'update') {
+              if (isset($_GET['edit']) && $_GET['edit'] != '') {
+                $check = "a.address_book_id = '". (int) $_GET['edit']."'";
+                $customers_default_address_id_checkbox = xtc_draw_checkbox_field('primary', 'on', false);
+              } else {
+                $check = "c.customers_default_address_id = a.address_book_id";
+              }
+
               //if (!is_object($cInfo)) { //DokuMan - 2010-10-01 - remove check if $cinfo is an object, otherwise customer status will be blank
               $customers_query = xtc_db_query("-- admin/customers.php
                                                SELECT c.customers_id,
@@ -710,9 +752,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                                       c.customers_vat_id,
                                                       c.customers_vat_id_status,
                                                       c.customers_status,
-                                                      c.customers_gender,
-                                                      c.customers_firstname,
-                                                      c.customers_lastname,
+                                                      -- c.customers_gender, # web28 2012-01-06 - wrong use correctly a.entry_gender AS customers_gender
+                                                      -- c.customers_firstname, # web28 2012-01-06 - wrong use correctly a.entry_firstname AS customers_firstname
+                                                      -- c.customers_lastname, # web28 2012-01-06 - wrong use correctly a.entry_lastname AS customers_lastname
                                                       c.customers_dob,
                                                       c.customers_email_address,
                                                       c.customers_default_address_id,
@@ -722,6 +764,10 @@ require (DIR_WS_INCLUDES.'head.php');
                                                       c.member_flag,
                                                       c.payment_unallowed,
                                                       c.shipping_unallowed,
+                                                      a.address_book_id,
+                                                      a.entry_gender AS customers_gender,
+                                                      a.entry_firstname AS customers_firstname,
+                                                      a.entry_lastname AS customers_lastname,  
                                                       a.entry_company,
                                                       a.entry_street_address,
                                                       a.entry_suburb,
@@ -732,12 +778,14 @@ require (DIR_WS_INCLUDES.'head.php');
                                                       a.entry_zone_id
                                                  FROM ".TABLE_CUSTOMERS." c
                                             LEFT JOIN ".TABLE_ADDRESS_BOOK." a
-                                                   ON c.customers_default_address_id = a.address_book_id
+                                                   ON ".$check."
                                                 WHERE a.customers_id = c.customers_id
                                                   AND c.customers_id = '".(int)$_GET['cID']."'"
                                              );
               $customers = xtc_db_fetch_array($customers_query);
-              $cInfo = new objectInfo($customers);
+              if (xtc_db_num_rows($customers_query) != 0) {
+                $cInfo = new objectInfo($customers);
+              }
               //} //DokuMan - 2010-10-01 - remove check if $cinfo is an object, otherwise customer status will be blank
               $newsletter_array = array (array ('id' => '1', 'text' => ENTRY_NEWSLETTER_YES), array ('id' => '0', 'text' => ENTRY_NEWSLETTER_NO));
               ?>
@@ -767,7 +815,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
               </tr>
-              <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post', 'onSubmit="return check_form();"') . xtc_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id); ?>
+              <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post', 'onSubmit="return check_form();"') . xtc_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id) . xtc_draw_hidden_field('address_book_id', $cInfo->address_book_id); ?>
                 <tr>
                   <td class="formAreaTitle"><?php echo CATEGORY_PERSONAL; ?></td>
                 </tr>
@@ -796,8 +844,8 @@ require (DIR_WS_INCLUDES.'head.php');
                         </tr>
                         <?php
                       }
+                      echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>'; 
                       ?>
-                      <tr>
                         <td class="main" bgcolor="#FFCC33"><?php echo ENTRY_CID; ?></td>
                         <td class="main" width="100%" bgcolor="#FFCC33">
                           <?php
@@ -841,8 +889,8 @@ require (DIR_WS_INCLUDES.'head.php');
                       </tr>
                       <?php
                       if (ACCOUNT_DOB == 'true') {
+                        echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
                         ?>
-                        <tr>
                           <td class="main"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
                           <td class="main">
                             <?php
@@ -860,8 +908,8 @@ require (DIR_WS_INCLUDES.'head.php');
                         </tr>
                         <?php
                       }
+                      echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>'; 
                       ?>
-                      <tr>
                         <td class="main"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
                         <td class="main">
                           <?php
@@ -949,8 +997,8 @@ require (DIR_WS_INCLUDES.'head.php');
                             // EOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
                           }
                           // EOF - Dokuman - 2011-08-26 - show error code of VAT ID check FROM DB (only in 'edit' process, not in 'update')
+                          echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
                         ?>
-                          <tr>
                             <td class="main"><?php echo ENTRY_VAT_ID; ?></td>
                             <td class="main">
                               <?php
@@ -1113,10 +1161,16 @@ require (DIR_WS_INCLUDES.'head.php');
                 <tr>
                   <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                 </tr>
+                <?php
+                if ($cInfo->customers_default_address_id == $cInfo->address_book_id) {
+                ?>
                 <tr>
                   <td class="formAreaTitle"><?php echo CATEGORY_CONTACT; ?></td>
                 </tr>
-                <tr>
+                <?php
+                }
+                echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>'; 
+                ?> 
                   <td class="formArea">
                     <table border="0" cellspacing="2" cellpadding="2">
                       <tr>
@@ -1153,6 +1207,9 @@ require (DIR_WS_INCLUDES.'head.php');
                 <tr>
                   <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                 </tr>
+                <?php
+                if ($cInfo->customers_default_address_id == $cInfo->address_book_id) {
+                ?>
                 <tr>
                   <td class="formAreaTitle"><?php echo CATEGORY_OPTIONS; ?></td>
                 </tr>
@@ -1228,6 +1285,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     </table>
                   </td>
                 </tr>
+                <?php
+                }
+                ?>
                 <tr>
                   <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                 </tr>
@@ -1300,17 +1360,22 @@ require (DIR_WS_INCLUDES.'head.php');
                         $search = '';
                         if (isset($_GET['search']) && (xtc_not_null($_GET['search']))) {
                           $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search']));
-                          $search = "AND (c.customers_lastname like '%".$keywords."%' or c.customers_firstname like '%".$keywords."%' or c.customers_email_address like '%".$keywords."%')";
+                          $search = "AND (c.customers_lastname LIKE '%".$keywords."%' 
+                                          OR c.customers_firstname LIKE '%".$keywords."%' 
+                                          OR c.customers_email_address LIKE '%".$keywords."%'
+                                         )";
                           //BOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                           if(isset($_GET['asb']) && $_GET['asb'] == 'asb') {
-                            $search = "AND (c.customers_lastname like '%".$keywords."%' or c.customers_firstname like '%".$keywords."%')";
+                            $search = "AND (c.customers_lastname LIKE '%".$keywords."%' 
+                                            OR c.customers_firstname LIKE '%".$keywords."%'
+                                           )";
                           }
                           //EOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                         }
                         //BOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                         if (isset($_GET['search_email']) && (xtc_not_null($_GET['search_email']))) {
                           $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search_email']));
-                          $search = "AND (c.customers_email_address like '%".$keywords."%')";
+                          $search = "AND (c.customers_email_address LIKE '%".$keywords."%')";
                         }
                         //EOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                         if (isset($_GET['status']) && ($_GET['status'] != '100' || $_GET['status'] == '0')) {
@@ -1375,6 +1440,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                        c.customers_email_address,
                                                        c.member_flag,
                                                        c.account_type,
+                                                       a.entry_company,
                                                        a.entry_country_id,
                                                        ci.customers_info_date_account_created as date_account_created,
                                                        ci.customers_info_date_account_last_modified as date_account_last_modified,
@@ -1498,6 +1564,65 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'.BUTTON_DELETE.'"><a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
                           break;
 
+                        case 'address_book' :
+                          $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_ADRESS_BOOK.'</b>');
+
+                          $contents = array ();
+                          require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
+                          require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
+                    
+                          $addresses_query = xtc_db_query("-- admin/customers.php
+                                                           select address_book_id,
+                                                                  entry_firstname as firstname,
+                                                                  entry_lastname as lastname,
+                                                                  entry_company as company,
+                                                                  entry_street_address as street_address,
+                                                                  entry_suburb as suburb,
+                                                                  entry_city as city,
+                                                                  entry_postcode as postcode,
+                                                                  entry_state as state,
+                                                                  entry_zone_id as zone_id,
+                                                                  entry_country_id as country_id
+                                                             FROM ".TABLE_ADDRESS_BOOK."
+                                                            WHERE customers_id = '".(int) $cInfo->customers_id."'
+                                                         ORDER BY address_book_id
+                                                         ");
+
+                          while ($addresses = xtc_db_fetch_array($addresses_query)) {
+                            $format_id = xtc_get_address_format_id($addresses['country_id']);
+
+                            if (isset($_GET['delete']) && $_GET['delete'] != '') {                              
+                              if ($addresses['address_book_id'] == $_GET['delete']) {
+                                if ($_GET['delete'] != $cInfo->customers_default_address_id) {
+                                  $contents[] = array ('text' => '<br/>');
+                                  $contents[] = array ('align' => 'left', 'text' => TEXT_INFO_DELETE);
+                                  $contents[] = array ('text' => '<br/>');
+                                  $contents[] = array ('text' =>  '<table style="font-size:11px; margin-left:20px;"><tr><td>' . xtc_address_format($format_id, $addresses, true, ' ', '<br />') . '</td></tr></table>');      
+                                  $contents[] = array ('text' => '<br/>');
+                                  $contents[] = array ('align' => 'left', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'delete')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete')).'cID='.$cInfo->customers_id.'&action=delete_confirm_adressbook&address_book_id='.$addresses['address_book_id']).'">'.BUTTON_DELETE.'</a>');      
+                                  $contents[] = array ('text' => '<br/>');
+                                } else {
+                                  $contents[] = array ('text' => '<br/>');
+                                  $contents[] = array ('align' => 'left', 'text' => TEXT_INFO_DELETE_DEFAULT);
+                                  $contents[] = array ('text' => '<br/>');
+                                  $contents[] = array ('align' => 'left', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'delete')).'cID='.$cInfo->customers_id).'">'.BUTTON_BACK.'</a>');      
+                                  $contents[] = array ('text' => '<br/>');
+                                }
+                              }    
+                            } else {
+                              $contents[] = array ('text' => '<br/>');
+                              $contents[] = array ('text' =>  '<table style="font-size:11px; margin-left:20px;"><tr><td>' . xtc_address_format($format_id, $addresses, true, ' ', '<br />') . '</td></tr></table>');      
+                              $contents[] = array ('text' => '<br/>');
+                              $contents[] = array ('align' => 'left', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit&edit='.$addresses['address_book_id']).'">'.BUTTON_EDIT.'</a>&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete', 'edit')).'cID='.$cInfo->customers_id.'&action=address_book&delete='.$addresses['address_book_id']).'">'.BUTTON_DELETE.'</a>'. (($cInfo->customers_default_address_id!=$addresses['address_book_id'])?'&nbsp;<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete', 'default')).'cID='.$cInfo->customers_id.'&action=update_default_adressbook&default='.$addresses['address_book_id']).'">'.TEXT_SET_DEFAULT.'</a>':'') );
+                              $contents[] = array ('text' =>  '<hr size="1"/>');
+                            }
+
+                          }                          
+                          if (!isset($_GET['delete'])) {
+                            $contents[] = array ('align' => 'right', 'text' => (xtc_count_customer_address_book_entries() < MAX_ADDRESS_BOOK_ENTRIES) ? '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'edit')).'cID='.$cInfo->customers_id.'&action=edit&edit=0').'">'.BUTTON_INSERT.'</a>&nbsp;<a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>' : '<a class="button" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete')).'cID='.$cInfo->customers_id).'">'.BUTTON_CANCEL.'</a>');
+                            $contents[] = array ('text' => '<br/>');
+                          }
+                          break;
                         case 'editstatus' :
                           if ($_GET['cID'] != 1) {
                             $customers_history_query = xtc_db_query("SELECT new_value, old_value, date_added, customer_notified FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".xtc_db_input($_GET['cID'])."' order by customers_status_history_id desc");
@@ -1555,6 +1680,9 @@ require (DIR_WS_INCLUDES.'head.php');
                             // elari cs v3.x changed for added accounting module
                             if ($cInfo->customers_id != 1 && $cInfo->customers_status == 0) { // h-h-h - 2011-10-06 - show only if customer is admin - thx to Webkiste
                               $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ACCOUNTING, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id).'">'.BUTTON_ACCOUNTING.'</a>');
+                            }
+                            if ($cInfo->customers_id != 1) {
+                              $contents[] = array ('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=address_book').'">'.TEXT_INFO_HEADING_ADRESS_BOOK.'</a>');
                             }
                             // elari cs v3.x changed for added iplog module
                             $contents[] = array (
