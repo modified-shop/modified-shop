@@ -25,8 +25,15 @@
   define('PAGE_PARSE_START_TIME', microtime(true));
 
   // set the level of error reporting
-  error_reporting(0); // Production Value
-  //error_reporting(-1); // Development value
+  //error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
+  error_reporting(0);
+  //  error_reporting(E_ALL);
+  
+  /*
+   * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
+   */
+  if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
+  if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
   // Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
   if (file_exists('../includes/local/configure.php')) {
