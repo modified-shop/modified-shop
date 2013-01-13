@@ -124,5 +124,5 @@
   }
 
   // Include Template Engine
-  require(DIR_WS_CLASSES . 'Smarty_2.6.26/Smarty.class.php');
+  require(DIR_FS_EXTERNAL.'smarty/Smarty.class.php');
 ?>

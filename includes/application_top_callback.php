@@ -182,5 +182,5 @@
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
   // Include Template Engine
-  //require(DIR_WS_CLASSES . 'Smarty_2.6.26/Smarty.class.php'); // Tomcraft - 2011-01-31 - Not needed in apllication_top_callback.php
+  //require(DIR_FS_EXTERNAL.'smarty/Smarty.class.php'); // Tomcraft - 2011-01-31 - Not needed in apllication_top_callback.php
 ?>
