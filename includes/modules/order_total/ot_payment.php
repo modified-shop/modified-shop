@@ -97,7 +97,7 @@ class ot_payment
         if ($this->include_shipping == 'false') {
             $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
             $shipping_tax = 0; 
-            if (array_key_exists($module, $GLOBALS) && is_object($module)) { 
+            if (is_object($module) && array_key_exists($module, $GLOBALS)) {
                 $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']); 
             }
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] && !$_SESSION['customers_status']['customers_status_add_tax_ot']) {
