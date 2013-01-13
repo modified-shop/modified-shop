@@ -48,8 +48,8 @@ if ($listing_split->number_of_rows > 0) {
 																			and cd.categories_id = '".$current_category_id."'
 																			".$group_check."
 																			and cd.language_id = '".$_SESSION['languages_id']."'");
-	if (xtc_db_num_rows($category_query)>0) {
-		$category = xtc_db_fetch_array($category_query,true);
+	if (xtc_db_num_rows($category_query, true)>0) {
+		$category = xtc_db_fetch_array($category_query, true);
 		$image = '';	
 		if ($category['categories_image'] != '') {
 			$image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];		
@@ -58,7 +58,7 @@ if ($listing_split->number_of_rows > 0) {
 	
 		if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
 			$manu_query = xtDBquery("select manufacturers_image, manufacturers_name from ".TABLE_MANUFACTURERS." where manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
-			$manu = xtc_db_fetch_array($manu_query,true);
+			$manu = xtc_db_fetch_array($manu_query, true);
 			$category['categories_name'] = $manu['manufacturers_name'];
 		
 			if ($manu['manufacturers_image'] != '') {
