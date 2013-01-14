@@ -1,0 +1,14 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+<h1>{#heading_reviews#}</h1>
+{foreach name=aussen item=module_data from=$module_content} 
+<p>
+	<strong>{#text_product#} </strong><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a><br />
+    <strong>{#text_author#}</strong> {$module_data.AUTHOR}<br />
+    <strong>{#text_rating#}</strong> {$module_data.RATING}
+</p>
+<div class="highlightbox">
+<h1>{#text_text#}</h1>
+<p>{$module_data.TEXT}</p>
+</div>
+{/foreach} 
+<p>{$NAVBAR}</p>

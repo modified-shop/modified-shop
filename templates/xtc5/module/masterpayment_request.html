@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<head>
+<title>Masterpayment Request</title>
+
+<link type="text/css" rel="stylesheet" href="templates/{$tpl_path}/css/masterpayment.css" />
+
+</head>
+
+<body>
+
+<div class="masterpayment_box">
+
+
+	{if !isset($masterpayment_error)}
+	
+
+		<form name="masterpaymentForm" id="masterpaymentForm" action="{$masterpayment_url}" method="post">			
+		
+			{if is_array($request_parameters)}			
+				{foreach key=parameter item=value from=$request_parameters}
+					<input type="hidden" name="{$parameter}" value="{$value}" />					
+				{/foreach}		
+			{/if}            
+            
+            <noscript>		
+				<p align="center">		
+					<input class="masterpayment_submit_button" type="submit" name="sent" value="&raquo; {$masterpayment_button_text}" />				
+				</p>
+                
+                {literal}
+                <style type="text/css">
+					.masterpayment_loading
+					{
+						display:none;
+					}
+				</style>
+                {/literal}			
+			</noscript>
+            
+            
+            <div align="center" class="masterpayment_loading">
+                <img src="images/icons/masterpayment_loading.gif" title="loading" />                
+            </div>
+	
+	
+		</form>	
+	
+        {literal}
+			<script type="text/javascript" language="javascript">
+				window.onload = function()
+				{
+					document.getElementById('masterpaymentForm').submit();
+				}
+            </script>	
+        {/literal}
+
+    {else} 
+    
+        <div align="center" class="masterpayment_error_box_outer">
+        
+            <div class="masterpayment_error_box_inner">
+            
+                <p>{$masterpayment_error_message}</p>
+            
+                <br />
+            
+                <a href="{$masterpayment_error_button_link}" target="_parent">{$masterpayment_error_button_text}</a>
+                
+            </div>
+            
+        </div>
+
+	{/if}
+
+</div>
+
+</body>
+</html>

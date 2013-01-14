@@ -1,0 +1,14 @@
+{config_load file="$language/lang_$language.conf" section="account_history"}
+<h1>{#heading_history#}</h1>
+{foreach name=aussen item=order_data from=$order_content}
+<div class="highlightbox">
+<h2>{#text_oid#}{$order_data.ORDER_ID}</h2>
+<p>{#text_date#}{$order_data.ORDER_DATE},
+{#text_articles#}{$order_data.ORDER_PRODUCTS} <br />
+<strong>{#text_total#}</strong>{$order_data.ORDER_TOTAL}&nbsp;&nbsp;<strong>{#text_status#}</strong>{$order_data.ORDER_STATUS} 
+</p><p>{$order_data.ORDER_BUTTON}</p>
+</div>
+<div class="hr"></div>
+{/foreach}
+<p>{$SPLIT_BAR}</p>
+<p>{$BUTTON_BACK}</p>		 

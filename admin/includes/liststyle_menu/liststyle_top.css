@@ -1,0 +1,168 @@
+
+/*Credits: Dynamic Drive CSS Library */
+/*URL: http://www.dynamicdrive.com/style/ */
+
+.suckertreemenu{
+	background: url(../../images/liststyle_menu/menu-bg.gif) repeat-x top;
+	padding: 7px 0px 0px 0px;
+	border: none;
+	border: 0px;
+	font-size: 14px;
+	height: 29px;
+	line-height: 18px;
+	margin-bottom: 5px;	
+}
+
+.suckertreemenu ul{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
+}
+
+/*Top level list items*/
+.suckertreemenu ul li{
+	padding: 0px 0px 0px 0px;
+	position: relative;
+	display: inline;
+	float: left;
+	background: #d3d3d3 url(../../images/liststyle_menu/menu-bg-li.gif) repeat-x bottom; /*overall menu background color*/
+}
+
+/*Top level menu link items style*/
+.suckertreemenu ul li a{
+	display: block;
+	width: 90px; /*Width of top level menu link items*/
+	padding: 0px 10px 0px 5px;
+	border-bottom: 1px solid #b40076;
+	border-left-width: 0;
+	text-decoration: none;
+	outline: none;
+	color: #333333;
+	letter-spacing: normal;	
+}
+	
+/*1st sub level menu*/
+.suckertreemenu ul li ul{
+left: 0;
+position: absolute;
+top: 1em; /* no need to change, as true value set by script */
+display: block;
+visibility: hidden;
+list-style-type: none;	
+}
+
+/*Sub level menu list items (undo style from Top level List Items)*/
+.suckertreemenu ul li ul li{
+display: list-item;
+float: none;
+z-index: 100;
+}
+
+/*All subsequent sub menu levels offset after 1st level sub menu */
+.suckertreemenu ul li ul li ul{ 
+left: 179px; /* no need to change, as true value set by script */
+top: 0;
+}
+
+/* Sub level menu links style */
+.suckertreemenu ul li ul li a{
+display: block;
+width: 180px; /*width of sub menu levels*/
+color: #333333;
+text-decoration: none;
+outline: none;
+padding: 3px 5px;
+border-left: 1px solid #b40076;
+border-right: 1px solid #b40076;
+}
+
+/*.suckertreemenu ul li a:hover{*/
+.suckertreemenu a:hover{
+	background-color: #b40076;
+	color: white;
+	text-decoration: none;
+	outline: none;
+}
+
+
+* html p#iepara{ /*For a paragraph (if any) that immediately follows suckertree menu, add 1em top spacing between the two in IE*/
+padding-top: 1em;
+}
+	
+/* Holly Hack for IE \*/
+* html .suckertreemenu ul li { float: left; height: 1%; }
+* html .suckertreemenu ul li a {
+	height: 1%;
+	text-decoration: none;
+	outline: none;
+}
+/* End */
+
+.suckertreemenu #current{
+	width: 70px;
+	background: #b40076;
+	color: #ffffff;
+	border-bottom: 1px solid #b40076;
+	margin-left: 5px;
+	text-align: center;
+	letter-spacing: normal;
+}
+.suckertreemenu .dataTableHeadingContent{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	font-weight: bold;
+	padding: 0px 10px 0px 10px;
+	border-bottom: 1px solid #b40076;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	background: transparent url(../../images/liststyle_menu/trenner.gif) no-repeat right;
+	cursor: pointer;
+	letter-spacing: normal;
+}
+
+/*AUSBLENDEN column_left */
+.columnLeft {	
+	display: none;
+}
+
+.columnLeft2 { 
+   display: none;
+}
+
+/* FASTMENÜ */
+td.fastmenu{
+	width: 105px;
+	font-size: 9px;
+	text-align: center;
+	font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+	letter-spacing: normal;	
+}
+td.fastmenu img{
+	margin-bottom: 3px;
+	margin-top: 3px;
+}
+/* BOF - web28 - 2010-04-10 - added ADMIN SERACH BAR
+#top1{
+    margin-top: 0px;	
+	margin-bottom: 5px;	
+	border-top: 5px solid #b40076;
+}*/
+#top1{
+    margin-top: 0px;	
+	margin-bottom: 5px;	
+	border-top: 0px solid #b40076;
+}
+/* EOF - web28 - 2010-04-10 - added ADMIN SERACH BAR */
+
+/*FIX FÜR ECONDA & CLEVERREACH*/
+li{
+	list-style-type: none;
+	margin-left:0px;
+}
+
+#lang_flag{
+	float: left;
+	margin-left: 5px;
+	margin-top: 3px;
+}
+

@@ -1,0 +1,66 @@
+{config_load file="$language/lang_$language.conf" section="account_edit"} 
+<h1>{#heading_account#}</h1>
+{$FORM_ACTION}
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<div class="highlightbox">
+	<h1>{#title_personal#}&nbsp;({#text_must#})</h1>
+  <table width="100%" border="0" cellspacing="2" cellpadding="4">
+  {if $csID}
+  <tr> 
+    <td>{#csID#}</td>
+    <td><b>{$csID}</b></td>
+  </tr>
+  {/if}
+  {if $gender=='1'} 
+  <tr> 
+    <td>{#text_gender#}</td>
+    <td><table cellspacing="0" cellpadding="0">
+      <tr>
+        <td>
+          {$INPUT_MALE}</td>
+        <td>
+          {$INPUT_FEMALE}</td>
+      </tr>
+    </table></td>
+  </tr>
+  {/if} 
+  <tr> 
+    <td>{#text_firstname#}</td>
+    <td>{$INPUT_FIRSTNAME}</td>
+  </tr>
+  <tr> 
+    <td>{#text_lastname#}</td>
+    <td>{$INPUT_LASTNAME}</td>
+  </tr>
+  {if $birthdate=='1'} 
+  <tr> 
+    <td>{#text_birthdate#}</td>
+    <td>{$INPUT_DOB}</td>
+  </tr>
+  {/if} 
+  <tr> 
+    <td>{#text_email#}</td>
+    <td>{$INPUT_EMAIL}</td>
+  </tr>
+  <tr>
+    <td>{#text_confirm_email#}</td>
+    <td>{$INPUT_CONFIRM_EMAIL}</td>
+  </tr>
+  <tr> 
+    <td>{#text_tel#}</td>
+    <td>{$INPUT_TEL}</td>
+  </tr>
+  <tr>
+    <td>{#text_fax#}</td>
+    <td>{$INPUT_FAX}</td>
+  </tr>
+  {if $vat=='1'}
+  <tr>
+    <td>{#text_ustid#}</td>
+    <td>{$INPUT_VAT}</td>
+  </tr>
+  {/if}
+</table>
+</div>
+<p>{$BUTTON_BACK}&nbsp;{$BUTTON_SUBMIT}</p>
+{$FORM_END}

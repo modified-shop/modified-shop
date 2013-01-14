@@ -1,0 +1,99 @@
+<script type="text/javascript">
+	function ShopgateRedirectClickHandler() {
+		var button = document.getElementById("shopgate_mobile_button");
+		
+		if (button.className == "sg_mobile_button_on") {
+			button.className = "sg_mobile_button_off";
+			button.src = "{$buttonOffImageSource}";
+		} else if (button.className == "sg_mobile_button_off") {
+			button.className = "sg_mobile_button_on";
+			button.src = "{$buttonOnImageSource}";
+			document.cookie = "{$cookieName}=; expires=Thu, 01-01-1970 00:00:01 GMT; path=/";
+			window.setTimeout(function() { ShopgateRedirect(); }, 500);
+		}
+	}
+	
+	function ShopgateRedirect() {
+		var backLinkRegex = new RegExp("(\\?*||\\&*)(shopgate_redirect=)(1|0)");
+		var documentUrl = document.location.href.replace(backLinkRegex, "");
+		
+		window.location.replace(documentUrl);
+	}
+</script>
+<div 
+	style="
+		line-height: 30px;
+		font-size: 30px;
+		font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+		font-weight: bold;
+		text-align: left;
+		background-color: rgb(255, 255, 255);
+		border-top-width: 1px;
+		border-right-width: 1px;
+		border-bottom-width: 1px;
+		border-left-width: 1px;
+		border-top-style: solid;
+		border-right-style: solid;
+		border-bottom-style: solid;
+		border-left-style: solid;
+		border-top-color: rgb(173, 173, 173);
+		border-right-color: rgb(173, 173, 173);
+		border-bottom-color: rgb(173, 173, 173);
+		border-left-color: rgb(173, 173, 173);
+		border-image: initial;
+		clear: both;
+		color: rgb(34, 34, 34);
+		margin-top: 20px;
+		margin-right: auto;
+		margin-left: auto;
+		margin-bottom: 40px;
+		padding-top: 15px;
+		padding-right: 15px;
+		padding-bottom: 15px;
+		padding-left: 15px;
+		position: relative;
+		width: 560px;
+		border-top-left-radius: 8px;
+		border-top-right-radius: 8px;
+		border-bottom-right-radius: 8px;
+		border-bottom-left-radius: 8px;
+">
+	{$buttonDescription}
+	<img
+		id="shopgate_mobile_button"
+		onclick="ShopgateRedirectClickHandler()"
+		src="{$buttonOffImageSource}"
+		class="sg_mobile_button_off"
+		style="
+			background-image: none;
+			background-attachment: initial;
+			background-origin: initial;
+			background-clip: initial;
+			background-color: initial;
+			margin-top: 0px;
+			margin-right: 0px;
+			margin-bottom: 0px;
+			margin-left: 0px;
+			padding-top: 0px;
+			padding-right: 0px;
+			padding-bottom: 0px;
+			padding-left: 0px;
+			border-top-width: medium;
+			border-right-width: medium;
+			border-bottom-width: medium;
+			border-left-width: medium;
+			border-top-style: none;
+			border-right-style: none;
+			border-bottom-style: none;
+			border-left-style: none;
+			border-color: initial;
+			border-image: initial;
+			vertical-align: baseline;
+			height: 45px;
+			position: absolute;
+			right: 15px;
+			top: 7px;
+			background-position: initial initial;
+			background-repeat: initial initial;
+		" />
+</div>

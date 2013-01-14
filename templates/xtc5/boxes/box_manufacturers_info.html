@@ -1,0 +1,8 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<h2 class="boxheader">{#heading_manufacturers_info#}</h2>
+<div class="boxbody">
+<p>{if $IMAGE}<center><img src="{$IMAGE}" alt="{$NAME}" /><br />{/if}
+<strong>{$NAME}</strong><br />
+{if $URL}{$URL}<br />{/if}
+{$LINK_MORE}</p>
+</div>
