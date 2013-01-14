@@ -21,7 +21,7 @@
   define('MODULE_EASYBILL_STANDARD_TAX_CLASS', 1);
   
   // Archivierung
-  define('EASYBILL_INVOICE_ARCHIV', DIR_FS_CATALOG.'admin/archiv/invoice/');
+  define('EASYBILL_INVOICE_ARCHIV', DIR_FS_CATALOG.'admin/archives/invoice/');
   
   
   class easybill extends order {
@@ -175,6 +175,10 @@
       }
 
       $this->setCustomersTaxRate();
+
+      if (!is_object($document)) {
+        $document = new stdClass();
+      }
       
       $document->documentID = $this->getDocumentID($bill_nr);		
       $document->customerID = $this->customers->customerID;
@@ -532,6 +536,10 @@
         if (defined(strtoupper('MODULE_PAYMENT_'.$this->info['payment_method'].'_TEXT_TITLE'))) {
           $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$this->info['payment_method'].'_TEXT_TITLE'));
         }
+      }
+
+      if (!is_object($payment)) {
+        $payment = new stdClass();
       }
         
       $payment->documentID = $documentID;
