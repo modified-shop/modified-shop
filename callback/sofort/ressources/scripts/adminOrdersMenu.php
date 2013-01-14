@@ -49,7 +49,7 @@ if(is_object($oInfo)) {
 			case 'cseo_2.1':
 				$contents[] = array ('align' => 'center', 'text' => '<br /><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action', 'print_oID')).'oID='.$oInfo->orders_id.'&action=edit').'">'.BUTTON_EDIT.'</a><br /><br />');
 				break;
-			case 'xtcmod_1.05':
+			case 'modified_1.06':
 				$contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=edit').'">'.BUTTON_EDIT.'</a>');
 				break;
 		}
