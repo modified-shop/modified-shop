@@ -144,6 +144,7 @@ if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
       <td class="dataTableContent">
         <?php
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
+        echo TEXT_PRODUCTS_SEARCH_INFO;
         ?>
       </td>
     </form>

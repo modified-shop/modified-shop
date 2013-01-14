@@ -110,6 +110,7 @@ define('TEXT_LASTNAME', 'Nachname:');
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Kundendaten speichern');
 
+define('TEXT_PRODUCTS_SEARCH_INFO', ' Artikelname oder Art.Nr oder EAN');
 define('TEXT_PRODUCTS_STATUS', 'Status:');
 define('TEXT_PRODUCTS_IMAGE', 'Artikelbild:');
 define('TEXT_PRODUCTS_QTY', 'Lagerbestand:');
