@@ -314,7 +314,7 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
         xtc_db_query("UPDATE ".TABLE_PRODUCTS."
                          SET products_quantity = '".(int)$stock_left."'
                        WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
-        if (($stock_left < 1) && (STOCK_ALLOW_CHECKOUT == 'false')) {
+        if (($stock_left < 1) && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true')) {
           xtc_db_query("UPDATE ".TABLE_PRODUCTS."
                            SET products_status = '0'
                          WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
