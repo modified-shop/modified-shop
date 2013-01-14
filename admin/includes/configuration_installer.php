@@ -38,7 +38,7 @@ $values_group = array();
   $values[] = "(NULL, 'SHOW_BUTTON_BUY_NOW', 'false', '8', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
-
+  $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'true', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 //configuration_group_id 10 --- "Logging Optionen"
 
 //configuration_group_id 11 --- "Cache Optionen"
