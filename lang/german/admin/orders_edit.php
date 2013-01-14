@@ -110,4 +110,13 @@ define('TEXT_FIRSTNAME', 'Vorname:');
 define('TEXT_LASTNAME', 'Nachname:');
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Kundendaten speichern');
+
+define('TEXT_PRODUCTS_SEARCH_INFO', ' Artikelname oder Art.Nr oder EAN');
+define('TEXT_PRODUCTS_STATUS', 'Status:');
+define('TEXT_PRODUCTS_IMAGE', 'Artikelbild:');
+define('TEXT_PRODUCTS_QTY', 'Lagerbestand:');
+define('TEXT_PRODUCTS_EAN', 'EAN:');
+define('TEXT_PRODUCTS_TAX_RATE', 'Steuersatz:');
+define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Erscheinungsdatum:');
+define('TEXT_IMAGE_NONEXISTENT', '---');
 ?>

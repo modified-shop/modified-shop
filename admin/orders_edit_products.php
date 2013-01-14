@@ -24,7 +24,18 @@
    Released under the GNU General Public License
   --------------------------------------------------------------*/
    
-   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+if( !defined('MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS')) {
+  define('MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS', 20);
+}
+
+if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
+  $admin_thumbs_size = 'style='.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
+} else {
+  $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
+}
+
 ?>
 <!-- Begin Infotext //-->
 <table border="0" cellspacing="0" cellpadding="2" style="border: 1px red solid; padding:5px; background: #FFD6D6; margin: 5px 0 5px 0">
@@ -130,13 +141,14 @@
       echo xtc_draw_hidden_field('oID', $_GET['oID']);
       echo xtc_draw_hidden_field('cID', $_POST['cID']);
       //BOF - web28 - 2011-01-16 - FIX missing sessions id
-      echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+      //echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
       //EOF - web28 - 2011-01-16 - FIX missing sessions id
       ?>
-      <td class="dataTableContent" width="40"><?php echo xtc_draw_input_field('search', '', 'size="30"');?></td>
+      <td class="dataTableContent" width="40"><?php echo xtc_draw_input_field('search', $_GET['search'], 'size="30"');?></td>
       <td class="dataTableContent">
         <?php
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
+        echo TEXT_PRODUCTS_SEARCH_INFO;
         ?>
       </td>
     </form>
@@ -144,45 +156,102 @@
 </table>
 <br /><br />
 <?php
-if ($_GET['action'] =='product_search') {
-  $products_query = xtc_db_query("SELECT
-                                         p.products_id,
-                                         p.products_model,
-                                         pd.products_name,
-                                         p.products_image,
-                                         p.products_status
-                                    FROM " . TABLE_PRODUCTS . " p,
-                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                   WHERE p.products_id = pd.products_id
-                                     AND pd.language_id = '" . $_SESSION['languages_id'] . "'
-                                     AND (pd.products_name like '%" . $_GET['search'] . "%' OR p.products_model = '" . $_GET['search'] . "')
-                                ORDER BY pd.products_name");
+if ($_GET['action'] =='product_search') {  
   ?>
   <table border="0" width="100%" cellspacing="0" cellpadding="2">
     <tr class="dataTableHeadingRow">
-      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td>
-      <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td> 
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_STATUS;?></b></td>
       <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_IMAGE;?></b></td>
       <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_MODEL;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_EAN;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_DATE_AVAILABLE;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE;?></b></td>
+      <?php 
+      if (PRICE_IS_BRUTTO == 'true') { 
+      ?>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_NETTO ;?></b></td>
+      <?php 
+      } 
+      ?>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_TAX_RATE;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_QTY;?></b></td>
+      <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
       <td class="dataTableHeadingContent">&nbsp;</td>
     </tr>
-    <?php
+    <?php   
+    $products_query_raw = ("SELECT
+                                   p.products_id,
+                                   p.products_model,
+                                   p.products_ean,
+                                   p.products_quantity,
+                                   p.products_image,
+                                   p.products_price,
+                                   p.products_discount_allowed,
+                                   p.products_tax_class_id,
+                                   p.products_date_available,
+                                   p.products_status,
+                                   pd.products_name                                         
+                              FROM " . TABLE_PRODUCTS . " p,
+                                   " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                             WHERE p.products_id = pd.products_id
+                               AND pd.language_id = '" . $_SESSION['languages_id'] . "'
+                               AND (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 
+                                    p.products_model LIKE ('%" . $_GET['search'] . "%') OR 
+                                    p.products_ean LIKE ('%" . $_GET['search'] . "%')
+                                   )
+                          ORDER BY pd.products_name");
+                                
+    $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $products_query_raw, $products_query_numrows);
+    $products_query = xtc_db_query($products_query_raw);
     while($products = xtc_db_fetch_array($products_query)) {
       ?>
       <tr class="dataTableRow">
         <?php
-        echo xtc_draw_form('product_ins', FILENAME_ORDERS_EDIT, 'action=product_ins', 'post');
+        
+          if ($products['products_status'] == '1') {
+            $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10);
+          } else {
+            $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+          }
+          
+          $products_tax_rate = xtc_get_tax_rate($products['products_tax_class_id']);
+          // calculate brutto price for display
+          if (PRICE_IS_BRUTTO == 'true') {
+            $products_price = xtc_round($products['products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
+            $products_price_netto = $xtPrice->xtcFormat($products['products_price'], false);
+          } else {
+            $products_price = xtc_round($products['products_price'], PRICE_PRECISION);
+            $products_price_netto = '';
+          }
+          
+          echo xtc_draw_form('product_ins', FILENAME_ORDERS_EDIT, 'action=product_ins', 'post');
           //BOF - web28 - 2011-01-16 - FIX missing sessions id
-          echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+          //echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
           //EOF - web28 - 2011-01-16 - FIX missing sessions id
           echo xtc_draw_hidden_field('cID', $_POST['cID']);
           echo xtc_draw_hidden_field('oID', $_GET['oID']);
           echo xtc_draw_hidden_field('products_id', $products['products_id']);
           ?>
-          <td class="dataTableContent"><?php echo $products['products_id'];?></td>
-          <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', $products['products_quantity'], 'size="2"');?></td>
-          <td class="dataTableContent"><?php echo $products['products_name'];?></td>
-          <td class="dataTableContent"><?php echo $products['products_model'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products['products_id'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products_status;?></td>
+          <td class="dataTableContent">&nbsp;<?php echo '<a target="_blank" href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID', 'edit_action', 'search', 'page', 'oID')) . 'pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding). '</a> '. $products['products_name'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo xtc_product_thumb_image($products['products_image'], $products['products_name'], '','',$admin_thumbs_size);?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products['products_model'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products['products_ean'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo xtc_date_short($products['products_date_available']);?></td>
+          <td class="dataTableContent"><?php echo $products_price?></td>
+          <?php 
+          if (PRICE_IS_BRUTTO == 'true') { 
+          ?>
+          <td class="dataTableContent"><?php echo $products_price_netto;?></td>
+          <?php 
+          } 
+          ?>
+          <td class="dataTableContent">&nbsp;<?php echo $products_tax_rate;?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products['products_quantity'];?></td>
+          <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', '', 'size="4"');?></td>
           <td class="dataTableContent">
             <?php
             echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>';
@@ -193,6 +262,12 @@ if ($_GET['action'] =='product_search') {
       <?php
     }
     ?>
+  </table>
+  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+    <tr>
+      <td class="smallText" valign="top"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+      <td class="smallText" align="right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></td>
+    </tr>
   </table>
   <?php
 }
