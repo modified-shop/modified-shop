@@ -48,7 +48,7 @@ class pn_sofortueberweisung {
   // EOF - Hendrik - 2010-08-11 - php5 compatible
     global $order;
     $this->code = 'pn_sofortueberweisung';
-    $this->version = 'pn_modified_v1.06_beta3';
+    $this->version = 'pn_modified_v1.06';
     $this->title = MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_TEXT_TITLE;
     if(defined('MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_KS_STATUS') && MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_KS_STATUS == 'True') {
       $this->title = MODULE_PAYMENT_PN_SOFORTUEBERWEISUNG_KS_TEXT_TITLE;

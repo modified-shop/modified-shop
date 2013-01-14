@@ -29,7 +29,7 @@ class billpayCallback {
         <title>Schnellregistrierung | Billpay</title>
       </head>
       <body onload="document.getElementById(\'form\').submit()">
-        <form method="post" action="https://www.billpay.de/landingPages/xtcmodified/" id="form">
+        <form method="post" action="https://www.billpay.de/landingPages/modified-shop/" id="form">
           <input type="hidden" name="IhrAnliegen_" value="Haendleranfrage">
           <input type="hidden" name="Firma_" value="'.STORE_NAME.'">
           <input type="hidden" name="Vorname_Name_" value="'.STORE_OWNER.'">
@@ -38,7 +38,7 @@ class billpayCallback {
           <input type="hidden" name="Ort_" value="">
           <input type="hidden" name="Telefonnummer_" value="">
           <input type="hidden" name="E_Mail_" value="'.STORE_OWNER_EMAIL_ADDRESS.'">
-          <input type="hidden" name="Shop_System_" value="xtc-modified">
+          <input type="hidden" name="Shop_System_" value="modified-shop">
           <input type="hidden" name="Shop_URL_" value="'.$projectHomepage.'">
           <input type="hidden" name="IhreNachricht_" value="">
           <input type="hidden" name="backlink" value="'.$backlink.'">';
@@ -51,7 +51,7 @@ class billpayCallback {
     }
 
     $html .=    '<input type="hidden" name="debug" value="0">
-            <input type="hidden" name="origin" value="xtcm">
+            <input type="hidden" name="origin" value="modified-shop">
             <input type="hidden" name="init" value="1">
           <noscript><input type="submit"></noscript>
         </form>

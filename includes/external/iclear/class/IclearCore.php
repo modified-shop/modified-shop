@@ -64,7 +64,7 @@ class IclearCore {
    */
   var $systemID = '';
   /**
-   * Indentifies clone (fork) of main shop system, xtcmv102, e.g.
+   * Indentifies clone (fork) of main shop system, modified-shop-v102, e.g.
    *
    * @var string
    * @access private
