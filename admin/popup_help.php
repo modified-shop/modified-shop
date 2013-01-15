@@ -1,6 +1,6 @@
 <?php
  /* -----------------------------------------------------------------------------------------
-   $Id: popup_help.php 3456 2012-08-21 14:25:08Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -14,15 +14,17 @@ error_reporting(0);
 
 require('includes/configure.php');
 
-$pattern = '/[^\w\-]/';
-$_GET['lng'] = preg_replace($pattern, '', $_GET['lng']);
-$_GET['type'] = preg_replace($pattern, '', $_GET['type']);
-$_GET['modul'] = preg_replace($pattern, '', $_GET['modul']);
+$valid_signs = '/[^\w\-]/';
+$_GET['lng'] = preg_replace($valid_signs, '', $_GET['lng']);
+$_GET['type'] = preg_replace($valid_signs, '', $_GET['type']);
+$_GET['modul'] = preg_replace($$valid_signs, '', $_GET['modul']);
 
 include(DIR_FS_LANGUAGES . $_GET['lng'] . '/modules/' . $_GET['type'] . '/' . $_GET['modul'] . '.php');
 
 if (defined(strtoupper('MODULE_'.$_GET['type'].'_'.str_replace('OT_','',$_GET['modul']).'_HELP_TEXT'))) {
   $const= constant(strtoupper('MODULE_'.$_GET['type'].'_'.str_replace('OT_','',$_GET['modul']).'_HELP_TEXT'));
+} else {
+  die( 'No help file found!' );
 }
 ?>
 <html>
