@@ -17,7 +17,7 @@ require('includes/configure.php');
 $valid_signs = '/[^\w\-]/';
 $_GET['lng'] = preg_replace($valid_signs, '', $_GET['lng']);
 $_GET['type'] = preg_replace($valid_signs, '', $_GET['type']);
-$_GET['modul'] = preg_replace($$valid_signs, '', $_GET['modul']);
+$_GET['modul'] = preg_replace($valid_signs, '', $_GET['modul']);
 
 include(DIR_FS_LANGUAGES . $_GET['lng'] . '/modules/' . $_GET['type'] . '/' . $_GET['modul'] . '.php');
 
