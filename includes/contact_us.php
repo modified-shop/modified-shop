@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: contact_us.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -16,7 +16,7 @@
 //included by shop_content.php
 
   //use contact_us.php language file
-  //require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
+  require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
   
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {

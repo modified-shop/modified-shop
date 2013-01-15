@@ -8,6 +8,16 @@
       <h1>{#title_returning#}</h1>
       {$FORM_ACTION}
       <p>{#text_returning#}</p>
+      <br />
+      {* BOC different texts depending on where customer comes from, noRiddle*}
+      {if $smarty.get.order_id}
+        {#text_after_login1#}
+      {elseif $smarty.get.review_prod_id}
+         {#text_after_login2#}
+      {else}
+        {#text_after_login#}
+      {/if}
+      {* EOC different texts depending on where customer comes from, noRiddle*}
       <table width="100" border="0" cellspacing="4" cellpadding="0">
             <tr>
                   <td style="white-space:nowrap;"><strong>{#text_email#}</strong></td>
