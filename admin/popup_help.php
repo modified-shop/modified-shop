@@ -37,6 +37,6 @@ if (defined(strtoupper('MODULE_'.$_GET['type'].'_'.str_replace('OT_','',$_GET['m
  </div>
  <div style="width:97%; padding:10px; text-align:center;">
   <input type="button" value="Close Window" onclick="window.close()">
-</div>
+ </div>
 </body>
 </html>
