@@ -46,7 +46,7 @@ $unlink_file = array('admin/includes/configure.org.php',
 $unlink_dir = array('admin/includes/modules/carp',
                     'admin/includes/modules/magpierss',
                     'admin/includes/modules/magpierss/extlib',
-                    'admin/rss'
+                    'admin/rss',
                     'includes/classes/Smarty_2.6.22',
                     'includes/classes/Smarty_2.6.26',
                     'includes/iclear',
@@ -86,9 +86,9 @@ function rrmdir($dir) {
         if(is_dir($file))
             rrmdir($file);
         else
-            @unlink($file) ? $success.=$file.'<br/>' : $error.=$file.'<br/>';;
+            @unlink($file) ? $success.=$file.'<br/>' : $error.=$file.'<br/>';
     }
-    @rmdir($dir) ? $success.=$dir.'<br/>' : $error.=$dir.'<br/>';;
+    @rmdir($dir) ? $success.=$dir.'<br/>' : $error.=$dir.'<br/>';
 }
 
 function remove_comments($sql, $remark) {
