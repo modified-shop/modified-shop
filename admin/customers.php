@@ -214,6 +214,8 @@
         $check_status = xtc_db_fetch_array($check_status_query);
         if ($check_status['customers_status'] != $status) {
           xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".xtc_db_input($_GET['cID'])."'");
+          // update customers status in newsletters_recipients
+          xtc_db_query("UPDATE ".TABLE_NEWSLETTER_RECIPIENTS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".xtc_db_input($_GET['cID'])."'");
           // create insert for admin access table if customers status is set to 0
           if ($_POST['status'] == 0) {
             xtc_db_query("INSERT INTO ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".xtc_db_input($_GET['cID'])."','1')");
