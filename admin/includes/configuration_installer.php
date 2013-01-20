@@ -72,8 +72,8 @@ $values_group = array();
 //configuration_group_id 20 --- "Import/export"
 
 //configuration_group_id 21 --- "Afterbuy"
-  //$values[] = "(NULL, 'AFTERBUY_DEALERS', '3', '21', '7', NULL , NOW(), NULL , NULL);";
-  //$values[] = "(NULL, 'AFTERBUY_IGNORE_GROUPE', '', '21', '8', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'AFTERBUY_DEALERS', '3', '21', '7', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'AFTERBUY_IGNORE_GROUPE', '', '21', '8', NULL , NOW(), NULL , NULL);";
 
 //configuration_group_id 22 --- "Such-Optionen"
   //$values[] = "(NULL, 'SEARCH_HIGHLIGHT', 'true', 22, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";   //modified 1.07
@@ -131,8 +131,14 @@ $values_group = array();
 //install configuration group
 $cfg_group_install = insert_into_config_group_table($values_group);
 
+//update configuration group
+$cfg_group_install = update_config_group_table($values_group_update);
+
 //install configuration
 $cfg_install = insert_into_config_table($values);
+
+//update configuration
+$cfg_install = update_config_table($values_update);
 
 //redirect
 if ($cfg_install || $cfg_group_install) {
@@ -162,7 +168,51 @@ function insert_into_config_table($values)
   return $install;
 }
 
+function update_config_table($values)
+{
+  global $messageStack;
+  //print_r($values);
+  $install = false;
+  foreach($values as $value) {
+    $cfg_arr = explode(',', $value);
+    $cfg_key = str_replace("'", '',$cfg_arr[1]); // Hochkommata entfernen
+    $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . trim($cfg_key) . "' LIMIT 1");
+    if (xtc_db_num_rows($result_cfg) == 0) {
+      $insert_into = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_id ,configuration_key ,configuration_value ,configuration_group_id ,sort_order ,last_modified ,date_added ,use_function ,set_function) VALUES ";
+      if( xtc_db_query($insert_into.$value)){
+        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'success');
+        $install = true;
+      } else {
+        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'error');
+      }
+    }
+  }
+  return $install;
+}
+
 function insert_into_config_group_table($values_group)
+{
+  global $messageStack;
+  $install = false;
+  foreach($values_group as $value) {
+    $cfg_arr = explode(',', $value);
+    $cfg_id = str_replace(array("(","'"), '',$cfg_arr[0]);
+    $query = "SELECT * FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_id = '".$cfg_id ."' LIMIT 1";
+    $result_cfg_query = xtc_db_query($query);
+    if (xtc_db_num_rows($result_cfg_query) == 0) {
+      $insert_into = "INSERT INTO ".TABLE_CONFIGURATION_GROUP ." VALUES ";
+      if (xtc_db_query($insert_into.$value)) {
+        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'success');
+        return true;
+      } else {
+        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'error');
+      }
+    }
+  }
+  return $install;
+}
+
+function update_config_group_table($values_group)
 {
   global $messageStack;
   $install = false;
