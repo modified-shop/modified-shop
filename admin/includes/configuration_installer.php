@@ -8,9 +8,13 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 $cfg_install = false;
+$cfg_update = false;
 $cfg_group_install = false;
+$cfg_group_update = false;
 $values = array();
+$values_update = array();
 $values_group = array();
+$values_group_update = array();
 
 //##############################//
 
@@ -124,6 +128,11 @@ $values_group = array();
   $values[] = "(NULL, 'WHOS_ONLINE_IP_WHOIS_SERVICE', 'http://www.utrace.de/?query=', '1000', '62', NULL, NOW(), NULL, NULL);"; 
   $values[] = "(NULL, 'CONFIRM_SAVE_ENTRY', 'true', '1000', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '1000', sort_order = '30'",
+                           'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'
+                           );
+
   //configuration_group_id 111125 --- "Paypal"
 
 //##############################//
@@ -132,20 +141,27 @@ $values_group = array();
 $cfg_group_install = insert_into_config_group_table($values_group);
 
 //update configuration group
-$cfg_group_install = update_config_group_table($values_group_update);
+$cfg_group_update = update_config_group_table($values_group_update);
 
 //install configuration
 $cfg_install = insert_into_config_table($values);
 
 //update configuration
-$cfg_install = update_config_table($values_update);
+$cfg_update = update_config_table($values_update);
 
 //redirect
-if ($cfg_install || $cfg_group_install) {
+if ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update) {
   xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
 }
 
 //---------- FUNCTIONS ----------//
+
+  /**
+   * insert_into_config_table()
+   *
+   * @param string $values
+   * @return boolean
+   */
 function insert_into_config_table($values)
 {
   global $messageStack;
@@ -168,28 +184,48 @@ function insert_into_config_table($values)
   return $install;
 }
 
+  /**
+   * update_config_table()
+   *
+   * @param array $values
+   * @return boolean
+   */
 function update_config_table($values)
 {
   global $messageStack;
-  //print_r($values);
+
   $install = false;
   foreach($values as $value) {
-    $cfg_arr = explode(',', $value);
-    $cfg_key = str_replace("'", '',$cfg_arr[1]); // Hochkommata entfernen
-    $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . trim($cfg_key) . "' LIMIT 1");
-    if (xtc_db_num_rows($result_cfg) == 0) {
-      $insert_into = "INSERT INTO ".TABLE_CONFIGURATION." (configuration_id ,configuration_key ,configuration_value ,configuration_group_id ,sort_order ,last_modified ,date_added ,use_function ,set_function) VALUES ";
-      if( xtc_db_query($insert_into.$value)){
-        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'success');
-        $install = true;
-      } else {
-        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION.' '.$value, 'error');
+    //don't update configuration_value
+    if (strpos($value['values'], 'configuration_value') === false) {
+      $cfg_values = rtrim($value['values'],',');
+      $cfg_key = trim($value['configuration_key']);
+      //only update if values are different
+      $check = " AND (" . str_replace(array("=",","),array("!="," OR "),$cfg_values). ")";      
+
+
+      $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". $check." LIMIT 1");
+      if (xtc_db_num_rows($result_cfg) != 0) {
+        $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
+
+        if( xtc_db_query($update)){
+          $messageStack->add_session('OK: '.$update, 'success');
+          $install = true;
+        } else {
+          $messageStack->add_session('ERROR: '.$update, 'error');
+        }
       }
     }
   }
   return $install;
 }
 
+  /**
+   * insert_into_config_group_table()
+   *
+   * @param string $values_group
+   * @return boolean
+   */
 function insert_into_config_group_table($values_group)
 {
   global $messageStack;
@@ -212,22 +248,30 @@ function insert_into_config_group_table($values_group)
   return $install;
 }
 
+  /**
+   * update_config_group_table()
+   *
+   * @param array $values_group
+   * @return boolean
+   */
 function update_config_group_table($values_group)
 {
   global $messageStack;
   $install = false;
   foreach($values_group as $value) {
-    $cfg_arr = explode(',', $value);
-    $cfg_id = str_replace(array("(","'"), '',$cfg_arr[0]);
-    $query = "SELECT * FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_id = '".$cfg_id ."' LIMIT 1";
+    $cfg_values = rtrim($value['values'],',');
+    $cfg_id = $value['configuration_group_id'];
+    //only update if values are different
+    $check = " AND (" . str_replace(array("=",","),array("!="," OR "),$cfg_values). ")";
+    $query = "SELECT * FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_id = '".$cfg_id . "'". $check." LIMIT 1";
     $result_cfg_query = xtc_db_query($query);
-    if (xtc_db_num_rows($result_cfg_query) == 0) {
-      $insert_into = "INSERT INTO ".TABLE_CONFIGURATION_GROUP ." VALUES ";
-      if (xtc_db_query($insert_into.$value)) {
-        $messageStack->add_session('OK: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'success');
+    if (xtc_db_num_rows($result_cfg_query) != 0) {      
+      $update = "UPDATE ".TABLE_CONFIGURATION_GROUP." SET ".$cfg_values." WHERE configuration_group_id = '" . $cfg_id . "'";
+      if (xtc_db_query($update)) {
+        $messageStack->add_session('OK: '.$update, 'success');
         return true;
       } else {
-        $messageStack->add_session('ERROR: INSERT INTO '.TABLE_CONFIGURATION_GROUP.' '.$value, 'error');
+        $messageStack->add_session('ERROR: '.$update, 'error');
       }
     }
   }
