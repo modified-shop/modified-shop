@@ -83,7 +83,7 @@ if ($reviews_split->number_of_rows > 0) {
     'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id='.$reviews['products_id'].'&reviews_id='.$reviews['reviews_id']),
     'PRODUCTS_NAME' => $reviews['products_name'],
     'AUTHOR' => $reviews['customers_name'],
-    'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).')<br />'.htmlspecialchars($reviews['reviews_text']).'..',
+    'TEXT' => '('.sprintf(TEXT_REVIEW_WORD_COUNT, xtc_word_count($reviews['reviews_text'], ' ')).')<br />'.nl2br(htmlspecialchars($reviews['reviews_text'])).'..',
     'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'));
   }
   $smarty->assign('module_content', $module_data);
