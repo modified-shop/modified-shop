@@ -56,9 +56,7 @@
    * @param mixed $parse
    * @return
    */
-  function xtc_parse_input_field_data($data, $parse) {
-    return strtr(trim($data), $parse);
-  }
+  require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_output_string()
