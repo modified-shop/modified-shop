@@ -29,8 +29,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-// Define the project version
-define('PROJECT_VERSION', 'modified eCommerce Shopssoftware v1.06 dated: 2013-01-14');
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_1.0.6.0');
 //Run Mode
@@ -75,6 +73,9 @@ if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') !=
 
 // solve compatibility issues
 require_once (DIR_WS_FUNCTIONS.'compatibility.php');
+
+// project versison
+require_once (DIR_WS_INCLUDES.'version.php');
 
 // default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
