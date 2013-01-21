@@ -29,9 +29,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-// Define the project version
-define('PROJECT_VERSION', 'modified eCommerce Shopssoftware v2.00 dated: 2012-11-??');
-
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_2.0.0.0');
 //Run Mode
@@ -87,6 +84,9 @@ require_once (DIR_WS_FUNCTIONS.FILENAME_COMPATIBILITY);
 if (version_compare(PHP_VERSION,"5.2","<")) {
   require_once (DIR_FS_EXTERNAL . 'upgradephp/upgrade.php');
 }
+
+// project versison
+require_once (DIR_WS_INCLUDES.'version.php');
 
 // default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
