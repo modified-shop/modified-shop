@@ -142,7 +142,7 @@ class product {
         $data_reviews[] = array ('AUTHOR' => $reviews['customers_name'],
                                  'DATE' => xtc_date_short($reviews['date_added']),
                                  'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
-                                 'TEXT' => $reviews['reviews_text']);
+                                 'TEXT' => nl2br($reviews['reviews_text']));
         if ($row == PRODUCT_REVIEWS_VIEW)
           break;
       }
