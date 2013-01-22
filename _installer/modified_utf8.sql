@@ -106,7 +106,7 @@ CREATE TABLE campaigns (
 
 DROP TABLE IF EXISTS campaigns_ip;
 CREATE TABLE campaigns_ip (
-  user_ip VARCHAR(15) NOT NULL,
+  user_ip VARCHAR(39) NOT NULL,
   time DATETIME NOT NULL,
   campaign VARCHAR(32) NOT NULL
 ) ENGINE=MyISAM;
@@ -425,7 +425,7 @@ DROP TABLE IF EXISTS customers_ip;
 CREATE TABLE customers_ip (
   customers_ip_id INT(11) NOT NULL AUTO_INCREMENT,
   customers_id INT(11) NOT NULL DEFAULT 0,
-  customers_ip VARCHAR(15) NOT NULL DEFAULT '',
+  customers_ip VARCHAR(39) NOT NULL DEFAULT '',
   customers_ip_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   customers_host VARCHAR(255) NOT NULL DEFAULT '',
   customers_advertiser VARCHAR(30) DEFAULT NULL,
@@ -613,7 +613,7 @@ CREATE TABLE orders (
   payment_class VARCHAR(32) NOT NULL,
   shipping_method VARCHAR(32) NOT NULL,
   shipping_class VARCHAR(32) NOT NULL,
-  customers_ip VARCHAR(32) NOT NULL,
+  customers_ip VARCHAR(39) NOT NULL,
   language VARCHAR(32) NOT NULL,
   afterbuy_success INT(1) DEFAULT 0 NOT NULL,
   afterbuy_id INT(32) DEFAULT 0 NOT NULL,
@@ -978,7 +978,7 @@ CREATE TABLE whos_online (
   customer_id INT(11) DEFAULT NULL,
   full_name VARCHAR(64) NOT NULL,
   session_id VARCHAR(32) NOT NULL,
-  ip_address VARCHAR(15) NOT NULL,
+  ip_address VARCHAR(39) NOT NULL,
   time_entry VARCHAR(14) NOT NULL,
   time_last_click VARCHAR(14) NOT NULL,
   last_page_url VARCHAR(255) NOT NULL,
@@ -1123,7 +1123,7 @@ CREATE TABLE coupon_gv_queue (
   order_id INT(5) NOT NULL DEFAULT 0,
   amount DECIMAL(8,4) NOT NULL DEFAULT '0.0000',
   date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  ipaddr VARCHAR(32) NOT NULL DEFAULT '',
+  ipaddr VARCHAR(39) NOT NULL DEFAULT '',
   release_flag CHAR(1) NOT NULL DEFAULT 'N',
   PRIMARY KEY (unique_id),
   KEY idx_uid (unique_id,customer_id,order_id)
@@ -1135,7 +1135,7 @@ CREATE TABLE coupon_redeem_track (
   coupon_id INT(11) NOT NULL DEFAULT 0,
   customer_id INT(11) NOT NULL DEFAULT 0,
   redeem_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  redeem_ip VARCHAR(32) NOT NULL DEFAULT '',
+  redeem_ip VARCHAR(39) NOT NULL DEFAULT '',
   order_id INT(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (unique_id)
 ) ENGINE=MyISAM;
