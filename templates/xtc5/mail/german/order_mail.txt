@@ -57,3 +57,5 @@ Versandadresse
 [SIGNATUR]
 
 [WIDERRUF]
+
+{$JANOLAW_INFO_TXT}
