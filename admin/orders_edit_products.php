@@ -27,7 +27,7 @@ if( !defined('MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS')) {
 }
 
 if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
-  $admin_thumbs_size = 'style='.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
+  $admin_thumbs_size = 'style="'.USE_ADMIN_THUMBS_IN_LIST_STYLE.'"';
 } else {
   $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
 }
