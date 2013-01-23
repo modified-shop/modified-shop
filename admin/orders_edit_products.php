@@ -32,6 +32,9 @@ if( defined('USE_ADMIN_THUMBS_IN_LIST_STYLE')) {
   $admin_thumbs_size = 'style="max-width: 40px; max-height: 40px;"';
 }
 
+require_once (DIR_WS_CLASSES.'currencies.php');
+$currencies = new currencies();
+
 ?>
 <!-- Begin Infotext //-->
 <table border="0" cellspacing="0" cellpadding="2" style="border: 1px red solid; padding:5px; background: #FFD6D6; margin: 5px 0 5px 0">
@@ -216,9 +219,10 @@ if ($_GET['action'] =='product_search') {
           // calculate brutto price for display
           if (PRICE_IS_BRUTTO == 'true') {
             $products_price = xtc_round($products['products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
-            $products_price_netto = $xtPrice->xtcFormat($products['products_price'], false);
+            $products_price = $currencies->format($products_price);
+            $products_price_netto = $currencies->format($products['products_price']);
           } else {
-            $products_price = xtc_round($products['products_price'], PRICE_PRECISION);
+            $products_price = $currencies->format($products['products_price']);
             $products_price_netto = '';
           }
           
