@@ -418,7 +418,7 @@ class product {
                           'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
                           'PRODUCTS_ID'=> $array['products_id'],
                           'PRODUCTS_MODEL'=> isset($array['products_model']) ? $array['products_model'] : '',
-                          'PRODUCTS_EAN', isset($array['products_ean']) ? $array['products_ean'] : '',
+                          'PRODUCTS_EAN'=> isset($array['products_ean']) ? $array['products_ean'] : '',
                           'PRODUCTS_MANUFACTURERS_MODEL', isset($array['products_manufacturers_model']) ? $array['products_manufacturers_model'] : '',
                           'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
                           'PRODUCTS_IMAGE' => $products_image,
