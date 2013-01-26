@@ -46,9 +46,10 @@ class eustandardtransfer {
 	// I take no credit for this, I just hunted down variables, the actual code was stolen from the 2checkout
 	// module.  About 20 minutes of trouble shooting and poof, here it is. -- Thomas Keats
 	function confirmation() {
-		global $_POST;
-
-		$confirmation = array ('title' => $this->title.': '.$this->check, 'fields' => array (array ('title' => MODULE_PAYMENT_EUTRANSFER_TEXT_DESCRIPTION)), 'description' => $this->info);
+		$confirmation = array ('title' => $this->title.': '.$this->check, 
+                           'fields' => array (array ('title' => '', 
+                                                     'field' => $this->info)
+                                             ));
 
 		return $confirmation;
 	}
