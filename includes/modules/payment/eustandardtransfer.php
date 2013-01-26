@@ -25,8 +25,7 @@ class eustandardtransfer {
 
     $this->code = 'eustandardtransfer';
     $this->title = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE;
-    $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;
-    $this->description2 = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION2;
+    $this->description = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION;    
     $this->sort_order = MODULE_PAYMENT_EUSTANDARDTRANSFER_SORT_ORDER;
     $this->info = MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_INFO;
     $this->enabled = ((MODULE_PAYMENT_EUSTANDARDTRANSFER_STATUS == 'True') ? true : false);
@@ -60,8 +59,12 @@ class eustandardtransfer {
   function selection() {
     $content = array();
     $content = array_merge($content, array (array ('title' => ' ',
-                                                    'field' => '<div align="left">'.$this->logo.'</div>')));
-    return array ('id' => $this->code, 'module' => $this->title, 'fields' => $content,'description' => $this->info);
+                                                   'field' => '<div align="left">'.$this->logo.'</div>')));
+    return array ('id' => $this->code, 
+                  'module' => $this->title, 
+                  'fields' => $content,
+                  'description' => $this->info
+                 );
   }
 
   function pre_confirmation_check() {
@@ -70,8 +73,8 @@ class eustandardtransfer {
 
   function confirmation() {
     $confirmation = array ('title' => $this->title, 
-                           'fields' => array (array ('title' => MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION, 
-                                                     'field' => MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION2)
+                           'fields' => array (array ('title' => '', 
+                                                     'field' => $this->info)
                                               ));
     return $confirmation;
   }

@@ -201,26 +201,32 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
   $smarty->assign('TOTAL_BLOCK', $total_block);
 }
 
+// create payment information
 if (is_array($payment_modules->modules)) {
   if ($confirmation = $payment_modules->confirmation()) {    
-    $payment_info = '';//$confirmation['title'];
-    if (isset($confirmation['fields'])) { //DokuMan - 2010-09-17 - Undefined index
+    if (isset($confirmation['title'])) {
+      $smarty->assign('PAYMENT_INFORMATION_TITLE', $confirmation['title']);
+    }
+    if (isset($confirmation['fields'])) {
       $smarty->assign('PAYMENT_INFORMATION', $confirmation['fields']);
     }
   }
 }
 
-
+// create comments
 if (xtc_not_null($order->info['comments'])) {
   $smarty->assign('ORDER_COMMENTS', nl2br(htmlspecialchars($order->info['comments'])) . xtc_draw_hidden_field('comments', $order->info['comments']));
 }
 
+// create form tag
 if (isset ($$_SESSION['payment']->form_action_url) && (!isset($$_SESSION['payment']->tmpOrders) || !$$_SESSION['payment']->tmpOrders)) {
   $form_action_url = $$_SESSION['payment']->form_action_url;
 } else {
   $form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
 $smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post'));
+
+// create buttons
 $payment_button = '';
 if (is_array($payment_modules->modules)) {
   $payment_button .= $payment_modules->process_button();

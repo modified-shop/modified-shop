@@ -16,12 +16,10 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank&uuml;berweisung');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
+  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION',
           '<br />Die billigste und einfachste Zahlungsmethode innerhalb der EU ist die &Uuml;berweisung mittels IBAN und BIC.' .
-          '<br />Bitte verwenden Sie die nebenstehenden Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages.<br />' .
-          '<br /><br />Sobald der Betrag auf unserem Konto eingegangen ist, werden wir Ihre Bestellung versenden.<br />');
-          
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION2', 
+          '<br />Sobald der Betrag auf unserem Konto eingegangen ist, werden wir Ihre Bestellung versenden.<br />'.
+          '<br /><br />Bitte verwenden Sie folgende Daten f&uuml;r die &Uuml;berweisung des Gesamtbetrages:<br />' .
           '<br />Name der Bank: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM .
           '<br />Empf&auml;nger: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH .
           '<br />Bankleitzahl: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM .
