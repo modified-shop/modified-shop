@@ -18,9 +18,8 @@
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_TITLE', 'EU-Standard Bank Transfer');
   define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION', 
           '<br />The cheapest and most simple payment method within the EU is the EU-Standard Bank Transfer using IBAN and BIC.' .
-          '<br />Please use the details on the right to transfer your total order value.<br />' .
-          '<br /><br />As soon as we receive your payment in the bank account mentioned above, we will ship your order.<br />');
-  define('MODULE_PAYMENT_EUSTANDARDTRANSFER_TEXT_DESCRIPTION2', 
+          '<br />As soon as we receive your payment in the bank account mentioned above, we will ship your order.<br />'.
+          '<br />Please use the details on the right to transfer your total order value.<br />' . 
           '<br />Bank Name: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BANKNAM .
           '<br />Branch: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_BRANCH .
           '<br />Account Name: ' . MODULE_PAYMENT_EUSTANDARDTRANSFER_ACCNAM .
