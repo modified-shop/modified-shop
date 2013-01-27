@@ -57,7 +57,7 @@
     $wo_last_page_url = xtc_db_prepare_input($_SERVER['REQUEST_URI']);
     $wo_referer = xtc_db_prepare_input(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '---');
     //EOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
-    
+
     $current_time = time();
     $time_last_click = 900;
     if (defined('WHOS_ONLINE_TIME_LAST_CLICK')) {
@@ -70,19 +70,19 @@
 
     $stored_customer_query = xtc_db_query("select count(*) as count from " . TABLE_WHOS_ONLINE . " where session_id = '" . $wo_session_id . "'");
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
-    
+
     $sql_data_array = array('customer_id' => $wo_customer_id,
-                            'full_name' => $wo_full_name,                              
+                            'full_name' => $wo_full_name,
                             'ip_address' => $wo_ip_address,
-                            'time_entry' => $current_time,
                             'time_last_click' => $current_time,
                             'last_page_url' => $wo_last_page_url,
-                            'http_referer' => $wo_referer        
+                            'http_referer' => $wo_referer
                             );
 
     if ($stored_customer['count'] > 0) {
-      xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array,'update', "session_id = '".$wo_session_id."'");          
-    } else {      
+      xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array,'update', "session_id = '".$wo_session_id."'");
+    } else {
+      $sql_data_array['time_entry'] = $current_time;
       $sql_data_array['session_id'] = $wo_session_id;
       xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array);
     }
