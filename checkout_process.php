@@ -383,12 +383,14 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
         }
 
         // update attribute stock
+        if (STOCK_LIMITED == 'true') {
         xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
                          SET attributes_stock=attributes_stock - '".$order->products[$i]['qty']."'
                        WHERE products_id='".$order->products[$i]['id']."'
                          AND options_values_id='".$order->products[$i]['attributes'][$j]['value_id']."'
                          AND options_id='".$order->products[$i]['attributes'][$j]['option_id']."'
                     ");
+        }
 
         $attributes_values = $main->getAttributes( $order->products[$i]['id'],
                                                    $order->products[$i]['attributes'][$j]['option_id'],
