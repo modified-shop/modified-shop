@@ -197,8 +197,26 @@
         break;
      case 'update_default_adressbook' :
         $customers_id = xtc_db_prepare_input($_GET['cID']);
+        
+        $address_book_query = xtc_db_query("-- admin/customers.php
+                                       SELECT entry_gender AS customers_gender,
+                                              entry_firstname AS customers_firstname,
+                                              entry_lastname AS customers_lastname
+                                         FROM ".TABLE_ADDRESS_BOOK."
+                                        WHERE address_book_id = '".(int) $_GET['default']."'
+                                          AND customers_id = '".xtc_db_input($customers_id)."'"
+                                           );
+        $address_book_array = xtc_db_fetch_array($address_book_query);  
 
-        xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_default_address_id='".(int) $_GET['default']."' WHERE customers_id = '".xtc_db_input($customers_id)."'");
+        if (ACCOUNT_GENDER != 'true') {
+          unset($address_book_array['customers_gender']);
+        }
+        
+        $sql_data_array = array ('customers_default_address_id' => (int) $_GET['default'],
+                                 'customers_last_modified' => 'now()'
+                                );
+        $sql_data_array = array_merge($address_book_array,$sql_data_array);
+        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '". xtc_db_input($customers_id) ."'");
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'update_default_adressbook', 'default')).'cID='.$customers_id.'&action=address_book'));
         break;
     case 'statusconfirm' :
