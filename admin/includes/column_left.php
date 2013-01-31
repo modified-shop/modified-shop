@@ -33,7 +33,7 @@
 echo '<div class="suckertreemenu">';
 echo '<ul id="treemenu1">';
 //---------------------------Ausgewählte Admin Sprache als Flagge
-echo ('<div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div>');
+echo ('<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>);
 //---------------------------STARTSEITE
 echo ('<li><a href="' . xtc_href_link('start.php', '', 'NONSSL') . '" id="current"><b>' . TEXT_ADMIN_START . '</b></a></li>'); 
 //---------------------------KUNDEN
