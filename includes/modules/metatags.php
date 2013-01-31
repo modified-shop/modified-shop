@@ -282,6 +282,7 @@
       }
     }
     return html_entity_decode($Text, ENT_QUOTES, strtoupper($_SESSION['language_charset']));
+  }
 // ---------------------------------------------------------------------------------------
 //  metaTitle und metaKeyWords, Rückgabe bzw. Formatierung
 // ---------------------------------------------------------------------------------------
