@@ -281,8 +281,7 @@
         $Text = substr($Text,0,$Length).$Abk;
       }
     }
-    return htmlentities($Text, ENT_QUOTES, strtoupper($_SESSION['language_charset']));  // web28 - 2010-09-16 - FIX html entities
-  }
+    return html_entity_decode($Text, ENT_QUOTES, strtoupper($_SESSION['language_charset']));
 // ---------------------------------------------------------------------------------------
 //  metaTitle und metaKeyWords, Rückgabe bzw. Formatierung
 // ---------------------------------------------------------------------------------------
