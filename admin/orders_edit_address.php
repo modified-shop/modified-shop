@@ -47,6 +47,15 @@
     //EOC web28 - 2011-10-18 - add dropdown countries boxes
     
       ?>
+			<!-- Begin Infotext //-->
+			<table border="0" cellspacing="0" cellpadding="2" style="border: 1px red solid; padding:5px; background: #FFD6D6; margin: 5px 0 5px 0">
+			  <tr>
+			    <td class="main"> 
+			      <?php echo TEXT_ORDERS_ADDRESS_EDIT_INFO;?>
+			    </td>
+			  </tr>
+			</table>
+			<!-- End Infotext //-->
       <table border="0" width="100%" cellspacing="0" cellpadding="2">
         <tr class="dataTableHeadingRow">
           <td class="dataTableHeadingContent" width="10%" align="left">&nbsp;</td>

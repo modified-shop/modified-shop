@@ -47,6 +47,7 @@ define('TEXT_CUSTOMER_EMAIL', 'E-mail:');
 define('TEXT_CUSTOMER_TELEPHONE', 'Phone:');
 define('TEXT_CUSTOMER_UST', 'VAT Reg No:');
 define('TEXT_CUSTOMER_CID', 'Customer ID:');
+define('TEXT_ORDERS_ADDRESS_EDIT_INFO', 'Please note that the data you provide here will be changed only in the orders data and not in the customer account!');
 
 // Artikelbearbeitung
 
