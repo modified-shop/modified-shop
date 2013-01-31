@@ -128,32 +128,12 @@ if ($order->delivery['country']['iso_code_2'] != '') {
 require (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping;
 
-if (defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')) {
-	switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
-		case 'national' :
-			if ($order->delivery['country_id'] == STORE_COUNTRY)
-				$pass = true;
-			break;
-		case 'international' :
-			if ($order->delivery['country_id'] != STORE_COUNTRY)
-				$pass = true;
-			break;
-		case 'both' :
-			$pass = true;
-			break;
-		default :
-			$pass = false;
-			break;
-	}
+require (DIR_WS_MODULES.'order_total/ot_shipping.php');
+$ot_shipping = new ot_shipping;
+$ot_shipping->process();
 
-	$free_shipping = false;
-	if (($pass == true) && ($order->info['total'] - $order->info['shipping_cost'] >= $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, false, 0, true))) {
-		$free_shipping = true;
-
-		include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-	}
-} else {
-	$free_shipping = false;
+if ($free_shipping == true) {
+  include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
 }
 
 // process the selected shipping method

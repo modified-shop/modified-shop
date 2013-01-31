@@ -31,7 +31,7 @@
     }
 
     function process() {
-      global $order, $xtPrice;
+      global $order, $xtPrice, $free_shipping;
 
       if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {
         switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
@@ -49,6 +49,7 @@
           $order->info['shipping_method'] = $this->title;
           $order->info['total'] -= $order->info['shipping_cost'];
           $order->info['shipping_cost'] = 0;
+          $free_shipping = true;
         }
       }
 
