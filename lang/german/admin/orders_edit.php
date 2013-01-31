@@ -46,6 +46,7 @@ define('TEXT_CUSTOMER_GROUP', 'Kundengruppe in der Bestellung');
 define('TEXT_CUSTOMER_EMAIL', 'E-Mail:');
 define('TEXT_CUSTOMER_TELEPHONE', 'Telefon:');
 define('TEXT_CUSTOMER_UST', 'USt-IdNr.:');
+define('TEXT_CUSTOMER_CID', 'Kundennummer:');
 
 // Artikelbearbeitung
 

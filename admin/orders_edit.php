@@ -99,6 +99,7 @@ if ($action == 'address_edit') {
                            'customers_telephone' => xtc_db_prepare_input($_POST['customers_telephone']),
                            'customers_email_address' => xtc_db_prepare_input($_POST['customers_email_address']),
                            'customers_address_format_id' => xtc_get_address_format_id($_POST['customers_country_id']),
+                           'customers_cid' => xtc_db_prepare_input($_POST['customers_cid']),
                            'delivery_company' => xtc_db_prepare_input($_POST['delivery_company']),
                            'delivery_firstname' => xtc_db_prepare_input($_POST['delivery_firstname']),
                            'delivery_lastname' => xtc_db_prepare_input($_POST['delivery_lastname']),
