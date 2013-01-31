@@ -177,6 +177,15 @@ if ($_GET['edit_action']=='address'){
 
 <tr class="dataTableRow">
 <td class="dataTableContent" align="left">
+<?php echo TEXT_CUSTOMER_CID;?>
+</td>
+<td class="dataTableContent" align="left" colspan="3">
+<?php echo xtc_draw_input_field('customers_cid', $order->customer['csID']);?>
+</td>
+</tr>
+
+<tr class="dataTableRow">
+<td class="dataTableContent" align="left">
 <?php echo TEXT_CUSTOMER_EMAIL;?>
 </td>
 <td class="dataTableContent" align="left" colspan="3">
