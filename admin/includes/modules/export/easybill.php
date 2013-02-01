@@ -123,7 +123,13 @@
                               INDEX orders_id (orders_id),
                               INDEX customers_id (customers_id)
                                                       )");
-
+		  xtc_db_query("CREATE TABLE IF NOT EXISTS easybill_datev (
+                              datev_id INT(11) NOT NULL AUTO_INCREMENT,
+                              customers_datev_id INT(11) NOT NULL,
+                              customers_id INT(11) NOT NULL,
+                              PRIMARY KEY (`datev_id`),
+                              INDEX customers_id (customers_id)
+                                                      )");
 	  }
 
     function remove() {

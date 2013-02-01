@@ -16,7 +16,11 @@
   define('EASYBILL_PAYMENT_HEADING', 'Zahlart: ');
   define('EASYBILL_PAYMENT_HEADING_II', 'Bestellnummer: ');
   define('EASYBILL_EOL', '<br/>');
-  
+
+	// Databasetable
+  define('TABLE_EASYBILL_DATEV', 'easybill_datev');
+	define('TABLE_EASYBILL', 'easybill');
+	  
   // in Datenbank auslagern
   define('MODULE_EASYBILL_STANDARD_TAX_CLASS', 1);
   
@@ -49,13 +53,15 @@
         $this->makeConnection();
       }
       
+      $this->getCustomerDatevId();
+      
       //SOAP Call
       try {
-        $customer = $this->client->getCustomerByCustomerNumber($this->customer['id']);
+        $customer = $this->client->getCustomerByCustomerNumber($this->customer['datev_id']);
       }		
       catch(SoapFault $e) {
         $this->error[] = 'customer not found';
-      } 
+      }   		
   
       $customer_details_query = xtc_db_query("SELECT customers_gender, 
                                                      customers_fax 
@@ -80,7 +86,7 @@
       $customer->companyName    = utf8_encode($this->billing['company']);
       $customer->phone_1        = utf8_encode($this->customer['telephone']);
       $customer->email          = utf8_encode($this->customer['email_address']);
-      $customer->customerNumber = utf8_encode($this->customer['id']);
+      $customer->customerNumber = utf8_encode($this->customer['datev_id']);
   
       if (xtc_not_null($this->customer['vat_id'])) {
         $customer->ustid = utf8_encode($this->customer['vat_id']);
@@ -99,8 +105,53 @@
         $this->error[] = $e;
       }
     }
-      
  
+ 
+ 		protected function getCustomerDatevId() {
+      $datev_query = xtc_db_query("SELECT customers_datev_id FROM " . TABLE_EASYBILL_DATEV . " WHERE customers_id = '" . $this->customer['id'] . "'");
+      if (xtc_db_num_rows($datev_query)>0) {
+     		$datev = xtc_db_fetch_array($datev_query);
+     		$this->customer['datev_id'] = $datev['customers_datev_id'];
+     	} else {
+     		$this->getNewCustomerDatevId();
+     	}
+ 		}     
+ 
+		
+		protected function getNewCustomerDatevId($search='') {
+			$error='';
+			
+			if ($search=='') {
+				$datev_query = xtc_db_query("SELECT MAX(customers_datev_id) AS last_datev_id FROM ".TABLE_EASYBILL_DATEV);
+				$datev = xtc_db_fetch_array($datev_query);
+				if ($datev['last_datev_id']>0) {
+					$search = ($datev['last_datev_id']+1);
+				} else {
+					$search = '10000';
+				}
+			}
+
+      if ($this->connection != true) {
+        $this->makeConnection();
+      }
+      
+      //SOAP Call
+      try {
+        $this->client->getCustomerByCustomerNumber($search);
+      }		
+      catch(SoapFault $e) {
+        $error=$e;
+      } 
+  		  		
+  		if (xtc_not_null($error)) {
+				$this->customer['datev_id'] = $search;
+				xtc_db_query("INSERT INTO ".TABLE_EASYBILL_DATEV." (customers_datev_id, customers_id) values (".$this->customer['datev_id'].", ".$this->customer['id'].")");
+			} else {
+				$this->getNewCustomerDatevId($search+1);
+			}
+		}
+		
+		
     protected function getCountryIso($country_name) {
       $country_query = xtc_db_query("SELECT countries_iso_code_2 FROM " . TABLE_COUNTRIES . " WHERE countries_name = '" . $country_name . "'");
       $country = xtc_db_fetch_array($country_query);
@@ -485,7 +536,7 @@
 																'billing_id'            => xtc_db_prepare_input($this->document->document->documentNumber),
 																'billing_date'          => 'now()'
 															 );
-				xtc_db_perform('easybill', $process_array);
+				xtc_db_perform(TABLE_EASYBILL, $process_array);
 	
 				if (MODULE_EASYBILL_DO_STATUS_CHANGE=='True') {
 					$status_array = array('orders_id'         => $this->info['order_id'],
@@ -506,7 +557,7 @@
     
     public function checkOrder() {
       
-      $check_query = xtc_db_query("SELECT * FROM easybill WHERE orders_id='".$this->info['order_id']."'");
+      $check_query = xtc_db_query("SELECT * FROM ".TABLE_EASYBILL." WHERE orders_id='".$this->info['order_id']."'");
       if (xtc_db_num_rows($check_query)>0) {
         $this->details = xtc_db_fetch_array($check_query);
         return true;
@@ -557,7 +608,7 @@
         $this->error[] = $e;
       }
 
-      xtc_db_query("UPDATE easybill
+      xtc_db_query("UPDATE ".TABLE_EASYBILL."
                        SET payment = '1'
                      WHERE orders_id = ".$this->info['order_id']);
 
