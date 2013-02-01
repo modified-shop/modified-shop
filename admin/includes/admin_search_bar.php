@@ -29,8 +29,14 @@
   if (strpos($page_filename, 'categories.php') !== false){
     $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
-?>
-<link href="includes/searchbar_menu/searchbar_menu.css" rel="stylesheet" type="text/css" />
+  
+  if (!defined('NEW_ADMIN_STYLE')) {   
+  ?>
+  <link href="includes/searchbar_menu/searchbar_menu.css" rel="stylesheet" type="text/css" />
+  <?php
+  }
+  ?>
+
 <div class="searchbar">
   <ul id="topmenu_search">
     <li>
