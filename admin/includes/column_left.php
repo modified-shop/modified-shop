@@ -30,10 +30,10 @@
   $admin_access = xtc_db_fetch_array($admin_access_query); 
  
 // BOF - Tomcraft - 2009-11-02 - NEW LISTSTYLE MENU
-echo '<div class="suckertreemenu">';
+echo '<div id="cssmenu" class="suckertreemenu">';
 echo '<ul id="treemenu1">';
 //---------------------------Ausgewählte Admin Sprache als Flagge
-echo ('<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>);
+echo ('<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>');
 //---------------------------STARTSEITE
 echo ('<li><a href="' . xtc_href_link('start.php', '', 'NONSSL') . '" id="current"><b>' . TEXT_ADMIN_START . '</b></a></li>'); 
 //---------------------------KUNDEN

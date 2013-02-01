@@ -45,24 +45,27 @@
     }
   }
   
-  // Admin Menu
+  if (!defined('NEW_ADMIN_STYLE')) { 
+    // Admin Menu
     if (USE_ADMIN_TOP_MENU != 'false') {
-  ?>
-   <script src="includes/liststyle_menu/topmenu.js" type="text/javascript"></script>
-   <script language="javascript">
+    ?>
+    <script src="includes/liststyle_menu/topmenu.js" type="text/javascript"></script>
+    <script language="javascript">
     <!--
       document.write('<link href="includes/liststyle_menu/liststyle_top.css" rel="stylesheet" type="text/css" />');
     //-->
-  </script>
+    </script>
+    <?php
+    } else {
+      echo '<link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />';
+    }
+    ?>
+    <noscript>
+      <link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />
+    </noscript>
   <?php
-  } else {
-    echo '<link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />';
   }
-?>
-<noscript>
-  <link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />
-</noscript>
-
+  ?>
 <div id="top1"><?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?></div>
 <table border="0" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 5px;">
   <tr>
