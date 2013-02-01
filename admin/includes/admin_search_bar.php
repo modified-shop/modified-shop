@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: admin_search_bar.php 4255 2013-01-11 16:04:14Z web28 $
+   $Id: admin_search_bar.php 4387 2013-02-01 12:20:50Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -14,23 +14,29 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  $page = basename($_SERVER['SCRIPT_FILENAME']);
+  $page_filename = basename($_SERVER['SCRIPT_FILENAME']);
   $search_cus = '';
   $search_email = '';
   $search_ord = '';
   $search_cat = '';
-  if (strpos($page, 'customers.php') !== false) {
-    $search_cus = encode_htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
-    $search_email = encode_htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : ''); //DokuMan - 2010-09-08 - set undefined index
+  if (strpos($page_filename, 'customers.php') !== false) {
+    $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
+    $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
-  if (strpos($page, 'orders.php') !== false) {
-    $search_ord = encode_htmlentities(isset($_GET['oID']) ? $_GET['oID'] : ''); //DokuMan - 2010-09-08 - set undefined index
+  if (strpos($page_filename, 'orders.php') !== false) {
+    $search_ord = htmlentities(isset($_GET['oID']) ? $_GET['oID'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
-  if (strpos($page, 'categories.php') !== false){
-    $search_cat = encode_htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
+  if (strpos($page_filename, 'categories.php') !== false){
+    $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
   }
-?>
-<link href="includes/searchbar_menu/searchbar_menu.css" rel="stylesheet" type="text/css" />
+  
+  if (!defined('NEW_ADMIN_STYLE')) {   
+  ?>
+  <link href="includes/searchbar_menu/searchbar_menu.css" rel="stylesheet" type="text/css" />
+  <?php
+  }
+  ?>
+  
 <div class="searchbar">
   <ul id="topmenu_search">
     <li>
