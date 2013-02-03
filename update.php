@@ -46,7 +46,8 @@ $unlink_file = array('admin/includes/configure.org.php',
                      'shopstat/.htaccess',
                      'templates/xtc5/css/no_javascript.css',
                      'update_1.0.5.0_to_1.0.6.0.sql',
-                     'wsdl_iclear_order.php');
+                     'wsdl_iclear_order.php',
+                     '_unterverzeichnis_.htaccess');
 
 // set all directories to be deleted                     
 $unlink_dir = array('admin/includes/modules/carp',
