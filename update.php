@@ -12,7 +12,26 @@ error_reporting(0);
 include ('includes/application_top.php');
 
 // set all files to be deleted
-$unlink_file = array('admin/includes/configure.org.php',
+$unlink_file = array('_unterverzeichnis_.htaccess',
+                     'admin/includes/configure.org.php',
+                     'admin/includes/javascript/jquery-ui.custom.css',
+                     'admin/includes/javascript/images/ui-bg_diagonals-thick_75_f3d8d8_40x40.png',
+                     'admin/includes/javascript/images/ui-bg_dots-small_65_a6a6a6_2x2.png',
+                     'admin/includes/javascript/images/ui-bg_flat_0_333333_40x100.png',
+                     'admin/includes/javascript/images/ui-bg_flat_65_d2d0d0_40x100.png',
+                     'admin/includes/javascript/images/ui-bg_flat_75_cecdca_40x100.png',
+                     'admin/includes/javascript/images/ui-bg_glass_55_fdf59b_1x400.png',
+                     'admin/includes/javascript/images/ui-bg_highlight-hard_100_e1e1e0_1x100.png',
+                     'admin/includes/javascript/images/ui-bg_highlight-hard_100_f6f6f6_1x100.png',
+                     'admin/includes/javascript/images/ui-bg_highlight-soft_15_b40076_1x100.png',
+                     'admin/includes/javascript/images/ui-icons_004276_256x240.png',
+                     'admin/includes/javascript/images/ui-icons_b40076_256x240.png',
+                     'admin/includes/javascript/images/ui-icons_cc0000_256x240.png',
+                     'admin/includes/javascript/images/ui-icons_cecdca_256x240.png',
+                     'admin/includes/javascript/ui/jquery.ui.core.min.js',
+                     'admin/includes/javascript/ui/jquery.ui.datepicker-de.js',
+                     'admin/includes/javascript/ui/jquery.ui.datepicker-en.js',
+                     'admin/includes/javascript/ui/jquery.ui.datepicker.min.js',
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
                      'admin/includes/modules/carp/carpinc.php',
@@ -47,10 +66,12 @@ $unlink_file = array('admin/includes/configure.org.php',
                      'templates/xtc5/css/no_javascript.css',
                      'update_1.0.5.0_to_1.0.6.0.sql',
                      'wsdl_iclear_order.php',
-                     '_unterverzeichnis_.htaccess');
+                     'xtbcallback.php');
 
 // set all directories to be deleted                     
-$unlink_dir = array('admin/includes/modules/carp',
+$unlink_dir = array('admin/includes/javascript/images',
+                    'admin/includes/javascript/ui',
+                    'admin/includes/modules/carp',
                     'admin/includes/modules/magpierss',
                     'admin/includes/modules/magpierss/extlib',
                     'admin/rss',
