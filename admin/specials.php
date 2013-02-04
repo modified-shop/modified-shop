@@ -134,19 +134,16 @@
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <script type="text/javascript" src="includes/general.js"></script>
-  <?php if ( ($action == 'new') || ($action == 'edit') ) { ?>
-  <link type="text/css" href="includes/javascript/jquery-ui.custom.css" rel="stylesheet" />
   <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/ui/jquery.ui.core.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker-<?php echo strtolower($_SESSION['language_code']); ?>.js"></script>
+  <script type="text/javascript" src="includes/general.js"></script>
+  <?php 
+  if ( ($action == 'new') || ($action == 'edit') ) {
+    //jQueryDatepicker
+    require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');  
+  ?>  
   <script type="text/javascript">
     $(function() {
-      $('#hasDatepicker').datepicker(
-        $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-        {dateFormat:'yy-mm-dd', changeMonth: true, changeYear: true}
-      );
+      $('#DatepickerSpecials').datepick();
     });
   </script>
   <?php } ?>
@@ -263,8 +260,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       </tr>
                       <tr>
                         <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
-                        <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="hasDatepicker"'); ?>
-                        </td>
+                        <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
                       </tr>
                     </table>
                   </td>

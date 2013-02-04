@@ -334,9 +334,12 @@
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
+  <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
   <script type="text/javascript" src="includes/general.js"></script>
   <script type="text/javascript" src="includes/javascript/categories.js"></script><?php //web28 - 2010-09-21-  js-file not in folder // Dokuman - 2010-10-31 - file was missing -> functions relevant for buttons ins category_view?>
   <?php
+  //jQueryDatepicker
+  require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
     // Include WYSIWYG if is activated
     if (USE_WYSIWYG == 'true') {
       $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".$_SESSION['languages_id']."'");
