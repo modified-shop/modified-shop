@@ -173,6 +173,7 @@
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
+    <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
     <script type="text/javascript">
       <!--
         function popupImageWindow(url) {
@@ -180,6 +181,10 @@ require (DIR_WS_INCLUDES.'head.php');
         }
       //-->
     </script>
+    <?php
+    //jQueryDatepicker
+    require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
+    ?>
 </head>
 <body>
     <!-- header //-->
@@ -230,23 +235,12 @@ require (DIR_WS_INCLUDES.'head.php');
                 while ($groups = xtc_db_fetch_array($groups_query)) {
                   $groups_array[] = array('id' => $groups['banners_group'], 'text' => $groups['banners_group']);
                 }
-              ?>
-              <link type="text/css" href="includes/javascript/jquery-ui.custom.css" rel="stylesheet" />
-              <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
-              <script type="text/javascript" src="includes/javascript/ui/jquery.ui.core.min.js"></script>
-              <script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker.min.js"></script>
-              <script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker-<?php echo strtolower($_SESSION['language_code']); ?>.js"></script>
+              ?>              
               <script type="text/javascript">
                 /* set Datepicker for dateExpires (1) and dateScheduled (2) */
                 $(function() {
-                  $('#hasDatepicker1').datepicker(
-                    $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-                    {dateFormat:'yy-mm-dd', changeMonth: true,  changeYear: true}
-                  );
-                  $('#hasDatepicker2').datepicker(
-                    $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-                    {dateFormat:'yy-mm-dd', changeMonth: true,  changeYear: true}
-                  );
+                  $('#Datepicker1').datepick();
+                  $('#Datepicker2').datepick();
                 });
               </script>
               <tr>
@@ -295,7 +289,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr>
                         <td class="main"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                         <td class="main">
-                          <?php echo xtc_draw_input_field('dateScheduled', $bInfo->date_scheduled ,'id="hasDatepicker1"'); ?>
+                          <?php echo xtc_draw_input_field('dateScheduled', $bInfo->date_scheduled ,'id="Datepicker1"'); ?>
                         </td>
                         </tr>
                         <tr>
@@ -304,7 +298,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <tr>
                           <td valign="top" class="main"><?php echo TEXT_BANNERS_EXPIRES_ON; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                           <td class="main">
-                            <?php echo xtc_draw_input_field('dateExpires', $bInfo->expires_date ,'id="hasDatepicker2"'); ?>
+                            <?php echo xtc_draw_input_field('dateExpires', $bInfo->expires_date ,'id="Datepicker2"'); ?>
                             <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
                           </td>
                         </tr>

@@ -182,7 +182,7 @@
                   <?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>
                 </td>
                 <td class="main">
-                  <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="hasDatepicker2" style="width: 135px"'); ?>
+                  <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"'); ?>                
                 </td>        
                 <td class="main">
                   &nbsp;

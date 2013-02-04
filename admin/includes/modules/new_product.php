@@ -87,21 +87,10 @@
 
   //if ($pInfo->products_startpage == '1') { $startpage_checked = true; } else { $startpage_checked = false; }
 ?>
-<link type="text/css" href="includes/javascript/jquery-ui.custom.css" rel="stylesheet" />
-<script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
-<script type="text/javascript" src="includes/javascript/ui/jquery.ui.core.min.js"></script>
-<script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker.min.js"></script>
-<script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker-<?php echo strtolower($_SESSION['language_code']); ?>.js"></script>
 <script type="text/javascript">
   $(function() {  /* set Datepicker for new_products (1) and products_specials (2) */
-    $('#hasDatepicker1').datepicker(
-    $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-    {dateFormat:'yy-mm-dd', changeMonth: true,  changeYear: true}
-    );
-    $('#hasDatepicker2').datepicker(
-    $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-    {dateFormat:'yy-mm-dd', changeMonth: true,  changeYear: true}
-    );
+    $('#DatepickerProduct').datepick();
+    $('#DatepickerSpecials').datepick();
   });
 </script>
 <tr>
@@ -126,7 +115,7 @@
             </tr>
             <tr>
               <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
-              <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '','id="hasDatepicker1" style="width: 135px"'); ?></span></td>
+              <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '' ,'id="DatepickerProduct" style="width: 135px"'); ?></span></td>
             </tr>
             <tr>
               <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE; ?></span></td>
@@ -230,6 +219,8 @@
   require_once("includes/modules/categories_specials.php");
   showSpecialsBox();
 ?>
+
+
 
 
 
@@ -358,6 +349,8 @@
           </table>
           <?php
         }
+
+
 
 
 
