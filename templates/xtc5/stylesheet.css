@@ -1308,7 +1308,7 @@ div#address_block input{
 vertical-align: middle;
 }
 div.checkoutInfoBoxes{
-width:435px;
+width:438px;
 border: 0px solid #a3a3a3;
 padding:5px;
 margin-right:20px;
@@ -1318,7 +1318,7 @@ div.checkoutInfoBoxes  a.more_info{
 color: red!important;
 }
 div.checkoutNavBoxes{
-width:435px;
+width:438px;
 border: 1px solid #a3a3a3;
 /*background:#F8F8F8;*/
 padding:5px;
@@ -1327,7 +1327,7 @@ float:left;
 height:120px;
 }
 div.checkoutNav2Boxes{
-width:435px;
+width:438px;
 border: 1px solid #a3a3a3;
 padding:5px;
 margin-right:20px;
