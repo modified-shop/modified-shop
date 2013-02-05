@@ -13,7 +13,6 @@
 error_reporting(0);
 
 require('includes/configure.php');
-require_once(DIR_FS_INC.'html_encoding.php');
 
 $valid_signs = '/[^\w\-]/';
 $_GET['lng'] = preg_replace($valid_signs, '', $_GET['lng']);
