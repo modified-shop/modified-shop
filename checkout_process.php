@@ -515,7 +515,7 @@ if (!$tmp) {
   // BOF - Tomcraft - 2009-11-28 - Included xs:booster
   if(@isset($_SESSION['xtb0'])) {
     define('XTB_CHECKOUT_PROCESS', __LINE__);
-    require 'callback/xtbooster/xtbcallback.php'; //DokuMan - Moved xtbcallback.php to callback directory
+    require_once (DIR_FS_CATALOG.'callback/xtbooster/xtbcallback.php'); //DokuMan - Moved xtbcallback.php to callback directory
   }
   // EOF - Tomcraft - 2009-11-28 - Included xs:booster
 
