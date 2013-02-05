@@ -80,6 +80,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODEL; ?></td>
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_PURCHASED; ?>&nbsp;</td>
+                          <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_QUANTITY; ?>&nbsp;</td>
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_RESET; ?>&nbsp;</td>
                         </tr>
                         <?php
@@ -90,6 +91,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $products_query_raw = "select p.products_id,
                                                       p.products_model,
                                                       p.products_ordered,
+                                                      p.products_quantity,
                                                       pd.products_name
                                                  from " . TABLE_PRODUCTS . " p,
                                                       " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -106,11 +108,12 @@ require (DIR_WS_INCLUDES.'head.php');
                             $rows = '0' . $rows;
                           }
                           ?>
-                          <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
+                          <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
                             <td class="dataTableContent"><?php echo $rows; ?>.</td>
-                            <td class="dataTableContent"><?php echo $products['products_model']; ?></td>
-                            <td class="dataTableContent"><?php echo $products['products_name'] .'</a>'; ?></td>
+                            <td class="dataTableContent"><?php echo $products['products_model']; ?>&nbsp;</td>
+                            <td class="dataTableContent"><?php echo $products['products_name']; ?></td>
                             <td class="dataTableContent" align="center"><?php echo $products['products_ordered']; ?>&nbsp;</td>
+                            <td class="dataTableContent" align="center"><?php echo $products['products_quantity']; ?>&nbsp;</td>
                             <td class="dataTableContent" align="center"><?php echo '<a href="'.$_SERVER['PHP_SELF'].'?clear_id='.$products['products_id'].'&page='.$_GET['page'].'&maxrows='.$maxrows.'"><img src="images/icon_delete.gif" alt="reset" style="border:0px;" /> </a>'; ?></td>
                           </tr>
                           <?php
