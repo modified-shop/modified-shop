@@ -21,8 +21,8 @@ $_GET['modul'] = preg_replace($valid_signs, '', $_GET['modul']);
 
 include(DIR_FS_LANGUAGES . $_GET['lng'] . '/modules/' . $_GET['type'] . '/' . $_GET['modul'] . '.php');
 
-if (defined(strtoupper('MODULE_'.$_GET['type'].'_'.str_replace('OT_','',$_GET['modul']).'_HELP_TEXT'))) {
-  $const= constant(strtoupper('MODULE_'.$_GET['type'].'_'.str_replace('OT_','',$_GET['modul']).'_HELP_TEXT'));
+if (defined(strtoupper('MODULE_'.$_GET['type'].'_'.str_ireplace('OT_','',$_GET['modul']).'_HELP_TEXT'))) {
+  $const= constant(strtoupper('MODULE_'.$_GET['type'].'_'.str_ireplace('OT_','',$_GET['modul']).'_HELP_TEXT'));
 } else {
   die( 'No help file found!' );
 }
