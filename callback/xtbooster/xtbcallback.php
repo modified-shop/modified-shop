@@ -178,11 +178,11 @@ if(isset($_GET['inquire'])) {
 	switch($_GET['inquire']) {
 		case 'version':
 			$res = $xtb->exec("ACTION:ReportInquiredInfo\nCASE:version\nCASE_VERSION:".XTBOOSTER_VERSION."\nREMOTE_ADDR:".$_SERVER["REMOTE_ADDR"]."\n"); $res = $xtb->parse($res);
-			if($res['RESULT']!='SUCCESS') { echo "FAILURE;".mktime().";".md5(microtime()); break; }
+			if($res['RESULT']!='SUCCESS') { echo "FAILURE;".time().";".md5(microtime()); break; }
 			break;
 		case 'sqlaction':
 			$res = $xtb->exec("ACTION:ReportInquiredInfo\nCASE:sqlaction\nCASEACTION:inquire\nCASE_VERSION:".XTBOOSTER_VERSION."\nREMOTE_ADDR:".$_SERVER["REMOTE_ADDR"]."\n"); $res = $xtb->parse($res);
-			if($res['RESULT']!='SUCCESS') { echo "FAILURE;".mktime().";".md5(microtime()); break; }
+			if($res['RESULT']!='SUCCESS') { echo "FAILURE;".time().";".md5(microtime()); break; }
 			$QUERY = trim($res['QUERY']); $INQUIRY_ID = $res['INQUIRY_ID'];
 			$QUERY = str_replace("#TABLE_AUCTIONS#","xtb_auctions",$QUERY);
 			$QUERY = str_replace("#TABLE_TRANSACTIONS#","xtb_transactions",$QUERY);
@@ -190,7 +190,7 @@ if(isset($_GET['inquire'])) {
 			$res = $xtb->exec("ACTION:ReportInquiredInfo\nCASE:sqlaction\nCASEACTION:report\nINQUIRY_ID:".$INQUIRY_ID."\nSQLACTION_RESULT:$SQLACTION_RESULT\nCASE_VERSION:".XTBOOSTER_VERSION."\n");
 			break;
 		default:
-			echo "NOT_AVAILABLE;".mktime().";".md5(microtime());
+			echo "NOT_AVAILABLE;".time().";".md5(microtime());
 			break;
 	}
 	exit;
@@ -251,7 +251,7 @@ if(xtc_db_num_rows($products_query)==1)
 	   . "ARTICLE_DESCRIPTION: -=$article_description\nARTICLE_NUMBER: -=$article_number\n"
 	   . "ARTICLE_VPE: -=$article_vpe\n";
 	$i=0; while(isset($images[$i])){
-		$x .= "PICTURE_" . intval($i+1) .": -=".$images[$i] . "\n";
+		$x .= "PICTURE_" . (int)($i+1) .": -=".$images[$i] . "\n";
 		$i++;
 	      }
 	$x .="\n";
@@ -266,7 +266,7 @@ if(xtc_db_num_rows($products_query)==1)
 
 	if($res['RESULT']!='SUCCESS')
 	{
-		echo "FAILURE;".mktime().";".md5(microtime());
+		echo "FAILURE;".time().";".md5(microtime());
 		exit;
 	}
 
@@ -317,11 +317,11 @@ if(xtc_db_num_rows($products_query)==1)
 	# Anzahl der erworbenen Auktionen erhoehen
 	xtc_db_query("UPDATE xtb_auctions SET _EBAY_QUANTITY_BUYED = _EBAY_QUANTITY_BUYED+".$res_ti['QUANTITYPURCHASED']." WHERE _EBAY_ITEM_ID=".$res_ti['ITEMID']);
 } else {
-	echo "FAILURE;".mktime().";".md5(microtime());
+	echo "FAILURE;".time().";".md5(microtime());
 	exit;
 }
 
-echo "OK;".mktime().";".md5(microtime());
+echo "OK;".time().";".md5(microtime());
 exit;
 }
 
