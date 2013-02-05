@@ -44,7 +44,7 @@ if (!is_object($product) || !$product->isProduct()) {
 } else {
 
   $info_smarty = new Smarty;
-  $info_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
   // defaults
   $hide_qty = 0;
