@@ -95,41 +95,13 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 
       if (isset($econda) && is_object($econda)) $econda->_loginUser();
 
-      // BOC added request for set review_prod_id and for order_id, noRiddle
-      /*
-      // BOF - GTB - 2011-03-21 redirect to last visited Page after login
-      //if ($_SESSION['cart']->count_contents() > 0) {
-      if (isset($_SESSION['REFERER']) && !empty($_SESSION['REFERER'])) {
-        xtc_redirect(xtc_href_link($_SESSION['REFERER']));
-      }elseif ($_SESSION['cart']->count_contents() > 0) {
-      // EOF - GTB - 2011-03-21 redirect to last visited Page after login
-        //BOF - web28 - 2010-09-20 redirect NONSSL
-        //xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART), 'NONSSL');
-        //EOF - web28 - 2010-09-20 redirect NONSSL
-      } else {
-          //BOF - web28 - 2010-08-11 redirect NONSSL
-        //xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
-        xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
-        //EOF - web28 - 2010-08-11 redirect NONSSL
-      }
-      */
-      // BOF - GTB - 2011-03-21 redirect to last visited Page after login
-      //if ($_SESSION['cart']->count_contents() > 0  && !isset($_GET['review_prod_id'])  && !isset($_GET['order_id'])) {
-      if (isset($_SESSION['REFERER']) && !empty($_SESSION['REFERER'])) {
-        xtc_redirect(xtc_href_link($_SESSION['REFERER']));
-      }elseif ($_SESSION['cart']->count_contents() > 0  && !isset($_GET['review_prod_id'])  && !isset($_GET['order_id'])) {
-      // EOF - GTB - 2011-03-21 redirect to last visited Page after login
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL');
-      } elseif (isset($_GET['review_prod_id'])) {
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_product_link((int)$_GET['review_prod_id'],''), 'NONSSL'));
-      } elseif (isset($_GET['order_id'])) {
-        xtc_redirect(xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' .(int)$_GET['order_id'], 'NONSSL'));
-      } else {         
-        xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');          
-      }
-      // EOC added request for set review_prod_id and for order_id, noRiddle
-
+      if (isset($_SESSION['REFERER']) && !empty($_SESSION['REFERER'])) { 
+        xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id')).(isset($_GET['review_prod_id'])?'products_id='.$_GET['review_prod_id']:''))); 
+      } elseif ($_SESSION['cart']->count_contents() > 0  && !isset($_GET['review_prod_id'])  && !isset($_GET['order_id'])) { 
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
+      } else {          
+        xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
+      } 
     }
   }
 }
