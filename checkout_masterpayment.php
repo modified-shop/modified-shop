@@ -67,7 +67,7 @@ if($action != 'request')
 	require (DIR_WS_INCLUDES . 'header.php');
 }
 
-$smarty->assign('tpl_path', CURRENT_TEMPLATE);
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 
 if($action == 'response')
