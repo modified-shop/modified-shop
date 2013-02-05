@@ -358,7 +358,7 @@ require (DIR_WS_INCLUDES.'head.php');
       }
     }
     // generate editor for products
-    if ($action == 'new_product') {
+    if ($action == 'new_product' || $action == 'new_product_preview') {
       for ($i = 0; $i < sizeof($languages); $i ++) {
         echo xtc_wysiwyg('products_description', $data['code'], $languages[$i]['id']);
         echo xtc_wysiwyg('products_short_description', $data['code'], $languages[$i]['id']);
@@ -391,7 +391,7 @@ require (DIR_WS_INCLUDES.'head.php');
               //----- new_category / edit_category (when ALLOW_CATEGORY_DESCRIPTIONS is 'true') -----
               if ($action == 'new_category' || $action == 'edit_category') {
                 include (DIR_WS_MODULES.'new_category.php');
-              } elseif ($action == 'new_product') {
+              } elseif ($action == 'new_product' || $action == 'new_product_preview') {
                 include (DIR_WS_MODULES.'new_product.php');
               } elseif ($action == 'edit_crossselling') {
                 include (DIR_WS_MODULES.'cross_selling.php');
