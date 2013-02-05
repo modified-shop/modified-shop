@@ -48,10 +48,10 @@ Sollen mehr Rabattstaffeln m&ouml;glich sein (Standard sind <b>3</b>), muss vor 
 <p>F&uuml;r Kunden aus allen L&auml;ndern wird ab <span class="green">0&euro;</span> (also immer) ein Aufschlag von <span class="red">0%</span> (also kein prozentualer Aufschlag) zuz&uuml;glich <span class="lila">2,00&euro;</span> (der feste Aufschlag) berechnet.</p>
 <hr>
 <h3>Felder Zahlungsart</h3>
-<p>In die Felder den <b>internen Code</b> der Zahlungsart eintragen, z.B. <b>moneyorder</b> f&uuml;r Vorkasse oder <b>cod</b> f&uuml;r Nachnahme. Mehrere Zahlungarten mit Komma trennen</p>Siehe hierzu Module -&gt; Zahlungsoptionen -&gt; Spalte &quot;Modulname (f&uuml;r internen Gebrauch)&quot;.<br/><br/>
+<p>In die Felder den <b>internen Code</b> der Zahlungsart eintragen, z.B. <b>moneyorder</b> f&uuml;r Vorkasse oder <b>cod</b> f&uuml;r Nachnahme. Mehrere Zahlungsarten mit Komma trennen</p>Siehe hierzu Module -&gt; Zahlungsoptionen -&gt; Spalte &quot;Modulname (f&uuml;r internen Gebrauch)&quot;.<br/><br/>
 <hr>
 <h3>Anzeige bei Zahlungsart im Bestellprozess</h3>
-Wenn schon im Bestellprozess bei der Zahlungsauswahl der entsprechende Rabatt angezeigt werden soll, die Option &quot;Anzeige bei den Zahlungarten&quot; auf &quot;true&quot; stellen. <br/><br/>
+Wenn schon im Bestellprozess bei der Zahlungsauswahl der entsprechende Rabatt angezeigt werden soll, die Option &quot;Anzeige bei den Zahlungsarten&quot; auf &quot;true&quot; stellen. <br/><br/>
 Weiter kann man mit der Option &quot;Anzeigeart im Bestellprozess bei der Zahlungsauswahl&quot; die Art der Darstellung einstellen:
 <p> -- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel</p>
 <p> -- price: Es wird immer der tats&auml;chliche Betrag angezeigt</p>'
@@ -94,9 +94,9 @@ define('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS_DESC','Die Steuerklasse spielt kein
 define('MODULE_ORDER_TOTAL_PAYMENT_BREAK_TITLE','<hr>Mehrfachberechnung');
 define('MODULE_ORDER_TOTAL_PAYMENT_BREAK_DESC','Sollten Mehrfachberechnungen m&ouml;glich sein? Wenn nein, wird nach dem ersten passenden Rabatt abgebrochen.');
 
-define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_TITLE', '<hr>Anzeige bei den Zahlungarten');
+define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_TITLE', '<hr>Anzeige bei den Zahlungsarten');
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_DESC', 'Anzeige im Bestellprozess bei der Zahlungsauswahl');
 
-define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_TITLE', '<hr>Anzeigeart bei den Zahlungarten');
+define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_TITLE', '<hr>Anzeigeart bei den Zahlungsarten');
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_DESC', 'Anzeigeart im Bestellprozess bei der Zahlungsauswahl <br />-- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel<br />-- price: es wird immer der tats&auml;chliche Betrag angezeigt');
 ?>
