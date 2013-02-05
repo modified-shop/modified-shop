@@ -19,7 +19,7 @@
    Credit Class/Gift Vouchers/Discount Coupons (Version 5.10)
    http://www.oscommerce.com/community/contributions,282
    Copyright (c) Strider | Strider@oscworks.com
-   Copyright (c  Nick Stanko of UkiDev.com, nick@ukidev.com
+   Copyright (c) Nick Stanko of UkiDev.com, nick@ukidev.com
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
 
@@ -86,7 +86,7 @@ define('COUPON_NAME_HELP', 'Eine Kurzbezeichnung f&uuml;r den Coupon');
 define('COUPON_AMOUNT_HELP', 'Tragen Sie hier den Rabatt f&uuml;r diesen Coupon ein. Entweder einen festen Betrag oder einen prozentualen Rabatt wie z.B. 10%');
 define('COUPON_CODE_HELP', 'Hier k&ouml;nnen Sie einen eigenen Code eintragen (max. 16 Zeichen). Lassen Sie das Feld frei, dann wird dieser Code automatisch generiert.');
 define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist');
-define('COUPON_FINISHDATE_HELP', 'Das Datium an dem der Coupon abl&auml;uft');
+define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft');
 define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung. <strong>Achtung:</strong> Der Coupon Wert wird <b>jetzt</b> ber&uuml;cksichtigt! Der Mindestbestellwert bleibt g&uuml;ltig.');
 define('COUPON_DESC_HELP', 'Beschreibung des Coupons f&uuml;r den Kunden');
 define('COUPON_MIN_ORDER_HELP', 'Mindestbestellwert ab dem dieser Coupon g&uuml;ltig ist');
