@@ -52,16 +52,16 @@
   {if $SHIPPING_METHOD}
     <div class="checkoutNav2Boxes">
       <h2>{#text_shipping_method#}</h2>
-      <div class="text">&nbsp;<a href="{$SHIPPING_EDIT}">{#text_edit#}</a></div>
-      <p style="clear:both;">{$SHIPPING_METHOD}</p>
+      <div class="text">&nbsp;<a href="{$SHIPPING_EDIT}">{#text_edit#}</a></div> 
+      <div style="clear:both;">{$SHIPPING_METHOD}</div>
     </div>
   {/if}
 
   {if $PAYMENT_METHOD!=''}
     <div class="checkoutNav2Boxes">
       <h2>{#text_payment_method#}</h2>
-      <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
-      <p style="clear:both;">{$PAYMENT_METHOD}</p>
+      <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div> 
+      <div style="clear:both;">{$PAYMENT_METHOD}</div>
     </div>
   {/if}
   <div style="clear:both"></div>
@@ -89,7 +89,7 @@
 
   <br />
   <h2>{#text_products#}</h2>
-  <p <div class="text">&nbsp;<a href="{$PRODUCTS_EDIT}">{#text_edit#}</a></p>
+  <div class="text">&nbsp;<a href="{$PRODUCTS_EDIT}">{#text_edit#}</a></div>
   <div style="clear:both"></div>
 
 </div>
