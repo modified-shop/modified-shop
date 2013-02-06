@@ -2,7 +2,7 @@
 {$address_label_customer}
 
 {if $PAYMENT_METHOD}Paymentmethod: {$PAYMENT_METHOD}{/if}
-Order Nr.: {$oID}
+Order No.: {$oID}
 Date: {$DATE}
 {if $csID}Customer ID: {$csID}{/if}
 Your e-mail-address: {$EMAIL}
