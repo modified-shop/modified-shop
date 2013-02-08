@@ -26,31 +26,31 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
 <!-- Adressbearbeitung Anfang //-->
-<?php 
-if ($_GET['edit_action']=='address'){
- echo xtc_draw_form('adress_edit', FILENAME_ORDERS_EDIT, 'action=address_edit', 'post');
- echo xtc_draw_hidden_field('oID', $_GET['oID']);
- echo xtc_draw_hidden_field('cID', $order->customer['ID']);
+<?php
+if ($_GET['edit_action']=='address') {
 
- //BOC web28 - 2011-10-18 - add dropdown countries boxes
- $customer_countries_query = xtc_db_query("select countries_id from ".TABLE_COUNTRIES." where countries_name = '".$order->customer['country']."'");
- $countries = xtc_db_fetch_array($customer_countries_query);
- $customer_countries_id = $countries['countries_id'];
+  //BOC web28 - 2013-02-02 - add dropdown countries boxes
+  function get_country_id($country_name) {
+    $countries_query = xtc_db_query("SELECT countries_id
+                                       FROM ".TABLE_COUNTRIES."
+                                      WHERE countries_name = '".xtc_db_input($country_name)."'");
+    $countries = xtc_db_fetch_array($countries_query);
+    return $countries['countries_id'];
+  }
 
- $delivery_countries_query = xtc_db_query("select countries_id from ".TABLE_COUNTRIES." where countries_name = '".$order->delivery['country']."'");
- $countries = xtc_db_fetch_array($delivery_countries_query);
- $delivery_countries_id = $countries['countries_id'];
+  $customer_countries_id = get_country_id($order->customer['country']);
+  $delivery_countries_id = get_country_id($order->delivery['country']);
+  $billing_countries_id = get_country_id($order->billing['country']);
+  //EOC web28 - 2013-02-02 - add dropdown countries boxes
 
- $billing_countries_query = xtc_db_query("select countries_id from ".TABLE_COUNTRIES." where countries_name = '".$order->billing['country']."'");
- $countries = xtc_db_fetch_array($billing_countries_query);
- $billing_countries_id = $countries['countries_id'];
- //EOC web28 - 2011-10-18 - add dropdown countries boxes
-
+  echo xtc_draw_form('adress_edit', FILENAME_ORDERS_EDIT, 'action=address_edit', 'post');
+  echo xtc_draw_hidden_field('oID', $_GET['oID']);
+  echo xtc_draw_hidden_field('cID', $order->customer['ID']);
 ?>
 <!-- Begin Infotext //-->
 <table border="0" cellspacing="0" cellpadding="2" style="border: 1px red solid; padding:5px; background: #FFD6D6; margin: 5px 0 5px 0">
   <tr>
-    <td class="main"> 
+    <td class="main">
       <?php echo TEXT_ORDERS_ADDRESS_EDIT_INFO;?>
     </td>
   </tr>
@@ -242,7 +242,7 @@ if ($_GET['edit_action']=='address'){
 </form>
 <br />
 <br />
-<?php 
-} 
+<?php
+}
 ?>
 <!-- Adressbearbeitung Ende //-->
