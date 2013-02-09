@@ -235,7 +235,7 @@
       <!-- BOF - Tomcraft - 2009-11-02 - TOP SAVE AND CANCEL BUTTON //-->
       <?php
       if (file_exists("includes/modules/categories_specials.php")) { ?>
-      <div class="main" style="margin-top: 4px;float:left">
+      <div class="main" style="margin-top: 7px;float:left">
         <div id="butSpecial">&nbsp;</div>
       </div>
       <script language="JavaScript" type="text/JavaScript">
