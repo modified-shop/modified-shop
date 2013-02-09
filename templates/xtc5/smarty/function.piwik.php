@@ -55,7 +55,7 @@ function smarty_function_piwik($params, &$smarty) {
         s.parentNode.insertBefore(g,s);
     })();
     </script>
-    <noscript><p><img src="http://'.$url.'/piwik.php?idsite=1&rec=1" style="border:0" alt="" /></p></noscript>
+    <noscript><p><img src="http://'.$url.'/piwik.php?idsite='.$id.'&rec=1" style="border:0" alt="" /></p></noscript>
   ';
 
   $orderCode = null;
