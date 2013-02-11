@@ -75,7 +75,8 @@ function spiffyCalManager() {
 	function swapImg(objWhatCal, strToWhat, blnStick) {
 		if (document.images) {
 			// this makes it so that the button sticks down when the cal is visible
-			if ((!(objWhatCal.visible) || (blnStick))&& (objWhatCal.enabled)) {
+			//if ((!(objWhatCal.visible) || (blnStick))&& (objWhatCal.enabled)) {
+			if ((document.images[objWhatCal.btnName]) && (!(objWhatCal.visible) || (blnStick))&& (objWhatCal.enabled)) { //web28 - 2013-02-03 - fix for non visible calendar boxes
 				document.images[objWhatCal.btnName].src = eval(objWhatCal.varName+strToWhat + ".src");
 			}
 		}
