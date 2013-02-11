@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: banktransfer_validation.php 2997 2012-06-09 06:52:24Z dokuman $
+   $Id: banktransfer_validation.php 4434 2013-02-11 09:05:02Z dokuman $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,7 +10,7 @@
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(banktransfer_validation.php,v 1.17 2003/02/18 18:33:15); www.oscommerce.com
-   (c) 2003 nextcommerce (banktransfer_validation.php,v 1.4 2003/08/1); www.nextcommerce.org
+   (c) 2003	 nextcommerce (banktransfer_validation.php,v 1.4 2003/08/1); www.nextcommerce.org
    (c) 2004 - 2006 fmce.de
    (c) 2004 - 2006 discus24.de
    (c) 2006 xt:Commerce
@@ -21,15 +21,16 @@
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
    Third Party contributions:
-   OSC German Banktransfer v0.85a         Autor:  Dominik Guder <osc@guder.org>
-   Extensioncode:               Marcel Bossert-Schwab <info@opensourcecommerce.de> (mbs)
-   New methods 2005 - 2010:         Frank Maroke (FrankM) <info@fmce.de>
-   New methods and bug fixes 2010 - 2012:  Christian Rothe <buero@laufstar.de>
+   OSC German Banktransfer v0.85a       	Autor:	Dominik Guder <osc@guder.org>
+   Extensioncode: 							Marcel Bossert-Schwab <info@opensourcecommerce.de> (mbs)
+   New methods 2005 - 2010: 				Frank Maroke (FrankM) <info@fmce.de>
+   New methods and bug fixes 2010 - 2013:	Christian Rothe <buero@laufstar.de>
 
-   Der Code dieser Klasse basiert auf dem Basis Klassenmodul "dd_de_check.php":
-   Methoden der Deutschen Bundesbank zur PRZ - Pruefung.
-   Die jeweils aktuelle Version von "dd_de_check.php" finden Sie unter:
-   http://www.payguard.de/download - Aktueller Stand: 07.12.2010.
+	 BLZ-Downloadseite der Deutschen Bundesbank:
+	 http://www.bundesbank.de/Redaktion/DE/Standardartikel/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/bankleitzahlen_download.html
+
+   Aktuelle Beschreibung der Pruefverfahren:
+   http://www.bundesbank.de/Navigation/DE/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/Pruefzifferberechnung/pruefzifferberechnung.html
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -72,7 +73,7 @@ var $PRZ; //Enthält die Prüfziffer
 ////
 // Diese Funktion gibt die Bankinformationen aus der Datenbank zurück*/
   function db_query($blz) {
-    $blz_query = xtc_db_query("SELECT * from banktransfer_blz WHERE blz = '" . xtc_db_input($blz) . "'");
+    $blz_query = xtc_db_query("SELECT * from ".TABLE_BANKTRANSFER_BLZ." WHERE blz = '" . xtc_db_input($blz) . "'");
     if (xtc_db_num_rows($blz_query)){
       $data = xtc_db_fetch_array ($blz_query);
     }else
@@ -147,7 +148,7 @@ var $PRZ; //Enthält die Prüfziffer
     // Pruefziffer ermitteln..
     $PNumber = substr($AccountNo, $Checkpoint-1, 1);
 
-    // Sonderfall Methoden der Bundesbank C6 und D1, zur Pruefung letzte Stelle  entfernen.
+    // Sonderfall Methoden der Bundesbank C6 und D1, zur Pruefung letzte Stelle entfernen.
     if ($Checkpoint == 16) {
       $AccountNo = substr($AccountNo, 0, -1);
     }
@@ -165,6 +166,11 @@ var $PRZ; //Enthält die Prüfziffer
       for ($Run = 0; $Run < strlen($Significance); $Run++) {
         $Help += $this->CrossSum(substr($AccountNo,$Run,1) * substr($Significance,$Run,1));
       }
+    }
+
+    // Sonderfall fuer Methode E0
+    if ($ChecksumCalcMethod == 'E0') {
+      $Help += 7;
     }
 
     $Help = $Help % $Modulator;
@@ -2435,42 +2441,44 @@ var $PRZ; //Enthält die Prüfziffer
   /* --- Added FrankM 20070822 ---
      --- Changed FrankM 20090206, 20100602 --- */
   /* --- Changed Christian Rothe 20110606 --- */
+  /* --- Changed Christian Rothe 20130309 --- */
   /* --- 20110606: Aenderung des Verfahrens durch die Bundesbank --- */
   private function MarkC6($AccountNo) {
     $AccountNo = $this->ExpandAccount($AccountNo);
     $FirstLeftDigit = substr($AccountNo, 0, 1);
-    // Erste Ziffer Ziffer von links auswerten.
-    // 4, 8 an erster Stelle von links = falsch.
-    if ((substr($AccountNo, 0, 1) == "4") or (substr($AccountNo, 0, 1) == "8")) {
-      $markC6 = 1;
-    // 0, 1, 2, 3, 5, 6, 7, 9 an erster Stelle von links = mit Methode 00 pruefen.
-    } else {
-      // Je nach vorhandener erster Stelle von links die Konstante zuordnen.
-      switch ($FirstLeftDigit) {
-        case 0:
-          $Help = '4451970';
-          break;
-        case 1:
-          $Help = '4451981';
-          break;
-        case 2:
-          $Help = '4451992';
-          break;
-        case 3:
-          $Help = '4451993';
-          break;
-        case 5:
-          $Help = '4344990';
-          break;
-        case 6:
-          $Help = '4344991';
-          break;
-        case 7:
-          $Help = '5499570';
-         break;
-        case 9:
-          $Help = '5499579';
-         break;
+
+    // Je nach vorhandener erster Stelle von links die Konstante zuordnen.
+    switch ($FirstLeftDigit) {
+      case 0:
+        $Help = '4451970';
+        break;
+      case 1:
+        $Help = '4451981';
+        break;
+      case 2:
+        $Help = '4451992';
+        break;
+      case 3:
+        $Help = '4451993';
+        break;
+      case 4:
+        $Help = '4344992';
+        break;
+      case 5:
+        $Help = '4344990';
+        break;
+      case 6:
+        $Help = '4344991';
+        break;
+      case 7:
+        $Help = '5499570';
+        break;
+      case 8:
+        $Help = '4451994';
+        break;
+      case 9:
+        $Help = '5499579';
+        break;
       }  /* end switch */
       // Fuer Berechnung der Pruefziffer die Konstante
       // zur Kontonummer hinzu fuegen.
@@ -2479,7 +2487,7 @@ var $PRZ; //Enthält die Prüfziffer
       // Methode 00, 16. Stelle Pruefziffer, Modulator 10,
       // Pruefziffer NICHT verschieben, ExpandAccount NICHT anwenden.
       $markC6 = $this->Method00($Help, '212121212121212', 16, 10, 0, 1);
-    }
+
     return $markC6;
   }
 
@@ -2539,13 +2547,14 @@ var $PRZ; //Enthält die Prüfziffer
   /* --- Added FrankM 20080717 ---
      --- Changed FrankM 20100602 ---
      --- Changed Nico Sommer 20110120 ---
-     --- Changed Christian Rothe 20110901 --- */
+     --- Changed Christian Rothe 20110901 ---
+     --- Changed Christian Rothe 20130309 --- */
 
   private function MarkD1($AccountNo) {
     $AccountNo = $this->ExpandAccount($AccountNo);
     $FirstLeftDigit = substr($AccountNo, 0, 1);
     $AccountSequence = substr($AccountNo, 1, 9);
-    if ((substr($AccountNo, 0, 1) == "2") or (substr($AccountNo, 0, 1) == "7") or (substr($AccountNo, 0, 1) == "8")) {
+    if (substr($AccountNo, 0, 1) == "8") {
       $markD1 = 1;
     } else {
       // Je nach vorhandener erster Stelle von links die Konstante zuordnen.
@@ -2570,6 +2579,9 @@ var $PRZ; //Enthält die Prüfziffer
          break;
         case 6:
          $Help = '4363386' . $AccountSequence;
+         break;
+        case 7:
+         $Help = '4363387' . $AccountSequence;
          break;
         case 9:
          $Help = '4363389' . $AccountSequence;
@@ -2697,6 +2709,12 @@ var $PRZ; //Enthält die Prüfziffer
     return $markD9;
   }
 
+  /* --- Added Christian Rothe 20130309 --- */
+  private function MarkE0($AccountNo) {
+    $AccountNo = $this->ExpandAccount($AccountNo);
+    $markE0 = $this->Method00($AccountNo, '212121212', strlen($AccountNo), 10, 0, 0, 'E0');
+    return $markE0;
+  }
 
 /* ----- Ende Endgueltige Funktionen der einzelnen Berechnungsmethoden. ---- */
 
@@ -2758,4 +2776,5 @@ var $PRZ; //Enthält die Prüfziffer
       return $Result;
     }  /* End of CheckAccount */
   }  /* End Class AccountCheck */
+
 ?>
