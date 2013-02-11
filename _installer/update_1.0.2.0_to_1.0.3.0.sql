@@ -23,13 +23,13 @@ UPDATE zones SET zone_code = 'TH' WHERE zone_id = 94;
 UPDATE configuration SET configuration_group_id = 1 WHERE configuration_id = 17;
 
 #Dokuman - 2009-10-02 - added entries for new moneybookers payment module version 2.4
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_EMAILID', '',  31, 1, NULL, '', NULL, NULL);
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_PWD','',  31, 2, NULL, '', NULL, NULL);
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_MERCHANTID','',  31, 3, NULL, '', NULL, NULL);
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID','0',  31, 4, NULL, '', 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID','0',  31, 5, NULL, '','xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID','0',  31, 6, NULL, '', 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', '_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID','0',  31, 7, NULL, '', 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_EMAILID', '',  31, 1, NULL, '', NULL, NULL);
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_PWD','',  31, 2, NULL, '', NULL, NULL);
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_MERCHANTID','',  31, 3, NULL, '', NULL, NULL);
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_TMP_STATUS_ID','0',  31, 4, NULL, '', 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID','0',  31, 5, NULL, '','xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID','0',  31, 6, NULL, '', 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID','0',  31, 7, NULL, '', 'xtc_get_order_status_name' , 'xtc_cfg_pull_down_order_statuses(');
 
 #Dokuman - 2009-10-02 - added entries for GLS shipping module version 1.1
 DROP TABLE IF EXISTS gls_country_to_postal;
@@ -71,13 +71,13 @@ UPDATE admin_access SET customers_group = '1' WHERE customers_id = '1';
 UPDATE admin_access SET customers_group = '2' WHERE customers_id = 'groups';
 
 #Tomcraft - 2009-11-02 - New admin top menu
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', 'USE_ADMIN_TOP_MENU', 'true', 1, 30, NULL , NOW( ) , NULL , 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('USE_ADMIN_TOP_MENU', 'true', 1, 30, NULL , NOW( ) , NULL , 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 
 #Tomcraft - 2009-11-02 - Admin language tabs
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', 'USE_ADMIN_LANG_TABS', 'true', 1, 31, NULL , NOW( ) , NULL , 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('USE_ADMIN_LANG_TABS', 'true', 1, 31, NULL , NOW( ) , NULL , 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 
 #Tomcraft - 2009-11-05 - Advanced contact form
-INSERT INTO configuration (configuration_id,  configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('', 'USE_CONTACT_EMAIL_ADDRESS', 'false', 12, 13, NULL,  NOW( ), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES   ('USE_CONTACT_EMAIL_ADDRESS', 'false', 12, 13, NULL,  NOW( ), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 
 #Tomcraft - 2009-11-07 - Added sortorder to products_options
 ALTER TABLE products_options ADD products_options_sortorder INT( 11 ) NOT NULL AFTER products_options_name;
