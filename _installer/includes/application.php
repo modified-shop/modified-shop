@@ -17,7 +17,7 @@
   (c) 2011 Strato document-root function v. 1.00 by web28 - www.rpa-cpm.de
    --------------------------------------------------------------*/
 
-  define('INSTALL_CHARSET', 'iso-8859-15'); //iso-8859-15 oder utf-8
+  define('INSTALL_CHARSET', 'latin1'); //latin1 oder utf8
   define('DIR_MODIFIED_INSTALLER', '_installer');
   define('MODIFIED_SQL', 'modified.sql');
   
@@ -26,41 +26,31 @@
   // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
   
-  if (INSTALL_CHARSET == 'utf-8') {
+  if (INSTALL_CHARSET == 'utf8') {
     $charset = 'utf-8';
-    $character_set = 'utf-8';
+    $character_set = 'utf8';
     $collation = 'utf8_general_ci';
   } else {
     $charset = 'iso-8859-15';
     $character_set = 'latin1';
     $collation = 'latin1_german1_ci'; 
   }
+  if (!defined('DB_SERVER_CHARSET')) {
+     define('DB_SERVER_CHARSET',$character_set);
+  }
 
   if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
     date_default_timezone_set('Europe/Berlin');
   }
-  // Some FileSystem Directories
-  if (!defined('DIR_FS_DOCUMENT_ROOT')) {
-    //BOF - web28 - 2010.02.18 - STRATO ROOT PATCH
-    if (strpos($_SERVER['DOCUMENT_ROOT'],'strato') !== FALSE) {
-      //BOF -  web28 - 2011-05-06 - NEW Strato document-root function
+  
+  // Set FileSystem Directories
+  if (!defined('DIR_FS_DOCUMENT_ROOT')) {   
+    if (strpos($_SERVER['DOCUMENT_ROOT'],'strato') !== false) {
       define('DIR_FS_DOCUMENT_ROOT', rtrim(strato_document_root(),'/'));
-      //EOF -  web28 - 2011-05-06 - NEW Strato document-root function
     } else {
-      define('DIR_FS_DOCUMENT_ROOT', rtrim($_SERVER['DOCUMENT_ROOT'],'/'));
-    }
-    //EOF - web28 - 2010.02.18 - STRATO ROOT PATCH
-    $local_install_path=str_replace('/'.DIR_MODIFIED_INSTALLER,'',$_SERVER['PHP_SELF']);
-    $local_install_path=str_replace('index.php','',$local_install_path);
-    $local_install_path=str_replace('install_step1.php','',$local_install_path);
-    $local_install_path=str_replace('install_step2.php','',$local_install_path);
-    $local_install_path=str_replace('install_step3.php','',$local_install_path);
-    $local_install_path=str_replace('install_step4.php','',$local_install_path);
-    $local_install_path=str_replace('install_step5.php','',$local_install_path);
-    $local_install_path=str_replace('install_step6.php','',$local_install_path);
-    $local_install_path=str_replace('install_step7.php','',$local_install_path);
-    $local_install_path=str_replace('install_finished.php','',$local_install_path);
-    define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT . $local_install_path);
+      define('DIR_FS_DOCUMENT_ROOT', rtrim(detectDocumentRoot(),'/'));
+    }    
+    define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT.'/');
   }
   if (!defined('DIR_FS_INC')) {
     define('DIR_FS_INC', DIR_FS_CATALOG.'inc/');
@@ -70,10 +60,10 @@
   }
 
   //require('../includes/functions/validations.php');
-  require(DIR_FS_CATALOG.'includes/classes/boxes.php');
-  require(DIR_FS_CATALOG.'includes/classes/message_stack.php');
-  require(DIR_FS_CATALOG.'includes/filenames.php');
-  require(DIR_FS_CATALOG.'includes/database_tables.php');
+  require_once(DIR_FS_CATALOG.'includes/classes/boxes.php');
+  require_once(DIR_FS_CATALOG.'includes/classes/message_stack.php');
+  require_once(DIR_FS_CATALOG.'includes/filenames.php');
+  require_once(DIR_FS_CATALOG.'includes/database_tables.php');
   require_once(DIR_FS_CATALOG.'inc/xtc_image.inc.php');
 
   // Start the Install_Session
@@ -120,38 +110,6 @@
     define('DIR_WS_ICONS','images/');
   }
 
-  function xtc_check_version($mini='4.1.2') {
-    $dummy=phpversion();
-    sscanf($dummy,"%d.%d.%d%s",$v1,$v2,$v3,$v4);
-    sscanf($mini,"%d.%d.%d%s",$m1,$m2,$m3,$m4);
-    if($v1>$m1)
-      return(1);
-    elseif($v1<$m1)
-      return(0);
-    if($v2>$m2)
-      return(1);
-    elseif($v2<$m2)
-      return(0);
-    if($v3>$m3)
-      return(1);
-    elseif($v3<$m3)
-      return(0);
-    if((!$v4)&&(!$m4))
-      return(1);
-    if(($v4)&&(!$m4)) {
-      $dummy=strpos($v4,"pl");
-      if(is_integer($dummy))
-        return(1);
-      return(0);
-    } elseif((!$v4)&&($m4)) {
-      $dummy=strpos($m4,"rc");
-      if(is_integer($dummy))
-        return(1);
-      return(0);
-    }
-    return(0);
-  }
-
   //BOF - web28 - 2010.02.09 - FIX LOST SESSION
   if (isset($_SESSION['language']) && $_SESSION['language'] != '') {
     $lang = $_SESSION['language'];
@@ -179,6 +137,14 @@
   //EOF - web28 - 2010.02.09 - FIX LOST SESSION
 
 /*########### FUNCTIONS #############*/
+
+  // Determine Document Root
+  function detectDocumentRoot() {
+    $dir_fs_www_root = realpath(dirname(basename(__FILE__)) . "/..");
+    if ($dir_fs_www_root == '') $dir_fs_www_root = '/';
+    $dir_fs_www_root = str_replace(array('\\','//'), '/', $dir_fs_www_root);
+    return $dir_fs_www_root;
+  }
 
   //BOF - web28 - 2011-05-06 - NEW Strato document-root function
   function strato_document_root() {
