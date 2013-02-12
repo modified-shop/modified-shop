@@ -249,7 +249,7 @@ function saveSpecialsData($products_id) {
              WHERE tr.tax_class_id = p. products_tax_class_id
                AND p.products_id = '". $products_id . "' ";
       $tax_query = xtc_db_query($sql);
-      $tax = xtc_db_fetch_array($tax_query,true);
+      $tax = xtc_db_fetch_array($tax_query);
       $_POST['specials_price'] = ($_POST['specials_price']/($_POST['tax_rate']+100)*100); //web28 - 2010-07-27 - tax_rate from  hidden field
     }
     if (substr($_POST['specials_price'], -1) == '%')  {
