@@ -234,7 +234,7 @@
     </table>
     <br />
     <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
-    <div align="center" style="padding-top:5px; font-size:11px;">Installer 106 rev8</div>
+    <div align="center" style="padding-top:5px; font-size:11px;">Installer 106 rev10</div>
     <div align="center" style="padding-top:5px; font-size:11px;"><?php echo $support; ?></div>
   </body>
 </html>
