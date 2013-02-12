@@ -47,8 +47,8 @@
       die();
     }
     // EOF - Dokuman - 2010-11-23 - revised database connection for error reporting
-
-    // BOF - Dokuman - 2011-03-01 - get ready for UTF8
+    
+    // set charset defined in configure.php
     if(!defined('DB_SERVER_CHARSET')) {
       define('DB_SERVER_CHARSET','utf8');
     }
@@ -57,7 +57,6 @@
     } else {
       mysql_query('SET NAMES '.DB_SERVER_CHARSET);
     }
-    // EOF - Dokuman - 2011-03-01 - get ready for UTF8
 
     return $$link;
   }
