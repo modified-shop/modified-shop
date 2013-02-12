@@ -162,7 +162,7 @@
   if(isset($_GET['page']) && $_GET['page'] > 1 && $addPagination) {
     // PREVNEXT_TITLE_PAGE_NO ist "Seite %d" aus der deutschen bzw. "page %d" aus der englischen Sprachdatei ...
     $Page = trim(str_replace('%d','',PREVNEXT_TITLE_PAGE_NO)).' '.(int)$_GET['page'];
-    //Cannonical Tag Page Parameter 
+    //Cannonical Tag Page Parameter
     $page_param = '&page='. (int)$_GET['page'];
   }
 // ---------------------------------------------------------------------------------------
@@ -316,8 +316,8 @@
   }
 // ---------------------------------------------------------------------------------------
 
-
-switch(basename($_SERVER['SCRIPT_NAME'])) { // Start Switch
+// Start Switch
+switch(basename($_SERVER['SCRIPT_NAME'])) {
 
 // ---------------------------------------------------------------------------------------
 //  Daten holen: Produktdetails
@@ -430,7 +430,9 @@ switch(basename($_SERVER['SCRIPT_NAME'])) { // Start Switch
     //-- Canonical-URL
     //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
     if (xtc_not_null($cPath)) {
-      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$Page,$request_type,false);
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'cPath='.$cPath.$page_param,$request_type,false);
+    } elseif (xtc_not_null($manu_id)) {
+      $canonical_url = xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manu_id.$page_param,$request_type,false);
     } elseif ($startpage) {
       $canonical_url = xtc_href_link(FILENAME_DEFAULT, '', $request_type,false);
     }
@@ -539,6 +541,7 @@ switch(basename($_SERVER['SCRIPT_NAME'])) { // Start Switch
   case FILENAME_SPECIALS :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addSpecialsShopTitle)?ML_TITLE:'');
+    $canonical_url = xtc_href_link(FILENAME_SPECIALS, ltrim($page_param,'&'),$request_type,false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für Neue Artikel
@@ -546,6 +549,7 @@ switch(basename($_SERVER['SCRIPT_NAME'])) { // Start Switch
   case FILENAME_PRODUCTS_NEW :
 
     $meta_title = metaTitle($breadcrumbTitle,$Page,($addNewsShopTitle)?ML_TITLE:'');
+    $canonical_url = xtc_href_link(FILENAME_PRODUCTS_NEW, ltrim($page_param,'&'),$request_type,false);
     break;
 // ---------------------------------------------------------------------------------------
 //  Title für sonstige Seiten
@@ -557,8 +561,8 @@ switch(basename($_SERVER['SCRIPT_NAME'])) { // Start Switch
 // ---------------------------------------------------------------------------------------
 
 
-} // Ende Switch
-
+}
+// Ende Switch
 
 // ---------------------------------------------------------------------------------------
 //  ... und wenn nix drin, dann Standard-Werte nehmen
