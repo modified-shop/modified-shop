@@ -56,4 +56,5 @@ $file_contents =
 '  define(\'DB_DATABASE\', \'' . $_POST['DB_DATABASE']. '\');' . PHP_EOL .
 '  define(\'USE_PCONNECT\', \'' . (($_POST['USE_PCONNECT'] == 'true') ? 'true' : 'false') . '\'); // use persistent connections?' . PHP_EOL .
 '  define(\'STORE_SESSIONS\', \'' . (($_POST['STORE_SESSIONS'] == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
+'  define(\'DB_SERVER_CHARSET\', \'' . DB_SERVER_CHARSET . '\'); // set db charset utf8 or latin1' . PHP_EOL . 
 '?>';

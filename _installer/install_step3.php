@@ -74,6 +74,8 @@
                   xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
                   $sql = 'ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation.";";
                   @mysql_query($sql);
+                  $sql = 'SET NAMES '.$character_set.' COLLATE '.$collation.";";
+                  @mysql_query($sql);
                   $db_error = false;
                   $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL;
                   xtc_db_install($db['DB_DATABASE'], $sql_file);
