@@ -68,6 +68,10 @@
 
   $db_error = false;
   xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
+  $sql = 'ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation.";";
+  @mysql_query($sql);
+  $sql = 'SET NAMES '.$character_set.' COLLATE '.$collation.";";
+  @mysql_query($sql);
 
   //check MySQL *server* version
   if (!$db_error) {
@@ -89,8 +93,6 @@
   }
   //check db permission
   if (!$db_error) {
-    $sql = 'ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation.";";
-    mysql_query($sql);
     xtc_db_test_create_db_permission($db['DB_DATABASE']);
   }
 
@@ -99,7 +101,7 @@
 <html>
   <head>
     <title>modified eCommerce Shopsoftware Installer - STEP 2 / DB Connection</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
       table,td,div { font-family: Arial, sans-serif; font-size: 12px;}

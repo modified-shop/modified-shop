@@ -27,7 +27,7 @@
 <html>
   <head>
     <title>modified eCommerce Shopsoftware Installer - Finished</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
       table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
@@ -93,6 +93,6 @@
       </tr>
     </table>
     <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified106tutf8.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
+    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified107tutf8.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
   </body>
 </html>

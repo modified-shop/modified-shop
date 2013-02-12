@@ -305,7 +305,7 @@
 <html>
 <head>
   <title>modified eCommerce Shopsoftware Installer - STEP 7 / Success</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
   <?php require('includes/form_check.js.php'); ?>
   <style type="text/css">
     body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}

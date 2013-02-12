@@ -66,7 +66,7 @@
 <html>
   <head>
     <title>modified eCommerce Shopsoftware Installer - STEP 1 / Settings</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
       table,td,div { font-family: Arial, sans-serif; font-size: 12px;}

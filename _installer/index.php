@@ -125,8 +125,9 @@
                 </div>
               </td>
             </tr>
-           <?php
-            // BOC flth new permission fix system
+          <?php
+          // BOC flth new permission fix system
+          if ($folder_flag || $file_flag) {
             $host = isset($_POST['path']) ? $_POST['host'] : rtrim(getenv('HTTP_HOST'),'/');
             $path = isset($_POST['path']) ? $_POST['path'] : basename(DIR_FS_CATALOG).'/';
             $port = isset($_POST['port']) ? $_POST['port'] : '21';
@@ -160,8 +161,9 @@
               </td>
             </tr>
             <?php
-            // EOC flth new permission fix system
-            ?>
+          }
+          // EOC flth new permission fix system
+          ?>
           <?php } ?>
           <?php if ($ok_message!='') { ?>
             <tr>
@@ -232,7 +234,7 @@
     </table>
     <br />
     <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
-    <div align="center" style="padding-top:5px; font-size:11px;">Installer 107 rev1</div>
+    <div align="center" style="padding-top:5px; font-size:11px;">Installer 107 rev2</div>
     <div align="center" style="padding-top:5px; font-size:11px;"><?php echo $support; ?></div>
   </body>
 </html>

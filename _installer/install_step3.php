@@ -23,7 +23,7 @@
 <html>
   <head>
     <title>modified eCommerce Shopsoftware Installer - STEP 3 / DB Import</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
     <style type="text/css">
       body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
       table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
@@ -72,9 +72,12 @@
                   $db['DB_SERVER_PASSWORD'] = trim(stripslashes($_POST['DB_SERVER_PASSWORD']));
                   $db['DB_DATABASE'] = trim(stripslashes($_POST['DB_DATABASE']));
                   xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
+                  $sql = 'ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation.";";
+                  @mysql_query($sql);
+                  $sql = 'SET NAMES '.$character_set.' COLLATE '.$collation.";";
+                  @mysql_query($sql);
                   $db_error = false;
                   $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL;                  
-
                   xtc_db_install($db['DB_DATABASE'], $sql_file);
                   if ($db_error) {
                 ?>
