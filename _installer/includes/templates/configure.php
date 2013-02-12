@@ -29,8 +29,8 @@ $file_contents =
 //EOF - web28 - 2010.09.15 - using SSL proxy
 '  define(\'DIR_WS_CATALOG\', \'' . $_POST['DIR_WS_CATALOG'] . '\'); // absolute path required' . PHP_EOL .
 //BOF - web28 - 2010.02.18 - STRATO ROOT PATCH
-'  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT.$local_install_path  . '\');' . PHP_EOL .
-'  define(\'DIR_FS_CATALOG\', \'' . DIR_FS_DOCUMENT_ROOT.$local_install_path  . '\');' . PHP_EOL .
+'  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\');' . PHP_EOL .
+'  define(\'DIR_FS_CATALOG\', \'' . DIR_FS_DOCUMENT_ROOT . '\');' . PHP_EOL .
 //EOF - web28 - 2010.02.18 - STRATO ROOT PATCH
 '  define(\'DIR_WS_IMAGES\', \'images/\');' . PHP_EOL .
 '  define(\'DIR_WS_ORIGINAL_IMAGES\', DIR_WS_IMAGES .\'product_images/original_images/\');' . PHP_EOL .

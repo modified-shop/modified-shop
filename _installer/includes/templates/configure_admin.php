@@ -29,11 +29,11 @@ $file_contents =
 '  define(\'USE_SSL_PROXY\', ' . (($_POST['USE_SSL_PROXY'] == 'true') ? 'true' : 'false') . '); // using SSL proxy?' . PHP_EOL .
 //EOF - web28 - 2010.09.15 - using SSL proxy
 //BOF - web28 - 2010.02.18 - STRATO ROOT PATCH
-'  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT.$local_install_path  . '\'); // where the pages are located on the server' . PHP_EOL .
+'  define(\'DIR_FS_DOCUMENT_ROOT\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // where the pages are located on the server' . PHP_EOL .
 '  define(\'DIR_WS_ADMIN\', \'' . $_POST['DIR_WS_CATALOG'] .'admin/' . '\'); // absolute path required' . PHP_EOL .
-'  define(\'DIR_FS_ADMIN\', \'' . DIR_FS_DOCUMENT_ROOT.$local_install_path .'admin/' . '\'); // absolute pate required' . PHP_EOL .
+'  define(\'DIR_FS_ADMIN\', \'' . DIR_FS_DOCUMENT_ROOT .'admin/' . '\'); // absolute pate required' . PHP_EOL .
 '  define(\'DIR_WS_CATALOG\', \'' . $_POST['DIR_WS_CATALOG'] . '\'); // absolute path required' . PHP_EOL .
-'  define(\'DIR_FS_CATALOG\', \'' . DIR_FS_DOCUMENT_ROOT.$local_install_path  . '\'); // absolute path required' . PHP_EOL .
+'  define(\'DIR_FS_CATALOG\', \'' . DIR_FS_DOCUMENT_ROOT . '\'); // absolute path required' . PHP_EOL .
 //EOF - web28 - 2010.02.18 - STRATO ROOT PATCH
 '  define(\'DIR_WS_IMAGES\', \'images/\');' . PHP_EOL .
 '  define(\'DIR_FS_CATALOG_IMAGES\', DIR_FS_CATALOG . \'images/\');' . PHP_EOL .
