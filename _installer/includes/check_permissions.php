@@ -30,6 +30,7 @@
                                           'admin/images/icons',
                                           'cache',
                                           'export',
+                                          'export/idealo_realtime',
                                           'images',
                                           'images/banner',
                                           'images/categories',
