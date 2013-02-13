@@ -37,8 +37,6 @@
   define('DIR_WS_CLASSES', DIR_WS_INCLUDES . 'classes/');
   define('DIR_WS_MODULES', DIR_WS_INCLUDES . 'modules/');
   define('DIR_WS_LANGUAGES', DIR_FS_CATALOG . 'lang/');
-  define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
-  define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
 
   define('DIR_WS_DOWNLOAD_PUBLIC', DIR_WS_CATALOG . 'pub/');
   define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
