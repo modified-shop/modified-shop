@@ -41,7 +41,7 @@ $_csv_new_idealo_version_text = '';
 	$_csv_new_version_idealo = explode ( '.', $_csv_version_idealo );
 
    	   $_csv_idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
-	   $_csv_idealo_version_text_no_modified = '<blink>' .TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $_csv_idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a></blink>';	
+	   $_csv_idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $_csv_idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; //DokuMan - 2012-08-21 - removed "blink"-tag	
 	   
 			if ( count ( $_csv_old_version_idealo ) == count ( $_csv_new_version_idealo ) ){
 	
