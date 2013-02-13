@@ -14,8 +14,8 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  require('includes/application.php');
   require('../admin/includes/configure.php');
+  require('includes/application.php');  
 
   //BOF - web28 - 2010.02.11 - NEW LANGUAGE HANDLING IN application.php
   //include('language/'.$_SESSION['language'].'.php');
