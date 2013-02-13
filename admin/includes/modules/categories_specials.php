@@ -223,13 +223,16 @@
        if ($_POST['specials_expires']) {
          $expires_date = str_replace("-", "", $_POST['specials_expires']);
        }
-       xtc_db_query("INSERT INTO " . TABLE_SPECIALS . " 
-                             SET products_id = '" . $products_id . "', 
-                                 specials_quantity = '" . (int)$_POST['specials_quantity'] . "', 
-                                 specials_new_products_price = '" . $_POST['specials_price'] . "', 
-                                 specials_date_added = now(), 
-                                 expires_date = '" . $expires_date . "', 
-                                 status = '1'");
+
+       $sql_data_array = array('products_id' => $products_id,
+                               'specials_quantity' => (int)$_POST['specials_quantity'],
+                               'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
+                               'specials_date_added' => 'now()',
+                               'expires_date' => $expires_date,
+                               'status' => '1'
+                               );
+       xtc_db_perform (TABLE_SPECIALS,$sql_data_array);
+
     } elseif($_POST['specials_action'] == "update" && isset($_POST['specials_price']) && isset($_POST['specials_quantity'])) {
       // update the existing special for this product, code taken from /admin/specials.php, and modified
       if (PRICE_IS_BRUTTO=='true' && substr($_POST['specials_price'], -1) != '%'){
@@ -251,16 +254,17 @@
         $expires_date = str_replace("-", "", $_POST['specials_expires']);
       }
 
-      //BOF BUGFIX - Änderungen wurden bei Update nicht übernommen
-      //xtc_db_query("update " . TABLE_SPECIALS . " set specials_quantity = '" . $_POST['specials_quantity'] . "', specials_new_products_price = '" . $_POST['specials_price'] . "', specials_last_modified = now(), expires_date = '" . $expires_date . "' where specials_id = '" . $products_id  . "'");
-      xtc_db_query("UPDATE " . TABLE_SPECIALS . " 
-                       SET specials_quantity = '" . (int)$_POST['specials_quantity'] . "', 
-                           specials_new_products_price = '" . $_POST['specials_price'] . "', 
-                           specials_last_modified = now(), 
-                           expires_date = '" . $expires_date . "', 
-                           status =  '" . xtc_db_input($_POST['specials_status']) . "'                           
-                     WHERE specials_id = '" . xtc_db_input($_POST['specials_id'])  . "'"); //DokuMan - 2011-11-8 - added missing status from SP1b
-      //BOF BUGFIX - Änderungen wurden bei Update nicht übernommen
+      $sql_data_array = array(
+                        'specials_quantity' => (int)$_POST['specials_quantity'],
+                        'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
+                        'specials_date_added' => 'now()',
+                        'expires_date' => $expires_date,
+                        'status' => (int)$_POST['specials_status']
+                        );
+
+      $sql_data_array['specials_attribute'] = (int)$_POST['specials_attribute'];
+
+      xtc_db_perform (TABLE_SPECIALS,$sql_data_array, 'update', "specials_id = '" . xtc_db_input($_POST['specials_id'])  . "'" );    
     }
     if(isset($_POST['specials_delete'])) {
       // delete existing special for this product, code taken from /admin/specials.php, and modified
