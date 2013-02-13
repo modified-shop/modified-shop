@@ -2664,7 +2664,7 @@
 																					}
 																					else
 																					{
-																						$url = HTTP_SERVER.DIR_WS_CATALOG."xtbcallback.php?item=".$x['HASH']."&key=".$x['XTB_KEY'];
+																						$url = HTTP_SERVER.DIR_WS_CATALOG."callback/xtbooster/xtbcallback.php?item=".$x['HASH']."&key=".$x['XTB_KEY']; //DokuMan - Moved xtbcallback.php to callback directory
 																						?>
 																						<tr>
 																							<td class="smallText" valign="top">-</td>
