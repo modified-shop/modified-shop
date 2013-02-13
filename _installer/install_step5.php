@@ -255,7 +255,7 @@
                                 <img src="buttons/<?php echo $lang;?>/button_continue.gif" border="0">
                               </a>
                             </td>
-                          <?php //BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>
+                          <?php //EOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>
                           </tr>
                         </table>
                         <br />
