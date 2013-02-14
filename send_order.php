@@ -157,24 +157,32 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   // dont allow cache
   $smarty->caching = 0;
 
-  // BOF - Tomcraft - 2011-06-17 - Added content to email for janolaw AGB hosting service
-  // Nur Widerruf (9) wird gesendet => TODO neues Feld content_email in Tabelle CONTENT_MANAGER zum auswaehlen was in Email mitgesendet wird.
-  $shop_content_query = xtc_db_query("SELECT content_title,
-                                             content_heading,
-                                             content_text,
-                                             content_file
-                                        FROM " . TABLE_CONTENT_MANAGER . "
-                                       WHERE content_group='9' " . $group_check . "
-                                         AND languages_id='" . $_SESSION['languages_id'] . "'");
-  // AGB (3) und Widerruf (9) wird gesendet => TODO neues Feld content_email in Tabelle CONTENT_MANAGER zum auswaehlen was in Email mitgesendet wird.
+  // BOF - Tomcraft - 2011-06-17 - Added revocation to email
+  // Nur Widerruf (REVOCATION_ID) wird gesendet => TODO neues Feld content_email in Tabelle CONTENT_MANAGER zum auswaehlen was in Email mitgesendet wird.
+  if(GROUP_CHECK == 'true') {
+    $group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
+  }
+  $shop_content_query = "SELECT
+                        content_title,
+                        content_heading,
+                        content_text,
+                        content_file
+                        FROM " . TABLE_CONTENT_MANAGER . "
+                        WHERE content_group='" . REVOCATION_ID . "' " . $group_check . "
+                        AND languages_id='" . $_SESSION['languages_id'] . "'";
+  // AGB (3) und Widerruf (REVOCATION_ID) wird gesendet => TODO neues Feld content_email in Tabelle CONTENT_MANAGER zum auswaehlen was in Email mitgesendet wird.
   /*
-  $shop_content_query = xtc_db_query("SELECT content_title,
-                                             content_heading,
-                                             content_text,
-                                             content_file
-                                        FROM " . TABLE_CONTENT_MANAGER . "
-                                       WHERE (content_group='3' || content_group='9') " . $group_check . "
-                                         AND languages_id='" . $_SESSION['languages_id'] . "'");
+  if(GROUP_CHECK == 'true') {
+    $group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
+  }
+  $shop_content_query = "SELECT
+                        content_title,
+                        content_heading,
+                        content_text,
+                        content_file
+                        FROM " . TABLE_CONTENT_MANAGER . "
+                        WHERE (content_group='3' || content_group='" . REVOCATION_ID . "') " . $group_check . "
+                        AND languages_id='" . $_SESSION['languages_id'] . "'";
   */
   $conditions_html = "";
   $conditions_txt = "";
@@ -197,10 +205,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $conditions_txt = str_replace("<br>", "\n", $conditions_txt);
   $conditions_txt = strip_tags($conditions_txt);
 
-  $smarty->assign('JANOLAW_INFO_HTML', $conditions_html);
-  $smarty->assign('JANOLAW_INFO_TXT', $conditions_txt);
+  $smarty->assign('REVOCATION_HTML', $conditions_html);
+  $smarty->assign('REVOCATION_TXT', $conditions_txt);
 
-  // EOF - Tomcraft - 2011-06-17 - Added content to email for janolaw AGB hosting service
+  // EOF - Tomcraft - 2011-06-17 - Added revocation to email
 
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
