@@ -1,5 +1,5 @@
-{foreach name=aussen item=module_data from=$module_content}
 <table class="paymentblock" width="100%" border="0" cellspacing="0" cellpadding="6">
+{foreach name=aussen item=module_data from=$module_content} 
   <tr>
     <td class="header" width="1%">{$module_data.selection}</td>
     <td class="header" width="84%"><label for="{$smarty.foreach.aussen.iteration}">{$module_data.module}</label></td>
@@ -33,5 +33,5 @@
     </td>
   </tr>
   {/if}
-</table>
 {/foreach}
+</table>

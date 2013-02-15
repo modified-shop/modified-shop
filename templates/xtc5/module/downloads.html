@@ -4,8 +4,8 @@
   {if $dl_prevented == 'true'}
     <p>{#download_not_allowed#}</p>
   {/if}
-  {foreach name=aussen item=dl_data from=$dl}
-    <table width="100%" border="0" cellspacing="0" cellpadding="4" class="downloadbox">
+  <table width="100%" border="0" cellspacing="0" cellpadding="4" class="downloadbox">
+    {foreach name=aussen item=dl_data from=$dl}
       <tr>
         <td class="icon">
           {if $dl_data.pic_link}
@@ -19,6 +19,6 @@
           {#table_heading_download_date#}&nbsp;{$dl_data.date}, <strong>{$dl_data.count}</strong>&nbsp;{#table_heading_download_count#}
         </td>
       </tr>
-    </table>
-  {/foreach}
+    {/foreach}
+  </table>
 {/if}
