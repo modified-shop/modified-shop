@@ -1,8 +1,8 @@
 {config_load file="$language/lang_$language.conf" section="new_products"}
 {config_load file="$language/lang_$language.conf" section="index"}
 <h1>{if #heading_text_top# != ''}{#heading_text_top#}{else}{#heading_text#}{/if}</h1>
-{foreach name=aussen item=module_data from=$module_content}
 <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+{foreach name=aussen item=module_data from=$module_content}
   <tr>
     <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
     <td class="productPreviewContent">
@@ -19,6 +19,10 @@
     <p>{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
     </td>
   </tr>
-</table>
-<div class="hrproductpreview"></div>
+  <tr>
+    <td align="center" colspan="2">
+    <div class="hrproductpreview"></div>
+    </td>
+  </tr>
 {/foreach}
+</table>

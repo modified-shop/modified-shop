@@ -1,7 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="specials"}
 <h1>{#heading_text#}</h1>
-{foreach name=aussen item=module_data from=$module_content}
-  <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+<table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+  {foreach name=aussen item=module_data from=$module_content}
     <tr>
       <td class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
       <td class="productPreviewContent">
@@ -12,7 +12,11 @@
       <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW != ''}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
     </td>
     </tr>
-  </table>
-  <div class="hrproductpreview"></div>
-{/foreach}
+    <tr>
+      <td align="center" colspan="2">
+      <div class="hrproductpreview"></div>
+      </td>
+    </tr>
+  {/foreach}
+</table>
 <p>{$NAVBAR}</p>

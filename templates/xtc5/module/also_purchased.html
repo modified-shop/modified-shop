@@ -1,7 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="also_purchased"}
 <h2>{#heading_text#}</h2>
-{foreach name=aussen item=module_data from=$module_content}
 <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+{foreach name=aussen item=module_data from=$module_content}
   <tr>
     <td class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
     <td class="productPreviewContent">
@@ -11,6 +11,10 @@
     {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
     </td>
   </tr>
-</table>
-<div class="hrproductpreview"></div>
+  <tr>
+    <td align="center" colspan="2">
+    <div class="hrproductpreview"></div>
+    </td>
+  </tr>
 {/foreach}
+</table>
