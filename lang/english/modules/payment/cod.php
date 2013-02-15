@@ -18,7 +18,7 @@
 define('MODULE_PAYMENT_TYPE_PERMISSION', 'cod');
 define('MODULE_PAYMENT_COD_TEXT_TITLE', 'Cash on Delivery');
 define('MODULE_PAYMENT_COD_TEXT_DESCRIPTION', 'Cash on Delivery');
-define('MODULE_PAYMENT_COD_TEXT_INFO','');
+define('MODULE_PAYMENT_COD_TEXT_INFO','We ship your order after receipt of payment.');
 define('MODULE_PAYMENT_COD_ZONE_TITLE' , 'Payment Zone');
 define('MODULE_PAYMENT_COD_ZONE_DESC' , 'If a zone is selected, only enable this payment method for that zone.');
 define('MODULE_PAYMENT_COD_ALLOWED_TITLE' , 'Allowed Zones');
