@@ -269,7 +269,7 @@ function saveSpecialsData($products_id) {
                       'status' => (int)$_POST['specials_status']
                       );
 
-    $sql_data_array['specials_attribute'] = (int)$_POST['specials_attribute'];
+    //$sql_data_array['specials_attribute'] = (int)$_POST['specials_attribute'];
 
     xtc_db_perform (TABLE_SPECIALS,$sql_data_array, 'update', "specials_id = '" . xtc_db_input($_POST['specials_id'])  . "'" );    
   }
