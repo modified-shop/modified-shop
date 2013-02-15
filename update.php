@@ -284,7 +284,7 @@ h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
         </tr>
         <?php }  elseif ($clean) { ?>
         <tr>
-          <td valign="top" colspan="2" align="center" style="border:1px solid green; width:100%;">Es wurden die Dateien und Verzeichnisse erfolgreich gelöscht.<br/>Bitte stellen sie sicher, dass auch diese Datei vom Server entfernt wurde.</td>
+          <td valign="top" colspan="2" align="center" style="border:1px solid green; width:100%;">Es wurden die Dateien und Verzeichnisse erfolgreich gelöscht.<br/>Bitte stellen Sie sicher, dass auch die Datei &quot;update.php&quot; vom Server entfernt wurde.</td>
         </tr>
         <?php } ?>        
       </table>
