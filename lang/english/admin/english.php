@@ -104,6 +104,7 @@ define('BOX_CONFIGURATION_18', 'VAT Reg No');
 define('BOX_CONFIGURATION_19', 'Partner');
 define('BOX_CONFIGURATION_22', 'Search-Options');
 define('BOX_CONFIGURATION_24', 'PIWIK &amp; Google Analytics');
+define('BOX_CONFIGURATION_40', 'Popup Window Options');
 define('BOX_CONFIGURATION_1000', 'My Admin');
 
 define('BOX_MODULES', 'Payment-/Shipping-/Billing-Modules');
