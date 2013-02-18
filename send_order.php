@@ -159,10 +159,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   // BOF - Tomcraft - 2011-06-17 - Added revocation to email  
   $shop_content_data = $main->getContentData(REVOCATION_ID);  
-  $revocation = $shop_content_data['content_text'];
-  if ($shop_content_data['content_file'] == '') {
-    $revocation = $shop_content_data['content_title'] . $revocation;    
-  }
+  $revocation = $shop_content_data['content_text'];  
   $smarty->assign('REVOCATION_HTML', $revocation);
   $smarty->assign('REVOCATION_TXT', $revocation); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail  function
 
