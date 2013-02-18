@@ -62,7 +62,7 @@ function xtc_wysiwyg($type, $lang, $langID = '') {
       break;
     // WYSIWYG editor categories_description textarea named categories_description[langID]
     case 'categories_description':
-      $val ='var oFCKeditor = new FCKeditor( \'categories_description['.$langID.']\', \'600\', \'300\' ) ;
+      $val ='var oFCKeditor = new FCKeditor( \'categories_description['.$langID.']\', \'100%\', \'300\' ) ;
              oFCKeditor.BasePath = "'.$path.'" ;
              oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
              oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
