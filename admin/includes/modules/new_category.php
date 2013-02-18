@@ -207,6 +207,7 @@
         <?php echo ('</div>');?>
         <?php } ?>
       </div>
+      <div style="clear:both;"></div>
       <div style="text-align:right;width:850px;">
         <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
         <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
