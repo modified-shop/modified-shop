@@ -215,20 +215,7 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   //revocation  
   $shop_content_data = $main->getContentData(REVOCATION_ID);
 
-  if ($shop_content_data['content_file'] != '') {
-    ob_start();
-    if (strpos($shop_content_data['content_file'], '.txt'))
-      echo '<pre>';
-    include (DIR_FS_CATALOG . 'media/content/' . $shop_content_data['content_file']);
-    if (strpos($shop_content_data['content_file'], '.txt'))
-      echo '</pre>';
-    $revocation = ob_get_contents();
-    ob_end_clean();
-  } else {
-    $revocation = $shop_content_data['content_text'];
-  }
-
-  $smarty->assign('REVOCATION', $revocation);
+  $smarty->assign('REVOCATION', $shop_content_data['content_text']);
   $smarty->assign('REVOCATION_TITLE', $shop_content_data['content_heading']);
   $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'));
 
