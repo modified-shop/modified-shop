@@ -24,7 +24,7 @@ $content_data = $main->getContentData($_GET['coID']);
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>" /> 
   <meta http-equiv="Content-Style-Type" content="text/css" />
   <meta name="robots" content="noindex, nofollow, noodp" />
-  <title><?php echo htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset']); ?></title>
+  <title><?php echo htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset'])); ?></title>
   <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
   <link rel="stylesheet" type="text/css" href="<?php echo 'templates/'.CURRENT_TEMPLATE.'/stylesheet.css'; ?>" />
 </head>
