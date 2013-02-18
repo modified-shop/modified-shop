@@ -157,54 +157,14 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   // dont allow cache
   $smarty->caching = 0;
 
-  // BOF - Tomcraft - 2011-06-17 - Added revocation to email
-  // Nur Widerruf (REVOCATION_ID) wird gesendet => TODO neues Feld content_email in Tabelle CONTENT_MANAGER zum auswaehlen was in Email mitgesendet wird.
-  if(GROUP_CHECK == 'true') {
-    $group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
+  // BOF - Tomcraft - 2011-06-17 - Added revocation to email  
+  $shop_content_data = $main->getContentData(REVOCATION_ID);  
+  $revocation = $shop_content_data['content_text'];
+  if ($shop_content_data['content_file'] == '') {
+    $revocation = $shop_content_data['content_title'] . $revocation;    
   }
-  $shop_content_query = xtc_db_query("SELECT content_title,
-                                             content_heading,
-                                             content_text,
-                                             content_file
-                                        FROM " . TABLE_CONTENT_MANAGER . "
-                                       WHERE content_group='" . REVOCATION_ID . "' " . $group_check . "
-                                         AND languages_id='" . $_SESSION['languages_id'] . "'");
-  // AGB (3) und Widerruf (REVOCATION_ID) wird gesendet => TODO neues Feld content_email in Tabelle CONTENT_MANAGER zum auswaehlen was in Email mitgesendet wird.
-  /*
-  if(GROUP_CHECK == 'true') {
-    $group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
-  }
-  $shop_content_query = xtc_db_query("SELECT content_title,
-                                             content_heading,
-                                             content_text,
-                                             content_file
-                                        FROM " . TABLE_CONTENT_MANAGER . "
-                                       WHERE (content_group='3' || content_group='" . REVOCATION_ID . "') " . $group_check . "
-                                         AND languages_id='" . $_SESSION['languages_id'] . "'");
-  */
-  $conditions_html = "";
-  $conditions_txt = "";
-  while ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
-    if ($shop_content_data['content_file'] != '') {
-      $conditions_html .= file_get_contents(DIR_FS_DOCUMENT_ROOT . 'media/content/' . $shop_content_data['content_file']);
-      $conditions_txt .= file_get_contents(DIR_FS_DOCUMENT_ROOT . 'media/content/' . $shop_content_data['content_file']);
-    } else {
-      $conditions_html .= $shop_content_data['content_title'];
-      $conditions_html .= $shop_content_data['content_text'];
-      $conditions_txt .= $shop_content_data['content_title'];
-      $conditions_txt .= $shop_content_data['content_text'];
-    }
-  }
-  // HTML
-  $conditions_html = nl2br($conditions_html);
-
-  // TXT
-  $conditions_txt = str_replace("<br />", "\n", $conditions_txt);
-  $conditions_txt = str_replace("<br>", "\n", $conditions_txt);
-  $conditions_txt = strip_tags($conditions_txt);
-
-  $smarty->assign('REVOCATION_HTML', $conditions_html);
-  $smarty->assign('REVOCATION_TXT', $conditions_txt);
+  $smarty->assign('REVOCATION_HTML', $revocation);
+  $smarty->assign('REVOCATION_TXT', $revocation); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail  function
 
   // EOF - Tomcraft - 2011-06-17 - Added revocation to email
 
