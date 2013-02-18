@@ -299,19 +299,6 @@ if ($category_depth == 'nested') {
 
   include (DIR_WS_INCLUDES.FILENAME_CENTER_MODULES);
 
-  if ($shop_content_data['content_file'] != '') {
-    ob_start();
-    if (strpos($shop_content_data['content_file'], '.txt')) {
-      echo '<pre>';
-    }
-    include (DIR_FS_CATALOG.'media/content/'.$shop_content_data['content_file']);
-    if (strpos($shop_content_data['content_file'], '.txt')){
-      echo '</pre>';
-    }
-    $shop_content_data['content_text'] = ob_get_contents();
-    ob_end_clean();
-  }
-
   $default_smarty->assign('text', str_replace('{$greeting}', xtc_customer_greeting(), $shop_content_data['content_text']));
   $default_smarty->assign('language', $_SESSION['language']);
 

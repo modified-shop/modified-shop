@@ -203,13 +203,7 @@ $smarty->assign('COMMENTS', xtc_draw_textarea_field('comments', 'soft', '60', '5
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   $shop_content_data = $main->getContentData(3);
 
-  if ($shop_content_data['content_file'] != '') {
-    $conditions = '<div class="agbframe">' . file_get_contents(DIR_FS_DOCUMENT_ROOT . 'media/content/' . $shop_content_data['content_file']) . '</div>';
-  } else {
-    $conditions = '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>';
-  }
-
-  $smarty->assign('AGB', $conditions);
+  $smarty->assign('AGB', '<div class="agbframe">' . $shop_content_data['content_text'] . '</div>');
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
 
   if (isset($_GET['step']) && $_GET['step'] == 'step2') {

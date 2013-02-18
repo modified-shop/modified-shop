@@ -166,8 +166,9 @@ class main {
    */
   function getContentData($coID) {
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'" : '';
-    $shop_content_query = xtc_db_query("-- includes/classes/main.php
-                                       SELECT content_title,
+    $content_data_query = xtDBquery("-- includes/classes/main.php
+                                       SELECT content_id,
+                                              content_title,
                                               content_heading,
                                               content_text,
                                               content_file
@@ -177,7 +178,22 @@ class main {
                                           AND languages_id='" . (int)$_SESSION['languages_id'] . "'
                                         LIMIT 1
                                       ");
-    return xtc_db_fetch_array($shop_content_query);
+    $content_data_array = xtc_db_fetch_array($content_data_query,true);
+    
+    // check if content data is a file
+    if ($content_data_array['content_file'] != '') {
+      unset($content_data_array['content_text']);
+      ob_start();      
+      include (DIR_FS_DOCUMENT_ROOT.'media/content/'.$content_data_array['content_file']);      
+      $content_data_array['content_text'] = @ob_get_contents();
+      ob_end_clean();
+      //check for txt file and format output
+      if (strpos($content_data_array['content_file'], '.txt')) {
+        $content_data_array['content_text'] = '<pre>' . $content_data_array['content_text'] . '</pre>';
+      }
+    }
+    
+    return $content_data_array;    
   }
 
   /**
