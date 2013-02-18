@@ -41,7 +41,24 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
   //EOF - Dokuman - 2009-10-30 - Check for existing signature files
 
-  //BOF - web28 - 2010-06-05 - Signatur in Email
+  //BOF - web28 - 2010-06-05 - Widerruf in Email
+  $html_widerruf = '';
+  $txt_widerruf = '';
+  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.html')) {
+    $html_widerruf = '<br />' . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.html'); //web28 - 2011-06-10 - ADD Linebreak
+  }
+  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.txt')) {
+    $txt_widerruf = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.txt'); //web28 - 2011-06-10 - ADD Linebreak
+  }
+
+  //Platzhalter [WIDERRUF] durch Widerruf Text ersetzen
+  if (strpos($message_body_html,'[WIDERRUF]') !== false) {
+    $message_body_html = str_replace('[WIDERRUF]', $html_widerruf, $message_body_html);
+  }
+  if (strpos($message_body_plain,'[WIDERRUF]') !== false) {
+    $message_body_plain = str_replace('[WIDERRUF]', $txt_widerruf, $message_body_plain);
+  }
+
   //Platzhalter [SIGNATUR] durch Signatur Text ersetzen
   if (strpos($message_body_html,'[SIGNATUR]') !== false) {
     $message_body_html = str_replace('[SIGNATUR]', $html_signatur, $message_body_html);
@@ -51,7 +68,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $message_body_plain = str_replace('[SIGNATUR]', $txt_signatur, $message_body_plain);
     $txt_signatur = '';
   }
-  //EOF - web28 - 2010-06-05 - Signatur in Email
+  //EOF - web28 - 2010-06-05 - Widerruf in Email
 
 //**********************************************************************************************
 
