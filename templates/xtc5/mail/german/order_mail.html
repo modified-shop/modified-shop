@@ -91,4 +91,9 @@
 
 [SIGNATUR]
 
-{$REVOCATION_HTML}
+{if $REVOCATION_HTML neq ''}
+<br />
+<font size="1" face="Arial, Helvetica, sans-serif">{$REVOCATION_HTML}</font>
+<br />
+{/if}
+
