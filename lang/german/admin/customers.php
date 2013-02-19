@@ -62,4 +62,8 @@ define('TABLE_HEADING_UMSATZ','Umsatz');
 // BOF - web28 - 2010-05-28 - added  customers_email_address
 define('TABLE_HEADING_EMAIL','E-Mail');
 // EOF - web28 - 2010-05-28 - added  customers_email_address
+
+define('TEXT_INFO_HEADING_ADRESS_BOOK', 'Adressbuch');
+define('TEXT_INFO_DELETE', '<b>Diesen Adressbucheintrag l&ouml;schen?</b>');
+define('TEXT_INFO_DELETE_DEFAULT', '<b>Dieser Adressbucheintrag kann nicht gel&ouml;scht werden!</b>'); 
 ?>
