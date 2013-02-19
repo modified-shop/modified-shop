@@ -62,4 +62,8 @@ define('TABLE_HEADING_UMSATZ','total revenue');
 // BOF - web28 - 2010-05-28 - added  customers_email_address
 define('TABLE_HEADING_EMAIL','Email');
 // EOF - web28 - 2010-05-28 - added  customers_email_address
+
+define('TEXT_INFO_HEADING_ADRESS_BOOK', 'Addressbook');
+define('TEXT_INFO_DELETE', '<b>Delete this address book entry?</b>');
+define('TEXT_INFO_DELETE_DEFAULT', '<b>The address book entry can not be deleted!</b>'); 
 ?>
