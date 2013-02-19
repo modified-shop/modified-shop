@@ -266,21 +266,22 @@ if ($category_depth == 'nested') {
     if (xtc_db_num_rows($filterlist_query, true) > 1) {
       $manufacturer_dropdown = xtc_draw_form('filter', DIR_WS_CATALOG . FILENAME_DEFAULT, 'get');
       if (isset($_GET['manufacturers_id'])) {
-        $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']);
+        $manufacturer_dropdown .= xtc_draw_hidden_field('manufacturers_id', (int)$_GET['manufacturers_id']).PHP_EOL;
         $options = array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES)); // DokuMan - 2012-03-27 - added missing "id" for xtc_draw_pull_down_menu
       } else {
-        $manufacturer_dropdown .= xtc_draw_hidden_field('cat', $current_category_id);
+        $manufacturer_dropdown .= xtc_draw_hidden_field('cat', $current_category_id).PHP_EOL;
         $options = array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS)); // DokuMan - 2012-03-27 - added missing "id" for xtc_draw_pull_down_menu
       }
-      $manufacturer_dropdown .= xtc_draw_hidden_field('sort', isset($_GET['sort']) ? $_GET['sort'] : '');
-      $manufacturer_dropdown .= xtc_hide_session_id()  .PHP_EOL; //Session ID nur anhängen, wenn Cookies deaktiviert sind
-
+      if (isset($_GET['sort']) && !empty($_GET['sort'])) {
+        $manufacturer_dropdown .= xtc_draw_hidden_field('sort', $_GET['sort']).PHP_EOL;
+      }
       while ($filterlist = xtc_db_fetch_array($filterlist_query, true)) {
         $options[] = array ('id' => $filterlist['id'], 'text' => $filterlist['name']);
       }
-      $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'onchange="this.form.submit()"');
-      $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>';
-      $manufacturer_dropdown .= '</form>'."\n";
+      $manufacturer_dropdown .= xtc_draw_pull_down_menu('filter_id', $options, isset($_GET['filter_id']) ? (int)$_GET['filter_id'] : '', 'onchange="this.form.submit()"').PHP_EOL;
+      $manufacturer_dropdown .= '<noscript><input type="submit" value="'.SMALL_IMAGE_BUTTON_VIEW.'" id="filter_submit" /></noscript>'.PHP_EOL;
+      $manufacturer_dropdown .= xtc_hide_session_id() .PHP_EOL; //Session ID nur anhängen, wenn Cookies deaktiviert sind
+      $manufacturer_dropdown .= '</form>'.PHP_EOL;
     }
   }
 
