@@ -2,6 +2,7 @@
 <div class="productnavigator">
 {if $FIRST != ''}<a href="{$FIRST}">{#first#}</a>&nbsp;|&nbsp;{/if}
 {if $PREVIOUS != ''}<a href="{$PREVIOUS}">{#back#}</a>&nbsp;|&nbsp;{/if}
+{if $OVERVIEW!=''}<a href="{$OVERVIEW}">{#overview#}</a>&nbsp;|&nbsp;{/if}
 {if $NEXT != ''}<a href="{$NEXT}">{#next#}</a>&nbsp;|&nbsp;{/if}
 {if $LAST != ''}<a href="{$LAST}">{#last#}</a>&nbsp;|&nbsp;{/if}
 {#product#}&nbsp;<strong>{$ACTUAL_PRODUCT}&nbsp;{#of#}&nbsp;{$PRODUCTS_COUNT}</strong>&nbsp;{#total#}
