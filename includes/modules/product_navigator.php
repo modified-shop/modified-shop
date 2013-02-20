@@ -91,8 +91,11 @@ if ($actual_key == (sizeof($p_data) - 1)) {
   if ($next_id != (sizeof($p_data) - 1))
     $last_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($p_data[(sizeof($p_data) - 1)]['pID'], $p_data[(sizeof($p_data) - 1)]['pName']));
 }
+$overview_link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($current_category_id));
+
 $module_smarty->assign('FIRST', $first_link);
 $module_smarty->assign('PREVIOUS', $prev_link);
+$module_smarty->assign('OVERVIEW', $overview_link);
 $module_smarty->assign('NEXT', $next_link);
 $module_smarty->assign('LAST', $last_link);
 // BOF - Tomcraft - 2010-05-02 - Show actual product count in product_navigator
