@@ -18,85 +18,9 @@
 
   include('language/'.$lang.'.php');
 
-
-  //BOF - web28 - 2010-06-14 - Fix possible end slash
+  // Fix possible end slash
   $http_server = rtrim($_POST['HTTP_SERVER'], '/');
-  $https_server = rtrim($_POST['HTTPS_SERVER'], '/');
-  //EOF - web28 - 2010-06-14 - Fix possible end slash
-
-  function phpLinkCheck($url, $r = FALSE) {
-  /*  Purpose: Check HTTP Links
-   *  Usage:   $var = phpLinkCheck(absoluteURI)
-   *           $var["Status-Code"] will return the HTTP status code
-   *           (e.g. 200 or 404). In case of a 3xx code (redirection)
-   *           $var["Location-Status-Code"] will contain the status
-   *           code of the new loaction.
-   *           See print_r($var) for the complete result
-   *
-   *  Author:  Johannes Froemter <j-f@gmx.net>
-   *  Date:    2001-04-14
-   *  Version: 0.1 (currently requires PHP4)
-   */
-
-  $url = trim($url);
-
-  //http oder https entfernen
-  $http = array('http://', 'https://');
-  $urltest = str_replace($http,'',$url);
-  //Auf // testen
-  if (strpos($urltest, '//') !== false)
-    return false;
-  //Auf falsches Installer Verzeichnis testen
-  if (strpos($urltest, DIR_MODIFIED_INSTALLER) !== false)
-    return false;
-
-  if (!preg_match("=://=", $url))
-    $url = "http://$url";
-  $url = parse_url($url);
-  $http["Parsed_URL"] = $url;
-  if (strtolower($url["scheme"]) != "http")
-    return FALSE;
-  if (!isset($url["port"]))
-    $url["port"] = 80;
-  if (!isset($url["path"]))
-    $url["path"] = "/";
-  $fp = @fsockopen($url["host"], $url["port"], $errno, $errstr, 30);
-  if (!$fp) {
-    $http["Status-Code"] = '550';  // unknown host // FALSE;
-    return $http;
-  } else {
-    $head = "";
-    $httpRequest = "HEAD ". $url["path"] ." HTTP/1.1\r\n"
-                  ."Host: ". $url["host"] ."\r\n"
-                  ."Connection: close\r\n\r\n";
-    fputs($fp, $httpRequest);
-
-    while(!feof($fp)) {
-      $head .= fgets($fp, 1024);
-    }
-    fclose($fp);
-    preg_match("=^(HTTP/\d+\.\d+) (\d{3}) ([^\r\n]*)=", $head, $matches);
-    $http["Status-Line"] = $matches[0];
-    $http["HTTP-Version"] = $matches[1];
-    $http["Status-Code"] = $matches[2];
-    $http["Reason-Phrase"] = $matches[3];
-    if ($r) {
-      return $http["Status-Code"];
-    }
-    $rclass = array("Informational", "Success",
-                    "Redirection", "Client Error",
-                    "Server Error");
-    $http["Response-Class"] = $rclass[$http["Status-Code"][0] - 1];
-    preg_match_all("=^(.+): ([^\r\n]*)=m", $head, $matches, PREG_SET_ORDER);
-    foreach($matches as $line) {
-      $http[$line[1]] = $line[2];
-    }
-    if ($http["Status-Code"][0] == 3) {
-      $http["Location-Status-Code"] = phpLinkCheck($http["Location"], true);
-    }
-    return $http;
-  }
-}
+  $https_server = rtrim($_POST['HTTPS_SERVER'], '/');  
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -180,10 +104,16 @@
                 <?php
                   } else {
                     //Testpfad
-                    $url = $http_server . $_POST['DIR_WS_CATALOG'] . 'robots.txt';
-                    $link_status = phpLinkCheck($url);
+                    if (defined('DISABLE_PATH_CHECK') && DISABLE_PATH_CHECK) {
+                      $link_status['Status-Code'] = 200;
+                    } else {
+                      $url = $http_server . $_POST['DIR_WS_CATALOG'] . 'robots.txt';
+                      $link_status = phpLinkCheck($url);
+                    }
                     if ($link_status['Status-Code'] == 550) {
-                      $errmsg = 'HTTP Server: ' . $link_status['Parsed_URL']['host'] . ' unbekannt/unknown' . '   [ERROR: 550]';
+                      $errmsg = 'URL: ' . $url . '<br />';
+                      $errmsg = 'PARSED URL: ' . $link_status['Parsed_URL']['host'] . $link_status['Parsed_URL']['path']. '<br />';
+                      $errmsg .= 'HTTP Server: ' . $link_status['Parsed_URL']['host'] . ' unbekannt/unknown' . '   [ERROR: 550]';
                     } else if ($link_status['Status-Code'] == 404) {
                       $errmsg = $link_status['Parsed_URL']['host'] . $link_status['Parsed_URL']['path'] . '   [ERROR: 404]';
                     }
