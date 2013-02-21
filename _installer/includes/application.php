@@ -18,7 +18,7 @@
    --------------------------------------------------------------*/
 
   include('includes/config.php');
-  include('includes/version.php);
+  include('includes/version.php');
   
   // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
