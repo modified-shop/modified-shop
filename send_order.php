@@ -144,6 +144,13 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION);
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION));
   }
+  
+  // Cash on Delivery
+  if ($order->info['payment_method'] == 'cod') {
+    $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_COD_TEXT_INFO);
+    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_COD_TEXT_INFO));
+  }
+  
 
   //allow duty-note in email
   if(!is_object($main)) {
