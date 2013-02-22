@@ -244,114 +244,114 @@
           case '14':
             // Austria
             $tax_normal='20.0000';
-            $tax_normal_text='20%';
+            $tax_normal_text='UST 20%';
             $tax_special='10.0000';
-            $tax_special_text='10%';
+            $tax_special_text='UST 10%';
             break;
           case '21':
             // Belgien
             $tax_normal='21.0000';
-            $tax_normal_text='21%';
+            $tax_normal_text='UST 21%';
             $tax_special='6.0000';
-            $tax_special_text='6%';
+            $tax_special_text='UST 6%';
             break;
           case '57':
             // Dänemark
             $tax_normal='25.0000';
-            $tax_normal_text='25%';
+            $tax_normal_text='UST 25%';
             $tax_special='25.0000';
-            $tax_special_text='25%';
+            $tax_special_text='UST 25%';
             break;
           case '72':
             // Finnland
             $tax_normal='22.0000';
-            $tax_normal_text='22%';
+            $tax_normal_text='UST 22%';
             $tax_special='8.0000';
-            $tax_special_text='8%';
+            $tax_special_text='UST 8%';
             break;
           case '73':
             // Frankreich
             $tax_normal='19.6000';
-            $tax_normal_text='19.6%';
+            $tax_normal_text='UST 19.6%';
             $tax_special='2.1000';
-            $tax_special_text='2.1%';
+            $tax_special_text='UST 2.1%';
              break;
           case '81':
             // Deutschland
             $tax_normal='19.0000';
-            $tax_normal_text='19%';
+            $tax_normal_text='MwSt. 19%';
             $tax_special='7.0000';
-            $tax_special_text='7%';
+            $tax_special_text='MwSt. 7%';
             break;
           case '84':
             // Griechenland
             $tax_normal='18.0000';
-            $tax_normal_text='18%';
+            $tax_normal_text='UST 18%';
             $tax_special='4.0000';
-            $tax_special_text='4%';
+            $tax_special_text='UST 4%';
             break;
           case '103':
             // Irland
             $tax_normal='21.0000';
-            $tax_normal_text='21%';
+            $tax_normal_text='UST 21%';
             $tax_special='4.2000';
-            $tax_special_text='4.2%';
+            $tax_special_text='UST 4.2%';
             break;
           case '105':
             // Italien
             $tax_normal='20.0000';
-            $tax_normal_text='20%';
+            $tax_normal_text='UST 20%';
             $tax_special='4.0000';
-            $tax_special_text='4%';
+            $tax_special_text='UST 4%';
             break;
           case '124':
             // Luxemburg
             $tax_normal='15.0000';
-            $tax_normal_text='15%';
+            $tax_normal_text='UST 15%';
             $tax_special='3.0000';
-            $tax_special_text='3%';
+            $tax_special_text='UST 3%';
             break;
           case '150':
             // Niederlande
             $tax_normal='19.0000';
-            $tax_normal_text='19%';
+            $tax_normal_text='UST 19%';
             $tax_special='6.0000';
-            $tax_special_text='6%';
+            $tax_special_text='UST 6%';
             break;
           case '171':
             // Portugal
             $tax_normal='17.0000';
-            $tax_normal_text='17%';
+            $tax_normal_text='UST 17%';
             $tax_special='5.0000';
-            $tax_special_text='5%';
+            $tax_special_text='UST 5%';
             break;
           case '195':
             // Spain
             $tax_normal='16.0000';
-            $tax_normal_text='16%';
+            $tax_normal_text='UST 16%';
             $tax_special='4.0000';
-            $tax_special_text='4%';
+            $tax_special_text='UST 4%';
             break;
           case '203':
             // Schweden
             $tax_normal='25.0000';
-            $tax_normal_text='25%';
+            $tax_normal_text='UST 25%';
             $tax_special='6.0000';
-            $tax_special_text='6%';
+            $tax_special_text='UST 6%';
             break;
           case '204':
             // Schweiz
             $tax_normal='7.6000';
-            $tax_normal_text='7,6%';
+            $tax_normal_text='UST 7,6%';
             $tax_special='2.4000';
-            $tax_special_text='2,4%';
+            $tax_special_text='UST 2,4%';
             break;
           case '222':
             // UK
             $tax_normal='17.5000';
-            $tax_normal_text='17.5%';
+            $tax_normal_text='UST 17.5%';
             $tax_special='5.0000';
-            $tax_special_text='5%';
+            $tax_special_text='UST 5%';
             break;
         }
 
