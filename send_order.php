@@ -153,6 +153,13 @@
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $payment_text));
   }
 
+  // Cash on Delivery
+  if ($order->info['payment_method'] == 'cod') {
+    $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_COD_TEXT_INFO);
+    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_COD_TEXT_INFO));
+  }
+
+
   //allow duty-note in email
   if(isset($send_by_admin)) {
     require(DIR_FS_CATALOG.DIR_WS_CLASSES.'main.php');
