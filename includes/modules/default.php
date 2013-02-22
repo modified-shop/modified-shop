@@ -44,6 +44,30 @@ if (xtc_check_categories_status($current_category_id) >= 1) {
   return;
 }
 
+// the following cPath references come from application_top.php
+$category_depth = 'top';
+if (isset ($cPath) && xtc_not_null($cPath)) {
+  $categories_products_query = "select p2c.products_id
+                                  from ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                  left join ".TABLE_PRODUCTS." p
+                                   on p2c.products_id = p.products_id
+                                  where p2c.categories_id = ".(int)$current_category_id."
+                                  and p.products_status = 1";
+  $categories_products_result = xtDBquery($categories_products_query);
+  if (xtc_db_num_rows($categories_products_result, true) > 0) {
+    $category_depth = 'products'; // display products
+  } else {
+    $category_parent_query = "select parent_id from ".TABLE_CATEGORIES." where parent_id = ".(int)$current_category_id." AND categories_status = 1";
+    $category_parent_result = xtDBquery($category_parent_query);
+    $category_parent = xtc_db_fetch_array($category_parent_result, true);
+    if (xtc_db_num_rows($category_parent_result, true) > 0) {
+      $category_depth = 'nested'; // navigate through the categories
+    } else {
+      $category_depth = 'products'; // category has no products, but display the 'no products' message
+    }
+  }
+}
+
 /**
  * list of categories
  *
