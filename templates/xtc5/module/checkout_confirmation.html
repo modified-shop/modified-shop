@@ -110,7 +110,7 @@
         {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}
         <div style="width:90px; float:left;">{$data.image}</div>
         {/if}
-        <div style="float:left;">
+        <div style="width:420px; float:left;">
         {$data.link}
         {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
         {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME}{$data.shipping_time}</span>{/if}
