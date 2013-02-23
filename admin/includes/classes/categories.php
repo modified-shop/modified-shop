@@ -638,11 +638,13 @@ class categories {
                               SET products_id   = '".$products_id."',
                               categories_id = '".$dest_category_id."'");
       // web28 - 2012-03-11 - link product to startpage
+      /* not longer needed
       if ($products_data['products_startpage'] == 1 ) {
         xtc_db_query("INSERT INTO ".TABLE_PRODUCTS_TO_CATEGORIES."
                               SET products_id   = '".$products_id."',
                                   categories_id = '0'");
       }
+      */
     } elseif ($action == 'update') {
       $update_sql_data = array ('products_last_modified' => 'now()');
       $sql_data_array = xtc_array_merge($sql_data_array, $update_sql_data);
@@ -924,9 +926,11 @@ class categories {
                                              AND   categories_id = '".$dest_categories_id."'");
     $check = xtc_db_fetch_array($check_query);
     if ($check['total'] < '1') {
-      xtc_db_query("INSERT INTO ".TABLE_PRODUCTS_TO_CATEGORIES."
+      if ($dest_categories_id != 0) {
+        xtc_db_query("INSERT INTO ".TABLE_PRODUCTS_TO_CATEGORIES."
                                       SET products_id   = '".$src_products_id."',
                                       categories_id = '".$dest_categories_id."'");
+      }
       if ($dest_categories_id == 0) {
         $this->set_product_status($src_products_id, $products_status);
         $this->set_product_startpage($src_products_id, 1);
