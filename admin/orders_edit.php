@@ -44,6 +44,10 @@ define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
 
 //######################//
 
+if (!defined('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION')) {
+  define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'true'); // 'true' 'false'  --- default: true
+}
+
 define('FORMAT_NEGATIVE', '<strong><font color="#ff0000">%s</font></strong>');
 
 // Benötigte Funktionen und Klassen Anfang:
@@ -141,7 +145,9 @@ if ($action == 'product_edit') {
   $product_query = xtc_db_query("select op.allow_tax,
                                         op.products_tax,
                                         p.products_tax_class_id,
-                                        pd.products_name
+                                        pd.products_name,
+                                        pd.products_short_description,
+                                        pd.products_order_description
                                    from " . TABLE_ORDERS_PRODUCTS . " op
                               left join " . TABLE_PRODUCTS . " p ON op.products_id = p.products_id
                               left join " . TABLE_PRODUCTS_DESCRIPTION . " pd ON op.products_id = pd.products_id AND pd.language_id = '".(int)$lang['languages_id']."'
@@ -212,10 +218,15 @@ if ($action == 'product_edit') {
   }
   //Gesamtpreis
   $final_price = $_POST['products_price'] * $_POST['products_quantity'];
+  
+  //using short description  if order description is not defined or empty
+  $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
+  $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
 
   $sql_data_array = array ('orders_id' => (int)($_POST['oID']),
                            'products_id' => (int)($_POST['products_id']),
                            'products_name' => xtc_db_prepare_input($_POST['products_name']),
+                           'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
                            'products_price' => (float)$_POST['products_price'],
                            'products_discount_made' => '',
                            'final_price' => (float)$final_price,
@@ -261,7 +272,9 @@ if ($action == 'product_ins') {
 
   $product_query = xtc_db_query("select p.products_model,
                                         p.products_tax_class_id,
-                                        pd.products_name
+                                        pd.products_name,
+                                        pd.products_short_description,
+                                        pd.products_order_description
                                    from ".TABLE_PRODUCTS." p,
                                         ".TABLE_PRODUCTS_DESCRIPTION." pd
                                   where p.products_id = '".(int)$_POST['products_id']."'
@@ -283,10 +296,15 @@ if ($action == 'product_ins') {
   $price = $xtPrice->xtcGetPrice($_POST['products_id'], $format = false, $_POST['products_quantity'], $product['products_tax_class_id'], '', '', $order->customer['ID']);
 
   $final_price = $price * $_POST['products_quantity'];
+  
+  //using short description  if order description is not defined or empty
+  $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
+  $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
 
   $sql_data_array = array ('orders_id' => (int)($_POST['oID']),
                            'products_id' => (int)($_POST['products_id']),
                            'products_name' => xtc_db_prepare_input($product['products_name']),
+                           'products_order_description' => xtc_db_prepare_input($product['products_order_description']),
                            'products_price' => (float)$price,
                            'products_discount_made' => '',
                            'products_shipping_time' => xtc_db_prepare_input($shipping_time), //web28 - 2011-10-14- added status update for shipping_status_name in TABLE_ORDERS_PRODUCTS
@@ -861,7 +879,7 @@ if ($action == 'save_order') {
     xtc_db_perform(TABLE_ORDERS_RECALCULATE, $sql_data_array);
 
   }
-  //BOF#######  Produkte Steuersätze  #######//
+  //EOF#######  Produkte Steuersätze  #######//
 
   //BOF#######  Module  #######//
   $module_query = xtc_db_query("SELECT value, class
