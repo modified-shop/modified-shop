@@ -371,47 +371,43 @@
       global $currencies,$xtPrice,$main;
       $this->content_type = $_SESSION['cart']->get_content_type();
 
-      $customer_address_query = xtc_db_query("SELECT c.payment_unallowed,c.shipping_unallowed,c.customers_firstname,
-                                                     c.customers_cid, c.customers_gender,c.customers_lastname,
+      $default_select =
+        "ab.entry_company, ab.entry_street_address, ab.entry_suburb,
+         ab.entry_postcode, ab.entry_city, ab.entry_zone_id, ab.entry_country_id, ab.entry_state,
+         co.countries_name,
+         co.countries_id, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id,
+         z.zone_name
+        ";
+
+      $default_join =
+        "LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
+         LEFT JOIN " . TABLE_COUNTRIES . " co ON (ab.entry_country_id = co.countries_id)         
+        ";
+
+      $customer_address_query = xtc_db_query("SELECT c.payment_unallowed, c.shipping_unallowed, c.customers_firstname,
+                                                     c.customers_cid, c.customers_gender, c.customers_lastname,
                                                      c.customers_telephone, c.customers_email_address,
-                                                     ab.entry_company, ab.entry_street_address, ab.entry_suburb,
-                                                     ab.entry_postcode, ab.entry_city, ab.entry_zone_id, ab.entry_state,
-                                                     co.countries_id, co.countries_name, co.countries_iso_code_2,
-                                                     co.countries_iso_code_3, co.address_format_id,
-                                                     z.zone_name
+                                                     " . $default_select . "
                                                 FROM " . TABLE_CUSTOMERS . " c,
-                                                     " . TABLE_ADDRESS_BOOK . " ab
-                                           LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                           LEFT JOIN " . TABLE_COUNTRIES . " co ON (ab.entry_country_id = co.countries_id)
+                                                     " . TABLE_ADDRESS_BOOK . " ab ON (ab.customers_id = '" . $_SESSION['customer_id'] . "' AND c.customers_default_address_id = ab.address_book_id)
+                                                     " . $default_join . "
                                                WHERE c.customers_id = '" . $_SESSION['customer_id'] . "'
-                                               AND ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                               AND c.customers_default_address_id = ab.address_book_id
                                             ");
       $customer_address = xtc_db_fetch_array($customer_address_query);
 
-      $shipping_address_query = xtc_db_query("SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
-                                                     ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
-                                                     ab.entry_city, ab.entry_zone_id, ab.entry_country_id, ab.entry_state,
-                                                     c.countries_id, c.countries_name, c.countries_iso_code_2,
-                                                     c.countries_iso_code_3, c.address_format_id,
-                                                     z.zone_name
+      $shipping_address_query = xtc_db_query("SELECT ab.entry_firstname, ab.entry_lastname,
+                                                     " . $default_select . "
                                                 FROM " . TABLE_ADDRESS_BOOK . " ab
-                                           LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                           LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
+                                                     " . $default_join . "
                                                WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
                                                  AND ab.address_book_id = '" . $_SESSION['sendto'] . "'
                                             ");
       $shipping_address = xtc_db_fetch_array($shipping_address_query);
 
-      $billing_address_query = xtc_db_query("SELECT ab.entry_firstname, ab.entry_lastname, ab.entry_company,
-                                                    ab.entry_street_address, ab.entry_suburb, ab.entry_postcode,
-                                                    ab.entry_city, ab.entry_zone_id, ab.entry_country_id, ab.entry_state,
-                                                    c.countries_id, c.countries_name, c.countries_iso_code_2,
-                                                    c.countries_iso_code_3, c.address_format_id,
-                                                    z.zone_name
+      $billing_address_query = xtc_db_query("SELECT ab.entry_firstname, ab.entry_lastname,
+                                                    " . $default_select . "
                                                FROM " . TABLE_ADDRESS_BOOK . " ab
-                                          LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
-                                          LEFT JOIN " . TABLE_COUNTRIES . " c ON (ab.entry_country_id = c.countries_id)
+                                                    " . $default_join . "
                                               WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
                                                 AND ab.address_book_id = '" . (isset($_SESSION['billto']) ? $_SESSION['billto'] : $_SESSION['sendto']) . "'
                                            ");
