@@ -304,7 +304,7 @@
         //using short description  if order description is not defined or empty        
         $order_description = '';
         if (array_key_exists('products_order_description',$order_data_values) && !empty($order_data_values['products_order_description'])) {
-          $order_description = nl2br($order_data_values['products_order_description']);
+          $order_description = $order_data_values['products_order_description'];
         }
         $order_description = !empty($order_description) ? $order_description : $short_description;
         $order_data[] = array ('PRODUCTS_ID' => $order_data_values['products_id'],
