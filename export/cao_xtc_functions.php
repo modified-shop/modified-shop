@@ -171,7 +171,7 @@ function SendCategories ()
     $schema  = '<CATEGORIES_DATA>' . "\n" .
                '<ID>' . $cat['categories_id'] . '</ID>' . "\n" .
                '<PARENT_ID>' . $cat['parent_id'] . '</PARENT_ID>' . "\n" .
-               '<IMAGE_URL>' . encode_encode_htmlspecialchars($cat['categories_image']) . '</IMAGE_URL>' . "\n" .
+               '<IMAGE_URL>' . encode_htmlspecialchars($cat['categories_image']) . '</IMAGE_URL>' . "\n" .
                '<SORT_ORDER>' . $cat['sort_order'] . '</SORT_ORDER>' . "\n" .
                '<DATE_ADDED>' . $cat['date_added'] . '</DATE_ADDED>' . "\n" .
                '<LAST_MODIFIED>' . $cat['last_modified'] . '</LAST_MODIFIED>' . "\n";
