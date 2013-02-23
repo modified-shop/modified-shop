@@ -44,6 +44,10 @@ define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
 
 //######################//
 
+if (!defined('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION')) {
+  define('CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'true'); // 'true' 'false'  --- default: true
+}
+
 define('FORMAT_NEGATIVE', '<strong><font color="#ff0000">%s</font></strong>');
 
 // Benötigte Funktionen und Klassen Anfang:
@@ -140,6 +144,7 @@ if ($action == 'product_edit') {
                                         op.products_tax,
                                         p.products_tax_class_id,
                                         pd.products_name,
+                                        pd.products_short_description,
                                         pd.products_order_description
                                    from " . TABLE_ORDERS_PRODUCTS . " op
                               left join " . TABLE_PRODUCTS . " p ON op.products_id = p.products_id
@@ -212,6 +217,10 @@ if ($action == 'product_edit') {
   }
   //Gesamtpreis
   $final_price = $_POST['products_price'] * $_POST['products_quantity'];
+  
+  //using short description  if order description is not defined or empty
+  $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
+  $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
 
   $sql_data_array = array ('orders_id' => (int)($_POST['oID']),
                            'products_id' => (int)($_POST['products_id']),
@@ -263,6 +272,7 @@ if ($action == 'product_ins') {
   $product_query = xtc_db_query("select p.products_model,
                                         p.products_tax_class_id,
                                         pd.products_name,
+                                        pd.products_short_description,
                                         pd.products_order_description
                                    from ".TABLE_PRODUCTS." p,
                                         ".TABLE_PRODUCTS_DESCRIPTION." pd
@@ -285,6 +295,10 @@ if ($action == 'product_ins') {
   $price = $xtPrice->xtcGetPrice($_POST['products_id'], $format = false, $_POST['products_quantity'], $product['products_tax_class_id'], '', '', $order->customer['ID']);
 
   $final_price = $price * $_POST['products_quantity'];
+  
+  //using short description  if order description is not defined or empty
+  $product['products_short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $product['products_short_description'] : '';        
+  $product['products_order_description'] = !empty($product['products_order_description']) ? nl2br($product['products_order_description']) : $product['products_short_description'];
 
   $sql_data_array = array ('orders_id' => (int)($_POST['oID']),
                            'products_id' => (int)($_POST['products_id']),
