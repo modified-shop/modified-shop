@@ -118,15 +118,15 @@
       }
       $states_query = xtc_db_query("select zone_name, zone_id from " . TABLE_ZONES . " where zone_country_id = '" . $countries['zone_country_id'] . "' order by zone_name");
       $num_state = 1;
-      while ($states = xtc_db_fetch_array($states_query)) {
-        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . PLEASE_SELECT . '", "");' . "\n";
+     while ($states = xtc_db_fetch_array($states_query)) {
+        if ($num_state == '1') $output_string .= '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(PLEASE_SELECT, ENT_COMPAT, strtoupper($_SESSION['language_charset']))  . '", "");' . "\n";
         $output_string .= '    ' . $form . '.' . $field . '.options[' . $num_state . '] = new Option("' . $states['zone_name'] . '", "' . $states['zone_id'] . '");' . "\n";
         $num_state++;
       }
       $num_country++;
     }
     $output_string .= '  } else {' . "\n" .
-                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . TYPE_BELOW . '", "");' . "\n" .
+                      '    ' . $form . '.' . $field . '.options[0] = new Option("' . html_entity_decode(TYPE_BELOW, ENT_COMPAT, strtoupper($_SESSION['language_charset'])). '", "");' . "\n" .
                       '  }' . "\n";
     return $output_string;
   }
