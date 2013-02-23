@@ -51,6 +51,7 @@
         }
 
         // fetch data into array
+        $records = array();
         while ($record = xtc_db_fetch_array($result))
                 $records[]=$record;
 
