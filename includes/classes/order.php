@@ -389,7 +389,7 @@
                                                      c.customers_telephone, c.customers_email_address,
                                                      " . $default_select . "
                                                 FROM " . TABLE_CUSTOMERS . " c,
-                                                     " . TABLE_ADDRESS_BOOK . " ab ON (ab.customers_id = '" . $_SESSION['customer_id'] . "' AND c.customers_default_address_id = ab.address_book_id)
+                                                     " . TABLE_ADDRESS_BOOK . " ab
                                                      " . $default_join . "
                                                WHERE c.customers_id = '" . $_SESSION['customer_id'] . "'
                                             ");
