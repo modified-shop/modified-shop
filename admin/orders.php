@@ -353,7 +353,7 @@ require (DIR_WS_INCLUDES.'header.php');
             <table border="0" width="100%" cellspacing="0" cellpadding="0">
               <tr>
                 <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_customers.gif'); ?></td>
-                <td class="pageHeading"><?php echo HEADING_TITLE . '<span style="font-size:13px"> - '.TABLE_HEADING_PRODUCTS_MODEL.': ' . $oID . ' - ' . $order->info['date_purchased'] ; ?></span></td>
+                <td class="pageHeading"><?php echo HEADING_TITLE . '<span style="font-size:13px"> - '.TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . $order->info['date_purchased'] ; ?></span></td>
               </tr>
               <tr>
                 <td class="main" valign="top"><?php echo TABLE_HEADING_CUSTOMERS ?></td>
