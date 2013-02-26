@@ -387,8 +387,8 @@
                                                      c.customers_cid, c.customers_gender, c.customers_lastname,
                                                      c.customers_telephone, c.customers_email_address,
                                                      " . $default_select . "
-                                                FROM " . TABLE_CUSTOMERS . " c,
-                                                     " . TABLE_ADDRESS_BOOK . " ab
+                                                FROM " . TABLE_CUSTOMERS . " c
+                                           LEFT JOIN " . TABLE_ADDRESS_BOOK . " ab ON (ab.customers_id = '" . $_SESSION['customer_id'] . "' AND c.customers_default_address_id = ab.address_book_id)
                                                      " . $default_join . "
                                                WHERE c.customers_id = '" . $_SESSION['customer_id'] . "'
                                             ");
