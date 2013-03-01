@@ -154,7 +154,6 @@ if ($errorno) {
                     p.products_vpe,
                     p.products_vpe_status,
                     p.products_vpe_value,
-                    pd.products_keywords,
                     pd.products_name,
                     pd.products_short_description,
                     pd.products_description ";
