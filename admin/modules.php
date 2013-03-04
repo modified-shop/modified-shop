@@ -167,7 +167,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
                           sort($directory_array[1]);
                           //EOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
-                          sort($directory_array);
+                          ksort($directory_array);
                           $dir->close();
                         }
                         $installed_modules = array();
