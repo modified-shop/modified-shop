@@ -36,12 +36,12 @@ class splitPageResults {
       if (($pos_order_by < $pos_to) && ($pos_order_by != false)) $pos_to = $pos_order_by;
 
       if (strpos($sql_query, 'DISTINCT') || strpos(strtoupper($sql_query), 'GROUP BY')) {
-        $count_string = 'DISTINCT ' . xtc_db_input($count_key);
+        $count_string = 'DISTINCT count(' . xtc_db_input($count_key).')';
       } else {
-        $count_string = xtc_db_input($count_key);
+        $count_string = 'count('.xtc_db_input($count_key).')';
       }
 
-      $reviews_count_query = xtc_db_query("SELECT count(" . $count_string . ") AS total " .  substr($sql_query, $pos_from, ($pos_to - $pos_from)));
+      $reviews_count_query = xtc_db_query("SELECT " . $count_string . " AS total " .  substr($sql_query, $pos_from, ($pos_to - $pos_from)));
       $reviews_count = xtc_db_fetch_array($reviews_count_query);
       $query_num_rows = $reviews_count['total'];
         
