@@ -8,8 +8,8 @@
   </tr>
 </table>
 {else}
-<table class="shippingblock" width="100%" border="0" cellspacing="0" cellpadding="6">
 {foreach name=aussen item=module_data from=$module_content} 
+<table class="shippingblock" width="100%" border="0" cellspacing="0" cellpadding="6">
   <tr>
     <td colspan="4" class="header"><strong>{$module_data.module}</strong></td>
   </tr>
@@ -28,6 +28,6 @@
   </tr>
   {/foreach}
   {/if}
-{/foreach}
 </table>
+{/foreach}
 {/if}
