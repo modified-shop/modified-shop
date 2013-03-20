@@ -120,4 +120,7 @@ ALTER TABLE payment_moneybookers_currencies
 ALTER TABLE payment_moneybookers_countries
   RENAME TO payment_amoneybookers_countries;
 
+# DokuMan - 2013-03-20 - change address format to 5 for Luxembourg
+UPDATE countries SET address_format_id = 5 WHERE countries_id = 124;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
