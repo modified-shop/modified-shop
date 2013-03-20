@@ -1533,10 +1533,14 @@ require (DIR_WS_INCLUDES.'head.php');
                             <?php
                             if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
                               ?>
-                              <td class="dataTableContent" align="left">&nbsp;
+                              <td class="dataTableContent" align="left">
                                 <?php
                                 if ($customers['customers_vat_id']) {
-                                  echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
+                                  if (xtc_not_null(xtc_validate_vatid_status($customers['customers_id']))) {
+                                    echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
+                                  } else {
+                                    echo $customers['customers_vat_id'];
+                                  }
                                 }
                                 ?>
                               </td>
