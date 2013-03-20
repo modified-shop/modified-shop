@@ -1793,7 +1793,7 @@ INSERT INTO countries VALUES (120,'Liberia','LR','LBR',1,1);
 INSERT INTO countries VALUES (121,'Libyan Arab Jamahiriya','LY','LBY',1,1);
 INSERT INTO countries VALUES (122,'Liechtenstein','LI','LIE',1,1);
 INSERT INTO countries VALUES (123,'Lithuania','LT','LTU',1,1);
-INSERT INTO countries VALUES (124,'Luxembourg','LU','LUX',1,1);
+INSERT INTO countries VALUES (124,'Luxembourg','LU','LUX',5,1);
 INSERT INTO countries VALUES (125,'Macau','MO','MAC',1,1);
 INSERT INTO countries VALUES (126,'Macedonia, The Former Yugoslav Republic of','MK','MKD',1,1);
 INSERT INTO countries VALUES (127,'Madagascar','MG','MDG',1,1);
