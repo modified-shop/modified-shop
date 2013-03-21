@@ -22,7 +22,7 @@
     if (xtc_not_null($value)) {
       $field .= ' value="' . xtc_parse_input_field_data($value, array('"' => '&quot;')) . '"';
     } else {
-      $field .= xtc_parse_input_field_data((array_key_exists($name, $GLOBALS) ?  $GLOBALS[$name] : NULL), array('"' => '&quot;'));
+      $field .= ' value="' . xtc_parse_input_field_data((array_key_exists($name, $GLOBALS) ?  $GLOBALS[$name] : NULL), array('"' => '&quot;')). '"';
     }
 
     if (xtc_not_null($parameters)) $field .= ' ' . $parameters;
