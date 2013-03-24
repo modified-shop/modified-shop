@@ -35,6 +35,8 @@ require_once (DIR_FS_INC.'xtc_get_order_description.inc.php');
 $currencies = new currencies();
 $catfunc = new categories();
 
+$page_param = isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '';
+
 //this is used only by group_prices
 if ($_GET['function']) {
 	switch ($_GET['function']) {
@@ -44,7 +46,7 @@ if ($_GET['function']) {
 						                     AND quantity    = '".(int) $_GET['quantity']."'");
 			break;
 	}
-	xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.(int) $_GET['pID']));
+	xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.(int) $_GET['pID'].$page_param));
 }
 
 // Multi-Status Change, separated from $_GET['action']
@@ -92,7 +94,7 @@ if ($_GET['action']) {
 					$catfunc->set_category_recursive($_GET['cID'], $_GET['flag']);
 				}
 			}
-			xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID']));
+			xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$page_param));
 			break;
 			//EOB setcflag
 
@@ -103,9 +105,9 @@ if ($_GET['action']) {
 				}
 			}
 			if ($_GET['pID']) {
-				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&pID='.$_GET['pID']));
+				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&pID='.$_GET['pID'].$page_param));
 			} else {
-				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID']));
+				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$page_param));
 			}
 			break;
 			//EOB setpflag
@@ -122,9 +124,9 @@ if ($_GET['action']) {
 				}
 			}
 			if ($_GET['pID']) {
-				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&pID='.$_GET['pID']));
+				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&pID='.$_GET['pID'].$page_param));
 			} else {
-				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID']));
+				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$page_param));
 			}
 			break;
 			//EOB setsflag
