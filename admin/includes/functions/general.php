@@ -96,7 +96,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
         if ($attribute_stock_values['attributes_stock'] <= '0') {
           $stock_flag = 'true';
           $which_attribute_query = xtDBquery("SELECT products_options_values_name FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." WHERE products_options_values_id = '".$attribute_stock_values['options_values_id']."' AND language_id = '".(int)$_SESSION['languages_id']."'");
-          $which_attribute = xtc_db_fetch_array($which_attribute_query);
+          $which_attribute = xtc_db_fetch_array($which_attribute_query,true);
           $stock_warn .= ', '.$which_attribute['products_options_values_name'];
         }
       }
