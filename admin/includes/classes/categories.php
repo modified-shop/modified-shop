@@ -768,11 +768,12 @@ class categories {
       }
     }
 
+    global $page_param;
     //redirect by update button
     if(isset($products_data['prod_update'])) {
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.$products_id));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.$products_id.$page_param));
     }
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($dest_categories_id).'&pID='.$products_id)); //web28 2012-04-14 new redirect
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($dest_categories_id).'&pID='.$products_id.$page_param)); //web28 2012-04-14 new redirect
   } // insert_product ends
 
   // ----------------------------------------------------------------------------------------------------- //
