@@ -18,7 +18,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // referrer #todo sec
-$ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : HTTP_SERVER.$_SERVER['REQUEST_URI']));
+$ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $current_domain.$_SERVER['REQUEST_URI']));
 if (!isset($_SESSION['tracking']['http_referer']))  $_SESSION['tracking']['http_referer']= $ref_url;
 
 // IP
