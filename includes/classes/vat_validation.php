@@ -25,14 +25,15 @@ class vat_validation {
 
   function vat_validation($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
     $this->vat_info = array ();
-    $this->live_check = ACCOUNT_COMPANY_VAT_LIVE_CHECK;
-    if (xtc_not_null($vat_id)) {
+    if (xtc_not_null($vat_id) && ACCOUNT_COMPANY_VAT_LIVE_CHECK == 'true') { // check only if VAT plausibility check is active
       $this->getInfo($vat_id, $customers_id, $customers_status, $country_id, $guest);
     } else {
       if ($guest) {
-        $this->vat_info = array ('status' => DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
+        $this->vat_info = array ('status' => DEFAULT_CUSTOMERS_STATUS_ID_GUEST,
+                                 'vat_id_status' => 90); // (int) Status 90 = dummy status to show no further texts (used when plausibility check is disabled)
       } else {
-        $this->vat_info = array ('status' => DEFAULT_CUSTOMERS_STATUS_ID);
+        $this->vat_info = array ('status' => DEFAULT_CUSTOMERS_STATUS_ID,
+                                 'vat_id_status' => 90); // (int) Status 90 = dummy status to show no further texts (used when plausibility check is disabled)
       }
     }
   }
