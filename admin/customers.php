@@ -1535,7 +1535,7 @@ function check_form() {
                   <?php
                   if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
                     ?>
-                    <td class="dataTableContent" align="left">&nbsp;
+                    <td class="dataTableContent" align="left">
                       <?php
                       if ($customers['customers_vat_id']) {
                         if (xtc_not_null(xtc_validate_vatid_status($customers['customers_id']))) {
