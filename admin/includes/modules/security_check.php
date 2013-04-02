@@ -42,7 +42,7 @@ if (!empty($check)) {
  ******************************************************************************/
 $check = array();
 foreach($configFiles as $file) {
-  if (is_writeable($file)) {
+  if (is_writable($file)) {
     $check[] = $file;
   }
 }
@@ -54,16 +54,16 @@ if (!empty($check)) {
  ** check folder permissions
  ******************************************************************************/
 
-  // writeable dirs
-  $check = array();
-  foreach($writeableDirs as $dir) {
-    if (!in_array(substr(decoct(fileperms($dir)), 2, 2), array('77', '75'))) {
-      $check[] = $dir;
-    }
+// writeable dirs
+$check = array();
+foreach($writeableDirs as $dir) {
+  if (is_writable($dir)) {
+    $check[] = $dir;
   }
-  if (!empty($check)) {
-    $warnings[] = TEXT_FOLDER_WARNING.'<ul><li>'.implode('</li><li>',$check).'</li></ul>';
-  }
+}
+if (!empty($check)) {
+  $warnings[] = TEXT_FOLDER_WARNING.'<ul><li>'.implode('</li><li>',$check).'</li></ul>';
+}
 
 /* //for further use
   // non writeable dirs
