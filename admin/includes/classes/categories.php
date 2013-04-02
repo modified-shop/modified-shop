@@ -821,9 +821,9 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
 
       //redirect by update button
       if(isset($products_data['prod_update'])) {
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.$products_id));
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.$products_id.$this->page_parameter));
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($dest_categories_id).'&pID='.$products_id)); //web28 2012-04-14 new redirect
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($dest_categories_id).'&pID='.$products_id.$this->page_parameter)); //web28 2012-04-14 new redirect
     } // insert_product ends
 
     // ----------------------------------------------------------------------------------------------------- //
@@ -1190,5 +1190,9 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
 
     }
     // ----------------------------------------------------------------------------------------------------- //
+
+  function set_page_parameter() {
+    $this->page_parameter = isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '';
+  }
   } // class categories ENDS
 ?>
