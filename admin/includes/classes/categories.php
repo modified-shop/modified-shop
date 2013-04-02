@@ -209,7 +209,7 @@ class categories {
 
       $accepted_categories_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
       $accepted_categories_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-      if ($categories_image = & xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
+      if ($categories_image = xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
       $categories_image_name = $categories_id.'.'.$cnsuffix;
@@ -280,7 +280,7 @@ class categories {
       $dest_category_id = (int)$dest_category_id;
 
       //get data
-      $ccopy_query = xtDBquery("SELECT * FROM ".TABLE_CATEGORIES." WHERE categories_id = '".$src_category_id."'");
+      $ccopy_query = xtc_db_query("SELECT * FROM ".TABLE_CATEGORIES." WHERE categories_id = '".$src_category_id."'");
       $ccopy_values = xtc_db_fetch_array($ccopy_query);
 
       //copy data (overrides)
@@ -304,7 +304,7 @@ class categories {
       $_SESSION['copied'][] = $new_cat_id;
 
       //copy / link products
-      $get_prod_query = xtDBquery("SELECT products_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE categories_id = '".$src_category_id."'");
+      $get_prod_query = xtc_db_query("SELECT products_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE categories_id = '".$src_category_id."'");
       while ($product = xtc_db_fetch_array($get_prod_query)) {
         if ($ctype == 'link') {
           $this->link_product($product['products_id'], $new_cat_id);
@@ -325,11 +325,11 @@ class categories {
         @ chmod(DIR_FS_CATALOG_IMAGES.'categories/'.$dest_pic, 0644); // h-h-h - 2011-01-27 - set file rights
 
         //write to DB
-        xtDBquery("UPDATE categories SET categories_image = '".$dest_pic."' WHERE categories_id = '".$new_cat_id."'");
+        xtc_db_query("UPDATE categories SET categories_image = '".$dest_pic."' WHERE categories_id = '".$new_cat_id."'");
       }
 
       //get descriptions
-      $cdcopy_query = xtDBquery("SELECT * FROM ".TABLE_CATEGORIES_DESCRIPTION." WHERE categories_id = '".$src_category_id."'");
+      $cdcopy_query = xtc_db_query("SELECT * FROM ".TABLE_CATEGORIES_DESCRIPTION." WHERE categories_id = '".$src_category_id."'");
 
       //copy descriptions
       while ($cdcopy_values = xtc_db_fetch_array($cdcopy_query)) {
@@ -341,7 +341,7 @@ class categories {
       }
 
       //get child categories of current category
-      $crcopy_query = xtDBquery("SELECT categories_id FROM ".TABLE_CATEGORIES." WHERE parent_id = '".$src_category_id."'");
+      $crcopy_query = xtc_db_query("SELECT categories_id FROM ".TABLE_CATEGORIES." WHERE parent_id = '".$src_category_id."'");
 
       //and go recursive
       while ($crcopy_values = xtc_db_fetch_array($crcopy_query)) {
@@ -528,7 +528,7 @@ class categories {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
       $products_image_name = $products_id.'_0.'.$nsuffix;
-      $dup_check_query = xtDBquery("SELECT COUNT(*) AS total
+      $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                 FROM ".TABLE_PRODUCTS."
                                                WHERE products_image = '".$products_data['products_previous_image_0']."'");
       $dup_check = xtc_db_fetch_array($dup_check_query);
@@ -536,7 +536,7 @@ class categories {
         @ xtc_del_image_file($products_data['products_previous_image_0']);
       }
       //workaround if there are v2 images mixed with v3
-      $dup_check_query = xtDBquery("SELECT COUNT(*) AS total
+      $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                 FROM ".TABLE_PRODUCTS."
                                                WHERE products_image = '".$products_image->filename."'");
       $dup_check = xtc_db_fetch_array($dup_check_query);
@@ -557,7 +557,7 @@ class categories {
     }
     //are we asked to delete some pics?
     if ($products_data['del_pic'] != '') {
-      $dup_check_query = xtDBquery("SELECT COUNT(*) AS total
+      $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                 FROM ".TABLE_PRODUCTS."
                                                WHERE products_image = '".$products_data['del_pic']."'");
       $dup_check = xtc_db_fetch_array($dup_check_query);
@@ -571,7 +571,7 @@ class categories {
 
     if ($products_data['del_mo_pic'] != '') {
       foreach ($products_data['del_mo_pic'] AS $dummy => $val) {
-        $dup_check_query = xtDBquery("SELECT COUNT(*) AS total
+        $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                       FROM ".TABLE_PRODUCTS_IMAGES."
                                                      WHERE image_name = '".$val."'");
         $dup_check = xtc_db_fetch_array($dup_check_query);
@@ -587,11 +587,11 @@ class categories {
     $accepted_mo_pics_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
     $accepted_mo_pics_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
     for ($img = 0; $img < MO_PICS; $img ++) {
-      if ($pIMG = & xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
+      if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
         $products_image_name = $products_id.'_'. ($img +1).'.'.$nsuffix;
-        $dup_check_query = xtDBquery("SELECT COUNT(*) AS total
+        $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                       FROM ".TABLE_PRODUCTS_IMAGES."
                                                      WHERE image_name = '".$products_data['products_previous_image_'. ($img +1)]."'");
         $dup_check = xtc_db_fetch_array($dup_check_query);
@@ -784,7 +784,7 @@ class categories {
     $dest_categories_id = (int)$dest_categories_id;
 
     //get data
-    $product_query = xtDBquery("SELECT * FROM ".TABLE_PRODUCTS."
+    $product_query = xtc_db_query("SELECT * FROM ".TABLE_PRODUCTS."
                                         WHERE products_id = '".$src_products_id."'");
 
     $product = xtc_db_fetch_array($product_query);
@@ -814,7 +814,7 @@ class categories {
       $dup_products_image_name = $dup_products_id.'_0'.'.'.$nsuffix;
 
       //write to DB
-      xtDBquery("UPDATE ".TABLE_PRODUCTS." SET products_image = '".$dup_products_image_name."' WHERE products_id = '".$dup_products_id."'");
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS." SET products_image = '".$dup_products_image_name."' WHERE products_id = '".$dup_products_id."'");
       @ copy(DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_ORIGINAL_IMAGES.'/'.$dup_products_image_name);
       @ copy(DIR_FS_CATALOG_INFO_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_INFO_IMAGES.'/'.$dup_products_image_name);
       @ copy(DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$product['products_image'], DIR_FS_CATALOG_THUMBNAIL_IMAGES.'/'.$dup_products_image_name);
