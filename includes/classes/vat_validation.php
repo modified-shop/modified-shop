@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: vat_validation.php
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
