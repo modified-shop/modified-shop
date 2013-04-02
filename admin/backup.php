@@ -113,7 +113,7 @@
         }
         break;
     case 'restorelocalnow':
-      $file = &xtc_try_upload('sql_file', DIR_FS_BACKUP, '777', array('sql','gz'));
+      $file = xtc_try_upload('sql_file', DIR_FS_BACKUP, '777', array('sql','gz'));
       xtc_redirect(xtc_href_link(FILENAME_BACKUP));
       break;
     }

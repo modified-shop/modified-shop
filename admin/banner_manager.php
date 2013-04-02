@@ -56,7 +56,7 @@
         if (empty($html_text)) {
           $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
           $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
-          if (!$banners_image = &xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types) && $_POST['banners_image_local'] == '') {
+          if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types) && $_POST['banners_image_local'] == '') {
             $banner_error = true;
           }
         }

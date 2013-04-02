@@ -529,6 +529,8 @@
                                    'address_last_modified' => 'now()'
                                    );
 
+
+
           if (ACCOUNT_GENDER == 'true')
             $sql_data_array['entry_gender'] = $customers_gender;
 
