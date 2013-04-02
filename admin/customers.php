@@ -529,6 +529,8 @@
           'address_last_modified' => 'now()'
           );
 
+
+          
         if (ACCOUNT_GENDER == 'true')
           $sql_data_array['entry_gender'] = $customers_gender;
 
@@ -738,7 +740,7 @@ function check_form() {
 }
 ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
+<body onLoad="SetFocus();">
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <!-- header_eof //-->
@@ -1534,10 +1536,14 @@ function check_form() {
                   if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
                     ?>
                     <td class="dataTableContent" align="left">&nbsp;
-                    <?php
-                    if ($customers['customers_vat_id']) {
-                      echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
-                    }
+                      <?php
+                      if ($customers['customers_vat_id']) {
+                        if (xtc_not_null(xtc_validate_vatid_status($customers['customers_id']))) {
+                          echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
+                        } else {
+                          echo $customers['customers_vat_id'];
+                        }
+                      }
                     ?>
                     </td>
                     <?php

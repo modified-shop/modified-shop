@@ -55,7 +55,7 @@
         }
 
         if (empty($html_text)) {
-          if (!$banners_image = &xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target) && $_POST['banners_image_local'] == '') {
+          if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target) && $_POST['banners_image_local'] == '') {
             $banner_error = true;
           }
         }

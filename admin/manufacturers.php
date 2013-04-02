@@ -37,7 +37,7 @@
       }
 
 	$dir_manufacturers=DIR_FS_CATALOG_IMAGES."/manufacturers";
-    if ($manufacturers_image = &xtc_try_upload('manufacturers_image', $dir_manufacturers)) {
+    if ($manufacturers_image = xtc_try_upload('manufacturers_image', $dir_manufacturers)) {
         xtc_db_query("update " . TABLE_MANUFACTURERS . " set
                                  manufacturers_image ='manufacturers/".$manufacturers_image->filename . "'
                                  where manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
