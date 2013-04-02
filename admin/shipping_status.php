@@ -49,7 +49,7 @@
         }
       }
 
-      if ($shipping_status_image = &xtc_try_upload('shipping_status_image',DIR_WS_ICONS)) {
+      if ($shipping_status_image = xtc_try_upload('shipping_status_image',DIR_WS_ICONS)) {
         xtc_db_query("update " . TABLE_SHIPPING_STATUS . " set shipping_status_image = '" . $shipping_status_image->filename . "' where shipping_status_id = '" . xtc_db_input($shipping_status_id) . "'");
       }
 
