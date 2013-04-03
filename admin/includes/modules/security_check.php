@@ -57,7 +57,7 @@ if (!empty($check)) {
 // writeable dirs
 $check = array();
 foreach($writeableDirs as $dir) {
-  if (is_writable($dir)) {
+  if (!is_writable($dir)) {
     $check[] = $dir;
   }
 }
