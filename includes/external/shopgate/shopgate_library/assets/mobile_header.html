@@ -1,4 +1,103 @@
 <script type="text/javascript">
+var ShopgateMobileHeader = function () {
+	this.create = function () {
+		// add DOM event for IE
+		addDomReadyEvent();
+		
+		// on DOM ready create the mobile header
+		window.onDomReady(function () {
+			// create the wrapper
+			var wrapper = ShopgateButtonWrapper();
+			
+			// append text and button image
+			wrapper.appendChild(document.createTextNode('{$buttonDescription}'));
+			wrapper.appendChild(ShopgateButtonImage());
+			
+			// find the desired parent element and add the wrapper to it
+			if ({$buttonPrepend}) {
+				var firstChild = document.querySelector('{$buttonParent}').firstChild;
+				document.querySelector('{$buttonParent}').insertBefore(wrapper, firstChild);
+			} else {
+				document.querySelector('{$buttonParent}').appendChild(wrapper);
+			}
+		});
+	}
+	
+	function addDomReadyEvent() {
+		window.onDomReady = initReady;
+		
+		// initialize event depending on browser
+		function initReady(fn) {
+			// W3C-compliant browser
+			if (document.addEventListener) {
+				document.addEventListener("DOMContentLoaded", fn, false);
+			} else { // IE
+				document.onreadystatechange = function() { readyState(fn) }
+			}
+		}
+	
+		// IE execute function
+		function readyState(func) {
+			// DOM is ready
+			if (document.readyState == "interactive" || document.readyState == "complete") {
+				func();
+			}
+		}
+	}
+	
+	function ShopgateButtonWrapper() {
+		var wrapper = document.createElement('div');
+		
+		// set attributes
+		wrapper.id = 'shopgate_mobile_header';
+		
+		// set styles
+		wrapper.style.lineHeight = '30px';
+		wrapper.style.fontSize = '30px';
+		wrapper.style.fontFamily = '"Helvetica Neue", Helvetica, Arial, sans-serif';
+		wrapper.style.fontWeight = 'bold';
+		wrapper.style.textAlign = 'left';
+		wrapper.style.backgroundColor = '#FFF';
+		wrapper.style.border = '1px solid #ADADAD';
+		wrapper.style.clear = 'both';
+		wrapper.style.color = '#222';
+		wrapper.style.margin = '20px auto';
+		wrapper.style.marginBottom = '40px';
+		wrapper.style.padding = '15px';
+		wrapper.style.position = 'relative';
+		wrapper.style.width = '560px';
+		wrapper.style.borderRadius = '8px';
+		wrapper.style.WebkitBorderRadius = '8px';
+		wrapper.style.MozBorderRadius = '8px';
+		
+		return wrapper;
+	}
+	
+	function ShopgateButtonImage() {
+		var btnImage = document.createElement('img');
+		
+		// set attributes
+		btnImage.id = 'shopgate_mobile_button';
+		btnImage.src = '{$buttonOffImageSource}';
+		btnImage.className = 'sg_mobile_button_off';
+		
+		// set on click handler 
+		btnImage.onclick = ShopgateRedirectClickHandler;
+		
+		// set styles
+		btnImage.style.background = 'none';
+		btnImage.style.margin = '0px';
+		btnImage.style.padding = '0px';
+		btnImage.style.border = 'medium none';
+		btnImage.style.verticalAlign = 'baseline';
+		btnImage.style.height = '45px';
+		btnImage.style.position = 'absolute';
+		btnImage.style.right = '15px';
+		btnImage.style.top = '7px';
+		
+		return btnImage;
+	}
+	
 	function ShopgateRedirectClickHandler() {
 		var button = document.getElementById("shopgate_mobile_button");
 		
@@ -19,81 +118,8 @@
 		
 		window.location.replace(documentUrl);
 	}
+}
+
+var _shopgate_mobile_header = new ShopgateMobileHeader();
+_shopgate_mobile_header.create();
 </script>
-<div 
-	style="
-		line-height: 30px;
-		font-size: 30px;
-		font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
-		font-weight: bold;
-		text-align: left;
-		background-color: rgb(255, 255, 255);
-		border-top-width: 1px;
-		border-right-width: 1px;
-		border-bottom-width: 1px;
-		border-left-width: 1px;
-		border-top-style: solid;
-		border-right-style: solid;
-		border-bottom-style: solid;
-		border-left-style: solid;
-		border-top-color: rgb(173, 173, 173);
-		border-right-color: rgb(173, 173, 173);
-		border-bottom-color: rgb(173, 173, 173);
-		border-left-color: rgb(173, 173, 173);
-		border-image: initial;
-		clear: both;
-		color: rgb(34, 34, 34);
-		margin-top: 20px;
-		margin-right: auto;
-		margin-left: auto;
-		margin-bottom: 40px;
-		padding-top: 15px;
-		padding-right: 15px;
-		padding-bottom: 15px;
-		padding-left: 15px;
-		position: relative;
-		width: 560px;
-		border-top-left-radius: 8px;
-		border-top-right-radius: 8px;
-		border-bottom-right-radius: 8px;
-		border-bottom-left-radius: 8px;
-">
-	{$buttonDescription}
-	<img
-		id="shopgate_mobile_button"
-		onclick="ShopgateRedirectClickHandler()"
-		src="{$buttonOffImageSource}"
-		class="sg_mobile_button_off"
-		style="
-			background-image: none;
-			background-attachment: initial;
-			background-origin: initial;
-			background-clip: initial;
-			background-color: initial;
-			margin-top: 0px;
-			margin-right: 0px;
-			margin-bottom: 0px;
-			margin-left: 0px;
-			padding-top: 0px;
-			padding-right: 0px;
-			padding-bottom: 0px;
-			padding-left: 0px;
-			border-top-width: medium;
-			border-right-width: medium;
-			border-bottom-width: medium;
-			border-left-width: medium;
-			border-top-style: none;
-			border-right-style: none;
-			border-bottom-style: none;
-			border-left-style: none;
-			border-color: initial;
-			border-image: initial;
-			vertical-align: baseline;
-			height: 45px;
-			position: absolute;
-			right: 15px;
-			top: 7px;
-			background-position: initial initial;
-			background-repeat: initial initial;
-		" />
-</div>

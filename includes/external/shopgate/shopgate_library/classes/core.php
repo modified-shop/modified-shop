@@ -3,7 +3,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.1.12');
+define('SHOPGATE_LIBRARY_VERSION', '2.1.23');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 define('SHOPGATE_ITUNES_URL', 'http://itunes.apple.com/de/app/shopgate-eine-app-alle-shops/id365287459?mt=8');
@@ -44,7 +44,7 @@ function ShopgateErrorHandler($errno, $errstr, $errfile, $errline) {
  * Exception type for errors within the Shopgate Library.
  *
  * This is used by the Shopgate Library and should be used by plugins and their components. Predefined error
- * codes and messages should be used. If not suitable, a custom message can be passed which results in error
+ * codes and messages are to be used. If not suitable, a custom message can be passed which results in error
  * code 999 (unknown error code) with the message appended. Error code, message, time, additional information
  * and part of the stack trace will be logged automatically on construction of a ShopgateLibraryException.
  *
@@ -70,6 +70,8 @@ class ShopgateLibraryException extends Exception {
 	const PLUGIN_API_DISABLED_ACTION = 22;
 	const PLUGIN_API_WRONG_RESPONSE_FORMAT = 23;
 
+	const PLUGIN_API_UNKNOWN_SHOP_NUMBER = 24;
+	
 	const PLUGIN_API_NO_ORDER_NUMBER = 30;
 	const PLUGIN_API_NO_USER = 35;
 	const PLUGIN_API_NO_PASS = 36;
@@ -87,7 +89,8 @@ class ShopgateLibraryException extends Exception {
 
 	const PLUGIN_NO_ADDRESSES_FOUND = 70;
 	const PLUGIN_WRONG_USERNAME_OR_PASSWORD = 71;
-
+	
+	const PLUGIN_FILE_DELETE_ERROR = 79;
 	const PLUGIN_FILE_NOT_FOUND = 80;
 	const PLUGIN_FILE_OPEN_ERROR = 81;
 	const PLUGIN_FILE_EMPTY_BUFFER = 82;
@@ -122,9 +125,11 @@ class ShopgateLibraryException extends Exception {
 
 		// Plugin API errors
 		self::PLUGIN_API_NO_ACTION => 'no action specified',
-		self::PLUGIN_API_UNKNOWN_ACTION  => 'unkown action requested',
+		self::PLUGIN_API_UNKNOWN_ACTION  => 'unknown action requested',
 		self::PLUGIN_API_DISABLED_ACTION => 'disabled action requested',
 		self::PLUGIN_API_WRONG_RESPONSE_FORMAT => 'wrong response format',
+		
+		self::PLUGIN_API_UNKNOWN_SHOP_NUMBER => 'unknown shop number received',
 
 		self::PLUGIN_API_NO_ORDER_NUMBER => 'parameter "order_number" missing',
 		self::PLUGIN_API_NO_USER => 'parameter "user" missing',
@@ -144,6 +149,8 @@ class ShopgateLibraryException extends Exception {
 		self::PLUGIN_NO_ADDRESSES_FOUND => 'no addresses found for customer',
 		self::PLUGIN_WRONG_USERNAME_OR_PASSWORD => 'wrong username or password',
 
+	
+		self::PLUGIN_FILE_DELETE_ERROR => 'cannot delete file(s)',
 		self::PLUGIN_FILE_NOT_FOUND => 'file not found',
 		self::PLUGIN_FILE_OPEN_ERROR => 'cannot open file',
 		self::PLUGIN_FILE_EMPTY_BUFFER => 'buffer is empty',
@@ -272,9 +279,6 @@ class ShopgateLibraryException extends Exception {
 /**
  * Exception type for errors reported by the Shopgate Merchant API.
  *
- * @param int $code One of the constants defined in [TODO].
- * @param string $additionalInformation More detailed information on what exactly went wrong.
- *
  * @author Shopgate GmbH, 35510 Butzbach, DE
  */
 class ShopgateMerchantApiException extends Exception {
@@ -284,14 +288,41 @@ class ShopgateMerchantApiException extends Exception {
 	const ORDER_SHIPPING_STATUS_ALREADY_COMPLETED = 204;
 
 	const INTERNAL_ERROR_OCCURED_WHILE_SAVING = 803;
+	
+	/**
+	 * @var ShopgateMerchantApiResponse
+	 */
+	protected $response;
 
-	public function __construct($code, $additionalInformation = null) {
+	/**
+	 * Exception type for errors reported by the Shopgate Merchant API.
+	 *
+	 *
+	 * @param int $code One of the constants defined in ShopgateMerchantApiException.
+	 * @param string $additionalInformation More detailed information on what exactly went wrong.
+	 * @param ShopgateMerchantApiResponse $response The response of the request that caused the exception to be thrown or null if the response was invalid.
+	 */
+	public function __construct($code, $additionalInformation, ShopgateMerchantApiResponse $response) {
+		$this->response = $response;
+		
 		$message = $additionalInformation;
-
-		if (ShopgateLogger::getInstance()->log($code.' - '.$additionalInformation) === false){
+		$errors = $this->response->getErrors();
+		if (!empty($errors)) {
+			$message .= "\n".print_r($errors, true);
+		}
+		
+		if (ShopgateLogger::getInstance()->log('SMA reports error: '.$code.' - '.$additionalInformation) === false) {
 			$message .= ' (unable to log)';
 		}
+		
 		parent::__construct($message, $code);
+	}
+	
+	/**
+	 * @return ShopgateMerchantApiResponse
+	 */
+	public function getResponse() {
+		return $this->response;
 	}
 }
 
@@ -343,13 +374,13 @@ class ShopgateLogger {
 	 * @param string $debugLogPath
 	 * @return ShopgateLogger
 	 */
-	public static function &getInstance($accessLogPath = null, $requestLogPath = null, $errorLogPath = null, $debugLogPath = null) {
+	public static function getInstance($accessLogPath = null, $requestLogPath = null, $errorLogPath = null, $debugLogPath = null) {
 		if (empty(self::$singleton)) {
 			// fallback for the default log files if none are specified
-			if (empty($accessLogPath))  $accessLogPath  = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.'access.log';
-			if (empty($requestLogPath)) $requestLogPath = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.'request.log';
-			if (empty($errorLogPath))   $errorLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.'error.log';
-			if (empty($debugLogPath))   $debugLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.'debug.log';
+			if (empty($accessLogPath))  $accessLogPath  = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'access.log';
+			if (empty($requestLogPath)) $requestLogPath = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'request.log';
+			if (empty($errorLogPath))   $errorLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'error.log';
+			if (empty($debugLogPath))   $debugLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'debug.log';
 				
 			self::$singleton = new self($accessLogPath, $requestLogPath, $errorLogPath, $debugLogPath);
 		}
@@ -551,7 +582,7 @@ class ShopgateBuilder {
 	 *
 	 * @param ShopgateConfigInterface $config
 	 */
-	public function __construct(ShopgateConfigInterface &$config = null) {
+	public function __construct(ShopgateConfigInterface $config = null) {
 		if (empty($config)) {
 			$this->config = new ShopgateConfig();
 		} else {
@@ -570,7 +601,7 @@ class ShopgateBuilder {
 	 *
 	 * @param ShopgatePlugin $plugin The ShopgatePlugin instance that should be wired to the framework.
 	 */
-	public function buildLibraryFor(ShopgatePlugin &$plugin) {
+	public function buildLibraryFor(ShopgatePlugin $plugin) {
 		// set error handler if configured
 		if ($this->config->getUseCustomErrorHandler()) {
 			set_error_handler('ShopgateErrorHandler');
@@ -596,7 +627,7 @@ class ShopgateBuilder {
 	 *
 	 * @return ShopgateMerchantApi
 	 */
-	public function &buildMerchantApi() {
+	public function buildMerchantApi() {
 		$authService = new ShopgateAuthentificationService($this->config->getCustomerNumber(), $this->config->getApikey());
 		$merchantApi = new ShopgateMerchantApi($authService, $this->config->getShopNumber(), $this->config->getApiUrl());
 		
@@ -608,20 +639,12 @@ class ShopgateBuilder {
 	 *
 	 * @return ShopgateMobileRedirect
 	 */
-	public function &buildRedirect() {
-		$merchantApi = &$this->buildMerchantApi();
+	public function buildRedirect() {
+		$merchantApi = $this->buildMerchantApi();
 		$redirect = new ShopgateMobileRedirect(
-				$this->config->getRedirectKeywordCachePath(),
-				$this->config->getRedirectSkipKeywordCachePath(),
-				$this->config->getServer(),
+				$this->config,
 				$merchantApi
 		);
-		
-		$redirect->setAlias($this->config->getAlias());
-		$redirect->setCustomMobileUrl($this->config->getCname());
-		
-		if ($this->config->getAlwaysUseSsl()) $redirect->setAlwaysUseSSL();
-		if ($this->config->getEnableRedirectKeywordUpdate()) $redirect->enableKeywordUpdate(ShopgateMobileRedirectInterface::DEFAULT_CACHE_TIME);
 		
 		return $redirect;
 	}
@@ -819,7 +842,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * @param ShopgateBuilder $builder If empty, the default ShopgateBuilder will be instantiated.
 	 */
-	public final function __construct(ShopgateBuilder &$builder = null) {
+	public final function __construct(ShopgateBuilder $builder = null) {
 		// some default values
 		$this->splittedExport = false;
 		$this->exportOffset = 0;
@@ -864,25 +887,25 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * @param ShopgateConfigInterface $config
 	 */
-	public final function setConfig(ShopgateConfigInterface &$config) {
+	public final function setConfig(ShopgateConfigInterface $config) {
 		$this->config = $config;
 	}
 	
-	public final function setMerchantApi(ShopgateMerchantApiInterface &$merchantApi) {
+	public final function setMerchantApi(ShopgateMerchantApiInterface $merchantApi) {
 		$this->merchantApi = $merchantApi;
 	}
 	
 	/**
 	 * @param ShopgatePluginApiInterface $pluginApi
 	 */
-	public final function setPluginApi(ShopgatePluginApiInterface &$pluginApi) {
+	public final function setPluginApi(ShopgatePluginApiInterface $pluginApi) {
 		$this->pluginApi = $pluginApi;
 	}
 
 	/**
 	 * @param ShopgateFileBuffer $buffer
 	 */
-	public final function setBuffer(ShopgateFileBufferInterface &$buffer) {
+	public final function setBuffer(ShopgateFileBufferInterface $buffer) {
 		$this->buffer = $buffer;
 	}
 	
@@ -993,7 +1016,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 
 	/**
 	 * @return string[] An array with the csv file field names as indices and empty strings as values.
-	 * @see http://wiki.shopgate.com/CSV_File_Categories/de
+	 * @see http://wiki.shopgate.com/CSV_File_Categories/
 	 */
 	protected function buildDefaultCategoryRow() {
 		$row = array(
@@ -1018,7 +1041,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	
 	/**
 	 * @return string[] An array with the csv file field names as indices and empty strings as values.
-	 * @see http://wiki.shopgate.com/CSV_File_Items/de
+	 * @see http://wiki.shopgate.com/CSV_File_Items/
 	 */
 	protected function buildDefaultItemRow() {
 		$row = array(
@@ -1055,6 +1078,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 			'ean' 						=> "",
 			'isbn' 						=> "",
 			'pzn'						=> "",
+			'upc'						=> "",
 			'last_update' 				=> "",
 			'tags' 						=> "",
 			'sort_order' 				=> "",
@@ -1170,7 +1194,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 
 	/**
 	 * @return string[] An array with the csv file field names as indices and empty strings as values.
-	 * @see http://wiki.shopgate.com/CSV_File_Reviews/de
+	 * @see http://wiki.shopgate.com/CSV_File_Reviews/
 	 */
 	protected function buildDefaultReviewRow() {
 		$row = array(
@@ -1242,7 +1266,13 @@ abstract class ShopgatePlugin extends ShopgateObject {
 		foreach ($additionalAllowedTags as &$t) $t = strtolower($t);
 		
 		// some tags must be removed completely (including content)
-		$string = preg_replace('/<\s*script.*\/script>/s', '', $string);
+		$string = preg_replace('#<script([^>]*?)>(.*?)</script>#is', '', $string);
+		$string = preg_replace('#<style([^>]*?)>(.*?)</style>#is', '', $string);
+		$string = preg_replace('#<link([^>]*?)>(.*?)</link>#is', '', $string);
+		
+		$string = preg_replace('#<script([^>]*?)/>#is', '', $string);
+		$string = preg_replace('#<style([^>]*?)/>#is', '', $string);
+		$string = preg_replace('#<link([^>]*?)/>#is', '', $string);
 
 		// add the additional allowed tags to the list
 		$allowedTags = array_merge($allowedTags, $additionalAllowedTags);
@@ -1315,7 +1345,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @return array
 	 */
-	protected final function getCreateItemsCsvLoaders() {
+	protected function getCreateItemsCsvLoaders() {
 		return $this->getCreateCsvLoaders("item");
 	}
 	
@@ -1326,7 +1356,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @return array
 	 */
-	protected final function getCreateCategoriesCsvLoaders() {
+	protected function getCreateCategoriesCsvLoaders() {
 		return $this->getCreateCsvLoaders("category");
 	}
 	
@@ -1335,7 +1365,7 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * @return array
 	 */
-	protected final function getCreateReviewsCsvLoaders() {
+	protected function getCreateReviewsCsvLoaders() {
 		return $this->getCreateCsvLoaders("review");
 	}
 

@@ -466,6 +466,24 @@ class ShopgateAddress extends ShopgateContainer {
 	public function getStreet2() { return $this->street_2; }
 
 	/**
+	 * Return the name of street1
+	 *
+	 * @return string
+	 */
+	public function getStreetName1() {
+		return $this->splitStreetData($this->getStreet1(), "street");
+	}
+	
+	/**
+	 * Return the house number of street1
+	 *
+	 * @return string
+	 */
+	public function getStreetNumber1() {
+		return $this->splitStreetData($this->getStreet1(), "number");
+	}
+	
+	/**
 	 * @return string
 	 */
 	public function getCity() { return $this->city; }
@@ -516,5 +534,40 @@ class ShopgateAddress extends ShopgateContainer {
 
 	public function accept(ShopgateContainerVisitor $v) {
 		$v->visitAddress($this);
+	}
+	
+	/**
+	 *
+	 * @param string $street
+	 * @param string $type [street|name]
+	 *
+	 * @return string
+	 */
+	protected function splitStreetData( $street, $type = "street" ) {
+		$splittedArray = array();
+		$street = trim($street);
+		
+		if(!preg_match("/^(.+)\s(.*[0-9]+.*)$/is", $street, $splittedArray)) {
+			// For "My-Little-Street123"
+			preg_match("/^(.+)([0-9]+.*)$/isU", $street, $splittedArray);
+		}
+		
+		$value = $street;
+		switch($type) {
+			case 'street':
+				if(isset($splittedArray[1])){
+					$value = $splittedArray[1];
+				}
+				break;
+			case 'number':
+				if(isset($splittedArray[2])){
+					$value = $splittedArray[2];
+				}else{
+					$value = "";
+				}
+				break;
+		}
+		
+		return $value;
 	}
 }

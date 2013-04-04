@@ -177,7 +177,7 @@ class ShopgateOrder extends ShopgateContainer {
 	 *
 	 * Sample: <ul><li>SHOPGATE</li><li>PREPAY</li><li>CC</li><li>INVOICE</li><li>DEBIT</li><li>COD</li><li>PAYPAL</li></ul>
 	 *
-	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/de
+	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/
 	 * @param string $value
 	 */
 	public function setPaymentGroup($value) {
@@ -189,7 +189,7 @@ class ShopgateOrder extends ShopgateContainer {
 	 *
 	 * Sample: <ul><li>SHOPGATE</li><li>PREPAY</li><li>DT_CC</li><li>KLARNA_INV</li><li>BILLSAFE</li><li>DEBIT</li><li>COD</li><li>PAYPAL</li></ul>
 	 *
-	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/de
+	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/
 	 * @param string $value
 	 */
 	public function setPaymentMethod($value) { $this->payment_method = $value; }
@@ -550,7 +550,7 @@ class ShopgateOrder extends ShopgateContainer {
 	 *
 	 * Sample: <ul><li>SHOPGATE</li><li>PREPAY</li><li>DT_CC</li><li>BILLSAFE</li><li>KLARNA_INV</li><li>DEBIT</li><li>COD</li><li>PAYPAL</li></ul>
 	 *
-	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/de
+	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/
 	 * @return string
 	 */
 	public function getPaymentMethod() {
@@ -562,7 +562,7 @@ class ShopgateOrder extends ShopgateContainer {
 	 *
 	 * Sample: <ul><li>SHOPGATE</li><li>PREPAY</li><li>CC</li><li>INVOICE</li><li>DEBIT</li><li>COD</li><li>PAYPAL</li></ul>
 	 *
-	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/de
+	 * @see http://wiki.shopgate.com/Merchant_API_payment_infos/
 	 * @return string
 	 */
 	public function getPaymentGroup() { return $this->payment_group; }
@@ -790,7 +790,7 @@ class ShopgateOrderItem extends ShopgateContainer {
 
 	protected $options = array();
 
-	protected $inputs;
+	protected $inputs = array();
 
 
 	/**********
@@ -873,16 +873,12 @@ class ShopgateOrderItem extends ShopgateContainer {
 	 * @param ShopgateOrderItemOption[]|mixed[][] $value
 	 */
 	public function setOptions($value) {
-		if (empty($value)) {
-			$this->options = null;
+		if (empty($value) || !is_array($value)) {
+			$this->options = array();
 			return;
 		}
 
-		if (!is_array($value)) {
-			$this->options = null;
-			return;
-		}
-
+		// convert sub-arrays into ShopgateOrderItemOption objects if necessary
 		foreach ($value as $index => &$element) {
 			if ((!is_object($element) || !($element instanceof ShopgateOrderItemOption)) && !is_array($element)) {
 				unset($value[$index]);
@@ -903,16 +899,12 @@ class ShopgateOrderItem extends ShopgateContainer {
  	 * @param ShopgateOrderItemInput[]|mixed[][] $value
 	 */
 	public function setInputs($value) {
-		if (empty($value)) {
-			$this->inputs = null;
+		if (empty($value) || !is_array($value)) {
+			$this->inputs = array();
 			return;
 		}
 		
-		if (!is_array($value)) {
-			$this->inputs = null;
-			return;
-		}
-		
+		// convert sub-arrays into ShopgateOrderItemInputs objects if necessary
 		foreach ($value as $index => &$element) {
 			if ((!is_object($element) || !($element instanceof ShopgateOrderItemInput)) && !is_array($element)) {
 				unset($value[$index]);
