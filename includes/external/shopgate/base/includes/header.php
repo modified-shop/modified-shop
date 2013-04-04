@@ -1,44 +1,44 @@
 <?php
-include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
-include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
-$shopgateConfig = new ShopgateConfigModified();
+$shopgateMobileHeader = '';// compatibility to older versions
+$shopgateJsHeader = '';
+if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
+	include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
+	include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
 
-$shopgateMobileHeader = '';
-$shopgateLanguages = xtc_db_fetch_array(xtc_db_query("SELECT * FROM `".TABLE_LANGUAGES."` WHERE UPPER(code) = UPPER('".$shopgateConfig->getLanguage()."')"));
-$shopgateLanguage = isset($shopgateLanguages['directory']) ? strtolower($shopgateLanguages["directory"]) : 'german';
-$shopgateCurrentLanguage = isset($_SESSION['language']) ? strtolower($_SESSION['language']) : 'german';
-
-if ($shopgateConfig->getShopIsActive() && $shopgateConfig->getEnableMobileWebsite()) {
-	// instantiate and set up redirect class
-	$shopgateBuilder = new ShopgateBuilder($shopgateConfig);
-	$shopgateRedirector = &$shopgateBuilder->buildRedirect();
-	$shopgateRedirector->setButtonDescription('Mobile Webseite aktivieren');
-	
-	##################
-	# redirect logic #
-	##################
-	
-	// check request for mobile devices
- 	if ($shopgateRedirector->isRedirectAllowed() && $shopgateRedirector->isMobileRequest() && ($shopgateCurrentLanguage == $shopgateLanguage)) {
-		$shopgateRedirectionUrl = null;
+	try {
+		$shopgateCurrentLanguage = isset($_SESSION['language_code']) ? strtolower($_SESSION['language_code']) : 'de';
+		$shopgateHeaderConfig = new ShopgateConfigModified();
+		$shopgateHeaderConfig->loadByLanguage($shopgateCurrentLanguage);
 		
-		// set redirection url
-		if ($product->isProduct) {
-			// product redirect
-			$shopgateRedirectionUrl = $shopgateRedirector->getItemUrl($product->pID);
-		
-		} elseif (!empty($current_category_id)) {
-			// category redirect
-			$shopgateRedirectionUrl = $shopgateRedirector->getCategoryUrl($current_category_id);
-			
+		if ($shopgateHeaderConfig->checkUseGlobalFor($shopgateCurrentLanguage)) {
+			$shopgateRedirectThisLanguage = in_array($shopgateCurrentLanguage, $shopgateHeaderConfig->getRedirectLanguages());
 		} else {
-			// default redirect
-			$shopgateRedirectionUrl = $shopgateRedirector->getShopUrl();
+			$shopgateRedirectThisLanguage = true;
 		}
 		
-		// perform the redirect
-		$shopgateRedirector->redirect($shopgateRedirectionUrl);
- 	} elseif ($shopgateRedirector->isMobileRequest() && !$shopgateRedirector->isRedirectAllowed() && ($shopgateCurrentLanguage == $shopgateLanguage)) {
- 		$shopgateMobileHeader = $shopgateRedirector->getMobileHeader();
- 	}
+		if ($shopgateRedirectThisLanguage) {
+			// SEO modules fix (for Commerce:SEO and others): if session variable was set, SEO did a redirect and most likely cut off our GET parameter
+			// => reconstruct here, then unset the session variable
+			if (!empty($_SESSION['shopgate_redirect'])) {
+				$_GET['shopgate_redirect'] = 1;
+				unset($_SESSION['shopgate_redirect']);
+			}
+
+			// instantiate and set up redirect class
+			$shopgateBuilder = new ShopgateBuilder($shopgateHeaderConfig);
+			$shopgateRedirector = &$shopgateBuilder->buildRedirect();
+	
+			##################
+			# redirect logic #
+			##################
+	
+			if (($product instanceof product) && $product->isProduct && !empty($product->pID)) {
+				$shopgateJsHeader = $shopgateRedirector->buildScriptItem($product->pID);
+			} elseif (!empty($current_category_id)) {
+				$shopgateJsHeader = $shopgateRedirector->buildScriptCategory($current_category_id);
+			} else {
+				$shopgateJsHeader = $shopgateRedirector->buildScriptShop();
+			}
+		}
+	} catch (ShopgateLibraryException $e) {	}
 }

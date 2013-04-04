@@ -1,8 +1,8 @@
 <?php
-define('SHOPGATE_PLUGIN_VERSION', '2.1.8');
+define('SHOPGATE_PLUGIN_VERSION', '2.1.16');
 
 /**
- * Modified eCommerce Plugin für Shopgate
+ * Modified eCommerce Plugin for Shopgate
  */
 class ShopgateModifiedPlugin extends ShopgatePlugin {
 	
@@ -15,7 +15,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	private $countryId;
 	private $zoneId;
 
-	private $oCurreny = null;
+	private $currency;
 
 	private $language = "german";
 
@@ -35,37 +35,53 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		// initialize configuration
 		require_once(DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php');
 		$this->config = new ShopgateConfigModified();
-
-		// Fetch Country
+		if (!isset($_REQUEST['shop_number'])) {
+			$this->config->loadFile();
+		} else {
+			$this->config->loadByShopNumber($_REQUEST['shop_number']);
+		}
+		
+		// fetch country
 		$qry = "SELECT * FROM `".TABLE_COUNTRIES."` WHERE UPPER(countries_iso_code_2) = UPPER('".$this->config->getCountry()."')";
 		$qry = xtc_db_fetch_array(xtc_db_query($qry));
-		$this->countryId = $qry ? $qry["countries_id"] : 'DE';
+		$this->countryId = !empty($qry['countries_id']) ? $qry['countries_id'] : 'DE';
 
-		// Fetch Language
+		// fetch language
 		$qry = "SELECT * FROM `".TABLE_LANGUAGES."` WHERE UPPER(code) = UPPER('".$this->config->getLanguage()."')";
 		$qry = xtc_db_fetch_array(xtc_db_query($qry));
-		$this->languageId = $qry ? $qry["languages_id"] : 2;
-		$this->language = $qry ? $qry["directory"] : 'german';
+		$this->languageId = !empty($qry['languages_id']) ? $qry['languages_id'] : 2;
+		$this->language = !empty($qry['directory']) ? $qry['directory'] : 'german';
 
-		// Fetch exchange-rate
+		// fetch currency
 		$qry = "SELECT * FROM `".TABLE_CURRENCIES."` WHERE UPPER(code) = UPPER('".$this->config->getCurrency()."')";
 		$qry = xtc_db_fetch_array(xtc_db_query($qry));
-		$this->exchangeRate = $qry ? $qry["value"] : 1;
-		$this->currencyId = $qry ? $qry["currencies_id"] : 1;
-		$this->oCurreny = $qry ? $qry : array("code" => "EUR", "symbol_right" => " €", "decimal_places"=>"2", "decimal_point"=>",", "thousands_point"=>".");
+		$this->exchangeRate = !empty($qry['value']) ? $qry['value'] : 1;
+		$this->currencyId = !empty($qry['currencies_id']) ? $qry['currencies_id'] : 1;
+		$this->currency = !empty($qry)
+			? $qry
+			: array('code' => 'EUR', 'symbol_left' => '', 'symbol_right' => ' EUR', 'decimal_point' => ',', 'thousands_point' => '.', 'decimal_places' => '2', 'value' => 1.0);
 
 		$this->zoneId = $this->config->getTaxZoneId();
 
-		if(!defined("DIR_FS_LANGUAGES")){
-			define('DIR_FS_LANGUAGES', DIR_FS_CATALOG. 'lang/');
+		if (!defined('DIR_FS_LANGUAGES')) {
+			define('DIR_FS_LANGUAGES', rtrim(DIR_FS_CATALOG, '/'). '/lang/');
 		}
+
+//		$langFiles = array(
+//			'admin/categories.php',
+//			'admin/content_manager.php',
+//		);
+
+//		foreach ($langFiles as $langFile) {
+//			include_once DIR_FS_LANGUAGES."/$this->language/$langFile";
+//		}
 
 		return true;
 	}
 
 	protected function createCategoriesCsv() {
 		
-		if(!$this->config->getReverseCategoriesSortOrder()){
+		if($this->config->getReverseCategoriesSortOrder()){
 			$maxOrder = 0;
 		} else {
 			$qry = "SELECT MAX( sort_order ) sort_order FROM " . TABLE_CATEGORIES;
@@ -108,7 +124,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			}
 
 			if (!empty($item["sort_order"]) || ((string) $item['sort_order'] === '0')) {
-				if(!$this->config->getReverseCategoriesSortOrder()){
+				if($this->config->getReverseCategoriesSortOrder()){
+					// reversed means the contrary to ordering system in shopgate - order_index is a priority system - high number = top position
+					// so just taking over the values means reversing the order
 					$row["order_index"] = $item["sort_order"];
 				} else {
 					$row["order_index"] = $maxOrder - $item["sort_order"];
@@ -130,43 +148,69 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @see ShopgatePluginApi::createItemsCsv()
 	 */
 	protected function createItemsCsv() {
-		$qry = "
-		SELECT DISTINCT
-			p.products_id,
-			p.products_model,
-			p.products_ean,
-			p.products_quantity,
-			p.products_image,
-			p.products_price,
-			DATE_FORMAT(p.products_last_modified, '%Y-%m-%d') as products_last_modified,
-			p.products_weight,
-			p.products_status,
-			sp.specials_new_products_price,
-			sp.specials_quantity,
-			pdsc.products_keywords,
-			pdsc.products_name,
-			pdsc.products_description,
-			pdsc.products_short_description,
-			shst.shipping_status_name,
-			mf.manufacturers_name,
-			p.products_tax_class_id,
-			p.products_fsk18,
-			p.products_vpe_status,
-			p.products_vpe_value,
-			vpe.products_vpe_name,
-			p.products_sort,
-			p.products_startpage,
-			p.products_startpage_sort
-		FROM ".TABLE_PRODUCTS." p
-		LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pdsc ON (p.products_id = pdsc.products_id AND pdsc.language_id = '".$this->languageId."')
-		LEFT JOIN ".TABLE_SHIPPING_STATUS." shst ON (p.products_shippingtime = shst.shipping_status_id AND shst.language_id = '".$this->languageId."')
-		LEFT JOIN ".TABLE_MANUFACTURERS." mf ON (mf.manufacturers_id = p.manufacturers_id)
-		LEFT JOIN ".TABLE_SPECIALS." sp ON (sp.products_id = p.products_id AND sp.status = 1 AND (sp.expires_date > now() OR sp.expires_date = '0000-00-00 00:00:00' OR sp.expires_date IS NULL))
-		LEFT JOIN ".TABLE_PRODUCTS_VPE." vpe ON (vpe.products_vpe_id = p.products_vpe AND vpe.language_id = pdsc.language_id)
-		WHERE p.products_status = 1
-		AND (p.products_date_available < NOW() OR p.products_date_available IS NULL)
-		";
+		$customerGroupMaxPriceDiscount = 0;
+		$customerGroupDiscountAttributes = false;
 
+		// get customer-group first
+		$qry = "SELECT"
+		. " status.customers_status_name,"
+		. " status.customers_status_discount,"
+		. " status.customers_status_discount_attributes"
+		. " FROM " . TABLE_CUSTOMERS_STATUS . " AS status"
+		. " WHERE status.customers_status_id = " . $this->config->getCustomerPriceGroup()
+		. " AND status.language_id = " . $this->languageId
+		. ";";
+
+		// Check if the customer group exists (ignore if not)
+		$queryResult = xtc_db_query($qry);
+		if($queryResult) {
+			$customerGroupResult = xtc_db_fetch_array($queryResult);
+			if(!empty($customerGroupResult) && isset($customerGroupResult['customers_status_discount'])) {
+				$customerGroupMaxPriceDiscount = $customerGroupResult['customers_status_discount'];
+			}
+			if(!empty($customerGroupResult) && isset($customerGroupResult['customers_status_discount'])) {
+				$customerGroupDiscountAttributes = $customerGroupResult['customers_status_discount_attributes'] ? true : false;
+			}
+		}
+		
+		$qry = "
+			SELECT DISTINCT
+				p.products_id,
+				p.products_model,
+				p.products_ean,
+				p.products_quantity,
+				p.products_image,
+				p.products_price,
+				DATE_FORMAT(p.products_last_modified, '%Y-%m-%d') as products_last_modified,
+				p.products_weight,
+				p.products_status,
+				sp.specials_new_products_price,
+				sp.specials_quantity,
+				pdsc.products_keywords,
+				pdsc.products_name,
+				pdsc.products_description,
+				pdsc.products_short_description,
+				shst.shipping_status_name,
+				mf.manufacturers_name,
+				p.products_tax_class_id,
+				p.products_fsk18,
+				p.products_vpe_status,
+				p.products_vpe_value,
+				vpe.products_vpe_name,
+				p.products_sort,
+				p.products_startpage,
+				p.products_startpage_sort,
+				p.products_discount_allowed
+			FROM ".TABLE_PRODUCTS." p
+			LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pdsc ON (p.products_id = pdsc.products_id AND pdsc.language_id = '".$this->languageId."')
+			LEFT JOIN ".TABLE_SHIPPING_STATUS." shst ON (p.products_shippingtime = shst.shipping_status_id AND shst.language_id = '".$this->languageId."')
+			LEFT JOIN ".TABLE_MANUFACTURERS." mf ON (mf.manufacturers_id = p.manufacturers_id)
+			LEFT JOIN ".TABLE_SPECIALS." sp ON (sp.products_id = p.products_id AND sp.status = 1 AND (sp.expires_date > now() OR sp.expires_date = '0000-00-00 00:00:00' OR sp.expires_date IS NULL))
+			LEFT JOIN ".TABLE_PRODUCTS_VPE." vpe ON (vpe.products_vpe_id = p.products_vpe AND vpe.language_id = pdsc.language_id)
+			WHERE p.products_status = 1
+				AND (p.products_date_available < NOW() OR p.products_date_available IS NULL)
+			";
+		
 		// sp.specials_quantity > 0 deleted, to handle the check in the loop
 		
 		if(STOCK_CHECK == "true" && STOCK_ALLOW_CHECKOUT == 'false') {
@@ -183,46 +227,51 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$maxOrder = $orderIndices["max_order"]+1;
 		$minOrder = $orderIndices["min_order"];
 		$addToOrderIndex = 0;
-
-		if($minOrder < 0){
+		
+		if($minOrder < 0) {
 			// make the sort_order positive
 			$addToOrderIndex += abs($minOrder);
 		}
-
+		
 		if($this->splittedExport) $qry .= " LIMIT {$this->exportOffset}, {$this->exportLimit}";
-
+		
 		$query = xtc_db_query($qry);
 		while($item = xtc_db_fetch_array($query)) {
 			$itemArr = $this->buildDefaultItemRow();
 			$orderInfos = array();
 			
 			$tax_rate = xtc_get_tax_rate($item["products_tax_class_id"], $this->countryId, $this->zoneId);
-
+			
 			// Get variantions and input fields
 			$variations = $this->_getVariations($item["products_id"], $tax_rate);
 			$inputFields = $this->_getInputFields($item["products_id"]);
 			
 			// Get categories
 			$categories = $this->_getProductPath($item["products_id"]);
-
+			
 			// Get Image Urls
 			$images = $this->_getProductsImages($item);
-
+			
 			$httpServer = HTTP_SERVER;
 			if(empty($httpServer)) $httpServer = "http://".$_SERVER["HTTP_HOST"];
 			$deeplink = $httpServer.DIR_WS_CATALOG."product_info.php?". xtc_product_link($item['products_id'], $item['products_name']);
-
+			
 			// Calculate the price
 			$price = $item["products_price"];
-			$oldPrice = null;
-
+			$oldPrice = '';
+			
 			// Special offers for a Customer group
 			$pOffers = $this->_getPersonalOffersPrice($item, $tax_rate);
-			if(!empty($pOffers) && ($pOffers < $price)) {
+			if(!empty($pOffers) && round($pOffers, 2) > 0) {
 				$price = $pOffers;
+				// Ignore the "old price" if it is lower than the offer amount (xtc3 also tells the old price here, but it's not very intuitive)
+				if($pOffers < $item["products_price"]) {
+					$oldPrice = $item["products_price"];
+				}
 			}
-
-			// General special offer
+			
+			// General special offer or customer group price reduction
+			$productDiscount = 0;
 			if(!empty($item["specials_new_products_price"])) {
 				if(STOCK_CHECK == 'true' && STOCK_ALLOW_CHECKOUT == 'false') {
 					if($item["specials_quantity"] > 0){
@@ -235,13 +284,32 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$price = $item["specials_new_products_price"];
 				
 				$orderInfos['is_special_price'] = 1;
+				
+			} elseif(!empty($customerGroupMaxPriceDiscount) && round($customerGroupMaxPriceDiscount, 2) > 0
+				  && !empty($item['products_discount_allowed']) && round($item['products_discount_allowed'], 2) > 0) {
+				$productDiscount = round($item['products_discount_allowed'], 2);
+				
+				// Limit discount to the customer groups maximum discount
+				if(round($customerGroupMaxPriceDiscount, 2) < $productDiscount) {
+					$productDiscount = round($customerGroupMaxPriceDiscount, 2);
+				}
+				
+				$oldPrice = $price;
+				if($oldPrice < $item['products_price']) {
+					$oldPrice = $item['products_price'];
+				}
+				
+				// Reduce price to the discounted price
+				$price = $this->_getDiscountPrice($price, $productDiscount);
+				
+				$orderInfos['is_special_price'] = 1;
 			}
-
+			
 			$category_numbers = $this->_getProductCategoryNumbers($item, $maxOrder, $addToOrderIndex);
-
+			
 			$price *= $this->exchangeRate;
-			$price = $this->formatPriceNumber( $price * ( 1 + ( $tax_rate / 100 ) ) );
-
+			$price = $price * ( 1 + ( $tax_rate / 100 ) );
+			
 			if (!empty($oldPrice)) {
 				$oldPrice = $oldPrice * $this->exchangeRate;
 				$oldPrice = $this->formatPriceNumber( $oldPrice * ( 1 + ( $tax_rate / 100 ) ) );
@@ -258,21 +326,21 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			}
 			
 			$description = preg_replace("/\n|\r/", "", $description);
-
+			
 			$itemArr['item_number'] = $item["products_id"];
 			$itemArr['item_number_public'] = $item['products_model'];
 			$itemArr['manufacturer'] = $item["manufacturers_name"];
 			$itemArr['item_name'] = trim( preg_replace('/<[^>]+>/',' ', $item["products_name"]) );
 			$itemArr['description'] =  $description;
-			$itemArr['unit_amount'] = $price;
-			$itemArr['currency'] = $this->oCurreny["code"];
+			$itemArr['unit_amount'] = $this->formatPriceNumber($price);
+			$itemArr['currency'] = $this->currency["code"];
 			$itemArr['is_available'] = $item["products_status"];
 			$itemArr['available_text'] = (string) $item["shipping_status_name"];
 			$itemArr['url_deeplink'] = $deeplink;
 			$itemArr['urls_images'] = $images;
 			$itemArr['categories'] = $categories;
 			$itemArr['category_numbers'] = implode("||", $category_numbers);
-			$itemArr['use_stock'] = STOCK_CHECK=='true'?1:0;
+			$itemArr['use_stock'] = (STOCK_ALLOW_CHECKOUT == 'true' || STOCK_CHECK != 'true') ? 0 : 1;
 			$itemArr['stock_quantity'] = $item['products_quantity'];
 			$itemArr['weight'] = $item["products_weight"]*1000;
 			$itemArr['tags'] = trim($item["products_keywords"]);
@@ -287,7 +355,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			$itemArr['basic_price'] = $this->_getProductVPE($item, $price);
 			$itemArr['is_highlight'] = $item["products_startpage"];
 			$itemArr['highlight_order_index'] = $item["products_startpage_sort"];
-
+			
 			if($this->config->getReverseItemsSortOrder()){
 				// $addToOrderIndex to make positive sort_order
 				$itemArr['sort_order'] = $item["products_sort"] + $addToOrderIndex;
@@ -300,11 +368,13 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			}
 
 			$itemNumber = 0 ;
-
-			if (!empty($oldPrice)) {
+			
+			if(!empty($oldPrice) && round($oldPrice, 2) > 0) {
 				$itemArr['old_unit_amount'] = $oldPrice;
+			} else {
+				$itemArr['old_unit_amount'] = '';
 			}
-
+			
 			if($itemArr['available_text'] == 'Unbekannt') {
 				$itemArr['is_available'] = 0;
 			}
@@ -313,7 +383,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$itemArr['has_input_fields'] = "1";
 				$itemArr = array_merge($itemArr, $inputFields);
 			}
-
+			
 			if(!empty($variations)) {
 				if($variations["has_options"]) {
 					$itemArr['has_options']=1;
@@ -325,6 +395,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					$itemArr['has_children']=1;
 					$itemNumber = $itemArr["item_number"];
 					$basePrice = round($itemArr["unit_amount"], 2);
+					$baseOldPrice = round($itemArr["old_unit_amount"], 2);
 					$baseWeight = $itemArr["weight"];
 
 					$parentItemNumber = $itemArr["item_number"];
@@ -336,15 +407,31 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 						$itemArr = array_merge($itemArr, $inputFields);
 					}
 
-					foreach ($variations as $variation) {
+					foreach ($variations as $key => $variation) {
 						$price = 0;
 						$weight = 0;
-						if(!empty($variation["offset_amount"]))
+						// Offset amount including tax without discounts (but with exchange rate, of set)
+						$originalOffsetAmount = 0;
+						if(!empty($variation["offset_amount"])) {
+							if(!empty($this->exchangeRate)) {
+								$variation["offset_amount"] *= $this->exchangeRate;
+								$variations[$key]["offset_amount"] = $variation["offset_amount"];
+							}
+							$originalOffsetAmount = $variation["offset_amount"]*(1+($tax_rate/100));
+							
+							// Variations also need to be discounted if products discount is set
+							if(!empty($productDiscount) && round($productDiscount, 2) > 0) {
+								if($customerGroupDiscountAttributes) { // Seems to be buggy in gambio so it is ignored here
+									$variation["offset_amount"] = $this->_getDiscountPrice($variation["offset_amount"], $productDiscount);
+									$variations[$key]["offset_amount"] = $variation["offset_amount"];
+								}
+							}
 							$price = $variation["offset_amount"]*(1+($tax_rate/100));
+						}
 
 
 						if(isset($variation["offset_weight"]))
-							$weight = $variation["offset_weight"]*1000;
+							$weight = $variation["offset_weight"] * 1000;
 
 						$hash = "";
 
@@ -375,10 +462,15 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 						}
 						
 						$itemArr["unit_amount"] = $this->formatPriceNumber($basePrice + $price);
-						$itemArr["weight"]		= $baseWeight + $weight;
+						if(!empty($baseOldPrice) && round($baseOldPrice, 2) > 0) {
+							$itemArr["old_unit_amount"] = $this->formatPriceNumber($baseOldPrice + $originalOffsetAmount);
+						} else {
+							$itemArr["old_unit_amount"] = '';
+						}
+						$itemArr["weight"]			= $baseWeight + $weight;
 						
 						if($isFirst == false){
-							$itemArr["use_stock"] 	= ATTRIBUTE_STOCK_CHECK=='true'?1:0;
+							$itemArr["use_stock"]	= (STOCK_ALLOW_CHECKOUT == 'true' || ATTRIBUTE_STOCK_CHECK != 'true') ? 0 : 1;
 						}
 						
 						// Overwrite stock only if its set up in the configuration
@@ -441,28 +533,27 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 				$factor = 1;
 				switch(strtolower($product["products_vpe_name"])) {
-				case "ml":
-				case "mg":
-					$factor = $product["products_vpe_value"]<250?100:1000;
-					break;
+					case "ml":
+					case "mg":
+						$factor = $product["products_vpe_value"]<250?100:1000;
+						break;
 				}
-
+				
 				$_price = ( $price / $product["products_vpe_value"] ) * $factor;
 
-				$vpe  = $this->oCurreny["symbol_left"];
-
+				$vpe  = $this->currency["symbol_left"];
+				
 				$vpe .= $this->formatPriceNumber(
 					$_price,
-					$this->oCurreny["decimal_places"],
-					$this->oCurreny["decimal_point"],
-					$this->oCurreny["thousands_point"]
+					$this->currency["decimal_places"],
+					$this->currency["decimal_point"],
+					$this->currency["thousands_point"]
 				);
-
-				$vpe .= " " . trim($this->oCurreny["symbol_right"]);
+				
+				$vpe .= " " . trim($this->currency["symbol_right"]);
 				$vpe .= ' pro '.(($factor == 1) ? '' : $factor.' ');
 				$vpe .= $product["products_vpe_name"];
 			}
-
 		}
 
 		return $vpe;
@@ -507,18 +598,18 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 	private function _getProductCategoryNumbers($item, $maxId, $addToOrderIndex) {
 		$category_numbers = array();
-	
+		
 		$catsQry = "
-		SELECT DISTINCT
-		ptc.categories_id,
-		c.products_sorting2
-		FROM ".TABLE_PRODUCTS_TO_CATEGORIES." ptc
-		JOIN ".TABLE_CATEGORIES." c ON (ptc.categories_id = c.categories_id)
-		WHERE ptc.products_id = '".$item["products_id"]."'
-		AND c.categories_status = 1
-		";
+			SELECT DISTINCT
+				ptc.categories_id,
+				c.products_sorting2
+			FROM ".TABLE_PRODUCTS_TO_CATEGORIES." ptc
+			INNER JOIN ".TABLE_CATEGORIES." c ON (ptc.categories_id = c.categories_id)
+			WHERE ptc.products_id = '".$item["products_id"]."'
+				AND c.categories_status = 1
+			";
 		$catsQuery = xtc_db_query($catsQry);
-	
+		
 		while($category = xtc_db_fetch_array($catsQuery)) {
 			if(empty($category["categories_id"])) {
 				continue;
@@ -542,7 +633,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					$sort = $maxId - $item["products_sort"];
 				}
 			}
-				
+			
 			if (!empty($sort) || ((string) $sort === '0')) {
 				$sort += $addToOrderIndex;
 				$catNumber = "=>".$sort;
@@ -550,10 +641,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			$catNumber = $category["categories_id"].$catNumber;
 			$category_numbers[] = $catNumber;
 		}
-	
+		
 		return $category_numbers;
 	}
-	
+
 	/**
 	 *
 	 * @param mixed[] $product
@@ -567,16 +658,27 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$qry = "SELECT * FROM ".TABLE_PERSONAL_OFFERS_BY."$customerStatusId
 		WHERE products_id = '".$product["products_id"]."'
 		AND quantity = 1";
-
+		
 		$qry = xtc_db_query($qry);
 		if(!$qry) return false;
-
+		
 		$specialOffer = xtc_db_fetch_array( $qry );
-
+		
 		return floatval($specialOffer["personal_offer"]);
 	}
 
-/**
+	/**
+	 * Takes a price value and a discount percent value and returns the new discounted price
+	 * @param float $price
+	 * @param float $discountPercent
+	 * @return float
+	 */
+	private function _getDiscountPrice($price, $discountPercent) {
+		$discountedPrice = $price * (1-$discountPercent/100);
+		return $discountedPrice;
+	}
+	
+	/**
 	 * Load all Categories of the product and build its category-path
 	 *
 	 * The categories are seperated by a =>. The Paths are seperated b< a double-pipe ||
@@ -589,7 +691,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$catsQry = "
 			SELECT DISTINCT ptc.categories_id
 			FROM ".TABLE_PRODUCTS_TO_CATEGORIES." ptc
-			JOIN ".TABLE_CATEGORIES." c ON ptc.categories_id = c.categories_id
+			INNER JOIN ".TABLE_CATEGORIES." c ON ptc.categories_id = c.categories_id
 			WHERE ptc.products_id = '$productId'
 			  AND c.categories_status = 1
 			ORDER BY products_sorting
@@ -605,8 +707,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				SELECT DISTINCT cd.categories_name
 				FROM ".TABLE_CATEGORIES_DESCRIPTION." cd
 				WHERE cd.categories_id IN (".$cats.")
-				  AND cd.language_id = ".$this->languageId."
-			    ORDER BY find_in_set(cd.categories_id, '$cats')
+					AND cd.language_id = ".$this->languageId."
+				ORDER BY find_in_set(cd.categories_id, '$cats')
 			";
 
 			$q = xtc_db_query($q);
@@ -618,6 +720,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			if(!empty($categories))$categories.="||";
 			$categories.=$cats;
 		}
+
 		return $categories;
 	}
 
@@ -626,6 +729,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @param int $productId
 	 */
 	private function _getVariations($productId, $tax_rate) {
+		$sg_prod_var = array();
+		
 		$qry = "
 			SELECT
 				pa.products_attributes_id,
@@ -640,13 +745,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				pa.attributes_stock,
 				pa.weight_prefix
 			FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-			JOIN ".TABLE_PRODUCTS_OPTIONS." po ON (pa.options_id = po.products_options_id AND po.language_id = $this->languageId)
- 			# commented out / replaced because of problems with attribute mappings:
-			# JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." povtpo ON povtpo.products_options_id = po.products_options_id
-			# JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (povtpo.products_options_values_id = pov.products_options_values_id AND pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
-			JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
+			INNER JOIN ".TABLE_PRODUCTS_OPTIONS." po ON (pa.options_id = po.products_options_id AND po.language_id = $this->languageId)
+			INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
 			WHERE pa.products_id = '".$productId."'
-			  AND pov.products_options_values_name != 'TEXTFELD'
+				AND pov.products_options_values_name != 'TEXTFELD'
 		";
 
 		$qry .= " ORDER BY po.products_options_id, pa.sortorder ASC";
@@ -655,6 +757,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		//		$options = array_pad(array(), 5, "");
 		$options = array();
+
 		$i=-1;
 		$old = null;
 		while($variation = xtc_db_fetch_array($query)) {
@@ -667,7 +770,30 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		if(empty($options)) return array();
 
-		$sg_prod_var = array();
+		// Find and rename duplicate option-value names
+		foreach($options as $optionIndex => $singleOption) {
+			// Check all option-value names for duplicate names
+			foreach($singleOption as $key => $optionVariation) {
+				if(!empty($optionVariation)) {
+					// Compare with following entries
+					$indexNumber = 1;
+					for($i = $key+1; $i < count($singleOption); $i++) {
+						if(trim($singleOption[$i]['products_options_values_name']) == trim($optionVariation['products_options_values_name'])) {
+							$indexNumber++;
+							$options[$optionIndex][$i]['products_options_values_name'] .= " $indexNumber";
+						}
+					}
+					// Add index 1 to the actual name if duplicate name-entries found
+					if($indexNumber > 1) {
+						$options[$optionIndex][$key]['products_options_values_name'] .= " 1";
+		
+						// Refresh the working variable for further operation
+						$singleOption = $options[$optionIndex];
+					}
+				}
+			}
+		}
+		
 		$countVariations = 1;
 		foreach($options as $option){
 			$countVariations *= count($option);
@@ -686,12 +812,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 
 	/**
-	 * Build the Productvariations recursively
+	 * Build the Productvariations as options
 	 *
 	 * @param &array $sg_prod_var
 	 * @param array $variations
-	 * @param int $index
-	 * @param array $tmp
+	 * @param float $tax_rate
 	 */
 	private function _buildOptions(&$sg_prod_var, $variations, $tax_rate) {
 		$tmp=array();
@@ -702,11 +827,14 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 			$options = array();
 			foreach($_variation as $option) {
-				$optionOffsetPrice = $option["options_values_price"]*(1+($tax_rate/100)); // Include Tax
+				// Currency and tax must be included here because the data is directly used for the item
+				$optionOffsetPrice = $option["options_values_price"]*$this->exchangeRate*(1+($tax_rate/100)); // Include Tax
 				$optionOffsetPrice = round($optionOffsetPrice * 100, 0); // get euro-cent
 
 				$field  = strip_tags($option["products_options_values_id"])."=".strip_tags($option["products_options_values_name"]);
-				$field .= $option["options_values_price"]!=0?"=>".$option["price_prefix"].$optionOffsetPrice:"";
+				$field .= ($option["options_values_price"] != 0)
+					? "=>".$option["price_prefix"].$optionOffsetPrice
+					: "";
 
 				$options[] = $field;
 			}
@@ -731,7 +859,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$sg_prod_var[0]["attribute_".($i+1)] = $variations[$i][0]["products_options_name"];
 			}
 		}
-
+		
 		foreach($variations[$index] as $variation) {
 			if(count($variations) == 1){
 				// only if 1 dimension
@@ -748,7 +876,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$tmp["stock_quantity"] = $variation["attributes_stock"];
 			}
 
-			// Kalkuliere den Preisunterschied
+			// Kalkuliere den Preisunterschied (Steuern und Währung werden noch nicht hier berücksichtigt)
 			$price = $variation["options_values_price"];
 			if($variation["price_prefix"] == "-"){
 				$price = -1 * $price;
@@ -757,8 +885,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$tmp['offset_amount'] = 0;
 			}
 			$tmp["offset_amount"] += $price;
-
-
 
 			// Kalkuliere den Gewichtsunterschied
 			$weight = (float) $variation["options_values_weight"];
@@ -793,23 +919,23 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$qry = "
 			SELECT px.xsell_id
 			FROM ".TABLE_PRODUCTS_XSELL." px
-			JOIN ".TABLE_PRODUCTS." p ON (px.products_id = p.products_id)
+			INNER JOIN ".TABLE_PRODUCTS." p ON (px.products_id = p.products_id)
 			WHERE p.products_id = '$products_id'
-			AND (p.products_date_available < NOW() OR p.products_date_available IS NULL)
+				AND (p.products_date_available < NOW() OR p.products_date_available IS NULL)
 			ORDER BY px.sort_order
 		";
-
+		
 		$xSellIds = array();
-
+		
 		$query = xtc_db_query($qry);
 		for($i = 0; $i < xtc_db_num_rows($query); $i++) {
 		$array = xtc_db_fetch_array($query);
 		$xSellIds[] = $array["xsell_id"];
 		}
-
+		
 		return implode("||", $xSellIds);
 	}
-
+	
 	private function _buildProperties($product, $itemArr) {
 		$properties = array();
 
@@ -818,6 +944,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		return implode("||", $properties);
 	}
+
 
 	private function _getInputFields($productId){
 		$qry = "
@@ -834,15 +961,15 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				pa.attributes_stock,
 				pa.weight_prefix
 			FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-			JOIN ".TABLE_PRODUCTS_OPTIONS." po ON pa.options_id = po.products_options_id
-			JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
+			INNER JOIN ".TABLE_PRODUCTS_OPTIONS." po ON pa.options_id = po.products_options_id
+			INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
 			WHERE pa.products_id = '$productId'
-			  AND pov.products_options_values_name = 'TEXTFELD'
+				AND pov.products_options_values_name = 'TEXTFELD'
 			ORDER BY po.products_options_id, pa.sortorder
 		";
-
+		
 		$query = xtc_db_query($qry);
-
+		
 		while($inputFields = xtc_db_fetch_array($query)) {
 			if($inputFields["products_options_id"] != $old){
 				$i++;
@@ -850,11 +977,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			}
 			$inputFieldsAll[$i][] = $inputFields;
 		}
-
+		
 		if(empty($inputFieldsAll)){
 			return;
 		}
-
+		
 		$sg_product_var = $this->_buildInputFields($inputFieldsAll);
 
 		return $sg_product_var;
@@ -866,17 +993,18 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$i = 0;
 		foreach($inputFieldsAll as $inputField) {
 			$i++;
-
+			
 			//			$sg_product_var["has_input_fields"] = 1;
 			$sg_product_var["input_field_".$i."_type"] = 'text';
 			$sg_product_var["input_field_".$i."_label"] = strip_tags($inputField[0]["products_options_name"]);
-			$sg_product_var["input_field_".$i."_add_amount"] = $inputField["options_values_price"]!=0?"=>".$option["price_prefix"].round($inputField["options_values_price"], 2):"";
+			$sg_product_var["input_field_".$i."_add_amount"] = ($inputField["options_values_price"] != 0)
+				? "=>".$option["price_prefix"].round($inputField["options_values_price"], 2)
+				: "";
 			// keine Angabe möglich
 			$sg_product_var["input_field_".$i."_infotext"] = '';
 			$sg_product_var["input_field_".$i."_required"] = 0;
-
 		}
-
+		
 		return $sg_product_var;
 	}
 
@@ -913,7 +1041,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		. " FROM " . TABLE_CUSTOMERS . " AS customer"
 
-		. " JOIN " . TABLE_CUSTOMERS_STATUS . " AS status"
+		. " INNER JOIN " . TABLE_CUSTOMERS_STATUS . " AS status"
 		. " ON customer.customers_status = status.customers_status_id"
 		. " AND status.language_id = ".$this->languageId
 
@@ -963,15 +1091,15 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 
 		$addresses = array();
- 		while ($addressData = xtc_db_fetch_array($addressResult)) {
- 			try {
- 				$stateCode = ShopgateXtcMapper::getShopgateStateCode($addressData["countries_iso_code_2"], $addressData["zone_code"]);
- 			} catch (ShopgateLibraryException $e) {
- 				// if state code can't be mapped to ISO use xtc3 state code
- 				$stateCode = $addressData['zone_code'];
- 			}
+		while ($addressData = xtc_db_fetch_array($addressResult)) {
+			try {
+				$stateCode = ShopgateXtcMapper::getShopgateStateCode($addressData["countries_iso_code_2"], $addressData["zone_code"]);
+			} catch (ShopgateLibraryException $e) {
+				// if state code can't be mapped to ISO use xtc3 state code
+				$stateCode = $addressData['zone_code'];
+			}
 
- 			try {
+			try {
 				$address = new ShopgateAddress();
 				$address->setId($addressData['address_book_id']);
 				$address->setAddressType(ShopgateAddress::BOTH); // xtc3 doesn't make a difference
@@ -984,9 +1112,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				$address->setCity($addressData["entry_city"]);
 				$address->setCountry($addressData["countries_iso_code_2"]);
 				$address->setState($stateCode);
- 			} catch (ShopgateLibraryException $e) {
- 				// don't abort here
-  			}
+			} catch (ShopgateLibraryException $e) {
+				// don't abort here
+			}
 
 			// put default address in front, append the others
 			if ($address->getId() == $customerData['customers_default_address_id']) {
@@ -1040,12 +1168,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			o.*,
 			so.shopgate_order_number
 			FROM ".TABLE_ORDERS." o
-			JOIN ".TABLE_SHOPGATE_ORDERS." so ON (so.orders_id = o.orders_id)
+			INNER JOIN ".TABLE_SHOPGATE_ORDERS." so ON (so.orders_id = o.orders_id)
 			WHERE so.shopgate_order_number = '{$order->getOrderNumber()}'
 		";
 		$dbOrder = xtc_db_fetch_array( xtc_db_query( $qry ) );
 
-		if(!empty($dbOrder)){
+		if(!empty($dbOrder)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DUPLICATE_ORDER, 'external_order_number: '. $dbOrder["orders_id"], true);
 		}
 
@@ -1073,7 +1201,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 
 		$phone_number = $order->getMobile();
-		if (empty($phone_number)) {
+		if(empty($phone_number)) {
 			$phone_number = $order->getPhone();
 		}
 
@@ -1157,8 +1285,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$orderData["last_modified"]					= date( 'Y-m-d H:i:s' );
 		$orderData["date_purchased"]				= $order->getCreatedTime( 'Y-m-d H:i:s' );
 
-		$orderData["currency"]						= $this->oCurreny["code"];
-		$orderData["currency_value"]				= $this->oCurreny["value"];
+		$orderData["currency"]						= $this->currency["code"];
+		$orderData["currency_value"]				= $this->exchangeRate;
 
 		$orderData["account_type"]					= "";
 
@@ -1197,7 +1325,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			"created" => "now()",
 		);
 		xtc_db_perform(TABLE_SHOPGATE_ORDERS, $ordersShopgateOrder);
-
 		
 		$this->log('method: _insertStatusHistory() ', ShopgateLogger::LOGTYPE_DEBUG);
 		$this->_insertStatusHistory($order, $dbOrderId, $orderData['orders_status']);
@@ -1210,7 +1337,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		
 		$this->log('method: _insertOrderTotal() ', ShopgateLogger::LOGTYPE_DEBUG);
 		$this->_insertOrderTotal($order, $dbOrderId);
-
+		
 		$this->log('db: update order ', ShopgateLogger::LOGTYPE_DEBUG);
 		
 		// Save status in order
@@ -1218,10 +1345,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$orderUpdateData["orders_status"]	= $orderData["orders_status"];
 		$orderUpdateData["last_modified"]	= date( 'Y-m-d H:i:s' );
 		xtc_db_perform(TABLE_ORDERS,$orderUpdateData, "update", "orders_id = {$dbOrderId}");
-
+		
 		$this->log('method: _pushOrderToAfterbuy', ShopgateLogger::LOGTYPE_DEBUG);
 		$this->_pushOrderToAfterbuy($dbOrderId, $order);
-
+		$this->log('method: _pushOrderToDreamRobot', ShopgateLogger::LOGTYPE_DEBUG);
+		$this->_pushOrderToDreamRobot($dbOrderId, $order);
+		
 		$this->log('return: end addOrder()', ShopgateLogger::LOGTYPE_DEBUG);
 		return array(
 			'external_order_id'=>$dbOrderId,
@@ -1246,7 +1375,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			so.is_shipping_blocked,
 			so.payment_infos
 		FROM ".TABLE_ORDERS." o
-		JOIN ".TABLE_SHOPGATE_ORDERS." so ON (so.orders_id = o.orders_id)
+		INNER JOIN ".TABLE_SHOPGATE_ORDERS." so ON (so.orders_id = o.orders_id)
 		WHERE so.shopgate_order_number = '{$order->getOrderNumber()}'
 		";
 		$dbOrder = xtc_db_fetch_array( xtc_db_query( $qry ) );
@@ -1448,6 +1577,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 				xtc_db_perform(TABLE_ORDERS,$orderData, "update", "orders_id = {$dbOrder['orders_id']}");
 
 				$this->_pushOrderToAfterbuy($dbOrder["orders_id"], $order);
+				$this->_pushOrderToDreamRobot($dbOrder["orders_id"], $order);
 			}
 		}
 
@@ -1648,7 +1778,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 			$this->log('db: get product ', ShopgateLogger::LOGTYPE_DEBUG);
 			
-			// Hole das Product aus der Datenbank
 			$qry = xtc_db_query(
 			"SELECT * FROM ".TABLE_PRODUCTS . " WHERE"
 			. " products_id = '" . $item_number ."'"
@@ -1689,7 +1818,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			);
 
 			$qry = xtc_db_perform(TABLE_ORDERS_PRODUCTS, $productData);
-			$produtcsOrderId = xtc_db_insert_id();
+			$productsOrderId = xtc_db_insert_id();
 			
 			$options = $orderItem->getOptions();
 			if(!empty($options)) {
@@ -1707,9 +1836,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 							pa.options_values_price,
 							pa.price_prefix
 						FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-						JOIN ".TABLE_PRODUCTS_OPTIONS." po ON pa.options_id = po.products_options_id AND po.language_id = $this->languageId
-						JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." povtpo ON povtpo.products_options_id = po.products_options_id
-						JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (povtpo.products_options_values_id = pov.products_options_values_id AND pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
+						INNER JOIN ".TABLE_PRODUCTS_OPTIONS." po ON pa.options_id = po.products_options_id AND po.language_id = $this->languageId
+						INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." povtpo ON povtpo.products_options_id = po.products_options_id
+						INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (povtpo.products_options_values_id = pov.products_options_values_id AND pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
 						WHERE pa.products_id = '".$dbProduct["products_id"]."'
 						AND pa.options_values_id = ".$attribute_model."
 						LIMIT 1
@@ -1723,8 +1852,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					
 					$productAttributeData = array(
 						"orders_id"=>$dbOrderId,
-						"orders_products_id"=>$produtcsOrderId,
-						"products_options"=>$dbattribute["products_options_name"],
+						"orders_products_id"=>$productsOrderId,
+						"products_options"=>$dbattribute['products_options_name'],
 						"products_options_values"=>$dbattribute["products_options_values_name"],
 						"options_values_price"=>$dbattribute["options_values_price"],
 						"price_prefix"=>$dbattribute["price_prefix"],
@@ -1744,30 +1873,30 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					$this->log('db: get attribute', ShopgateLogger::LOGTYPE_DEBUG);
 					
 					// Hole das Attribut aus der Datenbank
-					$qry = xtc_db_query("
-					SELECT
-					po.products_options_name,
-					pov.products_options_values_name,
-					pa.options_values_price,
-					pa.price_prefix
-					FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
-					JOIN ".TABLE_PRODUCTS_OPTIONS." po ON pa.options_id = po.products_options_id AND po.language_id = $this->languageId
-					JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." povtpo ON povtpo.products_options_id = po.products_options_id
-					JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (povtpo.products_options_values_id = pov.products_options_values_id AND pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
-					WHERE pa.products_id = '".$dbProduct["products_id"]."'
-					AND pa.products_attributes_id = '".$attribute_model."'
-					LIMIT 1
-					");
+					$qry = "
+						SELECT
+							po.products_options_name,
+							pov.products_options_values_name,
+							pa.options_values_price,
+							pa.price_prefix
+						FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+						INNER JOIN ".TABLE_PRODUCTS_OPTIONS." po ON pa.options_id = po.products_options_id AND po.language_id = $this->languageId
+						INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." povtpo ON povtpo.products_options_id = po.products_options_id
+						INNER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov ON (povtpo.products_options_values_id = pov.products_options_values_id AND pa.options_values_id = pov.products_options_values_id AND pov.language_id = $this->languageId)
+						WHERE pa.products_id = '".$dbProduct["products_id"]."'
+						AND pa.products_attributes_id = '".$attribute_model."'
+						LIMIT 1
+					";
 					
+					$qry = xtc_db_query($qry);
 					$dbattribute = xtc_db_fetch_array($qry);
 					if(empty($dbattribute)) continue; //Fehler
-					
 					
 					$this->log('db: save order product attributes', ShopgateLogger::LOGTYPE_DEBUG);
 					
 					$productAttributeData = array(
 						"orders_id"=>$dbOrderId,
-						"orders_products_id"=>$produtcsOrderId,
+						"orders_products_id"=>$productsOrderId,
 						"products_options"=>$dbattribute["products_options_name"],
 						"products_options_values"=>$dbattribute["products_options_values_name"],
 						"options_values_price"=>$dbattribute["options_values_price"],
@@ -1781,36 +1910,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		
 		$this->log('method: updateItemsStock', ShopgateLogger::LOGTYPE_DEBUG);
 		$this->updateItemsStock($order);
-
-		// after update stock, insert a PAYMENT_FEE - "Article".
-		//
-		//WARNING: On modify: Change the taxes calculation too!
-		if($order->getAmountShopPayment() != 0){
-
-			$this->log('db: save payment fee', ShopgateLogger::LOGTYPE_DEBUG);
-			
-			$paymentInfos = $order->getPaymentInfos();
-
-			$dbProduct['products_id'] = 0;
-			$dbProduct['products_model'] = $item_number;
-			$productData = array(
-				"orders_id"				=>	$dbOrderId,
-				"products_id"			=>	0,
-				"products_model"		=>	"PAYMENT_FEE",
-				"products_name"			=>	xtc_db_prepare_input('Zahlungsartkosten'. (!empty($paymentInfos['shopgate_payment_name']) ? ' ('.$paymentInfos['shopgate_payment_name'].')' : '')),
-				"products_price"		=> 	$order->getAmountShopPayment(),
-				"products_discount_made"=>	0,
-				"final_price"			=> 	$order->getAmountShopPayment(),
-				"products_shipping_time"=> 	"",
-				"products_tax"			=> 	$order->getPaymentTaxPercent(),
-				"products_quantity"		=> 	1,
-				"allow_tax"				=>	1,
-			);
-
-			$qry = xtc_db_perform(TABLE_ORDERS_PRODUCTS, $productData);
-			$produtcsOrderId = xtc_db_insert_id();
-
-		}
 
 		if(!empty($errors)){
 			$this->log('db: save errors in history', ShopgateLogger::LOGTYPE_DEBUG);
@@ -1835,17 +1934,17 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		///////////////////////////////////////////////////////////////////////
 		$amountWithTax = $order->getAmountComplete();
 
-		$taxes = $this->_getOrderTaxes($order, $dbOrderId);
-
-		$xtPrice = new xtcPrice($this->oCurreny["code"], 1);
-		$shippingCosts = ( $order->getAmountShipping() );
+		$shippingTaxRate = $this->_getOrderShippingTaxRate($order);
+		$taxes = $this->_getOrderTaxes($order, $dbOrderId, $shippingTaxRate);
+		$xtPrice = new xtcPrice($this->currency["code"], 1);
+		$shippingCosts = $order->getAmountShipping();
 
 		$sort = 10;
 
 		$ordersTotal = array();
 		$ordersTotal["orders_id"]		= $dbOrderId;
 		$ordersTotal["title"]			= xtc_db_prepare_input("Zwischensumme:");
-		$ordersTotal["text"]			= $xtPrice->xtcFormat($order->getAmountItems()+($order->getAmountShopPayment()), true);
+		$ordersTotal["text"]			= $xtPrice->xtcFormat($order->getAmountItems(), true);
 		$ordersTotal["value"]			= $order->getAmountItems();
 		$ordersTotal["class"]			= "ot_subtotal";
 		$ordersTotal["sort_order"]		= $sort++;
@@ -1860,7 +1959,25 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$ordersTotal["sort_order"]		= $sort++;
 		xtc_db_perform(TABLE_ORDERS_TOTAL, $ordersTotal);
 
-
+		// insert payment costs.
+		//
+		//WARNING: On modify: Change the taxes calculation too!
+		if($order->getAmountShopPayment() != 0){
+			$this->log('db: save payment fee', ShopgateLogger::LOGTYPE_DEBUG);
+			
+			$paymentInfos = $order->getPaymentInfos();
+			
+			$ordersTotal = array();
+			$ordersTotal["orders_id"]		= $dbOrderId;
+			$ordersTotal["title"]			= xtc_db_prepare_input('Zahlungsartkosten'. (!empty($paymentInfos['shopgate_payment_name']) ? ' ('.$paymentInfos['shopgate_payment_name'].'):' : ''));
+			$ordersTotal["text"]			= $xtPrice->xtcFormat($order->getAmountShopPayment(), true);
+			$ordersTotal["value"]			= $order->getAmountShopPayment();
+			$ordersTotal["class"]			= "ot_shipping";
+			$ordersTotal["sort_order"]		= $sort++;
+			xtc_db_perform(TABLE_ORDERS_TOTAL, $ordersTotal);
+		
+		}
+		
 		foreach($taxes as $percent => $tax_value) {
 			$ordersTotal = array();
 			$ordersTotal["orders_id"]		= $dbOrderId;
@@ -1883,20 +2000,28 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 	}
 
-	private function _getOrderTaxes(ShopgateOrder $order, $dbOrderId) {
+	private function _getOrderTaxes(ShopgateOrder $order, $dbOrderId, $shippingTaxRate = 0) {
 		$taxes = array();
 
 		foreach($order->getItems() as $orderItem) {
 			$tax		= $orderItem->getTaxPercent();
+			$tax		= intval($tax*100)/100;
 			$tax_value	= $orderItem->getUnitAmountWithTax() - $orderItem->getUnitAmount();
 
 			if(!isset($taxes[$tax])) $taxes[$tax]= 0;
 			$taxes[$tax] += $tax_value * $orderItem->getQuantity();
 		}
 
+		if(!empty($shippingTaxRate)) {
+			$shippingTaxRate = intval($shippingTaxRate*100)/100;
+			if(!isset($taxes[$shippingTaxRate])) $taxes[$shippingTaxRate]= 0;
+			$taxes[$shippingTaxRate] += $order->getAmountShipping()-$this->_getOrderShippingAmountWithoutTax($order, $shippingTaxRate);
+		}
+		
 		// set taxes for payment method
 		if($order->getAmountShopPayment() != 0){
 			$tax		= $order->getPaymentTaxPercent();
+			$tax		= intval($tax*100)/100;
 			$tax_value	= $order->getAmountShopPayment() - round(($order->getAmountShopPayment()*100)/($order->getPaymentTaxPercent()+100),2);
 
 			if(!isset($taxes[$tax])) $taxes[$tax]= 0;
@@ -1906,6 +2031,49 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		return $taxes;
 	}
 
+	private function _getOrderShippingTaxRate(ShopgateOrder $order) {
+		$shippingTaxRate = 0;
+	
+		// Check if a shipping method is set in config
+		$shippingMethod = $this->config->getShipping();
+		$orderCountryCode2 = $order->getInvoiceAddress()->getCountry();
+		
+		if(!empty($shippingMethod)) {
+			// Get tax value from shipping module
+			$qry =
+			"SELECT `c`.`configuration_value`, `tr`.`tax_rate` " .
+			"FROM `" . TABLE_CONFIGURATION . "` AS `c` " .
+			"INNER JOIN `" . TABLE_TAX_RATES . "` AS `tr` ON(`c`.`configuration_value`=`tr`.`tax_class_id`) " .
+			"INNER JOIN `" . TABLE_ZONES_TO_GEO_ZONES . "` AS `geozones` ON(`tr`.`tax_zone_id`=`geozones`.`geo_zone_id`) " .
+			"INNER JOIN `" . TABLE_COUNTRIES . "` AS `co` ON(`geozones`.`zone_country_id`=`co`.`countries_id`) " .
+			"WHERE " .
+			"`c`.`configuration_key` = 'MODULE_SHIPPING_".strtoupper($shippingMethod)."_TAX_CLASS' " .
+			"AND " .
+			"`co`.`countries_iso_code_2`='$orderCountryCode2';";
+			$result = xtc_db_query($qry);
+			$moduleTaxSetting = xtc_db_fetch_array($result);
+			if(!empty($moduleTaxSetting) && !empty($moduleTaxSetting['configuration_value']) && !empty($moduleTaxSetting['tax_rate'])) {
+				// get the tax rate for the shipping costs
+				$shippingTaxRate = intval($moduleTaxSetting['tax_rate']*100)/100;
+			}
+		}
+	
+		return $shippingTaxRate;
+	}
+	
+	private function _getOrderShippingAmountWithoutTax(ShopgateOrder $order, $shippingTaxRate = 0) {
+		$shippingAmountWithoutTax = $order->getAmountShipping();
+		
+		// Check if a shipping method is set in config
+		$shippingMethod = $this->config->getShipping();
+		if(!empty($shippingTaxRate)) {
+			// remove tax from shipping costs
+			$shippingAmountWithoutTax /= 1+$shippingTaxRate/100;
+		}
+		
+		return $shippingAmountWithoutTax;
+	}
+	
 	private function updateItemsStock(ShopgateOrder $order) {
 		if(STOCK_LIMITED != "true") return; /* STOCK_LIMITED ist vom System gegeben */
 
@@ -1977,7 +2145,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			rd.reviews_text
 		FROM
 		" . TABLE_REVIEWS . " as r
-		JOIN
+		INNER JOIN
 		" . TABLE_REVIEWS_DESCRIPTION . " as rd ON r.reviews_id = rd.reviews_id
 		WHERE rd.languages_id = '".$this->languageId."'
 		ORDER BY r.products_id ASC";
@@ -2129,6 +2297,19 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 	}
 	
+	private function _pushOrderToDreamRobot($dbOrderId, ShopgateOrder $order) {
+		if (!$order->getIsShippingBlocked() && file_exists(DIR_FS_CATALOG.'dreamrobot_checkout.inc.php')) {
+			require_once(DIR_FS_CATALOG.'includes/classes/order.php');
+			$this->log("START TO SEND ORDER TO DREAMROBOT", ShopgateLogger::LOGTYPE_ACCESS);
+	
+			$order = new order($dbOrderId);
+			$_SESSION['tmp_oID'] = $dbOrderId;
+			include_once ('./dreamrobot_checkout.inc.php');
+			
+			$this->log("FINISH SEND ORDER TO DREAMROBOT", ShopgateLogger::LOGTYPE_ACCESS);
+		}
+	}
+	
 	public function cron($jobname, $params, &$message, &$errorcount) {
 		switch ($jobname) {
 			case 'set_shipping_completed': $this->cronSetOrdersShippingCompleted($message, $errorcount); break;
@@ -2146,12 +2327,14 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @param int $errorcount This reference gets incremented on errors.
 	 */
 	protected function cronSetOrdersShippingCompleted(&$message, &$errorcount) {
-		$query = xtc_db_input(
-				"SELECT `".TABLE_SHOPGATE_ORDERS."`.`orders_id`, `shopgate_order_number` ".
-				"FROM `".TABLE_SHOPGATE_ORDERS."` ".
-				"LEFT JOIN `".TABLE_ORDERS."` ON (`".TABLE_ORDERS."`.`orders_id` = `".TABLE_SHOPGATE_ORDERS."`.`orders_id`) ".
-				"WHERE `is_sent_to_shopgate` = 0 and `orders_status` = ".$this->config->getOrderStatusShipped()
-		);
+		$query =
+			"SELECT `sgo`.`orders_id`, `sgo`.`shopgate_order_number` ".
+			"FROM `".TABLE_SHOPGATE_ORDERS."` sgo ".
+			"INNER JOIN `".TABLE_ORDERS."` xto ON (`xto`.`orders_id` = `sgo`.`orders_id`) ".
+			"INNER JOIN `".TABLE_LANGUAGES."` xtl ON (`xtl`.`directory` = `xto`.`language`) ".
+			"WHERE `sgo`.`is_sent_to_shopgate` = 0 ".
+				"AND `xto`.`orders_status` = ".xtc_db_input($this->config->getOrderStatusShipped())." ".
+				"AND `xtl`.`code` = '".xtc_db_input($this->config->getLanguage())."';";
 		$result = xtc_db_query($query);
 		
 		if (empty($result)) {
@@ -2159,7 +2342,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 		
 		while ($shopgateOrder = xtc_db_fetch_array($result)) {
-			if (!$this->setOrderShippingCompleted($shopgateOrder['shopgate_order_number'], $shopgateOrder['orders_id'])) {
+			if (!$this->setOrderShippingCompleted($shopgateOrder['shopgate_order_number'], $shopgateOrder['orders_id'], $this->merchantApi)) {
 				$errorcount++;
 				$message .= 'Shopgate order number "'.$shopgateOrder['shopgate_order_number'].'": error'."\n";
 			}
@@ -2173,22 +2356,40 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 * @param int $status The ID of the order status that has been set in the shopping system.
 	 */
 	public function updateOrdersStatus($orderIds, $status) {
-		if ($status != $this->config->getOrderStatusShipped()) {
-			return;
-		}
-		
 		$query = xtc_db_input(
-				"SELECT `orders_id`, `shopgate_order_number` ".
-				"FROM `".TABLE_SHOPGATE_ORDERS."` ".
-				"WHERE `orders_id` IN (" . implode(", ", $orderIds) . ")");
+			"SELECT `sgo`.`orders_id`, `sgo`.`shopgate_order_number`, `xtl`.`code` ".
+			"FROM `".TABLE_SHOPGATE_ORDERS."` sgo ".
+			"INNER JOIN `".TABLE_ORDERS."` xto ON (`xto`.`orders_id` = `sgo`.`orders_id`) ".
+			"INNER JOIN `".TABLE_LANGUAGES."` xtl ON (`xtl`.`directory` = `xto`.`language`) ".
+			"WHERE `sgo`.`orders_id` IN (".xtc_db_input(implode(", ", $orderIds)).")");
 		$result = xtc_db_query($query);
 		
 		if (empty($result)) {
 			return;
 		}
 
+		$configurations = array();
+		$merchantApis = array();
 		while ($shopgateOrder = xtc_db_fetch_array($result)) {
-			$this->setOrderShippingCompleted($shopgateOrder['shopgate_order_number'], $shopgateOrder['orders_id']);
+			$language = $shopgateOrder['code'];
+			
+			if (empty($merchantApis[$language])) {
+				try {
+					$config = new ShopgateConfigModified();
+					$config->loadByLanguage($language);
+					$builder = new ShopgateBuilder($config);
+					$merchantApis[$language] = &$builder->buildMerchantApi();
+					$configurations[$language] = $config;
+				} catch (ShopgateLibraryException $e) {
+					// do not abort. the error will be logged
+				}
+			}
+			
+			if ($status != $configurations[$language]->getOrderStatusShipped()) {
+				return;
+			}
+			
+			$this->setOrderShippingCompleted($shopgateOrder['shopgate_order_number'], $shopgateOrder['orders_id'], $merchantApis[$language]);
 		}
 	}
 	
@@ -2197,16 +2398,17 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	 *
 	 * @param string $shopgateOrderNumber The number of the order at Shopgate.
 	 * @param int $orderId The ID of the order in the shop system.
+	 * @param ShopgateMerchantApi The SMA object to use for the request.
 	 * @return bool true on success, false on failure.
 	 */
-	protected function setOrderShippingCompleted($shopgateOrderNumber, $orderId) {
+	protected function setOrderShippingCompleted($shopgateOrderNumber, $orderId, ShopgateMerchantApi &$merchantApi) {
 		$success = false;
 		
 		// These are expected and should not be added to error count:
 		$ignoreCodes = array(ShopgateMerchantApiException::ORDER_ALREADY_COMPLETED, ShopgateMerchantApiException::ORDER_SHIPPING_STATUS_ALREADY_COMPLETED);
 		
 		try {
-			$this->merchantApi->setOrderShippingCompleted($shopgateOrderNumber);
+			$merchantApi->setOrderShippingCompleted($shopgateOrderNumber);
 			
 			$statusArr = array(
 					"orders_id" => $orderId,
@@ -2218,14 +2420,10 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			
 			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $statusArr);
 			
-			// update Shopgate orders table
-			$qry = 'UPDATE `'.TABLE_SHOPGATE_ORDERS.'` SET `is_sent_to_shopgate` = 1 WHERE `shopgate_order_number` = '.$shopgateOrderNumber.';';
-			xtc_db_query($qry);
-			
 			$success = true;
 		} catch (ShopgateLibraryException $e) {
 			$response = $this->stringFromUtf8($e->getAdditionalInformation(), $this->config->getEncoding());
-		
+			
 			$statusArr = array(
 					"orders_id" => $orderId,
 					"orders_status_id" => $this->config->getOrderStatusShipped(),
@@ -2233,11 +2431,11 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					"customer_notified" => 0,
 					"comments" => "[Shopgate] Ein Fehler ist im Shopgate Modul aufgetreten ({$e->getCode()}): {$response}",
 			);
-		
+			
 			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $statusArr);
 		} catch (ShopgateMerchantApiException $e) {
 			$response = $this->stringFromUtf8($e->getMessage(), $this->config->getEncoding());
-		
+			
 			$statusArr = array(
 					"orders_id" => $orderId,
 					"orders_status_id" => $this->config->getOrderStatusShipped(),
@@ -2245,13 +2443,13 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					"customer_notified" => 0,
 					"comments" => "[Shopgate] Ein Fehler ist bei Shopgate aufgetreten ({$e->getCode()}): {$response}",
 			);
-		
+			
 			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $statusArr);
 			
 			$success = (in_array($e->getCode(), $ignoreCodes)) ? true : false;
 		} catch (Exception $e) {
 			$response = $this->stringFromUtf8($e->getMessage(), $this->config->getEncoding());
-		
+			
 			$statusArr = array(
 					"orders_id" => $orderId,
 					"orders_status_id" => $this->config->getOrderStatusShipped(),
@@ -2259,8 +2457,14 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 					"customer_notified" => 0,
 					"comments" => "[Shopgate] Ein unbekannter Fehler ist aufgetreten ({$e->getCode()}): {$response}",
 			);
-		
+			
 			xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $statusArr);
+		}
+		
+		// Update shopgate order on success
+		if($success) {
+			$qry = 'UPDATE `'.TABLE_SHOPGATE_ORDERS.'` SET `is_sent_to_shopgate` = 1 WHERE `shopgate_order_number` = '.$shopgateOrderNumber.';';
+			xtc_db_query($qry);
 		}
 		
 		return $success;
@@ -2270,7 +2474,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$products_id = xtc_get_prid($products_id);
 		$stock_query = xtc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . $products_id . "'");
 		$stock_values = xtc_db_fetch_array($stock_query);
-	
+		
 		return $stock_values['products_quantity'];
 	}
 }

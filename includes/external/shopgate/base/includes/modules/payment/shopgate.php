@@ -121,12 +121,12 @@ class shopgate {
 			
 			// ... grant access to to shopgate for main administrator
 			xtc_db_query("update ".TABLE_ADMIN_ACCESS." SET shopgate=1 where customers_id=1 LIMIT 1");
-				
+			
 			if( $_SESSION['customer_id'] !=1 ) {
 				// grant access also to current user
 				xtc_db_query("update ".TABLE_ADMIN_ACCESS." SET shopgate = 1 where customers_id=".$_SESSION['customer_id']." LIMIT 1");
 			}
-
+			
 			xtc_db_query("update ".TABLE_ADMIN_ACCESS." SET shopgate = 5 where customers_id = 'groups'");
 		}
 	}
@@ -147,7 +147,7 @@ class shopgate {
 					`modified` datetime DEFAULT NULL,
 					`created` datetime DEFAULT NULL,
 					PRIMARY KEY (`shopgate_order_id`)
-			) ENGINE=MyISAM DEFAULT CHARSET=utf8; ");
+			) ENGINE=MyISAM; ");
 	}
 	
 	/**
@@ -174,33 +174,74 @@ class shopgate {
 			xtc_db_query($qry);
 		}
 		
-		$orderStatusShippingBlockedId = -1;
-		
-		$checkShippingBlockedDE = xtc_db_fetch_array(xtc_db_query("SELECT orders_status_id, language_id, orders_status_name FROM ".TABLE_ORDERS_STATUS." WHERE orders_status_name = 'Versand blockiert (Shopgate)'"));
-		if(!empty($checkShippingBlockedDE)){
-			$orderStatusShippingBlockedId = $checkShippingBlockedDE['orders_status_id'];
-		} else {
-			// get the highest order_status_id to generate new orders_status_id
-			$next_id = xtc_db_fetch_array(xtc_db_query("SELECT max(orders_status_id) AS orders_status_id FROM " . TABLE_ORDERS_STATUS));
-			$orderStatusShippingBlockedId = $next_id['orders_status_id'] + 1;
-			
-			xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS." ( orders_status_id, language_id, orders_status_name) values ('". $orderStatusShippingBlockedId ."', '2', 'Versand blockiert (Shopgate)')");
+		$languages = xtc_db_query("SELECT `languages_id`, `code` FROM `".TABLE_LANGUAGES."`;");
+		if (empty($languages)) {
+			echo MODULE_PAYMENT_SHOPGATE_ERROR_READING_LANGUAGES;
+			return;
 		}
 		
-		$checkShippingBlockedEN = xtc_db_fetch_array(xtc_db_query("SELECT orders_status_id, language_id, orders_status_name FROM ".TABLE_ORDERS_STATUS." WHERE orders_status_name = 'Shipping blocked (Shopgate)' AND orders_status_id = '". $orderStatusShippingBlockedId ."'"));
-		if(empty($checkShippingBlockedEN)){
-			xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS." ( orders_status_id, language_id, orders_status_name) values ('". $orderStatusShippingBlockedId ."', '1', 'Shipping blocked (Shopgate)')");
-		}
-
+		// load global configuration
 		try {
-			$shopgateConfig = new ShopgateConfigModified();
-			$shopgateConfig->setOrderStatusShippingBlocked($orderStatusShippingBlockedId);
-			$shopgateConfig->saveFile(array('order_status_shipping_blocked'));
+			$config = new ShopgateConfigModified();
+			$config->loadFile();
 		} catch (ShopgateLibraryException $e) {
-			$message = 'Speichern der Konfiguration von Shopgate fehlgeschlagen. Bitte &uuml;berpr&uuml;fen Sie die Schreibrechte(777) f&uuml;r den Ordner &quot;/shopgate_library/config/&quot; von Shopgate.';
-			echo $message;
+			if (!($config instanceof ShopgateConfig)) {
+				echo MODULE_PAYMENT_SHOPGATE_ERROR_LOADING_CONFIG;
+				return;
+			}
 		}
 		
+		$languageCodes = array();
+		$configFieldList = array('language', 'redirect_languages');
+		while ($language = xtc_db_fetch_array($languages)) {
+			// collect language codes to enable redirect
+			$languageCodes[] = $language['code'];
+			
+			switch ($language['code']) {
+				case 'de': $statusName = 'Versand blockiert (Shopgate)'; break;
+				case 'en': $statusName = 'Shipping blocked (Shopgate)';  break;
+				default: continue 2;
+			}
+			
+			$checkShippingBlocked = xtc_db_fetch_array(xtc_db_query(
+				"SELECT `orders_status_id`, `orders_status_name` ".
+				"FROM `".TABLE_ORDERS_STATUS."` ".
+				"WHERE `orders_status_name` = '".xtc_db_input($statusName)."' ".
+				"AND `language_id` = ".xtc_db_input($language['languages_id']).";"
+			));
+			
+			if (!empty($checkShippingBlocked)) {
+				$orderStatusShippingBlockedId = $checkShippingBlocked['orders_status_id'];
+			} else {
+				// if no orders_status_id has been determined yet and the status could not be found, create a new one
+				if (!isset($orderStatusShippingBlockedId)) {
+					$nextId = xtc_db_fetch_array(xtc_db_query("SELECT max(orders_status_id) AS orders_status_id FROM " . TABLE_ORDERS_STATUS));
+					$orderStatusShippingBlockedId = $nextId['orders_status_id'] + 1;
+				}
+				
+				// insert the status into the database
+				xtc_db_query(
+					"INSERT INTO `".TABLE_ORDERS_STATUS."` ".
+					"(`orders_status_id`, `language_id`, `orders_status_name`) VALUES ".
+					"(".xtc_db_input($orderStatusShippingBlockedId).", ".xtc_db_input($language['languages_id']).", '".xtc_db_input($statusName)."');"
+				);
+			}
+			
+			// set global order status id
+			if ($language['code'] == DEFAULT_LANGUAGE) {
+				$config->setOrderStatusShippingBlocked($orderStatusShippingBlockedId);
+				$configFieldList[] = 'order_status_shipping_blocked';
+			}
+		}
+		
+		// save default language, order_status_id and redirect languages in the configuration
+		try {
+			$config->setLanguage(DEFAULT_LANGUAGE);
+			$config->setRedirectLanguages($languageCodes);
+			$config->saveFile($configFieldList);
+		} catch (ShopgateLibraryException $e) {
+			echo MODULE_PAYMENT_SHOPGATE_ERROR_SAVING_CONFIG;
+		}
 	}
 	
 	/**

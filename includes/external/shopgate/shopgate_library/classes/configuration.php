@@ -10,6 +10,11 @@
  */
 class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterface {
 	/**
+	 * @var string The path to the folder where the config file(s) are saved.
+	 */
+	protected $config_folder_path;
+	
+	/**
 	 * @var array<string, string> List of field names (index) that must have a value according to their validation regex (value)
 	 */
 	protected $coreValidations = array(
@@ -17,9 +22,9 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		'shop_number' => '/^[0-9]{5,}$/', // at least 5 digits
 		'apikey' => '/^[0-9a-f]{20}$/', // exactly 20 hexadecimal digits
 		'alias' => '/^[0-9a-zA-Z]+(([\.]?|[\-]+)[0-9a-zA-Z]+)*$/', // start and end with alpha-numerical characters, multiple dashes and single dots in between are ok
-		'cname' => '/^(https?:\/\/\S+)?$/', // empty or a string beginning with "http://" or "https://" followed by any number of non-whitespace characters
+		'cname' => '/^(http:\/\/\S+)?$/i', // empty or a string beginning with "http://" followed by any number of non-whitespace characters
 		'server' => '/^(live|pg|custom)$/', // "live" or "pg" or "custom"
-		'api_url' => '/^(https?:\/\/\S+)?$/', // empty or a string beginning with "http://" or "https://" followed by any number of non-whitespace characters (this is used for testing only, thus the lose validation)
+		'api_url' => '/^(https?:\/\/\S+)?$/i', // empty or a string beginning with "http://" or "https://" followed by any number of non-whitespace characters (this is used for testing only, thus the lose validation)
 	);
 	
 	/**
@@ -168,14 +173,23 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	/**
 	 * @var bool
 	 */
-	protected $enable_clear_logfile;
+	protected $enable_clear_log_file;
 	
+	/**
+	 * @var bool
+	 */
+	protected $enable_clear_cache;
 	
 	#######################################################
 	### Options regarding shop system specific settings ###
 	#######################################################
 	/**
-	 * @var string The ISO 3166 ALPHA-2 code of the language the plugin uses for export.
+	 * @var string The ISO 3166 ALPHA-2 code of the country the plugin uses for export.
+	 */
+	protected $country;
+	
+	/**
+	 * @var string The ISO 639 code of the language the plugin uses for export.
 	 */
 	protected $language;
 	
@@ -183,6 +197,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var string The ISO 4217 code of the currency the plugin uses for export.
 	 */
 	protected $currency;
+	
+	/**
+	 * @var string CSS style identifier for the parent element the Mobile Header should be attached to.
+	 */
+	protected $mobile_header_parent;
+	
+	/**
+	 * @var bool True to insert the Mobile Header as first child element, false to append it.
+	 */
+	protected $mobile_header_prepend;
 	
 	/**
 	 * @var int The capacity (number of lines) of the buffer used for the export actions.
@@ -301,32 +325,39 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_get_log_file = 1;
 		$this->enable_mobile_website = 0;
 		$this->enable_cron = 0;
-		$this->enable_clear_logfile = 1;
+		$this->enable_clear_log_file = 1;
+		$this->enable_clear_cache = 1;
 		
-		$this->language = 'DE';
+		$this->country = 'DE';
+		$this->language = 'de';
 		$this->currency = 'EUR';
+		
+		$this->mobile_header_parent = 'body';
+		$this->mobile_header_prepend = true;
 		
 		$this->export_buffer_capacity = 100;
 		$this->max_attributes = 50;
+		
+		$this->config_folder_path = SHOPGATE_BASE_DIR.DS.'config';
 		
 		$this->export_folder_path = SHOPGATE_BASE_DIR.DS.'temp';
 		$this->log_folder_path = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs';
 		$this->cache_folder_path = SHOPGATE_BASE_DIR.DS.'temp'.DS.'cache';
 		
-		$this->items_csv_filename = 'items.csv';
-		$this->categories_csv_filename = 'categories.csv';
-		$this->reviews_csv_filename = 'reviews.csv';
-		$this->pages_csv_filename = 'pages.csv';
+		$this->items_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'items.csv';
+		$this->categories_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'categories.csv';
+		$this->reviews_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'reviews.csv';
+		$this->pages_csv_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'pages.csv';
 		
-		$this->access_log_filename = 'access.log';
-		$this->request_log_filename = 'request.log';
-		$this->error_log_filename = 'error.log';
-		$this->debug_log_filename = 'debug.log';
+		$this->access_log_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'access.log';
+		$this->request_log_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'request.log';
+		$this->error_log_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'error.log';
+		$this->debug_log_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'debug.log';
 		
-		$this->redirect_keyword_cache_filename = 'redirect_keywords.txt';
-		$this->redirect_skip_keyword_cache_filename = 'skip_redirect_keywords.txt';
+		$this->redirect_keyword_cache_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'redirect_keywords.txt';
+		$this->redirect_skip_keyword_cache_filename = ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'skip_redirect_keywords.txt';
 		
-		// call possible sub classes' startup()
+		// call possible sub class' startup()
 		if (!$this->startup()) {
 			$this->loadArray($data);
 		}
@@ -371,39 +402,100 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	}
 	
 	public function loadFile($path = null) {
-		global $shopgate_config;
-		
-		// unset $shopgate_config to avoid reading from somehow injected global variables
-		if (isset($shopgate_config)) {
-			$shopgate_config = null;
-		}
+		$config = null;
 		
 		// try loading files
-		if (!empty($path)) {
+		if (!empty($path) && file_exists($path)) {
 			// try $path
-			$success = $this->includeFile($path);
+			$config = $this->includeFile($path);
 			
-			if (!$success) {
+			if (!$config) {
 				throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'The passed configuration file "'.$path.'" does not exist or does not define the $shopgate_config variable.');
 			}
 		} else {
 			// try myconfig.php
-			$success = $this->includeFile(SHOPGATE_BASE_DIR.DS.'config'.DS.'myconfig.php');
+			$config = $this->includeFile($this->config_folder_path.DS.'myconfig.php');
 			
 			// if unsuccessful, use default configuration values
-			if (!$success) {
+			if (!$config) {
 				return;
 			}
 		}
 		
 		// if we got here, we have a $shopgate_config to load
-		$unmappedData = parent::loadArray($shopgate_config);
+		$unmappedData = parent::loadArray($config);
 		$this->mapAdditionalSettings($unmappedData);
 	}
 	
-	public function saveFile(array $fieldList, $path = null, $validate = true) {
-		global $shopgate_config;
+	/**
+	 * Loads the configuration file by for a given Shopgate shop number.
+	 *
+	 * @param string $shopNumber The shop number.
+	 * @throws ShopgateLibraryException in case the $shopNumber is empty or no configuration file can be found.
+	 */
+	public function loadByShopNumber($shopNumber) {
+		if (empty($shopNumber) || !preg_match($this->coreValidations['shop_number'], $shopNumber)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be found without shop number');
+		}
 		
+		// find all config files
+		$configFile = null;
+		$files = scandir($this->config_folder_path);
+		foreach ($files as $file) {
+			if (!is_file($this->config_folder_path.DS.$file)) {
+				continue;
+			}
+			
+			$shopgate_config = null;
+			include($this->config_folder_path.DS.$file);
+			if (isset($shopgate_config) && isset($shopgate_config['shop_number']) && ($shopgate_config['shop_number'] == $shopNumber)) {
+				$configFile = $this->config_folder_path.DS.$file;
+				break;
+			}
+		}
+		
+		if (empty($configFile)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'no configuration file found for shop number "'.$shopNumber.'"', true, false);
+		}
+		
+		$this->loadFile($configFile);
+		$this->initFileNames();
+	}
+	
+	/**
+	 * Loads the configuration file by a given language.
+	 *
+	 * @param string $language the ISO-639 code of the language
+	 * @throws ShopgateLibraryException in case the $language is empty
+	 */
+	public function loadByLanguage($language) {
+		if (empty($language) || !preg_match('/[a-z]{2}/', $language)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be found without language code', true, false);
+		}
+	
+		$this->loadFile($this->config_folder_path.DS.'myconfig-'.$language.'.php');
+		$this->initFileNames();
+	}
+	
+	/**
+	 * Sets the file names according to the language of the configuration.
+	 */
+	protected function initFileNames() {
+		$this->items_csv_filename = 'items-'.$this->language.'.csv';
+		$this->categories_csv_filename = 'categories-'.$this->language.'.csv';
+		$this->reviews_csv_filename = 'reviews-'.$this->language.'.csv';
+		$this->pages_csv_filename = 'pages-'.$this->language.'.csv';
+	
+		$this->access_log_filename = 'access-'.$this->language.'.log';
+		$this->request_log_filename = 'request-'.$this->language.'.log';
+		$this->error_log_filename = 'error-'.$this->language.'.log';
+		$this->debug_log_filename = 'debug-'.$this->language.'.log';
+	
+		$this->redirect_keyword_cache_filename = 'redirect_keywords-'.$this->language.'.txt';
+		$this->redirect_skip_keyword_cache_filename = 'skip_redirect_keywords-'.$this->language.'.txt';
+	}
+	
+	public function saveFile(array $fieldList, $path = null, $validate = true) {
 		// if desired, validate before doing anything else
 		if ($validate) {
 			$this->validate($fieldList);
@@ -421,7 +513,6 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 			$this->loadFile($path);
 		} catch (ShopgateLibraryException $e) {
 			ShopgateLogger::getInstance()->log('-- Don\'t worry about the "error reading or writing configuration", that was just a routine check during saving.');
-			$shopgate_config = array();
 		}
 		
 		// merge old config with new values
@@ -429,7 +520,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		
 		// if necessary point $path to  myconfig.php
 		if (empty($path)) {
-			$path = SHOPGATE_BASE_DIR.DS.'config'.DS.'myconfig.php';
+			$path = $this->config_folder_path.DS.'myconfig.php';
 		}
 		
 		// create the array definition string and save it to the file
@@ -437,6 +528,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		if (!@file_put_contents($path, $shopgateConfigFile)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'The configuration file "'.$path.'" could not be saved.');
 		}
+	}
+	
+	public function saveFileForLanguage(array $fieldList, $language, $validate = true) {
+		if (empty($language)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be saved without language', true, false);
+		}
+		
+		$this->saveFile($fieldList, $this->config_folder_path.DS.'myconfig-'.$language.'.php', $validate);
 	}
 	
 	public final function validate(array $fieldList = array()) {
@@ -508,7 +607,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	}
 	
 	public function getCname() {
-		return $this->cname;
+		return rtrim($this->cname, '/');
 	}
 	
 	public function getServer() {
@@ -592,16 +691,32 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->enable_cron;
 	}
 	
-	public function getEnableClearLogfile() {
-		return $this->enable_clear_logfile;
+	public function getEnableClearLogFile() {
+		return $this->enable_clear_log_file;
+	}
+	
+	public function getEnableClearCache() {
+		return $this->enable_clear_cache;
+	}
+	
+	public function getCountry() {
+		return strtoupper($this->country);
 	}
 	
 	public function getLanguage() {
-		return $this->language;
+		return strtolower($this->language);
 	}
 	
 	public function getCurrency() {
 		return $this->currency;
+	}
+	
+	public function getMobileHeaderParent() {
+		return $this->mobile_header_parent;
+	}
+	
+	public function getMobileHeaderPrepend() {
+		return $this->mobile_header_prepend;
 	}
 	
 	public function getExportBufferCapacity() {
@@ -733,7 +848,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	}
 	
 	public function setCname($value) {
-		$this->cname = $value;
+		$this->cname = rtrim($value, '/');
 	}
 	
 	public function setServer($value) {
@@ -812,16 +927,32 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_cron = $value;
 	}
 	
-	public function setEnableClearLogfile($value) {
-		$this->enable_clear_logfile = $value;
+	public function setEnableClearLogFile($value) {
+		$this->enable_clear_log_file = $value;
+	}
+	
+	public function setEnableClearCache($value) {
+		$this->enable_clear_cache = $value;
+	}
+	
+	public function setCountry($value) {
+		$this->country = strtoupper($value);
 	}
 	
 	public function setLanguage($value) {
-		$this->language = $value;
+		$this->language = strtolower($value);
 	}
 	
 	public function setCurrency($value) {
 		$this->currency = $value;
+	}
+	
+	public function setMobileHeaderParent($value) {
+		$this->mobile_header_parent = $value;
+	}
+	
+	public function setMobileHeaderPrepend($value) {
+		$this->mobile_header_prepend = $value;
 	}
 	
 	public function setExportBufferCapacity($value) {
@@ -1024,15 +1155,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * Tries to include the specified file and check for $shopgate_config.
 	 *
 	 * @param string $path The path to the configuration file.
-	 * @return boolean true if the file was included and defined $shopgate_config, false otherwise
+	 * @return mixed[]|bool The $shopgate_config array if the file was included and defined $shopgate_config, false otherwise.
 	 */
 	private function includeFile($path) {
-		global $shopgate_config;
-		
-		// unset $shopgate_config to avoid reading from somehow injected global variables
-		if (isset($shopgate_config)) {
-			unset($shopgate_config);
-		}
+		$shopgate_config = null;
 		
 		// try including the file
 		if (file_exists($path)) {
@@ -1047,7 +1173,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		if (!isset($shopgate_config) || !is_array($shopgate_config)) {
 			return false;
 		} else {
-			return true;
+			return $shopgate_config;
 		}
 	}
 	
@@ -1552,6 +1678,8 @@ class ShopgateConfigOld extends ShopgateObject {
 interface ShopgateConfigInterface {
 	const SHOPGATE_API_URL_LIVE = 'https://api.shopgate.com/merchant/';
 	const SHOPGATE_API_URL_PG   = 'https://api.shopgatepg.com/merchant/';
+	
+	const SHOPGATE_FILE_PREFIX = 'shopgate_';
 
 	/**
 	 * Tries to load the configuration from a file.
@@ -1749,6 +1877,16 @@ interface ShopgateConfigInterface {
 	 * @return string The ISO 4217 code of the currency the plugin uses for export.
 	 */
 	public function getCurrency();
+	
+	/**
+	 * @return string CSS style identifier for the parent element the Mobile Header should be attached to.
+	 */
+	public function getMobileHeaderParent();
+	
+	/**
+	 * @return bool True to insert the Mobile Header as first child element, false to append it.
+	 */
+	public function getMobileHeaderPrepend();
 
 	/**
 	 * @return int The capacity (number of lines) of the buffer used for the export actions.
@@ -2011,17 +2149,27 @@ interface ShopgateConfigInterface {
 	public function setEnableClearLogfile($value);
 
 	/**
-	 * @param string The ISO 3166 ALPHA-2 code of the language the plugin uses for export.
+	 * @param string $value The ISO 3166 ALPHA-2 code of the language the plugin uses for export.
 	 */
 	public function setLanguage($value);
 	
 	/**
-	 * @param string The ISO 4217 code of the currency the plugin uses for export.
+	 * @param string $value The ISO 4217 code of the currency the plugin uses for export.
 	 */
 	public function setCurrency($value);
 	
 	/**
-	 * @param int The capacity (number of lines) of the buffer used for the export actions.
+	 * @param string $value CSS style identifier for the parent element the Mobile Header should be attached to.
+	 */
+	public function setMobileHeaderParent($value);
+	
+	/**
+	 * @return bool $value True to insert the Mobile Header as first child element, false to append it.
+	 */
+	public function setMobileHeaderPrepend($value);
+	
+	/**
+	 * @param int $value The capacity (number of lines) of the buffer used for the export actions.
 	 */
 	public function setExportBufferCapacity($value);
 

@@ -1,5 +1,48 @@
 '''Deutsch'''
 
+'''Version 2.1.16'''
+* überarbeitete Konfigurationsseite
+* es können jetzt mehrere Sprachen für die mobile Weiterleitung ausgewählt werden
+* globale Konfigurationseinstellungen hinzugefügt
+* nutzt die Shopgate Library 2.1.23
+
+'''Version 2.1.15'''
+* Korrektur der Verzeichnisstruktur
+* nutzt die Shopgate Library 2.1.22
+
+'''Version 2.1.14'''
+* Problem bei der mobilen Weiterleitung bei nicht konfigurierten Sprachen behoben
+
+'''Version 2.1.13'''
+* Verzeichnisstruktur für einfachere Plugininstallation optimiert
+* nutzt die Shopgate Library 2.1.21
+
+'''Version 2.1.12'''
+* Es wurde ein Fehler behoben, bei dem die Kategorien eine genau umgekehrte Reihenfolge in manchen Shops aufwiesen
+* Eine Einstellung ist für Shops hinzugekommen, die den Sortierungsindex in umgekehrter Reihenfolge nutzen, um so die Kategorien darzustellen
+* Es kann nun eine Einstellung vorgenommen werden, welche die Umkehrung der Reihenfolge von Produkten bewirkt
+* Fehler im Zusammenhang mit Artikelrabatten behoben, wodurch in manchen Fällen falsche Produktpreise exportiert wurden
+* nutzt die Shopgate Library 2.1.21
+* Einstellungsfelder "mobile Weiterleitung" / "Shop ist freigeschaltet" entfernt
+* JS-Header wird im <head> HTML-Tag eingebunden
+* <link rel="alternate" ...> HTML-Tag wird nun eingebunden
+
+'''Version 2.1.11'''
+* Problem bei der Bestellsynchronisation behoben 
+
+'''Version 2.1.10'''
+* Default Charset wird beim Erstellen der Shopgate Tabelle nicht länger gesetzt, da es bei manchen Providern Probleme gibt
+* MySQL Abfragen mit Joins werden nun explizit angegeben, für Fälle wo das Schlüsselwort "JOIN" alleine nicht benutzt werden darf
+* Sonderpreise für Kundengruppen und Artikelrabatt wird nun unterstützt und ist so umgesetzt, wie es das Shopsystem nutzt. Maximale Rabatte aus Kundengruppen werden berücksichtigt
+* Unterstützung für mehrere Sprachen: pro Sprache kann jetzt ein Shopgate-Shop konfiguriert werden
+* Versandart für Bestellungsimport kann nun in der Konfiguration ausgewählt werden. Der Steuersatz dieser Versandart-Steuerklasse wird für die Ausweisung von Steuern auf der Bestellungsdetailseite verwendet
+* Zahlungsartkosten werden nicht mehr als Artikel hinzugefügt
+* Doppelt Artikel-Optionswertnamen werden automatisch durchnumeriert
+* Fehler behoben, bei dem Artikel-Attributpreise bei anderer Währung falsch berechnet wurden
+* Nutzt Shopgate Library 2.1.18
+
+'''Version 2.1.9'''
+* Bestellungen, die bereits als versendet bei Shopgate markiert wurden, werden beim Cronjob nun auch korrekt in der Datenbank aktualisiert
 
 '''Version 2.1.8'''
 * Fehler bei der Sortierung von Produkten und Kategorien mit negativen Sortierungsindizes behoben
@@ -72,6 +115,49 @@
 
 '''English'''
 
+'''Version 2.1.16'''
+* revised configuration interface
+* it's now possible to select multiple languages for the Mobile Redirect 
+* added global configuration settings
+* uses Shopgate Library 2.1.23
+
+'''Version 2.1.15'''
+* fixed the directory structure
+* uses Shopgate Library 2.1.22
+
+'''Version 2.1.14'''
+* fixed issue with mobile redirect on not configured languages
+
+'''Version 2.1.13'''
+* updated directory structure to simplify the plugin installation
+* uses Shopgate Library 2.1.21
+
+'''Version 2.1.12'''
+* fixed an issue that caused categories to be in the exactly reversed sort order 
+* a setting has been added for shops that use the category sort order in an inverted way to display the categories
+* the sort order of products can now also be inverted by setting in the extended shopgate settings
+* fixed an issue with products discount allowed values where product prices was exportet wrong in some cases
+* uses Shopgate Library 2.1.21
+* configuration fields "mobile Website" / "shop is active" removed
+* js header output in <head> HTML tag
+* <link rel="alternate" ...> HTML tag output in <head>
+
+'''Version 2.1.11'''
+* fixed an issue in order synchronization 
+
+'''Version 2.1.10'''
+* the default charset is no longer set while creating the orders_shopgate_order table, because there seems to be a problem with some providers, while using this functionality
+* mysql selects using join are now called explicit for cases where the keyword "JOIN" can not be used alone
+* discounts for customer groups are now exported in the way the shoppingsystem implements it. The discount limit is also included for the export
+* support for multiple languages: for every language a different Shopgate shop can be configured now
+* the shipping method for the orders import can now be selected on the shopgate-confuration page. The tax rate set for the shipping methods tax class will be used for calculating the shipping cost taxes on the orders detail page
+* payment costs aren't added as article anymore
+* duplicate product option value names are now automatically renamed while giving an index for each duplicate name
+* fixed an issue with false price calculation for product attributes while exporting a currency using an exchange rate
+* uses Shopgate Library 2.1.18
+
+'''Version 2.1.9'''
+* orders that are marked as shipped at shopgate will now be updated correctly while executing the cronjob
 
 '''Version 2.1.8'''
 * fixed issue in sorting products and categories with negative sort order indices
