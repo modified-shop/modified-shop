@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 Bernd Blazynski
+* @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
 */
 
@@ -180,54 +180,65 @@ if (MODULE_PAYMENT_BILLSAFE_2_SERVER == 'Live') {
 }
 $bs->setCredentials(array('merchantId' => MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID, 'merchantLicenseSandbox' => MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE, 'merchantLicenseLive' => MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE, 'applicationSignature' => $ini['applicationSignature'], 'applicationVersion' => $ini['applicationVersion']));
 
-$orders_query = xtc_db_query('SELECT id, transactionid, billsafeStatus FROM billsafe_orders_2 WHERE orderid = "'.xtc_db_input($order_id).'"');
+$orders_query = xtc_db_query('SELECT id, transactionid, billsafeStatus, type FROM billsafe_orders_2 WHERE orderid = "'.xtc_db_input($order_id).'"');
 $billsafe_orders = xtc_db_fetch_array($orders_query);
 $paramsIns = array('transactionId' => $billsafe_orders['transactionid']);
 $responseInstruction = $bs->callMethod('getPaymentInstruction', $paramsIns);
-if ($responseInstruction->ack == 'OK') {
-  $url = substr(HTTP_SERVER, 7).DIR_WS_CATALOG;
-  $ins = $responseInstruction->instruction;
-  $smarty->assign('BillsafeText', $ins->legalNote);
-  $smarty->assign('BillsafeText2', '<b>'.$ins->note.'</b>');
-  $smarty->assign('recipient', MODULE_PAYMENT_BILLSAFE_2_RECIPIENT.':');
-  $smarty->assign('recipientValue', $ins->recipient);
-  $smarty->assign('account', MODULE_PAYMENT_BILLSAFE_2_ACCOUNT_NUMBER.':');
-  $smarty->assign('accountValue', $ins->accountNumber);
-  $smarty->assign('bankcode', MODULE_PAYMENT_BILLSAFE_2_BANK_CODE.':');
-  $smarty->assign('bankcodeValue', $ins->bankCode);
-  $smarty->assign('bank', MODULE_PAYMENT_BILLSAFE_2_BANK_NAME.':');
-  $smarty->assign('bankValue', $ins->bankName);
-  $smarty->assign('bic', MODULE_PAYMENT_BILLSAFE_2_BIC.':');
-  $smarty->assign('bicValue', $ins->bic);
-  $smarty->assign('iban', MODULE_PAYMENT_BILLSAFE_2_IBAN.':');
-  $smarty->assign('ibanValue', $ins->iban);
-  $smarty->assign('amount', MODULE_PAYMENT_BILLSAFE_2_AMOUNT.':');
-  $smarty->assign('amountValue', xtc_format_price_order($ins->amount, 1, $order->info['currency']));
-  $smarty->assign('reference', MODULE_PAYMENT_BILLSAFE_2_REFERENCE.':');
-  $smarty->assign('referenceValue', $ins->reference);
-  $smarty->assign('referenceUrl', MODULE_PAYMENT_BILLSAFE_2_REFERENCE.':');
-  $smarty->assign('referenceUrlValue', $url);
-} else {
-  $smarty->assign('BillsafeText', '');
-  $smarty->assign('BillsafeText2', '');
-  $smarty->assign('recipient', '');
-  $smarty->assign('recipientValue', '');
-  $smarty->assign('account', '');
-  $smarty->assign('accountValue', '');
-  $smarty->assign('bankcode', '');
-  $smarty->assign('bankcodeValue', '');
-  $smarty->assign('bank', '');
-  $smarty->assign('bankValue', '');
-  $smarty->assign('bic', '');
-  $smarty->assign('bicValue', '');
-  $smarty->assign('iban', '');
-  $smarty->assign('ibanValue', '');
-  $smarty->assign('amount', '');
-  $smarty->assign('amountValue', '');
-  $smarty->assign('reference', '');
-  $smarty->assign('referenceValue', '');
-  $smarty->assign('referenceUrl', '');
-  $smarty->assign('referenceUrlValue', '');
+$smarty->assign('BillsafeType', $billsafe_orders['type']);
+if ($billsafe_orders['type'] == 'invoice') {
+  if ($responseInstruction->ack == 'OK') {
+    $url = substr(HTTP_SERVER, 7).DIR_WS_CATALOG;
+    $ins = $responseInstruction->instruction;
+    $smarty->assign('BillsafeText', $ins->legalNote);
+    $smarty->assign('BillsafeText2', '<b>'.$ins->note.'</b>');
+    $smarty->assign('recipient', MODULE_PAYMENT_BILLSAFE_2_RECIPIENT.':');
+    $smarty->assign('recipientValue', $ins->recipient);
+    $smarty->assign('account', MODULE_PAYMENT_BILLSAFE_2_ACCOUNT_NUMBER.':');
+    $smarty->assign('accountValue', $ins->accountNumber);
+    $smarty->assign('bankcode', MODULE_PAYMENT_BILLSAFE_2_BANK_CODE.':');
+    $smarty->assign('bankcodeValue', $ins->bankCode);
+    $smarty->assign('bank', MODULE_PAYMENT_BILLSAFE_2_BANK_NAME.':');
+    $smarty->assign('bankValue', $ins->bankName);
+    $smarty->assign('bic', MODULE_PAYMENT_BILLSAFE_2_BIC.':');
+    $smarty->assign('bicValue', $ins->bic);
+    $smarty->assign('iban', MODULE_PAYMENT_BILLSAFE_2_IBAN.':');
+    $smarty->assign('ibanValue', $ins->iban);
+    $smarty->assign('amount', MODULE_PAYMENT_BILLSAFE_2_AMOUNT.':');
+    $smarty->assign('amountValue', xtc_format_price_order($ins->amount, 1, $order->info['currency']));
+    $smarty->assign('reference', MODULE_PAYMENT_BILLSAFE_2_REFERENCE.':');
+    $smarty->assign('referenceValue', $ins->reference);
+    $smarty->assign('referenceUrl', MODULE_PAYMENT_BILLSAFE_2_REFERENCE.':');
+    $smarty->assign('referenceUrlValue', $url);
+  } else {
+    $smarty->assign('BillsafeText', '');
+    $smarty->assign('BillsafeText2', '');
+    $smarty->assign('recipient', '');
+    $smarty->assign('recipientValue', '');
+    $smarty->assign('account', '');
+    $smarty->assign('accountValue', '');
+    $smarty->assign('bankcode', '');
+    $smarty->assign('bankcodeValue', '');
+    $smarty->assign('bank', '');
+    $smarty->assign('bankValue', '');
+    $smarty->assign('bic', '');
+    $smarty->assign('bicValue', '');
+    $smarty->assign('iban', '');
+    $smarty->assign('ibanValue', '');
+    $smarty->assign('amount', '');
+    $smarty->assign('amountValue', '');
+    $smarty->assign('reference', '');
+    $smarty->assign('referenceValue', '');
+    $smarty->assign('referenceUrl', '');
+    $smarty->assign('referenceUrlValue', '');
+  }
+} elseif ($billsafe_orders['type'] == 'installment') {
+  if ($responseInstruction->ack == 'OK') {
+    $url = substr(HTTP_SERVER, 7).DIR_WS_CATALOG;
+    $ins = $responseInstruction->instruction;
+    $smarty->assign('BillsafeText2', '<b>'.$ins->note.'</b>');
+  } else {
+    $smarty->assign('BillsafeText2', '');
+  }
 }
 $smarty->caching = false;
 $smarty->template_dir = DIR_FS_CATALOG.'templates';

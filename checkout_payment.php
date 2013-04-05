@@ -213,6 +213,10 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   }
 }
 
+//BOF - Dokuman - 2012-06-19 - BILLSAFE payment module
+if ($_GET['billsafe_close'] == 'true' || $_GET['payment_error'] == 'billsafe_2' || $_GET['payment_error'] == 'billsafe_2hp') echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.stripslashes(urlencode(html_entity_decode($_GET['error_message']))), 'SSL').'"); </script>';
+//EOF - Dokuman - 2012-06-19 - BILLSAFE payment module
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('PAYMENT_BLOCK', $payment_block);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment.html');

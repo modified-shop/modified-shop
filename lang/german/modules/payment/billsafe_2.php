@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 Bernd Blazynski
+* @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
 */
 
@@ -46,7 +46,7 @@ define('MODULE_PAYMENT_BILLSAFE_2_TRANSACTIONID', 'BillSAFE Transaktions-ID');
 define('MODULE_PAYMENT_BILLSAFE_2_CODE_TEXT', 'Code');
 define('MODULE_PAYMENT_BILLSAFE_2_MESSAGE_TEXT', 'Message');
 define('MODULE_PAYMENT_BILLSAFE_2_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0" />&nbsp;<a href="https://client.billsafe.de" target="_blank" style="text-decoration: underline; font-weight: bold;">Zur BillSAFE-Website</a>');
-define('MODULE_PAYMENT_BILLSAFE_2_STATUS_TITLE', 'BillSAFE Modul aktivieren');
+define('MODULE_PAYMENT_BILLSAFE_2_STATUS_TITLE', 'BillSAFE Rechnungskauf aktivieren');
 define('MODULE_PAYMENT_BILLSAFE_2_STATUS_DESC', 'M&ouml;chten Sie Kauf auf Rechnung mit BillSAFE anbieten?');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID_TITLE', 'Merchant-ID');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID_DESC', 'Die Merchant-ID, die mit der BillSAFE-API genutzt wird.');
@@ -98,6 +98,7 @@ define('MODULE_PAYMENT_BILLSAFE_2_MODEL', 'Artikel-Nr.');
 define('MODULE_PAYMENT_BILLSAFE_2_TAX', 'MwSt.');
 define('MODULE_PAYMENT_BILLSAFE_2_PRICE_EX', 'Preis (exkl.)');
 define('MODULE_PAYMENT_BILLSAFE_2_PRICE_INC', 'Preis (inkl.)');
+define('MODULE_PAYMENT_BILLSAFE_2_CHECK', 'Auswahl');
 define('MODULE_PAYMENT_BILLSAFE_2_INC', 'inkl. ');
 define('MODULE_PAYMENT_BILLSAFE_2_TOTAL', 'Gesamtbetrag');
 define('MODULE_PAYMENT_BILLSAFE_2_FREPORT_SHIPMENT', 'Komplettlieferung');

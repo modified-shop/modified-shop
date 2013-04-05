@@ -83,6 +83,7 @@
 
 <br />
 <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+{if $BillsafeType == 'invoice'}
 {$BillsafeText}<br /> 
 {$BillsafeText2}<br /> 
 <br />
@@ -125,6 +126,10 @@
 <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$referenceUrlValue}</font></td>
 </tr>
 </table>
+{elseif $BillsafeType == 'installment'}
+{$BillsafeText2}<br /> 
+<br />
+{/if}
 </font>
 </body>
 </html>

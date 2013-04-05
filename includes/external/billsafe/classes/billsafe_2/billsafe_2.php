@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 BillSAFE GmbH and Bernd Blazynski
+* @copyright (C) 2013 PayPal SE and Bernd Blazynski
 * @license GPLv2
 */
 
@@ -50,7 +50,7 @@ class Billsafe_Sdk {
   private $_isUtf8Mode = false;
   private $_lastResponse;
   private $_logger;
-  private $_apiVersion = '202';
+  private $_apiVersion = '208';
   private $_apiUrlSandbox = 'https://sandbox-nvp.billsafe.de/V{VERSION}';
   private $_apiUrlLive = 'https://nvp.billsafe.de/V{VERSION}';
   private $_gatewayVersion = '200';

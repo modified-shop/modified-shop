@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 BillSAFE GmbH and Bernd Blazynski
+* @copyright (C) 2013 PayPal SE and Bernd Blazynski
 * @license GPLv2
 */
 
@@ -40,7 +40,7 @@ $ini['merchantLicenseLive'] = '';
 //geändert Ben BillSAFE
 $ini['applicationSignature'] = '1406801e3073bc303cf0d3fff0fb85f7';
 //$ini['applicationSignature'] = '3acef6967aac4c3d460242fe3a2a8468';
-$ini['applicationVersion'] = 'modified-shop_v2.4 2012-10-23';
+$ini['applicationVersion'] = 'modified-shop_v2.6 2013-01-23';
 //Set this to true if your data is utf-8 encoded.
 //Set this to false if your data is latin-1 encoded.
 //The encoding of the response object will be affected accordingly.

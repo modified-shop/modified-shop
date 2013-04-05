@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 Bernd Blazynski
+* @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
 */
 
@@ -39,8 +39,8 @@ define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_101', 'Payment via BillSAFE is n
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_102', 'An error occured during data processing. Please contact us.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_215', 'There were missing parameters during data processing. Please contact us.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_216', 'There were invalid parameters during data processing. Please contact us.');
-define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMPANY', 'Payment via BillSAFE GmbH is unfortunately only possible for private individuals.');
-define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_ADDRESS', 'Payment via BillSAFE GmbH is unfortunately not possible with alternate delivery address.');
+define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMPANY', 'Payment via BillSAFE is unfortunately only possible for private individuals.');
+define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_ADDRESS', 'Payment via BillSAFE is unfortunately not possible with an alternate delivery address.');
 define('MODULE_PAYMENT_BILLSAFE_2_STATUS_TEXT', 'Status');
 define('MODULE_PAYMENT_BILLSAFE_2_TRANSACTIONID', 'BillSAFE transaction ID');
 define('MODULE_PAYMENT_BILLSAFE_2_CODE_TEXT', 'Code');
@@ -98,6 +98,7 @@ define('MODULE_PAYMENT_BILLSAFE_2_MODEL', 'Model');
 define('MODULE_PAYMENT_BILLSAFE_2_TAX', 'VAT');
 define('MODULE_PAYMENT_BILLSAFE_2_PRICE_EX', 'Price (excl.)');
 define('MODULE_PAYMENT_BILLSAFE_2_PRICE_INC', 'Price (incl.)');
+define('MODULE_PAYMENT_BILLSAFE_2_CHECK', 'Choose');
 define('MODULE_PAYMENT_BILLSAFE_2_INC', 'incl. ');
 define('MODULE_PAYMENT_BILLSAFE_2_TOTAL', 'Total');
 define('MODULE_PAYMENT_BILLSAFE_2_FREPORT_SHIPMENT', 'Report full shipment');

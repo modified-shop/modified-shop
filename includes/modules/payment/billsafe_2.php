@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 Bernd Blazynski
+* @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
 */
 
@@ -161,18 +161,10 @@ class billsafe_2 {
     if (MODULE_PAYMENT_BILLSAFE_2_SCHG != '') {
       $schg_tax_rate = xtc_get_tax_rate(MODULE_PAYMENT_BILLSAFE_2_SCHGTAX);
       if (stristr(MODULE_PAYMENT_BILLSAFE_2_SCHG, '%')) {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          $schg_amount = xtc_add_tax(($total * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100), $schg_tax_rate);
-        } else {
-          $schg_amount = $total * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
-        }
+        $schg_amount = $total * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
         $schg = '<br />'.MODULE_PAYMENT_BILLSAFE_2_SCHG_TEXT_INFO.MODULE_PAYMENT_BILLSAFE_2_SCHG;
       } else {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          $schg_amount = xtc_add_tax(MODULE_PAYMENT_BILLSAFE_2_SCHG, $schg_tax_rate);
-        } else {
-          $schg_amount = MODULE_PAYMENT_BILLSAFE_2_SCHG;
-        }
+        $schg_amount = MODULE_PAYMENT_BILLSAFE_2_SCHG;
         $schg = '<br />'.MODULE_PAYMENT_BILLSAFE_2_SCHG_TEXT_INFO.$xtPrice->xtcFormat($schg_amount, true);
       }
     } else {
@@ -182,10 +174,18 @@ class billsafe_2 {
     $total = $total + $schg_amount;
     $total = round($xtPrice->xtcCalculateCurrEx($total, $_SESSION['currency']), $xtPrice->get_decimal_places($_SESSION['currency']));
     $total = number_format(round(($total + $shipping_cost), $xtPrice->get_decimal_places($currency)), 2, '.', '');
+    $company_b = md5($order->billing['company']);
+    $company_d = md5($order->delivery['company']);
+    $firstname_b = md5($order->billing['firstname']);
+    $firstname_d = md5($order->delivery['firstname']);
+    $lastname_b = md5($order->billing['lastname']);
+    $lastname_d = md5($order->delivery['lastname']);
+    $email = md5($customer['customers_email_address']);
+    $phone = md5($customer['customers_telephone']);
     if ($customer['customers_gender'] != '') {
-      $params = array('order_amount' => round($total, $xtPrice->get_decimal_places($currency)), 'order_currencyCode' => $currency, 'customer_id' => $customer_id, 'customer_gender' => $customer['customers_gender'], 'customer_company' => $order->billing['company'], 'deliveryAddress_company' => $order->delivery['company'], 'customer_firstname' => $order->billing['firstname'], 'deliveryAddress_firstname' => $order->delivery['firstname'], 'customer_lastname' => $order->billing['lastname'], 'deliveryAddress_lastname' => $order->delivery['lastname'], 'customer_street' => $order->billing['street_address'], 'deliveryAddress_street' => $order->delivery['street_address'], 'customer_postcode' => $order->billing['postcode'], 'deliveryAddress_postcode' => $order->delivery['postcode'], 'customer_city' => $order->billing['city'], 'deliveryAddress_city' => $order->delivery['city'], 'customer_country' => $order->billing['country']['iso_code_2'], 'deliveryAddress_country' => $order->delivery['country']['iso_code_2'], 'customer_dateOfBirth' => $customer['customers_dob'],'customer_email' => $customer['customers_email_address'], 'customer_phone' => $customer['customers_telephone'], );
+      $params = array('order_amount' => round($total, $xtPrice->get_decimal_places($currency)), 'order_currencyCode' => $currency, 'customer_id' => $customer_id, 'customer_gender' => $customer['customers_gender'], 'customer_company' => $company_b, 'deliveryAddress_company' => $company_d, 'customer_firstname' => $firstname_b, 'deliveryAddress_firstname' => $firstname_d, 'customer_lastname' => $lastname_b, 'deliveryAddress_lastname' => $lastname_d, 'customer_street' => $order->billing['street_address'], 'deliveryAddress_street' => $order->delivery['street_address'], 'customer_postcode' => $order->billing['postcode'], 'deliveryAddress_postcode' => $order->delivery['postcode'], 'customer_city' => $order->billing['city'], 'deliveryAddress_city' => $order->delivery['city'], 'customer_country' => $order->billing['country']['iso_code_2'], 'deliveryAddress_country' => $order->delivery['country']['iso_code_2'], 'customer_dateOfBirth' => $customer['customers_dob'],'customer_email' => $email, 'customer_phone' => $phone, );
     } else {
-      $params = array('order_amount' => round($total, $xtPrice->get_decimal_places($currency)), 'order_currencyCode' => $currency, 'customer_id' => $customer_id, 'customer_company' => $order->billing['company'], 'deliveryAddress_company' => $order->delivery['company'], 'customer_firstname' => $order->billing['firstname'], 'deliveryAddress_firstname' => $order->delivery['firstname'], 'customer_lastname' => $order->billing['lastname'], 'deliveryAddress_lastname' => $order->delivery['lastname'], 'customer_street' => $order->billing['street_address'], 'deliveryAddress_street' => $order->delivery['street_address'], 'customer_postcode' => $order->billing['postcode'], 'deliveryAddress_postcode' => $order->delivery['postcode'], 'customer_city' => $order->billing['city'], 'deliveryAddress_city' => $order->delivery['city'], 'customer_country' => $order->billing['country']['iso_code_2'], 'deliveryAddress_country' => $order->delivery['country']['iso_code_2'], 'customer_dateOfBirth' => $customer['customers_dob'],'customer_email' => $customer['customers_email_address'], 'customer_phone' => $customer['customers_telephone'], );
+      $params = array('order_amount' => round($total, $xtPrice->get_decimal_places($currency)), 'order_currencyCode' => $currency, 'customer_id' => $customer_id, 'customer_company' => $company_b, 'deliveryAddress_company' => $company_d, 'customer_firstname' => $firstname_b, 'deliveryAddress_firstname' => $firstname_d, 'customer_lastname' => $lastname_b, 'deliveryAddress_lastname' => $lastname_d, 'customer_street' => $order->billing['street_address'], 'deliveryAddress_street' => $order->delivery['street_address'], 'customer_postcode' => $order->billing['postcode'], 'deliveryAddress_postcode' => $order->delivery['postcode'], 'customer_city' => $order->billing['city'], 'deliveryAddress_city' => $order->delivery['city'], 'customer_country' => $order->billing['country']['iso_code_2'], 'deliveryAddress_country' => $order->delivery['country']['iso_code_2'], 'customer_dateOfBirth' => $customer['customers_dob'],'customer_email' => $email, 'customer_phone' => $phone, );
     }
     $response = $bs->callMethod('prevalidateOrder', $params);
     if ($response->ack == 'OK') {
@@ -231,10 +231,12 @@ class billsafe_2 {
       } else {
         $lisb = 'true';
       }
+          //var formElement = document.getElementsByTagName(\'form\')[0];
+          //var formElement = document.getElementById(\'checkout_confirmation\');
       $process_button_string .= '<script type="text/javascript" src="https://content.billsafe.de/lpg/js/client.js"></script>
         <script type="text/javascript"><!--
           var formElement = document.getElementById(\'checkout_confirmation\');
-          var lpg = new BillSAFE.LPG.client({form: formElement, conditions: [{element: \'paymentType\', value: \''.$payment_type.'\'}], sandbox: '.$lisb.'});
+          var lpg = new BillSAFE.LPG.client({form: formElement, conditions: {invoice: [{element: \'paymentType\', value: \''.$payment_type.'\'}]}, sandbox: '.$lisb.'});
         //--></script>';
     }
     return $process_button_string;
@@ -327,8 +329,11 @@ class billsafe_2 {
         } else {
           $article[$i]['tax'] = number_format($shipping_tax_rate, 2, '.', '');
         }
+      } else {
+        $i = $i - 1;
       }
       if ($_SESSION['discount_value'] != 0) {
+        $discount_tax_rate = xtc_get_tax_rate('1');
         $i = $i + 1;
         $article[$i]['number'] = 'discount';
         $article[$i]['name'] = $_SESSION['discount_name'];
@@ -339,7 +344,11 @@ class billsafe_2 {
         } else {
           $article[$i]['grossPrice'] = number_format($_SESSION['discount_value'], 2, '.', '');
         }
-        $article[$i]['tax'] = number_format(0, 2, '.', '');
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+          $article[$i]['tax'] = number_format(0, 2, '.', '');
+        } else {
+          $article[$i]['tax'] = number_format($discount_tax_rate, 2, '.', '');
+        }
       }
       if ($_SESSION['voucher_value'] != 0) {
         $i = $i + 1;
@@ -348,24 +357,38 @@ class billsafe_2 {
         $article[$i]['type'] = 'voucher';
         $article[$i]['quantity'] = 1;
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
-          $article[$i]['netPrice'] = number_format(($_SESSION['voucher_value'] * -1), 2, '.', '');
+          $article[$i]['netPrice'] = number_format($_SESSION['voucher_value'], 2, '.', '');
         } else {
-          $article[$i]['grossPrice'] = number_format(($_SESSION['voucher_value'] * -1), 2, '.', '');
+          $article[$i]['grossPrice'] = number_format($_SESSION['voucher_value'], 2, '.', '');
         }
         $article[$i]['tax'] = number_format(0, 2, '.', '');
       }
       if ($_SESSION['coupon_value'] != 0) {
+        if (MODULE_ORDER_TOTAL_COUPON_TAX_CLASS) {
+          $coupon_tax_rate = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COUPON_TAX_CLASS);
+        } else {
+          $coupon_tax_rate = xtc_get_tax_rate('1');
+        }
         $i = $i + 1;
         $article[$i]['number'] = 'coupon';
         $article[$i]['name'] = $_SESSION['coupon_name'];
         $article[$i]['type'] = 'voucher';
         $article[$i]['quantity'] = 1;
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
-          $article[$i]['netPrice'] = number_format(($_SESSION['coupon_value'] * -1), 2, '.', '');
+          $article[$i]['netPrice'] = number_format($_SESSION['coupon_value'], 2, '.', '');
         } else {
-          $article[$i]['grossPrice'] = number_format(($_SESSION['coupon_value'] * -1), 2, '.', '');
+          $article[$i]['grossPrice'] = number_format($_SESSION['coupon_value'], 2, '.', '');
         }
-        $article[$i]['tax'] = number_format(0, 2, '.', '');
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+          $article[$i]['tax'] = number_format($coupon_tax_rate, 2, '.', '');
+          $coupon_tax = $_SESSION['coupon_value'] * $coupon_tax_rate / 100;
+        } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+          $article[$i]['tax'] = number_format(0, 2, '.', '');
+          $coupon_tax = 0;
+        } else {
+          $article[$i]['tax'] = number_format($coupon_tax_rate, 2, '.', '');
+          $coupon_tax = $_SESSION['coupon_value'] - ($_SESSION['coupon_value'] / (1 + $coupon_tax_rate / 100));
+        }
       }
       if ($_SESSION['schg_value'] != 0) {
         $schg_tax_rate = xtc_get_tax_rate(MODULE_PAYMENT_BILLSAFE_2_SCHGTAX);
@@ -379,12 +402,15 @@ class billsafe_2 {
         } else {
           $article[$i]['grossPrice'] = number_format(($_SESSION['schg_value']), 2, '.', '');
         }
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+          $article[$i]['tax'] = number_format($schg_tax_rate, 2, '.', '');
+          $schg_tax = $_SESSION['schg_value'] * $schg_tax_rate / 100;
+        } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
           $article[$i]['tax'] = number_format(0, 2, '.', '');
           $schg_tax = 0;
         } else {
           $article[$i]['tax'] = number_format($schg_tax_rate, 2, '.', '');
-          $schg_tax = $_SESSION['schg_value'] * $schg_tax_rate / 100;
+          $schg_tax = $_SESSION['schg_value'] - ($_SESSION['schg_value'] / (1 + $schg_tax_rate / 100));
         }
       }
       if ($_SESSION['lofee_value'] != 0) {
@@ -404,7 +430,7 @@ class billsafe_2 {
           $lofee_tax = 0;
         } else {
           $article[$i]['tax'] = number_format($lofee_tax_rate, 2, '.', '');
-          $lofee_tax = $_SESSION['lofee_value'] * $lofee_tax_rate / 100;
+          $lofee_tax = $_SESSION['lofee_value'] - ($_SESSION['lofee_value'] / (1 + $lofee_tax_rate / 100));
         }
       }
 
@@ -412,9 +438,9 @@ class billsafe_2 {
       if (xtc_db_num_rows($customer_query)) $customer = xtc_db_fetch_array($customer_query);
       $shipping_tax = round(($order->info['shipping_cost'] / 100) * $shipping_tax_rate, 2);
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-        $total = $order->info['subtotal'] + $order->info['tax'] + $shipping_tax + $_SESSION['discount_value'] - $_SESSION['voucher_value'] - $_SESSION['coupon_value'] + $_SESSION['schg_value'] + $_SESSION['lofee_value'];
+        $total = $order->info['subtotal'] + $order->info['tax'] + $shipping_tax + $_SESSION['discount_value'] + $_SESSION['voucher_value'] + $_SESSION['coupon_value'] + $_SESSION['schg_value'] + $schg_tax + $coupon_tax + $_SESSION['lofee_value'];
       } else {
-        $total = $order->info['subtotal'] + $_SESSION['discount_value'] - $_SESSION['voucher_value'] - $_SESSION['coupon_value'] + $_SESSION['schg_value'] + $_SESSION['lofee_value'];
+        $total = $order->info['subtotal'] + $_SESSION['discount_value'] + $_SESSION['voucher_value'] + $_SESSION['coupon_value'] + $_SESSION['schg_value'] + $_SESSION['lofee_value'];
       }
       $total = round($xtPrice->xtcCalculateCurrEx($total, $_SESSION['currency']), $xtPrice->get_decimal_places($_SESSION['currency']));
       $info_tax = $order->info['tax']; 
@@ -422,7 +448,7 @@ class billsafe_2 {
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
         $info_tax = number_format(0, 2, '.', '');
       } else {
-        $info_tax = number_format(round(($info_tax + $shipping_tax + $schg_tax + $lofee_tax), $xtPrice->get_decimal_places($currency)), 2, '.', '');;
+        $info_tax = number_format(round(($info_tax + $shipping_tax + $schg_tax + $coupon_tax + $lofee_tax), $xtPrice->get_decimal_places($currency)), 2, '.', '');
       }
       $url_image = $this->checkLogoURL(MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL);
       if ($customer['customers_gender'] != '') {
@@ -430,7 +456,6 @@ class billsafe_2 {
       } else {
         $params = array('order_amount' => round($total, $xtPrice->get_decimal_places($currency)), 'order_taxAmount' => number_format($info_tax, 2, '.', ''), 'order_currencyCode' => $currency, 'customer' => array('id' => $customer_id, 'company' => $order->delivery['company'], 'firstname' => $order->delivery['firstname'], 'lastname' => $order->delivery['lastname'], 'street' => $order->delivery['street_address'], 'postcode' => $order->delivery['postcode'], 'city' => $order->delivery['city'], 'country' => $order->delivery['country']['iso_code_2'], 'email' => $customer['customers_email_address'], 'phone' => $customer['customers_telephone']), 'product' => 'invoice', 'url_return' => xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL'), 'url_cancel' => xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'), 'url_image' => $url_image, 'articleList' => $article);
       }
-//      $_SESSION['bs_article'] = $article;
       if (!empty($customer['customers_dob']) && $customer['customers_dob'] != '0000-00-00') $params['customer']['dateOfBirth'] = $customer['customers_dob'];
       $response = $bs->callMethod('prepareOrder', $params);
       if ($response->ack == 'OK') {
@@ -488,7 +513,7 @@ class billsafe_2 {
     if ($this->response->ack == 'OK' && $this->response->status == 'ACCEPTED') {
       if ($this->order_status) xtc_db_query('UPDATE '.TABLE_ORDERS.' SET orders_status = "'.xtc_db_input($this->order_status).'" WHERE orders_id = "'.xtc_db_input($insert_id).'"');
       $customer = $this->response->customer;
-      xtc_db_query('INSERT INTO billsafe_orders_2 (id, orderid, transactionid, token, billsafeStatus, paymentStatus,date) VALUES (NULL,"'.xtc_db_input($insert_id).'", "'.xtc_db_input($this->response->transactionId).'", "'.$token.'", "'.xtc_db_input($this->response->status).'", NULL, "'.date('Y-m-d H:i:s').'")');
+      xtc_db_query('INSERT INTO billsafe_orders_2 (id, orderid, transactionid, token, billsafeStatus, type, paymentStatus,date) VALUES (NULL,"'.xtc_db_input($insert_id).'", "'.xtc_db_input($this->response->transactionId).'", "'.$token.'", "'.xtc_db_input($this->response->status).'", "invoice", NULL, "'.date('Y-m-d H:i:s').'")');
       $resultQuery = xtc_db_query('SELECT id FROM billsafe_orders_2 WHERE transactionId = "'.xtc_db_input($this->response->transactionId).'"');
       $result = xtc_db_fetch_array($resultQuery);
       xtc_db_query('INSERT INTO billsafe_orders_user_2 (id, bsorders_id, gender, company, firstname, lastname, street, housenumber, postcode, city, country, dateofbirth, email, phone) VALUES (NULL, "'.xtc_db_input($result['id']).'", "'.xtc_db_input($customer->gender).'", "'.xtc_db_input($customer->firstname).'", "'.xtc_db_input($customer->company).'", "'.xtc_db_input($customer->lastname).'", "'.xtc_db_input($customer->street).'", "'.xtc_db_input($customer->housenumber).'", "'.xtc_db_input($customer->postcode).'", "'.xtc_db_input($customer->city).'", "'.xtc_db_input($customer->country).'", "0000-00-00", "'.xtc_db_input($customer->email).'", "'.xtc_db_input($customer->phone).'")');
@@ -516,7 +541,7 @@ class billsafe_2 {
       }
       $comments = MODULE_PAYMENT_BILLSAFE_2_STATUS_TEXT.': '.$this->response->status.'; '.MODULE_PAYMENT_BILLSAFE_2_TRANSACTIONID.': '.$this->response->transactionId;
       xtc_db_query ('INSERT INTO orders_status_history (orders_status_history_id, orders_id, orders_status_id, date_added, customer_notified, comments) VALUES (NULL, "'.xtc_db_input($insert_id).'", "1", "'.date('Y-m-d H:i:s').'", "0", "'.xtc_db_input($comments).'")');
-      $params = array('transactionId' => xtc_db_input($this->response->transactionId), 'orderNumber' => $insert_id);
+      $params = array('transactionId' => xtc_db_input($this->response->transactionId), 'orderNumber' => xtc_db_input($insert_id));
       $response = $bs->callMethod('setOrderNumber', $params);
       if ($response->ack == 'OK') {
       } else {
@@ -544,7 +569,12 @@ class billsafe_2 {
   function install() {
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_orders_2"');
     if (xtc_db_num_rows($check_query) == 0) {
-      xtc_db_query('CREATE TABLE billsafe_orders_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, orderid VARCHAR(255) NOT NULL, transactionid VARCHAR(255) NOT NULL, billsafeStatus VARCHAR(255) NOT NULL, token VARCHAR(255) NOT NULL, date TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, paymentStatus VARCHAR(255) NULL DEFAULT NULL) ENGINE = MYISAM;');
+      xtc_db_query('CREATE TABLE billsafe_orders_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, orderid VARCHAR(255) NOT NULL, transactionid VARCHAR(255) NOT NULL, billsafeStatus VARCHAR(255) NOT NULL, type VARCHAR(64) NOT NULL, token VARCHAR(255) NOT NULL, date TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, paymentStatus VARCHAR(255) NULL DEFAULT NULL) ENGINE = MYISAM;');
+    } elseif (xtc_db_num_rows($check_query) != 0) {
+      $check_query = xtc_db_query('SHOW COLUMNS FROM billsafe_orders_2 like "type"');
+      if (xtc_db_num_rows($check_query) == 0) {
+        xtc_db_query('ALTER TABLE billsafe_orders_2 ADD type VARCHAR(64) NOT NULL AFTER billsafeStatus');
+      }
     }
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_orders_details_2"');
     if (xtc_db_num_rows($check_query) == 0) {
@@ -588,25 +618,44 @@ class billsafe_2 {
     }
     $logo_url = HTTPS_CATALOG_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/top_logo.jpg';
     $billsafe_logo = 'https://images.billsafe.de/image/image/id/2120806d6053';
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_STATUS", "False", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LAYER", "True", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LOG", "False", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE", "False", "6", "1", "xtc_cfg_select_option(array(\'Echo\', \'Mail\', \'File\'), ", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR", "", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID", "", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE", "", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER", "0", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER", "500", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SCHG", "", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SCHGTAX", "1", "6", "0", "xtc_get_tax_class_title", "xtc_cfg_pull_down_tax_classes(", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL", "'.$logo_url.'", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL", "'.$billsafe_logo.'", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SERVER", "Sandbox", "6", "1", "xtc_cfg_select_option(array(\'Live\', \'Sandbox\'), ", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ZONE", "0", "6", "2", "xtc_get_zone_class_title", "xtc_cfg_pull_down_zone_classes(", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID", "0", "6", "0", "xtc_cfg_pull_down_order_statuses(", "xtc_get_order_status_name", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER", "0", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ALLOWED", "DE", "6", "0", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING", "", "6", "99", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_STATUS"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_STATUS", "False", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_LAYER"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LAYER", "True", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_LOG"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LOG", "False", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE", "False", "6", "1", "xtc_cfg_select_option(array(\'Echo\', \'Mail\', \'File\'), ", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR", "", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID", "", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE", "", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER", "0", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER", "500", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SCHG"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SCHG", "", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SCHGTAX"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SCHGTAX", "1", "6", "0", "xtc_get_tax_class_title", "xtc_cfg_pull_down_tax_classes(", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL", "'.$logo_url.'", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL", "'.$billsafe_logo.'", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SERVER"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SERVER", "Sandbox", "6", "1", "xtc_cfg_select_option(array(\'Live\', \'Sandbox\'), ", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_ZONE"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ZONE", "0", "6", "2", "xtc_get_zone_class_title", "xtc_cfg_pull_down_zone_classes(", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID", "0", "6", "0", "xtc_cfg_pull_down_order_statuses(", "xtc_get_order_status_name", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER", "0", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_ALLOWED"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_ALLOWED", "DE", "6", "0", now())');
+    $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING"');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING", "", "6", "99", now())');
   }
 
   function remove() {

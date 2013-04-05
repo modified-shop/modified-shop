@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 Bernd Blazynski
+* @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
 */
 
@@ -60,7 +60,7 @@ class ot_billsafe {
             $this->output[] = array('title' => MODULE_ORDER_TOTAL_BILLSAFE_SCHG, 'text' => $xtPrice->xtcFormat($this->schg['amount'], true), 'value' => $this->schg['amount']);
           }
           $order->info['total'] += $this->schg['amount'];
-//          $order->info['tax'] += $this->schg['tax'];
+          $order->info['tax'] += $this->schg['tax'];
         }
       }
     }
@@ -72,23 +72,19 @@ class ot_billsafe {
       $schg_tax_rate = xtc_get_tax_rate(MODULE_PAYMENT_BILLSAFE_2_SCHGTAX);
       $schg_tax_name = xtc_get_tax_description(MODULE_PAYMENT_BILLSAFE_2_SCHGTAX);
       if (stristr(MODULE_PAYMENT_BILLSAFE_2_SCHG, '%')) {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          $schg_amount = xtc_add_tax(($this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100), $schg_tax_rate);
-          $schg_amount_calc = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
-        } else {
           $schg_amount = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
           $schg_amount_calc = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
-        }
-      } else {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-          $schg_amount = xtc_add_tax(MODULE_PAYMENT_BILLSAFE_2_SCHG, $schg_tax_rate);
-          $schg_amount_calc = MODULE_PAYMENT_BILLSAFE_2_SCHG;
         } else {
           $schg_amount = MODULE_PAYMENT_BILLSAFE_2_SCHG;
           $schg_amount_calc = MODULE_PAYMENT_BILLSAFE_2_SCHG;
         }
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+        $schg_tax = $schg_amount_calc * $schg_tax_rate / 100;
+      } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {
+        $schg_tax = 0;
+      } else {
+        $schg_tax = $schg_amount_calc - ($schg_amount_calc / (1 + $schg_tax_rate / 100));
       }
-      $schg_tax = $schg_amount_calc * $schg_tax_rate / 100;
     } else {
       $schg_amount = 0;
       $schg_tax = 0;
@@ -96,11 +92,7 @@ class ot_billsafe {
     if ($schg_tax_rate && ($schg_tax > 0)) {
       reset($order->info['tax_groups']);
       while (list($key, $value) = each($order->info['tax_groups'])) {
-        if (strpos($key, $schg_tax_rate.'%')) {
-          $order->info['tax_groups'][$key] += $schg_tax;
-        } else {
-          $order->info['tax_groups'][TAX_ADD_TAX.$schg_tax_name] += $schg_tax;
-        }
+        if (strpos($key, $schg_tax_rate.'%')) $order->info['tax_groups'][$key] += $schg_tax;
       }
     }
     $this->schg['amount'] = $schg_amount;
@@ -142,7 +134,7 @@ class ot_billsafe {
 
   function install() {
     xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ("MODULE_ORDER_TOTAL_BILLSAFE_STATUS", "true", "6", "1", "xtc_cfg_select_option(array(\'true\', \'false\'), ", now())');
-    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ("MODULE_ORDER_TOTAL_BILLSAFE_SORT_ORDER", "39", "6", "2", now())');
+    xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ("MODULE_ORDER_TOTAL_BILLSAFE_SORT_ORDER", "50", "6", "2", now())');
   }
 
   function keys() {

@@ -8,7 +8,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   Copyright (c) 2011-2012 BillSAFE GmbH and Bernd Blazynski
+   Copyright (c) 2013 PayPal SE and Bernd Blazynski
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -27,7 +27,7 @@
 * GNU General Public License for more details.
 *
 * @package BillSAFE_2
-* @copyright (C) 2011 Bernd Blazynski
+* @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
 */
 
@@ -541,7 +541,7 @@
 <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_MODEL; ?></td>
 <td class="dataTableHeadingContent" align="right"><?php echo MODULE_PAYMENT_BILLSAFE_2_TAX; ?></td>
 <td class="dataTableHeadingContent" align="right"><?php echo MODULE_PAYMENT_BILLSAFE_2_PRICE_INC; ?></td>
-<td class="dataTableHeadingContent" align="center"></td>
+<td class="dataTableHeadingContent" align="center"><?php echo MODULE_PAYMENT_BILLSAFE_2_CHECK; ?></td>
 </tr><?php
   $countOrder = xtc_db_fetch_array(xtc_db_query('SELECT COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'"'));
   $countUsed = xtc_db_fetch_array(xtc_db_query('SELECT COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'" AND (shipped = 1 OR storno = 1)'));
@@ -550,7 +550,7 @@
   $countNotRetoure = xtc_db_fetch_array(xtc_db_query('SELECT COUNT(articlenumber) AS quantity FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'" AND (shipped = 1 AND retoure = 0)'));
   $orderQuery = xtc_db_query('SELECT * FROM billsafe_orders_details_2 WHERE ordernumber = "'.xtc_db_input($order_id).'"');
   while ($orderData = xtc_db_fetch_array($orderQuery)) {
-    echo '<tr class="dataTableRow"><td class="dataTableContent" valign="top">'.$orderData['articlename'].'</td><td class="dataTableContent" valign="top">'.$orderData['articlenumber'].'</td><td class="dataTableContent" align="right" valign="top">'.xtc_display_tax_value($orderData['articletax']).'%</td><td class="dataTableContent" align="right" valign="top"><strong>'.format_price($orderData['articleprice'], 1, $order->info['currency'], 0, 0).'</strong></td><td class="dataTableContent" valign="top" align="right">';
+    echo '<tr class="dataTableRow"><td class="dataTableContent" valign="top">'.$orderData['articlename'].'</td><td class="dataTableContent" valign="top">'.$orderData['articlenumber'].'</td><td class="dataTableContent" align="right" valign="top">'.xtc_display_tax_value($orderData['articletax']).'%</td><td class="dataTableContent" align="right" valign="top"><strong>'.format_price($orderData['articleprice'], 1, $order->info['currency'], 0, 0).'</strong></td><td class="dataTableContent" valign="top" align="center">';
     if ($orderData['shipped'] == 1 || $orderData['storno'] == 1) {
       echo '<input type="checkbox" name="shipped[]" value='.$orderData['id'].' checked="checked" disabled="disabled" />&nbsp;</td>';
     } else {
