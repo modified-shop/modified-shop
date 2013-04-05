@@ -365,4 +365,24 @@ if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status
   $smarty->display(CURRENT_TEMPLATE.'/offline.html');	
 	EXIT;
 }
+
+//BOF - Dokuman - 2012-06-19 - BILLSAFE payment module (BillSAFE-Layer Start)
+if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER')) {
+  if (preg_match('/checkout_payment/',$_SERVER['PHP_SELF']) && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
+    if (isset($_GET['payment_error'])) {
+      $bs_error = stripslashes(html_entity_decode('payment_error='.$_GET['payment_error'].'&error_message='.$_GET['error_message']));
+    } else {
+      $bs_error = '';
+    }
+    echo '<script type="text/javascript"><!--
+      if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");
+    --></script>';
+  }
+  if (preg_match('/checkout_success/',$_SERVER['PHP_SELF']) && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
+    echo '<script type="text/javascript"><!--
+      if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");
+    --></script>';
+  }
+}
+//EOF - Dokuman - 2012-06-19 - BILLSAFE payment module - BillSAFE-Layer End
 ?>
