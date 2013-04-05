@@ -1,0 +1,29 @@
+<div class="klarna_box_bottom_input_combo" style="width: 100%">
+      <div id="left" style="width: 30%">
+            <select style="width: 98%" name="{{input.birth_day}}"
+                  class="klarna-validate-select bday">
+                  <option value="00" disabled="disabled" selected="selected">{{lang.date_day}}</option>
+                  {{#input.days}}
+                        <option value="{{value}}">{{text}}</option>
+                  {{/input.days}}
+            </select>
+      </div>
+      <div id="left" style="width: 40%">
+            <select style="width: 98%" name="{{input.birth_month}}"
+                  class="klarna-validate-select bmonth">
+                  <option value="00" disabled="disabled" selected="selected">{{lang.date_month}}</option>
+                  {{#input.months}}
+                        <option value="{{value}}">{{text}}</option>
+                  {{/input.months}}
+            </select>
+      </div>
+      <div id="right" style="width: 30%">
+            <select style="width: 100%" name="{{input.birth_year}}"
+                  class="klarna-validate-select byear">
+                  <option value="00" disabled="disabled" selected="selected">{{lang.date_year}}</option>
+                  {{#input.years}}
+                        <option value="{{value}}">{{text}}</option>
+                  {{/input.years}}
+            </select>
+      </div>
+</div>

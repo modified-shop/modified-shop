@@ -1,0 +1,65 @@
+.. |logo| image:: logo.png
+
+=====================
+Klarna PHP API |logo|
+=====================
+
+v2.1.3
+----------------
+Date: 2011-09-26
+
+* Fixed a minor conversion issue.
+
+v2.1.2
+----------------
+Date: 2011-09-12
+
+* Improved the MySQL and SQL storage modules
+
+    Added so you can pass an associative array to pcURI with the database info
+
+    Added support for dashes in the normal regexp handling
+
+    Fixed a rounding bug which requires a DROP TABLE and re-update of all PClasses
+
+* Fixed a minor issue regarding the debug and xmlrpcDebug settings
+
+* Added support for the ISO 3166-1 alpha-3 country codes
+
+
+v2.1.1
+----------------
+Date: 2011-09-06
+
+* Corrected a few issues in the phpDoc comments
+
+* Improved fetchPClasses, it is now possible to specify only country (as code or constant)
+
+* Changed the MySQL PClass storage's clear functionality to use DELETE FROM instead of DROP TABLE,
+  this is to prevent possible permission issues in the database
+
+* Various improvements and bug fixes
+
+v2.1.0
+----------------
+Date: 2011-08-19
+
+* Added support for stronger cryptographic hashes
+
+	The default is now SHA-512 instead of MD5
+
+* Experimental generic database storage using PDO
+
+* Added work arounds for issues with the XML-RPC library
+
+* Bug fix and additional sanity checks in getCheapestPClass
+
+* Debug mode uses FirePHP if available
+
+v2.0.0
+----------------
+Date: 2011-07-01
+
+* Initial release of 2.0 API
+
+* A complete rewrite using object oriented practices

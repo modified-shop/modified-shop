@@ -1,0 +1,6 @@
+.klarna_box_container.ie6,
+.klarna_box_container.ie7,
+.klarna_box_container.ie8,
+.klarna_box_container.ie9 {
+    width: 800px !important;
+}

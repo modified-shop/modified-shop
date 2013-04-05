@@ -32,6 +32,7 @@
 $module_smarty = new Smarty;
 
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_cart.php');
 
 
 // include needed functions
