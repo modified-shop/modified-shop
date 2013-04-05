@@ -1,0 +1,161 @@
+.klarna_PPBox {
+    max-width: 100%;
+    float: right;
+    text-align: right;
+    font-size: 11px;
+    height: 81px;
+    margin-bottom: 1em;
+}
+
+.klarna_PPBox .klarna_PPBox_inner {
+    width: 100%;
+    float: right;
+    min-width: 160px;
+}
+
+.klarna_PPBox .klarna_PPBox_top {
+    width: 100%;
+    float: right;
+    height: 35px;
+    z-index: 10;
+    cursor: pointer;
+    overflow: hidden; /* save some face when size get out of hand */
+}
+
+.klarna_PPBox .klarna_PPBox_bottom {
+    height: 1px;
+    overflow: visible;
+    position: relative;
+    width: 100%;
+    clear: both;
+    float: right;
+}
+
+.klarna_PPBox .klarna_PPBox_topLeft {
+    width: 32px;
+    height: 35px;
+    float: left;
+    background-repeat: no-repeat;
+}
+
+.klarna_PPBox .klarna_PPBox_topRight {
+    width: 6px;
+    height: 35px;
+    float: right;
+    background-repeat: no-repeat;
+}
+
+.klarna_PPBox .klarna_PPBox_topMid {
+    margin-left: 32px;
+    margin-right: 6px;
+    height: 35px;
+    background-repeat: repeat-x;
+    cursor: pointer;
+}
+
+.klarna_PPBox .klarna_PPBox_topMid span {
+    text-align: center;
+    float: right;
+    margin: 10px 0px 0px 0px !important;
+    width: 100%;
+}
+
+.klarna_PPBox .klarna_PPBox_topMid span label {
+    color: #009EDA;
+    padding: 0 2px 0 2px;
+    cursor: pointer;
+    float: none;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid {
+    max-height: 170px;
+    width: 100%;
+    float: right;
+    overflow: auto;
+    padding-top: 5px;
+    position: relative;
+    z-index: 10;
+    color: #FFFFFF;
+    background-repeat: repeat-x;
+    margin-top: -2px;
+    background-position: bottom;
+    display: none;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid table {
+    float: right;
+    width: 100%;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid table th {
+    border-bottom: 1px solid #FFFFFF;
+}
+
+.klarna_PPBox .klarna_PPBox_pricetag {
+    color: #009EDA;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid_readMore {
+    margin-top: 10px;
+    text-align: center !important;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid_readMore a {
+    width: 100%;
+    color: #FFFFFF;
+    text-decoration: underline;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid_readMore a:hover {
+    color: #FFFFFF;
+    text-decoration: none;
+}
+
+.klarna_PPBox .klarna_PPBox_pull {
+    width: 100%;
+    float: right;
+    height: 20px;
+    cursor: pointer;
+    margin-top: 4px;
+    position: static;
+    text-align: center !important;
+}
+
+#klarna_PPBox_pullDown {
+    clear: both;
+}
+
+.klarna_PPBox .nlBanner {
+    float: right;
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    clear: both;
+}
+.klarna_PPBox .nlBanner img {
+    width: 100%;
+    height: auto;
+}
+
+.klarna_PPBox_bottomMid table td {
+    border: none !important;
+    padding: 0px 2px 0px 2px;
+}
+
+.klarna_column_left {
+    text-align: left !important;
+    padding-left:2px !important;
+}
+
+.klarna_column_right {
+    text-align: right !important;
+    padding-right:2px !important;
+}
+
+#klarna_PPBox .bannerhook {
+    clear: both;
+    position: relative;
+    z-index: 5;
+}

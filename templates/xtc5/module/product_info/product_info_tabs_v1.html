@@ -15,6 +15,7 @@
 			<p class="taxandshippinginfo" style="white-space:nowrap">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</p>
 			{if $SHIPPING_NAME}<p class="shippingtime"><strong>{#text_shippingtime#}</strong>{if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if} {$SHIPPING_NAME}</p>
 			{/if}
+			{$KLARNA_PPBOX}
 			{if $PRODUCTS_VPE}
 			<div class="hrlightgrey"></div>{$PRODUCTS_VPE}{/if}
 			{if $MODULE_graduated_price !=''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}
