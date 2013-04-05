@@ -176,7 +176,7 @@ define('TXT_TOOLS','Tools');
 define('TEXT_ACCOUNTING','Admin-access for:');
 
 /******* SHOPGATE **********/
-include_once DIR_FS_EXTERNAL.'/shopgate/base/lang/english/admin/english.php';
+include_once DIR_FS_EXTERNAL.'shopgate/base/lang/english/admin/english.php';
 /******* SHOPGATE **********/
 
 // javascript messages
