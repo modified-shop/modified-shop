@@ -1,0 +1,51 @@
+<link rel="stylesheet" type="text/css" href="{{setup.path_css}}productprice/style.css" />
+<script type="text/javascript" src="{{setup.path_js}}productprice/klarna_pp.js"></script>
+<script type="text/javascript" src="https://static.klarna.com:444/external/js/klarnapart.js"></script>
+<script>
+    addKlarnaPartPaymentEvent(function() { InitKlarnaPartPaymentElements('klarna_partpayment', '{{input.eid}}', '{{input.country}}'); });
+    window.klarna_product = {
+        countryCode: '{{setup.countryCode}}',
+        sum: '{{setup.sum}}',
+        ajax_path: '{{setup.ajax_path}}'
+    };
+    if (typeof klarnaPP != "undefined") {
+        klarnaPP.product = new KlarnaProductInfo(klarna_product);
+    }
+</script>
+<div class="klarna_PPBox">
+    <div id="klarna_partpayment" style="display: none"></div>
+    <div class="klarna_PPBox_inner">
+         <div class="klarna_PPBox_top">
+            <div class="klarna_PPBox_topRight"></div>
+            <div class="klarna_PPBox_topLeft"></div>
+            <div class="klarna_PPBox_topMid">
+                  <p>{{lang.PPBOX_fromText}}<label>{{setup.currency_prefix}}{{input.defaultMonth}}{{setup.currency_suffix}}</label>{{lang.PPBOX_monthText}}{{setup.asterisk}}</p>
+            </div>
+         </div>
+         <div class="klarna_PPBox_bottom">
+              <div class="klarna_PPBox_bottomMid">
+                  <table cellpadding="0" cellspacing="0" width="100%" border="0">
+                      <thead>
+                          <tr>
+                              <th style="text-align: left">{{lang.PPBOX_th_month}}</th>
+                              <th style="text-align: right">{{lang.PPBOX_th_sum}}</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          {{input.monthTable}}
+                      </tbody>
+                  </table>
+                  <div class="klarna_PPBox_bottomMid_readMore">
+                      <a href="javascript:ShowKlarnaPartPaymentPopup();">{{lang.PPBox_readMore}}</a>
+                  </div>
+                <div class="klarna_PPBox_pull" id="klarna_PPBox_pullUp">
+                    <img src="{{setup.path_img}}productprice/pullUp.png" alt="More info" />
+                </div>
+              </div>
+         </div>
+        <div class="klarna_PPBox_pull" id="klarna_PPBox_pullDown">
+            <img src="{{setup.path_img}}productprice/pullDown.png" alt="More info" />
+        </div>
+    </div>
+    {{input.nlBanner}}
+</div>

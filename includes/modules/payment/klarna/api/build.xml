@@ -1,0 +1,154 @@
+<project name="PHP-API" default="tests">
+    <property name="props" location="build.properties" />
+    <property name="versionp" location="version.properties" />
+    <property name="git.tasks.macro" location="ant/git-tasks.xml" />
+    <property name="tasks" location="ant/tasks.xml" />
+    <property name="base" location="ant/base.xml" />
+
+    <property file="${props}" />
+    <property file="${versionp}" />
+    <import file="${tasks}" />
+    <import file="${git.tasks.macro}" />
+    <import file="${base}" />
+
+    <fileset dir="." id="alldirs">
+        <include name="Klarna.php" />
+        <include name="klarnaaddr.php" />
+        <include name="klarnacalc.php" />
+        <include name="klarnaconfig.php" />
+        <include name="klarnapclass.php" />
+        <include name="checkout/*.php" />
+        <include name="pclasses/*.php" />
+        <include name="examples/*.php" />
+
+        <include name="${xmlrpc.dir}/lib/**.*" />
+    </fileset>
+
+    <patternset id="source.xml">
+        <include name="**/*.xml" />
+        <exclude name="${build.dir}/**/*.xml" />
+        <exclude name="${install.dir}/**/*.xml" />
+        <exclude name="${xmlrpc.dir}/**/*.xml" />
+        <exclude name="phpunit/coverage/**.xml" />
+    </patternset>
+
+    <patternset id="source.php">
+        <include name="**/*.php" />
+        <include name="**/*.inc" />
+        <exclude name="${build.dir}/**/*.php" />
+        <exclude name="${install.dir}/**/*.php" />
+        <exclude name="${build.dir}/**/*.inc" />
+        <exclude name="${install.dir}/**/*.inc" />
+        <exclude name="${xmlrpc.dir}/**/*" />
+        <exclude name="phpunit/coverage/**/*" />
+    </patternset>
+
+    <patternset id="source.js">
+        <include name="**/*.js" />
+        <exclude name="${build.dir}/**/*.js" />
+        <exclude name="${install.dir}/**/*.js" />
+        <exclude name="${xmlrpc.dir}/**/*.js" />
+        <exclude name="phpunit/coverage/**.js" />
+    </patternset>
+
+    <patternset id="source">
+        <patternset refid="source.js" />
+        <patternset refid="source.php" />
+        <patternset refid="source.xml" />
+    </patternset>
+
+    <target name="install" description="Creates the binary/run-time folder" depends="get-xmlrpc">
+        <!-- Copy the files (cannot do this direct with the zip task) -->
+        <copy todir="${install.dir}">
+            <fileset refid="alldirs" />
+        </copy>
+
+        <replace-ver-n-date dir="${install.dir}">
+            <fileset refid="alldirs" />
+        </replace-ver-n-date>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="init" depends="clean">
+        <antcall target="check" />
+    </target>
+
+    <target name="coverage">
+        <delete file="${unit.coverage.uri}" />
+        <delete file="${unit.junit=phpunit/junit-log.xml}" />
+        <php-coverage dest="${unit.coverage.uri}" type="${unit.coverage.type}"
+            src="${unit.dir}" conf="${unit.conf}" log="${unit.junit}"
+            bootstrap="phpunit/bootstrap.php" />
+    </target>
+
+    <target name="unittests">
+        <!--This breaks, will use tests and coverage instead in hudson -->
+        <phpunit conf="${unit.conf}" />
+    </target>
+
+    <target name="check" depends="check-php, check-xml, check-js" />
+
+    <target name="check-php">
+        <phplint>
+            <files>
+                <fileset dir=".">
+                    <patternset refid="source.php" />
+                </fileset>
+            </files>
+        </phplint>
+    </target>
+
+    <target name="check-xml">
+        <xmllint>
+            <files>
+                <fileset dir=".">
+                    <patternset refid="source.xml" />
+                </fileset>
+            </files>
+        </xmllint>
+    </target>
+
+    <target name="check-js">
+        <jslint>
+            <files>
+                <fileset dir=".">
+                    <patternset refid="source.js" />
+                </fileset>
+            </files>
+        </jslint>
+    </target>
+
+	<target name="check-xmlrpc">
+		<available file="${xmlrpc.path}" property="xmlrpc.present" />
+	</target>
+
+    <target name="get-xmlrpc" depends="check-xmlrpc" unless="xmlrpc.present">
+        <!-- Download the PHPXMLRPC library -->
+        <mkdir dir="transport" />
+        <get dest="." src="${xmlrpc.url}" />
+        <unzip dest="${xmlrpc.path}" src="${xmlrpc.zip}" overwrite="yes" />
+        <delete file="${xmlrpc.zip}" />
+
+        <echo message="XMLRPC downloaded." />
+    </target>
+
+    <target name="replace-ver-n-date" description="Replaces version and date token">
+        <!-- Replace version token with version number -->
+        <replace dir="${install.dir}" token="${build.version.token}" value="${version}" />
+
+        <!-- Replace release token with release timestamp -->
+        <replace dir="${install.dir}" token="${build.datestamp}" value="${build.date}" />
+
+        <echo message="Tokens for version and date replaced with correct values." />
+    </target>
+
+    <target name="create-doc" description="Creates the phpDoc for this project">
+        <php-doc title="${doc.title}" dest="${doc.dir}" files="${doc.files}" />
+
+        <!-- If a <a name="class.php"></a> exists in errors.html, something went wrong -->
+        <!-- Should we fail on that? -->
+    </target>
+</project>

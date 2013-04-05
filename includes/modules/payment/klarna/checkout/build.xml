@@ -1,0 +1,203 @@
+<project name="Project-Name" default="tests">
+    <property name="props" location="build.properties" />
+    <property name="versionp" location="version.properties" />
+    <property name="git.tasks.macro" location="ant/git-tasks.xml"/>
+    <property name="tasks" location="ant/tasks.xml"/>
+    <property name="base" location="ant/base.xml"/>
+
+    <property file="${props}" />
+    <property file="${versionp}" />
+    <import file="${tasks}" />
+    <import file="${git.tasks.macro}" />
+    <import file="${base}" />
+
+    <patternset id="mergetrail">
+        <exclude name="**/*BACKUP*" />
+        <exclude name="**/*BASE*" />
+        <exclude name="**/*LOCAL*" />
+        <exclude name="**/*REMOTE*" />
+    </patternset>
+
+    <patternset id="source.php">
+        <patternset refid="mergetrail" />
+        <include name="**/*.php" />
+    </patternset>
+
+    <patternset id="source.data">
+        <patternset refid="mergetrail" />
+        <include name="*.xml" />
+    </patternset>
+
+    <patternset id="source.html">
+        <patternset refid="mergetrail" />
+        <include name="**/*.html" />
+        <include name="**/*.xml" />
+    </patternset>
+
+    <patternset id="source.img">
+        <patternset refid="mergetrail" />
+        <include name="**/*.jpg" />
+        <include name="**/*.png" />
+        <include name="**/*.gif" />
+    </patternset>
+
+    <patternset id="source.js">
+        <patternset refid="mergetrail" />
+        <include name="**/*.js" />
+    </patternset>
+
+    <patternset id="source.css">
+        <patternset refid="mergetrail" />
+        <include name="**/*.css" />
+    </patternset>
+
+    <patternset id="source">
+        <patternset refid="mergetrail" />
+        <patternset refid="source.php" />
+        <patternset refid="source.data" />
+        <patternset refid="source.html" />
+        <patternset refid="source.css" />
+        <patternset refid="source.js" />
+    </patternset>
+
+    <patternset id="demo">
+        <patternset refid="mergetrail" />
+        <include name="klarnaAjax.php" />
+        <include name="index.php" />
+        <include name="css/demo.css" />
+        <include name="inc.config.php" />
+    </patternset>
+
+    <target name="install" description="Creates the binary/run-time folder">
+        <property name="img.dir" location="${install.dir}/" />
+        <property name="js.dir" location="${install.dir}/js/" />
+        <property name="css.dir" location="${install.dir}/" />
+        <property name="html.dir" location="${install.dir}/html" />
+        <property name="data.dir" location="${install.dir}/data" />
+        <property name="class.dir" location="${install.dir}/classes" />
+
+        <antcall target="fetch-translations" />
+
+        <copy todir="${img.dir}">
+            <fileset dir="media">
+                <patternset refid="source.img" />
+            </fileset>
+        </copy>
+
+        <copy todir="${js.dir}">
+            <fileset dir="media">
+                <patternset refid="source.js" />
+            </fileset>
+        </copy>
+
+        <copy todir="${css.dir}">
+            <fileset dir="media">
+                <patternset refid="source.css" />
+            </fileset>
+        </copy>
+
+        <copy todir="${html.dir}">
+            <fileset dir="html">
+                <patternset refid="source.html" />
+            </fileset>
+        </copy>
+
+        <copy todir="${data.dir}">
+            <fileset dir="data">
+                <patternset refid="source.data" />
+            </fileset>
+        </copy>
+
+        <copy todir="${class.dir}">
+            <fileset dir="classes">
+                <patternset refid="source.php" />
+            </fileset>
+        </copy>
+
+        <replace-ver-n-date dir="${class.dir}">
+            <fileset dir="${class.dir}">
+                <patternset refid="source.php" />
+            </fileset>
+        </replace-ver-n-date>
+    </target>
+
+    <target name="install-demo">
+        <antcall target="install" />
+        <ant antfile="build.xml" dir="${api.dir}"
+            target="get-xmlrpc" inheritAll="false">
+            <property name="xmlrpc.path" location="${api.dir}/transport" />
+        </ant>
+        <antcall target="install-api" />
+        <copy todir="${install.dir}">
+            <fileset dir="." id="demo files">
+                <patternset refid="demo" />
+            </fileset>
+        </copy>
+    </target>
+
+    <target name="clone-api">
+        <git-clone-pull
+            repository="gitolite@msgit.internal.machines:php-api"
+            dest="api" />
+    </target>
+
+    <target name="fetch-translations">
+        <mkdir dir="data" />
+        <exec executable="wget">
+            <arg value="--no-check-certificate" />
+            <arg value="https://msbo.internal.machines/api/xmllanguage/ant/${translation.version}" />
+            <arg value="-O" />
+            <arg value="data/language.xml" />
+        </exec>
+    </target>
+
+    <target name="coverage">
+        <delete file="${unit.coverage.uri}" />
+        <delete file="${unit.junit=phpunit/junit-log.xml}" />
+        <php-coverage dest="${unit.coverage.uri}" type="${unit.coverage.type}"
+            src="${unit.dir}" conf="${unit.conf}" log="${unit.junit}" />
+    </target>
+
+    <target name="unittests" depends="clone-api, fetch-translations">
+        <phpunit conf="${unit.conf}" />
+    </target>
+
+    <target name="check" depends="check-php, check-xml, check-js" />
+
+    <target name="check-php">
+        <!--<phplint>
+            <files>
+                <fileset dir=".">
+                    <include name="classes/**/*.php" />
+                    <patternset refid="demo"/>
+                </fileset>
+            </files>
+        </phplint> -->
+    </target>
+
+    <target name="check-xml">
+       <!-- <xmllint>
+            <files>
+                <fileset dir=".">
+                    <patternset refid="source.data"/>
+                </fileset>
+            </files>
+        </xmllint> -->
+    </target>
+
+    <target name="check-js">
+      <!--  <jslint>
+            <files>
+                <fileset dir="media">
+                    <patternset refid="source.js"/>
+                </fileset>
+            </files>
+        </jslint> -->
+    </target>
+
+    <target name="list-authors">
+        <git-authors />
+        <echo>${authors}</echo>
+    </target>
+
+</project>

@@ -1,0 +1,19 @@
+<div style="clear: both;"></div>
+<ol class="paymentPlan">
+{{#pclasses.table}}
+    <li>
+        <label for="klarna_pclass_{{id}}">
+            <input name="{{pclassInputName}}" value="{{id}}" type="radio" id="klarna_pclass_{{id}}" {{#default}}checked="checked"{{/default}}>
+            <div>
+                <span>
+                    <span class="klarna_pclass_selected"></span>
+                    {{{description}}}{{#cost}} - {{cost}} {{lang.per_month}}{{/cost}}
+                </span>
+            </div>
+        </label>
+    </li>
+{{/pclasses.table}}
+</ol>
+{{#config.nlBanner}}
+    <img class="nlbanner" src="{{config.nlBanner}}" />
+{{/config.nlBanner}}

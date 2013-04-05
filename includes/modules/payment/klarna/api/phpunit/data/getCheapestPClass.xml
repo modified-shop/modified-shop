@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<klarna>
+  <estore id="1029">
+    <pclass pid="390" type="1">
+      <description>Konto</description>
+      <months>24</months>
+      <startfee>0</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>19.5</interestrate>
+      <minamount>1</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="362" type="0">
+      <description>24 m&amp;#229;n</description>
+      <months>24</months>
+      <startfee>295</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>9.95</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="112" type="0">
+      <description>12 m&amp;#229;n</description>
+      <months>12</months>
+      <startfee>295</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>0</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="137" type="0">
+      <description>6 m&amp;#229;n</description>
+      <months>6</months>
+      <startfee>195</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>0</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="136" type="0">
+      <description>3 m&amp;#229;n</description>
+      <months>3</months>
+      <startfee>95</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>0</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="665" type="2">
+      <description>Handla nu - Betala i Mars</description>
+      <months>0</months>
+      <startfee>29</startfee>
+      <invoicefee>0</invoicefee>
+      <interestrate>0</interestrate>
+      <minamount>1</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="666" type="3">
+      <description>300 SEK/m&amp;#229;n</description>
+      <months>0</months>
+      <startfee>0</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>0</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+  </estore>
+</klarna>
