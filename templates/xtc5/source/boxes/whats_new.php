@@ -26,7 +26,6 @@ $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_random_select.inc.php');
-require_once (DIR_FS_INC.'xtc_get_products_name.inc.php');
 
 // query restrictions
 $fsk_lock = ($_SESSION['customers_status']['customers_fsk18_display'] == '0') ? 'AND p.products_fsk18 != 1': '';
