@@ -1,0 +1,541 @@
+@CHARSET "ISO-8859-1";
+
+/**
+ * GREEN BALOON
+ */
+.klarna_baloon
+{
+    width: 210px;
+    position: absolute;
+    z-index: 100;
+}
+
+.klarna_baloon_top
+{
+    width: 100%;
+    height: 14px;
+
+    background-image: url(baloon/green_full.png);
+    background-repeat: no-repeat;
+    background-position: 0 top;
+}
+
+.klarna_baloon_middle
+{
+    width: 100%;
+    min-height: 30px;
+
+    background-image: url(baloon/green_middle.png);
+    background-repeat: repeat-y;
+}
+
+.klarna_baloon_middle div
+{
+    color: #FFF;
+    font-size: 11px;
+    margin: 0px 24px 0px 5px;
+    padding-bottom: 5px;
+    position: relative;
+    font-family: Arial, Verdana, Helvetica;
+}
+
+.klarna_baloon_bottom
+{
+    width: 100%;
+    height: 25px;
+
+    background-image: url(baloon/green_full.png);
+    background-repeat: no-repeat;
+    background-position: 0 bottom;
+}
+/**
+ * GREEN END BALOON
+ */
+
+ /**
+ * RED BALOON
+ */
+.klarna_red_baloon
+{
+    width: 210px;
+    position: absolute;
+    z-index: 101;
+}
+
+.klarna_fading_baloon {
+    opacity: .2;
+}
+.klarna_fading_baloon:hover {
+    opacity: 1;
+}
+
+.klarna_red_baloon_top
+{
+    width: 100%;
+    height: 14px;
+
+    background-image: url(baloon/red_full.png);
+    background-repeat: no-repeat;
+    background-position: 0 top;
+}
+
+.klarna_red_baloon_middle
+{
+    width: 100%;
+    min-height: 30px;
+
+    background-image: url(baloon/red_middle.png);
+    background-repeat: repeat-y;
+}
+
+.klarna_red_baloon_middle div
+{
+    color: #FFF;
+    font-size: 11px;
+    margin: 0px 24px 0px 5px;
+    padding-bottom: 5px;
+    position: relative;
+    font-family: Arial, Verdana, Helvetica;
+}
+
+.klarna_red_baloon_bottom
+{
+    width: 100%;
+    height: 25px;
+
+    background-image: url(baloon/red_full.png);
+    background-repeat: no-repeat;
+    background-position: 0 bottom;
+}
+/**
+ * RED END BALOON
+ */
+
+ /**
+ * BLUE BALOON
+ */
+.klarna_blue_baloon
+{
+    width: 210px;
+    position: absolute;
+    z-index: 101;
+}
+
+.klarna_blue_baloon_top
+{
+    width: 100%;
+    height: 14px;
+
+    background-image: url(baloon/blue_full.png);
+    background-repeat: no-repeat;
+    background-position: 0 top;
+}
+
+.klarna_blue_baloon_middle
+{
+    width: 100%;
+    min-height: 30px;
+
+    background-image: url(baloon/blue_middle.png);
+    background-repeat: repeat-y;
+}
+
+.klarna_blue_baloon_middle div
+{
+    color: #FFF;
+    font-size: 11px;
+    margin: 0px 24px 0px 5px;
+    padding-bottom: 5px;
+    position: relative;
+    font-family: Arial, Verdana, Helvetica;
+}
+
+.klarna_blue_baloon_bottom
+{
+    width: 100%;
+    height: 25px;
+
+    background-image: url(baloon/blue_full.png);
+    background-repeat: no-repeat;
+    background-position: 0 bottom;
+}
+/**
+ * BLUE END BALOON
+ */
+
+.klarna_box
+{
+    border: 1px solid #7BA7C9;
+
+    width: 100%;
+    background-color: #FFFFFF;
+    display: inline-block;
+}
+
+/**
+ * TOP of box
+ */
+.klarna_box_top
+{
+    height: 65px;
+    width: 100%;
+    position: relative;
+}
+
+.klarna_box_top img
+{
+    padding: 5px;
+}
+
+.klarna_box_top_agreement
+{
+    float: right;
+    margin: 10px;
+    height: 40px;
+    color: #3FC7F3;
+    margin-right: 53px;
+
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+}
+
+.klarna_box_top_agreement a
+{
+    color: #3FC7F3;
+    text-decoration: underline;
+}
+
+.klarna_box_top_agreement a:hover
+{
+    text-decoration: none;
+}
+
+.box_active_language {
+    cursor: pointer;
+}
+
+.klarna_box_top_flag {
+    right: 0;
+    display: block;
+    width: 42px;
+    background-color: #F9F9F9;
+    border: 1px solid #EAEAEA;
+    padding: 0px;
+    margin: 5px 5px 2px 2px;
+    position: absolute;
+    z-index: 10;
+    opacity:0.4;
+    filter:alpha(opacity=40);
+}
+
+.klarna_box_top_flag img {
+    cursor: pointer;
+}
+
+.klarna_box_top_flag_list
+{
+    display: none;
+    font-size: 11px;
+    width: 100%;
+    border-top: 1px solid #EAEAEA;
+    background-color: #F1F1F1;
+}
+
+.klarna_box_bottom_languageInfo
+{
+    padding: 3px;
+    position: absolute;
+    width: 22px;
+    right: 10px;
+    margin-top: 15px;
+    z-index: 9;
+    display: none;
+}
+
+/**
+ * Bottom of box
+ */
+.klarna_box_bottom
+{
+    width: 100%;
+    min-height: 250px;
+    display: inline-block;
+}
+
+/**
+ * Payment plan selection
+ */
+.klarna_box_bottom ol.paymentPlan
+{
+    width: 100%;
+    background-color: #F9F9F9;
+    border-top: 1px solid #BDBDBD;
+    border-left: 1px solid #BDBDBD;
+    border-right: 1px solid #BDBDBD;
+    overflow: none;
+    list-style: none;
+
+    margin: 2px 0 0 0;
+    padding: 0;
+}
+
+.klarna_box_bottom ol.paymentPlan li
+{
+    width: 100%;
+    background-color: #F9F9F9;
+    border-bottom: 1px solid #BDBDBD;
+    list-style: none;
+
+    margin: 0;
+    height: 21px;
+
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #000000;
+    cursor: pointer;
+}
+
+.klarna_box_bottom ol.paymentPlan li:hover
+{
+    background-color: #F1F1F1;
+}
+
+.klarna_box_bottom ol.paymentPlan li.click
+{
+    background-color: #FFFFFF;
+}
+
+.klarna_box_bottom ol.paymentPlan li div
+{
+    padding: 3px;
+}
+
+.klarna_box_bottom ol.paymentPlan li img
+{
+    display: none;
+    float: right;
+    position: relative;
+    margin: 3px;
+}
+
+.klarna_box_bottom ol.paymentPlan li.click img {
+    display: block;
+}
+
+.klarna_box_bottom input
+{
+    height: 21px;
+    border: 1px solid #BDBDBD;
+
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #000000;
+
+    padding: 0;
+    margin: 2px 0 5px 0;
+}
+
+.klarna_box_bottom select
+{
+    height: 21px;
+    border: 1px solid #BDBDBD;
+
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #000000;
+
+    padding: 0;
+    margin: 2px 0 5px 0;
+}
+
+.klarna_box_bottom select option, .klarna_box_ilt_question select option
+{
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #000000;
+}
+
+.klarna_box_bottom input.Klarna_fullwidth, .klarna_box_bottom input.Klarna_pnoInputField
+{
+    width: 100%;
+}
+
+.klarna_box_bottom input.Klarna_radio
+{
+    border: 0;
+    float: left;
+    height: 21px;
+    margin: 0;
+}
+
+.klarna_box_bottom_content_listPriceInfo
+{
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 10px;
+    color: #666666;
+    font-style: italic;
+}
+
+.klarna_box_bottom_radio_title
+{
+    height: 21px;
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #666666;
+    font-weight: normal;
+    text-align: left;
+    margin: 2px 10px 0px 5px;
+    float: left;
+}
+
+.klarna_box_bottom_contents
+{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    display: inline-block;
+}
+
+.klarna_box_bottom_left
+{
+    width: 41%;
+    float: left;
+}
+
+.klarna_box_bottom_content
+{
+    padding: 10px;
+    position: relative;
+}
+
+.klarna_box_bottom_address
+{
+    background-color: #EAF6FF;
+    border: 1px solid #7BA7C9;
+    width: 100%;
+    margin: 2px 0 5px 0;
+}
+
+.klarna_box_bottom_address_title
+{
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #666666;
+    font-weight: bold;
+    text-align: left;
+    width: 100%;
+    display: table;
+    padding: 5px;
+}
+
+.klarna_box_bottom_address_content
+{
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #666666;
+    font-weight: normal;
+    text-align: left;
+    width: 100%;
+    display: table;
+    padding: 5px;
+}
+
+.klarna_box_bottom_address_content p
+{
+    padding: 0;
+    margin: 0;
+}
+
+.klarna_box_bottom_content_loader
+{
+    position: absolute;
+    z-index: 9;
+    right: 11px;
+    margin-top: 5px;
+    display: none;
+}
+
+.klarna_box_bottom_title
+{
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #666666;
+    font-weight: bold;
+    text-align: left;
+    width: 100%;
+    display: table;
+}
+
+.klarna_box_bottom_input_combo
+{
+    width: 100%;
+    display: table;
+}
+
+.klarna_box_bottom_input_combo div#left
+{
+    float: left;
+}
+
+.klarna_box_bottom_input_combo div#right
+{
+    float: right;
+}
+
+.klarna_box_bottom_right
+{
+    width: 59%;
+    float: right;
+}
+
+.klarna_box_ilt {
+    float: right;
+    text-align: right;
+    display: none;
+}
+
+.klarna_box_ilt_question {
+    display: inline-block;
+    min-width: 500px;
+    margin-bottom: 8px;
+}
+
+.klarna_box_ilt_question_div {
+
+    margin-right: 300px;
+    margin-top: 3px;
+}
+
+.klarna_box_ilt_question select {
+    float: right;
+    width: 150px;
+    margin-right: 10px;
+    margin-left: 10px;
+    border: 1px solid #BDBDBD;
+    height: 21px;
+}
+
+.klarna_box_ilt_title, .klarna_box_ilt_question div
+{
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #666666;
+    font-weight: bold;
+}
+
+.klarna_box_ilt_title
+{
+    margin: 0 0 10px 3px;
+    float: right;
+    display: table;
+    min-width: 58%;
+    text-align: left;
+}
+
+.klarna_additional_information {
+    font-family: Arial, Verdana, Helvetica;
+    font-size: 12px;
+    color: #666666;
+    font-weight: bold;
+    float: right;
+}

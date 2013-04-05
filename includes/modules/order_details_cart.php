@@ -36,6 +36,7 @@ $module_smarty->caching = false; //DokuMan - 2012-10-30 - avoid Smarty caching i
 $module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 //$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 //EOF - GTB - 2010-08-03 - Security Fix - Base
+include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_cart.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_check_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');

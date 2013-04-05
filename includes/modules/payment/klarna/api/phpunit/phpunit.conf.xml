@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+    convertErrorsToExceptions="true"
+    verbose="true"
+    strict="true">
+    <testsuite name="All tests">
+        <file>phpunit/digestTest.php</file>
+        <file>phpunit/KlarnaAddrTest.php</file>
+        <file>phpunit/KlarnaCalcTest.php</file>
+        <file>phpunit/KlarnaConfigTest.php</file>
+        <file>phpunit/KlarnaEncodingTest.php</file>
+        <file>phpunit/KlarnaMockTest.php</file>
+        <file>phpunit/KlarnaPClassTest.php</file>
+        <file>phpunit/KlarnaTestILT.php</file>
+        <file>phpunit/KlarnaTest.php</file>
+        <file>phpunit/pclasses/jsonstorageTest.php</file>
+        <file>phpunit/pclasses/sqlstorageTest.php</file>
+        <file>phpunit/pclasses/xmlstorageTest.php</file>
+    </testsuite>
+</phpunit>

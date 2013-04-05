@@ -1,0 +1,110 @@
+body {
+	font-family: "Trebuchet MS";
+	font-size: 12px;
+	background: #ccc;
+}
+
+a {
+	color: #0f6f93;
+	text-decoration: none;
+}
+a:hover {
+	text-decoration: underline;
+}
+
+h2 {
+	margin-bottom: 5px;
+}
+
+th {
+	text-align: left;
+	font-size: 14px;
+}
+
+ul.numbered {
+	list-style-type: decimal;
+}
+ul.numbered li {
+	margin-bottom: 14px;
+}
+div#container {
+	width: 1000px;
+	margin: 30px auto;
+}
+div#inner-container {
+	background-color: #FFF;
+	padding: 5px;
+	margin-bottom: 5px;
+}
+
+div#header {
+	padding: 20px 20px 0 20px;
+	background-color: #fff;
+	color: #000;
+}
+div#header h1 {
+	margin: 0;
+	color: #000;
+	font-size: 25px;
+	padding-left: 58px;
+}
+
+div#logotyp {
+	background: url('../images/klarna.png');
+	width: 231px;
+	height: 50px;
+}
+
+div.box {
+	float: left;
+	padding: 1px;
+	border: 1px #ccc solid;
+	width: 300px;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+div.box h2 {
+	margin-top: 0;
+}
+div.box-inner {
+	background-color: #eee;
+	padding: 10px;
+	height: 120px;
+	overflow: auto;
+}
+div.box-link {
+	background-color: #eee;
+	padding: 10px;
+	height: 20px;
+	text-align: right;
+	font-size: 18px;
+}
+
+div#content {
+	padding: 0px 20px 20px 20px;
+}
+
+div#footer {
+	padding-left: 5px;
+}
+
+.clear {
+	clear: both;
+}
+
+.error {
+	padding: 10px;
+	border: 1px #d90d0d solid;
+	color: #d90d0d;
+	background-color: #f3afaf;
+	margin-bottom: 10px;
+}
+
+.success {
+	padding: 10px;
+	border: 1px #009407 solid;
+	color: #000;
+	background-color: #96d999;
+	margin-bottom: 10px;
+}
+

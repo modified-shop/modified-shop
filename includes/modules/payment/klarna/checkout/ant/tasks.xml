@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+<macrodef name="replace-ver-n-date" description="Replaces version and date token">
+    <attribute name="dir" />
+    <element name="fileset" />
+    <sequential>
+        <!-- Replace version/ release / build number token with respective values
+             -->
+        <replace dir="@{dir}" token="${build.version.token}" value="${version}">
+            <replacefilter
+                token="${build.version.token}"
+                value="${version}" />
+            <replacefilter
+                token="${build.date.token}"
+                value="${build.date}" />
+            <replacefilter
+                token="${build.number.token}"
+                value="${build.version.build}" />
+            <fileset />
+        </replace>
+    </sequential>
+</macrodef>
+
+<macrodef name="strip-todo">
+    <element name="files" />
+    <sequential>
+        <apply executable="sed" failonerror="true" parallel="true" >
+            <arg value="-i" />
+            <arg value="s:\s*//\s*@*TODO.*$::i ; s:/\*\s*@*TODO[^\*]*\*/::i ; s:\(\s*\*\)\s*@*TODO.*$:\1:i" />
+            <files />
+        </apply>
+    </sequential>
+</macrodef>
+
+<macrodef name="check-fixme">
+    <element name="files" />
+    <sequential>
+        <apply executable="grep" failonerror="false" parallel="true"
+            resultproperty="ret">
+            <arg value="-i" />
+            <arg value="FIXME" />
+            <files />
+        </apply>
+        <fail message="build contains FIXMEs ${ret}!)">
+            <condition>
+                <not>
+                    <equals arg1="${ret}" arg2="1" />
+                </not>
+            </condition>
+        </fail>
+    </sequential>
+</macrodef>
+
+<!--
+sudo apt-get install googlecl
+It is required that you login via the displayed link.
+(can we automate that in hudson?)
+ -->
+<macrodef name="google-docs-get">
+    <attribute name="title" />
+    <attribute name="format" default="pdf" />
+    <sequential>
+        <exec executable="google" failonerror="true" failifexecutionfails="true">
+            <arg value="docs" />
+            <arg value="get" />
+            <arg value="--format=@{format}" />
+            <arg value="--title" />
+            <arg value="@{title}" />
+        </exec>
+    </sequential>
+</macrodef>
+
+<macrodef name="phplint">
+    <attribute name="dest" />
+    <attribute name="globs" default="**/*.php"
+        description="comma separated list of patterns" />
+    <sequential>
+        <apply executable="php" failonerror="true">
+            <arg value="-l" />
+            <fileset dir="@{dest}" casesensitive="yes" includes="@{globs}">
+            </fileset>
+        </apply>
+    </sequential>
+</macrodef>
+
+<macrodef name="xmllint">
+    <attribute name="dest" />
+    <attribute name="globs" default="**/*.xml,**/*.xsd"
+        description="comma separated list of patterns" />
+    <sequential>
+        <apply executable="xmllint" failonerror="true">
+            <arg value="--noout" />
+            <fileset dir="@{dest}" casesensitive="yes" includes="@{globs}" />
+        </apply>
+    </sequential>
+</macrodef>
+
+<!--
+    http://www.javascriptlint.com/download/jsl-0.3.0-src.tar.gz
+
+    tar -xvf jsl...
+    make -f Makefile.ref
+    cd /usr/local/bin
+    ln -s wherever/jsl-0.3.0/SOME_DIR.OBJ/jsl (some .OBJ folder)
+ -->
+<macrodef name="jslint">
+    <attribute name="dest" />
+    <attribute name="globs" default="**/*.js"
+        description="comma separated list of patterns" />
+    <attribute name="exglobs" default="**phpunit/**"
+        description="comma separated list of patterns" />
+    <sequential>
+        <apply executable="jsl" failonerror="true">
+            <arg value="-conf" />
+            <arg value="ant/jslint.conf" />
+            <arg value="-nologo" />
+            <arg value="-process" />
+            <fileset dir="@{dest}" casesensitive="yes"
+                includes="@{globs}" excludes="@{exglobs}"/>
+        </apply>
+    </sequential>
+</macrodef>
+
+
+<!--
+    pip install pep8
+!-->
+<macrodef name="pep8">
+    <attribute name="dest" />
+    <attribute name="globs" default="**/*.py"
+        description="comma separated list of patterns" />
+    <sequential>
+        <apply executable="pep8" failonerror="true" parallel="true" >
+            <arg value="--ignore=W191" />
+            <fileset dir="@{dest}" casesensitive="yes" includes="@{globs}" />
+        </apply>
+    </sequential>
+</macrodef>
+
+<macrodef name="phpunit">
+    <attribute name="conf" />
+    <sequential>
+        <exec executable="phpunit" failonerror="true"
+            failifexecutionfails="true">
+            <arg line="-c @{conf}" />
+        </exec>
+    </sequential>
+</macrodef>
+
+<macrodef name="php-coverage">
+    <attribute name="src" default="." />
+    <attribute name="dest" />
+    <attribute name="type" default="clover" />
+    <attribute name="log" />
+    <attribute name="conf" />
+    <sequential>
+        <exec executable="phpunit" failonerror="true"
+            failifexecutionfails="true">
+            <arg line="-d memory_limit=256M" />
+            <arg line="-c @{conf}" />
+            <arg line="--coverage-@{type} @{dest}" />
+            <arg line="--log-junit @{log}" />
+        </exec>
+    </sequential>
+</macrodef>
+
+<!--
+    sudo yum install phpdoc
+    sudo apt-get install phpdoc ?
+    (alt. look at http://sourceforge.net/projects/phpdocu/)
+-->
+<macrodef name="php-doc">
+    <attribute name="title" />
+    <attribute name="dest" default="./doc" />
+    <attribute name="files" />
+    <sequential>
+        <exec executable="phpdoc" failonerror="true" failifexecutionfails="true">
+            <arg line="-ue on" />
+            <arg line="--title '@{title}'" /> <!-- e.g. Klarna PHP 2.0 API Documentation -->
+            <arg line="--target @{dest}" />
+            <arg line="--filename @{files}" /> <!-- file,file2,etc -->
+            <arg line="--sourcecode" />
+            <arg line="--javadocdesc" />
+        </exec>
+    </sequential>
+</macrodef>
+
+</project>

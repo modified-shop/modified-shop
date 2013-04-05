@@ -45,6 +45,7 @@ if (!is_object($product) || !$product->isProduct()) {
 
   $info_smarty = new Smarty;
   $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+  include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_price.php'); // Klarna payment module integration
 
   // defaults
   $hide_qty = 0;
