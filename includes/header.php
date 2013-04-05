@@ -325,12 +325,6 @@ echo '<body onload="resize();"> ';
 echo '<body>';
 }
 
-/******** SHOPGATE **********/
-if (isset($shopgateMobileHeader)) {
-  echo $shopgateMobileHeader;
-}
-/******** SHOPGATE **********/
-
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE=='true') {
 ?>
