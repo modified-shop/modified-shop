@@ -66,7 +66,7 @@ echo ('</ul>');
 echo ('</li>');
 
 /******** SHOPGATE **********/
-include_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'/external/shopgate/base/admin/includes/column_left.php');
+include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');
 /******** SHOPGATE **********/
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster

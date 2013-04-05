@@ -277,12 +277,6 @@ function resize() {
 <body<?php if(strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) echo ' onload="resize();"'; ?>>
 <?php
 
-/******** SHOPGATE **********/
-if (isset($shopgateMobileHeader)) {
-  echo $shopgateMobileHeader;
-}
-/******** SHOPGATE **********/
-
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE=='true') { ?>
 <script type="text/javascript"><!--
