@@ -156,6 +156,10 @@ if (($_SESSION['account_type'] == 1) && (DELETE_GUEST_ACCOUNT == 'true')) {
 }
 //EOF - DokuMan - 2010-05-20 - Move guest deletion from logoff to checkout_success
 
+//BOF - Dokuman - 2012-06-19 - BILLSAFE payment module
+echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'"); </script>';
+//EOF - Dokuman - 2012-06-19 - BILLSAFE payment module
+
 $smarty->assign('language', $_SESSION['language']);
 //BOF - DokuMan - 2010-08-31 - PAYMENT_BLOCK not needed in checkout success
 //$smarty->assign('PAYMENT_BLOCK', $payment_block);
