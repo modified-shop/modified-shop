@@ -1352,6 +1352,13 @@ float:left;
 div.checkoutInfoBoxes  a.more_info{
 color: red!important;
 }
+div.checkoutInfoBoxesLarge{
+width:910px;
+border: 0px solid #a3a3a3;
+padding:5px;
+margin-right:0px;
+float:left;
+}
 div.checkoutNavBoxes{
 width:438px;
 border: 1px solid #a3a3a3;
