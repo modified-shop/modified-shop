@@ -245,11 +245,11 @@ class KlarnaConstant
     {
         switch ($option) {
         case KiTT::PART:
-            return (strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS) == 'true');
+            return (defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS')?strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS) == 'true':false);
         case KiTT::SPEC:
-            return (strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_STATUS) == 'true');
+            return (defined('MODULE_PAYMENT_KLARNA_SPECCAMP_STATUS')?strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_STATUS) == 'true':false);
         case KiTT::INVOICE:
-            return (strtolower(MODULE_PAYMENT_KLARNA_INVOICE_STATUS) == 'true');
+            return (defined('MODULE_PAYMENT_KLARNA_INVOICE_STATUS')?strtolower(MODULE_PAYMENT_KLARNA_INVOICE_STATUS) == 'true':false);
         default:
             return false;
         }
