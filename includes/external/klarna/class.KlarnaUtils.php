@@ -135,7 +135,7 @@ class KlarnaUtils
         $version = KlarnaCore::getCurrentVersion();
         $latest = @file_get_contents($sURL);
         $templateLoader = KiTT::templateLoader(KiTT::Locale($this->_country));
-
+     /*
         if (version_compare($latest, $version, '>')) {
             $latestVersion = $templateLoader->load('newversion.mustache');
             echo $latestVersion->render(
@@ -144,7 +144,7 @@ class KlarnaUtils
                     'latest' => $latest
                 )
             );
-        }
+        }     */
     }
 
     /**
