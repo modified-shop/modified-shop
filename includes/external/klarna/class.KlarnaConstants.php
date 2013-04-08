@@ -195,17 +195,17 @@ class KlarnaConstant
         case KiTT::PART:
             return explode(
                 ",",
-                (defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED')?MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED:array())
+                (defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED')?MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED:'')
             );
         case KiTT::SPEC:
             return explode(
                 ",",
-                (defined('MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED')?MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED:array())
+                (defined('MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED')?MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED:'')
             );
         case KiTT::INVOICE:
             return explode(
                 ",",
-                (defined('MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED')?MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED:array())
+                (defined('MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED')?MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED:'')
             );
         default:
             return array();
