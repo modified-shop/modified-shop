@@ -134,13 +134,13 @@ class KlarnaConstant
     {
         switch ($option) {
         case KiTT::PART:
-            return (strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_LIVEMODE) == "true")
+            return (defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_LIVEMODE') && strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_LIVEMODE) == "true")
                 ? Klarna::LIVE : Klarna::BETA;
         case KiTT::SPEC:
-            return (strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_LIVEMODE) == "true")
+            return (defined('MODULE_PAYMENT_KLARNA_SPECCAMP_LIVEMODE') && strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_LIVEMODE) == "true")
                 ? Klarna::LIVE : Klarna::BETA;
         case KiTT::INVOICE:
-            return (strtolower(MODULE_PAYMENT_KLARNA_INVOICE_LIVEMODE) == "true")
+            return (defined('MODULE_PAYMENT_KLARNA_INVOICE_LIVEMODE') && strtolower(MODULE_PAYMENT_KLARNA_INVOICE_LIVEMODE) == "true")
                 ? Klarna::LIVE : Klarna::BETA;
         default:
             return null;
@@ -195,17 +195,17 @@ class KlarnaConstant
         case KiTT::PART:
             return explode(
                 ",",
-                MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED
+                (defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED')?MODULE_PAYMENT_KLARNA_PARTPAYMENT_ALLOWED:'')
             );
         case KiTT::SPEC:
             return explode(
                 ",",
-                MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED
+                (defined('MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED')?MODULE_PAYMENT_KLARNA_SPECCAMP_ALLOWED:'')
             );
         case KiTT::INVOICE:
             return explode(
                 ",",
-                MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED
+                (defined('MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED')?MODULE_PAYMENT_KLARNA_INVOICE_ALLOWED:'')
             );
         default:
             return array();
@@ -245,11 +245,11 @@ class KlarnaConstant
     {
         switch ($option) {
         case KiTT::PART:
-            return (strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS) == 'true');
+            return (defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS')?strtolower(MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS) == 'true':false);
         case KiTT::SPEC:
-            return (strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_STATUS) == 'true');
+            return (defined('MODULE_PAYMENT_KLARNA_SPECCAMP_STATUS')?strtolower(MODULE_PAYMENT_KLARNA_SPECCAMP_STATUS) == 'true':false);
         case KiTT::INVOICE:
-            return (strtolower(MODULE_PAYMENT_KLARNA_INVOICE_STATUS) == 'true');
+            return (defined('MODULE_PAYMENT_KLARNA_INVOICE_STATUS')?strtolower(MODULE_PAYMENT_KLARNA_INVOICE_STATUS) == 'true':false);
         default:
             return false;
         }

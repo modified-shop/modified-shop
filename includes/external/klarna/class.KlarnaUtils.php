@@ -177,7 +177,7 @@ class KlarnaUtils
      */
     public static function deduceCountry($option)
     {
-        $customer_country_id = $_SESSION['customer_country_id'];
+        $customer_country_id = (isset($_SESSION['customer_country_id'])?$_SESSION['customer_country_id']:STORE_COUNTRY);
         $currency = $_SESSION['currency'];
 
         $addr = null;
