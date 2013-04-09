@@ -141,7 +141,6 @@ if (ACCOUNT_SUBURB == 'true') {
 <?php echo xtc_draw_input_field('billing_suburb', $order->billing['suburb']);?>
 </td>
 </tr>
-<tr>
 <?php
 }
 ?>
