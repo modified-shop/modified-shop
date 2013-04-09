@@ -23,7 +23,6 @@ require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 
-$allowed_tags = '<h1><h2><h3><h4><p><br><em><strong><b><i><ol><ul><li>';
 $module_content = array();
 
 // create smarty elements
@@ -169,8 +168,8 @@ if (!is_object($product) || !$product->isProduct()) {
   $info_smarty->assign('PRODUCTS_WEIGHT', $product->data['products_weight']);
   $info_smarty->assign('PRODUCTS_STATUS', $product->data['products_status']);
   $info_smarty->assign('PRODUCTS_ORDERED', $product->data['products_ordered']);
-  $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes(strip_tags($product->data['products_description'], $allowed_tags)));
-  $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes(strip_tags($product->data['products_short_description'], $allowed_tags)));
+  $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
+  $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
   $info_smarty->assign('PRODUCTS_IMAGE', $product->productImage($product->data['products_image'], 'thumbnail'));
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 

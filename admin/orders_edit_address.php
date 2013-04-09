@@ -124,6 +124,27 @@
           </td>
         </tr>
 
+        <?php
+        if (ACCOUNT_SUBURB == 'true') {
+        ?>
+        <tr class="dataTableRow">
+          <td class="dataTableContent" align="left">
+            <?php echo ENTRY_SUBURB;?>
+          </td>
+          <td class="dataTableContent" align="left">
+            <?php echo xtc_draw_input_field('customers_suburb', $order->customer['suburb']);?>
+          </td>
+          <td class="dataTableContent" align="left">
+            <?php echo xtc_draw_input_field('delivery_suburb', $order->delivery['suburb']);?>
+          </td>
+          <td class="dataTableContent" align="left">
+            <?php echo xtc_draw_input_field('billing_suburb', $order->billing['suburb']);?>
+          </td>
+        </tr>
+        <?php
+        }
+        ?>
+
         <tr class="dataTableRow">
           <td class="dataTableContent" align="left">
             <?php echo TEXT_ZIP;?>
