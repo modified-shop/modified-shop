@@ -95,6 +95,7 @@ if ($action == 'address_edit') {
                            'customers_lastname' => xtc_db_prepare_input($_POST['customers_lastname']),
                            'customers_name' => xtc_db_prepare_input($_POST['customers_firstname']) . ' ' . xtc_db_prepare_input($_POST['customers_lastname']),
                            'customers_street_address' => xtc_db_prepare_input($_POST['customers_street_address']),
+                           'customers_suburb' => xtc_db_prepare_input($_POST['customers_suburb']),
                            'customers_city' => xtc_db_prepare_input($_POST['customers_city']),
                            'customers_postcode' => xtc_db_prepare_input($_POST['customers_postcode']),
                            'customers_country' => $customers_country['countries_name'],
@@ -107,6 +108,7 @@ if ($action == 'address_edit') {
                            'delivery_lastname' => xtc_db_prepare_input($_POST['delivery_lastname']),
                            'delivery_name' => xtc_db_prepare_input($_POST['delivery_firstname']) . ' ' . xtc_db_prepare_input($_POST['delivery_lastname']),
                            'delivery_street_address' => xtc_db_prepare_input($_POST['delivery_street_address']),
+                           'delivery_suburb' => xtc_db_prepare_input($_POST['delivery_suburb']),
                            'delivery_city' => xtc_db_prepare_input($_POST['delivery_city']),
                            'delivery_postcode' => xtc_db_prepare_input($_POST['delivery_postcode']),
                            'delivery_country' => $delivery_country['countries_name'],
@@ -117,6 +119,7 @@ if ($action == 'address_edit') {
                            'billing_lastname' => xtc_db_prepare_input($_POST['billing_lastname']),
                            'billing_name' => xtc_db_prepare_input($_POST['billing_firstname']) . ' ' . xtc_db_prepare_input($_POST['billing_lastname']),
                            'billing_street_address' => xtc_db_prepare_input($_POST['billing_street_address']),
+                           'billing_suburb' => xtc_db_prepare_input($_POST['billing_suburb']),
                            'billing_city' => xtc_db_prepare_input($_POST['billing_city']),
                            'billing_postcode' => xtc_db_prepare_input($_POST['billing_postcode']),
                            'billing_country' => $billing_country['countries_name'],
@@ -954,6 +957,7 @@ if ($action == 'save_order') {
     xtc_db_perform(TABLE_ORDERS_RECALCULATE, $sql_data_array);
 
     //echo $module_value['value'].'|'.$module_n_price.'|'.$module_tax.'|'.$module_value['class'].'<br>';
+
 
   }
   //EOF#######  Module  #######//
