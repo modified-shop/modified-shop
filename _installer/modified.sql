@@ -29,7 +29,7 @@
 #   the mysqldiff perl script located in the extras
 #   directory of the 'catalog' module.
 #   * Comments should be like these, full line comments.
-#   (don't use inline comments)
+#   (don`t use inline comments)
 #  --------------------------------------------------------------
 
 
