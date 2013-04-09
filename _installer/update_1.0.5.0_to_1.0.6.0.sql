@@ -33,7 +33,7 @@ ALTER TABLE orders MODIFY comments text;
 
 #DokuMan - 2010-10-13 - add index idx_categories_id
 ALTER TABLE products_to_categories
-  ADD INDEX idx_categories_id (categories_id,products_id);
+  ADD INDEX idx_categories_id (categories_id);
 
 #DokuMan - 2010-10-14 - keep index naming convention (idx_)
 ALTER TABLE orders_products
