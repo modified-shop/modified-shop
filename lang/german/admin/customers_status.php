@@ -17,7 +17,7 @@
 
 define('HEADING_TITLE', 'Kundengruppen');
 
-define('ENTRY_CUSTOMERS_FSK18','Kauf von FSK18 Artikel Sperren?');
+define('ENTRY_CUSTOMERS_FSK18','Kauf von FSK18 Artikel sperren?');
 define('ENTRY_CUSTOMERS_FSK18_DISPLAY','Anzeige von FSK18 Artikeln?');
 define('ENTRY_CUSTOMERS_STATUS_ADD_TAX','UST in Rechnung ausweisen');
 define('ENTRY_CUSTOMERS_STATUS_MIN_ORDER','Mindestbestellwert:');
