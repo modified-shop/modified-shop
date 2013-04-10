@@ -18,10 +18,15 @@ restore_error_handler();
  * Error reporting is disabled to avoid informative output.
  */
 if (_SEQ_DEBUG || _SEQ_ERRORS) {
+//BOF - DokuMan - 2013-04-10 - use error reporting settings from application_top.php
+  set_error_handler('seq_error_handler_');
+  /*
     error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT); //Hide E_DEPRECATED and E_STRICT errors from SSEQ - do not include E_NOTICE here!
     set_error_handler('seq_error_handler_');
 } else {
     error_reporting(0);
+  */
+//EOF - DokuMan - 2013-04-10 - use error reporting settings from application_top.php
 }
 
 define('_SEQ_TOKEN_NAME','SEQ_TOKEN_');

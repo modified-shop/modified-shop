@@ -10,8 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-error_reporting(0);
-
 require('includes/configure.php');
 
 $valid_signs = '/[^\w\-]/';
