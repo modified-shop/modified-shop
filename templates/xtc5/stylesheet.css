@@ -107,6 +107,9 @@ border:1px solid #666;
 padding:2px;
 background:url(img/input_bg.gif) no-repeat;
 }
+input[type=radio], input[type=checkbox] {
+margin: 0 3px;
+}
 /* PARAGRAPH GLOBAL */
 p {
 margin:8px 0;
