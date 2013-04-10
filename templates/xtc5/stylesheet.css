@@ -107,6 +107,9 @@ input[type=text], input[type=password] {
   padding:2px;
   background:url(img/input_bg.gif) no-repeat;
 }
+input[type=radio], input[type=checkbox] {
+  margin: 0 3px;
+}
 /* PARAGRAPH GLOBAL */
 p {
   margin:8px 0;
