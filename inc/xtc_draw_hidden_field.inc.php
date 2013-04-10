@@ -17,15 +17,15 @@
    ---------------------------------------------------------------------------------------*/
 
    function xtc_draw_hidden_field($name, $value = '', $parameters = '') {
-    $field = '<input type="hidden" name="' . xtc_parse_input_field_data($name, array('"' => '&quot;')) . '"';
+    $field = '<input type="hidden" name="' . xtc_parse_input_field_data($name, array('"' => '&quot;')) . '" value="';
 
     if (xtc_not_null($value)) {
-      $field .= ' value="' . xtc_parse_input_field_data($value, array('"' => '&quot;')) . '"';
+      $field .= xtc_parse_input_field_data($value, array('"' => '&quot;'));
     } else {
-      $field .= ' value="' . xtc_parse_input_field_data((array_key_exists($name, $GLOBALS) ?  $GLOBALS[$name] : NULL), array('"' => '&quot;')). '"';
+      $field .= xtc_parse_input_field_data((array_key_exists($name, $GLOBALS) ?  $GLOBALS[$name] : NULL), array('"' => '&quot;'));
     }
 
-    if (xtc_not_null($parameters)) $field .= ' ' . $parameters;
+    $field .= xtc_not_null($parameters) ? '" '.$parameters : '"';
 
     $field .= ' />';
 
