@@ -49,7 +49,8 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                          ORDER BY p.products_startpage_sort ASC
                             LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
 } else {
-
+  
+  $days = '';
   if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
     $date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
     $days = " AND p.products_date_added > '".$date_new_products."' ";
@@ -75,7 +76,6 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
 $row = 0;
 $module_content = array ();
 
-//BOF - web28 -  Produkte mit gleicher ID nicht doppelt anzeigen
 $pid_array = array();
 $new_products_query = xtDBquery($new_products_query);
 while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
@@ -85,7 +85,6 @@ while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
   $pid_array[] = $new_products['products_id'];
 }
 unset($pid_array);
-//EOF - web28 -  Produkte mit gleicher ID nicht doppelt anzeigen
 
 if (sizeof($module_content) >= 1) {
   $module_smarty->assign('language', $_SESSION['language']);
