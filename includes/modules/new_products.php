@@ -22,9 +22,7 @@
    ---------------------------------------------------------------------------------------*/
 
 $module_smarty = new Smarty;
-
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-
 
 //fsk18 lock
 $fsk_lock = '';
@@ -67,6 +65,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                          and p2c.categories_id = c.categories_id
                          ".$group_check."
                          ".$fsk_lock."
+                         ".$days."
                          and c.parent_id = '".$new_products_category_id."'
                          and p.products_status = '1'
                          and pd.language_id = '".(int) $_SESSION['languages_id']."'
