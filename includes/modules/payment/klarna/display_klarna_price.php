@@ -20,7 +20,11 @@ $productRate = 0;
 $productRate = xtc_get_tax_rate($product->data['products_tax_class_id']);
 $totalSum = $xtPrice->xtcAddTax($product->data['products_price'], $productRate);
 
+try{
 $ppbox = new klarna_ppbox();
 $html = $ppbox->showPPBox($totalSum, KlarnaFlags::PRODUCT_PAGE);
+}catch(Exception $e){
+	return false;
+}
 
 $info_smarty->assign('KLARNA_PPBOX', $html);

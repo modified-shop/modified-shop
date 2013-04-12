@@ -139,13 +139,27 @@ class KlarnaInstaller
         $this->_klarnaDB->query(
             'CREATE TABLE IF NOT EXISTS `klarna_ordernum` ('.
             '`orders_id` INT NOT NULL , '.
-            '`klarna_ref` VARCHAR( 50 ) NOT NULL , '.
+            '`klarna_ref` VARCHAR( 256 ) NOT NULL , '.
             'UNIQUE ( `orders_id` ) '.
             //~ 'UNIQUE ( `orders_id` ), '.
             //~ 'FOREIGN KEY ( `orders_id` ) REFERENCES ' .
             //~ TABLE_ORDERS . ' ( `orders_id` )' .
             ');'
         );
+        $this->_klarnaDB->query("CREATE TABLE IF NOT EXISTS `klarna_pclasses` (
+                `eid` int(10) unsigned NOT NULL,
+                `id` int(10) unsigned NOT NULL,
+                `type` tinyint(4) NOT NULL,
+                `description` varchar(255) NOT NULL,
+                `months` int(11) NOT NULL,
+                `interestrate` decimal(11,2) NOT NULL,
+                `invoicefee` decimal(11,2) NOT NULL,
+                `startfee` decimal(11,2) NOT NULL,
+                `minamount` decimal(11,2) NOT NULL,
+                `country` int(11) NOT NULL,
+                `expire` int(11) NOT NULL,
+                KEY `id` (`id`)
+            )");
 
         foreach ($this->_getConfigArray() as $config) {
             $merged = array_merge($this->_defaultArray, $config);
