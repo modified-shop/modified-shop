@@ -32,8 +32,7 @@
   </tr>
   {/foreach}
   <tr>
-    <td colspan="4" class="subtotal">{$UST_CONTENT}<strong>{$TOTAL_CONTENT}</strong>{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}</td>
+    <td colspan="4" class="subtotal">{$UST_CONTENT}<strong>{$TOTAL_CONTENT}</strong>{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}{if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}</td>
     <td class="subtotal">&nbsp;</td>
   </tr>
 </table>
-{$KLARNA_PPBOX}
