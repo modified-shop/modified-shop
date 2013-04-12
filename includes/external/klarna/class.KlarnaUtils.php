@@ -144,7 +144,7 @@ class KlarnaUtils
                     'latest' => $latest
                 )
             );
-        }     */
+        }*/
     }
 
     /**
@@ -1174,6 +1174,10 @@ class KlarnaUtils
         // Go over all the order total modules that are active for this order
         // and add them.
         foreach ($klarna_ot as $key => $item) {
+        	$flags = KlarnaFlags::INC_VAT;
+              if (KlarnaConstant::showPriceTax() === false) {
+                $flags = KlarnaFlags::NO_FLAG;
+            }
             if ($key === "ot_shipping") {
                 $flags |= KlarnaFlags::IS_SHIPMENT;
             } else if ($key === "ot_klarna_fee") {
