@@ -22,7 +22,6 @@
                 {$SHIPPING_NAME}
               </p>
             {/if}
-            {$KLARNA_PPBOX}
             {if $PRODUCTS_VPE}
               <div class="hrlightgrey"></div>{$PRODUCTS_VPE}
             {/if}
@@ -53,6 +52,7 @@
               <div class="hrlightgrey"></div><div style="padding-top:5px;">{$PRODUCTS_URL}</div>
             {/if}
             <br />
+            {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
             <div style="margin-top:10px"></div>
             {$PRODUCTS_PRINT}
             {if $PRODUCTS_DATE_AVIABLE != ''}
