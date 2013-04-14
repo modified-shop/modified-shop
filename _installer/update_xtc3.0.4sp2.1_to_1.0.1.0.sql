@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS database_version (
 ) ENGINE=myisam;
 
 # Set database Version to minimum Version 1.0.1.0 (1.0.0.0 not allowed)
-INSERT INTO database_version VALUES ('MOD_1.0.1.0');
+DELETE FROM database_version;
+INSERT INTO database_version(version) VALUES ('MOD_1.0.1.0');
  
 UPDATE configuration SET configuration_value = 'xtc5', last_modified = NOW()
 WHERE configuration_key = 'CURRENT_TEMPLATE';
