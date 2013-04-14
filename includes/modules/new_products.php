@@ -76,6 +76,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
 $row = 0;
 $module_content = array ();
 
+//Produkte mit gleicher ID nicht doppelt anzeigen 
 $pid_array = array();
 $new_products_query = xtDBquery($new_products_query);
 while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
