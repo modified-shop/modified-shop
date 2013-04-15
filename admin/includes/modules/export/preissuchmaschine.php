@@ -96,9 +96,7 @@ if (isset($_POST['psmgoogle'])) {
 							 'PAYPAL' 		=> array('active' => false,
 													 'title' => 'PayPal'),
 							 'MONEYBOOKERS' => array('active' => false,
-													 'title' => 'Moneybookers'),
-							 'UOS_GIROPAY'  => array('active' => false,
-											 		 'title' => 'Giropay')
+													 'title' => 'Moneybookers')
 							);
 
     
