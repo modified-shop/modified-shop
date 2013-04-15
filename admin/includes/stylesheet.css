@@ -407,6 +407,9 @@ CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE {
   font-size: 12px;
   border: solid 1px #a3a3a3;
 }
+INPUT[type=checkbox], INPUT[type=radio] {
+  border: none;
+}
 FORM {
   display: inline;
 }
