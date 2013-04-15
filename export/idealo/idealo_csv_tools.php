@@ -303,14 +303,88 @@ class idealo_csv_tools extends idealo_csv_universal{
 	 	$artikel = $this->getArtikelID();    	
 	    	
     	foreach ( $artikel as $art ){
-    		$schema .= $this->getCSVValues ( $art, IDEALO_CSV_SEPARATOR,  IDEALO_CSV_QUOTECHAR );
+    		
+    		$options = $this->productOption($art);
+
+			if($options !== false){
+				
+				$optionNumber = 0;
+				
+				$option = $this->getVariant($art);
+				
+				foreach ( $option as $op ){
+					
+					$optionNumber++;
+					
+					$exrtaPrice = '0';
+					$extraWeight = '0';
+					$extraName = '';
+									
+					foreach ( $op as $o ){
+						
+						$extraName .= $this->getAttributeOption($o['options_id']). ': ' . $this->getAttributeValue($o['options_values_id']) . '; ';
+						$exrtaPrice = $this->getExtra( $exrtaPrice, $o['price_prefix'], $o['options_values_price']);
+						$extraWeight = $this->getExtra( $extraWeight, $o['weight_prefix'], $o['options_values_weight']); 
+						
+					}
+
+					$schema .= $this->getCSVValues ( '1', $art, IDEALO_CSV_SEPARATOR,  IDEALO_CSV_QUOTECHAR, substr ( $extraName, 0, -2 ), $exrtaPrice, $extraWeight, $optionNumber );
+					
+				}
+				
+			}else{
+    			$schema .= $this->getCSVValues ( '0', $art, IDEALO_CSV_SEPARATOR,  IDEALO_CSV_QUOTECHAR );				
+				
+			}
 
     	}
 	 	
 	 	return $schema;
 	 	
+	 }	  
+	 
+	 public function getExtra ( $oldValue, $prefix, $value ){
+	 	
+	 	switch ($prefix) {
+		    case '+':
+		       	return $oldValue + $value;
+		    case '-':
+		       	return $oldValue - $value;
+		    case '*':
+		    	return $oldValue * $value;
+		    case '/':
+		    	return $oldValue / $value;  
+		}
+	 	
 	 }
-
+	  
+	   
+	  public function getAttributeOption($id){
+	  	
+	  	 $option = xtc_db_query("SELECT `products_options_name`
+	  	 								FROM `products_options`
+	  	 								WHERE `products_options_id` = '" . $id . "' AND `language_id` = '" . $_SESSION [ 'languages_id' ] . "';");
+	 	 
+		 $result = xtc_db_fetch_array($option);
+		 
+		 return $result['products_options_name'];
+	  	
+	  }
+	  
+	 
+	  public function getAttributeValue($id){
+	  	
+	  	 $optionValue = xtc_db_query("SELECT `products_options_values_name`
+	  	 								FROM `products_options_values`
+	  	 								WHERE `products_options_values_id` = '" . $id . "' AND `language_id` = '" . $_SESSION [ 'languages_id' ] . "';");
+	 	 
+		 $result = xtc_db_fetch_array($optionValue);
+		 
+		 return $result['products_options_values_name'];
+	  	
+	  }
+	  
+	 
 	
 	public function createHeader(){
 		
@@ -353,9 +427,18 @@ class idealo_csv_tools extends idealo_csv_universal{
 			$schema .= IDEALO_CSV_QUOTECHAR . str_replace(array("<b>","</b>"), "", IDEALO_CSV_MIN_EXTRA_COSTS) . IDEALO_CSV_QUOTECHAR . IDEALO_CSV_SEPARATOR;
       		
       	}
+      	
+      		$schema .=  IDEALO_CSV_QUOTECHAR . IDEALO_EXTRA_ATTRIBUTES . IDEALO_CSV_QUOTECHAR . IDEALO_CSV_SEPARATOR;
+      		
+      	
 	        $schema .= "\n";
 	        
-	        
+	        setlocale ( LC_ALL, 'de_DE' ); 
+			$date = date ( "d.m.y H:i:s" );   
+			
+			$schema .= 'Datei zuletzt erstellt am ' . $date . ' Uhr';
+			$schema .= "\n";
+
 	        $schema .= VERSION_TEXT_01 . VERSION_TEXT_02 . VERSION_TEXT_03 . VERSION_TEXT_04 . "\n";
 	        
 	        return $schema;
@@ -499,12 +582,6 @@ class idealo_csv_tools extends idealo_csv_universal{
 	 					
 	 				}
 	 				
-	 				if ( IDEALO_CSV_CAT_EXPORT == 'filter' ){
-	 					
-	 					return false;
-	 						
-	 				}
-	 				
 	 			}
 	 			
 	 		}	
@@ -609,13 +686,102 @@ class idealo_csv_tools extends idealo_csv_universal{
     }
 
 
-	public function getCSVValues ( $id, $separator,  $quotarchar ){
+	 private function productOption($id){
+	 	$attributes = xtc_db_query("SELECT `products_id`
+								   			 FROM `products_attributes`
+								   			 WHERE `products_id` = '". $id ."';");
+		$att = xtc_db_fetch_array($attributes);
+	
+		if(!empty($att)){
+			return true;
+		}else{
+			return false;	
+		}
+	 }
+
+	private $attributes = array();
+	
+	private function getProductOption($array, $re_array = array()){
+		$result = array();
+		$keys = array_keys($array);
+		if(count($array) > 1){
+			$array0 = $array[$keys[0]];
+			unset($array[$keys[0]]);
+			
+			for($i = 0; $i < count($array0); $i++){
+				$result_array = $re_array;
+				$result_array [] = $array0[$i];
+				$this->getProductOption($array, $result_array);
+			}
+		}else{
+			for($i = 0; $i < count($array[$keys[0]]); $i++){
+				$result_array = $re_array;
+				$result_array [] = $array[$keys[0]][$i];
+				$this->result [] = $result_array;
+			}
+		}
+	}
+
+
+	
+	 private function getVariant($id){
+	 	$variant = array();
+	 	$this->result = array();
+	 	$count = count($this->attributes);
+	 	
+	 	$attributes = xtc_db_query("SELECT `options_id`, `options_values_id`, `options_values_price`, `price_prefix`, `attributes_model`, `attributes_stock`, `options_values_weight`, `weight_prefix`
+								   			 FROM `products_attributes`
+								   			 WHERE `products_id` = '". $id ."'
+								   			 ORDER BY `options_id` ASC;");
+		$result_array = array();
+		$product_attributes = array();
+		
+		while($att = xtc_db_fetch_array($attributes)){
+			$result_array [] = $att;
+			$product_attributes [] = $att['options_id'];
+		}
+
+		$product_attributes = array_unique($product_attributes);
+		$same = array();
+		foreach($product_attributes as $att){
+			foreach($result_array as $re){
+				if($re['options_id'] == $att){
+					$same[$att][] = $re;
+				}	
+			}
+		}		
+			
+		$same2 = array();
+		
+		foreach($same as $sa){
+			$same2 [] = $sa;
+		}
+		
+		$this->getProductOption($same2);
+
+	 	return $this->result;
+	 }
+
+
+	public function getCSVValues ( $variant, $id, $separator,  $quotarchar, $extraName = '', $exrtaPrice = 0, $extraWeight = 0, $optionNumer = '' ){
 		
 		$products = $this->getArticle ( $id );
-
+		
 		$schema = '';
-			
+		
+		$products_price = $products [ 'products_price' ] + $exrtaPrice;
+				
 		$products_price = $this->getPrice ( $products [ 'products_tax_class_id' ], $products [ 'products_price' ], $id );	
+		
+		$tax = $this->getTax($products [ 'products_tax_class_id' ],$id);
+		
+		if ( ( float ) $exrtaPrice > 0 ){
+						
+			$exrtaPrice = $exrtaPrice * ( 1 + $tax / 100 );
+			
+			$products_price = $products_price + $exrtaPrice;
+			
+		}
 		
 		if ( ( float ) $products [ 'products_discount_allowed' ] > 0.00 ) {
 			
@@ -641,10 +807,16 @@ class idealo_csv_tools extends idealo_csv_universal{
 			$products_price > 0.00 && 
 			$this->filter ( $id, $products[ 'manufacturers_name' ] ) === true && 
 			$this->filterCat ( $cat ) === true){
-						
-			$schema .= $quotarchar . $id . $quotarchar . $separator;
+			
+			if ($optionNumer != '' ){
+				
+				$schema .= $quotarchar . $id . '-' .  $optionNumer . $quotarchar . $separator;
+				
+			}else{	
+			
+				$schema .= $quotarchar . $id . $quotarchar . $separator;
 
-           
+			}
 
       		$products_description = $this->cleanText ( $products [ 'products_description' ], 1000 );
 
@@ -678,17 +850,29 @@ class idealo_csv_tools extends idealo_csv_universal{
 				
 			}
 
+			$netto = (float)$price / ( 1 + $tax / 100 );
+
 			$schema .=	$quotarchar . $this->cleanText ( $products[ 'manufacturers_name' ], 100 ) . $quotarchar . $separator .
-						$quotarchar . $this->cleanText ( $products [ 'products_name' ], 200 ) . $quotarchar . $separator .
+						$quotarchar . $this->cleanText ( $products [ 'products_name' ], 200 ) . ' ' . $extraName . $quotarchar . $separator .
 						$quotarchar . $this->cleanText ( $cat, 100 ) . $quotarchar . $separator .
 						$quotarchar . $products_short_description . $quotarchar . $separator .
 						$quotarchar . $products_description . $quotarchar . $separator .
 						$quotarchar . $image . $quotarchar . $separator .
 						$quotarchar . $url . $quotarchar . $separator .
 						$quotarchar . $price . $quotarchar . $separator .
-						$quotarchar . number_format ( $products [ 'products_price' ], 2, '.', '' ) . $quotarchar . $separator .
-						$quotarchar . $products [ 'products_ean' ] . $quotarchar . $separator .
-						$quotarchar . $this->getShippingTime ( $products [ 'products_shippingtime' ], $_SESSION [ 'languages_id' ] ) . $quotarchar . $separator;
+						$quotarchar . number_format ( $netto, 2, '.', '' ) . $quotarchar . $separator;
+			
+			if ( $variant == '0' ){
+				
+				$schema .=	$quotarchar . $products [ 'products_ean' ] . $quotarchar . $separator;
+				
+			}else{
+				
+				$schema .=	$quotarchar . '' . $quotarchar . $separator;
+				
+			}	
+			
+			$schema .=	$quotarchar . $this->getShippingTime ( $products [ 'products_shippingtime' ], $_SESSION [ 'languages_id' ] ) . $quotarchar . $separator;
 		
 			if ( $products [ 'products_vpe_status' ] == '1'  && ( float ) $products [ 'products_vpe_value' ] > 0 ){
 				
@@ -701,13 +885,21 @@ class idealo_csv_tools extends idealo_csv_universal{
 				$schema .= $quotarchar . ''. $quotarchar . $separator;
 				
 			}
+			
+			
+			$weight = 0;
+			
 			if ( empty ( $products [ 'products_weight' ] ) ){
 				
 				$schema .= $quotarchar . 'keine Angabe' . $quotarchar . $separator;
 				
 			}else{
 				
-				$schema .= $quotarchar . $products [ 'products_weight' ] . $quotarchar . $separator;
+				$weight = (float) $products [ 'products_weight' ] + (float) $extraWeight;
+				
+				$weight = str_replace ( ",", ".", $weight );
+				
+				$schema .= $quotarchar . $weight . $quotarchar . $separator;
 				
 			}
 			
@@ -737,7 +929,7 @@ class idealo_csv_tools extends idealo_csv_universal{
 			foreach ( $this->shipping as $ship ){
 				if ( $ship [ 'active' ] == '1' ){
 					
-					$costs = $this->getShippingCosts ( $price, $products [ 'products_weight' ], $ship );
+					$costs = $this->getShippingCosts ( $price, (float)$weight, $ship );
 					
 				}
 				
@@ -766,6 +958,8 @@ class idealo_csv_tools extends idealo_csv_universal{
 			     	}
 			     	
 			     }
+			
+			$schema .= $quotarchar . $extraName . $this->quoting . $quotarchar . $separator;
 			
 			$schema .= "\n";
 		
@@ -888,18 +1082,24 @@ class idealo_csv_tools extends idealo_csv_universal{
 	 	
 	 }
 	 
-	 
-	  public function getPrice( $tax, $price, $id ){
-	  	
-	  	$value = xtc_db_query ( " SELECT `tax_rate`
+	 public function getTax($tax,$id){
+	 	
+	 	$value = xtc_db_query ( " SELECT `tax_rate`
 								  FROM `tax_rates`
 								  WHERE `tax_class_id` = " . $tax . " 
 								  		AND `tax_zone_id` = " . $this->geo_zone . ";" );
 	 	
 	 	$value = xtc_db_fetch_array ( $value );
 	 	
-	 	$value = $value [ 'tax_rate' ];
+	 	return $value [ 'tax_rate' ];
 	 	
+	 }
+	 
+	 
+	  public function getPrice( $tax, $price, $id ){
+	  	
+	  	$value = $this->getTax($tax,$id);
+	  	
 	 	$special = xtc_db_query ( "	SELECT	`specials_new_products_price`
 	                                FROM `specials`
 	                                WHERE `products_id` = " . $id . " 

@@ -13,8 +13,8 @@
 */
 
 
-$_csv_version_number_idealo = '3.3.0';
-$_csv_version_date = '22.01.2013';
+$_csv_version_number_idealo = '3.5.1';
+$_csv_version_date = '20.03.2013';
 $_csv_idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_CSV_MODIFIED', $_csv_idealo_module_modified );
@@ -41,7 +41,7 @@ $_csv_new_idealo_version_text = '';
 	$_csv_new_version_idealo = explode ( '.', $_csv_version_idealo );
 
    	   $_csv_idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
-	   $_csv_idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $_csv_idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; //DokuMan - 2012-08-21 - removed "blink"-tag
+	   $_csv_idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $_csv_idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>';	//DokuMan - 2012-08-21 - removed "blink"-tag
 	   
 			if ( count ( $_csv_old_version_idealo ) == count ( $_csv_new_version_idealo ) ){
 	
@@ -153,6 +153,7 @@ define('DELIVERY','Lieferzeit');
 define('BASEPRICE', 'Grundpreis');
 define('WEIGHT', 'Gewicht');
 define('CSV_SHIPPINGCOMMENT', 'Versandkommentar');
+define('IDEALO_EXTRA_ATTRIBUTES', 'extra Attribute');
 define('CAMPAIGN', '94511215'); 
 
 define('IDEALO_CSV', 'export/idealo/');
