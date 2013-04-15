@@ -16,7 +16,8 @@
   {if $module_data.error != ''}
   <tr>
     <td class="radiobutton">&nbsp;</td>
-    <td class="description" colspan="2">{$module_data.error}</td>
+    <td class="description">{$module_data.error}</td>
+    <td class="price">&nbsp;</td>
   </tr>
   {else}
   {foreach name=aussen item=method_data from=$module_data.methods} 
