@@ -233,6 +233,7 @@ div.stock_warn {
 
 /* forms */
 CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { font-family: Verdana, Arial, sans-serif; font-size: 12px; border: solid 1px #a3a3a3;}
+INPUT[type=checkbox], INPUT[type=radio] { border: none; }
 FORM { display: inline; }
 
 /* account */
