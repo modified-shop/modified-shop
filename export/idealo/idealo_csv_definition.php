@@ -13,8 +13,8 @@
 */
 
 
-$_csv_version_number_idealo = '3.3.0';
-$_csv_version_date = '22.01.2013';
+$_csv_version_number_idealo = '3.5.1';
+$_csv_version_date = '20.03.2013';
 $_csv_idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_CSV_MODIFIED', $_csv_idealo_module_modified );
@@ -153,6 +153,7 @@ define('DELIVERY','Lieferzeit');
 define('BASEPRICE', 'Grundpreis');
 define('WEIGHT', 'Gewicht');
 define('CSV_SHIPPINGCOMMENT', 'Versandkommentar');
+define('IDEALO_EXTRA_ATTRIBUTES', 'extra Attribute');
 define('CAMPAIGN', '94511215'); 
 
 define('IDEALO_CSV', 'export/idealo/');

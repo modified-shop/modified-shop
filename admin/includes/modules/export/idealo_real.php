@@ -26,6 +26,8 @@ require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/communication.php' );
 include_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_shipping.php' );
 include_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_payment.php' ); 
 require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition.php' );
+require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition_universal.php' );
+
 
 
 class idealo_real{
@@ -71,7 +73,7 @@ class idealo_real{
 	public function deleteProduct( $list_idealo ){
 
 		$delete_list = array();
-		
+
 		if ( $this->login [ 'status' ] == 'False' ){
 			
 			$delete_list = $list_idealo;
@@ -112,27 +114,37 @@ class idealo_real{
 			$communication->deleteProduct( $delete_list );
 			
 		}
-		
+
 	}
 	
 	
 	
 	
 	 public function cleanIdealo(){
+
 		$communication = new Communication( $this->login );
 			    	    
 		$page = 1;
 		
 		do{
-			
-			$article = @$communication->getListFromXML($this->login['webservice'] . "getOffers?shopId=" . $this->login['idealo_shop_id'] . "&user=" . $this->login['user'] . "&password=" . $this->login['password'] . "&pageNumber=" . $page . "&pageSize=". $this->login['pagesize'] ,"offer","sku");
-			
-			$this->deleteProduct( $article );
-			
-			if ( $this->login [ 'status' ] != 'False' ){
-			
-				$page++;
+			$article = $communication->getOfferList ( $page );
+			if ( count( $article ) > 0 ){
 				
+				$list = array();
+				
+				foreach ( $article as $art ){
+
+					$list [] = (string) $art->sku[0];
+				
+					}
+				$this->deleteProduct( $list );
+				
+				if ( $this->login [ 'status' ] != 'False' ){
+				
+					$page++;
+					
+				}
+			
 			}
 			
 		}while ( count ( $article ) > 0 );
@@ -185,7 +197,7 @@ class idealo_real{
 				$sql2 .= ", '0'";
 				
 				$costs = 'idealo_' . $ship['country'] . '_costs';
-				$sql .= ", `" . $costs . "` varchar(20)";
+				$sql .= ", `" . $costs . "` varchar(100)";
 				$sql2 .= ", ''";
 				
 				$free = 'idealo_' . $ship['country'] . '_free';
@@ -222,8 +234,8 @@ class idealo_real{
 				$sql2 .= ", '0'";
 			}
 			
-			$sql .= ');';
-			$sql2 .= ');';
+			$sql .= ", `idealoMinorderprice` varchar(10), `idealoMinorder` varchar(10), `idealoMinorderBorder` varchar(10));";
+			$sql2 .= ", '', '', '');";
 			
 			xtc_db_query($sql);			
 			xtc_db_query($sql2);			
@@ -301,38 +313,42 @@ class idealo_real{
 
    		$not_set = array();
    		
-   		$user = $_POST [ 'configuration' ];
+   		if ( $this->login [ 'testmode' ] != '1' ){
+	   		
+	   		$user = $_POST [ 'configuration' ];
+	   		
+	   		$user = $user [ 'MODULE_IDEALO_REALTIME_FILE' ];
+	
+	   		if ( $user == '' ){
+	   			
+	   			$not_set [] = 'user';
+	   			   			
+	   		}
+	
+	   		if ( $_POST [ 'url_input' ] == '' ){
+	   			
+	   			$not_set [] = 'url_input';
+	   			   			
+	   		}
+	   		
+	   		if ( $_POST [ 'shop_id_input' ] == '' ){
+	   			
+	   			$not_set [] = 'shop_id_input';
+	   			
+	   		}
+	   		
+	   		if ( $_POST [ 'password_input' ] == '' ){
+	   			
+	   			$not_set [] = 'password_input';
+	   			
+	   		}
+	   		
+	   		if ( $_POST [ 'pagesize_input' ] == '' ){
+	   			
+	   			$not_set [] = 'pagesize_input';
+	   			
+	   		}
    		
-   		$user = $user [ 'MODULE_IDEALO_REALTIME_FILE' ];
-
-   		if ( $user == '' ){
-   			
-   			$not_set [] = 'user';
-   			   			
-   		}
-
-   		if ( $_POST [ 'url_input' ] == '' ){
-   			
-   			$not_set [] = 'url_input';
-   			   			
-   		}
-   		
-   		if ( $_POST [ 'shop_id_input' ] == '' ){
-   			
-   			$not_set [] = 'shop_id_input';
-   			
-   		}
-   		
-   		if ( $_POST [ 'password_input' ] == '' ){
-   			
-   			$not_set [] = 'password_input';
-   			
-   		}
-   		
-   		if ( $_POST [ 'pagesize_input' ] == '' ){
-   			
-   			$not_set [] = 'pagesize_input';
-   			
    		}
    		$idealo_shipping = new idealo_shipping();
 	 	$this->shipping = $idealo_shipping->shipping;
@@ -470,6 +486,11 @@ class idealo_real{
 			$this->setValueIdealoSetting ( $shipping, $value );
 			
 		 }
+		 
+    	xtc_db_query("UPDATE `idealo_realtime_setting` SET `idealoMinorder` = '" . $_POST['idealo_realtime_minOrder_input'] . "';");	
+    	xtc_db_query("UPDATE `idealo_realtime_setting` SET `idealoMinorderprice` = '" . $_POST['idealo_realtime_minOrderPrice_input'] . "';");	
+		xtc_db_query("UPDATE `idealo_realtime_setting` SET `idealoMinorderBorder` = '" . $_POST['idealo_realtime_minOrderBorder_input'] . "';");	
+				      	 		 	
 		 		 	
 	 	if ( $check ){
 	 		
@@ -481,15 +502,77 @@ class idealo_real{
 	 	
 	 }
 
+	
+	public function sendMail(){
+		$tools = new tools();
+		
+		$eMail = $tools->getEmail();
+		
+		$baseUrl = HTTP_SERVER . DIR_WS_CATALOG;
+		
+		$dateihandle = fopen( HTTP_SERVER . DIR_WS_CATALOG . 'export/idealo_realtime_test.html', "r" );
+		$zeile = fgets( $dateihandle, 4096 );
+		
+		$error = 'keine';
+						
+		if( $zeile != 'no errors' ){	
+		
+			$error = $baseUrl . 'export/idealo_realtime_test.html';
+		
+		}
+		
+		$tools->sendMail ( $eMail, 
+						   $baseUrl . 'export/idealo_realtime_test.csv', 
+						   $error, 
+						   $baseUrl, 
+						   MODULE_VERSION_TEXT, 
+						   $baseUrl . 'export/log_' . date( "n_Y" ) . '.log', 
+						   $baseUrl . 'export/last_answer.xml',
+						   $baseUrl . 'export/last_request.xml' );
+						   
+		 $html = '	<body bgcolor="#99CCFF">
+					<b>
+					<center>
+					<font face="Arial,MS Sans Serif">
+		 			
+		 			<form name="close" onSubmit= "window.close();>
+		 				<br><br>
+		 				<div id="logo">
+							<a href="www.idealo.de" target="_blank"><img src="http://www.idealo.de/pics/common/logoidealo_blue_l.gif" alt="Price Comparison" class="logo noborder"/></a>
+						</div><br><br>';
+						
+			$html .= IDEALO_QUESTION_AFTER_EMAIL_SEND_01 . $baseUrl . IDEALO_QUESTION_AFTER_EMAIL_SEND_02 . '<br><br>';
+								
+			$html .= '<input id="close" type="submit" name="close" value="close" />
+	 		
+	    			</form><br><br>
+	    			
+	    			</font>
+					</center>
+					</b>
+				</body>';
+			
+			echo $html;
+		die();
+		
+	}
+
 
 	
     public function process ( $file ) {
 
+		if ( isset( $_POST [ 'sendIdealoMail' ] ) ){
+			
+			$this->sendMail();
+			
+		}
+		
+		$tools = new tools();
+	     $this->login = $tools->getLogin();
+
 		if ( $this->saveSetting() ){
 
 	    	@xtc_set_time_limit(0);
-	
-	    	$tools = new tools();
 	    	$tools->cleanTableIdealoRealtimeUpdate();
 	    	$tools->cleanTableIdealoRealtimeFailedRequest();
 	    	
@@ -500,11 +583,15 @@ class idealo_real{
 	    	$xml = '';
 	    	    	
 	    	try{
-	    		
-	    		$this->cleanIdealo();
-	    		
+
+	    		if ( $this->login [ 'testmode' ] != '1' ){
+	    			
+	    			$this->cleanIdealo();		
+	    			
+	    		}
+
 	    	} catch ( Exception $e ){}
-	    	
+
 	    	if ( $this->login [ 'status' ] == 'True' ){
 	    		
 	    		$tools->newTimestamp();
@@ -519,7 +606,7 @@ class idealo_real{
 		     	$article_count = $article_count [ 'count(*)' ];
 		       	       	
 		       	$repetition = 0;	
-		       	       
+
 		       	if ( $article_count > 0 ){
 		       		
 					if ( $article_count <= $this->login [ 'pagesize' ] ){
@@ -539,6 +626,12 @@ class idealo_real{
 		    		$artikel = $this->getArtikelID($artikel_start, $this->login['pagesize']);
 			    	$xml = $tools->getXMLBegin();
 			    	
+			    	if ( $this->login [ 'testmode' ] != '0' ){
+			    		
+			    		$xml .= '<testMode>true</testMode>';
+			    		
+			    	}
+
 			    	foreach ( $artikel as $art ){
 			    		$xml .= $tools->getXML ( $art );
 			    		
@@ -550,7 +643,7 @@ class idealo_real{
 
 		    	}
 		   
-		    	if( $_POST[ 'testfile' ] == 'yes' ){
+		    	if( $this->login [ 'testmode' ] == '1' ){
 		    		
 		    		$this->backToBackend ( substr ( $_SERVER [ 'PHP_SELF' ], 0, -24 ) );
 		    		
@@ -571,38 +664,52 @@ class idealo_real{
 	
 	 public function backToBackend ( $url ){
 	 	
-	 	echo '	<body bgcolor="#99CCFF">
+	 $html = '	<body bgcolor="#99CCFF">
 					<b>
 					<center>
 					<font face="Arial,MS Sans Serif">
 		 			
-		 			<form action=javascript:history.back()>
+		 			<form name="exportReady" action="" method="post">
 		 				<br><br>
 		 				<div id="logo">
 							<a href="www.idealo.de" target="_blank"><img src="http://www.idealo.de/pics/common/logoidealo_blue_l.gif" alt="Price Comparison" class="logo noborder"/></a>
-						</div>
+						</div><br><br>';
+		$html .= IDEALO_TESTMODE_ACTIVE;
 									
-						<br><br>
+		$html .= '<br><br>';
 					
-						Ihre Artikel wurden erfolgreich exportiert.<br><br>
-						<br><br>
-								
-						Sie k&ouml;nnen die Testdatei hier herunterladen:<br><br>
-						<a href="' . $url . '/export/idealo_realtime_test.csv"><img src="' . $url . '/export/idealo_realtime/idealo_csv_file.gif"></a><br><br>
-						 		
-						Link zu der CSV Datei:<br><br> 
-						 
-						<a href="' . $url . '/export/idealo_realtime_test.csv">LINK</a><br><br>
-						 		
-						Schicken Sie diesen Link bitte an csv@idealo.de<br><br>
-						 					
-	    				<input id="export" type="submit" name="export" value="Zur&uuml;ck zum Shopnbackend" />
-	    				 		
-	    			</form>
+		$html .= IDEALO_REALTIME_TEST_DONE . '<br><br>';
+		$html .= IDEALO_REALTIME_TEST_OPEN_TESTFILE . '<br><br>';
+		
+		$html .=		'<a href="' . $url . '/export/idealo_realtime_test.csv"><img src="' . $url . '/export/idealo_realtime/idealo_csv_file.gif"></a><br><br>';
+		
+		$dateihandle = fopen( HTTP_SERVER . DIR_WS_CATALOG . 'export/idealo_realtime_test.html', "r" );
+		$zeile = fgets( $dateihandle, 4096 );						
+	
+		if( $zeile != 'no errors' ){		
+						
+			$html .='<br><br><br>' .
+					IDEALO_REALTIME_TEST_MISSED . 
+					'<br>
+					<a href="' . HTTP_SERVER . DIR_WS_CATALOG . 'export/idealo_realtime_test.html" target="_blank">FEHLER</a>
+					<br><br><br>';
+						
+			}
+		
+		$html .=	IDEALO_REALTIME_TEST_OK . '<br><br>';						 					
+	    $html .=	'<input id="sendMail" type="submit" name="sendMail" value="senden" />
+	    			 <input type="hidden" name="sendIdealoMail" value="sendIdealoMail">
+	 		
+	    			</form><br><br>
+	    			<form name="back" action="javascript:history.back()">
+	    				<input id="back" type="submit" name="back" value="zur&uuml;ck zum Backend" />
+	    			</form>		
 	    			</font>
 					</center>
 					</b>
 				</body>';
+			
+			echo $html;
 				 
 	 }
 
@@ -757,9 +864,9 @@ class idealo_real{
      		$payment_text .= $this->getDisplayPayment($payment);	
      	}
 				
-		$testfile_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_TESTFILE' LIMIT 1");
-		$testfile_db = xtc_db_fetch_array($testfile_query);
-		$testfile_db = $testfile_db['configuration_value'];
+		$testmode_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_TESTMODE' LIMIT 1");
+		$testmode_db = xtc_db_fetch_array($testmode_query);
+		$testmode_db = $testmode_db['configuration_value'];
 		
 		$textfile_array[] = array ('id' => 'yes', 'text' => 'ja',);
 		$textfile_array[] = array ('id' => 'no', 'text' => 'nein');
@@ -771,8 +878,8 @@ class idealo_real{
 		$certificate_array[] = array ('id' => '1', 'text' => 'ja',);
 		$certificate_array[] = array ('id' => '0', 'text' => 'nein');
 		
-		$testfile =  TESTFILE . '<br>' .
-					 xtc_draw_pull_down_menu('testfile', $textfile_array, $testfile_db).'<br>';
+		$testmode =  IDEALO_REALTIME_TESTMODE_ACTIVE . '<br>' .
+					 xtc_draw_pull_down_menu('testmode', $textfile_array, $testmode_db).'<br>';
 		
 		$article_filter_array[] = array ('id' => 'filter', 'text' => 'filtern',);
 		$article_filter_array[] = array ('id' => 'export', 'text' => 'exportieren',);
@@ -824,12 +931,26 @@ class idealo_real{
 					  IDEALO_REALTIME_CAT_FILTER_TEXT . '<br>' .
 					  xtc_draw_input_field('cat_filter_value', $cat_filter_value) . '<br><br>';
 		
+		$tools->getMinorderValues();
 		
+		
+		$minOrderDisplay =	IDEALO_REALTIME_MIN_ORDER_TITLE . '<br><br>' .
+							IDEALO_REALTIME_MIN_ORDER_VALUE . '<br>' .
+		   			   		xtc_draw_input_field('idealo_realtime_minOrder_input', $tools->minOrder) . '<br>' .
+							IDEALO_REALTIME_MIN_ORDER_TEXT . '<br><br>' .
+							IDEALO_REALTIME_MIN_EXTRA_COSTS	. '<br>' .
+							xtc_draw_input_field('idealo_realtime_minOrderPrice_input', $tools->minOrderPrice) . '<br>' .
+							IDEALO_REALTIME_MIN_ORDER_PRICE_TEXT . '<br>' .
+							IDEALO_REALTIME_MIN_ORDER_BORDER_VALUE . '<br>' .
+							xtc_draw_input_field('idealo_realtime_minOrderBorder_input', $tools->idealoMinorderBorder) . '<br>' .
+							IDEALO_REALTIME_MIN_ORDER_BORDER_TEXT;
 		
 		
    			   					
 	    return array('text' => 	$missing_config_user. '<br><br>' .
-	    
+	    						
+	    						$testmode . '<br>' .
+	    							    						
 	    						URL . '<br>' .
 	    						URL_HINT . '<br>' .
 	    						xtc_draw_input_field('url_input', $url) . '<br>' .
@@ -876,10 +997,13 @@ class idealo_real{
 								$brand_filter .
 								$cat_filter .
 								
+								$minOrderDisplay .
+								
+								IDEALO_REALTIME_EXPORT_TEXT . '<br>'.
+								
 								REAL_TEXT . '<br><br>' .
 								$realtime_link . '<br><br>' .
 								
-								$testfile .
 	                            '<br>' . xtc_button( $button_text ) . '<font size="+1">*</font> ' . 
 	                
 	                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set =' . $_GET['set'] . '&module=idealo_real')) .
@@ -959,7 +1083,7 @@ class idealo_real{
 	
     public function install() {
       xtc_db_query ( "delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE '%IDEALO_REALTIME%'" );
-      xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_FILE', 'csv@idealo.de',  '6', '1', '', now())" );
+      xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_FILE', '',  '6', '1', '', now())" );
       xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_FILE_TITLE', 'User',  '6', '1', '', now())" );
       xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_FILE_DESC', 'Bitte den Usernamen eingeben',  '6', '1', '', now())" );
       xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())" );
@@ -968,6 +1092,7 @@ class idealo_real{
       xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_LANGUAGE', 'DE',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())" );
       xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_CERTIFICAT', '1',  '6', '1', '', now())" );
       xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_MISSING_CONFIG', '1',  '6', '1', '', now())" );
+      xtc_db_query ( "insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_IDEALO_REALTIME_TESTMODE', '1',  '6', '1', '', now())" );
       
       $this->createRealtime();
       

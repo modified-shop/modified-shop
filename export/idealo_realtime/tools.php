@@ -60,6 +60,25 @@ class tools extends idealo_universal{
 				
 		$this->checkCampaign();
 		
+		$this->getMinorderValues();
+		
+		
+	}
+
+	public function getMinorderValues(){
+
+		$idealo_Minorder_query = xtc_db_query("select `idealoMinorder` from `idealo_realtime_setting` LIMIT 1");
+		$idealo_Minorder_db = xtc_db_fetch_array($idealo_Minorder_query);
+		$this->minOrder = $idealo_Minorder_db['idealoMinorder'];
+		
+		$idealo_idealoMinorderprice_query = xtc_db_query("select `idealoMinorderprice` from `idealo_realtime_setting` LIMIT 1");
+		$idealo_idealoMinorderprice_db = xtc_db_fetch_array($idealo_idealoMinorderprice_query);
+		$this->minOrderPrice = $idealo_idealoMinorderprice_db['idealoMinorderprice'];
+		
+		$idealo_idealoMinorderBorder_query = xtc_db_query("select `idealoMinorderBorder` from `idealo_realtime_setting` LIMIT 1");
+		$idealo_idealoMinorderBorder_db = xtc_db_fetch_array($idealo_idealoMinorderBorder_query);
+		$this->idealoMinorderBorder = $idealo_idealoMinorderBorder_db['idealoMinorderBorder'];
+
 	}
 
 	
@@ -161,18 +180,25 @@ class tools extends idealo_universal{
     	$result [ 'idealo_shop_id' ] = $this->getValue ( 'SHOP_ID' );
     	$result [ 'certificate' ] = $this->getValue ( 'CERTIFICATE' );
     	$result [ 'pagesize' ] = $this->getValue ( 'PAGESIZE' );
-    	$result [ 'testcsv' ] = $this->getValue ( 'TESTFILE' );
-    	
-    	if ( $result [ 'testcsv' ] == 'yes' ){
+
+    	if ($result [ 'pagesize' ] == ''){
+
+    		$result [ 'pagesize' ] = 50;
     		
-    		$result [ 'testcsv' ] = 1;
+    	}
+    	
+    	$result [ 'testmode' ] = $this->getValue ( 'TESTMODE' );
+    	
+    	if ( $result [ 'testmode' ] == 'yes' ){
+    		
+    		$result [ 'testmode' ] = '1';
     		
     	}else{
     		
-    		$result [ 'testcsv' ] = 0;
+    		$result [ 'testmode' ] = '0';
     		
     	}
-
+    	
 		$result [ 'status' ] = $this->getValue ( 'STATUS' );
 
 		return $result;
@@ -288,28 +314,7 @@ class tools extends idealo_universal{
 	 	return XML_END;
 	 	
 	 }
-	 
-		 
-	 public function getTestfileCheck(){
-	 	
-	 	$value = xtc_db_query ( "	SELECT `configuration_value` 
-	 							 	FROM `" . TABLE_CONFIGURATION . "` 
-	 							 	WHERE `configuration_key` = 'MODULE_IDEALO_REALTIME_TESTFILE' 
-	 							 	LIMIT 1");
-		$value = xtc_db_fetch_array ( $value );
-		
-		if ( $value [ 'configuration_value' ] == 'yes' ){
-			
-			return true;
-			
-		}else{
-			
-			return false;
-			
-		}
-		
-	 }
-	 
+	 	 
 	 
 	
 	public function getArticle ( $id ){
@@ -368,126 +373,172 @@ class tools extends idealo_universal{
 	 	$fp = fopen ( $path . 'idealo_realtime_test.csv', "w" );
         fputs ( $fp, 'empty' );
         fclose( $fp );
+        
+        $fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
+        fputs ( $fp, 'no errors' );
+        fclose( $fp );
         		
 	 }
 
 
 	public function getXML ( $id ){
 
-		$products = $this->getArticle ( $id );
-
-		$xml .= '<offer>';
-			
-		$products_price = $this->getPrice ( $products [ 'products_tax_class_id' ], $products [ 'products_price' ], $id );
-        $categorie_query = xtc_db_query("	SELECT
-                                            categories_id
-                                            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
-                                            WHERE products_id = '" . $products [ 'products_id' ] . "'
-                                            ORDER BY categories_id DESC;" );
-
-         while ( $categorie_data = xtc_db_fetch_array ( $categorie_query ) ) {
-         	
-                $categories = $categorie_data [ 'categories_id' ];
-                
-         }
-         
-         $cat = $this->buildCAT ( $categories, $id );
-					
-		if( $products [ 'products_status' ] == 1 && 
-			$products_price > 0.00 &&
-			$this->filter ( $id, $products[ 'manufacturers_name' ] ) === true && 
-			$this->filterCat ( $cat ) === true 		
-		){		
-			
-			$xml .= '<command>InsertOrReplace</command>'.
-						'<sku>' . $id . '</sku>';
-
-      		$products_description = $this->cleanText ( $products [ 'products_description' ], 1000 );
-
-            $products_short_description = $this->cleanText ( $products[ 'products_short_description' ] , 255 );
-
-			if ( $products [ 'products_image' ] != '' ){
+		if ( $id != '' ){
 				
-			    $image =  $this->shop_url . $this->image_url . $products [ 'products_image' ];
-			    
-			}else{
+			$products = $this->getArticle ( $id );
+	
+			$xml .= '<offer>';
 				
-			    $image = '';
-			    
-			}
-									
-			$price = number_format ( $products_price, 2, '.', '' );
-
-			$language = 'de';
-
-			$language_id = xtc_db_query("SELECT `languages_id`
-									  FROM `languages`
-									  WHERE `code` LIKE '" . $language . "';" );
-
-			$language_id = xtc_db_fetch_array ( $language_id );
-			
-			$url = $this->shop_url . DIR_WS_CATALOG . 'product_info.php?' . xtc_product_link ( $products [ 'products_id' ], $products [ 'products_name' ] );
-
-			if ( $this->campaignSet === true ){
-				
-				$url .= IDEALO_CAMPAIGN;
-				
-			}
-
-
-			$xml .=	'<title><![CDATA[' . $this->cleanText ( $products [ 'products_name' ], 200 ) . ']]></title>' .
-					'<url>' . $url . '</url>' .
-					'<price>' . $price . '</price>' .
-					'<image>' . $image . '</image>' .
-					'<brand><![CDATA[' . $this->cleanText ( $products[ 'manufacturers_name' ], 100 ) . ']]></brand>' .
-					'<description><![CDATA[' . $products_description . ']]></description>' .
-					'<delivery><![CDATA[' . $this->getShippingTime ( $products [ 'products_shippingtime' ], $language_id [ 'languages_id' ] ) . ']]></delivery>' .
-					'<category><![CDATA[' .  $cat . ']]></category>';
-			if( $this->checkEan ( $products [ 'products_ean' ] ) ){
-
-					$xml .= '<ean>' . $products [ 'products_ean' ] . '</ean>';
-					
-				}
-
-			if ( $products [ 'products_vpe_status' ] == '1'  && ( float ) $products [ 'products_vpe_value' ] > 0 ){
-
-				$vpe = $this->getVPE ( $products [ 'products_vpe' ], $language_id [ 'languages_id' ] );	
-
-				$xml .=	'<basePrice context="DE" measure="' . $vpe [ 'measure' ] . '" unit="' . $vpe [ 'unit' ]. '">' . number_format ( $price / $products [ 'products_vpe_value' ], 2, '.', '' ) . '</basePrice>';
-									
-			}
-			
-			foreach ( $this->shipping as $ship ){
-				if ( $ship [ 'active' ] == '1' ){
-					
-					$costs = $this->getShippingCosts ( $price, $products [ 'products_weight' ], $ship );
-					
-				}
-				
-				foreach ( $this->payment as $payment ){
-					
-					if ( $payment [ 'active' ] == '1' ){
+			$products_price = $this->getPrice ( $products [ 'products_tax_class_id' ], $products [ 'products_price' ], $id );
+	        $categorie_query = xtc_db_query("	SELECT
+	                                            categories_id
+	                                            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+	                                            WHERE products_id = '" . $products [ 'products_id' ] . "'
+	                                            ORDER BY categories_id DESC;" );
+	
+	         while ( $categorie_data = xtc_db_fetch_array ( $categorie_query ) ) {
+	         	
+	                $categories = $categorie_data [ 'categories_id' ];
+	                
+	         }
+	         
+	         $cat = $this->buildCAT ( $categories, $id );
 						
-						$xml .= $this->getPaymentCosts ( $payment, $ship [ 'country' ], $price, $costs );
-														
+			if( $products [ 'products_status' ] == 1 && 
+				$products_price > 0.00 &&
+				$this->filter ( $id, $products[ 'manufacturers_name' ] ) === true && 
+				$this->filterCat ( $cat ) === true 		
+			){		
+				
+				$xml .= '<command>InsertOrReplace</command>'.
+							'<sku><![CDATA[' . $id . ']]></sku>';
+	
+	      		$products_description = $this->cleanText ( $products [ 'products_description' ], 1000 );
+	
+	            $products_short_description = $this->cleanText ( $products[ 'products_short_description' ] , 255 );
+	
+				if ( $products [ 'products_image' ] != '' ){
+					
+				    $image =  $this->shop_url . $this->image_url . $products [ 'products_image' ];
+				    
+				}else{
+					
+				    $image = '';
+				    
+				}
+										
+				$price = number_format ( $products_price, 2, '.', '' );
+	
+				$language = 'de';
+	
+				$language_id = xtc_db_query("SELECT `languages_id`
+										  FROM `languages`
+										  WHERE `code` LIKE '" . $language . "';" );
+	
+				$language_id = xtc_db_fetch_array ( $language_id );
+				
+				$url = $this->shop_url . DIR_WS_CATALOG . 'product_info.php?' . xtc_product_link ( $products [ 'products_id' ], $products [ 'products_name' ] );
+	
+				if ( $this->campaignSet === true ){
+					
+					$url .= IDEALO_CAMPAIGN;
+					
+				}
+	
+	
+				$xml .=	'<title><![CDATA[' . $this->cleanText ( $products [ 'products_name' ], 200 ) . ']]></title>' .
+						'<url>' . $url . '</url>' .
+						'<price>' . $price . '</price>';
+					
+					$xml .='<image>' . $image . '</image>';
+						
+				$xml .=	'<brand><![CDATA[' . $this->cleanText ( $products[ 'manufacturers_name' ], 100 ) . ']]></brand>' .
+						'<description><![CDATA[' . $products_description . ']]></description>' .
+						'<delivery><![CDATA[' . $this->getShippingTime ( $products [ 'products_shippingtime' ], $language_id [ 'languages_id' ] ) . ']]></delivery>' .
+						'<category><![CDATA[' .  $cat . ']]></category>';
+				if( $this->checkEan ( $products [ 'products_ean' ] ) ){
+	
+						$xml .= '<ean>' . $products [ 'products_ean' ] . '</ean>';
+						
+					}
+	
+				if ( $products [ 'products_vpe_status' ] == '1'  && ( float ) $products [ 'products_vpe_value' ] > 0 ){
+	
+					$vpe = $this->getVPE ( $products [ 'products_vpe' ], $language_id [ 'languages_id' ] );	
+	
+					$xml .=	'<basePrice context="DE" measure="' . $vpe [ 'measure' ] . '" unit="' . $vpe [ 'unit' ]. '">' . number_format ( $price / $products [ 'products_vpe_value' ], 2, '.', '' ) . '</basePrice>';
+										
+				}
+				
+				foreach ( $this->shipping as $ship ){
+					if ( $ship [ 'active' ] == '1' ){
+						
+						$costs = $this->getShippingCosts ( $price, $products [ 'products_weight' ], $ship );
+
+						if ( $this->minOrderPrice != '' ){
+
+					     	if ( $this->checkMinExtraPrice ( $price ) ){
+
+					     		$costs = $costs + $this->minOrderPrice;
+					     		
+					     	}
+					     	
+					     }
+						
+						
+					}
+
+					foreach ( $this->payment as $payment ){
+						
+						if ( $payment [ 'active' ] == '1' ){
+							
+							$xml .= $this->getPaymentCosts ( $payment, $ship [ 'country' ], $price, $costs );
+															
+						}
+						
 					}
 					
 				}
+
+				$portocoment = $this->shippingcomment;
+		      	
+		      	if ( $this->checkMinOrder ( $price ) ){
+	
+		      		$portocoment = IDEALO_REALTIME_MIN_ORDER .  number_format( $this->minOrder, 2, '.', '' ) . ' EUR';
+	
+		      	}
+		      	
+		      	if ( $this->minOrderPrice != '' ){
+	     	
+			     	if ( $this->checkMinExtraPrice ( $price ) ){
+			     		
+			     		$portocoment = number_format( $this->minOrderPrice, 2, '.', '' ) . 
+									   IDEALO_REALTIME_MIN_ORDER_EXTRA_PRICE .
+			     					   number_format( $this->idealoMinorderBorder, 2, '.', '' ) . 
+			     					   IDEALO_REALTIME_SUM;
+			     	
+			     	}
+		      		
+	      		}
+				$xml .= '<shippingComment>' . $portocoment . '</shippingComment>';
+			
+			}elseif ($id!=''){
+				
+				$xml .=	'<command>DELETE</command>'.				
+						'<sku>' . $id . '</sku>';
 				
 			}
-			$xml .= '<shippingComment>' . $this->shippingcomment . '</shippingComment>';
-		
+			
+			$xml .= '</offer>';
+			
+		    return $xml;
+		      
 		}else{
 			
-			$xml .=	'<command>DELETE</command>'.				
-					'<sku>' . $id . '</sku>';
+			return '';
 			
 		}
-		
-		$xml .= '</offer>';
-		
-	    return $xml;   
-	        
+		        
     }
 	 
 	 
@@ -533,7 +584,7 @@ class tools extends idealo_universal{
 		
 		if ( strpos ( $payment_coutry, $country ) !== false ){
 			
-			$return = '<shipping context="' . $country . '" type="' . $payment [ 'db' ] . '">' . number_format ( $costs, 2, '.', '' ) . '</shipping>';
+			$return = '<shipping context="' . $country . '" type="' . $payment [ 'db' ] . '">' . number_format ( ( float ) $costs, 2, '.', '' ) . '</shipping>';
 			
 		}
 		
@@ -652,14 +703,12 @@ class tools extends idealo_universal{
 	 	
 	 	if ( count ( $vpe ) == 1 ){
 	 		
-	 		$vpe [ 'measure' ] = '1';
-	 		
+	 		$vpe [ 'measure' ] = '1';	 		
 	 		$vpe [ 'unit' ] = utf8_encode ( $vpe [ '0' ] );
 	 		
 	 	}else{
 	 		
-	 		$vpe [ 'measure' ] =  $vpe [ '0' ];
-	 		
+	 		$vpe [ 'measure' ] =  $vpe [ '0' ];	 		
 	 		$vpe [ 'unit' ] = utf8_encode ( $vpe [ '1' ] ) ;
 	 		
 	 	}

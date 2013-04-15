@@ -13,6 +13,10 @@
 */
 
 
+
+
+
+
 define('IDEALO_REQUEST_ERROR_TABLE', 'idealo_realtime_failed_request');
 
 class communication_universal{
@@ -21,6 +25,7 @@ class communication_universal{
 										'csv_mode' => 'CSV update mode'
 									 );
 
+	public $login = array();
 	
 	 public function checkShopStatus ( $result_exec ){
 	 	foreach ( $this->modul_deactivate as $rule ){
@@ -41,30 +46,78 @@ class communication_universal{
 	 }
 
 	
-	  public function sendRequest($xml, $showLog = false, $db_request_failed_id = '-1' ){
+	public function getTestLogin(){
 
-	 	$url = $this->login [ 'url' ];
-		$ch = curl_init ($url);
+		$xml_idealo = simplexml_load_file ( 'http://ftp.idealo.de/software/modules/version.xml' );
+			$this->login = array(	'shop_id'	=> ( string ) $xml_idealo->partenws->shopid,
+									'user'		=> ( string ) $xml_idealo->partenws->user,
+									'password'	=> ( string ) $xml_idealo->partenws->password,
+									'url'		=> ( string ) $xml_idealo->partenws->url,
+									'testmode'	=> '1'
+								);
+
+	}
+	
+	public function getOfferList ( $page ){
+		
+		$ch = curl_init ();
+
 		$this->createErrorTable();
 		setlocale ( LC_ALL, 'de_DE' ); 
 		date_default_timezone_set ( 'Europe/Berlin' );
 		$date = date( "j.n.Y H:i:s " ); 
 
-		curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-		
-		$header = $xml;
-				
 		$header = array(
-							'shopId: ' . $this->login [ 'shop_id' ],
-							'Content-Type: application/xml',
-							'user: ' . $this->login [ 'user' ],
-							'password: ' . $this->login [ 'password' ],
-							'Expect:'.''
-						);
-								
-		curl_setopt ( $ch, CURLOPT_HTTPHEADER, $header );
-		curl_setopt ( $ch, CURLOPT_POST, true );
-		curl_setopt ( $ch, CURLOPT_POSTFIELDS, $xml );
+		            	'shopId: ' . $this->login [ 'shop_id' ],
+		           		'Content-Type: application/xml',
+		           		'Expect:'.''
+		  	           );
+
+		curl_setopt($ch, CURLOPT_HTTPGET, TRUE);	
+		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, $this->login [ 'user' ] . ':' . $this->login [ 'password' ]);
+		curl_setopt($ch, CURLOPT_URL, $this->login [ 'url' ]. 'getOffers/?pageNumber=' . $page . '&pageSize=50');           
+
+		if ( $this->certificate === false ){
+			
+			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+			
+		}
+		$result_exec = curl_exec ( $ch );
+		$oXML = new SimpleXMLElement($result_exec);
+
+		curl_close ( $ch );		
+
+		return $oXML;
+		
+	}
+	
+	  public function sendRequest($xml, $showLog = false, $db_request_failed_id = '-1' ){
+
+		$ch = curl_init ($this->login [ 'url' ] . "updateOffers" );
+
+		$this->createErrorTable();
+		setlocale ( LC_ALL, 'de_DE' ); 
+		date_default_timezone_set ( 'Europe/Berlin' );
+		$date = date( "j.n.Y H:i:s " ); 
+
+		$header = array(
+		            	'shopId: ' . $this->login [ 'shop_id' ],
+		           		'Content-Type: application/xml',
+		           		'Expect:'.''
+		  	           );
+				
+		curl_setopt($ch, CURLOPT_POST, TRUE);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+		curl_setopt($ch, CURLOPT_USERPWD, $this->login [ 'user' ] . ':' . $this->login [ 'password' ]);
+
 		if ( $this->certificate === false ){
 			
 			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
@@ -143,13 +196,35 @@ class communication_universal{
 				$missed = true;
 				
 			}
-			if ( $missed ){
+			if ( $missed && !isset($this->login ['testmode'] ) ){
 
 				$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
 				
 			}
-
+			
 			$path = $this->path.'export/';
+			
+			if ( $missed && isset ($this->login ['testmode'] ) ){
+				
+				$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
+				$zeile = fgets( $dateihandle, 4096 );
+									
+				if( $zeile == 'no errors' ){		
+
+					$fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
+					fputs ( $fp,  $error_message);
+			    	fclose ( $fp );
+			    	
+				}else{
+					
+					$fp = fopen ( $path . 'idealo_realtime_test.html', "a+" );
+					fputs ( $fp,  $error_message);
+			    	fclose ( $fp );
+					
+				}
+
+			}			
+			
 	        $fp = fopen ( $path . 'last_answer.xml', "w+" );
 	        @chmod ( $path . 'last_answer.xml', 0666 );
 	        fputs ( $fp, $result_exec );
@@ -204,7 +279,7 @@ class communication_universal{
 					$sku = $ws_result->offerResponse[ $i ]->sku;
 					$status = $ws_result->offerResponse[ $i ]->status;
 					$idealo_id = $ws_result->offerResponse[ $i ]->id;
-					if ( $idealo_id == '-1' || $status == 'FAILED' ){
+					if ( $idealo_id == '-1' || $status == 'FAILED' ) {
 						
 						if ( strpos ( $statusMsg, 'Failed to deactivate Offer' ) === false &&  strpos ( $statusMsg, 'No offer with given sku found' ) === false ){
 							
@@ -222,24 +297,41 @@ class communication_universal{
 					$log .= "<br>";
 					
 				}
-				if ( $products_errors != '' ){
+				
+				if ( $products_errors != '' && !isset ($this->login ['testmode'] ) ){
 					
 					$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
 					
 				}
 				
 			}
-			if ( $db_request_failed_id != '-1' && $missed !== true ){
+			
+			if ( $db_request_failed_id != '-1' && $missed !== true && !isset ($this->login ['testmode'] ) ) {
 				
 					$this->deleteFromErrorTable ( $db_request_failed_id );
 					
 				}
-			if( $showLog ){
 				
-				echo '<p>Uebertragungsprotokoll:<br>';
-				echo '<br>' . $log;
+			if( $products_errors != '' && isset ($this->login ['testmode'] ) ){
 				
+				$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
+				$zeile = fgets( $dateihandle, 4096 );
+									
+				if( $zeile == 'no errors' ){		
+
+					$fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
+					fputs ( $fp,  $error_message);
+			    	fclose ( $fp );
+			    	
+				}else{
+				
+					$fp = fopen ( $this->path . 'export/idealo_realtime_test.html', "a+" );
+					fputs ( $fp,  $products_errors);
+			    	fclose ( $fp );
+				}
+
 			}
+			
 			$log = str_replace ( "<br>", "\n", $log );
 			
 			$log = "\n\n" . $log;
@@ -247,16 +339,24 @@ class communication_universal{
 	        @chmod ( $path . 'log_' . date ( "n_Y" ) . '.log', 0666 );
 	        fputs ( $fp, $log );
 	        fclose ( $fp );
-	        if( $this->testfile == '1' && $missed !== true && $timestamp !== true ){
+	        if( $missed !== true && $timestamp !== true ){
 	        	
-	        	$this->createTestfile( $path, $status_array, $statusMsg_array, $xml, $idealo_id_array );
-	        	
+	        	if ( isset ($this->login ['testmode'] )){
+	        		
+	        		if ( $this->login ['testmode'] == '1' ){
+	        			
+	        			$this->createTestfile( $path, $status_array, $statusMsg_array, $xml, $idealo_id_array );	
+	        			
+	        		}
+	        		
+	        	}
+	        		        	
 	        }
 	        
         }
 
         curl_close ( $ch );
-        	
+
 	  }
 	  
 	  	  
@@ -325,27 +425,39 @@ class communication_universal{
 	
 	
 	public function deleteProduct( $list, $showLog = false ){	
-			
+
 		try{
-			
+
 			$request_text =	'<?xml version="1.0" encoding="UTF-8"?>' .
-								'<offers>';
+							'<offers>';
+			
+			if ( isset ($this->login ['testmode'] ) ){
+					
+				if ( $this->login ['testmode'] != '0' ){
+					
+					
+					$request_text .= '<testMode>true</testMode>';
+					
+				}
+				
+			}
 			foreach( $list as $id ){
 				
-				$request_text .= 	'<offer>'.
-									'<command>DELETE</command>'.				
-									'<sku>' . $id . '</sku>' .
+				$request_text .= 	'<offer>';
+				
+				$request_text .=	'<command>DELETE</command>'.				
+									'<sku><![CDATA[' . $id . ']]></sku>' .
 									'</offer>'; 
 			}
 			
 			$request_text .=	'</offers>';				
-					
-			$this->sendRequest( $request_text, $showLog );
-			
+
+			$this->sendRequest( $request_text, $showLog );			
+
 		} catch ( Exception $e ){}
-		
+
 	}
-	
+		
 	
 	public function createTestfileExport( $status_array, $statusMsg_array, $xml, $shipping_header, $result_idealo_id, $path ){
 
@@ -358,7 +470,7 @@ class communication_universal{
 							
 				$schema = '';
 				if( $zeile == 'empty' ){
-					$schema .=  'idealo_id|command|sku|title|ean|han|url|price|image|brand|description|delivery|category|' . $shipping_header . 'shippingComment|baseprice|protokoll|Uebertragen am|';
+					$schema .=  'command|protokoll|Uebertragen am|sku|title|ean|han|url|price|image|brand|description|delivery|category|' . $shipping_header . 'shippingComment|baseprice|';
 					$schema .= "\n";
 					setlocale ( LC_ALL, 'de_DE' ); 
 		         	$date = date ( "d.m.y H:i:s" );   
@@ -377,23 +489,33 @@ class communication_universal{
 			        
 				}
 				
-				$i = 0;
+				$i = -1;
 				setlocale ( LC_ALL, 'de_DE' ); 
 				date_default_timezone_set ( 'Europe/Berlin' );
+				$date = date ( "j.n.Y H:i:s" );
+				
 				foreach( $xml as $article ){
-					if( $article->command != 'DELETE' ){
+
+						if ( isset($article->command) && $article->price != '0.00' ){
+																				
+							$schema .=  $article->command . '|' . $status_array [ $i ] . ' ' . $statusMsg_array [ $i ] . '|' . $date . '|' . $article->sku . '|' .  $article->title. '|' . $article->ean. '|' . $article->han. '|' . $article->url. '|' . $article->price. '|' . $article->image. '|' . $article->brand . '|' . $article->description . '|' . $article->delivery . '|' . $article->category . '|';
+							foreach( $article->shipping as $sh ){
+								
+								$schema .= $sh. '|';
+								
+							}
 						
-						$schema .= $result_idealo_id [ $i ] . '|' . $article->command . '|' . $article->sku . '|' .  $article->title. '|' . $article->ean. '|' . $article->han. '|' . $article->url. '|' . $article->price. '|' . $article->image. '|' . $article->brand . '|' . $article->description . '|' . $article->delivery . '|' . $article->category . '|';
-						foreach( $article->shipping as $sh ){
+						$baseprise = '';
+						
+						if ($article->basePrice != ''){
 							
-							$schema .= $sh. '|';
+							$attrs = $article->basePrice->attributes();	
 							
+							$baseprise = $article->basePrice . ' EUR / ' . $attrs->measure . ' ' . $attrs->unit;
 						}
-						
-						$date = date ( "j.n.Y H:i:s" );
-						$schema .= $article->shippingComment . '|' . $article->basePrice . '|';
-						$schema .= $status_array [ $i ] . ' ' . $statusMsg_array [ $i ] . '|' . $date;
-						$schema .= "\n";
+
+							$schema .= $article->shippingComment . '|' . $baseprise . '|';
+							$schema .= "\n";
 						 
 					}
 					
@@ -408,7 +530,7 @@ class communication_universal{
 			}
         
         } catch ( Exception $e ){}
-		
+
 	}
 	
 	
