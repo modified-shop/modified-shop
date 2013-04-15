@@ -25,21 +25,29 @@ class Communication extends communication_universal{
 	
 	public $login = array();
 	public $tools;
-	public $testfile = '';
 	public $path = '';
 	public $db_connection;
 		
 	
 	public function __construct( $login = array() ){
-		
-		$this->testfile = $login [ 'testcsv' ];
 		$path = __FILE__;
 		$this->path = substr ( $path, 0 , -40 );
-		$this->login = array(	'shop_id'	=> $login [ 'idealo_shop_id' ],
-								'user'		=> $login [ 'user' ],
-								'password'	=> $login [ 'password' ],
-								'url'		=> $login [ 'webservice' ] . "updateOffers"
-							);
+		
+		if ( $login [ 'testmode' ] == '1' ){
+			
+			$this->getTestLogin();
+			
+		}else{
+			$this->login = array(	'shop_id'	=> $login [ 'idealo_shop_id' ],
+									'user'		=> $login [ 'user' ],
+									'password'	=> $login [ 'password' ],
+									'url'		=> $login [ 'webservice' ],
+									'pagesize'	=> $login [ 'pagesize' ],
+									'testmode'	=> '0'
+								);
+			
+			
+		}
 		
 		$this->db_connection = new Idealo_DB_Connection();
 		

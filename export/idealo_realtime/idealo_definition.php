@@ -13,8 +13,8 @@
 */
 
 
-$version_number_idealo = '1.1.2';
-$version_date = '19.11.2012';
+$version_number_idealo = '1.3.0';
+$version_date = '27.03.2013';
 $idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_REALTIME_MODIFIED', $idealo_module_modified );
@@ -41,7 +41,7 @@ $new_idealo_version_text = '';
 	$new_version_idealo = explode ( '.', $version_idealo );
 
    	   $idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
-	   $idealo_version_text_no_modified = '<blink>' .TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a></blink>';	
+	   $idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; //DokuMan - 2012-08-21 - removed "blink"-tag
 	   
 			if ( count ( $old_version_idealo ) == count ( $new_version_idealo ) ){
 	
@@ -86,6 +86,7 @@ define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  '<img src = "http://www.idealo.de/
 define('MODULE_IDEALO_REALTIME_FILE_TITLE' , '<hr noshade>User');
 define('MODULE_IDEALO_REALTIME_FILE_DESC' , 'Ihr Benutzername fuer den Webservice. Falls Sie noch nicht f&uuml;r die Nutzung des Webservice freigeschaltet sind, wenden Sie sich bitte an csv@idealo.de' );
 
+define('IDEALO_REALTIME_TESTMODE_ACTIVE', '<b>Testmodus</b><br>Wenn aktiv, werden keine Logindaten im Modul ben&ouml;tigt. ');
 
 define('URL', '<b>URL fuer Webservice</b>');
 define('URL_HINT', 'Url fuer Request');
@@ -189,5 +190,21 @@ define('IDEALO_REALTIME_CAT_EXPORT', $_realtime_cat_filter);
 define('IDEALO_REALTIME_CAT_FILTER', '<b>Filter nach Kategorien</b>');
 define('IDEALO_REALTIME_CAT_FILTER_SELECTION', 'W&auml;hlen Sie aus, ob die Kategorien gefiltert, oder &quot;nur diese&quot; exportiert werden sollen.');
 define('IDEALO_REALTIME_CAT_FILTER_TEXT', 'Geben Sie hier die Kategorien ein. Trennen Sie die Kategorien mit einem Semikolon &quot;;&quot;. Es gen&uuml;gt, einen Teilpfad der Kategorie anzugeben. wird der Teilpfad in der Kategorie eines Artikels gefunden, wird dieser gefiltert. Z.B. Filter &quot;TV&quot;: alle Kategorien mit &quot;TV&quot; als Teilpfad (z.B. TV->LCD und TV->Plasma) werden gefiltert. Filter &quot;LCD&quot;: alle Artikel mit dem Teilpfad &quot;LCD&quot; werden gefiltert. &quot;TV->Plasma&quot; wird exportiert.');
+
+define('IDEALO_REALTIME_MIN_ORDER_TITLE', '<hr noshade><b>Mindestbestellwert</b>');
+define('IDEALO_REALTIME_MIN_ORDER', 'Mindestbestellwert: ');
+define('IDEALO_REALTIME_MIN_EXTRA_COSTS', '<b>Mindermengenzuschlag</b>');
+define('IDEALO_REALTIME_MIN_ORDER_EXTRA_PRICE', ' EUR Mindermengenzuschlag unter ');
+define('IDEALO_REALTIME_SUM', ' EUR Warenwert, bereits in den Versandkosten enthalten.');
+
+define('IDEALO_REALTIME_MIN_ORDER_VALUE', '<b>Mindestbestellwert</b>');
+define('IDEALO_REALTIME_MIN_ORDER_TEXT', 'Tragen Sie Ihren Mindestbestellwert ein. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 5.00. Die betreffenden Angebote erhalten automatisch einen entsprechenden Versandkommentar.');
+define('IDEALO_REALTIME_MIN_ORDER_BORDER_TEXT', 'Tragen Sie die H&ouml;he des Zuschlages ein. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 2.99. ');
+define('IDEALO_REALTIME_MIN_ORDER_BORDER_VALUE', '<b>Mindermengengrenze</b>');
+define('IDEALO_REALTIME_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab welchem der Mindermengenzuschlag nicht mehr anfällt. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 49.95');
+
+define('IDEALO_REALTIME_EXPORT_TEXT', '<hr noshade><b>Aktualisieren</b>');
+ 
+ 
  
 ?>

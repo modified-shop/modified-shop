@@ -97,7 +97,7 @@ class idealo{
 				$sql2 .= ", '0'";
 				
 				$costs = 'idealo_' . $ship['country'] . '_costs';
-				$sql .= ", `" . $costs . "` varchar(20)";
+				$sql .= ", `" . $costs . "` varchar(100)";
 				$sql2 .= ", ''";
 				
 				$free = 'idealo_' . $ship['country'] . '_free';
