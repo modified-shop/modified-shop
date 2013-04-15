@@ -13,6 +13,7 @@
   define('RSS_FEED_CACHEFILE', DIR_FS_CATALOG.'export/rss_cache.txt');
   
   function get_external_content($url, $timeout='3', $rss=true) {
+    $data = '';
     if (($rss && (!file_exists(RSS_FEED_CACHEFILE) || filemtime(RSS_FEED_CACHEFILE)<(time()-86400))) || !$rss) {
       if (function_exists('curl_version') && is_array(curl_version())) {
         $ch = curl_init();
@@ -39,12 +40,10 @@
         fputs($fp, $data);
         fclose($fp);
       }
-      echo 1;
     } else {
       $fp = fopen(RSS_FEED_CACHEFILE, "rb");
       $data = fread($fp, filesize(RSS_FEED_CACHEFILE));
       fclose($fp);
-      echo 2;
     }
     
     return $data;
