@@ -110,7 +110,7 @@
 //  noindex, nofollow bei "unwichtigen" Seiten
 // ---------------------------------------------------------------------------------------
   $meta_robots = META_ROBOTS;
-  if($noIndexUnimportant && !in_array(basename($_SERVER['SCRIPT_NAME']),$pagesToShow)) {
+  if($noIndexUnimportant && !in_array(basename($PHP_SELF),$pagesToShow)) {
     $meta_robots = 'noindex, nofollow, noodp';
   }
 // ---------------------------------------------------------------------------------------
@@ -121,7 +121,7 @@
 // ---------------------------------------------------------------------------------------
 
   // Wenn wir auf der Startseite sind, Metas aus der index-Seite holen
-  if(  basename($_SERVER['SCRIPT_NAME'])==FILENAME_DEFAULT &&
+  if(  basename($PHP_SELF)==FILENAME_DEFAULT &&
     empty($_GET['cat']) &&
     empty($_GET['cPath']) &&
     empty($_GET['manufacturers_id'])
@@ -317,7 +317,7 @@
 // ---------------------------------------------------------------------------------------
 
 // Start Switch
-switch(basename($_SERVER['SCRIPT_NAME'])) {
+switch(basename($PHP_SELF)) {
 
 // ---------------------------------------------------------------------------------------
 //  Daten holen: Produktdetails
