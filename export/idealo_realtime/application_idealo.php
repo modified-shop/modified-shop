@@ -45,7 +45,7 @@ if (file_exists('../../includes/local/configure.php')) {
 $php4_3_10 = (0 == version_compare(phpversion(), "4.3.10"));
 define('PHP4_3_10', $php4_3_10);
 // define the project version
-define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
+define('PROJECT_VERSION', 'xt:Commerce v3.0.4 SP2.1');
 
 // set the type of request (secure or not)
 $request_type = (getenv('HTTPS') == '1' || getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';

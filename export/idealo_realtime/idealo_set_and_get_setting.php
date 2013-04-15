@@ -20,9 +20,9 @@ define ( 'COMMENTLENGTH', 100 );
 $certificate_query = xtc_db_query( "select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_CERTIFICATE' LIMIT 1" );
 $certificate_db = xtc_db_fetch_array( $certificate_query ); // false if 'MODULE_IDEALO_REALTIME_CERTIFICAT' doesn't exist
 
-// check if testfile active is already in db
-$testfile_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_TESTFILE' LIMIT 1");
-$testfile_db = xtc_db_fetch_array($testfile_query); // false if 'MODULE_IDEALO_REALTIME_TESTFILE' doesn't exist
+// check if testmode active is already in db
+$testmode_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_TESTMODE' LIMIT 1");
+$testmode_db = xtc_db_fetch_array($testmode_query); // false if 'MODULE_IDEALO_REALTIME_TESTMODE' doesn't exist
 
 
 // check if campaign is already in db
@@ -248,7 +248,7 @@ if( isset($_POST['article_filter'])) {
 if( isset( $_POST [ 'certificate' ] ) ) {
 	// does a dataset exist?
 	if( $certificate_db !== false ) {
-		// update value if $_POST['testfile'] != $quoting_db
+		// update value if $_POST['testmode'] != $quoting_db
 		if( $_POST [ 'certificate' ] != $certificate_db [ 'configuration_value' ] ) {
 			xtc_db_query( "update " . TABLE_CONFIGURATION . "
 					      set configuration_value = '" . $_POST [ 'certificate' ] . "'
@@ -268,29 +268,29 @@ if( isset( $_POST [ 'certificate' ] ) ) {
 
 
 /*
- * testfile
+ * testmode
  */
 
-// is testfile_active set? 
-if( isset($_POST['testfile'])) {
+// is testmode_active set? 
+if( isset($_POST['testmode'])) {
 	// does a dataset exist?
-	if( $testfile_db !== false ) {
-		// update value if $_POST['testfile'] != $quoting_db
-		if( $_POST['testfile'] != $testfile_db['configuration_value'] ) {
+	if( $testmode_db !== false ) {
+		// update value if $_POST['testmode'] != $quoting_db
+		if( $_POST['testmode'] != $testmode_db['configuration_value'] ) {
 			xtc_db_query("update " . TABLE_CONFIGURATION . "
-					      set configuration_value = '" . $_POST['testfile'] . "'
-					      where configuration_key = 'MODULE_IDEALO_REALTIME_TESTFILE'");
+					      set configuration_value = '" . $_POST['testmode'] . "'
+					      where configuration_key = 'MODULE_IDEALO_REALTIME_TESTMODE'");
 		}
 	} else {
 		// insert data
 		xtc_db_query("insert into " . TABLE_CONFIGURATION . "
 					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
-					  values ('MODULE_IDEALO_REALTIME_TESTFILE', '" . $_POST['testfile'] . "', 6, 1, '', now()) ");
+					  values ('MODULE_IDEALO_REALTIME_TESTMODE', '" . $_POST['testmode'] . "', 6, 1, '', now()) ");
 	}
 
-	$testfile = stripcslashes($_POST['testfile']);
+	$testmode = stripcslashes($_POST['testmode']);
 } else {
-	$testfile = "";
+	$testmode = "";
 }
 
 /*
