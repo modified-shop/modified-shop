@@ -643,7 +643,6 @@
              } //WHILE loop to display products ENDS
              // ----------------------------------------------------------------------------------------------------- //
              ?>
-              </tr>
             </table>
             <!-- categories and products table ENDS -->
 
