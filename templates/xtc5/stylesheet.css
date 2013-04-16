@@ -769,7 +769,6 @@ div.highlightbox div.hr {
 table.paymentblock {
   background-color:#f8f8f8;
   margin-bottom:15px;
-  border-collapse:collapse;
 }
 table.paymentblock tr td.header {
   background-color:#ccc;
@@ -777,66 +776,77 @@ table.paymentblock tr td.header {
   padding-left:5px;
   color:#000;
   font-weight:bold;
-  border:none;
 }
-table.paymentblock tr td {
-  vertical-align:top;
-  border:1px #eee solid;
+table.paymentblock tr td.header.left {
+  border:#eee solid;
+  border-width:0 0 0 1px;
+}
+table.paymentblock tr td.header.right {
+  border:#eee solid;
+  border-width:0 1px 0 0;
 }
 table.paymentblock tr td.payleft {
+  border:#eee solid;
   border-width:0 0 1px 1px;
 }
 table.paymentblock tr td.payright {
+  border:#eee solid;
   border-width:0 1px 1px 0;
 }
 table.paymentblock tr td.filler {
   background:#fff !important;
   line-height:10px !important;
-  border:none;
 }
 /* SHIPPING TYPE SELECTION */
 table.shippingblock {
   background-color:#f8f8f8;
   margin-bottom:15px;
-  border-collapse:collapse;
 }
 table.shippingblock tr td.header {
   background-color:#ccc;
   padding:2px 2px 2px 5px;
   color:#000;
   font-weight:bold;
-  border:none;
+  border:#eee solid;
+  border-width:0 1px 0 1px;
 }
 table.shippingblock tr td {
   vertical-align:top;
-  border:1px #eee solid;
-  border-width:0 0 1px 0;
 }
 table.shippingblock tr td.filler {
   background:#fff !important;
   line-height:10px !important;
-  border:none;
 }
 table.shippingblock tr td.description {
   width:100%;
-  padding-left:6px; 
+  vertical-align:top;
+  padding-left:6px;
+  border:#eee solid;
+  border-width:0 0 1px 0;
 }
 table.shippingblock tr td.freeshipping {
   width:100%;
-  padding-left:6px;  
+  vertical-align:top;
+  padding-left:6px;
+  border:#eee solid;
+  border-width:0 1px 1px 1px;
 }
 table.shippingblock tr td.radiobutton {
+  vertical-align:top;
   white-space:nowrap;
   padding:4px;
-  border-width: 0 0 1px 1px;  
+  border:#eee solid;
+  border-width:0 0 1px 1px;
 }
 table.shippingblock tr td.radiobutton input {
   margin:0;
   padding:0;
 }
 table.shippingblock tr td.price {
+  vertical-align:top;
   white-space:nowrap;
-  border-width: 0 1px 1px 0;  
+  border:#eee solid;
+  border-width:0 1px 1px 0;
 }
 /* ORDER DETAILS IN ACCOUNT HISTORY */
 table.accounthistoryinfoorderdetails tr td {
