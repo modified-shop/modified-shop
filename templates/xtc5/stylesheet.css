@@ -779,12 +779,10 @@ table.paymentblock tr td.header {
   font-weight:bold;
   border:none;
 }
-
 table.paymentblock tr td {
   vertical-align:top;
   border:1px #eee solid;
 }
-
 table.paymentblock tr td.payleft {
   border-width:0 0 1px 1px;
 }
