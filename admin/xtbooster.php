@@ -341,9 +341,9 @@
           for($pi=0;$pi<30;$pi++)
             $desc = str_replace("#PICTURE_".$pi."#", "", $desc);
           // Relative Bildnamen aus der Produktbescheibung oder Template mit der Shop-URL versehen
-          if(preg_match("/src=['\"]([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i",$desc)) {
-            $desc=preg_replace("/src=(['\"])/([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i", "/src=\\1".HTTP_CATALOG_SERVER."/\\2/",$desc); 
-            $desc=preg_replace("/src=(['\"])([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i", "/src=\\1".HTTP_CATALOG_SERVER.DIR_WS_CATALOG."\\2/",$desc); 
+          if (preg_match('#src=(?![\'"]?(?:https?:)?//)([\'"])?#', $desc)) {
+            $desc=preg_replace('#src=(?![\'"]?(?:https?:)?//)([\'"])?\/#', 'src=$1'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG, $desc); 
+            $desc=preg_replace('#src=(?![\'"]?(?:https?:)?//)([\'"])?#', 'src=$1'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG, $desc); 
           }
           $item['DESCRIPTION'] = $desc;
           reset($images);
@@ -1846,9 +1846,9 @@
                                               }
                                             }
                                             // Relative Bildnamen aus der Produktbescheibung oder Template mit der Shop-URL versehen
-                                            if(preg_match("/src=['\"]([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i",$desc)) {
-                                              $desc=preg_replace("/src=(['\"])/([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i", "/src=\\1".HTTP_CATALOG_SERVER."/\\2/",$desc); 
-                                              $desc=preg_replace("/src=(['\"])([^h].....|h[^t]....|ht[^t]...|htt[^p]..|http[^s:].|http[s:][^/:])/i", "/src=\\1".HTTP_CATALOG_SERVER.DIR_WS_CATALOG."\\2/",$desc);
+                                            if (preg_match('#src=(?![\'"]?(?:https?:)?//)([\'"])?#', $desc)) {
+                                              $desc=preg_replace('#src=(?![\'"]?(?:https?:)?//)([\'"])?\/#', 'src=$1'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG, $desc); 
+                                              $desc=preg_replace('#src=(?![\'"]?(?:https?:)?//)([\'"])?#', 'src=$1'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG, $desc); 
                                             }
                                             // $desc = encode_htmlspecialchars($desc);
                                             echo xtc_draw_textarea_field('add[DESCRIPTION]', 'soft', '103', '20', $desc); // This line includes GNU/GPL licensed code written by xt:Commerce GmbH (www.xtcommerce.de)
