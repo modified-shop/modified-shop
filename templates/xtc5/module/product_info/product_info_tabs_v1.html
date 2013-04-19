@@ -20,6 +20,7 @@
 			{if $MODULE_graduated_price !=''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}
 			{if $PRODUCTS_DISCOUNT!=''}<div class="hrlightgrey"></div>{$PRODUCTS_DISCOUNT}{/if}
 			{if $PRODUCTS_FSK18=='true'}<div class="hrlightgrey"></div><img src="{$tpl_path}img/fsk18.gif" alt="" style="cursor:default" />{/if}
+			{if $PRODUCTS_EXPIRES}<p class="taxandshippinginfo">{#text_expires_date#} {$PRODUCTS_EXPIRES}</p>{/if}
 			{if $PRODUCTS_MODEL!=''}<div class="hrlightgrey"></div>
 			<strong>{#model#}</strong> {$PRODUCTS_MODEL}{/if}
 			{if $PRODUCTS_URL != ''}

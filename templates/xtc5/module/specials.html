@@ -8,6 +8,7 @@
 		<h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
 		<p>{$module_data.PRODUCTS_SHORT_DESCRIPTION}</p>
 		<span class="price">{$module_data.PRODUCTS_PRICE}</span>&nbsp;<span class="taxandshippinginfo">({$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK})</span>
+		{if $module_data.PRODUCTS_EXPIRES != '0000-00-00 00:00:00'}<p class="taxandshippinginfo">{#text_expires_date#} {$module_data.PRODUCTS_EXPIRES|date_format:"%x"}</p>{/if}
 		<p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW!=''}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$tpl_path}buttons/{$language}/button_product_more.gif" alt="Details" border="0" /></a></p>
 	</td>
   </tr>
