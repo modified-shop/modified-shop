@@ -12,7 +12,7 @@ class micropayment_method
     var $version = '1.0';
     // var $form_action_url=null;
     var $_check;
-    var $rslcode = 'www';
+    var $rslcode = 'r120';
     var $get_url_called = false;
 
     function micropayment_method()
