@@ -1,39 +1,43 @@
 <?php
 require_once('mcp_prepay.php');
 define('MODULE_PAYMENT_MCP_SERVICE_STATUS_TITLE','(global) Status');
-define('MODULE_PAYMENT_MCP_SERVICE_STATUS_DESC','(global) Enable the micropayment&trade; module');
-define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_TITLE','Positioning');
+define('MODULE_PAYMENT_MCP_SERVICE_STATUS_DESC','Enable the micropayment&trade; module');
+define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_TITLE','(global) Positioning');
 define('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER_DESC','Position in the liste');
 define('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID_TITLE','(global) Account-ID');
 define('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID_DESC','Account-ID from micropayment&trade;');
-define('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY_TITLE','Access-Key');
+define('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY_TITLE','(global) Access-Key');
 define('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY_DESC','Access-Key from micropayment&trade;');
-define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_TITLE','Project code');
+define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_TITLE','(global) Project code');
 define('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE_DESC','Project code from micropayment&trade;');
-define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_TITLE','Payment text');
+define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_TITLE','(global) Payment text');
 define('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT_DESC','Text used for identification.');
 
-define('MODULE_PAYMENT_MCP_SERVICE_THEME_TITLE','Theme');
+define('MODULE_PAYMENT_MCP_SERVICE_THEME_TITLE','(global) Theme');
 define('MODULE_PAYMENT_MCP_SERVICE_THEME_DESC','Theme for the payment windows, default is x1');
 
-define('MODULE_PAYMENT_MCP_SERVICE_GFX_TITLE','Logo-Code');
+define('MODULE_PAYMENT_MCP_SERVICE_GFX_TITLE','(global) Logo-Code');
 define('MODULE_PAYMENT_MCP_SERVICE_GFX_DESC','Please insert your Logo-Code here');
 
-define('MODULE_PAYMENT_MCP_SERVICE_BGGFX_TITLE','Background image parameter');
+define('MODULE_PAYMENT_MCP_SERVICE_BGGFX_TITLE','(global) Background image parameter');
 define('MODULE_PAYMENT_MCP_SERVICE_BGGFX_DESC','Please insert your Background image parameter here.');
 
-define('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR_TITLE','Background Color');
+define('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR_TITLE','(global) Background Color');
 define('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR_DESC','Please insert your Background color in HEX here.');
 
-define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_TITLE','Security field name');
+define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_TITLE','(global) Security field name');
 define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_DESC','For more security in server-to-server communication, please enter a name only you know.');
-define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_TITLE','Security field value');
+
+define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_TITLE','(global) Security field value');
 define('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE_DESC','Please enter a private security code which should not be passed on to customers. The micropayment&trade; server will process this code with each notification for improved security.');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_TITLE','Order status: in process');
+
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_TITLE','(global) Order status: in process');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID_DESC','Customor is paying the order');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID_TITLE','Order status: paid');
+
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID_TITLE','(global) Order status: paid');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID_DESC','Customer has successfully paid.');
-define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_TITLE','Order status: Canceled / Error');
+
+define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_TITLE','(global) Order status: Canceled / Error');
 define('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID_DESC','If a back posting occurs, this status is set');
 
 define('MODULE_PAYMENT_MCP_SERVICE_ALLOWED_IP_ADDRESSES','193.159.183.234;193.159.183.235;193.159.183.236');
