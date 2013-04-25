@@ -89,7 +89,7 @@ if ($listing_split->number_of_rows > 0) {
 
 if ($result != false) {
   // get default template
-  if (!array_key_exists('listing_template', $category) || $category['listing_template'] == '' || $category['listing_template'] == 'default') {
+  if (!isset($category['listing_template']) || $category['listing_template'] == '' || $category['listing_template'] == 'default') {
     $files = array ();
     if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
       while (($file = readdir($dir)) !== false) {
