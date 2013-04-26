@@ -108,8 +108,8 @@
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td>
-    <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
-    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT;?></b></td>
+    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>
+    <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION_VALUE;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRICE;?></b></td>
     <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
