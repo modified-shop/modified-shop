@@ -216,9 +216,9 @@ function sql_update($file) {
           }
         }
       }
-      if (!$exists) {
-        xtc_db_query($sql);
-      }
+    }
+    if (!$exists) {
+      xtc_db_query($sql);
     }
     $success .= ' - <span style="color:red;">Success!</span><br/>';
   }
