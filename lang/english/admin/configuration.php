@@ -651,8 +651,8 @@ define('PAYPAL_EXPRESS_ADDRESS_CHANGE_TITLE','PayPal-Express Address Data');
 define('PAYPAL_EXPRESS_ADDRESS_CHANGE_DESC','Permits changing address data transferred by PayPal.');
 define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_TITLE','Ship-To-Address Overwrite');
 define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_DESC','Permits changing address data transferred by PayPal (existing account)');
-define('PAYPAL_INVOICE_TITLE','Shop connoisseur for PayPal Invoice-No.');
-define('PAYPAL_INVOICE_DESC','Letter(s) before the Order-No. as Shop connoisseurs to be set and as Invoice-No. of PayPal to be used. By different Shop connoisseurs several shops with a PayPal account can work, without which it comes with same order-numbers to same invoice-numbers in the PayPal account.');
+define('PAYPAL_INVOICE_TITLE','Shop prefix for PayPal invoice no.');
+define('PAYPAL_INVOICE_DESC','Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal account. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
