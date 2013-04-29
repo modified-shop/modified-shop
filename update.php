@@ -201,7 +201,25 @@ function sql_update($file) {
   $sql_array = (split_sql_file($sql_file, ';'));
   foreach ($sql_array as $sql) {
     $success .= $sql;
-    xtc_db_query($sql);
+    $exists = false;
+    if (preg_match("|[\z\s]?(?:ALTER TABLE?)?[\z\s]+([^ ]*)[\z\s]+(?:ADD?)?[\z\s]+([^ ]*)[\z\s]+([^ ]*)|", $sql, $matches)) {
+      if ($matches[2] == strtoupper('INDEX')) {
+        $check_query = xtc_db_query("SHOW KEYS FROM ".$matches[1]." WHERE Key_name='".$matches[3]."'");
+        if (xtc_db_num_rows($check_query)>0) {
+          xtc_db_query("ALTER TABLE ".$matches[1]." DROP INDEX ".$matches[3]);
+        }
+      } else {
+        $check_query = xtc_db_query("SHOW COLUMNS FROM " . $matches[1]);
+        while ($check = xtc_db_fetch_array($check_query)) {
+          if ($check['Field']==$matches[2]) { 
+            $exists = true;
+          }
+        }
+      }
+      if (!$exists) {
+        xtc_db_query($sql);
+      }
+    }
     $success .= ' - <span style="color:red;">Success!</span><br/>';
   }
 }
