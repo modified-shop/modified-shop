@@ -308,9 +308,9 @@
                               }
                               echo '
                                     <tr>
-                                      <td style="min-width:20%; border-bottom: 1px solid #aaaaaa;" class="dataTableContent"><b>'.$configuration_key_title.'</b></td>
-                                      <td style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;" class="dataTableContent">'.$value_field.'</td>
-                                      <td style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;" class="dataTableContent">'.$configuration_key_desc.'</td>
+                                      <td style="min-width:20%; border-bottom: 1px solid #aaaaaa;" class="dataTableConfig"><b>'.$configuration_key_title.'</b></td>
+                                      <td style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;" class="dataTableConfig">'.$value_field.'</td>
+                                      <td style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;" class="dataTableConfig">'.$configuration_key_desc.'</td>
                                     </tr>
                                    ';
 
