@@ -10,34 +10,25 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // in Sprachdateien auslagern:
-  define('EASYBILL_UNIT', '');
-  define('EASYBILL_STATUS_CHANGE_COMMENT', '');
-  define('EASYBILL_PAYMENT_HEADING', 'Zahlart: ');
-  define('EASYBILL_PAYMENT_HEADING_II', 'Bestellnummer: ');
-  define('EASYBILL_EOL', '<br/>');
-  
-	// Databasetable
-  define('TABLE_EASYBILL_DATEV', 'easybill_datev');
-	define('TABLE_EASYBILL', 'easybill');
-	  
-  // in Datenbank auslagern
-  define('MODULE_EASYBILL_STANDARD_TAX_CLASS', 1);
-  
   // Archivierung
   define('EASYBILL_INVOICE_ARCHIV', DIR_FS_CATALOG.'admin/archives/invoice/');
-  
-  
+
   class easybill extends order {
-  
-  
+
     var $error = array();
     var $connection = false;
-    
-    
+
+    // multilanguage
+    if (defined('RUN_MODE_ADMIN')) {
+      require_once (DIR_FS_LANGUAGES.$this->info['language'].'/easybill.php');    
+    } else {
+      require_once (DIR_WS_LANGUAGES.$this->info['language'].'/easybill.php');
+    }
+
+
     protected function makeConnection () {
+    
       @ini_set('soap.wsdl_cache_enabled', '0');
-          
       $this->client = new SoapClient("https://soap.easybill.de/soap.easybill.php?wsdl", array('trace' => 1, 
                                                                                               'exceptions' => 1,
                                                                                               'cache_wsdl' => WSDL_CACHE_NONE));
@@ -112,6 +103,7 @@
  
  
  		protected function getCustomerDatevId() {
+ 		
       $datev_query = xtc_db_query("SELECT customers_datev_id FROM " . TABLE_EASYBILL_DATEV . " WHERE customers_id = '" . $this->customer['id'] . "'");
       if (xtc_db_num_rows($datev_query)>0) {
      		$datev = xtc_db_fetch_array($datev_query);
@@ -123,8 +115,8 @@
  
 		
 		protected function getNewCustomerDatevId($search='') {
-			$error='';
-			
+		
+			$error='';	
 			if ($search=='') {
 				$datev_query = xtc_db_query("SELECT MAX(customers_datev_id) AS last_datev_id FROM ".TABLE_EASYBILL_DATEV);
 				$datev = xtc_db_fetch_array($datev_query);
@@ -157,6 +149,7 @@
 		
 		
     protected function getCountryIso($country_name) {
+    
       $country_query = xtc_db_query("SELECT countries_iso_code_2 FROM " . TABLE_COUNTRIES . " WHERE countries_name = '" . $country_name . "'");
       $country = xtc_db_fetch_array($country_query);
       
@@ -165,6 +158,7 @@
 
      
     protected function getCustomerGroupID($status_id) {
+    
       if (xtc_not_null($status_id)) {
         
         //SOAP Call
@@ -195,6 +189,7 @@
   
   
     protected function createCustomerGroup($status_id) { 
+    
       $customers_statuses_query = xtc_db_query("SELECT customers_status_id,
                                                        customers_status_name
                                                   FROM ".TABLE_CUSTOMERS_STATUS."
@@ -217,6 +212,7 @@
   
   
     public function createDocument($bill_nr='', $save=false, $download=false) {
+    
       require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
       require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
       
@@ -420,6 +416,7 @@
     
       
     protected function setCustomersTaxRate() {
+    
       $country_query = xtc_db_query("SELECT entry_country_id, 
                                             entry_zone_id 
                                        FROM ".TABLE_ADDRESS_BOOK." 
@@ -438,6 +435,7 @@
     
   
     protected function getShippingTax() {
+    
       require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
       $shipping_class = explode('_', $this->info['shipping_class']);
       if (defined(strtoupper('MODULE_SHIPPING_'.$shipping_class[0].'_TAX_CLASS'))) {
@@ -449,6 +447,7 @@
 
     
     protected function getOrderTotalTax($type) {
+    
       $type = explode('_', $type, 2);
       require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
       if (defined(strtoupper('MODULE_ORDER_TOTAL_'.$type[1].'_TAX_CLASS'))) {
@@ -532,6 +531,7 @@
   
   
     protected function after_process() {
+    
     	if (isset($this->document->document->documentNumber) && xtc_not_null($this->document->document->documentNumber)) 
     	{
 				$process_array = array ('orders_id'             => xtc_db_prepare_input($this->info['order_id']),
@@ -615,9 +615,6 @@
       xtc_db_query("UPDATE ".TABLE_EASYBILL."
                        SET payment = '1'
                      WHERE orders_id = ".$this->info['order_id']);
-
     }
-    
-    
   }
 ?>
