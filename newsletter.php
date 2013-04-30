@@ -106,16 +106,22 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['e
 
       $info_message = TEXT_EMAIL_INPUT;
 
-      if (SEND_EMAILS == true) {
+      if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, xtc_db_input($_POST['email']), '', '', EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', TEXT_EMAIL_SUBJECT, $html_mail, $txt_mail);
+      } else {
+        xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($_POST['email'])."'");
+        $info_message = TEXT_EMAIL_ACTIVE;
       }
     } else {
       $check_mail = xtc_db_fetch_array($check_mail_query);
       if ($check_mail['mail_status'] == '0') {
         $info_message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
 
-        if (SEND_EMAILS == true) {
+        if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
           xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, xtc_db_input($_POST['email']), '', '', EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', TEXT_EMAIL_SUBJECT, $html_mail, $txt_mail);
+        } else {
+          xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($_POST['email'])."'");
+          $info_message = TEXT_EMAIL_ACTIVE;
         }
       } else {
         $info_message = TEXT_EMAIL_EXIST_NEWSLETTER;
@@ -198,13 +204,7 @@ $breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '',
 
 require (DIR_WS_INCLUDES.'header.php');
 
-//BOF - Dokuman - 2009-11-02 - Fix lost session on newsletter subscription
-//$smarty->assign('VVIMG', '<img src="'.DIR_WS_CATALOG.FILENAME_DISPLAY_VVCODES.'" alt="Captcha" />');
-//BOF - GTB - 2010-09-16 - set newsletter to SSL
-$smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, 't='. time(), 'SSL') .'" alt="Captcha" />');
-//$smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, 't='. time(), 'NONSSL') .'" alt="Captcha" />');
-//EOF - GTB - 2010-09-16 - set newsletter to SSL
-//EOF - Dokuman - 2009-11-02 - Fix lost session on newsletter subscription
+$smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
 
 $smarty->assign('text_newsletter', TEXT_NEWSLETTER);
 $smarty->assign('info_message', $info_message);
