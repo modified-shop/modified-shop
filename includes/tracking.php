@@ -22,7 +22,17 @@ $ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER']
 if (!isset($_SESSION['tracking']['http_referer']))  $_SESSION['tracking']['http_referer']= $ref_url;
 
 // IP
-if (!isset($_SESSION['tracking']['ip'])) $_SESSION['tracking']['ip'] = $_SERVER['REMOTE_ADDR'];
+if (!isset($_SESSION['tracking']['ip'])) {
+  if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] != '') {
+    $ip = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
+  } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
+    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
+  } else  {
+    $ip = $_SERVER['REMOTE_ADDR'];
+  }
+  $ip_array = explode(',', $ip);
+  $_SESSION['tracking']['ip'] = trim($ip_array[0]);
+}
 
 // campaigns
 if (!isset ($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {

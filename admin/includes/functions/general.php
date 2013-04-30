@@ -2248,7 +2248,7 @@
           } else {
             //BOF - DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
             //$GLOBALS['total'] += filesize($dir.$file);
-            $totalspaceUsed += filesize($dir.$file);
+            $totalspaceUsed += @filesize($dir.$file);
             //EOF - DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
           }
         }
