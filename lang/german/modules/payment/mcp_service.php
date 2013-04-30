@@ -48,7 +48,7 @@ define('MODULE_PAYMENT_MCP_SERVICE_ERROR_UNKNOWN_ORDER_ID','Die Bestellung exist
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH','Sicherheitsfeld stimmt nicht &uuml;berein!');
 define('MODULE_PAYMENT_MCP_SERVICE_ERROR_AMOUNT_MISSMATCH','Die Summe stimmt nicht mit dem Bezahltem Wert &uuml;berein! Ist: %s  Soll: %s');
 
-define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">Damit die Bezahlmodule von Micropayment&trade; funktionieren, m&uuml;ssen Sie einen Account bei Micropayment&trade; anlegen und ein Projekt erstellen.<a href="%s" target="blank">Klicken Sie hier um sich zu Registrieren.</a></div>');
+define('MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT','%s<div class="mcp_notice_register">Damit die Bezahlmodule von Micropayment&trade; funktionieren, m&uuml;ssen Sie einen Account bei Micropayment&trade; anlegen und ein Projekt erstellen.<a href="%s" target="blank">Klicken Sie hier um sich zu registrieren.</a></div>');
 define('MODULE_PAYMENT_MCP_SERVICE_CSS','
 <style type="text/css">
 .mcp_notice_register {
