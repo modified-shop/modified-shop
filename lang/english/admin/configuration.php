@@ -791,3 +791,7 @@ define('WHOS_ONLINE_IP_WHOIS_SERVICE_DESC', 'http://www.utrace.de/?query= or htt
 
 define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_TITLE', 'Completion of order - disable Sold out?');
 define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'If a sold-out items (stocks 0) be disabled at the end of the order automatically? The article is no longer visible in the shop! <br /> On Products are available again shortly, the option should be set to "false"');
+
+define('EMAIL_SQL_ERRORS_TITLE','Double-Opt-In for Newsletter registration.');
+define('EMAIL_SQL_ERRORS_DESC','On "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');
+?>

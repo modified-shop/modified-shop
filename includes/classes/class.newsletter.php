@@ -75,87 +75,92 @@ class newsletter {
 	}
 
 	function AddUser($check,$postCode,$mail) {
-//		global $db;
-			// Check if email exists 
-			
-			$this->generateCode();
+		$this->generateCode();
 
-	if (($check == 'inp') && (($postCode == $_SESSION['vvcode'] && $_SESSION['vvcode']!='') || $this->auto==true)) {
+    if (($check == 'inp') && (($postCode == $_SESSION['vvcode'] && $_SESSION['vvcode']!='') || $this->auto==true)) {
+      // Check if email exists 
+      $check_mail_query = xtc_db_query("select customers_email_address, mail_status from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($mail)."'");
+      if (!xtc_db_num_rows($check_mail_query)) {
+    
 
-		$check_mail_query = xtc_db_query("select customers_email_address, mail_status from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($mail)."'");
-		if (!xtc_db_num_rows($check_mail_query)) {
-		
+        if (isset ($_SESSION['customer_id'])) {
+          $customers_id = $_SESSION['customer_id'];
+          $customers_status = $_SESSION['customers_status']['customers_status_id'];
+          $customers_firstname = $_SESSION['customer_first_name'];
+          $customers_lastname = $_SESSION['customer_last_name'];
+        } else {
 
-			if (isset ($_SESSION['customer_id'])) {
-				$customers_id = $_SESSION['customer_id'];
-				$customers_status = $_SESSION['customers_status']['customers_status_id'];
-				$customers_firstname = $_SESSION['customer_first_name'];
-				$customers_lastname = $_SESSION['customer_last_name'];
-			} else {
+          $check_customer_mail_query = xtc_db_query("select customers_id, customers_status, customers_firstname, customers_lastname, customers_email_address from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($mail)."'");
+          if (!xtc_db_num_rows($check_customer_mail_query)) {
+            $customers_id = '0';
+            $customers_status = '1';
+            $customers_firstname = TEXT_CUSTOMER_GUEST;
+            $customers_lastname = '';
+          } else {
+            $check_customer = xtc_db_fetch_array($check_customer_mail_query);
+            $customers_id = $check_customer['customers_id'];
+            $customers_status = $check_customer['customers_status'];
+            $customers_firstname = $check_customer['customers_firstname'];
+            $customers_lastname = $check_customer['customers_lastname'];
+          }
 
-				$check_customer_mail_query = xtc_db_query("select customers_id, customers_status, customers_firstname, customers_lastname, customers_email_address from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($mail)."'");
-				if (!xtc_db_num_rows($check_customer_mail_query)) {
-					$customers_id = '0';
-					$customers_status = '1';
-					$customers_firstname = TEXT_CUSTOMER_GUEST;
-					$customers_lastname = '';
-				} else {
-					$check_customer = xtc_db_fetch_array($check_customer_mail_query);
-					$customers_id = $check_customer['customers_id'];
-					$customers_status = $check_customer['customers_status'];
-					$customers_firstname = $check_customer['customers_firstname'];
-					$customers_lastname = $check_customer['customers_lastname'];
-				}
+        }
 
-			}
+        $sql_data_array = array ('customers_email_address' => xtc_db_input($mail), 'customers_id' => xtc_db_input($customers_id), 'customers_status' => xtc_db_input($customers_status), 'customers_firstname' => xtc_db_input($customers_firstname), 'customers_lastname' => xtc_db_input($customers_lastname), 'mail_status' => '0', 'mail_key' => xtc_db_input($this->vlCode), 'date_added' => 'now()');
+        xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
 
-			$sql_data_array = array ('customers_email_address' => xtc_db_input($mail), 'customers_id' => xtc_db_input($customers_id), 'customers_status' => xtc_db_input($customers_status), 'customers_firstname' => xtc_db_input($customers_firstname), 'customers_lastname' => xtc_db_input($customers_lastname), 'mail_status' => '0', 'mail_key' => xtc_db_input($this->vlCode), 'date_added' => 'now()');
-			xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
-
-			$this->message = TEXT_EMAIL_INPUT;
-			$this->message_id = 7;
+        $this->message = TEXT_EMAIL_INPUT;
+        $this->message_id = 7;
 
 
-				$this->sendRequestMail($mail);
-					
+        if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
+          $this->sendRequestMail($mail);
+        } else {
+          xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($mail)."'");
+          $this->message = TEXT_EMAIL_ACTIVE;
+          $this->message_id = 6;
+        }					
 
-		} else {
-			$check_mail = xtc_db_fetch_array($check_mail_query);
+      } else {
+        $check_mail = xtc_db_fetch_array($check_mail_query);
 
-			if ($check_mail['mail_status'] == '0') {
+        if ($check_mail['mail_status'] == '0') {
 
-				$this->message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
-				$this->message_id = 8;
+          $this->message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
+          $this->message_id = 8;
 
-				$this->sendRequestMail($mail);
+          if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
+            $this->sendRequestMail($mail);
+          } else {
+            xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($mail)."'");
+            $this->message = TEXT_EMAIL_ACTIVE;
+            $this->message_id = 6;
+          }					
 
-			} else {
-				$this->message = TEXT_EMAIL_EXIST_NEWSLETTER;
-				$this->message_id = 9;
-			}
+        } else {
+          $this->message = TEXT_EMAIL_EXIST_NEWSLETTER;
+          $this->message_id = 9;
+        }
 
-		}
+      }
 
-	} else {
-		$this->message = TEXT_WRONG_CODE;
-		$this->message_id = 10;
-	}
+    } else {
+      $this->message = TEXT_WRONG_CODE;
+      $this->message_id = 10;
+    }
 
-	if (($check == 'del') && ($postCode == $_SESSION['vvcode'])) {
-		
-		$check_mail_query = xtc_db_query("select customers_email_address from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($mail)."'");
-		if (!xtc_db_num_rows($check_mail_query)) {
-			$this->message = TEXT_EMAIL_NOT_EXIST;
-			$this->message_id = 11;
-		} else {
-			$del_query = xtc_db_query("delete from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address ='".xtc_db_input($mail)."'");
-			$this->message = TEXT_EMAIL_DEL;
-			$this->message_id = 12;
-		}
-	}
-		
-		
-
+    if (($check == 'del') && ($postCode == $_SESSION['vvcode'])) {
+    
+      $check_mail_query = xtc_db_query("select customers_email_address from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($mail)."'");
+      if (!xtc_db_num_rows($check_mail_query)) {
+        $this->message = TEXT_EMAIL_NOT_EXIST;
+        $this->message_id = 11;
+      } else {
+        $del_query = xtc_db_query("delete from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address ='".xtc_db_input($mail)."'");
+        $this->message = TEXT_EMAIL_DEL;
+        $this->message_id = 12;
+      }
+    }
 	}
 
 	function sendRequestMail($mail) {
@@ -180,11 +185,8 @@ class newsletter {
 		$email_subject = $mailer->subject;
 
 		if (SEND_EMAILS == true) {
-				xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, xtc_db_input($mail), '', '', EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', TEXT_EMAIL_SUBJECT, $html_mail, $txt_mail);
-			}
-		
-		
-
+		  xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, xtc_db_input($mail), '', '', EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', TEXT_EMAIL_SUBJECT, $html_mail, $txt_mail);
+		}
 	}
 
 	function generateCode() {
@@ -192,11 +194,8 @@ class newsletter {
 		$this->vlCode = xtc_random_charcode(32);
 	}
 	
-	function RemoveLinkAdmin($key,$mail) {
-		
+	function RemoveLinkAdmin($key,$mail) {	
 		return HTTP_CATALOG_SERVER.DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$mail.'&key='.$key;
-		
-		
 	}
 		
 }
