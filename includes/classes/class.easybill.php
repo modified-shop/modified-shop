@@ -16,7 +16,7 @@
   define('EASYBILL_PAYMENT_HEADING', 'Zahlart: ');
   define('EASYBILL_PAYMENT_HEADING_II', 'Bestellnummer: ');
   define('EASYBILL_EOL', '<br/>');
-
+  
 	// Databasetable
   define('TABLE_EASYBILL_DATEV', 'easybill_datev');
 	define('TABLE_EASYBILL', 'easybill');
@@ -90,9 +90,13 @@
   
       if (xtc_not_null($this->customer['vat_id'])) {
         $customer->ustid = utf8_encode($this->customer['vat_id']);
-        $customer->taxOptions = null;
+        if ($this->customer['status'] == DEFAULT_CUSTOMERS_VAT_STATUS_ID) {
+          $customer->taxOptions = '2';   // without VAT  
+        } else {
+          $customer->taxOptions = '1';  // with VAT
+        }
       }	else {
-        $customer->taxOptions = null;
+        $customer->taxOptions = '0';  // undefined VAT
       }
       
       $customer->groupID = $this->getCustomerGroupID($this->info['status']);
@@ -420,13 +424,13 @@
                                             entry_zone_id 
                                        FROM ".TABLE_ADDRESS_BOOK." 
                                       WHERE customers_id = '".(int) $this->customer['id']."' 
-                                        AND entry_firstname = '".$this->billing['firstname']."'
-                                        AND entry_lastname = '".$this->billing['lastname']."'
-                                        AND entry_street_address = '".$this->billing['street_address']."'
-                                        AND entry_postcode = '".$this->billing['postcode']."'
-                                        AND entry_company = '".$this->billing['company']."'
-                                        AND entry_city = '".$this->billing['city']."'                                      
-                                          ");
+                                        AND entry_firstname = '".xtc_db_input($this->billing['firstname'])."'
+                                        AND entry_lastname = '".xtc_db_input($this->billing['lastname'])."'
+                                        AND entry_street_address = '".xtc_db_input($this->billing['street_address'])."'
+                                        AND entry_postcode = '".xtc_db_input($this->billing['postcode'])."'
+                                        AND entry_company = '".xtc_db_input($this->billing['company'])."'
+                                        AND entry_city = '".xtc_db_input($this->billing['city'])."'                                      
+                                    ");
 			$country = xtc_db_fetch_array($country_query);
 			$this->customer['country_id'] = $country['entry_country_id'];
 			$this->customer['zone_id'] = $country['entry_zone_id'];
