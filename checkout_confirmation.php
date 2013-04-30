@@ -41,11 +41,6 @@ require_once (DIR_FS_INC . 'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 
-
-
-
-
-
 // BOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
 require (DIR_WS_LANGUAGES.$_SESSION['language'].'/checkout_confirmation.php');
 // EOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
@@ -139,15 +134,12 @@ $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CH
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
 
 require (DIR_WS_INCLUDES . 'header.php');
+
 if (SHOW_IP_LOG == 'true') {
   $smarty->assign('IP_LOG', 'true');
-  if (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-    $customers_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-  } else {
-    $customers_ip = $_SERVER['REMOTE_ADDR'];
-  }
-  $smarty->assign('CUSTOMERS_IP', $customers_ip);
+  $smarty->assign('CUSTOMERS_IP', $_SESSION['tracking']['ip']);
 }
+
 //allow duty-note in checkout_confirmation
 $smarty->assign('DELIVERY_DUTY_INFO', $main->getDeliveryDutyInfo($order->delivery['country']['iso_code_2']));
 
