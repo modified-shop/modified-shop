@@ -120,4 +120,8 @@
 	/******** SHOPGATE **********/
 	define('TABLE_SHOPGATE_ORDERS', 'orders_shopgate_order');
 	/******** SHOPGATE **********/
+
+  // easybill
+  define('TABLE_EASYBILL_DATEV', 'easybill_datev');
+	define('TABLE_EASYBILL', 'easybill');
 ?>

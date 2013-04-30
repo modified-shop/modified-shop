@@ -34,6 +34,8 @@
   define('MODULE_EASYBILL_NO_AUTO_PAYMENT_DESC','Welche Zahlarten sollen nicht automaitsch auf bezahlt gesetzt werden ?<br/><br/>Liste getrennt durch Semikolon (;)');
   define('MODULE_EASYBILL_STATUS_CHANGE_TITLE','Bestellstatus');
   define('MODULE_EASYBILL_STATUS_CHANGE_DESC','Nach erfolgter Rechnungserstellung auf diesen Status setzen.');
+  define('MODULE_EASYBILL_STANDARD_TAX_CLASS_TITLE','<hr /><b>Standard Steuersatz:</b>');
+  define('MODULE_EASYBILL_STANDARD_TAX_CLASS_DESC','Bitte geben sie einen Standardsatz an, f&uuml;r den Fall, dass keine Steuerklasse ermittelt werden kann.');
   
 
   class easybill {
@@ -53,8 +55,15 @@
     }
 
     function display() {
+      $tax_class_array = array (array ('id' => '0', 'text' => TEXT_NONE));
+      $tax_class_query = xtc_db_query("SELECT tax_class_id, tax_class_title FROM ".TABLE_TAX_CLASS." ORDER BY tax_class_title");
+      while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
+        $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => $tax_class['tax_class_title']);
+      }
 		
-		  return array('text' => '<br/>' . xtc_button(BUTTON_REVIEW_APPROVE) . '&nbsp;' .
+		  return array('text' => '<br/>' . MODULE_EASYBILL_STANDARD_TAX_CLASS_TITLE . '<br/>' . MODULE_EASYBILL_STANDARD_TAX_CLASS_DESC .
+		                         '<br/>' . xtc_draw_pull_down_menu('configuration[MODULE_EASYBILL_STANDARD_TAX_CLASS]', $tax_class_array, MODULE_EASYBILL_STANDARD_TAX_CLASS) . '<br/>' .
+		                         '<br/>' . xtc_button(BUTTON_REVIEW_APPROVE) . '&nbsp;' .
                              xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=easybill')));
     }
 
@@ -94,6 +103,13 @@
       if (!isset($this->_check)) {
         $check_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_EASYBILL_STATUS'");
         $this->_check = xtc_db_num_rows($check_query);
+        // Update Check
+        if ($this->_check > 0) {
+          $check_update_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_EASYBILL_STANDARD_TAX_CLASS'");
+          if (xtc_db_num_rows($check_update_query) < 1) {
+		        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EASYBILL_STANDARD_TAX_CLASS', '1',  '111', '11', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+          }
+        }
       }
       return $this->_check;
     }
@@ -109,9 +125,10 @@
 		  xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EASYBILL_NO_AUTO_PAYMENT', 'moneyorder',  '111', '8', '', now())");
 		  xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EASYBILL_DO_STATUS_CHANGE', 'False',  '111', '9', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		  xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_EASYBILL_STATUS_CHANGE', '0', '111', '10', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+		  xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_EASYBILL_STANDARD_TAX_CLASS', '1',  '111', '11', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 
 		  // Tabellenstruktur anlegen
-		  xtc_db_query("CREATE TABLE IF NOT EXISTS easybill (
+		  xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_EASYBILL." (
                               easybill_id INT(11) NOT NULL AUTO_INCREMENT,
                               orders_id INT(11) NOT NULL,
                               customers_id INT(11) NOT NULL,
@@ -121,20 +138,20 @@
                               payment int(1) NOT NULL DEFAULT '0',
                               PRIMARY KEY (`easybill_id`),
                               INDEX orders_id (orders_id),
-                              INDEX customers_id (customers_id)
-                                                      )");
-		  xtc_db_query("CREATE TABLE IF NOT EXISTS easybill_datev (
+                              INDEX customers_id (customers_id))
+                   ");
+		  xtc_db_query("CREATE TABLE IF NOT EXISTS ".TABLE_EASYBILL_DATEV." (
                               datev_id INT(11) NOT NULL AUTO_INCREMENT,
                               customers_datev_id INT(11) NOT NULL,
                               customers_id INT(11) NOT NULL,
                               PRIMARY KEY (`datev_id`),
-                              INDEX customers_id (customers_id)
-                                                      )");
+                              INDEX customers_id (customers_id))
+                   ");
 	  }
 
     function remove() {
       xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key in ('" . implode("', '", $this->keys()) . "')");
-      xtc_db_query("DROP TABLE easybill");
+      xtc_db_query("DROP TABLE ".TABLE_EASYBILL);
     }
 
     function keys() {
@@ -152,6 +169,5 @@
       $payment = $this->getPaymentInstalled();
       return array_merge($key, (is_array($payment)?$payment:array()));
     }
-
   }
 ?>
