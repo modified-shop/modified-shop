@@ -32,27 +32,18 @@ require_once (DIR_FS_INC.'xtc_render_vvcode.inc.php');
 require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-//BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 $inp = 'true';
-//EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 
 $info_message = ''; //DokuMan - 2010-08-26 - set missing variable
 
-//if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 if (isset ($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['email'])) {
   $vlcode = xtc_random_charcode(32);
-  //BOF - GTB - 2010-09-16 - set newsletter to SSL
   $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($_POST['email']).'&key='.$vlcode, 'SSL');
-  //$link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($_POST['email']).'&key='.$vlcode, 'NONSSL');
-  //EOF - GTB - 2010-09-16 - set newsletter to SSL 
 
   // assign language to template for caching
   $smarty->assign('language', $_SESSION['language']);
-  //BOF - GTB - 2010-08-03 - Security Fix - Base
   $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  //$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
   $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
   // assign vars
@@ -65,40 +56,24 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['e
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
 
-  // Check if email exists
-
-  //BOF - Dokuman - 2009-09-04: convert uppercase Captchas to lowercase, to be more flexible on user input
-  //if (($_POST['check'] == 'inp') && ($_POST['vvcode'] == $_SESSION['vvcode'])) {
-  //BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
-    //if (($_POST['check'] == 'inp') && (strtoupper($_POST['vvcode']) == $_SESSION['vvcode'])) {
   if (xtc_validate_email(trim($_POST['email'])) && ($_POST['check'] == 'inp') && (strtoupper($_POST['vvcode']) == $_SESSION['vvcode'])) {
-  //BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
-  //EOF - Dokuman - 2009-09-04: convert uppercase Captchas to lowercase, to be more flexible on user input
 
+    // Check if email exists
     $check_mail_query = xtc_db_query("select customers_email_address, mail_status from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
     if (!xtc_db_num_rows($check_mail_query)) {
 
-      if (isset ($_SESSION['customer_id'])) {
-        $customers_id = $_SESSION['customer_id'];
-        $customers_status = $_SESSION['customers_status']['customers_status_id'];
-        $customers_firstname = $_SESSION['customer_first_name'];
-        $customers_lastname = $_SESSION['customer_last_name'];
+      $check_customer_mail_query = xtc_db_query("select customers_id, customers_status, customers_firstname, customers_lastname, customers_email_address from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
+      if (!xtc_db_num_rows($check_customer_mail_query)) {
+        $customers_id = '0';
+        $customers_status = '1';
+        $customers_firstname = TEXT_CUSTOMER_GUEST;
+        $customers_lastname = '';
       } else {
-
-        $check_customer_mail_query = xtc_db_query("select customers_id, customers_status, customers_firstname, customers_lastname, customers_email_address from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
-        if (!xtc_db_num_rows($check_customer_mail_query)) {
-          $customers_id = '0';
-          $customers_status = '1';
-          $customers_firstname = TEXT_CUSTOMER_GUEST;
-          $customers_lastname = '';
-        } else {
-          $check_customer = xtc_db_fetch_array($check_customer_mail_query);
-          $customers_id = $check_customer['customers_id'];
-          $customers_status = $check_customer['customers_status'];
-          $customers_firstname = $check_customer['customers_firstname'];
-          $customers_lastname = $check_customer['customers_lastname'];
-        }
-
+        $check_customer = xtc_db_fetch_array($check_customer_mail_query);
+        $customers_id = $check_customer['customers_id'];
+        $customers_status = $check_customer['customers_status'];
+        $customers_firstname = $check_customer['customers_firstname'];
+        $customers_lastname = $check_customer['customers_lastname'];
       }
 
       $sql_data_array = array ('customers_email_address' => xtc_db_input($_POST['email']), 'customers_id' => xtc_db_input($customers_id), 'customers_status' => xtc_db_input($customers_status), 'customers_firstname' => xtc_db_input($customers_firstname), 'customers_lastname' => xtc_db_input($customers_lastname), 'mail_status' => '0', 'mail_key' => xtc_db_input($vlcode), 'date_added' => 'now()');
@@ -129,22 +104,12 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process') && isset($_POST['e
     }
 
   } else {
-      //BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
-      //$info_message = TEXT_WRONG_CODE;
-      $info_message = '';
-      if (!xtc_validate_email(trim($_POST['email']))) $info_message .= ERROR_EMAIL;
+    $info_message = '';
+    if (!xtc_validate_email(trim($_POST['email']))) $info_message .= ERROR_EMAIL;
     if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) $info_message .= ERROR_VVCODE;
-    //EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
   }
 
-  //BOF - Dokuman - 2009-09-04: convert uppercase Captchas to lowercase, to be more flexible on user input
-  //if (($_POST['check'] == 'del') && ($_POST['vvcode'] == $_SESSION['vvcode'])) {
-  //BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
-  //if (($_POST['check'] == 'del') && (strtoupper($_POST['vvcode']) == $_SESSION['vvcode'])) {
   if (xtc_validate_email(trim($_POST['email'])) && ($_POST['check'] == 'del') && (strtoupper($_POST['vvcode']) == $_SESSION['vvcode'])) {
-  //EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
-  //BOF - Dokuman - 2009-09-04: convert uppercase Captchas to lowercase, to be more flexible on user input
-
     $check_mail_query = xtc_db_query("select customers_email_address from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
     if (!xtc_db_num_rows($check_mail_query)) {
       $info_message = TEXT_EMAIL_NOT_EXIST;
@@ -162,10 +127,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'activate')) {
     $info_message = TEXT_EMAIL_NOT_EXIST;
   } else {
     $check_mail = xtc_db_fetch_array($check_mail_query);
-    //BOF - web28 - 2009-02-09 : FIX WRONG ACTIVATE HANDLING
-    //if (!$check_mail['mail_key'] == $_GET['key']) {
     if ($check_mail['mail_key'] != $_GET['key']) {
-    //EOF - web28 - 2009-02-09 : FIX WRONG ACTIVATE HANDLING
       $info_message = TEXT_EMAIL_ACTIVE_ERROR;
     } else {
       xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($_GET['email'])."'");
@@ -185,10 +147,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'remove')) {
     $info_message = TEXT_EMAIL_NOT_EXIST;
   } else {
     $check_mail = xtc_db_fetch_array($check_mail_query);
-    //BOF - web28 - 2009-02-09 : FIX WRONG DEACTIVATE HANDLING
-    //if (!xtc_validate_password($check_mail['customers_email_address'], $_GET['key'])) {
     if ($check_mail['mail_key'] != $_GET['key']) {
-    //EOF - web28 - 2009-02-09 : FIX WRONG DEACTIVATE HANDLING
       $info_message = TEXT_EMAIL_DEL_ERROR;
     } else {
       $del_query = xtc_db_query("delete from ".TABLE_NEWSLETTER_RECIPIENTS." where  customers_email_address ='".xtc_db_input($_GET['email'])."' and mail_key = '".xtc_db_input($_GET['key'])."'");
@@ -197,10 +156,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'remove')) {
   }
 }
 
-//BOF - GTB - 2010-09-16 - set newsletter to SSL
 $breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '', 'SSL'));
-//$breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '', 'NONSSL'));
-//EOF - GTB - 2010-09-16 - set newsletter to SSL
 
 require (DIR_WS_INCLUDES.'header.php');
 
@@ -208,29 +164,13 @@ $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, ''
 
 $smarty->assign('text_newsletter', TEXT_NEWSLETTER);
 $smarty->assign('info_message', $info_message);
-//BOF - GTB - 2010-09-16 - set newsletter to SSL
 $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL')));
-//$smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'NONSSL')));
-//EOF - GTB - 2010-09-16 - set newsletter to SSL
-
-//BOF - DokuMan - 2010-10-13: Use $_POST-variable to show email in input field, Undefined index: email
-//BOF - web28 - 2010-02-09: SHOW EMAIL IN INPUT FIELD
-//$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', xtc_db_input($_POST['email'])));
-//$smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', (xtc_db_input(isset($_GET['email'])) ? xtc_db_input($_GET['email']) : xtc_db_input($_POST['email']))));
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', isset($_POST['email']) ? xtc_db_prepare_input($_POST['email']) : ''));
-//EOF - web28 - 2010-02-09: SHOW EMAIL IN INPUT FIELD
-//EOF - DokuMan - 2010-10-13: Use $_POST-variable to show email in input field, Undefined index: email
-
-// BOF - Tomcraft - 2010-01-24 - unified the captcha field size.
-//$smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="6" maxlength="6"', 'text', false));
 $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="8" maxlength="6"', 'text', false));
-// EOF - Tomcraft - 2010-01-24 - unified the captcha field size.
 
-//BOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 if(isset($_POST['check']) && $_POST['check'] == 'inp') {$inp = 'true'; $del = '';}
 if(isset($_POST['check']) && $_POST['check'] == 'del') {$inp = ''; $del = 'true';}
 $smarty->assign('CHECK_INP', xtc_draw_radio_field('check', 'inp', $inp));
-//EOF - web28 - 2010-02-09: NEWSLETTER ERROR HANDLING
 $smarty->assign('CHECK_DEL', xtc_draw_radio_field('check', 'del', isset($del) ? $del : ''));
 $smarty->assign('BUTTON_SEND', xtc_image_submit('button_send.gif', IMAGE_BUTTON_LOGIN));
 $smarty->assign('FORM_END', '</form>');
