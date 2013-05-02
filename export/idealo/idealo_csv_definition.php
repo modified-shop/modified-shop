@@ -80,7 +80,7 @@ $_csv_new_idealo_version_text = '';
    
 define( 'NEW_IDEALO_CSV_VERSION_TEXT', $_csv_new_idealo_version_text );
 define( 'MODULE_IDEALO_CSV_TEXT_DESCRIPTION', 'CSV - Idealo' );
-define( 'MODULE_IDEALO_CSV_TEXT_TITLE',  '<img src = "http://www.idealo.de/pics/common/logoidealo_blue_s.gif"> - CSV');
+define( 'MODULE_IDEALO_CSV_TEXT_TITLE',  xtc_image(DIR_WS_ICONS . 'logoidealo_blue_s.gif') . ' - CSV');
 
 
 define('MODULE_IDEALO_CSV_FILE_TITLE' , '<hr noshade>User');
