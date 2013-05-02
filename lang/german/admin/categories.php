@@ -46,6 +46,7 @@ define('TEXT_INSERT_ELEMENT','Neues Element');
 
 define('TEXT_WARN_MAIN','Haupt');
 define('TEXT_NEW_PRODUCT', 'Neuer Artikel in &quot;%s&quot;');
+define('TEXT_EDIT_PRODUCT', 'Artikel bearbeiten in &quot;%s&quot;');
 define('TEXT_CATEGORIES', 'Kategorien:');
 define('TEXT_PRODUCTS', 'Produkte:');
 define('TEXT_PRODUCTS_PRICE_INFO', 'Preis:');
