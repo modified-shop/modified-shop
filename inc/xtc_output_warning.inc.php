@@ -21,7 +21,7 @@
 
   $result = '';
 
-  if (isset($_SESSION['customers_status']['customers_status_id']) && $_SESSION['customers_status']['customers_status_id'] == '0' ) {
+  if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0' ) {
     $result = '<div class="errormessage">' . xtc_image(DIR_WS_ICONS . 'output_warning.gif', ICON_WARNING) . $warning . '</div>';
   }
   echo $result;

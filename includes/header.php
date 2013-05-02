@@ -31,7 +31,7 @@ define('DIR_MODIFIED_INSTALLER', '_installer');
 
 //SET SHOP OFFLINE 503 STATUS CODE
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
-if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status_id'] != 0) {	   
+if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {	   
 	header("HTTP/1.1 503 Service Temporarily Unavailable");
   header("Status: 503 Service Temporarily Unavailable");
 }
