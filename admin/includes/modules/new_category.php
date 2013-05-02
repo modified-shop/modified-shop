@@ -35,7 +35,7 @@
                                       TABLE_CATEGORIES . " c, " .
                                       TABLE_CATEGORIES_DESCRIPTION . " cd
                                       where c.categories_id = cd.categories_id
-                                      and c.categories_id = '" . $_GET['cID'] . "'");
+                                      and c.categories_id = '" . (int)$_GET['cID'] . "'");
 
       $category = xtc_db_fetch_array($category_query);
 
@@ -71,13 +71,13 @@
                             array('id' => 'DESC','text'=>TEXT_SORT_DESC));
 ?>
   <tr>
-    <td class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></td>
+    <td class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path((int)$_GET['cID'])); ?></td>
     <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
   </tr>
   <tr>
     <?php
     $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';
-    echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"'); ?>
+    echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"'); ?>
    <td>
       <!-- BOF Block1 //-->
       <div style="width: 860px; padding:5px;">
@@ -212,7 +212,7 @@
         <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
         <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
         <input type="submit" class="button" name="update_category" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
-        <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . $_GET['cID']); ?>"><?php echo BUTTON_CANCEL ; ?></a>
+        <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID']); ?>"><?php echo BUTTON_CANCEL ; ?></a>
       </div>
     </td>
   </form>
