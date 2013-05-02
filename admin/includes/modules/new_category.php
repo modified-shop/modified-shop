@@ -54,7 +54,7 @@
 
     $languages = xtc_get_languages();
 
-    $text_new_or_edit = ($_GET['action']=='new_category_ACD') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
+    $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
 
     $order_array='';
     $order_array=array(array('id' => 'p.products_price','text'=>TXT_PRICES),
