@@ -264,7 +264,7 @@ if (isset($_GET['info_message'])) {
   $smarty->assign('info_message', str_replace('+', ' ', encode_htmlspecialchars($_GET['info_message'])));
 }
 //BOF - web28 - 2011-05-15 - new continue shopping link
-if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false) {
+if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
   $_SESSION['continue_link'] = $_SERVER['HTTP_REFERER'];
 }
 if(!empty($_SESSION['continue_link'])) {
