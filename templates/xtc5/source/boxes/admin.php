@@ -15,11 +15,11 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// reset var
-$box_smarty = new smarty;
-$box_content='';
-$flag='';
-$box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
+  // reset var
+  $box_smarty = new smarty;
+  $box_content='';
+  $flag='';
+  $box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
 
   // include needed functions
   require_once(DIR_FS_INC . 'xtc_image_button.inc.php');
@@ -44,18 +44,24 @@ $box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
   $products = xtc_db_fetch_array($products_query);
   $reviews_query = xtc_db_query("select count(*) as count from " . TABLE_REVIEWS);
   $reviews = xtc_db_fetch_array($reviews_query);
+  $admin_status_query = xtc_db_query("SELECT customers_status_name
+                                        FROM " . TABLE_CUSTOMERS_STATUS . "
+                                       WHERE customers_status_id = '" . DEFAULT_CUSTOMERS_STATUS_ID_ADMIN . "' 
+                                         AND language_id = '" . $_SESSION['languages_id'] . "'");
+  $admin_status = xtc_db_fetch_array($admin_status_query);
   $admin_image = '<a href="' . xtc_href_link_admin(FILENAME_START,'', 'NONSSL').'">'.xtc_image_button('button_admin.gif', IMAGE_BUTTON_ADMIN).'</a>';  //web28 - 2010-06-23 change unnecessary SSL to NONSSL
-   if ($product->isProduct()) {
-    $admin_link='<a href="' . xtc_href_link_admin(FILENAME_EDIT_PRODUCTS, 'cPath=' . $cPath . '&amp;pID=' . $product->data['products_id']) . '&amp;action=new_product' . '" onclick="window.open(this.href); return false;">' . xtc_image_button('edit_product.gif', IMAGE_BUTTON_PRODUCT_EDIT) . '</a>';
-    } else {
-    $admin_link = ''; //DokuMan  - 2010-03-23 - set undefinded variable
-   }
-
-  $box_content= '<strong>' . BOX_TITLE_STATISTICS . '</strong><br />' . $orders_contents . '<br />' .
-                                         BOX_ENTRY_CUSTOMERS . ' ' . $customers['count'] . '<br />' .
-                                         BOX_ENTRY_PRODUCTS . ' ' . $products['count'] . '<br />' .
-                                         BOX_ENTRY_REVIEWS . ' ' . $reviews['count'] .'<br />' .
-                                         $admin_image . '<br />' .$admin_link;
+  $admin_link = '';
+  if ($product->isProduct()) {
+    $admin_link='<a href="' . xtc_href_link_admin(FILENAME_EDIT_PRODUCTS, 'cPath=' . $cPath . '&pID=' . $product->data['products_id']) . '&action=new_product' . '" onclick="window.open(this.href); return false;">' . xtc_image_button('edit_product.gif', IMAGE_BUTTON_PRODUCT_EDIT) . '</a>';
+  }
+  
+  $box_content = '<strong>' . BOX_TITLE_STATISTICS . '</strong><br />' . $orders_contents . '<br />' .
+                 BOX_ENTRY_CUSTOMERS . ' ' . $customers['count'] . '<br />' .
+                 BOX_ENTRY_PRODUCTS . ' ' . $products['count'] . '<br />' .
+                 BOX_ENTRY_REVIEWS . ' ' . $reviews['count'] .'<br />' .
+                 BOX_LOGINBOX_STATUS . ' ' . $admin_status['customers_status_name'] .'<br />' .
+                 $admin_image . '<br />' .
+                 $admin_link;
 
     if ($flag==true) define('SEARCH_ENGINE_FRIENDLY_URLS',true);
     $box_smarty->assign('BOX_CONTENT', $box_content);
@@ -64,5 +70,4 @@ $box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
     $box_smarty->assign('language', $_SESSION['language']);
     $box_admin= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_admin.html');
     $smarty->assign('box_ADMIN',$box_admin);
-
 ?>
