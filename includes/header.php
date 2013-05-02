@@ -359,7 +359,7 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 include(DIR_WS_INCLUDES.FILENAME_BANNER);
 
 //SHOP OFFLINE INFO
-if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status_id'] != 0) {	
+if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {	
 	$smarty->assign('language', $_SESSION['language']);
 	$smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
   $smarty->display(CURRENT_TEMPLATE.'/offline.html');	

@@ -38,7 +38,7 @@
 // -----------------------------------------------------------------------------------------
 //	Nur, wenn Preise sichtbar
 // -----------------------------------------------------------------------------------------
-  if ($_SESSION['customers_status']['customers_status_show_price'] == 1) {
+  if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
     require_once(DIR_WS_BOXES . 'add_a_quickie.php');
     require_once(DIR_WS_BOXES . 'shopping_cart.php');
   }
@@ -51,7 +51,7 @@
 // -----------------------------------------------------------------------------------------
 //	Nur fuer Admins
 // -----------------------------------------------------------------------------------------
-  if ($_SESSION['customers_status']['customers_status_id'] == 0) {
+  if ($_SESSION['customers_status']['customers_status'] == '0') {
     require_once(DIR_WS_BOXES . 'admin.php');
     $smarty->assign('is_admin', true);
   }
@@ -75,7 +75,7 @@
 // -----------------------------------------------------------------------------------------
 //	Nur, wenn Bewertungen erlaubt
 // -----------------------------------------------------------------------------------------
-  if ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
+  if ($_SESSION['customers_status']['customers_status_read_reviews'] == '1') {
     require_once(DIR_WS_BOXES . 'reviews.php');
   }
 // -----------------------------------------------------------------------------------------

@@ -73,8 +73,8 @@ define('SHOW_COUNTS_DESC' , 'Display number of products after each category name
 define('DISPLAY_PRICE_WITH_TAX_TITLE' , 'Display Prices with Tax');
 define('DISPLAY_PRICE_WITH_TAX_DESC' , 'Display prices with tax included (true) or add the tax at the end (false)');
 
-define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_TITLE' , 'Customer Status of Administrators');
-define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_DESC' , 'Choose the default customer status for administrators');
+define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_TITLE' , 'Customer Status of Administrators for the frontend');
+define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_DESC' , 'Choose the default customer status for administrators for the frontend');
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_TITLE' , 'Customer Status of Guests');
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_DESC' , 'Choose the default customer status for guest accounts');
 define('DEFAULT_CUSTOMERS_STATUS_ID_TITLE' , 'Customer Status of New Customers');
