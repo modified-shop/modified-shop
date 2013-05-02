@@ -29,7 +29,9 @@
   if (defined('CONFIRM_SAVE_ENTRY')) {
     $confirm_save_entry = CONFIRM_SAVE_ENTRY == 'true' ? $confirm_save_entry : '';
   }
-
+  
+  $text_new_or_edit = TEXT_EDIT_PRODUCT;
+  
   if (isset($_GET['pID']) && (!$_POST)) {
     $product_query = xtc_db_query("SELECT *,
                                           date_format(p.products_date_available, '%Y-%m-%d') as products_date_available
@@ -55,6 +57,7 @@
     $pInfo->products_startpage = $_POST['products_startpage'];
   } else {
     $pInfo = new objectInfo(array ());
+    $text_new_or_edit = TEXT_NEW_PRODUCT;
   }
 
   $manufacturers_array = array (array ('id' => '', 'text' => TEXT_NONE));
@@ -99,7 +102,7 @@
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"');
 ?>
-<span class="pageHeading"><?php echo sprintf(TEXT_NEW_PRODUCT, xtc_output_generated_category_path($current_category_id)); ?></span><br />
+<span class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></span><br />
 
 <div style="width: 860px; padding:5px;">
 <table bgcolor="f3f3f3" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding:5px;">
