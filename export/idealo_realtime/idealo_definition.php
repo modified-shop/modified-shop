@@ -80,7 +80,7 @@ $new_idealo_version_text = '';
    
 define( 'NEW_IDEALO_REALTIME_VERSION_TEXT', $new_idealo_version_text );
 define( 'MODULE_IDEALO_REALTIME_TEXT_DESCRIPTION', 'Realtime - Idealo' );
-define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  '<img src = "http://www.idealo.de/pics/common/logoidealo_blue_s.gif"> - Realtime');
+define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  xtc_image(DIR_WS_ICONS . 'logoidealo_blue_s.gif') . ' - Realtime');
 
 
 define('MODULE_IDEALO_REALTIME_FILE_TITLE' , '<hr noshade>User');
