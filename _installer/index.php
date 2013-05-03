@@ -58,14 +58,14 @@
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $process = true;
-    $_SESSION['language'] = xtc_db_prepare_input($_POST['LANGUAGE']);
+    $lng = xtc_db_prepare_input($_POST['LANGUAGE']);
     $error = false;
-    if ( ($_SESSION['language'] != 'german') && ($_SESSION['language'] != 'english') ) {
+    if ( ($lng != 'german') && ($lng != 'english') ) {
       $error = true;
       $messageStack->add('index', SELECT_LANGUAGE_ERROR);
     }
     if ($error == false) {
-      xtc_redirect(xtc_href_link('install_step1.php?lg='. xtc_db_prepare_input($_POST['LANGUAGE']), '', 'NONSSL'));
+      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lng, '', 'NONSSL'));
     }
   }
 
