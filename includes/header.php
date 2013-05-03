@@ -20,7 +20,7 @@
    Credit Class/Gift Vouchers/Discount Coupons (Version 5.10)
    http://www.oscommerce.com/community/contributions,282
    Copyright (c) Strider | Strider@oscworks.com
-   Copyright (c  Nick Stanko of UkiDev.com, nick@ukidev.com
+   Copyright (c)  Nick Stanko of UkiDev.com, nick@ukidev.com
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
 
@@ -64,10 +64,13 @@ if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false && strpos($_SESSIO
 <link rel="shortcut icon" href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/favicon.ico';?>" type="image/x-icon" />
 <?php
 /*
-  The following copyright announcement is in compliance  to section 2c of the GNU General Public License, 
-  and thus can not be removed, or can only be modified  appropriately.
+  The following copyright announcement is in compliance
+  to section 2c of the GNU General Public License, and
+  thus can not be removed, or can only be modified
+  appropriately.
 
-  Please leave this comment intact together with the following copyright announcement.
+  Please leave this comment intact together with the
+  following copyright announcement.
 */
 ?>
 <!--
