@@ -47,9 +47,14 @@
   $products = xtc_db_fetch_array($products_query);
   $reviews_query = xtc_db_query("select count(*) as count from ".TABLE_REVIEWS);
   $reviews = xtc_db_fetch_array($reviews_query);
+  $admin_status_query = xtc_db_query("SELECT customers_status_name
+                                        FROM " . TABLE_CUSTOMERS_STATUS . "
+                                       WHERE customers_status_id = '" . DEFAULT_CUSTOMERS_STATUS_ID_ADMIN . "' 
+                                         AND language_id = '" . $_SESSION['languages_id'] . "'");
+  $admin_status = xtc_db_fetch_array($admin_status_query);
   $admin_image = '<a href="'.xtc_href_link_admin(FILENAME_START,'', 'NONSSL').'">'.xtc_image_button('button_admin.gif', IMAGE_BUTTON_ADMIN).'</a>';
   if ($product->isProduct()) {
-    $admin_link='<a href="'.xtc_href_link_admin(FILENAME_EDIT_PRODUCTS, 'cPath='.$cPath.'&amp;pID='.$product->data['products_id']).'&amp;action=new_product'.'">'.xtc_image_button('edit_product.gif', IMAGE_BUTTON_PRODUCT_EDIT).'</a>';
+    $admin_link='<a href="'.xtc_href_link_admin(FILENAME_EDIT_PRODUCTS, 'cPath='.$cPath.'&pID='.$product->data['products_id']).'&action=new_product'.'">'.xtc_image_button('edit_product.gif', IMAGE_BUTTON_PRODUCT_EDIT).'</a>';
   } elseif (isset($_GET['coID'])) {
     $content_query = xtc_db_query("SELECT content_id FROM ".TABLE_CONTENT_MANAGER." WHERE content_group='".(int)$_GET['coID']."' AND languages_id='".(int)$_SESSION['languages_id']."'");
     $content_data = xtc_db_fetch_array($content_query);
@@ -60,7 +65,9 @@
                              BOX_ENTRY_CUSTOMERS . ' ' . $customers['count'] . '<br />' .
                              BOX_ENTRY_PRODUCTS . ' ' . $products['count'] . '<br />' .
                              BOX_ENTRY_REVIEWS . ' ' . $reviews['count'] .'<br />' .
-                             $admin_image . '<br />' .$admin_link;
+                             BOX_LOGINBOX_STATUS . ' ' . $admin_status['customers_status_name'] .'<br />' .
+                             $admin_image . '<br />' .
+                             $admin_link;
 
   if ($flag==true)
     define('SEARCH_ENGINE_FRIENDLY_URLS',true);
