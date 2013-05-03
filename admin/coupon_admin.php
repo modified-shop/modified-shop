@@ -263,22 +263,12 @@ require (DIR_WS_INCLUDES.'head.php');
   }
 ?>
   <script type="text/javascript" src="includes/general.js"></script>
-  <link type="text/css" href="includes/javascript/jquery-ui.custom.css" rel="stylesheet" />
   <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/ui/jquery.ui.core.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/ui/jquery.ui.datepicker-<?php echo strtolower($_SESSION['language_code']); ?>.js"></script>
   <script type="text/javascript">
     $(function() {
       /* set Datepicker for coupon_startdate (1) and coupon_finishdate (2) */
-      $('#hasDatepicker1').datepicker(
-        $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-        {dateFormat:'yy-mm-dd', changeMonth: true,  changeYear: true}
-      );
-      $('#hasDatepicker2').datepicker(
-        $.datepicker.regional['<?php echo strtolower($_SESSION['language_code']); ?>'],
-        {dateFormat:'yy-mm-dd', changeMonth: true,  changeYear: true}
-      );
+      $('#Datepicker1').datepick(); 
+      $('#Datepicker2').datepick(); 
     });
   </script>
 </head>
@@ -879,7 +869,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             <td align="left"><?php echo COUPON_STARTDATE; ?></td>
                             <td align="left">
                               <?php
-                              echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="hasDatepicker1"');
+                              echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="Datepicker1"');
                               ?>
                             </td>
                             <td align="left"><?php echo COUPON_STARTDATE_HELP; ?></td>
@@ -888,7 +878,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             <td align="left"><?php echo COUPON_FINISHDATE; ?></td>
                             <td align="left">
                               <?php
-                                echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="hasDatepicker2"');
+                                echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="Datepicker2"');
                               ?>
                             </td>
                             <td align="left"><?php echo COUPON_FINISHDATE_HELP; ?></td>
