@@ -63,9 +63,6 @@
   require_once(DIR_FS_CATALOG.'includes/database_tables.php');
   require_once(DIR_FS_CATALOG.'inc/xtc_image.inc.php');
 
-  // Start the Install_Session
-  session_start();
-
   define('CR', "\n");
   define('BOX_BGCOLOR_HEADING', '#bbc3d3');
   define('BOX_BGCOLOR_CONTENTS', '#f8f8f9');
@@ -107,13 +104,17 @@
     define('DIR_WS_ICONS','images/');
   }
 
-  //BOF - web28 - 2010.02.09 - FIX LOST SESSION
-  if (isset($_SESSION['language']) && $_SESSION['language'] != '') {
-    $lang = $_SESSION['language'];
-  } else {
+  $lang = '';
+  if (isset($_GET['lg']) && $_GET['lg'] != '') {
+    $lang = $_GET['lg'];
+  }
+  if (isset($_POST['lg']) && $_POST['lg'] != '') {
+    $lang = $_POST['lg'];
+  }
+  if ($lang == '') {
     //BOF - DokuMan - 2010-08-16 - Set browser language on installer start page
     preg_match("/^([a-z]+)-?([^,;]*)/i", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $browser_lang);
-    switch ($browser_lang[1]) {
+    switch (strtolower($browser_lang[1])) {
       case 'de':
         $lang = 'german';
         break;
@@ -122,12 +123,6 @@
         break;
     }
     //EOF - DokuMan - 2010-08-16 - Set browser language on installer start page
-    if (isset($_GET['lg']) && $_GET['lg'] != '') {
-      $lang = $_GET['lg'];
-    }
-    if (isset($_POST['lg']) && $_POST['lg'] != '') {
-      $lang = $_POST['lg'];
-    }
   }
   //include('language/'.$lang.'.php');
   $input_lang = '<input type="hidden" name="lg" value="'. $lang .'">';
