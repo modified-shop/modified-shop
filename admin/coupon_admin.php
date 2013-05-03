@@ -271,6 +271,10 @@ require (DIR_WS_INCLUDES.'head.php');
       $('#Datepicker2').datepick(); 
     });
   </script>
+	<?php
+	//jQueryDatepicker
+	require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
+	?>
 </head>
 <body>
     <!-- header //-->
