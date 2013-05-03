@@ -31,13 +31,13 @@
 
 
   $orders_status_validating = xtc_db_num_rows(xtc_db_query("SELECT orders_status FROM ".TABLE_ORDERS ." WHERE orders_status ='0'"));
-  $orders_contents .='<a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&amp;status=0', 'NONSSL').'">'.TEXT_VALIDATING.'</a> '.$orders_status_validating.'<br />';
+  $orders_contents .='<a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status=0', 'NONSSL').'">'.TEXT_VALIDATING.'</a> '.$orders_status_validating.'<br />';
 
   $orders_status_query = xtc_db_query("SELECT orders_status_name, orders_status_id FROM ".TABLE_ORDERS_STATUS." WHERE language_id = '".$_SESSION['languages_id']."'");
   while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
     $orders_pending_query = xtc_db_query("SELECT count(*) AS count FROM ".TABLE_ORDERS." WHERE orders_status = '".$orders_status['orders_status_id']."'");
     $orders_pending = xtc_db_fetch_array($orders_pending_query);
-    $orders_contents .= '<a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&amp;status='.$orders_status['orders_status_id'], 'NONSSL').'">'.$orders_status['orders_status_name'].'</a>: '.$orders_pending['count'].'<br />';
+    $orders_contents .= '<a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status='.$orders_status['orders_status_id'], 'NONSSL').'">'.$orders_status['orders_status_name'].'</a>: '.$orders_pending['count'].'<br />';
   }
   $orders_contents = substr($orders_contents, 0, -6);
 
