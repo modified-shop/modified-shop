@@ -267,8 +267,8 @@ require (DIR_WS_INCLUDES.'head.php');
   <script type="text/javascript">
     $(function() {
       /* set Datepicker for coupon_startdate (1) and coupon_finishdate (2) */
-      $('#Datepicker1').datepick(); 
-      $('#Datepicker2').datepick(); 
+      $('#Datepicker1').datepick({dateFormat: 'yyyy-mm-dd'}); 
+      $('#Datepicker2').datepick({dateFormat: 'yyyy-mm-dd'}); 
     });
   </script>
 	<?php
