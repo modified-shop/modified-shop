@@ -188,7 +188,7 @@ if (strstr($PHP_SELF, FILENAME_ADDRESS_BOOK_PROCESS )) {
     include('includes/form_check.js.php');
   }
 }
-if (strstr($PHP_SELF, FILENAME_CHECKOUT_SHIPPING_ADDRESS ) or strstr($PHP_SELF,FILENAME_CHECKOUT_PAYMENT_ADDRESS)) {
+if (strstr($PHP_SELF, FILENAME_CHECKOUT_SHIPPING_ADDRESS ) || strstr($PHP_SELF,FILENAME_CHECKOUT_PAYMENT_ADDRESS)) {
 require('includes/form_check.js.php');
 ?>
 <script type="text/javascript"><!--
@@ -318,12 +318,8 @@ function resize() {
 
 ?>
 </head>
+<body<?php if(strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) echo ' onload="resize();"'; ?>>
 <?php
-if (strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) {
-echo '<body onload="resize();"> ';
-} else {
-echo '<body>';
-}
 
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE=='true') {
@@ -424,17 +420,14 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 }
 
 include(DIR_WS_INCLUDES.FILENAME_BANNER);
-//BOF - web28- 2010-07-07 SHOP OFFLINE INFO
-//require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php');
-if(xtc_get_shop_conf('SHOP_OFFLINE') != 'checked' || $_SESSION['customers_status']['customers_status'] == '0') {
-  //Do nothing
-} else {
+
+//SHOP OFFLINE INFO
+if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {	
   $smarty->assign('language', $_SESSION['language']);
-  $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));
-    $smarty->display(CURRENT_TEMPLATE.'/offline.html');
+  $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
+  $smarty->display(CURRENT_TEMPLATE.'/offline.html');	
   EXIT;
 }
-//EOF  - web28- 2010-07-07 SHOP OFFLINE INFO
 
 //BOF - Dokuman - 2012-06-19 - BILLSAFE payment module (BillSAFE-Layer Start)
 if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER')) {
