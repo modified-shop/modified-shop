@@ -54,15 +54,15 @@
   //EOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
 
   $messageStack = new messageStack();
-  $process = false;
+  $error = false;
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
-    if ( ($lang != 'german') && ($lng != 'english') ) {
+    if ( ($lang != 'german') && ($lang != 'english') ) {
       $error = true;
       $messageStack->add('index', SELECT_LANGUAGE_ERROR);
     }
     if ($error == false) {
-      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lng, '', 'NONSSL'));
+      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lang, '', 'NONSSL'));
     }
   }
 
