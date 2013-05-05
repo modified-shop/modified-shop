@@ -57,10 +57,7 @@
   $process = false;
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
-    $process = true;
-    $lng = xtc_db_prepare_input($_POST['LANGUAGE']);
-    $error = false;
-    if ( ($lng != 'german') && ($lng != 'english') ) {
+    if ( ($lang != 'german') && ($lng != 'english') ) {
       $error = true;
       $messageStack->add('index', SELECT_LANGUAGE_ERROR);
     }
@@ -142,6 +139,7 @@
                       </div>
                       <div class="right">
                         <form name="ftp" action="index.php" method="post">
+                        <?php echo $input_lang; ?>
                           <label for="host"><?php echo FTP_HOST; ?>:</label>
                             <?php echo xtc_draw_input_field_installer('host', $host, '', 'id="host"'); ?><br />
                           <label for="port"><?php echo FTP_PORT; ?>:</label>
@@ -199,13 +197,13 @@
                   <tr>
                     <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />Deutsch</td>
                     <td width="192"><img src="images/icons/icon-deu.gif" width="30" height="16" alt="" />
-                      <?php echo xtc_draw_radio_field_installer('LANGUAGE', 'german'); ?>
+                      <?php echo xtc_draw_radio_field_installer('lg', 'german', (($lang=='german')?true:false)); ?>
                     </td>
                   </tr>
                   <tr>
                     <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />English</td>
                     <td><img src="images/icons/icon-eng.gif" width="30" height="16" alt="" />
-                    <?php echo xtc_draw_radio_field_installer('LANGUAGE', 'english'); ?> </td>
+                    <?php echo xtc_draw_radio_field_installer('lg', 'english', (($lang=='english')?true:false)); ?> </td>
                   </tr>
                 </table>
                 <?php // BOF - web28 - 2010.12.13 - NEW db-upgrade ?>
@@ -223,7 +221,7 @@
                   </table>
                   <?php // EOF - web28 - 2010.12.13 - NEW db-upgrade ?>
                 <?php } else {
-                  echo '<br/><strong>'. TEXT_INSTALLATION_NOT_POSSIBLE .'</strong><br/><br/><a href="index.php"><img src="buttons/'.$lang.'/button_retry.gif" border="0" alt="refresh page"></a>';
+                  echo '<br/><strong>'. TEXT_INSTALLATION_NOT_POSSIBLE .'</strong><br/><br/><input type="image" src="buttons/'.$lang.'/button_retry.gif" alt="refresh page">';
                 } ?>
                 <br />
               </form>
