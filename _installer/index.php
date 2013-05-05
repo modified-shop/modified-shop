@@ -54,18 +54,15 @@
   //EOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
 
   $messageStack = new messageStack();
-  $process = false;
+  $error = false;
 
   if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
-    $process = true;
-    $lng = xtc_db_prepare_input($_POST['LANGUAGE']);
-    $error = false;
-    if ( ($lng != 'german') && ($lng != 'english') ) {
+    if ( ($lang != 'german') && ($lang != 'english') ) {
       $error = true;
       $messageStack->add('index', SELECT_LANGUAGE_ERROR);
     }
     if ($error == false) {
-      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lng, '', 'NONSSL'));
+      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lang, '', 'NONSSL'));
     }
   }
 
@@ -125,45 +122,46 @@
                 </div>
               </td>
             </tr>
-          <?php
-          // BOC flth new permission fix system
-          if ($folder_flag || $file_flag) {
-            $host = isset($_POST['path']) ? $_POST['host'] : rtrim(getenv('HTTP_HOST'),'/');
-            $path = isset($_POST['path']) ? $_POST['path'] : basename(DIR_FS_CATALOG).'/';
-            $port = isset($_POST['port']) ? $_POST['port'] : '21';
-            $login = isset($_POST['login']) ? $_POST['login'] : '';
-            ?>
-            <tr>
-              <td>
-                <div id="permissions" class="popout">
-                    <?php if (!empty($ftp_message)) echo $ftp_message; ?>
-                    <div class="left" >
-                      <?php echo FTP_CHANGE_PERM_EXPLAIN; ?><br />
-                    </div>
-                    <div class="right">
-                      <form name="ftp" action="index.php" method="post">
-                        <label for="host"><?php echo FTP_HOST; ?>:</label>
-                          <?php echo xtc_draw_input_field_installer('host', $host, '', 'id="host"'); ?><br />
-                        <label for="port"><?php echo FTP_PORT; ?>:</label>
-                          <?php echo xtc_draw_input_field_installer('port', $port, '', 'id="port"'); ?><br />
-                        <label for="path"><?php echo FTP_PATH; ?>:</label>
-                          <?php echo xtc_draw_input_field_installer('path', $path, '', 'id="path"'); ?><br />
-                        <label for="login"><?php echo FTP_LOGIN; ?>:</label>
-                          <?php echo xtc_draw_input_field_installer('login', $login, '', 'id="login"'); ?><br />
-                        <label for="password"><?php echo FTP_PASSWORD; ?>:</label>
-                          <?php echo xtc_draw_password_field_installer('password', $password, '', 'id="password"'); ?><br />
-                        <?php echo xtc_draw_hidden_field_installer('action', 'ftp'); ?>
-                        <input type="submit" value="<?php echo CONNECT_FTP; ?>" />
-                      </form>
-                    </div>
-                  <br style="clear:both;" />
-                </div>
-              </td>
-            </tr>
             <?php
-          }
-          // EOC flth new permission fix system
-          ?>
+            // BOC flth new permission fix system
+            if ($folder_flag || $file_flag) {
+              $host = isset($_POST['path']) ? $_POST['host'] : rtrim(getenv('HTTP_HOST'),'/');
+              $path = isset($_POST['path']) ? $_POST['path'] : basename(DIR_FS_CATALOG).'/';
+              $port = isset($_POST['port']) ? $_POST['port'] : '21';
+              $login = isset($_POST['login']) ? $_POST['login'] : '';
+              ?>
+              <tr>
+                <td>
+                  <div id="permissions" class="popout">
+                      <?php if (!empty($ftp_message)) echo $ftp_message; ?>
+                      <div class="left" >
+                        <?php echo FTP_CHANGE_PERM_EXPLAIN; ?><br />
+                      </div>
+                      <div class="right">
+                        <form name="ftp" action="index.php" method="post">
+                        <?php echo $input_lang; ?>
+                          <label for="host"><?php echo FTP_HOST; ?>:</label>
+                            <?php echo xtc_draw_input_field_installer('host', $host, '', 'id="host"'); ?><br />
+                          <label for="port"><?php echo FTP_PORT; ?>:</label>
+                            <?php echo xtc_draw_input_field_installer('port', $port, '', 'id="port"'); ?><br />
+                          <label for="path"><?php echo FTP_PATH; ?>:</label>
+                            <?php echo xtc_draw_input_field_installer('path', $path, '', 'id="path"'); ?><br />
+                          <label for="login"><?php echo FTP_LOGIN; ?>:</label>
+                            <?php echo xtc_draw_input_field_installer('login', $login, '', 'id="login"'); ?><br />
+                          <label for="password"><?php echo FTP_PASSWORD; ?>:</label>
+                            <?php echo xtc_draw_password_field_installer('password', $password, '', 'id="password"'); ?><br />
+                          <?php echo xtc_draw_hidden_field_installer('action', 'ftp'); ?>
+                          <input type="submit" value="<?php echo CONNECT_FTP; ?>" />
+                        </form>
+                      </div>
+                    <br style="clear:both;" />
+                  </div>
+                </td>
+              </tr>
+              <?php
+            }
+            // EOC flth new permission fix system
+            ?>
           <?php } ?>
           <?php if ($ok_message!='') { ?>
             <tr>
@@ -199,31 +197,31 @@
                   <tr>
                     <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />Deutsch</td>
                     <td width="192"><img src="images/icons/icon-deu.gif" width="30" height="16" alt="" />
-                      <?php echo xtc_draw_radio_field_installer('LANGUAGE', 'german'); ?>
+                      <?php echo xtc_draw_radio_field_installer('lg', 'german', (($lang=='german')?true:false)); ?>
                     </td>
                   </tr>
                   <tr>
                     <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />English</td>
                     <td><img src="images/icons/icon-eng.gif" width="30" height="16" alt="" />
-                    <?php echo xtc_draw_radio_field_installer('LANGUAGE', 'english'); ?> </td>
+                    <?php echo xtc_draw_radio_field_installer('lg', 'english', (($lang=='english')?true:false)); ?> </td>
                   </tr>
                 </table>
                 <?php // BOF - web28 - 2010.12.13 - NEW db-upgrade ?>
-                <?php if ($error_flag==false) { ?>
+                  <?php if ($error_flag==false) { ?>
                   <input type="hidden" name="action" value="process" />
                   <table width="95%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                      <?php if($upgrade) { ?>
+                      <?php /* if($upgrade) { ?>
                         <td style="padding-left:4px"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /></td>
                         <td><?php echo TEXT_DB_UPGRADE; ?></td>
                         <td  style="padding-right:10px"><?php echo xtc_draw_checkbox_field_installer('db_upgrade','',true); //enable upgrade by default ?></td>
-                      <?php }?>
+                      <?php } */ ?>
                       <td align="right"><input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif"></td>
                     </tr>
                   </table>
                   <?php // EOF - web28 - 2010.12.13 - NEW db-upgrade ?>
                 <?php } else {
-                  echo '<br/><strong>'. TEXT_INSTALLATION_NOT_POSSIBLE .'</strong><br/><br/><a href="index.php"><img src="buttons/'.$lang.'/button_retry.gif" border="0" alt="refresh page"></a>';
+                  echo '<br/><strong>'. TEXT_INSTALLATION_NOT_POSSIBLE .'</strong><br/><br/><input type="image" src="buttons/'.$lang.'/button_retry.gif" alt="refresh page">';
                 } ?>
                 <br />
               </form>
