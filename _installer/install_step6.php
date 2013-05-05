@@ -688,7 +688,8 @@
             <tr>
               <td>
                  <form name="install" action="install_step6.php" method="post" onSubmit="return check_form(install_step6);">
-                   <?php echo $input_lang; ?>
+                <?php echo $input_lang; 
+                      echo draw_hidden_fields(); ?>
                    <input name="action" type="hidden" value="process" />
                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
                      <tr>
