@@ -165,7 +165,7 @@
     reset($_POST);
     $hidden_fields = '';
     while (list($key, $value) = each($_POST)) {
-      if ($key != 'x' && $key != 'y') {
+      if ($key != 'x' && $key != 'y' && $key != 'lg') {
         if (is_array($value)) {
           for ($i=0; $i<sizeof($value); $i++) {
             $hidden_fields .= xtc_draw_hidden_field_installer($key . '[]', $value[$i]).PHP_EOL;
