@@ -96,10 +96,11 @@
                   <p class="noteBox"><?php echo TEXT_STEP4_ERROR_1; ?></p>
                   <p class="noteBox"><font face="Verdana, Arial, Helvetica, sans-serif"><?php echo TEXT_STEP4_ERROR_2; ?></p>
                   <form name="install" action="install_step4.php" method="post">
-                     <?php echo draw_hidden_fields(); ?>
+                  <?php echo $input_lang; 
+                        echo draw_hidden_fields(); ?>
                     <table border="0" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td align="center"><a href="index.php"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                        <td align="center"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
                         <td align="center">
                           <input type="image" src="buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry">
                         </td>
@@ -110,6 +111,8 @@
                     } else {
                   ?>
                   <form name="install" action="install_step5.php" method="post">
+                  <?php echo $input_lang; 
+                        echo draw_hidden_fields(); ?>
                     <p><?php echo TEXT_VALUES; ?><br />
                       <br />
                       includes/configure.php<br />
@@ -180,7 +183,10 @@
                   <br />
                   <table border="0" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td align="right"><a href="index.php"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel" /></a> <!--input type="hidden" name="install[]" value="configure"--> <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif"></td>
+                      <td align="right">
+                        <a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel" /></a>
+                        <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif">
+                      </td>
                     </tr>
                   </table>
                   <br />
