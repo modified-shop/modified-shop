@@ -124,7 +124,7 @@
     }
     //EOF - DokuMan - 2010-08-16 - Set browser language on installer start page
   }
-  //include('language/'.$lang.'.php');
+ //include('language/'.$lang.'.php');
   $input_lang = '<input type="hidden" name="lg" value="'. $lang .'">';
   //EOF - web28 - 2010.02.09 - FIX LOST SESSION
 
