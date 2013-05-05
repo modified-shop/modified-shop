@@ -21,7 +21,7 @@
                                            //'includes/configure.org.php',
                                            'admin/includes/configure.php',
                                            //'admin/includes/configure.org.php',
-                                           'export/rss_cache.txt',
+                                           //'export/rss_cache.txt',
                                            //'sitemap.xml',
                                           ),
                           'dirs' => array('admin/backups',
