@@ -18,12 +18,11 @@
 
 // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode=false) {
-    global $request_type, $session_started, $http_domain, $https_domain,$truncate_session_id;
+    global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
 
     $parameters = str_replace('&amp;', '&', $parameters); // web28 - 2010-09-02 -- making link W3C-Conform
 
     if (!xtc_not_null($page)) {
-      //die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
       $page = FILENAME_DEFAULT;
     }
     
@@ -57,8 +56,8 @@
       $link = substr($link, 0, -1);
     }
 
-// Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') ) {
+    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if ( ($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') && !$cookie) {
       if (defined('SID') && xtc_not_null(SID)) {
         $sid = SID;
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
@@ -68,7 +67,7 @@
       }
     }
 
-//--- SEO Hartmut König -----------------------------------------//
+    //--- SEO Hartmut König -----------------------------------------//
     if ((isset($_REQUEST['test']) && $_REQUEST['test'])
         || ((SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true)) ) {
         require_once(DIR_FS_INC . 'shopstat_functions.inc.php');
@@ -87,9 +86,9 @@
                 : $separator = '?';
          }
     }
-//--- SEO Hartmut König -----------------------------------------//
+    //--- SEO Hartmut König -----------------------------------------//
 
-  // remove session if useragent is a known Spider
+    // remove session if useragent is a known Spider
     if (isset($truncate_session_id) && $truncate_session_id) {
       $sid=NULL;
     }
@@ -97,16 +96,6 @@
     if (isset($sid)) {
       $link .= $separator . $sid;
     }
-/*
-    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-      while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
-
-      $link = str_replace('?', '/', $link);
-      $link = str_replace('&', '/', $link);
-      $link = str_replace('=', '/', $link);
-      $separator = '?';
-    }
-*/
 
     //-- W3C-Conform
     if($urlencode) {
@@ -117,7 +106,8 @@
     return $link;
   }
 
-    function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
+    
+  function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
     global $request_type, $session_started, $http_domain, $https_domain;
 
     if (!xtc_not_null($page)) {

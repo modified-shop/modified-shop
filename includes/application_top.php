@@ -267,7 +267,7 @@ if (function_exists('session_set_cookie_params')) {
 if (isset ($_POST[session_name()])) {
   session_id($_POST[session_name()]);
 }
-elseif (($request_type == 'SSL') && isset ($_GET[session_name()])) {
+elseif (isset ($_GET[session_name()])) {
   session_id($_GET[session_name()]);
 }
 
@@ -283,6 +283,12 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
   session_start();  
   $session_started = true;
 }
+
+// check for Cookie usage
+if (isset ($_COOKIE[session_name()])) {
+  $cookie = true;
+}
+
 include (DIR_WS_INCLUDES.'tracking.php');
 // check the Agent
 $truncate_session_id = false;
