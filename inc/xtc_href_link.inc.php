@@ -18,12 +18,11 @@
 
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode=false) {
-    global $request_type, $session_started, $http_domain, $https_domain,$truncate_session_id;
+    global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
 
     $parameters = str_replace('&amp;', '&', $parameters); // web28 - 2010-09-02 -- making link W3C-Conform
 
     if (!xtc_not_null($page)) {
-      //die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
       $page = FILENAME_DEFAULT;
     }
     
@@ -58,7 +57,7 @@
     }
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ((($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False')) || (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8))) {
+    if ((($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') && !$cookie) || (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8))) {
       if (defined('SID') && xtc_not_null(SID)) {
         $sid = SID;
       } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
@@ -97,17 +96,6 @@
     if (isset($sid)) {
       $link .= $separator . $sid;
     }
-    
-    /*
-    if ( (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true) ) {
-      while (strstr($link, '&&')) $link = str_replace('&&', '&', $link);
-
-      $link = str_replace('?', '/', $link);
-      $link = str_replace('&', '/', $link);
-      $link = str_replace('=', '/', $link);
-      $separator = '?';
-    }
-    */
 
     //-- W3C-Conform
     if($urlencode) {
