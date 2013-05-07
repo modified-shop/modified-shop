@@ -273,19 +273,19 @@ require (DIR_WS_INCLUDES.'head.php');
                               <tr>
                                 <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_USERS_ONLINE; ?></strong></td>
                                 <td width="4%"><p style="margin-left: 3px"></p></td>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank">modified eCommerce Shopsoftware - Blog</a></font></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank">modified eCommerce Shopsoftware - Blog</a></td>
                               </tr>
                               <tr>
                                 <?php
                                 if($admin_access['whos_online'] == 1) {
                                   ?>
-                                <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;<em><font face="Verdana" color="#7691A2"><?php echo TABLE_CAPTION_USERS_ONLINE_HINT; ?></font></em>
+                                <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;<em><font color="#7691A2"><?php echo TABLE_CAPTION_USERS_ONLINE_HINT; ?></font></em>
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <tr class="dataTableHeadingRow">
-                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="22%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_USERS_ONLINE_SINCE; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="33%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_USERS_ONLINE_NAME; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="33%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_USERS_ONLINE_LAST_CLICK; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="33%"><strong><font face="Verdana"><?php echo TABLE_HEADING_USERS_ONLINE_INFO; ?></font></strong></td>
+                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="22%"><strong><?php echo TABLE_HEADING_USERS_ONLINE_SINCE; ?></strong></td>
+                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="33%"><strong><?php echo TABLE_HEADING_USERS_ONLINE_NAME; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="33%"><strong><?php echo TABLE_HEADING_USERS_ONLINE_LAST_CLICK; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="33%"><strong><?php echo TABLE_HEADING_USERS_ONLINE_INFO; ?></strong></td>
                                     </tr>
                                     <?php
                                     $whos_online_query = xtc_db_query('-- admin/start.php
@@ -306,10 +306,10 @@ require (DIR_WS_INCLUDES.'head.php');
                                       }
                                       ?>
                                       <tr>
-                                        <td class="dataTableContent" width="22%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></font></td>
-                                        <td class="dataTableContent" width="33%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo $whos_online['full_name']; ?></a></font></td>
-                                        <td class="dataTableContent" align="center" width="33%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></font></td>
-                                        <td class="dataTableContent" align="center" width="33%"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"> <font face="Verdana" color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></td>
+                                        <td class="dataTableContent" width="22%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></td>
+                                        <td class="dataTableContent" width="33%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo $whos_online['full_name']; ?></a></td>
+                                        <td class="dataTableContent" align="center" width="33%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></td>
+                                        <td class="dataTableContent" align="center" width="33%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><font color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></td>
                                       </tr>
                                       <?php
                                     }
@@ -324,9 +324,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                 }
                                 ?>
                                 <td width="4%">&nbsp;</td>
-                                <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">
+                                <td style="background: #F9F0F1; border: 1px solid #b40076; min-width:400px;" height="200" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
-                                    <?php        
+                                    <?php
                                     $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
                                     if ($feed && class_exists('SimpleXmlElement')) {
                                       $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
@@ -338,7 +338,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                         <?php echo $rss->channel->description; ?>
                                       </div>
                                       <br/>
-                                      <?php        
+                                      <?php
                                       for ($i=0; $i<=3; $i++) {
                                       ?>
                                         <div class="feedtitle" align="left" style="padding:5px;font-size:11px;">
@@ -360,7 +360,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                       <div class="feedtitle" align="left" style="padding:5px;font-size:11px;">
                                         <?php echo RSS_FEED_ALTERNATIVE; ?>
                                       </div>
-                                    <?php  
+                                    <?php
                                     }
                                     ?>
                                   </table>
@@ -372,9 +372,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td width="48%">&nbsp;</td>
                               </tr>
                               <tr>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_ORDERS; ?> <?php echo TABLE_CAPTION_NEW_ORDERS_COMMENT; ?></strong></font></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_NEW_ORDERS; ?><?php echo TABLE_CAPTION_NEW_ORDERS_COMMENT; ?></strong></td>
                                 <td width="4%"><p style="margin-left: 3px"></p></td>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS; ?> </strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS_COMMENT; ?></font></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS; ?></strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS_COMMENT; ?></td>
                               </tr>
                               <tr>
                                 <?php
@@ -383,11 +383,11 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td style="background: #F9F0F1; border: 1px solid #b40076; height: 200px;" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <tr class="dataTableHeadingRow">
-                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_NUMBER; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><p align="center"> <strong><font face="Verdana"><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_DATE; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="25%"><p align="center"> <strong><font face="Verdana"><?php echo TABLE_HEADING_NEW_ORDERS_CUSTOMERS_NAME; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><p align="center"><strong><font face="Verdana"><?php echo TABLE_HEADING_NEW_ORDERS_EDIT; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><p align="center"><strong><font face="Verdana"><?php echo TABLE_HEADING_NEW_ORDERS_DELETE; ?></font></strong></td>
+                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><strong><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_NUMBER; ?></strong></td>
+                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><p align="center"><strong><?php echo TABLE_HEADING_NEW_ORDERS_ORDER_DATE; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="25%"><p align="center"><strong><?php echo TABLE_HEADING_NEW_ORDERS_CUSTOMERS_NAME; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><p align="center"><strong><?php echo TABLE_HEADING_NEW_ORDERS_EDIT; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><p align="center"><strong><?php echo TABLE_HEADING_NEW_ORDERS_DELETE; ?></strong></td>
                                     </tr>
                                     <?php
                                     $abfrage = xtc_db_query('-- admin/start.php
@@ -400,18 +400,15 @@ require (DIR_WS_INCLUDES.'head.php');
                                     while($row = xtc_db_fetch_array($abfrage)){
                                       ?>
                                       <tr>
-                                        <td class="dataTableContent" width="25%"><font face="Verdana"><?php echo $row['orders_id']; ?></font></td>
-                                        <td class="dataTableContent" width="25%"><p align="center"> <font face="Verdana"><?php echo $row['date_purchased']; ?></font></td>
-                                        <td class="dataTableContent" align="center" width="25%"><font face="Verdana"><?php echo $row['delivery_name']; ?></font></td>
-                                        <td class="dataTableContent" align="center" width="12%"><strong> <a href="orders.php?page=1&oID=<?php echo $row['orders_id']; ?>&action=edit"> <font face="Verdana" color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></strong></td>
-                                        <td class="dataTableContent" align="center" width="12%"> <a href="orders.php?page=1&oID=<?php echo $row['orders_id']; ?>&action=delete"> <font face="Verdana" color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></font></a></td>
+                                        <td class="dataTableContent" width="25%"><?php echo $row['orders_id']; ?></td>
+                                        <td class="dataTableContent" width="25%"><p align="center"><?php echo $row['date_purchased']; ?></td>
+                                        <td class="dataTableContent" align="center" width="25%"><?php echo $row['delivery_name']; ?></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="orders.php?page=1&oID=<?php echo $row['orders_id']; ?>&action=edit"><font color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="orders.php?page=1&oID=<?php echo $row['orders_id']; ?>&action=delete"><font color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></font></a></td>
                                       </tr>
                                       <?php
                                     }
                                     ?>
-                                    <tr>
-                                      <td class="smallText" colspan="5"><em> <font face="Verdana"></font></em></td>
-                                    </tr>
                                   </table>
                                 </td>
                                   <?php
@@ -428,11 +425,11 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <tr class="dataTableHeadingRow">
-                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_NEW_CUSTOMERS_LASTNAME; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_NEW_CUSTOMERS_FIRSTNAME; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="25%"><strong> <font face="Verdana"><?php echo TABLE_HEADING_NEW_CUSTOMERS_REGISTERED; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><strong><font face="Verdana"><?php echo TABLE_HEADING_NEW_CUSTOMERS_EDIT; ?></font></strong></td>
-                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><strong><font face="Verdana"><?php echo TABLE_HEADING_NEW_CUSTOMERS_ORDERS; ?></font></strong></td>
+                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><strong><?php echo TABLE_HEADING_NEW_CUSTOMERS_LASTNAME; ?></strong></td>
+                                      <td class="dataTableHeadingContent" bgcolor="#D9D9D9" height="20" width="25%"><strong><?php echo TABLE_HEADING_NEW_CUSTOMERS_FIRSTNAME; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="25%"><strong><?php echo TABLE_HEADING_NEW_CUSTOMERS_REGISTERED; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><strong><?php echo TABLE_HEADING_NEW_CUSTOMERS_EDIT; ?></strong></td>
+                                      <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><strong><?php echo TABLE_HEADING_NEW_CUSTOMERS_ORDERS; ?></strong></td>
                                     </tr>
                                     <?php
                                     $abfrage = xtc_db_query('-- admin/start.php
@@ -449,8 +446,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                         <td class="dataTableContent" width="25%"><?php echo $row['customers_lastname']; ?></td>
                                         <td class="dataTableContent" width="25%"><?php echo $row['customers_firstname']; ?></td>
                                         <td class="dataTableContent" align="center" width="25%"><?php echo $row['customers_date_added']; ?></td>
-                                        <td class="dataTableContent" align="center" width="12%"><strong> <a href="customers.php?page=1&cID=<?php echo $row['customers_id']; ?>&action=edit"> <font face="Verdana" color="#800000"><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></font></a></strong></td>
-                                        <td class="dataTableContent" align="center" width="12%"><strong> <a href="orders.php?cID=<?php echo $row['customers_id']; ?>"><font color="#7691A2" face="Verdana"><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></font></a></strong></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="customers.php?page=1&cID=<?php echo $row['customers_id']; ?>&action=edit"><font color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="orders.php?cID=<?php echo $row['customers_id']; ?>"><font color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></font></a></td>
                                       </tr>
                                       <?php
                                     }
@@ -478,10 +475,10 @@ require (DIR_WS_INCLUDES.'head.php');
                                   <!--  BOF START INFOS GEBURTSTAGSLISTE -->
                                   <table cellpadding="5" cellspacing="0" width="100%" id="table1" class="contentTable">
                                     <tr>
-                                      <td class="infoBoxHeading"></span><font face="Verdana"><strong><?php echo TABLE_CAPTION_BIRTHDAYS; ?></strong></font></td>
+                                      <td class="infoBoxHeading"><strong><?php echo TABLE_CAPTION_BIRTHDAYS; ?></strong></td>
                                     </tr>
                                   </table>
-                                  <table cellpadding="5" cellspacing="0" style="font-family:Verdana; font-size:11px; border: 1px solid #b40076; border-top:0px;" width="100%" id="AutoNumber1">
+                                  <table cellpadding="5" cellspacing="0" style="border: 1px solid #b40076; border-top:0px;" width="100%" id="AutoNumber1">
                                     <tr>
                                       <td width="100%" colspan="2" bgcolor="#F1F1F1" style="border-bottom: 1px solid #CCCCCC"><strong><?php echo TABLE_CELL_BIRTHDAYS_TODAY; ?>:</strong></td>
                                     </tr>
