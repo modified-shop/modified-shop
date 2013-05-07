@@ -130,16 +130,14 @@ require (DIR_WS_INCLUDES.'head.php');
         list-style-type:disc;
       }
   </style>
-</head>
-<body>
+  </head>
+  <body>
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- BOF - Tomcraft - 2009-06-16 - Added security check //-->
     <table border="0" width="100%" cellspacing="2" cellpadding="2" class="startphp">
       <tr>
         <td><?php include(DIR_WS_MODULES.FILENAME_SECURITY_CHECK); ?></td>
       </tr>
     </table>
-    <!-- EOF - Tomcraft - 2009-06-16 - Added security check //-->
     <!-- body //-->
     <table border="0" width="100%" cellspacing="2" cellpadding="2" class="startphp">
       <tr>
@@ -199,6 +197,9 @@ require (DIR_WS_INCLUDES.'head.php');
                             ?>
                           </td>
                           <td width="25%" valign="top">
+                          <?php
+                            if($admin_access['customers'] == 1) {
+                            ?>
                             <table width="100%">
                               <?php
                               foreach ($customers as $customer) {
@@ -211,8 +212,14 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td style="background:#e4e4e4" align="center"><?php echo $newsletter['count']; ?></td>
                               </tr>
                             </table>
+                            <?php
+                            }
+                          ?>
                           </td>
                           <td width="25%" valign="top">
+                          <?php
+                            if($admin_access['categories'] == 1) {
+                            ?>
                             <table width="100%">
                               <tr>
                                 <td style="background:#e4e4e4"><strong><?php echo TOTAL_PRODUCTS_ACTIVE; ?>:</strong></td>
@@ -231,8 +238,14 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td style="background:#e4e4e4"><?php echo $specials['specials_count']; ?></td>
                               </tr>
                             </table>
+                            <?php
+                            }
+                          ?>
                           </td>
                           <td width="25%" valign="top">
+                          <?php
+                            if($admin_access['orders'] == 1) {
+                            ?>
                             <table width="100%">
                               <?php
                               foreach ($orders as $order) {
@@ -241,6 +254,9 @@ require (DIR_WS_INCLUDES.'head.php');
                               }
                               ?>
                             </table>
+                            <?php
+                            }
+                          ?>
                           </td>
                         </tr>
                       </table>
@@ -251,7 +267,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td>
                       <table valign="top" width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                          <td></td>
+                          <td>&nbsp;</td>
                         </tr>
                         <tr>
                           <td>
@@ -263,6 +279,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank">modified eCommerce Shopsoftware - Blog</a></font></td>
                               </tr>
                               <tr>
+                                <?php
+                                if($admin_access['whos_online'] == 1) {
+                                  ?>
                                 <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;<em><font face="Verdana" color="#7691A2"><?php echo TABLE_CAPTION_USERS_ONLINE_HINT; ?></font></em>
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <tr class="dataTableHeadingRow">
@@ -293,13 +312,20 @@ require (DIR_WS_INCLUDES.'head.php');
                                         <td class="dataTableContent" width="22%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></font></td>
                                         <td class="dataTableContent" width="33%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo $whos_online['full_name']; ?></a></font></td>
                                         <td class="dataTableContent" align="center" width="33%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></font></td>
-                                        <td class="dataTableContent" align="center" width="33%"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"> <font face="Verdana" color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="33%"><font face="Verdana" color="#800000"><u><strong> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"> <font color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></strong></u></font></td>
                                       </tr>
                                       <?php
                                     }
                                     ?>
                                   </table>
                                 </td>
+                                  <?php
+                                } else {
+                                ?>
+                                  <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;</td>
+                                  <?php
+                                }
+                                ?>
                                 <td width="4%">&nbsp;</td>
                                 <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
@@ -310,7 +336,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                       $rss->addAttribute('encoding', 'UTF-8');
                                       ?>
                                       <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-                                        <div style="width:40px; height:100%; float:left;"><img src='http://images.modified-shop.org/copyright.gif' border='0' alt=''></div><a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo $rss->channel->title; ?></a>
+                                        <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo $rss->channel->title; ?></a>
                                         <br/>
                                         <?php echo $rss->channel->description; ?>
                                       </div>
@@ -329,7 +355,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                     } else {
                                     ?>
                                       <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-                                        <div style="width:40px; height:100%; float:left;"><img src='http://images.modified-shop.org/copyright.gif' border='0' alt=''></div><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
+                                        <a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
                                         <br/>
                                         <?php echo RSS_FEED_DESCRIPTION; ?>
                                       </div>
@@ -354,6 +380,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><span style="margin-left: 3px"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS; ?> </strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS_COMMENT; ?></font></span></td>
                               </tr>
                               <tr>
+                                <?php
+                                if($admin_access['orders'] == 1) {
+                                  ?>
                                 <td style="background: #F9F0F1; border: 1px solid #b40076; height: 200px;" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <tr class="dataTableHeadingRow">
@@ -388,7 +417,17 @@ require (DIR_WS_INCLUDES.'head.php');
                                     </tr>
                                   </table>
                                 </td>
+                                  <?php
+                                } else {
+                                ?>
+                                  <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;</td>
+                                  <?php
+                                }
+                                ?>
                                 <td>&nbsp;</td>
+                                <?php
+                                if($admin_access['customers'] == 1) {
+                                  ?>
                                 <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">
                                   <table border="0" width="98%" cellspacing="0" cellpadding="0">
                                     <tr class="dataTableHeadingRow">
@@ -413,15 +452,25 @@ require (DIR_WS_INCLUDES.'head.php');
                                         <td class="dataTableContent" width="25%"><?php echo $row['customers_lastname']; ?></td>
                                         <td class="dataTableContent" width="25%"><?php echo $row['customers_firstname']; ?></td>
                                         <td class="dataTableContent" align="center" width="25%"><?php echo $row['customers_date_added']; ?></td>
-                                        <td class="dataTableContent" align="center" width="12%"><strong> <a href="customers.php?page=1&cID=<?php echo $row['customers_id']; ?>&action=edit"> <font face="Verdana" color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></strong></td>
-                                        <td class="dataTableContent" align="center" width="12%"> <a href="orders.php?cID=<?php echo $row['customers_id']; ?>"><font color="#7691A2" face="Verdana"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="12%"><strong> <a href="customers.php?page=1&cID=<?php echo $row['customers_id']; ?>&action=edit"> <font face="Verdana" color="#800000"><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></font></a></strong></td>
+                                        <td class="dataTableContent" align="center" width="12%"><strong> <a href="orders.php?cID=<?php echo $row['customers_id']; ?>"><font color="#7691A2" face="Verdana"><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></font></a></strong></td>
                                       </tr>
                                       <?php
                                     }
                                     ?>
                                   </table>
                                </td>
+                                  <?php
+                                } else {
+                                ?>
+                                  <td style="background: #F9F0F1; border: 1px solid #b40076;" height="200" valign="top">&nbsp;</td>
+                                  <?php
+                                }
+                                ?>
                               </tr>
+                              <?php
+                              if($admin_access['customers'] == 1) {
+                                ?>
                               <tr>
                                 <td>&nbsp;</td>
                                 <td>&nbsp;</td>
@@ -471,6 +520,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                   <!--  EOF START INFOS GEBURTSTAGSLISTE -->
                                 </td>
                               </tr>
+                                <?php
+                              }
+                              ?>
                             </table>
                             <!--  EOF START INFOS USER ONLINE + NEUE KUNDEN  + LETZTE BESTELLUNGEN +  NEWSFEED-->
                           </td>
@@ -485,7 +537,9 @@ require (DIR_WS_INCLUDES.'head.php');
         </td>
       </tr>
     </table>
+    <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <!-- footer_eof //-->
   </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
