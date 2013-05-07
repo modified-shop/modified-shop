@@ -53,9 +53,9 @@
     //EOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
 
     //BOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
-    $wo_ip_address = xtc_db_prepare_input($_SERVER['REMOTE_ADDR']);
-    $wo_last_page_url = xtc_db_prepare_input($_SERVER['REQUEST_URI']);
-    $wo_referer = xtc_db_prepare_input(isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '---');
+    $wo_ip_address = xtc_db_prepare_input($_SESSION['tracking']['ip']);
+    $wo_last_page_url = xtc_db_prepare_input(strip_tags($_SERVER['REQUEST_URI']));
+    $wo_referer = xtc_db_prepare_input(isset($_SERVER['HTTP_REFERER']) ? strip_tags($_SERVER['HTTP_REFERER']) : '---');
     //EOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
 
     $current_time = time();
@@ -72,11 +72,11 @@
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
 
     $sql_data_array = array('customer_id' => $wo_customer_id,
-                            'full_name' => $wo_full_name,
-                            'ip_address' => $wo_ip_address,
-                            'time_last_click' => $current_time,
-                            'last_page_url' => $wo_last_page_url,
-                            'http_referer' => $wo_referer
+                            'full_name' => xtc_db_input($wo_full_name),
+                            'ip_address' => xtc_db_input($wo_ip_address),
+                            'time_last_click' => xtc_db_input($current_time),
+                            'last_page_url' => xtc_db_input($wo_last_page_url),
+                            'http_referer' => xtc_db_input($wo_referer)
                             );
 
     if ($stored_customer['count'] > 0) {
