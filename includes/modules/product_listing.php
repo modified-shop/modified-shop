@@ -87,6 +87,9 @@ if ($listing_split->number_of_rows > 0) {
   $result = false;
 }
 
+//include Categorie Listing
+include (DIR_WS_MODULES. 'categories_listing.php');
+
 if ($result != false) {
   // get default template
   if (!isset($category['listing_template']) || $category['listing_template'] == '' || $category['listing_template'] == 'default') {
