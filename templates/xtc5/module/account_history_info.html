@@ -58,11 +58,9 @@
 	{/foreach}
 </table>
 	<div class="hr"></div>
-	<!-- BOF - web28 - 2010-03-27 PayPal Bezahl-Link -->
 	{if $PAYPAL_LINK}	    
-		<p><div style="padding:5px;">{$PAYPAL_LINK}</div></p>		
-    {/if}
-	<!-- EOF - web28 - 2010-03-27 PayPal Bezahl-Link -->
+    <p><div style="padding:5px;">{$PAYPAL_LINK}</div></p>		
+	{/if}
 	<p>{$TOTAL_BLOCK}</p>
 	{if $downloads_content neq ''}
   	<p>{$downloads_content}</p>

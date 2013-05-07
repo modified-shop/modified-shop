@@ -8,7 +8,7 @@
 			<div class="hr"></div>
 		{/if}
 	{/if}
-	{if $empty=='false'} <!-- cart has content -->
+	{if $empty=='false'} {* cart has content *}
 		{foreach name=aussen item=products_data from=$products}
 			<p>{$products_data.QTY}&nbsp;x&nbsp;<a href="{$products_data.LINK}">{$products_data.NAME|truncate:20:"...":true}</a></p>
 		{/foreach}
@@ -19,7 +19,7 @@
 		{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}</p>
 		<div class="hr"></div>
 		<p style="text-align:right;"><a href="{$LINK_CART}"><strong>{#heading_cart#}&nbsp;&raquo;</strong></a></p>
-	{else} <!-- cart has no content -->
+	{else} {* cart has no content *}
 		<p>{#text_empty_cart#}</p>
 	{/if}
 	</div>
