@@ -73,7 +73,9 @@
                 <table border="0" width="100%" cellspacing="0" cellpadding="0" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding: 5px;">
                   <tr>
                     <td valign="top" class="main">
-                      <form name="img_upload" action="shop_offline.php" method="post" enctype="multipart/form-data">
+                      <?php 
+                        echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
+                        ?>
                         <input type="checkbox" name="shop_offline" value="checked" <?php echo xtc_get_shop_conf('SHOP_OFFLINE'); ?>>
                         <?php echo SETTINGS_OFFLINE ?><br /><br />
                         <?php echo SETTINGS_OFFLINE_MSG ?>:<br />
