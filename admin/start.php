@@ -375,9 +375,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td width="48%">&nbsp;</td>
                               </tr>
                               <tr>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><span style="margin-left: 3px"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_ORDERS; ?> <?php echo TABLE_CAPTION_NEW_ORDERS_COMMENT; ?></strong></font></span></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_ORDERS; ?> <?php echo TABLE_CAPTION_NEW_ORDERS_COMMENT; ?></strong></font></td>
                                 <td width="4%"><p style="margin-left: 3px"></p></td>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><span style="margin-left: 3px"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS; ?> </strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS_COMMENT; ?></font></span></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><font face="Verdana"><strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS; ?> </strong><?php echo TABLE_CAPTION_NEW_CUSTOMERS_COMMENT; ?></font></td>
                               </tr>
                               <tr>
                                 <?php
@@ -481,7 +481,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                   <!--  BOF START INFOS GEBURTSTAGSLISTE -->
                                   <table cellpadding="5" cellspacing="0" width="100%" id="table1" class="contentTable">
                                     <tr>
-                                      <td class="infoBoxHeading"><span style="margin-left: 3px"></span><font face="Verdana"><strong><?php echo TABLE_CAPTION_BIRTHDAYS; ?></strong></font></span></td>
+                                      <td class="infoBoxHeading"></span><font face="Verdana"><strong><?php echo TABLE_CAPTION_BIRTHDAYS; ?></strong></font></td>
                                     </tr>
                                   </table>
                                   <table cellpadding="5" cellspacing="0" style="font-family:Verdana; font-size:11px; border: 1px solid #b40076; border-top:0px;" width="100%" id="AutoNumber1">
