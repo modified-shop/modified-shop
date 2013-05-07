@@ -267,9 +267,6 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td>
                       <table valign="top" width="100%" cellpadding="0" cellspacing="0">
                         <tr>
-                          <td>&nbsp;</td>
-                        </tr>
-                        <tr>
                           <td>
                             <!--  BOF START INFOS USER ONLINE + NEUE KUNDEN  + LETZTE BESTELLUNGEN +  NEWSFEED-->
                             <table border="0" width="100%" cellspacing="0">
@@ -312,7 +309,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                         <td class="dataTableContent" width="22%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></font></td>
                                         <td class="dataTableContent" width="33%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo $whos_online['full_name']; ?></a></font></td>
                                         <td class="dataTableContent" align="center" width="33%"><font face="Verdana"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></font></td>
-                                        <td class="dataTableContent" align="center" width="33%"><font face="Verdana" color="#800000"><u><strong> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"> <font color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></strong></u></font></td>
+                                        <td class="dataTableContent" align="center" width="33%"> <a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"> <font face="Verdana" color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></td>
                                       </tr>
                                       <?php
                                     }
