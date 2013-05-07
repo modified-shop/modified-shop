@@ -391,8 +391,11 @@ class sofort {
 		$lngdir = DIR_FS_CATALOG.'lang/';
 		
 		foreach (new DirectoryIterator($lngdir) as $file){
-			if (file_exists($lngdir.$file->getFilename().'/modules/payment/sofort_general.php')) $installedModulLangs[] = $file->getFilename();
+		  if (is_dir($lngdir.$file->getFilename())) {
+			  if (file_exists($lngdir.$file->getFilename().'/modules/payment/sofort_general.php')) $installedModulLangs[] = $file->getFilename();
+		  }
 		}
+		
 		//currently installed in this module
 		if(!in_array($_SESSION['language'], $installedModulLangs)) {
 			switch ($paymentMethod) {

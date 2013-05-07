@@ -53,7 +53,7 @@ include(DIR_FS_CATALOG.'lang/'.$language.'/modules/payment/sofort_lastschrift.ph
 include(DIR_FS_CATALOG.'lang/'.$language.'/modules/payment/sofort_ideal.php');
 
 if ($_GET['action'] == 'ideal'){ // iDeal
-	list ($userid, $projectid) = split(':', MODULE_PAYMENT_SOFORT_IDEAL_CLASSIC_CONFIGURATION_KEY);
+	list ($userid, $projectid) = explode(':', MODULE_PAYMENT_SOFORT_IDEAL_CLASSIC_CONFIGURATION_KEY);
 	$SofortLib_ClassicNotification = new SofortLib_ClassicNotification($userid, $projectid, MODULE_PAYMENT_SOFORT_IDEAL_CLASSIC_NOTIFICATION_PASSWORD);
 	$SofortLib_ClassicNotification->getNotification();
 	
