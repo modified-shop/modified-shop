@@ -315,45 +315,43 @@ require (DIR_WS_INCLUDES.'head.php');
                                 ?>
                                 <td width="4%">&nbsp;</td>
                                 <td style="background: #F9F0F1; border: 1px solid #b40076; min-width:400px;" height="200" valign="top">
-                                  <table border="0" width="98%" cellspacing="0" cellpadding="0">
-                                    <?php
-                                    $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
-                                    if ($feed && class_exists('SimpleXmlElement')) {
-                                      $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
-                                      $rss->addAttribute('encoding', 'UTF-8');
-                                      ?>
-                                      <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-                                        <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo utf8_decode($rss->channel->title); ?></a>
-                                        <br/>
-                                        <?php echo utf8_decode($rss->channel->description); ?>
-                                      </div>
-                                      <br/>
-                                      <?php
-                                      for ($i=0; $i<=3; $i++) {
-                                      ?>
-                                        <div class="feedtitle" align="left" style="padding:5px;font-size:11px;">
-                                          <a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>"><?php echo utf8_decode($rss->channel->item[$i]->title); ?></a>
-                                          <br/>
-                                          <?php echo utf8_decode($rss->channel->item[$i]->description); ?>
-                                        </div>
-                                        <hr noshade="noshade">
-                                      <?php
-                                      }
-                                    } else {
+                                  <?php
+                                  $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
+                                  if ($feed && class_exists('SimpleXmlElement')) {
+                                    $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
+                                    $rss->addAttribute('encoding', 'UTF-8');
                                     ?>
-                                      <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-                                        <a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
-                                        <br/>
-                                        <?php echo RSS_FEED_DESCRIPTION; ?>
-                                      </div>
+                                    <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
+                                      <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo utf8_decode($rss->channel->title); ?></a>
                                       <br/>
+                                      <?php echo utf8_decode($rss->channel->description); ?>
+                                    </div>
+                                    <br/>
+                                    <?php
+                                    for ($i=0; $i<=3; $i++) {
+                                    ?>
                                       <div class="feedtitle" align="left" style="padding:5px;font-size:11px;">
-                                        <?php echo RSS_FEED_ALTERNATIVE; ?>
+                                        <a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>"><?php echo utf8_decode($rss->channel->item[$i]->title); ?></a>
+                                        <br/>
+                                        <?php echo utf8_decode($rss->channel->item[$i]->description); ?>
                                       </div>
+                                      <hr noshade="noshade">
                                     <?php
                                     }
-                                    ?>
-                                  </table>
+                                  } else {
+                                  ?>
+                                    <div style="background:#F0F1F1;font-size:11px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
+                                      <a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
+                                      <br/>
+                                      <?php echo RSS_FEED_DESCRIPTION; ?>
+                                    </div>
+                                    <br/>
+                                    <div class="feedtitle" align="left" style="padding:5px;font-size:11px;">
+                                      <?php echo RSS_FEED_ALTERNATIVE; ?>
+                                    </div>
+                                  <?php
+                                  }
+                                  ?>
                                 </td>
                               </tr>
                               <tr>
