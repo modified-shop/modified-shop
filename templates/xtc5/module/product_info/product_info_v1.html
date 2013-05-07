@@ -49,7 +49,7 @@
 </div>
 
 {if $more_images|@count > 0}
-<!-- More Pictures -->
+{* More Pictures *}
 <div class="morepics">
 {foreach item=more_images_data from=$more_images} 
 <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" /></a>                          
