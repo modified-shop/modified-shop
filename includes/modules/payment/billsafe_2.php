@@ -44,10 +44,15 @@ class billsafe_2 {
     require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
     $this->code = 'billsafe_2';
     $this->title = MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE;
+    // BOF - Changed to white label solution
+    /*
     if (preg_match('/checkout_payment/',$_SERVER['PHP_SELF'])) {
       $url_image = $this->checkBillSAFELogoURL(MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL);
       $this->info ='<img src="'.$url_image.'" title="BillSAFE" alt="BillSAFE" style="margin-right:10px; float:left;" />'.MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO;
     }
+    */
+    $this->info = MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO;
+    // EOF - Changed to white label solution
     $this->description = MODULE_PAYMENT_BILLSAFE_2_TEXT_DESCRIPTION;
     $this->sort_order = MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER;
     $this->enabled = ((MODULE_PAYMENT_BILLSAFE_2_STATUS == 'True') ? true : false);
@@ -600,7 +605,11 @@ class billsafe_2 {
       xtc_db_query('UPDATE admin_access SET billsafe_print_order_2 = "1" WHERE customers_id = "1" OR customers_id = "groups"');
     }
     $logo_url = HTTPS_CATALOG_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/top_logo.jpg';
+    // BOF - Changed to white label solution
+    /*
     $billsafe_logo = 'https://images.billsafe.de/image/image/id/2120806d6053';
+    */
+    // EOF - Changed to white label solution
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_STATUS"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_STATUS", "False", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_LAYER"');
@@ -625,8 +634,12 @@ class billsafe_2 {
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SCHGTAX", "1", "6", "0", "xtc_get_tax_class_title", "xtc_cfg_pull_down_tax_classes(", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL", "'.$logo_url.'", "6", "0", now())');
+    // BOF - Changed to white label solution
+    /*
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL", "'.$billsafe_logo.'", "6", "0", now())');
+    */
+    // EOF - Changed to white label solution
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_SERVER"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2_SERVER", "Sandbox", "6", "1", "xtc_cfg_select_option(array(\'Live\', \'Sandbox\'), ", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2_ZONE"');
@@ -644,7 +657,12 @@ class billsafe_2 {
   }
 
   function keys() {
+    // BOF - Changed to white label solution
+    /*
     return array('MODULE_PAYMENT_BILLSAFE_2_STATUS', 'MODULE_PAYMENT_BILLSAFE_2_LAYER', 'MODULE_PAYMENT_BILLSAFE_2_LOG', 'MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_SCHG', 'MODULE_PAYMENT_BILLSAFE_2_SCHGTAX', 'MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_BILLSAFE_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_SERVER', 'MODULE_PAYMENT_BILLSAFE_2_ZONE', 'MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_ALLOWED');
+    */
+    return array('MODULE_PAYMENT_BILLSAFE_2_STATUS', 'MODULE_PAYMENT_BILLSAFE_2_LAYER', 'MODULE_PAYMENT_BILLSAFE_2_LOG', 'MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_SCHG', 'MODULE_PAYMENT_BILLSAFE_2_SCHGTAX', 'MODULE_PAYMENT_BILLSAFE_2_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2_SERVER', 'MODULE_PAYMENT_BILLSAFE_2_ZONE', 'MODULE_PAYMENT_BILLSAFE_2_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2_ALLOWED');
+    // EOF - Changed to white label solution
   }
 
   public function checkLogoURL($logoURL) {
@@ -655,6 +673,8 @@ class billsafe_2 {
     }
   }
 
+  // BOF - Changed to white label solution
+  /*
   public function checkBillSAFELogoURL($logoURL) {
     if ($logoURL != '' ) {
       if (ENABLE_SSL == true) {
@@ -670,6 +690,8 @@ class billsafe_2 {
       return 'https://images.billsafe.de/image/image/id/04105000caae';
     }
   }
+  */
+  // EOF - Changed to white label solution
 
   function get_shipping_tax_rate($shipping_id) {
     $check_query = xtc_db_query('SELECT configuration_value FROM '.TABLE_CONFIGURATION.' WHERE configuration_key = "MODULE_SHIPPING_'.$shipping_id.'_TAX_CLASS"');
