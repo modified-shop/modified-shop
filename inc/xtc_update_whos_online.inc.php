@@ -76,7 +76,7 @@
                             'ip_address' => $wo_ip_address,
                             'time_last_click' => $current_time,
                             'last_page_url' => $wo_last_page_url,
-                            'http_referer' => $wo_referer)
+                            'http_referer' => $wo_referer
                             );
 
     if ($stored_customer['count'] > 0) {
