@@ -72,11 +72,11 @@
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
 
     $sql_data_array = array('customer_id' => $wo_customer_id,
-                            'full_name' => xtc_db_input($wo_full_name),
-                            'ip_address' => xtc_db_input($wo_ip_address),
-                            'time_last_click' => xtc_db_input($current_time),
-                            'last_page_url' => xtc_db_input($wo_last_page_url),
-                            'http_referer' => xtc_db_input($wo_referer)
+                            'full_name' => xtc_db_prepare_input($wo_full_name),
+                            'ip_address' => $wo_ip_address,
+                            'time_last_click' => $current_time,
+                            'last_page_url' => $wo_last_page_url,
+                            'http_referer' => $wo_referer)
                             );
 
     if ($stored_customer['count'] > 0) {
