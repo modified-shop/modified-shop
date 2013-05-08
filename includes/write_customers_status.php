@@ -47,6 +47,6 @@
                                              WHERE customers_status_id = '" . DEFAULT_CUSTOMERS_STATUS_ID_GUEST . "' 
                                                AND language_id = '" . $_SESSION['languages_id'] . "'");
     $_SESSION['customers_status'] = xtc_db_fetch_array($customers_status_query);
-    $_SESSION['customers_status']['customers_status_id'] = $customers_status_value_1['customers_status'];
+    $_SESSION['customers_status']['customers_status_id'] = DEFAULT_CUSTOMERS_STATUS_ID_GUEST;
   }
 ?>
