@@ -31,8 +31,14 @@
 * @license GPLv2
 */
 
+// BOF - Changed to white label solution
+/*
 define('MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE', 'Kauf auf Rechnung mit BillSAFE');
 define('MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO', 'Bezahlen Sie bequem per Rechnung. Ganz einfach und unb&uuml;rokratisch mit BillSAFE, einem Service von PayPal.');
+*/
+define('MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE', 'Rechnung');
+define('MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO', 'Kaufen Sie jetzt auf Rechnung und begutachten Sie Ihre Eink&auml;ufe in Ruhe bevor Sie bezahlen.');
+// EOF - Changed to white label solution
 define('MODULE_PAYMENT_BILLSAFE_2_SCHG_TEXT_INFO', 'F&uuml;r diese Zahlweise erheben wir einen Zuschlag von: ');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON', 'Leider ist der Rechnungskauf &uuml;ber BillSAFE nicht m&ouml;glich. Bitte w&auml;hlen Sie eine andere Zahlungsweise.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_101', 'BillSAFE steht derzeit leider nicht zur Verf&uuml;gung, bitte w&auml;hlen Sie eine andere Zahlungsweise.');
