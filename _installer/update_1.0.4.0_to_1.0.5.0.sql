@@ -281,7 +281,7 @@ CREATE TABLE shop_configuration (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1 COLLATE latin1_german1_ci;
 
 INSERT INTO shop_configuration (configuration_key, configuration_value) VALUES('SHOP_OFFLINE', '');
-INSERT INTO shop_configuration (configuration_key, configuration_value) VALUES('SHOP_OFFLINE_MSG', '<p style="text-align: center;"><span style="font-size: large;"><font face="Arial">Unser Shop ist  aufgrund von Wartungsarbeiten  im Moment nicht erreichbar.<br />\r\n</font><font face="Arial">Bitte besuchen Sie uns zu einem   sp&auml;teren Zeitpunkt noch einmal.<br />\r\n<br />\r\n<br />\r\n<br />\r\n</font></span><font><font><a href="login_admin.php"><font color="#808080">Login</font></a></font></font><span style="font-size: large;"><font face="Arial"><br />\r\n</font></span></p>');
+INSERT INTO shop_configuration (configuration_key, configuration_value) VALUES('SHOP_OFFLINE_MSG', '<p style="text-align: center;"><span style="font-size: large;"><font face="Arial">Unser Shop ist aufgrund von Wartungsarbeiten im Moment nicht erreichbar.<br />\r\n</font><font face="Arial">Bitte besuchen Sie uns zu einem sp&auml;teren Zeitpunkt noch einmal.<br />\r\n<br />\r\n<br />\r\n<br />\r\n</font></span><font><font><a href="login_admin.php"><font color="#808080">Login</font></a></font></font><span style="font-size: large;"><font face="Arial"><br />\r\n</font></span></p>');
 # EOF - web28 - 2010-07-07 - set shop offline
 
 # BOF - web28 - 2010-07-07 - FIX special character
