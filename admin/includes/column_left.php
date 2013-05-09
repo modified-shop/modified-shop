@@ -17,15 +17,21 @@
    --------------------------------------------------------------*/
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-$admin_access_query = xtc_db_query("SELECT * FROM " . TABLE_ADMIN_ACCESS . " WHERE customers_id = ".(int)$_SESSION['customer_id']);
-$admin_access = xtc_db_fetch_array($admin_access_query); 
+$admin_access = array();
+if (($_SESSION['customers_status']['customers_status_id'] == '0')) {
+  $admin_access_query = xtc_db_query("SELECT * FROM " . TABLE_ADMIN_ACCESS . " WHERE customers_id = ".(int)$_SESSION['customer_id']);
+  $admin_access = xtc_db_fetch_array($admin_access_query); 
+}
 
 echo '<div id="cssmenu" class="suckertreemenu">';
 echo '<ul id="treemenu1">';
+
 //---------------------------Ausgewählte Admin Sprache als Flagge
 echo '<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>';
+
 //---------------------------STARTSEITE
 echo '<li><a href="' . xtc_href_link('start.php', '', 'NONSSL') . '" id="current"><b>' . TEXT_ADMIN_START . '</b></a></li>'; 
+
 //---------------------------KUNDEN
 echo '<li>';
   echo '<div class="dataTableHeadingContent"><strong>'.BOX_HEADING_CUSTOMERS.'</strong></div>';
