@@ -126,10 +126,28 @@ class worldpay {
 
 		$address = encode_htmlspecialchars($order->customer['street_address']."\n".$order->customer['suburb']."\n".$order->customer['city']."\n".$order->customer['state'], ENT_QUOTES);
 
-		$process_button_string .= xtc_draw_hidden_field('testMode', MODULE_PAYMENT_WORLDPAY_MODE).xtc_draw_hidden_field('name', $order->customer['firstname'].' '.$order->customer['lastname']).xtc_draw_hidden_field('address', $address).xtc_draw_hidden_field('postcode', $order->customer['postcode']).xtc_draw_hidden_field('country', $order->customer['country']['iso_code_2']).xtc_draw_hidden_field('tel', $order->customer['telephone']).xtc_draw_hidden_field('myvar', 'Y').xtc_draw_hidden_field('fax', $order->customer['fax']).xtc_draw_hidden_field('email', $order->customer['email_address']).
+		$process_button_string .= xtc_draw_hidden_field('testMode', MODULE_PAYMENT_WORLDPAY_MODE).
+        
+        xtc_draw_hidden_field('name', $order->customer['firstname'].' '.$order->customer['lastname']).
+        
+        xtc_draw_hidden_field('address', $address).
+        
+        xtc_draw_hidden_field('postcode', $order->customer['postcode']).
+        
+        xtc_draw_hidden_field('country', $order->customer['country']['iso_code_2']).
+        
+        xtc_draw_hidden_field('tel', $order->customer['telephone']).
+        
+        xtc_draw_hidden_field('myvar', 'Y').xtc_draw_hidden_field('fax', $order->customer['fax']).
+        
+        xtc_draw_hidden_field('email', $order->customer['email_address']).
 
 		// Ian-san: Added dynamic callback and languages link here 6/4/2003:
-		xtc_draw_hidden_field('lang', $language_code).xtc_draw_hidden_field('MC_callback', xtc_href_link(wpcallback).'.php').xtc_draw_hidden_field('MC_XTCsid', $XTCsid);
+		xtc_draw_hidden_field('lang', $language_code).
+        
+        xtc_draw_hidden_field('MC_callback', xtc_href_link('callback/wpcallback.php')).
+        
+        xtc_draw_hidden_field('MC_XTCsid', $XTCsid);#todo
 
 		// Ian-san: Added MD5 here 6/4/2003:
 		if (MODULE_PAYMENT_WORLDPAY_USEMD5 == '1') {
