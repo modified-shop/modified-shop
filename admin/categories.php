@@ -299,8 +299,10 @@ if ($_GET['action']) {
 								$dest_category_id = xtc_db_prepare_input($dest_category_id);
 								if ($_POST['copy_as'] == 'link') {
 									$catfunc->link_product($product_id, $dest_category_id);
+                  $pID = $product_id;
 								} elseif ($_POST['copy_as'] == 'duplicate') {
 									$catfunc->duplicate_product($product_id, $dest_category_id);
+                  $pID = $catfunc->dup_products_id;
 								} else {
 									$messageStack->add_session('Copy type not specified.', 'error');
 								}
@@ -309,8 +311,10 @@ if ($_GET['action']) {
 							$dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']);
 							if ($_POST['copy_as'] == 'link') {
 								$catfunc->link_product($product_id, $dest_category_id);
+                $pID = $product_id;
 							} elseif ($_POST['copy_as'] == 'duplicate') {
 								$catfunc->duplicate_product($product_id, $dest_category_id);
+                $pID = $catfunc->dup_products_id;
 							} else {
 								$messageStack->add_session('Copy type not specified.', 'error');
 							}
@@ -319,7 +323,7 @@ if ($_GET['action']) {
 				}
 
         $action = is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
-        $pID = is_array($_POST['multi_products']) && isset($_POST['multi_products']) ? '&pID='. end($_POST['multi_products']) : '';
+        $pID = isset($pID) && $pID > 0 ? '&pID='. $pID : '';
 				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$dest_category_id.$pID.$action.'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
 			}
 			// --- MULTI COPY ENDS ---
