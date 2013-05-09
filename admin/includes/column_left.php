@@ -20,8 +20,6 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 $admin_access_query = xtc_db_query("SELECT * FROM " . TABLE_ADMIN_ACCESS . " WHERE customers_id = ".(int)$_SESSION['customer_id']);
 $admin_access = xtc_db_fetch_array($admin_access_query); 
 
-$admin_access = array();
-
 echo '<div id="cssmenu" class="suckertreemenu">';
 echo '<ul id="treemenu1">';
 //---------------------------Ausgewählte Admin Sprache als Flagge
