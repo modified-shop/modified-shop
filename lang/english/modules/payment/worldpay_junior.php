@@ -14,7 +14,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.worldpay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">WorldPay Webseite besuchen</a>');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.worldpay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">Visit the WorldPay website</a>');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE', 'In Review: Transaction performed in demo mode.');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'The payment transaction has been successfully performed!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Your payment has been unsuccessful!');
@@ -47,8 +47,8 @@
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_TITLE', 'Sort order of display.');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_TITLE', 'Pre-Auth');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_DESC', 'The mode you are working in (A = Pay Now, E = Pre Auth). Ignored if Use PreAuth is False.');
+  //define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_TITLE', 'Pre-Auth'); // Wird nicht benutzt
+  //define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_DESC', 'The mode you are working in (A = Pay Now, E = Pre Auth). Ignored if Use PreAuth is False.'); // Wird nicht benutzt
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_TITLE', 'Payment Zone');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_DESC', 'If a zone is selected, only enable this payment method for that zone.');
@@ -60,7 +60,7 @@
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_DESC', 'Set the status of orders made with this payment module to this value');
   
 // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_TITLE', 'Exclusion in case of shipping');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_DESC', 'deactivate this payment if one of these shippingtypes are selected (list separated by comma)');
 // EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
 ?>

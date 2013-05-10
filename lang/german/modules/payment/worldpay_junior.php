@@ -15,52 +15,52 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.worldpay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">WorldPay Webseite besuchen</a>');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE', 'In Review: Transaction performed in demo mode.');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'The payment transaction has been successfully performed!');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Your payment has been unsuccessful!');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONTINUE_BUTTON', 'Click here to continue to %s');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE', 'In Prüfung: Transaktion in Demo Modus durchgeführt.');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'Die Zahlungs Transaktion wurde erfolgreich durchgeführt!');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Ihre Zahlung war nicht erfolgreich!');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONTINUE_BUTTON', 'Klicken Sie hier um zu %s fortzufahren');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_TITLE', 'WorldPay Junior');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESC', 'Worldpay Payment Module');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESC', 'Worldpay Zahlungsmodul');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS_TITLE', 'Enable WorldPay Module');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS_DESC', 'Do you want to enable WorldPay payments?');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS_TITLE', 'WorldPay Modul aktivieren');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per WorldPay akzeptieren?');
   
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED_TITLE' , 'Erlaubte Zonen');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_TITLE', 'Worldpay Installation ID');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_DESC', 'Your WorldPay Installation ID');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_TITLE', 'Worldpay Installations ID');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_DESC', 'Ihre WorldPay Installations ID');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_TITLE', 'Payment Response password');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_DESC', 'A password that is sent back in the callback response (specified in the WorldPay Customer Management System)');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_TITLE', 'Zahlungs Antwort Passwort');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_DESC', 'Ein Passwort, das in der Callback Antwort zurück gesendet wird (angegeben im WorldPay Kunden Management System)');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_TITLE', 'MD5 secret for transactions Password');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_DESC', 'The MD5 secret encryption password used to validate transaction responses with (specified in the WorldPay Customer Management System)');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_TITLE', 'MD5 Geheimnis für Transaktions Passwort');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_DESC', 'Das geheime MD5 Verschlüsselungs-Passwort um Transaktions-Antworten zu validieren (angegeben im WorldPay Kunden Management System)');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_TITLE', 'Transaction Method');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_DESC', 'The processing method to use for each transaction');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_TITLE', 'Transaktions Methode');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_DESC', 'Die Bearbeitungs-Methode, die für jede Transaktionen genutzt werden soll.');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_TITLE', 'Test Mode');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_DESC', 'Process transactions in test mode?');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_TITLE', 'Test Modus');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_DESC', 'Transaktionen im Test-Modus durchführen?');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_TITLE', 'Sort order of display.');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_DESC', 'Sort order of display. Lowest is displayed first.');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_TITLE', 'Pre-Auth');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_DESC', 'The mode you are working in (A = Pay Now, E = Pre Auth). Ignored if Use PreAuth is False.');
+  //define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_TITLE', 'Pre-Auth'); // Wird nicht benutzt
+  //define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREAUTH_DESC', 'Der Modus, in dem gearbeitet wird (A = Pay Now, E = Pre Auth). Wird ignoriert, falls PreAuth auf False.'); // Wird nicht benutzt
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_TITLE', 'Payment Zone');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_DESC', 'If a zone is selected, only enable this payment method for that zone.');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_TITLE', 'Zahlungszone');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE_DESC', 'Wenn eine Zone ausgew&auml;hlt ist, gilt die Zahlungsmethode nur f&uuml;r diese Zone.');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID_TITLE', 'Set Preparing Order Status');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID_DESC', 'Set the status of prepared orders made with this payment module to this value');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID_TITLE', 'Tempor&auml;rer Bestellstatus');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID_DESC', 'Bestellstatus f&uuml;r noch nicht abgeschlossene Transaktionen');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_TITLE', 'Set Order Status');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_DESC', 'Set the status of orders made with this payment module to this value');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen.');
 
 // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_TITLE', 'Exclusion in case of shipping');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_DESC', 'deactivate this payment if one of these shippingtypes are selected (list separated by comma)');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
 // EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
 ?>
