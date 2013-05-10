@@ -15,8 +15,8 @@
    ---------------------------------------------------------------------------------------*/
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_DESCRIPTION', '<img src="images/icon_popup.gif" border="0">&nbsp;<a href="http://www.worldpay.com" target="_blank" style="text-decoration: underline; font-weight: bold;">WorldPay Webseite besuchen</a>');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE', 'In Prüfung: Transaktion in Demo Modus durchgeführt.');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'Die Zahlungs Transaktion wurde erfolgreich durchgeführt!');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_WARNING_DEMO_MODE', 'In Pr&uuml;fung: Transaktion in Demo Modus durchgef&uuml;hrt.');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_SUCCESSFUL_TRANSACTION', 'Die Zahlungs Transaktion wurde erfolgreich durchgef&uuml;hrt!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_UNSUCCESSFUL_TRANSACTION', 'Ihre Zahlung war nicht erfolgreich!');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TEXT_CONTINUE_BUTTON', 'Klicken Sie hier um zu %s fortzufahren');
 
@@ -33,16 +33,16 @@
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_DESC', 'Ihre WorldPay Installations ID');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_TITLE', 'Zahlungs Antwort Passwort');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_DESC', 'Ein Passwort, das in der Callback Antwort zurück gesendet wird (angegeben im WorldPay Kunden Management System)');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_CALLBACK_PASSWORD_DESC', 'Ein Passwort, das in der Callback Antwort zur&uuml;ck gesendet wird (angegeben im WorldPay Kunden Management System)');
 
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_TITLE', 'MD5 Geheimnis für Transaktions Passwort');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_DESC', 'Das geheime MD5 Verschlüsselungs-Passwort um Transaktions-Antworten zu validieren (angegeben im WorldPay Kunden Management System)');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_TITLE', 'MD5 Geheimnis f&uuml;r Transaktions Passwort');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_MD5_PASSWORD_DESC', 'Das geheime MD5 Verschl&uuml;sselungs-Passwort um Transaktions-Antworten zu validieren (angegeben im WorldPay Kunden Management System)');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_TITLE', 'Transaktions Methode');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_DESC', 'Die Bearbeitungs-Methode, die für jede Transaktionen genutzt werden soll.');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TRANSACTION_METHOD_DESC', 'Die Bearbeitungs-Methode, die f&uuml;r jede Transaktionen genutzt werden soll.');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_TITLE', 'Test Modus');
-  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_DESC', 'Transaktionen im Test-Modus durchführen?');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_TESTMODE_DESC', 'Transaktionen im Test-Modus durchf&uuml;hren?');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
