@@ -558,7 +558,7 @@ class billsafe_2hp {
     $logo_url = HTTPS_CATALOG_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/top_logo.jpg';
     $billsafe_logo = 'https://images.billsafe.de/image/image/id/2120806d6053';
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_STATUS"');
-    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_STATUS", "False", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
+    if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_STATUS", "True", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_LAYER"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_LAYER", "True", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_LOG"');
