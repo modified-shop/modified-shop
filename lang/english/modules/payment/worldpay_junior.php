@@ -25,6 +25,9 @@
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS_TITLE', 'Enable WorldPay Module');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_STATUS_DESC', 'Do you want to enable WorldPay payments?');
+  
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED_TITLE' , 'Erlaubte Zonen');
+  define('MODULE_PAYMENT_WORLDPAY_JUNIOR_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, welche f&uuml;r dieses Modul erlaubt sein sollen. (z.B. AT,DE (wenn leer, werden alle Zonen erlaubt))');
 
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_TITLE', 'Worldpay Installation ID');
   define('MODULE_PAYMENT_WORLDPAY_JUNIOR_INSTALLATION_ID_DESC', 'Your WorldPay Installation ID');
