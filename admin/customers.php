@@ -1537,6 +1537,17 @@ function check_form() {
                     ?>
                     <td class="dataTableContent" align="left">
                       <?php
+                      echo $customers['customers_vat_id'];
+                      if ($customers['customers_vat_id'] && ($c_vatid_status = xtc_validate_vatid_status($customers['customers_id']))) {
+                        echo '&nbsp;<img title="'.$c_vatid_status.'" alt="'.$c_vatid_status.'" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'_light.gif" />';
+                      }
+                    ?>
+                    </td>
+                    <?php
+/* old
+                    ?>
+                    <td class="dataTableContent" align="left">
+                      <?php
                       if ($customers['customers_vat_id']) {
                         if (xtc_not_null(xtc_validate_vatid_status($customers['customers_id']))) {
                           echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
@@ -1547,6 +1558,7 @@ function check_form() {
                     ?>
                     </td>
                     <?php
+*/
                   }
                   ?>
                   <td class="dataTableContent" align="right"><?php echo xtc_date_short($customers['date_account_created']); ?>&nbsp;</td>
