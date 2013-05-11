@@ -1539,7 +1539,7 @@ function check_form() {
                       <?php
                       echo $customers['customers_vat_id'];
                       if ($customers['customers_vat_id'] && ($c_vatid_status = xtc_validate_vatid_status($customers['customers_id']))) {
-                        echo '&nbsp;<img title="'.$c_vatid_status.'" alt="'.$c_vatid_status.'" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'_light.gif" />';
+                        echo '&nbsp;<img title="'.strip_tags($c_vatid_status).'" alt="[x]" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'_light.gif" />';
                       }
                     ?>
                     </td>
