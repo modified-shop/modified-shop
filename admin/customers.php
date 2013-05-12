@@ -1533,33 +1533,24 @@ function check_form() {
                   ?>
                   <td class="dataTableContent" align="left"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td><?php// web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
                   <?php
-                  if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
-                    ?>
-                    <td class="dataTableContent" align="left">
-                      <?php
-                      echo $customers['customers_vat_id'];
-                      if ($customers['customers_vat_id'] && ($c_vatid_status = xtc_validate_vatid_status($customers['customers_id']))) {
-                        echo '&nbsp;<img title="'.strip_tags($c_vatid_status).'" alt="[x]" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'.gif" />';
-                      }
-                    ?>
-                    </td>
-                    <?php
-/* old
-                    ?>
-                    <td class="dataTableContent" align="left">
-                      <?php
+                    if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+                      echo '<td class="dataTableContent">';
                       if ($customers['customers_vat_id']) {
-                        if (xtc_not_null(xtc_validate_vatid_status($customers['customers_id']))) {
-                          echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
-                        } else {
-                          echo $customers['customers_vat_id'];
-                        }
+                        $vatid_title = strip_tags(xtc_validate_vatid_status($customers['customers_id']));
+                        $vatid_color = ($customers['customers_vat_id_status'] == 1 ? 'green' : 'red');
+                        echo '<span title="'.$vatid_title.'" style="color:'.$vatid_color.';cursor:help;">' .
+                             $customers['customers_vat_id'] .
+                             '</span>';
                       }
-                    ?>
-                    </td>
-                    <?php
+                      echo '</td>';
+/* with vatid status check icon
+                      echo '<td class="dataTableContent" align="left" style="white-space: nowrap">';
+                      if ($customers['customers_vat_id']) {
+                        echo $customers['customers_vat_id'].'&nbsp;<img title="'.strip_tags(xtc_validate_vatid_status($customers['customers_id'])).'" alt="[i]" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'_light.gif" />';
+                      }
+                      echo '</td>';
 */
-                  }
+                    }
                   ?>
                   <td class="dataTableContent" align="right"><?php echo xtc_date_short($customers['date_account_created']); ?>&nbsp;</td>
                   <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
