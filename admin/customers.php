@@ -1549,6 +1549,20 @@ function check_form() {
                         echo $customers['customers_vat_id'].'&nbsp;<img title="'.strip_tags(xtc_validate_vatid_status($customers['customers_id'])).'" alt="[i]" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'_light.gif" />';
                       }
                       echo '</td>';
+/* old vatid status check
+                      ?>
+                      <td class="dataTableContent" align="left">
+                        <?php
+                        if ($customers['customers_vat_id']) {
+                          if (xtc_not_null(xtc_validate_vatid_status($customers['customers_id']))) {
+                            echo $customers['customers_vat_id'].'<br /><span style="font-size:8pt"><nobr>('.xtc_validate_vatid_status($customers['customers_id']).')</nobr></span>';
+                          } else {
+                            echo $customers['customers_vat_id'];
+                          }
+                        }
+                        ?>
+                      </td>
+                      <?php
 */
                     }
                   ?>
