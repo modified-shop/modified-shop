@@ -1534,17 +1534,22 @@ require (DIR_WS_INCLUDES.'head.php');
                             <td class="dataTableContent" align="left"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td><?php// web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
                             <?php
                             if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
-                              ?>
-                              <td class="dataTableContent" align="left">
-                                <?php
-                                echo $customers['customers_vat_id'];
-                                if ($customers['customers_vat_id'] && ($c_vatid_status = xtc_validate_vatid_status($customers['customers_id']))) {
-                                  echo '&nbsp;<img title="'.strip_tags($c_vatid_status).'" alt="[x]" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'.gif" />';
-                                }
-                              ?>
-                              </td>
-                              <?php
-/* old
+                              echo '<td class="dataTableContent">';
+                              if ($customers['customers_vat_id']) {
+                                $vatid_title = strip_tags(xtc_validate_vatid_status($customers['customers_id']));
+                                $vatid_color = ($customers['customers_vat_id_status'] == 1 ? 'green' : 'red');
+                                echo '<span title="'.$vatid_title.'" style="color:'.$vatid_color.';cursor:help;">' .
+                                     $customers['customers_vat_id'] .
+                                     '</span>';
+                              }
+                              echo '</td>';
+/* with vatid status check icon
+                              echo '<td class="dataTableContent" align="left" style="white-space: nowrap">';
+                              if ($customers['customers_vat_id']) {
+                                echo $customers['customers_vat_id'].'&nbsp;<img title="'.strip_tags(xtc_validate_vatid_status($customers['customers_id'])).'" alt="[i]" src="images/icon_status_'.($customers['customers_vat_id_status'] == 1 ? 'green' : 'red').'_light.gif" />';
+                              }
+                              echo '</td>';
+/* old vatid status check
                               ?>
                               <td class="dataTableContent" align="left">
                                 <?php
