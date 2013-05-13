@@ -35,3 +35,27 @@ function encode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
   $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
   return htmlspecialchars($string, $flags , $encoding);
 }
+
+/**
+ * decode_htmlentities
+ */
+function decode_htmlentities ($string, $flags = ENT_COMPAT, $encoding = '')
+{
+  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+  $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
+  $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
+  return html_entity_decode($string, $flags , $encoding);
+}
+
+/**
+ * decode_htmlspecialchars
+ */
+function decode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
+{
+  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));  
+  $default_charset = isset($_SESSION['language_charset']) && in_array(strtoupper($_SESSION['language_charset']), $supported_charsets) ? strtoupper($_SESSION['language_charset']) : ENCODE_DEFAULT_CHARSET;
+  $encoding = !empty($encoding) && in_array(strtoupper($encoding), $supported_charsets) ? strtoupper($encoding) : $default_charset;
+  return htmlspecialchars_decode($string, $flags , $encoding);
+}
+
+
