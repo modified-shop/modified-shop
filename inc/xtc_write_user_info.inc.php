@@ -21,7 +21,7 @@
                               'customers_ip' => $_SESSION['tracking']['ip'],
                               'customers_ip_date' => 'now()',
                               'customers_host' => $_SESSION['tracking']['http_referer']['host'],
-                              'customers_advertiser' => $_SESSION['tracking']['refID'],
+                              'customers_advertiser' => ((isset($_SESSION['tracking']['refID']))?$_SESSION['tracking']['refID']:''),
                               'customers_referer_url' => $_SESSION['tracking']['http_referer']['host'].$_SESSION['tracking']['http_referer']['path'],
                               );
 
