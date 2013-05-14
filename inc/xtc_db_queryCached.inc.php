@@ -14,54 +14,74 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-
-
   function xtc_db_queryCached($query, $link = 'db_link') {
     global $$link;
 
     // get HASH ID for filename
-    $id=md5($query);
-
+    $id = md5($query);
 
     // cache File Name
-    $file=SQL_CACHEDIR.$id.'.xtc';
+    $file = SQL_CACHEDIR . $id . '.mod.cache';
 
     // file life time
-    $expire = DB_CACHE_EXPIRE; // 24 hours
-
-    if (STORE_DB_TRANSACTIONS == 'true') {
-      error_log('QUERY ' . $query . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
-    }
+    $expire = DB_CACHE_EXPIRE;
 
     if (file_exists($file) && filemtime($file) > (time() - $expire)) {
 
-     // get cached resulst
-        $result = unserialize(implode('',file($file)));
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+        $queryStartTime = array_sum(explode(" ",microtime()));
+      }
 
-        } else {
+      // get cached resulst
+      $result = unserialize(base64_decode(file_get_contents($file)));
 
-         if (file_exists($file)) @unlink($file);
-
-        // get result from DB and create new file
-        $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
-
-        if (STORE_DB_TRANSACTIONS == 'true') {
-                $result_error = mysql_error();
-                error_log('RESULT ' . $result . ' ' . $result_error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+        $queryEndTime = array_sum(explode(" ",microtime())); 
+        $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+        if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY CACHED ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }
+        $result_error = mysql_error();
+        if ($result_error) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR CACHED ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+      }
 
-        // fetch data into array
-        $records = array();
-        while ($record = xtc_db_fetch_array($result))
-                $records[]=$record;
+    } else {
 
+      if (file_exists($file)) @unlink($file);
 
-        // safe result into file.
-        $stream = serialize($records);
-        $fp = fopen($file,"w");
-        fwrite($fp, $stream);
-        fclose($fp);
-        $result = unserialize(implode('',file($file)));
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+        $queryStartTime = array_sum(explode(" ",microtime()));
+      }
+
+      // get result from DB and create new file
+      $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
+
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+        $queryEndTime = array_sum(explode(" ",microtime())); 
+        $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+        if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+        $result_error = mysql_error();
+        if ($result_error) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+      }
+
+      // fetch data into array
+      $records = array();
+      while ($record = xtc_db_fetch_array($result)) {
+        $records[]=$record;
+      }
+      
+      // safe result into file.
+      $stream = base64_encode(serialize($records));
+      $fp = fopen($file,"w");
+            fwrite($fp, $stream);
+            fclose($fp);
+      $result = unserialize(base64_decode(file_get_contents($file)));
 
    }
 

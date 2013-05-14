@@ -44,7 +44,10 @@ $values_group_update = array();
 
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'true', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+
 //configuration_group_id 10 --- "Logging Optionen"
+  $values[] = "(NULL, 'STORE_DB_SLOW_QUERY', 'true', '10', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'STORE_DB_SLOW_QUERY_TIME', '1.0', '10', '7', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 11 --- "Cache Optionen"
 

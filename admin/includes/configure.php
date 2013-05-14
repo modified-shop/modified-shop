@@ -51,6 +51,7 @@
   define('DIR_FS_BACKUP', DIR_FS_ADMIN . 'backups/');
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
   define('DIR_WS_FILEMANAGER', DIR_WS_MODULES . 'fckeditor/editor/filemanager/browser/default/');
+  define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
 
   // define our database connection
   define('DB_SERVER', 'localhost'); // eg, localhost - should not be empty for productive servers

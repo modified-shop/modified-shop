@@ -21,27 +21,23 @@
   function xtc_db_query($query, $link = 'db_link') {
     global $$link;
 
-    //echo $query.'<br />';
-
-    //BOF - DokuMan - 2010-02-25 - also check for defined STORE_DB_TRANSACTIONS constant
-    //if (STORE_DB_TRANSACTIONS == 'true') {
-    //  error_log('QUERY ' . $query . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
-    //}
-    //EOF - DokuMan - 2010-02-25 - also check for defined STORE_DB_TRANSACTIONS constant
+    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+      $queryStartTime = array_sum(explode(" ",microtime()));
+    }
     
-//    $queryStartTime = array_sum(explode(" ",microtime()));
     $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
-//	$queryEndTime = array_sum(explode(" ",microtime())); 
-//	$processTime = $queryEndTime - $queryStartTime;
-//	echo 'time: '.$processTime.' Query: '.$query.'<br />';
 
-    //BOF - DokuMan - 2010-02-25 - also check for defined STORE_DB_TRANSACTIONS constant
-    //if (STORE_DB_TRANSACTIONS == 'true') {
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
-       error_log('QUERY ' . $query . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
-    //EOF - DokuMan - 2010-02-25 - also check for defined STORE_DB_TRANSACTIONS constant   
-       $result_error = mysql_error();
-       error_log('RESULT ' . $result . ' ' . $result_error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+      $queryEndTime = array_sum(explode(" ",microtime())); 
+      $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+
+      if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+      }
+      $result_error = mysql_error();
+      if ($result_error) {
+        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+      }
     }
 
     return $result;
