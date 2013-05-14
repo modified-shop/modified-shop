@@ -42,7 +42,8 @@
   define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
   define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
-
+  define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
+  
 // define our database connection
   define('DB_SERVER', 'localhost'); // eg, localhost - should not be empty for productive servers
   define('DB_SERVER_USERNAME', '');

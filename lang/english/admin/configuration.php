@@ -341,9 +341,13 @@ define('STOCK_REORDER_LEVEL_DESC' , 'Define when stock needs to be re-ordered (p
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Store page parse time');
 define('STORE_PAGE_PARSE_TIME_DESC' , 'Store the time it takes to parse a page');
 define('STORE_PAGE_PARSE_TIME_LOG_TITLE' , 'Log file destination');
-define('STORE_PAGE_PARSE_TIME_LOG_DESC' , 'Enter storage location/filename, where the page parse time as well as the database queries will be stored.<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>Default value "page_parse_time.log":<br/><strong>Frontend:</strong> Parse time and database queries in the shop frontend will be stored in the root directory in the file "<strong>page_parse_time.log</strong>".<br/><strong>Administration (Backend):</strong> Parse time and database queries in the shop backend will be stored in the file "<strong>admin/page_parse_time.log</strong>".');
+define('STORE_PAGE_PARSE_TIME_LOG_DESC' , 'Enter storage filename, where the page parse time as well as the database queries will be stored.<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Log file date format');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: %d/%m/%Y %H:%M:%S)');
+define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
+define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queriesbe saved ?.<br/><strong>Caution: Store Database Queries must be enabled!</strong>.');
+define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Time');
+define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Time for the slow querys wich should be logged.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Display The Page Parse Time');
 define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time (store page parse time must be enabled)');

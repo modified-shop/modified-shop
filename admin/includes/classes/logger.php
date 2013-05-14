@@ -50,8 +50,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       return '<span class="smallText">Parse Time: ' . $this->timer_total . 's</span>';
     }
 
-    function write($message, $type) {
-      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $type . '] ' . $message . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+    function write($message, $processTime) {
+      error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . '] ' . $message . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
     }
   }
 ?>

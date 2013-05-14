@@ -38,7 +38,7 @@ Deny from all
 Order Deny,Allow
 Deny from all
 </Files>
-<Files *.xtc>
+<Files *.cache>
 Order Deny,Allow
 Deny from all
 </Files>
