@@ -21,9 +21,9 @@
       $sql_data_array = array('customers_id' => $customer_id,
                               'customers_ip' => $_SESSION['tracking']['ip'],
                               'customers_ip_date' => 'now()',
-                              'customers_host' => isset($_SESSION['tracking']['http_referer']['host']) ? $_SESSION['tracking']['http_referer']['host'] : '',
-                              'customers_advertiser' => isset($_SESSION['tracking']['refID']) ? $_SESSION['tracking']['refID'] : '',
-                              'customers_referer_url' => isset($_SESSION['tracking']['http_referer']['host']) ? $_SESSION['tracking']['http_referer']['host'].$_SESSION['tracking']['http_referer']['path'] : '',
+                              'customers_host' => $_SESSION['tracking']['http_referer']['host'],
+                              'customers_advertiser' => ((isset($_SESSION['tracking']['refID']))?$_SESSION['tracking']['refID']:''),
+                              'customers_referer_url' => $_SESSION['tracking']['http_referer']['host'].$_SESSION['tracking']['http_referer']['path'],
                               );
 
       xtc_db_perform(TABLE_CUSTOMERS_IP, $sql_data_array);
