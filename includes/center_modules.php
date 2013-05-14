@@ -19,11 +19,6 @@
   require(DIR_WS_MODULES . FILENAME_NEW_PRODUCTS);
   require(DIR_WS_MODULES . FILENAME_UPCOMING_PRODUCTS);
 
-  //BOF - DokuMan - 2011-01-21 - Fix a notice when there is no content found in center_modules
-  //return $module;
-  if(isset($module)) {
-     return $module;
-  }
-  return '';
-  //EOF - DokuMan - 2011-01-21 - Fix a notice when there is no content found in center_modules
+  return (isset($module) ? $module : '');
+
 ?>
