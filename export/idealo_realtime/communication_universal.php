@@ -49,12 +49,12 @@ class communication_universal{
 	public function getTestLogin(){
 
 		$xml_idealo = simplexml_load_file ( 'http://ftp.idealo.de/software/modules/version.xml' );
-			$this->login = array(	'shop_id'	=> ( string ) $xml_idealo->partenws->shopid,
-									'user'		=> ( string ) $xml_idealo->partenws->user,
-									'password'	=> ( string ) $xml_idealo->partenws->password,
-									'url'		=> ( string ) $xml_idealo->partenws->url,
-									'testmode'	=> '1'
-								);
+		$this->login = array(	'shop_id'	=> ( string ) $xml_idealo->partenws->shopid,
+								'user'		=> ( string ) $xml_idealo->partenws->user,
+								'password'	=> ( string ) $xml_idealo->partenws->password,
+								'url'		=> ( string ) $xml_idealo->partenws->url,
+								'testmode'	=> '1'
+							);
 
 	}
 	
@@ -74,7 +74,7 @@ class communication_universal{
 		  	           );
 
 		curl_setopt($ch, CURLOPT_HTTPGET, TRUE);	
-		curl_setopt($ch, CURLOPT_TIMEOUT, 30);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 180);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
@@ -87,7 +87,16 @@ class communication_universal{
 			
 		}
 		$result_exec = curl_exec ( $ch );
-		$oXML = new SimpleXMLElement($result_exec);
+
+		if ( strpos( $result_exec, 'sku' ) !== false){
+			
+			$oXML = new SimpleXMLElement($result_exec);
+
+		}else{
+
+			return array();
+			
+		}
 
 		curl_close ( $ch );		
 
@@ -111,7 +120,7 @@ class communication_universal{
 		  	           );
 				
 		curl_setopt($ch, CURLOPT_POST, TRUE);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+		curl_setopt($ch, CURLOPT_TIMEOUT, 180);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
@@ -196,9 +205,21 @@ class communication_universal{
 				$missed = true;
 				
 			}
-			if ( $missed && !isset($this->login ['testmode'] ) ){
+			if ( $missed ){
+				
+				if (isset($this->login ['testmode'] )){
+				
+					if ($this->login ['testmode'] == '0' ){
+						
+						$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
+						
+					}
+					
+				}else{
 
-				$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
+					$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
+					
+				}
 				
 			}
 			
@@ -206,20 +227,24 @@ class communication_universal{
 			
 			if ( $missed && isset ($this->login ['testmode'] ) ){
 				
-				$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
-				$zeile = fgets( $dateihandle, 4096 );
-									
-				if( $zeile == 'no errors' ){		
-
-					$fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
-					fputs ( $fp,  $error_message);
-			    	fclose ( $fp );
-			    	
-				}else{
-					
-					$fp = fopen ( $path . 'idealo_realtime_test.html', "a+" );
-					fputs ( $fp,  $error_message);
-			    	fclose ( $fp );
+				if ( $this->login ['testmode'] == '1' ){
+				
+					$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
+					$zeile = fgets( $dateihandle, 4096 );
+										
+					if( $zeile == 'no errors' ){		
+	
+						$fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
+						fputs ( $fp,  $error_message);
+				    	fclose ( $fp );
+				    	
+					}else{
+						
+						$fp = fopen ( $path . 'idealo_realtime_test.html', "a+" );
+						fputs ( $fp,  $error_message);
+				    	fclose ( $fp );
+						
+					}
 					
 				}
 
@@ -279,9 +304,12 @@ class communication_universal{
 					$sku = $ws_result->offerResponse[ $i ]->sku;
 					$status = $ws_result->offerResponse[ $i ]->status;
 					$idealo_id = $ws_result->offerResponse[ $i ]->id;
-					if ( $idealo_id == '-1' || $status == 'FAILED' ) {
+					
+					if ( ($idealo_id == '-1' || $status == 'FAILED' ) && $status != 'IGNORED' ) {
 						
-						if ( strpos ( $statusMsg, 'Failed to deactivate Offer' ) === false &&  strpos ( $statusMsg, 'No offer with given sku found' ) === false ){
+						if ( strpos ( $statusMsg, 'Failed to deactivate Offer' ) === false 
+							 && strpos ( $statusMsg, 'No offer with given sku found' ) === false 
+							 ){
 							
 							$products_errors .= '<br>SKU:</b> ' . $sku . ' <b>STATUS:</b> ' . $status . ' <b>STATUS_MSG:</b> ' . $statusMsg . ' <b>IDEALO_ID:</b> ' . $idealo_id . '<br><br>';
 							
@@ -298,21 +326,45 @@ class communication_universal{
 					
 				}
 				
-				if ( $products_errors != '' && !isset ($this->login ['testmode'] ) ){
+				if ( $products_errors != '' ){
 					
-					$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
-					
+					if ( isset ($this->login ['testmode'] ) ){
+						
+						if ( $this->login ['testmode'] == '0' ){
+							
+							$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
+							
+						}
+						
+					}else{
+						
+						$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
+						
+					}
+										
 				}
 				
 			}
 			
-			if ( $db_request_failed_id != '-1' && $missed !== true && !isset ($this->login ['testmode'] ) ) {
+			if ( $db_request_failed_id != '-1' && $missed !== true ) {
 				
+				if (isset ($this->login ['testmode'] ) ){
+					
+					if ( $this->login ['testmode'] == '0' ){
+						
+						$this->deleteFromErrorTable ( $db_request_failed_id );
+						
+					}
+					
+				}else{
+					
 					$this->deleteFromErrorTable ( $db_request_failed_id );
 					
 				}
+						
+			}
 				
-			if( $products_errors != '' && isset ($this->login ['testmode'] ) ){
+			if( $products_errors != '' ){
 				
 				$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
 				$zeile = fgets( $dateihandle, 4096 );

@@ -24,7 +24,7 @@ class idealo_universal {
 	public $idealoMinorderBorder = '';
 	
 	
-	public function sendMail( $eMail, $testCSV, $errorTXT, $shopUrl, $moduleVersion, $log, $lastAnswer, $lastRequest ){
+	public function sendMail( $eMail, $testCSV, $errorTXT, $shopUrl, $moduleVersion, $log, $lastAnswer, $lastRequest, $triggerUrl = 'keine' ){
 
 		try{
 			
@@ -46,6 +46,8 @@ class idealo_universal {
 			$message .= 'Last request: ' . $lastRequest;
 			$message .= "\n\n";
 			$message .= 'Last answer: ' . $lastAnswer;
+			$message .= "\n\n";
+			$message .= 'TriggerURL: ' . $triggerUrl;
 
 			$header =  "From: " . $eMail . "<" . $eMail . ">\n";
 			

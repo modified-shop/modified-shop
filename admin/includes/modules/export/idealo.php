@@ -55,7 +55,7 @@ class idealo{
       $this->CAT=array();
       $this->PARENT=array();
       $this->productsPrice = 0;
-      $this->description = '<center><a href="http://www.idealo.de" target="_blank">' . xtc_image(DIR_WS_ICONS.'logoidealo_blue_l.gif') . '</a></center>';
+      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-mQSVVZsF/pics/logos/logo_blue_big.png"></a></center>';
       $this->country_array = array();
     }
 
@@ -206,7 +206,7 @@ class idealo{
 			 			<form action="javascript:history.back()">
 			 				<br><br>
 			 				<div id="logo">
-								<a href="http://www.idealo.de" target="_blank">' . xtc_image(DIR_WS_ICONS . 'logoidealo_blue_l.gif', 'Price Comparison', '', '', 'class="logo noborder"') . '</a>
+								<a href="http://www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-mQSVVZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
 							</div>
 										
 							<br><br>

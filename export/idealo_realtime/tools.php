@@ -396,9 +396,15 @@ class tools extends idealo_universal{
 	                                            WHERE products_id = '" . $products [ 'products_id' ] . "'
 	                                            ORDER BY categories_id DESC;" );
 	
+			$categories = '0';
+	
 	         while ( $categorie_data = xtc_db_fetch_array ( $categorie_query ) ) {
-	         	
-	                $categories = $categorie_data [ 'categories_id' ];
+	         		
+	         		if ( $categorie_data [ 'categories_id' ] != '0' ){
+	         			
+	         			$categories = $categorie_data [ 'categories_id' ];
+	         			
+	         		}
 	                
 	         }
 	         
@@ -444,7 +450,6 @@ class tools extends idealo_universal{
 					$url .= IDEALO_CAMPAIGN;
 					
 				}
-	
 	
 				$xml .=	'<title><![CDATA[' . $this->cleanText ( $products [ 'products_name' ], 200 ) . ']]></title>' .
 						'<url>' . $url . '</url>' .
