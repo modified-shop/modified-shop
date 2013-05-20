@@ -2,7 +2,7 @@
 
 define ('IDEALO_TESTMODE_ACTIVE', '<font color = red><b>Das Modul befindet sich im Testmodus. Die &uuml;bermittelten Angebote werden bei Idealo nicht gelistet!</font></b>');
 
-define ('IDEALO_EMAIL_SEND_01', 'Das Ergebnis wurde an Idealo gesendet. Sie (');
+define ('IDEALO_EMAIL_SEND_01', 'Das Ergebnis wurde an idealo gesendet. Sie (');
 define ('IDEALO_EMAIL_SEND_02', ') erhalten in K&uuml;rze eine Antwort.');
 
 define ('IDEALO_QUESTION_AFTER_EMAIL_SEND_01', 'Falls Sie Fragen haben, wenden Sie sich bitte an <a href="mailto:csv@idealo.de?subject=Frage%20zum%20Echtzeitmodul%20Shop%20');
