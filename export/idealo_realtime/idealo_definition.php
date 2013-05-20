@@ -13,8 +13,8 @@
 */
 
 
-$version_number_idealo = '1.3.0';
-$version_date = '27.03.2013';
+$version_number_idealo = '1.3.2';
+$version_date = '08.05.2013';
 $idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_REALTIME_MODIFIED', $idealo_module_modified );
@@ -41,7 +41,7 @@ $new_idealo_version_text = '';
 	$new_version_idealo = explode ( '.', $version_idealo );
 
    	   $idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
-	   $idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; //DokuMan - 2012-08-21 - removed "blink"-tag
+	   $idealo_version_text_no_modified = '<blink>' .TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a></blink>';	
 	   
 			if ( count ( $old_version_idealo ) == count ( $new_version_idealo ) ){
 	
@@ -80,7 +80,7 @@ $new_idealo_version_text = '';
    
 define( 'NEW_IDEALO_REALTIME_VERSION_TEXT', $new_idealo_version_text );
 define( 'MODULE_IDEALO_REALTIME_TEXT_DESCRIPTION', 'Realtime - Idealo' );
-define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  xtc_image(DIR_WS_ICONS . 'logoidealo_blue_s.gif') . ' - Realtime');
+define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  '<img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"> - Realtime');
 
 
 define('MODULE_IDEALO_REALTIME_FILE_TITLE' , '<hr noshade>User');
