@@ -173,8 +173,9 @@
       }
       if (!$_POST['coupon_code']) {
         $coupon_code = create_coupon_code();
+      } else {
+        $coupon_code = $_POST['coupon_code'];
       }
-      if ($_POST['coupon_code']) $coupon_code = $_POST['coupon_code'];
       $query1 = xtc_db_query("SELECT coupon_code FROM " . TABLE_COUPONS . " WHERE coupon_code = '" . xtc_db_prepare_input($coupon_code) . "'");
       if (xtc_db_num_rows($query1) && $_POST['coupon_code'] && $_GET['oldaction'] != 'voucheredit')  {
         $update_errors = 1;
@@ -240,7 +241,7 @@
             xtc_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_marray[$i]);
           }
       }
-      xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction')) . 'cid=' . (int)$_GET['cid'] ));        
+      xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction') . 'cid=' . (int)$_GET['cid'] ));        
     }
     break;
   }
