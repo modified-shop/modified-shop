@@ -231,7 +231,9 @@
                     ?>
                     <tr>
                       <td colspan="2">
-                        <form action="" method="get">
+                      <?php
+                        echo xtc_draw_form('stats_sales_report', FILENAME_SALES_REPORT, '', 'get');
+                        ?>
                           <table border="0" style="border: 1px solid; border-color: #cccccc;" width="100%" cellspacing="0" cellpadding="0">
                             <tr>
                               <td align="left" rowspan="2" class="menuBoxHeading">
