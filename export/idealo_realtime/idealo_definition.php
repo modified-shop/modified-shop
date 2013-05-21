@@ -19,15 +19,15 @@ $idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_REALTIME_MODIFIED', $idealo_module_modified );
 
-define( 'VERSION_TEXT_01', 'Idealo - Realtime Exportmodul V ' );
-define( 'VERSION_TEXT_02', $version_number_idealo );
-define( 'VERSION_TEXT_03', ' f&uuml;r xt-Systeme vom ' );
-define( 'VERSION_TEXT_04', $version_date );
+define( 'MODULE_IDEALO_REALTIME_VERSION_TEXT_01', 'Idealo - Realtime Exportmodul V ' );
+define( 'MODULE_IDEALO_REALTIME_VERSION_TEXT_02', $version_number_idealo );
+define( 'MODULE_IDEALO_REALTIME_VERSION_TEXT_03', ' f&uuml;r xt-Systeme vom ' );
+define( 'MODULE_IDEALO_REALTIME_VERSION_TEXT_04', $version_date );
 define( 'TEXT_NEW_IDEALO_MODULE_01', 'Die Version ' );
 define( 'TEXT_NEW_IDEALO_MODULE_02', ' des Moduls ist auf Idealo verf&uuml;gbar.' );
 define( 'TEXT_IDEALO_CSV_TEAM', '<br>Da das installierte Modul f&uuml;r Ihr Shopsystem modifiziert wurde, wenden Sie sich f&uuml;r ein Update bitte an <a href="mailto:csv@idealo.de">csv@idealo.de.</a>');
 
-define( 'MODULE_VERSION_TEXT', VERSION_TEXT_01 . $version_number_idealo . VERSION_TEXT_03 . $version_date );
+define( 'MODULE_VERSION_TEXT', MODULE_IDEALO_REALTIME_VERSION_TEXT_01 . $version_number_idealo . MODULE_IDEALO_REALTIME_VERSION_TEXT_03 . $version_date );
 $version_location_idealo = 'http://ftp.idealo.de/software/modules/version.xml';
 $new_idealo_version_text = '';
 
