@@ -232,7 +232,7 @@
                     <tr>
                       <td colspan="2">
                       <?php
-                        echo xtc_draw_form('stats_sales_report', FILENAME_SALES_REPORT, '', 'get');
+                        echo xtc_draw_form('stats_sales_report', FILENAME_SALES_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
                         ?>
                           <table border="0" style="border: 1px solid; border-color: #cccccc;" width="100%" cellspacing="0" cellpadding="0">
                             <tr>
