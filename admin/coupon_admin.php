@@ -241,25 +241,19 @@
             xtc_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_marray[$i]);
           }
       }
-      xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction') . 'cid=' . (int)$_GET['cid'] ));        
+      xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction') . 'cid=' . (int)$_GET['cid'] )));        
     }
     break;
   }
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
-<?php
+  
+require (DIR_WS_INCLUDES.'head.php');
+
 if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
  $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
  $data=xtc_db_fetch_array($query);
  echo xtc_wysiwyg('gv_mail',$data['code']);
  }
  ?>
-<script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body>
 <!-- header //-->
@@ -318,7 +312,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                 $customer = xtc_db_fetch_array($customer_query);
               ?>
               <tr <?php $tr_attributes;?>>  
-                <td class="dataTableContent" align="left">&nbsp;<?php echo $_GET['cid']; ?></td>
+                <td class="dataTableContent" align="left">&nbsp;<?php echo (int)$_GET['cid']; ?></td>
                 <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['customer_id']; ?></td>
                 <td class="dataTableContent" align="left">&nbsp;<?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?></td>
                 <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['redeem_ip']; ?></td>
@@ -343,7 +337,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           $coupon_desc = xtc_db_fetch_array($coupon_description_query);
           $count_customers = xtc_db_query("SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . (int)$_GET['cid'] . "' AND customer_id = '" . (int)$cInfo->customer_id . "'");
 
-          $heading[] = array('text' => '<b>[' . $_GET['cid'] . ']' . COUPON_NAME . ' ' . $coupon_desc['coupon_name'] . '</b>');
+          $heading[] = array('text' => '<b>[' . (int)$_GET['cid'] . ']' . COUPON_NAME . ' ' . $coupon_desc['coupon_name'] . '</b>');
           $contents[] = array('text' => '<b>' . TEXT_REDEMPTIONS . '</b>');
           $contents[] = array('text' => TEXT_REDEMPTIONS_TOTAL . '=' . $cc_query_numrows);
           $contents[] = array('text' => TEXT_REDEMPTIONS_CUSTOMER . '=' . xtc_db_num_rows($count_customers));
@@ -383,7 +377,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
        </td>
       </tr>
       <tr>
-          <?php echo xtc_draw_form('mail', FILENAME_COUPON_ADMIN, 'action=send_email_to_user&cid=' . $_GET['cid']); ?>
+          <?php echo xtc_draw_form('mail', FILENAME_COUPON_ADMIN, 'action=send_email_to_user&cid=' . (int)$_GET['cid']); ?>
             <td>
              <table border="0" width="100%" cellpadding="0" cellspacing="2">
               <tr>
