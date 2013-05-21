@@ -47,9 +47,9 @@ class idealo_real{
       $this->code = 'idealo_real';
 		
 	  if ( TEXT_IDEALO_REALTIME_MODIFIED == 'no' ){
-      	      $this->title = MODULE_IDEALO_REALTIME_TEXT_TITLE . ' v. '. VERSION_TEXT_02 . ' - ' . NEW_IDEALO_REALTIME_VERSION_TEXT;
+      	      $this->title = MODULE_IDEALO_REALTIME_TEXT_TITLE . ' v. '. MODULE_IDEALO_REALTIME_VERSION_TEXT_02 . ' - ' . NEW_IDEALO_REALTIME_VERSION_TEXT;
       }else{
-      	      $this->title = MODULE_IDEALO_REALTIME_TEXT_TITLE . ' v. '. VERSION_TEXT_02 . '.mod - ' . NEW_IDEALO_REALTIME_VERSION_TEXT;
+      	      $this->title = MODULE_IDEALO_REALTIME_TEXT_TITLE . ' v. '. MODULE_IDEALO_REALTIME_VERSION_TEXT_02 . '.mod - ' . NEW_IDEALO_REALTIME_VERSION_TEXT;
       }
 
       $this->description = MODULE_IDEALO_REALTIME_TEXT_DESCRIPTION;
