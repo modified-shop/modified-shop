@@ -33,7 +33,7 @@ $_csv_new_idealo_version_text = '';
 
  if( @file_get_contents ( $_csv_version_location_idealo ) !== false ) {
 	$_csv_xml_idealo = simplexml_load_file ( $_csv_version_location_idealo );
-	$_csv_version_idealo = ( string ) $_csv_xml_idealo->csv->xt_systeme;
+	$_csv_version_idealo = ( string ) $_csv_xml_idealo->csv_export->xt_systeme;
 
 	$_csv_idealo_module_download = ( string )$_csv_xml_idealo->download->url;
 
