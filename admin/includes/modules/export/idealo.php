@@ -44,9 +44,9 @@ class idealo{
       $this->code = 'idealo';
 		
 	  if ( TEXT_IDEALO_CSV_MODIFIED == 'no' ){
-      	      $this->title = MODULE_IDEALO_CSV_TEXT_TITLE . ' v. '. VERSION_TEXT_02 . ' - ' . NEW_IDEALO_CSV_VERSION_TEXT;
+      	      $this->title = MODULE_IDEALO_CSV_TEXT_TITLE . ' v. '. MODULE_IDEALO_CSV_VERSION_TEXT_02 . ' - ' . NEW_IDEALO_CSV_VERSION_TEXT;
       }else{
-      	      $this->title = MODULE_IDEALO_CSV_TEXT_TITLE . ' v. '. VERSION_TEXT_02 . '.mod - ' . NEW_IDEALO_CSV_VERSION_TEXT;
+      	      $this->title = MODULE_IDEALO_CSV_TEXT_TITLE . ' v. '. MODULE_IDEALO_CSV_VERSION_TEXT_02 . '.mod - ' . NEW_IDEALO_CSV_VERSION_TEXT;
       }
 
       $this->description = MODULE_IDEALO_CSV_TEXT_DESCRIPTION;

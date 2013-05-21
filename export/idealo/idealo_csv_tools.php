@@ -439,7 +439,7 @@ class idealo_csv_tools extends idealo_csv_universal{
 			$schema .= 'Datei zuletzt erstellt am ' . $date . ' Uhr';
 			$schema .= "\n";
 
-	        $schema .= VERSION_TEXT_01 . VERSION_TEXT_02 . VERSION_TEXT_03 . VERSION_TEXT_04 . "\n";
+	        $schema .= MODULE_IDEALO_CSV_VERSION_TEXT_01 . MODULE_IDEALO_CSV_VERSION_TEXT_02 . MODULE_IDEALO_CSV_VERSION_TEXT_03 . MODULE_IDEALO_CSV_VERSION_TEXT_04 . "\n";
 	        
 	        return $schema;
 		
