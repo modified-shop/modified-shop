@@ -101,6 +101,9 @@ require (DIR_WS_INCLUDES.'database_tables.php');
 // SQL caching dir
 define('SQL_CACHEDIR', DIR_FS_CATALOG.'cache/');
 
+// LOG dir
+define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
+
 // graduated prices model or products assigned ?
 define('GRADUATED_ASSIGN', 'true');
 
@@ -293,6 +296,7 @@ if (HTTP_SERVER == HTTPS_SERVER) {
 }
 
 include (DIR_WS_INCLUDES.'tracking.php');
+
 // check the Agent
 $truncate_session_id = false;
 if (CHECK_CLIENT_AGENT && xtc_check_agent() == 1) {

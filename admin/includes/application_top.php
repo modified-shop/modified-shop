@@ -92,6 +92,9 @@ define('DIR_WS_BASE', '');
 // SQL caching dir
 define('SQL_CACHEDIR',DIR_FS_CATALOG.'cache/');
 
+// LOG dir
+define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
+
 define('TAX_DECIMAL_PLACES', 0);
 
 // Used in the "Backup Manager" to compress backups
