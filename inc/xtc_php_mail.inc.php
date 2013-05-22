@@ -63,12 +63,12 @@ function xtc_php_mail($from_email_address, $from_email_name,
   //Platzhalter [SIGNATUR] durch Signatur Text ersetzen
   if (strpos($message_body_html,'[SIGNATUR]') !== false) {
     $message_body_html = str_replace('[SIGNATUR]', $html_signatur, $message_body_html);
-    $html_signatur = '';
   }
+  $html_signatur = '';
   if (strpos($message_body_plain,'[SIGNATUR]') !== false) {
     $message_body_plain = str_replace('[SIGNATUR]', $txt_signatur, $message_body_plain);
-    $txt_signatur = '';
   }
+  $txt_signatur = '';
   //EOF - web28 - 2010-06-05 - Widerruf in Email
 
 //**********************************************************************************************
