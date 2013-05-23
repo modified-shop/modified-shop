@@ -49,6 +49,7 @@
   require('includes/application_top.php');
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
+  
   // default detail no detail
   $srDefaultDetail = 0;
   // default view (daily)
@@ -58,7 +59,6 @@
   // default sort
   $srDefaultSort = 4;
 
-  //BOF - Dokuman - 2010-10-31 - set default variables
   $srView = 0;
   $srDetail = 0;
   $srExp = 0;
@@ -68,7 +68,6 @@
   $srSort = 0;
   $srFilter = 0;
 
-  //EOF - Dokuman - 2010-10-31 - set default variables
   // report views (1: yearly 2: monthly 3: weekly 4: daily)
   if (isset($_GET['report']) && (xtc_not_null($_GET['report'])) ) {
     $srView = $_GET['report'];
@@ -231,9 +230,7 @@
                     ?>
                     <tr>
                       <td colspan="2">
-                      <?php
-                        echo xtc_draw_form('stats_sales_report', FILENAME_SALES_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-                        ?>
+                        <form action="" method="get">
                           <table border="0" style="border: 1px solid; border-color: #cccccc;" width="100%" cellspacing="0" cellpadding="0">
                             <tr>
                               <td align="left" rowspan="2" class="menuBoxHeading">
@@ -253,7 +250,7 @@
                                   }
                                   for ($i = 1; $i < 32; $i++) {
                                     ?>
-                                    <option<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
+                                    <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
                                     <?php
                                   }
                                   ?>
@@ -267,7 +264,7 @@
                                   }
                                   for ($i = 1; $i < 13; $i++) {
                                     ?>
-                                    <option<?php if ($m == $i) echo " selected"; ?> value="<?php echo $i; ?>"><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
+                                    <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
                                     <?php
                                   }
                                   ?>
@@ -281,7 +278,7 @@
                                   }
                                   for ($i = 10; $i >= 0; $i--) {
                                     ?>
-                                    <option<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
+                                    <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
                                     <?php
                                   }
                                   ?>
@@ -321,23 +318,15 @@
                                 <br />
                                 <?php echo REPORT_PAYMENT_FILTER; ?><br />
                                 <select name="payment" size="1">
-                                  <?php // BOF - Hendrik - 2010-08-06 - preselection bug found by Robert/Robo-X - modified by Dokuman 2010-10-13
-                                  /* <option value="0"><?php echo REPORT_ALL; ?></option> */
-                                  /* <option value="0" <?php if ($srPayment == '0') echo "selected='selected'"; ?>><?php echo REPORT_ALL; ?></option> */ ?>
                                   <option value="0" <?php if ($srPayment === 0) echo " selected"; ?>><?php echo REPORT_ALL; ?></option>
-                                  <?php // EOF - Hendrik - 2010-08-06 - preselection bug found by Robert/Robo-X - modified by Dokuman 2010-10-13 ?>
                                   <?php
-                                  $payments = explode(';', MODULE_PAYMENT_INSTALLED); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+                                  $payments = explode(';', MODULE_PAYMENT_INSTALLED);
                                   for ($i=0; $i<count($payments); $i++){
                                     require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
                                     $payment = substr($payments[$i], 0, strrpos($payments[$i], '.'));
                                     $payment_text = constant(MODULE_PAYMENT_.strtoupper($payment)._TEXT_TITLE);
                                     ?>
-                                    <?php // BOF - Hendrik - 2010-08-06 - preselection bug found by Robert/Robo-X - modified by Dokuman 2010-10-13
-                                    /* <option value="<?php echo $payment; ?>"<?php if ($srPayment == $payment) echo " selected"; ?>><?php echo $payment_text ; ?></option> */
-                                    /*<option value="<?php echo $payment; ?>"<?php if (($srPayment == $payment) && ($srPayment != '0')) echo "selected='selected'"; ?>><?php echo $payment_text ; ?></option> */ ?>
                                     <option value="<?php echo $payment; ?>"<?php if ($srPayment === $payment) echo " selected"; ?>><?php echo $payment_text ; ?></option>
-                                    <?php // EOF - Hendrik - 2010-08-06 - preselection bug found by Robert/Robo-X - modified by Dokuman 2010-10-13 ?>
                                     <?php
                                   }
                                   ?>
@@ -370,14 +359,16 @@
                                 <?php echo REPORT_END_DATE; ?><br />
                                 <select name="endD" size="1">
                                   <?php
+                                  echo $endDate;
+                                  
                                   if ($endDate) {
-                                    $j = date("j", $endDate - 60* 60 * 24);
+                                    $j = date("j", $endDate - (60 * 60 * 24));
                                   } else {
                                     $j = date("j");
                                   }
                                   for ($i = 1; $i < 32; $i++) {
                                     ?>
-                                    <option<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
+                                    <option value="<?php echo $i; ?>"<?php if ($j == $i) echo " selected"; ?>><?php echo $i; ?></option>
                                     <?php
                                   }
                                   ?>
@@ -391,7 +382,7 @@
                                   }
                                   for ($i = 1; $i < 13; $i++) {
                                     ?>
-                                    <option<?php if ($m == $i) echo " selected"; ?> value="<?php echo $i; ?>"><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
+                                    <option value="<?php echo $i; ?>"<?php if ($m == $i) echo " selected"; ?>><?php echo strftime("%B", mktime(0, 0, 0, $i, 1)); ?></option>
                                     <?php
                                   }
                                   ?>
@@ -405,7 +396,7 @@
                                   }
                                   for ($i = 10; $i >= 0; $i--) {
                                     ?>
-                                    <option<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
+                                    <option value="<?php echo date("Y") - $i; ?>"<?php if ($y == $i) echo " selected"; ?>><?php echo date("Y") - $i; ?></option>
                                     <?php
                                   }
                                   ?>
@@ -425,7 +416,7 @@
                   } // end of ($srExp < 1)
                   ?>
                   <tr>
-                    <td width=100% valign=top>
+                    <td width="100%" valign="top">
                       <table border="0" width="100%" cellspacing="0" cellpadding="2">
                         <tr>
                           <td valign="top">
@@ -435,13 +426,13 @@
                                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDERS;?></td>
                                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ITEMS; ?></td>
                                 <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_REVENUE;?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo  TABLE_HEADING_SHIPPING;?></td>
+                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SHIPPING;?></td>
                               </tr>
                               <?php
                             } // end of if $srExp < 2 csv export
                             $sum = 0;
                             while ($sr->actDate < $sr->endDate) {
-                              $info = $sr->getNext();
+                              $info = $sr->getNext($srDetail);
                               $last = sizeof($info) - 1;
                               if ($srExp < 2) {
                                 ?>
@@ -450,68 +441,54 @@
                                   switch ($srView) {
                                     case '3':
                                       ?>
-                                      <td class="dataTableContent" align="right"><?php echo xtc_date_long(date("Y-m-d\ H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d\ H:i:s", $sr->showDateEnd)); ?></td>
+                                      <td class="dataTableContent" align="right"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
                                       <?php
                                       break;
                                     case '4':
                                       ?>
-                                      <td class="dataTableContent" align="right"><?php echo xtc_date_long(date("Y-m-d\ H:i:s", $sr->showDate)); ?></td>
+                                      <td class="dataTableContent" align="right"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
                                       <?php
                                       break;
                                     default;
                                       ?>
-                                      <td class="dataTableContent" align="right"><?php echo xtc_date_short(date("Y-m-d\ H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d\ H:i:s", $sr->showDateEnd)); ?></td>
-                                      <?php
+                                      <td class="dataTableContent" align="right"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                                     <?php
                                   }
                                   ?>
-                                  <td class="dataTableContent" align="right"><?php echo /*$info[0]['order'];*/ (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); /*Dokuman - 2010-10-31 - fix empty <td>line without visible dashes*/ ?></td>
-                                  <td class="dataTableContent" align="right"><?php echo /*$info[$last - 1]['totitem'];*/ (isset($info[$last - 1]['totitem']) ? $info[$last - 1]['totitem'] : '&nbsp;'); /*Dokuman - 2010-10-31 - Undefined offset: -1 */ ?></td>
-                                  <td class="dataTableContent" align="right"><?php echo /*$currencies->format($info[$last - 1]['totsum']);*/ (isset($info[$last - 1]['totsum']) ? $currencies->format($info[$last - 1]['totsum']) : '&nbsp;' ); /*Dokuman - 2010-10-31 - Undefined offset: -1 */?></td>
-                                  <td class="dataTableContent" align="right"><?php echo $currencies->format($info[0]['shipping']);?></td>
+                                  <td class="dataTableContent" align="right"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
+                                  <td class="dataTableContent" align="right"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
+                                  <td class="dataTableContent" align="right"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
+                                  <td class="dataTableContent" align="right"><?php echo $currencies->format($info[0]['shipping']); ?></td>
                                 </tr>
                                 <?php
-                              } else {
+                             } else {
                                 // csv export
+                                ('Content-type: application/x-octet-stream');
+                                header('Content-disposition: attachment; filename=stats_sales_report.csv');
                                 echo date(DATE_FORMAT, $sr->showDate) . SR_SEPARATOR1 . date(DATE_FORMAT, $sr->showDateEnd) . SR_SEPARATOR1;
                                 echo $info[0]['order'] . SR_SEPARATOR1;
-                                echo $info[$last - 1]['totitem'] . SR_SEPARATOR1;
-                                echo $currencies->format($info[$last - 1]['totsum']) . SR_SEPARATOR1;
-                                echo $currencies->format($info[0]['shipping']) . SR_NEWLINE;
+                                echo $info[$last]['totitem'] . SR_SEPARATOR1;
+                                echo number_format($info[$last]['totsum'], 2, '.', '') . SR_SEPARATOR1;
+                                echo number_format($info[0]['shipping'], 2, '.', '') . "\n";
                               }
                               if ($srDetail) {
-                                for ($i = 0; $i < $last; $i++) {
+                                for ($i = 0; $i <= $last; $i++) {
                                   if ($srMax == 0 or $i < $srMax) {
                                     if ($srExp < 2) {
                                       ?>
                                       <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                                         <td class="dataTableContent">&nbsp;</td>
                                         <td class="dataTableContent" align="left">
-                                          <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo $info[$i]['pmodel'].' : '.$info[$i]['pname']; ?></a>
+                                          <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
                                           <?php
                                           if (is_array($info[$i]['attr'])) {
-                                            $attr_info = $info[$i]['attr'];
-                                            foreach ($attr_info as $attr) {
-                                              echo '<div style="font-style:italic;">&nbsp;' . $attr['quant'] . 'x ' ;
-                                              //  $attr['options'] . ': '
-                                              $flag = 0;
-                                              foreach ($attr['options_values'] as $value) {
-                                                if ($flag > 0) {
-                                                  echo "," . $value;
-                                                } else {
-                                                  echo $value;
-                                                  $flag = 1;
-                                                }
-                                              }
+                                            foreach ($info[$i]['attr'] as $attr) {
                                               $price = 0;
-                                              foreach ($attr['price'] as $value) {
-                                                $price += $value;
-                                              }
-                                              if ($price != 0) {
-                                                echo ' (';
-                                                if ($price > 0) {
-                                                  echo "+";
-                                                }
-                                                echo $currencies->format($price). ')';
+                                              echo '<div style="font-style:italic; text-indent:10px;">';
+                                              for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
+                                                if ($x > 0) echo '<br/>';
+                                                echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
+                                                echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . $currencies->format($attr['price'][$x]) . ')' : '');
                                               }
                                               echo '</div>';
                                             }
@@ -533,52 +510,26 @@
                                       </tr>
                                       <?php
                                     } else {
-                                      // csv export
+                                      // csv export details
+                                      echo $info[$i]['pmodel'] . SR_SEPARATOR2 . $info[$i]['pname'] . SR_SEPARATOR2;
                                       if (is_array($info[$i]['attr'])) {
-                                        $attr_info = $info[$i]['attr'];
-                                        foreach ($attr_info as $attr) {
-                                          echo $info[$i]['pname'] . "(";
-                                          $flag = 0;
-                                          foreach ($attr['options_values'] as $value) {
-                                            if ($flag > 0) {
-                                              echo ", " . $value;
-                                            } else {
-                                              echo $value;
-                                              $flag = 1;
-                                            }
+                                        foreach ($info[$i]['attr'] as $attr) {
+                                          for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
+                                            if ($x > 0) echo ', ';
+                                            echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
+                                            echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . number_format($attr['price'][$x], 2, '.', '') . ')' : '');
                                           }
-                                          $price = 0;
-                                          foreach ($attr['price'] as $value) {
-                                            $price += $value;
-                                          }
-                                          if ($price != 0) {
-                                            echo ' (';
-                                            if ($price > 0) {
-                                              echo "+";
-                                            } else {
-                                              echo " ";
-                                            }
-                                            echo $currencies->format($price). ')';
-                                          }
-                                          echo ")" . SR_SEPARATOR2;
-                                          if ($srDetail == 2) {
-                                            echo $attr['quant'] . SR_SEPARATOR2;
-                                            echo $currencies->format( $attr['quant'] * ($info[$i]['price'] + $price)) . SR_NEWLINE;
-                                          } else {
-                                            echo $attr['quant'] . SR_NEWLINE;
-                                          }
-                                          $info[$i]['pquant'] = $info[$i]['pquant'] - $attr['quant'];
                                         }
                                       }
-                                      if ($info[$i]['pquant'] > 0) {
-                                        echo $info[$i]['pmodel'].SR_SEPARATOR2.$info[$i]['pname'] . SR_SEPARATOR2;
-                                        if ($srDetail == 2) {
-                                          echo $info[$i]['pquant'] . SR_SEPARATOR2;
-                                          echo $currencies->format($info[$i]['pquant'] * $info[$i]['price']) . SR_NEWLINE;
-                                        } else {
-                                          echo $info[$i]['pquant'] . SR_NEWLINE;
-                                        }
+                                      echo SR_SEPARATOR2;
+                                      if ($srDetail == 2) {
+                                        echo $info[$i]['pquant'] . SR_SEPARATOR2;
+                                        echo number_format($info[$i]['psum'], 2, '.', '') . SR_SEPARATOR2;
+                                      } else {
+                                        echo $info[$i]['pquant'] . SR_SEPARATOR2;
+                                        echo SR_SEPARATOR2;
                                       }
+                                      echo "\n";
                                     }
                                   }
                                 }
