@@ -2,20 +2,21 @@
 /* --------------------------------------------------------------
    $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce coding standards; www.oscommerce.com
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
    --------------------------------------------------------------
    Third Party contribution:
 
-   stats_sales_report (c) Charly Wilhelm  charly@yoshi.ch
+   stats_sales_report (c) Charly Wilhelm charly@yoshi.ch
 
    possible views (srView):
   1 yearly
