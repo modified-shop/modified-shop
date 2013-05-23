@@ -891,7 +891,13 @@ if (defined('PAYPAL_API_VERSION')) {
           curl_setopt($ch, CURLOPT_PROXY, PROXY_HOST.":".PROXY_PORT);
         }
         //NVPRequest for submitting to server
-        $nvpreq="METHOD=".urlencode($methodName)."&VERSION=".urlencode($this->version)."&PWD=".urlencode($this->API_Password)."&USER=".urlencode($this->API_UserName)."&SIGNATURE=".urlencode($this->API_Signature).$nvpStr;
+        $nvpreq="METHOD=".urlencode($methodName).
+                "&VERSION=".urlencode($this->version).
+                "&PWD=".urlencode($this->API_Password).
+                "&USER=".urlencode($this->API_UserName).
+                "&SIGNATURE=".urlencode($this->API_Signature).
+                ((xtc_not_null(PAYPAL_TITLE)) ? "BRANDNAME="	.urlencode(PAYPAL_TITLE) : '').
+                $nvpStr;
         //setting the nvpreq as POST FIELD to curl
         curl_setopt($ch,CURLOPT_POSTFIELDS,$nvpreq);
         //getting response from server
@@ -918,7 +924,13 @@ if (defined('PAYPAL_API_VERSION')) {
       }
       /// Falls cURL nicht da oder Fehlerhaft
       global $API_Endpoint,$version,$API_UserName,$API_Password,$API_Signature,$nvp_Header;
-      $nvpreq="METHOD=".urlencode($methodName)."&VERSION=".urlencode($this->version)."&PWD=".urlencode($this->API_Password)."&USER=".urlencode($this->API_UserName)."&SIGNATURE=".urlencode($this->API_Signature).$nvpStr;
+      $nvpreq="METHOD=".urlencode($methodName).
+              "&VERSION=".urlencode($this->version).
+              "&PWD=".urlencode($this->API_Password).
+              "&USER=".urlencode($this->API_UserName).
+              "&SIGNATURE=".urlencode($this->API_Signature).
+              ((xtc_not_null(PAYPAL_TITLE)) ? "BRANDNAME="	.urlencode(PAYPAL_TITLE) : '').
+              $nvpStr;
       $request_post = array(
                       'http'=>array(
                       'method'=>'POST',
