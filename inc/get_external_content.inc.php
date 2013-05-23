@@ -23,29 +23,67 @@
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         $data = curl_exec($ch);
                 curl_close($ch);
+        
+        if ($data && !check_valid_xml($data, $rss))
+          $data='';
       }
       if ($data=='' && function_exists('file_get_contents')) {
         $opts = array('http' => array('method'=>"GET", 'header'=>"Content-Type: text/html; charset=UTF-8", 'timeout' => $timeout));
         $context = stream_context_create($opts); 
         $data = @file_get_contents($url, false, $context);
+
+        if ($data && !check_valid_xml($data, $rss))
+          $data='';
       }
       if ($data=='' && function_exists('fopen')) {
         ini_set('default_socket_timeout', $timeout);  
-        $handle = fopen($url, 'r');   
-        $data = @stream_get_contents($handle);
-        fclose($handle);
+        $fp = @fopen($url, 'r');
+        if (is_resource($fp)) {
+          $data = @stream_get_contents($fp);
+          fclose($fp);
+        }
+
+        if ($data && !check_valid_xml($data, $rss))
+          $data='';
       }
-      if ($rss) {
-        $fp = fopen(RSS_FEED_CACHEFILE, "w+");
-        fputs($fp, $data);
-        fclose($fp);
+      if ($rss && $data) {
+        $fp = @fopen(RSS_FEED_CACHEFILE, "w+");
+        if (is_resource($fp)) {
+          fputs($fp, $data);
+          fclose($fp);
+        }
       }
     } else {
-      $fp = fopen(RSS_FEED_CACHEFILE, "rb");
-      $data = fread($fp, filesize(RSS_FEED_CACHEFILE));
-      fclose($fp);
+      $fp = @fopen(RSS_FEED_CACHEFILE, "rb");
+      if (is_resource($fp)) {
+        $data = fread($fp, filesize(RSS_FEED_CACHEFILE));
+        fclose($fp);
+      }
     }
-    
+        
     return $data;
+  }
+  
+  function check_valid_xml($data, $rss) {
+    $valid = true;
+    
+    if (!$rss)
+      return $valid;
+      
+    libxml_use_internal_errors(true);
+    if (!class_exists('SimpleXmlElement')) {
+      $xml = simplexml_load_string($data);
+      if (!$xml) {
+        $valid = false;
+      }
+      libxml_clear_errors();
+    } else {
+      $xml = new DOMDocument;
+      if (!$xml->load($data)) {
+        $valid = false;
+      }
+      libxml_clear_errors();
+    }
+    return $valid;
   }
 ?>
