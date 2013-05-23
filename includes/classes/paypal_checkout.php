@@ -899,7 +899,7 @@ if (defined('PAYPAL_API_VERSION')) {
                 "&PWD=".urlencode($this->API_Password).
                 "&USER=".urlencode($this->API_UserName).
                 "&SIGNATURE=".urlencode($this->API_Signature).
-                ((xtc_not_null(PAYPAL_TITLE)) ? "BRANDNAME="	.urlencode(PAYPAL_TITLE) : '').
+                ((xtc_not_null(PAYPAL_BRANDNAME)) ? "BRANDNAME="	.urlencode(PAYPAL_BRANDNAME) : '').
                 $nvpStr;
         //setting the nvpreq as POST FIELD to curl
         curl_setopt($ch,CURLOPT_POSTFIELDS,$nvpreq);
@@ -932,7 +932,7 @@ if (defined('PAYPAL_API_VERSION')) {
               "&PWD=".urlencode($this->API_Password).
               "&USER=".urlencode($this->API_UserName).
               "&SIGNATURE=".urlencode($this->API_Signature).
-              ((xtc_not_null(PAYPAL_TITLE)) ? "BRANDNAME="	.urlencode(PAYPAL_TITLE) : '').
+              ((xtc_not_null(PAYPAL_BRANDNAME)) ? "BRANDNAME="	.urlencode(PAYPAL_BRANDNAME) : '').
               $nvpStr;
       $request_post = array(
                       'http'=>array(

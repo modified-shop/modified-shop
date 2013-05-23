@@ -246,7 +246,7 @@ class paypal {
     $new_config[]=array('','PAYPAL_API_CO_BORD', '', 111125, 23, '', '');
     $new_config[]=array('','PAYPAL_ERROR_DEBUG', 'false', 111125, 24, '', 'xtc_cfg_select_option(array("true", "false"),');
     $new_config[]=array('','PAYPAL_INVOICE', '', 111125, 25, '', '');
-		$new_config[]=array('','PAYPAL_TITLE', '', 111125, 26, '', '');
+    $new_config[]=array('','PAYPAL_BRANDNAME', '', 111125, 26, '', '');
     $new_config[]=array('','PAYPAL_API_KEY', '109,111,100,105,102,105,101,100,95,67,97,114,116,95,69,67,77', 6, 5, '', '');
     // Config Daten speichern
     foreach($new_config as $v1) {
