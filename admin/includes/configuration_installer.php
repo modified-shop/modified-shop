@@ -138,7 +138,8 @@ $values_group_update = array();
                            );
 
   //configuration_group_id 111125 --- "Paypal"
-
+  $values[] = "(NULL, 'PAYPAL_TITLE', '', '111125', '26', NULL, NOW(), NULL, NULL);";
+  
 //##############################//
 
 //install configuration group

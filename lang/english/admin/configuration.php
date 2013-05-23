@@ -654,6 +654,8 @@ define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_TITLE','Ship-To-Address Overwrite');
 define('PAYPAL_EXPRESS_ADDRESS_OVERRIDE_DESC','Permits changing address data transferred by PayPal (existing account)');
 define('PAYPAL_INVOICE_TITLE','Shop prefix for PayPal invoice no.');
 define('PAYPAL_INVOICE_DESC','Arbitrary string of letters (prefix), which is placed in front of each order number and is used for generating the PayPal invoice number.<br />This allows multiple store operation with only one PayPal account. Conflicts regarding the order numbers are avoided. Each order has its own invoice numbers within the PayPal account.');
+define('PAYPAL_TITLE_TITLE','PayPal Shop-Name');
+define('PAYPAL_TITLE_DESC','Enter the name wich should be displayed in PayPal.');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
