@@ -28,7 +28,7 @@
     switch ($action) {
       case 'setflag':
         xtc_set_specials_status($_GET['id'], $_GET['flag']);
-        xtc_redirect(xtc_href_link(FILENAME_SPECIALS, '', 'NONSSL'));
+        xtc_redirect(xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id));
         break;
       case 'insert':
         // insert a product on special
