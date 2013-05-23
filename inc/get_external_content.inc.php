@@ -23,7 +23,7 @@
               curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
         $data = curl_exec($ch);
                 curl_close($ch);
-        
+
         if ($data && !check_valid_xml($data, $rss))
           $data='';
       }
@@ -71,19 +71,22 @@
       return $valid;
       
     libxml_use_internal_errors(true);
-    if (!class_exists('SimpleXmlElement')) {
+    libxml_clear_errors();
+    
+    if (class_exists('SimpleXmlElement')) {
       $xml = simplexml_load_string($data);
-      if (!$xml) {
+      if (sizeof(libxml_get_errors()) > 0) {
         $valid = false;
       }
-      libxml_clear_errors();
     } else {
       $xml = new DOMDocument;
-      if (!$xml->load($data)) {
+      $xml->load($data);
+      if (sizeof(libxml_get_errors()) > 0) {      
         $valid = false;
       }
-      libxml_clear_errors();
     }
+    libxml_clear_errors();
+    
     return $valid;
   }
 ?>
