@@ -376,7 +376,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
                           ?>
                           <tr>
-                            <td colspan="4">
+                            <td colspan="7">
                               <table border="0" width="100%" cellpadding="0"cellspacing="2">
                                 <tr>
                                   <td class="smallText" valign="top"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></td>
