@@ -1276,7 +1276,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_set_banner_status($banners_id, $status) {
     if ($status == '1') {
-      return xtc_db_query("update ".TABLE_BANNERS." set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = NULL where banners_id = '".$banners_id."'");
+      return xtc_db_query("update ".TABLE_BANNERS." set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = now() where banners_id = '".$banners_id."'");
     } elseif ($status == '0') {
       return xtc_db_query("update ".TABLE_BANNERS." set status = '0', date_status_change = now() where banners_id = '".$banners_id."'");
     } else {
@@ -1294,7 +1294,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_set_specials_status($specials_id, $status) {
     if ($status == '1') {
-      return xtc_db_query("update ".TABLE_SPECIALS." set status = '1', expires_date = NULL, date_status_change = NULL where specials_id = '".$specials_id."'");
+      return xtc_db_query("update ".TABLE_SPECIALS." set status = '1', expires_date = NULL, date_status_change = now() where specials_id = '".$specials_id."'");
     } elseif ($status == '0') {
       return xtc_db_query("update ".TABLE_SPECIALS." set status = '0', date_status_change = now() where specials_id = '".$specials_id."'");
     } else {
