@@ -223,7 +223,7 @@
                                                    ON (op.orders_id=opa.orders_id 
                                                        AND op.products_id='".$resp['pid']."'
                                                        AND op.orders_products_id=opa.orders_products_id)
-                                          GROUP BY opa.products_options_values
+                                          GROUP BY opa.orders_products_options_values_id
                                           ORDER BY opa.orders_products_attributes_id");
           $attrib_cnt = xtc_db_num_rows($attributes_query);
           if ($attrib_cnt > 0) {
