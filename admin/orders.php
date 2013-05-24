@@ -45,6 +45,21 @@
     return $payment_method;
   }
 
+  function get_order_total($orders_id) {
+    $total = '0';
+    $orders_total_query = xtc_db_query("SELECT value
+                                          FROM orders_total
+                                         WHERE class IN ('ot_total', 'ot_subtotal_no_tax', 'ot_subtotal')
+                                           AND orders_id = '".$orders_id."'
+                                      ORDER BY sort_order DESC
+                                         LIMIT 1");
+    if (xtc_db_num_rows($orders_total_query) > 0) {                                    
+      $orders_total = xtc_db_fetch_array($orders_total_query);
+      $total = $orders_total['value'];
+    }
+    return $total;
+  }
+
   // initiate template engine for mail
   $smarty = new Smarty;
   require (DIR_WS_CLASSES.'currencies.php');
@@ -81,22 +96,20 @@
                           o.ibn_billnr,
                           o.language,
                           o.delivery_country,
-                          o.delivery_country_iso_code_2,
-                          ot.text as order_total
+                          o.delivery_country_iso_code_2
                           ';
 
   //admin search bar
   if ($action == 'search' && $oID) {
     $orders_query_raw = "-- /admin/orders.php
-                         SELECT ".$order_select_fields.",
-                                s.orders_status_name
-                           FROM ".TABLE_ORDERS." o
-                      LEFT JOIN (".TABLE_ORDERS_TOTAL." ot, ".TABLE_ORDERS_STATUS." s)
-                             ON (o.orders_id = ot.orders_id AND o.orders_status = s.orders_status_id)
-                          WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
-                            AND o.orders_id LIKE '%".$oID."%'
-                            AND ot.class = 'ot_total'
-                       ORDER BY o.orders_id DESC";
+                       SELECT ".$order_select_fields.",
+                              s.orders_status_name
+                         FROM ".TABLE_ORDERS." o
+                    LEFT JOIN ".TABLE_ORDERS_STATUS." s
+                              ON (o.orders_status = s.orders_status_id 
+                                  AND s.language_id = '".(int)$_SESSION['languages_id']."')
+                        WHERE o.orders_id LIKE '%".$oID."%'
+                     ORDER BY o.orders_id DESC";
     $orders_query = xtc_db_query($orders_query_raw);
     $order_exists = false;
     if (xtc_db_num_rows($orders_query) == 1) {
@@ -938,90 +951,80 @@ require (DIR_WS_INCLUDES.'head.php');
                                                SELECT ".$order_select_fields.",
                                                       s.orders_status_name
                                                  FROM ".TABLE_ORDERS." o
-                                            LEFT JOIN (".TABLE_ORDERS_TOTAL." ot, ".TABLE_ORDERS_STATUS." s)
-                                                   ON (o.orders_id = ot.orders_id
-                                                       AND (o.orders_status = s.orders_status_id
-                                                            OR (o.orders_status = '0' AND s.orders_status_id = '1')
-                                                           )
-                                                      )
+                                            LEFT JOIN ".TABLE_ORDERS_STATUS." s
+                                                      ON (((o.orders_status = s.orders_status_id)
+                                                           OR (o.orders_status = '0' 
+                                                               AND s.orders_status_id = '1'))
+                                                           AND s.language_id = '".(int)$_SESSION['languages_id']."')
                                                 WHERE o.customers_id = '".xtc_db_input($cID)."'
-                                                  AND ot.class = 'ot_total'
-                                                  AND s.language_id = '".(int)$_SESSION['languages_id']."'
                                              ORDER BY orders_id DESC";
 
                         } elseif (isset($_GET['status']) && $_GET['status']=='0') {
-                            $orders_query_raw = "-- /admin/orders.php
-                                                 SELECT ".$order_select_fields."
-                                                   FROM ".TABLE_ORDERS." o
-                                              LEFT JOIN ".TABLE_ORDERS_TOTAL." ot ON (o.orders_id = ot.orders_id)
-                                                   WHERE o.orders_status = '0'
-                                                     AND ot.class = 'ot_total'
-                                                ORDER BY o.orders_id DESC";
-
-                          } elseif (isset($_GET['status']) && xtc_not_null($_GET['status'])) { //web28 - 2012-04-14  - FIX xtc_not_null($_GET['status'])
-                            $status = xtc_db_prepare_input($_GET['status']);
-                            $orders_query_raw = "-- /admin/orders.php
-                                                 SELECT ".$order_select_fields.",
-                                                        s.orders_status_name
-                                                   FROM ".TABLE_ORDERS." o
-                                              LEFT JOIN (".TABLE_ORDERS_TOTAL." ot, ".TABLE_ORDERS_STATUS." s)
-                                                     ON (o.orders_id = ot.orders_id AND o.orders_status = s.orders_status_id)
-                                                   WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
-                                                     AND s.orders_status_id = '".xtc_db_input($status)."'
-                                                     AND ot.class = 'ot_total'
-                                                ORDER BY o.orders_id DESC";
-
-                          } elseif ($action == 'search' && $oID) {
-                            // ADMIN SEARCH BAR $orders_query_raw moved it to the top
+                          $orders_query_raw = "-- /admin/orders.php
+                                               SELECT ".$order_select_fields."
+                                                 FROM ".TABLE_ORDERS." o
+                                                 WHERE o.orders_status = '0'
+                                              ORDER BY o.orders_id DESC";
+                        } elseif (isset($_GET['status']) && xtc_not_null($_GET['status'])) {
+                          $status = xtc_db_prepare_input($_GET['status']);
+                          $orders_query_raw = "-- /admin/orders.php
+                                               SELECT ".$order_select_fields.",
+                                                      s.orders_status_name
+                                                 FROM ".TABLE_ORDERS." o
+                                            LEFT JOIN ".TABLE_ORDERS_STATUS." s
+                                                      ON (o.orders_status = s.orders_status_id
+                                                          AND s.orders_status_id = '".xtc_db_input($status)."'
+                                                          AND s.orders_status_id = '".xtc_db_input($status)."')
+                                              ORDER BY o.orders_id DESC";
+                        } elseif ($action == 'search' && $oID) {
+                          // ADMIN SEARCH BAR $orders_query_raw moved it to the top
+                        } else {
+                          $orders_query_raw = "-- /admin/orders.php
+                                               SELECT ".$order_select_fields.",
+                                                      s.orders_status_name
+                                                 FROM ".TABLE_ORDERS." o
+                                            LEFT JOIN ".TABLE_ORDERS_STATUS." s
+                                                   ON (((o.orders_status = s.orders_status_id)
+                                                        OR (o.orders_status = '0' 
+                                                            AND s.orders_status_id = '1'))
+                                                        AND s.language_id = '".(int)$_SESSION['languages_id']."'
+                                                       )
+                                             ORDER BY o.orders_id DESC";
+                        }
+                        $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_ORDER_RESULTS, $orders_query_raw, $orders_query_numrows);
+                        $orders_query = xtc_db_query($orders_query_raw);
+                        while ($orders = xtc_db_fetch_array($orders_query)) {
+                          if ((!xtc_not_null($oID) || (isset($oID) && $oID == $orders['orders_id'])) && !isset($oInfo)) { //web28 - 2012-04-14 - FIX !xtc_not_null($oID)
+                            $oInfo = new objectInfo($orders);
+                          }
+                          if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) {
+                            echo '                      <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=edit').'\'">'.PHP_EOL;
                           } else {
-                            $orders_query_raw = "-- /admin/orders.php
-                                                 SELECT ".$order_select_fields.",
-                                                        s.orders_status_name
-                                                   FROM ".TABLE_ORDERS." o
-                                              LEFT JOIN (".TABLE_ORDERS_TOTAL." ot, ".TABLE_ORDERS_STATUS." s)
-                                                     ON (o.orders_id = ot.orders_id AND o.orders_status = s.orders_status_id)
-                                                  WHERE (s.language_id = '".(int)$_SESSION['languages_id']."'
-                                                          AND ot.class = 'ot_total')
-                                                     OR (o.orders_status = '0'
-                                                          AND ot.class = 'ot_total'
-                                                          AND s.orders_status_id = '1'
-                                                          AND s.language_id = '".(int)$_SESSION['languages_id']."')
-                                               ORDER BY o.orders_id DESC";
+                            echo '                      <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID')).'oID='.$orders['orders_id']).'\'">'.PHP_EOL;
                           }
-                          $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_ORDER_RESULTS, $orders_query_raw, $orders_query_numrows);
-                          $orders_query = xtc_db_query($orders_query_raw);
-                          while ($orders = xtc_db_fetch_array($orders_query)) {
-                            if ((!xtc_not_null($oID) || (isset($oID) && $oID == $orders['orders_id'])) && !isset($oInfo)) { //web28 - 2012-04-14 - FIX !xtc_not_null($oID)
-                              $oInfo = new objectInfo($orders);
-                            }
-                            if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id)) {
-                              echo '                      <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=edit').'\'">'.PHP_EOL;
-                            } else {
-                              echo '                      <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID')).'oID='.$orders['orders_id']).'\'">'.PHP_EOL;
-                            }
-                            $orders_link = xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders['orders_id'] . '&action=edit');
-                            $orders_image_preview = xtc_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW);
-                            $orders['customers_name'] = (isset($orders['customers_company']) && $orders['customers_company'] != '') ? $orders['customers_company'] : $orders['customers_name'];
-                            if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id) ) {
-                              $orders_action_image = xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT);
-                            } else {
-                              $orders_action_image = '<a href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
-                            }
-                             ?>
-                              <td class="dataTableContent"><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;' . $orders['customers_name']; ?></td>
-                              <td class="dataTableContent" align="right"><?php echo ($orders['ibn_billnr']!=''?'F ':'').$orders['orders_id']; ?></td>
-                              <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
-                              <td class="dataTableContent" align="right"><?php !empty($orders['order_total'])? print_r(strip_tags($orders['order_total'])) : print_r('0,00 '.$orders['currency']); ?></td>
-                              <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
-                              <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders['orders_status_name']; }else{ echo '<font color="#FF0000">'.TEXT_VALIDATING.'</font>';}?></td>
-                              <?php if (AFTERBUY_ACTIVATED=='true') { ?>
-                              <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
-                              <?php } ?>
-                              <td class="dataTableContent" align="right"><?php echo $orders_action_image; ?>&nbsp;</td>
-                            </tr>
-                            <?php
+                          $orders_link = xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID', 'action')) . 'oID=' . $orders['orders_id'] . '&action=edit');
+                          $orders_image_preview = xtc_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW);
+                          $orders['customers_name'] = (isset($orders['customers_company']) && $orders['customers_company'] != '') ? $orders['customers_company'] : $orders['customers_name'];
+                          if (isset($oInfo) && is_object($oInfo) && ($orders['orders_id'] == $oInfo->orders_id) ) {
+                            $orders_action_image = xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT);
+                          } else {
+                            $orders_action_image = '<a href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                           }
-                          ?>
+                           ?>
+                            <td class="dataTableContent"><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;' . $orders['customers_name']; ?></td>
+                            <td class="dataTableContent" align="right"><?php echo ($orders['ibn_billnr']!=''?'F ':'').$orders['orders_id']; ?></td>
+                            <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
+                            <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
+                            <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
+                            <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders['orders_status_name']; }else{ echo '<font color="#FF0000">'.TEXT_VALIDATING.'</font>';}?></td>
+                            <?php if (AFTERBUY_ACTIVATED=='true') { ?>
+                            <td class="dataTableContent" align="right"><?php  echo ($orders['afterbuy_success'] == 1) ? $orders['afterbuy_id'] : 'TRANSMISSION_ERROR'; ?></td>
+                            <?php } ?>
+                            <td class="dataTableContent" align="right"><?php echo $orders_action_image; ?>&nbsp;</td>
+                          </tr>
+                          <?php
+                        }
+                        ?>
                       <tr>
                         <td colspan="5">
                           <table border="0" width="100%" cellspacing="0" cellpadding="2">
