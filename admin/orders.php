@@ -903,7 +903,7 @@ elseif ($action == 'custom_action') {
                       <td class="dataTableContent"><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;' . $orders['customers_name']; ?></td>
                       <td class="dataTableContent" align="right"><?php echo $orders['orders_id']; ?></td>
                       <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
-                      <td class="dataTableContent" align="right"><?php echo number_format(get_order_total($orders['orders_id']), 2) . '&nbsp;' . $orders['currency']; ?></td>
+                      <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
                       <td class="dataTableContent" align="center"><?php echo xtc_datetime_short($orders['date_purchased']); ?></td>
                       <td class="dataTableContent" align="right"><?php if($orders['orders_status']!='0') { echo $orders['orders_status_name']; }else{ echo '<font color="#FF0000">'.TEXT_VALIDATING.'</font>';}?></td>
                       <?php if (AFTERBUY_ACTIVATED=='true') { ?>
