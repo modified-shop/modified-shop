@@ -21,6 +21,10 @@
   $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
 
+  if (!defined('MAX_DISPLAY_LIST_PRODUCTS')) {
+    define('MAX_DISPLAY_LIST_PRODUCTS', 50);     // display products per page
+  }
+
   $sID = (isset($_GET['sID']) ? (int)$_GET['sID'] : 1);
   $page_id = (isset($_GET['page']) ? (int)$_GET['page'] : 0);
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -317,7 +321,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                     AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
                                                     AND p.products_id = s.products_id
                                                ORDER BY pd.products_name";
-                          $specials_split = new splitPageResults($page_id, MAX_DISPLAY_SEARCH_RESULTS, $specials_query_raw, $specials_query_numrows);
+                          $specials_split = new splitPageResults($page_id, MAX_DISPLAY_LIST_PRODUCTS, $specials_query_raw, $specials_query_numrows);
                           $specials_query = xtc_db_query($specials_query_raw);
                           while ($specials = xtc_db_fetch_array($specials_query)) {
                             $price=$specials['products_price'];
@@ -375,8 +379,8 @@ require (DIR_WS_INCLUDES.'head.php');
                             <td colspan="4">
                               <table border="0" width="100%" cellpadding="0"cellspacing="2">
                                 <tr>
-                                  <td class="smallText" valign="top"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></td>
-                                  <td class="smallText" align="right"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></td>
+                                  <td class="smallText" valign="top"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></td>
+                                  <td class="smallText" align="right"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></td>
                                 </tr>
                                 <?php
                                 if (empty($action)) {
