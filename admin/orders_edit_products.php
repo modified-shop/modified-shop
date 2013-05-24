@@ -134,13 +134,13 @@ $currencies = new currencies();
   </tr>
   <tr class="dataTableRow">
     <?php
-    echo xtc_draw_form('product_search', FILENAME_ORDERS_EDIT, '', 'get');
+      echo xtc_draw_form('product_search', FILENAME_ORDERS_EDIT, '', 'get');
       echo xtc_draw_hidden_field('edit_action', 'products');
       echo xtc_draw_hidden_field('action', 'product_search');
       echo xtc_draw_hidden_field('oID', $_GET['oID']);
       echo xtc_draw_hidden_field('cID', $_POST['cID']);
       //BOF - web28 - 2011-01-16 - FIX missing sessions id
-      //echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+      echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
       //EOF - web28 - 2011-01-16 - FIX missing sessions id
       ?>
       <td class="dataTableContent" width="40"><?php echo xtc_draw_input_field('search', $_GET['search'], 'size="30"');?></td>
@@ -228,7 +228,7 @@ if ($_GET['action'] =='product_search') {
           
           echo xtc_draw_form('product_ins', FILENAME_ORDERS_EDIT, 'action=product_ins', 'post');
           //BOF - web28 - 2011-01-16 - FIX missing sessions id
-          //echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+          echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
           //EOF - web28 - 2011-01-16 - FIX missing sessions id
           echo xtc_draw_hidden_field('cID', $_POST['cID']);
           echo xtc_draw_hidden_field('oID', $_GET['oID']);
