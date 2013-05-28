@@ -22,17 +22,9 @@
 
   $smarty = new Smarty;
 
-  // BOF - DokuMan - 2011-12-08 - get store name for display in letter box of packing slip
-  $query_store_name=xtc_db_query("-- admin/print_order.php
-                                  SELECT configuration_value AS store_name
-                                    FROM " . TABLE_CONFIGURATION . "
-                                   WHERE configuration_key='STORE_NAME'
-                                   LIMIT 1");
-
-  while($row = xtc_db_fetch_array($query_store_name)){
-    $smarty->assign('store_name', $row['store_name']);
-  }
-  // EOF - DokuMan - 2011-12-08 - get store name for display in letter box of packing slip
+  //get store name and store name_address 
+  $smarty->assign('store_name', STORE_NAME); 
+  $smarty->assign('store_name_address', STORE_NAME_ADDRESS); 
 
   // get order data
   include(DIR_WS_CLASSES . 'order.php');
