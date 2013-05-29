@@ -74,6 +74,7 @@
                                                 " . TABLE_LANGUAGES . " l 
                                           where p.products_id = pd.products_id 
                                             and l.languages_id = pd.language_id 
+                                            and pd.products_viewed > 0 
                                        order by pd.products_viewed DESC";
                   $products_split = new splitPageResults($_GET['page'], '20', $products_query_raw, $products_query_numrows);
                   $products_query = xtc_db_query($products_query_raw);
