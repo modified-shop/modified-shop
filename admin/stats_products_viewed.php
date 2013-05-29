@@ -96,6 +96,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                       " . TABLE_LANGUAGES . " l
                                                 where pd.products_id = p.products_id
                                                   and l.languages_id = pd.language_id
+                                                  and pd.products_viewed > 0 
                                              order by pd.products_viewed DESC";
                         $products_split = new splitPageResults($_GET['page'], $maxrows, $products_query_raw, $products_query_numrows);
                         $products_query = xtc_db_query($products_query_raw);
