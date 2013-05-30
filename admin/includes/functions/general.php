@@ -68,7 +68,7 @@
   */
   function xtc_output_string($string, $translate = false, $protected = false) {
     if ($protected == true) {
-      return htmlspecialchars($string);
+      return encode_htmlspecialchars($string);
     } else {
       if ($translate == false) {
         return xtc_parse_input_field_data($string, array('"' => '&quot;'));
@@ -401,8 +401,8 @@
    * @param string $exclude
    * @return
    */
-  function xtc_draw_products_pull_down($name, $parameters = '', $exclude = '') {
-    global $currencies;
+  function xtc_draw_products_pull_down($name, $parameters = '', $exclude = '', $add_price = true, $add_model = true) {
+    global $xtPrice;
     if (empty($exclude)) {
       $exclude = array ();
     }
@@ -411,14 +411,27 @@
       $select_string .= ' '.$parameters;
     }
     $select_string .= '>';
-    $products_query = xtc_db_query("select p.products_id, pd.products_name,p.products_tax_class_id, p.products_price from ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd where p.products_id = pd.products_id and pd.language_id = '".(int)$_SESSION['languages_id']."' order by products_name");
+
+    $products_query = xtc_db_query("select p.products_id,
+                                           p.products_model, 
+                                           pd.products_name,
+                                           p.products_tax_class_id, 
+                                           p.products_price 
+                                      from ".TABLE_PRODUCTS." p, 
+                                           ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                     where p.products_id = pd.products_id 
+                                       and pd.language_id = '".(int)$_SESSION['languages_id']."' 
+                                  order by products_name"
+                                  );
     while ($products = xtc_db_fetch_array($products_query)) {
       if (!in_array($products['products_id'], $exclude)) {
         //brutto admin:
         if (PRICE_IS_BRUTTO == 'true') {
           $products['products_price'] = xtc_round($products['products_price'] * ((100 + xtc_get_tax_rate($products['products_tax_class_id'])) / 100), PRICE_PRECISION);
         }
-        $select_string .= '<option value="'.$products['products_id'].'">'.$products['products_name'].' ('.xtc_round($products['products_price'], PRICE_PRECISION).')</option>';
+        $products_price = $add_price ? ' ('.trim($xtPrice->xtcFormat($products['products_price'],true)).')' : '';
+        $products_model = $add_model ? ' ['.TEXT_GLOBAL_PRODUCTS_MODEL.': '.$products['products_model'].']' : ''; 
+        $select_string .= '<option value="'.$products['products_id'].'">'.$products['products_name'].$products_price.$products_model.'</option>';
       }
     }
     $select_string .= '</select>';
