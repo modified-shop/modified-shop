@@ -47,7 +47,7 @@
     if (USE_ADMIN_TOP_MENU != 'false') {
     ?>
     <script src="includes/liststyle_menu/topmenu.js" type="text/javascript"></script>
-    <script language="javascript">
+    <script type="text/javascript">
     <!--
       document.write('<link href="includes/liststyle_menu/liststyle_top.css" rel="stylesheet" type="text/css" />');
     //-->
@@ -159,7 +159,7 @@
 <?php
   if (USE_ADMIN_TOP_MENU != 'false') {
 ?>
-<script language="javascript">
+<script type="text/javascript">
 <!--
   document.write('<?php ob_start(); require(DIR_WS_INCLUDES . "column_left.php"); $menucontent = ob_get_clean(); echo addslashes($menucontent);?>');
 //-->
