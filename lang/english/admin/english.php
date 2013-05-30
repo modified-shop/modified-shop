@@ -500,3 +500,5 @@ define ('CONFIG_MAX_VALUE_WARNING', '"% s" WARNING:% s input was ignored [maximu
 define ('CONFIG_MIN_VALUE_WARNING', '"% s" WARNING:% s input was ignored [Minimum:% s]');
 
 define ('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Display period in seconds:% s After this time, the entries will be deleted.');
+
+define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Products Model');
