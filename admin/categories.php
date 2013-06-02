@@ -68,7 +68,7 @@ $catfunc->set_page_parameter();
         $catfunc->set_product_status($product_id, '1');
       }
     }
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
   }
 
   if (isset ($_POST['multi_status_off'])) {
@@ -84,7 +84,7 @@ $catfunc->set_page_parameter();
         $catfunc->set_product_status($product_id, "0");
       }
     }
-    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+    xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
   }
   // --- MULTI STATUS ENDS ---
 
@@ -243,7 +243,7 @@ $catfunc->set_page_parameter();
               $catfunc->move_product($product_id, $src_category_id, $dest_category_id);
             }
           }
-          xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$dest_category_id.'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+          xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id));
         }
         // --- MULTI MOVE ENDS ---
 
@@ -317,11 +317,11 @@ $catfunc->set_page_parameter();
         //BOC - web28 - redirect to product input mask
         $action = is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
         $pID = isset($pID) && $pID > 0 ? '&pID='. $pID : '';
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$dest_category_id.$pID.$action.'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id.$pID.$action));
         //EOC - web28 - redirect to product input mask
         }
         // --- MULTI COPY ENDS ---
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&'.xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID'))));
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
         break;
         #EOB multi_action_confirm
     } //EOB switch action

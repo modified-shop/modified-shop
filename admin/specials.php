@@ -205,9 +205,9 @@ require (DIR_WS_INCLUDES.'head.php');
                   <td>
                   <form name="new_special" <?php echo 'action="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action, 'NONSSL') . '"'; ?> method="post">
                     <?php
-                    if ($form_action == 'update') {
-                      echo xtc_draw_hidden_field('specials_id', $sID);
-                    }
+                    xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
+                    if ($form_action == 'update') echo xtc_draw_hidden_field('specials_id', $sID);
+                    ?>
                     echo xtc_draw_hidden_field('products_up_id', $sInfo->products_id);
                     ?>
                     <br />

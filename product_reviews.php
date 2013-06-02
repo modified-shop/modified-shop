@@ -30,16 +30,6 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
-// lets retrieve all $_GET keys and values..
-$get_params = xtc_get_all_get_params();
-$get_params_back = xtc_get_all_get_params(array ('reviews_id')); // for back button
-$get_params = substr($get_params, 0, -1); //remove trailing &
-if (xtc_not_null($get_params_back)) {
-  $get_params_back = substr($get_params_back, 0, -1); //remove trailing &
-} else {
-  $get_params_back = $get_params;
-}
-
 // BOF - DokuMan - 2011-07-26 - Error catch needed in case this page is accessed without $_GET['products_id']
 if (!isset($_GET['products_id']) || !is_numeric($_GET['products_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_REVIEWS));
@@ -58,7 +48,7 @@ if (!xtc_db_num_rows($product_info_query)) {
 }
 $product_info = xtc_db_fetch_array($product_info_query);
 
-$breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, $get_params));
+$breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
 
 require (DIR_WS_INCLUDES.'header.php');
 
@@ -91,8 +81,8 @@ if (xtc_db_num_rows($reviews_query)) {
   }
 }
 $smarty->assign('module_content', $data_reviews);
-$smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, $get_params_back).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-$smarty->assign('BUTTON_WRITE', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, $get_params).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>');
+$smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params(array('reviews_id'))).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+$smarty->assign('BUTTON_WRITE', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_get_all_get_params()).'">'.xtc_image_button('button_write_review.gif', IMAGE_BUTTON_WRITE_REVIEW).'</a>');
 $smarty->assign('language', $_SESSION['language']);
 
 // set cache ID

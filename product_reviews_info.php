@@ -25,10 +25,6 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_break_string.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 
-// lets retrieve all $_GET keys and values..
-$get_params = xtc_get_all_get_params(array ('reviews_id'));
-$get_params = substr($get_params, 0, -1); //remove trailing &
-
 $reviews_query = "select rd.reviews_text,
                          r.reviews_rating,
                          r.reviews_id,
@@ -54,7 +50,7 @@ if (!xtc_db_num_rows($reviews_query))
   xtc_redirect(xtc_href_link(FILENAME_REVIEWS));
 $reviews = xtc_db_fetch_array($reviews_query);
 
-$breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, $get_params));
+$breadcrumb->add(NAVBAR_TITLE_PRODUCT_REVIEWS, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params(array ('reviews_id'))));
 
 xtc_db_query("update ".TABLE_REVIEWS." set reviews_read = reviews_read+1 where reviews_id = '".$reviews['reviews_id']."'");
 
