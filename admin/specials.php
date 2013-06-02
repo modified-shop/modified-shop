@@ -203,10 +203,10 @@ require (DIR_WS_INCLUDES.'head.php');
               $new_price=xtc_round($new_price,PRICE_PRECISION);              
               ?>
                   <td>
-									<?php
-									xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
-									if ($form_action == 'update') echo xtc_draw_hidden_field('specials_id', $sID);
-									?>
+                  <?php
+                  xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
+                  if ($form_action == 'update') echo xtc_draw_hidden_field('specials_id', $sID);
+                  ?>
                     echo xtc_draw_hidden_field('products_up_id', $sInfo->products_id);
                     ?>
                     <br />
