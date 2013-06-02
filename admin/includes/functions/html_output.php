@@ -285,9 +285,9 @@
    * @return string (2 sorting arrows)
    */
   function xtc_sorting($page,$sort) {
-    $nav= '<br /><a href="'.xtc_href_link($page,'sorting='.$sort.'&'.xtc_get_all_get_params(array('action','sorting'))).'">';
+    $nav= '<br /><a href="'.xtc_href_link($page, xtc_get_all_get_params(array('action','sorting')).'sorting='.$sort).'">';
     $nav.= xtc_image(DIR_WS_ICONS . 'sort_down.gif', '', '20' ,'20').'</a>';
-    $nav.= '<a href="'.xtc_href_link($page,'sorting='.$sort.'-desc&'.xtc_get_all_get_params(array('action','sorting'))).'">';
+    $nav.= '<a href="'.xtc_href_link($page, xtc_get_all_get_params(array('action','sorting')).'sorting='.$sort.'-desc').'">';
     $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', '', '20' ,'20').'</a>';    
     return $nav;
   }
