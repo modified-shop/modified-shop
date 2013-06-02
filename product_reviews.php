@@ -73,7 +73,7 @@ if (xtc_db_num_rows($reviews_query)) {
     $row ++;
     $data_reviews[] = array (
     'ID' => $reviews['reviews_id'],
-    'AUTHOR' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, $get_params.'&reviews_id='.$reviews['reviews_id']).'">'.$reviews['customers_name'].'</a>',
+    'AUTHOR' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, xtc_get_all_get_params(array('reviews_id')).'reviews_id='.$reviews['reviews_id']).'">'.$reviews['customers_name'].'</a>',
     'DATE' => xtc_date_short($reviews['date_added']),
     'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
     'TEXT' => $reviews['reviews_text']
