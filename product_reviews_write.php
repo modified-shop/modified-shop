@@ -63,17 +63,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
   xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
 }
 
-// lets retrieve all $_GET keys and values..
-$get_params = xtc_get_all_get_params();
-$get_params_back = xtc_get_all_get_params(array ('reviews_id')); // for back button
-$get_params = substr($get_params, 0, -1); //remove trailing &
-if (xtc_not_null($get_params_back)) {
-  $get_params_back = substr($get_params_back, 0, -1); //remove trailing &
-} else {
-  $get_params_back = $get_params;
-}
-
-$breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVIEWS, $get_params));
+$breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
 
 if(isset($_SESSION['customer_id'])) {
   $customer_info_query = xtc_db_query("SELECT customers_firstname,
@@ -104,7 +94,7 @@ if (!$product->isProduct()) {
   $smarty->assign('INPUT_RATING', xtc_draw_radio_field('rating', '1').' '.xtc_draw_radio_field('rating', '2').' '.xtc_draw_radio_field('rating', '3').' '.xtc_draw_radio_field('rating', '4').' '.xtc_draw_radio_field('rating', '5'));
   $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&'.xtc_product_link($product->data['products_id'],$product->data['products_name'])), 'post', 'onSubmit="return checkForm();"'));
   $smarty->assign('BUTTON_BACK', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
-  $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE).xtc_draw_hidden_field('get_params', $get_params));
+  $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE).xtc_draw_hidden_field('get_params', xtc_get_all_get_params()));
   $smarty->assign('FORM_END', '</form>');
 }
 $smarty->assign('language', $_SESSION['language']);
