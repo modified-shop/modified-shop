@@ -973,8 +973,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                                  FROM ".TABLE_ORDERS." o
                                             LEFT JOIN ".TABLE_ORDERS_STATUS." s
                                                       ON (o.orders_status = s.orders_status_id
-                                                          AND s.orders_status_id = '".xtc_db_input($status)."'
                                                           AND s.orders_status_id = '".xtc_db_input($status)."')
+                                                WHERE s.language_id = '".(int)$_SESSION['languages_id']."'
                                               ORDER BY o.orders_id DESC";
                         } elseif ($action == 'search' && $oID) {
                           // ADMIN SEARCH BAR $orders_query_raw moved it to the top
