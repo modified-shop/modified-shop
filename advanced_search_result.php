@@ -61,7 +61,7 @@ if ($keywords && !xtc_parse_search_string($keywords, $search_keywords)) {
 }
 
 if ($errorno) {
-  xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH, 'errorno='.$errorno.'&'.xtc_get_all_get_params()));
+  xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH, xtc_get_all_get_params().'errorno='.$errorno));
 
 } else {
 

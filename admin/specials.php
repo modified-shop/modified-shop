@@ -219,7 +219,11 @@
   var specialExpires = new ctlSpiffyCalendarBox("specialExpires", "new_special", "specials_expires","btnDate1","<?php echo $expires_date; ?>",2);
 </script>
 <!-- EOF - Tomcraft - 2009-11-06 - SPIFFY CAL 2.1 //-->
-      <tr><form name="new_special" <?php echo 'action="' . xtc_href_link(FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action, 'NONSSL') . '"'; ?> method="post"><?php if ($form_action == 'update') echo xtc_draw_hidden_field('specials_id', $_GET['sID']); ?>
+      <tr>
+        <?php
+        xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
+        if ($form_action == 'update') echo xtc_draw_hidden_field('specials_id', $_GET['sID']);
+        ?>
         <td><br /><table border="0" cellspacing="0" cellpadding="2">
           
                 <td class="main"><?php echo TEXT_SPECIALS_PRODUCT; echo ($sInfo->products_name) ? "" :  ''; ?>&nbsp;</td>

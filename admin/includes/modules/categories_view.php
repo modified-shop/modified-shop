@@ -225,9 +225,9 @@
              <?php
              //multi-actions form STARTS
              if ((isset($_POST['multi_categories']) && xtc_not_null($_POST['multi_categories'])) || (isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products']))) {
-               $action_multi = "action=multi_action_confirm&" . xtc_get_all_get_params(array('cPath', 'action')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '');
+               $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action_confirm' . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
              } else {
-               $action_multi = "action=multi_action&" . xtc_get_all_get_params(array('cPath', 'action')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '');
+               $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
              }
              echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
              //add current category id in $_POST
