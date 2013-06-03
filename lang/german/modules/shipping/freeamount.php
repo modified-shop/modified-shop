@@ -22,7 +22,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // CUSTOMIZE THIS SETTING
-define('NUMBER_OF_ZONES', 2);
+define('NUMBER_OF_ZONES_FREEAMOUNT', 2);
 
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Versandkostenfrei');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Versandkostenfreie Lieferung');
@@ -38,7 +38,7 @@ define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, w
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige');
 
-for ($ii=1; $ii<=NUMBER_OF_ZONES; $ii++) {
+for ($ii=1; $ii<=NUMBER_OF_ZONES_FREEAMOUNT; $ii++) {
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' L&auml;nder');
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$ii.' sind.');
   define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$ii.'_TITLE' , 'Zone '.$ii.' Mindestbetrag');
