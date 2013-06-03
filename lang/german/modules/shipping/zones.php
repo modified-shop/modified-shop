@@ -35,12 +35,12 @@ define('MODULE_SHIPPING_ZONES_TAX_CLASS_DESC' , 'Folgende Steuerklasse an Versan
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige');
 
-for ($sz=1;$sz<=NUMBER_OF_ZONES;$sz++) {
-define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$sz.'_TITLE' , 'Zone '.$sz.' L&auml;nder');
-define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$sz.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$sz.' sind.');
-define('MODULE_SHIPPING_ZONES_COST_'.$sz.'_TITLE' , 'Zone '.$sz.' Versandkosten');
-define('MODULE_SHIPPING_ZONES_COST_'.$sz.'_DESC' , 'Versandkosten nach Zone '.$sz.' Bestimmungsorte, basierend auf einer Gruppe von max. Bestellgewichten. Beispiel: 3:8.50,7:10.50,... Gewicht von kleiner oder gleich 3 w&uuml;rde 8.50 f&uuml;r die Zone '.$sz.' Bestimmungsl&auml;nder kosten.');
-define('MODULE_SHIPPING_ZONES_HANDLING_'.$sz.'_TITLE' , 'Zone '.$sz.' Handling Geb&uuml;hr');
-define('MODULE_SHIPPING_ZONES_HANDLING_'.$sz.'_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandzone');
+for ($ii=1;$ii<=NUMBER_OF_ZONES;$ii++) {
+define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' L&auml;nder');
+define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$ii.' sind.');
+define('MODULE_SHIPPING_ZONES_COST_'.$ii.'_TITLE' , 'Zone '.$ii.' Versandkosten');
+define('MODULE_SHIPPING_ZONES_COST_'.$ii.'_DESC' , 'Versandkosten nach Zone '.$ii.' Bestimmungsorte, basierend auf einer Gruppe von max. Bestellgewichten. Beispiel: 3:8.50,7:10.50,... Gewicht von kleiner oder gleich 3 w&uuml;rde 8.50 f&uuml;r die Zone '.$ii.' Bestimmungsl&auml;nder kosten.');
+define('MODULE_SHIPPING_ZONES_HANDLING_'.$ii.'_TITLE' , 'Zone '.$ii.' Handling Geb&uuml;hr');
+define('MODULE_SHIPPING_ZONES_HANDLING_'.$ii.'_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandzone');
 }
 ?>
