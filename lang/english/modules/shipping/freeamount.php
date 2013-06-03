@@ -28,8 +28,8 @@ define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Free Shipping w/ Minimum 
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY', 'Free Shipping minimum order: %s');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER', 'Sort Order');
 
-define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Allowed FREEAMOUNT');
-define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_DESC' , 'Please enter the FREEAMOUNT <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all FREEAMOUNT))');
+define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_TITLE' , 'Allowed Zones');
+define('MODULE_SHIPPING_FREEAMOUNT_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_TITLE' , 'Enable Free Shipping with Minimum Purchase');
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_DESC' , 'Do you want to offer free shipping?');
 define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_TITLE' , 'Enable Display');
