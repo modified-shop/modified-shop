@@ -51,7 +51,7 @@ while ($check_number_zones = xtc_db_fetch_array($check_zones_query)) {
   $number_of_zones = $check_number_zones['configuration_value'];
 }
 for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= $number_of_zones; $module_shipping_dp_i ++) {
-  define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Countries');
+  define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' L&auml;nder');
   define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Kommagetrennte Liste von der 2stelligen ISO country codes der Zone '.$module_shipping_dp_i.'');
   define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Versandtabelle');
   define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_DESC' , 'Versandkosten der Zone '.$module_shipping_dp_i.' bezogen auf Bestellungsgewicht. Beispiel: 3:8.50,7:10.50,99999:12.00... Gewichte gr&ouml;sser 0 und kleiner 3 kosten 8.50, kleiner als 7 kostet 10.50 f&uuml;r Zone '.$module_shipping_dp_i.'.');
