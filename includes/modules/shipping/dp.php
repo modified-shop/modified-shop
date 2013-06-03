@@ -78,6 +78,7 @@
 
       for ($i=1; $i<=$this->num_dp; $i++) {
         $countries_table = constant('MODULE_SHIPPING_DP_COUNTRIES_' . $i);
+        $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table); //web28 -2011-06-13 - support for textareas
         $country_zones = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
         if (in_array($dest_country, $country_zones)) {
           $dest_zone = $i;
@@ -149,7 +150,7 @@
       xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key LIKE 'MODULE_SHIPPING_DP_COST_%'");
 
       for ($i = 1; $i <= $number_of_zones; $i ++) {
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_COUNTRIES_".$i."', 'DE', '6', '0', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_COUNTRIES_".$i."', 'DE', '6', '0', 'xtc_cfg_textarea(', now())"); //web28 -2011-06-13 - support for textareas
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_COST_".$i."', '5:6.70,10:9.70,20:13.00', '6', '0', now())");
       }
 

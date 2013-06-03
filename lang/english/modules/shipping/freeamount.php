@@ -21,9 +21,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// CUSTOMIZE THIS SETTING
-define('NUMBER_OF_ZONES_FREEAMOUNT', 2);
-
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Free Shipping');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Free Shipping w/ Minimum Order Amount');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY', 'Free Shipping minimum order: %s');
@@ -35,13 +32,22 @@ define('MODULE_SHIPPING_FREEAMOUNT_STATUS_TITLE' , 'Enable Free Shipping with Mi
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_DESC' , 'Do you want to offer free shipping?');
 define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_TITLE' , 'Enable Display');
 define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'Do you want to display text way if the minimum amount is not reached?');
+define('MODULE_SHIPPING_FREEAMOUNT_ZONE_TITLE' , 'Shipping Zone');
+define('MODULE_SHIPPING_FREEAMOUNT_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_DESC' , 'Lowest will be displayed first.');
+define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_TITLE' , 'Number of zones');
+define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_DESC' , 'Number of zones to use');
 
-for ($ii=1; $ii<=NUMBER_OF_ZONES_FREEAMOUNT; $ii++) {
-  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' Countries');
-  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$ii.'.');
-  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$ii.'_TITLE' , 'Zone '.$ii.' Minimum Cost');
-  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$ii.'_DESC' , 'Minimum order amount purchased for Zone '.$ii.' before shipping is free.');
+$check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES'");
+$number_of_zones = 0;
+while ($check_number_zones = xtc_db_fetch_array($check_zones_query)) {
+  $number_of_zones = $check_number_zones['configuration_value'];
+}
+for ($module_shipping_freeamount_i = 1; $module_shipping_freeamount_i <= $number_of_zones; $module_shipping_freeamount_i ++) {
+  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Countries');
+  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_freeamount_i.'.');
+  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Minimum Cost');
+  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_DESC' , 'Minimum order amount purchased for Zone '.$module_shipping_freeamount_i.' before shipping is free.');
 }
 ?>

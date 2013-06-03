@@ -15,9 +15,6 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-   
-   // CUSTOMIZE THIS SETTING
-define('NUMBER_OF_ZONES',9);
 
 define('MODULE_SHIPPING_ZONES_TEXT_TITLE', 'Zone Rates');
 define('MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION', 'Zone Based Rates');
@@ -32,15 +29,24 @@ define('MODULE_SHIPPING_ZONES_ALLOWED_TITLE' , 'Allowed Zones');
 define('MODULE_SHIPPING_ZONES_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_ZONES_TAX_CLASS_TITLE' , 'Tax Class');
 define('MODULE_SHIPPING_ZONES_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
+define('MODULE_SHIPPING_ZONES_ZONE_TITLE' , 'Shipping Zone');
+define('MODULE_SHIPPING_ZONES_ZONE_DESC' , 'If you choose a zone only this shipping zones used.');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_DESC' , 'Sort order of display.');
+define('MODULE_SHIPPING_ZONES_NUMBER_ZONES_TITLE' , 'Number of zones');
+define('MODULE_SHIPPING_ZONES_NUMBER_ZONES_DESC' , 'Number of zones to use');
 
-for ($ii=1;$ii<=NUMBER_OF_ZONES;$ii++) {
-define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' Countries');
-define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$ii.'.');
-define('MODULE_SHIPPING_ZONES_COST_'.$ii.'_TITLE' , 'Zone '.$ii.' Shipping Table');
-define('MODULE_SHIPPING_ZONES_COST_'.$ii.'_DESC' , 'Shipping rates to Zone '.$ii.' destinations based on a group of maximum order weights. Example: 3:8.50,7:10.50,... Weights less than or equal to 3 would cost 8.50 for Zone '.$ii.' destinations.');
-define('MODULE_SHIPPING_ZONES_HANDLING_'.$ii.'_TITLE' , 'Zone '.$ii.' Handling Fee');
-define('MODULE_SHIPPING_ZONES_HANDLING_'.$ii.'_DESC' , 'Handling Fee for this shipping zone');
+$check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_ZONES_NUMBER_ZONES'");
+$number_of_zones = 0;
+while ($check_number_zones = xtc_db_fetch_array($check_zones_query)) {
+  $number_of_zones = $check_number_zones['configuration_value'];
+}
+for ($module_shipping_zones_i = 1; $module_shipping_zones_i <= $number_of_zones; $module_shipping_zones_i ++) {
+  define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$module_shipping_zones_i.'_TITLE' , 'Zone '.$module_shipping_zones_i.' Countries');
+  define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$module_shipping_zones_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_zones_i.'.');
+  define('MODULE_SHIPPING_ZONES_COST_'.$module_shipping_zones_i.'_TITLE' , 'Zone '.$module_shipping_zones_i.' Shipping Table');
+  define('MODULE_SHIPPING_ZONES_COST_'.$module_shipping_zones_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_zones_i.' destinations based on a group of maximum order weights. Example: 3:8.50,7:10.50,... Weights less than or equal to 3 would cost 8.50 for Zone '.$module_shipping_zones_i.' destinations.');
+  define('MODULE_SHIPPING_ZONES_HANDLING_'.$module_shipping_zones_i.'_TITLE' , 'Zone '.$module_shipping_zones_i.' Handling Fee');
+  define('MODULE_SHIPPING_ZONES_HANDLING_'.$module_shipping_zones_i.'_DESC' , 'Handling Fee for this shipping zone');
 }
 ?>
