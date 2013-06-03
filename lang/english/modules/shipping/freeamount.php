@@ -22,7 +22,7 @@
    ---------------------------------------------------------------------------------------*/
 
 // CUSTOMIZE THIS SETTING
-define('NUMBER_OF_ZONES', 2);
+define('NUMBER_OF_ZONES_FREEAMOUNT', 2);
 
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Free Shipping');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Free Shipping w/ Minimum Order Amount');
@@ -38,7 +38,7 @@ define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'Do you want to display text 
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_DESC' , 'Lowest will be displayed first.');
 
-for ($ii=1; $ii<=NUMBER_OF_ZONES; $ii++) {
+for ($ii=1; $ii<=NUMBER_OF_ZONES_FREEAMOUNT; $ii++) {
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' Countries');
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$ii.'.');
   define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$ii.'_TITLE' , 'Zone '.$ii.' Minimum Cost');
