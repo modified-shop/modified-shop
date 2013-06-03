@@ -21,9 +21,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// CUSTOMIZE THIS SETTING
-define('NUMBER_OF_ZONES_FREEAMOUNT', 2);
-
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE', 'Versandkostenfrei');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_DESCRIPTION', 'Versandkostenfreie Lieferung');
 define('MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY', 'ab %s  Bestellwert versenden wir Ihre Bestellung versandkostenfrei');
@@ -35,13 +32,22 @@ define('MODULE_SHIPPING_FREEAMOUNT_STATUS_TITLE' , 'Versandkostenfreie Lieferung
 define('MODULE_SHIPPING_FREEAMOUNT_STATUS_DESC' , 'M&ouml;chten Sie Versandkostenfreie Lieferung anbieten?');
 define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_TITLE' , 'Anzeige aktivieren');
 define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn der Mindestbetrag zur VK-freien Lieferung nicht erreicht ist?');
+define('MODULE_SHIPPING_FREEAMOUNT_ZONE_TITLE' , 'Versand Zone');
+define('MODULE_SHIPPING_FREEAMOUNT_ZONE_DESC' , 'Wenn Sie eine Zone ausw&auml;hlen, wird diese Versandart nur in dieser Zone angeboten.');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige');
+define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
+define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
 
-for ($ii=1; $ii<=NUMBER_OF_ZONES_FREEAMOUNT; $ii++) {
-  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' L&auml;nder');
-  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$ii.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$ii.' sind.');
-  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$ii.'_TITLE' , 'Zone '.$ii.' Mindestbetrag');
-  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$ii.'_DESC' , 'Midestbestellwert f&uuml;r Zone '.$ii.' damit der Versand kostenlos ist.');
+$check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES'");
+$number_of_zones = 0;
+while ($check_number_zones = xtc_db_fetch_array($check_zones_query)) {
+  $number_of_zones = $check_number_zones['configuration_value'];
+}
+for ($module_shipping_freeamount_i = 1; $module_shipping_freeamount_i <= $number_of_zones; $module_shipping_freeamount_i ++) {
+  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' L&auml;nder');
+  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_freeamount_i.' sind.');
+  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Mindestbetrag');
+  define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_DESC' , 'Midestbestellwert f&uuml;r Zone '.$module_shipping_freeamount_i.' damit der Versand kostenlos ist.');
 }
 ?>
