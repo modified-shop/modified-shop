@@ -289,37 +289,26 @@ if(xtc_count_shipping_modules() > 0) {
   } else {
     $radio_buttons = 0;
     #loop through installed shipping methods...
-    //BOF - DokuMan - 2011-12-19 - precount for performance
-    //for($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
-    $n=sizeof($quotes);
-    for ($i=0; $i<$n; $i++) {
-    //EOF - DokuMan - 2011-12-19 - precount for performance
-      if(!isset($quotes[$i]['error'])) {
-        //BOF - DokuMan - 2011-12-19 - precount for performance
-        //for($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
-        $n2=sizeof($quotes[$i]['methods']);
-        for ($j=0; $j<$n2; $j++) {
-        //EOF - DokuMan - 2011-12-19 - precount for performance
+    for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+      for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
+        if (!isset ($quotes[$i]['error'])) {
           # set the radio button to be checked if it is the method chosen
           $quotes[$i]['methods'][$j]['radio_buttons'] = $radio_buttons;
-          $checked = (($quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
-          if(($checked == true) || ($n == 1 && $n2 == 1)) {
+          $checked = ((isset($_SESSION['shipping']) && $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
+          if (($checked == true) || ($n == 1 && $n2 == 1)) {
             $quotes[$i]['methods'][$j]['checked'] = 1;
           }
-          if(($n > 1) || ($n2 > 1)) {
-            if($_SESSION['customers_status']['customers_status_show_price_tax'] == 0)
-              $quotes[$i]['tax'] = '';
-            if($_SESSION['customers_status']['customers_status_show_price_tax'] == 0)
+          if (($n > 1) || ($n2 > 1)) {
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quotes[$i]['tax'])) {
               $quotes[$i]['tax'] = 0;
-            //BOF - DokuMan - 2012-05-31 - fix undefined index 'tax'
-            //$quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true);
-            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax'])?$quotes[$i]['tax']:''), true, 0, true);
-            //EOF - DokuMan - 2012-05-31 - fix undefined index 'tax'
-            $quotes[$i]['methods'][$j]['radio_field'] = xtc_draw_hidden_field('act_shipping', 'true').xtc_draw_radio_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'], $checked, 'onclick="this.form.submit();"');
+            }
+            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true);            
+            $quotes[$i]['methods'][$j]['radio_field'] = xtc_draw_radio_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'], $checked, 'id="'.($i+1).'"');
           } else {
-            if($_SESSION['customers_status']['customers_status_show_price_tax'] == 0)
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
               $quotes[$i]['tax'] = 0;
-            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true).xtc_draw_hidden_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id']);
+            }
+            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0), true, 0, true).xtc_draw_hidden_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id']);
           }
           $radio_buttons ++;
         }
@@ -387,12 +376,12 @@ $temp_prods=$order->products;
 $n=sizeof($temp_prods);
 for ($i=0; $i<$n; $i++) {
 //EOF - DokuMan - 2011-12-19 - precount for performance
-//	$temp_prods[$i]['details']='&nbsp;&#187;<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$temp_prods[$i]['id']).'\', \'popup\', \'toolbar=0, width=640, height=600\')" alt="" /><small>Details</small></a>';
-	$temp_prods[$i]['details']='&nbsp;&#187;<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($temp_prods[$i]['id'], $temp_prods[$i]['name'])).'" target="_blank"><small>Details</small></a>';
-	$image = xtc_get_products_image($temp_prods[$i]['id']);
-	if ($image!= '') {
-		$temp_prods[$i]['image']='<img height="60px" src="'.DIR_WS_THUMBNAIL_IMAGES.$image.'" alt="'.$temp_prods[$i]['name'].'" title="'.$temp_prods[$i]['name'].'" />';
-	}
+//  $temp_prods[$i]['details']='&nbsp;&#187;<a style="cursor:pointer" onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$temp_prods[$i]['id']).'\', \'popup\', \'toolbar=0, width=640, height=600\')" alt="" /><small>Details</small></a>';
+  $temp_prods[$i]['details']='&nbsp;&#187;<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($temp_prods[$i]['id'], $temp_prods[$i]['name'])).'" target="_blank"><small>Details</small></a>';
+  $image = xtc_get_products_image($temp_prods[$i]['id']);
+  if ($image!= '') {
+    $temp_prods[$i]['image']='<img height="60px" src="'.DIR_WS_THUMBNAIL_IMAGES.$image.'" alt="'.$temp_prods[$i]['name'].'" title="'.$temp_prods[$i]['name'].'" />';
+  }
   if (isset($temp_prods[$i]['attributes'])) { //Dokuman - 2012-05-31 - fix paypal_checkout notices
     $attributes_model='';
     reset($temp_prods[$i]['attributes']);
@@ -513,17 +502,17 @@ if(DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
 // August 2012 Zollkosten als Muster mit Group ID 15
 /*
 if($order->delivery['country_id'] !== STORE_COUNTRY):
-	if (GROUP_CHECK == 'true') {
-		$group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
-	}
-	$shop_content_query = "SELECT
+  if (GROUP_CHECK == 'true') {
+    $group_check = "and group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'";
+  }
+  $shop_content_query = "SELECT
                          content_text
                          FROM " . TABLE_CONTENT_MANAGER . "
                          WHERE content_group='15' " . $group_check . "
                          AND languages_id='" . $_SESSION['languages_id'] . "'";
-	$shop_content_query = xtc_db_query($shop_content_query);
-	$shop_content_data = xtc_db_fetch_array($shop_content_query);
-	$smarty->assign('CHECKOUT_ZOLL', $shop_content_data['content_text']);
+  $shop_content_query = xtc_db_query($shop_content_query);
+  $shop_content_data = xtc_db_fetch_array($shop_content_query);
+  $smarty->assign('CHECKOUT_ZOLL', $shop_content_data['content_text']);
 endif;
 */
 
