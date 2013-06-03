@@ -16,6 +16,14 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+/**
+ * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
+ *
+ * + CUSTOMIZE THE SETTING IN lang/LANGUAGE/modules/shipping/freeamount.php
+ */
+/*##################################*/ 
+ define('NUM_ZONES_MODULE_FREEAMOUNT', 2); 
+/*##################################*/
 
   class freeamount {
     var $code, $title, $description, $icon, $enabled;
@@ -27,12 +35,7 @@
       $this->icon ='';   // change $this->icon =  DIR_WS_ICONS . 'shipping_ups.gif'; to some freeshipping icon
       $this->sort_order = MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER;
       $this->enabled = ((MODULE_SHIPPING_FREEAMOUNT_STATUS == 'True') ? true : false);
-      /**
-       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
-       * 
-       * + CUSTOMIZE THE SETTING IN lang/LANGUAGE/modules/shipping/freeamount.php
-       */
-        $this->num_zones = 2;
+      $this->num_zones = NUM_ZONES_MODULE_FREEAMOUNT;
     }
 
     function quote($method = '') {
@@ -59,8 +62,8 @@
           $this->enabled = false;
         }
 
-      $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE);
+        $this->quotes = array('id' => $this->code,
+                              'module' => MODULE_SHIPPING_FREEAMOUNT_TEXT_TITLE);
 
         if ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $freeamount_zone) {
           $this->quotes['error'] = sprintf(MODULE_SHIPPING_FREEAMOUNT_TEXT_WAY, $xtPrice->xtcFormat($freeamount_zone, true, 0, true));
