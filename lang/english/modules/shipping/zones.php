@@ -1,16 +1,17 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: zones.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: zones.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+    modified eCommerce Shopsoftware
+    http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(zones.php,v 1.3 2002/04/17); www.oscommerce.com 
    (c) 2003	 nextcommerce (zones.php,v 1.4 2003/08/13); www.nextcommerce.org
+   (c) 2003  xt-commerce.com (zones.php  2005-04-29); www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -34,7 +35,7 @@ define('MODULE_SHIPPING_ZONES_TAX_CLASS_DESC' , 'Use the following tax class on 
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_DESC' , 'Sort order of display.');
 
-for ($ii=1;$ii<NUMBER_OF_ZONES;$ii++) {
+for ($ii=1;$ii<=NUMBER_OF_ZONES;$ii++) {
 define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' Countries');
 define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$ii.'.');
 define('MODULE_SHIPPING_ZONES_COST_'.$ii.'_TITLE' , 'Zone '.$ii.' Shipping Table');

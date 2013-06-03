@@ -1,20 +1,29 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: freeamount.php 1306 2005-10-14 10:32:31Z mz $   
+   $Id: freeamount.php 4855 2013-06-03 12:15:20Z Tomcraft $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(freeamount.php,v 1.01 2002/01/24); www.oscommerce.com 
    (c) 2003	 nextcommerce (freeamount.php,v 1.12 2003/08/24); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+/**
+ * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
+ *
+ * + CUSTOMIZE THE SETTING IN lang/LANGUAGE/modules/shipping/freeamount.php
+ */
+/*##################################*/ 
+ define('NUM_ZONES_MODULE_FREEAMOUNT', 2); 
+/*##################################*/
 
   class freeamount {
     var $code, $title, $description, $icon, $enabled;
@@ -26,12 +35,7 @@
       $this->icon ='';   // change $this->icon =  DIR_WS_ICONS . 'shipping_ups.gif'; to some freeshipping icon
       $this->sort_order = MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER;
       $this->enabled = ((MODULE_SHIPPING_FREEAMOUNT_STATUS == 'True') ? true : false);
-      /**
-       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
-       * 
-       * + CUSTOMIZE THE SETTING IN lang/LANGUAGE/modules/shipping/freeamount.php
-       */
-        $this->num_zones = 2;
+      $this->num_zones = NUM_ZONES_MODULE_FREEAMOUNT;
     }
 
     function quote($method = '') {
