@@ -1068,7 +1068,7 @@ if (defined('PAYPAL_API_VERSION')) {
         $i++;
       }
       if($express_call && PAYPAL_EXP_WARN!='') {
-        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(html_entity_decode(PAYPAL_EXP_WARN),0,127))).
+        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(decode_htmlentities(PAYPAL_EXP_WARN),0,127))).
                         '&L_NUMBER'.$i.'='.
                         '&L_QTY'.$i.'=0'.
                         '&L_AMT'.$i.'=0';
@@ -1076,7 +1076,7 @@ if (defined('PAYPAL_API_VERSION')) {
       }
       if($express_call && PAYPAL_EXP_VORL!='' && PAYPAL_EXP_VERS!=0) {
         $products_sum_amt+=PAYPAL_EXP_VERS;
-        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(html_entity_decode(PAYPAL_EXP_VORL),0,127))).
+        $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr(decode_htmlentities(PAYPAL_EXP_VORL),0,127))).
                         '&L_NUMBER'.$i.'='.
                         '&L_QTY'.$i.'=1'.
                         '&L_AMT'.$i.'='.urlencode(number_format(PAYPAL_EXP_VERS, $xtPrice->get_decimal_places($order->info['currency']), '.', ','));
