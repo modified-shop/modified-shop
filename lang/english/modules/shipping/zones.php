@@ -16,7 +16,7 @@
    ---------------------------------------------------------------------------------------*/
    
    // CUSTOMIZE THIS SETTING
-define('NUMBER_OF_ZONES',10);
+define('NUMBER_OF_ZONES',9);
 
 define('MODULE_SHIPPING_ZONES_TEXT_TITLE', 'Zone Rates');
 define('MODULE_SHIPPING_ZONES_TEXT_DESCRIPTION', 'Zone Based Rates');
@@ -34,7 +34,7 @@ define('MODULE_SHIPPING_ZONES_TAX_CLASS_DESC' , 'Use the following tax class on 
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_DESC' , 'Sort order of display.');
 
-for ($ii=0;$ii<NUMBER_OF_ZONES;$ii++) {
+for ($ii=1;$ii<NUMBER_OF_ZONES;$ii++) {
 define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_TITLE' , 'Zone '.$ii.' Countries');
 define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$ii.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$ii.'.');
 define('MODULE_SHIPPING_ZONES_COST_'.$ii.'_TITLE' , 'Zone '.$ii.' Shipping Table');

@@ -117,17 +117,12 @@
       $this->icon = '';
       $this->tax_class = MODULE_SHIPPING_ZONES_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_ZONES_STATUS == 'True') ? true : false);
-
-/**
- * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
- * 
- * + CUSTOMIZE THE SETTING IN lang/LANGUAGE/modules/shipping/zones.php
- */
-
-//BOF - 29.07.2009 - Dokuman - up to 9 zones possible, no changes in langfile needed
-      //$this->num_zones = 1;
+      /**
+       * CUSTOMIZE THIS SETTING FOR THE NUMBER OF ZONES NEEDED
+       * 
+       * + CUSTOMIZE THE SETTING IN lang/LANGUAGE/modules/shipping/zones.php
+       */
       $this->num_zones = 9;
-//EOF - 29.07.2009 - Dokuman - up to 9 zones possible, no changes in langfile needed
     }
 
 /**
@@ -205,11 +200,13 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_SORT_ORDER', '0', '6', '0', now())");
       for ($i = 1; $i <= $this->num_zones; $i++) {
         $default_countries = '';
+        $default_shipping = '';
         if ($i == 1) {
           $default_countries = 'US,CA';
+          $default_shipping = '3:8.50,7:10.50,99:20.00';
         }
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_COUNTRIES_" . $i ."', '" . $default_countries . "', '6', '0', now())");
-        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_COST_" . $i ."', '3:8.50,7:10.50,99:20.00', '6', '0', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_COST_" . $i ."', '" . $default_shipping . "', '6', '0', now())");
         xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_ZONES_HANDLING_" . $i."', '0', '6', '0', now())");
       }
     }
@@ -219,8 +216,10 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_ZONES_STATUS','MODULE_SHIPPING_ZONES_ALLOWED', 'MODULE_SHIPPING_ZONES_TAX_CLASS', 'MODULE_SHIPPING_ZONES_SORT_ORDER');
-
+      $keys = array('MODULE_SHIPPING_ZONES_STATUS',
+                    'MODULE_SHIPPING_ZONES_ALLOWED', 
+                    'MODULE_SHIPPING_ZONES_TAX_CLASS', 
+                    'MODULE_SHIPPING_ZONES_SORT_ORDER');
       for ($i=1; $i<=$this->num_zones; $i++) {
         $keys[] = 'MODULE_SHIPPING_ZONES_COUNTRIES_' . $i;
         $keys[] = 'MODULE_SHIPPING_ZONES_COST_' . $i;
