@@ -98,12 +98,7 @@
 
         for ($i=0, $size = sizeof($include_quotes); $i<$size; $i++) {
           $quotes = $GLOBALS[$include_quotes[$i]]->quote($method);
-          // BOF - Tomcraft - 2011-02-01 - Paypal Express Modul
-          // if (is_array($quotes)) $quotes_array[] = $quotes;
-          if (!isset ($quotes['error'])) {
-            if (is_array($quotes)) $quotes_array[] = $quotes;
-          }
-          // EOF - Tomcraft - 2011-02-01 - Paypal Express Modul
+          if (is_array($quotes)) $quotes_array[] = $quotes;
         }
       }
 

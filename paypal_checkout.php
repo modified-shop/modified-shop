@@ -291,37 +291,26 @@ if(xtc_count_shipping_modules() > 0) {
   } else {
     $radio_buttons = 0;
     #loop through installed shipping methods...
-    //BOF - DokuMan - 2011-12-19 - precount for performance
-    //for($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
-    $n=sizeof($quotes);
-    for ($i=0; $i<$n; $i++) {
-    //EOF - DokuMan - 2011-12-19 - precount for performance
-      if(!isset($quotes[$i]['error'])) {
-        //BOF - DokuMan - 2011-12-19 - precount for performance
-        //for($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
-        $n2=sizeof($quotes[$i]['methods']);
-        for ($j=0; $j<$n2; $j++) {
-        //EOF - DokuMan - 2011-12-19 - precount for performance
+    for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
+      for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
+        if (!isset ($quotes[$i]['error'])) {
           # set the radio button to be checked if it is the method chosen
           $quotes[$i]['methods'][$j]['radio_buttons'] = $radio_buttons;
-          $checked = (($quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
-          if(($checked == true) || ($n == 1 && $n2 == 1)) {
+          $checked = ((isset($_SESSION['shipping']) && $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'] == $_SESSION['shipping']['id']) ? true : false);
+          if (($checked == true) || ($n == 1 && $n2 == 1)) {
             $quotes[$i]['methods'][$j]['checked'] = 1;
           }
-          if(($n > 1) || ($n2 > 1)) {
-            if($_SESSION['customers_status']['customers_status_show_price_tax'] == 0)
-              $quotes[$i]['tax'] = '';
-            if($_SESSION['customers_status']['customers_status_show_price_tax'] == 0)
+          if (($n > 1) || ($n2 > 1)) {
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 || !isset($quotes[$i]['tax'])) {
               $quotes[$i]['tax'] = 0;
-            //BOF - DokuMan - 2012-05-31 - fix undefined index 'tax'
-            //$quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true);
-            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax'])?$quotes[$i]['tax']:''), true, 0, true);
-            //EOF - DokuMan - 2012-05-31 - fix undefined index 'tax'
-            $quotes[$i]['methods'][$j]['radio_field'] = xtc_draw_hidden_field('act_shipping', 'true').xtc_draw_radio_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'], $checked, 'onclick="this.form.submit();"');
+            }
+            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true);            
+            $quotes[$i]['methods'][$j]['radio_field'] = xtc_draw_radio_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'], $checked, 'id="'.($i+1).'"');
           } else {
-            if($_SESSION['customers_status']['customers_status_show_price_tax'] == 0)
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
               $quotes[$i]['tax'] = 0;
-            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true).xtc_draw_hidden_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id']);
+            }
+            $quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], isset($quotes[$i]['tax']) ? $quotes[$i]['tax'] : 0), true, 0, true).xtc_draw_hidden_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id']);
           }
           $radio_buttons ++;
         }
