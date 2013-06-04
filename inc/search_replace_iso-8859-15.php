@@ -60,7 +60,7 @@ function shopstat_getRegExps(&$search, &$replace)
 						"/Ü/",                    //--Umlaute etc.
 						"/Ö/",                    //--Umlaute etc.						
 						"/'|\"|`/",               	//--Anführungszeichen weg.						
-						"/[:,\.!?\*\+]/"         	//--Doppelpunkte, Komma, Punkt etc. weg. 
+						"/[:,\.!?\*\+#$']/"         	//--Doppelpunkte, Komma, Punkt etc. weg. 
                         );
 						
 	
