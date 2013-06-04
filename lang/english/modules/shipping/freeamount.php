@@ -39,12 +39,7 @@ define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_DESC' , 'Lowest will be displayed 
 define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_DESC' , 'Number of zones to use');
 
-$check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES'");
-$number_of_zones = 0;
-while ($check_number_zones = xtc_db_fetch_array($check_zones_query)) {
-  $number_of_zones = $check_number_zones['configuration_value'];
-}
-for ($module_shipping_freeamount_i = 1; $module_shipping_freeamount_i <= $number_of_zones; $module_shipping_freeamount_i ++) {
+for ($module_shipping_freeamount_i = 1; $module_shipping_freeamount_i <= MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES; $module_shipping_freeamount_i ++) {
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Countries');
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_freeamount_i.'.');
   define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Minimum Cost');
