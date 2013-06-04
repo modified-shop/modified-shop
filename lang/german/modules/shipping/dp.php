@@ -45,12 +45,7 @@ define('MODULE_SHIPPING_DP_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen a
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
 
-$check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_SHIPPING_DP_NUMBER_ZONES'");
-$number_of_zones = 0;
-while ($check_number_zones = xtc_db_fetch_array($check_zones_query)) {
-  $number_of_zones = $check_number_zones['configuration_value'];
-}
-for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= $number_of_zones; $module_shipping_dp_i ++) {
+for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
   define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' L&auml;nder');
   define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_DESC' , 'Kommagetrennte Liste von der 2stelligen ISO country codes der Zone '.$module_shipping_dp_i.'');
   define('MODULE_SHIPPING_DP_COST_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Versandtabelle');
