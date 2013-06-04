@@ -31,7 +31,7 @@ function shopstat_getRegExps(&$search, &$replace)
                         "/Ü/",              //--Umlaute etc.
                         "/Ö/",              //--Umlaute etc.
                         "/'|\"|´|`/",       //--Anführungszeichen weg.
-                        "/[:,\.!?\*\+]/",   //--Doppelpunkte, Komma, Punkt etc. weg.
+                        "/[:,\.!?\*\+#$']/",   //--Doppelpunkte, Komma, Punkt etc. weg.
                         );
     $replace    = array(
                         "-",    //--Kaufmännisches Und mit Blanks muss raus
@@ -56,7 +56,7 @@ function shopstat_getRegExps(&$search, &$replace)
                         "Ue",   //--Umlaute etc.
                         "Oe",   //--Umlaute etc.
                         "",     //--Anführungszeichen weg.
-                        ""      //--Doppelpunkte, Komma, Punkt etc. weg.
+                        "-"      //--Doppelpunkte, Komma, Punkt etc. weg.
                         );
 
 }
