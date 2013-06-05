@@ -717,8 +717,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       if (isset($_POST['coupon_desc'][$language_id])) $coupon_desc[$language_id] = $_POST['coupon_desc'][$language_id];
       //BOF  web28 - 2010-07-04 FIX error handling
       $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
-      $input_name .= $lang_img . '&nbsp;'. xtc_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', $coupon_name[$language_id]) . '&nbsp;<br />';
-      $input_desc .= $lang_img . '&nbsp;'. xtc_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','3', $coupon_desc[$language_id]) . '&nbsp;<br />';
+      $input_name .= $lang_img . '&nbsp;'. xtc_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', $coupon_name[$language_id], 'style="width: 278px"') . '&nbsp;<br />';
+      $input_desc .= $lang_img . '&nbsp;'. xtc_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','3', $coupon_desc[$language_id], 'style="width: 278px"') . '&nbsp;<br />';
     }
     //EOF  web28 - 2010-03-11  new table design
 
@@ -740,64 +740,64 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
 ?>
     <table class="main borderall" border="0" cellspacing="0" cellpadding="6">
       <tr>
-        <td align="left"><?php echo COUPON_NAME; ?></td>
-        <td align="left"><?php echo $input_name; ?></td>
-        <td align="left"><?php echo COUPON_NAME_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_NAME; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo $input_name; ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_NAME_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left" valign="top"><?php echo COUPON_DESC; ?></td>
-        <td align="left" valign="top"><?php echo $input_desc; ?></td>
-        <td align="left" valign="top"><?php echo COUPON_DESC_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;" valign="top"><b><?php echo COUPON_DESC; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;" valign="top"><?php echo $input_desc; ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;" valign="top"><?php echo COUPON_DESC_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_AMOUNT; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_amount', $coupon_amount, 'style="width: 150px"'); ?></td>
-        <td align="left"><?php echo COUPON_AMOUNT_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_AMOUNT; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_amount', $coupon_amount, 'style="width: 300px"'); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_AMOUNT_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_MIN_ORDER; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_min_order', $coupon_min_order, 'style="width: 150px"'); ?></td>
-        <td align="left"><?php echo COUPON_MIN_ORDER_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_MIN_ORDER; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_min_order', $coupon_min_order, 'style="width: 300px"'); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_MIN_ORDER_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_FREE_SHIP; ?></td>
-        <td align="left"><?php echo xtc_draw_checkbox_field('coupon_free_ship', $coupon_free_ship); ?></td>
-        <td align="left"><?php echo COUPON_FREE_SHIP_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_FREE_SHIP; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_checkbox_field('coupon_free_ship', $coupon_free_ship); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_FREE_SHIP_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_CODE; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_code', $coupon_code, 'style="width: 150px"'); ?></td>
-        <td align="left"><?php echo COUPON_CODE_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_CODE; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_code', $coupon_code, 'style="width: 300px"'); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_CODE_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_USES_COUPON; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_uses_coupon', $coupon_uses_coupon, 'style="width: 150px"'); ?></td>
-        <td align="left"><?php echo COUPON_USES_COUPON_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_USES_COUPON; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_uses_coupon', $coupon_uses_coupon, 'style="width: 300px"'); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_USES_COUPON_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_USES_USER; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_uses_user', $coupon_uses_user, 'style="width: 150px"'); ?></td>
-        <td align="left"><?php echo COUPON_USES_USER_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_USES_USER; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_uses_user', $coupon_uses_user, 'style="width: 300px"'); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_USES_USER_HELP; ?></td>
       </tr>
        <tr>
-        <td align="left"><?php echo COUPON_PRODUCTS; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_products', $coupon_products, 'style="width: 150px"'); ?> <a href="<?php echo xtc_href_link('validproducts.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validproducts.php', 'Valid_Products', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
-        <td align="left"><?php echo COUPON_PRODUCTS_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_PRODUCTS; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_products', $coupon_products, 'style="width: 300px"'); ?> <a href="<?php echo xtc_href_link('validproducts.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validproducts.php', 'Valid_Products', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_PRODUCTS_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_CATEGORIES; ?></td>
-        <td align="left"><?php echo xtc_draw_input_field('coupon_categories', $coupon_categories, 'style="width: 150px"'); ?> <a href="<?php echo xtc_href_link('validcategories.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validcategories.php', 'Valid_Categories', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
-        <td align="left"><?php echo COUPON_CATEGORIES_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_CATEGORIES; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;"><?php echo xtc_draw_input_field('coupon_categories', $coupon_categories, 'style="width: 300px"'); ?> <a href="<?php echo xtc_href_link('validcategories.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validcategories.php', 'Valid_Categories', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_CATEGORIES_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_STARTDATE; ?></td>
-        <td align="left" style="white-space:nowrap"><?php echo xtc_draw_date_selector('coupon_startdate', mktime(0,0,0, $coupon_startdate[1], $coupon_startdate[2], $coupon_startdate[0])); ?></td>
-        <td align="left"><?php echo COUPON_STARTDATE_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_STARTDATE; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8; white-space:nowrap"><?php echo xtc_draw_date_selector('coupon_startdate', mktime(0,0,0, $coupon_startdate[1], $coupon_startdate[2], $coupon_startdate[0])); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_STARTDATE_HELP; ?></td>
       </tr>
       <tr>
-        <td align="left"><?php echo COUPON_FINISHDATE; ?></td>
-        <td align="left" style="white-space:nowrap"><?php echo xtc_draw_date_selector('coupon_finishdate', mktime(0,0,0, $coupon_finishdate[1], $coupon_finishdate[2], $coupon_finishdate[0])); ?></td>
-        <td align="left"><?php echo COUPON_FINISHDATE_HELP; ?></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa;"><b><?php echo COUPON_FINISHDATE; ?></b></td>
+        <td class="dataTableConfig" style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8; white-space:nowrap" align="left"><?php echo xtc_draw_date_selector('coupon_finishdate', mktime(0,0,0, $coupon_finishdate[1], $coupon_finishdate[2], $coupon_finishdate[0])); ?></td>
+        <td class="dataTableConfig" style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;"><?php echo COUPON_FINISHDATE_HELP; ?></td>
       </tr>
     </table>
     <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PREVIEW . '"/>'; ?>
@@ -973,7 +973,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
         $contents[] = array('text'=> '<center>'.'
                      <a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EMAIL.'</a>' .
                      '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')).'action=voucheredit&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EDIT.'</a>' .
-                     $change_coupon_status .
+                     $change_coupon_status . '<br /><br />' .
 										 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherdelete&cid='.$cInfo->coupon_id.$coupon_status,'NONSSL').'">'.BUTTON_DELETE.'</a>' .
 										 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('page','cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id.'&cpage='.$_GET['page'],'NONSSL').'">'.BUTTON_REPORT.'</a></center>'
                      );
