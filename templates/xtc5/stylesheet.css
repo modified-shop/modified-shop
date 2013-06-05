@@ -1113,12 +1113,15 @@ height:70px;
 list-style-type:none;
 float:left;
 width:195px;
-margin-right:15px;
+margin-right:22px;
 border:solid 1px;
 padding:8px;
 }
 ul#checkoutnavigation li.active {
 background-color:#f8f8f8;
+}
+ul#checkoutnavigation li.active.last {
+margin-right:0;
 }
 ul#checkoutnavigation li.active .number {
 font-size:20px;
@@ -1135,6 +1138,9 @@ ul#checkoutnavigation li.inactive {
 color:#999;
 background-color:#ededed;
 border-color:#999;
+}
+ul#checkoutnavigation li.inactive.last{
+margin-right:0;
 }
 ul#checkoutnavigation li.inactive .number {
 font-size:20px;
