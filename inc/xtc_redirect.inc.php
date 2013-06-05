@@ -19,7 +19,7 @@
   require_once(DIR_FS_INC . 'xtc_exit.inc.php');
   
   function xtc_redirect($url, $ssl='') {
-  	global $request_type;
+  	global $request_type, $PHP_SELF;
 
     if ( (ENABLE_SSL == true) && ($request_type == 'SSL') && ($ssl != 'NONSSL') ) {
 		  if (substr($url, 0, strlen(HTTP_SERVER)) == HTTP_SERVER) {
@@ -27,8 +27,11 @@
 		  }
     }
     
-    $_SESSION['REFERER'] = basename(parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH));
-
+    $_SESSION['REFERER'] = '';
+    if (strpos($PHP_SELF, 'admin') === false && strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false) {
+      $_SESSION['REFERER'] = basename($PHP_SELF);
+    }
+    
     header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     xtc_exit();
   }
