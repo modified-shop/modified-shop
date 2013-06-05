@@ -143,11 +143,11 @@ $module_smarty = new Smarty;
 $order_total = $xtPrice->xtcFormat($order->info['total'],false); //web28 2012-04-27 - rounded $order_total
 if ($order_total > 0) {
   if (isset ($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
-    $smarty->assign('error', encode_htmlspecialchars($error['error']));
+    $smarty->assign('error', '<p class="errormessage">'. encode_htmlspecialchars($error['error']).'</p>');
   }
   // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
-    $smarty->assign('error', $_SESSION['reshash']['FORMATED_ERRORS']);
+    $smarty->assign('error', '<p class="errormessage">'. $_SESSION['reshash']['FORMATED_ERRORS'].'</p>');
   }
   // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   $selection = $payment_modules->selection();
