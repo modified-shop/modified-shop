@@ -241,7 +241,7 @@
             xtc_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_data_marray[$i]);
           }
       }
-      xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction') . 'cid=' . (int)$_GET['cid'] )));        
+      xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction')) . 'cid=' . (int)$_GET['cid'] ));        
     }
     break;
   }
@@ -825,26 +825,24 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               ?>
             </form>
          </div> 
-         <div class="main" style="float:right;">(c) modified by www.rpa-com.de</div>  
        </td>
       </tr>
       <tr>
         <td>
-        <div style="margin-bottom:10px;"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link('coupon_admin.php', 'action=new'); ?>"><?php echo BUTTON_INSERT; ?></a></div>
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top">
-              <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                <tr class="dataTableHeadingRow">
-                  <td class="dataTableHeadingContent" align="left" width="25"><?php echo COUPON_ID; ?></td>
-                  <td class="dataTableHeadingContent" align="left"><?php echo COUPON_NAME; ?></td>
-                  <td class="dataTableHeadingContent" align="left" width="110"><?php echo COUPON_AMOUNT; ?></td>
-                  <td class="dataTableHeadingContent" align="left" width="110"><?php echo TEXT_COUPON_MINORDER; ?></td>
-                  <td class="dataTableHeadingContent" align="left" width="80"><?php echo COUPON_CODE; ?></td>
-                  <td class="dataTableHeadingContent" align="center" width="70"><?php echo TEXT_COUPON_STATUS; ?></td>
-                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-                </tr>
-                <?php
+          <table border="0" width="100%" cellspacing="0" cellpadding="0">
+            <tr>
+              <td valign="top">
+                <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                  <tr class="dataTableHeadingRow">
+                    <td class="dataTableHeadingContent" align="left" width="25"><?php echo COUPON_ID; ?></td>
+                    <td class="dataTableHeadingContent" align="left"><?php echo COUPON_NAME; ?></td>
+                    <td class="dataTableHeadingContent" align="left" width="110"><?php echo COUPON_AMOUNT; ?></td>
+                    <td class="dataTableHeadingContent" align="left" width="110"><?php echo TEXT_COUPON_MINORDER; ?></td>
+                    <td class="dataTableHeadingContent" align="left" width="80"><?php echo COUPON_CODE; ?></td>
+                    <td class="dataTableHeadingContent" align="center" width="70"><?php echo TEXT_COUPON_STATUS; ?></td>
+                    <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                  </tr>
+                  <?php
                     $coupon_active = $status != '*' ? " AND coupon_active = '" . xtc_db_input($status)."'" : '';
                     $cc_query_raw = "SELECT *
                                        FROM " . TABLE_COUPONS ." 
@@ -873,39 +871,39 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                         $coupon_amount = $currencies->format($cc_list['coupon_amount']);
                       }
                       ?>
-                      <tr <?php echo $tr_attributes;?>>
-                        <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['coupon_id']; ?></td>
-                        <td class="dataTableContent" align="left">&nbsp;<?php echo $coupon_desc['coupon_name']; ?></td>
-                        <td class="dataTableContent" align="left" style="padding-left: 5px"><?php echo $coupon_amount;?>&nbsp;</td>
-                        <td class="dataTableContent" align="left">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
-                        <td class="dataTableContent nobr" align="left">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
-                        <td class="dataTableContent" align="center"><?php if ($cc_list['coupon_active'] == 'N') { echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10); } else { echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10); } ?></td>
-                        <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page', 'cid', 'action', 'oldaction')) . 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-                      </tr>
-                          <?php
+                  <tr <?php echo $tr_attributes;?>>
+                    <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['coupon_id']; ?></td>
+                    <td class="dataTableContent" align="left">&nbsp;<?php echo $coupon_desc['coupon_name']; ?></td>
+                    <td class="dataTableContent" align="left" style="padding-left: 5px"><?php echo $coupon_amount;?>&nbsp;</td>
+                    <td class="dataTableContent" align="left">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
+                    <td class="dataTableContent nobr" align="left">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
+                    <td class="dataTableContent" align="center"><?php if ($cc_list['coupon_active'] == 'N') { echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10); } else { echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10); } ?></td>
+                    <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('page', 'cid', 'action', 'oldaction')) . 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                  </tr>
+                      <?php
+                    }
+                  ?>
+                  <tr>
+                    <td colspan="8">
+                      <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                        <?php
+                        if (is_object($cc_split)) {
+                        ?>
+                        <tr>
+                          <td class="smallText">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</td>
+                          <td align="right" class="smallText">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid','cid'))); ?>&nbsp;</td>
+                        </tr>
+                        <?php
                         }
-                      ?>
-                      <tr>
-                        <td colspan="8">
-                          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                            <?php
-                            if (is_object($cc_split)) {
-                            ?>
-                            <tr>
-                              <td class="smallText">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</td>
-                              <td align="right" class="smallText">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid','cid'))); ?>&nbsp;</td>
-                            </tr>
-                            <?php
-                            }
-                            ?>
-                            <tr>
-                              <td align="right" colspan="2" class="smallText"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link('coupon_admin.php', 'action=new') . '">' . BUTTON_INSERT . '</a>'; ?></td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-              </table>
-            </td>
+                        ?>
+                        <tr>
+                          <td align="right" colspan="2" class="smallText"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link('coupon_admin.php', 'action=new') . '">' . BUTTON_INSERT . '</a>'; ?></td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
 <?php
     $heading = array();
     $contents = array();
