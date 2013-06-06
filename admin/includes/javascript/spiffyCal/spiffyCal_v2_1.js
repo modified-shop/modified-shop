@@ -1032,7 +1032,7 @@ function ctlSpiffyCalendarBox(strVarName, strFormName, strTextBoxName, strBtnNam
 				}
 			}
 			// hide all combos underneath it
-			if (this.hideCombos) {toggleCombos('hidden');}
+			//if (this.hideCombos) {toggleCombos('hidden');}
 
 			// pop calendar up to the correct month and year if there's a date there
 			// otherwise pop it up using today's month and year
