@@ -796,7 +796,7 @@ class categories {
     $sql_data_array['products_startpage'] = $startpage;
     $sql_data_array['products_date_added'] = 'now()';
     $sql_data_array['products_status'] = $products_status;
-    $sql_data_array['products_ordered'] = ''; // reset products ordered - #t27
+    $sql_data_array['products_ordered'] = ''; // reset products ordered - ticket #27
 
     //get customers statuses and set group_permissions
     //not needed, because group_permissions are in $sql_data_array   
