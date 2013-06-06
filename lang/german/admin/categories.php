@@ -75,7 +75,7 @@ define('TEXT_EDIT_SORT_ORDER', 'Sortierreihenfolge:');
 define('TEXT_INFO_COPY_TO_INTRO', 'Bitte w&auml;hlen Sie eine neue Kategorie aus, in die Sie den Artikel kopieren m&ouml;chten:');
 define('TEXT_INFO_CURRENT_CATEGORIES', 'Aktuelle Kategorien:');
 
-define('TEXT_INFO_HEADING_NEW_CATEGORY', 'Neue Kategorie');
+define('TEXT_INFO_HEADING_NEW_CATEGORY', 'Neue Kategorie in &quot;%s&quot;');
 define('TEXT_INFO_HEADING_EDIT_CATEGORY', 'Kategorie &quot;%s&quot; bearbeiten');
 define('TEXT_INFO_HEADING_DELETE_CATEGORY', 'Kategorie l&ouml;schen');
 define('TEXT_INFO_HEADING_MOVE_CATEGORY', 'Kategorie verschieben');
