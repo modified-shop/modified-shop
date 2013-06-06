@@ -1,11 +1,9 @@
 {config_load file="$language/lang_$language.conf" section="index"}
 <h1>{$LIST_TITLE}</h1>
-{if $CATEGORIES_DESCRIPTION || $CATEGORIES_IMAGE || $MANUFACTURER_DROPDOWN || $CATEGORIES_LISTING}
-  {if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME}" class="imgLeft" /><br />{/if}
-  {if $CATEGORIES_DESCRIPTION}{$CATEGORIES_DESCRIPTION}<br />{/if}
-  {if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}<br />{/if}
-  {if $MANUFACTURER_DROPDOWN}{$MANUFACTURER_DROPDOWN}<br />{/if}
-{/if}
+{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME}" class="imgLeft" /><br />{/if}
+{if $CATEGORIES_DESCRIPTION}{$CATEGORIES_DESCRIPTION}<br />{/if}
+{if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}<br />{/if}
+{if $MANUFACTURER_DROPDOWN}{$MANUFACTURER_DROPDOWN}<br />{/if}
 {$NAVIGATION}
 <div class="hrproductpreview"></div>
 <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
