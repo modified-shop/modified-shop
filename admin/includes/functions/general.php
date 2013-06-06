@@ -1501,6 +1501,7 @@
   function xtc_output_generated_category_path($id, $from = 'category') {
     $calculated_category_path_string = '';
     $calculated_category_path = xtc_generate_category_path($id, $from);
+    
     for ($i = 0, $n = sizeof($calculated_category_path); $i < $n; $i ++) {
       if ($from == 'category') {
         $calculated_category_path[$i] = array_reverse($calculated_category_path[$i]);
