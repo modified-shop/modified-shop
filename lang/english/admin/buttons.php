@@ -21,7 +21,6 @@ define('BUTTON_SWITCH_PRODUCTS', 'Products only');
 define('BUTTON_SWITCH_CATEGORIES', 'Categories only');
 define('BUTTON_NEW_CATEGORIES', 'New Category');
 define('BUTTON_NEW_PRODUCTS', 'New Product');
-define('BUTTON_NEW_PRODUCTS_IN_CATEGORY', 'New Product in Category');
 define('BUTTON_COPY', 'Copy');
 define('BUTTON_BACK', 'Back');
 define('BUTTON_CANCEL', 'Cancel');
