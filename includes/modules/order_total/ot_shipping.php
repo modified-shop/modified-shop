@@ -56,31 +56,30 @@
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
 
       if (xtc_not_null($order->info['shipping_method'])) {
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-        // price with tax
 
+        $tax = 0;
+        $shipping_tax = 0;
+        $shipping_tax_description = '';
+        if (array_key_exists($module, $GLOBALS) && is_object($GLOBALS[$module])) {
           $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
           $tax = $xtPrice->xtcFormat(xtc_add_tax($order->info['shipping_cost'], $shipping_tax),false,0,false)-$order->info['shipping_cost'];
-          $tax = $xtPrice->xtcFormat($tax,false,0,true);
+		      $tax = $xtPrice->xtcFormat($tax,false,0,true);
+        }
+        
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+          // price with tax
           $order->info['shipping_cost'] = xtc_add_tax($order->info['shipping_cost'], $shipping_tax);
           $order->info['tax'] += $tax;
           $order->info['tax_groups'][TAX_ADD_TAX . "$shipping_tax_description"] += $tax;
           $order->info['total'] += $tax;
-
         } else {
-
-        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-
-          $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $tax = $xtPrice->xtcFormat(xtc_add_tax($order->info['shipping_cost'], $shipping_tax),false,0,false)-$order->info['shipping_cost'];
-		 $tax = $xtPrice->xtcFormat($tax,false,0,true);
-
-          $order->info['tax'] = $order->info['tax'] += $tax;
-          $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
+          if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+            $order->info['tax'] = $order->info['tax'] += $tax;
+            $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] = $order->info['tax_groups'][TAX_NO_TAX . "$shipping_tax_description"] += $tax;
+          }
         }
-        }
+        
         $this->output[] = array('title' => $order->info['shipping_method'] . ':',
                                 'text' => $xtPrice->xtcFormat($order->info['shipping_cost'], true,0,true),
                                 'value' => $xtPrice->xtcFormat($order->info['shipping_cost'], false,0,true));
