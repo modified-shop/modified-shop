@@ -1502,6 +1502,9 @@
     $calculated_category_path_string = '';
     $calculated_category_path = xtc_generate_category_path($id, $from);
     for ($i = 0, $n = sizeof($calculated_category_path); $i < $n; $i ++) {
+      if ($from == 'category') {
+        $calculated_category_path[$i] = array_reverse($calculated_category_path[$i]);
+      }
       for ($j = 0, $k = sizeof($calculated_category_path[$i]); $j < $k; $j ++) {
         $calculated_category_path_string .= $calculated_category_path[$i][$j]['text'].'&nbsp;&gt;&nbsp;';
       }

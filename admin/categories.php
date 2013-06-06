@@ -34,6 +34,7 @@
   include_once (DIR_WS_MODULES.'graduated-prices-edit.php');
   //EOF - web28 - 2010-09-20 -  graduated-prices-edit by Web4Business GmbH - Designs - Modules
   require_once (DIR_FS_INC.'xtc_get_order_description.inc.php');
+  require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
 
   $currencies = new currencies();
   $catfunc = new categories();
