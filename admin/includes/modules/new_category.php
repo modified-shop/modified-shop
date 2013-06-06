@@ -53,7 +53,15 @@
   }
 
   $languages = xtc_get_languages();
-
+  
+  $cat_id = '';
+  if (!isset($_GET['cID'])) {
+    $cat_id_array = xtc_parse_category_path($cPath);
+    $cat_id = $cPath_array[(sizeof($cat_id_array) - 1)];
+  } else {
+    $cat_id = $_GET['cID'];
+  }
+    
   $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
 
   $order_array='';
@@ -71,7 +79,7 @@
                           array('id' => 'DESC','text'=>TEXT_SORT_DESC));
 ?>
   <tr>
-    <td class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path((int)$_GET['cID'])); ?></td>
+    <td class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></td>
     <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
   </tr>
   <tr>
