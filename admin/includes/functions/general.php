@@ -1484,7 +1484,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
           $categories_array[$index][] = array ('id' => $categories['categories_id'], 'text' => $category['categories_name']);
           if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0'))
             $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
-          $categories_array = array_reverse($categories_array);
+          $categories_array[$index] = array_reverse($categories_array[$index]);
         }
         $index ++;
       }
@@ -1494,7 +1494,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       $categories_array[$index][] = array ('id' => $id, 'text' => $category['categories_name']);
       if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0'))
         $categories_array = xtc_generate_category_path($category['parent_id'], 'category', $categories_array, $index);
-      $categories_array[$index] = array_reverse($categories_array[$index]);
     }
     return $categories_array;
   }
