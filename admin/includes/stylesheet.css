@@ -177,7 +177,7 @@ input.button {
 	border: 1px solid Black;
 	background-color: #F1F1F1;
 	padding: 2px 4px 4px 4px;
-	margin: 6px 2px 0px 2px;
+	margin: 0 2px;
 	text-decoration: none;
 	font-size: 10px;
 	cursor: pointer;
