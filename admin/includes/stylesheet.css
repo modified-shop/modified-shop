@@ -195,8 +195,8 @@ a.button:active,
 a.button:hover,
 span.button    {
 	border: 1px solid Black;
-	padding: 4px 6px 4px 6px;
-	margin: 6px 2px 0px 2px;
+	padding: 3px 6px;
+	margin: 6px 2px 0px;
 	background-color: #F1F1F1;
 	font-family: Verdana, Arial, sans-serif;
 	font-size: 10px;
