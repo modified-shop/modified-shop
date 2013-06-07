@@ -238,7 +238,7 @@
       <!-- BOF - Tomcraft - 2009-11-02 - TOP SAVE AND CANCEL BUTTON //-->
       <?php
       if (file_exists("includes/modules/categories_specials.php")) { ?>
-      <div class="main" style="margin-top: 7px;float:left">
+      <div class="main" style="float:left;">
         <div id="butSpecial">&nbsp;</div>
       </div>
       <script language="JavaScript" type="text/JavaScript">
@@ -381,7 +381,7 @@
         ?>
 
         <!-- BOF - Tomcraft - 2009-11-02 - Save //-->
-        <div style="text-align:right;">
+        <div style="text-align:right; margin-top:10px;">
           <?php
           if($form_action == 'insert_product'){
             echo xtc_draw_hidden_field('products_date_added', (($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
