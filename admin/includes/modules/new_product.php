@@ -232,7 +232,7 @@
 
 
 
-      <div class="main" style="margin-top: 7px;float:left">
+      <div class="main" style="float:left;">
         <div id="butSpecial">&nbsp;</div>
       </div>
       <script language="JavaScript" type="text/JavaScript">
@@ -244,6 +244,7 @@
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
         <?php
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content') . '">' . BUTTON_NEW_CONTENT . '</a>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
@@ -317,14 +318,25 @@
               <?php echo xtc_draw_input_field('products_meta_keywords[' . $languages[$i]['id'] . ']', (isset($products_meta_keywords[$languages[$i]['id']]) ? stripslashes($products_meta_keywords[$languages[$i]['id']]) : xtc_get_products_meta_keywords($pInfo->products_id, $languages[$i]['id'])), 'style="width:100%" maxlength="180"'); ?>
           </div>
           <?php
+          
+          if (file_exists("includes/modules/new_products_content.php")) {
+            include("includes/modules/new_products_content.php");
+          }
+ 
           echo ('</div>');
         } ?>
       </div>
       <!-- EOF Block2 //-->
 
-<div style="clear:both;"></div>
+      <div style="clear:both;"></div>
 
-<div style="width: 860px; padding:5px;">
+      <?php
+      if (file_exists("includes/modules/new_products_content.php")) {
+        include_once("includes/modules/new_products_content.php");
+      }
+      ?>
+
+      <div style="width: 860px; padding:5px;">
         <!-- BOF Product images //-->
         <div class="main" style="margin:10px 5px 5px 5px"><?php echo HEADING_PRODUCT_IMAGES; ?></div>
           <table width="100%" border="0" bgcolor="f3f3f3" style="border: 1px solid #aaaaaa; padding:5px;">
@@ -333,8 +345,8 @@
             ?>
           </table>
         <!-- EOF Product images //-->
-<?php
-//Customers group block
+        <?php
+        //Customers group block
         if (GROUP_CHECK == 'true') {
           $customers_statuses_array = xtc_get_customers_statuses();
           $customers_statuses_array = array_merge(array (array ('id' => 'all', 'text' => TXT_ALL)), $customers_statuses_array);
@@ -362,7 +374,7 @@
         include(DIR_WS_MODULES.'group_prices.php');
       ?>
         <!-- BOF Save //-->
-        <div style="text-align:right;">
+        <div style="text-align:right; margin-top:10px;">
           <?php
           if($form_action == 'insert_product'){
             echo xtc_draw_hidden_field('products_date_added', (($pInfo->products_date_added) ? $pInfo->products_date_added : date('Y-m-d')));
