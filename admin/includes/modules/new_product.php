@@ -251,6 +251,7 @@
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
         <?php
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content') . '">' . BUTTON_NEW_CONTENT . '</a>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
@@ -328,11 +329,22 @@
               <?php echo xtc_draw_input_field('products_meta_keywords[' . $languages[$i]['id'] . ']', (isset($products_meta_keywords[$languages[$i]['id']]) ? stripslashes($products_meta_keywords[$languages[$i]['id']]) : $products_desc_fields['products_meta_keywords']), 'style="width:100%" maxlength="180"'); ?>
           </div>
           <?php
+          
+          if (file_exists("includes/modules/new_products_content.php")) {
+            include("includes/modules/new_products_content.php");
+          }
+ 
           echo ('</div>');
         } ?>
       </div>
 
       <div style="clear:both;"></div>
+
+      <?php
+      if (file_exists("includes/modules/new_products_content.php")) {
+        include_once("includes/modules/new_products_content.php");
+      }
+      ?>
 
       <div style="width: 860px; padding:5px;">
         <!-- BOF - Tomcraft - 2009-11-02 - Product images //-->

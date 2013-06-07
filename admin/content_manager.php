@@ -34,7 +34,11 @@
 
   if ($special=='delete_product') {
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." where content_id='".$g_coID."'");
-    xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.(int)$_GET['pID']));
+    if (isset($_GET['cPath'])) {
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID')) . 'action='.$_GET['last_action']));
+    } else {
+      xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.(int)$_GET['pID']));
+    }
   } // if get special
 
   if ($id=='update' or $id=='insert') {
@@ -230,7 +234,11 @@
       } // if get id
 
       // rename filename
-      xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.$product));
+      if (isset($_GET['cPath'])) {
+        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('last_action', 'action', 'id', 'coID')) . 'action='.$_GET['last_action']));
+      } else {
+        xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.$product));
+      }
     }// if error
   }
 
@@ -762,16 +770,16 @@ require (DIR_WS_INCLUDES.'head.php');
                               // mask for product content
 
                               if ($action !='new_products_content') {
-                                echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER,'action=edit_products_content&id=update_product&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
+                                echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=update_product&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
                               } else {
-                                echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER,'action=edit_products_content&id=insert_product','post','enctype="multipart/form-data"');
+                                echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=insert_product','post','enctype="multipart/form-data"');
                               }
                                 ?>
                                 <div class="main"><?php echo TEXT_CONTENT_DESCRIPTION; ?></div>
                                 <table class="main" width="980" border="0">
                                   <tr>
                                     <td width="10%"><?php echo TEXT_PRODUCT; ?></td>
-                                    <td width="90%"><?php echo xtc_draw_pull_down_menu('product',$products_array,$content['products_id']); ?></td>
+                                    <td width="90%"><?php echo ((isset($_GET['pID'])) ? xtc_get_products_name($_GET['pID']) . xtc_draw_hidden_field('product', (int)$_GET['pID']) : xtc_draw_pull_down_menu('product',$products_array,$content['products_id'])); ?></td>
                                   </tr>
                                   <tr>
                                     <td width="10%"><?php echo TEXT_LANGUAGE; ?></td>
@@ -831,7 +839,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                     }
                                   ?>
                                   <tr>
-                                    <td colspan="2" align="right" class="main"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo BUTTON_BACK; ?></a></td>
+                                    <td colspan="2" align="right" class="main"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?><a class="button" onclick="this.blur();" href="javascript:history.back(1)"><?php echo BUTTON_BACK; ?></a></td>
                                   </tr>
                                 </table>
                               </form>
