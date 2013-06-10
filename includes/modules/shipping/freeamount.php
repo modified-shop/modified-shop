@@ -61,7 +61,7 @@
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
       
-      for ($i=1; $i<=$this->num_zones; $i++) {
+      for ($i=1; $i<=$this->num_freeamount; $i++) {
         $countries_table = constant('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_' . $i);
         $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table); //web28 -2011-06-13 - support for textareas
         $country_zones = explode(',', $countries_table);
