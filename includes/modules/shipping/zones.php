@@ -183,19 +183,18 @@
           }
         }
 
+        $this->quotes = array('id' => $this->code,
+                              'module' => MODULE_SHIPPING_ZONES_TEXT_TITLE);
+
         if ($shipping == -1) {
-          $shipping_cost = 0;
-          $shipping_method = MODULE_SHIPPING_ZONES_UNDEFINED_RATE;
+          $this->quotes['error'] = MODULE_SHIPPING_ZONES_UNDEFINED_RATE;
         } else {
           $shipping_cost = ($shipping + constant('MODULE_SHIPPING_ZONES_HANDLING_' . $dest_zone));
+          $this->quotes['methods'] = array(array('id' => $this->code,
+                                                 'title' => $shipping_method,
+                                                 'cost'  => $shipping_cost));
         }
       }
-
-      $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_ZONES_TEXT_TITLE,
-                            'methods' => array(array('id' => $this->code,
-                                                     'title' => $shipping_method,
-                                                     'cost' => $shipping_cost)));
 
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
