@@ -20,21 +20,29 @@ define('MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION', 'Table Rate');
 define('MODULE_SHIPPING_TABLE_TEXT_WAY', 'Best Way');
 define('MODULE_SHIPPING_TABLE_TEXT_WEIGHT', 'Weight');
 define('MODULE_SHIPPING_TABLE_TEXT_AMOUNT', 'Amount');
+define('MODULE_SHIPPING_TABLE_UNDEFINED_RATE', 'The shipping rate cannot be determined at this time.');
 
 define('MODULE_SHIPPING_TABLE_STATUS_TITLE' , 'Enable Table Method');
 define('MODULE_SHIPPING_TABLE_STATUS_DESC' , 'Do you want to offer table rate shipping?');
 define('MODULE_SHIPPING_TABLE_ALLOWED_TITLE' , 'Allowed Zones');
 define('MODULE_SHIPPING_TABLE_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
-define('MODULE_SHIPPING_TABLE_COST_TITLE' , 'Shipping Table');
-define('MODULE_SHIPPING_TABLE_COST_DESC' , 'The shipping cost is based on the total cost or weight of items. Example: 25:5.50,50:8.50,etc.. Up to 25 charge 5.50, from there to 50 charge 8.50, etc');
 define('MODULE_SHIPPING_TABLE_MODE_TITLE' , 'Table Method');
 define('MODULE_SHIPPING_TABLE_MODE_DESC' , 'The shipping cost is based on the order total or the total weight of the items ordered.');
-define('MODULE_SHIPPING_TABLE_HANDLING_TITLE' , 'Handling Fee');
-define('MODULE_SHIPPING_TABLE_HANDLING_DESC' , 'Handling fee for this shipping method.');
 define('MODULE_SHIPPING_TABLE_TAX_CLASS_TITLE' , 'Tax Class');
 define('MODULE_SHIPPING_TABLE_TAX_CLASS_DESC' , 'Use the following tax class on the shipping fee.');
 define('MODULE_SHIPPING_TABLE_ZONE_TITLE' , 'Shipping Zone');
 define('MODULE_SHIPPING_TABLE_ZONE_DESC' , 'If a zone is selected, only enable this shipping method for that zone.');
 define('MODULE_SHIPPING_TABLE_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_TABLE_SORT_ORDER_DESC' , 'Sort order of display.');
+define('MODULE_SHIPPING_TABLE_NUMBER_ZONES_TITLE' , 'Number of zones');
+define('MODULE_SHIPPING_TABLE_NUMBER_ZONES_DESC' , 'Number of zones to use');
+
+for ($module_shipping_table_i = 1; $module_shipping_table_i <= MODULE_SHIPPING_ZONES_NUMBER_ZONES; $module_shipping_table_i ++) {
+  define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Countries');
+  define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_table_i.'.');
+  define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Shipping Table');
+  define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_table_i.' destinations based on a group of maximum order weights or order total. Example: 3:8.50,7:10.50,... Weights/Total less than or equal to 3 would cost 8.50 for Zone '.$module_shipping_table_i.' destinations.');
+  define('MODULE_SHIPPING_TABLE_HANDLING_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Handling Fee');
+  define('MODULE_SHIPPING_TABLE_HANDLING_'.$module_shipping_table_i.'_DESC' , 'Handling Fee for this shipping zone');
+}
 ?>
