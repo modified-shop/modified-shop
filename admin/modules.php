@@ -23,7 +23,9 @@
   $xtPrice = new xtcPrice($_SESSION['currency'],'');
   $module_directory = '';
   $module_key = '';
-
+  $installed = false;
+  $deinstalled = false;
+  
   $set = (isset($_GET['set']) ? $_GET['set'] : '');
   if (xtc_not_null($set)) {
     switch ($set) {
@@ -152,11 +154,12 @@ require (DIR_WS_INCLUDES.'head.php');
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
                           <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                          <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                           <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                         </tr>
                         <?php
                         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-                        $directory_array = array();
+                        $directory_array = array(array());
                         if ($dir = @dir($module_directory)) {
                           while ($file = $dir->read()) {
                             if (!is_dir($module_directory . $file)) {
@@ -172,11 +175,22 @@ require (DIR_WS_INCLUDES.'head.php');
                                 } else {
                                   $messageStack->add_session(sprintf(TEXT_MODULE_FILE_MISSING, $_SESSION['language'], $file), 'warning');
                                 }
-                                if (isset($module->sort_order) && is_numeric($module->sort_order)) {
-                                  if (empty($directory_array[0][$module->sort_order])) {
-                                    $directory_array[0][$module->sort_order] = $file;
+                                if ($module->check() > 0) {
+                                  if (!is_numeric($module->sort_order)) {
+                                    $module->sort_order = 0;
+                                  }
+                                  if (!array_key_exists(($module->sort_order*100), $directory_array[0])) {
+                                    $directory_array[0][($module->sort_order*100)] = $file;
                                   } else {
-                                    $directory_array[0][] = $file;
+                                    // search for next free index in array
+                                    $index = ($module->sort_order*100);
+                                    while (1==1) {
+                                      if (!array_key_exists($index, $directory_array[0])) {
+                                        $directory_array[0][$index] = $file;
+                                        break;
+                                      }
+                                      $index++;
+                                    }
                                   }
                                 } else {
                                   $directory_array[1][] = $file;
@@ -193,7 +207,7 @@ require (DIR_WS_INCLUDES.'head.php');
                               $directory_array[0][$key] = $val;
                             }
                             $directory_array[0] = array_values($directory_array[0]);
-                          }
+                          }                          
                           sort($directory_array[1]);
                           //EOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
                           ksort($directory_array);
@@ -240,6 +254,29 @@ require (DIR_WS_INCLUDES.'head.php');
                                   $module_info['keys'] = $keys_extra;
                                   $mInfo = new objectInfo($module_info);
                                 }
+                                if ($module->check() > 0 && !$installed) {
+                                  $installed = true;
+                                  ?>
+                                  <tr class="dataTableHeadingRow">
+                                    <td colspan="5" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
+                                  </tr>
+                                  <?php
+                                } elseif ($module->check() < 1 && !$deinstalled && $installed) {
+                                  $deinstalled = true;
+                                  ?>
+                                  <tr><td colspan="5" style="height:35px;">&nbsp;</td></tr>
+                                  <tr class="dataTableHeadingRow">
+                                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
+                                    <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                                    <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                                    <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                                  </tr>
+                                  <tr class="dataTableHeadingRow">
+                                    <td colspan="5" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                                  </tr>
+                                  <?php
+                                }
                                 if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
                                   if ($module->check() > 0) {
                                     echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
@@ -260,7 +297,19 @@ require (DIR_WS_INCLUDES.'head.php');
                                 </td>
                                 <td class="dataTableContent"><?php echo str_replace('.php','',$file); ?></td>
                                 <td class="dataTableContent" align="right">
-<?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
+                                <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
+                                <td class="dataTableContent" align="center">
+                                  <?php 
+                                    if ($module->check() > 0) {
+                                      if (isset($module->enabled) && $module->enabled) { 
+                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT); 
+                                      } else { 
+                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT); 
+                                      }
+                                    }
+                                  ?>
+                                  &nbsp;
+                                </td>
                                 <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                               </tr>
                               <?php
