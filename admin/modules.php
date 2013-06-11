@@ -157,7 +157,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         </tr>
                         <?php
                         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-                        $directory_array = array();
+                        $directory_array = array(array());
                         if ($dir = @dir($module_directory)) {
                           while ($file = $dir->read()) {
                             if (!is_dir($module_directory . $file)) {
@@ -174,10 +174,18 @@ require (DIR_WS_INCLUDES.'head.php');
                                   $messageStack->add_session(sprintf(TEXT_MODULE_FILE_MISSING, $_SESSION['language'], $file), 'warning');
                                 }
                                 if (isset($module->sort_order) && is_numeric($module->sort_order)) {
-                                  if (empty($directory_array[0][$module->sort_order])) {
-                                    $directory_array[0][$module->sort_order] = $file;
+                                  if (!array_key_exists(($module->sort_order*100), $directory_array[0])) {
+                                    $directory_array[0][($module->sort_order*100)] = $file;
                                   } else {
-                                    $directory_array[0][] = $file;
+                                    // search for next free index in array
+                                    $index = ($module->sort_order*100);
+                                    while (1==1) {
+                                      if (!array_key_exists($index, $directory_array[0])) {
+                                        $directory_array[0][$index] = $file;
+                                        break;
+                                      }
+                                      $index++;
+                                    }
                                   }
                                 } else {
                                   $directory_array[1][] = $file;
