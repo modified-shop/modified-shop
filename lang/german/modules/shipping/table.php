@@ -20,21 +20,29 @@ define('MODULE_SHIPPING_TABLE_TEXT_DESCRIPTION', 'Tabellarische Versandkosten');
 define('MODULE_SHIPPING_TABLE_TEXT_WAY', 'Bester Weg');
 define('MODULE_SHIPPING_TABLE_TEXT_WEIGHT', 'Gewicht');
 define('MODULE_SHIPPING_TABLE_TEXT_AMOUNT', 'Menge');
+define('MODULE_SHIPPING_TABLE_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht berechnet werden.');
 
 define('MODULE_SHIPPING_TABLE_STATUS_TITLE' , 'Tabellarische Versandkosten aktivieren');
 define('MODULE_SHIPPING_TABLE_STATUS_DESC' , 'M&ouml;chten Sie Tabellarische Versandkosten anbieten?');
 define('MODULE_SHIPPING_TABLE_ALLOWED_TITLE' , 'Erlaubte Versandzonen');
 define('MODULE_SHIPPING_TABLE_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
-define('MODULE_SHIPPING_TABLE_COST_TITLE' , 'Versandkosten');
-define('MODULE_SHIPPING_TABLE_COST_DESC' , 'Die Versandkosten basieren auf Gesamtkosten oder Gesamtgewicht der bestellten Waren. Beispiel: 25:5.50,50:8.50,etc.. Bis 25 werden 5.50 verrechnet, dar&uuml;ber bis 50 werden 8.50 verrechnet, etc');
 define('MODULE_SHIPPING_TABLE_MODE_TITLE' , 'Versandkosten Methode');
 define('MODULE_SHIPPING_TABLE_MODE_DESC' , 'Die Versandkosten basieren auf Gesamtkosten oder Gesamtgewicht der bestellten Waren.');
-define('MODULE_SHIPPING_TABLE_HANDLING_TITLE' , 'Handling Geb&uuml;hr');
-define('MODULE_SHIPPING_TABLE_HANDLING_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandmethode');
 define('MODULE_SHIPPING_TABLE_TAX_CLASS_TITLE' , 'Steuerklasse');
 define('MODULE_SHIPPING_TABLE_TAX_CLASS_DESC' , 'Folgende Steuerklasse an Versandkosten anwenden');
 define('MODULE_SHIPPING_TABLE_ZONE_TITLE' , 'Versandzone');
 define('MODULE_SHIPPING_TABLE_ZONE_DESC' , 'Wenn eine Zone ausgew&auml;hlt ist, wird diese Versandmethode ausschlie&szlig;lich f&uuml;r diese Zone angewendet');
 define('MODULE_SHIPPING_TABLE_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
 define('MODULE_SHIPPING_TABLE_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige');
+define('MODULE_SHIPPING_TABLE_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
+define('MODULE_SHIPPING_TABLE_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
+
+for ($module_shipping_table_i = 1; $module_shipping_table_i <= MODULE_SHIPPING_TABLE_NUMBER_ZONES; $module_shipping_table_i ++) {
+  define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' L&auml;nder');
+  define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_table_i.' sind.');
+  define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Versandkosten');
+  define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_table_i.' Bestimmungsorte, basierend auf einer Gruppe von max. Bestellgewichten oder Warenkorbwert, je nach Moduleinstellung. Beispiel: 3:8.50,7:10.50,... Gewicht/Preis von kleiner oder gleich 3 w&uuml;rde 8.50 f&uuml;r die Zone '.$module_shipping_table_i.' Bestimmungsl&auml;nder kosten.');
+  define('MODULE_SHIPPING_TABLE_HANDLING_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Handling Geb&uuml;hr');
+  define('MODULE_SHIPPING_TABLE_HANDLING_'.$module_shipping_table_i.'_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandzone');
+}
 ?>
