@@ -27,25 +27,32 @@ require (DIR_WS_INCLUDES.'head.php');
       font-family: Verdana, Arial, sans-serif;
       font-size: 12px;
     }
+    dl dd {
+      margin-left: 10px;
+    }
     #contentHead dt {
       float: right;
     }
     #contentHead dd {
-      padding-left: 35px;
+      margin-left: 80px;
     }
     #credits dl dt {
       color: #D68000;
       font-size: 12px;
       font-weight: bold;
     }
-    dl#person dt {
+    dl#person dt, dl#donate dt {
       color: black;
       font-weight: bold;
       float: left;
       font-size: 12px;
     }
     dl#person dd {
-      margin-left: 90px;
+      margin-left: 125px;
+      font-size: 12px;
+    }
+    dl#donate dd {
+      margin-left: 80px;
       font-size: 12px;
     }
   </style>
@@ -108,7 +115,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   <dl>
                     <dt><?php echo TEXT_HEADING_SUPPORT; ?></dt>
                     <dd>
-                      <dl id="person">
+                      <dl id="donate">
                         <dt><?php echo TEXT_HEADING_DONATIONS; ?></dt>
                         <dd><?php echo TEXT_INFO_DONATIONS; ?></dd>
                         <dt>&nbsp;</dt><dd>&nbsp;</dd>
