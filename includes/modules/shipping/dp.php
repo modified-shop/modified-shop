@@ -101,19 +101,18 @@
           }
         }
 
+        $this->quotes = array('id' => $this->code,
+                              'module' => MODULE_SHIPPING_DP_TEXT_TITLE);
+
         if ($shipping == -1) {
-          $shipping_cost = 0;
-          $shipping_method = MODULE_SHIPPING_DP_UNDEFINED_RATE;
+          $this->quotes['error'] = MODULE_SHIPPING_DP_UNDEFINED_RATE;
         } else {
           $shipping_cost = ($shipping + MODULE_SHIPPING_DP_HANDLING);
+          $this->quotes['methods'] = array(array('id' => $this->code,
+                                                 'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_DP_TEXT_UNITS .')',
+                                                 'cost'  => $shipping_cost));
         }
       }
-
-      $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_DP_TEXT_TITLE,
-                            'methods' => array(array('id' => $this->code,
-                                                     'title' => $shipping_method . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_DP_TEXT_UNITS .')',
-                                                     'cost' => $shipping_cost * $shipping_num_boxes)));
 
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
