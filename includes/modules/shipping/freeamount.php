@@ -99,10 +99,11 @@
     }
 
     function check() {
-      $check = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_STATUS'");
-      $check = xtc_db_num_rows($check);
-
-      return $check;
+      if (!isset($this->_check)) {
+        $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_STATUS'");
+        $this->_check = xtc_db_num_rows($check_query);
+      }
+      return $this->_check;
     }
 
     function install() {
