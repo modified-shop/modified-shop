@@ -37,7 +37,7 @@ define('MODULE_SHIPPING_TABLE_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_TABLE_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_TABLE_NUMBER_ZONES_DESC' , 'Number of zones to use');
 
-for ($module_shipping_table_i = 1; $module_shipping_table_i <= MODULE_SHIPPING_ZONES_NUMBER_ZONES; $module_shipping_table_i ++) {
+for ($module_shipping_table_i = 1; $module_shipping_table_i <= MODULE_SHIPPING_TABLE_NUMBER_ZONES; $module_shipping_table_i ++) {
   define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Countries');
   define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_table_i.'.');
   define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Shipping Table');
