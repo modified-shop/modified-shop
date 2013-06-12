@@ -19,19 +19,28 @@
 define('MODULE_SHIPPING_ITEM_TEXT_TITLE', 'Versandkosten pro St&uuml;ck');
 define('MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION', 'Versandkosten pro St&uuml;ck');
 define('MODULE_SHIPPING_ITEM_TEXT_WAY', 'Bester Weg');
+define('MODULE_SHIPPING_ITEM_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
+define('MODULE_SHIPPING_ITEM_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht berechnet werden.');
 
 define('MODULE_SHIPPING_ITEM_STATUS_TITLE' , 'Versandkosten pro St&uuml;ck aktivieren');
 define('MODULE_SHIPPING_ITEM_STATUS_DESC' , 'M&ouml;chten Sie Versandkosten pro St&uuml;ck anbieten?');
 define('MODULE_SHIPPING_ITEM_ALLOWED_TITLE' , 'Erlaubte Versandzonen');
 define('MODULE_SHIPPING_ITEM_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
-define('MODULE_SHIPPING_ITEM_COST_TITLE' , 'Versandkosten');
-define('MODULE_SHIPPING_ITEM_COST_DESC' , 'Die Versandkosten werden mit der Anzahl an Artikel einer Bestellung multipliziert, wenn diese Versandart angegeben ist.');
-define('MODULE_SHIPPING_ITEM_HANDLING_TITLE' , 'Handling Geb&uuml;hr');
-define('MODULE_SHIPPING_ITEM_HANDLING_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandart.');
 define('MODULE_SHIPPING_ITEM_TAX_CLASS_TITLE' , 'Steuerklasse');
 define('MODULE_SHIPPING_ITEM_TAX_CLASS_DESC' , 'Folgende Steuerklasse an Versandkosten anwenden');
 define('MODULE_SHIPPING_ITEM_ZONE_TITLE' , 'Versandzone');
 define('MODULE_SHIPPING_ITEM_ZONE_DESC' , 'Wenn eine Zone ausgew&auml;hlt ist, wird diese Versandmethode ausschlie&szlig;lich f&uuml;r diese Zone angewendet');
 define('MODULE_SHIPPING_ITEM_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
 define('MODULE_SHIPPING_ITEM_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige');
+define('MODULE_SHIPPING_ITEM_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
+define('MODULE_SHIPPING_ITEM_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
+
+for ($module_shipping_item_i = 1; $module_shipping_item_i <= MODULE_SHIPPING_ITEM_NUMBER_ZONES; $module_shipping_item_i ++) {
+  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' L&auml;nder');
+  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_item_i.' sind.');
+  define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Versandkosten');
+  define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_item_i.' werden mit der Anzahl an Artikel einer Bestellung multipliziert, wenn diese Versandart angegeben ist.');
+  define('MODULE_SHIPPING_ITEM_HANDLING_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Handling Geb&uuml;hr');
+  define('MODULE_SHIPPING_ITEM_HANDLING_'.$module_shipping_item_i.'_DESC' , 'Handling Geb&uuml;hr f&uuml;r diese Versandzone');
+}
 ?>
