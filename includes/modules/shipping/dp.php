@@ -78,21 +78,28 @@
 
       for ($i=1; $i<=$this->num_dp; $i++) {
         $countries_table = constant('MODULE_SHIPPING_DP_COUNTRIES_' . $i);
-        $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table); //web28 -2011-06-13 - support for textareas
-        $country_zones = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+        $countries_table  = preg_replace("'[\r\n\s]+'",'',$countries_table);
+        $country_zones = explode(",", $countries_table);
         if (in_array($dest_country, $country_zones)) {
           $dest_zone = $i;
           break;
         }
       }
 
+      $this->quotes = array('id' => $this->code,
+                            'module' => MODULE_SHIPPING_DP_TEXT_TITLE);
+
       if ($dest_zone == 0) {
-        $error = true;
+        if (MODULE_SHIPPING_DP_DISPLAY == 'True') {
+          $this->quotes['error'] = MODULE_SHIPPING_DP_INVALID_ZONE;
+        } else {
+          $this->enabled = false;
+        }
       } else {
         $shipping = -1;
         $dp_cost = constant('MODULE_SHIPPING_DP_COST_' . $i);
 
-        $dp_table = preg_split("/[:,]/" , $dp_cost); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+        $dp_table = preg_split("/[:,]/" , $dp_cost);
         for ($i=0; $i<sizeof($dp_table); $i+=2) {
           if ($shipping_weight <= $dp_table[$i]) {
             $shipping = $dp_table[$i+1];
@@ -101,11 +108,12 @@
           }
         }
 
-        $this->quotes = array('id' => $this->code,
-                              'module' => MODULE_SHIPPING_DP_TEXT_TITLE);
-
         if ($shipping == -1) {
-          $this->quotes['error'] = MODULE_SHIPPING_DP_UNDEFINED_RATE;
+          if (MODULE_SHIPPING_DP_DISPLAY == 'True') {
+            $this->quotes['error'] = MODULE_SHIPPING_DP_UNDEFINED_RATE;
+          } else {
+            $this->enabled = false;
+          }
         } else {
           $shipping_cost = ($shipping + MODULE_SHIPPING_DP_HANDLING);
           $this->quotes['methods'] = array(array('id' => $this->code,
@@ -119,10 +127,10 @@
       }
 
       if (xtc_not_null($this->icon)) $this->quotes['icon'] = xtc_image($this->icon, $this->title);
-
-      if ($error == true) $this->quotes['error'] = MODULE_SHIPPING_DP_INVALID_ZONE;
-
-      return $this->quotes;
+      
+      if ($this->enabled) {
+        return $this->quotes;
+      }
     }
 
     function check() {
@@ -141,6 +149,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_SORT_ORDER', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_ALLOWED', '', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '5', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     }
 
 
@@ -176,15 +185,22 @@
     }
 
     function remove() {
-      xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+      xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key IN ('" . implode("', '", $this->keys()) . "')");
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_DP_STATUS', 'MODULE_SHIPPING_DP_HANDLING','MODULE_SHIPPING_DP_ALLOWED', 'MODULE_SHIPPING_DP_TAX_CLASS', 'MODULE_SHIPPING_DP_ZONE', 'MODULE_SHIPPING_DP_SORT_ORDER','MODULE_SHIPPING_DP_NUMBER_ZONES');
+      $keys = array('MODULE_SHIPPING_DP_STATUS', 
+                    'MODULE_SHIPPING_DP_HANDLING',
+                    'MODULE_SHIPPING_DP_ALLOWED', 
+                    'MODULE_SHIPPING_DP_TAX_CLASS', 
+                    'MODULE_SHIPPING_DP_ZONE', 
+                    'MODULE_SHIPPING_DP_SORT_ORDER',
+                    'MODULE_SHIPPING_DP_NUMBER_ZONES',
+                    'MODULE_SHIPPING_DP_DISPLAY');
 
       for ($i = 1; $i <= $this->num_dp; $i ++) {
-        $keys[count($keys)] = 'MODULE_SHIPPING_DP_COUNTRIES_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DP_COST_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DP_COUNTRIES_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DP_COST_' . $i;
       }
 
       return $keys;

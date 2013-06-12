@@ -44,6 +44,8 @@ define('MODULE_SHIPPING_DP_ALLOWED_TITLE' , 'Individual shipping zones');
 define('MODULE_SHIPPING_DP_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_DESC' , 'Number of zones to use');
+define('MODULE_SHIPPING_DP_DISPLAY_TITLE' , 'Enable Display');
+define('MODULE_SHIPPING_DP_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
 for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
   define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' Countries');

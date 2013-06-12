@@ -44,6 +44,8 @@ define('MODULE_SHIPPING_DP_ALLOWED_TITLE' , 'Einzelne Versandzonen');
 define('MODULE_SHIPPING_DP_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. zb AT,DE');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
 define('MODULE_SHIPPING_DP_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
+define('MODULE_SHIPPING_DP_DISPLAY_TITLE' , 'Anzeige aktivieren');
+define('MODULE_SHIPPING_DP_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein Versand in das Land m&ouml;glich ist bzw. keine Versandkosten berechnet werden konnten?');
 
 for ($module_shipping_dp_i = 1; $module_shipping_dp_i <= MODULE_SHIPPING_DP_NUMBER_ZONES; $module_shipping_dp_i ++) {
   define('MODULE_SHIPPING_DP_COUNTRIES_'.$module_shipping_dp_i.'_TITLE' , 'DP Zone '.$module_shipping_dp_i.' L&auml;nder');
