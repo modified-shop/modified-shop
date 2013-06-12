@@ -179,6 +179,7 @@ require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
+
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -187,6 +188,15 @@ $configuration_query = xtc_db_query('select configuration_key as cfgKey, configu
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
 }
+
+//CSS buttons
+if (file_exists('templates/'.CURRENT_TEMPLATE.'/source/inc/'.'xtc_css_button.inc.php')) {
+  require_once ('templates/'.CURRENT_TEMPLATE.'/source/inc/'.'xtc_css_button.inc.php');
+  if (!defined('USE_CSS_BUTTONS')) {
+     define('USE_CSS_BUTTONS','true');     
+  }
+}
+
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
 if(SECURITY_CODE_LENGTH=='')

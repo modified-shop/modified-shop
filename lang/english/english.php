@@ -202,7 +202,6 @@ define('IMAGE_BUTTON_PRODUCT_EDIT', 'Edit product');
 // define('IMAGE_BUTTON_LOGIN', 'Login');
 // EOF - vr - 2010-02-20 removed double definition 
 define('IMAGE_BUTTON_SEND', 'Send'); //DokuMan - 2010-03-15 - Added button description for contact form
-define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-11-12 - used in default template ...shopping_cart.html
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'Delete');
 define('SMALL_IMAGE_BUTTON_EDIT', 'Edit');
@@ -526,4 +525,7 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home pa
 // EOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 
 define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %s and Cancellation Policy %s');
+
+define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping');
+define('IMAGE_BUTTON_PRODUCT_MORE', 'Details');
 ?>
