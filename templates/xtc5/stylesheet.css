@@ -1455,3 +1455,271 @@ BASIC Template for AGB Hosting Content
 #janolaw-body{
 }
 /* janolaw EOF */
+
+/* ====================================================================================================================== */
+/* ========= css Buttons web0null ========= */
+/* ====================================================================================================================== */
+.cssButton {
+	position:relative;
+	margin:0 4px 0 0;
+	display:inline-block;
+	text-align:left;
+	overflow:hidden;
+	text-decoration:none !important;
+}
+
+.buttonSize0,
+.buttonSize0 .background_hover,
+.buttonSize0 .animate_image,
+.buttonSize0 .buttonIcon,
+.buttonSize0 button {
+	height:28px;
+	line-height:28px;
+	cursor:pointer;
+}
+
+.buttonSize1,
+.buttonSize1 .background_hover,
+.buttonSize1 .animate_image,
+.buttonSize1 .buttonIcon,
+.buttonSize1 button {
+	height:24px;
+	line-height:24px;
+	cursor:pointer;
+}
+
+.buttonSize2,
+.buttonSize2 .background_hover,
+.buttonSize2 .animate_image,
+.buttonSize2 .buttonIcon,
+.buttonSize2 button {
+	height:20px;
+	line-height:20px;
+	cursor:pointer;
+}
+
+.cssButton .background_hover,
+.cssButton .animate_image,
+.cssButton button {
+	position:absolute !important;
+	display:inline-block;
+	width:100%;
+	top:0;
+	left:0;
+	border:none;
+	background:transparent;
+}
+
+.cssButton .animate_image {
+	background-position:50% 50%;
+}
+
+.cssButton:hover .animate_image {
+	background-position:60% 50%;
+}
+
+.cssButton .background_hover {
+	opacity:0;
+	filter: alpha(opacity=0);
+}
+
+.cssButton:hover .background_hover {
+	opacity:1;
+	filter: alpha(opacity=100);
+}
+
+.cssButton .buttonIcon {
+	position:absolute;
+	background-position:center center;
+	background-repeat:no-repeat;
+}
+
+/* ================================================= */
+.cssButton.buttonSize0 .buttonIcon {
+	width:35px;
+}
+
+.cssButton.buttonSize1 .buttonIcon {
+	width:35px;
+}
+
+.cssButton.buttonSize2 .buttonIcon {
+	width:25px;
+}
+
+/* ================================================= */
+.cssButton.buttonSize0 .buttonIcon {
+	background-size:20px;
+	-moz-background-size:20px;
+}
+
+.cssButton.buttonSize1 .buttonIcon {
+	background-size:20px;
+	-moz-background-size:20px;
+}
+
+.cssButton.buttonSize2 .buttonIcon {
+	background-size:13px;
+	-moz-background-size:13px;
+}
+
+/* ================================================= */
+.icononly.buttonSize0 .buttonIcon {
+	width:28px;
+}
+
+.icononly.buttonSize1 .buttonIcon {
+	width:24px;
+}
+
+.icononly.buttonSize2 .buttonIcon {
+	width:20px;
+}
+
+/* ================================================= */
+.iconleft .buttonIcon {
+	left:0;
+}
+
+.iconright .buttonIcon {
+	right:0;
+}
+
+.cssButton .buttonText,
+.icononly .buttonIcon {
+	position:relative;
+	display:inline-block;
+	font-weight:bold;
+	font-size:12px;
+	white-space:nowrap;
+}
+
+.cssButton .buttonText {
+	padding:0 10px;
+}
+
+/* ================================================= */
+.iconleft.buttonSize0 .buttonText {
+	padding:0 10px 0 33px;
+}
+
+.iconleft.buttonSize1 .buttonText {
+	padding:0 10px 0 33px;
+}
+
+.iconleft.buttonSize2 .buttonText {
+	padding:0 5px 0 25px;
+}
+
+/* ================================================= */
+.iconright.buttonSize0 .buttonText {
+	padding:0 33px 0 10px;
+}
+
+.iconright.buttonSize1 .buttonText {
+	padding:0 33px 0 10px;
+}
+
+.iconright.buttonSize2 .buttonText {
+	padding:0 25px 0 5px;
+}
+
+/* ================================================= */
+.iconnone.buttonSize0 .buttonText {
+	padding:0 10px;
+}
+
+.iconnone.buttonSize1 .buttonText {
+	padding:0 10px;
+}
+
+.iconnone.buttonSize2 .buttonText {
+	padding:0 5px;
+}
+
+/* ================================================= */
+.cssButton button {
+    color:transparent;
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+
+.buttonclear {
+	clear:both;
+	font-size:0;
+	line-height:0;
+}
+
+/* cssButton style =================================== */
+.cssButton,
+.background_hover,
+.animate_image {
+	-moz-border-radius:3px;
+	-webkit-border-radius:3px;
+	border-radius:3px;
+}
+
+.cssButton.textButton {
+	-moz-box-shadow:0 1px 2px rgba(0,0,0,0.3);
+	-webkit-box-shadow:0 1px 2px rgba(0,0,0,0.3);
+	box-shadow:0 1px 2px rgba(0,0,0,0.3);
+	filter:progid:DXImageTransform.Microsoft.Shadow(color='#808080',direction='120',strength='2');
+}
+
+/* Verlauf */
+.cssButton .gradient_0 {
+	background-image:url(buttons/cssbutton_ico/gradient_0.png) ;
+}
+
+/* not IE */
+.cssButton .gradient_1 {
+	background-image:-moz-linear-gradient( -90deg,rgba(255,255,255,.2) 0,rgba(255,255,255,.1) 50%,rgba(0,0,0,.2) 51%,rgba(0,0,0,.6) 100%);
+	background-image:-webkit-linear-gradient( -90deg,rgba(255,255,255,.2) 0,rgba(255,255,255,.1) 50%,rgba(0,0,0,.2) 51%,rgba(0,0,0,.6) 100%);
+	background-image:linear-gradient( -90deg,rgba(255,255,255,.2) 0,rgba(255,255,255,.1) 50%,rgba(0,0,0,.2) 51%,rgba(0,0,0,.6) 100%) ;
+}
+
+.cssButton .gradient_2 {
+	background-image:-moz-linear-gradient( -90deg,rgba(255,255,255,0.1) 0,rgba(0,0,0,.3) 100%);
+	background-image:-webkit-linear-gradient( -90deg,rgba(255,255,255,0.1) 0,rgba(0,0,0,.3) 100%);
+	background-image:linear-gradient( -90deg,rgba(255,255,255,0.1) 0,rgba(0,0,0,.3) 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(gradientType=0,startColorstr=#1affffff,endColorstr=#4d000000) ;
+}
+
+/* Text Farbe */
+.cssButton {
+	color:#FFFFFF!important;
+}
+
+/* Text-Shadow */
+.cssButton .buttonText {
+	text-shadow:1px 1px 1px #000000;
+	text-shadow:1px 1px 1px rgba(0,0,0,1) !important;
+}
+
+/* Button Farbe */
+.color_1 {
+	background-color:#AD4C79!important;
+}
+
+.color_0 {
+	background-color:#4D4D4D!important;
+}
+
+/* css Animation ================================== (not IE) */
+/* .cssButton .background_hover,
+.cssButton .animate_image {
+	-webkit-transition-duration:200ms;
+	-webkit-transition-property:background-color,background-position,opacity;
+	-webkit-transition-timing-function:ease-in-out;
+	-moz-transition-duration:200ms;
+	-moz-transition-property:background-color,background-position,opacity;
+	-moz-transition-timing-function:ease-in-out;
+	-o-transition-duration:200ms;
+	-o-transition-property:background-color,background-position,opacity;
+	-o-transition-timing-function:ease-in-out;
+}
+
+*/
+/* ====================================================================================================================== */
+/* ========= css Buttons web0null ========= */
+/* ====================================================================================================================== */

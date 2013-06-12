@@ -800,4 +800,8 @@ define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'If a sold-out items (stock
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In for Newsletter registration.');
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');
+
+define ('USE_CSS_BUTTONS_TITLE', 'CSS buttons use');
+define ('USE_CSS_BUTTONS_DESC', 'Enables the standard CSS buttons. false - configuration in the template directory in <b>source/inc/xtc_css_button.inc.php</b> and <b>stylesheets.css</b>') ;
+
 ?>
