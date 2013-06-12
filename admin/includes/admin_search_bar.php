@@ -20,14 +20,14 @@
   $search_ord = '';
   $search_cat = '';
   if (strpos($page_filename, 'customers.php') !== false) {
-    $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
-    $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : ''); //DokuMan - 2010-09-08 - set undefined index
+    $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
+    $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
   }
   if (strpos($page_filename, 'orders.php') !== false) {
-    $search_ord = htmlentities(isset($_GET['oID']) ? $_GET['oID'] : ''); //DokuMan - 2010-09-08 - set undefined index
+    $search_ord = htmlentities(isset($_GET['oID']) ? $_GET['oID'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
   }
   if (strpos($page_filename, 'categories.php') !== false){
-    $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : ''); //DokuMan - 2010-09-08 - set undefined index
+    $search_cat = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); //DokuMan - 2010-09-08 - set undefined index
   }
   
   if (!defined('NEW_ADMIN_STYLE')) {   
