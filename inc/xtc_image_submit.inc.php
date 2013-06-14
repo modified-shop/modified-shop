@@ -17,19 +17,16 @@
    
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
-  function xtc_image_submit($image, $alt = '', $parameters = '', $css_button = true) {
-    if ($css_button && defined('USE_CSS_BUTTONS') && USE_CSS_BUTTONS == 'true' && function_exists('xtc_css_button')) {
-        return xtc_css_button($image, $alt, $parameters, true);
-    } else {
-        $image_submit = '<input type="image" src="' . xtc_parse_input_field_data('templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
+  function xtc_image_submit($image, $alt = '', $parameters = '') {
 
-        if (xtc_not_null($alt)) $image_submit .= ' title=" ' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . ' "';
+    $image_submit = '<input type="image" src="' . xtc_parse_input_field_data('templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
-        if (xtc_not_null($parameters)) $image_submit .= ' ' . $parameters;
+    if (xtc_not_null($alt)) $image_submit .= ' title=" ' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . ' "';
 
-        $image_submit .= ' />';
+    if (xtc_not_null($parameters)) $image_submit .= ' ' . $parameters;
 
-        return $image_submit;
-    }
+    $image_submit .= ' />';
+
+    return $image_submit;
   }
  ?>

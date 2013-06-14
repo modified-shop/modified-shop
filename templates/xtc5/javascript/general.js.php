@@ -17,14 +17,6 @@
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.js" type="text/javascript"></script>
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/thickbox.js" type="text/javascript"></script>
 
-<?php
-if (defined('USE_CSS_BUTTONS') && USE_CSS_BUTTONS == 'true') {
-?>
-  <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/css_button.js" type="text/javascript"></script>
-<?php
-}
-?>
-
 <?php // BOF - web28 - 2010-07-09 - TABS/ACCORDION in product_info ?>
 <?php
 if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
