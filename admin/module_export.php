@@ -26,23 +26,39 @@
   // include needed functions (for modules)
   require_once(DIR_WS_FUNCTIONS . 'export_functions.php');
 
-  $action = (isset($_GET['action']) ? $_GET['action'] : '');
-  $set = (isset($_GET['set']) ? $_GET['set'] : '');
-
   if (!is_writeable(DIR_FS_CATALOG . 'export/')) {
     $messageStack->add(ERROR_EXPORT_FOLDER_NOT_WRITEABLE, 'error');
   }
-  $module_type = 'export';
-  $module_directory = DIR_WS_MODULES . 'export/';
-  $module_key = 'MODULE_EXPORT_INSTALLED';
+  
+  // set default file extension
   $file_extension = '.php';
-  define('HEADING_TITLE', HEADING_TITLE_MODULES_EXPORT);
 
   if (isset($_GET['error'])) {
     $map='error';
     if ($_GET['kind']=='success') $map='success';
     $messageStack->add($_GET['error'], $map);
   }
+
+  $set = (isset($_GET['set']) ? $_GET['set'] : '');
+  if (xtc_not_null($set)) {
+    switch ($set) {
+      case 'external':
+        $module_type = 'external';
+        $module_directory = DIR_WS_MODULES . 'external/';
+        $module_key = 'MODULE_EXTERNAL_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_EXTERNAL);
+        break;
+      case 'export':
+      default:
+        $module_type = 'export';
+        $module_directory = DIR_WS_MODULES . 'export/';
+        $module_key = 'MODULE_EXPORT_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_EXPORT);
+        break;
+    }
+  }
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
   if (xtc_not_null($action)) {
     switch ($action) {
       //BOF NEW MODULE PROCESSING
@@ -99,14 +115,17 @@
 
       case 'install':
       case 'remove':
-        $file_extension = substr(basename($_SERVER['SCRIPT_NAME']), strrpos(basename($_SERVER['SCRIPT_NAME']), '.'));
         $class = basename($_GET['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
           $module = new $class;
           if ($action == 'install') {
             $module->install();
+            // restore old values
+            xtc_restore_configuration($module->keys());
           } elseif ($action == 'remove') {
+            // save old values
+            xtc_backup_configuration($module->keys());
             $module->remove();
           }
         }
@@ -147,7 +166,9 @@
                 <div style="float:left; width:80px;"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
                 <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
                 <div class="main">Modules</div>
+                <?php if ($set == 'export') { ?>
                 <div style="clear:both;margin:10px 0 5px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
+                <?php } ?>
               </td>
             </tr>
             <tr>
@@ -158,73 +179,129 @@
                       <table border="0" width="100%" cellspacing="0" cellpadding="2">
                         <tr class="dataTableHeadingRow">
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                          <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                           <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?> </td>
                         </tr>
                         <?php
-                        $file_extension = substr(basename($_SERVER['SCRIPT_NAME']), strrpos(basename($_SERVER['SCRIPT_NAME']), '.'));
-                        $directory_array = array();
+                        $directory_array = array(array());
                         if ($dir = @dir($module_directory)) {
                           while ($file = $dir->read()) {
                             if (!is_dir($module_directory . $file)) {
                               if (substr($file, strrpos($file, '.')) == $file_extension) {
-                                $directory_array[] = $file;
+                                include_once($module_directory . $file);
+                                $class = substr($file, 0, strrpos($file, '.'));
+                                if (xtc_class_exists($class)) {
+                                  $module = new $class();
+                                }                              
+                                if ($module->check() > 0) {
+                                  $directory_array[0][] = $file;
+                                } else {
+                                  $directory_array[1][] = $file;
+                                }
+                                unset($module);
                               }
                             }
                           }
-                          sort($directory_array);
+                          if (is_array($directory_array[0])) {
+                            ksort($directory_array[0]);
+                            foreach ($directory_array[0] as $key => $val){
+                              $directory_array[0][$key] = $val;
+                            }
+                            $directory_array[0] = array_values($directory_array[0]);
+                          }
+                          if (is_array($directory_array[1])) {                      
+                            sort($directory_array[1]);
+                          }
+                          ksort($directory_array);
                           $dir->close();
                         }
+                                                
                         $installed_modules = array();
-                        for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
-                          $file = $directory_array[$i];
-                          include($module_directory . $file);
-                          $class = substr($file, 0, strrpos($file, '.'));
-                          if (xtc_class_exists($class)) {
-                            $module = new $class;
-                            if ($module->check() > 0) {
-                              if ($module->sort_order > 0) {
-                                $installed_modules[$module->sort_order] = $file;
-                              } else {
-                                $installed_modules[] = $file;
-                              }
-                            }
-                            if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
-                              $module_info = array('code' => $module->code,
-                                                   'title' => $module->title,
-                                                   'description' => $module->description,
-                                                   'status' => $module->check());
-                              $module_keys = $module->keys();
-                              $keys_extra = array();
-                              for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
-                                $key_value_query = xtc_db_query("select configuration_key,configuration_value, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_keys[$j] . "'");
-                                $key_value = xtc_db_fetch_array($key_value_query);
-                                if ($key_value['configuration_key'] !='') {
-                                  $keys_extra[$module_keys[$j]]['title'] = constant(strtoupper($key_value['configuration_key'] .'_TITLE'));
-                                }
-                                $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
-                                if ($key_value['configuration_key'] !='') {
-                                  $keys_extra[$module_keys[$j]]['description'] = constant(strtoupper($key_value['configuration_key'] .'_DESC'));
-                                }
-                                $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
-                                $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
-                              }
-                              $module_info['keys'] = $keys_extra;
-                              $mInfo = new objectInfo($module_info);
-                            }
-                            if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
+                        foreach ($directory_array as $directory_array) {
+                          for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
+                            $file = $directory_array[$i];
+                            include_once($module_directory . $file);
+                            $class = substr($file, 0, strrpos($file, '.'));
+                            if (xtc_class_exists($class)) {
+                              $module = new $class();
                               if ($module->check() > 0) {
-                                echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
-                              } else {
-                                echo '              <tr class="dataTableRowSelected">' . "\n";
+                                if (($module->sort_order > 0) && !isset($installed_modules[$module->sort_order])) {
+                                  $installed_modules[$module->sort_order] = $file;
+                                } else {
+                                  $installed_modules[] = $file;
+                                }
                               }
-                            } else {
-                              echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
+                              if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
+                                $module_info = array('code' => $module->code,
+                                                     'title' => $module->title,
+                                                     'description' => $module->description,
+                                                     'extended_description' => $module->extended_description,
+                                                     'status' => $module->check());
+                                $module_keys = $module->keys();
+                                $keys_extra = array();
+                                for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
+                                  $key_value_query = xtc_db_query("select configuration_key,configuration_value, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_keys[$j] . "'");
+                                  $key_value = xtc_db_fetch_array($key_value_query);
+                                  if ($key_value['configuration_key'] !='')
+                                    $keys_extra[$module_keys[$j]]['title'] = constant(strtoupper($key_value['configuration_key'] .'_TITLE'));
+                                  $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
+                                  if ($key_value['configuration_key'] !='')
+                                    $keys_extra[$module_keys[$j]]['description'] = constant(strtoupper($key_value['configuration_key'] .'_DESC'));
+                                  $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
+                                  $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
+                                }
+                                $module_info['keys'] = $keys_extra;
+                                $mInfo = new objectInfo($module_info);
+                              }
+                              if ($module->check() > 0 && !$installed) {
+                                $installed = true;
+                                ?>
+                                <tr class="dataTableHeadingRow">
+                                  <td colspan="3" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
+                                </tr>
+                                <?php
+                              } elseif ($module->check() < 1 && !$deinstalled && $installed) {
+                                $deinstalled = true;
+                                ?>
+                                <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
+                                <tr class="dataTableHeadingRow">
+                                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
+                                  <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?> </td>
+                                </tr>
+                                <tr class="dataTableHeadingRow">
+                                  <td colspan="3" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                                </tr>
+                                <?php
+                              }
+
+                              if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
+                                if ($module->check() > 0) {
+                                  echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
+                                } else {
+                                  echo '              <tr class="dataTableRowSelected">' . "\n";
+                                }
+                              } else {
+                                echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
+                              }
+                                ?>
+                                <td class="dataTableContent"><?php echo $module->title; ?></td>
+                                <td class="dataTableContent" align="center">
+                                  <?php 
+                                    if ($module->check() > 0) {
+                                      if (isset($module->enabled) && $module->enabled) { 
+                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT); 
+                                      } else { 
+                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT); 
+                                      }
+                                    }
+                                  ?>
+                                  &nbsp;
+                                </td>
+                                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?> </td>
+                              </tr>
+                              <?php
                             }
-                              ?>
-                              <td class="dataTableContent"><?php echo $module->title; ?></td>
-                              <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?> </td>
-                            </tr>
-                            <?php
                           }
                         }
                         ksort($installed_modules);
