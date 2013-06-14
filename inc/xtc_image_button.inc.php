@@ -16,11 +16,8 @@
    ---------------------------------------------------------------------------------------*/
    
 // Output a function button in the selected language
-  function xtc_image_button($image, $alt = '', $parameters = '', $css_button = true) {
-    if ($css_button && defined('USE_CSS_BUTTONS') && USE_CSS_BUTTONS == 'true' && function_exists('xtc_css_button')) {
-      return xtc_css_button($image, $alt, $parameters, false);
-    } else {    
-      return xtc_image('templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, $alt, '', '', $parameters);
-    }
+  function xtc_image_button($image, $alt = '', $parameters = '') {
+
+    return xtc_image('templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, $alt, '', '', $parameters);
   }
  ?>

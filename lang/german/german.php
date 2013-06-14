@@ -528,7 +528,4 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','Sie werden in %s Sekunden auf unsere Homep
 // EOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 
 define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformation %s sowie unsere Widerrufsbelehrung %s zur Kenntnis.');
-
-define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Einkauf fortsetzen');
-define('IMAGE_BUTTON_PRODUCT_MORE', 'Details');
 ?>
