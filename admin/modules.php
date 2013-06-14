@@ -184,7 +184,9 @@ require (DIR_WS_INCLUDES.'head.php');
                             }
                             $directory_array[0] = array_values($directory_array[0]);
                           }                          
-                          sort($directory_array[1]);
+                          if (is_array($directory_array[1])) {                      
+                            sort($directory_array[1]);
+                          }
                           //EOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
                           ksort($directory_array);
                           $dir->close();
