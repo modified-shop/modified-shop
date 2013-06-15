@@ -63,49 +63,25 @@
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
         break;
-      case 'install':
-        $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-        $class = basename($_GET['module']);
-        if (file_exists($module_directory . $class . $file_extension)) {
-          include($module_directory . $class . $file_extension);
-          $module = new $class(0);
-          $module->install();
-          // restore old values
-          $keys = $module->keys();
-          for ($i=0, $x=sizeof($keys); $i<$x; $i++) {
-            if (defined($keys[$i].'_BAK')) {
-              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(constant($keys[$i].'_BAK')) . "', last_modified = NOW() where configuration_key='" . $keys[$i] . "'");
-              xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key='" . $keys[$i].'_BAK' . "'");
-            }
-          }
-        }
-        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
-        break;
         
+      case 'install':
       case 'remove':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($_GET['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
           $module = new $class(0);
-          // save old values
-          $keys = $module->keys();
-          for ($i=0, $x=sizeof($keys); $i<$x; $i++) {
-            if (defined($keys[$i].'_BAK')) {
-              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(constant($keys[$i])) . "', last_modified = NOW() where configuration_key='" . $keys[$i].'_BAK' . "'");
-            } else {
-              $restore_query = xtc_db_query("SELECT * FROM ".TABLE_CONFIGURATION." WHERE configuration_key = '".$keys[$i]."'");
-              if (xtc_db_num_rows($restore_query)>0) {
-                $restore = xtc_db_fetch_array($restore_query);
-                unset($restore['configuration_id']);
-                $restore['configuration_key'] = $restore['configuration_key'].'_BAK';
-                xtc_db_perform(TABLE_CONFIGURATION, $restore);
-              }
-            }
+          if ($action == 'install') {
+            $module->install();
+            // restore old values
+            xtc_restore_configuration($module->keys());
+          } elseif ($action == 'remove') {
+            // save old values
+            xtc_backup_configuration($module->keys());
+            $module->remove();
           }
-          $module->remove();
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
+        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $_GET['set'] . '&module=' . $class));
         break;
     }
   }
@@ -208,7 +184,9 @@ require (DIR_WS_INCLUDES.'head.php');
                             }
                             $directory_array[0] = array_values($directory_array[0]);
                           }                          
-                          sort($directory_array[1]);
+                          if (is_array($directory_array[1])) {                      
+                            sort($directory_array[1]);
+                          }
                           //EOF - DokuMan - 2011-07-19 - sorting of modules (credits to GTB)
                           ksort($directory_array);
                           $dir->close();

@@ -17,7 +17,7 @@
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE_MODULES_EXPORT', 'Modules');
-
+define('HEADING_TITLE_MODULES_EXTERNAL', 'External Modules');
 
 define('TABLE_HEADING_MODULES', 'Modules');
 define('TABLE_HEADING_SORT_ORDER', 'Sort Order');
@@ -30,5 +30,7 @@ define('TABLE_HEADING_FILENAME','Modulname (for internal usage)');
 define('ERROR_EXPORT_FOLDER_NOT_WRITEABLE','export/ Folder not writeable!');
 
 define('TEXT_MODULE_INFO','Please check the manufacturer of the modules for the latest version!');
+define('TABLE_HEADING_MODULES_INSTALLED', 'Modules installed');
+define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Modules not installed');
 
 ?>
