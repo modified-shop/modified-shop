@@ -251,7 +251,7 @@ if (xtc_not_null($action)) {
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td valign="top">
-                      <table border="0" width="100%" cellspacing="0" cellpadding="3">
+                      <table border="0" width="100%" cellspacing="0" cellpadding="2">
                         <tr class="dataTableHeadingRow">
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
