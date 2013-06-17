@@ -70,7 +70,7 @@
         $class = basename($_GET['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
-          $module = new $class(0);
+          $module = new $class();
           if ($action == 'install') {
             $module->install();
             // restore old values
@@ -81,7 +81,7 @@
             $module->remove();
           }
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $_GET['set'] . '&module=' . $class));
+        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
         break;
     }
   }
