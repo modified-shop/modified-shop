@@ -345,13 +345,13 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 ?>
               </table>
-              <div class="smallText f-left pdg2"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
-              <div class="smallText f-right pdg2"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
+              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
+              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
               <?php
               if (empty($action)) {
               ?>
                 <div class="clear"></div>
-                <div class="smallText f-right pdg2"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&action=new') . '">' . BUTTON_NEW_PRODUCTS . '</a>'; ?></div>
+                <div class="smallText flt-r pdg2"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&action=new') . '">' . BUTTON_NEW_PRODUCTS . '</a>'; ?></div>
                 <?php
                 }
                 ?>                                
