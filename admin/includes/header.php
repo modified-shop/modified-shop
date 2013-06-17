@@ -154,7 +154,7 @@
       </td>
     </tr>
   </table>
-</div>
+
 <div id="top2"></div>
 <?php
   if (USE_ADMIN_TOP_MENU != 'false') {

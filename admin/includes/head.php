@@ -30,7 +30,7 @@
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
   ?>
-  <script language="javascript">
+  <script type="text/javascript">
     <!--
       document.write('<link rel="stylesheet" type="text/css" href="includes/css/topmenu.css" />');
     //-->
