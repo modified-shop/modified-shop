@@ -26,26 +26,26 @@ if (($_SESSION['customers_status']['customers_status_id'] == '0')) {
 //begin----------------------------functions----------------------------------------------------------------------------------
 
 // mainMenue($linktext);
-if (!function_exists('mainMenue')){ // erste ebene
-    function mainMenue($linktext){
-        $html  = '<li>';            
-        if (defined('NEW_ADMIN_STYLE')) {
-          $html .= '<div class="dataTableHeadingContent"><a href="#"><strong>'.$linktext.'</strong></a></div>';
-        } else {
-          $html .= '<div class="dataTableHeadingContent"><strong>'.$linktext.'</strong></div>';
-        }
-        $html .= '<ul>';
-        return $html;
+if (!function_exists('mainMenue')) { // erste ebene
+  function mainMenue($linktext) {
+    $html  = '<li>';            
+    if (defined('NEW_ADMIN_STYLE')) {
+      $html .= '<div class="dataTableHeadingContent"><a href="#"><strong>'.$linktext.'</strong></a></div>';
+    } else {
+      $html .= '<div class="dataTableHeadingContent"><strong>'.$linktext.'</strong></div>';
     }
+    $html .= '<ul>';
+    return $html;
+  }
 }
 
 // endMenue();
-if (!function_exists('endMenue')){ // menü schließen
-    function endMenue(){
-        $html  = '</ul>';
-        $html .= '</li>';
-        return $html;
-    }
+if (!function_exists('endMenue')) { // menü schließen
+  function endMenue() {
+    $html  = '</ul>';
+    $html .= '</li>';
+    return $html;
+  }
 }
 
 //end----------------------------functions----------------------------------------------------------------------------------
