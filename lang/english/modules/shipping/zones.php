@@ -35,9 +35,11 @@ define('MODULE_SHIPPING_ZONES_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_ZONES_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_ZONES_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_ZONES_NUMBER_ZONES_DESC' , 'Number of zones to use');
+define('MODULE_SHIPPING_ZONES_DISPLAY_TITLE' , 'Enable Display');
+define('MODULE_SHIPPING_ZONES_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
 for ($module_shipping_zones_i = 1; $module_shipping_zones_i <= MODULE_SHIPPING_ZONES_NUMBER_ZONES; $module_shipping_zones_i ++) {
-  define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$module_shipping_zones_i.'_TITLE' , 'Zone '.$module_shipping_zones_i.' Countries');
+  define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$module_shipping_zones_i.'_TITLE' , '<hr/>Zone '.$module_shipping_zones_i.' Countries');
   define('MODULE_SHIPPING_ZONES_COUNTRIES_'.$module_shipping_zones_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_zones_i.'.');
   define('MODULE_SHIPPING_ZONES_COST_'.$module_shipping_zones_i.'_TITLE' , 'Zone '.$module_shipping_zones_i.' Shipping Table');
   define('MODULE_SHIPPING_ZONES_COST_'.$module_shipping_zones_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_zones_i.' destinations based on a group of maximum order weights. Example: 3:8.50,7:10.50,... Weights less than or equal to 3 would cost 8.50 for Zone '.$module_shipping_zones_i.' destinations.');

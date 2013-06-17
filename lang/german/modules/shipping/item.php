@@ -20,7 +20,6 @@ define('MODULE_SHIPPING_ITEM_TEXT_TITLE', 'Versandkosten pro St&uuml;ck');
 define('MODULE_SHIPPING_ITEM_TEXT_DESCRIPTION', 'Versandkosten pro St&uuml;ck');
 define('MODULE_SHIPPING_ITEM_TEXT_WAY', 'Bester Weg');
 define('MODULE_SHIPPING_ITEM_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
-define('MODULE_SHIPPING_ITEM_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht berechnet werden.');
 
 define('MODULE_SHIPPING_ITEM_STATUS_TITLE' , 'Versandkosten pro St&uuml;ck aktivieren');
 define('MODULE_SHIPPING_ITEM_STATUS_DESC' , 'M&ouml;chten Sie Versandkosten pro St&uuml;ck anbieten?');
@@ -34,9 +33,11 @@ define('MODULE_SHIPPING_ITEM_SORT_ORDER_TITLE' , 'Sortierreihenfolge');
 define('MODULE_SHIPPING_ITEM_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige');
 define('MODULE_SHIPPING_ITEM_NUMBER_ZONES_TITLE' , 'Anzahl der Zonen');
 define('MODULE_SHIPPING_ITEM_NUMBER_ZONES_DESC' , 'Anzahl der bereitgestellten Zonen');
+define('MODULE_SHIPPING_ITEM_DISPLAY_TITLE' , 'Anzeige aktivieren');
+define('MODULE_SHIPPING_ITEM_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein Versand in das Land m&ouml;glich ist bzw. keine Versandkosten berechnet werden konnten?');
 
 for ($module_shipping_item_i = 1; $module_shipping_item_i <= MODULE_SHIPPING_ITEM_NUMBER_ZONES; $module_shipping_item_i ++) {
-  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' L&auml;nder');
+  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_TITLE' , '<hr/>Zone '.$module_shipping_item_i.' L&auml;nder');
   define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_item_i.' sind.');
   define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Versandkosten');
   define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_item_i.' werden mit der Anzahl an Artikel einer Bestellung multipliziert, wenn diese Versandart angegeben ist.');
