@@ -1,0 +1,45 @@
+.modulbox{
+  width: 850px;
+  margin: 20px 4px;
+}
+.modulbox .contentTable{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #000000;
+	background-color: #F6F6F6;
+	border: 1px solid #a3a3a3;
+  border-collapse: collapse;
+  margin-top: -1px;
+
+}
+
+/* info box */
+.modulbox .infoBoxHeading {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: bold;
+  line-height:28px;
+	padding: 0px 5px;
+	background: #DBDBDB ;/*#ccc url(images/menu-bg-li.gif) repeat-x bottom;*/
+  color: #000;  
+}
+
+.modulbox .infoBoxContent {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+  line-height:18px;
+	color: #000;
+  padding: 5px;
+	background-color: #eee;
+}
+
+.modulbox .infoBoxContent input[type=text], .infoBoxContent textarea{
+	width:830px;
+}
+
+.modulbox .infoBoxContent hr{
+background:#a3a3a3;
+height:5px;
+margin-bottom:5px;
+border: none;
+}
