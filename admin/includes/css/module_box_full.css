@@ -1,5 +1,5 @@
 .modulbox{
-  width: 850px;
+  width: 99%;
   margin: 20px 4px;
 }
 .modulbox .contentTable{
@@ -34,12 +34,12 @@
 }
 
 .modulbox .infoBoxContent input[type=text], .infoBoxContent textarea{
-	width:830px;
+	width:99%;
 }
 
 .modulbox .infoBoxContent hr{
 background:#a3a3a3;
-height:5px;
+height:2px;
 margin-bottom:5px;
 border: none;
 }
