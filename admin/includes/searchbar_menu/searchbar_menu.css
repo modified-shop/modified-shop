@@ -5,7 +5,6 @@
 	padding:0px;
 	margin:0px;	
 }
-
 #topmenu_search li {
 	float: left;
 	margin: 3px 1px 0px 15px;
@@ -14,15 +13,12 @@
 	color: #fafafa;
 	font-weight: bold;
 }
-
 #topmenu_search input {	
 	border: 1px solid #860058;
 }
-
-.searchbar{
+.searchbar {
 	overflow: hidden;
 	width: 100%;
 	height: 25px;
-	background:  #AF417E /* url(../../images/searchbar_menu/asb_bg.gif) bottom;*/
+	background: #AF417E /*url(../../images/searchbar_menu/asb_bg.gif) bottom*/;
 }
-
