@@ -609,10 +609,10 @@ border: 1px solid #a3a3a3;
 min-width:800px;
 }
 
-.f-left{
+.flt-l{
 float:left;
 }
-.f-right{
+.flt-r{
 float:right;
 }
 .clear{
