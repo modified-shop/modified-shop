@@ -296,3 +296,17 @@ table.option-values-table{
 border: 1px solid #a3a3a3;
 min-width:800px;
 }
+
+.flt-l{
+float:left;
+}
+.flt-r{
+float:right;
+}
+.clear{
+clear: both;
+}
+.pdg2{
+padding:2px;
+}
+
