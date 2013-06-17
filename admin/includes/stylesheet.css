@@ -412,7 +412,7 @@ div.stock_warn {
 /* forms */
 CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE {
   font-family: Verdana, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   border: solid 1px #a3a3a3;
 }
 INPUT[type=checkbox], INPUT[type=radio] {
@@ -431,7 +431,7 @@ FORM {
 }
 .formAreaTitle {
   font-family: Tahoma, Verdana, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: bold;
 }
 
@@ -461,7 +461,7 @@ FORM {
 }
 .main {
   font-family: Verdana, Arial, sans-serif;
-  font-size: 12px;
+  font-size: 10px;
 }
 .errorText {
   font-family: Verdana, Arial, sans-serif;
