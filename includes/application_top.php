@@ -194,6 +194,7 @@ require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
+require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');

@@ -38,9 +38,11 @@ define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_TITLE' , 'Display order');
 define('MODULE_SHIPPING_FREEAMOUNT_SORT_ORDER_DESC' , 'Lowest will be displayed first.');
 define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_TITLE' , 'Number of zones');
 define('MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES_DESC' , 'Number of zones to use');
+define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_TITLE' , 'Enable Display');
+define('MODULE_SHIPPING_FREEAMOUNT_DISPLAY_DESC' , 'Do you want to display, if shipping to destination is not possible or if shipping costs cannot be calculated?');
 
 for ($module_shipping_freeamount_i = 1; $module_shipping_freeamount_i <= MODULE_SHIPPING_FREEAMOUNT_NUMBER_ZONES; $module_shipping_freeamount_i ++) {
-  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Countries');
+  define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_TITLE' , '<hr/>Zone '.$module_shipping_freeamount_i.' Countries');
   define('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_'.$module_shipping_freeamount_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_freeamount_i.'.');
   define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_TITLE' , 'Zone '.$module_shipping_freeamount_i.' Minimum Cost');
   define('MODULE_SHIPPING_FREEAMOUNT_AMOUNT_'.$module_shipping_freeamount_i.'_DESC' , 'Minimum order amount purchased for Zone '.$module_shipping_freeamount_i.' before shipping is free.');

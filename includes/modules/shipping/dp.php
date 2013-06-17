@@ -85,7 +85,7 @@
       }
 
       $this->quotes = array('id' => $this->code,
-                            'module' => MODULE_SHIPPING_DP_TEXT_TITLE);
+                            'module' => $this->title);
 
       if ($dest_zone == 0) {
         if (MODULE_SHIPPING_DP_DISPLAY == 'True') {
@@ -145,7 +145,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DP_ZONE', '0', '6', '0', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_SORT_ORDER', '0', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_ALLOWED', '', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_ALLOWED', '', '6', '0', 'xtc_cfg_textarea(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DP_NUMBER_ZONES', '5', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_DP_DISPLAY', 'True', '6', '7', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     }
@@ -221,7 +221,8 @@
                     'MODULE_SHIPPING_DP_ZONE', 
                     'MODULE_SHIPPING_DP_SORT_ORDER',
                     'MODULE_SHIPPING_DP_NUMBER_ZONES',
-                    'MODULE_SHIPPING_DP_DISPLAY');
+                    'MODULE_SHIPPING_DP_DISPLAY'
+                   );
       $keys = array_merge($keys, $this->keys_zones($this->num_dp));
 
       return $keys;
