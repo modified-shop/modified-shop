@@ -65,20 +65,14 @@
       case 'module_processing_do':
         $class = basename($_GET['module']);
         include($module_directory . $class . $file_extension);
-        $module = new $class;
-        $module->process($_GET['file'], $_GET['start']);
-        $add_params = '';
-        $link = xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set .
-                                                      '&file='. $_GET['file'].
-                                                      '&module='. $class.
-                                                      '&start=' . $limit.
-                                                      '&count='.$count.
-                                                      '&action=module_processing_do'.
-                                                      '&max='. $_GET['max'].
-                                                      '&count_records='. $count_records.
-                                                      '&miss='. $_GET['miss'].
-                                                      $add_params
-                     );
+        $module = new $class();
+        $module->process($_GET['file']);
+        $get_params = isset($module->get_params) ? $module->get_params : '';
+        //convert params array to params string
+        $params = convert_params_array_to_string($get_params);
+        $link = xtc_href_link(FILENAME_MODULE_EXPORT, $params);
+        $recursive_call = isset($module->recursive_call) ? $module->recursive_call : '';
+        $infotext = isset($module->infotext) ? $module->infotext : '';
         break;
       //EOF NEW MODULE PROCESSING
       case 'save':
@@ -92,22 +86,25 @@
         }
         $class = basename($_GET['module']);
         include($module_directory . $class . $file_extension);
+        $module = new $class();
         //BOF NEW MODULE PROCESSING
         if (isset($_POST['process']) && $_POST['process'] == 'module_processing_do') {
-          $add_params = '';
-          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set .
-                                                             '&file='. $file.
-                                                             '&module='. $class.
-                                                             '&start=0'.
-                                                             '&count='.$count.
-                                                             '&action=module_processing_do'.
-                                                             '&max='. $_POST['max_datasets'].
-                                                             '&miss='. $_POST['only_missing_images'].
-                                                             $add_params
-                                    ));
+          $get_params = isset($module->get_params) ? $module->get_params : array();
+          //add post params to get params
+          $post_params = isset($module->post_params) ? $module->post_params : array();
+          reset($post_params);
+          while(list($key, $pparam) = each($post_params)) {
+            $get_params[$pparam] = $_POST[$pparam];
+          }
+          //convert params array to params string
+          $params = convert_params_array_to_string($get_params);          
+          if (trim($params) != '') {
+            xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT,$params));
+          } else {
+            $messageStack->add(ERROR_PARAMETERS_NOT_SET, 'error');//PARAMETER ERROR
+          }
         //EOF NEW MODULE PROCESSING
         } else {
-          $module = new $class;
           $module->process($file);
           xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class));
         }
@@ -134,8 +131,95 @@
     }
   }
 
+  //########## FUNCTIONS ##########//
 
-  require (DIR_WS_INCLUDES.'head.php');
+  function get_module_info($module)
+  {
+      $module_info = array('code' => $module->code,
+                           'title' => $module->title,
+                           'description' => $module->description,
+                           'extended_description' => $module->extended_description,
+                           'status' => $module->check());
+      $module_info['properties'] = isset($module->properties) ? $module->properties : array();
+      $module_keys = $module->keys();
+      $keys_extra = array();
+      for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
+        $key_value_query = xtc_db_query("SELECT configuration_key,
+                                                configuration_value,
+                                                use_function,
+                                                set_function
+                                           FROM " . TABLE_CONFIGURATION . "
+                                          WHERE configuration_key = '" . $module_keys[$j] . "'");
+        $key_value = xtc_db_fetch_array($key_value_query);
+        if ($key_value['configuration_key'] !='') {
+          $keys_extra[$module_keys[$j]]['title'] = constant(strtoupper($key_value['configuration_key'] .'_TITLE'));
+        }
+        $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
+        if ($key_value['configuration_key'] !='') {
+          $keys_extra[$module_keys[$j]]['description'] = constant(strtoupper($key_value['configuration_key'] .'_DESC'));
+        }
+        $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
+        $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
+      }
+      $module_info['keys'] = $keys_extra;
+      return $module_info;
+  }
+
+  function create_directory_array($module_directory,$file_extension)
+  {
+      global $module;
+      $directory_array = array(array());
+      if ($dir = @dir($module_directory)) {
+        while ($file = $dir->read()) {
+          if (!is_dir($module_directory . $file)) {
+            if (substr($file, strrpos($file, '.')) == $file_extension) {
+              include_once($module_directory . $file);
+              $class = substr($file, 0, strrpos($file, '.'));
+              if (xtc_class_exists($class)) {
+                $module = new $class();
+              }
+              if ($module->check() > 0) {
+                $directory_array[0][] = $file;
+              } else {
+                $directory_array[1][] = $file;
+              }
+              unset($module);
+            }
+          }
+        }
+        if (is_array($directory_array[0])) {
+          ksort($directory_array[0]);
+          foreach ($directory_array[0] as $key => $val){
+            $directory_array[0][$key] = $val;
+          }
+          $directory_array[0] = array_values($directory_array[0]);
+        }
+        if (is_array($directory_array[1])) {
+          sort($directory_array[1]);
+        }
+        ksort($directory_array);
+        $dir->close();
+      }
+      return $directory_array;
+  }
+  
+  function convert_params_array_to_string($params_array)
+  {
+    reset($params_array);
+    $params = array();
+    while(list($key, $value) = each($params_array)) {
+      $params[] = $key .'='. $value;
+    }
+    $params_string = implode('&', $params);
+    return $params_string;
+  }
+
+
+//########## OUTPUT ##########//
+require (DIR_WS_INCLUDES.'head.php');
+if (xtc_not_null($action)) {
+  echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
+}
 ?>
 </head>
 <body>
@@ -146,33 +230,24 @@
     <?php
     //BOF NEW MODULE PROCESSING
     echo isset($link) ? '<form name="modul_continue" action="'.$link.'" method="POST"></form>' :'';
-    echo isset($selbstaufruf) ? $selbstaufruf :'';
+    echo isset($recursive_call) ? $recursive_call : '';
     //EOF NEW MODULE PROCESSING
     ?>
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
+        <td class="boxLeft columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
             <!-- left_navigation //-->
             <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
             <!-- left_navigation_eof //-->
-          </table>
         </td>
         <!-- body_text //-->
         <td class="boxCenter" width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td width="100%">
-                <div style="float:left; width:80px;"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
-                <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
-                <div class="main">Modules</div>
-                <?php if ($set == 'export') { ?>
-                <div style="clear:both;margin:10px 0 5px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
-                <?php } ?>
-              </td>
-            </tr>
-            <tr>
-              <td>
+          <div style="float:left; width:80px;"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><br /></div>
+          <?php if ($set == 'export' && !xtc_not_null($action)) { ?>
+          <div style="clear:both;margin:10px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
+          <?php } ?>
+                <?php if(!xtc_not_null($action)) { ?>
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td valign="top">
@@ -183,39 +258,7 @@
                           <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?> </td>
                         </tr>
                         <?php
-                        $directory_array = array(array());
-                        if ($dir = @dir($module_directory)) {
-                          while ($file = $dir->read()) {
-                            if (!is_dir($module_directory . $file)) {
-                              if (substr($file, strrpos($file, '.')) == $file_extension) {
-                                include_once($module_directory . $file);
-                                $class = substr($file, 0, strrpos($file, '.'));
-                                if (xtc_class_exists($class)) {
-                                  $module = new $class();
-                                }                              
-                                if ($module->check() > 0) {
-                                  $directory_array[0][] = $file;
-                                } else {
-                                  $directory_array[1][] = $file;
-                                }
-                                unset($module);
-                              }
-                            }
-                          }
-                          if (is_array($directory_array[0])) {
-                            ksort($directory_array[0]);
-                            foreach ($directory_array[0] as $key => $val){
-                              $directory_array[0][$key] = $val;
-                            }
-                            $directory_array[0] = array_values($directory_array[0]);
-                          }
-                          if (is_array($directory_array[1])) {                      
-                            sort($directory_array[1]);
-                          }
-                          ksort($directory_array);
-                          $dir->close();
-                        }
-                                                
+                        $directory_array = create_directory_array($module_directory,$file_extension);
                         $installed_modules = array();
                         foreach ($directory_array as $directory_array) {
                           for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
@@ -232,27 +275,7 @@
                                 }
                               }
                               if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
-                                $module_info = array('code' => $module->code,
-                                                     'title' => $module->title,
-                                                     'description' => $module->description,
-                                                     'extended_description' => $module->extended_description,
-                                                     'status' => $module->check());
-                                $module_keys = $module->keys();
-                                $keys_extra = array();
-                                for ($j = 0, $k = sizeof($module_keys); $j < $k; $j++) {
-                                  $key_value_query = xtc_db_query("select configuration_key,configuration_value, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_key = '" . $module_keys[$j] . "'");
-                                  $key_value = xtc_db_fetch_array($key_value_query);
-                                  if ($key_value['configuration_key'] !='') {
-                                    $keys_extra[$module_keys[$j]]['title'] = constant(strtoupper($key_value['configuration_key'] .'_TITLE'));
-                                  }
-                                  $keys_extra[$module_keys[$j]]['value'] = $key_value['configuration_value'];
-                                  if ($key_value['configuration_key'] !='') {
-                                    $keys_extra[$module_keys[$j]]['description'] = constant(strtoupper($key_value['configuration_key'] .'_DESC'));
-                                  }
-                                  $keys_extra[$module_keys[$j]]['use_function'] = $key_value['use_function'];
-                                  $keys_extra[$module_keys[$j]]['set_function'] = $key_value['set_function'];
-                                }
-                                $module_info['keys'] = $keys_extra;
+                                $module_info = get_module_info($module);
                                 $mInfo = new objectInfo($module_info);
                               }
                               if ($module->check() > 0 && !$installed) {
@@ -279,22 +302,23 @@
 
                               if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
                                 if ($module->check() > 0) {
-                                  echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
+                                  $tr_attribute = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'"';
                                 } else {
-                                  echo '              <tr class="dataTableRowSelected">' . "\n";
+                                  $tr_attribute = 'class="dataTableRowSelected"';
                                 }
                               } else {
-                                echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
+                                $tr_attribute = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '\'"';
                               }
                                 ?>
+                                <tr <?php echo $tr_attribute;?>>
                                 <td class="dataTableContent"><?php echo $module->title; ?></td>
                                 <td class="dataTableContent" align="center">
-                                  <?php 
+                                  <?php
                                     if ($module->check() > 0) {
-                                      if (isset($module->enabled) && $module->enabled) { 
-                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', ICON_ARROW_RIGHT); 
-                                      } else { 
-                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', ICON_ARROW_RIGHT); 
+                                      if (isset($module->enabled) && $module->enabled) {
+                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', BUTTON_STATUS_ON);
+                                      } else {
+                                        echo xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', BUTTON_STATUS_OFF);
                                       }
                                     }
                                   ?>
@@ -317,20 +341,85 @@
                           xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ( '" . $module_key . "', '" . implode(';', $installed_modules) . "','6', '0', now())");
                         }
                         ?>
-                        <tr>
-                          <td colspan="3" class="smallText"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></td>
-                        </tr>
                       </table>
+                      <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></div>
                     </td>
                     <?php
+                    //BOC BOX RIGHT
                     $heading = array();
                     $contents = array();
-                    switch ($action) {
-                      case 'edit':
+                    if (isset($mInfo) && is_object($mInfo)) {
+                      $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                      if ($mInfo->status == '1') {
+                        $keys = '';
+                        reset($mInfo->keys);
+                        while (list(, $value) = each($mInfo->keys)) {
+                          $keys .= '<b>' . $value['title'] . '</b><br />';
+                          if ($value['use_function']) {
+                            $use_function = $value['use_function'];
+                            if (strpos($use_function, '->') !== false) {
+                              $class_method = explode('->', $use_function);
+                              if (!is_object(${$class_method[0]})) {
+                                include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                                ${$class_method[0]} = new $class_method[0]();
+                              }
+                              $keys .= xtc_call_function($class_method[1], $value['value'], ${$class_method[0]});
+                            } else {
+                              $keys .= xtc_call_function($use_function, $value['value']);
+                            }
+                          } else {
+                            $keys .=  (strlen($value['value']) > 30) ? substr($value['value'],0,30) . ' ...' : $value['value'];
+                          }
+                          $keys .= '<br /><br />';
+                        }
+                        $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
+                        (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
+                          ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
+                          : '')
+                        );
+                        $contents[] = array('text' => '<br />' . $mInfo->description);
+                        $contents[] = array('text' => '<br />' . $keys);
+                      } else {
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set. '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
+                        $contents[] = array('text' => '<br />' . $mInfo->description);
+                      }
+                    }
+
+                    if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                      echo '            <td class=boxRight" width="25%" valign="top">' . "\n";
+                      echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                      //BOF NEW MODULE PROCESSING
+                      if ($_GET['action']=='module_processing_do') {
+                        echo $infotext;
+                      }
+                      //EOF NEW MODULE PROCESSING
+                      echo '            </td>' . "\n";
+                    }
+                    //EOC BOX RIGHT
+                    ?>
+                  </tr>
+                </table>
+                <?php
+                } else {
+                //BOC MODUL PROCESS
+                ?>
+                  <div class="modulbox_wrap" style="clear:both;">
+                    <?php
+                      if (isset($_GET['module']) && !isset($mInfo)) {
+                        $heading = array();
+                        $contents = array();
+                        $class = basename($_GET['module']);
+                        include($module_directory . $class . '.php');
+                        if (xtc_class_exists($class)) {
+                          $module = new $class();
+                          $module_info = get_module_info($module);
+                          $mInfo = new objectInfo($module_info);
+                        }
+
                         $keys = '';
                         reset($mInfo->keys);
                         while (list($key, $value) = each($mInfo->keys)) {
-                          // if($value['description']!='_DESC' && $value['title']!='_TITLE'){
                           $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
                           // }
                           if ($value['set_function']) {
@@ -342,68 +431,34 @@
                         }
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                         $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                        $class = substr($file, 0, strrpos($file, '.'));
-                        $module = new $_GET['module'];
-                        $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save','post'));
+                        $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post'));
                         $contents[] = array('text' => $keys);
                         // display module fields
                         $contents[] = $module->display();
-                        break;
 
-                      default:
-                        $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                        if ($mInfo->status == '1') {
-                          $keys = '';
-                          reset($mInfo->keys);
-                          while (list(, $value) = each($mInfo->keys)) {
-                            $keys .= '<b>' . $value['title'] . '</b><br />';
-                            if ($value['use_function']) {
-                              $use_function = $value['use_function'];
-                              if (strpos($use_function, '->') !== false) {
-                                $class_method = explode('->', $use_function);
-                                if (!is_object(${$class_method[0]})) {
-                                  include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                                  ${$class_method[0]} = new $class_method[0]();
-                                }
-                                $keys .= xtc_call_function($class_method[1], $value['value'], ${$class_method[0]});
-                              } else {
-                                $keys .= xtc_call_function($use_function, $value['value']);
-                              }
-                            } else {
-                              $keys .=  (strlen($value['value']) > 30) ? substr($value['value'],0,30) . ' ...' : $value['value'];
-                            }
-                            $keys .= '<br /><br />';
+                        if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                          echo '<div class="modulbox">';
+                          echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                          //BOF NEW MODULE PROCESSING
+                          if ($action=='module_processing_do') {
+                            echo $infotext;
                           }
-                          $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
-                          $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>');
-                          $contents[] = array('text' => '<br />' . $mInfo->description);
-                          $contents[] = array('text' => '<br />' . $keys);
-                        } else {
-                          $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set. '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
-                          $contents[] = array('text' => '<br />' . $mInfo->description);
-                        }
-                        break;
-                    }
 
-                    if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                      echo '            <td width="25%" valign="top">' . "\n";
-                      echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
-                      //BOF NEW MODULE PROCESSING
-                      if ($_GET['action']=='module_processing_do') {
-                        echo $infotext;
+                          if ($action=='ready') {
+                            echo sprintf(MODULE_STEP_READY_STYLE_TEXT,(isset($module->ready_text) ? $module->ready_text : ''));
+                            echo sprintf(MODULE_STEP_READY_STYLE_BACK,xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module='.$mInfo->code))) ;
+                          }
+                          //EOF NEW MODULE PROCESSING
+                          echo '</div>';
+                        }
+
                       }
-                      if (isset($_GET['infotext'])) {
-                        echo '<div style="margin:10px; font-family:Verdana; font-size:15px; text-align:center;">'. nl2br(strip_tags(urldecode($_GET['infotext']))) .'</div>';
-                      }
-                      //EOF NEW MODULE PROCESSING
-                      echo '            </td>' . "\n";
-                    }
-                    ?>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
+                     ?>
+                  </div>
+            <?php
+            //EOC MODUL PROCESS
+            }
+            ?>
         </td>
         <!-- body_text_eof //-->
       </tr>
