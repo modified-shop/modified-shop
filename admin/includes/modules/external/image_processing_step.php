@@ -31,7 +31,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'Es werden alle Bilder in d
 /images/product_images/thumbnail_images/ <br /> <br /> neu erstellt.<br /> <br />
 
 Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'XT-Imageprocessing-New <b>-V2.01- Produktbilder</b>');
+define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing-New <b>-V2.1- Produktbilder</b>');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
 define('IMAGE_EXPORT','Dr&uuml;cken Sie Ok um die Stapelverarbeitung zu starten, dieser Vorgang kann einige Zeit dauern, auf keinen Fall unterbrechen!.');
@@ -41,26 +41,38 @@ define('IMAGE_STEP_INFO','Bilder erstellt: ');
 define('IMAGE_STEP_INFO_READY',' - Fertig!');
 define('TEXT_MAX_IMAGES','max. Bilder pro Seitenreload');
 define('TEXT_ONLY_MISSING_IMAGES','Nur fehlende Bilder erstellen');
+define('MODULE_STEP_READY_STYLE_TEXT', '<div style="margin:10px; font-family:Verdana; font-size:15px; text-align:center;">%s</div>');
+define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
 
 if ( !class_exists( "image_processing_step" ) ) {
   class image_processing_step {
     var $code, $title, $description, $enabled;
 
-
     function image_processing_step() {
-      global $order;
-
+      global $current_page;
       $this->code = 'image_processing_step';
       $this->title = MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE;
       $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, $_GET['max']);
       $this->sort_order = MODULE_STEP_IMAGE_PROCESS_SORT_ORDER;
       $this->enabled = ((MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
+      $this->module_filename = $current_page;
+      $this->properties = array();
 
+      //define used get parameters
+      $this->get_params = array('set' => $_GET['set'],
+                                'file'=> $_GET['file'],
+                                'module'=> $this->code,
+                                'start'=> 0,
+                                'action' => 'module_processing_do'
+                                );
+      //define used post parameters
+      $this->post_params = array('max_datasets','only_missing_images');
+
+      $this->ready_text = IMAGE_STEP_INFO . $_GET['count']. IMAGE_STEP_INFO_READY;
     }
 
 
-    function process($file, $offset) {
-      global $limit, $selbstaufruf, $infotext, $count;
+    function process($file) {
 
       include ('includes/classes/'.FILENAME_IMAGEMANIPULATOR);
 
@@ -81,19 +93,18 @@ if ( !class_exists( "image_processing_step" ) ) {
         }
         closedir($dir);
       }
-
+      $offset = $_GET['start'];
       $max_files = sizeof($files);
-      $step = $_GET['max'];
+      $step = $_GET['max_datasets'];
       $count = $_GET['count'];
       $limit = $offset + $step;
       for ($i=$offset; $i<$limit; $i++) {
         if ($i >= $max_files) { // FERTIG
-          $infotext = urlencode(strip_tags(IMAGE_STEP_INFO) . $count. strip_tags(IMAGE_STEP_INFO_READY)) ;
-          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module='.$this->code.'&infotext='.$infotext. '&max='. $_GET['max'])); //FERTIG
+          xtc_redirect(xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&action=ready&module='.$this->code.'&count='. $count.'&max_datasets='. $_GET['max_datasets'])); //FERTIG
         }
         $products_image_name = $files[$i]['text'];
 
-        if ($_GET['miss'] == 1) {
+        if ($_GET['only_missing_images'] == 1) {
           $flag = false;
           if (!is_file(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$files[$i]['text'])) {
             require(DIR_WS_INCLUDES . 'product_thumbnail_images.php'); $flag = true;
@@ -114,11 +125,16 @@ if ( !class_exists( "image_processing_step" ) ) {
           $count += 1;
         }
       }
-      //xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&action=save&module=image_processing_new_step&start=' . $limit));
+      $this->get_params['start'] = $limit;
+      $this->get_params['count'] = $count;
+      reset($this->post_params);
+      while(list($key, $pparam) = each($this->post_params)) {
+        $this->get_params[$pparam] = $_GET[$pparam];
+      }
       //Animierte Gif-Datei und Hinweistext
       $info_wait = '<img src="images/loading.gif"> ';
-      $infotext = '<div style="margin:10px; font-family:Verdana; font-size:15px; text-align:center;">'.$info_wait . IMAGE_STEP_INFO . $count.'</div>';
-      $selbstaufruf = '<script language="javascript" type="text/javascript">setTimeout("document.modul_continue.submit()", 3000);</script>';
+      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . $count);
+      $this->recursive_call = '<script language="javascript" type="text/javascript">setTimeout("document.modul_continue.submit()", 3000);</script>';
     }
 
     function display() {
@@ -137,7 +153,7 @@ if ( !class_exists( "image_processing_step" ) ) {
                              '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
                              '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false) . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
-                             xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=image_processing_step'))
+                             xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module=image_processing_step'))
                    );
 
     }
