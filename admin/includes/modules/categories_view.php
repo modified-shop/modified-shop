@@ -643,11 +643,21 @@
              } //WHILE loop to display products ENDS
              // ----------------------------------------------------------------------------------------------------- //
              ?>
+              <tr>
+                <td colspan="11">
+                  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                    <tr>
+                      <td class="smallText" valign="top"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
+                      <td class="smallText" align="right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
             </table>
             <!-- categories and products table ENDS -->
 
             <!-- bottom buttons -->
-            <table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding-top: 10px; border-top: 1px solid Black">
+            <table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding-top: 10px;">
               <tr>
                 <td class="smallText">
                   <?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?>
@@ -1014,18 +1024,11 @@
           } //end switch
           if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
             //display info box
-            echo '<td width="265" valign="top" style="padding-left: 5px;">' . "\n";
+            echo '<td width="25%" valign="top">' . "\n";
             echo box::infoBox($heading, $contents); // cYbercOsmOnauT - 2011-02-05 - Changed methods of the classes box and tableBox to static
             echo '</td>' . "\n";
           }
           ?>
-        </tr>
-        <tr>
-          <td class="smallText" align="center" style="padding:5px;">
-          <span style="padding-right:50px;"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></span>
-          <?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?>
-          </td>
-          <td class="smallText" valign="top">&nbsp;</td>
         </tr>
       </table>
     </td>
