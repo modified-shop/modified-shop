@@ -714,7 +714,7 @@ require (DIR_WS_INCLUDES.'head.php');
             }
           ?>
           <tr>
-            <td align="right" colspan="10">
+            <td align="right" colspan="7">
               <table border="0" cellspacing="0" cellpadding="2">
               <?php
                 for ($i = 0, $n = sizeof($order->totals); $i < $n; $i ++) {
@@ -778,7 +778,7 @@ require (DIR_WS_INCLUDES.'head.php');
         <table cellspacing="0" cellpadding="2" class="table">
           <tr>
             <td class="main">
-              <table border="1" cellspacing="0" cellpadding="5">
+              <table border="1" width="100%" cellspacing="0" cellpadding="5">
                 <tr>
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_DATE_ADDED; ?></b></td>
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
@@ -1026,7 +1026,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         }
                         ?>
                       <tr>
-                        <td colspan="5">
+                        <td colspan="7">
                           <table border="0" width="100%" cellspacing="0" cellpadding="2">
                             <tr>
                               <td class="smallText" valign="top"><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_ORDER_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></td>
