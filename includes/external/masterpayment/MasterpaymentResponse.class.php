@@ -1,13 +1,13 @@
 <?php
 /****************************************************** 
  * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentResponse.class.php 12.07.2012 - 15:57 $
+ * $Id: MasterpaymentResponse.class.php 18.06.2012 - 14:09 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -45,10 +45,8 @@ class MasterpaymentResponse
 			
 			if($this->checkResponse())
 			{		
-					
-				if((isset($_SESSION['cart_Masterpayment_ID']) && !empty($_SESSION['cart_Masterpayment_ID'])) or (substr($_SESSION['payment'], 0, strpos($_SESSION['payment'], '_')) == 'masterpayment'))
+				if(isset($_SESSION['customer_id']) && (isset($_SESSION['cart_Masterpayment_ID']) && !empty($_SESSION['cart_Masterpayment_ID'])) && (substr($_SESSION['payment'], 0, strpos($_SESSION['payment'], '_')) == 'masterpayment'))
 				{					
-				
 					if($this->response_string['response'] == 'success')
 					{
 						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'NONSSL'));
@@ -56,12 +54,12 @@ class MasterpaymentResponse
 						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error=masterpayment_' . $this->response_string['payment_method'], 'NONSSL'));
 					} elseif($this->response_string['response'] == 'cancelled') {
 						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'NONSSL'));
-					}
-										
+					}															
+				} elseif(isset($_SESSION['customer_id']) && (!isset($_SESSION['cart_Masterpayment_ID']) && empty($_SESSION['cart_Masterpayment_ID'])) && (substr($_SESSION['payment'], 0, strpos($_SESSION['payment'], '_')) != 'masterpayment')) {
+					xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'NONSSL'));
 				} elseif($this->response_string['response'] == 'success') {					
 					$this->sendMail();					
 				}
-				
 			} else {
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'NONSSL'));
 			}			
