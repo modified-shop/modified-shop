@@ -81,7 +81,7 @@
     include (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/shipping/'.$shipping_class[0].'.php');
     $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class[0].'_TEXT_TITLE'));
   } else {
-    include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+    include (DIR_FS_CATALOG . 'lang/'.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
     $shipping_method = FREE_SHIPPING_TITLE;
   }
   $smarty->assign('SHIPPING_METHOD', $shipping_method);
