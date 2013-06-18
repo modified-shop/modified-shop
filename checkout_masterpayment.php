@@ -1,13 +1,13 @@
 <?php
 /****************************************************** 
  * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: checkout_masterpayment.php 28.11.2012 22:57 $
+ * $Id: checkout_masterpayment.php 18.06.2013 11:08 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -62,18 +62,14 @@ if($action == '' or !isset($action) or $action != 'response')
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
-if($action != 'request')
-{
-	require (DIR_WS_INCLUDES . 'header.php');
-}
-
-$smarty->assign('tpl_path', CURRENT_TEMPLATE);
-
+$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
 if($action == 'response')
 {
 	require_once('includes/masterpayment/MasterpaymentResponse.class.php');  
 	$MasterpaymentResponse = new MasterpaymentResponse($_GET);
+	
+	require (DIR_WS_INCLUDES . 'header.php');
 	
 	if(@file_exists('lang/' . $_SESSION['language'] . '/masterpayment_callback.php'))
 	{
@@ -90,31 +86,23 @@ if($action == 'response')
 	
 	$main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/masterpayment_response.html');
 } elseif($action == 'request') {	
-	// load selected payment module
-	require (DIR_WS_CLASSES.'payment.php');
-	$payment_modules = new payment($_SESSION['payment']);
-	
-	// load the selected shipping module
-	require (DIR_WS_CLASSES.'shipping.php');
-	$shipping_modules = new shipping($_SESSION['shipping']);
-
-	if(!class_exists(order)){
-		require (DIR_WS_CLASSES . 'order.php');
-	}
-	
-	$order = new order();
-
-  	if(!class_exists(order_total)){  
-  		require(DIR_WS_CLASSES . 'order_total.php');
- 	}  
-  	$order_total_modules = new order_total;
-  	$order_total_modules->process();
-	
 	require_once('includes/masterpayment/MasterpaymentRequest.class.php');  
 	$masterpayment = new MasterpaymentRequest();
+	
+	if(@file_exists('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_config.php'))
+	{
+		include('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_config.php');
+	}
 
 	if($masterpayment->init())
 	{
+		if(!class_exists(order))
+		{
+			require (DIR_WS_CLASSES . 'order.php');
+		}
+	
+		$order = new order($masterpayment->order_ID);
+		
 		$smarty->assign('masterpayment_url', $masterpayment->getMasterpaymentURL());
 		$smarty->assign('request_parameters', $masterpayment->generateRequest());
 	} else {
@@ -128,6 +116,8 @@ if($action == 'response')
 	$smarty->display(CURRENT_TEMPLATE . '/module/masterpayment_request.html');	
 	exit;
 } else {
+	require (DIR_WS_INCLUDES . 'header.php');
+	
 	require_once('includes/masterpayment/MasterpaymentActions.class.php');  
 	$MasterpaymentActions = new MasterpaymentActions();
 	

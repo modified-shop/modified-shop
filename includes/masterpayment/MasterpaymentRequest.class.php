@@ -1,13 +1,13 @@
 <?php
 /****************************************************** 
  * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentRequest.class.php 28.11.2012 22:20 $
+ * $Id: MasterpaymentRequest.class.php 18.06.2013 14:04 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -35,7 +35,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 	{		
 		$retval = false;
 		
-		if(isset($_SESSION['cart_Masterpayment_ID']) && !empty($_SESSION['cart_Masterpayment_ID'])) 
+		if(isset($_SESSION['cart_Masterpayment_ID']) && !empty($_SESSION['cart_Masterpayment_ID']) && (substr($_SESSION['payment'], 0, strpos($_SESSION['payment'], '_')) == 'masterpayment')) 
 		{		
 			parent::__construct();
 		
@@ -105,7 +105,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 			$params['houseNumber'] = $this->getCustomerHouseNumber();
 			$params['zipCode'] = $order->billing['postcode'];
 			$params['city'] = $order->billing['city'];
-			$params['country'] = $order->billing['country']['iso_code_2'];
+			$params['country'] = $order->billing['country_iso_2'];
 			$params['birthdate'] = $this->getCustomerBirthdate();  		
 			$params['mobile'] = $this->getCustomerTelephone();
 			$params['email'] = $order->customer['email_address'];
@@ -197,12 +197,18 @@ class MasterpaymentRequest extends MasterpaymentActions
 	*/
 	function getBasketValue()
 	{
-		global $order, $xtPrice;
+		global $xtPrice;
+		
+		$order_total_query = xtc_db_query("select text, value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . xtc_db_input($this->order_ID) . "' and class = 'ot_total'");
+      	$order_total = xtc_db_fetch_array($order_total_query);		
+		
+		$order_tax_query = xtc_db_query("select text, value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . xtc_db_input($this->order_ID) . "' and class = 'ot_tax'");
+      	$order_tax = xtc_db_fetch_array($order_tax_query);			
 		
 		if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-			$total = $order->info['total'] + $order->info['tax'];
+			$total = $order_total['value'] + $order_tax['value'];
 		} else {
-			$total = $order->info['total'];
+			$total = $order_total['value'];
 		}
 		
 		$amount = round($total, $xtPrice->get_decimal_places($_SESSION['currency']));
