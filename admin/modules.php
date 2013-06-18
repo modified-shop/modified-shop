@@ -123,6 +123,9 @@
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action)) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
+  if (file_exists('includes/css/'.basename($_GET['module']).'.css')) {
+    echo '<link href="includes/css/'.basename($_GET['module']).'.css" rel="stylesheet" type="text/css" />';
+  }
 }
 ?>
 </head>
