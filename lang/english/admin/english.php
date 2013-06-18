@@ -153,7 +153,7 @@ define('BOX_MODULE_NEWSLETTER','Newsletter');
 define('BOX_SHIPPING_STATUS','Shipping status');
 define('BOX_SALES_REPORT','Sales Report');
 define('BOX_MODULE_EXPORT','Export Modules');
-define('BOX_MODULE_EXTERNAL','Modules');
+define('BOX_MODULE_SYSTEM','System Modules');
 define('BOX_HEADING_GV_ADMIN', 'Vouchers/Coupons');
 define('BOX_GV_ADMIN_QUEUE', 'Gift Voucher Queue');
 define('BOX_GV_ADMIN_MAIL', 'Mail Gift Voucher');
