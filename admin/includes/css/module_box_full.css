@@ -1,5 +1,9 @@
+.boxRight{
+width: 100%;
+}
+
 .modulbox{
-  width: 99%;
+  width: 850px;
   margin: 20px 4px;
 }
 .modulbox .contentTable{

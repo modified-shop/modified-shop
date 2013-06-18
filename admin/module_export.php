@@ -242,14 +242,14 @@ if (xtc_not_null($action)) {
         </td>
         <!-- body_text //-->
         <td class="boxCenter" width="100%" valign="top">
-          <div style="float:left; width:80px;"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><br /></div>
           <?php if ($set == 'export' && !xtc_not_null($action)) { ?>
           <div style="clear:both;margin:10px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
           <?php } ?>
+            <table border="0" width="100%" cellspacing="0" cellpadding="0">
+              <tr>
                 <?php if(!xtc_not_null($action)) { ?>
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
                     <td valign="top">
                       <table border="0" width="100%" cellspacing="0" cellpadding="2">
                         <tr class="dataTableHeadingRow">
@@ -345,9 +345,44 @@ if (xtc_not_null($action)) {
                       <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></div>
                     </td>
                     <?php
-                    //BOC BOX RIGHT
-                    $heading = array();
-                    $contents = array();
+                }
+                //BOC BOX RIGHT
+                $heading = array();
+                $contents = array();
+                switch ($action) {
+                  case 'edit':
+                    if (isset($_GET['module']) && !isset($mInfo)) {
+                      $heading = array();
+                      $contents = array();
+                      $class = basename($_GET['module']);
+                      include($module_directory . $class . '.php');
+                      if (xtc_class_exists($class)) {
+                        $module = new $class();
+                        $module_info = get_module_info($module);
+                        $mInfo = new objectInfo($module_info);
+                      }
+                    }
+                    $keys = '';
+                    reset($mInfo->keys);
+                    while (list($key, $value) = each($mInfo->keys)) {
+                      $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
+                      // }
+                      if ($value['set_function']) {
+                        eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                      } else {
+                        $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value']);
+                      }
+                      $keys .= '<br /><br />';
+                    }
+                    $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
+                    $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                    $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post'));
+                    $contents[] = array('text' => $keys);
+                    // display module fields
+                    $contents[] = $module->display();                          
+                    break;
+
+                  default:
                     if (isset($mInfo) && is_object($mInfo)) {
                       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                       if ($mInfo->status == '1') {
@@ -384,81 +419,31 @@ if (xtc_not_null($action)) {
                         $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set. '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
                         $contents[] = array('text' => '<br />' . $mInfo->description);
                       }
-                    }
+                    }                        
+                    break;
+                }
 
-                    if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                      echo '            <td class=boxRight" width="25%" valign="top">' . "\n";
-                      echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
-                      //BOF NEW MODULE PROCESSING
-                      if ($_GET['action']=='module_processing_do') {
-                        echo $infotext;
-                      }
-                      //EOF NEW MODULE PROCESSING
-                      echo '            </td>' . "\n";
-                    }
-                    //EOC BOX RIGHT
-                    ?>
-                  </tr>
-                </table>
-                <?php
-                } else {
-                //BOC MODUL PROCESS
+                if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                  echo '            <td class="boxRight">' . "\n";
+                  echo '<div class="modulbox">';
+                  echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                  //BOF NEW MODULE PROCESSING
+                  if ($action=='module_processing_do') {
+                    echo $infotext;
+                  }
+
+                  if ($action=='ready') {
+                    echo sprintf(MODULE_STEP_READY_STYLE_TEXT,(isset($module->ready_text) ? $module->ready_text : ''));
+                    echo sprintf(MODULE_STEP_READY_STYLE_BACK,xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module='.$mInfo->code))) ;
+                  }
+                  //EOF NEW MODULE PROCESSING
+                  echo '</div>';       
+                  echo '            </td>' . "\n";
+                }
+                //EOC BOX RIGHT
                 ?>
-                  <div class="modulbox_wrap" style="clear:both;">
-                    <?php
-                      if (isset($_GET['module']) && !isset($mInfo)) {
-                        $heading = array();
-                        $contents = array();
-                        $class = basename($_GET['module']);
-                        include($module_directory . $class . '.php');
-                        if (xtc_class_exists($class)) {
-                          $module = new $class();
-                          $module_info = get_module_info($module);
-                          $mInfo = new objectInfo($module_info);
-                        }
-
-                        $keys = '';
-                        reset($mInfo->keys);
-                        while (list($key, $value) = each($mInfo->keys)) {
-                          $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
-                          // }
-                          if ($value['set_function']) {
-                            eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
-                          } else {
-                            $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value']);
-                          }
-                          $keys .= '<br /><br />';
-                        }
-                        $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
-                        $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                        $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=save','post'));
-                        $contents[] = array('text' => $keys);
-                        // display module fields
-                        $contents[] = $module->display();
-
-                        if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                          echo '<div class="modulbox">';
-                          echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
-                          //BOF NEW MODULE PROCESSING
-                          if ($action=='module_processing_do') {
-                            echo $infotext;
-                          }
-
-                          if ($action=='ready') {
-                            echo sprintf(MODULE_STEP_READY_STYLE_TEXT,(isset($module->ready_text) ? $module->ready_text : ''));
-                            echo sprintf(MODULE_STEP_READY_STYLE_BACK,xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module='.$mInfo->code))) ;
-                          }
-                          //EOF NEW MODULE PROCESSING
-                          echo '</div>';
-                        }
-
-                      }
-                     ?>
-                  </div>
-            <?php
-            //EOC MODUL PROCESS
-            }
-            ?>
+            </tr>
+          </table>      
         </td>
         <!-- body_text_eof //-->
       </tr>
