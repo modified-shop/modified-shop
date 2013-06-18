@@ -123,6 +123,9 @@
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action)) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
+  if (file_exists('includes/css/'.basename($_GET['module']).'.css')) {
+    echo '<link href="includes/css/'.basename($_GET['module']).'.css" rel="stylesheet" type="text/css" />';
+  }
 }
 ?>
 </head>
@@ -140,12 +143,12 @@ if (xtc_not_null($action)) {
         </td>
         <!-- body_text //-->
         <td class="boxCenter" width="100%" valign="top">
-          <div style="float:left; width:80px;"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-          <div class="main">Module</div>
-          <?php if(!xtc_not_null($action)) { ?>
-          <table border="0" width="100%" cellspacing="0" cellpadding="0">
-            <tr>
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
+        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+        <div class="main">Modules</div>        
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+          <tr>
+            <?php if(!xtc_not_null($action)) { ?>
               <td valign="top">
                 <table border="0" width="100%" cellspacing="0" cellpadding="2">
                   <tr class="dataTableHeadingRow">
@@ -261,17 +264,19 @@ if (xtc_not_null($action)) {
                             </tr>
                             <?php
                           }
-                          if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) {
-                            if ($module->check() > 0) {
-                              echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'">' . "\n";
-                            } else {
-                              echo '              <tr class="dataTableRowSelected">' . "\n";
-                            }
+                          if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code)) {
+                          if ($module->check() > 0) {
+                            $tr_attribute = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class . '&action=edit') . '\'"';
                           } else {
-                            echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'">' . "\n";
+                            $tr_attribute = 'class="dataTableRowSelected"';
                           }
-                          ?>
-                          <td class="dataTableContent">
+                        } else {
+                          $tr_attribute = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '\'"';
+                        }
+                        
+                        ?>
+                          <tr <?php echo $tr_attribute;?>>
+                            <td class="dataTableContent">
                             <?php
                               echo $module->title;
                               if (isset($module->icons_available)) {
@@ -317,80 +322,12 @@ if (xtc_not_null($action)) {
                 <div class="smallText pdg2"><?php echo TEXT_MODULE_DIRECTORY . ' admin/' . $module_directory; ?></div>
               </td>
               <?php
+                }
               //BOC BOX RIGHT
               $heading = array();
               $contents = array();
-              if (isset($mInfo) && is_object($mInfo)) {
-                $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                if ($mInfo->status == '1') {
-                  $keys = '';
-                  reset($mInfo->keys);
-                  while (list(, $value) = each($mInfo->keys)) {
-                    $keys .= '<b>' . (isset($value['title'])?$value['title']:'') . '</b><br />';
-                    if ($value['use_function']) {
-                      $use_function = $value['use_function'];
-                      if (preg_match('/->/', $use_function)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
-                        $class_method = explode('->', $use_function);
-                        if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) { // DokuMan - 2011-05-10 - check if object is first set
-                          include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                          ${$class_method[0]} = new $class_method[0]();
-                        }
-                        $keys .= xtc_call_function($class_method[1], $value['value'], ${$class_method[0]});
-                      } else {
-                        $keys .= xtc_call_function($use_function, $value['value']);
-                      }
-                    } else {
-                      $keys .=  (strlen($value['value']) > 30) ? substr($value['value'],0,30) . ' ...' : $value['value'];
-                    }
-                    $keys .= '<br /><br />';
-                  }
-                  $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
-                  $contents[] = array('text' => '<br />' . $mInfo->description);
-                  if (isset($mInfo->extended_description) && $mInfo->extended_description != '') {
-                    if (($mInfo->code == "paypal" || $mInfo->code == "paypalexpress") && PAYPAL_API_USER == '') {
-                      // Special text in paypal and paypalexpress if API_USER not defined
-                      $contents[] = array('text' => '<br />' . $mInfo->extended_description);
-                    }
-                  }
-                  $contents[] = array('text' => '<br />' . $keys);
-                } else {
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
-                  $contents[] = array('text' => '<br />' . $mInfo->description);
-                }
-
-              }
-              if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                echo '            <td class=boxRight" width="25%" valign="top">' . "\n";
-                echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
-                echo '            </td>' . "\n";
-              }
-              //EOC BOX RIGHT
-              ?>
-            </tr>
-          </table>
-          <?php
-          } else {
-          //BOC MODUL PROCESS
-          ?>
-          <div class="modulbox_wrap" style="clear:both;">
-          <?php
-            if (isset($_GET['module']) && !isset($mInfo)) {
-              $heading = array();
-              $contents = array();
-              $class = basename($_GET['module']);
-              if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php')) {
-                include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php');
-                include_once($module_directory . $class . '.php');
-                if (xtc_class_exists($class)) {
-                  $module = new $class;
-                  $module_info = get_module_info($module);
-                  $mInfo = new objectInfo($module_info);
-                }
-
-                switch ($action) {
-                  // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-                  case 'removepaypal':
+              switch ($action) {
+                case 'removepaypal':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=remove'));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_DELETE_PAYPAL.'<br /><br />'.$mInfo->description);
@@ -398,38 +335,93 @@ if (xtc_not_null($action)) {
                     $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_START .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']).'">' . BUTTON_CANCEL . '</a>');
                     break;
                   // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-                  case 'edit':
-                    $keys = '';
-                    reset($mInfo->keys);
-                    while (list($key, $value) = each($mInfo->keys)) {
-                      $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
-                      if ($value['set_function']) {
-                        eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
-                      } else {
-                        $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"'); //web28- 2010-05-17 - set css definition
-                      }
-                      $keys .= '<br /><br />';
+                case 'edit':
+                  if (isset($_GET['module']) && !isset($mInfo)) {
+                    $heading = array();
+                    $contents = array();
+                    $class = basename($_GET['module']);
+                    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php')) {
+                      include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php');
+                    }  
+                    include_once($module_directory . $class . '.php');
+                    if (xtc_class_exists($class)) {
+                      $module = new $class;
+                      $module_info = get_module_info($module);
+                      $mInfo = new objectInfo($module_info);
                     }
-                    $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
+                  } 
+                  $keys = '';
+                  reset($mInfo->keys);
+                  while (list($key, $value) = each($mInfo->keys)) {
+                    $keys .= '<b>' . $value['title'] . '</b><br />' .  $value['description'].'<br />';
+                    if ($value['set_function']) {
+                      eval('$keys .= ' . $value['set_function'] . "'" . $value['value'] . "', '" . $key . "');");
+                    } else {
+                      $keys .= xtc_draw_input_field('configuration[' . $key . ']', $value['value'], 'class="inputModule"'); //web28- 2010-05-17 - set css definition
+                    }
+                    $keys .= '<br /><br />';
+                  }
+                  $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
+                  $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                  $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save'));
+                  $contents[] = array('text' => $keys);
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']) . '">' . BUTTON_CANCEL . '</a>');
+                  break;
+
+                default:
+                  if (isset($mInfo) && is_object($mInfo)) {
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save'));
-                    $contents[] = array('text' => $keys);
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']) . '">' . BUTTON_CANCEL . '</a>');
-                    break;
-                }
-              }
+                    if ($mInfo->status == '1') {
+                      $keys = '';
+                      reset($mInfo->keys);
+                      while (list(, $value) = each($mInfo->keys)) {
+                        $keys .= '<b>' . (isset($value['title'])?$value['title']:'') . '</b><br />';
+                        if ($value['use_function']) {
+                          $use_function = $value['use_function'];
+                          if (preg_match('/->/', $use_function)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+                            $class_method = explode('->', $use_function);
+                            if (!isset(${$class_method[0]}) || !is_object(${$class_method[0]})) { // DokuMan - 2011-05-10 - check if object is first set
+                              include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                              ${$class_method[0]} = new $class_method[0]();
+                            }
+                            $keys .= xtc_call_function($class_method[1], $value['value'], ${$class_method[0]});
+                          } else {
+                            $keys .= xtc_call_function($use_function, $value['value']);
+                          }
+                        } else {
+                          $keys .=  (strlen($value['value']) > 30) ? substr($value['value'],0,30) . ' ...' : $value['value'];
+                        }
+                        $keys .= '<br /><br />';
+                      }
+                      $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
+                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
+                      $contents[] = array('text' => '<br />' . $mInfo->description);
+                      if (isset($mInfo->extended_description) && $mInfo->extended_description != '') {
+                        if (($mInfo->code == "paypal" || $mInfo->code == "paypalexpress") && PAYPAL_API_USER == '') {
+                          // Special text in paypal and paypalexpress if API_USER not defined
+                          $contents[] = array('text' => '<br />' . $mInfo->extended_description);
+                        }
+                      }
+                      $contents[] = array('text' => '<br />' . $keys);
+                    } else {
+                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
+                      $contents[] = array('text' => '<br />' . $mInfo->description);
+                    }
+
+                  }
+                  break;
+              }             
               if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                echo '            <td class="boxRight">' . "\n";
                 echo '<div class="modulbox">';
                 echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
                 echo '</div>';
+                echo '            </td>' . "\n";
               }
-            }
-          ?>
-          </div>
-          <?php
-          //EOC MODUL PROCESS
-          }
-          ?>
+              //EOC BOX RIGHT
+              ?>
+            </tr>
+          </table>          
         </td>
         <!-- body_text_eof //-->
       </tr>
