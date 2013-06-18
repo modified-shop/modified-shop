@@ -16,7 +16,7 @@
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE_MODULES_EXPORT', 'Export Module');
-define('HEADING_TITLE_MODULES_EXTERNAL', 'Externe Module');
+define('HEADING_TITLE_MODULES_SYSTEM', 'System Module');
 
 define('TABLE_HEADING_MODULES', 'Module');
 define('TABLE_HEADING_SORT_ORDER', 'Reihenfolge');

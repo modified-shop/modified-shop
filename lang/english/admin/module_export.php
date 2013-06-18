@@ -15,8 +15,8 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('HEADING_TITLE_MODULES_EXPORT', 'Modules');
-define('HEADING_TITLE_MODULES_EXTERNAL', 'External Modules');
+define('HEADING_TITLE_MODULES_EXPORT', 'Export Modules');
+define('HEADING_TITLE_MODULES_SYSTEM', 'System Modules');
 
 define('TABLE_HEADING_MODULES', 'Modules');
 define('TABLE_HEADING_SORT_ORDER', 'Sort Order');

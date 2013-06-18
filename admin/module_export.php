@@ -42,11 +42,11 @@
   $set = (isset($_GET['set']) ? $_GET['set'] : '');
   if (xtc_not_null($set)) {
     switch ($set) {
-      case 'external':
-        $module_type = 'external';
-        $module_directory = DIR_WS_MODULES . 'external/';
-        $module_key = 'MODULE_EXTERNAL_INSTALLED';
-        define('HEADING_TITLE', HEADING_TITLE_MODULES_EXTERNAL);
+      case 'system':
+        $module_type = 'system';
+        $module_directory = DIR_WS_MODULES . 'system/';
+        $module_key = 'MODULE_SYSTEM_INSTALLED';
+        define('HEADING_TITLE', HEADING_TITLE_MODULES_SYSTEM);
         break;
       case 'export':
       default:
