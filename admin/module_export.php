@@ -354,6 +354,7 @@ if (xtc_not_null($action)) {
                 $contents = array();
                 switch ($action) {
                   case 'module_processing_do':
+                  case 'ready':
                   case 'edit':
                     if (isset($_GET['module']) && !isset($mInfo)) {
                       $heading = array();
