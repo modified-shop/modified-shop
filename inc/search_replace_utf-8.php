@@ -135,7 +135,7 @@ function shopstat_getRegExps(&$search, &$replace)
   $search = array_merge($search,$search3);
   }
 
-    if (SPECIAL_CHAR_MORE) {
+  if (SPECIAL_CHAR_MORE) {
   $search4 = array(  //BOF - web28 - 2010-05-12 - Weitere Sonderzeichen
             "'&(Ograve|#210);|Ò'i",    //Großes O mit Grave
             "'&(ograve|#242);|ò'i",    //Kleines o mit Grave
@@ -317,7 +317,7 @@ function shopstat_getRegExps(&$search, &$replace)
   $replace = array_merge($replace,$replace3);
   }
 
-    if (SPECIAL_CHAR_MORE) {
+  if (SPECIAL_CHAR_MORE) {
   $replace4 = array(  //BOF -web28 - 2010-09-16 - Weitere Sonderzeichen
             "O",    //Großes O mit Grave
             "o",    //Kleines o mit Grave
