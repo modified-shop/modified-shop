@@ -164,6 +164,33 @@ function shopstat_getRegExps(&$search, &$replace)
   //echo print_r($search);
   }
 
+  if (SPECIAL_CHAR_PL) {
+  $search5 = array(  //BOF - Tomcraft - 2013-06-20 - Polnische Sonderzeichen
+            "'&#260;|Ą'i",
+            "'&#261;|ą'i",
+            "'&#280;|Ę'i",
+            "'&#281;|ę'i",
+            "'&(Oacute|#211);|Ó'i",
+            "'&(oacute|#243);|ó'i",
+            "'&#262;|Ć'i",
+            "'&#263;|ć'i",
+            "'&#321;|Ł'i",
+            "'&#322;|ł'i",
+            "'&#323;|Ń'i",
+            "'&#324;|ń'i",
+            "'&#346;|Ś'i",
+            "'&#347;|ś'i",
+            "'&#377;|Ź'i",
+            "'&#378;|ź'i",
+            "'&#379;|Ż'i",
+            "'&#380;|ż'i"
+            //EOF - web28 - 2010-05-12 - Weitere Sonderzeichen
+            );
+
+  $search = array_merge($search,$search5);
+  //echo print_r($search);
+  }
+
 //*****************************************************************
 
   $replace    = array(
@@ -316,6 +343,32 @@ function shopstat_getRegExps(&$search, &$replace)
             );
 
   $replace = array_merge($replace,$replace4);
+  }
+
+  if (SPECIAL_CHAR_PL) {
+  $replace5 = array(  //BOF - Tomcraft - 2013-06-20 - Polnische Sonderzeichen
+            "A",
+            "a",
+            "E",
+            "e",
+            "O",
+            "o",
+            "C",
+            "c",
+            "t",
+            "t",
+            "N",
+            "n",
+            "S",
+            "s",
+            "Z",
+            "z",
+            "Z",
+            "z"
+            //EOF - web28 - 2010-09-16 - Weitere Sonderzeichen
+            );
+
+  $replace = array_merge($replace,$replace5);
   }
 
 }
