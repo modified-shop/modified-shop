@@ -19,6 +19,7 @@ define('SEO_SEPARATOR',':');
 //Sonderzeichen
 define('SPECIAL_CHAR_FR', true);  //Französische Sonderzeichen
 define('SPECIAL_CHAR_ES', true);  //Spanische/Italienische/Portugisische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
+define('SPECIAL_CHAR_PL', true);  //Polnische Sonderzeichen
 define('SPECIAL_CHAR_MORE', true);  //Weitere Sonderzeichen
 
 //-- Kategorienamen in Artikellink hinzufügen - Standard true
