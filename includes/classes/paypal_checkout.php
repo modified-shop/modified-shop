@@ -1020,7 +1020,7 @@ if (defined('PAYPAL_API_VERSION')) {
           for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j++) {
             $attributes_data .= ' - ' . $order->products[$i]['attributes'][$j]['option'] . ': ' . $order->products[$i]['attributes'][$j]['value'];
             $attributes_model .= '-'.xtc_get_attributes_model($order->products[$i]['id'], $order->products[$i]['attributes'][$j]['value'],$order->products[$i]['attributes'][$j]['option']);
-        }
+          }
         }
         $tmp_products .='&L_NAME'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr($order->products[$i]['name'].$attributes_data,0,127))).
                       '&L_NUMBER'.$i.'='.urlencode($this->mn_iconv($_SESSION['language_charset'], "UTF-8",substr($order->products[$i]['model'].$attributes_model,0,127))).
