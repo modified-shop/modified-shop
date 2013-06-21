@@ -168,6 +168,7 @@ define('BOX_REMOVEOLDPICS','Alte Bilder l&ouml;schen'); // Remove old pictures -
 define('BOX_JANOLAW','janolaw AGB Hosting'); // Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
 define('BOX_PARCEL_CARRIERS','Paketdienstleister'); //Dokuman - 2012-11-16 - Track & Trace functionality
 define('BOX_HAENDLERBUND','H&auml;ndlerbund AGB Service'); // Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
+define('BOX_SAFETERMS','Safeterms - AGB Service'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
