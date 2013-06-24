@@ -146,23 +146,23 @@
       for ($i = 1; $i <= $this->num_freeamount; $i ++) {
         if ($i == 1) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'DE' WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_1'");
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '10:6.90,20:11.90,31.5:13.90' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '50.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_1'");
         }
         if ($i == 2) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AT,BE,BG,CY,CZ,DK,EE,ES,FI,FR,GB,GR,HU,IE,IT,LT,LU,LV,MC,MT,NL,PL,PT,RO,SE,SI,SK' WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_2'");
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '5:17.00,10:22.00,20:32.00,31.5:42.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_2'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '100.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_2'");
         }
         if ($i == 3) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AD,AL,AM,AZ,BA,BY,CH,FO,GE,GI,GL,HR,IS,KZ,LI,MD,ME,MK,NO,RS,RU,SM,TR,UA,VA' WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_3'");
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '5:30.00,10:35.00,20:45.00,31.5:55.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_3'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '150.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_3'");
         }
         if ($i == 4) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'CA,DZ,EG,IL,JO,LB,LR,LY,MA,PM,PS,SY,TN,US' WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_4'");
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '5:35.00,10:45.00,20:65.00,31.5:85.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_4'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '200.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_4'");
         }
         if ($i == 5) {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AE,AF,AG,AI,AN,AO,AR,AU,AW,BB,BD,BF,BH,BI,BJ,BM,BN,BO,BR,BS,BT,BW,BZ,CD,CF,CG,CI,CK,CL,CM,CN,CO,CR,CU,CV,DJ,DM,DO,EC,ER,ET,FJ,FK,FM,GA,GD,GF,GH,GM,GN,GP,GQ,GT,GU,GW,GY,HK,HN,HT,ID,IN,IQ,IR,JM,JP,KE,KG,KH,KI,KM,KN,KP,KR,KW,KY,LA,LC,LK,LS,MG,MH,ML,MM,MN,MO,MP,MQ,MR,MS,MU,MV,MW,MX,MY,MZ,NA,NC,NE,NG,NI,NP,NR,NZ,OM,PA,PE,PF,PG,PH,PK,PN,PR,PY,QA,RE,RW,SA,SB,SC,SD,SG,SH,SL,SN,SO,SR,ST,SV,SZ,TC,TD,TG,TH,TJ,TM,TO,TT,TV,TW,TZ,UG,UY,UZ,VC,VE,VN,VU,WF,WS,YE,ZA,ZM,ZW' WHERE configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_5'");
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '5:40.00,10:55.00,20:85.00,31.5:115.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_5'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '250.00' WHERE  configuration_key = 'MODULE_SHIPPING_FREEAMOUNT_AMOUNT_5'");
         }
       }
       
