@@ -100,10 +100,10 @@ $system = xtc_get_system_information();
       </tr>
       <tr>
         <td>
-           <iframe src="?phpInfo" width="100%" height="700" style="border: solid 1px #a3a3a3;">
+           <iframe src="<?php echo xtc_href_link(basename($PHP_SELF), 'phpInfo', 'NONSSL'); ?>" width="100%" height="700" style="border: solid 1px #a3a3a3;">
            <p>Der verwendete Browser kann leider nicht mit inline Frames (iframe)
              umgehen:
-             <a href="?phpInfo" target="_blank">Hier geht es zur phpinfo()
+             <a href="<?php echo xtc_href_link(basename($PHP_SELF), 'phpInfo', 'NONSSL'); ?>" target="_blank">Hier geht es zur phpinfo()
              Seite vom System</a>
            </p>
          </iframe>
