@@ -186,7 +186,7 @@ if ($order_total > 0) {
   $module_smarty->assign('module_content', $selection);
 } else {
   $smarty->assign('GV_COVER', 'true');
-  ($_SESSION['no_payment']) = true;
+  $_SESSION['no_payment'] = true;
   if (isset ($_SESSION['payment'])){
     unset ($_SESSION['payment']); //web28 - 2012-04-27 -  Fix for order_total <= 0
   }
