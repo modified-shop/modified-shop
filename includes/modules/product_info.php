@@ -23,7 +23,7 @@
    ---------------------------------------------------------------------------------------*/
 
 /******* SHOPGATE **********/
-if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
+if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
   include_once DIR_FS_EXTERNAL.'shopgate/base/includes/modules/product_info.php';
 }
 /******* SHOPGATE **********/
@@ -45,7 +45,7 @@ if (!is_object($product) || !$product->isProduct()) {
 
   $info_smarty = new Smarty;
   $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  if(strpos(MODULE_PAYMENT_INSTALLED, 'klarna_partPayment.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'klarna_partPayment') === false){
+  if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'klarna_partPayment.php') !== false && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'klarna_partPayment') === false){
     include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_price.php'); // Klarna payment module integration
   }
 

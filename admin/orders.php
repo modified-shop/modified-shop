@@ -311,7 +311,7 @@
         $order_updated = true;
       }
       if ($order_updated) {
-        if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
+        if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
         /******* SHOPGATE **********/
         include_once DIR_FS_EXTERNAL.'shopgate/base/admin/orders.php';
         setShopgateOrderStatus($oID, $status);

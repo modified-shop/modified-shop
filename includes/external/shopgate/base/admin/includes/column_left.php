@@ -1,7 +1,7 @@
 <?php
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
+if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
 
 // determine configuration language: $_GET > $_SESSION > global
 $sg_language_get = (!empty($_GET['sg_language'])
