@@ -92,7 +92,7 @@ include (DIR_WS_MODULES. 'categories_listing.php');
 
 if ($result != false) {
   // get default template
-  if (!isset($category['listing_template']) || $category['listing_template'] == '' || $category['listing_template'] == 'default') {
+  if (empty($category['listing_template']) || $category['listing_template'] == 'default') {
     $files = array ();
     if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
       while (($file = readdir($dir)) !== false) {
