@@ -63,7 +63,9 @@
       </form>
     </td>
   </tr>
-<form action="<?php echo FILENAME_NEW_ATTRIBUTES; ?>" method="post" name="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"><input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>"><input type="hidden" name="action" value="change">
+<form action="<?php echo FILENAME_NEW_ATTRIBUTES; ?>" method="post" name="SUBMIT_ATTRIBUTES" enctype="multipart/form-data">
+<input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
+<input type="hidden" name="action" value="change">
 <?php
 echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
 
@@ -72,8 +74,10 @@ echo '<input type="hidden" name="products_options_id" value="' . (isset($product
 echo '<input type="hidden" name="option_order_by" value="' . $option_order_by . '">';
 $_POST['cpath'] = isset($_GET['cpath']) ? $_GET['cpath'] : (isset($_POST['cpath']) ? $_POST['cpath']: '') ;
 if ($_POST['cpath'] != '') {
-  $param ='cPath='. $_POST['cpath'] . '&current_product_id='. $_POST['current_product_id'];
+  $param ='cPath='. $_POST['cpath'] . '&current_product_id='. $_POST['current_product_id'] . $oldaction.$oldpage ;
   echo '<input type="hidden" name="cpath" value="' . $_POST['cpath'] . '">';
+  echo '<input type="hidden" name="oldaction" value="' . str_replace('&oldaction=','',$oldaction) . '">';
+  echo '<input type="hidden" name="page" value="' . str_replace('&page=','',$oldpage) . '">';
 } else {
   $param = '';
 }
