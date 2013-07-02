@@ -720,8 +720,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
       if (isset($_POST['coupon_desc'][$language_id])) $coupon_desc[$language_id] = $_POST['coupon_desc'][$language_id];
       //BOF  web28 - 2010-07-04 FIX error handling
       $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
-      $input_name .= $lang_img . '&nbsp;'. xtc_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', $coupon_name[$language_id], 'style="width: 277px"') . '&nbsp;<br />';
-      $input_desc .= $lang_img . '&nbsp;'. xtc_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','3', $coupon_desc[$language_id], 'style="width: 277px"') . '&nbsp;<br />';
+      $input_name .= $lang_img . '&nbsp;'. xtc_draw_input_field('coupon_name[' . $languages[$i]['id'] . ']', $coupon_name[$language_id], 'style="width: 276px"') . '&nbsp;<br />';
+      $input_desc .= $lang_img . '&nbsp;'. xtc_draw_textarea_field('coupon_desc[' . $languages[$i]['id'] . ']','physical','24','3', $coupon_desc[$language_id], 'style="width: 276px"') . '&nbsp;<br />';
     }
     //EOF  web28 - 2010-03-11  new table design
 
