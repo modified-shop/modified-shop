@@ -199,7 +199,7 @@ foreach($cat_array as $lang_array) {
     foreach($lang_array as $cat_id => $cat_data) { 
         $lang_param = ($cat_data['code'] != DEFAULT_LANGUAGE) ? '&language='.$cat_data['code'] : ''; 
         $date = ($cat_data['last_modified'] != NULL) ? $cat_data['last_modified'] : $cat_data['date_added']; 
-         
+        $languages_id = $cat_data['language_id'];
         /** 
          * @author Timo Paul (mail[at]timopaul.biz) 
          * @since Saturday, 16-th May 2009 
@@ -236,7 +236,7 @@ $stmt = "
 $product_result = xtc_db_query($stmt); 
 if (xtc_db_num_rows($product_result) > 0) { 
     while($product_data = xtc_db_fetch_array($product_result)) { 
-
+        $languages_id = $product_data['language_id'];
         /** 
          * @author Timo Paul (mail[at]timopaul.biz) 
          * @since Saturday, 16-th May 2009 
