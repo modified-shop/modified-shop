@@ -513,11 +513,8 @@
       // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
       $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart-php function get_products
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
-        $products_price=$xtPrice->xtcGetPrice($products[$i]['id'],
-                                        $format=false,
-                                        $products[$i]['quantity'],
-                                        $products[$i]['tax_class_id'],
-                                        '')+$xtPrice->xtcFormat($_SESSION['cart']->attributes_price($products[$i]['id']),false);
+        
+        $products_price = $products[$i]['price']; //single plain price including attributes_price
 
         //using short description  if order description is not defined or empty
         $products[$i]['short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
