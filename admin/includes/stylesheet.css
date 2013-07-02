@@ -271,6 +271,9 @@ body {
   border-bottom: 1px dashed #cccccc;
   text-align: left;
 }
+.dataTableConfig a {
+  font-size: 12px; 
+}
 td.categories_view_data {
   font-family: Verdana, Arial, sans-serif; 
   font-size: 10px; 
