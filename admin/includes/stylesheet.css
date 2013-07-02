@@ -86,7 +86,7 @@ border-color: #000000;
 .dataTableHeadingContent {
 
     font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-size: 10px;
+    font-size: 10px !important;
     font-weight: bold;
     padding: 5px;
     background-color: #f1f1f1;
@@ -108,7 +108,7 @@ background-color: #F9F0F1;
  
 .dataTableContent {
  font-family: Verdana, Arial, sans-serif; 
- font-size: 10px; 
+ font-size: 10px !important; 
  color: #000000;
  vertical-align: middle;
  border-bottom: 1px dashed #cccccc;
@@ -241,13 +241,13 @@ div.stock_warn {
 .messageStackSuccess { font-family: Verdana, Arial, sans-serif; font-size: 10px; background-color: #99ff00; }
 
 /* forms */
-CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { font-family: Verdana, Arial, sans-serif; font-size: 10px; border: solid 1px #a3a3a3;}
+CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE { font-family: Verdana, Arial, sans-serif; font-size: 12px; border: solid 1px #a3a3a3;}
 INPUT[type=checkbox], INPUT[type=radio] { border: none; }
 FORM { display: inline; }
 
 /* account */
 .formArea { background-color: #f1f1f1; border-color: #cccccc; border-style: solid; border-width: 1px; }
-.formAreaTitle { font-family: Tahoma, Verdana, Arial, sans-serif; font-size: 10px; font-weight: bold; }
+.formAreaTitle { font-family: Tahoma, Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; }
 
 /* attributes */
 .attributes-odd { background-color: #f4f7fd; }
@@ -258,7 +258,7 @@ FORM { display: inline; }
 .oldPrice { text-decoration: line-through; }
 .fieldRequired { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
 .smallText { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
-.main { font-family: Verdana, Arial, sans-serif; font-size: 10px; }
+.main { font-family: Verdana, Arial, sans-serif; font-size: 12px; }
 .errorText { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #ff0000; }
 
 /*Eingabefelder Zahlungs- u. Versandmodule*/
