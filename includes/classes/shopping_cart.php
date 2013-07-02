@@ -516,7 +516,7 @@ class shoppingCart {
           } else {
             $products_price = $xtPrice->xtcGetPrice($products['products_id'],
                                 $format = false,
-                                $this->contents[$products_id]['qty'],
+                                $this->contents[$products_id]['qty'], //only used by xtcGetGraduatedPrice
                                 $products['products_tax_class_id'],
                                 $products['products_price']);
 
