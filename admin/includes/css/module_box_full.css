@@ -20,7 +20,7 @@ width: 100%;
 /* info box */
 .modulbox .infoBoxHeading {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	font-size: 12px;
 	font-weight: bold;
   line-height:28px;
 	padding: 0px 5px;
@@ -30,7 +30,7 @@ width: 100%;
 
 .modulbox .infoBoxContent {
 	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 10px;
+	font-size: 12px;
   line-height:18px;
 	color: #000;
   padding: 5px;

@@ -239,7 +239,7 @@ body {
 }
 .dataTableHeadingContent {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 10px;
+  font-size: 10px !important;
   font-weight: bold;
   padding: 5px;
   background-color: #f1f1f1;
@@ -257,7 +257,7 @@ body {
 }
 .dataTableContent {
   font-family: Verdana, Arial, sans-serif; 
-  font-size: 10px; 
+  font-size: 10px !important; 
   color: #000000;
   vertical-align: middle;
   border-bottom: 1px dashed #cccccc;
@@ -412,7 +412,7 @@ div.stock_warn {
 /* forms */
 CHECKBOX, INPUT, RADIO, SELECT, TEXTAREA, FILE {
   font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   border: solid 1px #a3a3a3;
 }
 INPUT[type=checkbox], INPUT[type=radio] {
@@ -431,7 +431,7 @@ FORM {
 }
 .formAreaTitle {
   font-family: Tahoma, Verdana, Arial, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
   font-weight: bold;
 }
 
@@ -461,7 +461,7 @@ FORM {
 }
 .main {
   font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
+  font-size: 12px;
 }
 .errorText {
   font-family: Verdana, Arial, sans-serif;

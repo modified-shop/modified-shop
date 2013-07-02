@@ -119,11 +119,11 @@ require (DIR_WS_INCLUDES.'head.php');
       }
       .startphp td {
         font-family: Verdana, Arial, Helvetica, sans-serif;
-        font-size: 10px;
+        font-size: 12px;
         padding:5px;
       }
       .feedtitle a {
-        font-size:10px;
+        font-size:12px;
         font-weight:bold;
       }
       .feedtitle ul li {
@@ -331,7 +331,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                     $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
                                     $rss->addAttribute('encoding', 'UTF-8');
                                     ?>
-                                    <div style="background:#F0F1F1;font-size:10px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
+                                    <div style="background:#F0F1F1;font-size:12px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
                                       <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo $rss->channel->title; ?></a>
                                       <br/>
                                       <?php echo $rss->channel->description; ?>
@@ -340,7 +340,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                     <?php
                                     for ($i=0; $i<=3; $i++) {
                                     ?>
-                                      <div class="feedtitle" align="left" style="padding:5px;font-size:10px;">
+                                      <div class="feedtitle" align="left" style="padding:5px;font-size:12px;">
                                         <a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>"><?php echo $rss->channel->item[$i]->title; ?></a>
                                         <br/>
                                         <?php echo $rss->channel->item[$i]->description; ?>
@@ -350,13 +350,13 @@ require (DIR_WS_INCLUDES.'head.php');
                                     }
                                   } else {
                                   ?>
-                                    <div style="background:#F0F1F1;font-size:10px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
+                                    <div style="background:#F0F1F1;font-size:12px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
                                       <a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a>
                                       <br/>
                                       <?php echo RSS_FEED_DESCRIPTION; ?>
                                     </div>
                                     <br/>
-                                    <div class="feedtitle" align="left" style="padding:5px;font-size:10px;">
+                                    <div class="feedtitle" align="left" style="padding:5px;font-size:12px;">
                                       <?php echo RSS_FEED_ALTERNATIVE; ?>
                                     </div>
                                   <?php
