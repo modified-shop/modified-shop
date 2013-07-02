@@ -59,9 +59,9 @@ require (DIR_WS_INCLUDES.'head.php');
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
         <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">          
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
+          <!-- left_navigation //-->
+          <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+          <!-- left_navigation_eof //-->
         </td>
         <!-- body_text //-->
         <td class="boxCenter" width="100%" valign="top">
