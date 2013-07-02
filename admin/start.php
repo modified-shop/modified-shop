@@ -122,6 +122,11 @@ require (DIR_WS_INCLUDES.'head.php');
         font-size: 12px;
         padding:5px;
       }
+      .startphp td div a, .startphp td.infoBoxHeading a {
+        font-family: Verdana, Arial, Helvetica, sans-serif;
+        font-size: 12px;
+        padding:0px;
+      }
       .feedtitle a {
         font-size:12px;
         font-weight:bold;
@@ -342,7 +347,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                     ?>
                                       <div class="feedtitle" align="left" style="padding:5px;font-size:12px;">
                                         <a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>"><?php echo $rss->channel->item[$i]->title; ?></a>
-                                        <br/>
+                                        <br/><br/>
                                         <?php echo $rss->channel->item[$i]->description; ?>
                                       </div>
                                       <hr noshade="noshade">
