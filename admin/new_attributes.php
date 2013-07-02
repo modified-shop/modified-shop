@@ -27,15 +27,19 @@ require(DIR_WS_MODULES.'new_attributes_config.php');
 require(DIR_FS_INC .'xtc_findTitle.inc.php');
 require_once(DIR_FS_INC . 'xtc_format_filesize.inc.php');
 
+$oldaction = isset($_GET['oldaction']) ? '&oldaction='.$_GET['oldaction'] : (isset($_POST['oldaction']) ? '&oldaction='.$_POST['oldaction']: '');
+$oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']) ? '&page='.$_POST['page']: '') ;
+
 //nach Speichern zur Kontrolle neu laden
 if (isset($_POST['products_options_id']) && $_POST['action'] == 'change') {
    include(DIR_WS_MODULES.'new_attributes_change.php');
-   xtc_redirect(xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id']));
+   xtc_redirect(xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage));
 }
+
 //nach Abbrechen zurück zur Kategorie
 if (isset($_GET['cPath'])) {
    include(DIR_WS_MODULES.'new_attributes_change.php');
-   xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id']));
+   xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . '&pID=' . $_GET['current_product_id'] . str_replace('old','',$oldaction). $oldpage));
 }
 //Aufruf über Icon aus Katgorie/Artikelübersicht
 if (isset($_GET['action']) && !isset($_POST['action'])) {
@@ -54,12 +58,10 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- body //-->
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
+        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">          
+          <!-- left_navigation //-->
+          <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+          <!-- left_navigation_eof //-->
         </td>
         <!-- body_text //-->
         <td  class="boxCenter" width="100%" valign="top">
