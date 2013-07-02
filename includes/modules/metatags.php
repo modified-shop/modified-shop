@@ -175,22 +175,22 @@
     if (version_compare(PHP_VERSION, '5.3.4', '<')) {
       $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
     } else {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,strtoupper($_SESSION['language_charset']));
+      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,get_supported_charset());
     }
     $translation_table = array_flip($translation_table);
     $Return= strtr($Text,$translation_table);
     return preg_replace( '/&#(\d+);/me',"chr('\\1')",$Return);
   }
   function metaHtmlEntities($Text) {
-    //BOF web28 2011-12-02 UFT-8
-    if($_SESSION['language_charset'] == 'utf-8') {
+    //BOF web28 2011-12-02 UTF-8
+    if(strtoupper($_SESSION['language_charset']) == 'UTF-8') {
       return $Text;
     }
-    //EOF web28 2011-12-02 UFT-8
+    //EOF web28 2011-12-02 UTF-8
     if (version_compare(PHP_VERSION, '5.3.4', '<')) {
       $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
     } else {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,strtoupper($_SESSION['language_charset']));
+      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,get_supported_charset());
     }
     $translation_table[chr(38)] = '&';
     return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&amp;",strtr($Text,$translation_table));
@@ -201,7 +201,7 @@
   function prepareWordArray($Text) {
     //$Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',strip_tags($Text));
     $Text = str_replace(array('&nbsp;','\t','\r','\n','\b'),' ',preg_replace("/<[^>]*>/",' ',$Text)); // <-- Besser bei Zeilenumbrüchen
-    $Text = htmlentities(metaNoEntities(strtolower($Text)), ENT_QUOTES, strtoupper($_SESSION['language_charset']));
+    $Text = encode_htmlentities(metaNoEntities(strtolower($Text)), ENT_QUOTES, $_SESSION['language_charset']);    
     $Text = preg_replace("/\s\-|\-\s/",' ',$Text); // <-- Gegen Trenn- und Gedankenstriche
     $Text = preg_replace("/(&[^aoucizens][^;]*;)/",' ',$Text);
     $Text = preg_replace("/[^0-9a-z|\-|&|;]/",' ',$Text); // <-- Bindestriche drin lassen
@@ -281,7 +281,7 @@
         $Text = substr($Text,0,$Length).$Abk;
       }
     }
-    return htmlspecialchars($Text, ENT_QUOTES, strtoupper($_SESSION['language_charset']));
+    return encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
   }
 // ---------------------------------------------------------------------------------------
 //  metaTitle und metaKeyWords, Rückgabe bzw. Formatierung
