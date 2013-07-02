@@ -58,4 +58,13 @@ function decode_htmlspecialchars ($string, $flags = ENT_COMPAT, $encoding = '')
   return htmlspecialchars_decode($string, $flags , $encoding);
 }
 
-
+/**
+ * get_supported_charset
+ */
+function get_supported_charset($charset = '')
+{
+  $charset = !empty($charset) ? $charset : (isset($_SESSION['language_charset']) ? $_SESSION['language_charset'] : null);
+  $supported_charsets = explode(',',strtoupper(ENCODE_DEFINED_CHARSETS));
+  $default_charset = isset($charset) && in_array(strtoupper($charset), $supported_charsets) ? strtoupper($charset) : ENCODE_DEFAULT_CHARSET;
+  return $default_charset;
+}
