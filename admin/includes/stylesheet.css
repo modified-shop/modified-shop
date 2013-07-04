@@ -188,7 +188,7 @@ input.button {
 	height: 22px;
 }
 
-/* IE Fix */
+/* IE 6 Fix */
 * html input.button { padding: 1px 0 1px 0; margin: 1px 1px; line-height: 12px; }
 * html button.button { padding: 1px 0 0 0; margin: -2px 1px; line-height: 14px; }
 
@@ -212,17 +212,28 @@ span.button    {
 	line-height: 22px;
 }
 
-* html a.button:link,    
-* html a.button:visited, 
-* html a.button:active, 
-* html a.button:hover,   {
-	line-height: 16px;
-	padding: 2px 8px 1px 8px;
-	height: 22px;	
+/* IE 7 Fix */
+* + html a.button:link,    
+* + html a.button:visited, 
+* + html a.button:active, 
+* + html a.button:hover   {
+	line-height: 22px;
+	padding: 4px 8px;
+	height: 22px;
 	margin-bottom: 0px;
 }
 
-span.button { border: 1px solid Black; line-height: 18px; padding: 3px 5px 3px 5px; background-color: #F1F1F1; font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; font-weight: normal; text-decoration: none; }
+span.button { 
+border: 1px solid Black; 
+line-height: 18px; 
+padding: 3px 5px 3px 5px; 
+background-color: #F1F1F1; 
+font-family: Verdana, Arial, sans-serif; 
+font-size: 10px; 
+color: #000000; 
+font-weight: normal; 
+text-decoration: none; 
+}
 
 /* Admin Buttons EOF */
 
@@ -274,6 +285,27 @@ width: 280px;
 height: 60px;
 }
 
+/* - web28 - 2010-07-22 - td styles coupon_admin.php */
+.td_left{
+  border: 1px solid #a3a3a3;
+  padding: 5px;
+  min-width: 20%;
+  vertical-align: top;
+}
+
+.td_middle{
+  border:1px solid #a3a3a3;  
+  padding:5px;
+  min-width: 20%;
+  vertical-align: top;
+}
+
+.td_right{
+  border:1px solid #a3a3a3;  
+  padding:5px;
+  min-width: 60%;
+  vertical-align: top;
+}
 /*NEW TABLE DESIGN*/
 .borderall td{
 border: 1px solid #a3a3a3;
@@ -345,11 +377,12 @@ font-family: Verdana, Arial, sans-serif;
 font-size: 12px; 
 color: #000; 
 font-weight: bold;
-padding: 4px 6px 0;
+padding: 1px 6px;
 border: 1px solid #a3a3a3;
 margin: 0 -1px -1px 0;
 background-color: #D0D0D0;
-height: 18px;
+height: 20px;
+line-height: 20px;
 }
 .pageHeadingTaba{
 padding: 1px 6px;
@@ -357,6 +390,7 @@ border: 1px solid #a3a3a3;
 margin: 0 -1px -1px 0;
 background: transparent;
 height: 20px; 
+line-height: 20px;
 }
 .pageHeadingTaba a{
 font-size: 12px; 
@@ -373,4 +407,12 @@ padding: 4px;
 .content-manager-width{
 max-width:1240px; 
 min-width:980px;
+}
+.customers-groups{
+width: 380px; 
+border: 1px solid #ff0000;
+background:#FFCC33;
+}
+table.collapse{
+border-collapse:collapse;
 }
