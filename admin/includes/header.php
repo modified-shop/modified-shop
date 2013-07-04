@@ -29,18 +29,13 @@
   ((strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email']=NULL : false);
   
   // Admin Language Switch
-  if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-    include(DIR_WS_CLASSES . 'language.php');
-    $lng = new language;
-  }
   $languages_string = '';
   if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
-    reset($lng->catalog_languages);
-    if (count($lng->catalog_languages) > 1) {
-      while (list($key, $value) = each($lng->catalog_languages)) {
-        if ( $value['status'] != 0 ){
-          $languages_string .= '&nbsp;<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $key, 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
-        }
+
+    $ls_languages = xtc_get_languages();
+    if (count($ls_languages) > 1) {
+      while (list($key, $value) = each($ls_languages)) {
+        $languages_string .= '&nbsp;<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
       }
     }
   }
