@@ -1,16 +1,17 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: languages.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: languages.php 5011 2013-07-04 15:22:37Z web28 $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(languages.php,v 1.10 2002/01/19); www.oscommerce.com 
    (c) 2003	 nextcommerce (languages.php,v 1.5 2003/08/14); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -37,8 +38,8 @@ define('TEXT_INFO_LANGUAGE_CHARSET_INFO','meta-content:');
 
 define('ERROR_REMOVE_DEFAULT_LANGUAGE', 'Fehler: Die Standardsprache darf nicht gel&ouml;scht werden. Bitte definieren Sie eine neue Standardsprache und wiederholen Sie den Vorgang.');
 
-// BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
 define('TEXT_INFO_LANGUAGE_STATUS', 'Status:');
 define('TABLE_HEADING_LANGUAGE_STATUS', 'Status');
-// EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+define('TEXT_INFO_LANGUAGE_STATUS_ADMIN', 'Status Admin:');
+define('TABLE_HEADING_LANGUAGE_STATUS_ADMIN', 'Status Admin');
 ?>
