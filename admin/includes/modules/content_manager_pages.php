@@ -322,7 +322,7 @@ if (!$action) {
             <td class="td_left"><?php echo TEXT_FILE_FLAG; ?></td>
             <td class="td_right"><?php echo xtc_draw_pull_down_menu('file_flag',$file_flag_array,$content['file_flag']); ?></td>
           </tr>
-          <?php if ($action != 'new' && CONTENT_CHILDS_ACTIV) { //Content Parent/Child  ?>
+          <?php if ($action != 'new' && CONTENT_CHILDS_ACTIV == 'true') { //Content Parent/Child  ?>
             <tr>
               <td class="td_left"><?php echo TEXT_PARENT; ?></td>
               <td class="td_right"><?php echo xtc_draw_pull_down_menu('parent',$content_data_array,$content['parent_id']); ?><?php echo check_content_childs($content['content_id'],$languages_id) ? '' : xtc_draw_checkbox_field('parent_check', 'yes', ($content['parent_id'] > 0 ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></td>

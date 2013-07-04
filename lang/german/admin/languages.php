@@ -38,8 +38,8 @@ define('TEXT_INFO_LANGUAGE_CHARSET_INFO','meta-content:');
 
 define('ERROR_REMOVE_DEFAULT_LANGUAGE', 'Fehler: Die Standardsprache darf nicht gel&ouml;scht werden. Bitte definieren Sie eine neue Standardsprache und wiederholen Sie den Vorgang.');
 
-// BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
 define('TEXT_INFO_LANGUAGE_STATUS', 'Status:');
 define('TABLE_HEADING_LANGUAGE_STATUS', 'Status');
-// EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+define('TEXT_INFO_LANGUAGE_STATUS_ADMIN', 'Status Admin:');
+define('TABLE_HEADING_LANGUAGE_STATUS_ADMIN', 'Status Admin');
 ?>

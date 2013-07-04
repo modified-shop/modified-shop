@@ -22,7 +22,7 @@
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
 
   if(!defined('CONTENT_CHILDS_ACTIV')) {
-    define('CONTENT_CHILDS_ACTIV',true);
+    define('CONTENT_CHILDS_ACTIV','true');
   }
   
   $set = (isset($_GET['set']) ? $_GET['set'] : '');
