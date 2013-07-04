@@ -207,9 +207,6 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 // PHPMailer
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
-if (EMAIL_TRANSPORT == 'smtp') {
-  require_once (DIR_WS_CLASSES.'class.smtp.php');
-}
 
 // move to xtc_db_queryCached.inc.php
 function xtDBquery($query) {
