@@ -226,18 +226,11 @@
         </tr>
       </table>
 
-      <!-- BOF - Tomcraft - 2009-11-06 - Included specials //-->
       <?php
       if (file_exists("includes/modules/categories_specials.php")) {
         require_once("includes/modules/categories_specials.php");
         showSpecialsBox();
-      }
       ?>
-      <!-- EOF - Tomcraft - 2009-11-06 - Included specials //-->
-
-      <!-- BOF - Tomcraft - 2009-11-02 - TOP SAVE AND CANCEL BUTTON //-->
-      <?php
-      if (file_exists("includes/modules/categories_specials.php")) { ?>
       <div class="main" style="float:left;">
         <div id="butSpecial">&nbsp;</div>
       </div>
@@ -245,22 +238,22 @@
         document.getElementById('butSpecial').innerHTML= '<a href="JavaScript:showSpecial()" class="button">Sonderangebot &raquo;</a>';
       </script>
       <?php } ?>
+      
       <div class="main" style="margin-bottom:10px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         &nbsp;&nbsp;
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
         <?php
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content') . '">' . BUTTON_NEW_CONTENT . '</a>';
+          echo '&nbsp;&nbsp;<a class="button" href="<'. xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
-      <!-- EOF - Tomcraft - 2009-11-02 - TOP SAVE AND CANCEL BUTTON //-->
 
-
-      <!-- BOF - Tomcraft - 2009-11-02 - Block2 //-->
+      <!-- BOF Block2 //-->
       <div style="width: 860px; padding:5px;clear:both;">
         <link rel="stylesheet" type="text/css" href="includes/lang_tabs_menu/lang_tabs_menu.css">
         <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
@@ -337,6 +330,7 @@
           echo ('</div>');
         } ?>
       </div>
+      <!-- EOF Block2 //-->
 
       <div style="clear:both;"></div>
 
@@ -347,14 +341,14 @@
       ?>
 
       <div style="width: 860px; padding:5px;">
-        <!-- BOF - Tomcraft - 2009-11-02 - Product images //-->
+         <!-- BOF Product images //-->
         <div class="main" style="margin:10px 5px 5px 5px"><?php echo HEADING_PRODUCT_IMAGES; ?></div>
           <table width="100%" border="0" bgcolor="f3f3f3" style="border: 1px solid #aaaaaa; padding:5px;">
             <?php
             include (DIR_WS_MODULES.'products_images.php');
             ?>
           </table>
-        <!-- EOF - Tomcraft - 2009-11-02 - Product images //-->
+        <!-- EOF Product images //-->
 
         <?php
         //Customers group block
@@ -373,14 +367,12 @@
           </table>
           <?php
         }
-        ?>
 
-        <?php
         //Price options
         include(DIR_WS_MODULES.'group_prices.php');
         ?>
 
-        <!-- BOF - Tomcraft - 2009-11-02 - Save //-->
+        <!-- BOF Save //-->
         <div style="text-align:right; margin-top:10px;">
           <?php
           if($form_action == 'insert_product'){
@@ -400,7 +392,7 @@
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
           ?>
         </div>
-        <!-- EOF - Tomcraft - 2009-11-02 - Save //-->
+        <!-- EOF Save //-->
       </div>
     </td>
   </tr>
