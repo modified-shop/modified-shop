@@ -226,7 +226,10 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
                          SET categories_image = ''
                        WHERE categories_id    = '".(int) $categories_id."'");
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); //web28 2012-04-14 new redirect
+    //web28 2012-11-30 new redirect
+    if ($action == 'insert') {
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
+    }
     } // insert_category ends
 
     // ----------------------------------------------------------------------------------------------------- //
@@ -1166,35 +1169,68 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
     }
 
     // ----------------------------------------------------------------------------------------------------- //
-    //set products images file rights
-    function set_products_images_file_rights($image_name) {
-      @ chmod(DIR_FS_CATALOG_INFO_IMAGES.$image_name, 0644);
-      @ chmod(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image_name, 0644);
-      @ chmod(DIR_FS_CATALOG_POPUP_IMAGES.$image_name, 0644);
-    }
 
-    // ----------------------------------------------------------------------------------------------------- //
+  //set products images file rights
+  function set_products_images_file_rights($image_name) {
+    @ chmod(DIR_FS_CATALOG_INFO_IMAGES.$image_name, 0644);
+    @ chmod(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image_name, 0644);
+    @ chmod(DIR_FS_CATALOG_POPUP_IMAGES.$image_name, 0644);
+  }
 
-    function create_permission_checkboxes($t_array) {
-      $customers_statuses_array = xtc_get_customers_statuses();
-      $customers_statuses_array = array_merge(array (array ('id' => 'all', 'text' => TXT_ALL)), $customers_statuses_array);
-      $input = '';
-      for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
-        $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? 'checked ' : '';
-        $preselect = $i==0 ? true : false; //preselect all
-        //$preselect = $customers_statuses_array[$i]['id']=='0' ? true : false; //preselect admin
-        if( !isset($_GET['pID']) && !isset($_GET['cID']) && $preselect) {
-          $checked = 'checked ';
-        }
-        $input .= '<input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />'. PHP_EOL;
+  // ----------------------------------------------------------------------------------------------------- //
+
+  function create_permission_checkboxes($t_array) {
+    $customers_statuses_array = xtc_get_customers_statuses();
+    $customers_statuses_array = array_merge(array (array ('id' => 'all', 'text' => TXT_ALL)), $customers_statuses_array);
+    $input = '';
+    for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
+      $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? 'checked ' : '';
+      $preselect = $i==0 ? true : false; //preselect all
+      //$preselect = $customers_statuses_array[$i]['id']=='0' ? true : false; //preselect admin
+      if( !isset($_GET['pID']) && !isset($_GET['cID']) && $preselect) {
+        $checked = 'checked ';
       }
-      return $input;
-
+      $input .= '<input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />'. PHP_EOL;
     }
-    // ----------------------------------------------------------------------------------------------------- //
+    return $input;
 
+  }
+
+  // ----------------------------------------------------------------------------------------------------- //
+
+  function get_categories_desc_fields ($category_id, $language_id) {
+    if (!empty($category_id)) {
+      if (empty($language)) {
+        $language = $_SESSION['languages_id'];
+      }
+      $category_query = xtc_db_query("SELECT *
+                                        FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                       WHERE categories_id = '".$category_id."'
+                                         AND language_id = '".$language_id."'
+                                    ");
+      return xtc_db_fetch_array($category_query);
+    }
+  }
+
+  // ----------------------------------------------------------------------------------------------------- //
+
+  function get_products_desc_fields ($product_id, $language_id) {
+    if (!empty($product_id)) {
+      if (empty($language)) {
+        $language = $_SESSION['languages_id'];
+      }
+      $product_query = xtc_db_query("SELECT *
+                                       FROM " . TABLE_PRODUCTS_DESCRIPTION . "
+                                      WHERE products_id = '" . $product_id . "'
+                                        AND language_id = '" . $language_id . "'
+                                    ");
+      return xtc_db_fetch_array($product_query);
+    }
+  }
+  // ----------------------------------------------------------------------------------------------------- //
+  
   function set_page_parameter() {
     $this->page_parameter = isset($_GET['page']) ? '&page='.(int)$_GET['page'] : '';
   }
-  } // class categories ENDS
+} // class categories ENDS
 ?>
