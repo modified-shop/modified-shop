@@ -362,12 +362,13 @@ span.button    {
   line-height: 22px;
 }
 
-* html a.button:link,    
-* html a.button:visited, 
-* html a.button:active, 
-* html a.button:hover,   {
-  line-height: 16px;
-  padding: 2px 8px 1px 8px;
+/* IE 7 Fix */
+* + html a.button:link,    
+* + html a.button:visited, 
+* + html a.button:active, 
+* + html a.button:hover   {
+  line-height: 22px;
+  padding: 4px 8px;
   height: 22px;  
   margin-bottom: 0px;
 }
@@ -612,6 +613,13 @@ border: 1px solid #a3a3a3;
 min-width:800px;
 }
 
+.dataTableContentSelected {
+font-family: Verdana, Arial, sans-serif;
+font-size: 10px;
+color: #000000;
+vertical-align: middle;
+background-color: #CCCCCC;
+}
 .flt-l{
 float:left;
 }
@@ -625,6 +633,16 @@ clear: both;
 padding:2px;
 }
 
+.table-main{
+width: 100%;
+padding: 2px;
+}
+
+.boxCenter{
+width: 100%;
+vertical-align: top;
+padding: 2px;
+}
 .boxRight{
 width: 25%;
 vertical-align: top;
@@ -633,4 +651,48 @@ vertical-align: top;
 float:left;
 width:80px;
 margin-bottom:5px;
+}
+.pageHeadingTab{ 
+font-family: Verdana, Arial, sans-serif; 
+font-size: 12px; 
+color: #000; 
+font-weight: bold;
+padding: 1px 6px;
+border: 1px solid #a3a3a3;
+margin: 0 -1px -1px 0;
+background-color: #D0D0D0;
+height: 20px;
+line-height: 20px;
+}
+.pageHeadingTaba{
+padding: 1px 6px;
+border: 1px solid #a3a3a3;
+margin: 0 -1px -1px 0;
+background: transparent;
+height: 20px; 
+line-height: 20px;
+}
+.pageHeadingTaba a{
+font-size: 12px; 
+color: #999;
+font-weight: bold;
+text-decoration: none;
+cursor: pointer; 
+}
+.borderTab{
+border: 1px solid #a3a3a3;
+clear:both;
+padding: 4px;
+}
+.content-manager-width{
+max-width:1240px; 
+min-width:980px;
+}
+.customers-groups{
+width: 380px; 
+border: 1px solid #ff0000;
+background:#FFCC33;
+}
+table.collapse{
+border-collapse:collapse;
 }

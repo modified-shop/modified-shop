@@ -128,4 +128,7 @@ ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#web28 - 2013-07-02 - Added Safeterms module
+ALTER TABLE content_manager ADD content_noindex INT( 1 ) NOT NULL DEFAULT '0';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

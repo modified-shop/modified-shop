@@ -73,6 +73,7 @@
  define('TEXT_FILE_DESC','Description:');
  define('USED_SPACE','Used Space:');
  define('TABLE_HEADING_CONTENT_FILESIZE','Filesize');
-
+ 
+ define('TEXT_CONTENT_NOINDEX','NoIndex');
 
  ?>

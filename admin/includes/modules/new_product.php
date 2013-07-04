@@ -218,38 +218,33 @@
         </tr>
       </table>
 
-<?php
-  require_once("includes/modules/categories_specials.php");
-  showSpecialsBox();
-?>
-
-
-
-
-
-
-
-
-
-
+      <?php
+      if (file_exists("includes/modules/categories_specials.php")) {
+        require_once("includes/modules/categories_specials.php");
+        showSpecialsBox();
+      ?>
       <div class="main" style="float:left;">
         <div id="butSpecial">&nbsp;</div>
       </div>
       <script language="JavaScript" type="text/JavaScript">
         document.getElementById('butSpecial').innerHTML= '<a href="JavaScript:showSpecial()" class="button">Sonderangebot &raquo;</a>';
       </script>
+      <?php } ?>
+      
       <div class="main" style="margin-bottom:10px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         &nbsp;&nbsp;
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
         <?php
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content') . '">' . BUTTON_NEW_CONTENT . '</a>';
+          echo '&nbsp;&nbsp;<a class="button" href="<'. xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
+
       <!-- BOF Block2 //-->
       <div style="width: 860px; padding:5px;clear:both;">
         <link rel="stylesheet" type="text/css" href="includes/lang_tabs_menu/lang_tabs_menu.css">
@@ -285,37 +280,38 @@
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           echo ('<div id="tab_lang_' . $i . '">');
           $lng_image = xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name']);
+          $products_desc_fields = $catfunc->get_products_desc_fields($pInfo->products_id, $languages[$i]['id']);
           ?>
           <div style="background:#000000;height:10px;"></div>
           <div class="main" style="background:#FFCC33;padding: 3px; line-height:20px;">
-            <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_PRODUCTS_NAME; ?>&nbsp;</b><?php echo xtc_draw_input_field('products_name[' . $languages[$i]['id'] . ']', (($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : xtc_get_products_name($pInfo->products_id, $languages[$i]['id'])),'style="width:80%" maxlength="255"'); ?>
+            <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_PRODUCTS_NAME; ?>&nbsp;</b><?php echo xtc_draw_input_field('products_name[' . $languages[$i]['id'] . ']', (($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : $products_desc_fields['products_name']),'style="width:80%" maxlength="255"'); ?>
           </div>
           <div class="main" style="padding: 3px; line-height:20px;">
-             <?php echo $lng_image. '&nbsp;'.TEXT_PRODUCTS_URL . '&nbsp;<small>' . TEXT_PRODUCTS_URL_WITHOUT_HTTP . '</small>'; ?><?php echo xtc_draw_input_field('products_url[' . $languages[$i]['id'] . ']', (($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : xtc_get_products_url($pInfo->products_id, $languages[$i]['id'])),'style="width:70%" maxlength="255"'); ?>
+             <?php echo $lng_image. '&nbsp;'.TEXT_PRODUCTS_URL . '&nbsp;<small>' . TEXT_PRODUCTS_URL_WITHOUT_HTTP . '</small>'; ?><?php echo xtc_draw_input_field('products_url[' . $languages[$i]['id'] . ']', (($products_url[$languages[$i]['id']]) ? stripslashes($products_url[$languages[$i]['id']]) : $products_desc_fields['products_url']),'style="width:70%" maxlength="255"'); ?>
           </div>
           <!-- input boxes desc, meta etc -->
           <div class="main" style="padding: 3px; line-height:20px;">
              <b><?php echo $lng_image . '&nbsp;' . TEXT_PRODUCTS_DESCRIPTION; ?></b><br />
-             <?php echo xtc_draw_textarea_field('products_description_' . $languages[$i]['id'], 'soft', '103', '30', (isset($products_description[$languages[$i]['id']]) ? stripslashes($products_description[$languages[$i]['id']]) : xtc_get_products_description($pInfo->products_id, $languages[$i]['id']))); ?>
+             <?php echo xtc_draw_textarea_field('products_description_' . $languages[$i]['id'], 'soft', '103', '30', (isset($products_description[$languages[$i]['id']]) ? stripslashes($products_description[$languages[$i]['id']]) : $products_desc_fields['products_description'])); ?>
           </div>
           <div style="height: 8px;"></div>
           <div width="100%" valign="top" class="main" style="padding: 3px; line-height:20px;">
             <b><?php echo $lng_image . '&nbsp;' . TEXT_PRODUCTS_SHORT_DESCRIPTION; ?></b><br />
-            <?php echo xtc_draw_textarea_field('products_short_description_' . $languages[$i]['id'], 'soft', '103', '20', (isset($products_short_description[$languages[$i]['id']]) ? stripslashes($products_short_description[$languages[$i]['id']]) : xtc_get_products_short_description($pInfo->products_id, $languages[$i]['id']))); ?>
+            <?php echo xtc_draw_textarea_field('products_short_description_' . $languages[$i]['id'], 'soft', '103', '20', (isset($products_short_description[$languages[$i]['id']]) ? stripslashes($products_short_description[$languages[$i]['id']]) : $products_desc_fields['products_short_description'])); ?>
           </div>
           <div valign="top" class="main" style="padding: 3px; line-height:20px;">
             <b><?php echo $lng_image . '&nbsp;' . TEXT_PRODUCTS_ORDER_DESCRIPTION; ?></b><br />
-            <?php echo xtc_draw_textarea_field('products_order_description[' . $languages[$i]['id'] . ']', 'soft', '103', '10', (isset($products_order_description[$languages[$i]['id']]) ? stripslashes($products_order_description[$languages[$i]['id']]) : xtc_get_order_description($pInfo->products_id, $languages[$i]['id'])), 'style="width:100%; height:50px;"'); ?>
+            <?php echo xtc_draw_textarea_field('products_order_description[' . $languages[$i]['id'] . ']', 'soft', '103', '10', (isset($products_order_description[$languages[$i]['id']]) ? stripslashes($products_order_description[$languages[$i]['id']]) : $products_desc_fields['products_order_description']), 'style="width:100%; height:50px;"'); ?>
           </div>
           <div class="main" valign="top" style="padding: 3px; line-height:20px;">
               <?php echo $lng_image. '&nbsp;'. TEXT_PRODUCTS_KEYWORDS . ' (max. 255 '. TEXT_CHARACTERS .')'; ?> <br/>
-              <?php echo xtc_draw_input_field('products_keywords[' . $languages[$i]['id'] . ']',(isset($products_keywords[$languages[$i]['id']]) ? stripslashes($products_keywords[$languages[$i]['id']]) : xtc_get_products_keywords($pInfo->products_id, $languages[$i]['id'])), 'style="width:100%" maxlength="255"'); ?><br/>
+              <?php echo xtc_draw_input_field('products_keywords[' . $languages[$i]['id'] . ']',(isset($products_keywords[$languages[$i]['id']]) ? stripslashes($products_keywords[$languages[$i]['id']]) : $products_desc_fields['products_keywords']), 'style="width:100%" maxlength="255"'); ?><br/>
               <?php echo $lng_image. '&nbsp;'. TEXT_META_TITLE. ' (max. 50 '. TEXT_CHARACTERS .')'; ?> <br/>
-              <?php echo xtc_draw_input_field('products_meta_title[' . $languages[$i]['id'] . ']',(isset($products_meta_title[$languages[$i]['id']]) ? stripslashes($products_meta_title[$languages[$i]['id']]) : xtc_get_products_meta_title($pInfo->products_id, $languages[$i]['id'])), 'style="width:100%" maxlength="50"'); ?><br/>
+              <?php echo xtc_draw_input_field('products_meta_title[' . $languages[$i]['id'] . ']',(isset($products_meta_title[$languages[$i]['id']]) ? stripslashes($products_meta_title[$languages[$i]['id']]) : $products_desc_fields['products_meta_title']), 'style="width:100%" maxlength="50"'); ?><br/>
               <?php echo $lng_image. '&nbsp;'. TEXT_META_DESCRIPTION. ' (max. 140 '. TEXT_CHARACTERS .')'; ?> <br/>
-              <?php echo xtc_draw_input_field('products_meta_description[' . $languages[$i]['id'] . ']',(isset($products_meta_description[$languages[$i]['id']]) ? stripslashes($products_meta_description[$languages[$i]['id']]) : xtc_get_products_meta_description($pInfo->products_id, $languages[$i]['id'])), 'style="width:100%" maxlength="140"'); ?><br/>
+              <?php echo xtc_draw_input_field('products_meta_description[' . $languages[$i]['id'] . ']',(isset($products_meta_description[$languages[$i]['id']]) ? stripslashes($products_meta_description[$languages[$i]['id']]) : $products_desc_fields['products_meta_description']), 'style="width:100%" maxlength="140"'); ?><br/>
               <?php echo $lng_image. '&nbsp;'. TEXT_META_KEYWORDS. ' (max. 180 '. TEXT_CHARACTERS .')'; ?> <br/>
-              <?php echo xtc_draw_input_field('products_meta_keywords[' . $languages[$i]['id'] . ']', (isset($products_meta_keywords[$languages[$i]['id']]) ? stripslashes($products_meta_keywords[$languages[$i]['id']]) : xtc_get_products_meta_keywords($pInfo->products_id, $languages[$i]['id'])), 'style="width:100%" maxlength="180"'); ?>
+              <?php echo xtc_draw_input_field('products_meta_keywords[' . $languages[$i]['id'] . ']', (isset($products_meta_keywords[$languages[$i]['id']]) ? stripslashes($products_meta_keywords[$languages[$i]['id']]) : $products_desc_fields['products_meta_keywords']), 'style="width:100%" maxlength="180"'); ?>
           </div>
           <?php
           
@@ -345,11 +341,10 @@
             ?>
           </table>
         <!-- EOF Product images //-->
+
         <?php
         //Customers group block
-        if (GROUP_CHECK == 'true') {
-          $customers_statuses_array = xtc_get_customers_statuses();
-          $customers_statuses_array = array_merge(array (array ('id' => 'all', 'text' => TXT_ALL)), $customers_statuses_array);
+        if (GROUP_CHECK == 'true') {          
           ?>
           <div class="main" style="margin:10px 5px 5px 5px;font-weight:bold;"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
           <table width="100%" border="0" bgcolor="f3f3f3" style="border: 1px solid #aaaaaa; padding:5px;">
@@ -365,14 +360,10 @@
           <?php
         }
 
-
-
-
-
-
         //Price options
         include(DIR_WS_MODULES.'group_prices.php');
       ?>
+      
         <!-- BOF Save //-->
         <div style="text-align:right; margin-top:10px;">
           <?php

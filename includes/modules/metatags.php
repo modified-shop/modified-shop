@@ -453,7 +453,8 @@ switch(basename($PHP_SELF)) {
               content_title,
               content_heading,
               content_text,
-              content_file
+              content_file,
+              content_noindex
       from   ".TABLE_CONTENT_MANAGER."
       where   content_group = '".(int)$_GET['coID']."'
       and   languages_id = '".(int)$_SESSION['languages_id']."'
@@ -492,6 +493,9 @@ switch(basename($PHP_SELF)) {
         $meta_descr = ($contents_meta['content_heading'])?$contents_meta['content_heading'].': ':'';
         $meta_descr .= $contents_meta['content_text'];
       }
+      
+      //noindex
+      $meta_robots = $contents_meta['content_noindex'] ? 'noindex, follow, noodp' : META_ROBOTS;
     }
 
     //-- Canonical-URL

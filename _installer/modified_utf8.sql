@@ -1021,6 +1021,7 @@ CREATE TABLE content_manager (
   content_meta_title TEXT,
   content_meta_description TEXT,
   content_meta_keywords TEXT,
+  content_noindex INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (content_id),
   FULLTEXT idx_content_meta (content_meta_title,content_meta_description,content_meta_keywords)
 ) ENGINE=MyISAM;
