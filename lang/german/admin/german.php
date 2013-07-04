@@ -308,6 +308,7 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d
 define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Steuers&auml;tzen)');
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Bundesl&auml;ndern)');
 
+
 define('PREVNEXT_BUTTON_PREV', '&lt;&lt;');
 define('PREVNEXT_BUTTON_NEXT', '&gt;&gt;');
 
@@ -499,3 +500,5 @@ define('CONFIG_MAX_VALUE_WARNING', '"%s" WARNUNG: Eingabe %s wurde ignoriert! [M
 define('CONFIG_MIN_VALUE_WARNING', '"%s" WARNUNG: Eingabe %s wurde ignoriert! [Minimum: %s]');
 
 define('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Anzeigezeitraum in Sek.: %s. Nach dieser Zeit werden die Eintr&auml;ge gel&ouml;scht.');
+
+define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Art.-Nr.');
