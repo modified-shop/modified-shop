@@ -21,29 +21,38 @@
 
   if (xtc_not_null($action)) {
     switch ($action) {
-      // BOF - Tomcraft - 2009-11-22 - Added option to deactivate languages (clickable status icons)
       case 'setlflag':
           $language_id = xtc_db_prepare_input($_GET['lID']);
           $status = xtc_db_prepare_input($_GET['flag']);
           xtc_db_query("update " . TABLE_LANGUAGES . " set status = '" . xtc_db_input($status) . "' where languages_id = '" . xtc_db_input($language_id) . "'");
           xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $language_id));
         break;
-      // BOF - Tomcraft - 2009-11-22 - Added option to deactivate languages (clickable status icons)
+       case 'setladminflag':
+          $language_id = xtc_db_prepare_input($_GET['lID']);
+          $status_admin = xtc_db_prepare_input($_GET['adminflag']);
+          xtc_db_query("update " . TABLE_LANGUAGES . " set status_admin = '" . xtc_db_input($status_admin) . "' where languages_id = '" . xtc_db_input($language_id) . "'");
+          xtc_redirect(xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $language_id));
+        break;
       case 'insert':
         $name = xtc_db_prepare_input($_POST['name']);
         $code = xtc_db_prepare_input($_POST['code']);
         $image = xtc_db_prepare_input($_POST['image']);
         $directory = xtc_db_prepare_input($_POST['directory']);
-        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-        $status = xtc_db_prepare_input($_POST['status']);
-        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
         $sort_order = xtc_db_prepare_input((int)$_POST['sort_order']);
         $charset = xtc_db_prepare_input($_POST['charset']);
+        $status = xtc_db_prepare_input($_POST['status']);
+        $status_admin = xtc_db_prepare_input($_POST['status_admin']);
 
-        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-        //xtc_db_query("insert into " . TABLE_LANGUAGES . " (name, code, image, directory, sort_order,language_charset) values ('" . xtc_db_input($name) . "', '" . xtc_db_input($code) . "', '" . xtc_db_input($image) . "', '" . xtc_db_input($directory) . "', '" . xtc_db_input($sort_order) . "', '" . xtc_db_input($charset) . "')");
-        xtc_db_query("insert into " . TABLE_LANGUAGES . " (name, code, image, directory, status, sort_order,language_charset) values ('" . xtc_db_input($name) . "', '" . xtc_db_input($code) . "', '" . xtc_db_input($image) . "', '" . xtc_db_input($directory) . "', '" . xtc_db_input($status) . "', '" . xtc_db_input($sort_order) . "', '" . xtc_db_input($charset) . "')");
-        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+        $sql_data_array = array('name' => $name, 
+                                'code' => $code,  
+                                'image' => $image,  
+                                'directory' => $directory,  
+                                'status' => $status,  
+                                'sort_order' => $sort_order, 
+                                'language_charset' => $charset
+                                ); 
+        $sql_data_array['status_admin'] = $status_admin;                                
+        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array); 
         $insert_id = xtc_db_insert_id();
 
         // create additional categories_description records
@@ -95,8 +104,9 @@
         }
 
         // create additional customers status
-              $customers_status_query=xtc_db_query("SELECT DISTINCT customers_status_id
-                    FROM ".TABLE_CUSTOMERS_STATUS);
+        $customers_status_query=xtc_db_query("SELECT DISTINCT customers_status_id
+                                                FROM ".TABLE_CUSTOMERS_STATUS
+                                            );
         while ($data=xtc_db_fetch_array($customers_status_query)) {
 
           $customers_status_data_query=xtc_db_query("SELECT *
@@ -133,16 +143,21 @@
         $code = xtc_db_prepare_input($_POST['code']);
         $image = xtc_db_prepare_input($_POST['image']);
         $directory = xtc_db_prepare_input($_POST['directory']);
-        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-        $status = xtc_db_prepare_input($_POST['status']);
-        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
         $sort_order = xtc_db_prepare_input($_POST['sort_order']);
         $charset = xtc_db_prepare_input($_POST['charset']);
-
-        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-        //xtc_db_query("update " . TABLE_LANGUAGES . " set name = '" . xtc_db_input($name) . "', code = '" . xtc_db_input($code) . "', image = '" . xtc_db_input($image) . "', directory = '" . xtc_db_input($directory) . "', sort_order = '" . xtc_db_input($sort_order) . "', language_charset = '" . xtc_db_input($charset) . "' where languages_id = '" . xtc_db_input($lID) . "'");
-        xtc_db_query("update " . TABLE_LANGUAGES . " set name = '" . xtc_db_input($name) . "', code = '" . xtc_db_input($code) . "', image = '" . xtc_db_input($image) . "', directory = '" . xtc_db_input($directory) . "', status = '" . xtc_db_input($status) . "', sort_order = '" . xtc_db_input($sort_order) . "', language_charset = '" . xtc_db_input($charset) . "' where languages_id = '" . xtc_db_input($lID) . "'");
-        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+        $status = xtc_db_prepare_input($_POST['status']);
+        $status_admin = xtc_db_prepare_input($_POST['status_admin']);
+       
+        $sql_data_array = array('name' => $name, 
+                                'code' => $code,  
+                                'image' => $image,  
+                                'directory' => $directory,  
+                                'status' => $status,  
+                                'sort_order' => $sort_order, 
+                                'language_charset' => $charset
+                                ); 
+        $sql_data_array['status_admin'] = $status_admin;  
+        xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.xtc_db_input($lID).'\'');        
 
         if ($_POST['default'] == 'on') {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($code) . "' where configuration_key = 'DEFAULT_LANGUAGE'");
@@ -197,47 +212,32 @@ require (DIR_WS_INCLUDES.'head.php');
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
         <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
             <!-- left_navigation //-->
             <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
             <!-- left_navigation_eof //-->
-          </table>
         </td>
         <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td width="100%">
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_configuration.gif'); ?></td>
-                    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main" valign="top">Configuration</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <td class="boxCenter">
+
+              <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading_configuration.gif'); ?></div>
+              <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
+              <div class="main pdg2 flt-l" valign="top">Configuration</div>
+ 
+               <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td valign="top">
-                      <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                      <table class="table-main collapse">
                         <tr class="dataTableHeadingRow">
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_NAME; ?></td>
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_CODE; ?></td>
-                          <!-- BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages //-->
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_STATUS; ?></td>
-                          <!-- EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages //-->
+                          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LANGUAGE_STATUS_ADMIN; ?></td>
                           <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                         </tr>
                         <?php
-                        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-                        //$languages_query_raw = "select languages_id, name, code, image, directory, sort_order,language_charset from " . TABLE_LANGUAGES . " order by sort_order";
-                        $languages_query_raw = "select languages_id, name, code, image, directory, status, sort_order,language_charset from " . TABLE_LANGUAGES . " order by sort_order";
-                        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+                        $languages_query_raw = "SELECT *
+                                                  FROM " . TABLE_LANGUAGES . " 
+                                              ORDER BY sort_order";
                         $languages_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $languages_query_raw, $languages_query_numrows);
                         $languages_query = xtc_db_query($languages_query_raw);
 
@@ -258,7 +258,6 @@ require (DIR_WS_INCLUDES.'head.php');
                             }
                             ?>
                             <td class="dataTableContent"><?php echo $languages['code']; ?></td>
-                            <!-- BOF - Tomcraft - 2009-11-22 - Added option to deactivate languages (clickable status icons) //-->
                             <td class="dataTableContent">
                               <?php
                               if ($languages['status'] == 1) {
@@ -268,37 +267,35 @@ require (DIR_WS_INCLUDES.'head.php');
                               }
                               ?>
                             </td>
-                            <!-- EOF - Tomcraft - 2009-11-22 - Added option to deactivate languages (clickable status icons) //-->
-                            <!-- BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons //-->
-                            <!--
-                              <td class="dataTableContent" align="right"><?php if ( (is_object($lInfo)) && ($languages['languages_id'] == $lInfo->languages_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-                            //-->
+                            <td class="dataTableContent">
+                              <?php
+                              if ($languages['status_admin'] == 1) {
+                                echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setladminflag&adminflag=0&lID=' . $languages['languages_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
+                              } else {
+                                echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setladminflag&adminflag=1&lID=' . $languages['languages_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
+                              }
+                              ?>
+                            </td>  
                             <td class="dataTableContent" align="right"><?php if (isset($lInfo) && (is_object($lInfo)) && ($languages['languages_id'] == $lInfo->languages_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $languages['languages_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-                            <!-- EOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons //-->
                           </tr>
                           <?php
                         }
                         ?>
-                        <tr>
-                          <td colspan="3">
-                            <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                              <tr>
-                                <td class="smallText" valign="top"><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></td>
-                                <td class="smallText" align="right"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
-                              </tr>
-                              <?php
-                              if (empty($action)) {
-                                ?>
-                                <tr>
-                                  <td align="right" colspan="2"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new') . '">' . BUTTON_NEW_LANGUAGE . '</a>'; ?></td>
-                                </tr>
-                                <?php
-                              }
-                              ?>
-                            </table>
-                          </td>
-                        </tr>
+                        <tr>                          
                       </table>
+                      
+                      <div class="smallText pdg2 flt-l"><?php echo $languages_split->display_count($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_LANGUAGES); ?></div>
+                      <div class="smallText pdg2 flt-r"><?php echo $languages_split->display_links($languages_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+                     
+                      <?php
+                      if (empty($action)) {
+                        ?>
+                        <div class="clear"></div>                        
+                        <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $lInfo->languages_id . '&action=new') . '">' . BUTTON_NEW_LANGUAGE . '</a>'; ?></div>
+                        <?php
+                      }
+                      ?>
+                          
                     </td>
                     <?php
                     $heading = array();
@@ -313,10 +310,8 @@ require (DIR_WS_INCLUDES.'head.php');
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset'));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', 'icon.gif'));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory'));
-                        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-                        //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status'));
-                        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+                        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin'));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                         $contents[] = array('align' => 'center', 'text' => '<br /><button class="button" type="submit" />' . BUTTON_INSERT . '</button> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
@@ -330,10 +325,8 @@ require (DIR_WS_INCLUDES.'head.php');
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_CHARSET . '<br />' . xtc_draw_input_field('charset', $lInfo->language_charset));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', $lInfo->image));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory', $lInfo->directory));
-                        // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-                        //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status', $lInfo->status));
-                        // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+                        $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status', $lInfo->status_admin));
                         $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
                         if (DEFAULT_LANGUAGE != $lInfo->code)
                           $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
@@ -352,29 +345,23 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_NAME . ' ' . $lInfo->name);
                           $contents[] = array('text' => TEXT_INFO_LANGUAGE_CODE . ' ' . $lInfo->code);
                           $contents[] = array('text' => TEXT_INFO_LANGUAGE_CHARSET_INFO . ' ' . $lInfo->language_charset);
-                          // BOF - Tomcraft - 2009-12-08 - show language_id
                           $contents[] = array('text' => 'Language-ID:' . ' ' . $lInfo->languages_id);
-                          // EOF - Tomcraft - 2009-12-08 - show language_id
                           $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_LANGUAGES . $lInfo->directory . '/' . $lInfo->image, $lInfo->name));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . DIR_WS_LANGUAGES . '<b>' . $lInfo->directory . '</b>');
-                          // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-                          //$contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
                           $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . ' ' . $lInfo->status);
-                          // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . ' '. $lInfo->status_admin);
                           $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . ' ' . $lInfo->sort_order);
                         }
                         break;
                     }
 
                     if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                      echo '            <td width="25%" valign="top">' . "\n";
+                      echo '            <td class="boxRight">' . "\n";
                       echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
                       echo '            </td>' . "\n";
                     }
-                    ?>
-                  </tr>
-                </table>
-              </td>
+                    ?>                  
+
             </tr>
           </table>
         </td>

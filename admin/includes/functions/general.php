@@ -369,6 +369,7 @@
     return (array) $array_merged;
   }
 
+
   /**
    * xtc_get_category_tree()
    *
@@ -800,10 +801,16 @@
    * @return
    */
   function xtc_get_languages() {
-    // BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
-    //$languages_query = xtc_db_query("select languages_id, name, code, image, directory from ".TABLE_LANGUAGES." order by sort_order");
-    $languages_query = xtc_db_query("select languages_id, name, code, image, directory from ".TABLE_LANGUAGES." where status = '1' order by sort_order");
-    // EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages
+    $languages_query = xtc_db_query("SELECT languages_id, 
+                                            name, 
+                                            code, 
+                                            image, 
+                                            directory 
+                                       FROM ".TABLE_LANGUAGES." 
+                                      WHERE status_admin = '1' 
+                                   ORDER BY sort_order
+                                     ");
+    
     while ($languages = xtc_db_fetch_array($languages_query)) {
       $languages_array[] = array ('id' => $languages['languages_id'],
                                   'name' => $languages['name'],
@@ -2529,3 +2536,4 @@
   }
   //EOF - DokuMan - 2011-01-06 - added GEOIP-function
 ?>
+
