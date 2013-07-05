@@ -330,7 +330,7 @@ input.button {
   height: 22px;
 }
 
-/* IE Fix */
+/* IE 6 Fix */
 * html input.button {
   padding: 1px 0 1px 0;
   margin: 1px 1px;
