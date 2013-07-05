@@ -26,6 +26,8 @@ DELETE FROM configuration WHERE configuration_key LIKE 'MODULE_SHIPPING_GLS_%';
 #Hendrik - 2010-08-29 - Xajax Support in Backend
 ALTER TABLE admin_access
   ADD xajax INT(1) DEFAULT 1 NOT NULL;
+UPDATE admin_access SET xajax = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET xajax = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #DokuMan - 2010-09-28 - display VAT description multilingually
 #Updating only the German tax rates here
@@ -80,6 +82,8 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
 
 ALTER TABLE admin_access
   ADD parcel_carriers INT(1) DEFAULT 1 NOT NULL;
+UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #DokuMan - 2012-11-12 - set new default template, if existing template was named "xtc5" 
 UPDATE configuration SET configuration_value = 'tpl_modified', last_modified = NOW() 
