@@ -70,63 +70,63 @@
         <tr>          
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('orders.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_orders.jpg" alt="<?php echo (BOX_ORDERS) ; ?>" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_orders.png" alt="<?php echo (BOX_ORDERS) ; ?>" width="40" height="40" border="0">
             </a>
             <br />
             <?php echo (BOX_ORDERS) ; ?>
           </td>          
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('content_manager.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_content.jpg" alt="<?php echo (BOX_CONTENT) ; ?>" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_content.png" alt="<?php echo (BOX_CONTENT) ; ?>" width="40" height="40" border="0">
             </a>
             <br />
             <?php echo (BOX_CONTENT) ; ?>
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('backup.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_backup.jpg" alt="<?php echo (BOX_BACKUP) ; ?>" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_backup.png" alt="<?php echo (BOX_BACKUP) ; ?>" width="40" height="40" border="0">
             </a>
             <br />
             <?php echo (BOX_BACKUP) ; ?>
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('customers.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_customers.jpg" alt="<?php echo (BOX_CUSTOMERS) ; ?>" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_customers.png" alt="<?php echo (BOX_CUSTOMERS) ; ?>" width="40" height="40" border="0">
             </a>
             <br />
             <?php echo (BOX_CUSTOMERS) ; ?>
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('categories.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_categories.jpg" alt="<?php echo (BOX_CATEGORIES) ; ?>" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_categories.png" alt="<?php echo (BOX_CATEGORIES) ; ?>" width="40" height="40" border="0">
             </a>
             <br />
             <?php echo (BOX_CATEGORIES) ; ?>
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('../index.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_shop.jpg" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_shop.png" width="40" height="40" border="0">
             </a>
             <br />
             Shop
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('../logoff.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_logout.jpg" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_logout.png" width="40" height="40" border="0">
             </a>
             <br />
             Logout
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('credits.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_credits.jpg" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_credits.png" width="40" height="40" border="0">
             </a>
             <br />
             Credits
           </td>
           <td class="fastmenu" align="center">
             <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_update.jpg" width="40" height="40" border="0">
+              <img src="images/icons/fastnav/icon_update.png" width="40" height="40" border="0">
             </a>
             <br />
             Update
