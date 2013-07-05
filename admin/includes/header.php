@@ -124,6 +124,13 @@
             <br />
             Credits
           </td>
+          <td class="fastmenu" align="center">
+            <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
+              <img src="images/icons/fastnav/icon_update.jpg" width="40" height="40" border="0">
+            </a>
+            <br />
+            Update
+          </td>
         </tr>
       </table>
     </td>
