@@ -1,0 +1,35 @@
+<?php
+/* --------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce(customers.php,v 1.13 2002/06/15); www.oscommerce.com
+   (c) 2003	 nextcommerce (customers.php,v 1.8 2003/08/15); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
+
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
+
+define('HEADING_TITLE', 'Software Update');
+define('HEADING_SUBTITLE', 'Update Check');
+
+define('TEXT_INFO_UPDATE_RECOMENDED', 'A new Version is available.');
+define('TEXT_INFO_UPDATE_NOT_POSSIBLE', 'Sorry, no check was possible. Please visit our <a target="_blank" href="http://www.modified-shop.org"><b>Website</b></a>.');
+define('TEXT_INFO_UPDATE', 'Your Version is up to date.');
+
+define('TEXT_HEADING_DEVELOPERS', 'Developers of the modified eCommerce Shopsoftware:');
+define('TEXT_HEADING_SUPPORT', 'Please support further development:');
+define('TEXT_HEADING_DONATIONS', 'Donations:');
+define('TEXT_HEADING_BASED_ON', 'The shop software is based on:');
+
+define('TEXT_INFO_THANKS', 'We wish to thank all coders and developers involved in this project. In case we forgot to mention anyone in the listing below, please post a message to the <a style="font-size: 12px; text-decoration: underline;" href="http://www.modified-shop.org/forum/" target="_blank">bulletin board</a> or to one of the listed developers.');
+define('TEXT_INFO_DISCLAIMER', 'This program is distributed in the hope that it will be useful. Nevertheless, we do not give any warranty that it is without bugs.');
+define('TEXT_INFO_DONATIONS', 'The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by donating to the project.');
+define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
+?>
