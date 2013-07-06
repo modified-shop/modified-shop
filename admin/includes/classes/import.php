@@ -51,6 +51,7 @@ class xtcImport {
 		$this->CatTree = array ('ID' => 0);
 		// precaching categories in array ?
 		$this->CatCache = true;
+		$this->CatDefault = CSV_CATEGORY_DEFAULT;
 		$this->FileSheme = array ();
 		$this->Groups = xtc_get_customers_statuses();
 	}
@@ -197,13 +198,13 @@ class xtcImport {
 					if ($this->FileSheme['p_cat.0'] != 'Y') {
 						if ($this->checkModel($line_data['p_model'])) {
 							$this->insertProduct($line_data, 'update');
-						} else {
+						} elseif ($this->CatDefault != '0') {
 							$this->insertProduct($line_data,'insert');
 						}
 					} else {
 						if ($this->checkModel($line_data['p_model'])) {
 							$this->insertProduct($line_data, 'update',true);
-						} else {
+						} elseif ($this->CatDefault != '0') {
 							$this->insertProduct($line_data,'insert',true);
 						}
 					}
@@ -434,6 +435,12 @@ class xtcImport {
 				xtc_db_perform(TABLE_PRODUCTS_DESCRIPTION, $prod_desc_array, 'update', 'products_id = \''.$products_id.'\' and language_id=\''.$this->languages[$i_insert]['id'].'\'');
 			}
 		}
+		
+    // check for Category		
+    $categories_check_query = xtc_db_query("SELECT categories_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id='".$products_id."'");
+    if (!xtc_db_num_rows($categories_check_query)) {    
+      $this->insertPtoCconnection($products_id, $this->CatDefault);
+    }
 	}
 
 	/*****************************************************************************
