@@ -20,7 +20,7 @@
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
   
-    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
+    //$parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
   
     //BOF - DokuMan - 2011-01-07 - Sanitize parameters
     $page = xtc_output_string($page);
@@ -50,14 +50,14 @@
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
     
-    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
+    //$link = str_replace('&', '&amp;', $link); // making link W3C-Conform
   
     return $link;
   }
 
   function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
   
-    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
+    //$parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
 
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
@@ -78,7 +78,7 @@
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
       
-    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
+    //$link = str_replace('&', '&amp;', $link); // making link W3C-Conform
   
     return $link;
   }
