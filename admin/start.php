@@ -30,6 +30,14 @@ define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nic
   require_once (DIR_WS_CLASSES.'currencies.php');
   $currencies = new currencies();
 
+  function convert_utf8 ($string) {
+    if (strtolower($_SESSION['language_charset'] == 'utf-8')) {
+      return $string;
+    } else {
+      return utf8_decode($string);
+    }
+  }
+
   $time_last_click = 900;
   if (defined('WHOS_ONLINE_TIME_LAST_CLICK')) {
     $time_last_click = (int)WHOS_ONLINE_TIME_LAST_CLICK;
@@ -337,18 +345,18 @@ require (DIR_WS_INCLUDES.'head.php');
                                     $rss->addAttribute('encoding', 'UTF-8');
                                     ?>
                                     <div style="background:#F0F1F1;font-size:12px; border:1px solid #999; padding:5px; font-weight: 700" align="left">
-                                      <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo $rss->channel->title; ?></a>
+                                      <a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo convert_utf8($rss->channel->title); ?></a>
                                       <br/>
-                                      <?php echo $rss->channel->description; ?>
+                                      <?php echo convert_utf8($rss->channel->description); ?>
                                     </div>
                                     <br/>
                                     <?php
                                     for ($i=0; $i<=3; $i++) {
                                     ?>
                                       <div class="feedtitle" align="left" style="padding:5px;font-size:12px;">
-                                        <a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>"><?php echo $rss->channel->item[$i]->title; ?></a>
+                                        <a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>"><?php echo convert_utf8($rss->channel->item[$i]->title); ?></a>
                                         <br/><br/>
-                                        <?php echo $rss->channel->item[$i]->description; ?>
+                                        <?php echo convert_utf8($rss->channel->item[$i]->description); ?>
                                       </div>
                                       <hr noshade="noshade">
                                     <?php
