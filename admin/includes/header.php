@@ -62,90 +62,94 @@
   }
   ?>
 <div id="top1"><?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?></div>
-<table border="0" width="100%" cellspacing="0" cellpadding="0" style="margin-bottom: 5px;">
-  <tr>
-    <td><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware').'<br />&nbsp;&nbsp;&nbsp;'.$languages_string ; ?></td>
-    <td valign="bottom" align="left" width="100%">
-      <table border="0" cellspacing="0" cellpadding="2">
-        <tr>          
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('orders.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_orders.png" alt="<?php echo (BOX_ORDERS) ; ?>" width="32" height="32" border="0">
-            </a>
-            <br />
-            <?php echo (BOX_ORDERS) ; ?>
-          </td>          
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('content_manager.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_content.png" alt="<?php echo (BOX_CONTENT) ; ?>" width="32" height="32" border="0">
-            </a>
-            <br />
-            <?php echo (BOX_CONTENT) ; ?>
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('backup.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_backup.png" alt="<?php echo (BOX_BACKUP) ; ?>" width="32" height="32" border="0">
-            </a>
-            <br />
-            <?php echo (BOX_BACKUP) ; ?>
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('customers.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_customers.png" alt="<?php echo (BOX_CUSTOMERS) ; ?>" width="32" height="32" border="0">
-            </a>
-            <br />
-            <?php echo (BOX_CUSTOMERS) ; ?>
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('categories.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_categories.png" alt="<?php echo (BOX_CATEGORIES) ; ?>" width="32" height="32" border="0">
-            </a>
-            <br />
-            <?php echo (BOX_CATEGORIES) ; ?>
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('../index.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_shop.png" width="32" height="32" border="0">
-            </a>
-            <br />
-            Shop
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('../logoff.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_logout.png" width="32" height="32" border="0">
-            </a>
-            <br />
-            Logout
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('credits.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_credits.png" width="32" height="32" border="0">
-            </a>
-            <br />
-            Credits
-          </td>
-          <td class="fastmenu" align="center">
-            <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
-              <img src="images/icons/fastnav/icon_update.png" width="32" height="32" border="0">
-            </a>
-            <br />
-            Update
-          </td>
-        </tr>
-      </table>
-    </td>
-  </tr>
-</table>
 
-<div id="top2"></div>
+<div id="favorites">
+  <div id="logo">
+    <div><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></div>
+    <div><?php echo '&nbsp;&nbsp;&nbsp;'.$languages_string ;?></div>
+  </div>
+  <table class="favorites">
+    <tr>          
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('orders.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_orders.png', BOX_ORDERS, 32, 32);?>
+        </a>
+        <br />
+        <?php echo (BOX_ORDERS) ; ?>
+      </td>          
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('content_manager.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_content.png', BOX_CONTENT, 32, 32);?>          
+        </a>
+        <br />
+        <?php echo (BOX_CONTENT) ; ?>
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('backup.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_backup.png', BOX_BACKUP, 32, 32);?>
+        </a>
+        <br />
+        <?php echo (BOX_BACKUP) ; ?>
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('customers.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_customers.png', BOX_CUSTOMERS, 32, 32);?> 
+        </a>
+        <br />
+        <?php echo (BOX_CUSTOMERS) ; ?>
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('categories.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_categories.png', BOX_CATEGORIES, 32, 32);?>
+        </a>
+        <br />
+        <?php echo (BOX_CATEGORIES) ; ?>
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_catalog_href_link('index.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_shop.png', BOX_SHOP, 32, 32);?>
+        </a>
+        <br />
+        Shop
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_catalog_href_link('logoff.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_logout.png', BOX_LOGOUT, 32, 32);?>
+        </a>
+        <br />
+        Logout
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('credits.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_credits.png', BOX_CREDITS, 32, 32);?>
+        </a>
+        <br />
+        Credits
+      </td>
+      <td class="fastmenu">
+        <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
+          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_update.png', BOX_UPDATE, 32, 32);?>
+        </a>
+        <br />
+        Update
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div id="top2" class="clear"></div>
 <?php
 if (USE_ADMIN_TOP_MENU != 'false') {
-?>
-<script type="text/javascript">
-  <!--
-    document.write('<?php ob_start(); require(DIR_WS_INCLUDES . "column_left.php"); $menucontent = ob_get_clean(); echo addslashes($menucontent);?>');
-  //-->
-</script>
-<?php
+  if (defined('NEW_ADMIN_STYLE')) { 
+    require_once(DIR_WS_INCLUDES . "column_left.php");
+  } else {
+    ?>
+    <script type="text/javascript">
+      <!--
+        document.write('<?php ob_start(); require(DIR_WS_INCLUDES . "column_left.php"); $menucontent = ob_get_clean(); echo addslashes($menucontent);?>');
+      //-->
+    </script>
+    <?php
+  }
 }
 ?>
