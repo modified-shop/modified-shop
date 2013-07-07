@@ -2,15 +2,16 @@
 /* -----------------------------------------------------------------------------------------
    $Id: table.php 1002 2005-07-10 16:11:37Z mz $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(table.php,v 1.27 2003/02/05); www.oscommerce.com 
    (c) 2003	 nextcommerce (table.php,v 1.8 2003/08/24); www.nextcommerce.org
+   (c) 2003 XT-Commerce
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -31,7 +32,7 @@
       $this->enabled = ((MODULE_SHIPPING_TABLE_STATUS == 'True') ? true : false);
       $this->num_table = defined('MODULE_SHIPPING_TABLE_NUMBER_ZONES')?MODULE_SHIPPING_TABLE_NUMBER_ZONES:'';
 
-      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_TABLE_ZONE > 0) ) {
+      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_TABLE_ZONE > 0) && is_object($order) ) {
         $check_flag = false;
         $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_TABLE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
