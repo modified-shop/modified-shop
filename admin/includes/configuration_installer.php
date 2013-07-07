@@ -74,7 +74,7 @@ $values_group_update = array();
 //configuration_group_id 19 --- "Google Conversionr"
 
 //configuration_group_id 20 --- "Import/export"
-$values[] = "(NULL, 'CSV_CATEGORY_DEFAULT', '0', '20', '4', NULL, NOW(), NULL, 'xtc_cfg_get_category_tree()');";
+  $values[] = "(NULL, 'CSV_CATEGORY_DEFAULT', '0', '20', '4', NULL, NOW(), NULL, 'xtc_cfg_get_category_tree()');";
 
 //configuration_group_id 21 --- "Afterbuy"
   $values[] = "(NULL, 'AFTERBUY_DEALERS', '3', '21', '7', NULL , NOW(), NULL , NULL);";
