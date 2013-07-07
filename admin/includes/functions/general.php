@@ -369,6 +369,16 @@
     return (array) $array_merged;
   }
 
+  // Alias function for Store configuration values in the Administration Tool
+  /**
+   * xtc_cfg_get_category_tree()
+   *
+   * @param string $category_id
+   * @return
+   */
+  function xtc_cfg_get_category_tree($category_id) {
+    return xtc_draw_pull_down_menu('configuration_value', xtc_get_category_tree(), $category_id);
+  }
 
   /**
    * xtc_get_category_tree()

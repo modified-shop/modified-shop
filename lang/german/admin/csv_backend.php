@@ -29,4 +29,6 @@ define('CSV_SETUP','Einstellungen');
 define('TEXT_IMPORT','');
 define('TEXT_PRODUCTS','Produkte');
 define('TEXT_EXPORT','Exportierte Datei wird im /export Verzeichnis gespeichert');
+define('CSV_CATEGORY_DEFAULT_TITLE','Kategorie f&uuml;r den Import');
+define('CSV_CATEGORY_DEFAULT_DESC','In diese Kategorie werden alle Artikel importiert, die noch nicht im Shop vorhanden sind.<br/><b>Wichtig:</b> es werden keine neuen Artikel in die Ebene Top importiert.');
 ?>
