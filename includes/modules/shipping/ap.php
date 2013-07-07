@@ -137,7 +137,6 @@
 
     function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_AP_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_HANDLING', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_AP_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_AP_ZONE', '0', '6', '0', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_SORT_ORDER', '0', '6', '0', now())");
@@ -147,7 +146,7 @@
   	}
 
     function install_zones($number_of_zones) {
-                    
+
       // backup old values
       xtc_backup_configuration($this->keys_zones($number_of_zones));
 
@@ -171,45 +170,45 @@
       }
 
       // set standard values
-      for ($i = 1; $i <= $this->num_ap; $i ++) {
+       for ($i = 1; $i <= $this->num_ap; $i ++) {
         if ($i == 1) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_1', 'DE,IT,SM', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_1', '1:12.35,2:13.80,3:15.25,4:16.70,5:18.15,6:19.60,7:21.05,8:22.50,9:23.95,10:25.40,11:26.85,12:28.30,13:29.75,14:31.20,15:32.65,16:34.10,17:35.55,18:37.00,19:38.45,20:39.90', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'DE,IT,SM' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_1'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:12.35,2:13.80,3:15.25,4:16.70,5:18.15,6:19.60,7:21.05,8:22.50,9:23.95,10:25.40,11:26.85,12:28.30,13:29.75,14:31.20,15:32.65,16:34.10,17:35.55,18:37.00,19:38.45,20:39.90' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_1'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_1'");
         }
         if ($i == 2) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_2', 'AD,BE,DK,FO,GL,FI,FR,GR,GB,IE,LI,LU,MC,NL,PT,SE,CH,SK,SI,ES,CZ,HU,VA', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_2', '1:13.08,2:15.26,3:17.44,4:19.62,5:21.80,6:23.98,7:26.16,8:28.34,9:30.52,10:32.70,11:34.88,12:37.06,13:39.24,14:41.42,15:43.60,16:45.78,17:47.96,18:50.14,19:52.32,20:54.50', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AD,BE,DK,FO,GL,FI,FR,GR,GB,IE,LI,LU,MC,NL,PT,SE,CH,SK,SI,ES,CZ,HU,VA' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_2'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:13.08,2:15.26,3:17.44,4:19.62,5:21.80,6:23.98,7:26.16,8:28.34,9:30.52,10:32.70,11:34.88,12:37.06,13:39.24,14:41.42,15:43.60,16:45.78,17:47.96,18:50.14,19:52.32,20:54.50' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_2'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_2'");
         }
         if ($i == 3) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_3', 'EG,AL,DZ,AM,AZ,BA,BG,EE,GE,GI,IS,IL,YU,HR,LV,LB,LY,LT,MT,MA,MK,MD,NO,PL,RO,RU,SY,TN,TR,UA,CY', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_3', '1:14.53,2:18.16,3:21.79,4:25.42,5:29.05,6:32.68,7:36.31,8:39.94,9:43.57,10:47.20,11:50.83,12:54.46,13:58.09,14:61.72,15:65.35,16:68.98,17:72.61,18:76.24,19:79.87,20:83.50', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'EG,AL,DZ,AM,AZ,BA,BG,EE,GE,GI,IS,IL,YU,HR,LV,LB,LY,LT,MT,MA,MK,MD,NO,PL,RO,RU,SY,TN,TR,UA,CY' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_3'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:14.53,2:18.16,3:21.79,4:25.42,5:29.05,6:32.68,7:36.31,8:39.94,9:43.57,10:47.20,11:50.83,12:54.46,13:58.09,14:61.72,15:65.35,16:68.98,17:72.61,18:76.24,19:79.87,20:83.50' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_3'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_3'");
         }
         if ($i == 4) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_4', 'ET,BH,BJ,BF,CI,DJ,ER,GM,GH,GU,GN,GW,IQ,IR,YE,JO,CM,CA,CV,KZ,QA,KG,KW,LR,ML,MH,MR,FM,NE,NG,MP,OM,PR,SA,SN,SL,SO,SD,TJ,TG,TD,TM,UZ,AE,US,UM,CF', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_4', '1:17.44,2:23.98,3:30.52,4:37.06,5:43.60,6:50.14,7:56.68,8:63.22,9:69.76,10:76.30,11:82.84,12:89.38,13:95.92,14:102.46,15:109.00,16:115.54,17:122.08,18:128.62,19:135.16,20:141.70', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'ET,BH,BJ,BF,CI,DJ,ER,GM,GH,GU,GN,GW,IQ,IR,YE,JO,CM,CA,CV,KZ,QA,KG,KW,LR,ML,MH,MR,FM,NE,NG,MP,OM,PR,SA,SN,SL,SO,SD,TJ,TG,TD,TM,UZ,AE,US,UM,CF' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_4'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:17.44,2:23.98,3:30.52,4:37.06,5:43.60,6:50.14,7:56.68,8:63.22,9:69.76,10:76.30,11:82.84,12:89.38,13:95.92,14:102.46,15:109.00,16:115.54,17:122.08,18:128.62,19:135.16,20:141.70' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_4'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_4'");
         }
         if ($i == 5) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_5', 'AF,AO,AI,AG,GQ,AR,BS,BD,BB,BZ,BM,BT,BO,BW,BR,BN,BI,KY,CL,CN,CR,DM,DO,EC,SV,FK,GF,GA,GD,GP,GT,GY,HT,HN,HK,IN,ID,TP,JM,JP,KH,KE,CO,KM,CG,KP,KR,CU,LA,LS', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_5', '1:19.62,2:28.34,3:37.06,4:45.78,5:54.50,6:63.22,7:71.94,8:80.66,9:89.38,10:98.10,11:106.82,12:115.54,13:124.26,14:132.98,15:141.70,16:150.42,17:159.14,18:167.86,19:176.58,20:185.30', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AF,AO,AI,AG,GQ,AR,BS,BD,BB,BZ,BM,BT,BO,BW,BR,BN,BI,KY,CL,CN,CR,DM,DO,EC,SV,FK,GF,GA,GD,GP,GT,GY,HT,HN,HK,IN,ID,TP,JM,JP,KH,KE,CO,KM,CG,KP,KR,CU,LA,LS' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_5'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:19.62,2:28.34,3:37.06,4:45.78,5:54.50,6:63.22,7:71.94,8:80.66,9:89.38,10:98.10,11:106.82,12:115.54,13:124.26,14:132.98,15:141.70,16:150.42,17:159.14,18:167.86,19:176.58,20:185.30' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_5'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_5'");
         }
         if ($i == 6) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_6', 'MO,MG,MW,MY,MV,MQ,MU,MX,MN,MS,MZ,MM,NA,NP,NI,AN,AW,PK,PA,PY,PE,PH,RE,RW,ZM,ST,SC,ZW,SG,LK,KN,LC,PM,VC,ZA,SR,SZ,TZ,TH,TT,TC,UG,UY,VE,VN,VG', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_6', '1:19.62,2:28.34,3:37.06,4:45.78,5:54.50,6:63.22,7:71.94,8:80.66,9:89.38,10:98.10,11:106.82,12:115.54,13:124.26,14:132.98,15:141.70,16:150.42,17:159.14,18:167.86,19:176.58,20:185.30', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'MO,MG,MW,MY,MV,MQ,MU,MX,MN,MS,MZ,MM,NA,NP,NI,AN,AW,PK,PA,PY,PE,PH,RE,RW,ZM,ST,SC,ZW,SG,LK,KN,LC,PM,VC,ZA,SR,SZ,TZ,TH,TT,TC,UG,UY,VE,VN,VG' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_6'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:19.62,2:28.34,3:37.06,4:45.78,5:54.50,6:63.22,7:71.94,8:80.66,9:89.38,10:98.10,11:106.82,12:115.54,13:124.26,14:132.98,15:141.70,16:150.42,17:159.14,18:167.86,19:176.58,20:185.30' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_6'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_6'");
         }
         if ($i == 7) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_7', 'AU,CK,FJ,PF,KI,NR,NC,NZ,PG,PN,SB,TO,TV,VU,WF,WS', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_7', '1:23.98,2:37.06,3:50.14,4:63.22,5:76.30,6:89.38,7:102.46,8:115.54,9:128.62,10:141.70,11:154.78,12:167.86,13:180.94,14:194.02,15:207.10,16:220.18,17:233.26,18:246.34,19:259.42,20:272.50', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AU,CK,FJ,PF,KI,NR,NC,NZ,PG,PN,SB,TO,TV,VU,WF,WS' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_7'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '1:23.98,2:37.06,3:50.14,4:63.22,5:76.30,6:89.38,7:102.46,8:115.54,9:128.62,10:141.70,11:154.78,12:167.86,13:180.94,14:194.02,15:207.10,16:220.18,17:233.26,18:246.34,19:259.42,20:272.50' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_7'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_7'");
         }
         if ($i == 8) {
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SHIPPING_AP_COUNTRIES_8', 'AT', '6', '0', 'xtc_cfg_textarea(', now())");
-          xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_AP_COST_8', '2:3.56,4:4.36,8:5.45,12:6.90,20:9.08,31.5:12.72', '6', '0', now())");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'AT' WHERE configuration_key = 'MODULE_SHIPPING_AP_COUNTRIES_8'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '2:3.56,4:4.36,8:5.45,12:6.90,20:9.08,31.5:12.72' WHERE  configuration_key = 'MODULE_SHIPPING_AP_COST_8'");
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '0' WHERE  configuration_key = 'MODULE_SHIPPING_AP_HANDLING_8'");
         }
       }
