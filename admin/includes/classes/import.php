@@ -436,11 +436,11 @@ class xtcImport {
 			}
 		}
 		
-    // check for Category		
-    $categories_check_query = xtc_db_query("SELECT categories_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id='".$products_id."'");
-    if (!xtc_db_num_rows($categories_check_query)) {    
-      $this->insertPtoCconnection($products_id, $this->CatDefault);
-    }
+		// check for Category		
+		$categories_check_query = xtc_db_query("SELECT categories_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE products_id='".$products_id."'");
+		if (!xtc_db_num_rows($categories_check_query)) {		
+			$this->insertPtoCconnection($products_id, $this->CatDefault);
+		}
 	}
 
 	/*****************************************************************************
