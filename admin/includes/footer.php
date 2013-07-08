@@ -17,10 +17,8 @@
    --------------------------------------------------------------*/
    defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
-<br />
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
-  <tr>
-    <td align="center" class="smallText">
+<div id="footer">
+    <div class="smallText">
       <?php
       /*
       The following copyright announcement is in compliance
@@ -36,12 +34,8 @@
     */
       ?>
       <a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">&nbsp;&copy;2009-<?php echo date("Y"); ?>&nbsp;provides no warranty and is redistributable under the <a style="color:#555555;text-decoration:none;" href="http://www.gnu.org/licenses/gpl-2.0.html" target="_blank">GNU General Public License (Version 2)</a><br />eCommerce Engine 2006 based on <a style="text-decoration:none; color:#555555;" href="http://www.xt-commerce.com/" rel="nofollow" target="_blank">xt:Commerce</a></span>
-    </td>
-  </tr>
-  <tr>
-    <td><?php echo xtc_image(DIR_WS_IMAGES . 'pixel_trans.gif', '', '1', '5'); ?></td>
-  </tr>
-</table>
+    </div>  
+</div>
 <?php
   /*
     echo ('<font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Session Debug:</strong><br />');

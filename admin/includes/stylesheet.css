@@ -216,6 +216,7 @@ body {
 .columnLeft2 { 
   vertical-align: top; 
   color: #000000;
+  width: 150px;
 }
 .boxCenter {
   border: 1px solid;
@@ -299,19 +300,29 @@ td.categories_view_data {
 }
 
 /* info box */
+.contentTable {
+  font-family: Verdana, Arial, sans-serif;
+  font-size: 10px;
+  color: #000000;
+  border: 1px solid #b40076;
+  width: 100%;
+  border-collapse: collapse;
+}
 .infoBoxHeading {
   font-family: Verdana, Arial, Helvetica, sans-serif;
   font-size: 10px;
   font-weight: bold;
-  padding: 5px;
-  background: url(../images/menu-bg-li.gif);
+  padding: 4px;
+  background: #dbdbdb;
   border-bottom: 1px solid #b40076;
+  height: 18px;
 }
 .infoBoxContent {
   font-family: Verdana, Arial, sans-serif;
   font-size: 10px;
   color: #000000;
-  background-color: #eaeaea;
+  padding: 2px 4px;
+  background: #eaeaea;
 }
 
 /*  
@@ -388,13 +399,6 @@ span.button {
 /* Admin Buttons EOF */
 div.stock_warn {
   background-color: #F9F0F1;
-}
-.contentTable {
-  font-family: Verdana, Arial, sans-serif;
-  font-size: 10px;
-  color: #000000;
-  background-color: #F6F6F6;
-  border: 1px solid #b40076;
 }
 
 /* message box */
@@ -637,7 +641,9 @@ padding:2px;
 width: 100%;
 padding: 2px;
 }
-
+.table-main td{
+vertical-align: top;
+}
 .boxCenter{
 width: 100%;
 vertical-align: top;
@@ -646,6 +652,10 @@ padding: 2px;
 .boxRight{
 width: 25%;
 vertical-align: top;
+padding: 0;
+}
+.w100{
+width: 100%;
 }
 .pageHeadingImage{
 float:left;
@@ -695,4 +705,14 @@ background:#FFCC33;
 }
 table.collapse{
 border-collapse:collapse;
+}
+#footer div{
+text-align: center;
+margin: 10px 0;
+}
+.txta-r{
+text-align: right;
+}
+.txta-c{
+text-align: center;
 }
