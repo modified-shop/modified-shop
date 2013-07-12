@@ -352,15 +352,10 @@
 		$message = '<table border="0" width="100%" cellspacing="0" cellpadding="2"><tr><td class="messageStackError"><img border="0" title="" alt="" src="images/icons/error.gif">'.$message.'</td></tr></table>';
 		return $message;
 	}
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
-<meta name="robots" content="noindex,nofollow">
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript" >
 	function doShipment(jalert) {

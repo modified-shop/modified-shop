@@ -35,12 +35,10 @@ if ($_GET['pID']=='media') {
  					WHERE content_id='".(int)$_GET['coID']."'");
  	$content_data=xtc_db_fetch_array($content_query);
  }
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<title><?php echo $page_title; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
 </head>
 <div class="pageHeading"><?php echo $content_data['content_heading']; ?></div><br />
 <table border="0" width="100%" cellspacing="0" cellpadding="2">

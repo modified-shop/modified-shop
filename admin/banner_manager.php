@@ -183,13 +183,10 @@
       $messageStack->add(ERROR_GRAPHS_DIRECTORY_DOES_NOT_EXIST, 'error');
     }
   }
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>"> 
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+
 <script type="text/javascript"><!--
 function popupImageWindow(url) {
   window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')

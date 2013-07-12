@@ -155,14 +155,9 @@
   if ($_GET['mail_sent_to']) {
     $messageStack->add(sprintf(NOTICE_EMAIL_SENT_TO, $_GET['mail_sent_to']), 'success');
   }
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>" />
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />
-<?php 
+
+require (DIR_WS_INCLUDES.'head.php');
+
 if (USE_WYSIWYG=='true' && ($_GET['action'] != 'preview' || $error== true)) {
  $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
  $data=xtc_db_fetch_array($query);

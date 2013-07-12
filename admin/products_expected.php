@@ -18,13 +18,10 @@
   require('includes/application_top.php');
 
   xtc_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>"> 
-<title><?php echo TITLE; ?></title>
-<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
