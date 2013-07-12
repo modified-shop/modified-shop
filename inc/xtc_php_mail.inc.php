@@ -131,7 +131,10 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->FromName = $from_email_name;
   $mail->AddAddress($to_email_address, $to_name);
   if ($forwarding_to != '') {
-    $mail->AddBCC($forwarding_to);
+    $forwarding = explode(',', $forwarding_to);
+    foreach ($forwarding as $forwarding_address) {
+      $mail->AddBCC(trim($forwarding_address));
+    }
   }
   $mail->AddReplyTo($reply_address, $reply_address_name);
 
