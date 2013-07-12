@@ -32,9 +32,6 @@
 
    TODO Attributpreise und Sonderangebote
       Bei Sonderangeboten wird der Attributpreis nicht zum Artikelpreis addiert
-   TODO Lagerbestand Attribute (Produkt löschen, Produkt Anzahl Änderung)
-    dazu muss die Tabelle orders_product_attributes um options_id und options_values_id erweitert werden
-    da ansonsten keine eindeutige Zuordnung möglich ist
     Anpassung in checkout_process.php
    --------------------------------------------------------------*/
 
@@ -243,6 +240,21 @@ if ($action == 'product_edit') {
   $new_qty = (double)$_POST['old_qty'] - (double)$_POST['products_quantity'];
   xtc_db_query("UPDATE " . TABLE_PRODUCTS . " SET products_quantity = products_quantity + " . $new_qty . " WHERE products_id = " . (int)($_POST['products_id']));
 
+  // Update Attributes Stock
+  if (STOCK_LIMITED == 'true') {
+    $delete_products_attributes_query = xtc_db_query("SELECT *
+                                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                                       WHERE orders_products_id = '".(int)$_POST['opID']."'
+                                                      ");
+    while ($delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query)) {
+      xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
+                       SET attributes_stock = attributes_stock + '".$new_qty."'
+                     WHERE products_id = '".(int)$_POST['products_id']."' 
+                       AND options_id = '".$delete_products_attributes['orders_products_options_id']."'
+                       AND options_values_id = '".$delete_products_attributes['orders_products_options_values_id']."'");
+    }
+  }
+
   // Update products_ordered (for bestsellers list)
   xtc_db_query("UPDATE " . TABLE_PRODUCTS . " SET products_ordered = products_ordered - ".sprintf('%d', $new_qty)." WHERE products_id = '".(int)($_POST['products_id'])."'");
 
@@ -428,7 +440,9 @@ if ($action == 'product_option_ins') {
                            'orders_products_id' => (int)($_POST['opID']),
                            'products_options' => xtc_db_prepare_input($products_options['products_options_name']),
                            'products_options_values' => xtc_db_prepare_input($products_options_values['products_options_values_name']),
-                           'options_values_price' => xtc_db_prepare_input($products_attributes['options_values_price']));
+                           'options_values_price' => xtc_db_prepare_input($products_attributes['options_values_price']),
+                           'orders_products_options_id' => xtc_db_prepare_input($products_attributes['options_id']),
+                           'orders_products_options_values_id' => xtc_db_prepare_input($products_attributes['options_values_id']));
 
   $insert_sql_data = array ('price_prefix' => xtc_db_prepare_input($products_attributes['price_prefix']));
   $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
@@ -440,6 +454,15 @@ if ($action == 'product_option_ins') {
                                    where op.orders_products_id = '".(int)$_POST['opID']."'
                                      and op.products_id = p.products_id");
   $products = xtc_db_fetch_array($products_query);
+
+  // Update Attributes Stock
+  if (STOCK_LIMITED == 'true') {
+    xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
+                     SET attributes_stock = attributes_stock - '".$products['products_quantity']."' 
+                   WHERE products_id = '".$products['products_id']."' 
+                     AND options_id = '".$products_attributes['options_id']."'
+                     AND options_values_id = '".$products_attributes['options_values_id']."'");
+  }
 
   $products_a_query = xtc_db_query("select options_values_price, price_prefix from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." where orders_products_id = '".(int)$_POST['opID']."'");
 
@@ -755,6 +778,23 @@ if ($action == 'curr_edit') {
 // Löschen eines Artikels aus der Bestellung Anfang:
 if ($action == 'product_delete') {
 
+  // Update Attributes Stock
+  if (STOCK_LIMITED == 'true') {
+    $delete_products_attributes_query = xtc_db_query("SELECT *
+                                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                                        JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                                             ON op.orders_products_id=opa.orders_products_id
+                                                       WHERE op.orders_products_id = '".(int)$_POST['opID']."'
+                                                      ");
+    while ($delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query)) {
+      xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
+                       SET attributes_stock = attributes_stock + '".$delete_products_attributes['products_quantity']."'
+                     WHERE products_id = '".$delete_products_attributes['products_id']."' 
+                       AND options_id = '".$delete_products_attributes['orders_products_options_id']."'
+                       AND options_values_id = '".$delete_products_attributes['orders_products_options_values_id']."'");
+    }
+  }
+
   xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." where orders_products_id = '".(int)($_POST['opID'])."'");
   xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".(int)($_POST['oID'])."' and orders_products_id = '".(int)($_POST['opID'])."'");
 
@@ -769,6 +809,22 @@ if ($action == 'product_delete') {
 // Löschen einer Artikeloption aus der Bestellung Anfang:
 if ($action == 'product_option_delete') {
 
+  // Update Attributes Stock
+  if (STOCK_LIMITED == 'true') {
+    $delete_products_attributes_query = xtc_db_query("SELECT *
+                                                        FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." opa
+                                                        JOIN ".TABLE_ORDERS_PRODUCTS." op
+                                                             ON op.orders_products_id=opa.orders_products_id
+                                                       WHERE orders_products_attributes_id='".(int)$_POST['opAID']."'
+                                                      ");
+    $delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query);
+    xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
+                     SET attributes_stock = attributes_stock + '".$delete_products_attributes['products_quantity']."'
+                   WHERE products_id = '".$delete_products_attributes['products_id']."' 
+                     AND options_id = '".$delete_products_attributes['orders_products_options_id']."'
+                     AND options_values_id = '".$delete_products_attributes['orders_products_options_values_id']."'");
+  }
+                 
   xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." where orders_products_attributes_id = '".(int)($_POST['opAID'])."'");
 
   $products_query = xtc_db_query("select op.products_id, op.products_quantity, p.products_tax_class_id from ".TABLE_ORDERS_PRODUCTS." op, ".TABLE_PRODUCTS." p where op.orders_products_id = '".(int)$_POST['opID']."' and op.products_id = p.products_id");
