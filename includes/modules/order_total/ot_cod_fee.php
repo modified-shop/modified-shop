@@ -40,6 +40,10 @@
       $this->enabled = ((MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') ? true : false);
       $this->sort_order = MODULE_ORDER_TOTAL_COD_FEE_SORT_ORDER;
 
+      $this->default_values = 'AT:3.00,DE:3.58,00:9.99';
+      
+      $this->properties['button_update'] = '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=update') . '">' . BUTTON_UPDATE. '</a>';
+      $this->properties['button_reset'] = '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . 'ordertotal' . '&module=' . $this->code . '&action=reset') . '">' . BUTTON_RESET. '</a>';
 
       $this->output = array();
     }
@@ -55,53 +59,24 @@
         //check if payment method is cod. If yes, check if cod is possible.
         if ($_SESSION['payment'] == 'cod') {
           //process installed shipping modules
-		   // BOF - Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
-          if ($_SESSION['shipping']['id'] == 'flat_flat') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_FLAT);
-          if ($_SESSION['shipping']['id'] == 'item_item') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_ITEM);
-          if ($_SESSION['shipping']['id'] == 'table_table') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_TABLE);
-          if ($_SESSION['shipping']['id'] == 'zones_zones') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_ZONES);
-          if ($_SESSION['shipping']['id'] == 'ap_ap') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_AP);
-          if ($_SESSION['shipping']['id'] == 'dp_dp') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DP);
-
-                    // module chp
-          if ($_SESSION['shipping']['id'] == 'chp_ECO') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHP);
-          if ($_SESSION['shipping']['id'] == 'chp_PRI') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHP);
-          if ($_SESSION['shipping']['id'] == 'chp_URG') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHP);
-
-          // module chronopost
-          if ($_SESSION['shipping']['id'] == 'chronopost_chronopost') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHRONOPOST);
-
-          // module DHL
-          if ($_SESSION['shipping']['id'] == 'dhl_ECX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_DOX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_SDX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_MDX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_WPX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-         // UPS
-          if ($_SESSION['shipping']['id'] == 'ups_ups') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_UPS);
-          if ($_SESSION['shipping']['id'] == 'upse_upse') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_UPSE);
-
-          // Free Shipping
-          if ($_SESSION['shipping']['id'] == 'free_free') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_FREE);
-          if ($_SESSION['shipping']['id'] == 'freeamount_freeamount') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_FREEAMOUNT_FREE);
-		  // EOF - Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
-
-            for ($i = 0; $i < count($cod_zones); $i++) {
-            if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
-                  $cod_cost = $cod_zones[$i + 1];
-                  $cod_country = true;
-                  break;
-                } elseif ($cod_zones[$i] == '00') {
-                  $cod_cost = $cod_zones[$i + 1];
-                  $cod_country = true;
-                  break;
-                } else {
-                }
-              $i++;
-            }
-          } else {
-            //COD selected, but no shipping module which offers COD
+          $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode($_SESSION['shipping']['id'])));
+          $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
+          for ($i = 0; $i < count($cod_zones); $i++) {
+          if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
+                $cod_cost = $cod_zones[$i + 1];
+                $cod_country = true;
+                break;
+              } elseif ($cod_zones[$i] == '00') {
+                $cod_cost = $cod_zones[$i + 1];
+                $cod_country = true;
+                break;
+              } else {
+              }
+            $i++;
           }
+        } else {
+          //COD selected, but no shipping module which offers COD
+        }
 
         if ($cod_country) {
             $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
@@ -148,41 +123,64 @@
     }
 
     function keys() {
-      return array('MODULE_ORDER_TOTAL_COD_FEE_STATUS', 'MODULE_ORDER_TOTAL_COD_FEE_SORT_ORDER', 'MODULE_ORDER_TOTAL_COD_FEE_FLAT', 'MODULE_ORDER_TOTAL_COD_FEE_ITEM', 'MODULE_ORDER_TOTAL_COD_FEE_TABLE','MODULE_ORDER_TOTAL_COD_FEE_CHRONOPOST','MODULE_ORDER_TOTAL_COD_FEE_DHL','MODULE_ORDER_TOTAL_COD_FEE_CHP', 'MODULE_ORDER_TOTAL_COD_FEE_ZONES', 'MODULE_ORDER_TOTAL_COD_FEE_AP', 'MODULE_ORDER_TOTAL_COD_FEE_UPS', 'MODULE_ORDER_TOTAL_COD_FEE_UPSE', 'MODULE_ORDER_TOTAL_COD_FEE_DP', 'MODULE_ORDER_TOTAL_COD_FEE_FREE', 'MODULE_ORDER_TOTAL_FREEAMOUNT_FREE', 'MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS');
+      $installed_shipping_modules = $this->get_installed_shipping_modules();
+      $modules = array();
+      $modules[] = 'MODULE_ORDER_TOTAL_COD_FEE_STATUS';
+      $modules[] = 'MODULE_ORDER_TOTAL_COD_FEE_SORT_ORDER';
+      if (count($installed_shipping_modules) > 0) {
+        foreach($installed_shipping_modules as $shipping_code) {
+          $shipping_code = strtoupper($shipping_code);
+          $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
+          if(defined('MODULE_ORDER_TOTAL_COD_'.$shipping_code)) {           
+            $modules[] = 'MODULE_ORDER_TOTAL_COD_'.$shipping_code;
+          }
+        }
+      }
+      $modules[] = 'MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS';
+      
+      return $modules;
     }
 
     function install() {
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_STATUS', 'true', '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_SORT_ORDER', '35', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_FLAT', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_ITEM', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_TABLE', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_ZONES', 'CA:4.50,US:3.00,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_AP', 'AT:3.63,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_DP', 'DE:4.00,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_CHP', 'CH:4.00,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_CHRONOPOST', 'FR:4.00,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_DHL', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_UPS', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_UPSE', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_FREE', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_FREEAMOUNT_FREE', 'AT:3.00,DE:3.58,00:9.99', '6', '0', now())");
-
+      $this->update();
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
+    }
+    
+    function update($reset = false) {
+      $installed_shipping_modules = $this->get_installed_shipping_modules();
+      if (count($installed_shipping_modules) > 0) {
+        foreach($installed_shipping_modules as $shipping_code) {
+          $shipping_code = strtoupper($shipping_code);
+          $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;          
+          if(!defined('MODULE_ORDER_TOTAL_COD_'.$shipping_code)) {            
+            $sql_data_array = array(
+                'configuration_key' => 'MODULE_ORDER_TOTAL_COD_'.$shipping_code, 
+                'configuration_value' => $this->default_values, 
+                'configuration_group_id' => '6', 
+                'sort_order' => '0',
+                'date_added' => 'now()'
+                );
+            xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array);            
+          }
+          if ($reset) {
+            $sql_data_array['configuration_value'] = $this->default_values;
+            xtc_db_perform(TABLE_CONFIGURATION, $sql_data_array,'update', "configuration_key='".'MODULE_ORDER_TOTAL_COD_'.$shipping_code."'");
+          }
+        }
+      }
+    }
+    
+    function reset() {
+      $this->update(true);
+    }
+    
+    function get_installed_shipping_modules() {
+      //dp.php;flat.php;zones.php      
+      $module_keys = str_replace('.php','',MODULE_SHIPPING_INSTALLED);
+      $installed_shipping_modules = explode(';',$module_keys);
+      return $installed_shipping_modules;    
     }
 
     function remove() {
