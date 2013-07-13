@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: categories_specials.php 2360 2011-11-18 15:10:57Z franky-n-xtcm $
+   $Id: categories_specials.php 4476 2013-02-15 19:37:01Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -100,10 +100,6 @@ function showSpecialsBox() {
       echo xtc_draw_hidden_field('specials_id', $sInfo->specials_id);
     }
     ?>
-
-<script type="text/javascript">
-  var specialExpires = new ctlSpiffyCalendarBox("specialExpires", "new_product", "specials_expires","btnDate2","<?php echo $expires_date; ?>",2);
-</script>
 <script language="JavaScript" type="text/JavaScript">
   function showSpecial() {
     //alert(document.getElementById("special").style.display);
@@ -186,10 +182,7 @@ function showSpecialsBox() {
                 <?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>
               </td>
               <td class="main">
-                <script type="text/javascript">specialExpires.writeControl(); specialExpires.dateFormat="yyyy-MM-dd";</script>
-                <noscript>
-                <?php echo  xtc_draw_input_field('specials_expires', $expires_date ,'style="width: 135px"'); ?>
-                </noscript>
+                <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"'); ?>                
               </td>
               <td class="main">
                 &nbsp;

@@ -39,8 +39,9 @@ $catfunc = new categories();
 $catfunc->set_page_parameter();
 
 //this is used only by group_prices
-if ($_GET['function']) {
-	switch ($_GET['function']) {
+$function = (isset($_GET['function']) ? $_GET['function'] : '');
+if (xtc_not_null($function)) {
+  switch ($function) {
 		case 'delete' :
 			xtc_db_query("DELETE FROM personal_offers_by_customers_status_".(int) $_GET['statusID']."
 						                     WHERE products_id = '".(int) $_GET['pID']."'
@@ -50,7 +51,7 @@ if ($_GET['function']) {
 	xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.(int) $_GET['pID'].$catfunc->page_parameter));
 }
 
-// Multi-Status Change, separated from $_GET['action']
+// Multi-Status Change, separated from $_GET['action'] //$action
 // --- MULTI STATUS ---
 if (isset ($_POST['multi_status_on'])) {
 	//set multi_categories status=on
@@ -86,9 +87,9 @@ if (isset ($_POST['multi_status_off'])) {
 // --- MULTI STATUS ENDS ---
 
 //regular actions
-if ($_GET['action']) {
-	switch ($_GET['action']) {
-
+$action = (isset($_GET['action']) ? $_GET['action'] : '');
+if (xtc_not_null($action)) {
+  switch ($action) {
 		case 'setcflag' :
 			if (($_GET['flag'] == '0') || ($_GET['flag'] == '1')) {
 				if ($_GET['cID']) {
@@ -98,7 +99,6 @@ if ($_GET['action']) {
 			xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$catfunc->page_parameter));
 			break;
 			//EOB setcflag
-
 		case 'setpflag' :
 			if (($_GET['flag'] == '0') || ($_GET['flag'] == '1')) {
 				if ($_GET['pID']) {
@@ -112,7 +112,6 @@ if ($_GET['action']) {
 			}
 			break;
 			//EOB setpflag
-
 		case 'setsflag' :
 			if (($_GET['flag'] == '0') || ($_GET['flag'] == '1')) {
 				if ($_GET['pID']) {
@@ -131,44 +130,33 @@ if ($_GET['action']) {
 			}
 			break;
 			//EOB setsflag
-
 		case 'update_category' :
 			$catfunc->insert_category($_POST, '', 'update');
 			break;
-
 		case 'insert_category' :
 			$catfunc->insert_category($_POST, $current_category_id);
 			break;
-
 		case 'update_product' :
 			$catfunc->insert_product($_POST, '', 'update');
 			break;
-
 		case 'insert_product' :
 			$catfunc->insert_product($_POST, $current_category_id);
 			break;
-
 		case 'edit_crossselling' :
 			$catfunc->edit_cross_sell($_GET);
 			break;
-
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
 		case 'multi_action':
-
 			// xs:booster start - multiauktion (v1.041)
 			if (isset($_POST['multi_xtb'])) {
-
 				$_SESSION['xtb1']['multi_xtb']=array();
-
 				require_once("../".DIR_WS_CLASSES.'xtbooster.php');
 				$xtb = new xtbooster_base;
 				$xtb->config();
 				$requestx = "ACTION:TradeTemplateFetch";
 				$resx = $xtb->parse($xtb->exec($requestx));
-
 				$MULTI_REVERSECATS = $resx['MULTI_REVERSECATS'];
 				$MULTI_ONLYONSTOCK = $resx['MULTI_ONLYONSTOCK'];
-
 				if (is_array($_POST['multi_products'])) {
 					$x=$_POST['multi_products'];
 					foreach($x as $products_id) {
@@ -178,7 +166,6 @@ if ($_GET['action']) {
 						$_SESSION['xtb1']['multi_xtb'][]=$products_id;
 					}
 				}
-
 				if (is_array($_POST['multi_categories'])) {
 					$_xtb_max_p = 10000;
 					function _xtb_reverse($category_id=0) {
@@ -194,7 +181,6 @@ if ($_GET['action']) {
 							_xtb_reverse($c['categories_id']);
 						}
 					}
-
 					foreach ($_POST['multi_categories'] AS $i=>$category_id) {
 						$q = xtc_db_query("select p.products_id, p.products_quantity from ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_TO_CATEGORIES." p2c where p.products_id = p2c.products_id and p.products_status = '1' and p2c.categories_id = '".$category_id."'");
 						while($p = xtc_db_fetch_array($q)) {
@@ -204,18 +190,13 @@ if ($_GET['action']) {
 						if($MULTI_REVERSECATS=='true') _xtb_reverse($category_id);
 					}
 				}
-
 				header("Location: xtbooster.php?xtb_module=add&mode=multi_xtb");
 				exit;
 			}
 			// xs:booster end - multiauktion (v1.041)
-
-
 			break;
 // EOF - Tomcraft - 2009-11-28 - Included xs:booster
-
 		case 'multi_action_confirm' :
-
 			// --- MULTI DELETE ---
 			if (isset ($_POST['multi_delete_confirm'])) {
 				//delete multi_categories
@@ -322,17 +303,16 @@ if ($_GET['action']) {
 						}
 					}
 				}
-
+        //BOC - web28 - redirect to product input mask
         $action = is_array($_POST['multi_products']) && isset($_POST['link_to_product']) ? '&action=new_product' : '';
         $pID = isset($pID) && $pID > 0 ? '&pID='. $pID : '';
 				xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$dest_category_id.$pID.$action));
+        //EOC - web28 - redirect to product input mask
 			}
 			// --- MULTI COPY ENDS ---
-
 			xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
 			break;
 			#EOB multi_action_confirm
-
 	} //EOB switch action
 } //EOB if action
 
@@ -343,15 +323,16 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 } else {
 	$messageStack->add(ERROR_CATALOG_IMAGE_DIRECTORY_DOES_NOT_EXIST, 'error');
 }
-
-
 // end of pre-checks and actions, HTML output follows
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
+<script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript" src="includes/javascript/categories.js"></script>
 <?php
+//jQueryDatepicker
+require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
 // Include WYSIWYG if is activated
 if (USE_WYSIWYG == 'true') {
 	$query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".$_SESSION['languages_id']."'");
@@ -365,13 +346,13 @@ if (USE_WYSIWYG == 'true') {
   {
     <?php
 	  // generate editor for categories
-    if ($_GET['action'] == 'new_category' || $_GET['action'] == 'edit_category') {
+     if ($action == 'new_category' || $action == 'edit_category') {
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         echo xtc_wysiwyg('categories_description', $data['code'], $languages[$i]['id']);
       }
     }
     // generate editor for products
-    if ($_GET['action'] == 'new_product' || $_GET['action'] == 'new_product_preview') {
+    if ($action == 'new_product' || $action == 'new_product_preview') {
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         echo xtc_wysiwyg('products_description', $data['code'], $languages[$i]['id']);
         echo xtc_wysiwyg('products_short_description', $data['code'], $languages[$i]['id']);
@@ -384,9 +365,7 @@ if (USE_WYSIWYG == 'true') {
 }
 ?>
 </head>
-<body style="margin: 0; background-color: #FFFFFF">
-
-		<div id="spiffycalendar" class="text"></div>
+<body>
 		<!-- header //-->
 		<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 		<!-- header_eof //-->
@@ -395,40 +374,38 @@ if (USE_WYSIWYG == 'true') {
 		<table style="border:none; width:100%;" cellspacing="2" cellpadding="2">
 			<tr>
 				<td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-    				<table style="border: none; width: <?php echo BOX_WIDTH; ?>;" cellspacing="1" cellpadding="1" class="columnLeft">
-    					<!-- left_navigation //-->
-                        <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-    					<!-- left_navigation_eof //-->
-    				</table>
+          <!-- left_navigation //-->
+          <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+          <!-- left_navigation_eof //-->
 				</td>
-				<!-- body_text //-->
-				<td class="boxCenter" width="100%" valign="top"><table width="100%" cellspacing="0" cellpadding="2">
-                    <?php
-
-//----- new_category / edit_category (when ALLOW_CATEGORY_DESCRIPTIONS is 'true') -----
-if ($_GET['action'] == 'new_category' || $_GET['action'] == 'edit_category') {
-	include (DIR_WS_MODULES.'new_category.php');
-}
-elseif ($_GET['action'] == 'new_product'|| $_GET['action'] == 'new_product_preview') {
-	include (DIR_WS_MODULES.'new_product.php');
-}
-elseif ($_GET['action'] == 'edit_crossselling') {
-	include (DIR_WS_MODULES.'cross_selling.php');
-} else {
-	//set $cPath to 0 if not set - FireFox workaround, didn't work when de/activating categories and $cPath wasn't set
-	if (!$cPath) { $cPath = '0'; }
-	include (DIR_WS_MODULES.'categories_view.php');
-}
-?>
+        <!-- body_text //-->
+				<td class="boxCenter" width="100%" valign="top">
+           <table width="100%" cellspacing="0" cellpadding="2">
+              <?php
+              //----- new_category / edit_category (when ALLOW_CATEGORY_DESCRIPTIONS is 'true') -----
+              if ($action == 'new_category' || $action == 'edit_category') {
+                include (DIR_WS_MODULES.'new_category.php');
+              } elseif ($action == 'new_product' || $action == 'new_product_preview') {
+                include (DIR_WS_MODULES.'new_product.php');
+              } elseif ($action == 'edit_crossselling') {
+                include (DIR_WS_MODULES.'cross_selling.php');
+              } else {
+                //set $cPath to 0 if not set - FireFox workaround, didn't work when de/activating categories and $cPath wasn't set
+                if (!$cPath) {
+                  $cPath = '0';
+                }
+                include (DIR_WS_MODULES.'categories_view.php');
+              }
+              ?>
                 <!-- close tables from above modules //-->
-				</table></td>
+				  </table>
+        </td>
 				<!-- body_text_eof //-->
 			</tr>
 		</table>
 		<!-- body_eof //-->
-
 		<!-- footer //-->
-        <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
 		<!-- footer_eof //-->
 	</body>
 </html>
