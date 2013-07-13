@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: new_product.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id: new_product.php 5007 2013-07-04 09:31:37Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -89,14 +89,13 @@
                                );
 
   //if ($pInfo->products_startpage == '1') { $startpage_checked = true; } else { $startpage_checked = false; }
-
 ?>
-<link rel="stylesheet" type="text/css" href="includes/javascript/spiffyCal/spiffyCal_v2_1.css">
-<script type="text/javascript" src="includes/javascript/spiffyCal/spiffyCal_v2_1.js"></script>
 <script type="text/javascript">
-  var dateAvailable = new ctlSpiffyCalendarBox("dateAvailable", "new_product", "products_date_available","btnDate1","<?php echo $pInfo->products_date_available; ?>",2);
+  $(function() {  /* set Datepicker for new_products (1) and products_specials (2) */
+    $('#DatepickerProduct').datepick();
+    $('#DatepickerSpecials').datepick();
+  });
 </script>
-
 <tr>
   <td>
   <?php
@@ -119,14 +118,7 @@
             </tr>
             <tr>
               <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
-              <td>
-                <span class="main">
-                <script type="text/javascript">dateAvailable.writeControl(); dateAvailable.dateFormat="yyyy-MM-dd";</script>
-                <noscript>
-                <?php echo  xtc_draw_input_field('products_date_available', $pInfo->products_date_available ,'style="width: 135px"'); ?>
-                </noscript>
-                </span>
-              </td>
+              <td><span class="main"><?php echo xtc_draw_input_field('products_date_available', isset($pInfo->products_date_available) ? $pInfo->products_date_available : '' ,'id="DatepickerProduct" style="width: 135px"'); ?></span></td>
             </tr>
             <tr>
               <td><span class="main"><?php echo TEXT_PRODUCTS_STARTPAGE; ?></span></td>
