@@ -1,16 +1,17 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: specials.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: specials.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(specials.php,v 1.10 2002/01/31); www.oscommerce.com 
    (c) 2003	 nextcommerce (specials.php,v 1.4 2003/08/14); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -18,6 +19,9 @@
 define('HEADING_TITLE', 'Sonderangebote');
 
 define('TABLE_HEADING_PRODUCTS', 'Artikel');
+define('TABLE_HEADING_PRODUCTS_QUANTITY', 'Anzahl Artikel (Lager)');
+define('TABLE_HEADING_SPECIALS_QUANTITY', 'Anzahl Sonderangebote');
+define('TABLE_HEADING_EXPIRES_DATE', 'G&uuml;ltig bis');
 define('TABLE_HEADING_PRODUCTS_PRICE', 'Artikelpreis');
 define('TABLE_HEADING_STATUS', 'Status');
 define('TABLE_HEADING_ACTION', 'Aktion');
@@ -40,7 +44,7 @@ define('TEXT_INFO_NEW_PRICE', 'neuer Preis:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'alter Preis:');
 define('TEXT_INFO_PERCENTAGE', 'Prozent:');
 define('TEXT_INFO_EXPIRES_DATE', 'G&uuml;ltig bis:');
-define('TEXT_INFO_STATUS_CHANGE', 'Status ge&auml;ndert:');
+define('TEXT_INFO_STATUS_CHANGE', 'Deaktiviert am:');
 
 define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Sonderangebot l&ouml;schen');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie das Sonderangebot l&ouml;schen m&ouml;chten?');
