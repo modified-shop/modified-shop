@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentResponse.class.php 18.06.2012 - 14:09 $
+ * $Id: MasterpaymentResponse.class.php 02.07.2013 - 16:00 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -46,7 +46,9 @@ class MasterpaymentResponse
 			if($this->checkResponse())
 			{		
 				if(isset($_SESSION['customer_id']) && (isset($_SESSION['cart_Masterpayment_ID']) && !empty($_SESSION['cart_Masterpayment_ID'])) && (substr($_SESSION['payment'], 0, strpos($_SESSION['payment'], '_')) == 'masterpayment'))
-				{					
+				{		
+					unset($_SESSION['cart_Masterpayment_ID']);
+							
 					if($this->response_string['response'] == 'success')
 					{
 						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'NONSSL'));
@@ -58,7 +60,7 @@ class MasterpaymentResponse
 				} elseif(isset($_SESSION['customer_id']) && (!isset($_SESSION['cart_Masterpayment_ID']) && empty($_SESSION['cart_Masterpayment_ID'])) && (substr($_SESSION['payment'], 0, strpos($_SESSION['payment'], '_')) != 'masterpayment')) {
 					xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'NONSSL'));
 				} elseif($this->response_string['response'] == 'success') {					
-					$this->sendMail();					
+					$this->sendMail();
 				}
 			} else {
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'NONSSL'));
@@ -84,7 +86,7 @@ class MasterpaymentResponse
 	{
 		global $smarty;
 		
-		$select_data = xtc_db_query("select o.customers_id, o.masterpayment_status, oh.customer_notified from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_STATUS_HISTORY . " oh on oh.orders_id = o.orders_id and oh.orders_status_id = '".MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS."' where o.orders_id = '".(int)$this->response_string['order_id']."'");
+		$select_data = xtc_db_query("select o.customers_id, o.masterpayment_status, oh.customer_notified from " . TABLE_ORDERS . " o left join " . TABLE_ORDERS_STATUS_HISTORY . " oh on oh.orders_id = o.orders_id and oh.orders_status_id = '".MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS."' where o.orders_id = '".xtc_db_input($this->response_string['order_id'])."'");
 		$result = xtc_db_fetch_array($select_data);
 		
 		if(isset($result['customers_id']) && $result['customer_notified'] != 1)
@@ -95,7 +97,7 @@ class MasterpaymentResponse
 			
 			if(SEND_EMAILS == 'true')
 			{
-				xtc_db_query("update " . TABLE_ORDERS_STATUS_HISTORY . " set customer_notified = 1 where orders_id = '".(int)$this->response_string['order_id']."' and orders_status_id = '".MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS."'");
+				xtc_db_query("update " . TABLE_ORDERS_STATUS_HISTORY . " set customer_notified = 1 where orders_id = '".xtc_db_input($this->response_string['order_id'])."' and orders_status_id = '".MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS."'");
 			}
 			
 			unset($_SESSION['customer_id']);
