@@ -599,13 +599,8 @@
           exit;
         }
         header("Content-type: text/html; charset=utf-8", true);
+        require (DIR_WS_INCLUDES.'head.php');
         ?>
-        <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-        <html <?php echo HTML_PARAMS; ?>>
-          <head>
-            <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-            <title><?php echo TITLE; ?></title>
-            <link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />
             <link rel="stylesheet" type="text/css" href="includes/xsbooster/xsbooster.css" />
             <script type="text/javascript" src="includes/xsbooster/prototype.js"></script>
             <script type="text/javascript" src="includes/xsbooster/effects.js"></script>
