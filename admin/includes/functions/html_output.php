@@ -20,10 +20,10 @@
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
   
-    //$parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
+    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
   
     //BOF - DokuMan - 2011-01-07 - Sanitize parameters
-    $page = xtc_output_string($page);
+    //$page = xtc_output_string($page);
     //EOF - DokuMan - 2011-01-07 - Sanitize parameters
     if (!xtc_not_null($page)) {
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
@@ -43,21 +43,21 @@
       $link = $link . $page . '?' . SID;
     } else {
       //BOF - DokuMan - 2011-01-07 - Sanitize parameters
-      //$link = $link . $page . '?' . $parameters . '&' . SID;
-      $link = $link . $page . '?' . xtc_output_string($parameters) . '&' . SID;
+      $link = $link . $page . '?' . $parameters . '&' . SID;
+      //$link = $link . $page . '?' . xtc_output_string($parameters) . '&' . SID;
       //EOF - DokuMan - 2011-01-07 - Sanitize parameters
     }
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
     
-    //$link = str_replace('&', '&amp;', $link); // making link W3C-Conform
+    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
   
     return $link;
   }
 
   function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
   
-    //$parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
+    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
 
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
@@ -78,7 +78,7 @@
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
       
-    //$link = str_replace('&', '&amp;', $link); // making link W3C-Conform
+    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
   
     return $link;
   }
