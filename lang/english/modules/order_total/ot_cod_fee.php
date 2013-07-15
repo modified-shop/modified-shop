@@ -25,99 +25,32 @@
   define('MODULE_ORDER_TOTAL_COD_FEE_SORT_ORDER_TITLE','Sort Order');
   define('MODULE_ORDER_TOTAL_COD_FEE_SORT_ORDER_DESC','Sort order of display');
 
-  define('MODULE_ORDER_TOTAL_COD_FEE_FLAT_TITLE','Flat Shippingcosts');
-  define('MODULE_ORDER_TOTAL_COD_FEE_FLAT_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_ITEM_TITLE','Shippingcosts each');
-  define('MODULE_ORDER_TOTAL_COD_FEE_ITEM_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_TABLE_TITLE','Tabular Shippingcosts');
-  define('MODULE_ORDER_TOTAL_COD_FEE_TABLE_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_ZONES_TITLE','Shippingcosts for zones');
-  define('MODULE_ORDER_TOTAL_COD_FEE_ZONES_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_AP_TITLE','Austrian Post AG');
-  define('MODULE_ORDER_TOTAL_COD_FEE_AP_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_CHP_TITLE','The Swiss Post');
-  define('MODULE_ORDER_TOTAL_COD_FEE_CHP_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_CHRONOPOST_TITLE','Chronopost');
-  define('MODULE_ORDER_TOTAL_COD_FEE_CHRONOPOST_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_DHL_TITLE','DHL Austria');
-  define('MODULE_ORDER_TOTAL_COD_FEE_DHL_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_DP_TITLE','German Post AG');
-  define('MODULE_ORDER_TOTAL_COD_FEE_DP_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-  
-  // BOF - vr - 2009-12-04 - missing language definitions for OT-COD-FEE-UPS
-  define('MODULE_ORDER_TOTAL_COD_FEE_UPS_TITLE','UPS');
-  define('MODULE_ORDER_TOTAL_COD_FEE_UPS_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-  
-  define('MODULE_ORDER_TOTAL_COD_FEE_UPSE_TITLE','UPS Express');
-  define('MODULE_ORDER_TOTAL_COD_FEE_UPSE_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-  // EOF - vr - 2009-12-04 - missing language definitions for OT-COD-FEE-UPS
-
-  define('MODULE_ORDER_TOTAL_COD_FEE_FREE_TITLE','Free Shipping (Order Total Modul Shipping)');
-  define('MODULE_ORDER_TOTAL_COD_FEE_FREE_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');
-  
-  define('MODULE_ORDER_TOTAL_FREEAMOUNT_FREE_TITLE','Free Shipping (Module Free Shipping)');
-  define('MODULE_ORDER_TOTAL_FREEAMOUNT_FREE_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
-  00 as ISO2-Code allows the COD shipping in all countries. If
-  00 is used you have to enter it as last argument. If
-  no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-  (not possible).');  
-
   define('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS_TITLE','Taxclass');
   define('MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS_DESC','Choose a taxclass.');
+  
+  function define_shipping_titles() {
+    $module_keys = str_replace('.php','',MODULE_SHIPPING_INSTALLED);
+    $installed_shipping_modules = explode(';',$module_keys);
+    
+    if (count($installed_shipping_modules) > 0) {
+        foreach($installed_shipping_modules as $shipping_code) {
+            $module_type = 'shipping';
+            $file = $shipping_code.'.php';            
+            $shipping_code = strtoupper($shipping_code);
+            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+                $title = constant('MODULE_SHIPPING_'.$shipping_code.'_TEXT_TITLE');
+            }
+            $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
+            
+            define('MODULE_ORDER_TOTAL_COD_'.$shipping_code.'_TITLE',$title);
+            define('MODULE_ORDER_TOTAL_COD_'.$shipping_code.'_DESC','&lt;ISO2-Code&gt;:&lt;Price&gt;, ....<br />
+            00 as ISO2-Code allows the COD shipping in all countries. If
+            00 is used you have to enter it as last argument. If
+            no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
+            (not possible).');
+                }          
+    }
+  }
+  define_shipping_titles();  
 ?>
