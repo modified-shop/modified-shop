@@ -96,7 +96,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       if (isset($econda) && is_object($econda)) $econda->_loginUser();
 
       if (isset($_SESSION['REFERER']) && !empty($_SESSION['REFERER'])) { 
-        xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id')).(isset($_GET['review_prod_id'])?'products_id='.$_GET['review_prod_id']:''))); 
+        xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id','action')).(isset($_GET['review_prod_id'])?'products_id='.$_GET['review_prod_id']:''))); 
       } elseif ($_SESSION['cart']->count_contents() > 0  && !isset($_GET['review_prod_id'])  && !isset($_GET['order_id'])) { 
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
       } else {          
