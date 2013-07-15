@@ -92,4 +92,5 @@ define('FILENAME_SHOPGATE', 'shopgate.php');
 define('FILENAME_JANOLAW','janolaw.php');
 define('FILENAME_HAENDLERBUND', 'haendlerbund.php'); //Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 define('FILENAME_XTBOOSTER','xtbooster.php'); // xs:booster
+define('FILENAME_SAFETERMS','safeterms.php'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
 ?>

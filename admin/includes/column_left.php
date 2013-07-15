@@ -110,6 +110,9 @@ echo mainMenue(BOX_HEADING_MODULES);
     // BOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface  
     if ($admin_access['haendlerbund'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
     // EOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
+    // BOF - Tomcraft - 2013-06-21 - Added safeterms AGB interface
+    if ($admin_access['safeterms'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
+    // EOF - Tomcraft - 2013-06-21 - Added safeterms AGB interface
 echo endMenue();
 
 //---------------------------STATISTIKEN
