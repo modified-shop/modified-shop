@@ -337,8 +337,6 @@ $catfunc->set_page_parameter();
   }
   // end of pre-checks and actions, HTML output follows
 
-
-
 require (DIR_WS_INCLUDES.'head.php');
 ?>
   <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
@@ -385,11 +383,9 @@ require (DIR_WS_INCLUDES.'head.php');
     <table style="border:none; width:100%;" cellspacing="2" cellpadding="2">
       <tr>
         <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table style="border: none; width: <?php echo BOX_WIDTH; ?>;" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
+          <!-- left_navigation //-->
+          <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+          <!-- left_navigation_eof //-->
         </td>
         <!-- body_text //-->
         <td class="boxCenter" width="100%" valign="top">

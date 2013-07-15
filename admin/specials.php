@@ -131,16 +131,14 @@ require (DIR_WS_INCLUDES.'head.php');
     <!-- body //-->
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
+        <td class="columnLeft2">
             <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+            <?php require_once(DIR_WS_INCLUDES . 'column_left.php'); ?>
             <!-- left_navigation_eof //-->
         </td>
         <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">            
-            <tr> 
+        <td class="boxCenter">
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>          
             <?php
             if ($action == 'new' || $action == 'edit') {
               $form_action = 'insert';
@@ -202,14 +200,15 @@ require (DIR_WS_INCLUDES.'head.php');
               $price=xtc_round($price,PRICE_PRECISION);
               $new_price=xtc_round($new_price,PRICE_PRECISION);              
               ?>
-                  <td>
-                  <?php
-                  xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
-                  if ($form_action == 'update') echo xtc_draw_hidden_field('specials_id', $sID);
-                  ?>
+                  
+                    <?php
+                    xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
+                    if ($form_action == 'update'){ 
+                      echo xtc_draw_hidden_field('specials_id', $sID);                
+                    }
                     echo xtc_draw_hidden_field('products_up_id', $sInfo->products_id);
                     ?>
-                    <br />
+                    
                     <table border="0" cellspacing="0" cellpadding="2">
                       <tr>
                         <td class="main"><?php echo TEXT_SPECIALS_PRODUCT; echo ($sInfo->products_name) ? "" :  ''; ?>&nbsp;</td>
@@ -252,7 +251,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 // BEGIN LISTING TABLE
                 } else {
               ?>              
-                <td valign="top">
+              
                   <table border="0" width="100%" cellspacing="0" cellpadding="2">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
@@ -383,16 +382,14 @@ require (DIR_WS_INCLUDES.'head.php');
                     break;
                 }
                 if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                  echo '            <td width="25%" valign="top">' . "\n";
+                  echo '            <td class="boxRight">' . "\n";
                   echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
                   echo '            </td>' . "\n";
                 }
               }
               // END LISTING TABLE
               ?>
-              </tr>
-            </table>
-          </td>            
+                       
         <!-- body_text_eof //-->
       </tr>
     </table>
