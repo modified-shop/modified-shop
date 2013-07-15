@@ -427,7 +427,8 @@ if (xtc_not_null($action)) {
               if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
                 echo '            <td class="boxRight">' . "\n";
                 echo '<div class="modulbox">';
-                echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                $box = new box;
+	              echo $box->infoBox($heading, $contents);
                 echo '</div>';
                 echo '            </td>' . "\n";
               }
