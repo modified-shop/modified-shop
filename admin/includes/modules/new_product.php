@@ -96,18 +96,15 @@
     $('#DatepickerSpecials').datepick();
   });
 </script>
-<tr>
-  <td>
+
   <?php
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"');
   ?>
-  <span class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></span><br />
-
-<div style="width: 860px; padding:5px;">
-<table bgcolor="f3f3f3" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding:5px;">
-  <tr>
-    <td>
+  
+<div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>
+<div style="width: 870px; margin:5px; padding:5px; border: 1px solid; border-color: #aaaaaa; background:#f3f3f3;">
+    
       <table width="100%" border="0" cellpadding="0" cellspacing="0">
         <tr>
           <td width="58%" valign="top">
@@ -386,10 +383,5 @@
         </div>
         <!-- EOF Save //-->
       </div>
-    </td>
-  </tr>
-</table>
 </div>
 </form>
-</td>
-</tr>

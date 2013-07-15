@@ -107,181 +107,164 @@
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
-<!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-<!-- header_eof //-->
-
-<!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top"><table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-<!-- left_navigation //-->
-<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-<!-- left_navigation_eof //-->
-    </table></td>
-<!-- body_text //-->
-    <td class="boxCenter" width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-  <tr>
-    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_configuration.gif'); ?></td>
-    <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-  </tr>
-  <tr>
-    <td class="main" valign="top">Configuration</td>
-  </tr>
-</table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_NAME; ?></td>
-                <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_CODES; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_CURRENCY_VALUE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-              </tr>
-<?php
-  $currency_query_raw = "select currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value from " . TABLE_CURRENCIES . " order by title";
-  $currency_split = new splitPageResults($_GET['page'], '20', $currency_query_raw, $currency_query_numrows);
-  $currency_query = xtc_db_query($currency_query_raw);
-  while ($currency = xtc_db_fetch_array($currency_query)) {
-    if (((!$_GET['cID']) || (@$_GET['cID'] == $currency['currencies_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
-      $cInfo = new objectInfo($currency);
-    }
-
-    if ( (is_object($cInfo)) && ($currency['currencies_id'] == $cInfo->currencies_id) ) {
-      echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '\'">' . "\n";
-    } else {
-      echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '\'">' . "\n";
-    }
-
-    if (DEFAULT_CURRENCY == $currency['code']) {
-      echo '                <td class="dataTableContent"><b>' . $currency['title'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
-    } else {
-      echo '                <td class="dataTableContent">' . $currency['title'] . '</td>' . "\n";
-    }
-?>
-                <td class="dataTableContent"><?php echo $currency['code']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo number_format($currency['value'], 8); ?></td>
-<!-- BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
-<!--
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
--->
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-<!-- EOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
-              </tr>
-<?php
-  }
-?>
-              <tr>
-                <td colspan="4"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td class="smallText" valign="top"><?php echo $currency_split->display_count($currency_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></td>
-                    <td class="smallText" align="right"><?php echo $currency_split->display_links($currency_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
-                  </tr>
-<?php
-  if (!$_GET['action']) {
-?>
-                  <tr>
-                    <td><?php if (CURRENCY_SERVER_PRIMARY) { echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update') . '">' . BUTTON_UPDATE . '</a>'; } ?></td>
-                    <td align="right"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new') . '">' . BUTTON_NEW_CURRENCY . '</a>'; ?></td>
-                  </tr>
-<?php
-  }
-?>
-                </table></td>
-              </tr>
-            </table></td>
-<?php
-  $heading = array();
-  $contents = array();
-  switch ($_GET['action']) {
-    case 'new':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_CURRENCY . '</b>');
-
-      $contents = array('form' => xtc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=insert'));
-      $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . xtc_draw_input_field('title'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . xtc_draw_input_field('symbol_left'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . xtc_draw_input_field('symbol_right'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places'));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . xtc_draw_input_field('value'));
-      $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']) . '">' . BUTTON_CANCEL . '</a>');
-      break;
-
-    case 'edit':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_CURRENCY . '</b>');
-
-      $contents = array('form' => xtc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=save'));
-      $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . xtc_draw_input_field('title', $cInfo->title));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code', $cInfo->code));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . xtc_draw_input_field('symbol_left', $cInfo->symbol_left));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . xtc_draw_input_field('symbol_right', $cInfo->symbol_right));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point', $cInfo->decimal_point));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point', $cInfo->thousands_point));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places', $cInfo->decimal_places));
-      $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . xtc_draw_input_field('value', $cInfo->value));
-      if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
-      $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id) . '">' . BUTTON_CANCEL . '</a>');
-      break;
-
-    case 'delete':
-      $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CURRENCY . '</b>');
-
-      $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-      $contents[] = array('text' => '<br /><b>' . $cInfo->title . '</b>');
-      $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_currency) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=deleteconfirm') . '">' . BUTTON_DELETE . '</a>' : '') . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id) . '">' . BUTTON_CANCEL . '</a>');
-      break;
-
-    default:
-      if (is_object($cInfo)) {
-        $heading[] = array('text' => '<b>' . $cInfo->title . '</b>');
-
-        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . ' ' . $cInfo->title);
-        $contents[] = array('text' => TEXT_INFO_CURRENCY_CODE . ' ' . $cInfo->code);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . ' ' . $cInfo->symbol_left);
-        $contents[] = array('text' => TEXT_INFO_CURRENCY_SYMBOL_RIGHT . ' ' . $cInfo->symbol_right);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . ' ' . $cInfo->decimal_point);
-        $contents[] = array('text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point);
-        $contents[] = array('text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places);
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_LAST_UPDATED . ' ' . xtc_date_short($cInfo->last_updated));
-        $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8));
-        $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_EXAMPLE . '<br />' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
+<body onload="SetFocus();">
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
       }
-      break;
-  }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
+        <div class="main pdg2 flt-l">Configuration</div>
+        <table class="tableCenter">      
+          <tr>
+            <td class="boxCenterLeft">
+              <table class="tableBoxCenter collapse">
+                <tr class="dataTableHeadingRow">
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_NAME; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_CODES; ?></td>
+                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_CURRENCY_VALUE; ?></td>
+                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                </tr>
+                <?php
+                  $currency_query_raw = "select currencies_id, title, code, symbol_left, symbol_right, decimal_point, thousands_point, decimal_places, last_updated, value from " . TABLE_CURRENCIES . " order by title";
+                  $currency_split = new splitPageResults($_GET['page'], '20', $currency_query_raw, $currency_query_numrows);
+                  $currency_query = xtc_db_query($currency_query_raw);
+                  while ($currency = xtc_db_fetch_array($currency_query)) {
+                    if (((!$_GET['cID']) || (@$_GET['cID'] == $currency['currencies_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                      $cInfo = new objectInfo($currency);
+                    }
 
-  if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
+                    if ( (is_object($cInfo)) && ($currency['currencies_id'] == $cInfo->currencies_id) ) {
+                      echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '\'">' . "\n";
+                    } else {
+                      echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '\'">' . "\n";
+                    }
 
-    $box = new box;
-    echo $box->infoBox($heading, $contents);
+                    if (DEFAULT_CURRENCY == $currency['code']) {
+                      echo '                <td class="dataTableContent"><b>' . $currency['title'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
+                    } else {
+                      echo '                <td class="dataTableContent">' . $currency['title'] . '</td>' . "\n";
+                    }
+                ?>
+                  <td class="dataTableContent"><?php echo $currency['code']; ?></td>
+                  <td class="dataTableContent txta-r"><?php echo number_format($currency['value'], 8); ?></td>
+                  <td class="dataTableContent txta-r"><?php if ( (is_object($cInfo)) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                </tr>
+              <?php
+                }
+              ?>
+              </table>
+                            
+              <div class="smallText pdg2 flt-l"><?php echo $currency_split->display_count($currency_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CURRENCIES); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $currency_split->display_links($currency_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
 
-    echo '            </td>' . "\n";
-  }
-?>
+              <?php
+              if (!$_GET['action']) {
+              ?>
+              <div class="clear"></div>
+              <div class="pdg2 flt-l"><?php if (CURRENCY_SERVER_PRIMARY) { echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=update') . '">' . BUTTON_UPDATE . '</a>'; } ?></div>
+              <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=new') . '">' . BUTTON_NEW_CURRENCY . '</a>'; ?></div>
+              
+              <?php
+              }
+              ?>
+              </td>
+            <?php
+              $heading = array();
+              $contents = array();
+              switch ($_GET['action']) {
+                case 'new':
+                  $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_CURRENCY . '</b>');
+
+                  $contents = array('form' => xtc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=insert'));
+                  $contents[] = array('text' => TEXT_INFO_INSERT_INTRO);
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . xtc_draw_input_field('title'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . xtc_draw_input_field('symbol_left'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . xtc_draw_input_field('symbol_right'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places'));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . xtc_draw_input_field('value'));
+                  $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']) . '">' . BUTTON_CANCEL . '</a>');
+                  break;
+
+                case 'edit':
+                  $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_CURRENCY . '</b>');
+
+                  $contents = array('form' => xtc_draw_form('currencies', FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=save'));
+                  $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . '<br />' . xtc_draw_input_field('title', $cInfo->title));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_CODE . '<br />' . xtc_draw_input_field('code', $cInfo->code));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . '<br />' . xtc_draw_input_field('symbol_left', $cInfo->symbol_left));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_RIGHT . '<br />' . xtc_draw_input_field('symbol_right', $cInfo->symbol_right));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . '<br />' . xtc_draw_input_field('decimal_point', $cInfo->decimal_point));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_THOUSANDS_POINT . '<br />' . xtc_draw_input_field('thousands_point', $cInfo->thousands_point));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_PLACES . '<br />' . xtc_draw_input_field('decimal_places', $cInfo->decimal_places));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_VALUE . '<br />' . xtc_draw_input_field('value', $cInfo->value));
+                  if (DEFAULT_CURRENCY != $cInfo->code) $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_INFO_SET_AS_DEFAULT);
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id) . '">' . BUTTON_CANCEL . '</a>');
+                  break;
+
+                case 'delete':
+                  $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CURRENCY . '</b>');
+
+                  $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+                  $contents[] = array('text' => '<br /><b>' . $cInfo->title . '</b>');
+                  $contents[] = array('align' => 'center', 'text' => '<br />' . (($remove_currency) ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=deleteconfirm') . '">' . BUTTON_DELETE . '</a>' : '') . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id) . '">' . BUTTON_CANCEL . '</a>');
+                  break;
+
+                default:
+                  if (is_object($cInfo)) {
+                    $heading[] = array('text' => '<b>' . $cInfo->title . '</b>');
+
+                    $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->currencies_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_TITLE . ' ' . $cInfo->title);
+                    $contents[] = array('text' => TEXT_INFO_CURRENCY_CODE . ' ' . $cInfo->code);
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_SYMBOL_LEFT . ' ' . $cInfo->symbol_left);
+                    $contents[] = array('text' => TEXT_INFO_CURRENCY_SYMBOL_RIGHT . ' ' . $cInfo->symbol_right);
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_DECIMAL_POINT . ' ' . $cInfo->decimal_point);
+                    $contents[] = array('text' => TEXT_INFO_CURRENCY_THOUSANDS_POINT . ' ' . $cInfo->thousands_point);
+                    $contents[] = array('text' => TEXT_INFO_CURRENCY_DECIMAL_PLACES . ' ' . $cInfo->decimal_places);
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_LAST_UPDATED . ' ' . xtc_date_short($cInfo->last_updated));
+                    $contents[] = array('text' => TEXT_INFO_CURRENCY_VALUE . ' ' . number_format($cInfo->value, 8));
+                    $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENCY_EXAMPLE . '<br />' . $currencies->format('30', false, DEFAULT_CURRENCY) . ' = ' . $currencies->format('30', true, $cInfo->code));
+                  }
+                  break;
+              }
+
+              if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                echo '            <td class="boxRight">' . "\n";
+                $box = new box;
+                echo $box->infoBox($heading, $contents);
+                echo '            </td>' . "\n";
+              }
+            ?>
           </tr>
-        </table></td>
-      </tr>
-    </table></td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
-<!-- body_eof //-->
-
-<!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //-->
-<br />
+        </table>
+      </td>
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

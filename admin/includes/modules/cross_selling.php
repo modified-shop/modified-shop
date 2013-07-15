@@ -51,8 +51,7 @@ function getParent($catID) {
 	return $parent_data['parent_id'];
 }
 ?>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
+        <table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo CROSS_SELLING.' : '.$article_data['products_name']; ?></td>
             <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
@@ -65,13 +64,7 @@ function getParent($catID) {
             <a class="button" onClick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES,'cPath='.$_GET['cpath'].'&pID='.$_GET['current_product_id']); ?>"><?php echo BUTTON_BACK; ?></a>
             </td>
           </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-      </tr>
-	  <tr>
-        <td>
+        </table>
 
 <?php
 echo xtc_draw_form('cross_selling', FILENAME_CATEGORIES, '', 'GET', '');
@@ -139,10 +132,8 @@ while ($cross_data = xtc_db_fetch_array($cross_query)) {
 </table>
 <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" onclick="return confirm('<?php echo SAVE_ENTRY; ?>')">
 </form>
-</td>
-</tr>
-<tr>
-<td class="pageHeading"><hr noshade><?php echo CROSS_SELLING_SEARCH; ?>
+
+<div class="pageHeading"><hr noshade><?php echo CROSS_SELLING_SEARCH; ?></div>
 <table>
 <br /><br />
 <tr class="dataTableRow">
@@ -163,10 +154,7 @@ while ($cross_data = xtc_db_fetch_array($cross_query)) {
 </tr>
 </table>
 <hr noshade>
-</td>
-</tr>
-<tr>
-<td>
+
 <?php
 	// search results
 	if ($_GET['search']) {
@@ -215,6 +203,3 @@ while ($cross_data = xtc_db_fetch_array($cross_query)) {
 <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" onclick="return confirm('<?php echo SAVE_ENTRY; ?>')">
 </form>
 <?php } ?>
-</td>
-</tr>
-</td>

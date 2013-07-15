@@ -89,120 +89,100 @@
       }
     }
   }
-
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-<!-- header_eof //-->
+<body>
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
 
-<!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top"><table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-<!-- left_navigation //-->
-<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-<!-- left_navigation_eof //-->
-    </table></td>
-<!-- body_text //-->
-    <td class="boxCenter" width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
+      <td class="boxCenter">
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>    
+        <table class="tableCenter">
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
+            <td class="boxCenterLeft">
+              <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMERS; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_VOUCHER_VALUE; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_ORDERS_ID; ?></td>
+                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_VOUCHER_VALUE; ?></td>
+                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE_PURCHASED; ?></td>
+                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
-<?php
-  $gv_query_raw = "select c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id from " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv where (gv.customer_id = c.customers_id and gv.release_flag = 'N')";
-  $gv_split = new splitPageResults($_GET['page'], '20', $gv_query_raw, $gv_query_numrows);
-  $gv_query = xtc_db_query($gv_query_raw);
-  while ($gv_list = xtc_db_fetch_array($gv_query)) {
-    if (((!$_GET['gid']) || (@$_GET['gid'] == $gv_list['unique_id'])) && (!$gInfo)) {
-      $gInfo = new objectInfo($gv_list);
-    }
-    if ( (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id) ) {
-      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') . '\'">' . "\n";
-    } else {
-      echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['unique_id']) . '\'">' . "\n";
-    }
-?>
+              <?php
+                $gv_query_raw = "select c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id from " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv where (gv.customer_id = c.customers_id and gv.release_flag = 'N')";
+                $gv_split = new splitPageResults($_GET['page'], '20', $gv_query_raw, $gv_query_numrows);
+                $gv_query = xtc_db_query($gv_query_raw);
+                while ($gv_list = xtc_db_fetch_array($gv_query)) {
+                  if (((!$_GET['gid']) || (@$_GET['gid'] == $gv_list['unique_id'])) && (!$gInfo)) {
+                    $gInfo = new objectInfo($gv_list);
+                  }
+                  if ( (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id) ) {
+                    echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gInfo->unique_id . '&action=edit') . '\'">' . "\n";
+                  } else {
+                    echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link('gv_queue.php', xtc_get_all_get_params(array('gid', 'action')) . 'gid=' . $gv_list['unique_id']) . '\'">' . "\n";
+                  }
+              ?>
                 <td class="dataTableContent"><?php echo $gv_list['customers_firstname'] . ' ' . $gv_list['customers_lastname']; ?></td>
-                <td class="dataTableContent" align="center"><?php echo $gv_list['order_id']; ?></td>
-                <td class="dataTableContent" align="right"><?php echo $currencies->format($gv_list['amount']); ?></td>
-                <td class="dataTableContent" align="right"><?php echo xtc_datetime_short($gv_list['date_created']); ?></td>
-<!-- BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
-<!--
-                <td class="dataTableContent" align="right"><?php if ( (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_QUEUE, 'page=' . $_GET['page'] . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
--->
-                <td class="dataTableContent" align="right"><?php if ( (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_QUEUE, 'page=' . $_GET['page'] . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-<!-- EOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
+                <td class="dataTableContent txta-c"><?php echo $gv_list['order_id']; ?></td>
+                <td class="dataTableContent txta-r"><?php echo $currencies->format($gv_list['amount']); ?></td>
+                <td class="dataTableContent txta-r"><?php echo xtc_datetime_short($gv_list['date_created']); ?></td>
+                <td class="dataTableContent txta-r"><?php if ( (is_object($gInfo)) && ($gv_list['unique_id'] == $gInfo->unique_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_GV_QUEUE, 'page=' . $_GET['page'] . '&gid=' . $gv_list['unique_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
-<?php
-  }
-?>
-              <tr>
-                <td colspan="5"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td class="smallText" valign="top"><?php echo $gv_split->display_count($gv_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
-                    <td class="smallText" align="right"><?php echo $gv_split->display_links($gv_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
-                  </tr>
-                </table></td>
-              </tr>
-            </table></td>
-<?php
-  $heading = array();
-  $contents = array();
-  switch ($_GET['action']) {
-    case 'release':
-      $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
+              <?php
+                }
+              ?>
+            </table>
 
-      $contents[] = array('align' => 'center', 'text' => '<a class="button" style="font-color: red;" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=confirmrelease&gid='.$gInfo->unique_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
-      break;
-    default:
-      $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
+            <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
+            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
 
-      $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=release&gid=' . $gInfo->unique_id,'NONSSL'). '">' . BUTTON_RELEASE . '</a>');
-      break;
-   }
-
-  if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-    echo '            <td width="25%" valign="top">' . "\n";
-
-    $box = new box;
-    echo $box->infoBox($heading, $contents);
-
-    echo '            </td>' . "\n";
-  }
-?>
+          </td>
+          <?php
+            $heading = array();
+            $contents = array();
+            switch ($_GET['action']) {
+              case 'release':
+                $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
+                $contents[] = array('align' => 'center', 'text' => '<a class="button" style="font-color: red;" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=confirmrelease&gid='.$gInfo->unique_id,'NONSSL').'">'. BUTTON_CONFIRM . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=cancel&gid=' . $gInfo->unique_id,'NONSSL') . '">' . BUTTON_CANCEL . '</a>');
+                break;
+              default:
+                $heading[] = array('text' => '[' . $gInfo->unique_id . '] ' . xtc_datetime_short($gInfo->date_created) . ' ' . $currencies->format($gInfo->amount));
+                $contents[] = array('align' => 'center','text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link('gv_queue.php','action=release&gid=' . $gInfo->unique_id,'NONSSL'). '">' . BUTTON_RELEASE . '</a>');
+                break;
+            }
+            if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+              echo '            <td class="boxRight">' . "\n";
+              $box = new box;
+              echo $box->infoBox($heading, $contents);
+              echo '            </td>' . "\n";
+            }
+            ?>
           </tr>
-        </table></td>
-      </tr>
-    </table></td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
-<!-- body_eof //-->
-
-<!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //-->
-<br />
+        </table>
+      </td>            
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
