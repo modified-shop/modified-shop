@@ -12,7 +12,7 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
  
-        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
         <div class="pageHeading flt-l"><?php echo HEADING_TITLE; ?>
           <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
         </div>
