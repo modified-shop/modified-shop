@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: header.php 2638 2012-01-30 16:47:35Z hhacker $
+   $Id: header.php 5065 2013-07-15 12:22:56Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -10,7 +10,7 @@
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce, www.oscommerce.com
-   (c) 2003      nextcommerce; www.nextcommerce.org
+   (c) 2003  nextcommerce; www.nextcommerce.org
    (c) 2006      xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
@@ -31,7 +31,6 @@
   // Admin Language Switch
   $languages_string = '';
   if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
-
     $ls_languages = xtc_get_languages();
     if (count($ls_languages) > 1) {
       while (list($key, $value) = each($ls_languages)) {
@@ -39,28 +38,9 @@
       }
     }
   }
-  
-  if (!defined('NEW_ADMIN_STYLE')) { 
-    // Admin Menu
-    if (USE_ADMIN_TOP_MENU != 'false') {
-    ?>
-    <script src="includes/liststyle_menu/topmenu.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    <!--
-      document.write('<link href="includes/liststyle_menu/liststyle_top.css" rel="stylesheet" type="text/css" />');
-    //-->
-    </script>
-    <?php
-    } else {
-      echo '<link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />';
-    }
-    ?>
-    <noscript>
-      <link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />
-    </noscript>
-  <?php
-  }
   ?>
+
+<div id="fixed-header">
 <div id="top1"><?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?></div>
 
 <div id="favorites">
@@ -153,3 +133,5 @@ if (USE_ADMIN_TOP_MENU != 'false') {
   }
 }
 ?>
+</div>
+<div class="fixed-header-height">&nbsp;</div>

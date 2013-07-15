@@ -1,0 +1,87 @@
+
+/*Credits: Dynamic Drive CSS Library */
+/*URL: http://www.dynamicdrive.com/style/ */
+
+.suckertreemenu ul{
+	list-style-type: none;
+   margin: 0;
+   padding: 0;
+   width: 150px;
+}
+
+.suckertreemenu li a{
+	display: block;
+	width: 100%;
+	padding: 1px 0px 1px 0px;
+	text-decoration: none;
+	outline: none;
+	letter-spacing: normal;		
+}
+
+/*Top level menu link items style*/
+.suckertreemenu li a:hover, .buttonmenu li a:active{
+	color: black;
+	background-color: #eeeeee;
+	outline: none;
+}
+
+#top1{
+  margin-top: 0px;
+	margin-bottom: 5px;	
+	border-top: 0px solid #b40076;
+}
+#top2{
+  margin-top: 0px;
+	margin-bottom: 5px;	
+	border-top: 5px solid #b40076;
+}
+/* EOF - web28 - 2010-04-10 - added ADMIN SERACH BAR */
+
+/*FIX FÜR ECONDA & CLEVERREACH*/
+li{
+	list-style-type: none;
+	margin-left:0px;
+}
+
+/*FIXED HEADER*/
+#fixed-header{
+position:fixed; 
+top:0px;
+z-index:100;
+height:115px;
+width:100%;
+background-color:#fff;
+}
+.fixed-header-height{
+height:115px;
+}
+
+/* FAVORITEN */
+#favorites {
+min-width: 1100px;
+height:75px;
+position:relative;
+}
+#logo{
+width:190px;
+}
+table.favorites{
+min-width: 955px;
+position: absolute; 
+bottom: 5px;
+left: 190px;
+}
+td.fastmenu {
+width: 105px;
+font-size: 9px;
+text-align: center;
+font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+letter-spacing: normal;
+}
+td.fastmenu img {
+margin: 3px 0;
+border: 0;
+}
+.columnLeft2 {
+display: block;
+}
