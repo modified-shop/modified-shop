@@ -40,6 +40,7 @@ require (DIR_WS_INCLUDES.'head.php');
 ?>
 
 </head>
+<body>
 <div class="pageHeading"><?php echo $content_data['content_heading']; ?></div><br />
 <table border="0" width="100%" cellspacing="0" cellpadding="2">
           <tr>
