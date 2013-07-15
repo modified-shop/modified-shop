@@ -143,23 +143,27 @@ if (xtc_not_null($action)) {
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
     <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
+    <table class="tableBody">
       <tr>
-        <td class="columnLeft2">
-            <!-- left_navigation //-->
-            <?php require_once(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-        </td>
+        <?php //left_navigation
+        if (USE_ADMIN_TOP_MENU == 'false') {
+          echo '<td class="columnLeft2">'.PHP_EOL;
+          echo '<!-- left_navigation //-->'.PHP_EOL;       
+          require_once(DIR_WS_INCLUDES . 'column_left.php');
+          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+          echo '</td>'.PHP_EOL;      
+        }
+        ?>
         <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-        <div class="main">Modules</div>        
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <?php if(!xtc_not_null($action)) { ?>
-              <td valign="top">
-                <table border="0" width="100%" cellspacing="0" cellpadding="2">
+        <td class="boxCenter">
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
+          <div class="main">Modules</div>         
+          <table class="tableCenter">
+            <tr>
+              <?php if(!xtc_not_null($action)) { ?>
+              <td class="boxCenterLeft">
+                <table class="tableBoxCenter collapse">
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                     <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
@@ -428,7 +432,7 @@ if (xtc_not_null($action)) {
                 echo '            <td class="boxRight">' . "\n";
                 echo '<div class="modulbox">';
                 $box = new box;
-	              echo $box->infoBox($heading, $contents);
+                echo $box->infoBox($heading, $contents);
                 echo '</div>';
                 echo '            </td>' . "\n";
               }

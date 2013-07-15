@@ -236,29 +236,33 @@ if (xtc_not_null($action)) {
     echo isset($recursive_call) ? $recursive_call : '';
     //EOF NEW MODULE PROCESSING
     ?>
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
+    <table class="tableBody">
       <tr>
-        <td class="boxLeft columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-        </td>
+        <?php //left_navigation
+        if (USE_ADMIN_TOP_MENU == 'false') {
+          echo '<td class="columnLeft2">'.PHP_EOL;
+          echo '<!-- left_navigation //-->'.PHP_EOL;       
+          require_once(DIR_WS_INCLUDES . 'column_left.php');
+          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+          echo '</td>'.PHP_EOL;      
+        }
+        ?>
         <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading_modules.gif'); ?></div>
+        <td class="boxCenter">
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><br /></div>
           <?php if ($set == 'export' && !xtc_not_null($action)) { ?>
           <div style="clear:both;margin:10px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
           <?php } ?>
-            <table border="0" width="100%" cellspacing="0" cellpadding="0">
-              <tr>
+          <table class="tableCenter">
+            <tr>
                 <?php if(!xtc_not_null($action)) { ?>
-                    <td valign="top">
-                      <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                    <td class="boxCenterLeft">
+                      <table class="tableBoxCenter collapse">
                         <tr class="dataTableHeadingRow">
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                          <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                          <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?> </td>
+                          <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                          <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                         </tr>
                         <?php
                         $directory_array = create_directory_array($module_directory,$file_extension);
@@ -285,7 +289,7 @@ if (xtc_not_null($action)) {
                                 $installed = true;
                                 ?>
                                 <tr class="dataTableHeadingRow">
-                                  <td colspan="3" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
+                                  <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
                                 </tr>
                                 <?php
                               } elseif ($module->check() < 1 && !$deinstalled && $installed) {
@@ -294,11 +298,11 @@ if (xtc_not_null($action)) {
                                 <tr><td colspan="3" style="height:35px;">&nbsp;</td></tr>
                                 <tr class="dataTableHeadingRow">
                                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
-                                  <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?> </td>
+                                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
                                 <tr class="dataTableHeadingRow">
-                                  <td colspan="3" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                                  <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
                                 </tr>
                                 <?php
                               }
@@ -315,7 +319,7 @@ if (xtc_not_null($action)) {
                                 ?>
                                 <tr <?php echo $tr_attribute;?>>
                                 <td class="dataTableContent"><?php echo $module->title; ?></td>
-                                <td class="dataTableContent" align="center">
+                                <td class="dataTableContent  txta-c">
                                   <?php
                                     if ($module->check() > 0) {
                                       if (isset($module->enabled) && $module->enabled) {
@@ -327,7 +331,7 @@ if (xtc_not_null($action)) {
                                   ?>
                                   &nbsp;
                                 </td>
-                                <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?> </td>
+                                <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?> </td>
                               </tr>
                               <?php
                             }
@@ -429,9 +433,10 @@ if (xtc_not_null($action)) {
                 }
 
                 if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                  echo '            <td class="boxRight">' . "\n";
-                  echo '<div class="modulbox">';
-                  echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                  echo '            <td class="boxRight">' . PHP_EOL;
+                  echo '<div class="modulbox">' . PHP_EOL;
+                  $box = new box;
+                   echo $box->infoBox($heading, $contents);
                   //BOF NEW MODULE PROCESSING
                   if ($action=='module_processing_do') {
                     echo $infotext;
@@ -442,8 +447,8 @@ if (xtc_not_null($action)) {
                     echo sprintf(MODULE_STEP_READY_STYLE_BACK,xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module='.$mInfo->code))) ;
                   }
                   //EOF NEW MODULE PROCESSING
-                  echo '</div>';       
-                  echo '            </td>' . "\n";
+                  echo '</div>' . PHP_EOL;      
+                  echo '            </td>'  . PHP_EOL;
                 }
                 //EOC BOX RIGHT
                 ?>

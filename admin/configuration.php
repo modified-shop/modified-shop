@@ -147,30 +147,30 @@ require (DIR_WS_INCLUDES.'head.php');
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
     <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
+    <table class="tableBody">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
-        </td>
+        <?php //left_navigation
+        if (USE_ADMIN_TOP_MENU == 'false') {
+          echo '<td class="columnLeft2">'.PHP_EOL;
+          echo '<!-- left_navigation //-->'.PHP_EOL;       
+          require_once(DIR_WS_INCLUDES . 'column_left.php');
+          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+          echo '</td>'.PHP_EOL;      
+        }
+        ?>
         <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td>
-                <table border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_configuration.gif'); ?></td>
-                    <td width="300" class="pageHeading">
-                    <?php
-                    $box_conf_gid = 'BOX_CONFIGURATION_'.$cfg_group['configuration_group_id'];
-                    echo (defined($box_conf_gid) && constant($box_conf_gid) != '' ? constant($box_conf_gid) : $cfg_group['configuration_group_title']);
-                    ?>
-                    </td>
-                    <td rowspan="2" class="pageHeading">
+        <td class="boxCenter">
+
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+          <div class="pageHeading pdg2 flt-l">
+            <?php
+              $box_conf_gid = 'BOX_CONFIGURATION_'.$cfg_group['configuration_group_id'];
+              echo (defined($box_conf_gid) && constant($box_conf_gid) != '' ? constant($box_conf_gid) : $cfg_group['configuration_group_title']);
+            ?>
+            <div class="main pdg2">Configuration</div> 
+          </div> 
+
+          <div class="main pdg2 flt-l" style="padding-left:30px;">
                       <?php
                         if ($_GET['gID']==11) { // delete cache files in admin section
                           echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=delcache');
@@ -179,54 +179,42 @@ require (DIR_WS_INCLUDES.'head.php');
                           echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_TEMP_CACHE . '"/></form>';
                         }
                       ?>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td class="main" valign="top">Configuration</td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td style="border-top: 3px solid; border-color: #cccccc;" class="main">
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
+          </div>
+          <div class="clear"></div>           
+          <div style="border-top: 3px solid; border-color: #cccccc;"></div>  
+
                   <?php
                     switch ($_GET['gID']) {
-                      case 21:
-                        echo AFTERBUY_URL;
+                      case 21: //Afterbuy                                  
                       case 19: // Google Conversion-Tracking
                       case 111125: // Paypal Express Modul
                       case 31: // moneybookers payment module version 2.4 & paypal payment module
-                        echo '<table class="infoBoxHeading" width="100%">
-                                <tr>
-                                  <td width="150" align="center">
-                                    <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
-                                  </td>
-                                  <td width="1">|</td>
-                                  <td width="150" align="center">
-                                    <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
-                                  </td>
-                                  <td width="1">|</td>
-                                  <td width="150" align="center">
-                                    <a class="button" class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125', 'NONSSL').'">PayPal</a>
-                                  </td>
-                                  <td width="1">|</td>
-                                  <td width="150" align="center">
-                                    <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31', 'NONSSL').'">Moneybookers.com</a>
-                                  </td>
-                                  <td width="1">|</td>
-                                  <td></td>
-                                </tr>
-                              </table>';
-                        if ($_GET['gID'] == '31')
-                            echo MB_INFO;
-                        break;
+                   echo '<div class="infoBoxHeading pdg2" style="height:22px">
+                          <div class="configPartner">
+                            <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
+                            </div>
+                            <div class="configPartner">
+                              <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=19', 'NONSSL').'">Google Conversion</a>
+                            </div>
+                            <div class="configPartner">
+                              <a class="button" class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=111125', 'NONSSL').'">PayPal</a>
+                            </div>
+                            <div class="configPartner">
+                              <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=31', 'NONSSL').'">Moneybookers.com</a>
+                            </div>
+                        </div>                        
+                        ';
+                  if ($_GET['gID']=='21')
+                    echo '<div class="main pdg2">'.AFTERBUY_URL.'</div>';
+                  if ($_GET['gID']=='31')
+                    echo '<div class="main pdg2">'. MB_INFO.'</div>';
+                    
+                  break;
                     }
                   ?>
-                  <tr>
-                    <td valign="top" align="right">
+ 
                       <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
-                        <table width="100%"  border="0" cellspacing="0" cellpadding="8">
+                         <table class="tableConfig">
                           <?php
                             $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
                             while ($configuration = xtc_db_fetch_array($configuration_query)) {
@@ -237,31 +225,31 @@ require (DIR_WS_INCLUDES.'head.php');
                                     if ($configuration['configuration_value'] != '') {
                                       $payment_installed = explode(';', $configuration['configuration_value']);
                                       for ($i = 0, $n = sizeof($payment_installed); $i < $n; $i++) {
-                                        include(DIR_WS_LANGUAGES . $language . '/modules/payment/' . $payment_installed[$i]); //DokuMan - 2012-06-30 - replace DIR_FS_CATALOG_LANGUAGES with DIR_WS_LANGUAGES
-                                      }
-                                    }
-                                    break;
-                                  case 'MODULE_SHIPPING_INSTALLED':
-                                    if ($configuration['configuration_value'] != '') {
-                                      $shipping_installed = explode(';', $configuration['configuration_value']);
-                                      for ($i = 0, $n = sizeof($shipping_installed); $i < $n; $i++) {
-                                        include(DIR_WS_LANGUAGES . $language . '/modules/shipping/' . $shipping_installed[$i]); //DokuMan - 2012-06-30 - replace DIR_FS_CATALOG_LANGUAGES with DIR_WS_LANGUAGES
-                                      }
-                                    }
-                                    break;
-                                  case 'MODULE_ORDER_TOTAL_INSTALLED':
-                                    if ($configuration['configuration_value'] != '') {
-                                      $ot_installed = explode(';', $configuration['configuration_value']);
-                                      for ($i = 0, $n = sizeof($ot_installed); $i < $n; $i++) {
-                                        include(DIR_WS_LANGUAGES . $language . '/modules/order_total/' . $ot_installed[$i]); //DokuMan - 2012-06-30 - replace DIR_FS_CATALOG_LANGUAGES with DIR_WS_LANGUAGES
-                                      }
-                                    }
-                                    break;
+                                  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_installed[$i]); 
+                                }
+                              }
+                              break;
+                            case 'MODULE_SHIPPING_INSTALLED':
+                              if ($configuration['configuration_value'] != '') {
+                                $shipping_installed = explode(';', $configuration['configuration_value']);
+                                for ($i = 0, $n = sizeof($shipping_installed); $i < $n; $i++) {
+                                  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_installed[$i]); 
+                                }
+                              }
+                              break;
+                            case 'MODULE_ORDER_TOTAL_INSTALLED':
+                              if ($configuration['configuration_value'] != '') {
+                                $ot_installed = explode(';', $configuration['configuration_value']);
+                                for ($i = 0, $n = sizeof($ot_installed); $i < $n; $i++) {
+                                  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/order_total/' . $ot_installed[$i]); 
+                                }
+                              }
+                              break;
                                 }
                               }
                               if (xtc_not_null($configuration['use_function'])) {
                                 $use_function = $configuration['use_function'];
-                                if (preg_match('/->/', $use_function)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+                                if (preg_match('/->/', $use_function)) {
                                   $class_method = explode('->', $use_function);
                                   if (!is_object(${$class_method[0]})) {
                                     include(DIR_WS_CLASSES . $class_method[0] . '.php');
@@ -281,7 +269,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                 $cInfo = new objectInfo($cInfo_array);
                               }
                               if ($configuration['set_function']) {
-                                eval('$value_field = ' . $configuration['set_function'] . '"' . htmlspecialchars($configuration['configuration_value']) . '");');
+                                eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
                               } else {
                                 if ( $configuration['configuration_key'] == 'SMTP_PASSWORD') {
                                   $value_field = xtc_draw_password_field($configuration['configuration_key'], $configuration['configuration_value']);
@@ -304,27 +292,21 @@ require (DIR_WS_INCLUDES.'head.php');
                                 $configuration_key_desc  = '&nbsp;';                            // description = empty
                               }
                               if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
-                                $configuration_key_desc = htmlentities($configuration_key_desc);
-                              }
-                              echo '
-                                    <tr>
-                                      <td style="min-width:20%; border-bottom: 1px solid #aaaaaa;" class="dataTableConfig"><b>'.$configuration_key_title.'</b></td>
-                                      <td style="min-width:20%; border-bottom: 1px solid #aaaaaa; background-color:#e8e8e8;" class="dataTableConfig">'.$value_field.'</td>
-                                      <td style="min-width:60%; border-bottom: 1px solid #aaaaaa;empty-cells: show;" class="dataTableConfig">'.$configuration_key_desc.'</td>
-                                    </tr>
-                                   ';
+                          $configuration_key_desc = encode_htmlentities($configuration_key_desc);
+                        }
+                        echo '
+                              <tr>
+                                <td class="dataTableConfig col-left">'.$configuration_key_title.'</td>
+                                <td class="dataTableConfig col-middle">'.$value_field.'</td>
+                                <td class="dataTableConfig col-right">'.$configuration_key_desc.'</td>
+                              </tr>
+                             ';
 
-                            }
-                          ?>
-                        </table>
-                        <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
-                      </form>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
+                      }
+                    ?>
+              </table>
+              <div class="main pdg2 flt-r"><input type="submit" class="button" onclick="this.blur();" value="<?= BUTTON_SAVE ?>"/></div>
+            </form>                   
         </td>
         <!-- body_text_eof //-->
       </tr>
