@@ -11,3 +11,5 @@ You can login our store with your e-mail-address and password:
 e-mail-address:{$EMAIL}
 
 Password: {$PASSWORD}
+
+[SIGNATUR]

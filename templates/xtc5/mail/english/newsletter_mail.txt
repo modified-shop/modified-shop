@@ -5,3 +5,5 @@ Please click the following activation link to receive newsletters. If you haven'
 
 Your activation link:
 {$LINK}
+
+[SIGNATUR]

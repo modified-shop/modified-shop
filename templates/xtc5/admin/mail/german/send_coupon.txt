@@ -7,4 +7,4 @@ Ihr Gutschein-Nummer lautet: {$COUPON_ID}
 Heben Sie Ihre Gutschein-Nummer gut auf, nur so können Sie von diesem Angebot profitieren
 wenn Sie uns das nächste mal unter {$WEBSITE} besuchen.
 
-
+[SIGNATUR]

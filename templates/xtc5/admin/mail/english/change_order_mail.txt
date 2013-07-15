@@ -12,4 +12,4 @@ New status: {$ORDER_STATUS}
 
 If you have any questions, please reply to this e-mail.
 
-
+[SIGNATUR]

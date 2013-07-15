@@ -30,3 +30,5 @@ Um den Gutschein einzulösen verwenden Sie bitte den folgenden link {$GIFT_LINK}.
 Geben Sie einfach Ihren persönlichen Code {$COUPON_CODE} während des Bezahlvorganges ein
 
 {/if}
+
+[SIGNATUR]
