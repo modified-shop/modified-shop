@@ -127,12 +127,4 @@ ALTER TABLE payment_moneybookers_countries
 # DokuMan - 2013-03-20 - change address format to 5 for Luxembourg
 UPDATE countries SET address_format_id = 5 WHERE countries_id = 124;
 
-#Tomcraft - 2013-06-21 - Added Safeterms module
-ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0;
-UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
-
-#web28 - 2013-07-02 - Add noindex option to content_manager
-ALTER TABLE content_manager ADD content_noindex INT( 1 ) NOT NULL DEFAULT '0';
-
 # Keep an empty line at the end of this file for the db_updater to work properly
