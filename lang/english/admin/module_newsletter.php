@@ -40,6 +40,6 @@ define('INFO_NEWSLETTER_SEND', '%d newsletters sent');
 define('INFO_NEWSLETTER_LEFT', '%d newsletters remaining');
 // EOF - DokuMan - 2011-12-12 - Texts for Newsletter E-Mail send status
 
-define('TEXT_NEWSLETTER_INFO', '<strong>ATTENTION:</strong> For sending newsletters, the use of external programs is recommended!<br /><br />If the Newsletter Shop module is used, it should be requested from the provider, how many emails can be sent in a given time at all.<br />With many providers, there are restrictions or sending is only allowed by special email servers.');
+define('TEXT_NEWSLETTER_INFO', '<strong>ATTENTION:</strong> For sending newsletters, the use of external programs is recommended!<br /><br />If the Newsletter Shop module is used, it should be requested from the provider, how many emails can be sent in a given time at all.<br />With many providers, there are restrictions or sending is only allowed by special email servers.<br /><br />By default the signature is attached automatically. If you would like to format the signature other than the standard-signature format, then add the code [NOSIGNATUR] (incl. squared brackets) to the end of your newsletter.');
 
 ?>
