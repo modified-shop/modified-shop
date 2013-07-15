@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: checkout_masterpayment.php 18.06.2013 11:08 $
+ * $Id: checkout_masterpayment.php 19.06.2013 09:12 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -78,7 +78,7 @@ if($action == 'response')
 	if(@file_exists('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_' . $_GET['payment_method'] . '.php'))
 	{
 		include('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_' . $_GET['payment_method'] . '.php');
-		$smarty->assign('masterpayment_method_title', constant('MODULE_PAYMENT_MASTERPAYMENT_'.strtoupper($_GET['payment_method']).'_CHECKOUT_TITLE'));
+		$smarty->assign('masterpayment_payment_title', constant('MODULE_PAYMENT_MASTERPAYMENT_'.strtoupper($_GET['payment_method']).'_CHECKOUT_TITLE'));
 	}
 
 	$smarty->assign('masterpayment_message', $_masterpaymentCallbackMessages[strtoupper($_GET['response'])]);		
@@ -102,7 +102,7 @@ if($action == 'response')
 	
 		$order = new order($masterpayment->order_ID);
 		
-		$smarty->assign('masterpayment_url', $masterpayment->getMasterpaymentURL());
+		$smarty->assign('masterpayment_url', $masterpayment->masterpaymentGatewayURL);
 		$smarty->assign('request_parameters', $masterpayment->generateRequest());
 	} else {
 		$smarty->assign('masterpayment_error', 1);

@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentRequest.class.php 18.06.2013 14:04 $
+ * $Id: MasterpaymentRequest.class.php 02.07.2013 16:00 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -25,8 +25,9 @@ class MasterpaymentRequest extends MasterpaymentActions
 {
 
 	var $order_ID;
-	var $paymentMethod;
-	var $nockparameters;
+	var $masterpaymentPaymentMethod;
+	var $masterpaymentNotInControlkeyParameters;
+	var $masterpaymentGatewayURL = 'https://www.masterpayment.com/en/payment/gateway';
 	
 	/*
 		Initialisieren der Klasse
@@ -40,11 +41,11 @@ class MasterpaymentRequest extends MasterpaymentActions
 			parent::__construct();
 		
 			$this->order_ID = substr($_SESSION['cart_Masterpayment_ID'], strpos($_SESSION['cart_Masterpayment_ID'], '-')+1);
-			$this->notInControlkeyParmeters = array('sex', 'installmentsCount', 'installmentsFreq', 'installmentsPeriod', 'paymentDelay', 'dueDays', 'createAsPending', 'customerNo', 'invoiceNo');
+			$this->masterpaymentNotInControlkeyParameters = array('sex', 'installmentsCount', 'installmentsFreq', 'installmentsPeriod', 'paymentDelay', 'dueDays', 'createAsPending', 'customerNo', 'invoiceNo');
 			
 			if($this->checkRequestAccess())
 			{
-				$this->paymentMethod = $this->getPaymentMethod();							
+				$this->masterpaymentPaymentMethod = $this->getPaymentMethod();							
 				$retval = true;
 			}			
 		}
@@ -58,7 +59,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 	*/
 	function checkRequestAccess() 
 	{		
-		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."' limit 1");
+		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".xtc_db_input($this->order_ID)."' limit 1");
 		$result_check = xtc_db_fetch_array($check_order);
 			
 		if($result_check['a_orders'] > 0)
@@ -68,15 +69,6 @@ class MasterpaymentRequest extends MasterpaymentActions
 			return false;				
 		}		
 	}		
-	
-	
-	/*
-		Rückgabe der Masterpayment URL für die Anfrage an das Gateway
-	*/
-	function getMasterpaymentURL() 
-	{		
-		return str_replace('{language}', strtolower($this->getCustomerLanguage()), $this->masterpaymentURL);			
-	}
 	
 	
 	/*
@@ -112,7 +104,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 			$params['userIp'] = $this->getCustomerIpAddress();
 		}
 		
-		$params['paymentType'] = $this->paymentMethod;
+		$params['paymentType'] = $this->masterpaymentPaymentMethod;
 		$params['gatewayStyle'] = 'standard';		
 
 		$params['UrlPatternSuccess'] = $this->getShopURL() . 'callback/masterpayment/masterpayment_mec_callback.php';
@@ -124,7 +116,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 		
 		$params['showCancelOption'] = MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SHOW_CANCEL_BUTTON;
 		
-		if($this->paymentMethod == 'ratenzahlung')
+		if($this->masterpaymentPaymentMethod == 'ratenzahlung')
 		{			
 			$params['installmentsCount'] = MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_INSTALLMENTS_COUNT;			
 			if (constant("MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_INSTALLMENTS_FREQ") > 0) {
@@ -132,16 +124,16 @@ class MasterpaymentRequest extends MasterpaymentActions
 			} else {
 				$params['installmentsPeriod'] = MODULE_PAYMENT_MASTERPAYMENT_RATENZAHLUNG_INSTALLMENTS_PERIOD;
 			}			
-		} elseif($this->paymentMethod == 'finanzierung') {
+		} elseif($this->masterpaymentPaymentMethod == 'finanzierung') {
 			$params['installmentsCount'] = MODULE_PAYMENT_MASTERPAYMENT_FINANZIERUNG_INSTALLMENTS_COUNT;
 			if (MODULE_PAYMENT_MASTERPAYMENT_FINANZIERUNG_INSTALLMENTS_PERIOD > 0) {
 				$params['installmentsFreq'] = MODULE_PAYMENT_MASTERPAYMENT_FINANZIERUNG_INSTALLMENTS_PERIOD;
 			} else {
 				$params['installmentsPeriod'] = MODULE_PAYMENT_MASTERPAYMENT_FINANZIERUNG_INSTALLMENTS_PERIOD;
 			}
-		} elseif($this->paymentMethod == 'deferred_debit') {
+		} elseif($this->masterpaymentPaymentMethod == 'deferred_debit') {
 			$params['paymentDelay'] = MODULE_PAYMENT_MASTERPAYMENT_DEFERRED_DEBIT_PAYMENT_DELAY;
-		} elseif($this->paymentMethod == 'rechnungskauf') {		
+		} elseif($this->masterpaymentPaymentMethod == 'rechnungskauf') {		
 			$params['customerNo'] = $_SESSION['customer_id'];
 			$params['dueDays'] = MODULE_PAYMENT_MASTERPAYMENT_RECHNUNGSKAUF_DUEDAYS;			
 			if(MODULE_PAYMENT_MASTERPAYMENT_RECHNUNGSKAUF_SEND_ORDERID == 'True')
@@ -149,7 +141,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 				$params['invoiceNo'] = $this->order_ID;
 			}
 			$params['createAsPending'] = 1;		
-		} elseif($this->paymentMethod == 'anzahlungskauf') {
+		} elseif($this->masterpaymentPaymentMethod == 'anzahlungskauf') {
 			$params['customerNo'] = $_SESSION['customer_id'];
 			if(MODULE_PAYMENT_MASTERPAYMENT_ANZAHLUNGSKAUF_SEND_ORDERID == 'True')
 			{
@@ -262,7 +254,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 				
 		if(isset($_SESSION['customer_id']) && $_SESSION['customer_id'] != 0) 
 		{		
-			$customer_query = xtc_db_query("select customers_dob from customers where customers_id = '".(int)$_SESSION['customer_id']."'");
+			$customer_query = xtc_db_query("select customers_dob from customers where customers_id = '".xtc_db_input($_SESSION['customer_id'])."'");
 			$c_vals = xtc_db_fetch_array($customer_query);
 			
 			$split = explode(" ", $c_vals['customers_dob']);		    
@@ -431,7 +423,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 		
 		$string['response'] = $method;
 		$string['order_id'] = $this->order_ID;
-		$string['payment_method'] = $this->paymentMethod;
+		$string['payment_method'] = $this->masterpaymentPaymentMethod;
 		$string['lang'] = $this->getCustomerLanguage();
 	
 		$link_parameter = '';
@@ -465,7 +457,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 			
 		$queryString['controlKey'] = $this->generateControlKey($prepareParams);
 			
-		$this->writeRequestLog($this->getMasterpaymentURL(), $this->order_ID, $queryString);	
+		$this->writeRequestLog($this->masterpaymentGatewayURL, $this->order_ID, $queryString);	
 			
 		return $queryString;		
 	}
@@ -480,7 +472,7 @@ class MasterpaymentRequest extends MasterpaymentActions
 		
 		foreach($params as $param => &$value) 
 		{			
-			if($value != '' && !in_array($param, $this->notInControlkeyParmeters))	
+			if($value != '' && !in_array($param, $this->masterpaymentNotInControlkeyParameters))	
 			{				
 				$tempString[] = $this->convertToUTF8($value);				
 			}			
@@ -527,6 +519,6 @@ class MasterpaymentRequest extends MasterpaymentActions
 		}
     }    
 		
-} //end class
+}
 		
 ?>

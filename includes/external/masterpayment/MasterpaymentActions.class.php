@@ -1,13 +1,13 @@
 <?php
 /****************************************************** 
- * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Masterpayment Modul for modified eCommerce Shopsoftware
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentActions.class.php 12.07.2012 - 15:57 $
+ * $Id: MasterpaymentActions.class.php 02.07.2013 - 15:59 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -22,9 +22,8 @@
 class MasterpaymentActions
 {
 	
-	var $masterpaymentURL;
 	var $masterpaymentLanguages;
-	var $defaultLanguage;
+	var $masterpaymentDefaultLanguage;
 	
 	function MasterpaymentActions()
 	{
@@ -33,10 +32,9 @@ class MasterpaymentActions
 	
 	
 	function __construct()
-	{		
-		$this->masterpaymentURL = 'https://www.masterpayment.com/{language}/payment/gateway';			
-		$this->masterpaymentLanguages = array('de' => 'german', 'en' => 'english', 'fr' => 'french', 'it' => 'italian', 'es' => 'spanish', 'pl' => 'polish', 'ru' => 'russian');	
-		$this->defaultLanguage = 'EN';			
+	{				
+		$this->masterpaymentLanguages = array('de' => 'german', 'en' => 'english');	
+		$this->masterpaymentDefaultLanguage = 'EN';			
 	}
 	
 	
@@ -88,7 +86,7 @@ class MasterpaymentActions
 			{				
 				$order_id = $this->getOrderId();
 	
-				$check_query = xtc_db_query('select masterpayment_status from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$order_id . '" limit 1');
+				$check_query = xtc_db_query('select masterpayment_status from ' . TABLE_ORDERS . ' where orders_id = "' . xtc_db_input($order_id) . '" limit 1');
 				$num_check = mysql_num_rows($check_query);
 				
 				if($num_check > 0)
@@ -133,7 +131,7 @@ class MasterpaymentActions
 		{			
 			$_order_id = (int)$this->getOrderId();
 			
-			$check_payment = xtc_db_query("select masterpayment_status from " . TABLE_ORDERS . " where orders_id = '".(int)$_order_id."' limit 1");
+			$check_payment = xtc_db_query("select masterpayment_status from " . TABLE_ORDERS . " where orders_id = '".xtc_db_input($_order_id)."' limit 1");
 			$num_check = mysql_num_rows($check_payment);
 			
 			if($num_check < 1)
@@ -164,7 +162,7 @@ class MasterpaymentActions
 			
 			if(SEND_EMAILS == 'true')
 			{
-				xtc_db_query("update " . TABLE_ORDERS_STATUS_HISTORY . " set customer_notified = 1 where orders_id = '".(int)$o_ID."' and orders_status_id = '".MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS."'");
+				xtc_db_query("update " . TABLE_ORDERS_STATUS_HISTORY . " set customer_notified = 1 where orders_id = '".xtc_db_input($o_ID)."' and orders_status_id = '".MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS."'");
 			}
 			
 			unset($_SESSION['cart_Masterpayment_ID']);

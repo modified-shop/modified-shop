@@ -12,10 +12,8 @@
 
 <div class="masterpayment_box">
 
-
-	{if isset($masterpayment_error)}
+	{if !isset($masterpayment_error)}
 	
-
 		<form name="masterpaymentForm" id="masterpaymentForm" action="{$masterpayment_url}" method="post">			
 		
 			{if is_array($request_parameters)}			
