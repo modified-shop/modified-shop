@@ -280,19 +280,26 @@
     <?php require(DIR_WS_INCLUDES . 'header.php');?>
     <!-- header_eof //-->
     <!-- body //-->
-    <table class="table-main">
+    <table class="tableBody">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">          
-          <!-- left_navigation //-->
-          <?php require(DIR_WS_INCLUDES . 'column_left.php');?>
-          <!-- left_navigation_eof //-->
-        </td>
-        <!-- body_text //-->
-        <td class="boxCenter">
+
+        <?php //left_navigation
+        if (USE_ADMIN_TOP_MENU == 'false') {
+          echo '<td class="columnLeft2">'.PHP_EOL;
+          echo '<!-- left_navigation //-->'.PHP_EOL;       
+          require_once(DIR_WS_INCLUDES . 'column_left.php');
+          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+
+          echo '</td>'.PHP_EOL;      
+        }
+        ?>
+        <!-- body_text //--> 
+        <td class="boxCenter"> 
           <div class="content-manager-width">                  
-            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading_content.gif'); ?></div>
-            <div class="pageHeading"><?php echo HEADING_TITLE;?></div>          
-            <div class="main" valign="top">Tools</div>     
+            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
+            <div class="pageHeading pdg2"><?php echo HEADING_TITLE;?></div>          
+            <div class="main pdg2">Tools</div>
+            <div class="clear"></div>     
               <?php
                 if ($set != 'product') {
                   //content

@@ -126,8 +126,8 @@
   // EOF DokuMan - 2011-03-05 - show category name in heading title
   ?>
   <!-- categories_view HTML part begin -->
-  <tr>
-   <td>
+ 
+      <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
       <div class="pageHeading pdg2 flt-l" style="margin-right:50px;">
         <?php echo HEADING_TITLE. ' - '.((xtc_not_null($category_name['categories_name'])) ? $category_name['categories_name'] : TEXT_TOP); //DokuMan - 2011-03-05 - show category name in heading title ?>
       </div>
@@ -151,16 +151,13 @@
       <?php
       }
       ?> 
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <table border="0" width="100%" cellspacing="0" cellpadding="0">
+
+      <table class="tableCenter collapse">
         <tr>
           <!-- categories & products column STARTS -->
-          <td valign="top">
+          <td class="boxCenterLeft">
             <!-- categories and products table -->
-            <table border="0" width="100%" cellspacing="0" cellpadding="2">
+            <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent" width="4%" align="center">
                   <?php echo TABLE_HEADING_EDIT; ?>
@@ -1004,11 +1001,10 @@
           if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
             //display info box
             echo '<td class="boxRight">' . "\n";
-            echo box::infoBox($heading, $contents); // cYbercOsmOnauT - 2011-02-05 - Changed methods of the classes box and tableBox to static
+            $box = new box;
+            echo $box->infoBox($heading, $contents);
             echo '</td>' . "\n";
           }
           ?>
         </tr>
       </table>
-    </td>
-  </tr>

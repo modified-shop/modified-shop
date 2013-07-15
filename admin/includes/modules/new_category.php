@@ -78,15 +78,13 @@
   $order_array_desc =array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
                           array('id' => 'DESC','text'=>TEXT_SORT_DESC));
 ?>
-  <tr>
-    <td class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></td>
-    <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-  </tr>
-  <tr>
+
+    <div class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path((int)$_GET['cID'])); ?></div>    
+
     <?php
     $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';
     echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"'); ?>
-    <td>
+
       <!-- BOF - Tomcraft - 2009-11-02 - Block1 //-->
       <div style="width: 860px; padding:5px;">
       <table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="f3f3f3" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding: 5px;">
@@ -223,6 +221,4 @@
         <input type="submit" class="button" name="update_category" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
         <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
       </div>
-    </td>
   </form>
-  </tr>
