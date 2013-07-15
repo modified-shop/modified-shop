@@ -1,7 +1,7 @@
 <?php
 /****************************************************** 
  * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
@@ -19,7 +19,7 @@
  *
  ******************************************************/
 
-require_once(DIR_FS_CATALOG . 'includes/masterpayment/MasterpaymentActions.class.php');
+require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActions.class.php');
 
   class masterpayment_credit_card extends MasterpaymentActions {
     var $code, $title, $description, $enabled;

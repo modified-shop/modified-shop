@@ -1,7 +1,7 @@
 <?php
 /****************************************************** 
  * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
@@ -21,7 +21,7 @@
  
 define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ALLOWED', '');
 
-require_once(DIR_FS_CATALOG . 'includes/masterpayment/MasterpaymentActions.class.php');
+require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActions.class.php');
 
   class masterpayment_config extends MasterpaymentActions {
     var $code, $title, $description, $enabled;
@@ -88,23 +88,23 @@ require_once(DIR_FS_CATALOG . 'includes/masterpayment/MasterpaymentActions.class
     }	
 
     function install() {  
-	  	$this->installProcess();
+      $this->installProcess();
  
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER', '10', '6', '0', now())");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_MERCHANTID', '', '6', '1', now());");      
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SECRETKEY', '', '6', '1', now());");   
-	 	xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");   	   
-	  	xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_BASKETDESCRIPTION', '', '6', '1', now());");	
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SEND_CUSTOMER_DATA', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SEND_PRODUCTS_DATA', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SHOW_CANCEL_BUTTON', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_TEMP', '".$this->getProcessStatusId()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-	  	xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS', '".$this->getSuccessStatusID()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_FAILURE', '".$this->getFailureStatusID()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_CANCEL', '".$this->getCancelStatusID()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_DELETE_TEMP_ORDER', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");  
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SAVE_LOGS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ALLOWED', '', '6', '0', now())");		  	  	   
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER', '10', '6', '0', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_MERCHANTID', '', '6', '1', now());");      
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SECRETKEY', '', '6', '1', now());");   
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_INFRAME', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");   	   
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_BASKETDESCRIPTION', '', '6', '1', now());");	
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SEND_CUSTOMER_DATA', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SEND_PRODUCTS_DATA', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SHOW_CANCEL_BUTTON', 'True', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_TEMP', '".$this->getProcessStatusId()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_SUCCESS', '".$this->getSuccessStatusID()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_FAILURE', '".$this->getFailureStatusID()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_CANCEL', '".$this->getCancelStatusID()."', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_DELETE_TEMP_ORDER', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");  
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SAVE_LOGS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now());");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ALLOWED', '', '6', '0', now())");		  	  	   
     }
 
     function remove() {
