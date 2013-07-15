@@ -1,9 +1,9 @@
 <?php
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_TEXT_TITLE', 'Masterpayment (<span style="color:#C00; font-weight:bold;"><em>Konfiguration</em></span>)');
-  define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_TEXT_DESCRIPTION', '<center><b>Masterpayment Konfiguration</b><br>(Modul v3.5)</center>');
+  define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_TEXT_DESCRIPTION', '<center><b>Masterpayment Konfiguration</b><br>(Modul v3.5.1)</center>');
     
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER_TITLE', 'Anzeigenreihenfolge');
-  define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER_DESC', '');
+  define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_MERCHANTID_TITLE', 'Merchant-ID');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_MERCHANTID_DESC', '');
   define('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SECRETKEY_TITLE', 'Secret-Key');

@@ -20,7 +20,7 @@
  ******************************************************/
 
 include('../../includes/application_top_callback.php');		
-require('../../includes/masterpayment/MasterpaymentCallback.class.php');	
+require('../../includes/external/masterpayment/MasterpaymentCallback.class.php');	
 	
 if(isset($_POST) && !empty($_POST)) 
 {	

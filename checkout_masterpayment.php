@@ -7,7 +7,7 @@
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: checkout_masterpayment.php 18.06.2013 11:08 $
+ * $Id: checkout_masterpayment.php 19.06.2013 09:12 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -58,15 +58,14 @@ if($action == '' or !isset($action) or $action != 'response')
 	}
 }
 
-
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_PAYMENT, xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
-$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+$smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 if($action == 'response')
 {
-	require_once('includes/masterpayment/MasterpaymentResponse.class.php');  
+	require_once('includes/external/masterpayment/MasterpaymentResponse.class.php');  
 	$MasterpaymentResponse = new MasterpaymentResponse($_GET);
 	
 	require (DIR_WS_INCLUDES . 'header.php');
@@ -79,14 +78,14 @@ if($action == 'response')
 	if(@file_exists('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_' . $_GET['payment_method'] . '.php'))
 	{
 		include('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_' . $_GET['payment_method'] . '.php');
-		$smarty->assign('masterpayment_method_title', constant('MODULE_PAYMENT_MASTERPAYMENT_'.strtoupper($_GET['payment_method']).'_CHECKOUT_TITLE'));
+		$smarty->assign('masterpayment_payment_title', constant('MODULE_PAYMENT_MASTERPAYMENT_'.strtoupper($_GET['payment_method']).'_CHECKOUT_TITLE'));
 	}
 
 	$smarty->assign('masterpayment_message', $_masterpaymentCallbackMessages[strtoupper($_GET['response'])]);		
 	
 	$main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/masterpayment_response.html');
 } elseif($action == 'request') {	
-	require_once('includes/masterpayment/MasterpaymentRequest.class.php');  
+	require_once('includes/external/masterpayment/MasterpaymentRequest.class.php');  
 	$masterpayment = new MasterpaymentRequest();
 	
 	if(@file_exists('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_config.php'))
@@ -103,7 +102,7 @@ if($action == 'response')
 	
 		$order = new order($masterpayment->order_ID);
 		
-		$smarty->assign('masterpayment_url', $masterpayment->getMasterpaymentURL());
+		$smarty->assign('masterpayment_url', $masterpayment->masterpaymentGatewayURL);
 		$smarty->assign('request_parameters', $masterpayment->generateRequest());
 	} else {
 		$smarty->assign('masterpayment_error', 1);
@@ -118,7 +117,7 @@ if($action == 'response')
 } else {
 	require (DIR_WS_INCLUDES . 'header.php');
 	
-	require_once('includes/masterpayment/MasterpaymentActions.class.php');  
+	require_once('includes/external/masterpayment/MasterpaymentActions.class.php');  
 	$MasterpaymentActions = new MasterpaymentActions();
 	
 	$smarty->assign('language', $_SESSION['language']);

@@ -1,13 +1,13 @@
  <?php
  /****************************************************** 
- * Masterpayment Modul for modified eCommerce Shopsoftware 
- * Version 3.5
+ * Masterpayment Modul for modified eCommerce Shopsoftware
+ * Version 3.5.1
  * Copyright (c) 2010-2012 by K-30 | Florian Ressel 
  *
  * support@k-30.de | www.k-30.de
  * ----------------------------------------------------
  *
- * $Id: MasterpaymentCallback.class.php 23.06.2012 17:27 $
+ * $Id: MasterpaymentCallback.class.php 19.06.2013 11:10 $
  *	
  *	The Modul based on:
  *  XT-Commerce - community made shopping
@@ -19,7 +19,7 @@
  *
  ******************************************************/
  
-require_once(DIR_FS_CATALOG . 'includes/masterpayment/MasterpaymentActions.class.php');
+require_once(DIR_FS_CATALOG . 'includes/external/masterpayment/MasterpaymentActions.class.php');
 
 class MasterpaymentCallback extends MasterpaymentActions
 {
@@ -27,20 +27,20 @@ class MasterpaymentCallback extends MasterpaymentActions
 	var $status, $order_ID, $customer_lang, $callbackData;
 	
 	
-	function MasterpaymentCallback(&$_var)
+	function MasterpaymentCallback($_var)
 	{
 		$this->__construct($_var);
 	}
 	
 	
-	function __construct(&$_var)
+	function __construct($_var)
 	{
 		parent::__construct();		
 		$this->init($_var);
 	}
 	
 	
-	function init(&$_var) 
+	function init($_var) 
 	{
 		$this->callbackData = $_var;
 		$this->writeCallbackLog();
@@ -79,7 +79,7 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{	
 		$retval = false;
 			
-		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."' limit 1");
+		$check_order = xtc_db_query("select count(orders_id) as a_orders from " . TABLE_ORDERS . " where orders_id = '".xtc_db_input($this->order_ID)."' limit 1");
 		$result_check = xtc_db_fetch_array($check_order);
 			
 		if($result_check['a_orders'] == 1)
@@ -133,6 +133,8 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{
 		if(!$this->deleteTempOrder())
 		{
+			$this->updateProductsQty();
+			
 			$_failureId = constant('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_FAILURE');
 			$this->changeStatus($_failureId, 2);
 			$this->writeStatusHistory($_failureId);
@@ -144,6 +146,8 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{
 		if(!$this->deleteTempOrder())
 		{
+			$this->updateProductsQty();		
+			
 			$_cancelId = constant('MODULE_PAYMENT_MASTERPAYMENT_CONFIG_ORDER_STATUS_ID_CANCEL');		
 			$this->changeStatus($_cancelId, 3);
 			$this->writeStatusHistory($_cancelId);
@@ -153,13 +157,13 @@ class MasterpaymentCallback extends MasterpaymentActions
 	
 	function changeStatus($_statusID, $m_status) 
 	{
-    	xtc_db_query("update ". TABLE_ORDERS . " set orders_status = '" . (int)$_statusID . "', masterpayment_status = '" . $m_status . "'  where orders_id='" . (int)$this->order_ID . "'");		
+		xtc_db_query("update ". TABLE_ORDERS . " set orders_status = '" . (int)$_statusID . "', masterpayment_status = '" . (int)$m_status . "'  where orders_id='" . xtc_db_input($this->order_ID) . "'");		
 	}
 	
 	
 	function setInvoiceData($invoice_co, $invoice_no) 
 	{
-		xtc_db_query("update " . TABLE_ORDERS . " set masterpayment_customerNo = '".$invoice_co."', masterpayment_invoiceNo = '".$invoice_no."' where orders_id = '". (int)$this->order_ID . "'");		
+		xtc_db_query("update " . TABLE_ORDERS . " set masterpayment_customerNo = '".$invoice_co."', masterpayment_invoiceNo = '".$invoice_no."' where orders_id = '". xtc_db_input($this->order_ID) . "'");		
 	}
 	
 	
@@ -167,23 +171,14 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{		
 		if(MODULE_PAYMENT_MASTERPAYMENT_CONFIG_DELETE_TEMP_ORDER == 'True')
 		{
-			
-			if (STOCK_LIMITED == 'true') 
-			{			
-				$order_query = xtc_db_query("select products_id, products_quantity from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($this->order_ID)."'");
-			
-				while ($order = xtc_db_fetch_array($order_query)) 
-				{
-					xtc_db_query("update ".TABLE_PRODUCTS." set products_quantity = products_quantity + ".$order['products_quantity'].", products_ordered = products_ordered - ".$order['products_quantity']." where products_id = '".$order['products_id']."'");
-				}				
-			}
+			$this->updateProductsQty();
 				
-          	xtc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . (int)$this->order_ID . '"');
-         	xtc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . (int)$this->order_ID . '"');
-         	xtc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . (int)$this->order_ID . '"');
-          	xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . (int)$this->order_ID . '"');
-			xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . (int)$this->order_ID . '"');
-			xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . (int)$this->order_ID . '"');
+			xtc_db_query('delete from ' . TABLE_ORDERS . ' where orders_id = "' . xtc_db_input($this->order_ID) . '"');
+			xtc_db_query('delete from ' . TABLE_ORDERS_TOTAL . ' where orders_id = "' . xtc_db_input($this->order_ID) . '"');
+			xtc_db_query('delete from ' . TABLE_ORDERS_STATUS_HISTORY . ' where orders_id = "' . xtc_db_input($this->order_ID) . '"');
+			xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS . ' where orders_id = "' . xtc_db_input($this->order_ID) . '"');
+			xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . ' where orders_id = "' . xtc_db_input($this->order_ID) . '"');
+			xtc_db_query('delete from ' . TABLE_ORDERS_PRODUCTS_DOWNLOAD . ' where orders_id = "' . xtc_db_input($this->order_ID) . '"');
 			
 			return true;		
 		} else {			
@@ -192,9 +187,23 @@ class MasterpaymentCallback extends MasterpaymentActions
 	}	
 	
 	
+	function updateProductsQty()
+	{
+		if (STOCK_LIMITED == 'true') 
+		{			
+			$order_query = xtc_db_query("select products_id, products_quantity from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($this->order_ID)."'");
+			
+			while ($order = xtc_db_fetch_array($order_query)) 
+			{
+				xtc_db_query("update ".TABLE_PRODUCTS." set products_quantity = products_quantity + ".$order['products_quantity'].", products_ordered = products_ordered - ".$order['products_quantity']." where products_id = '".$order['products_id']."'");
+			}				
+		}
+	}
+		
+	
 	function getCustomerId() 
 	{		
-		$select_customerid = xtc_db_query("select customers_id from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."' limit 1");
+		$select_customerid = xtc_db_query("select customers_id from " . TABLE_ORDERS . " where orders_id = '".xtc_db_input($this->order_ID)."' limit 1");
 		$_customer_id = xtc_db_fetch_array($select_customerid);
 			
 		return $_customer_id['customers_id'];		
@@ -205,7 +214,7 @@ class MasterpaymentCallback extends MasterpaymentActions
 	{	
 		$_mlanguage = 'english';
 			
-		$select_olanguage_query = xtc_db_query("select language from " . TABLE_ORDERS . " where orders_id = '".mysql_real_escape_string($this->order_ID)."'");
+		$select_olanguage_query = xtc_db_query("select language from " . TABLE_ORDERS . " where orders_id = '".xtc_db_input($this->order_ID)."'");
 		$fetch_olanguage = xtc_db_fetch_array($select_olanguage_query);
 		
 		if(isset($fetch_olanguage['language']) && !empty($fetch_olanguage['language'])) 
@@ -225,8 +234,8 @@ class MasterpaymentCallback extends MasterpaymentActions
     	  
 	    if (isset($cId) && !empty($cId)) 
 		{
-        	xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . $cId . "'");
-        	xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . $cId . "'");        	
+        	xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET . " where customers_id = '" . xtc_db_input($cId) . "'");
+        	xtc_db_query("delete from " . TABLE_CUSTOMERS_BASKET_ATTRIBUTES . " where customers_id = '" . xtc_db_input($cId) . "'");        	
       	}		
     }
 	
@@ -252,7 +261,7 @@ class MasterpaymentCallback extends MasterpaymentActions
     {
 		if(MODULE_PAYMENT_MASTERPAYMENT_CONFIG_SAVE_LOGS == 'True')
 		{
-			$logfile = @fopen(DIR_FS_CATALOG . 'includes/masterpayment/logs/callbacks.log', 'a+');
+			$logfile = @fopen(DIR_FS_CATALOG . 'includes/external/masterpayment/logs/callbacks.log', 'a+');
 			@fwrite($logfile, "------------------------------------------------------------------------\n");	
 			@fwrite($logfile, "transactions-id / order-id: " . $this->callbackData['TX_ID'] . "\n");	
 			@fwrite($logfile, "status: " . $this->callbackData['STATUS'] . "\n");	
