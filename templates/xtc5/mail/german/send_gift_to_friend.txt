@@ -14,3 +14,4 @@ Um den Gutschein einzulösen klicken Sie bitte auf {$GIFT_LINK}
 Falls es mit dem obigen Link Probleme beim Einlösen kommen sollte,
 können Sie den Betrag während des Bestellvorganges verbuchen.
 
+[SIGNATUR]

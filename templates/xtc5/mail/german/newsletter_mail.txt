@@ -9,3 +9,5 @@ bitten wir Sie, den Aktivierungslink einfach zu ignorieren.
       
 Ihr Aktivierungslink:
 {$LINK}
+
+[SIGNATUR]

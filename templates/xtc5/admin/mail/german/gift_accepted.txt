@@ -6,3 +6,4 @@ welcher aus Sicherheitsgründen nicht sofort freigeschaltet wurde.
 Dieses Guthaben steht Ihnen nun zur Verfügung.
 Sie können Ihren Gutschein verbuchen und per E-Mail versenden Der von Ihnen bestellte Gutschein hat einen Wert von {$AMMOUNT}.
 
+[SIGNATUR]
