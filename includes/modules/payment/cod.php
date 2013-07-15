@@ -90,39 +90,14 @@ class cod {
 
   function selection() {
     global $xtPrice,$order;
-    $cod_country = false;
-    if (defined('MODULE_ORDER_TOTAL_COD_FEE_STATUS') && MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
-      //process installed shipping modules
-      // BOF - Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
-          if ($_SESSION['shipping']['id'] == 'flat_flat') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_FLAT);
-          if ($_SESSION['shipping']['id'] == 'item_item') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_ITEM);
-          if ($_SESSION['shipping']['id'] == 'table_table') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_TABLE);
-          if ($_SESSION['shipping']['id'] == 'zones_zones') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_ZONES);
-          if ($_SESSION['shipping']['id'] == 'ap_ap') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_AP);
-          if ($_SESSION['shipping']['id'] == 'dp_dp') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DP);
 
+      if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
 
-          if ($_SESSION['shipping']['id'] == 'chp_ECO') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHP);
-          if ($_SESSION['shipping']['id'] == 'chp_PRI') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHP);
-          if ($_SESSION['shipping']['id'] == 'chp_URG') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHP);
+        $cod_country = false;
 
-
-          if ($_SESSION['shipping']['id'] == 'chronopost_chronopost') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_CHRONOPOST);
-
-
-          if ($_SESSION['shipping']['id'] == 'dhl_ECX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_DOX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_SDX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_MDX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-          if ($_SESSION['shipping']['id'] == 'dhl_WPX') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_DHL);
-
-          if ($_SESSION['shipping']['id'] == 'ups_ups') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_UPS);
-          if ($_SESSION['shipping']['id'] == 'upse_upse') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_UPSE);
-
- 
-          if ($_SESSION['shipping']['id'] == 'free_free') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_COD_FEE_FREE);
-          if ($_SESSION['shipping']['id'] == 'freeamount_freeamount') $cod_zones = preg_split("/[:,]/", MODULE_ORDER_TOTAL_FREEAMOUNT_FREE);
-      // EOF - Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
+        //process installed shipping modules
+		    $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode($_SESSION['shipping']['id'])));
+        $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
 
             for ($i = 0; $i < count($cod_zones); $i++) {
             if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
@@ -142,7 +117,6 @@ class cod {
           }
 
         if ($cod_country) {
-
             $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
             $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
@@ -150,7 +124,6 @@ class cod {
             $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
         }
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-
             $cod_cost_value=$cod_cost;
             $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
         }
@@ -159,10 +132,13 @@ class cod {
            $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
         }
         $this->cost = '+ '.$cod_cost;
-
       }
-   
-    return array ('id' => $this->code, 'module' => $this->title, 'description' => $this->info,'module_cost'=>$this->cost);
+
+      return array ('id' => $this->code,
+                    'module' => $this->title,
+                    'description' => $this->info,
+                    'module_cost'=>$this->cost
+                   );
   }
 
   function pre_confirmation_check() {

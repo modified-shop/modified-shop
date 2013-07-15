@@ -66,6 +66,8 @@
         
       case 'install':
       case 'remove':
+      case 'update':
+      case 'reset':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($_GET['module']);
         if (file_exists($module_directory . $class . $file_extension)) {
@@ -79,7 +81,14 @@
             // save old values
             xtc_backup_configuration($module->keys());
             $module->remove();
+          } elseif ($action == 'update') {
+            // update keys             
+            $module->update();
+          } elseif ($action == 'reset') {
+            // reset to defualt values            
+            $module->reset();
           }
+          
         }
         xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class));
         break;
@@ -136,9 +145,9 @@ if (xtc_not_null($action)) {
     <!-- body //-->
     <table border="0" width="100%" cellspacing="2" cellpadding="2">
       <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
+        <td class="columnLeft2">
             <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
+            <?php require_once(DIR_WS_INCLUDES . 'column_left.php'); ?>
             <!-- left_navigation_eof //-->
         </td>
         <!-- body_text //-->
@@ -394,7 +403,11 @@ if (xtc_not_null($action)) {
                         $keys .= '<br /><br />';
                       }
                       $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
-                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>');
+                      $contents[] = array('align' => 'center', 
+                                          'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'. 
+                                                    '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>'.
+                                                    $mInfo->properties['button_update'].$mInfo->properties['button_reset']
+                                                    );
                       $contents[] = array('text' => '<br />' . $mInfo->description);
                       if (isset($mInfo->extended_description) && $mInfo->extended_description != '') {
                         if (($mInfo->code == "paypal" || $mInfo->code == "paypalexpress") && PAYPAL_API_USER == '') {
