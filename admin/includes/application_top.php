@@ -141,6 +141,7 @@ require_once (DIR_FS_INC . 'xtc_get_qty.inc.php');
 require_once (DIR_FS_INC . 'xtc_product_link.inc.php');
 require_once (DIR_FS_INC . 'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_top_level_domain.inc.php');
+require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 require_once(DIR_FS_INC . 'xtc_backup_restore_configuration.php');
 
 // design layout (wide of boxes in pixels) (default: 125)
