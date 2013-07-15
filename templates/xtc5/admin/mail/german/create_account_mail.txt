@@ -12,5 +12,4 @@ E-Mail: {$EMAIL}
 
 Ihr Passwort: {$PASSWORD}
 
-
-
+[SIGNATUR]

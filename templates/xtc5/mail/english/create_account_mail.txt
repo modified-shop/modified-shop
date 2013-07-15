@@ -26,3 +26,5 @@ Redeem your voucher by entering the code {$COUPON_CODE} during checkout process,
 {/if} 
 
 If you have any questions, please contact us at {$content.MAIL_REPLY_ADDRESS}!
+
+[SIGNATUR]

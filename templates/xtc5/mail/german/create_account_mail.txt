@@ -28,3 +28,5 @@ Geben Sie einfach Ihren persönlichen Code {$COUPON_CODE} während des Bezahlvorga
 {/if}
 
 Falls Sie Fragen zu unserem Kunden-Service haben, wenden Sie sich bitte an: {$content.MAIL_REPLY_ADDRESS}
+
+[SIGNATUR]
