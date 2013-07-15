@@ -1,0 +1,12 @@
+/*FIXED HEADER*/
+#fixed-header{
+position:static; 
+top:0px;
+z-index:100;
+height:auto;
+width:100%;
+background-color:#fff;
+}
+.fixed-header-height{
+height:0;
+}
