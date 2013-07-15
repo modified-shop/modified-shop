@@ -118,6 +118,7 @@ $values_group_update = array();
 //configuration_group_id 1000 --- "Adminbereich"
   $values_group[] = "(1000,'Adminarea Options','Adminarea Configuration', 1000,1);";
 
+  $values[] = "(NULL, 'USE_ADMIN_FIXED_TOP', 'true', '1000', '23', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST', 'true', '1000', '32', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_ADMIN_THUMBS_IN_LIST_STYLE', 'max-width:40px;max-height:40px;', '1000', '33', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_ORDER_RESULTS', '30', '1000', '50', NULL , NOW(), NULL , NULL);";
@@ -132,6 +133,10 @@ $values_group_update = array();
   $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '30'",
                            'configuration_key' => 'MAX_DISPLAY_ORDER_RESULTS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '1000', sort_order = '26'",
+                           'configuration_key' => 'USE_ADMIN_LANG_TABS'
                            );
 
 //configuration_group_id 111125 --- "Paypal"

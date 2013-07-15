@@ -802,3 +802,6 @@ define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'Soll ein ausverkaufter Art
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In f&uuml;r Newsletteranmeldung');
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','Bei "true" wird eine eMail an den Kunden geschickt worin die Newsletteranmeldung best&auml;tigt werden muss. Es muss hierf&uuml;r das Senden von eMails aktiviert sein.');
+
+define('USE_ADMIN_FIXED_TOP_TITLE', 'Admin Seitenkopf fixieren?');
+define('USE_ADMIN_FIXED_TOP_DESC', 'Soll der Seitenkopf beim Scrollen immer sichtbar sein? Standard: true (ja)');

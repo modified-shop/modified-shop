@@ -19,7 +19,7 @@
   
   define('NEW_ADMIN_STYLE',true);
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
@@ -29,19 +29,14 @@
   
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
-  ?>
-  <script type="text/javascript">
-    <!--
-      document.write('<link rel="stylesheet" type="text/css" href="includes/css/topmenu.css" />');
-    //-->
-  </script>
-  <?php
+    echo '<link rel="stylesheet" type="text/css" href="includes/css/topmenu.css" />';
   } else {
-    echo '<link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />';
+    echo '<link rel="stylesheet" type="text/css" href="includes/css/liststyle_left.css" />';
+  }
+  if (USE_ADMIN_FIXED_TOP != 'true') {
+    echo '<link rel="stylesheet" type="text/css" href="includes/css/fixed_top_none.css" />';
   }
   ?>
 
-  <noscript>
-    <link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />
-  </noscript>
+  <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   

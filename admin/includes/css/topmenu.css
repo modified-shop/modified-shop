@@ -1,4 +1,4 @@
-#cssmenu{
+#cssmenu {
 clear:both;
 border:none;
 margin:0 0 10px 0;
@@ -7,7 +7,7 @@ font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
 font-size:10px;
 font-weight:bold;
 color:#333;
-min-width:1100px;
+min-width:1200px;
 border-top: 1px solid #a8a8a8;
 }
 #cssmenu ul {
@@ -35,11 +35,11 @@ text-align:center;
 text-decoration:none;
 width: 70px;
 }
-#cssmenu li a:hover{
+#cssmenu li a:hover {
 color:#fff;
 text-decoration:none;
 }
-#cssmenu li ul{
+#cssmenu li ul {
 margin-top: 0px;
 background: #dbdbdb;
 border-left:1px solid #AF417E;
@@ -50,7 +50,7 @@ display:none;
 position:absolute;
 z-index:2000;
 }
-#cssmenu ul li:hover ul{
+#cssmenu ul li:hover ul {
 display:block;
 }
 #cssmenu li li {
@@ -69,11 +69,11 @@ font-weight:normal;
 padding:0px 5px;
 text-align:left;
 }
-#cssmenu li ul a:hover{
+#cssmenu li ul a:hover {
 background:#bbb;
 color:#000000;
 }
-#cssmenu p{
+#cssmenu p {
 clear:left;
 }
 #cssmenu1.active > a {
@@ -89,7 +89,7 @@ border: none;
 border-bottom:2px solid #AF417E;
 }
 /* IE-HACK */
-* + html #cssmenu ul li .dataTableHeadingContent{
+* + html #cssmenu ul li .dataTableHeadingContent {
 border-bottom: 0px;
 }
 #cssmenu ul li .dataTableHeadingContent a {
@@ -104,7 +104,7 @@ text-align:center;
 text-decoration:none;
 white-space: nowrap;
 }
-#cssmenu .dataTableHeadingContent a:hover{
+#cssmenu .dataTableHeadingContent a:hover {
 color:#000;
 }
 #cssmenu .menuBoxContentLink {
@@ -122,8 +122,21 @@ margin-bottom: 5px;
 border-top: 0px solid #AF417E;
 }
 
+/*FIXED HEADER*/
+#fixed-header{
+position:fixed; 
+top:0px;
+z-index:100;
+height:135px;
+width:100%;
+background-color:#fff;
+}
+.fixed-header-height{
+height:135px;
+}
+
 /* FAVORITEN */
-#favorites{
+#favorites {
 min-width: 1100px;
 height:75px;
 position:relative;
@@ -137,17 +150,17 @@ position: absolute;
 bottom: 5px;
 left: 190px;
 }
-td.fastmenu{
+td.fastmenu {
 width: 105px;
 font-size: 9px;
 text-align: center;
 font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
 letter-spacing: normal;
 }
-td.fastmenu img{
+td.fastmenu img {
 margin: 3px 0;
 border: 0;
 }
-.columnLeft2{
+.columnLeft2 {
 display: none;
 }

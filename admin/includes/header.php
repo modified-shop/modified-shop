@@ -39,29 +39,6 @@
     }
   }
 
-  if (!defined('NEW_ADMIN_STYLE')) { 
-    // Admin Menu
-    if (USE_ADMIN_TOP_MENU != 'false') {
-    ?>
-    <script src="includes/liststyle_menu/topmenu.js" type="text/javascript"></script>
-    <script type="text/javascript">
-    <!--
-      document.write('<link href="includes/liststyle_menu/liststyle_top.css" rel="stylesheet" type="text/css" />');
-    //-->
-    </script>
-    <?php
-    } else {
-      echo '<link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />';
-    }
-    ?>
-    <noscript>
-      <link href="includes/liststyle_menu/liststyle_left.css" rel="stylesheet" type="text/css" />
-    </noscript>
-  <?php
-  }
-  ?>
-
-  <?php
   // Include XAJAX JS Library
   if( XAJAX_BACKEND_SUPPORT=='true' ) {
     require ('xajax.common.php');
@@ -71,6 +48,7 @@
   }
   ?>
 
+<div id="fixed-header">
   <div id="top1"><?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?></div>
 
   <div id="favorites">
@@ -174,3 +152,5 @@
     }
   }
   ?>
+</div>
+<div class="fixed-header-height">&nbsp;</div>
