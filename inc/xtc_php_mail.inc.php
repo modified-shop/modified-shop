@@ -60,6 +60,12 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $message_body_plain = str_replace('[WIDERRUF]', $txt_widerruf, $message_body_plain);
   }
 
+  //Platzhalter [NOSIGNATUR] falls keine Signatir notwendig (zB Newsletter)
+  if (strpos($message_body_html,'[NOSIGNATUR]') !== false) {
+    $html_signatur = '';
+    $txt_signatur = '';
+  }
+
   //Platzhalter [SIGNATUR] durch Signatur Text ersetzen
   if (strpos($message_body_html,'[SIGNATUR]') !== false) {
     $message_body_html = str_replace('[SIGNATUR]', $html_signatur, $message_body_html);
