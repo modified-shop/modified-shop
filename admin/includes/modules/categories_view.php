@@ -159,47 +159,47 @@
             <!-- categories and products table -->
             <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent" width="4%" align="center">
+                <td class="dataTableHeadingContent txta-c" style="width:4%">
                   <?php echo TABLE_HEADING_EDIT; ?>
                   <input type="checkbox" onclick="javascript:CheckAll(this.checked);">
                 </td>
-                <td class="dataTableHeadingContent" width="10%" align="center">
+                <td class="dataTableHeadingContent txta-c" style="width:10%">
                   <?php echo TABLE_HEADING_PRODUCTS_MODEL.xtc_sorting(FILENAME_CATEGORIES,'model'); ?>
                 </td>
-                <td class="dataTableHeadingContent" align="center" width="10%">
+                <td class="dataTableHeadingContent txta-c" style="width:10%;">
                   <?php echo TABLE_HEADING_SORT.xtc_sorting(FILENAME_CATEGORIES,'sort'); ?>
                 </td>
                 <?php
                 if( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
                   ?>
-                  <td class="dataTableHeadingContent" width="10%" align="center">
+                  <td class="dataTableHeadingContent txta-c" style="width:10%">
                     <?php echo TABLE_HEADING_IMAGE ?>
                   </td>
                   <?php
                 }
                 ?>
-                <td class="dataTableHeadingContent" align="center" width="30%">
+                <td class="dataTableHeadingContent txta-c" style="width:30%">
                   <?php echo TABLE_HEADING_CATEGORIES_PRODUCTS.xtc_sorting(FILENAME_CATEGORIES,'name'); ?>
                 </td>
                 <?php
                 // check Produkt and attributes stock
                 if (STOCK_CHECK == 'true') {
-                  echo '<td class="dataTableHeadingContent" align="center" width="20%">' . TABLE_HEADING_STOCK . xtc_sorting(FILENAME_CATEGORIES,'stock') . '</td>';
+                  echo '<td class="dataTableHeadingContent txta-c" style="width:20%">' . TABLE_HEADING_STOCK . xtc_sorting(FILENAME_CATEGORIES,'stock') . '</td>';
                 }
                 ?>
-                <td class="dataTableHeadingContent" align="center" width="7%">
+                <td class="dataTableHeadingContent txta-c" style="width:7%">
                   <?php echo TABLE_HEADING_STATUS.xtc_sorting(FILENAME_CATEGORIES,'status'); ?>
                </td>
-               <td class="dataTableHeadingContent" align="center" width="7%">
+               <td class="dataTableHeadingContent txta-c" style="width:7%">
                   <?php echo TABLE_HEADING_STARTPAGE.xtc_sorting(FILENAME_CATEGORIES,'startpage'); ?>
                </td>
-               <td class="dataTableHeadingContent" align="center" width="10%">
+               <td class="dataTableHeadingContent txta-c" style="width:10%">
                   <?php echo TABLE_HEADING_PRICE.xtc_sorting(FILENAME_CATEGORIES,'price'); ?>
                </td>
-               <td class="dataTableHeadingContent" align="center" width="12%">
+               <td class="dataTableHeadingContent txta-c" style="width:12%">
                   <?php echo '%&nbsp;max' . xtc_sorting(FILENAME_CATEGORIES,'discount'); ?>
                </td>
-               <td class="dataTableHeadingContent" width="10%" align="center">
+               <td class="dataTableHeadingContent txta-c" style="width:10%">
                   <?php echo TABLE_HEADING_ACTION; ?>
                </td>
              </tr>
@@ -281,11 +281,11 @@
                  <?php
                  if ( USE_ADMIN_THUMBS_IN_LIST=='true' ) {
                  ?>
-                   <td class="categories_view_data" style="text-align: center;">--</td>
+                   <td class="categories_view_data txta-c">--</td>
                  <?php
                  }
                  ?>
-                 <td class="categories_view_data" style="text-align: left; padding-left: 5px;">
+                 <td class="categories_view_data txta-c" style="padding-left: 5px;">
                    <?php
                    echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .$cPath_back). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) .' ..</a>';
                    ?>
@@ -338,7 +338,7 @@
                    <?php
                  }
                  ?>
-                 <td class="categories_view_data" style="text-align: left; padding-left: 5px;">
+                 <td class="categories_view_data txta-l" style="padding-left: 5px;">
                    <?php
                    echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . xtc_get_path($categories['categories_id'])) . '">' . xtc_image(DIR_WS_ICONS . 'folder.gif', ICON_FOLDER, '', '', $icon_padding) . '</a>';
                    echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $categories['categories_id']. '&action=edit_category') . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding) . '</a>';
@@ -538,7 +538,7 @@
                    <?php
                  } else {
                    ?>
-                   <td class="categories_view_data" width="22">--</td>
+                    <td class="categories_view_data">--</td>
                    <?php
                  }
                  ?>
@@ -553,7 +553,7 @@
                  </td>
                  <?php
                  if( USE_ADMIN_THUMBS_IN_LIST=='true' ) { ?>
-                   <td class="categories_view_data" style="text-align: center;">
+                   <td class="categories_view_data txta-c">
                      <?php
                      echo xtc_product_thumb_image($products['products_image'], $products['products_name'], '','',$admin_thumbs_size);
                      ?>
@@ -561,7 +561,7 @@
                    <?php
                  }
                  ?>
-                 <td class="categories_view_data" style="text-align: left; padding-left: 8px;">
+                 <td class="categories_view_data txta-l" style="padding-left: 8px;">
                    <?php
                    echo '<a href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding). '</a>';
                    echo '<a href="'. xtc_href_link(FILENAME_NEW_ATTRIBUTES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_attr.gif', BUTTON_EDIT_ATTRIBUTES,'', '', $icon_padding). '</a>';
@@ -989,27 +989,25 @@
             <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
           </td>
+        <td>&nbsp;</td>
         </tr>
         <tr>
           <td>            
-            <!-- bottom buttons -->
-            <table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding-top: 10px;">
-              <tr>
-                <td class="smallText">
-                  <?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?>
-                </td>
-                <td align="right" class="smallText">
-                  <?php
-                  if ($cPath) {
-                    echo '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .  $cPath_back . '&cID=' . $current_category_id) . '">' . BUTTON_BACK . '</a>&nbsp;';
-                  }
-                  echo '<a class="button" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>&nbsp;';
-                  echo '<a class="button" href="javascript:SwitchProducts()" onclick="this.blur()">' . BUTTON_SWITCH_PRODUCTS . '</a>&nbsp;';
-                  echo '<a class="button" href="javascript:SwitchCategories()" onclick="this.blur()">' . BUTTON_SWITCH_CATEGORIES . '</a>&nbsp;';
-                  ?>
-                </td>
-              </tr>
-            </table>
+            <!-- bottom buttons --> 
+            <div style="padding-top:10px;">            
+              <div class="smallText flt-l"><?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?></div>
+              <div class="smallText flt-r">
+                <?php
+                if ($cPath) {
+                  echo '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .  $cPath_back . '&cID=' . $current_category_id) . '">' . BUTTON_BACK . '</a>&nbsp;';
+                }
+                echo '<a class="button" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>&nbsp;';
+                echo '<a class="button" href="javascript:SwitchProducts()" onclick="this.blur()">' . BUTTON_SWITCH_PRODUCTS . '</a>&nbsp;';
+                echo '<a class="button" href="javascript:SwitchCategories()" onclick="this.blur()">' . BUTTON_SWITCH_CATEGORIES . '</a>&nbsp;';
+                ?>
+              </div>
+            </div>              
           </td>
+          <td>&nbsp;</td>
         </tr>    
       </table>
