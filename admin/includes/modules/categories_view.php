@@ -626,30 +626,6 @@
              ?>              
             </table>             
             <!-- categories and products table ENDS -->
-            
-            <!-- PAGINATION-->
-            <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
-            
-
-            <!-- bottom buttons -->
-            <table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding-top: 10px;">
-              <tr>
-                <td class="smallText">
-                  <?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?>
-                </td>
-                <td align="right" class="smallText">
-                  <?php
-                  if ($cPath) {
-                    echo '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .  $cPath_back . '&cID=' . $current_category_id) . '">' . BUTTON_BACK . '</a>&nbsp;';
-                  }
-                  echo '<a class="button" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>&nbsp;';
-                  echo '<a class="button" href="javascript:SwitchProducts()" onclick="this.blur()">' . BUTTON_SWITCH_PRODUCTS . '</a>&nbsp;';
-                  echo '<a class="button" href="javascript:SwitchCategories()" onclick="this.blur()">' . BUTTON_SWITCH_CATEGORIES . '</a>&nbsp;';
-                  ?>
-                </td>
-              </tr>
-            </table>
           </td>
           <!-- categories & products column ENDS -->
           <?php
@@ -1007,4 +983,33 @@
           }
           ?>
         </tr>
+        <tr>
+          <td>
+            <!-- PAGINATION-->
+            <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
+          </td>
+        </tr>
+        <tr>
+          <td>            
+            <!-- bottom buttons -->
+            <table border="0" width="100%" cellspacing="0" cellpadding="2" style="padding-top: 10px;">
+              <tr>
+                <td class="smallText">
+                  <?php echo TEXT_CATEGORIES . '&nbsp;' . $categories_count . '<br />' . TEXT_PRODUCTS . '&nbsp;' . $products_count; ?>
+                </td>
+                <td align="right" class="smallText">
+                  <?php
+                  if ($cPath) {
+                    echo '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .  $cPath_back . '&cID=' . $current_category_id) . '">' . BUTTON_BACK . '</a>&nbsp;';
+                  }
+                  echo '<a class="button" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>&nbsp;';
+                  echo '<a class="button" href="javascript:SwitchProducts()" onclick="this.blur()">' . BUTTON_SWITCH_PRODUCTS . '</a>&nbsp;';
+                  echo '<a class="button" href="javascript:SwitchCategories()" onclick="this.blur()">' . BUTTON_SWITCH_CATEGORIES . '</a>&nbsp;';
+                  ?>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>    
       </table>
