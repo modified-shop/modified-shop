@@ -14,7 +14,6 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (!$action) {
   ?>
-  <br />
   <div class="pageHeadingTab flt-l pdg2"><?php echo HEADING_CONTENT; ?></div>
   <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product'); ?>"><?php echo HEADING_PRODUCTS_CONTENT; ?></a></div>
   <div class="borderTab">
@@ -75,7 +74,7 @@ if (!$action) {
     ?>
     <br />
     <div class="main"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'&nbsp;&nbsp;'.$languages[$i]['name']; ?></div>
-    <table class="table-main">
+    <table class="tableCenter">
       <tr class="dataTableHeadingRow">
         <td class="dataTableHeadingContent" width="10" ><?php echo TABLE_HEADING_CONTENT_ID; ?></td>
         <td class="dataTableHeadingContent" width="10" >&nbsp;</td>
@@ -282,8 +281,9 @@ if (!$action) {
                                      );
       }
       ?>      
-      <div class="pageHeading"><br /><?php echo HEADING_CONTENT; ?><br /><br /></div>
-      <div style="width:860px;">
+      
+      <div style="width:860px;padding:5px;">
+      <div class="pageHeading"><?php echo HEADING_CONTENT; ?><br /></div>
         <?php
           if ($action != 'new') {
             echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER,'action=edit&id=update&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);

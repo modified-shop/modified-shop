@@ -36,7 +36,7 @@ if (!$action) {
     $total_space_media_products = xtc_spaceUsed(DIR_FS_CATALOG.'media/products/'); // DokuMan - 2011-09-06 - sum up correct filesize avoiding global variable
     echo '<div class="main clear">'.USED_SPACE.xtc_format_filesize($total_space_media_products).'</div></br>';
   ?>
-  <table class="table-main">
+  <table class="tableCenter">
     <tr class="dataTableHeadingRow">
       <td class="dataTableHeadingContent nobr"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></td>
       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
@@ -81,7 +81,7 @@ if (!$action) {
             <tr>
               <td class="dataTableContent" align="left"></td>
               <td class="dataTableContent" align="left">
-                <table class="table-main">
+                <table class="tableCenter">
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent nobr" width="2%" ><?php echo TABLE_HEADING_PRODUCTS_CONTENT_ID; ?></td>
                     <td class="dataTableHeadingContent nobr" width="2%" >&nbsp;</td>
@@ -220,9 +220,9 @@ if (!$action) {
       // mask for product content
       
       ?>
+      <div style="width:800px; margin:5px;">
       <div class="pageHeading"><br /><?php echo HEADING_PRODUCTS_CONTENT; ?><br /></div>
       <div class="main"><?php echo TEXT_CONTENT_DESCRIPTION; ?></div>
-      <div style="width:800px;">
         <?php 
         if ($action !='new_products_content') {
           echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=update_product&coID='.$g_coID,'post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
