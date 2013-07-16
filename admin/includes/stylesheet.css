@@ -726,7 +726,7 @@ text-align: center;
 margin: 10px 0;
 }
 .txta-l{
-text-align: left;
+text-align: left!important;
 }
 .txta-r{
 text-align: right;
