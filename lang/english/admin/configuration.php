@@ -800,4 +800,7 @@ define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'If a sold-out items (stock
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In for Newsletter registration.');
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');
+
+define('USE_ADMIN_FIXED_TOP_TITLE', 'Fixate admin page header?'); 
+define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header allways be visable when scrolling? Standard: true (yes)');
 ?>
