@@ -202,7 +202,7 @@ require (DIR_WS_INCLUDES.'head.php');
               ?>
                   
                     <?php
-                    xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
+                    echo xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
                     if ($form_action == 'update'){ 
                       echo xtc_draw_hidden_field('specials_id', $sID);                
                     }
