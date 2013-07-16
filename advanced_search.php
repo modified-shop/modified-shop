@@ -38,10 +38,7 @@ $smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FI
 // EOF - GTB - 2010-09-20 - correct the Formular in dependences of the request type SSL / NONSSL
 
 $smarty->assign('INPUT_KEYWORDS', xtc_draw_input_field('keywords', '', 'style="width: 100%"'));
-//BOF - DokuMan - 2009-05-31 - removed quotationmark
-//$smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP.'?KeepThis=true&TB_iframe=true&height=400&width=600"'));
-$smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP.'?KeepThis=true&TB_iframe=true&height=400&width=600'));
-//EOF - DokuMan - 2009-05-31 - removed quotationmark
+$smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, 'KeepThis=true&TB_iframe=true&height=400&width=600', $request_type));
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_search.gif', IMAGE_BUTTON_SEARCH));
 
 
