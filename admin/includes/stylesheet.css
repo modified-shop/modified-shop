@@ -506,3 +506,12 @@ margin-top: 5px;
 padding:5px;
 border: 1px solid #aaaaaa;
 }
+.tableConfirm td.col-left{
+font-size:12px;
+font-weight:bold;
+min-width:50%;
+}
+.tableConfirm td.col-single-right{
+background-color:#e8e8e8;
+min-width:50%;
+}
