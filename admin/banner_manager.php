@@ -53,10 +53,11 @@
           $messageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
           $banner_error = true;
         }
-        if (empty($html_text)) {
+        if (empty($banners_image_local)) {
           $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
           $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
           if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types) && $_POST['banners_image_local'] == '') {
+            $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
             $banner_error = true;
           }
         }
@@ -249,7 +250,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       </tr>                      
                       <tr>
                         <td class="td_left" valign="top"><?php echo TEXT_BANNERS_IMAGE; ?></td>
-                        <td class="td_right"><?php echo xtc_draw_file_field('banners_image') . ' ' . TEXT_BANNERS_IMAGE_LOCAL . ' (jpg,jpeg,jpe,gif,png,bmp,tiff,tif,bmp,swf,cab)<br />' . DIR_FS_CATALOG_IMAGES.'banner/' . xtc_draw_input_field('banners_image_local', $bInfo->banners_image); ?></td>
+                        <td class="td_right"><?php echo xtc_draw_file_field('banners_image') . ' ' . TEXT_BANNERS_IMAGE_LOCAL . ' (jpg,jpeg,jpe,gif,png,bmp,tiff,tif,bmp,swf,cab)<br />' . DIR_FS_CATALOG_IMAGES.'banner/' . xtc_draw_input_field('banners_image_local', $bInfo->banners_image, '', true); ?></td>
                       </tr>                      
                       <tr>
                         <td class="td_left"><?php echo TEXT_BANNERS_IMAGE_TARGET; ?></td>
