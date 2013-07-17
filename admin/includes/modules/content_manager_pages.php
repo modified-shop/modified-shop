@@ -76,16 +76,16 @@ if (!$action) {
     <div class="main"><?php echo xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'&nbsp;&nbsp;'.$languages[$i]['name']; ?></div>
     <table class="tableCenter">
       <tr class="dataTableHeadingRow">
-        <td class="dataTableHeadingContent" width="10" ><?php echo TABLE_HEADING_CONTENT_ID; ?></td>
-        <td class="dataTableHeadingContent" width="10" >&nbsp;</td>
-        <td class="dataTableHeadingContent" width="30%" align="left"><?php echo TABLE_HEADING_CONTENT_TITLE; ?></td>
-        <td class="dataTableHeadingContent" width="1%" align="middle"><?php echo TABLE_HEADING_CONTENT_GROUP; ?></td>
-        <td class="dataTableHeadingContent" width="1%" align="middle"><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
-        <td class="dataTableHeadingContent" width="25%"align="left"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
-        <td class="dataTableHeadingContent" nowrap width="5%" align="left"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
-        <td class="dataTableHeadingContent" nowrap width="" align="middle"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
-        <td class="dataTableHeadingContent" nowrap width="" align="middle"><?php echo TEXT_CONTENT_NOINDEX ?></td>
-        <td class="dataTableHeadingContent" width="30%" align="middle"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent txta-c" style="width:10px" ><?php echo TABLE_HEADING_CONTENT_ID; ?></td>
+        <td class="dataTableHeadingContent" style="width:10px" >&nbsp;</td>
+        <td class="dataTableHeadingContent" style="width:30%"><?php echo TABLE_HEADING_CONTENT_TITLE; ?></td>
+        <td class="dataTableHeadingContent txta-c" style="width:1%"><?php echo TABLE_HEADING_CONTENT_GROUP; ?></td>
+        <td class="dataTableHeadingContent txta-c" style="width:1%"><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
+        <td class="dataTableHeadingContent" style="width:25%"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
+        <td class="dataTableHeadingContent nobr" style="width:5%"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
+        <td class="dataTableHeadingContent txta-c nobr"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
+        <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_NOINDEX ?></td>
+        <td class="dataTableHeadingContent txta-c nobr" style="width:30%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
       </tr>
       <?php
       for ($ii = 0, $nn = sizeof($content); $ii < $nn; $ii++) {
@@ -94,22 +94,22 @@ if (!$action) {
         echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
           if ($content[$ii]['CONTENT_FILE']=='') $content[$ii]['CONTENT_FILE']='database';
             ?>
-            <td class="dataTableContent" align="left"><?php echo $content[$ii]['CONTENT_ID']; ?></td>
-            <td bgcolor="<?php echo substr((6543216554/$content[$ii]['CONTENT_GROUP']),0,6); ?>" class="dataTableContent" align="left">&nbsp;</td>
-            <td class="dataTableContent" align="left">
-              <?php echo $content[$ii]['CONTENT_TITLE']; ?>
+            <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_ID']; ?></td>
+            <td bgcolor="<?php echo substr((6543216554/$content[$ii]['CONTENT_GROUP']),0,6); ?>" class="dataTableContent">&nbsp;</td>
+            <td class="dataTableContent">
+              <?php echo '&nbsp;'.$content[$ii]['CONTENT_TITLE']; ?>
               <?php
               if ($content[$ii]['CONTENT_DELETE']=='0'){
                 echo '<font color="#ff0000">*</font>';
               } ?>
             </td>
-            <td class="dataTableContent" align="middle"><?php echo $content[$ii]['CONTENT_GROUP']; ?></td>
-            <td class="dataTableContent" align="middle"><?php echo $content[$ii]['SORT_ORDER']; ?>&nbsp;</td>
-            <td class="dataTableContent" align="left"><?php echo $content[$ii]['CONTENT_FILE']; ?></td>
-            <td class="dataTableContent" align="middle"><?php if ($content[$ii]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
-            <td class="dataTableContent" align="middle"><?php echo $file_flag_result['file_flag_name']; ?></td>
-            <td class="dataTableContent" align="middle"><?php if ($content[$ii]['CONTENT_NOINDEX']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
-            <td class="dataTableContent" align="right">
+            <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_GROUP']; ?></td>
+            <td class="dataTableContent txta-c"><?php echo $content[$ii]['SORT_ORDER']; ?>&nbsp;</td>
+            <td class="dataTableContent"><?php echo $content[$ii]['CONTENT_FILE']; ?></td>
+            <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
+            <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
+            <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_NOINDEX']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
+            <td class="dataTableContent txta-r">
               <a href="">
                 <?php
                 if ($content[$ii]['CONTENT_DELETE']=='1'){
@@ -185,16 +185,16 @@ if (!$action) {
 
                   if ($content_1[$a]['CONTENT_FILE']=='') $content_1[$a]['CONTENT_FILE']='database';
                     ?>
-                    <td class="dataTableContent" align="left"><?php echo $content_1[$a]['CONTENT_ID']; ?></td>
-                    <td class="dataTableContent" align="left">--</td>
-                    <td class="dataTableContent" align="left"><?php echo $content_1[$a]['CONTENT_TITLE']; ?></td>
-                    <td class="dataTableContent" align="middle"><?php echo $content_1[$a]['CONTENT_GROUP']; ?></td>
-                    <td class="dataTableContent" align="middle"><?php echo $content_1[$a]['SORT_ORDER']; ?>&nbsp;</td>
-                    <td class="dataTableContent" align="left"><?php echo $content_1[$a]['CONTENT_FILE']; ?></td>
-                    <td class="dataTableContent" align="middle"><?php if ($content_1[$a]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
-                    <td class="dataTableContent" align="middle"><?php echo $file_flag_result['file_flag_name']; ?></td>
-                    <td class="dataTableContent" align="middle"><?php if ($content_1[$a]['CONTENT_NOINDEX']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
-                    <td class="dataTableContent" align="right">
+                    <td class="dataTableContent txta-c"><?php echo $content_1[$a]['CONTENT_ID']; ?></td>
+                    <td class="dataTableContent">--</td>
+                    <td class="dataTableContent"><?php echo $content_1[$a]['CONTENT_TITLE']; ?></td>
+                    <td class="dataTableContent txta-c"><?php echo $content_1[$a]['CONTENT_GROUP']; ?></td>
+                    <td class="dataTableContent txta-c"><?php echo $content_1[$a]['SORT_ORDER']; ?>&nbsp;</td>
+                    <td class="dataTableContent"><?php echo $content_1[$a]['CONTENT_FILE']; ?></td>
+                    <td class="dataTableContent txta-c"><?php if ($content_1[$a]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
+                    <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
+                    <td class="dataTableContent txta-c"><?php if ($content_1[$a]['CONTENT_NOINDEX']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
+                    <td class="dataTableContent txta-r">
                       <a href="">
                         <?php
                         if ($content_1[$a]['CONTENT_DELETE']=='1'){
@@ -443,10 +443,10 @@ if (!$action) {
           </tr>          
         </table>
        
-        <div class="flt-r pdg2">
+        <div class="flt-r mrg5 pdg2">
           <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
         </div>
-        <div class="flt-r pdg2">
+        <div class="flt-r mrg5 pdg2">
           <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo BUTTON_BACK; ?></a>
         </div>
        
