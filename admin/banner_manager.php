@@ -239,7 +239,7 @@ require (DIR_WS_INCLUDES.'head.php');
              
                   <?php echo xtc_draw_form('new_banner', FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . 'action=' . $form_action, 'post', 'enctype="multipart/form-data"'); if ($form_action == 'update') echo xtc_draw_hidden_field('banners_id', $bID); ?>
                 
-                    <table class="tableConfig borderall">
+                    <table class="tableConfig">
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_TITLE; ?></td>
                         <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_title', $bInfo->banners_title, '', true); ?></td>
@@ -251,12 +251,12 @@ require (DIR_WS_INCLUDES.'head.php');
                         <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_URL_NOTE; ?></td>
                       </tr>
                       <tr>
-                        <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_BANNERS_GROUP; ?></td>
+                        <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_GROUP; ?></td>
                         <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group) . '<br />' . xtc_draw_input_field('new_banners_group', '', '', ((sizeof($groups_array) > 0) ? false : true)); ?></td>
                         <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
                       </tr>                      
                       <tr>
-                        <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_BANNERS_IMAGE; ?></td>
+                        <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE; ?></td>
                         <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('banners_image') . ' ' . '<br />' . xtc_draw_input_field('banners_image_local', $bInfo->banners_image, '', true); ?></td>
                         <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_LOCAL;?></td>
                       </tr>                      
@@ -287,10 +287,10 @@ require (DIR_WS_INCLUDES.'head.php');
                       </tr>
                     </table>            
                     
-                    <div class="main">
+                    <div class="main" style="padding:6px;border-bottom: 1px solid #a3a3a3;">
                       <?php echo TEXT_BANNERS_BANNER_NOTE . '<br />' . TEXT_BANNERS_INSERT_NOTE . '<br />' . TEXT_BANNERS_EXPIRCY_NOTE . '<br />' . TEXT_BANNERS_SCHEDULE_NOTE; ?>
                     </div>
-                    <div class="main nobr">
+                    <div class="main mrg5 nobr">
                       <?php echo (($form_action == 'insert') ? '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>' : '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, (isset($_GET['page']) ? 'page=' . $_GET['page'] . '&' : '') . (isset($_GET['bID']) ? 'bID=' . $_GET['bID'] : '')) . '">' . BUTTON_CANCEL . '</a>'; ?>
                     </div>
                 
@@ -305,10 +305,10 @@ require (DIR_WS_INCLUDES.'head.php');
                   <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_BANNERS; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_GROUPS; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATISTICS; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_GROUPS; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATISTICS; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATUS; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                     </tr>
                     <?php
                       $banners_query_raw = "select banners_id, banners_title, banners_image, banners_group, status, expires_date, expires_impressions, date_status_change, date_scheduled, date_added from " . TABLE_BANNERS . " order by banners_title, banners_group";
@@ -324,17 +324,16 @@ require (DIR_WS_INCLUDES.'head.php');
                         $banners_shown = ($info['banners_shown'] != '') ? $info['banners_shown'] : '0';
                         $banners_clicked = ($info['banners_clicked'] != '') ? $info['banners_clicked'] : '0';
                         if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) {
-                          echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '\'">' . "\n";
+                          $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id) . '\'"';
                         } else {
-                          echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '\'">' . "\n";
+                          $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '\'"';
                         }
                         ?>
-                        
+                        <tr <?php echo $tr_attributes;?>>
                           <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . FILENAME_POPUP_IMAGE . '?banner=' . $banners['banners_id'] . '\')">' . xtc_image(DIR_WS_IMAGES . 'icon_popup.gif', ICON_POPUP) . '</a>&nbsp;' . $banners['banners_title']; ?></td>
-
-                          <td class="dataTableContent" align="right"><?php echo $banners['banners_group']; ?></td>
-                          <td class="dataTableContent" align="right"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
-                          <td class="dataTableContent" align="right">
+                          <td class="dataTableContent txta-r"><?php echo $banners['banners_group']; ?></td>
+                          <td class="dataTableContent txta-r"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
+                          <td class="dataTableContent txta-r">
                             <?php                                      
                               if ($banners['status'] == '1') {
                                 echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id'] . '&action=setflag&flag=0') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
@@ -343,7 +342,7 @@ require (DIR_WS_INCLUDES.'head.php');
                               }
                             ?>
                           </td>
-                          <td class="dataTableContent" align="right"><?php echo '<a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                          <td class="dataTableContent txta-r"><?php echo '<a href="' . xtc_href_link(FILENAME_BANNER_STATISTICS, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_ICONS . 'statistics.gif', ICON_STATISTICS) . '</a>&nbsp;'; if (isset($bInfo) && is_object($bInfo) && ($banners['banners_id'] == $bInfo->banners_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $banners['banners_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                         </tr>
                         <?php
                       }
