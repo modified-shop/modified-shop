@@ -1,16 +1,17 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: banner_manager.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: banner_manager.php 5100 2013-07-17 13:25:47Z Tomcraft $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(banner_manager.php,v 1.25 2003/02/16); www.oscommerce.com 
    (c) 2003	 nextcommerce (banner_manager.php,v 1.4 2003/08/14); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -25,10 +26,11 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_BANNERS_TITLE', 'Banner Title:');
 define('TEXT_BANNERS_URL', 'Banner URL:');
+define('TEXT_BANNERS_URL_NOTE', 'URL target when clicking the banner.'); 
 define('TEXT_BANNERS_GROUP', 'Banner Group:');
-define('TEXT_BANNERS_NEW_GROUP', ', or enter a new banner group below');
+define('TEXT_BANNERS_NEW_GROUP', 'Choose an existing banner group (if exists) or enter a new banner group below.');
 define('TEXT_BANNERS_IMAGE', 'Image:');
-define('TEXT_BANNERS_IMAGE_LOCAL', ', or enter local file below');
+define('TEXT_BANNERS_IMAGE_LOCAL', 'Choose the desired image by clicking the "Browse" button or enter local file below in path &quot;' . DIR_FS_CATALOG_IMAGES.'banner/&quot; an.<br /><strong>Allowed extensions:</strong> jpg, jpeg, jpe, gif, png, bmp, tiff, tif, bmp, swf, cab');
 define('TEXT_BANNERS_IMAGE_TARGET', 'Image Target (Save To):');
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
 define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Here you can enter directly a HTML code you received from an affiliate service to display the banner.');

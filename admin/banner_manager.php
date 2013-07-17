@@ -242,40 +242,48 @@ require (DIR_WS_INCLUDES.'head.php');
                     <table class="tableConfig borderall">
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_TITLE; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('banners_title', $bInfo->banners_title, '', true); ?></td>
+                        <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_title', $bInfo->banners_title, '', true); ?></td>
+                        <td class="dataTableConfig col-right">&nbsp;</td>
                       </tr>
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_URL; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('banners_url', $bInfo->banners_url); ?></td>
+                        <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_url', $bInfo->banners_url); ?></td>
+                        <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_URL_NOTE; ?></td>
                       </tr>
                       <tr>
                         <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_BANNERS_GROUP; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group) . TEXT_BANNERS_NEW_GROUP . '<br />' . xtc_draw_input_field('new_banners_group', '', '', ((sizeof($groups_array) > 0) ? false : true)); ?></td>
+                        <td class="dataTableConfig col-middle"><?php echo xtc_draw_pull_down_menu('banners_group', $groups_array, $bInfo->banners_group) . '<br />' . xtc_draw_input_field('new_banners_group', '', '', ((sizeof($groups_array) > 0) ? false : true)); ?></td>
+                        <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_NEW_GROUP; ?></td>
                       </tr>                      
                       <tr>
                         <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_BANNERS_IMAGE; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('banners_image') . ' ' . TEXT_BANNERS_IMAGE_LOCAL . ' (jpg,jpeg,jpe,gif,png,bmp,tiff,tif,bmp,swf,cab)<br />' . DIR_FS_CATALOG_IMAGES.'banner/' . xtc_draw_input_field('banners_image_local', $bInfo->banners_image, '', true); ?></td>
+                        <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('banners_image') . ' ' . '<br />' . xtc_draw_input_field('banners_image_local', $bInfo->banners_image, '', true); ?></td>
+                        <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_IMAGE_LOCAL;?></td>
                       </tr>                      
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_IMAGE_TARGET; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo DIR_FS_CATALOG_IMAGES.'banner/' . xtc_draw_input_field('banners_image_target'); ?></td>
+                        <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('banners_image_target'); ?></td>
+                        <td class="dataTableConfig col-right"><?php echo DIR_FS_CATALOG_IMAGES.'banner/'; ?></td>
                       </tr>                      
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('html_text', 'soft', '60', '5', $bInfo->banners_html_text) . ' ' . TEXT_BANNERS_HTML_TEXT_NOTE; ?></td>
+                        <td class="dataTableConfig col-middle"><?php echo xtc_draw_textarea_field('html_text', 'soft', '40', '5', $bInfo->banners_html_text); ?></td>
+                        <td class="dataTableConfig col-right"><?php echo TEXT_BANNERS_HTML_TEXT_NOTE; ?></td>
                       </tr>                      
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
-                        <td class="dataTableConfig col-single-right">
+                        <td class="dataTableConfig col-middle">
                           <?php echo xtc_draw_input_field('dateScheduled', $bInfo->date_scheduled ,'id="Datepicker1"'); ?>
                         </td>
+                        <td class="dataTableConfig col-right">&nbsp;</td>
                       </tr>                     
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_EXPIRES_ON; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
-                        <td class="dataTableConfig col-single-right">
+                        <td class="dataTableConfig col-middle">
                           <?php echo xtc_draw_input_field('dateExpires', $bInfo->expires_date ,'id="Datepicker2"'); ?>
                           <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
                         </td>
+                        <td class="dataTableConfig col-right">&nbsp;</td>
                       </tr>
                     </table>            
                     
