@@ -44,7 +44,7 @@ if (!$action) {
       for ($i=0,$n=sizeof($products_ids); $i<$n; $i++) {
         echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
           ?>
-          <td class="dataTableContent_products  txta-c" style="width:5%"><?php echo $products_ids[$i]['id']; ?></td>
+          <td class="dataTableContent_products txta-c" style="width:5%"><?php echo $products_ids[$i]['id']; ?></td>
           <td class="dataTableContent_products"><b>
             <?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?>
             <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.$products_ids[$i]['id'].$setparam);?>"><?php echo $products_ids[$i]['name']; ?></a></b>
