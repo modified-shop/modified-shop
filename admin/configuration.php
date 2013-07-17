@@ -36,7 +36,7 @@
         // moneybookers payment module version 2.4
         if ($_GET['gID']=='31') {
           if (isset($_POST['_PAYMENT_MONEYBOOKERS_EMAILID'])) {
-          $url = 'https://www.moneybookers.com/app/email_check.pl?email=' . urlencode($_POST['_PAYMENT_MONEYBOOKERS_EMAILID']) . '&cust_id=8644877&password=1a28e429ac2fcd036aa7d789ebbfb3b0';
+            $url = 'https://www.moneybookers.com/app/email_check.pl?email=' . urlencode($_POST['_PAYMENT_MONEYBOOKERS_EMAILID']) . '&cust_id=8644877&password=1a28e429ac2fcd036aa7d789ebbfb3b0';
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
@@ -214,7 +214,7 @@
             ?>
             
                 <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
-                  <table class="tableConfig">
+                  <table class="tableConfig borderall">
                     <?php
                       $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
