@@ -220,7 +220,7 @@ if (!$action) {
       // mask for product content
       
       ?>
-      <div style="width:800px; margin:5px;">
+      <div style="width:99%; margin:5px;">
       <div class="pageHeading"><br /><?php echo HEADING_PRODUCTS_CONTENT; ?><br /></div>
       <div class="main"><?php echo TEXT_CONTENT_DESCRIPTION; ?></div>
         <?php 
@@ -230,22 +230,22 @@ if (!$action) {
           echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'action=edit_products_content&id=insert_product','post','enctype="multipart/form-data"');
         }
         ?>
-        <table class="main collapse">
+        <table class="tableConfig borderall">
           <tr>
-            <td class="td_left"><?php echo TEXT_PRODUCT; ?></td>
-            <td class="td_right"><?php echo ((isset($_GET['pID'])) ? xtc_get_products_name($_GET['pID']) . xtc_draw_hidden_field('product', (int)$_GET['pID']) : xtc_draw_pull_down_menu('product',$products_array,$content['products_id'])); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCT; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo ((isset($_GET['pID'])) ? xtc_get_products_name($_GET['pID']) . xtc_draw_hidden_field('product', (int)$_GET['pID']) : xtc_draw_pull_down_menu('product',$products_array,$content['products_id'])); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_LANGUAGE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>
           </tr>
           <?php
             if (GROUP_CHECK=='true') {
               $customers_statuses_array = xtc_get_customers_statuses();
               $customers_statuses_array=array_merge(array(array('id'=>'all','text'=>TXT_ALL)),$customers_statuses_array);
               ?>
-                <td class="td_left"><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
-                <td class="td_right">
+                <td class="dataTableConfig col-left"><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
+                <td class="dataTableConfig col-single-right">
                   <div class="customers-groups">
                     <?php
                       for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
@@ -264,31 +264,31 @@ if (!$action) {
             }
           ?>
           <tr>
-            <td class="td_left"><?php echo TEXT_TITLE_FILE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_title',$content['content_name'],'size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_TITLE_FILE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_title',$content['content_name'],'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_LINK; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_link',$content['content_link'],'size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_LINK; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_link',$content['content_link'],'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left" valign="top"><?php echo TEXT_FILE_DESC; ?></td>
-            <td class="td_right"><?php echo xtc_draw_textarea_field('file_comment','','100','30',$content['file_comment']); ?></td>
+            <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_FILE_DESC; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('file_comment','','100','30',$content['file_comment']); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_CHOOSE_FILE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_pull_down_menu('select_file',$content_files,$default_value); ?><?php echo ' '.TEXT_CHOOSE_FILE_DESC; ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_CHOOSE_FILE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('select_file',$content_files,$default_value); ?><?php echo ' '.TEXT_CHOOSE_FILE_DESC; ?></td>
           </tr>
           <tr>
-            <td class="td_left" valign="top"><?php echo TEXT_UPLOAD_FILE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_file_field('file_upload').' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
+            <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_UPLOAD_FILE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload').' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
           </tr>
           <?php
             if ($content['content_file']!='') {
               ?>
               <tr>
-                <td class="td_left"><?php echo TEXT_FILENAME; ?></td>
-                <td class="td_right" valign="top"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
+                <td class="dataTableConfig col-left"><?php echo TEXT_FILENAME; ?></td>
+                <td class="dataTableConfig col-single-right" valign="top"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
               </tr>
               <?php
             }

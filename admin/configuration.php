@@ -214,7 +214,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
  
                       <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
-                         <table class="tableConfig">
+                         <table class="tableConfig borderall">
                           <?php
                             $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
                             while ($configuration = xtc_db_fetch_array($configuration_query)) {
