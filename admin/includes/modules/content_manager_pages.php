@@ -282,7 +282,7 @@ if (!$action) {
       }
       ?>      
       
-      <div style="width:860px;padding:5px;">
+      <div style="width:99%;padding:5px;">
       <div class="pageHeading"><?php echo HEADING_CONTENT; ?><br /></div>
         <?php
           if ($action != 'new') {
@@ -291,25 +291,25 @@ if (!$action) {
             echo xtc_draw_form('edit_content',FILENAME_CONTENT_MANAGER,'action=edit&id=insert','post','enctype="multipart/form-data"').xtc_draw_hidden_field('coID',$g_coID);
           }
         ?>
-        <table class="main collapse">
+        <table class="tableConfig borderall">
           <tr>
-            <td class="td_left"><?php echo TEXT_LANGUAGE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>
           </tr>
           <?php
             if ($content['content_delete']!=0 or $action == 'new') {
               ?>
               <tr>
-                <td class="td_left"><?php echo TEXT_GROUP; ?></td>
-                <td class="td_right"><?php echo xtc_draw_input_field('content_group',isset($content['content_group'])?$content['content_group']:'','size="5"') . ' '. TEXT_GROUP_DESC; ?></td>
+                <td class="dataTableConfig col-left"><?php echo TEXT_GROUP; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_group',isset($content['content_group'])?$content['content_group']:'','size="5"') . ' '. TEXT_GROUP_DESC; ?></td>
               </tr>
               <?php
             } else {
               echo xtc_draw_hidden_field('content_group',$content['content_group']);
               ?>
               <tr>
-                <td class="td_left"><?php echo TEXT_GROUP; ?></td>
-                <td class="td_right"><?php echo $content['content_group']; ?></td>
+                <td class="dataTableConfig col-left"><?php echo TEXT_GROUP; ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo $content['content_group']; ?></td>
               </tr>
               <?php
             }
@@ -319,26 +319,26 @@ if (!$action) {
             }
           ?>
           <tr>
-            <td class="td_left"><?php echo TEXT_FILE_FLAG; ?></td>
-            <td class="td_right"><?php echo xtc_draw_pull_down_menu('file_flag',$file_flag_array,$content['file_flag']); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_FILE_FLAG; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('file_flag',$file_flag_array,$content['file_flag']); ?></td>
           </tr>
           <?php if ($action != 'new' && CONTENT_CHILDS_ACTIV == 'true') { //Content Parent/Child  ?>
             <tr>
-              <td class="td_left"><?php echo TEXT_PARENT; ?></td>
-              <td class="td_right"><?php echo xtc_draw_pull_down_menu('parent',$content_data_array,$content['parent_id']); ?><?php echo check_content_childs($content['content_id'],$languages_id) ? '' : xtc_draw_checkbox_field('parent_check', 'yes', ($content['parent_id'] > 0 ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_PARENT; ?></td>
+              <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('parent',$content_data_array,$content['parent_id']); ?><?php echo check_content_childs($content['content_id'],$languages_id) ? '' : xtc_draw_checkbox_field('parent_check', 'yes', ($content['parent_id'] > 0 ? true : false)).' '.TEXT_PARENT_DESCRIPTION; ?></td>
             </tr>
           <?php } ?>
           <tr>
-            <td class="td_left"><?php echo TEXT_SORT_ORDER; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('sort_order',isset($content['sort_order'])?$content['sort_order']:'','size="5"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_SORT_ORDER; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('sort_order',isset($content['sort_order'])?$content['sort_order']:'','size="5"'); ?></td>
           </tr>                                  
           <tr>
-            <td class="td_left"><?php echo TEXT_STATUS; ?></td>
-            <td class="td_right"><?php echo xtc_draw_checkbox_field('status','yes', (isset($content['content_status']) && $content['content_status'] == '1' ? true : false)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_STATUS; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_checkbox_field('status','yes', (isset($content['content_status']) && $content['content_status'] == '1' ? true : false)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_CONTENT_NOINDEX; ?>: </td>
-            <td class="td_right"><?php echo xtc_draw_checkbox_field('noindex','yes', (isset($content['content_noindex']) && $content['content_noindex'] == '1' ? true : false));?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_NOINDEX; ?>: </td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_checkbox_field('noindex','yes', (isset($content['content_noindex']) && $content['content_noindex'] == '1' ? true : false));?></td>
           </tr>
           <?php
             if (GROUP_CHECK=='true') {
@@ -346,8 +346,8 @@ if (!$action) {
               $customers_statuses_array=array_merge(array(array('id'=>'all','text'=>TXT_ALL)),$customers_statuses_array);
               ?>
               <tr>
-                <td class="td_left" ><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
-                <td class="td_right">
+                <td class="dataTableConfig col-left" ><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
+                <td class="dataTableConfig col-single-right">
                   <div class="customers-groups">
                     <?php
                     for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
@@ -366,32 +366,32 @@ if (!$action) {
             }
           ?>
           <tr>
-            <td class="td_left"><?php echo TEXT_TITLE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_title',isset($content['content_title'])?$content['content_title']:'','size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_TITLE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_title',isset($content['content_title'])?$content['content_title']:'','size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_HEADING; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_heading',isset($content['content_heading'])?$content['content_heading']:'','size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_HEADING; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_heading',isset($content['content_heading'])?$content['content_heading']:'','size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo 'Meta Title'; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_meta_title',isset($content['content_meta_title'])?$content['content_meta_title']:'','size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo 'Meta Title'; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_meta_title',isset($content['content_meta_title'])?$content['content_meta_title']:'','size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo 'Meta Description'; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_meta_description',isset($content['content_meta_description'])?$content['content_meta_description']:'','size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo 'Meta Description'; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_meta_description',isset($content['content_meta_description'])?$content['content_meta_description']:'','size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo 'Meta Keywords'; ?></td>
-            <td class="td_right"><?php echo xtc_draw_input_field('cont_meta_keywords',isset($content['content_meta_keywords'])?$content['content_meta_keywords']:'','size="60"'); ?></td>
+            <td class="dataTableConfig col-left"><?php echo 'Meta Keywords'; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_meta_keywords',isset($content['content_meta_keywords'])?$content['content_meta_keywords']:'','size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_UPLOAD_FILE; ?></td>
-            <td class="td_right"><?php echo xtc_draw_file_field('file_upload').' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_UPLOAD_FILE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload').' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_CHOOSE_FILE; ?></td>
-            <td class="td_right">
+            <td class="dataTableConfig col-left"><?php echo TEXT_CHOOSE_FILE; ?></td>
+            <td class="dataTableConfig col-single-right">
               <?php
                 if ($dir= opendir(DIR_FS_CATALOG.'media/content/')){
                   while (($file = readdir($dir)) !== false) {
@@ -430,12 +430,12 @@ if (!$action) {
             </td>
           </tr>
           <tr>
-            <td class="td_left"></td>
-            <td class="td_right"><?php echo TEXT_FILE_DESCRIPTION; ?></td>
+            <td class="dataTableConfig col-left"></td>
+            <td class="dataTableConfig col-single-right"><?php echo TEXT_FILE_DESCRIPTION; ?></td>
           </tr>
           <tr>
-            <td class="td_left"><?php echo TEXT_CONTENT; ?></td>
-            <td class="td_right">
+            <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT; ?></td>
+            <td class="dataTableConfig col-single-right">
               <?php
                 echo xtc_draw_textarea_field('cont','','100%','35',isset($content['content_text'])?$content['content_text']:'');
               ?>
