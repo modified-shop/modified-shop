@@ -475,15 +475,15 @@ min-width:20%;
 }
 .tableConfig td.col-middle{
 background-color:#e8e8e8;
-min-width:21%;
-}
-.tableConfig td.col-single-right{
-background-color:#e8e8e8;
-min-width:80%;
+min-width:20%;
 }
 .tableConfig td.col-right{
 min-width:60%;
 empty-cells: show;
+}
+.tableConfig td.col-single-right{
+background-color:#e8e8e8;
+min-width:80%;
 }
 .configPartner{
 float:left;
