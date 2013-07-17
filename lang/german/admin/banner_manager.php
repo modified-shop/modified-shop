@@ -32,6 +32,7 @@ define('TEXT_BANNERS_IMAGE', 'Bild (Datei):');
 define('TEXT_BANNERS_IMAGE_LOCAL', ', oder geben Sie unten die lokale Datei auf Ihrem Server an'); 
 define('TEXT_BANNERS_IMAGE_TARGET', 'Bildziel (Speichern nach):'); 
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
+define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Hier kann direkt der HTML-Code eines Affiliate Dienstes zur Banner-Anzeige eingetragen werden.');
 define('TEXT_BANNERS_EXPIRES_ON', 'G&uuml;ltigkeit bis:');
 define('TEXT_BANNERS_OR_AT', ', oder bei');
 define('TEXT_BANNERS_IMPRESSIONS', 'Impressionen/Anzeigen.');

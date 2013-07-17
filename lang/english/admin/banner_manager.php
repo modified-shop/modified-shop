@@ -32,6 +32,7 @@ define('TEXT_BANNERS_IMAGE', 'Image:');
 define('TEXT_BANNERS_IMAGE_LOCAL', ', or enter local file below');
 define('TEXT_BANNERS_IMAGE_TARGET', 'Image Target (Save To):');
 define('TEXT_BANNERS_HTML_TEXT', 'HTML Text:');
+define('TEXT_BANNERS_HTML_TEXT_NOTE', 'Here you can enter directly a HTML code you received from an affiliate service to display the banner.');
 define('TEXT_BANNERS_EXPIRES_ON', 'Expires On:');
 define('TEXT_BANNERS_OR_AT', ', or at');
 define('TEXT_BANNERS_IMPRESSIONS', 'impressions/views.');

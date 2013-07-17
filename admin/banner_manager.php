@@ -262,7 +262,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       </tr>                      
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_HTML_TEXT; ?></td>
-                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('html_text', 'soft', '60', '5', $bInfo->banners_html_text); ?></td>
+                        <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('html_text', 'soft', '60', '5', $bInfo->banners_html_text) . ' ' . TEXT_BANNERS_HTML_TEXT_NOTE; ?></td>
                       </tr>                      
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
