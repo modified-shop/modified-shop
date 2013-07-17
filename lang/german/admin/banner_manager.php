@@ -61,6 +61,7 @@ define('SUCCESS_BANNER_STATUS_UPDATED', 'Erfolg: Der Status des Banners wurde ak
 
 define('ERROR_BANNER_TITLE_REQUIRED', 'Fehler: Ein Bannertitel wird ben&ouml;tigt.');
 define('ERROR_BANNER_GROUP_REQUIRED', 'Fehler: Eine Bannergruppe wird ben&ouml;tigt.');
+define('ERROR_BANNER_IMAGE_REQUIRED', 'Fehler: Ein Bannerbild wird ben&ouml;tigt.');
 define('ERROR_IMAGE_DIRECTORY_DOES_NOT_EXIST', 'Fehler: Das Zielverzeichnis %s existiert nicht.');
 define('ERROR_IMAGE_DIRECTORY_NOT_WRITEABLE', 'Fehler: Das Zielverzeichnis %s ist nicht beschreibbar.');
 define('ERROR_IMAGE_DOES_NOT_EXIST', 'Fehler: Bild existiert nicht.');
