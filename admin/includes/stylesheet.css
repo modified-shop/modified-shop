@@ -115,6 +115,7 @@ background-color: #F9F0F1;
  color: #000000;
  vertical-align: middle!important;
  border-bottom: 1px dashed #cccccc;
+ padding: 2px 0;
  /*text-align: left;*/
  }
  
@@ -460,10 +461,12 @@ text-align: center;
 width:100%;
 padding:2px;
 border-collapse: collapse;
+margin-top: 5px;
 }
 .tableConfig td{
 padding:8px; 
 border-bottom: 1px solid #aaaaaa;
+border-top: 1px solid #aaaaaa;
 }
 .tableConfig td.col-left{
 font-size:12px;
@@ -472,11 +475,7 @@ min-width:20%;
 }
 .tableConfig td.col-middle{
 background-color:#e8e8e8;
-min-width:21%;
-}
-.tableConfig td.col-single-right{
-background-color:#e8e8e8;
-min-width:80%;
+min-width:20%;
 }
 .tableConfig td.col-right{
 min-width:60%;
@@ -489,4 +488,17 @@ text-align: center;
 }
 .border0{
 border:0;
+}
+.mrg5{
+margin:5px;
+}
+.tableConfirm{
+width:600px;
+padding:2px;
+border-collapse: collapse;
+margin-top: 5px;
+}
+.tableConfirm td{
+padding:5px;
+border: 1px solid #aaaaaa;
 }
