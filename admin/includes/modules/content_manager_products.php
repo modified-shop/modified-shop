@@ -28,7 +28,6 @@ if (!$action) {
                         'name'=>$products_id_data['products_name']);
   } // while
   ?>
-  <br />  
   <div class="pageHeadingTaba pdg2 flt-l"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo HEADING_CONTENT; ?></a></div>
   <div class="pageHeadingTab pdg2 flt-l"><?php echo HEADING_PRODUCTS_CONTENT; ?></div>
   <div class="borderTab">
@@ -38,15 +37,15 @@ if (!$action) {
   ?>
   <table class="tableCenter">
     <tr class="dataTableHeadingRow">
-      <td class="dataTableHeadingContent nobr"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></td>
+      <td class="dataTableHeadingContent nobr txta-c"><?php echo TABLE_HEADING_PRODUCTS_ID; ?></td>
       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
     </tr>
     <?php
       for ($i=0,$n=sizeof($products_ids); $i<$n; $i++) {
         echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
           ?>
-          <td class="dataTableContent_products" align="left" width="5%"><?php echo $products_ids[$i]['id']; ?></td>
-          <td class="dataTableContent_products" align="left"><b>
+          <td class="dataTableContent_products txta-c" style="width:5%"><?php echo $products_ids[$i]['id']; ?></td>
+          <td class="dataTableContent_products"><b>
             <?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?>
             <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.$products_ids[$i]['id'].$setparam);?>"><?php echo $products_ids[$i]['name']; ?></a></b>
           </td>
@@ -79,26 +78,26 @@ if (!$action) {
           if ($_GET['pID']==$products_ids[$i]['id']){
             ?>
             <tr>
-              <td class="dataTableContent" align="left"></td>
-              <td class="dataTableContent" align="left">
+              <td class="dataTableContent"></td>
+              <td class="dataTableContent">
                 <table class="tableCenter">
                   <tr class="dataTableHeadingRow">
-                    <td class="dataTableHeadingContent nobr" width="2%" ><?php echo TABLE_HEADING_PRODUCTS_CONTENT_ID; ?></td>
-                    <td class="dataTableHeadingContent nobr" width="2%" >&nbsp;</td>
-                    <td class="dataTableHeadingContent nobr" width="5%" ><?php echo TABLE_HEADING_LANGUAGE; ?></td>
-                    <td class="dataTableHeadingContent nobr" width="15%" ><?php echo TABLE_HEADING_CONTENT_NAME; ?></td>
-                    <td class="dataTableHeadingContent nobr" width="30%" ><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
-                    <td class="dataTableHeadingContent nobr" width="1%" ><?php echo TABLE_HEADING_CONTENT_FILESIZE; ?></td>
-                    <td class="dataTableHeadingContent nobr" align="middle" width="20%" ><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
-                    <td class="dataTableHeadingContent nobr" width="5%" ><?php echo TABLE_HEADING_CONTENT_HITS; ?></td>
-                    <td class="dataTableHeadingContent nobr" width="20%" ><?php echo TABLE_HEADING_CONTENT_ACTION; ?></td>
+                    <td class="dataTableHeadingContent nobr txta-c" style="width:2%" ><?php echo TABLE_HEADING_PRODUCTS_CONTENT_ID; ?></td>
+                    <td class="dataTableHeadingContent nobr" style="width:2%" >&nbsp;</td>
+                    <td class="dataTableHeadingContent nobr" style="width:5%" ><?php echo TABLE_HEADING_LANGUAGE; ?></td>
+                    <td class="dataTableHeadingContent nobr" style="width:15%" ><?php echo TABLE_HEADING_CONTENT_NAME; ?></td>
+                    <td class="dataTableHeadingContent nobr" style="width:30%" ><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
+                    <td class="dataTableHeadingContent nobr" style="width:1%" ><?php echo TABLE_HEADING_CONTENT_FILESIZE; ?></td>
+                    <td class="dataTableHeadingContent nobr txta-c" style="width:20%" ><?php echo TABLE_HEADING_CONTENT_LINK; ?></td>
+                    <td class="dataTableHeadingContent nobr" style="width:5%" ><?php echo TABLE_HEADING_CONTENT_HITS; ?></td>
+                    <td class="dataTableHeadingContent nobr" style="width:20%" ><?php echo TABLE_HEADING_CONTENT_ACTION; ?></td>
                   </tr>
                   <?php
                   for ($ii=0,$nn=sizeof($content_array); $ii<$nn; $ii++) {
                     echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
                     ?>
-                      <td class="dataTableContent" align="left"><?php echo  $content_array[$ii]['id']; ?> </td>
-                      <td class="dataTableContent" align="left">
+                      <td class="dataTableContent txta-c"><?php echo  $content_array[$ii]['id']; ?> </td>
+                      <td class="dataTableContent txta-c">
                         <?php
                           if ($content_array[$ii]['file']!='') {
                             echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
@@ -113,11 +112,11 @@ if (!$action) {
                           }
                         ?>
                       </td>
-                      <td class="dataTableContent" align="left"><?php echo xtc_image(DIR_WS_CATALOG.'lang/'.$lang_dir.'/admin/images/icon.gif'); ?></td>
-                      <td class="dataTableContent" align="left"><?php echo $content_array[$ii]['name']; ?></td>
-                      <td class="dataTableContent" align="left"><?php echo $content_array[$ii]['file']; ?></td>
-                      <td class="dataTableContent" align="left"><?php echo xtc_filesize($content_array[$ii]['file']); ?></td>
-                      <td class="dataTableContent" align="left" align="middle">
+                      <td class="dataTableContent txta-c"><?php echo xtc_image(DIR_WS_CATALOG.'lang/'.$lang_dir.'/admin/images/icon.gif'); ?></td>
+                      <td class="dataTableContent"><?php echo $content_array[$ii]['name']; ?></td>
+                      <td class="dataTableContent"><?php echo $content_array[$ii]['file']; ?></td>
+                      <td class="dataTableContent txta-c"><?php echo xtc_filesize($content_array[$ii]['file']); ?></td>
+                      <td class="dataTableContent txta-c">
                         <?php
                           if ($content_array[$ii]['link']!='') {
                             echo '<a href="'.$content_array[$ii]['link'].'" target="new">'.$content_array[$ii]['link'].'</a>';
@@ -125,8 +124,8 @@ if (!$action) {
                         ?>
                         &nbsp;
                       </td>
-                      <td class="dataTableContent" align="left"><?php echo $content_array[$ii]['read']; ?></td>
-                      <td class="dataTableContent" align="left">
+                      <td class="dataTableContent txta-c"><?php echo $content_array[$ii]['read']; ?></td>
+                      <td class="dataTableContent">
                         <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete_product&coID='.$content_array[$ii]['id'].'&pID='.$products_ids[$i]['id'].'&set='.$set); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
                         <?php
                           echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
@@ -272,7 +271,7 @@ if (!$action) {
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('cont_link',$content['content_link'],'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_FILE_DESC; ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_FILE_DESC; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_textarea_field('file_comment','','100','30',$content['file_comment']); ?></td>
           </tr>
           <tr>
@@ -280,7 +279,7 @@ if (!$action) {
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('select_file',$content_files,$default_value); ?><?php echo ' '.TEXT_CHOOSE_FILE_DESC; ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" valign="top"><?php echo TEXT_UPLOAD_FILE; ?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_UPLOAD_FILE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload').' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
           </tr>
           <?php
@@ -288,16 +287,16 @@ if (!$action) {
               ?>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_FILENAME; ?></td>
-                <td class="dataTableConfig col-single-right" valign="top"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
               </tr>
               <?php
             }
           ?>          
         </table>
-        <div class="flt-r pdg2">
+        <div class="flt-r mrg5 pdg2">
           <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
         </div>
-        <div class="flt-r pdg2">
+        <div class="flt-r mrg5 pdg2">
           <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action'))); ?>"><?php echo BUTTON_BACK; ?></a>
         </div>
       </form>

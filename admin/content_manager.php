@@ -293,12 +293,11 @@
         ?>
         <!-- body_text //--> 
         <td class="boxCenter"> 
-          <div class="content-manager-width">                  
-            <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
-            <div class="pageHeading pdg2"><?php echo HEADING_TITLE;?></div>          
-            <div class="main pdg2">Tools</div>
-            <div class="clear"></div>
-            <div style="border-top: 3px solid; border-color: #cccccc;"></div>
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE;?></div>          
+          <div class="main pdg2">Tools</div>
+          <div class="clear"></div>
+          <div class="content-manager-width mrg5">             
               <?php
                 if ($set != 'product') {
                   //content
@@ -312,13 +311,12 @@
               ?>
               <?php                        
               if (!$action) {
-                ?>
-                <br/>
-                <div><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo BUTTON_NEW_CONTENT; ?></a></div>
+                ?>                
+                <div class="mrg5"><a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action='.$newaction.$setparam); ?>"><?php echo BUTTON_NEW_CONTENT; ?></a></div>
                 <?php
               }
               ?>
-           </div>
+          </div>
         </td>
         <!-- body_text_eof //-->
       </tr>
