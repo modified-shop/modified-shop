@@ -134,6 +134,10 @@ background-color:#fff;
 .fixed-header-height{
 height:135px;
 }
+.fixed_messageStack{
+margin-top:136px; 
+margin-bottom:-136px;
+}
 
 /* FAVORITEN */
 #favorites {

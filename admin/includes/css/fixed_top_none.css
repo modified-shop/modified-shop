@@ -10,3 +10,7 @@ background-color:#fff;
 .fixed-header-height{
 height:0;
 }
+.fixed_messageStack{
+margin-top:0; 
+margin-bottom:0;
+}
