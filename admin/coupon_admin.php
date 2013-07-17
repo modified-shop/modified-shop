@@ -9,7 +9,7 @@
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(coupon_admin.php); www.oscommerce.com
+   (c) 2002-2003 osCommerce (coupon_admin.php); www.oscommerce.com
    (c) 2006 XT-Commerce (coupon_admin.php 1084 2005-07-23)
 
    Released under the GNU General Public License
@@ -19,7 +19,7 @@
    Credit Class/Gift Vouchers/Discount Coupons (Version 5.10)
    http://www.oscommerce.com/community/contributions,282
    Copyright (c) Strider | Strider@oscworks.com
-   Copyright (c  Nick Stanko of UkiDev.com, nick@ukidev.com
+   Copyright (c) Nick Stanko of UkiDev.com, nick@ukidev.com
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
    
@@ -513,8 +513,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
             $lang_img = '<span style="float:right; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
         ?>
         <tr>
-          <td class="main"><?php echo COUPON_NAME. $lang_img ; ?></td>
-          <td class="main"><?php echo $_POST['coupon_name'][$language_id]; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_NAME. $lang_img ; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_name'][$language_id]; ?>&nbsp;</td>
         </tr>
         <?php
         }
@@ -524,60 +524,60 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
             $lang_img = '<span style="float:right; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
         ?>
         <tr>
-          <td class="main"><?php echo COUPON_DESC. $lang_img ; ?></td>
-          <td class="main"><?php echo $_POST['coupon_desc'][$language_id]; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_DESC. $lang_img ; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_desc'][$language_id]; ?>&nbsp;</td>
         </tr>
         <?php
         }
         ?>
         <tr>
-          <td class="main"><?php echo COUPON_AMOUNT; ?></td>
-          <td class="main"><?php echo $_POST['coupon_amount']; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_AMOUNT; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_amount']; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_MIN_ORDER; ?></td>
-          <td class="main"><?php echo $_POST['coupon_min_order']; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_MIN_ORDER; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_min_order']; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_FREE_SHIP; ?></td>
-          <td class="main"><?php echo $_POST['coupon_free_ship'] ? TEXT_FREE_SHIPPING : TEXT_NO_FREE_SHIPPING; ?></td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_FREE_SHIP; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_free_ship'] ? TEXT_FREE_SHIPPING : TEXT_NO_FREE_SHIPPING; ?></td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_CODE; ?></td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_CODE; ?></td>
           <?php
           $c_code = $_POST['coupon_code'] ? $_POST['coupon_code'] : $coupon_code;
           ?>
-          <td class="main"><?php echo $coupon_code; ?>&nbsp;</td>
+          <td class="dataTableConfig col-single-right"><?php echo $coupon_code; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_USES_COUPON; ?></td>
-          <td class="main"><?php echo $_POST['coupon_uses_coupon']; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_USES_COUPON; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_uses_coupon']; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_USES_USER; ?></td>
-          <td class="main"><?php echo $_POST['coupon_uses_user']; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_USES_USER; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_uses_user']; ?>&nbsp;</td>
         </tr>
          <tr>
-          <td class="main"><?php echo COUPON_PRODUCTS; ?></td>
-          <td class="main"><?php echo $_POST['coupon_products']; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_PRODUCTS; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_products']; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_CATEGORIES; ?></td>
-          <td class="main"><?php echo $_POST['coupon_categories']; ?>&nbsp;</td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_CATEGORIES; ?></td>
+          <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_categories']; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_STARTDATE; ?></td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
           <?php
               $start_date = date(DATE_FORMAT, mktime(0, 0, 0, $_POST['coupon_startdate_month'],$_POST['coupon_startdate_day'] ,$_POST['coupon_startdate_year'] ));
           ?>
-         <td class="main"><?php echo $start_date; ?>&nbsp;</td>
+         <td class="dataTableConfig col-single-right"><?php echo $start_date; ?>&nbsp;</td>
         </tr>
         <tr>
-          <td class="main"><?php echo COUPON_FINISHDATE; ?></td>
+          <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
           <?php
               $finish_date = date(DATE_FORMAT, mktime(0, 0, 0, $_POST['coupon_finishdate_month'],$_POST['coupon_finishdate_day'] ,$_POST['coupon_finishdate_year'] ));
           ?>
-          <td class="main"><?php echo $finish_date; ?>&nbsp;</td>
+          <td class="dataTableConfig col-single-right"><?php echo $finish_date; ?>&nbsp;</td>
         </tr>
         <?php
         $languages = xtc_get_languages();
