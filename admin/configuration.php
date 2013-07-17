@@ -181,7 +181,6 @@
             ?>
           </div>
           <div class="clear"></div> 
-          <div style="border-top: 3px solid; border-color: #cccccc;"></div>         
        
             <?php
               switch ($_GET['gID']) {
@@ -214,7 +213,7 @@
             ?>
             
                 <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
-                  <table class="tableConfig borderall">
+                  <table class="tableConfig">
                     <?php
                       $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
@@ -305,7 +304,7 @@
                       }
                     ?>
                   </table>
-                  <div class="main pdg2 flt-r"><input type="submit" class="button" onclick="this.blur();" value="<?= BUTTON_SAVE ?>"/></div>
+                  <div class="main pdg2 flt-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?= BUTTON_SAVE ?>"/></div>
                 </form>
         </td>
         <!-- body_text_eof //-->
