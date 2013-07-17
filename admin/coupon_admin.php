@@ -314,13 +314,13 @@ require (DIR_WS_INCLUDES.'head.php');
                           <td valign="top">
                             <table border="0" width="100%" cellspacing="0" cellpadding="2">
                               <tr class="dataTableHeadingRow">
-                                <td class="dataTableHeadingContent" align="left"><?php echo COUPON_ID; ?></td>
+                                <td class="dataTableHeadingContent"><?php echo COUPON_ID; ?></td>
                                 <?php // web28 - 2010-07-23 - new table design ?>
-                                <td class="dataTableHeadingContent" align="left"><?php echo CUSTOMER_ID; ?></td>
-                                <td class="dataTableHeadingContent" align="left"><?php echo CUSTOMER_NAME; ?></td>
-                                <td class="dataTableHeadingContent" align="left"><?php echo IP_ADDRESS; ?></td>
-                                <td class="dataTableHeadingContent" align="left"><?php echo REDEEM_DATE; ?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                                <td class="dataTableHeadingContent"><?php echo CUSTOMER_ID; ?></td>
+                                <td class="dataTableHeadingContent"><?php echo CUSTOMER_NAME; ?></td>
+                                <td class="dataTableHeadingContent"><?php echo IP_ADDRESS; ?></td>
+                                <td class="dataTableHeadingContent"><?php echo REDEEM_DATE; ?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                               </tr>
                               <?php
                                 $cc_query_raw = "select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . (int)$_GET['cid'] . "'";
@@ -342,12 +342,12 @@ require (DIR_WS_INCLUDES.'head.php');
                                     $customer_query = xtc_db_query("select customers_firstname, customers_lastname from " . TABLE_CUSTOMERS . " where customers_id = '" . $cc_list['customer_id'] . "'");
                                     $customer = xtc_db_fetch_array($customer_query);
                                   ?>
-                                    <td class="dataTableContent" align="left">&nbsp;<?php echo $_GET['cid']; ?></td><?php // web28 - 2010-07-23 - new table design ?>
-                                    <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['customer_id']; ?></td>
-                                    <td class="dataTableContent" align="left">&nbsp;<?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?></td>
-                                    <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['redeem_ip']; ?></td>
-                                    <td class="dataTableContent" align="left">&nbsp;<?php echo xtc_date_short($cc_list['redeem_date']); ?></td>
-                                    <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['unique_id'] == $cInfo->unique_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                                    <td class="dataTableContent">&nbsp;<?php echo $_GET['cid']; ?></td><?php // web28 - 2010-07-23 - new table design ?>
+                                    <td class="dataTableContent">&nbsp;<?php echo $cc_list['customer_id']; ?></td>
+                                    <td class="dataTableContent">&nbsp;<?php echo $customer['customers_firstname'] . ' ' . $customer['customers_lastname']; ?></td>
+                                    <td class="dataTableContent">&nbsp;<?php echo $cc_list['redeem_ip']; ?></td>
+                                    <td class="dataTableContent">&nbsp;<?php echo xtc_date_short($cc_list['redeem_date']); ?></td>
+                                    <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['unique_id'] == $cInfo->unique_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                                   </tr>
                                   <?php
                                 }
@@ -578,7 +578,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <td>
                       <?php echo xtc_draw_form('coupon', 'coupon_admin.php', 'action=update_confirm&oldaction=' . $_GET['oldaction'] . '&cid=' . (int)$_GET['cid']); ?>
                         <?php // BOF - web28 - 2011-03-11 - new table design ?>
-                        <table class="tableConfig borderall" border="0" cellspacing="0" cellpadding="5" style="border-collapse:collapse">
+                        <table class="tableConfirm borderall collapse">
                           <?php
                             $languages = xtc_get_languages();
                             for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -586,8 +586,8 @@ require (DIR_WS_INCLUDES.'head.php');
                               $lang_img = '<span style="float:right; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
                               ?>
                               <tr>
-                                <td class="dataTableConfig col-left" align="left"><?php echo COUPON_NAME. $lang_img ; ?></td>
-                                <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_name'][$language_id]; ?>&nbsp;</td>
+                                <td class="dataTableConfig col-left"><?php echo COUPON_NAME. $lang_img ; ?></td>
+                                <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_name'][$language_id]; ?>&nbsp;</td>
                               </tr>
                               <?php
                             }
@@ -597,36 +597,36 @@ require (DIR_WS_INCLUDES.'head.php');
                               $lang_img = '<span style="float:right; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
                               ?>
                               <tr>
-                                <td class="dataTableConfig col-left" align="left"><?php echo COUPON_DESC. $lang_img ; ?></td>
-                                <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_desc'][$language_id]; ?>&nbsp;</td>
+                                <td class="dataTableConfig col-left"><?php echo COUPON_DESC. $lang_img ; ?></td>
+                                <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_desc'][$language_id]; ?>&nbsp;</td>
                               </tr>
                               <?php
                             }
                             ?>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_AMOUNT; ?></td>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_amount']; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_AMOUNT; ?></td>
+                              <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_amount']; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_MIN_ORDER; ?></td>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_min_order']; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_MIN_ORDER; ?></td>
+                              <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_min_order']; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_FREE_SHIP; ?></td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_FREE_SHIP; ?></td>
                               <?php
                                 if ($_POST['coupon_free_ship']) {
                                   ?>
-                                  <td class="dataTableConfig col-single-right" align="left"><?php echo TEXT_FREE_SHIPPING; ?></td>
+                                  <td class="dataTableConfig col-single-right"><?php echo TEXT_FREE_SHIPPING; ?></td>
                                   <?php
                                 } else {
                                   ?>
-                                  <td class="dataTableConfig col-single-right" align="left"><?php echo TEXT_NO_FREE_SHIPPING; ?></td>
+                                  <td class="dataTableConfig col-single-right"><?php echo TEXT_NO_FREE_SHIPPING; ?></td>
                                   <?php
                                 }
                               ?>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_CODE; ?></td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_CODE; ?></td>
                               <?php
                                 if ($_POST['coupon_code']) {
                                   $c_code = $_POST['coupon_code'];
@@ -634,37 +634,37 @@ require (DIR_WS_INCLUDES.'head.php');
                                   $c_code = $coupon_code;
                                 }
                               ?>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $coupon_code; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-single-right"><?php echo $coupon_code; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_USES_COUPON; ?></td>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_uses_coupon']; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_USES_COUPON; ?></td>
+                              <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_uses_coupon']; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_USES_USER; ?></td>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_uses_user']; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_USES_USER; ?></td>
+                              <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_uses_user']; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_PRODUCTS; ?></td>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_products']; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_PRODUCTS; ?></td>
+                              <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_products']; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_CATEGORIES; ?></td>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $_POST['coupon_categories']; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_CATEGORIES; ?></td>
+                              <td class="dataTableConfig col-single-right"><?php echo $_POST['coupon_categories']; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_STARTDATE; ?></td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
                               <?php
                                 $start_date = xtc_date_short($_POST['coupon_startdate']);
                               ?>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $start_date; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-single-right"><?php echo $start_date; ?>&nbsp;</td>
                             </tr>
                             <tr>
-                              <td class="dataTableConfig col-left" align="left"><?php echo COUPON_FINISHDATE; ?></td>
+                              <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
                               <?php
                                 $finish_date = xtc_date_short($_POST['coupon_finishdate']);
                               ?>
-                              <td class="dataTableConfig col-single-right" align="left"><?php echo $finish_date; ?>&nbsp;</td>
+                              <td class="dataTableConfig col-single-right"><?php echo $finish_date; ?>&nbsp;</td>
                             </tr>
                             <?php
                               $languages = xtc_get_languages();
@@ -799,62 +799,56 @@ require (DIR_WS_INCLUDES.'head.php');
 
                       echo xtc_draw_form('coupon', 'coupon_admin.php', 'action=update&oldaction='.$action . '&cid=' . (int)$_GET['cid'],'post', 'enctype="multipart/form-data"');
                         ?>
-                        <table class="tableConfig borderall">
+                        <table class="tableConfig">
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_NAME; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo $input_name; ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_NAME_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_NAME; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo $input_name; ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_NAME_HELP; ?></td>
                           </tr>
                            <tr>
-                            <td class="dataTableConfig col-left" align="left" valign="top"><?php echo COUPON_DESC; ?></td>
-                            <td class="dataTableConfig col-middle" align="left" valign="top"><?php echo $input_desc; ?></td>
-                            <td class="dataTableConfig col-right" align="left" valign="top"><?php echo COUPON_DESC_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_DESC; ?></td>
+                            <td class="dataTableConfig col-middle nobr"><?php echo $input_desc; ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_DESC_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_AMOUNT; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_amount', $coupon_amount, 'style="width: 150px"'); ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_AMOUNT_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_AMOUNT; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_amount', $coupon_amount, 'style="width: 150px"'); ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_AMOUNT_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_MIN_ORDER; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_min_order', $coupon_min_order, 'style="width: 150px"'); ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_MIN_ORDER_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_MIN_ORDER; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_min_order', $coupon_min_order, 'style="width: 150px"'); ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_MIN_ORDER_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_FREE_SHIP; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_checkbox_field('coupon_free_ship', $coupon_free_ship); ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_FREE_SHIP_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_FREE_SHIP; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_checkbox_field('coupon_free_ship', $coupon_free_ship); ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_FREE_SHIP_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_CODE; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_code', $coupon_code, 'style="width: 150px"'); ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_CODE_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_CODE; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_code', $coupon_code, 'style="width: 150px"'); ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_CODE_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_USES_COUPON; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_uses_coupon', $coupon_uses_coupon, 'style="width: 150px"'); ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_USES_COUPON_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_USES_COUPON; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_uses_coupon', $coupon_uses_coupon, 'style="width: 150px"'); ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_USES_COUPON_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_USES_USER; ?></td>
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_uses_user', $coupon_uses_user, 'style="width: 150px"'); ?></td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_USES_USER_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_USES_USER; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_uses_user', $coupon_uses_user, 'style="width: 150px"'); ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_USES_USER_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_PRODUCTS; ?></td>
-                            <?php // BOF - web28 - 2010-11-13 - FIX popup link ?>
-                            <!--td align="left"><?php //echo xtc_draw_input_field('coupon_products', $coupon_products, 'style="width: 150px"'); ?> <A HREF="validproducts.php" TARGET="_blank" ONCLICK="window.open('validproducts.php', 'Valid_Products', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false">View</A></td-->
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_products', $coupon_products, 'style="width: 150px"'); ?> <a href="<?php echo xtc_href_link('validproducts.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validproducts.php', 'Valid_Products', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
-                            <?php // EOF - web28 - 2010-11-13 - FIX popup link ?>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_PRODUCTS_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_PRODUCTS; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_products', $coupon_products, 'style="width: 150px"'); ?> <a href="<?php echo xtc_href_link('validproducts.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validproducts.php', 'Valid_Products', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_PRODUCTS_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_CATEGORIES; ?></td>
-                            <?php // BOF - web28 - 2010-11-13 - FIX popup link ?>
-                            <!--td align="left"><?php //echo xtc_draw_input_field('coupon_categories', $coupon_categories, 'style="width: 150px"'); ?> <A HREF="validcategories.php" TARGET="_blank" ONCLICK="window.open('validcategories.php', 'Valid_Categories', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false">View</A></td-->
-                            <td class="dataTableConfig col-middle" align="left"><?php echo xtc_draw_input_field('coupon_categories', $coupon_categories, 'style="width: 150px"'); ?> <a href="<?php echo xtc_href_link('validcategories.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validcategories.php', 'Valid_Categories', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
-                            <?php //EOF - web28 - 2010-11-13 - FIX popup link ?>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_CATEGORIES_HELP; ?></td>
+                            <td class="dataTableConfig col-left"><?php echo COUPON_CATEGORIES; ?></td>
+                            <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('coupon_categories', $coupon_categories, 'style="width: 150px"'); ?> <a href="<?php echo xtc_href_link('validcategories.php', '' , 'NONSSL');?>" target="_blank" onclick="window.open('validcategories.php', 'Valid_Categories', 'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600'); return false"><?php echo TEXT_VIEW_SHORT;?></a></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_CATEGORIES_HELP; ?></td>
                           </tr>
                           <tr>
                             <?php
@@ -870,22 +864,22 @@ require (DIR_WS_INCLUDES.'head.php');
                               $coupon_finishdate = $_POST['coupon_finishdate'];
                             }
                             ?>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_STARTDATE; ?></td>
-                            <td class="dataTableConfig col-middle" align="left">
+                            <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
+                            <td class="dataTableConfig col-middle nobr">
                               <?php
                               echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="Datepicker1"');
                               ?>
                             </td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_STARTDATE_HELP; ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_STARTDATE_HELP; ?></td>
                           </tr>
                           <tr>
-                            <td class="dataTableConfig col-left" align="left"><?php echo COUPON_FINISHDATE; ?></td>
-                            <td class="dataTableConfig col-middle" align="left">
+                            <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
+                            <td class="dataTableConfig col-middle nobr">
                               <?php
                                 echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="Datepicker2"');
                               ?>
                             </td>
-                            <td class="dataTableConfig col-right" align="left"><?php echo COUPON_FINISHDATE_HELP; ?></td>
+                            <td class="dataTableConfig col-right"><?php echo COUPON_FINISHDATE_HELP; ?></td>
                           </tr>
                         </table>
                         <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_PREVIEW . '"/>'; ?>
@@ -935,14 +929,14 @@ require (DIR_WS_INCLUDES.'head.php');
                             <?php // BOF - web28 - 2010-07-23 - new table design?>
                             <table border="0" width="100%" cellspacing="0" cellpadding="2">
                               <tr class="dataTableHeadingRow">
-                                <td class="dataTableHeadingContent" align="left" width="25"><?php echo COUPON_ID; ?></td>
-                                <td class="dataTableHeadingContent" align="left"><?php echo COUPON_NAME; ?></td>
-                                <td class="dataTableHeadingContent" align="left" width="110"><?php echo COUPON_AMOUNT; ?></td>
-                                <td class="dataTableHeadingContent" align="left" width="110"><?php echo TEXT_COUPON_MINORDER; ?></td>
-                                <td class="dataTableHeadingContent" align="left" width="80"><?php echo COUPON_CODE; ?></td>
-                                <td class="dataTableHeadingContent" align="center" width="70"><?php echo TEXT_COUPON_STATUS; ?></td>
-                                <td class="dataTableHeadingContent" align="center" width="70"><?php echo TEXT_COUPON_DELETE; ?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                                <td class="dataTableHeadingContent" style="width:25px"><?php echo COUPON_ID; ?></td>
+                                <td class="dataTableHeadingContent"><?php echo COUPON_NAME; ?></td>
+                                <td class="dataTableHeadingContent" style="width:110px"><?php echo COUPON_AMOUNT; ?></td>
+                                <td class="dataTableHeadingContent" style="width:110px"><?php echo TEXT_COUPON_MINORDER; ?></td>
+                                <td class="dataTableHeadingContent" style="width:80px"><?php echo COUPON_CODE; ?></td>
+                                <td class="dataTableHeadingContent txta-c" style="width:70px"><?php echo TEXT_COUPON_STATUS; ?></td>
+                                <td class="dataTableHeadingContent txta-c" style="width:70px"><?php echo TEXT_COUPON_DELETE; ?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                               </tr>
                               <?php
                               if (isset($_GET['page']) && $_GET['page'] > 1) {
@@ -1007,9 +1001,9 @@ require (DIR_WS_INCLUDES.'head.php');
                                                                                AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
                                   $coupon_desc = xtc_db_fetch_array($coupon_description_query);
                                   ?>
-                                  <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['coupon_id']; ?></td>
-                                  <td class="dataTableContent" align="left">&nbsp;<?php echo $coupon_desc['coupon_name']; ?></td>
-                                  <td class="dataTableContent" align="left" style="padding-left: 5px">
+                                  <td class="dataTableContent">&nbsp;<?php echo $cc_list['coupon_id']; ?></td>
+                                  <td class="dataTableContent">&nbsp;<?php echo $coupon_desc['coupon_name']; ?></td>
+                                  <td class="dataTableContent" style="padding-left: 5px">
                                     <?php
                                     if ($cc_list['coupon_type'] == 'P') {
                                       echo $cc_list['coupon_amount'] . '%';
@@ -1021,11 +1015,11 @@ require (DIR_WS_INCLUDES.'head.php');
                                     ?>
                                     &nbsp;
                                   </td>
-                                  <td class="dataTableContent" align="left">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
-                                  <td class="dataTableContent" align="left">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
-                                  <td class="dataTableContent" align="center"><?php if ($cc_list['coupon_active'] == 'N') { echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10); } else { echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10); } ?></td>
+                                  <td class="dataTableContent">&nbsp;<?php echo $currencies->format($cc_list['coupon_minimum_order']); ?></td>
+                                  <td class="dataTableContent nobr">&nbsp;<?php echo $cc_list['coupon_code']; ?></td>
+                                  <td class="dataTableContent txta-c"><?php if ($cc_list['coupon_active'] == 'N') { echo xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10); } else { echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10); } ?></td>
                                   <td class="dataTableContent" align="center">&nbsp;<?php if ($cc_list['coupon_active'] == 'N') { echo '<a href="' . xtc_href_link('coupon_admin.php',  '&action=noconfirmdelete' . '&cID=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_ICONS . 'delete.gif', BUTTON_DELETE_NO_CONFIRM) . '</a>'; } ?></td>
-                                  <td class="dataTableContent" align="right"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                                  <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($cc_list['coupon_id'] == $cInfo->coupon_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUPON_ADMIN, 'page=' . $_GET['page'] . '&cid=' . $cc_list['coupon_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                                 </tr>
                                 <?php
                               }
