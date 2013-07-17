@@ -18,7 +18,7 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   if ($messageStack->size > 0) {
-    echo $messageStack->output();
+    echo '<div class="fixed_messageStack">'.$messageStack->output() . '</div>';
   }
   
   //define with and height for xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT)

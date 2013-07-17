@@ -48,12 +48,16 @@ li{
 position:fixed; 
 top:0px;
 z-index:100;
-height:115px;
+height:112px;
 width:100%;
 background-color:#fff;
 }
 .fixed-header-height{
-height:115px;
+height:112px;
+}
+.fixed_messageStack{
+margin-top:112px; 
+margin-bottom:-114px;
 }
 
 /* FAVORITEN */
