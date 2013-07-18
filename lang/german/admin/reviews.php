@@ -45,7 +45,7 @@ define('TEXT_INFO_REVIEW_SIZE', 'Gr&ouml;sse:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'durchschnittl. Wertung:');
 
 define('TEXT_OF_5_STARS', '%s von 5 Sternen!');
-define('TEXT_GOOD', '<small><font color="#ff0000"><b>GUT</b></font></small>');
-define('TEXT_BAD', '<small><font color="#ff0000"><b>SCHLECHT</b></font></small>');
+define('TEXT_GOOD', '<span class="smallText colorRed"><b>GUT</b></span>');
+define('TEXT_BAD', '<span class="smallText colorRed"><b>SCHLECHT</b></span>');
 define('TEXT_INFO_HEADING_DELETE_REVIEW', 'Bewertung l&ouml;schen');
 ?>

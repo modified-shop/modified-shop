@@ -60,8 +60,8 @@
   $result = xtc_db_query("select * from ".TABLE_ADMIN_ACCESS."");
   if ($result_array = xtc_db_fetch_array($result)) {
     if (!isset($result_array['backup_db'])) {
-      xtc_db_query("ALTER TABLE `". TABLE_ADMIN_ACCESS."` ADD `backup_db` INT( 1 ) DEFAULT '0' NOT NULL") ;
-      xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '1' WHERE `customers_id` = '1' LIMIT 1") ;
+      xtc_db_query("ALTER TABLE `". TABLE_ADMIN_ACCESS."` ADD `backup_db` INT( 1 ) DEFAULT '0' NOT NULL");
+      xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '1' WHERE `customers_id` = '1' LIMIT 1");
       //Rechte automatisch setzen fuer Unteradmin
       if ($_SESSION['customer_id'] > 1) {
         xtc_db_query("UPDATE `".TABLE_ADMIN_ACCESS."` SET `backup_db` = '1' WHERE `customers_id` = '".$_SESSION['customer_id']."' LIMIT 1") ;
@@ -76,7 +76,7 @@
       }
       $target .= $filename['name'];
       move_uploaded_file($filename['tmp_name'], $target);
-      }
+    }
   }
 
   if (xtc_not_null($action)) {
@@ -86,7 +86,7 @@
         $messageStack->add_session(SUCCESS_LAST_RESTORE_CLEARED, 'success');
         xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         break;
-    case 'download':
+      case 'download':
         $extension = substr($_GET['file'], -3);
         if ( ($extension == 'zip') || ($extension == '.gz') || ($extension == 'sql') ) {
           if ($fp = fopen(DIR_FS_BACKUP . $_GET['file'], 'rb')) {
@@ -112,14 +112,14 @@
           xtc_redirect(xtc_href_link(FILENAME_BACKUP));
         }
         break;
-    case 'restorelocalnow':
-      $file = xtc_try_upload('sql_file', DIR_FS_BACKUP, '777', array('sql','gz'));
-      xtc_redirect(xtc_href_link(FILENAME_BACKUP));
-      break;
+      case 'restorelocalnow':
+        $file = xtc_try_upload('sql_file', DIR_FS_BACKUP, '777', array('sql','gz'));
+        xtc_redirect(xtc_href_link(FILENAME_BACKUP));
+        break;
     }
   }
 
-// check if the backup directory exists
+  // check if the backup directory exists
   $dir_ok = false;
   if (is_dir(DIR_FS_BACKUP)) {
     $dir_ok = true;
@@ -129,54 +129,42 @@
   } else {
     $messageStack->add(ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
-
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
 <body>
-  <!-- header //-->
-  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-  <!-- header_eof //-->
-  <!-- body //-->
-  <table border="0" width="100%" cellspacing="2" cellpadding="2">
-    <tr>
-      <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-        <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-          <!-- left_navigation //-->
-          <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-          <!-- left_navigation_eof //-->
-        </table>
-      </td>
-      <!-- body_text //-->
-      <td class="boxCenter" width="100%" valign="top">
-        <table border="0" width="100%" cellspacing="0" cellpadding="2">
-          <tr>
-            <td>
-              <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td class="pageHeading"><?php echo HEADING_TITLE; ?>
-                    <span class="smallText"> [<?php echo VERSION; ?>]</span>
-                  </td>
-                  <td class="pageHeading" align="right">
-                    <?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?>
-                  </td>
-                </tr>
-              </table>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                <tr>
-                  <td valign="top">
-                    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                      <tr class="dataTableHeadingRow">
-                        <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
-                        <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_FILE_DATE; ?></td>
-                        <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_FILE_SIZE; ?></td>
-                        <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-                      </tr>
-                      <?php
+<!-- header //-->
+<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+<!-- header_eof //-->
+
+<!-- body //-->
+<table class="tableBody">
+  <tr>
+    <?php //left_navigation
+    if (USE_ADMIN_TOP_MENU == 'false') {
+      echo '<td class="columnLeft2">'.PHP_EOL;
+      echo '<!-- left_navigation //-->'.PHP_EOL;       
+      require_once(DIR_WS_INCLUDES . 'column_left.php');
+      echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+      echo '</td>'.PHP_EOL;      
+    }
+    ?>
+    <!-- body_text //--> 
+        <td class="boxCenter">         
+            <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?>
+              <span class="smallText"> [<?php echo VERSION; ?>]</span>
+            </div>
+            <table class="tableCenter">
+              <tr>
+                <td class="boxCenterLeft">
+                  <table class="tableBoxCenter collapse">
+                    <tr class="dataTableHeadingRow">
+                      <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_TITLE; ?></td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_FILE_DATE; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_FILE_SIZE; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                    </tr>
+                    <?php
                       if ($dir_ok) {
                         $dir = dir(DIR_FS_BACKUP);
                         $contents = array();
@@ -214,38 +202,39 @@ require (DIR_WS_INCLUDES.'head.php');
                               $onclick_link = 'file=' . $entry;
                             }
                             ?>
-                            <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
-                            <td class="dataTableContent" align="center" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
-                            <td class="dataTableContent" align="right" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
-                            <td class="dataTableContent" align="right"><?php if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                              <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
+                              <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
+                              <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
+                              <td class="dataTableContent txta-r" ><?php if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                             </tr>
                             <?php
                           }
                         }
                         $dir->close();
                       }
-                      ?>
-                      <tr>
-                        <td class="smallText" colspan="3"><?php echo TEXT_BACKUP_DIRECTORY . ' ' . DIR_FS_BACKUP; ?></td>
-                        <td align="right" class="smallText"><?php if ( ($action != 'backup') && (isset($dir))) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=backup') . '">' . BUTTON_BACKUP . '</a>'; if ( ($action != 'restorelocal') && ($dir) ) echo '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=restorelocal') . '">' . TEXT_INFO_HEADING_RESTORE_LOCAL . '</a>'; ?></td>
-                      </tr>
-                      <?php
-                      if (defined('DB_LAST_RESTORE')) {
-                        ?>
-                        <tr>
-                          <td class="smallText" colspan="4"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></td>
-                        </tr>
-                        <?php
-                      }
-                      ?>
-                    </table>
-                  </td>
+                    ?>
+                  </table>
+                  <div class="smallText pdg2 flt-l"><?php echo TEXT_BACKUP_DIRECTORY . ' ' . DIR_FS_BACKUP; ?></div>
+                  <div class="smallText pdg2 flt-r"><?php if ( ($action != 'backup') && (isset($dir))) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=backup') . '">' . BUTTON_BACKUP . '</a>'; if ( ($action != 'restorelocal') && ($dir) ) echo '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=restorelocal') . '">' . BUTTON_RESTORE . '</a>'; ?></div>
+               
                   <?php
+                  if (defined('DB_LAST_RESTORE')) {
+                  ?>
+                    <div class="clear"></div>
+                    <div class="smallText pdg2 flt-r"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></div>
+
+                  <?php
+                  }
+                  ?>
+                  
+                </td>
+                <?php
                   $heading = array();
                   $contents = array();
                   switch ($action) {
                     case 'backup':
                       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_BACKUP . '</b>');
+
                       $contents = array('form' => xtc_draw_form('backup', BK_FILENAME, 'action=backupnow'));
                       $contents[] = array('text' => TEXT_INFO_NEW_BACKUP);
                       if ($messageStack->size > 0) {
@@ -262,7 +251,6 @@ require (DIR_WS_INCLUDES.'head.php');
                       }
                       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                       break;
-
                     case 'restore':
                       $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                       $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
@@ -300,25 +288,22 @@ require (DIR_WS_INCLUDES.'head.php');
                       break;
                   }
                   if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                    echo '            <td width="25%" valign="top">' . "\n";
+                    echo '            <td class="boxRight">' . "\n";
                     echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
                     echo '            </td>' . "\n";
                   }
-                  ?>
-                </tr>
-              </table>
-            </td>
-          </tr>
-        </table>
-      </td>
-      <!-- body_text_eof //-->
-    </tr>
-  </table>
-  <!-- body_eof //-->
-  <!-- footer //-->
-  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-  <!-- footer_eof //-->
-  <br />
-</body>
+                ?>
+              </tr>                
+          </table>
+        </td>
+        <!-- body_text_eof //-->
+      </tr>
+    </table>
+    <!-- body_eof //-->
+    <!-- footer //-->
+    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <!-- footer_eof //-->
+    <br />
+  </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
