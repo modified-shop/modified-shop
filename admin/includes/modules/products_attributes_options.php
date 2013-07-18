@@ -227,10 +227,6 @@ if ($_GET['action'] != 'update_option') {
     $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
     $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
   }
-  //BOC Filter
-  $inputs.= TABLE_HEADING_OPT_FILTER.': <input type="checkbox" name="is_filter" value="1" />'.'&nbsp;&nbsp;&nbsp;';
-  $inputs.= TABLE_HEADING_OPT_ONLY_FILTER .': <input type="checkbox" name="is_only_filter" value="1" />';
-  //EOC Filter
   ?>
                     <tr>
                       <td colspan="4"><?php echo xtc_black_line(); ?></td>
@@ -271,10 +267,6 @@ while ($options_values = xtc_db_fetch_array($options)) {
       $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
       $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;" value="' . $option_name['products_options_name'] . '">&nbsp;<br />';
     }
-    //BOC Filter
-    $inputs.= TABLE_HEADING_OPT_FILTER.': <input type="checkbox" name="is_filter" value="1"'.($options_values['is_filter'] == 1 ? ' checked="checked"' : false) .' />'.'&nbsp;&nbsp;&nbsp;';
-    $inputs.= TABLE_HEADING_OPT_ONLY_FILTER .': <input type="checkbox" name="is_only_filter" value="1"'.($options_values['is_only_filter'] == 1 ? ' checked="checked"' : false) .' />';
-    //EOC Filter
   ?>
                     <tr>
                       <td colspan="4"><?php echo xtc_black_line(); ?></td>
