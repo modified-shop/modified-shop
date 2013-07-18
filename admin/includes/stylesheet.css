@@ -87,11 +87,10 @@ border-color: #000000;
 
 }
 .dataTableHeadingContent {
-
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px !important;
     font-weight: bold;
-    padding: 5px;
+    padding: 5px!important;
     background-color: #f1f1f1;
     border: 1px solid #CCCCCC;
 }
@@ -333,10 +332,22 @@ white-space: nowrap;
 table.option-table{
 border: 1px solid #a3a3a3;
 min-width:800px;
+border-collapse:collapse;
+padding:2px; 
+}
+table.option-table td{
+vertical-align: middle;
+padding:2px; 
 }
 table.option-values-table{
 border: 1px solid #a3a3a3;
 min-width:800px;
+border-collapse:collapse; 
+padding:2px;
+}
+table.option-values-table td{
+vertical-align: middle;
+padding:2px; 
 }
 
 .dataTableContentSelected {
