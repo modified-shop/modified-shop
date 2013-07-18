@@ -6,11 +6,11 @@
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   --------------------------------------------------------------
+   -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce; http://www.oscommerce.com
-   (c) 2003 nextcommerce ; http://www.nextcommerce.org
+   (c) 2002-2003 osCommerce (table.php,v 1.27 2003/02/05); www.oscommerce.com 
+   (c) 2003 nextcommerce (table.php,v 1.8 2003/08/24); www.nextcommerce.org
    (c) 2006 XT-Commerce
 
    Released under the GNU General Public License 
@@ -61,7 +61,7 @@
     }
 
     function quote($method = '') {
-      global $order, $shipping_weight, $shipping_num_boxes,$xtPrice;
+      global $order, $shipping_weight, $shipping_num_boxes, $xtPrice;
 
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
@@ -74,6 +74,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
 
       $this->quotes = array('id' => $this->code,

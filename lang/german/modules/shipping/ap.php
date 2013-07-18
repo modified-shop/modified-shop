@@ -46,7 +46,7 @@ define('MODULE_SHIPPING_AP_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn kein
 
 for ($module_shipping_ap_i = 1; $module_shipping_ap_i <= MODULE_SHIPPING_AP_NUMBER_ZONES; $module_shipping_ap_i ++) {
   define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_TITLE' , '<hr/>Zone '.$module_shipping_ap_i.' L&auml;nder');
-  define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_ap_i.' sind.');
+  define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_ap_i.' sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
   define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Tarif Tabelle bis 20 kg');
   define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_ap_i.' Bestimmungsorte, basierend auf einer Gruppe von max. Bestellgewichten. Beispiel: 3:8.50,7:10.50,... Gewicht von kleiner oder gleich 3 w&uuml;rde 8.50 f&uuml;r die Zone '.$module_shipping_ap_i.' Bestimmungsl&auml;nder kosten.');
   define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Handling Geb&uuml;hr');

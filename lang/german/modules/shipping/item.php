@@ -38,7 +38,7 @@ define('MODULE_SHIPPING_ITEM_DISPLAY_DESC' , 'M&ouml;chten Sie anzeigen, wenn ke
 
 for ($module_shipping_item_i = 1; $module_shipping_item_i <= MODULE_SHIPPING_ITEM_NUMBER_ZONES; $module_shipping_item_i ++) {
   define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_TITLE' , '<hr/>Zone '.$module_shipping_item_i.' L&auml;nder');
-  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_item_i.' sind.');
+  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_DESC' , 'Durch Komma getrennte Liste von ISO L&auml;ndercodes (2 Zeichen), welche Teil von Zone '.$module_shipping_item_i.' sind (WORLD eintragen f&uuml;r den Rest der Welt.).');
   define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Versandkosten');
   define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_DESC' , 'Versandkosten nach Zone '.$module_shipping_item_i.' werden mit der Anzahl an Artikel einer Bestellung multipliziert, wenn diese Versandart angegeben ist.');
   define('MODULE_SHIPPING_ITEM_HANDLING_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Handling Geb&uuml;hr');
