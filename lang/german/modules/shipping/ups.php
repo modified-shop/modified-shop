@@ -82,7 +82,4 @@ define('MODULE_SHIPPING_UPS_COUNTRIES_7_TITLE' , 'Staaten f&uuml;r UPS Standard 
 define('MODULE_SHIPPING_UPS_COUNTRIES_7_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 6:');
 define('MODULE_SHIPPING_UPS_COST_7_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 6');
 define('MODULE_SHIPPING_UPS_COST_7_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 6. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 37,10 = 4:37.10,...');
-
-
-
 ?>
