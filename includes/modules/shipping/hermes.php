@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: hermse.php 899 2005-04-29 02:40:57Z hhgag $
+   $Id: hermes.php 5134 2013-07-18 14:23:20Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
