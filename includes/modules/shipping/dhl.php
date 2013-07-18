@@ -496,36 +496,134 @@ xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, config
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_DHL_STATUS', 'MODULE_SHIPPING_DHL_HANDLING','MODULE_SHIPPING_DHL_ALLOWED', 'MODULE_SHIPPING_DHL_TAX_CLASS', 'MODULE_SHIPPING_DHL_ZONE', 'MODULE_SHIPPING_DHL_SORT_ORDER');
+      $keys = array('MODULE_SHIPPING_DHL_STATUS',
+                    'MODULE_SHIPPING_DHL_HANDLING',
+                    'MODULE_SHIPPING_DHL_ALLOWED',
+                    'MODULE_SHIPPING_DHL_TAX_CLASS',
+                    'MODULE_SHIPPING_DHL_ZONE',
+                    'MODULE_SHIPPING_DHL_SORT_ORDER');
 
       for ($i = 1; $i <= $this->num_dhl; $i ++) {
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_COUNTRIES_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_COST_ECX_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_COST_DOX_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_COST_WPX_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_COST_MDX_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_COST_SDX_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_ECX_20_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_ECX_30_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_ECX_50_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_ECX_51_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_DOX_20_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_DOX_30_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_DOX_50_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_DOX_51_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_WPX_20_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_WPX_30_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_WPX_50_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_WPX_51_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_MDX_20_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_MDX_30_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_MDX_50_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_MDX_51_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_SDX_20_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_SDX_30_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_SDX_50_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_DHL_STEP_SDX_51_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_COUNTRIES_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_COST_ECX_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_COST_DOX_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_COST_WPX_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_COST_MDX_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_COST_SDX_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_ECX_20_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_ECX_30_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_ECX_50_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_ECX_51_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_DOX_20_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_DOX_30_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_DOX_50_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_DOX_51_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_WPX_20_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_WPX_30_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_WPX_50_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_WPX_51_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_MDX_20_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_MDX_30_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_MDX_50_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_MDX_51_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_SDX_20_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_SDX_30_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_SDX_50_' . $i;
+        $keys[] = 'MODULE_SHIPPING_DHL_STEP_SDX_51_' . $i;
       }
+      
+      $exclude_array = array('MODULE_SHIPPING_DHL_COST_DOX_1,
+                              MODULE_SHIPPING_DHL_COST_WPX_1,
+                              MODULE_SHIPPING_DHL_STEP_DOX_20_1,
+                              MODULE_SHIPPING_DHL_STEP_DOX_30_1,
+                              MODULE_SHIPPING_DHL_STEP_DOX_50_1,
+                              MODULE_SHIPPING_DHL_STEP_DOX_51_1,
+                              MODULE_SHIPPING_DHL_STEP_WPX_20_1,
+                              MODULE_SHIPPING_DHL_STEP_WPX_30_1,
+                              MODULE_SHIPPING_DHL_STEP_WPX_50_1,
+                              MODULE_SHIPPING_DHL_STEP_WPX_51_1,
+                              MODULE_SHIPPING_DHL_COST_DOX_2,
+                              MODULE_SHIPPING_DHL_COST_WPX_2,
+                              MODULE_SHIPPING_DHL_STEP_DOX_20_2,
+                              MODULE_SHIPPING_DHL_STEP_DOX_30_2,
+                              MODULE_SHIPPING_DHL_STEP_DOX_50_2,
+                              MODULE_SHIPPING_DHL_STEP_DOX_51_2,
+                              MODULE_SHIPPING_DHL_STEP_WPX_20_2,
+                              MODULE_SHIPPING_DHL_STEP_WPX_30_2,
+                              MODULE_SHIPPING_DHL_STEP_WPX_50_2,
+                              MODULE_SHIPPING_DHL_STEP_WPX_51_2,
+                              MODULE_SHIPPING_DHL_COST_DOX_3,
+                              MODULE_SHIPPING_DHL_COST_WPX_3,
+                              MODULE_SHIPPING_DHL_STEP_DOX_20_3,
+                              MODULE_SHIPPING_DHL_STEP_DOX_30_3,
+                              MODULE_SHIPPING_DHL_STEP_DOX_50_3,
+                              MODULE_SHIPPING_DHL_STEP_DOX_51_3,
+                              MODULE_SHIPPING_DHL_STEP_WPX_20_3,
+                              MODULE_SHIPPING_DHL_STEP_WPX_30_3,
+                              MODULE_SHIPPING_DHL_STEP_WPX_50_3,
+                              MODULE_SHIPPING_DHL_STEP_WPX_51_3,
+                              MODULE_SHIPPING_DHL_COST_ECX_4,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_4,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_4,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_4,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_4,
+                              MODULE_SHIPPING_DHL_COST_ECX_5,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_5,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_5,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_5,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_5,
+                              MODULE_SHIPPING_DHL_COST_ECX_6,
+                              MODULE_SHIPPING_DHL_COST_MDX_6,
+                              MODULE_SHIPPING_DHL_COST_SDX_6,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_6,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_6,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_6,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_6,
+                              MODULE_SHIPPING_DHL_STEP_MDX_20_6,
+                              MODULE_SHIPPING_DHL_STEP_MDX_30_6,
+                              MODULE_SHIPPING_DHL_STEP_MDX_50_6,
+                              MODULE_SHIPPING_DHL_STEP_MDX_51_6,
+                              MODULE_SHIPPING_DHL_STEP_SDX_20_6,
+                              MODULE_SHIPPING_DHL_STEP_SDX_30_6,
+                              MODULE_SHIPPING_DHL_STEP_SDX_50_6,
+                              MODULE_SHIPPING_DHL_STEP_SDX_51_6,
+                              MODULE_SHIPPING_DHL_COST_ECX_7,
+                              MODULE_SHIPPING_DHL_COST_MDX_7,
+                              MODULE_SHIPPING_DHL_COST_SDX_7,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_7,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_7,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_7,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_7,
+                              MODULE_SHIPPING_DHL_STEP_MDX_20_7,
+                              MODULE_SHIPPING_DHL_STEP_MDX_30_7,
+                              MODULE_SHIPPING_DHL_STEP_MDX_50_7,
+                              MODULE_SHIPPING_DHL_STEP_MDX_51_7,
+                              MODULE_SHIPPING_DHL_STEP_SDX_20_7,
+                              MODULE_SHIPPING_DHL_STEP_SDX_30_7,
+                              MODULE_SHIPPING_DHL_STEP_SDX_50_7,
+                              MODULE_SHIPPING_DHL_STEP_SDX_51_7,
+                              MODULE_SHIPPING_DHL_COST_ECX_8,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_8,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_8,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_8,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_8,
+                              MODULE_SHIPPING_DHL_COST_ECX_9,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_9,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_9,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_9,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_9,
+                              MODULE_SHIPPING_DHL_COST_ECX_10,
+                              MODULE_SHIPPING_DHL_STEP_ECX_20_10,
+                              MODULE_SHIPPING_DHL_STEP_ECX_30_10,
+                              MODULE_SHIPPING_DHL_STEP_ECX_50_10,
+                              MODULE_SHIPPING_DHL_STEP_ECX_51_10');
+      
+      for ($x=0, $n=sizeof($keys); $x<$n; $x++) {
+        if (in_array($keys[$x], $exclude_array)) {
+          unset($keys[$x]);
+        }
+      }
+      $keys = array_values($keys);
 
       return $keys;
     }

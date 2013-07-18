@@ -249,15 +249,29 @@
     }
 
     function keys() {
-      $keys = array('MODULE_SHIPPING_CHP_STATUS', 'MODULE_SHIPPING_CHP_HANDLING','MODULE_SHIPPING_CHP_ALLOWED', 'MODULE_SHIPPING_CHP_TAX_CLASS', 'MODULE_SHIPPING_CHP_ZONE', 'MODULE_SHIPPING_CHP_SORT_ORDER');
+      $keys = array('MODULE_SHIPPING_CHP_STATUS', 
+                    'MODULE_SHIPPING_CHP_HANDLING',
+                    'MODULE_SHIPPING_CHP_ALLOWED', 
+                    'MODULE_SHIPPING_CHP_TAX_CLASS', 
+                    'MODULE_SHIPPING_CHP_ZONE', 
+                    'MODULE_SHIPPING_CHP_SORT_ORDER');
 
       for ($i=1; $i <= $this->num_chp; $i++) {
-        $keys[count($keys)] = 'MODULE_SHIPPING_CHP_COUNTRIES_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_CHP_COST_ECO_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_CHP_COST_PRI_' . $i;
-        $keys[count($keys)] = 'MODULE_SHIPPING_CHP_COST_URG_' . $i;
+        $keys[] = 'MODULE_SHIPPING_CHP_COUNTRIES_' . $i;
+        $keys[] = 'MODULE_SHIPPING_CHP_COST_ECO_' . $i;
+        $keys[] = 'MODULE_SHIPPING_CHP_COST_PRI_' . $i;
+        $keys[] = 'MODULE_SHIPPING_CHP_COST_URG_' . $i;
       }
-
+            
+      $exclude_array = array('MODULE_SHIPPING_CHP_COST_URG_1');
+      
+      for ($x=0, $n=sizeof($keys); $x<$n; $x++) {
+        if (in_array($keys[$x], $exclude_array)) {
+          unset($keys[$x]);
+        }
+      }
+      $keys = array_values($keys);
+      
       return $keys;
     }
   }
