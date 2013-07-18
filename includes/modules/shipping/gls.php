@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: gls.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -82,6 +82,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
 
       $plz_table = constant('MODULE_SHIPPING_GLS_POSTCODE');

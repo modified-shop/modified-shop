@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: chronopost.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: chronopost.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -87,6 +87,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
       if ($dest_zone == 0) {
         $this->quotes['error'] = MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE;

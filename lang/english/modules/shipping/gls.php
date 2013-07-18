@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$   
+   $Id: gls.php 5121 2013-07-18 11:38:19Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -45,32 +45,32 @@ define('MODULE_SHIPPING_GLS_ALLOWED_TITLE' , 'Single Shipping Zones');
 define('MODULE_SHIPPING_GLS_ALLOWED_DESC' , 'Enter the zones <b>one by one</b>, in which ones shipping should be possible, e.g.: AT,DE');
 
 define('MODULE_SHIPPING_GLS_COUNTRIES_1_TITLE' , 'GLS Zone 1 Countries');
-define('MODULE_SHIPPING_GLS_COUNTRIES_1_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 1');
+define('MODULE_SHIPPING_GLS_COUNTRIES_1_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 1 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_GLS_COST_1_TITLE' , 'GLS Zone 1 Shipping Table');
 define('MODULE_SHIPPING_GLS_COST_1_DESC' , 'Shipping rates to Zone 1 destinations based on a range of order weights. Example: 0-3:8.50,3-7:10.50,... Weights greater than 0 and less than or equal to 3 would cost 8.50 for Zone 1 destinations.');
 
 define('MODULE_SHIPPING_GLS_COUNTRIES_2_TITLE' , 'GLS Zone 2 Countries');
-define('MODULE_SHIPPING_GLS_COUNTRIES_2_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 2');
+define('MODULE_SHIPPING_GLS_COUNTRIES_2_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 2 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_GLS_COST_2_TITLE' , 'GLS Zone 2 Shipping Table');
 define('MODULE_SHIPPING_GLS_COST_2_DESC' , 'Shipping rates to Zone 2 destinations based on a range of order weights. Example: 0-3:8.50,3-7:10.50,... Weights greater than 0 and less than or equal to 3 would cost 8.50 for Zone 2 destinations.');
 
 define('MODULE_SHIPPING_GLS_COUNTRIES_3_TITLE' , 'GLS Zone 3 Countries');
-define('MODULE_SHIPPING_GLS_COUNTRIES_3_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 3');
+define('MODULE_SHIPPING_GLS_COUNTRIES_3_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 3 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_GLS_COST_3_TITLE' , 'GLS Zone 3 Shipping Table');
 define('MODULE_SHIPPING_GLS_COST_3_DESC' , 'Shipping rates to Zone 3 destinations based on a range of order weights. Example: 0-3:8.50,3-7:10.50,... Weights greater than 0 and less than or equal to 3 would cost 8.50 for Zone 3 destinations.');
 
 define('MODULE_SHIPPING_GLS_COUNTRIES_4_TITLE' , 'GLS Zone 4 Countries');
-define('MODULE_SHIPPING_GLS_COUNTRIES_4_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 4');
+define('MODULE_SHIPPING_GLS_COUNTRIES_4_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 4 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_GLS_COST_4_TITLE' , 'GLS Zone 4 Shipping Table');
 define('MODULE_SHIPPING_GLS_COST_4_DESC' , 'Shipping rates to Zone 4 destinations based on a range of order weights. Example: 0-3:8.50,3-7:10.50,... Weights greater than 0 and less than or equal to 3 would cost 8.50 for Zone 4 destinations.');
 
 define('MODULE_SHIPPING_GLS_COUNTRIES_5_TITLE' , 'GLS Zone 5 Countries');
-define('MODULE_SHIPPING_GLS_COUNTRIES_5_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 5');
+define('MODULE_SHIPPING_GLS_COUNTRIES_5_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 5 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_GLS_COST_5_TITLE' , 'GLS Zone 5 Shipping Table');
 define('MODULE_SHIPPING_GLS_COST_5_DESC' , 'Shipping rates to Zone 5 destinations based on a range of order weights. Example: 0-3:8.50,3-7:10.50,... Weights greater than 0 and less than or equal to 3 would cost 8.50 for Zone 5 destinations.');
 
 define('MODULE_SHIPPING_GLS_COUNTRIES_6_TITLE' , 'GLS Zone 6 Countries');
-define('MODULE_SHIPPING_GLS_COUNTRIES_6_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 6');
+define('MODULE_SHIPPING_GLS_COUNTRIES_6_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 6 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_GLS_COST_6_TITLE' , 'GLS Zone 6 Shipping Table');
 define('MODULE_SHIPPING_GLS_COST_6_DESC' , 'Shipping rates to Zone 6 destinations based on a range of order weights. Example: 0-3:8.50,3-7:10.50,... Weights greater than 0 and less than or equal to 3 would cost 8.50 for Zone 6 destinations.');
 

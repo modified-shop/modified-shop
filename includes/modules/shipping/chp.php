@@ -1,16 +1,17 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: chp.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: chp.php 5127 2013-07-18 13:38:22Z Tomcraft $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(chp.php,v 1.02 2003/02/18); www.oscommerce.com 
    (c) 2003	 nextcommerce (chp.php,v 1.11 2003/08/24); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    -----------------------------------------------------------------------------------------
@@ -85,6 +86,12 @@
           $dest_zone = $j;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $j;
+          break;
+        }
+        // rest of the world eof
       }
 
       if ($dest_zone == 0) {

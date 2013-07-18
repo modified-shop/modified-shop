@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: fedexeu.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: fedexeu.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -82,6 +82,12 @@
           $dest_zone = $j;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $j;
+          break;
+        }
+        // rest of the world eof
       }
 
       if ($dest_zone == 0) {

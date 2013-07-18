@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: dhl.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id: dhl.php 5129 2013-07-18 14:00:37Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -85,6 +85,12 @@
           $dest_zone = $j;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $j;
+          break;
+        }
+        // rest of the world eof
       }
 
       if ($dest_zone == 0) {
