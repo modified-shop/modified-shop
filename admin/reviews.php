@@ -151,7 +151,7 @@ require (DIR_WS_INCLUDES.'head.php');
           </tr>
           <tr>
             <td class="main">&nbsp;</td>           
-            <td class="main"><?php echo xtc_product_thumb_image($rInfo->products_image, $rInfo->products_name, defined('SMALL_IMAGE_WIDTH') ? SMALL_IMAGE_WIDTH : '', defined('SMALL_IMAGE_HEIGHT') ? SMALL_IMAGE_HEIGHT : '');; ?></td>
+            <td class="main"><?php echo xtc_product_thumb_image($rInfo->products_image, $rInfo->products_name, defined('SMALL_IMAGE_WIDTH') ? SMALL_IMAGE_WIDTH : '', defined('SMALL_IMAGE_HEIGHT') ? SMALL_IMAGE_HEIGHT : ''); ?></td>
           </tr>
           <tr>
             <td class="main"><b><?php echo ENTRY_REVIEW; ?></b></td>
@@ -159,7 +159,7 @@ require (DIR_WS_INCLUDES.'head.php');
           </tr>
           <tr>
             <td class="main"><b><?php echo ENTRY_RATING; ?></b></td>
-            <td class="main"><?php echo xtc_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'templates/'. CURRENT_TEMPLATE .'/img/stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<span class="smallText">>[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</span></td>
+            <td class="main"><?php echo xtc_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'templates/'. CURRENT_TEMPLATE .'/img/stars_' . $rInfo->reviews_rating . '.gif', sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating)); ?>&nbsp;<span class="smallText">[<?php echo sprintf(TEXT_OF_5_STARS, $rInfo->reviews_rating); ?>]</span></td>
           </tr>       
       </table>
           
@@ -171,7 +171,6 @@ require (DIR_WS_INCLUDES.'head.php');
     ?>
       
       <div class="smallText mrg5 txta-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id . '&action=edit') . '">' . BUTTON_BACK . '</a> <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $rInfo->reviews_id) . '">' . BUTTON_CANCEL . '</a>'; ?></div>
-    </form>
     </div>
     <?php
     } else {
@@ -187,6 +186,9 @@ require (DIR_WS_INCLUDES.'head.php');
 
 <?php
     }
+    ?>
+  </form>
+  <?php
   } else {
 ?>
         <table class="tableCenter">
