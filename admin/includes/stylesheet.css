@@ -438,15 +438,15 @@ FORM {
   border-width: 1px;
 }
 .formAreaTitle { 
-font-family: Tahoma, Verdana, Arial, sans-serif; 
-font-size: 12px; 
-font-weight: bold; 
-margin-top: 25px;
+  font-family: Tahoma, Verdana, Arial, sans-serif; 
+  font-size: 12px; 
+  font-weight: bold; 
+  margin-top: 25px;
 }
-.formAreaTitle span.title{
-background:#E8E8E8;
-padding:5px;
-border:1px solid #aaa;
+.formAreaTitle span.title {
+  background:#E8E8E8;
+  padding:5px;
+  border:1px solid #aaa;
 }
 
 /* attributes */

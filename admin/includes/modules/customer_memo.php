@@ -2,32 +2,27 @@
 /* --------------------------------------------------------------
    $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
-
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
 
    Released under the GNU General Public License 
    --------------------------------------------------------------
    based on:
-   (c) 2003	 nextcommerce (customer_memo.php,v 1.6 2003/08/18); www.nextcommerce.org
-   
-   --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+   (c) 2003  nextcommerce (customer_memo.php,v1.6 2003-08-18) www.nextcommerce.org
+   (c) 2003  XT-Commerce  (customer_memo.php, 955 2005-05-19) www.xt-commerce.com
 
+   --------------------------------------------------------------*/
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
     <td class="dataTableConfig col-left"><?php echo ENTRY_MEMO; ?></td>
     <td class="dataTableConfig col-single-right">
     <?php
-    $memo_query = xtc_db_query("SELECT
-                                    *
-                                FROM
-                                    " . TABLE_CUSTOMERS_MEMO . "
-                                WHERE
-                                    customers_id = '" . $_GET['cID'] . "'
-                                ORDER BY
-                                    memo_date DESC");
+    $memo_query = xtc_db_query("SELECT *
+                                  FROM " . TABLE_CUSTOMERS_MEMO . "
+                                 WHERE customers_id = '" . (int)$_GET['cID'] . "'
+                              ORDER BY memo_date DESC");
     while ($memo_values = xtc_db_fetch_array($memo_query)) {
       $poster_query = xtc_db_query("SELECT customers_firstname, customers_lastname FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '" . $memo_values['poster_id'] . "'");
       $poster_values = xtc_db_fetch_array($poster_query);

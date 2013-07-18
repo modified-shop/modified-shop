@@ -22,10 +22,10 @@
    --------------------------------------------------------------*/
 
   require ('includes/application_top.php');
-  require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
   require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
-  require_once (DIR_FS_INC.'xtc_create_password.inc.php');
+  require_once (DIR_FS_INC.'xtc_create_random_value.inc.php');
+  require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 
   // initiate template engine for mail
@@ -33,7 +33,10 @@
 
   $customers_statuses_array = xtc_get_customers_statuses();
   if (!isset($customers_password)) {
-    $customers_password_encrypted = xtc_RandomString(8);
+    //BOF - DokuMan - 2012-11-27 - use xtc_create_password() function to also create an encrypted random password
+    //$customers_password_encrypted = xtc_RandomString(8);
+    $customers_password_encrypted =  xtc_create_random_value(8);
+    //EOF - DokuMan - 2012-11-27 - use xtc_create_password() function to also create an encrypted random password
     $customers_password = xtc_encrypt_password($customers_password_encrypted);
   }
   if (isset($_GET['action']) && $_GET['action'] == 'edit') {
@@ -70,8 +73,11 @@
     $payment_unallowed = xtc_db_prepare_input($_POST['payment_unallowed']);
     $shipping_unallowed = xtc_db_prepare_input($_POST['shipping_unallowed']);
 
-    if ($customers_password == '') {
-      $customers_password_encrypted =  xtc_RandomString(8);
+    if ($customers_password_encrypted == '') { //DokuMan - 2012-11-27 - fix empty admin passwords in customer's email
+      //BOF - DokuMan - 2012-11-27 - use xtc_create_password() function to also create an encrypted random password
+      //$customers_password_encrypted = xtc_RandomString(8);
+      $customers_password_encrypted =  xtc_create_random_value(8);
+      //EOF - DokuMan - 2012-11-27 - use xtc_create_password() function to also create an encrypted random password
       $customers_password = xtc_encrypt_password($customers_password_encrypted);
     }
     $error = false; // reset error flag
