@@ -44,7 +44,7 @@ define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_TITLE' , 'Einzelne Versandzonen');
 define('MODULE_SHIPPING_CHRONOPOST_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. zb AT,DE');
 
 define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_TITLE' , 'Chronopost Zone 1 (pays)');
-define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone');
+define('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1_DESC' , 'Ins&eacute;rer une virgule entre 2 codes ISO de pays qui font partie de la m&ecirc;me zone (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_CHRONOPOST_COST_1_TITLE' , 'Chronopost Zone 1 (poids:tarifs)');
 define('MODULE_SHIPPING_CHRONOPOST_COST_1_DESC' , 'Tarifs Chronopost pour les destinations de la Zone 1. Principe : une fourchette de poids (grammes) suivie du tarif (euros TTC). Exemple: 0-2000:28.71,2000-5000:34.38,... Les colis pesant moins de 2kg seront factur&eacute;s 28,71 EUR TTC pour les destinations de');
 
