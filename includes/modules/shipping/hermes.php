@@ -8,11 +8,10 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
-   (c) 2003 XT-Commerce
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(flat.php,v 1.40 2003/02/05); www.oscommerce.com
    (c) 2003	 nextcommerce (flat.php,v 1.7 2003/08/24); www.nextcommerce.org
-   (c) 2003 XT-Commerce
+   (c) 2006 xt:Commerce; www.xt-commerce.com
    (c) 2008 Leonid Lezner - www.waaza.eu
 
    Released under the GNU General Public License
