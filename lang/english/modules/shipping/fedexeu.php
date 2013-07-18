@@ -41,6 +41,7 @@ define('MODULE_SHIPPING_FEDEXEU_SORT_ORDER_TITLE' , 'Sort Order');
 define('MODULE_SHIPPING_FEDEXEU_SORT_ORDER_DESC' , 'Sort order of display.');
 define('MODULE_SHIPPING_FEDEXEU_ALLOWED_TITLE' , 'Allowed Shipping Zones');
 define('MODULE_SHIPPING_FEDEXEU_ALLOWED_DESC' , 'Please enter the zones <b>separately</b> which should be allowed to use this modul (e. g. AT,DE (leave empty if you want to allow all zones))');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_1_TITLE' , 'Europe Zone 1 Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_1_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 1');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_1_TITLE' , 'Shipping Table for Zone 1 up to 2.50 kg PAK');
@@ -53,6 +54,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_1_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_1_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_1_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_1_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_2_TITLE' , 'Europe Zone 2 Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_2_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 2.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_2_TITLE' , 'Shipping Table for Zone 2 up to 2.50 kg PAK');
@@ -65,6 +67,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_2_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_2_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_2_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_2_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_3_TITLE' , 'Europe Zone 3 Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_3_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 3.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_3_TITLE' , 'Shipping Table for Zone 3 up to 2.50 kg PAK');
@@ -77,6 +80,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_3_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_3_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_3_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_3_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_4_TITLE' , 'World Zone A Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_4_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone World A.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_4_TITLE' , 'Shipping Table for Zone A up to 2.50 kg PAK');
@@ -89,6 +93,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_4_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_4_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_4_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_4_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_5_TITLE' , 'World Zone B Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_5_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone World B.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_5_TITLE' , 'Shipping Table for Zone B up to 2.50 kg PAK');
@@ -101,6 +106,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_5_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_5_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_5_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_5_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_6_TITLE' , 'World Zone C Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_6_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone World C.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_6_TITLE' , 'Shipping Table for Zone C up to 2.50 kg PAK');
@@ -113,6 +119,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_6_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_6_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_6_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_6_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_7_TITLE' , 'World Zone D Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_7_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone World D.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_7_TITLE' , 'Shipping Table for Zone D up to 2.50 kg PAK');
@@ -125,6 +132,7 @@ define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_7_TITLE' , 'Extra charge up to 40 kg
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_40_7_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_7_TITLE' , 'Extra charge up to 70 kg BOX');
 define('MODULE_SHIPPING_FEDEXEU_STEP_BOX_70_7_DESC' , 'Extra charge for each additional 0,50 kg in EUR');
+
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_8_TITLE' , 'World Zone E Countries');
 define('MODULE_SHIPPING_FEDEXEU_COUNTRIES_8_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone World E.');
 define('MODULE_SHIPPING_FEDEXEU_COST_PAK_8_TITLE' , 'Shipping Table for Zone E up to 2.50 kg PAK');

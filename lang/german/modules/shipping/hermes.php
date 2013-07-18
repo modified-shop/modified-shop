@@ -28,21 +28,20 @@ define('MODULE_SHIPPING_HERMES_STATUS_TITLE' , 'Hermes Paket Shop aktivieren');
 define('MODULE_SHIPPING_HERMES_STATUS_DESC' , 'Modul von Leonid Lezner');
 
 define('MODULE_SHIPPING_HERMES_NATIONAL_TITLE' , 'Nationaler Versand (DE)');
-define('MODULE_SHIPPING_HERMES_NATIONAL_DESC' , 'Preise für Klassen: S;M;L');
+define('MODULE_SHIPPING_HERMES_NATIONAL_DESC' , 'Preise f&uuml;r Klassen: S;M;L');
 
-define('MODULE_SHIPPING_HERMES_INTERNATIONAL_TITLE' , 'Internationaler Versand (alle außer DE)');
-define('MODULE_SHIPPING_HERMES_INTERNATIONAL_DESC' , 'Preise für Klassen: S;M;L');
+define('MODULE_SHIPPING_HERMES_INTERNATIONAL_TITLE' , 'Internationaler Versand (alle au&szlig;er DE)');
+define('MODULE_SHIPPING_HERMES_INTERNATIONAL_DESC' , 'Preise f&uuml;r Klassen: S;M;L');
 
 define('MODULE_SHIPPING_HERMES_GEWICHT_TITLE' , 'Klassendefinition');
-define('MODULE_SHIPPING_HERMES_GEWICHT_DESC' , 'Max. Gewicht (kg) für Klassen: S;M;L');
+define('MODULE_SHIPPING_HERMES_GEWICHT_DESC' , 'Max. Gewicht (kg) f&uuml;r Klassen: S;M;L');
 
 define('MODULE_SHIPPING_HERMES_MAXGEWICHT_TITLE' , 'Maximales Gewicht');
-define('MODULE_SHIPPING_HERMES_MAXGEWICHT_DESC' , 'Max. Gewicht für die Versandart (kg)');
+define('MODULE_SHIPPING_HERMES_MAXGEWICHT_DESC' , 'Max. Gewicht f&uuml;r die Versandart (kg)');
 
 define('MODULE_SHIPPING_HERMES_SORT_ORDER_TITLE' , 'Reihenfolge der Anzeige');
 define('MODULE_SHIPPING_HERMES_SORT_ORDER_DESC' , 'Niedrigste wird zuerst angezeigt.');
 
 define('MODULE_SHIPPING_HERMES_ALLOWED_TITLE' , 'Einzelne Versandzonen');
 define('MODULE_SHIPPING_HERMES_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll, z. B.: AT,DE.');
-
 ?>
