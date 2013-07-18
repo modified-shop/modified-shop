@@ -44,25 +44,38 @@ require (DIR_WS_INCLUDES.'head.php');
   </script>
 </head>
 <body>
-<?php require (DIR_WS_INCLUDES . 'header.php'); ?>
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-      <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-        <?php require (DIR_WS_INCLUDES . 'column_left.php'); ?>
-      </table>
-    </td>
-    <td class="boxCenter" width="100%" valign="top">
-      <!-- BOF options and values//-->
-      <?php
-      include (DIR_WS_MODULES.'products_attributes_options.php');
-      include (DIR_WS_MODULES.'products_attributes_values.php');
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
       ?>
-      <!-- BOF options and values//-->
-    </td>
-  </tr>
-</table>
-<?php require (DIR_WS_INCLUDES . 'footer.php'); ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <!-- BOF options and values//-->
+        <?php
+        include (DIR_WS_MODULES.'products_attributes_options.php');
+        include (DIR_WS_MODULES.'products_attributes_values.php');
+        ?>
+        <!-- BOF options and values//-->
+      </td>
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
 </body>
 </html>
-<?php require (DIR_WS_INCLUDES . 'application_bottom.php'); ?>
+<?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
