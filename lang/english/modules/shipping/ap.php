@@ -1,16 +1,17 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ap.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: ap.php 5038 2013-07-07 10:08:54Z Tomcraft $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(ap.php,v 1.02 2003/02/18); www.oscommerce.com 
    (c) 2003	 nextcommerce (ap.php,v 1.4 2003/08/13); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    -----------------------------------------------------------------------------------------
@@ -49,7 +50,7 @@ define('MODULE_SHIPPING_AP_DISPLAY_DESC' , 'Do you want to display, if shipping 
 
 for ($module_shipping_ap_i = 1; $module_shipping_ap_i <= MODULE_SHIPPING_AP_NUMBER_ZONES; $module_shipping_ap_i ++) {
   define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_TITLE' , '<hr/>Zone '.$module_shipping_ap_i.' Countries');
-  define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_ap_i.'.');
+  define('MODULE_SHIPPING_AP_COUNTRIES_'.$module_shipping_ap_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_ap_i.' (Enter WORLD for the rest of the world.).');
   define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Shipping Table');
   define('MODULE_SHIPPING_AP_COST_'.$module_shipping_ap_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_ap_i.' will be multiplied by the number of items in an order that uses this shipping method.');
   define('MODULE_SHIPPING_AP_HANDLING_'.$module_shipping_ap_i.'_TITLE' , 'Zone '.$module_shipping_ap_i.' Handling Fee');

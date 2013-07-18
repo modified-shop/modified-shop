@@ -7,11 +7,11 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(table.php,v 1.27 2003/02/05); www.oscommerce.com 
-   (c) 2003	 nextcommerce (table.php,v 1.8 2003/08/24); www.nextcommerce.org
-   (c) 2003 XT-Commerce
+   based on:
+   (c) 2000-2001 The Exchange Project (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce (table.php,v 1.27 2003/02/05); www.oscommerce.com 
+   (c) 2003 nextcommerce (table.php,v 1.8 2003/08/24); www.nextcommerce.org
+   (c) 2006 XT-Commerce
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -74,6 +74,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
 
       $this->quotes = array('id' => $this->code,

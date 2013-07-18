@@ -11,7 +11,7 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(ap.php,v 1.05 2003/02/18); www.oscommerce.com 
    (c) 2003	 nextcommerce (ap.php,v 1.11 2003/08/24); www.nextcommerce.org
-   (c) 2003 XT-Commerce
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    -----------------------------------------------------------------------------------------
@@ -79,6 +79,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
 
       $this->quotes = array('id' => $this->code,
