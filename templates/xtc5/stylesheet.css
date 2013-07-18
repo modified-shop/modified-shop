@@ -1455,3 +1455,59 @@ BASIC Template for AGB Hosting Content
 #janolaw-body{
 }
 /* janolaw EOF */
+
+/* Content */
+ul.contentmenu {
+background-color:#ededed;
+margin-bottom:15px;
+border:solid #ccc;
+border-width:0 1px 1px 1px;
+}
+ul.contentmenu li a.actparentlink { font-style:italic; }
+ul.contentmenu li a.actlink { font-style:italic; text-decoration:underline; }
+/* 1st TIER */
+ul.contentmenu li.level1 {
+list-style-type:none;
+border:solid #fff;
+border-width:1px 0 0 0;
+}
+ul.contentmenu li.level1 a {
+text-decoration:none;
+outline:none;
+color:#333;
+background:#eee;
+font-weight:bold;
+padding:4px 0 4px 6px;
+display:block;
+}
+ul.contentmenu li.level1 a:hover {
+text-decoration:none;
+color:#333;
+background-color:#e1e1e1;
+font-weight:bold;
+}
+ul.contentmenu li.activeparent1 a  { font-style:italic; background:#eee; }
+ul.contentmenu li.active1 a  {	font-style: italic; background: #d7c9d1;}
+/* 2nd TIER */
+ul.contentmenu li.level2 {
+list-style-type:none;
+border:solid #fff;
+border-width:1px 0 0 0;
+}
+ul.contentmenu li.level2 a {
+text-decoration:none;
+outline:none;
+color:#333;
+background:url(img/dotted1.gif) no-repeat 8px 9px #e1e1e1;
+font-weight:bold;
+padding:4px 0 4px 18px;
+display:block;
+}
+ul.contentmenu li.level2 a:hover {
+text-decoration:none;
+color:#333;
+background-color:#c7c7c7;
+font-weight:bold;
+}
+ul.contentmenu li.activeparent2 a  { font-style:italic; background:#e1e1e1; }
+ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
