@@ -28,7 +28,7 @@ define('MODULE_SHIPPING_DHL_TEXT_UNITS', 'kg');
 define('MODULE_SHIPPING_DHL_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
 define('MODULE_SHIPPING_DHL_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht errechnet werden');
 
-define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS &Ouuml;sterreich');
+define('MODULE_SHIPPING_DHL_STATUS_TITLE' , 'DHL WORLDWIDE EXPRESS &Ouml;sterreich');
 define('MODULE_SHIPPING_DHL_STATUS_DESC' , 'Wollen Sie den Versand &uuml;ber DHL WORLDWIDE EXPRESS &Ouml;sterreich anbieten?');
 define('MODULE_SHIPPING_DHL_HANDLING_TITLE' , 'Handling Fee');
 define('MODULE_SHIPPING_DHL_HANDLING_DESC' , 'Bearbeitungsgeb&uuml;hr f&uuml;r diese Versandart in Euro');
