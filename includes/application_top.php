@@ -170,6 +170,7 @@ require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_product_path.inc.php');
 require_once (DIR_FS_INC.'xtc_get_top_level_domain.inc.php');
 require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
+require_once (DIR_FS_INC.'xtc_get_content_path.inc.php');
 
 require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
 require_once (DIR_FS_INC.'xtc_redirect.inc.php');
