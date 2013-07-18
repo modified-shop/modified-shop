@@ -82,6 +82,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
 
       $this->quotes = array('id' => $this->code,

@@ -38,7 +38,7 @@ define('MODULE_SHIPPING_ITEM_DISPLAY_DESC' , 'Do you want to display, if shippin
 
 for ($module_shipping_item_i = 1; $module_shipping_item_i <= MODULE_SHIPPING_ITEM_NUMBER_ZONES; $module_shipping_item_i ++) {
   define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_TITLE' , '<hr/>Zone '.$module_shipping_item_i.' Countries');
-  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_item_i.'.');
+  define('MODULE_SHIPPING_ITEM_COUNTRIES_'.$module_shipping_item_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_item_i.' (Enter WORLD for the rest of the world.).');
   define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Shipping Table');
   define('MODULE_SHIPPING_ITEM_COST_'.$module_shipping_item_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_item_i.' will be multiplied by the number of items in an order that uses this shipping method.');
   define('MODULE_SHIPPING_ITEM_HANDLING_'.$module_shipping_item_i.'_TITLE' , 'Zone '.$module_shipping_item_i.' Handling Fee');

@@ -6,11 +6,11 @@
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   --------------------------------------------------------------
+   -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce; http://www.oscommerce.com
-   (c) 2003 nextcommerce ; http://www.nextcommerce.org
+   (c) 2002-2003 osCommerce (table.php,v 1.6 2003/02/16); www.oscommerce.com 
+   (c) 2003 nextcommerce (table.php,v 1.4 2003/08/13); www.nextcommerce.org
    (c) 2006 XT-Commerce
 
    Released under the GNU General Public License 
@@ -43,7 +43,7 @@ define('MODULE_SHIPPING_TABLE_DISPLAY_DESC' , 'Do you want to display, if shippi
 
 for ($module_shipping_table_i = 1; $module_shipping_table_i <= MODULE_SHIPPING_TABLE_NUMBER_ZONES; $module_shipping_table_i ++) {
   define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_TITLE' , '<hr/>Zone '.$module_shipping_table_i.' Countries');
-  define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_table_i.'.');
+  define('MODULE_SHIPPING_TABLE_COUNTRIES_'.$module_shipping_table_i.'_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone '.$module_shipping_table_i.' (Enter WORLD for the rest of the world.).');
   define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Shipping Table');
   define('MODULE_SHIPPING_TABLE_COST_'.$module_shipping_table_i.'_DESC' , 'Shipping rates to Zone '.$module_shipping_table_i.' destinations based on a group of maximum order weights or order total. Example: 3:8.50,7:10.50,... Weights/Total less than or equal to 3 would cost 8.50 for Zone '.$module_shipping_table_i.' destinations.');
   define('MODULE_SHIPPING_TABLE_HANDLING_'.$module_shipping_table_i.'_TITLE' , 'Zone '.$module_shipping_table_i.' Handling Fee');
