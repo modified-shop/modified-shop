@@ -27,7 +27,11 @@ define('FILENAME_ACCOUNT_DELETE', 'account_delete.php'); //Dokuman - 2009-08-21 
 define('FILENAME_ADDRESS_BOOK', 'address_book.php');
 define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process.php');
 define('FILENAME_ADVANCED_SEARCH', 'advanced_search.php');
-define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result.php');
+if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'true') {
+  define('FILENAME_ADVANCED_SEARCH_RESULT', 'findologic.php');
+} else {
+  define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result.php');
+}
 define('FILENAME_ALSO_PURCHASED_PRODUCTS', 'also_purchased_products.php');
 define('FILENAME_CHECKOUT_CONFIRMATION', 'checkout_confirmation.php');
 define('FILENAME_CHECKOUT_PAYMENT', 'checkout_payment.php');
