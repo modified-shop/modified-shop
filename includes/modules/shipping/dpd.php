@@ -185,7 +185,7 @@
     function install() {
       // put out a notice to make sure that the tables are created
 
-      //disabled the next one because of some problems: If module is installed and this set to 0, checkout doesn't work.
+      // disabled the next one because of some problems: If module is installed and this set to 0, checkout doesn't work.
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_SHIPPING_DPD_STATUS', 'True', '6', '0', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DPD_HANDLING', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_DPD_ALLOWED', '', '6', '0', now())");
@@ -197,7 +197,7 @@
       if (xtc_db_query("DROP TABLE IF EXISTS dpd_country_to_postal")){
       } else {
       }
-       // Table structure for table `dpd_country_to_postal`
+      // Table structure for table `dpd_country_to_postal`
       if (xtc_db_query("CREATE TABLE dpd_country_to_postal (dpd_country char(2) NOT NULL default '', dpd_postal_reference int(11) NOT NULL default '0', PRIMARY KEY  (dpd_country)) ENGINE=MyISAM")){
       } else {
       }
