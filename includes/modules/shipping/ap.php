@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ap.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: ap.php 5118 2013-07-18 10:58:36Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org

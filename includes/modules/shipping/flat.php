@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: flat.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: flat.php 5038 2013-07-07 10:08:54Z Tomcraft $   
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -11,7 +11,7 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(flat.php,v 1.40 2003/02/05); www.oscommerce.com 
    (c) 2003	 nextcommerce (flat.php,v 1.7 2003/08/24); www.nextcommerce.org
-   (c) 2003 XT-Commerce
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
