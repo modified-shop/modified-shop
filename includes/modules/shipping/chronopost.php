@@ -2,15 +2,16 @@
 /* -----------------------------------------------------------------------------------------
    $Id: chronopost.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(chronopost.php,v 1.0 2002/04/01); www.oscommerce.com 
    (c) 2003	 nextcommerce (chronopost.php,v 1.9 2003/08/24); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    -----------------------------------------------------------------------------------------
@@ -26,9 +27,9 @@
   class chronopost {
     var $code, $title, $description, $enabled, $num_chronopost;
 
-/**
- * class constructor
- */
+    /**
+    * class constructor
+    */
     function chronopost() {
       $this->code        = 'chronopost';
       $this->title       = MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE;
@@ -38,9 +39,9 @@
       $this->tax_class   = MODULE_SHIPPING_CHRONOPOST_TAX_CLASS;
       $this->enabled     = ((MODULE_SHIPPING_CHRONOPOST_STATUS == 'True') ? true : false);
 
-/**
- * CUSTOMIZE THIS SETTING FOR THE NUMBER OF chronopost NEEDED
- */
+      /**
+      * CUSTOMIZE THIS SETTING FOR THE NUMBER OF chronopost NEEDED
+      */
       $this->num_chronopost = 10; //NBen je remplace 1 par 10
 
       if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_CHRONOPOST_ZONE > 0) ) {
@@ -69,44 +70,46 @@
                             'module'  => MODULE_SHIPPING_CHRONOPOST_TEXT_TITLE,
                             'methods' => array());
 
-      if (xtc_not_null($this->icon))
-	$this->quotes['icon'] = xtc_image($this->icon, $this->title);
+      if (xtc_not_null($this->icon)) {
+        $this->quotes['icon'] = xtc_image($this->icon, $this->title);
+      }
 
-      if ($this->tax_class > 0)
+      if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      }
 
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
       for ($i = 1; $i <= $this->num_chronopost; $i ++) {
-	$countries_table = constant('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_' . $i);
-	$country = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
-	if ( in_array($dest_country, $country ) ) {
-	  $dest_zone = $i;
-	  break;
-	}
+        $countries_table = constant('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_' . $i);
+        $country = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+        if (in_array($dest_country, $country)) {
+          $dest_zone = $i;
+          break;
+        }
       }
       if ($dest_zone == 0) {
-	$this->quotes['error'] = MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE;
-	return $this->quotes;
+        $this->quotes['error'] = MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE;
+        return $this->quotes;
       }
 
       $table = preg_split("/[:,]/" , constant('MODULE_SHIPPING_CHRONOPOST_COST_' . $dest_zone)); // Hetfield - 2009-08-18 - replaced deprecated function split with preg_split to be ready for PHP >= 5.3
       $cost = -1;
       for ($i = 0, $n = sizeof($table); $i < $n; $i+=2) {
-	if ($shipping_weight <= $table[$i]) {
-	  $cost = $table[$i+1] + MODULE_SHIPPING_CHRONOPOST_HANDLING + SHIPPING_HANDLING;
-	  break;
-	}
+        if ($shipping_weight <= $table[$i]) {
+          $cost = $table[$i+1] + MODULE_SHIPPING_CHRONOPOST_HANDLING;
+          break;
+        }
       }
 
       if ($cost == -1) {
-	$this->quotes['error'] = MODULE_SHIPPING_CHRONOPOST_UNDEFINED_RATE;
-	return $this->quotes;
+        $this->quotes['error'] = MODULE_SHIPPING_CHRONOPOST_UNDEFINED_RATE;
+        return $this->quotes;
       }
 
       $this->quotes['methods'][] = array('id'    => $this->code,
-					 'title' => MODULE_SHIPPING_CHRONOPOST_TEXT_WAY . ' ' . $order->delivery['country']['title'],
-					 'cost'  => $cost + MODULE_SHIPPING_CHRONOPOST_HANDLING + SHIPPING_HANDLING);
+                                         'title' => MODULE_SHIPPING_CHRONOPOST_TEXT_WAY . ' ' . $order->delivery['country']['title'],
+                                         'cost'  => $cost + MODULE_SHIPPING_CHRONOPOST_HANDLING);
 
       return $this->quotes;
     }
@@ -123,7 +126,7 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) VALUES ('MODULE_SHIPPING_CHRONOPOST_STATUS', 'True', '6', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_HANDLING', '0', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_ALLOWED', '', '6', '0', now())");
-	  
+
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_1', 'BE,LU', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_COST_1', '0-500:38.85,500-1000:50.17,1000-1500:61.50,1500-2000:72.82,2000-2500:84.15,2500-3000:95.48,3000-3500:98.71,3500-4000:101.94,4000-4500:105.16,4500-5000:108.39', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_2', 'DE,ES,IT,NL,GB', '6', '0', now())");
@@ -155,14 +158,13 @@
     }
 
     function keys() {
-      $keys = array(
-		    'MODULE_SHIPPING_CHRONOPOST_STATUS',
-		    'MODULE_SHIPPING_CHRONOPOST_HANDLING',
-		    'MODULE_SHIPPING_CHRONOPOST_ALLOWED',
-		    'MODULE_SHIPPING_CHRONOPOST_TAX_CLASS',
-		    'MODULE_SHIPPING_CHRONOPOST_ZONE',
-		    'MODULE_SHIPPING_CHRONOPOST_SORT_ORDER'
-		    );
+      $keys = array('MODULE_SHIPPING_CHRONOPOST_STATUS',
+                    'MODULE_SHIPPING_CHRONOPOST_HANDLING',
+                    'MODULE_SHIPPING_CHRONOPOST_ALLOWED',
+                    'MODULE_SHIPPING_CHRONOPOST_TAX_CLASS',
+                    'MODULE_SHIPPING_CHRONOPOST_ZONE',
+                    'MODULE_SHIPPING_CHRONOPOST_SORT_ORDER'
+                   );
       for ($i = 1; $i <= $this->num_chronopost; $i ++) {
         $keys[count($keys)] = 'MODULE_SHIPPING_CHRONOPOST_COUNTRIES_' . $i;
         $keys[count($keys)] = 'MODULE_SHIPPING_CHRONOPOST_COST_' . $i;
