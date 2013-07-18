@@ -134,10 +134,10 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
 }
 
 if (!$cache) {
-  $box_content = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_information.html');
+  $box_information = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_information.html');
 } else {
-  $box_content = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_information.html', $cache_id);
+  $box_information = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_information.html', $cache_id);
 }
 
-$smarty->assign('box_INFORMATION', $box_content);
+$smarty->assign('box_INFORMATION', $box_information);
 ?>
