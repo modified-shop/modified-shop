@@ -49,37 +49,37 @@ define('MODULE_SHIPPING_UPS_FREEAMOUNT_TITLE' , 'Versandkostenfrei Inland');
 define('MODULE_SHIPPING_UPS_FREEAMOUNT_DESC' , 'Mindestbestellwert f&uuml;r den versandkostenfreien Versand im Inland und den erm&auml;&szlig;igten Versand ins Ausland.');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_1_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 1');
-define('MODULE_SHIPPING_UPS_COUNTRIES_1_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 1:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_1_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 1 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_1_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 1');
 define('MODULE_SHIPPING_UPS_COST_1_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 1. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 5,15 = 4:5.15,...');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_2_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 3');
-define('MODULE_SHIPPING_UPS_COUNTRIES_2_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 3:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_2_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 3 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_2_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 3');
 define('MODULE_SHIPPING_UPS_COST_2_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 3. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 13,75 = 4:13.75,...');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_3_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 31');
-define('MODULE_SHIPPING_UPS_COUNTRIES_3_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 31:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_3_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 31 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_3_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 31');
 define('MODULE_SHIPPING_UPS_COST_3_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 31. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 23,50 = 4:23.50,...');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_4_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 4');
-define('MODULE_SHIPPING_UPS_COUNTRIES_4_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 4:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_4_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 4 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_4_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 4');
 define('MODULE_SHIPPING_UPS_COST_4_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 4. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 25,40 = 4:25.40,...');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_5_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 41');
-define('MODULE_SHIPPING_UPS_COUNTRIES_5_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 41:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_5_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 41 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_5_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 41');
 define('MODULE_SHIPPING_UPS_COST_5_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 41. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 30,00 = 4:30.00,...');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_6_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 5');
-define('MODULE_SHIPPING_UPS_COUNTRIES_6_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 5:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_6_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 5 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_6_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 5');
 define('MODULE_SHIPPING_UPS_COST_6_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 5. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 34,35 = 4:34.35,...');
 
 define('MODULE_SHIPPING_UPS_COUNTRIES_7_TITLE' , 'Staaten f&uuml;r UPS Standard Zone 6');
-define('MODULE_SHIPPING_UPS_COUNTRIES_7_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 6:');
+define('MODULE_SHIPPING_UPS_COUNTRIES_7_DESC' , 'Durch Komma getrennte ISO-K&uuml;rzel der Staaten f&uuml;r Zone 6 (WORLD eintragen f&uuml;r den Rest der Welt.):');
 define('MODULE_SHIPPING_UPS_COST_7_TITLE' , 'Tarife f&uuml;r UPS Standard Zone 6');
 define('MODULE_SHIPPING_UPS_COST_7_DESC' , 'Gewichtsbasierte Versandkosten innerhalb Zone 6. Beispiel: Sendung zwischen 0 und 4kg kostet EUR 37,10 = 4:37.10,...');
 ?>

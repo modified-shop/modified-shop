@@ -82,6 +82,12 @@
           $dest_zone = $j;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $j;
+          break;
+        }
+        // rest of the world eof
       }
 
       if ($dest_zone == 0) {

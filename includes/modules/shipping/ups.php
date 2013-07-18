@@ -83,9 +83,15 @@ function quote($method = '') {
 		$countries_table = constant('MODULE_SHIPPING_UPS_COUNTRIES_' . $i);
 		$country_zones = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
 		if (in_array($dest_country, $country_zones)) {
-		$dest_zone = $i;
-		break;
+		  $dest_zone = $i;
+		  break;
 		}
+		// rest of the world
+		if ($countries_table == 'WORLD') {
+		  $dest_zone = $i;
+		  break;
+		}
+		// rest of the world eof
 	}
 
 	if ($dest_zone == 0) {

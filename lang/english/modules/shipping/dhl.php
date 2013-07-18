@@ -76,7 +76,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_1_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_1_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_2_TITLE' , 'Zone 1 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_2_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 1.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_2_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 1 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_ECX_2_TITLE' , 'Shipping Table Zone 1 up to 10 kg ECX');
 define('MODULE_SHIPPING_DHL_COST_ECX_2_DESC' , 'Shipping Table Zone 1, based on <b>\'ECX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_MDX_2_TITLE' , 'Shipping Table Zone 1 up to 10 kg MDX');
@@ -109,7 +109,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_2_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_2_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_3_TITLE' , 'Zone 2 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_3_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 2.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_3_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 2 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_ECX_3_TITLE' , 'Shipping Table Zone 2 up to 10 kg ECX');
 define('MODULE_SHIPPING_DHL_COST_ECX_3_DESC' , 'Shipping Table Zone 2, based on <b>\'ECX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_MDX_3_TITLE' , 'Shipping Table Zone 2 up to 10 kg MDX');
@@ -142,7 +142,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_3_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_3_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_4_TITLE' , 'Zone 3 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_4_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 3.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_4_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 3 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_4_TITLE' , 'Shipping Table Zone 3 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_4_DESC' , 'Shipping Table Zone 3, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_4_TITLE' , 'Shipping Table Zone 3 up to 10 kg WPX');
@@ -185,7 +185,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_4_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_4_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_5_TITLE' , 'Zone 4 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_5_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 4.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_5_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 4 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_5_TITLE' , 'Shipping Table Zone 4 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_5_DESC' , 'Shipping Table Zone 4, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_5_TITLE' , 'Shipping Table Zone 4 up to 10 kg WPX');
@@ -228,7 +228,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_5_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_5_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_6_TITLE' , 'Zone 5 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_6_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 5.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_6_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 5 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_6_TITLE' , 'Shipping Table Zone 5 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_6_DESC' , 'Shipping Table Zone 5, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_6_TITLE' , 'Shipping Table Zone 5 up to 10 kg WPX');
@@ -251,7 +251,7 @@ define('MODULE_SHIPPING_DHL_STEP_WPX_51_6_TITLE' , 'Extra charge up from 50 kg W
 define('MODULE_SHIPPING_DHL_STEP_WPX_51_6_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_7_TITLE' , 'Zone 6 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_7_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 6.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_7_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 6 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_7_TITLE' , 'Shipping Table Zone 6 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_7_DESC' , 'Shipping Table Zone 6, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_7_TITLE' , 'Shipping Table Zone 6 up to 10 kg WPX');
@@ -274,7 +274,7 @@ define('MODULE_SHIPPING_DHL_STEP_WPX_51_7_TITLE' , 'Extra charge up from 50 kg W
 define('MODULE_SHIPPING_DHL_STEP_WPX_51_7_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_8_TITLE' , 'Zone 7 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_8_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 7.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_8_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 7 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_8_TITLE' , 'Shipping Table Zone 7 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_8_DESC' , 'Shipping Table Zone 7, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_8_TITLE' , 'Shipping Table Zone 7 up to 10 kg WPX');
@@ -317,7 +317,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_8_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_8_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_9_TITLE' , 'Zone 8 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_9_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 8.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_9_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 8 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_9_TITLE' , 'Shipping Table Zone 8 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_9_DESC' , 'Shipping Table Zone 8, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_9_TITLE' , 'Shipping Table Zone 8 up to 10 kg WPX');
@@ -360,7 +360,7 @@ define('MODULE_SHIPPING_DHL_STEP_SDX_51_9_TITLE' , 'Extra charge up from 50 kg S
 define('MODULE_SHIPPING_DHL_STEP_SDX_51_9_DESC' , 'Extra charge each additional 0,50 kg in EUR');
 
 define('MODULE_SHIPPING_DHL_COUNTRIES_10_TITLE' , 'Zone 9 Countries');
-define('MODULE_SHIPPING_DHL_COUNTRIES_10_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 9.');
+define('MODULE_SHIPPING_DHL_COUNTRIES_10_DESC' , 'Comma separated list of two character ISO country codes that are part of Zone 9 (Enter WORLD for the rest of the world.).');
 define('MODULE_SHIPPING_DHL_COST_DOX_10_TITLE' , 'Shipping Table Zone 9 up to 10 kg DOX');
 define('MODULE_SHIPPING_DHL_COST_DOX_10_DESC' , 'Shipping Table Zone 9, based on <b>\'DOX\'</b> up to 10 kg shipping weight.');
 define('MODULE_SHIPPING_DHL_COST_WPX_10_TITLE' , 'Shipping Table Zone 9 up to 10 kg WPX');

@@ -82,6 +82,12 @@
           $dest_zone = $i;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $i;
+          break;
+        }
+        // rest of the world eof
       }
 
       $plz_table = constant('MODULE_SHIPPING_GLS_POSTCODE');

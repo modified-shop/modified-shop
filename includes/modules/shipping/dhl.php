@@ -85,6 +85,12 @@
           $dest_zone = $j;
           break;
         }
+        // rest of the world
+        if ($countries_table == 'WORLD') {
+          $dest_zone = $j;
+          break;
+        }
+        // rest of the world eof
       }
 
       if ($dest_zone == 0) {
@@ -271,10 +277,7 @@
       $this->quotes = array('id' => $this->code,
                             'module' => $this->title . ' (' . $shipping_num_boxes . ' x ' . $shipping_weight . ' ' . MODULE_SHIPPING_DHL_TEXT_UNITS .')');
 
-      //BOF - DokuMan - 2010-09-17 - Undefined variable: methods
-      //$this->quotes['methods'] = $methods;
       $this->quotes['methods'] = isset($methods) ? $methods : '';
-      //EOF - DokuMan - 2010-09-17 - Undefined variable: methods
 
       if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
