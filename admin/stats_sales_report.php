@@ -175,18 +175,20 @@
   } else {
     $endDate = mktime(0, 0, 0, date("m"), date("d") + 1, date("Y"));
   }
-
+  
   require(DIR_WS_CLASSES . 'sales_report.php');
   $sr = new sales_report($srView, $startDate, $endDate, $srSort, $srStatus, $srFilter,$srPayment);
   $startDate = $sr->startDate;
   $endDate = $sr->endDate;
+  //echo 'SD'.$startDate;
+  
 
   if ($srExp < 2) {
     // not for csv export
     require (DIR_WS_INCLUDES.'head.php');
     ?>    
       </head>
-        <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
+        <body>
           <?php
           if ($srExp < 1) {
             require(DIR_WS_INCLUDES . 'header.php');
@@ -194,57 +196,49 @@
           ?>
           <!-- header_eof //-->
           <!-- body //-->
-          <table border="0" width="100%" cellspacing="2" cellpadding="2">
+          <table class="tableBody">
             <tr>
               <?php
               if ($srExp < 1) {
                 ?>
-                <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-                  <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-                    <!-- left_navigation //-->
-                    <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-                    <!-- left_navigation_eof //-->
-                  </table>
-                </td>
+                <?php //left_navigation
+                if (USE_ADMIN_TOP_MENU == 'false') {
+                  echo '<td class="columnLeft2">'.PHP_EOL;
+                  echo '<!-- left_navigation //-->'.PHP_EOL;       
+                  require_once(DIR_WS_INCLUDES . 'column_left.php');
+                  echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+                  echo '</td>'.PHP_EOL;      
+                }
+                ?>
                 <!-- body_text //-->
                 <?php
               } // end sr_exp
               ?>
-              <td class="boxCenter" width="100%" valign="top">
-                <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td colspan="2">
-                      <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                        <tr>
-                          <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_statistic.gif'); ?></td>
-                          <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-                        </tr>
-                        <tr>
-                          <td class="main" valign="top">Statistics</td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+              <td class="boxCenter">
+                <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_statistic.png'); ?></div>
+                <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+                <div class="main pdg2">Statistics</div>
+                <div class="clear"></div>
+                    
                   <?php
                   if ($srExp < 1) {
                     ?>
-                    <tr>
-                      <td colspan="2">
+                    
                         <form action="" method="get">
-                          <table border="0" style="border: 1px solid; border-color: #cccccc;" width="100%" cellspacing="0" cellpadding="0">
+                          <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
                             <tr>
-                              <td align="left" rowspan="2" class="menuBoxHeading">
+                              <td rowspan="2" class="menuBoxHeading txta-l">
                                 <input type="radio" name="report" value="1" <?php if ($srView == 1) echo "checked"; ?>><?php echo REPORT_TYPE_YEARLY; ?><br />
                                 <input type="radio" name="report" value="2" <?php if ($srView == 2) echo "checked"; ?>><?php echo REPORT_TYPE_MONTHLY; ?><br />
                                 <input type="radio" name="report" value="3" <?php if ($srView == 3) echo "checked"; ?>><?php echo REPORT_TYPE_WEEKLY; ?><br />
                                 <input type="radio" name="report" value="4" <?php if ($srView == 4) echo "checked"; ?>><?php echo REPORT_TYPE_DAILY; ?><br />
                               </td>
                               <td class="menuBoxHeading">
-                                <?php echo REPORT_START_DATE; ?><br />
+                                <?php echo REPORT_START_DATE;?><br />
                                 <select name="startD" size="1">
-                                  <?php
+                                  <?php                                  
                                   if ($startDate) {
-                                    $j = date("j", $startDate);
+                                    $j = date("j", $startDate);                                    
                                   } else {
                                     $j = 1;
                                   }
@@ -284,7 +278,7 @@
                                   ?>
                                 </select>
                               </td>
-                              <td rowspan="2" align="left" class="menuBoxHeading">
+                              <td rowspan="2" class="menuBoxHeading txta-l">
                                 <?php echo REPORT_DETAIL; ?><br />
                                 <select name="detail" size="1">
                                   <option value="0"<?php if ($srDetail == 0) echo "selected"; ?>><?php echo DET_HEAD_ONLY; ?></option>
@@ -303,7 +297,7 @@
                                   <option<?php if ($srMax == 50) echo " selected"; ?>>50</option>
                                 </select>
                               </td>
-                              <td rowspan="2" align="left" class="menuBoxHeading">
+                              <td rowspan="2" class="menuBoxHeading txta-l">
                                 <?php echo REPORT_STATUS_FILTER; ?><br />
                                 <select name="status" size="1">
                                   <option value="0"><?php echo REPORT_ALL; ?></option>
@@ -333,7 +327,7 @@
                                 </select>
                                 <br />
                               </td>
-                              <td rowspan="2" align="left" class="menuBoxHeading">
+                              <td rowspan="2" class="menuBoxHeading txta-l">
                                 <?php echo REPORT_EXP; ?><br />
                                 <select name="export" size="1">
                                   <option value="0" selected><?php echo EXP_NORMAL; ?></option>
@@ -403,30 +397,24 @@
                                 </select>
                               </td>
                             </tr>
-                            <tr>
-                              <td colspan="5" class="menuBoxHeading" align="right">
-                                <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
-                              </td>
-                            </tr>
-                          </table>
+                          </table>  
+                          <div class="main mrg5 txta-r">
+                            <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
+                          </div>                         
                         </form>
-                      </td>
-                    </tr>
+
                     <?php
                   } // end of ($srExp < 1)
                   ?>
-                  <tr>
-                    <td width="100%" valign="top">
-                      <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                        <tr>
-                          <td valign="top">
-                            <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                  
+                      
+                            <table class="tableCenter collapse">
                               <tr class="dataTableHeadingRow">
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_DATE; ?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ORDERS;?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ITEMS; ?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_REVENUE;?></td>
-                                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SHIPPING;?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE; ?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ORDERS;?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ITEMS; ?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_REVENUE;?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SHIPPING;?></td>
                               </tr>
                               <?php
                             } // end of if $srExp < 2 csv export
@@ -441,24 +429,24 @@
                                   switch ($srView) {
                                     case '3':
                                       ?>
-                                      <td class="dataTableContent" align="right"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                                      <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
                                       <?php
                                       break;
                                     case '4':
                                       ?>
-                                      <td class="dataTableContent" align="right"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
+                                      <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
                                       <?php
                                       break;
                                     default;
                                       ?>
-                                      <td class="dataTableContent" align="right"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                                      <td class="dataTableContent txta-r"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
                                      <?php
                                   }
                                   ?>
-                                  <td class="dataTableContent" align="right"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
-                                  <td class="dataTableContent" align="right"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
-                                  <td class="dataTableContent" align="right"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
-                                  <td class="dataTableContent" align="right"><?php echo $currencies->format($info[0]['shipping']); ?></td>
+                                  <td class="dataTableContent txta-r"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
+                                  <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
+                                  <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
+                                  <td class="dataTableContent txta-r"><?php echo $currencies->format($info[0]['shipping']); ?></td>
                                 </tr>
                                 <?php
                              } else {
@@ -478,7 +466,7 @@
                                       ?>
                                       <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
                                         <td class="dataTableContent">&nbsp;</td>
-                                        <td class="dataTableContent" align="left">
+                                        <td class="dataTableContent txta-l">
                                           <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
                                           <?php
                                           if (is_array($info[$i]['attr'])) {
@@ -495,10 +483,10 @@
                                           }
                                           ?>
                                         </td>
-                                        <td class="dataTableContent" align="right"><?php echo $info[$i]['pquant']; ?></td>
+                                        <td class="dataTableContent txta-r"><?php echo $info[$i]['pquant']; ?></td>
                                         <?php
                                         if ($srDetail == 2) {?>
-                                          <td class="dataTableContent" align="right"><?php echo $currencies->format($info[$i]['psum']); ?></td>
+                                          <td class="dataTableContent txta-r"><?php echo $currencies->format($info[$i]['psum']); ?></td>
                                           <?php
                                         } else {
                                           ?>
@@ -538,12 +526,8 @@
                             if ($srExp < 2) {
                             ?>
                           </table>
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
+                        
+                  
             </td>
             <!-- body_text_eof //-->
           </tr>
