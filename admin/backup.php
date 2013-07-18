@@ -207,20 +207,20 @@ require (DIR_WS_INCLUDES.'head.php');
                         $dir->close();
                       }
                     ?>
-                    <tr>
-                      <td class="smallText" colspan="3"><?php echo TEXT_BACKUP_DIRECTORY . ' ' . DIR_FS_BACKUP; ?></td>
-                      <td align="right" class="smallText"><?php if ( ($action != 'backup') && (isset($dir))) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=backup') . '">' . BUTTON_BACKUP . '</a>'; if ( ($action != 'restorelocal') && ($dir) ) echo '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=restorelocal') . '">' . BUTTON_RESTORE . '</a>'; ?></td>
-                    </tr>
-                    <?php
-                      if (defined('DB_LAST_RESTORE')) {
-                        ?>
-                        <tr>
-                          <td class="smallText" colspan="4"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></td>
-                        </tr>
-                        <?php
-                      }
-                    ?>
                   </table>
+                  <div class="smallText pdg2 flt-l"><?php echo TEXT_BACKUP_DIRECTORY . ' ' . DIR_FS_BACKUP; ?></div>
+                  <div class="smallText pdg2 flt-r"><?php if ( ($action != 'backup') && (isset($dir))) echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=backup') . '">' . BUTTON_BACKUP . '</a>'; if ( ($action != 'restorelocal') && ($dir) ) echo '&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=restorelocal') . '">' . BUTTON_RESTORE . '</a>'; ?></div>
+               
+                  <?php
+                  if (defined('DB_LAST_RESTORE')) {
+                  ?>
+                    <div class="clear"></div>
+                    <div class="smallText pdg2 flt-r"><?php echo TEXT_LAST_RESTORATION . ' ' . DB_LAST_RESTORE . ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'action=forget') . '">' . TEXT_FORGET . '</a>'; ?></div>
+
+                  <?php
+                  }
+                  ?>
+                  
                 </td>
                 <?php
                   $heading = array();

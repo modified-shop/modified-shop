@@ -167,9 +167,9 @@ if (xtc_not_null($action)) {
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
-                  <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                  <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                  <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
                 $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
@@ -258,7 +258,7 @@ if (xtc_not_null($action)) {
                           $installed = true;
                           ?>
                           <tr class="dataTableHeadingRow">
-                            <td colspan="5" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
+                            <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
                           </tr>
                           <?php
                         } elseif ($module->check() < 1 && !$deinstalled && $installed) {
@@ -268,12 +268,12 @@ if (xtc_not_null($action)) {
                           <tr class="dataTableHeadingRow">
                             <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_MODULES; ?></td>
                             <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_FILENAME; ?></td>
-                            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
-                            <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
-                            <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                            <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT_ORDER; ?></td>
+                            <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
+                            <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                           </tr>
                           <tr class="dataTableHeadingRow">
-                            <td colspan="5" align="center" class="dataTableHeadingContent" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
+                            <td colspan="5" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
                           </tr>
                           <?php
                         }
@@ -298,9 +298,9 @@ if (xtc_not_null($action)) {
                               ?>
                             </td>
                             <td class="dataTableContent"><?php echo str_replace('.php','',$file); ?></td>
-                            <td class="dataTableContent" align="right">
+                            <td class="dataTableContent txta-r">
                             <?php if (isset($module->sort_order) && is_numeric($module->sort_order)) echo $module->sort_order; ?>&nbsp;</td>
-                            <td class="dataTableContent" align="center">
+                            <td class="dataTableContent txta-c">
                               <?php
                                 if ($module->check() > 0) {
                                   if (isset($module->enabled) && $module->enabled) {
@@ -312,7 +312,7 @@ if (xtc_not_null($action)) {
                               ?>
                               &nbsp;
                             </td>
-                            <td class="dataTableContent" align="right"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                            <td class="dataTableContent txta-r"><?php if (isset($mInfo) && is_object($mInfo) && ($class == $mInfo->code) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $class) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                           </tr>
                           <?php
                           }
