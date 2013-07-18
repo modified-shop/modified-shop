@@ -129,140 +129,151 @@ require (DIR_WS_INCLUDES.'head.php');
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->
     <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
-      <tr>
-        <td class="columnLeft2">
-            <!-- left_navigation //-->
-            <?php require_once(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-        </td>
-        <!-- body_text //-->
-        <td class="boxCenter">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>          
-            <?php
-            if ($action == 'new' || $action == 'edit') {
-              $form_action = 'insert';
+    <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>          
+        <?php
+        if ($action == 'new' || $action == 'edit') {
+          $form_action = 'insert';
+          $expires_date = '';
+          if ( ($action == 'edit') && isset($sID) ) {
+            $form_action = 'update';
+            $product_query = xtc_db_query("-- /admin/specials.php
+                                            SELECT
+                                                  p.products_id,
+                                                  p.products_model,
+                                                  p.products_price,
+                                                  p.products_tax_class_id,
+                                                  s.specials_quantity,
+                                                  s.specials_new_products_price,
+                                                  s.expires_date,
+                                                  pd.products_name
+                                             FROM " . TABLE_PRODUCTS . " p,
+                                                  " . TABLE_PRODUCTS_DESCRIPTION . " pd,
+                                                  " . TABLE_SPECIALS . " s
+                                            WHERE p.products_id = pd.products_id
+                                              AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                              AND p.products_id = s.products_id
+                                              AND s.specials_id = '" . $sID ."'");
+            $product = xtc_db_fetch_array($product_query);
+            $sInfo = new objectInfo($product);
+            // BOF - Tomcraft - 2009-11-06 - preset expires_date for input-field
+            // build the expires date in the format YYYY-MM-DD
+            if ($sInfo->expires_date != 0) {
+              $expires_date = substr($sInfo->expires_date, 0, 4)."-".
+              substr($sInfo->expires_date, 5, 2)."-".
+              substr($sInfo->expires_date, 8, 2);
+            }	else {
               $expires_date = '';
-              if ( ($action == 'edit') && isset($sID) ) {
-                $form_action = 'update';
-                $product_query = xtc_db_query("-- /admin/specials.php
-                                                SELECT
-                                                      p.products_id,
-                                                      p.products_model,
-                                                      p.products_price,
-                                                      p.products_tax_class_id,
-                                                      s.specials_quantity,
-                                                      s.specials_new_products_price,
-                                                      s.expires_date,
-                                                      pd.products_name
-                                                 FROM " . TABLE_PRODUCTS . " p,
-                                                      " . TABLE_PRODUCTS_DESCRIPTION . " pd,
-                                                      " . TABLE_SPECIALS . " s
-                                                WHERE p.products_id = pd.products_id
-                                                  AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-                                                  AND p.products_id = s.products_id
-                                                  AND s.specials_id = '" . $sID ."'");
-                $product = xtc_db_fetch_array($product_query);
-                $sInfo = new objectInfo($product);
-                // BOF - Tomcraft - 2009-11-06 - preset expires_date for input-field
-                // build the expires date in the format YYYY-MM-DD
-                if ($sInfo->expires_date != 0) {
-                  $expires_date = substr($sInfo->expires_date, 0, 4)."-".
-                  substr($sInfo->expires_date, 5, 2)."-".
-                  substr($sInfo->expires_date, 8, 2);
-                }	else {
-                  $expires_date = '';
-                }
-                // EOF - Tomcraft - 2009-11-06 - preset expires_date for input-field
-              } else {
-                $sInfo = new objectInfo(array());
-                // create an array of products on special, which will be excluded from the pull down menu of products
-                // (when creating a new product on special)
-                $specials_array = array();
-                $specials_query = xtc_db_query("-- /admin/specials.php
-                                                SELECT p.products_id
-                                                  FROM " . TABLE_PRODUCTS . " p,
-                                                       " . TABLE_SPECIALS . " s
-                                                 WHERE s.products_id = p.products_id");
-                while ($specials = xtc_db_fetch_array($specials_query)) {
-                  $specials_array[] = $specials['products_id'];
-                }
-              }
+            }
+            // EOF - Tomcraft - 2009-11-06 - preset expires_date for input-field
+          } else {
+            $sInfo = new objectInfo(array());
+            // create an array of products on special, which will be excluded from the pull down menu of products
+            // (when creating a new product on special)
+            $specials_array = array();
+            $specials_query = xtc_db_query("-- /admin/specials.php
+                                            SELECT p.products_id
+                                              FROM " . TABLE_PRODUCTS . " p,
+                                                   " . TABLE_SPECIALS . " s
+                                             WHERE s.products_id = p.products_id");
+            while ($specials = xtc_db_fetch_array($specials_query)) {
+              $specials_array[] = $specials['products_id'];
+            }
+          }
 
 
-              $price=$sInfo->products_price;
-              $new_price=$sInfo->specials_new_products_price;
-              if (PRICE_IS_BRUTTO=='true'){
-                $price_netto=xtc_round($price,PRICE_PRECISION);
-                $new_price_netto=xtc_round($new_price,PRICE_PRECISION);
-                $price= ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-                $new_price= ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-              }
-              $price=xtc_round($price,PRICE_PRECISION);
-              $new_price=xtc_round($new_price,PRICE_PRECISION);              
-              ?>
+          $price=$sInfo->products_price;
+          $new_price=$sInfo->specials_new_products_price;
+          if (PRICE_IS_BRUTTO=='true'){
+            $price_netto=xtc_round($price,PRICE_PRECISION);
+            $new_price_netto=xtc_round($new_price,PRICE_PRECISION);
+            $price= ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+            $new_price= ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+          }
+          $price=xtc_round($price,PRICE_PRECISION);
+          $new_price=xtc_round($new_price,PRICE_PRECISION);              
+          ?>
                   
-                    <?php
-                    echo xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
-                    if ($form_action == 'update'){ 
-                      echo xtc_draw_hidden_field('specials_id', $sID);                
-                    }
-                    echo xtc_draw_hidden_field('products_up_id', $sInfo->products_id);
-                    ?>
-                    
-                    <table border="0" cellspacing="0" cellpadding="2">
-                      <tr>
-                        <td class="main"><?php echo TEXT_SPECIALS_PRODUCT; echo ($sInfo->products_name) ? "" :  ''; ?>&nbsp;</td>
-                        <td class="main"><?php echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' <small>(' . $xtPrice->xtcFormat($price,true). ')</small>' : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
-                      </tr>
-                      <?php
-                      if ($form_action == 'update') {
-                      ?>
-                      <tr>
-                        <td class="main"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?>:&nbsp;</td>
-                        <td class="main"><?php echo $sInfo->products_model;?></td>
-                      </tr>
-                      <?php
-                      }
-                      ?>
-                      <tr>
-                        <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;</td>
-                        <td class="main"><?php echo xtc_draw_input_field('specials_price', $new_price);?> </td>
-                      </tr>
-                      <tr>
-                        <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>&nbsp;</td>
-                        <td class="main"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity);?> </td>
-                      </tr>
-                      <tr>
-                        <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
-                        <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
-                      </tr>
-                    </table>
+            <?php
+            echo xtc_draw_form('new_special', FILENAME_SPECIALS, xtc_get_all_get_params(array('action', 'info', 'sID')) . 'action=' . $form_action);
+            if ($form_action == 'update'){ 
+              echo xtc_draw_hidden_field('specials_id', $sID);                
+            }
+            echo xtc_draw_hidden_field('products_up_id', $sInfo->products_id);
+            ?>
+            
+            <table class="tableConfig">
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_PRODUCT; echo ($sInfo->products_name) ? "" :  ''; ?>&nbsp;</td>
+                <td class="dataTableConfig col-middle"><?php echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' <small>(' . $xtPrice->xtcFormat($price,true). ')</small>' : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
+                <td class="dataTableConfig col-right">&nbsp;</td>
+              </tr>
+              <?php
+              if ($form_action == 'update') {
+              ?>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?>:&nbsp;</td>
+                <td class="dataTableConfig col-middle"><?php echo $sInfo->products_model;?></td>
+                <td class="dataTableConfig col-right">&nbsp;</td>
+              </tr>
+              <?php
+              }
+              ?>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;</td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_price', $new_price);?> </td>
+                <td class="dataTableConfig col-right">&nbsp;</td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>&nbsp;</td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity);?> </td>
+                <td class="dataTableConfig col-right">&nbsp;</td>
+              </tr>
+              <tr>
+                <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
+                <td class="dataTableConfig col-right">&nbsp;</td>
+              </tr>
+            </table>
 
-                    <div class="main" style="padding:2px"><br /><?php echo TEXT_SPECIALS_PRICE_TIP; ?></div>
-                    <div class="main" style="padding:2px"><br />
-                     <?php echo (($form_action == 'insert') ?
-                     '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'
-                     :
-                     '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sID) . '">' . BUTTON_CANCEL . '</a>'; ?>
-                    </div>
-                   </form>
-                 </td>             
-                <?php
-                // BEGIN LISTING TABLE
-                } else {
-              ?>              
-              
-                  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+            <div class="main" style="padding:6px;border-bottom: 1px solid #a3a3a3;"><?php echo TEXT_SPECIALS_PRICE_TIP; ?></div>
+            <div class="main mrg5 nobr">
+             <?php echo (($form_action == 'insert') ?
+             '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'
+             :
+             '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'). '&nbsp;&nbsp;&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sID) . '">' . BUTTON_CANCEL . '</a>'; ?>
+            </div>
+           </form>
+      </td>                   
+        <?php
+        // BEGIN LISTING TABLE
+        } else {
+        ?>              
+        <table class="tableCenter">
+          <tr>
+            <td class="boxCenterLeft">
+              <table class="tableBoxCenter collapse">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
                       <td class="dataTableHeadingContent"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?></td>
-                      <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_PRODUCTS_QUANTITY; ?></td>
-                      <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_SPECIALS_QUANTITY; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_STATUS; ?></td>
-                      <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_PRODUCTS_QUANTITY; ?></td>
+                      <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_SPECIALS_QUANTITY; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_EXPIRES_DATE; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_PRODUCTS_PRICE; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_STATUS; ?></td>
+                      <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                     </tr>
                     <?php
                     $specials_query_raw = "-- /admin/specials.php
@@ -318,10 +329,10 @@ require (DIR_WS_INCLUDES.'head.php');
                   <tr <?php echo $tr_attributes;?>>
                   <td  class="dataTableContent"><?php echo $specials['products_name']; ?></td>
                   <td  class="dataTableContent"><?php echo $specials['products_model']; ?></td>
-                  <td  class="dataTableContent" align="center"><?php echo $specials['products_quantity']; ?></td>
-                  <td  class="dataTableContent" align="center"><?php echo $specials['specials_quantity']; ?></td>
-                  <td  class="dataTableContent" align="right"><?php echo (isset($specials['expires_date']) ? xtc_date_short($specials['expires_date']): '&nbsp;'); ?></td>
-                  <td  class="dataTableContent" align="right">
+                  <td  class="dataTableContent txta-c"><?php echo $specials['products_quantity']; ?></td>
+                  <td  class="dataTableContent txta-c"><?php echo $specials['specials_quantity']; ?></td>
+                  <td  class="dataTableContent txta-r"><?php echo (isset($specials['expires_date']) ? xtc_date_short($specials['expires_date']): '&nbsp;'); ?></td>
+                  <td  class="dataTableContent txta-r">
                     <span class="oldPrice">
                       <?php echo $xtPrice->xtcFormat($specials['products_price'],true); ?>
                     </span>
@@ -330,7 +341,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <?php echo $xtPrice->xtcFormat($specials['specials_new_products_price'],true); ?>
                     </span>
                   </td>
-                  <td  class="dataTableContent" align="right">
+                  <td  class="dataTableContent txta-r">
                     <?php
                     if ($specials['status'] == '1') {
                       echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-right:5px;"') . '<a href="' . xtc_href_link(FILENAME_SPECIALS, 'action=setflag&flag=0&id=' . $specials['specials_id'] . '&page=' . $page_id, 'NONSSL') . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
@@ -339,7 +350,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     ?>
                     </td>
-                    <td class="dataTableContent" align="right"><?php if (isset($sInfo) && (is_object($sInfo)) && ($specials['specials_id'] == $sInfo->specials_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $specials['specials_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                    <td class="dataTableContent txta-r"><?php if (isset($sInfo) && (is_object($sInfo)) && ($specials['specials_id'] == $sInfo->specials_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $specials['specials_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                   </tr>
                   <?php
                 }
@@ -347,58 +358,62 @@ require (DIR_WS_INCLUDES.'head.php');
               </table>
               <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
               <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
+             
               <?php
               if (empty($action)) {
               ?>
                 <div class="clear"></div>
                 <div class="smallText flt-r pdg2"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&action=new') . '">' . BUTTON_NEW_PRODUCTS . '</a>'; ?></div>
-                <?php
-                }
-                ?>                                
-                </td>
-                <?php
-                $heading = array();
-                $contents = array();
-                switch ($action) {
-                  case 'delete':
-                    $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</b>');
-                    $contents = array('form' => xtc_draw_form('specials', FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id . '&action=deleteconfirm'));
-                    $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
-                    $contents[] = array('text' => '<br /><b>' . $sInfo->products_name . '</b>');
-                    $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id) . '">' . BUTTON_CANCEL . '</a>');
-                    break;
-                  default:
-                    if (isset($sInfo) && is_object($sInfo)) {
-                      $heading[] = array('text' => '<b>' . $sInfo->products_name . '</b>');
-                      $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
-                      $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($sInfo->specials_date_added));
-                      $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($sInfo->specials_last_modified));
-                      $contents[] = array('align' => 'center', 'text' => '<br />' . xtc_product_thumb_image($sInfo->products_image, $sInfo->products_name, defined('SMALL_IMAGE_WIDTH') ? SMALL_IMAGE_WIDTH : '', defined('SMALL_IMAGE_HEIGHT') ? SMALL_IMAGE_HEIGHT : ''));
-                      $contents[] = array('text' => '<br />' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->products_price,true));
-                      $contents[] = array('text' => '' . TEXT_INFO_NEW_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->specials_new_products_price,true));
-                      $contents[] = array('text' => '' . TEXT_INFO_PERCENTAGE . ' ' . number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) . '%');
-                      $contents[] = array('text' => '<br />' . TEXT_INFO_EXPIRES_DATE . ' <b>' . xtc_date_short($sInfo->expires_date) . '</b>');
-                      $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . xtc_date_short($sInfo->date_status_change));
-                    }
-                    break;
-                }
-                if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-                  echo '            <td class="boxRight">' . "\n";
-                  $box = new box;
-                  echo $box->infoBox($heading, $contents);
-                  echo '            </td>' . "\n";
-                }
+              <?php
               }
-              // END LISTING TABLE
-              ?>
-                       
-        <!-- body_text_eof //-->
-      </tr>
-    </table>
-    <!-- body_eof //-->
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
-  </body>
+              ?>                                
+            </td>
+            <?php
+            $heading = array();
+            $contents = array();
+            switch ($action) {
+              case 'delete':
+                $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_SPECIALS . '</b>');
+                $contents = array('form' => xtc_draw_form('specials', FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id . '&action=deleteconfirm'));
+                $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
+                $contents[] = array('text' => '<br /><b>' . $sInfo->products_name . '</b>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id) . '">' . BUTTON_CANCEL . '</a>');
+                break;
+              default:
+                if (isset($sInfo) && is_object($sInfo)) {
+                  $heading[] = array('text' => '<b>' . $sInfo->products_name . '</b>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&sID=' . $sInfo->specials_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($sInfo->specials_date_added));
+                  $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($sInfo->specials_last_modified));
+                  $contents[] = array('align' => 'center', 'text' => '<br />' . xtc_product_thumb_image($sInfo->products_image, $sInfo->products_name, defined('SMALL_IMAGE_WIDTH') ? SMALL_IMAGE_WIDTH : '', defined('SMALL_IMAGE_HEIGHT') ? SMALL_IMAGE_HEIGHT : ''));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_ORIGINAL_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->products_price,true));
+                  $contents[] = array('text' => '' . TEXT_INFO_NEW_PRICE . ' ' . $xtPrice->xtcFormat($sInfo->specials_new_products_price,true));
+                  $contents[] = array('text' => '' . TEXT_INFO_PERCENTAGE . ' ' . number_format(100 - (($sInfo->specials_new_products_price / $sInfo->products_price) * 100)) . '%');
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_EXPIRES_DATE . ' <b>' . xtc_date_short($sInfo->expires_date) . '</b>');
+                  $contents[] = array('text' => '' . TEXT_INFO_STATUS_CHANGE . ' ' . xtc_date_short($sInfo->date_status_change));
+                }
+                break;
+            }
+            if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+              echo '            <td class="boxRight">' . "\n";
+              $box = new box;
+              echo $box->infoBox($heading, $contents);
+              echo '            </td>' . "\n";
+            }
+          }
+          // END LISTING TABLE
+          ?>
+          </tr>
+        </table>
+      </td>
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
+</body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
