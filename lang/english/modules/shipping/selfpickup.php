@@ -21,6 +21,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+define('MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE', 'Self Pickup');
 define('MODULE_SHIPPING_SELFPICKUP_TEXT_DESCRIPTION', 'Pickup By The Customer');
 define('MODULE_SHIPPING_SELFPICKUP_TEXT_TITLE', 'Self Pickup.');
 define('MODULE_SHIPPING_SELFPICKUP_TEXT_WAY', 'Self Pickup at our Company.');
