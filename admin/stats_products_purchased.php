@@ -120,7 +120,8 @@
       </table>             
       <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $maxrows, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
       <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $maxrows, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
-      <div class="smallText clear pdg2 flt-l">
+      <div class="clear"></div> 
+      <div class="smallText pdg2 flt-l">
         <?php echo TEXT_ROWS.'&nbsp;'. xtc_draw_form('getmaxrows', FILENAME_STATS_PRODUCTS_PURCHASED, 'page='.$_GET['page']) . xtc_draw_input_field('maxrows', $maxrows, 'style="width:50px"'); ?>
           <input type="image" src="images/icon_arrow_right.gif" style="vertical-align:bottom" alt="los" title="los" />
         </form>
