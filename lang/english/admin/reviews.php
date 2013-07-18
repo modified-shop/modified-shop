@@ -46,7 +46,7 @@ define('TEXT_INFO_REVIEW_SIZE', 'Size:');
 define('TEXT_INFO_PRODUCTS_AVERAGE_RATING', 'Average Rating:');
 
 define('TEXT_OF_5_STARS', '%s of 5 Stars!');
-define('TEXT_GOOD', '<small><font color="#ff0000"><b>GOOD</b></font></small>');
-define('TEXT_BAD', '<small><font color="#ff0000"><b>BAD</b></font></small>');
+define('TEXT_GOOD', '<span class="smallText colorRed"><b>GOOD</b></font></span>');
+define('TEXT_BAD', '<span class="smallText colorRed"><b>BAD</b></font></span>');
 define('TEXT_INFO_HEADING_DELETE_REVIEW', 'Delete Review');
 ?>
