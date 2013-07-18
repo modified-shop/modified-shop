@@ -82,7 +82,7 @@
                             'methods' => array(array('id' => $this->code,
                                                      'title' => $stitle,
                                                      'cost' => $preise[$price_id])));
-       if ($this->tax_class > 0) {
+      if ($this->tax_class > 0) {
         $this->quotes['tax'] = xtc_get_tax_rate($this->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
       }
     
