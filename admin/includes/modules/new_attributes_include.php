@@ -142,30 +142,30 @@ if ($_POST['cpath'] != '') {
             echo '<td class="main">'. PHP_EOL;
             echo '<input type="checkbox" name="optionValues[]" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
             echo '</td>'. PHP_EOL;
-            echo '<td class="main" align="left"><input type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
-            echo '<td class="main" align="left"><input type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?$attr_array['attributes_model']:'') . '" size="15"></td>'. PHP_EOL;
-            echo '<td class="main" align="left"><input type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
-            echo '<td class="main" align="left"><input type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
-            echo '<td style="width:35px;" class="main" align="left">'. PHP_EOL;
+            echo '<td class="main"><input type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
+            echo '<td class="main"><input type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?$attr_array['attributes_model']:'') . '" size="15"></td>'. PHP_EOL;
+            echo '<td class="main"><input type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
+            echo '<td class="main"><input type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
+            echo '<td style="width:35px;" class="main">'. PHP_EOL;
             echo '   <select name="' . $current_value_id . '_weight_prefix">'. PHP_EOL;
             echo '     <option value="+"' . (isset($attr_array['posCheck_weight'])?$attr_array['posCheck_weight']:'') . '>+</option>'. PHP_EOL;
             echo '     <option value="-"' . (isset($attr_array['negCheck_weight'])?$attr_array['negCheck_weight']:'') . '>-</option>'. PHP_EOL;
             echo '    </select>'. PHP_EOL;
             echo '  </td>'. PHP_EOL;
-            echo '<td width="10%" class="main" align="left"><input type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight'])?$attr_array['options_values_weight']:'') . '" size="10"></td>'. PHP_EOL;
+            echo '<td width="10%" class="main"><input type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight'])?$attr_array['options_values_weight']:'') . '" size="10"></td>'. PHP_EOL;
             // brutto Admin
             if (PRICE_IS_BRUTTO=='true'){
               $attribute_value_price_calculate = $xtPrice->xtcFormat(xtc_round((isset($attr_array['options_values_price'])?$attr_array['options_values_price']:0)*((100+(xtc_get_tax_rate(xtc_get_tax_class_id($_POST['current_product_id']))))/100),PRICE_PRECISION),false);
             } else {
               $attribute_value_price_calculate = xtc_round((isset($attr_array['options_values_price'])?$attr_array['options_values_price']:0),PRICE_PRECISION);
             }
-            echo '<td style="width:35px;" class="main" align="left">'. PHP_EOL;
+            echo '<td style="width:35px;" class="main">'. PHP_EOL;
             echo '   <select name="' . $current_value_id . '_prefix">'. PHP_EOL;
             echo '     <option value="+"' . (isset($attr_array['posCheck'])?$attr_array['posCheck']:'') . '>+</option>'. PHP_EOL;
             echo '     <option value="-"' . (isset($attr_array['negCheck'])?$attr_array['negCheck']:'') . '>-</option>'. PHP_EOL;
             echo '    </select>'. PHP_EOL;
             echo '  </td>'. PHP_EOL;
-            echo '<td style="white-space: nowrap;" class="main" align="left"><input type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. PHP_EOL;
+            echo '<td style="white-space: nowrap;" class="main"><input type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. PHP_EOL;
             // brutto Admin
             if (PRICE_IS_BRUTTO=='true'){
                echo '<span style="font-size:11px">'.TEXT_NETTO .'<strong>'.$xtPrice->xtcFormat(xtc_round((isset($attr_array['options_values_price'])?$attr_array['options_values_price']:0),PRICE_PRECISION),true).'</strong></span>  '. PHP_EOL;

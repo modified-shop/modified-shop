@@ -100,7 +100,7 @@ if ($_GET['action'] == 'delete_product_option') {
                           );
   $options_values = xtc_db_fetch_array($options);
 ?>
-                  <table border="0" cellspacing="0" cellpadding="2" class="option-table">
+                  <table class="option-table">
                     <tr>
                       <td class="pageHeading" colspan="3">&nbsp;<?php echo $options_values['products_options_name']; ?>&nbsp;</td>
                     </tr>
@@ -128,7 +128,7 @@ if ($_GET['action'] == 'delete_product_option') {
   //Produkt zugeordnet - Warnung - Attributemerkmal kann nicht gelöscht werden
 ?>
                     <tr class="dataTableHeadingRow">
-                      <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
+                      <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
                     </tr>
@@ -140,7 +140,7 @@ while ($products_values = xtc_db_fetch_array($products)) {
   $rows++;
 ?>
                     <tr class="<?php echo ($rows % 2) ? 'attributes-even' : 'attributes-odd'; ?>">
-                      <td align="center" class="smallText">&nbsp;<?php echo $products_values['products_id']; ?>&nbsp;</td>
+                      <td class="smallText txta-c">&nbsp;<?php echo $products_values['products_id']; ?>&nbsp;</td>
                       <td class="smallText">&nbsp;<?php echo $products_values['products_name']; ?>&nbsp;</td>
                       <td class="smallText">&nbsp;<?php echo $products_values['products_options_values_name']; ?>&nbsp;</td>
                     </tr>
@@ -185,7 +185,7 @@ while ($products_values = xtc_db_fetch_array($products)) {
 } else {
   // ############  BOF DEFAULT  ############ //
 ?>
-                  <table border="0" cellspacing="0" cellpadding="2" class="option-table">
+                  <table class="option-table">
                     <tr>
                       <td colspan="4" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;                          
                           <form name="option_order_by" action="<?php echo FILENAME_PRODUCTS_ATTRIBUTES; ?>">
@@ -207,7 +207,7 @@ while ($products_values = xtc_db_fetch_array($products)) {
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_SORTORDER; ?>&nbsp;</td>
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
-                      <td class="dataTableHeadingContent" align="center">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                      <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                     </tr>
                     <tr>
                       <td colspan="4"><?php echo xtc_black_line(); ?></td>
@@ -227,6 +227,10 @@ if ($_GET['action'] != 'update_option') {
     $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
     $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
   }
+  //BOC Filter
+  $inputs.= TABLE_HEADING_OPT_FILTER.': <input type="checkbox" name="is_filter" value="1" />'.'&nbsp;&nbsp;&nbsp;';
+  $inputs.= TABLE_HEADING_OPT_ONLY_FILTER .': <input type="checkbox" name="is_only_filter" value="1" />';
+  //EOC Filter
   ?>
                     <tr>
                       <td colspan="4"><?php echo xtc_black_line(); ?></td>
@@ -234,10 +238,10 @@ if ($_GET['action'] != 'update_option') {
                     <form name="options" action="<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_options&option_page=' . $option_page, 'NONSSL');?>" method="post">
                     <input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">
                     <tr style="background-color: #d4d4d4;">
-                       <td align="center" class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
+                      <td align="center" class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
                       <td class="smallText"><?php echo TABLE_HEADING_SORTORDER . ':&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;" value="' . $option_name['products_options_sortorder'] . '">'; ?></td>
-                      <td class="smallText"><?php echo $inputs; ?></td>
-                      <td align="center" class="smallText">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
+                      <td class="smallText"><?php echo $inputs; ?></td>                      
+                      <td class="smallText txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
                     </tr>
                     </form>
                     <tr>
@@ -254,8 +258,11 @@ while ($options_values = xtc_db_fetch_array($options)) {
   if (($_GET['action'] == 'update_option') && ($_GET['option_id'] == $options_values['products_options_id'])) {
     $inputs = '';
     for ($i = 0, $n = sizeof($languages);$i < $n;$i++) {
+      $add_select = '';
+      $add_select .= 'is_filter, is_only_filter,'; //Filter
       $option_name = xtc_db_query("-- products_attributes.php
-                                  SELECT products_options_name
+                                  SELECT $add_select
+                                  products_options_name
                                     FROM " . TABLE_PRODUCTS_OPTIONS . "
                                    WHERE products_options_id = '" . $options_values['products_options_id'] . "'
                                      AND language_id = '" . $languages[$i]['id'] . "'"
@@ -264,20 +271,24 @@ while ($options_values = xtc_db_fetch_array($options)) {
       $lang_img = '<span style="float:left; padding-top:2px;">'. xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'].'/admin/images/'.$languages[$i]['image'], $languages[$i]['name']) . '</span>';
       $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;" value="' . $option_name['products_options_name'] . '">&nbsp;<br />';
     }
+    //BOC Filter
+    $inputs.= TABLE_HEADING_OPT_FILTER.': <input type="checkbox" name="is_filter" value="1"'.($options_values['is_filter'] == 1 ? ' checked="checked"' : false) .' />'.'&nbsp;&nbsp;&nbsp;';
+    $inputs.= TABLE_HEADING_OPT_ONLY_FILTER .': <input type="checkbox" name="is_only_filter" value="1"'.($options_values['is_only_filter'] == 1 ? ' checked="checked"' : false) .' />';
+    //EOC Filter
   ?>
                     <tr>
                       <td colspan="4"><?php echo xtc_black_line(); ?></td>
                     </tr>
                     <form name="option" action="<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_name&option_page='.$_GET['option_page'], 'NONSSL') ;?>" method="post">
                     <tr style="background-color: #d4d4d4;">
-                       <td align="center" class="smallText">
+                      <td class="smallText txta-c">
                         <?php echo $options_values['products_options_id']; ?><input type="hidden" name="option_id" value="<?php echo $options_values['products_options_id']; ?>">
                       </td>
                       <td align="left" class="smallText">
                         <?php echo TABLE_HEADING_SORTORDER; ?>:&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;" value="<?php echo $options_values['products_options_sortorder']; ?>">
-                      </td>
+                      </td>                      
                       <td class="smallText"><?php echo $inputs; ?></td>
-                      <td align="center" class="smallText">
+                      <td class="smallText txta-c update">
                         <?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;
                         <?php //BOF - webkiste - auf der selben Seite bleiben ?>
                         <?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $_GET['option_page'] .'', 'NONSSL')); ?>
@@ -294,10 +305,10 @@ while ($options_values = xtc_db_fetch_array($options)) {
      //Standard
   ?>
                       <tr class="<?php echo (floor($rows/2) == ($rows/2) ? 'attributes-even' : 'attributes-odd'); ?>">
-                        <td align="center" class="smallText">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
-                        <td class="smallText">&nbsp;<?php echo $options_values["products_options_sortorder"]; ?>&nbsp;</td>
-                        <td class="smallText">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;</td>
-                        <td align="center" class="smallText">
+                        <td class="smallText txta-c">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
+                        <td class="smallText">&nbsp;<?php echo $options_values["products_options_sortorder"]; ?>&nbsp;</td>                        
+                        <td class="smallText">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;<?php echo ($options_values['is_filter'] == 1 ? ' (Filter)' : false)?>&nbsp;</td>
+                        <td class="smallText txta-c">
                           <?php echo xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&option_order_by=' .
                           $option_order_by . '&option_page=' . $option_page, 'NONSSL')); ?>&nbsp;&nbsp;
                            <?php
