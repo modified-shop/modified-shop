@@ -114,7 +114,7 @@
         break;
 
       case 'install':
-      case 'remove':
+      case 'removeconfirm':
       case 'resetconfirm':
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
@@ -124,11 +124,11 @@
             $module->install();
             // restore old values
             xtc_restore_configuration($module->keys());
-          } elseif ($action == 'remove') {
+          } elseif ($action == 'removeconfirm') {
             // save old values
             xtc_backup_configuration($module->keys());
             $module->remove();
-          } elseif ($action == 'reset') {
+          } elseif ($action == 'resetconfirm') {
             // reset to defualt values 
             xtc_reset_configuration($module->keys());           
             $module->remove();
@@ -404,7 +404,14 @@ if (xtc_not_null($action) && !$box) {
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=resetconfirm'));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESET);
-                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESET .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESET .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
+                    break;
+
+                case 'remove':
+                    $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm'));
+                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_REMOVE);
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_MODULE_REMOVE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
 
                   default:
@@ -434,7 +441,7 @@ if (xtc_not_null($action) && !$box) {
                         }
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                         $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset&box=1') . '">' . BUTTON_RESET . '</a>'.
-                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
+                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove&box=1') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
                                                                            (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
                                                                              ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
                                                                              : '')
