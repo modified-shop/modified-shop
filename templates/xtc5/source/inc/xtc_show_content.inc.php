@@ -45,16 +45,16 @@
     if ($in_path) $content_active_parent = " activeparent".$level; 
     
     //Aktiven Content markieren
-    $cat_active = '';
-    $this_category = array_pop($content_path); //Letzter Eintrag im Array ist die aktuelle Content
-    if ($this_category == $counter) $cat_active = " active".$level;
+    $content_active = '';
+    $this_content = array_pop($content_path); //Letzter Eintrag im Array ist der aktuelle Content
+    if ($this_content == $counter) $content_active = " active".$level;
     //EOF +++ Content markieren +++
 
     //BOF +++ Content Linkerstellung +++  
     if (trim($content_string == '')) $content_string = "\n"; //Zeilenschaltung Codedarstellung  
     $content_string .= $ul; //UL LI Versschachtelung
     $content_string .= $tab; //Tabulator Codedarstellung
-    $content_string .= '<li class="level'.$level.$cat_active.$cat_active_parent.'">';
+    $content_string .= '<li class="level'.$level.$content_active.$content_active_parent.'">';
     $content_string .= '<a href="'.xtc_href_link(FILENAME_CONTENT, 'coID='.$content_array[$counter]['coID']).'" title="'. $content_array[$counter]['name'] . '">';
     $content_string .= $content_array[$counter]['name'];
     $content_string .= '</a></li>';

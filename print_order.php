@@ -21,18 +21,23 @@ require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 
 $smarty = new Smarty;
 
-$smarty->assign('language', $_SESSION['language']);
 $smarty->assign('base_href', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+  //BOF - GTB - 2010-08-03 - Security Fix - Base
+  //$path = DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/';
+  $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+  //$smarty->assign('tpl_path', $path);
+  //EOF - GTB - 2010-08-03 - Security Fix - Base
 
 $oID = (int) $_GET['oID'];
+
 // check if custmer is allowed to see this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
                                     WHERE orders_id=".$oID);
 $order_check = xtc_db_fetch_array($order_query_check);
-//BOF - GTB - 2010-09-15 - change Print Button to Form for Guests
-if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check['customers_id']) || (isset($_POST['customer_id']) && $_POST['customer_id'] == $order_check['customers_id'])) {
-//EOF - GTB - 2010-09-15 - change Print Button to Form for Guests
+
+if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check['customers_id']) 
+    || (isset($_POST['customer_id']) && $_POST['customer_id'] == $order_check['customers_id'])) {
 
   // get order data
   include (DIR_WS_CLASSES.'order.php');
@@ -41,16 +46,19 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
   $smarty->assign('address_label_payment', xtc_address_format($order->billing['format_id'], $order->billing, 1, '', '<br />'));
   $smarty->assign('csID', $order->customer['csID']);
+
   // get products data
   $order_total = $order->getTotalData($oID);
   $smarty->assign('order_data', $order->getOrderData($oID));
   $smarty->assign('order_total', $order_total['data']);
-  
-  //allow duty-note in print_order
+
+  // allow duty-note in print_order
   $smarty->assign('DELIVERY_DUTY_INFO', $main->getDeliveryDutyInfo($order->delivery['country_iso_2']));
 
   // assign language to template for caching
-  $smarty->assign('language', $_SESSION['language']);
+  $smarty->assign('language', $order->info['language']);  
+  $smarty->assign('charset', $_SESSION['language_charset'] );
+
   $smarty->assign('oID', (int) $_GET['oID']);
   $payment_method = false; //DokuMan - 2010-03-18 - set undefined variable
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
@@ -60,14 +68,6 @@ if ((isset($_SESSION['customer_id']) && $_SESSION['customer_id'] == $order_check
   $smarty->assign('PAYMENT_METHOD', $payment_method);
   $smarty->assign('COMMENT', $order->info['comments']);
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
-  //BOF - GTB - 2010-08-03 - Security Fix - Base
-  //$path = DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/';
-  $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-  //$smarty->assign('tpl_path', $path);
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
-  //BOF - web28 - 2010-08-17 - define missing charset
-  $smarty->assign('charset', $_SESSION['language_charset'] );
-  //EOF - web28 - 2010-08-17 - define missing charset
 
   // dont allow cache
   $smarty->caching = 0;
