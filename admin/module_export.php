@@ -106,7 +106,7 @@
         //EOF NEW MODULE PROCESSING
         } else {
           $module->process($file);
-          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class));
+          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $_GET['module']));
         }
         break;
 
@@ -126,7 +126,7 @@
             $module->remove();
           }
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $class));
+        xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $_GET['module']));
         break;
     }
   }
