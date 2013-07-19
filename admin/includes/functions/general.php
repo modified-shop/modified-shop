@@ -195,7 +195,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_redirect($url) {
     global $logger;
-    header('Location: '.$url);
+    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     if (STORE_PAGE_PARSE_TIME == 'true') {
       if (!is_object($logger))
         $logger = new logger;
