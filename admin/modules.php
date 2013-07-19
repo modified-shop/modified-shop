@@ -26,7 +26,8 @@
   $installed = false;
   $deinstalled = false;
 
-  $set = (isset($_GET['set']) ? $_GET['set'] : '');
+  $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : '');
+  $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
   if (xtc_not_null($set)) {
     switch ($set) {
       case 'shipping':
@@ -61,7 +62,7 @@
         while (list($key, $value) = each($_POST['configuration'])) {
           xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . $value . "' where configuration_key = '" . $key . "'");
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
+        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class));
         break;
 
       case 'install':
@@ -69,10 +70,10 @@
       case 'update':
       case 'reset':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
-        $class = basename($_GET['module']);
+        $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
-          $module = new $class(0);
+          $module = new $class();
           if ($action == 'install') {
             $module->install();
             // restore old values
@@ -85,12 +86,14 @@
             // update keys             
             $module->update();
           } elseif ($action == 'reset') {
-            // reset to defualt values            
-            $module->reset();
+            // reset to defualt values 
+            xtc_reset_configuration($module->keys());           
+            $module->remove();
+            $module->install();
           }
           
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']));
+        xtc_redirect(xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class));
         break;
     }
   }
@@ -132,8 +135,8 @@
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action)) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
-  if (file_exists('includes/css/'.basename($_GET['module']).'.css')) {
-    echo '<link href="includes/css/'.basename($_GET['module']).'.css" rel="stylesheet" type="text/css" />';
+  if (file_exists('includes/css/'.basename($module_class).'.css')) {
+    echo '<link href="includes/css/'.basename($module_class).'.css" rel="stylesheet" type="text/css" />';
   }
 }
 ?>
@@ -250,7 +253,7 @@ if (xtc_not_null($action)) {
                           }
                           // EOF - DokuMan - 2011-05-10 revise fix for sorting of modules
                         }
-                        if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
+                        if ((!isset($module_class) || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                           $module_info = get_module_info($module);
                           $mInfo = new objectInfo($module_info);                          
                         }
@@ -342,17 +345,17 @@ if (xtc_not_null($action)) {
               switch ($action) {
                 case 'removepaypal':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=remove'));
+                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=remove'));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_DELETE_PAYPAL.'<br /><br />'.$mInfo->description);
                     $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('paypaldelete').' '.BUTTON_MODULE_REMOVE);
-                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_START .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']).'">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_START .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
                     break;
                   // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
                 case 'edit':
-                  if (isset($_GET['module']) && !isset($mInfo)) {
+                  if (isset($module_class) && !isset($mInfo)) {
                     $heading = array();
                     $contents = array();
-                    $class = basename($_GET['module']);
+                    $class = basename($module_class);
                     if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php')) {
                       include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class. '.php');
                     }  
@@ -376,9 +379,9 @@ if (xtc_not_null($action)) {
                   }
                   $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                   $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                  $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module'] . '&action=save'));
+                  $contents = array('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=save'));
                   $contents[] = array('text' => $keys);
-                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $_GET['module']) . '">' . BUTTON_CANCEL . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class) . '">' . BUTTON_CANCEL . '</a>');
                   break;
 
                 default:
@@ -408,7 +411,8 @@ if (xtc_not_null($action)) {
                       }
                       $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                       $contents[] = array('align' => 'center', 
-                                          'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'. 
+                                          'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset') . '">' . BUTTON_RESET . '</a>'.
+                                                    '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'. 
                                                     '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>'.
                                                     $mInfo->properties['button_update'].$mInfo->properties['button_reset']
                                                     );
