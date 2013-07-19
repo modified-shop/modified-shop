@@ -501,3 +501,4 @@ define ('CONFIG_MIN_VALUE_WARNING', '"% s" WARNING:% s input was ignored [Minimu
 define ('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Display period in seconds:% s After this time, the entries will be deleted.');
 
 define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Products Model');
+define('TEXT_INFO_MODULE_RESET', 'Reset all Definitions ?<br/><br/><b>ATTENTION</b>: All variables from this Module will be deleted.');
