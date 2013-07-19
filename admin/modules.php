@@ -87,9 +87,13 @@
             $module->update();
           } elseif ($action == 'reset') {
             // reset to defualt values 
-            xtc_reset_configuration($module->keys());           
-            $module->remove();
-            $module->install();
+            xtc_reset_configuration($module->keys());  
+            if (is_callable(array($module, 'reset'))) {
+              $module->reset();
+            } else {
+              $module->remove();
+              $module->install();
+            }
           }
           
         }
@@ -253,7 +257,7 @@ if (xtc_not_null($action)) {
                           }
                           // EOF - DokuMan - 2011-05-10 revise fix for sorting of modules
                         }
-                        if ((!isset($module_class) || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
+                        if ((!$module_class || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                           $module_info = get_module_info($module);
                           $mInfo = new objectInfo($module_info);                          
                         }
@@ -414,7 +418,7 @@ if (xtc_not_null($action)) {
                                           'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset') . '">' . BUTTON_RESET . '</a>'.
                                                     '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'. 
                                                     '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>'.
-                                                    $mInfo->properties['button_update'].$mInfo->properties['button_reset']
+                                                    (isset($mInfo->properties['button_update']) ? $mInfo->properties['button_update'] : '')
                                                     );
                       $contents[] = array('text' => '<br />' . $mInfo->description);
                       if (isset($mInfo->extended_description) && $mInfo->extended_description != '') {
