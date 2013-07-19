@@ -102,7 +102,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 			
 			// check if the request is for the correct shop number
 			if (!empty($this->params['shop_number']) && ($this->params['shop_number'] != $this->config->getShopNumber())) {
-				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_SHOP_NUMBER, "'{$this->params['shop_number']}'");
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_SHOP_NUMBER, "{$this->params['shop_number']}");
 			}
 
 			// check if an action to call has been passed, is known and enabled
@@ -112,13 +112,13 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 
 			// check if the action is white-listed
 			if (!in_array($this->params['action'], $this->actionWhitelist)) {
-				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_ACTION, "'{$this->params['action']}'");
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_ACTION, "{$this->params['action']}");
 			}
 
 			// check if action is enabled in the config
 			$configArray = $this->config->toArray();
 			if (empty($configArray['enable_'.$this->params['action']])) {
-				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION, "'{$this->params['action']}'");
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION, "{$this->params['action']}");
 			}
 			
 			// enable debugging if requested
@@ -794,6 +794,12 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 		);
 		
 		$response = $this->sendRequest($request);
+		
+		$responseData = $response->getData();
+		if(!isset($responseData["keywords"]) || !isset($responseData["skip_keywords"])) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::MERCHANT_API_INVALID_RESPONSE, "\"keyword\" or \"skip_keyword\" is not set. Response: " . var_export($responseData, true));
+		}
+		
 		return $response->getData();
 	}
 	

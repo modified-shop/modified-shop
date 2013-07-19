@@ -203,14 +203,14 @@ class ShopgateMobileRedirect extends ShopgateObject implements ShopgateMobileRed
 		if(is_array($keyword)){
 			foreach($keyword as $word){
 				foreach($this->redirectKeywords as $key => $mobileKeyword){
-					if(mb_strtolower($word) == mb_strtolower($mobileKeyword)){
+					if(strtolower($word) == strtolower($mobileKeyword)){
 						unset($this->redirectKeywords[$key]);
 					}
 				}
 			}
 		} else {
 			foreach($this->redirectKeywords as $key => $mobileKeyword){
-				if(mb_strtolower($keyword) == mb_strtolower($mobileKeyword)){
+				if(strtolower($keyword) == strtolower($mobileKeyword)){
 					unset($this->redirectKeywords[$key]);
 				}
 			}

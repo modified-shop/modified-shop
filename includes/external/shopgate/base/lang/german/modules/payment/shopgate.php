@@ -1,6 +1,8 @@
 <?php
+##### XTC3 | XTCM BOF #####
 //
 //
+##### XTC3 | XTCM EOF #####
 
 define('MODULE_PAYMENT_SHOPGATE_TEXT_TITLE', 'Shopgate');
 define('MODULE_PAYMENT_SHOPGATE_TEXT_DESCRIPTION', 'Shopgate - Mobile Shopping.');

@@ -1,9 +1,11 @@
 <?php
 
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
+
+##### XTCM BOF #####
 include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
 include_once DIR_FS_CATALOG.'includes/external/shopgate/plugin.php';
+##### XTCM EOF #####
 
 /**
  * Wrapper for setShopgateOrderlistStatus() with only one order.
@@ -31,7 +33,9 @@ function setShopgateOrderlistStatus($orderIds, $status) {
 	if (empty($orderIds) || !is_array($orderIds)) {
 		return;
 	}
-	
+
+##### XTCM BOF #####
 	$plugin = new ShopgateModifiedPlugin();
+##### XTCM EOF #####
 	$plugin->updateOrdersStatus($orderIds, $status);
 }

@@ -3,20 +3,9 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.1.23');
+define('SHOPGATE_LIBRARY_VERSION', '2.1.26');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
-define('SHOPGATE_ITUNES_URL', 'http://itunes.apple.com/de/app/shopgate-eine-app-alle-shops/id365287459?mt=8');
-
-## QR-Code Config - Start
-if (!defined('QR_CACHEABLE'))			define('QR_CACHEABLE', false);
-if (!defined('QR_CACHE_DIR'))			define('QR_CACHE_DIR', false);
-if (!defined('QR_LOG_DIR'))				define('QR_LOG_DIR', dirname(__FILE__).'/../temp/');
-if (!defined('QR_FIND_BEST_MASK'))		define('QR_FIND_BEST_MASK', true);
-if (!defined('QR_FIND_FROM_RANDOM'))	define('QR_FIND_FROM_RANDOM', 2);
-if (!defined('QR_DEFAULT_MASK'))		define('QR_DEFAULT_MASK', 2);
-if (!defined('QR_PNG_MAXIMUM_SIZE'))	define('QR_PNG_MAXIMUM_SIZE',  1024);
-## QR-Code Config - End
 
 /**
  * Error handler for PHP errors.
@@ -63,6 +52,7 @@ class ShopgateLibraryException extends Exception {
 	// Configuration failure
 	const CONFIG_INVALID_VALUE = 10;
 	const CONFIG_READ_WRITE_ERROR = 11;
+	const CONFIG_PLUGIN_NOT_ACTIVE = 12;
 
 	// Plugin API errors
 	const PLUGIN_API_NO_ACTION = 20;
@@ -122,6 +112,7 @@ class ShopgateLibraryException extends Exception {
 		// Configuration failure
 		self::CONFIG_INVALID_VALUE => 'invalid value in configuration',
 		self::CONFIG_READ_WRITE_ERROR => 'error reading or writing configuration',
+		self::CONFIG_PLUGIN_NOT_ACTIVE => 'plugin not activated',
 
 		// Plugin API errors
 		self::PLUGIN_API_NO_ACTION => 'no action specified',
@@ -359,35 +350,57 @@ class ShopgateLogger {
 	 */
 	private static $singleton;
 
-	private function __construct($accessLogPath, $requestLogPath, $errorLogPath, $debugLogErrorPath) {
-		$this->files[self::LOGTYPE_ACCESS]['path']  = $accessLogPath;
-		$this->files[self::LOGTYPE_REQUEST]['path'] = $requestLogPath;
-		$this->files[self::LOGTYPE_ERROR]['path']   = $errorLogPath;
-		$this->files[self::LOGTYPE_DEBUG]['path']   = $debugLogErrorPath;
+	private function __construct() {
 		$this->debug = false;
 	}
+	
 
 	/**
-	 * @param string $accessLogPath
-	 * @param string $requestLogPath
-	 * @param string $errorLogPath
-	 * @param string $debugLogPath
 	 * @return ShopgateLogger
 	 */
 	public static function getInstance($accessLogPath = null, $requestLogPath = null, $errorLogPath = null, $debugLogPath = null) {
 		if (empty(self::$singleton)) {
-			// fallback for the default log files if none are specified
+			self::$singleton = new self();
+			
+			// fall back to default log paths if none are specified
 			if (empty($accessLogPath))  $accessLogPath  = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'access.log';
 			if (empty($requestLogPath)) $requestLogPath = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'request.log';
 			if (empty($errorLogPath))   $errorLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'error.log';
 			if (empty($debugLogPath))   $debugLogPath   = SHOPGATE_BASE_DIR.DS.'temp'.DS.'logs'.DS.ShopgateConfigInterface::SHOPGATE_FILE_PREFIX.'debug.log';
-				
-			self::$singleton = new self($accessLogPath, $requestLogPath, $errorLogPath, $debugLogPath);
 		}
-
+		
+		// set log file paths if requested
+		self::$singleton->setLogFilePaths($accessLogPath, $requestLogPath, $errorLogPath, $debugLogPath);
+		
 		return self::$singleton;
 	}
-
+	
+	/**
+	 * Sets the paths to the log files.
+	 * 
+	 * @param string $accessLogPath
+	 * @param string $requestLogPath
+	 * @param string $errorLogPath
+	 * @param string $debugLogPath
+	 */
+	public function setLogFilePaths($accessLogPath, $requestLogPath, $errorLogPath, $debugLogPath) {
+		if (!empty($accessLogPath)) {
+			$this->files[self::LOGTYPE_ACCESS]['path'] = $accessLogPath;
+		}
+		
+		if (!empty($requestLogPath)) {
+			$this->files[self::LOGTYPE_REQUEST]['path'] = $requestLogPath;
+		}
+		
+		if (!empty($errorLogPath)) {
+			$this->files[self::LOGTYPE_ERROR]['path'] = $errorLogPath;
+		}
+		
+		if (!empty($debugLogErrorPath)) {
+			$this->files[self::LOGTYPE_DEBUG]['path'] = $debugLogErrorPath;
+		}
+	}
+	
 	/**
 	 * Enables logging messages to debug log file.
 	 */
@@ -742,14 +755,10 @@ abstract class ShopgateObject {
 	/**
 	 * Encodes a string from a given encoding to UTF-8.
 	 *
-	 * This wraps the mb_convert_encoding() function of PHP.
-	 *
 	 * @param string $string The string to encode.
-	 * @param string|string[] $sourceEncoding The encoding(s) of $string.
+	 * @param string|string[] $sourceEncoding The (possible) encoding(s) of $string.
 	 * @param bool $force Set this true to enforce encoding even if the source encoding is already UTF-8.
 	 * @return string The UTF-8 encoded string.
-	 *
-	 * @see http://php.net/manual/de/function.mb-convert-encoding.php
 	 */
 	public function stringToUtf8($string, $sourceEncoding = 'ISO-8859-15', $force = false) {
 		$conditions =
@@ -759,25 +768,61 @@ abstract class ShopgateObject {
 		
 		return ($conditions)
 			? $string
-			: mb_convert_encoding($string, SHOPGATE_LIBRARY_ENCODING, $sourceEncoding);
+			: $this->convertEncoding($string, SHOPGATE_LIBRARY_ENCODING, $sourceEncoding);
 	}
 
 	/**
 	 * Decodes a string from UTF-8 to a given encoding.
 	 *
-	 * This wraps the mb_convert_encoding() function of PHP.
-	 *
 	 * @param string $string The string to decode.
 	 * @param string $destinationEncoding The desired encoding of the return value.
 	 * @param bool $force Set this true to enforce encoding even if the destination encoding is set to UTF-8.
 	 * @return string The UTF-8 decoded string.
-	 *
-	 * @see http://php.net/manual/de/function.mb-convert-encoding.php
 	 */
 	public function stringFromUtf8($string, $destinationEncoding = 'ISO-8859-15', $force = false) {
 		return ($destinationEncoding == SHOPGATE_LIBRARY_ENCODING) && !$force
 				? $string
-				: mb_convert_encoding($string, $destinationEncoding, SHOPGATE_LIBRARY_ENCODING);
+				: $this->convertEncoding($string, $destinationEncoding, SHOPGATE_LIBRARY_ENCODING);
+	}
+	
+	/**
+	 * Converts a string's encoding to another.
+	 * 
+	 * This wraps the mb_convert_encoding() and iconv() functions of PHP. If the mb_string extension is not installed,
+	 * iconv() will be used instead.
+	 * 
+	 * If iconv() must be used and an array is passed as $sourceEncoding all encodings will be tested and the (probably)
+	 * best encoding will be used for conversion.
+	 *
+	 * @see http://php.net/manual/en/function.mb-convert-encoding.php
+	 * @see http://php.net/manual/en/function.iconv.php
+	 * 
+	 * @param string $string The string to decode.
+	 * @param string $destinationEncoding The desired encoding of the return value.
+	 * @param string|string[] $sourceEncoding The (possible) encoding(s) of $string.
+	 * @return string The UTF-8 decoded string.
+	 */
+	protected function convertEncoding($string, $destinationEncoding, $sourceEncoding) {
+		if (function_exists('mb_convert_encoding')) {
+			return mb_convert_encoding($string, $destinationEncoding, $sourceEncoding);
+		} else {
+			// I have no excuse for the following. Please forgive me.
+			if (is_array($sourceEncoding)) {
+				$bestEncoding = '';
+				$bestScore = null;
+				foreach ($sourceEncoding as $encoding) {
+					$score = abs(strlen($string) - strlen(@iconv($encoding, $destinationEncoding, $string)));
+					if (is_null($bestScore) || ($score < $bestScore)) {
+						$bestScore = $score;
+						$bestEncoding = $encoding;
+					}
+				}
+				
+				$sourceEncoding = $bestEncoding;
+			}
+			
+			return @iconv($sourceEncoding, $destinationEncoding.'//IGNORE', $string);
+		}
 	}
 }
 
@@ -1303,14 +1348,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 				$this->log("Call Function {$method}", ShopgateLogger::LOGTYPE_DEBUG);
 				$result = call_user_func_array( array( $this, $method ), $arguments );
 
-// 				if( ShopgateLogger::getInstance()->isDebugEnabled()
-// 				&& is_array($result) && is_array( $arguments[0]) ) {
-					
-// 					$diff = array_diff_assoc($result, $arguments[0]);
-// 					$this->log("Changed Data:\n". print_r($diff, true), ShopgateLogger::LOGTYPE_DEBUG);
-// 				}
-
-				$arguments[0] = $result;
+ 				if($result) {
+					$arguments[0] = $result;
+ 				}
 			}
 		}
 		
@@ -1617,6 +1657,10 @@ class ShopgateFileBuffer extends ShopgateObject implements ShopgateFileBufferInt
 		fclose($this->fileHandle);
 		$this->fileHandle = null;
 		
+		// FIX for Windows Servers
+		if(file_exists($this->filePath)) {
+			unlink($this->filePath);
+		}
 		rename($this->filePath.".tmp", $this->filePath);
 		
 		$this->log('Fertig, '.basename($this->filePath).' wurde erfolgreich erstellt', "access");
@@ -1751,6 +1795,7 @@ interface ShopgateContainerVisitor {
 	public function visitOrderItem(ShopgateOrderItem $i);
 	public function visitOrderItemOption(ShopgateOrderItemOption $o);
 	public function visitOrderItemInput(ShopgateOrderItemInput $i);
+	public function visitOrderItemAttribute(ShopgateOrderItemAttribute $o);
 	public function visitOrderDeliveryNote(ShopgateDeliveryNote $d);
 	public function visitCategory(ShopgateCategory $d);
 	public function visitItem(ShopgateItem $i);
@@ -1907,6 +1952,18 @@ class ShopgateContainerUtf8Visitor implements ShopgateContainerVisitor {
 		// create new object with utf-8 en- / decoded data
 		try {
 			$this->object = new ShopgateOrderItemInput($properties);
+		} catch (ShopgateLibraryException $e) {
+			$this->object = null;
+		}
+	}
+
+	public function visitOrderItemAttribute(ShopgateOrderItemAttribute $i) {
+		$properties = $i->buildProperties();
+		$this->iterateSimpleProperties($properties);
+		
+		// create new object with utf-8 en- / decoded data
+		try {
+			$this->object = new ShopgateOrderItemAttribute($properties);
 		} catch (ShopgateLibraryException $e) {
 			$this->object = null;
 		}
@@ -2142,6 +2199,11 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 
 	public function visitOrderItemInput(ShopgateOrderItemInput $i) {
 		// get properties and iterate (no complex types in ShopgateOrderItemInput objects)
+		$this->array = $this->iterateSimpleProperties($i->buildProperties());
+	}
+
+	public function visitOrderItemAttribute(ShopgateOrderItemAttribute $i) {
+		// get properties and iterate (no complex types in ShopgateOrderItemAttribute objects)
 		$this->array = $this->iterateSimpleProperties($i->buildProperties());
 	}
 
