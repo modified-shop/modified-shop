@@ -427,12 +427,6 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->mapAdditionalSettings($unmappedData);
 	}
 	
-	/**
-	 * Loads the configuration file by for a given Shopgate shop number.
-	 *
-	 * @param string $shopNumber The shop number.
-	 * @throws ShopgateLibraryException in case the $shopNumber is empty or no configuration file can be found.
-	 */
 	public function loadByShopNumber($shopNumber) {
 		if (empty($shopNumber) || !preg_match($this->coreValidations['shop_number'], $shopNumber)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be found without shop number');
@@ -441,6 +435,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		// find all config files
 		$configFile = null;
 		$files = scandir($this->config_folder_path);
+		ob_start();
 		foreach ($files as $file) {
 			if (!is_file($this->config_folder_path.DS.$file)) {
 				continue;
@@ -453,7 +448,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 				break;
 			}
 		}
-		
+		ob_end_clean();
 		if (empty($configFile)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'no configuration file found for shop number "'.$shopNumber.'"', true, false);
 		}
@@ -462,17 +457,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->initFileNames();
 	}
 	
-	/**
-	 * Loads the configuration file by a given language.
-	 *
-	 * @param string $language the ISO-639 code of the language
-	 * @throws ShopgateLibraryException in case the $language is empty
-	 */
 	public function loadByLanguage($language) {
-		if (empty($language) || !preg_match('/[a-z]{2}/', $language)) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be found without language code', true, false);
+		if (!is_null($language) && !preg_match('/[a-z]{2}/', $language)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'invalid language code "'.$language.'"', true, false);
 		}
-	
+		
 		$this->loadFile($this->config_folder_path.DS.'myconfig-'.$language.'.php');
 		$this->initFileNames();
 	}
@@ -530,12 +519,65 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		}
 	}
 	
-	public function saveFileForLanguage(array $fieldList, $language, $validate = true) {
-		if (empty($language)) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'configuration file cannot be saved without language', true, false);
+	public function saveFileForLanguage(array $fieldList, $language = null, $validate = true) {
+		$fileName = null;
+		if (!is_null($language)) {
+			$this->setLanguage($language);
+			$fieldList[] = 'language';
+			$fileName = $this->config_folder_path.DS.'myconfig-'.$language.'.php';
 		}
 		
-		$this->saveFile($fieldList, $this->config_folder_path.DS.'myconfig-'.$language.'.php', $validate);
+		$this->saveFile($fieldList, $fileName, $validate);
+	}
+	
+	public function checkDuplicates() {
+		$shopNumbers = array();
+		$files = scandir($this->config_folder_path);
+		
+		foreach ($files as $file) {
+			if (!is_file($this->config_folder_path.DS.$file)) {
+				continue;
+			}
+				
+			$shopgate_config = null;
+			include($this->config_folder_path.DS.$file);
+			if (isset($shopgate_config) && isset($shopgate_config['shop_number'])) {
+				if (in_array($shopgate_config['shop_number'], $shopNumbers)) {
+					return true;
+				} else {
+					$shopNumbers[] = $shopgate_config['shop_number'];
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	public function checkMultipleConfigs() {
+		$files = scandir($this->config_folder_path);
+		$counter = 0;
+		
+		foreach ($files as $file) {
+			if (!is_file($this->config_folder_path.DS.$file)) {
+				continue;
+			}
+			$counter++;
+		}
+		
+		return ($counter > 1);
+	}
+
+	public function checkUseGlobalFor($language) {
+		return !file_exists($this->config_folder_path.DS.'myconfig-'.$language.'.php');
+	}
+	
+	public function useGlobalFor($language) {
+		$fileName = $this->config_folder_path.DS.'myconfig-'.$language.'.php';
+		if (file_exists($fileName)) {
+			if (!@unlink($fileName)) {
+				throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_READ_WRITE_ERROR, 'Error deleting configuration file "'.$fileName."'.");
+			}
+		}
 	}
 	
 	public final function validate(array $fieldList = array()) {
@@ -1164,7 +1206,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		if (file_exists($path)) {
 			ob_start();
 			include($path);
-			ob_clean();
+			ob_end_clean();
 		} else {
 			return false;
 		}
@@ -1680,7 +1722,7 @@ interface ShopgateConfigInterface {
 	const SHOPGATE_API_URL_PG   = 'https://api.shopgatepg.com/merchant/';
 	
 	const SHOPGATE_FILE_PREFIX = 'shopgate_';
-
+	
 	/**
 	 * Tries to load the configuration from a file.
 	 *
@@ -1697,7 +1739,22 @@ interface ShopgateConfigInterface {
 	 * @throws ShopgateLibraryException in case a configuration file could not be loaded or the $shopgate_config is not set.
 	 */
 	public function loadFile($path = null);
+	
+	/**
+	 * Loads the configuration file by a given language or the global configuration file.
+	 *
+	 * @param string|null $language the ISO-639 code of the language or null to load global configuration
+	 */
+	public function loadByLanguage($language);
 
+	/**
+	 * Loads the configuration file for a given Shopgate shop number.
+	 *
+	 * @param string $shopNumber The shop number.
+	 * @throws ShopgateLibraryException in case the $shopNumber is empty or no configuration file can be found.
+	 */
+	public function loadByShopNumber($shopNumber);
+	
 	/**
 	 * Saves the desired configuration fields to the specified file or myconfig.php.
 	 *
@@ -1716,7 +1773,52 @@ interface ShopgateConfigInterface {
 	 * @throws ShopgateLibraryException in case the configuration can't be loaded or saved.
 	 */
 	public function saveFile(array $fieldList, $path = null, $validate = true);
-
+	
+	/**
+	 * Saves the desired fields to the configuration file for a given language or global configuration
+	 *
+	 * @param string[] $fieldList the list of fieldnames that should be saved to the configuration file.
+	 * @param string $language the ISO-639 code of the language or null to save to global configuration
+	 * @param bool $validate true to validate the fields that should be set.
+	 *
+	 * @throws ShopgateLibraryException in case the configuration can't be loaded or saved.
+	 */
+	public function saveFileForLanguage(array $fieldList, $language = null, $validate = true);
+	
+	/**
+	 * Checks for duplicate shop numbers in multiple configurations.
+	 *
+	 * This checks all files in the configuration folder and shop numbers in all
+	 * configuration files.
+	 *
+	 * @param string $shopNumber The shop number to test or null to test all shop numbers found.
+	 * @return bool true if there are duplicates, false otherwise.
+	 */
+	public function checkDuplicates();
+	
+	/**
+	 * Checks if there is more than one configuration file available.
+	 * 
+	 * @return bool true if multiple configuration files are available, false otherwise.
+	 */
+	public function checkMultipleConfigs();
+	
+	/**
+	 * Checks if there is a configuration for the language requested.
+	 *
+	 * @param string $language the ISO-639 code of the language or null to load global configuration
+	 * @return bool true if global configuration should be used, false if the language has separate configuration
+	 */
+	public function checkUseGlobalFor($language);
+	
+	/**
+	 * Removes the configuration for the language requested.
+	 *
+	 * @param string $language the ISO-639 code of the language or null to load global configuration
+	 * @throws ShopgateLibraryException in case the file exists but cannot be deleted.
+	 */
+	public function useGlobalFor($language);
+	
 	/**
 	 * Validates the configuration values.
 	 *

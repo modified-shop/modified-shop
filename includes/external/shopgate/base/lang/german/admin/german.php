@@ -1,12 +1,25 @@
 <?php
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 
 ### Plugin ###
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Encoding des Shopsystems');
+##### XTCM BOF #####
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION',
-		'W&auml;hlen Sie das Encoding Ihres Shopsystems. &Uuml;blicherweise ist f&uuml;r Versionen vor 1.06 "ISO-8859-15" zu w&auml;hlen.');
+	'W&auml;hlen Sie das Encoding Ihres Shopsystems. &Uuml;blicherweise ist f&uuml;r Versionen vor 1.06 "ISO-8859-15" zu w&auml;hlen.'
+);
 define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
+##### XTCM EOF #####
+
+##### XTC3 | XTCM BOF #####
+//
+//
+//
+//
+//
+//
+
+//
+##### XTC3 | XTCM EOF #####
 
 ### Menu ###
 define('BOX_SHOPGATE', 'Shopgate');
@@ -97,9 +110,20 @@ define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_OFF', 'Nein');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_DESCRIPTION',
 		'W&auml;hlen Sie hier "Ja" aus, wenn die Sortierung Ihrer Produkte in Ihrem mobilen Shop genau falsch herum ist.');
 
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION', 'Produktbeschreibung');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY', 'Nur Beschreibung');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_ONLY', 'Nur Kurzbeschreibung');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_SHORTDESC', 'Beschreibung + Kurzbeschreibung');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_DESC', 'Kurzbeschreibung + Beschreibung');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESCRIPTION', 'W&auml;hlen Sie hier aus, wie die Produktbeschreibung im mobilen Shop zusammengesetzt sein soll.');
+
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP', 'Preisgruppe f&uuml;r Shopgate');
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION', 'W&auml;hlen Sie die Preisgruppe, die f&uuml;r Shopgate gilt (bzw. die Kundengruppe, aus welcher die Preisinformationen beim Produktexport verwendet werden).');
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_OFF', '-- Deaktiviert --');
+
+##### XTC3 | XTCM BOF #####
+define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Verf&uuml;gbar ab dem #DATE#');
+##### XTC3 | XTCM EOF #####
 
 ### Bestellungsimport ###
 define('SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS', 'Bestellungsimport');
