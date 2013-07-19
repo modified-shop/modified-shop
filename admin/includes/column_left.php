@@ -82,7 +82,7 @@ echo mainMenue(BOX_HEADING_PRODUCTS);
 echo endMenue();
 
 /******** SHOPGATE **********/
-if(strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false) {
+if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
   include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');
 }
 /******** SHOPGATE **********/
