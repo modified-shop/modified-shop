@@ -1,10 +1,13 @@
 <?php
 require_once 'includes/application_top.php';
 
-defined( '_VALID_XTC' ) or die('Direct Access not allowed.');
 
+
+##### XTCM BOF #####
 require(DIR_FS_CATALOG.'/includes/external/shopgate/shopgate_library/shopgate.php');
 require(DIR_FS_CATALOG.'/includes/external/shopgate/base/shopgate_config.php');
+##### XTCM EOF #####
+
 $encodings = array('UTF-8', 'ISO-8859-1', 'ISO-8859-15');
 $error = array();
 
@@ -14,6 +17,42 @@ $sg_language = (!empty($_GET['sg_language'])
 	: null
 );
 
+// remove '?' characters from the language id. This can happen if a wrong formatted link is used
+if(!empty($sg_language)) {
+	$sg_language = trim($sg_language, '?');
+	if(strpos($sg_language, '?') !== false) {
+		$sg_language = explode('?', $sg_language);
+		$sg_language = $sg_language[0];
+	}
+}
+
+##### XTC3 | XTCM BOF #####
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+//
+//
+//
+//
+//
+//
+##### XTC3 | XTCM EOF #####
+
 // determine redirect_languages for global configuration
 if (($sg_language === null) && !isset($_POST['_shopgate_config']['redirect_languages'])) {
 	$_POST['_shopgate_config']['redirect_languages'] = array();
@@ -22,12 +61,14 @@ if (($sg_language === null) && !isset($_POST['_shopgate_config']['redirect_langu
 // load configuration
 if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 	try {
+##### XTCM BOF #####
 		$shopgateConfig = new ShopgateConfigModified();
+##### XTCM EOF #####
 		
 		// check if some settings are selected, keep default if not
 		$sgEmptySettings = array(
-		'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
-		'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_cancled'
+			'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
+			'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_cancled'
 		);
 		foreach ($sgEmptySettings as $sgEmptySetting) {
 			if ($_POST['_shopgate_config'][$sgEmptySetting] == '-') {
@@ -61,7 +102,9 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 } else {
 	try {
 		$shopgate_message = '';
+##### XTCM BOF #####
 		$shopgateConfig = new ShopgateConfigModified();
+##### XTCM EOF #####
 		
 		if ($sg_language !== null) {
 			$sgUseGlobalConfig = $shopgateConfig->checkUseGlobalFor($sg_language);
@@ -113,7 +156,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgOrderStates[$row['orders_status_id']] = $row;
 	}
-
+	
 	// get customer groups
 	$qry = xtc_db_query("
 		SELECT
@@ -129,11 +172,18 @@ if($_GET["sg_option"] === "config") {
 			 customers_status_id != '0'
 	");
 	
+	$sgExportDescriptionTypes = array(
+		SHOPGATE_SETTING_EXPORT_DESCRIPTION						=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY,
+		SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION				=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_ONLY,
+		SHOPGATE_SETTING_EXPORT_DESCRIPTION_SHORTDESCRIPTION	=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_SHORTDESC,
+		SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION_DESCRIPTION	=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_DESC,
+	);
+	
 	$sgCustomerGroups = array();
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCustomerGroups[$row['customers_status_id']] = $row;
 	}
-
+	
 	// get tax zones
 	$qry = xtc_db_query("
 		SELECT
@@ -148,7 +198,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgTaxZones[$row['geo_zone_id']] = $row;
 	}
-
+	
 	// get currencies
 	$qry = xtc_db_query("
 		SELECT
@@ -161,7 +211,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCurrencies[$row["code"]] = $row["title"];
 	}
-
+	
 	// get countries
 	$qry = xtc_db_query("
 		SELECT
@@ -176,7 +226,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCountries[$row['countries_iso_code_2']] = $row;
 	}
-
+	
 	// get directory name by language of the backend interface
 	if(!empty($_SESSION['language'])) {
 		$languageDirectory = strtolower(trim($_SESSION['language']));
@@ -196,24 +246,32 @@ if($_GET["sg_option"] === "config") {
 			$sgInstalledShippingModules[$shippingModule] = constant(MODULE_SHIPPING_.strtoupper($shippingModule)._TEXT_TITLE);
 		}
 	}
+	
+##### XTC3 | XTCM BOF #####
+//
+//
+//
+//
+//
+//
 }
 
+//
+//
+//
+//
+//
+//
+//
+##### XTC3 | XTCM EOF #####
 
-
-
-
-
-
-
-
-
-
+##### XTCM BOF #####
+//
 $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
-
-
-
-
-
+//
+//
+//
+##### XTCM BOF #####
 ?>
 <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html <?php echo HTML_PARAMS; ?>>
@@ -249,7 +307,9 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		}
 		
 		table.shopgate_setting {
-			
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php // ?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 		}
 		
 		td.shopgate_setting {
@@ -257,16 +317,22 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		}
 		
 		tr.shopgate_even {
-			
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php // ?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 		}
 		
 		tr.shopgate_uneven {
-			
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php // ?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 		}
 		
 		td.shopgate_input div {
+<?php ##### XTCM BOF ##### ?>
 			background: #f9f0f1;
 			border: 1px solid #cccccc;
+<?php ##### XTCM EOF ##### ?>
 			margin-bottom: 10px;
 			padding: 2px;
 		}
@@ -277,7 +343,9 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		
 		div.shopgate_language_selection {
 			font-size: 11pt;
+<?php ##### XTCM | GambioGX BOF ##### ?>
 			background: #f9f0f1;
+<?php ##### XTCM | GambioGX EOF ##### ?>
 			padding: 12px;
 			margin-top: 8px;
 			margin-bottom: 8px;
@@ -311,7 +379,11 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		}
 	</style>
 </head>
-<?php $tableClass = 'dataTableContent'; ?>
+<?php
+##### XTC3 | XTCM BOF #####
+	$tableClass = 'dataTableContent';
+##### XTC3 | XTCM EOF #####
+?>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
 
 	<!-- header //-->
@@ -334,7 +406,9 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 				<table border="0" width="100%" cellspacing="0" cellpadding="2" style="height:100%;">
 					<tr>
 						<td>
+<?php ##### XTC3 | XTCM BOF ##### ?>
 							<div class="pageHeading">
+<?php ##### XTC3 | XTCM EOF ##### ?>
 								<?php echo SHOPGATE_CONFIG_TITLE; ?>
 							</div>
 						</td>
@@ -620,6 +694,28 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 									<td class="shopgate_setting" align="right">
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<select name="_shopgate_config[export_description_type]">
+															<?php foreach($sgExportDescriptionTypes as $sgDescriptionType => $sgDescriptionTypeName): ?>
+															<option value="<?php echo $sgDescriptionType; ?>"
+																<?php echo $shopgateConfig["export_description_type"]==$sgDescriptionType?'selected=""':''?>>
+																<?php echo $sgDescriptionTypeName; ?>
+															</option>
+															<?php endforeach; ?>
+														</select>
+													</div>
+													<?php echo SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP; ?></b></td>
 												<td class="<?php echo $tableClass; ?> shopgate_input">
 													<div>
@@ -642,6 +738,32 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 										</table>
 									</td>
 								</tr>
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS; ?></th></tr>

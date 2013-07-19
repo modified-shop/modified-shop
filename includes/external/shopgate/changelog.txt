@@ -1,5 +1,34 @@
 '''Deutsch'''
 
+'''Version 2.1.22'''
+* Beim Produktexport ist es nun möglich eine Kombination aus der Artikelbeschreibung und der Kurzbeschreibung zu verwenden. Einstellbar über die Konfigurationsseite.
+* Der Adresszusatz bei Shopgate-Bestellungen wird beim Bestellungsimport nun berücksichtigt
+* Die Kundendaten des Kunden im Shop werden beim Bestellungsimport nun auch mit den Daten des Kunden auf Seiten des Shops eingetragen anstatt, wie zuvor, nur die übermittelten Kundendaten zu verwenden
+
+'''Version 2.1.21'''
+* Der Bestellungsimport bricht nun nicht mehr mit einem Fehler ab, wenn optionale Datenbankfelder fehlen
+
+'''Version 2.1.20'''
+* Die Bestände von Produktattributen werden jetzt korrekt exportiert
+
+'''Version 2.1.19'''
+* Die ausgewählte Versandart sollte nun korrekt berücksichtigt werden, um die Steuern für die Versandkosten zu berechnen
+
+'''Version 2.1.18'''
+* Ein Fehler wurde behoben, der bei der Installation des Shopgate-Payment-Moduls auftrat
+
+'''Version 2.1.17'''
+* Beim Bestellungsimport werden nun auch die Lageroptionen korrekt für Produkte, zugehörige Attribute und Sonderangebote berücksichtigt. Produkte und Sonderangebote dem Shopsystem entsprechend inaktiv gesetzt
+* Support für die alte Produktstruktur ist bereits enthalten, um fehlerhafte Bestellungimports kurz nach einem Update des Shopgate Plugins zu vermeiden
+* Vorbestell-Produkte werden nun als solche exportiert
+* Die Methode updateOrder() wirft keine Fehlermeldung mehr, wenn die Bezahlung nach dem Versand eingeht und der Versand nicht blockiert war
+* Die Shopgate Konfigurationsdatei kann nun auch dann problemfrei gespeichert werden, wenn fehlerhaft Formatierte Parameter via GET angehängt werden
+* Der Bestellstatus "Versand blockiert (Shopgate)" kann bei der Installation des Shopgate Zahlungsmoduls nun auch dann zugeordnet werden, wenn er anders benannt ist, solange dieser mit dem Schlüsselwort "Shopgate" (ohne Anführungszeichen) gekennzeichnet ist
+* Problem mit DreamRobot und Versandkosten behoben
+* Funktionalität zur Verarbeitung der globalen und sprachabhängigen Konfigurationen in die Shopgate Library verlegt
+* Fehler beim Speichern der Logdateien behoben
+* nutzt die Shopgate Library 2.1.26
+
 '''Version 2.1.16'''
 * überarbeitete Konfigurationsseite
 * es können jetzt mehrere Sprachen für die mobile Weiterleitung ausgewählt werden
@@ -114,6 +143,35 @@
 
 
 '''English'''
+
+'''Version 2.1.22'''
+* it is now possible to choose a combination of the products description and the short description on the Shopgate settings page
+* the additional address field on Shopgate orders is now appended to the address while importing orders
+* the customers data while importing orders is now taken from the shop customer data, instead of the customer data, given by the addOrder request
+
+'''Version 2.1.21'''
+* the add order request doesn't stop anymore with an error message, when optional database fields are missing
+
+'''Version 2.1.20'''
+* the stock of the products attributes is now exported correctly
+
+'''Version 2.1.19'''
+* the selected shipping method should now consulted correctly to be able to calculate taxes for the shipping costs
+
+'''Version 2.1.18'''
+* fixed an issue where the shopgate payment module could not be installed properly
+
+'''Version 2.1.17'''
+* the stock level options are now accessed on importing orders and adapted to the ordered products, attributes and specials. Products and specials are now deactivated according to the shoppingsystem
+* support for the older products structure to avoid false order imports after updating to a newer shopgate plugin is already included
+* preorder products are now exported as such
+* method updateOrder() doesn't throw an exception anymore if payment is done after shipping and shipping was not blocked by Shopgate. 
+* the Shopgate configuration file can now be saved without any problems, even if false formatted GET parameters are appended on navigation to the Shopgate configuration page
+* the orders status "Shipping blocked (Shopgate)" can now be recognized while installing the Shopgate payment module even if its name has been changed, as long as it is marked with the keyword "Shopgate" (without quoutes)
+* fixed an issue with DreamRobot and shipping costs
+* moved functionality for handling of global and language dependend configurations to Shopgate Library
+* fixed a bug in saving of log files
+* uses Shopgate Library 2.1.26
 
 '''Version 2.1.16'''
 * revised configuration interface

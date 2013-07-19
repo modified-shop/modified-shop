@@ -1,0 +1,201 @@
+'''Deutsch'''
+
+'''Version 2.1.26'''
+* die Konvertierung der Zeichensätze wird jetzt optional mit iconv durchgeführt, wenn die mb_string-Erweiterung für PHP nicht installiert ist
+* Logik zur dateibasierten Verarbeitung einer globalen Konfiguration und mehreren sprachabhängigen Konfigurationen implementiert
+
+'''Version 2.1.25'''
+* Problem mit einer Ausgabe während dem Laden der Konfigurationsdatei behoben
+* Implementierung der neuen Shopgate-Merchant-API-Felder "item_number_public" und "attributes", welche in "get_orders" zurückgeliefert werden
+* Fehler behoben, durch den das Umbenennen von CSV-Dateien unter Windows-Server-Systemen fehlschlug
+
+'''Version 2.1.24'''
+* Problem beim Laden der Konfiguration per ob_start() und ob_end_clean() behoben
+
+'''Version 2.1.23'''
+* bei Requests an die Shopgate Plugin API wird jetzt die Shopnummer überprüft
+* bei der Alias-Weiterleitung wird kein https:// mehr verwendet
+* beim Weiterleitung-CNAME ist nur noch http:// erlaubt
+* Fehler beim mehrfachen Laden der Konfiguration behoben
+
+'''Version 2.1.22'''
+* Problem beim Abruf der Redirect-Keywords behoben
+
+'''Version 2.1.21'''
+* Problem beim Laden der Shopgate Konfigurationsdatei behoben
+
+'''Version 2.1.20'''
+* Problem mit der Einstellung "enable_clear_log_file" behoben
+
+'''Version 2.1.19'''
+* Javascript Header hinzugefügt, um den Onlineshop mit dem mobilen Shop zu "verlinken" 
+* HTTP  Weiterleitungscode von 302 auf 301 geändert
+* neue Methode "clear_cache" hinzugefügt
+
+'''Version 2.1.18'''
+* neue Methode ShopgateMerchantApi::batchAddItem() hinzugefügt
+* neue Methode ShopgateMerchantApi::batchUpdateItem() hinzugefügt
+* Aktualisierung und Korrektur der PHPDocs für die API-Klassen
+* Schrägstriche am Ende des CNAME-Eintrags werden jetzt entfernt
+* Methoden getCreateItemsCsvLoaders(), getCreateCategoriesCsvLoaders() und getCreateReviewsCsvLoaders() der Klasse ShopgatePlugin sind nicht mehr "final"
+* Problem mit der Funktion ini_get_all() behoben
+
+'''Version 2.1.17'''
+* der Mobile Header wird jetzt per JavaScript eingehangen, um mehr Flexibilität bei komplizierten Layouts zu ermöglichen
+* neue Einstellungen "mobile_header_parent" und "mobile_header_prepend" in ShopgateConfig
+* neue Methode ShopgateRedirect::setParentElement()
+* Fehler behoben, bei dem auf "http://" weitergeleitet wurde, wenn kein CNAME eingetragen war
+* Log-, Export- und Cache-Dateien erhalten jetzt das Präfix "shopgate_"
+
+'''Version 2.1.16'''
+* Funktionen ShopgateAddress::getStreetNumber und ShopgateAddress::getStreetName hinzugefügt
+* Der CNAME wird um http:// ergeänzt, wenn es nicht angegeben wurde
+* Entfernen von <script>-, <style>- und <link>-Tags aus der Produktbeschreibung verbessert
+* "ping" liest jetzt die Ordnerberechtigungen der konfigurierten Ordner für Export, Logs und Cache aus
+
+'''Version 2.1.15'''
+* Anpassung der Klasse ShopgateConfig zur Nutzung sprach- oder Shop-abhängiger Konfigurationsdateien
+
+'''Version 2.1.14'''
+* ShopgateMerchantApi::getMobileRedirectKeywords() ist jetzt deprecated
+* ShopgateMerchantApi::getMobileRedirectUserAgents() eingefügt
+
+'''Version 2.1.13'''
+* der updateOrder()-Callback erhält jetzt mit der Bestellung auch die Bestellungsposten
+* die Filterung von <script>-Tags im Export wurde verbessert
+* die Getter-Methoden eines ShopgateOrderItem-Objekts ohne Optionen oder Eingabefelder geben jetzt leere Arrays anstelle von null zurück
+* die Einstellungen "country" und "language" wurden zur Klasse ShopgateConfig hinzugefügt
+* allgemeine Methode zur Erzeugung von Weiterleitungslinks über Produktnummer, Kategorienummer und zur Startseite hinzugefügt
+* Kompatibilitätsprobleme zwischen verschiedenen PHP-Versionen behoben
+
+'''Version 2.1.12'''
+* möglicher timestamp-fehler behoben
+* Standard Timeout für der ShopgateMerachantApi auf 30 sekunden
+* Timeout bei getMobileRedirectKeywords auf 1 sekunde gesetzt
+* Kompatibilitätsproblem mit PHP < 5.3 behoben
+
+'''Version 2.1.11'''
+* Script-Tags werden beim Export jetzt inklusive Inhalt entfernt.
+
+'''Version 2.1.10'''
+* timestamp-fehler behoben
+
+'''Version 2.1.9'''
+* Authentifizierung erweitert
+* Das Schreiben von Log-Einträgen wird jetzt unterbunden, wenn der cache keine Schreibrechte hat
+
+'''Version 2.1.8'''
+* Notice-Meldungen der ping-action entfernt
+
+'''Version 2.1.7'''
+* Return by reference benötigt das &-Zeichen bei der Zuweisung UND am Funktions-/Methodennamen
+
+'''Version 2.1.6'''
+* Neues CSV-Feld "active_status"
+* Bei Plugin-API-Anfragen wird jetzt auch die Plugin-Version zurückgegeben, falls gesetzt.
+
+'''Version 2.1.5'''
+* Fehler in der Verwendung der alten Konfiguaration behoben
+* changelog.txt hinzugefügt
+
+
+
+'''English'''
+
+'''Version 2.1.26'''
+* conversion of encodings is now performed via iconv if the mb_string extension for PHP is not installed
+* implemented logic to handle processing of file-based global and language dependend configurations
+
+'''Version 2.1.25'''
+* fixed an issue producing an output during loading the configuration file
+* implementation of the new Shopgate Merchant API fields "item_number_public" and "attributes" returned by "get_orders"
+* fixed issue that caused renaming CSV files on Windows Server systems to fail
+
+'''Version 2.1.24'''
+* fixed issue with loading configuration via ob_start() / ob_end_clean()
+
+'''Version 2.1.23'''
+* on requests to the Shopgate Plugin API the shop number is checked now
+* mobile redirection via alias is done to a http:// URL now
+* the CNAME for mobile redirection must be http:// now
+* fixed an error when loading configuration more than once
+
+'''Version 2.1.22'''
+* fixed issue on request for redirect keywords
+
+'''Version 2.1.21'''
+* fixed issue with loading the Shopgate configuration file
+
+'''Version 2.1.20'''
+* fixed issue with "enable_clear_log_file" setting
+
+'''Version 2.1.19'''
+* java script header added for linking online shop to the mobile shop site
+* updated HTTP redirect code from 302 to 301
+* new method "clear_cache" added
+
+'''Version 2.1.18'''
+* added new method ShopgateMerchantApi::batchAddItem()
+* added new method ShopgateMerchantApi::batchUpdateItem()
+* updated and corrected PHPDoc for API classes
+* trailing slashes on the CNAME setting are cut off
+* methods getCreateItemsCsvLoaders(), getCreateCategoriesCsvLoaders() and getCreateReviewsCsvLoaders() of class ShopgatePlugin are not "final" anymore
+* fixed issue with function ini_get_all()
+
+'''Version 2.1.17'''
+* Mobile Header now gets attached via JavaScript for more flexibility in complicated layouts
+* new settings "mobile_header_parent" and "mobile_header_prepend" in ShopgateConfig
+* new method ShopgateRedirect::setParentElement()
+* fixed the issue where redirection to "http://" was performed if no CNAME was set
+* log, export and cache file now get the prefix "shopgate_"
+
+'''Version 2.1.16'''
+* Added function ShopgateAddress::getStreetNumber and ShopgateAddress::getStreetName
+* http:// will add to cname if not given
+* improved removal of <script>, <style> and <link> tags from the products description
+* "ping" now checks the directory permissions of the configured directories for export, logs and cache
+
+'''Version 2.1.15'''
+* extended class ShopgateConfig for use with multiple configuration files depending on language or shop number
+
+'''Version 2.1.14'''
+* ShopgateMerchantApi::getMobileRedirectKeywords() is now deprecated
+* added ShopgateMerchantApi::getMobileRedirectUserAgents()
+
+'''Version 2.1.13'''
+* the updateOrder() callback is now provided with the items of the order as well
+* filtering of <script> tags in the export has been improved
+* the getters of a ShopgateOrderItem object with no inputs or options set will now return empty arrays instead of null
+* settings "country" and "language" have been added to the ShopgateConfig class
+* added generic method to create redirection links for item numbers, category numbers and the welcome page
+* fixed incompatibility issues between different PHP versions
+
+'''Version 2.1.12'''
+* fix possible timestamp-error
+* set default timout for ShopagteMerchantApi to 30 seconds
+* set timeout on getMobileRedirectKeywords to 1 second
+* fixed compatibility issues with PHP < 5.3
+
+'''Version 2.1.11'''
+* script tags will be stripped off including content on products export
+
+'''Version 2.1.10'''
+* fixed timestamp error
+
+'''Version 2.1.9'''
+* extended authentification
+* disable log entries if cache is not writeable
+
+'''Version 2.1.8'''
+* reduced notice Logs on ping action
+
+'''Version 2.1.7'''
+* return by reference needs &-sign on function name
+
+'''Version 2.1.6'''
+* new csv column "active_status"
+* plugin API returns the plugin version if exists
+
+'''Version 2.1.5'''
+* fixed error in use of old configuration
+* added changelog.txt
