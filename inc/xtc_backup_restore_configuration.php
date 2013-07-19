@@ -50,5 +50,14 @@
       }
     }
   }
+
+
+  function xtc_reset_configuration($configuration) {
+    if (!is_array($configuration)) {
+      $configuration = array($configuration);
+    }
+    $configuration_key = substr($configuration[0], 0, strrpos($configuration[0], '_'));
+    xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE '" . $configuration_key.'%_BAK' . "'");
+  }
   
- ?>
+?>
