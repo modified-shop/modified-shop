@@ -1,11 +1,27 @@
 <?php
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 
 ### Plugin ###
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Shop system encoding');
+##### XTCM BOF #####
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'Choose the encoding of your shop system. This is usually "ISO-8859-15" for versions before 1.06.');
 define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
+##### XTCM EOF #####
+
+##### XTC3 | XTCM BOF #####
+//
+//
+//
+//
+//
+//
+
+//
+//
+
+//
+//
+##### XTC3 | XTCM EOF #####
 
 ### Menu ###
 define('BOX_SHOPGATE', 'Shopgate');
@@ -95,9 +111,20 @@ define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_OFF', 'No');
 define('SHOPGATE_CONFIG_EXTENDED_REVERSE_ITEMS_SORT_ORDER_DESCRIPTION',
 		'Choose "Yes" if the sort order of the products in your mobile shop appears upside down.');
 
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION', 'Products description');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY', 'Description only');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_ONLY', 'Short description only');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_SHORTDESC', 'Description and short description');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_DESC', 'Short description and description');
+define('SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESCRIPTION', 'Please select the method to be used to build descriptions for the mobile shop.');
+
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP', 'Price group for Shopgate');
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION', 'Choose the valid price group for Shopgate (the customer group of which the price information is taken for the products export).');
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_OFF', '-- Deactivated --');
+
+##### XTC3 | XTCM BOF #####
+define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Available on #DATE#');
+##### XTC3 | XTCM EOF #####
 
 ### Orders Import ###
 define('SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS', 'Importing Orders');
