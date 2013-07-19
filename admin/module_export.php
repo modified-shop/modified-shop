@@ -39,7 +39,8 @@
     $messageStack->add($_GET['error'], $map);
   }
 
-  $set = (isset($_GET['set']) ? $_GET['set'] : '');
+  $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : '');
+  $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
   if (xtc_not_null($set)) {
     switch ($set) {
       case 'system':
@@ -63,7 +64,7 @@
     switch ($action) {
       //BOF NEW MODULE PROCESSING
       case 'module_processing_do':
-        $class = basename($_GET['module']);
+        $class = basename($module_class);
         include($module_directory . $class . $file_extension);
         $module = new $class();
         $module->process($_GET['file']);
@@ -84,7 +85,7 @@
             }
           }
         }
-        $class = basename($_GET['module']);
+        $class = basename($module_class);
         include($module_directory . $class . $file_extension);
         $module = new $class();
         //BOF NEW MODULE PROCESSING
@@ -106,16 +107,17 @@
         //EOF NEW MODULE PROCESSING
         } else {
           $module->process($file);
-          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $_GET['module']));
+          xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class));
         }
         break;
 
       case 'install':
       case 'remove':
-        $class = basename($_GET['module']);
+      case 'reset':
+        $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
-          $module = new $class;
+          $module = new $class();
           if ($action == 'install') {
             $module->install();
             // restore old values
@@ -124,9 +126,14 @@
             // save old values
             xtc_backup_configuration($module->keys());
             $module->remove();
+          } elseif ($action == 'reset') {
+            // reset to defualt values 
+            xtc_reset_configuration($module->keys());           
+            $module->remove();
+            $module->install();
           }
         }
-        xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $_GET['module']));
+        xtc_redirect(xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class));
         break;
     }
   }
@@ -219,8 +226,8 @@
 require (DIR_WS_INCLUDES.'head.php');
 if (xtc_not_null($action)) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
-  if (file_exists('includes/css/'.basename($_GET['module']).'.css')) {
-    echo '<link href="includes/css/'.basename($_GET['module']).'.css" rel="stylesheet" type="text/css" />';
+  if (file_exists('includes/css/'.basename($module_class).'.css')) {
+    echo '<link href="includes/css/'.basename($module_class).'.css" rel="stylesheet" type="text/css" />';
   }
 }
 ?>
@@ -281,7 +288,7 @@ if (xtc_not_null($action)) {
                                   $installed_modules[] = $file;
                                 }
                               }
-                              if ((!isset($_GET['module']) || (isset($_GET['module']) && ($_GET['module'] == $class))) && !isset($mInfo)) {
+                              if ((!isset($module_class) || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                                 $module_info = get_module_info($module);
                                 $mInfo = new objectInfo($module_info);
                               }
@@ -360,10 +367,10 @@ if (xtc_not_null($action)) {
                   case 'module_processing_do':
                   case 'ready':
                   case 'edit':
-                    if (isset($_GET['module']) && !isset($mInfo)) {
+                    if (isset($module_class) && !isset($mInfo)) {
                       $heading = array();
                       $contents = array();
-                      $class = basename($_GET['module']);
+                      $class = basename($module_class);
                       include($module_directory . $class . '.php');
                       if (xtc_class_exists($class)) {
                         $module = new $class();
@@ -417,11 +424,12 @@ if (xtc_not_null($action)) {
                           $keys .= '<br /><br />';
                         }
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
-                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
-                        (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
-                          ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
-                          : '')
-                        );
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset') . '">' . BUTTON_RESET . '</a>'.
+                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
+                                                                           (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
+                                                                             ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
+                                                                             : '')
+                                            );
                         $contents[] = array('text' => '<br />' . $mInfo->description);
                         $contents[] = array('text' => '<br />' . $keys);
                       } else {
