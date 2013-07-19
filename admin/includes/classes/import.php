@@ -365,7 +365,7 @@ class xtcImport {
 		// Insert Group Prices.
 		for ($i = 0; $i < count($this->Groups) - 1; $i ++) {
 			// seperate string ::
-			if (isset ($dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']])) {
+			if (isset ($dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']]) && $dataArray['p_priceNoTax.'.$this->Groups[$i +1]['id']] > 0) {
 			// BOF - vr - 2010-03-16 use $products_id instead
 				// $truncate_query = "DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$this->Groups[$i +1]['id']." WHERE products_id='".$prod_data['products_id']."'";
 				$truncate_query = "DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$this->Groups[$i +1]['id']." WHERE products_id='".$products_id."'";
