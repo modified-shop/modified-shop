@@ -2,6 +2,7 @@
 
 ##### XTCM BOF #####
 include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
+include_once DIR_FS_CATALOG.'includes/external/shopgate/base/lang/'.$_SESSION['language'].'/modules/payment/shopgate.php';
 ##### XTCM EOF #####
 
 class shopgate {
@@ -18,7 +19,7 @@ class shopgate {
 //
 //
 //
-		$this->enabled = false;
+		$this->enabled = ((MODULE_PAYMENT_SHOPGATE_STATUS == 'True') ? true : false);
 ###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
 	}
 	
@@ -93,7 +94,7 @@ class shopgate {
 			define('TABLE_ORDERS_SHOPGATE_ORDER', 'orders_shopgate_order');
 		}
 		xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_ALLOWED', 'MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID')");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_STATUS', 'True', '6', '".$this->sort_order."', now())");
+		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_SHOPGATE_STATUS', 'False',  '6', '".$this->sort_order."', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_ALLOWED', '0',   '6', '".$this->sort_order."', now())");
 		
 		$this->installTable();
@@ -128,7 +129,7 @@ class shopgate {
 	 * @return multitype:
 	 */
 	function keys() {
-		return array( );
+		return array('MODULE_PAYMENT_SHOPGATE_STATUS');
 	}
 	
 ##### XTC3 | XTCM | GambioGX BOF #####
@@ -173,6 +174,7 @@ class shopgate {
 					PRIMARY KEY (`shopgate_order_id`)
 			) ENGINE=MyISAM; ");
 ###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
+
 //
 //
 //
@@ -181,6 +183,7 @@ class shopgate {
 //
 //
 ###### XTC3 | XTCM | GambioGX | osCommerce EOF #####
+
 	}
 	
 	/**
@@ -248,6 +251,7 @@ class shopgate {
 			$languageCodes[] = $language['code'];
 			
 			switch($language['code']) {
+
 				case 'de':
 					$statusNameNew = 'Versand blockiert (Shopgate)';
 					$statusNameSearch = '%shopgate%';
@@ -256,13 +260,16 @@ class shopgate {
 					$statusNameNew = 'Shipping blocked (Shopgate)';
 					$statusNameSearch = '%shopgate%';
 					break;
+
 				default: continue 2;
 			}
 			
 			$checkShippingBlocked = xtc_db_fetch_array(xtc_db_query(
 				"SELECT `orders_status_id`, `orders_status_name` ".
 				"FROM `".TABLE_ORDERS_STATUS."` ".
+
 				"WHERE LOWER(`orders_status_name`) LIKE '".xtc_db_input($statusNameSearch)."' ".
+
 				"AND `language_id` = ".xtc_db_input($language['languages_id']).";"
 			));
 			
@@ -328,4 +335,13 @@ class shopgate {
 		
 		return !$exists;
 	}
+
+  function process($file) {
+
+  }
+
+  function display() {
+    return array('text' => '<br/>' . xtc_button(BUTTON_REVIEW_APPROVE) . '&nbsp;' .
+                           xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=easybill')));
+  }
 }

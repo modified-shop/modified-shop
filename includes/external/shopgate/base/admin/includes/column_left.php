@@ -1,7 +1,7 @@
 <?php
 
 
-if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false){
+if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
 
 	// determine configuration language: $_GET > $_SESSION > global
 	$sg_language_get = (!empty($_GET['sg_language'])

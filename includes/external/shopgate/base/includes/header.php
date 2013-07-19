@@ -1,7 +1,7 @@
 <?php
 $shopgateMobileHeader = '';// compatibility to older versions
 $shopgateJsHeader = '';
-if(defined('MODULE_PAYMENT_INSTALLED') && strpos(MODULE_PAYMENT_INSTALLED, 'shopgate.php') !== false) {
+if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
 ##### XTCM BOF #####
 	include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
 	include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
