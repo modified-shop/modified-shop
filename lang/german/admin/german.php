@@ -506,3 +506,5 @@ define('CONFIG_MIN_VALUE_WARNING', '"%s" WARNUNG: Eingabe %s wurde ignoriert! [M
 define('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Anzeigezeitraum in Sek.: %s. Nach dieser Zeit werden die Eintr&auml;ge gel&ouml;scht.');
 
 define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Art.-Nr.');
+define('TEXT_INFO_MODULE_RESET', 'Wollen sie die Standard Einstellungen wieder herstellen ?<br/><br/><b>ACHTUNG</b>: Es werden alle bisher vorgenommen Einstellungen in diesem Modul gel&ouml;scht.');
+define('TEXT_INFO_MODULE_REMOVE', 'Wollen sie das Modul deinstallieren ?<br/><br/><b>ACHTUNG</b>: Es wird ein Backup aller bisherigen Einstellungen in diesem Modul gemacht, welches beim erneuten Installieren wieder hergestellt werden.');

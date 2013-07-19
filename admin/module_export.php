@@ -41,6 +41,8 @@
 
   $set = (isset($_GET['set']) ? strip_tags($_GET['set']) : '');
   $module_class = (isset($_GET['module']) ? strip_tags($_GET['module']) : '');
+  $box = (isset($_GET['box']) ? true : false);
+
   if (xtc_not_null($set)) {
     switch ($set) {
       case 'system':
@@ -112,8 +114,8 @@
         break;
 
       case 'install':
-      case 'remove':
-      case 'reset':
+      case 'removeconfirm':
+      case 'resetconfirm':
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
           include($module_directory . $class . $file_extension);
@@ -122,11 +124,11 @@
             $module->install();
             // restore old values
             xtc_restore_configuration($module->keys());
-          } elseif ($action == 'remove') {
+          } elseif ($action == 'removeconfirm') {
             // save old values
             xtc_backup_configuration($module->keys());
             $module->remove();
-          } elseif ($action == 'reset') {
+          } elseif ($action == 'resetconfirm') {
             // reset to defualt values 
             xtc_reset_configuration($module->keys());           
             $module->remove();
@@ -224,7 +226,7 @@
 
 //########## OUTPUT ##########//
 require (DIR_WS_INCLUDES.'head.php');
-if (xtc_not_null($action)) {
+if (xtc_not_null($action) && !$box) {
   echo '<link href="includes/css/module_box_full.css" rel="stylesheet" type="text/css" />';
   if (file_exists('includes/css/'.basename($module_class).'.css')) {
     echo '<link href="includes/css/'.basename($module_class).'.css" rel="stylesheet" type="text/css" />';
@@ -263,7 +265,7 @@ if (xtc_not_null($action)) {
           <?php } ?>
           <table class="tableCenter">
             <tr>
-                <?php if(!xtc_not_null($action)) { ?>
+                <?php if(!xtc_not_null($action) || $box) { ?>
                     <td class="boxCenterLeft">
                       <table class="tableBoxCenter collapse">
                         <tr class="dataTableHeadingRow">
@@ -288,7 +290,7 @@ if (xtc_not_null($action)) {
                                   $installed_modules[] = $file;
                                 }
                               }
-                              if ((!isset($module_class) || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
+                              if ((!$module_class || (isset($module_class) && ($module_class == $class))) && !isset($mInfo)) {
                                 $module_info = get_module_info($module);
                                 $mInfo = new objectInfo($module_info);
                               }
@@ -398,6 +400,20 @@ if (xtc_not_null($action)) {
                     $contents[] = $module->display();                          
                     break;
 
+                case 'reset':
+                    $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=resetconfirm'));
+                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESET);
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESET .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
+                    break;
+
+                case 'remove':
+                    $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm'));
+                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_REMOVE);
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_MODULE_REMOVE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
+                    break;
+
                   default:
                     if (isset($mInfo) && is_object($mInfo)) {
                       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
@@ -424,8 +440,8 @@ if (xtc_not_null($action)) {
                           $keys .= '<br /><br />';
                         }
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
-                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset') . '">' . BUTTON_RESET . '</a>'.
-                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset&box=1') . '">' . BUTTON_RESET . '</a>'.
+                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove&box=1') . '">' . BUTTON_MODULE_REMOVE . '</a>'.
                                                                            (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
                                                                              ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
                                                                              : '')
