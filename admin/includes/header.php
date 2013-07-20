@@ -79,28 +79,28 @@
           <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_shop.png', BOX_SHOP, 32, 32);?>
         </a>
         <br />
-        Shop
+        <?php echo (BOX_SHOP) ; ?>
       </td>
       <td class="fastmenu">
         <a href="<?php echo xtc_catalog_href_link('logoff.php', '', 'NONSSL') ; ?>">
           <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_logout.png', BOX_LOGOUT, 32, 32);?>
         </a>
         <br />
-        Logout
+        <?php echo (BOX_LOGOUT) ; ?>
       </td>
       <td class="fastmenu">
         <a href="<?php echo xtc_href_link('credits.php', '', 'NONSSL') ; ?>">
           <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_credits.png', BOX_CREDITS, 32, 32);?>
         </a>
         <br />
-        Credits
+        <?php echo (BOX_CREDITS) ; ?>
       </td>
       <td class="fastmenu">
         <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
           <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_update.png', BOX_UPDATE, 32, 32);?>
         </a>
         <br />
-        Update
+        <?php echo (BOX_UPDATE) ; ?>
       </td>
     </tr>
   </table>
