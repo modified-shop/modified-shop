@@ -63,7 +63,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                 where p.products_id = pd.products_id 
                                   and l.languages_id = pd.language_id 
                              order by pd.products_viewed DESC";
-        $products_split = new splitPageResults($_GET['page'], '20', $products_query_raw, $products_query_numrows);
+        $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_STATS_RESULTS, $products_query_raw, $products_query_numrows);
         $products_query = xtc_db_query($products_query_raw);
         while ($products = xtc_db_fetch_array($products_query)) {
           $rows++;
