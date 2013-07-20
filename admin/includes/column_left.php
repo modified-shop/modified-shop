@@ -56,8 +56,19 @@ if (!function_exists('endMenue')) { // menü schließen
 echo '<div id="cssmenu" class="suckertreemenu">';
 echo '<ul id="treemenu1">';
 
-//---------------------------Ausgewählte Admin Sprache als Flagge
-echo '<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>';
+//---------------------------Ausgewählte Admin-Sprache als Flagge mit Dropdown
+$ls_languages = xtc_get_languages();
+if ((!isset($_GET['action']) || $_GET['action'] == 'edit') && count($ls_languages) > 1) {
+  echo mainMenue(xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']));
+  while (list($key, $value) = each($ls_languages)) {
+    if ($value['directory'] != $_SESSION['language']) {
+      echo '<li><a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '" class="menuBoxContentLink">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . ' ' . $value['name'] . '</a></li>';
+    }
+  }
+  echo endMenue();
+} else {
+  echo '<li>' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</li>';
+}
 
 //---------------------------STARTSEITE
 echo '<li><a href="' . xtc_href_link('start.php', '', 'NONSSL') . '" id="current"><b>' . TEXT_ADMIN_START . '</b></a></li>'; 
