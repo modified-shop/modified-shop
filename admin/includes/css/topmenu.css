@@ -10,6 +10,9 @@ color:#333;
 min-width:1200px;
 border-top: 1px solid #a8a8a8;
 }
+#cssmenu img {
+height: 11px;
+}
 #cssmenu ul {
 background: #dbdbdb /*url(images/menu-bg.gif) 1px repeat-x*/;
 list-style:none;
