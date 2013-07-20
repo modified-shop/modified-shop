@@ -52,7 +52,7 @@
           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_QUANTITY; ?>&nbsp;</td>
         </tr>
         <?php
-        $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page'] * $maxrows - $maxrows : 0;                    
+        $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*MAX_DISPLAY_STATS_RESULTS-MAX_DISPLAY_STATS_RESULTS : 0;             
         $products_query_raw = "select p.products_id,
                                       p.products_model,  
                                       p.products_ordered,
@@ -65,14 +65,12 @@
                                   and p.products_ordered > 0 
                              group by pd.products_id 
                              order by p.products_ordered DESC, pd.products_name";
-        $products_split = new splitPageResults($_GET['page'], '20', $products_query_raw, $products_query_numrows, 'p.products_id');
+        $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_STATS_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
 
         $products_query = xtc_db_query($products_query_raw);
         while ($products = xtc_db_fetch_array($products_query)) {
           $rows++;
-          if (strlen($rows) < 2) {
-            $rows = '0' . $rows;
-          }
+          $rows = str_pad($rows, strlen(MAX_DISPLAY_STATS_RESULTS), '0', STR_PAD_LEFT);
         ?>
         <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
           <td class="dataTableContent"><?php echo $rows; ?>.</td>
@@ -85,8 +83,8 @@
         }
       ?>
       </table>             
-      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
-      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_STATS_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_STATS_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
     </td>
     <!-- body_text_eof //-->
   </tr>
