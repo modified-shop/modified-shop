@@ -144,10 +144,11 @@ require (DIR_WS_INCLUDES.'header.php');
 <?php
 
 if ($srExp < 1) {
+
+    echo xtc_draw_form('campaigns_report', FILENAME_CAMPAIGNS_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
 ?>
         <tr>
           <td colspan="2">
-            <form action="" method="get">
               <table border="0" style="border: 1px solid; border-color: #cccccc;" width="100%" cellspacing="0" cellpadding="0">
                 <tr>
                   <td align="left" rowspan="2" class="menuBoxHeading">
@@ -279,9 +280,9 @@ if ($srExp < 1) {
                   <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>'; ?>
                   </td>
               </table>
-            </form>
-          </td>
-        </tr>
+            </td>
+          </tr>
+        </form>
 <?php
 
 } // end of ($srExp < 1)
