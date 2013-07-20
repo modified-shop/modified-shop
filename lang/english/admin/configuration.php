@@ -718,6 +718,8 @@ define ('MAX_ROW_LISTS_ATTR_OPTIONS_TITLE', 'Product Options: Number of Product 
 define ('MAX_ROW_LISTS_ATTR_OPTIONS_DESC', 'Maximum number of Product Options to be displayed per page.');
 define ('MAX_ROW_LISTS_ATTR_VALUES_TITLE', 'Product Options: Number of Option Values per page');
 define ('MAX_ROW_LISTS_ATTR_VALUES_DESC', 'Maximum number of Option Values to be displayed per page.');
+define('MAX_DISPLAY_STATS_RESULTS_TITLE', 'Anzahl der Statistikergebnisse pro Seite');
+define('MAX_DISPLAY_STATS_RESULTS_DESC', 'Maximum Anzahl der Ergebnisse die in den Statistiken pro Seite angezeigt werden sollen.');
 
 // Whos online
 define ('WHOS_ONLINE_TIME_LAST_CLICK_TITLE', 'Who\'s Online - Display period in seconds');
