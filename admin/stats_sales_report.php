@@ -222,7 +222,7 @@
                     
                   <?php
                   if ($srExp < 1) {
-                    echo xtc_draw_form('sales_report', FILENAME_STATS_SALES_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+                    echo xtc_draw_form('sales_report', FILENAME_SALES_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
                     ?>
                     
                           <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
