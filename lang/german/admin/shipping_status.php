@@ -28,6 +28,7 @@ define('TEXT_INFO_HEADING_NEW_SHIPPING_STATUS', 'Neuer Lieferstatus');
 define('TEXT_INFO_HEADING_EDIT_SHIPPING_STATUS', 'Lieferstatus bearbeiten');
 define('TEXT_INFO_SHIPPING_STATUS_IMAGE', 'Bild:');
 define('TEXT_INFO_HEADING_DELETE_SHIPPING_STATUS', 'Lieferstatus l&ouml;schen');
+define('TEXT_DELETE_IMAGE', 'Bild l&ouml;schen');
 
 define('ERROR_REMOVE_DEFAULT_SHIPPING_STATUS', 'Fehler: Der Standard-Lieferstatus kann nicht gel&ouml;scht werden. Bitte definieren Sie einen neuen Standard-Lieferstatus und wiederholen Sie den Vorgang.');
 define('ERROR_STATUS_USED_IN_ORDERS', 'Fehler: Dieser Lieferstatus wird zur Zeit noch f&uuml;r Artikel verwendet.');
