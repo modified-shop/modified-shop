@@ -87,10 +87,6 @@
   );
 
 // ---------------------------------------------------------------------------------------
-//      Einzelne Content Seiten mit noindex versehen, kommagetrennte Liste der coID
-// ---------------------------------------------------------------------------------------
-  $content_noIndex = array(7,9);
-// ---------------------------------------------------------------------------------------
 //  Ende Konfiguration
 // ---------------------------------------------------------------------------------------
 
@@ -430,14 +426,11 @@ switch(basename($PHP_SELF)) {
 // ---------------------------------------------------------------------------------------
   case FILENAME_CONTENT :
 
-    //  Noindex bei bestimmten Contet Seiten
-    if(in_array(intval($_GET['coID']),$content_noIndex)) {
-      $meta_robots = 'noindex, follow, noodp';
-    }
     $contents_meta_query = xtDBquery("
       select  content_meta_title,
               content_meta_description,
               content_meta_keywords,
+              content_meta_robots,
               content_title,
               content_heading,
               content_text,
@@ -457,7 +450,12 @@ switch(basename($PHP_SELF)) {
           $contents_meta['content_text'] .= ' '.implode(' ', @file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']));
         }
       }
-
+      
+      // meta robots
+      if ($contents_meta['content_meta_robots']!='') {
+        $meta_robots = $contents_meta['content_meta_robots'];
+      }
+      
       // KeyWords ...
       if(!empty($contents_meta['content_meta_keywords'])) {
         $meta_keyw = $contents_meta['content_meta_keywords'];
