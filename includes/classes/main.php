@@ -56,7 +56,7 @@ class main {
    */
   function getShippingStatusImage($id) {
     if (isset($this->SHIPPING[$id]['image']) && $this->SHIPPING[$id]['image'] != '') {
-      return DIR_WS_CATALOG.'admin/images/icons/'.$this->SHIPPING[$id]['image'];
+      return DIR_WS_CATALOG.DIR_WS_IMAGES.$this->SHIPPING[$id]['image'];
     } else {
       return;
     }

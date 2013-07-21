@@ -20,6 +20,7 @@
   switch ($_GET['action']) {
     case 'insert':
     case 'save':
+        
       $shipping_status_id = xtc_db_prepare_input($_GET['oID']);
 
       $languages = xtc_get_languages();
@@ -41,15 +42,22 @@
           $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
           xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array);
         } elseif ($_GET['action'] == 'save') {
-			//BOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
-			$shipping_status_query = xtc_db_query("select * from ".TABLE_SHIPPING_STATUS." where language_id = '".$language_id."' and shipping_status_id = '".xtc_db_input($shipping_status_id)."'");
-			if (xtc_db_num_rows($shipping_status_query) == 0) xtc_db_perform(TABLE_SHIPPING_STATUS, array ('shipping_status_id' => xtc_db_input($shipping_status_id), 'language_id' => $language_id));
-			//EOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
-			xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array, 'update', "shipping_status_id = '" . xtc_db_input($shipping_status_id) . "' and language_id = '" . $language_id . "'");
+          $shipping_status_query = xtc_db_query("select * from ".TABLE_SHIPPING_STATUS." where language_id = '".$language_id."' and shipping_status_id = '".xtc_db_input($shipping_status_id)."'");
+          if (xtc_db_num_rows($shipping_status_query) == 0) 
+            xtc_db_perform(TABLE_SHIPPING_STATUS, array ('shipping_status_id' => xtc_db_input($shipping_status_id), 'language_id' => $language_id));
+          xtc_db_perform(TABLE_SHIPPING_STATUS, $sql_data_array, 'update', "shipping_status_id = '" . xtc_db_input($shipping_status_id) . "' and language_id = '" . $language_id . "'");
         }
       }
 
-      if ($shipping_status_image = xtc_try_upload('shipping_status_image',DIR_WS_ICONS)) {
+      if ($_POST['delete_image'] == 'on') {
+        $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_IMAGES . $_POST['shipping_image'];        
+        if (file_exists($image_location)) {
+          @unlink($image_location);
+          xtc_db_query("update " . TABLE_SHIPPING_STATUS . " set shipping_status_image = '' where shipping_status_id = '" . xtc_db_input($shipping_status_id) . "'");
+        }
+      }
+
+      if ($shipping_status_image = xtc_try_upload('shipping_status_image',DIR_FS_DOCUMENT_ROOT.DIR_WS_IMAGES)) {
         xtc_db_query("update " . TABLE_SHIPPING_STATUS . " set shipping_status_image = '" . $shipping_status_image->filename . "' where shipping_status_id = '" . xtc_db_input($shipping_status_id) . "'");
       }
 
@@ -68,7 +76,12 @@
       if ($shipping_status['configuration_value'] == $oID) {
         xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_SHIPPING_STATUS_ID'");
       }
-
+      $shipping_status_image_query = xtc_db_query("select shipping_status_image from " . TABLE_SHIPPING_STATUS . " where shipping_status_id='".(int)$oID."'");
+      $shipping_status_image = xtc_db_fetch_array($shipping_status_image_query);
+      $image_location = DIR_FS_DOCUMENT_ROOT . DIR_WS_IMAGES . $shipping_status_image['shipping_status_image'];        
+      if (file_exists($image_location)) 
+        @unlink($image_location);
+      
       xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where shipping_status_id = '" . xtc_db_input($oID) . "'");
 
       xtc_redirect(xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page']));
@@ -76,7 +89,6 @@
 
     case 'delete':
       $oID = xtc_db_prepare_input($_GET['oID']);
-
 
       $remove_status = true;
       if ($oID == DEFAULT_SHIPPING_STATUS_ID) {
@@ -144,7 +156,7 @@
     if (DEFAULT_SHIPPING_STATUS_ID == $shipping_status['shipping_status_id']) {
         echo '<td class="dataTableContent" align="left">';
      if ($shipping_status['shipping_status_image'] != '') {
-       echo xtc_image(DIR_WS_ICONS . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO);
+       echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO);
      }
      echo '</td>';
       echo '                <td class="dataTableContent"><b>' . $shipping_status['shipping_status_name'] . ' (' . TEXT_DEFAULT . ')</b></td>' . "\n";
@@ -152,18 +164,13 @@
 
       			echo '<td class="dataTableContent" align="left">';
                        if ($shipping_status['shipping_status_image'] != '') {
-                           echo xtc_image(DIR_WS_ICONS . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO);
+                           echo xtc_image(DIR_WS_CATALOG.DIR_WS_IMAGES . $shipping_status['shipping_status_image'] , IMAGE_ICON_INFO);
                            }
                            echo '</td>';
       echo '                <td class="dataTableContent">' . $shipping_status['shipping_status_name'] . '</td>' . "\n";
     }
 ?>
-<!-- BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
-<!--
-                <td class="dataTableContent" align="right"><?php if ( (is_object($oInfo)) && ($shipping_status['shipping_status_id'] == $oInfo->shipping_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ''); } else { echo '<a href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $shipping_status['shipping_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
--->
                 <td class="dataTableContent" align="right"><?php if ( (is_object($oInfo)) && ($shipping_status['shipping_status_id'] == $oInfo->shipping_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $shipping_status['shipping_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-<!-- EOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
               </tr>
 <?php
   }
@@ -212,13 +219,15 @@
 
       $contents = array('form' => xtc_draw_form('status', FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->shipping_status_id  . '&action=save', 'post', 'enctype="multipart/form-data"'));
       $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
+      $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . '<br />' . xtc_draw_file_field('shipping_status_image') . 
+                                    '<br />' . $oInfo->shipping_status_image . xtc_draw_hidden_field('shipping_image', $oInfo->shipping_status_image) .
+                                    '<br />' . xtc_draw_checkbox_field('delete_image', '', false) . ' ' . TEXT_DELETE_IMAGE);
 
       $shipping_status_inputs_string = '';
       $languages = xtc_get_languages();
       for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
         $shipping_status_inputs_string .= '<br />' . xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_input_field('shipping_status_name[' . $languages[$i]['id'] . ']', xtc_get_shipping_status_name($oInfo->shipping_status_id, $languages[$i]['id']));
       }
-      $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_IMAGE . '<br />' . xtc_draw_file_field('shipping_status_image',$oInfo->shipping_status_image));
       $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . $shipping_status_inputs_string);
       if (DEFAULT_SHIPPING_STATUS_ID != $oInfo->shipping_status_id) $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->shipping_status_id) . '">' . BUTTON_CANCEL . '</a>');
@@ -238,7 +247,6 @@
         $heading[] = array('text' => '<b>' . $oInfo->shipping_status_name . '</b>');
 
         $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->shipping_status_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->shipping_status_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
-
         $shipping_status_inputs_string = '';
         $languages = xtc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
