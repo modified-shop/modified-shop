@@ -19,7 +19,7 @@ function shopstat_getRegExps()
             "'&(amp|#38);'i"       => '-',        //--Ampersand-Zeichen => '', kaufmännisches Und
             "'&(lt|#60);'i"        => '-',        //--öffnende spitze Klammer
             "'&(gt|#62);'i"        => '-',        //--schließende spitze Klammer
-            "'&(nbsp|#160);'i"     => '',         //--Erzwungenes Leerzeichen
+            "'&(nbsp|#160);'i"     => '-',         //--Erzwungenes Leerzeichen
             "'&(iexcl|#161);|¡'i"  => '',         //umgekehrtes Ausrufezeichen
             "'&(cent|#162);|¢'i"   => 'ct',       //Cent-Zeichen
             "'&(pound|#163);|£'i"  => 'GBP',      //Pfund-Zeichen
@@ -28,7 +28,7 @@ function shopstat_getRegExps()
             "'&(brvbar|#166);|¦'i" => '',         //durchbrochener Strich
             "'&(sect|#167);|§'i"   => '',         //Paragraph-Zeichen
             "'&(copy|#169);|©'i"   => '',         //Copyright-Zeichen
-            "'&(shy|#173);'i"      => '',         //Eingetragene Marke wird zu -R-
+            "'&(shy|#173);'i"      => '',         //bedingter Trennstrich
             "'&(reg|#174);|®'i"    => '-R-',      //Eingetragene Marke wird zu -R-
             "'&(deg|#176);|°'i"    => '-GRAD-',   //Grad-Zeichen -- degree wird zu -Grad-
             "'&(plusmn|#177);|±'i" => '',         //Plusminus-Zeichen
@@ -170,8 +170,20 @@ function shopstat_getRegExps()
             "'&(Yacute|#221;)|Ý'i" => 'Y',        //Großes Y mit Akut
             "'&(yacute|#253;)|ý'i" => 'y',        //Kleines y mit Akut
             "'&#381;|Ž'i"          => 'Z',        //--Großes Z mit Hatschek
-            "'&#382;|ž'i"          => 'z'         //--Kleines z mit Hatschek
-            //EOF - web28 - 2010-05-12 - Weitere Sonderzeichen
+            "'&#382;|ž'i"          => 'z',        //--Kleines z mit Hatschek
+
+            //Benannte Zeichen für Pfeil-Symbole
+            "'&(larr|#8592);|←'i"   => '-',       //--Pfeil links
+            "'&(uarr|#8593);|↑'i"   => '-',       //--Pfeil oben
+            "'&(rarr|#8594);|→'i"   => '-',       //--Pfeil rechts
+            "'&(darr|#8595);|↓'i"   => '-',       //--Pfeil unten
+            "'&(harr|#8596);|↔'i"   => '-',       //--Pfeil links/rechts
+            "'&(crarr|#8629);'i"    => '-',       //--Pfeil links/rechts
+            "'&(lAarr|#8656);'i"    => '-',       //--Pfeil links/rechts
+            "'&(uAarr|#8657);'i"    => '-',       //--Pfeil links/rechts
+            "'&(rArr|#8658);'i"     => '-',       //--Pfeil links/rechts
+            "'&(dArr|#8659);'i"     => '-',       //--Pfeil links/rechts
+            "'&(hArr|#8660);'i"     => '-'        //--Pfeil links/rechts
             );
     foreach ($sr_array_mo as $sr => $rp ) {
         $search[] = $sr;

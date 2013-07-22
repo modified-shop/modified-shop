@@ -26,7 +26,7 @@
 
     $manufacturers_query = xtc_db_query("select manufacturers_id, manufacturers_name from " . TABLE_MANUFACTURERS . " order by manufacturers_name");
     while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
-      $manufacturers_array[] = array('id' => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
+      $manufacturers_array[$manufacturers['manufacturers_id']] = array('id' => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
     }
     
     //BOF - web28 - 2011-01-20 - set manufacturers cache for better performance - thanks to DocBobo

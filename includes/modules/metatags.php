@@ -167,30 +167,9 @@
 // ---------------------------------------------------------------------------------------
 //  Aufräumen: Umlaute und Sonderzeichen wandeln.
 // ---------------------------------------------------------------------------------------
-  function metaNoEntities($Text){
-    if (version_compare(PHP_VERSION, '5.3.4', '<')) {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-    } else {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,get_supported_charset());
-    }
-    $translation_table = array_flip($translation_table);
-    $Return= strtr($Text,$translation_table);
-    return preg_replace( '/&#(\d+);/me',"chr('\\1')",$Return);
-  }
-  function metaHtmlEntities($Text) {
-    //BOF web28 2011-12-02 UTF-8
-    if(strtoupper($_SESSION['language_charset']) == 'UTF-8') {
-      return $Text;
-    }
-    //EOF web28 2011-12-02 UTF-8
-    if (version_compare(PHP_VERSION, '5.3.4', '<')) {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
-    } else {
-      $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES,get_supported_charset());
-    }
-    $translation_table[chr(38)] = '&';
-    return preg_replace("/&(?![A-Za-z]{0,4}\w{2,3};|#[0-9]{2,3};)/","&amp;",strtr($Text,$translation_table));
-  }
+  function metaNoEntities($Text){ 
+    return decode_htmlentities($Text);  
+  }  
 // ---------------------------------------------------------------------------------------
 //  Array basteln: Text aufbereiten -> Array erzeugen -> Array unique ...
 // ---------------------------------------------------------------------------------------
@@ -277,7 +256,8 @@
         $Text = substr($Text,0,$Length).$Abk;
       }
     }
-    return encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
+    $Text = encode_htmlspecialchars($Text, ENT_QUOTES, $_SESSION['language_charset']);
+    return str_replace('&amp;','&',$Text); 
   }
 // ---------------------------------------------------------------------------------------
 //  metaTitle und metaKeyWords, Rückgabe bzw. Formatierung
