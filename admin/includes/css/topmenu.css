@@ -153,6 +153,9 @@ width:190px;
 }
 table.favorites{
 min-width: 955px;
+position: absolute; 
+bottom: 5px;
+left: 190px;
 }
 td.fastmenu {
 width: 105px;
