@@ -175,7 +175,7 @@
                         <br />
                         <table border="0" width="100%" cellspacing="0" cellpadding="0">
                           <tr>
-                            <td align="right"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
+                            <td align="right"><a href="index.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
                           </tr>
                         </table>
                       </form>
@@ -223,7 +223,7 @@
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="right">
-                      <a href="install_step1.php?lg=<?php echo $lang; ?>&db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a>
+                      <a href="install_step1.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>&db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a>
                       <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif">
                     </td>
                   </tr>

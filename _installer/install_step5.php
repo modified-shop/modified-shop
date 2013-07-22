@@ -97,7 +97,7 @@
                         echo draw_hidden_fields(); ?>
                     <table border="0" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
-                        <td align="center"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                        <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
                         <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
                       </tr>
                     </table>
@@ -143,7 +143,7 @@
                             echo draw_hidden_fields(); ?>
                         <table border="0" width="100%" cellspacing="0" cellpadding="0">
                           <tr>
-                            <td align="center"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                            <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
                             <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
                           </tr>
                         </table>
@@ -183,7 +183,7 @@
                           <tr>
                           <?php //BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>
                             <td align="center">
-                              <a href="<?php echo $step;?>.php?lg=<?php echo $lang; ?>">
+                              <a href="<?php echo $step;?>.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>">
                                 <img src="buttons/<?php echo $lang;?>/button_continue.gif" border="0">
                               </a>
                             </td>

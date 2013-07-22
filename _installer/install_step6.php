@@ -363,11 +363,11 @@
 
         // Steuerklassen
         xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (1, 'Standardsatz', '', '', now())");
-        xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (2, 'erm&auml;&szlig;igter Steuersatz', '', NULL, now())");
+        xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (2, 'ermŠ§igter Steuersatz', '', NULL, now())");
 
         // Steuersätze
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (6, 'Steuerzone EU-Ausland', '', '', now())");
-        xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (5, 'Steuerzone EU', 'Steuerzone f&uuml;r die EU', '', now())");
+        xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (5, 'Steuerzone EU', 'Steuerzone fŸr die EU', '', now())");
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (7, 'Steuerzone B2B', '', NULL, now())");
 
         // EU-Steuerzonen Stand 01.01.2007
@@ -394,9 +394,7 @@
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (150, 150, 0, 5, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (170, 170, 0, 5, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (171, 171, 0, 5, NULL, now())");
-        //BOF - Dokuman 2009-08-20 - Added Romania to EU Zones (since 01.01.2007)
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (175, 175, 0, 5, NULL, now())");
-        //EOF - Dokuman 2009-08-20 - Added Romania to EU Zones (since 01.01.2007)
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (189, 189, 0, 5, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (190, 190, 0, 5, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (195, 195, 0, 5, NULL, now())");
@@ -617,7 +615,7 @@
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (238, 238, 0, 6, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (239, 239, 0, 6, NULL, now())");
       }
-      xtc_redirect(xtc_href_link(DIR_MODIFIED_INSTALLER.'/install_step7.php', '', 'NONSSL'));
+      xtc_redirect(xtc_href_link(DIR_MODIFIED_INSTALLER.'/install_step7.php', 'lg='.$lang.'&char='.INSTALL_CHARSET, 'NONSSL'));
     }
   }
 ?>
