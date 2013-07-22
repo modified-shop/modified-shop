@@ -94,7 +94,7 @@ require (DIR_WS_INCLUDES.'head.php');
             $rows = '0' . $rows;
           }
         ?>                  
-        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
+        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_VIEWED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
           <td class="dataTableContent"><?php echo $rows; ?>.</td>
           <td class="dataTableContent"><?php echo $products['products_model']; ?></td>
           <td class="dataTableContent"><?php echo  $products['products_name'] . ' (' . $products['name'] . ')'; ?></td>
@@ -106,9 +106,9 @@ require (DIR_WS_INCLUDES.'head.php');
       ?>
         <tr>
           <td class="dataTableContent" colspan="5" align="right" style="padding-right:20px">
-            <?php echo xtc_draw_form('resetall', FILENAME_STATS_PRODUCTS_PURCHASED, 'clear_all=true&page='.$_GET['page'].'&maxrows='.$maxrows);?>
+            <?php echo xtc_draw_form('resetall', FILENAME_STATS_PRODUCTS_VIEWED, 'clear_all=true&page='.$_GET['page'].'&maxrows='.$maxrows);?>
               <img src="images/icons/warning.gif" alt="" style="border:0px;" />
-              <input type="submit" value="<?php echo BUTTON_RESET_PRODUCTS_PURCHASED; ?>" onclick="this.blur();" class="button" />
+              <input type="submit" value="<?php echo BUTTON_RESET_PRODUCTS_VIEWED; ?>" onclick="this.blur();" class="button" />
               <img src="images/icons/warning.gif" alt="" style="border:0px;" />
             </form>
           </td>
