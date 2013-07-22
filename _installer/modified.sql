@@ -759,7 +759,8 @@ CREATE TABLE products (
   products_startpage INT(1) NOT NULL DEFAULT 0,
   products_startpage_sort INT(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (products_id),
-  KEY idx_products_date_added (products_date_added)
+  KEY idx_products_date_added (products_date_added),
+  KEY idx_products_model (products_model)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_attributes;
