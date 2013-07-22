@@ -61,6 +61,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
 
   //Platzhalter [NOSIGNATUR] falls keine Signatir notwendig (zB Newsletter)
   if (strpos($message_body_html,'[NOSIGNATUR]') !== false) {
+    $message_body_html = str_replace('[NOSIGNATUR]', '', $message_body_html);
+    $message_body_plain = str_replace('[NOSIGNATUR]', '', $message_body_plain);
     $html_signatur = '';
     $txt_signatur = '';
   }
