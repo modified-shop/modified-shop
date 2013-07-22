@@ -1622,7 +1622,8 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'WHOS_ONLINE_IP_WHOIS_SERVICE', 'http://www.utrace.de/?query=', '1000', '62', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CONFIRM_SAVE_ENTRY', 'true', '1000', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'USE_ADMIN_FIXED_TOP', 'true', '1000', '23', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_STATS_RESULTS', '30', '1000', '51', NULL , NOW(), NULL , NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_STATS_RESULTS', '30', '1000', '55', NULL , NOW(), NULL , NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_COUPON_RESULTS', '30', '1000', '56', NULL , NOW(), NULL , NULL);
 
 INSERT INTO configuration_group VALUES (1,'My Store','General information about my store',1,1);
 INSERT INTO configuration_group VALUES (2,'Minimum Values','The minimum values for functions / data',2,1);
@@ -1900,8 +1901,8 @@ INSERT INTO currencies VALUES
 (3, 'CHF', 'Schweizer Franken', 'CHF', '', '.', '', '2', 1.2044, '2012-11-26 00:00:00'),
 (4, 'GBP', 'Great Britain Pound', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
 
-INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'utf-8',1);
-INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'utf-8',1);
+INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'utf-8',1,1);
+INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'utf-8',1,1);
 
 INSERT INTO orders_status VALUES (0,1,'Cancelled');
 INSERT INTO orders_status VALUES (0,2,'Storniert');
