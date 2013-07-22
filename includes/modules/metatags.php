@@ -87,10 +87,6 @@
   );
 
 // ---------------------------------------------------------------------------------------
-//      Einzelne Content Seiten mit noindex versehen, kommagetrennte Liste der coID
-// ---------------------------------------------------------------------------------------
-  $content_noIndex = array(7,9);
-// ---------------------------------------------------------------------------------------
 //  Ende Konfiguration
 // ---------------------------------------------------------------------------------------
 
@@ -182,11 +178,11 @@
     return preg_replace( '/&#(\d+);/me',"chr('\\1')",$Return);
   }
   function metaHtmlEntities($Text) {
-    //BOF web28 2011-12-02 UFT-8
+    //BOF web28 2011-12-02 UTF-8
     if(strtoupper($_SESSION['language_charset']) == 'UTF-8') {
       return $Text;
     }
-    //EOF web28 2011-12-02 UFT-8
+    //EOF web28 2011-12-02 UTF-8
     if (version_compare(PHP_VERSION, '5.3.4', '<')) {
       $translation_table = get_html_translation_table(HTML_ENTITIES,ENT_QUOTES);
     } else {
@@ -442,19 +438,15 @@ switch(basename($PHP_SELF)) {
 // ---------------------------------------------------------------------------------------
   case FILENAME_CONTENT :
 
-    //  Noindex bei bestimmten Contet Seiten
-    if(in_array(intval($_GET['coID']),$content_noIndex)) {
-      $meta_robots = 'noindex, follow, noodp';
-    }
     $contents_meta_query = xtDBquery("
       select  content_meta_title,
               content_meta_description,
               content_meta_keywords,
+              content_meta_robots,
               content_title,
               content_heading,
               content_text,
-              content_file,
-              content_noindex
+              content_file
       from   ".TABLE_CONTENT_MANAGER."
       where   content_group = '".(int)$_GET['coID']."'
       and   languages_id = '".(int)$_SESSION['languages_id']."'
@@ -470,7 +462,12 @@ switch(basename($PHP_SELF)) {
           $contents_meta['content_text'] .= ' '.implode(' ', @file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']));
         }
       }
-
+      
+      // meta robots
+      if ($contents_meta['content_meta_robots']!='') {
+        $meta_robots = $contents_meta['content_meta_robots'];
+      }
+      
       // KeyWords ...
       if(!empty($contents_meta['content_meta_keywords'])) {
         $meta_keyw = $contents_meta['content_meta_keywords'];
@@ -493,9 +490,6 @@ switch(basename($PHP_SELF)) {
         $meta_descr = ($contents_meta['content_heading'])?$contents_meta['content_heading'].': ':'';
         $meta_descr .= $contents_meta['content_text'];
       }
-      
-      //noindex
-      $meta_robots = $contents_meta['content_noindex'] ? 'noindex, follow, noodp' : META_ROBOTS;
     }
 
     //-- Canonical-URL
