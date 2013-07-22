@@ -28,17 +28,6 @@
   ((strip_tags($_GET['search']) != $_GET['search']) ? $_GET['search']=NULL : false);
   ((strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email']=NULL : false);
   
-  // Admin Language Switch
-  $languages_string = '';
-  if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
-    $ls_languages = xtc_get_languages();
-    if (count($ls_languages) > 1) {
-      while (list($key, $value) = each($ls_languages)) {
-        $languages_string .= '&nbsp;<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
-      }
-    }
-  }
-
   // Include XAJAX JS Library
   if( XAJAX_BACKEND_SUPPORT=='true' ) {
     require ('xajax.common.php');
@@ -52,12 +41,11 @@
   <div id="top1"><?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?></div>
 
   <div id="favorites">
-    <div id="logo">
-      <div><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></div>
-      <div><?php echo '&nbsp;&nbsp;&nbsp;'.$languages_string ;?></div>
-    </div>
     <table class="favorites">
       <tr>          
+        <td class="fastmenu" id="logo">
+          <?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', PROJECT_VERSION);?>
+        </td>         
         <td class="fastmenu">
           <a href="<?php echo xtc_href_link('orders.php', '', 'NONSSL') ; ?>">
             <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_orders.png', BOX_ORDERS, 32, 32);?>
@@ -98,28 +86,28 @@
             <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_shop.png', BOX_SHOP, 32, 32);?>
           </a>
           <br />
-          Shop
+          <?php echo (BOX_SHOP) ; ?>
         </td>
         <td class="fastmenu">
           <a href="<?php echo xtc_catalog_href_link('logoff.php', '', 'NONSSL') ; ?>">
             <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_logout.png', BOX_LOGOUT, 32, 32);?>
           </a>
           <br />
-          Logout
+          <?php echo (BOX_LOGOUT) ; ?>
         </td>
         <td class="fastmenu">
           <a href="<?php echo xtc_href_link('credits.php', '', 'NONSSL') ; ?>">
             <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_credits.png', BOX_CREDITS, 32, 32);?>
           </a>
           <br />
-          Credits
+          <?php echo (BOX_CREDITS) ; ?>
         </td>
         <td class="fastmenu">
           <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
             <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_update.png', BOX_UPDATE, 32, 32);?>
           </a>
           <br />
-          Update
+          <?php echo (BOX_UPDATE) ; ?>
         </td>
         <?php
           // xajax in backend

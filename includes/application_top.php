@@ -204,7 +204,9 @@ xtc_db_connect() or die('Unable to connect to database server!');
 // load configuration
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from '.TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-  define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
+  if (substr($configuration['cfgKey'], -4) != '_BAK') {
+    define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
+  }
 }
 
 // PHPMailer
