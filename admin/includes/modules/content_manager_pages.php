@@ -44,7 +44,7 @@ if (!$action) {
                                         content_meta_title,
                                         content_meta_description,
                                         content_meta_keywords,
-                                        content_noindex
+                                        content_meta_robots
                                    FROM ".TABLE_CONTENT_MANAGER."
                                   WHERE languages_id='".$languages[$i]['id']."'
                                     AND parent_id='0'
@@ -68,7 +68,7 @@ if (!$action) {
                        'CONTENT_META_TITLE' => $content_data['content_meta_title'],
                        'CONTENT_META_DESCRIPTION' => $content_data['content_meta_description'],
                        'CONTENT_META_KEYWORDS' => $content_data['content_meta_keywords'],
-                       'CONTENT_NOINDEX' => $content_data['content_noindex']
+                       'TEXT_CONTENT_META_ROBOTS' => $content_data['content_meta_robots']
                        );
     } // while content_data
     ?>
@@ -84,7 +84,7 @@ if (!$action) {
         <td class="dataTableHeadingContent" style="width:25%"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
         <td class="dataTableHeadingContent nobr" style="width:5%"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
-        <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_NOINDEX ?></td>
+        <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_META_ROBOTS ?></td>
         <td class="dataTableHeadingContent txta-c nobr" style="width:30%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
       </tr>
       <?php
@@ -108,7 +108,7 @@ if (!$action) {
             <td class="dataTableContent"><?php echo $content[$ii]['CONTENT_FILE']; ?></td>
             <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
             <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
-            <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_NOINDEX']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
+            <td class="dataTableContent txta-c"><?php echo $content[$ii]['TEXT_CONTENT_META_ROBOTS']; ?>&nbsp;</td>
             <td class="dataTableContent txta-r">
               <a href="">
                 <?php
@@ -149,7 +149,7 @@ if (!$action) {
                                                     content_meta_title,
                                                     content_meta_description,
                                                     content_meta_keywords,
-                                                    content_noindex
+                                                    content_meta_robots
                                                FROM ".TABLE_CONTENT_MANAGER."
                                               WHERE languages_id='".$languages[$i]['id']."'
                                                 AND parent_id='".$content[$ii]['CONTENT_ID']."'
@@ -174,7 +174,7 @@ if (!$action) {
                                  'CONTENT_META_TITLE' => $content_1_data['content_meta_title'],
                                  'CONTENT_META_DESCRIPTION' => $content_1_data['content_meta_description'],
                                  'CONTENT_META_KEYWORDS' => $content_1_data['content_meta_keywords'],
-                                 'CONTENT_NOINDEX' => $content_1_data['content_noindex']
+                                 'TEXT_CONTENT_META_ROBOTS' => $content_1_data['content_meta_robots']
                                  );
             }
             for ($a = 0, $x = sizeof($content_1); $a < $x; $a++) {
@@ -193,7 +193,7 @@ if (!$action) {
                     <td class="dataTableContent"><?php echo $content_1[$a]['CONTENT_FILE']; ?></td>
                     <td class="dataTableContent txta-c"><?php if ($content_1[$a]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
                     <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
-                    <td class="dataTableContent txta-c"><?php if ($content_1[$a]['CONTENT_NOINDEX']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
+                    <td class="dataTableContent txta-c"><?php echo $content_1[$a]['TEXT_CONTENT_META_ROBOTS']; ?>&nbsp;</td>
                     <td class="dataTableContent txta-r">
                       <a href="">
                         <?php
@@ -249,7 +249,7 @@ if (!$action) {
                                             content_meta_title,
                                             content_meta_description,
                                             content_meta_keywords,
-                                            content_noindex
+                                            content_meta_robots
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE content_id='".$g_coID."'");
         $content = xtc_db_fetch_array($content_query);
@@ -336,9 +336,20 @@ if (!$action) {
             <td class="dataTableConfig col-left"><?php echo TEXT_STATUS; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_checkbox_field('status','yes', (isset($content['content_status']) && $content['content_status'] == '1' ? true : false)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
           </tr>
+          <?php
+          $meta_robots = explode(', ', $content['content_meta_robots']);
+          foreach ($meta_robots as $key => $value) {
+            $content['meta_robots'][$value] = $value;
+          }
+          ?>
           <tr>
-            <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_NOINDEX; ?>: </td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_checkbox_field('noindex','yes', (isset($content['content_noindex']) && $content['content_noindex'] == '1' ? true : false));?></td>
+            <td class="dataTableConfig col-left"><?php echo TEXT_CONTENT_META_ROBOTS; ?>: </td>
+            <td class="dataTableConfig col-single-right">
+              <?php echo xtc_draw_checkbox_field('cont_meta_robots[]','noindex', (isset($content['meta_robots']['noindex']) ? $content['meta_robots']['noindex'] : false)).TEXT_CONTENT_NOINDEX.'<br/>'.
+                         xtc_draw_checkbox_field('cont_meta_robots[]','nofollow', (isset($content['meta_robots']['nofollow']) ? $content['meta_robots']['nofollow'] : false)).TEXT_CONTENT_NOFOLLOW.'<br/>'.
+                         xtc_draw_checkbox_field('cont_meta_robots[]','noodp', (isset($content['meta_robots']['noodp']) ? $content['meta_robots']['noodp'] : false)).TEXT_CONTENT_NOODP;
+              ?>
+            </td>
           </tr>
           <?php
             if (GROUP_CHECK=='true') {

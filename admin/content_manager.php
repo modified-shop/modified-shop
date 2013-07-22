@@ -76,8 +76,8 @@
     $file_flag=xtc_db_prepare_input($_POST['file_flag']);
     $parent_check=xtc_db_prepare_input($_POST['parent_check']);
     $parent_id=xtc_db_prepare_input($_POST['parent']);
-    $content_noindex = isset($_POST['noindex']) ? xtc_db_prepare_input($_POST['noindex']) : '';
-    
+    $content_meta_robots = implode(', ', is_array($_POST['cont_meta_robots']) ? array_map('xtc_db_prepare_input', $_POST['cont_meta_robots']) : array());
+        
     $content_query = xtc_db_query("SELECT MAX(content_group) AS content_group FROM ".TABLE_CONTENT_MANAGER."");
     $content_data = mysql_fetch_row($content_query);
     if ($_POST['content_group'] == '0' || $_POST['content_group'] == '') {
@@ -105,8 +105,6 @@
     }  // if
 
     $content_status = $content_status == 'yes' ? 1 : 0;
-
-    $content_noindex = $content_noindex == 'yes' ? 1 : 0;
     
     $parent_id = $parent_check=='yes' ? $parent_id: '0';
 
@@ -137,7 +135,7 @@
                             'content_meta_title' => $content_meta_title,
                             'content_meta_description' => $content_meta_description,
                             'content_meta_keywords' => $content_meta_keywords,
-                            'content_noindex' => $content_noindex
+                            'content_meta_robots' => $content_meta_robots
                             );
       if ($id=='update') {
         xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_id = '" . $coID . "'");
