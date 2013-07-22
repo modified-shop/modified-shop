@@ -18,10 +18,13 @@
 	define("FL_SERVICE_URL", MODULE_FINDOLOGIC_SERVICE_URL);
 
 	// e.g. true
-	define("FL_NET_PRICE", MODULE_FINDOLOGIC_NET_PRICE);
+	//define("FL_NET_PRICE", MODULE_FINDOLOGIC_NET_PRICE);
+	define("FL_NET_PRICE", false); // Changed to static value
 
-	define("FL_ALIVE_TEST_TIMEOUT", MODULE_FINDOLOGIC_ALIVE_TEST_TIMEOUT);
-	define("FL_REQUEST_TIMEOUT", MODULE_FINDOLOGIC_REQUEST_TIMEOUT);
+	//define("FL_ALIVE_TEST_TIMEOUT", MODULE_FINDOLOGIC_ALIVE_TEST_TIMEOUT);
+	define("FL_ALIVE_TEST_TIMEOUT", 1); // Changed to static value
+	//define("FL_REQUEST_TIMEOUT", MODULE_FINDOLOGIC_REQUEST_TIMEOUT);
+	define("FL_REQUEST_TIMEOUT", 3); // Changed to static value
 	
 	// e.g. "export/findologic.csv"
 	define("FL_EXPORT_FILENAME", MODULE_FINDOLOGIC_EXPORT_FILENAME);
@@ -46,7 +49,8 @@
 	} 
 
 	// get the revision this was created from
-	define("FL_REVISION", preg_replace('/.*(\d+).*/', '$1', '$Revision: '.MODULE_FINDOLOGIC_REVISION.' $'));
+	//define("FL_REVISION", preg_replace('/.*(\d+).*/', '$1', '$Revision: '.MODULE_FINDOLOGIC_REVISION.' $'));
+	define("FL_REVISION", preg_replace('/.*(\d+).*/', '$1', '$Revision: 204 $')); // Changed to static value
 
 	// set language
 	define("FL_LANG", MODULE_FINDOLOGIC_LANG);
