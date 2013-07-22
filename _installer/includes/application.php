@@ -22,24 +22,11 @@
   
   // Set the level of error reporting
   error_reporting(E_ALL & ~E_NOTICE);
-  
-  if (INSTALL_CHARSET == 'utf8') {
-    $charset = 'utf-8';
-    $character_set = 'utf8';
-    $collation = 'utf8_general_ci';
-  } else {
-    $charset = 'iso-8859-15';
-    $character_set = 'latin1';
-    $collation = 'latin1_german1_ci'; 
-  }
-  if (!defined('DB_SERVER_CHARSET')) {
-     define('DB_SERVER_CHARSET',$character_set);
-  }
 
   if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
     date_default_timezone_set('Europe/Berlin');
   }
-  
+    
   // Set FileSystem Directories
   if (!defined('DIR_FS_DOCUMENT_ROOT')) {   
     if (strpos($_SERVER['DOCUMENT_ROOT'],'strato') !== false) {
@@ -103,6 +90,30 @@
   if (!defined('DIR_WS_ICONS')) {
     define('DIR_WS_ICONS','images/');
   }
+  $char = '';
+  if (isset($_GET['char']) && $_GET['char'] != '') {
+    $char = $_GET['char'];
+  }
+  if (isset($_POST['char']) && $_POST['char'] != '') {
+    $char = $_POST['char'];
+  }
+  switch ($char) {
+    case 'utf8':
+      define('INSTALL_CHARSET', 'utf8');
+      $charset = 'utf-8';
+      $character_set = 'utf8';
+      $collation = 'utf8_general_ci';
+      break;
+    default:
+      define('INSTALL_CHARSET', 'latin1');
+      $charset = 'iso-8859-15';
+      $character_set = 'latin1';
+      $collation = 'latin1_german1_ci';
+      break;
+  }
+  if (!defined('DB_SERVER_CHARSET')) {
+     define('DB_SERVER_CHARSET',$character_set);
+  }
 
   $lang = '';
   if (isset($_GET['lg']) && $_GET['lg'] != '') {
@@ -125,7 +136,8 @@
     //EOF - DokuMan - 2010-08-16 - Set browser language on installer start page
   }
  //include('language/'.$lang.'.php');
-  $input_lang = '<input type="hidden" name="lg" value="'. $lang .'">';
+  $input_lang  = '<input type="hidden" name="lg" value="'. $lang .'">';
+  $input_lang .= '<input type="hidden" name="char" value="'. INSTALL_CHARSET .'">';
   //EOF - web28 - 2010.02.09 - FIX LOST SESSION
 
 /*########### FUNCTIONS #############*/
@@ -165,7 +177,7 @@
     reset($_POST);
     $hidden_fields = '';
     while (list($key, $value) = each($_POST)) {
-      if ($key != 'x' && $key != 'y' && $key != 'lg') {
+      if ($key != 'x' && $key != 'y' && $key != 'lg' && $key != 'char') {
         if (is_array($value)) {
           for ($i=0; $i<sizeof($value); $i++) {
             $hidden_fields .= xtc_draw_hidden_field_installer($key . '[]', $value[$i]).PHP_EOL;
