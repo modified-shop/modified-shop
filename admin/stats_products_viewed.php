@@ -105,7 +105,7 @@ require (DIR_WS_INCLUDES.'head.php');
         }
       ?>
         <tr>
-          <td class="dataTableContent" colspan="5" align="right" style="padding-right:20px">
+          <td class="dataTableContent txta-c" colspan="5" style="padding-right:20px">
             <?php echo xtc_draw_form('resetall', FILENAME_STATS_PRODUCTS_VIEWED, 'clear_all=true&page='.$_GET['page'].'&maxrows='.$maxrows);?>
               <img src="images/icons/warning.gif" alt="" style="border:0px;" />
               <input type="submit" value="<?php echo BUTTON_RESET_PRODUCTS_VIEWED; ?>" onclick="this.blur();" class="button" />
