@@ -33,9 +33,6 @@ function xtc_db_install($database, $sql_file) {
       if (file_exists($sql_file)) {
         $fd = fopen($sql_file, 'rb');
         $restore_query = fread($fd, filesize($sql_file));
-        if (INSTALL_CHARSET == 'utf8') {
-          $restore_query = utf8_encode(html_entity_decode($restore_query)); 
-        }
         fclose($fd);
       } else {
         $db_error = 'SQL file does not exist: ' . $sql_file;
@@ -104,6 +101,9 @@ function xtc_db_install($database, $sql_file) {
       //EOF - Dokuman - 2009-10-14 - Added missing table entries
 
       for ($i=0; $i<sizeof($sql_array); $i++) {
+        if (INSTALL_CHARSET == 'utf8') {
+          $sql_array[$i] = mb_convert_encoding($sql_array[$i], 'utf-8', 'ISO-8859-15');
+        }
         xtc_db_query_installer($sql_array[$i]);
       }
     } else {
