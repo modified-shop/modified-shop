@@ -105,7 +105,7 @@ require (DIR_WS_INCLUDES.'head.php');
         }
       ?>
         <tr>
-          <td class="dataTableContent" colspan="4" align="right" style="padding-right:20px">
+          <td class="dataTableContent" colspan="5" align="right" style="padding-right:20px">
             <?php echo xtc_draw_form('resetall', FILENAME_STATS_PRODUCTS_PURCHASED, 'clear_all=true&page='.$_GET['page'].'&maxrows='.$maxrows);?>
               <img src="images/icons/warning.gif" alt="" style="border:0px;" />
               <input type="submit" value="<?php echo BUTTON_RESET_PRODUCTS_PURCHASED; ?>" onclick="this.blur();" class="button" />
@@ -114,8 +114,8 @@ require (DIR_WS_INCLUDES.'head.php');
           </td>
         </tr>
       </table>             
-      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $maxrows, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $maxrows, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], 'maxrows='.$maxrows); ?></td>
+      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $maxrows, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $maxrows, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], 'maxrows='.$maxrows); ?></div>
       <div class="clear"></div>
       <div class="smallText pdg2 flt-l">
         <?php echo TEXT_ROWS.'&nbsp;'.xtc_draw_form('getmaxrows', FILENAME_STATS_PRODUCTS_VIEWED, 'page='.$_GET['page']) . xtc_draw_input_field('maxrows', $maxrows, 'style="width:50px"'); ?>
