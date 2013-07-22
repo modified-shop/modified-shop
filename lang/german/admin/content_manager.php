@@ -73,8 +73,9 @@
  define('TEXT_FILE_DESC','Beschreibung:');
  define('USED_SPACE','Verwendeter Speicherplatz:');
  define('TABLE_HEADING_CONTENT_FILESIZE','Dateigr&ouml;&szlig;e');
- 
- define('TEXT_CONTENT_NOINDEX','NoIndex');
-   
+ define('TEXT_CONTENT_NOINDEX','noindex');
+ define('TEXT_CONTENT_NOFOLLOW','nofollow');
+ define('TEXT_CONTENT_NOODP','noodp');
+ define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
  
  ?>
