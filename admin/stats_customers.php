@@ -54,10 +54,9 @@
           <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_TOTAL_PURCHASED; ?>&nbsp;</td>
         </tr>
         <?php
-          if (isset($_GET['page']) && ($_GET['page'] > 1))
-            $rows = $_GET['page'] * MAX_DISPLAY_SEARCH_RESULTS - MAX_DISPLAY_SEARCH_RESULTS;
+          $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*MAX_DISPLAY_STATS_RESULTS-MAX_DISPLAY_STATS_RESULTS : 0;   
           $customers_query_raw = "select c.customers_firstname, c.customers_lastname, sum(op.final_price) as ordersum from " . TABLE_CUSTOMERS . " c, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_ORDERS . " o where c.customers_id = o.customers_id and o.orders_id = op.orders_id group by c.customers_firstname, c.customers_lastname order by ordersum DESC";
-          $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $customers_query_raw, $customers_query_numrows, 'c.customers_id');
+          $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_STATS_RESULTS, $customers_query_raw, $customers_query_numrows, 'c.customers_id');
           // fix counted customers
           $customers_query_numrows = xtc_db_query("select customers_id from " . TABLE_ORDERS . " group by customers_id");
           $customers_query_numrows = xtc_db_num_rows($customers_query_numrows);
@@ -65,10 +64,7 @@
           $customers_query = xtc_db_query($customers_query_raw);
           while ($customers = xtc_db_fetch_array($customers_query)) {
             $rows++;
-
-            if (strlen($rows) < 2) {
-              $rows = '0' . $rows;
-            }
+            $rows = str_pad($rows, strlen(MAX_DISPLAY_STATS_RESULTS), '0', STR_PAD_LEFT);
         ?>
         <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CUSTOMERS, 'search=' . $customers['customers_lastname'], 'NONSSL'); ?>'">
           <td class="dataTableContent"><?php echo $rows; ?>.</td>
@@ -79,8 +75,8 @@
           }
         ?>
       </table>
-      <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
-      <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?>&nbsp;</div>
+      <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_STATS_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
+      <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_STATS_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?>&nbsp;</div>
      </td>
     <!-- body_text_eof //-->
   </tr>
