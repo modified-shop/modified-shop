@@ -144,10 +144,10 @@ require (DIR_WS_INCLUDES.'head.php');
             </tr>
             <?php
             if ($srExp < 1) {
+    echo xtc_draw_form('campaigns_report', FILENAME_CAMPAIGNS_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
               ?>
               <tr>
                 <td colspan="2">
-                  <form action="" method="get">
                     <table border="0" style="border: 1px solid; border-color: #cccccc;" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
                         <td align="left" rowspan="2" class="menuBoxHeading">
@@ -265,9 +265,9 @@ require (DIR_WS_INCLUDES.'head.php');
                         </td>
                       </tr>
                     </table>
-                  </form>
                 </td>
               </tr>
+        </form>
               <?php
             } // end of ($srExp < 1)
             ?>
