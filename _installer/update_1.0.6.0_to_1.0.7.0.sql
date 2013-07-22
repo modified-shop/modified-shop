@@ -30,4 +30,7 @@ ALTER TABLE languages ADD status_admin INT( 1 ) NOT NULL DEFAULT '1';
 #GTB - 2013-07-22 - Add customers_country_iso_code_2
 ALTER TABLE orders ADD customers_country_iso_code_2 varchar(2) NOT NULL AFTER customers_address_format_id;
 
+#GTB - 2013-07-22 - Add new index on products_model
+ALTER TABLE products ADD INDEX idx_products_model (products_model);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
