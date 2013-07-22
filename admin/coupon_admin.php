@@ -33,8 +33,8 @@
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php'); //web28- 2011-07-07 - Fix html email
   require_once(DIR_WS_CLASSES . 'currencies.php');
   
-  if(!defined('MAX_DISPLAY_COUPON_LIST')) {
-    define('MAX_DISPLAY_COUPON_LIST', MAX_DISPLAY_SEARCH_RESULTS);
+  if(!defined('MAX_DISPLAY_COUPON_RESULTS')) {
+    define('MAX_DISPLAY_COUPON_RESULTS', MAX_DISPLAY_SEARCH_RESULTS);
   }
   $currencies = new currencies();
 
@@ -292,7 +292,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                 </tr>
                 <?php
                 $cc_query_raw = "SELECT * FROM " . TABLE_COUPON_REDEEM_TRACK . " WHERE coupon_id = '" . (int)$_GET['cid'] . "'";
-                $cc_split = new splitPageResults($_GET['page'], MAX_DISPLAY_COUPON_LIST, $cc_query_raw, $cc_query_numrows);
+                $cc_split = new splitPageResults($_GET['page'], MAX_DISPLAY_COUPON_RESULTS, $cc_query_raw, $cc_query_numrows);
                 $cc_query = xtc_db_query($cc_query_raw);
                 while ($cc_list = xtc_db_fetch_array($cc_query)) {      
                   if (((!$_GET['uid']) || (@$_GET['uid'] == $cc_list['unique_id'])) && (!$cInfo)) {
@@ -319,8 +319,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                 ?>
                 <?php if (is_object($cc_split)) { ?>
                 <tr>
-                  <td class="smallText">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</td>
-                  <td class="smallText txta-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</td>
+                  <td class="smallText">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</td>
+                  <td class="smallText txta-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid'))); ?>&nbsp;</td>
                 </tr>
               <?php } ?>
               </table>
@@ -802,7 +802,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                                         $coupon_active
                                   ORDER BY coupon_id DESC";
 
-                $cc_split = new splitPageResults($_GET['page'], MAX_DISPLAY_COUPON_LIST, $cc_query_raw, $cc_query_numrows);
+                $cc_split = new splitPageResults($_GET['page'], MAX_DISPLAY_COUPON_RESULTS, $cc_query_raw, $cc_query_numrows);
                 $cc_query = xtc_db_query($cc_query_raw);
                 while ($cc_list = xtc_db_fetch_array($cc_query)) {                                  
                   if ((!isset($_GET['cid']) || (isset($_GET['cid']) && ($_GET['cid'] == $cc_list['coupon_id']))) && !isset($cInfo)) {
@@ -840,8 +840,8 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
               <?php
               if (is_object($cc_split)) {
               ?>
-              <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div> 
-              <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_LIST, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid','cid'))); ?>&nbsp;</div> 
+              <div class="smallText pdg2 flt-l">&nbsp;<?php echo $cc_split->display_count($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUPONS); ?>&nbsp;</div> 
+              <div class="smallText pdg2 flt-r">&nbsp;<?php echo $cc_split->display_links($cc_query_numrows, MAX_DISPLAY_COUPON_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'],xtc_get_all_get_params(array('page','uid','cid'))); ?>&nbsp;</div> 
               <?php
               }
               ?>
