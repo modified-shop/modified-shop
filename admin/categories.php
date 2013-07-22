@@ -375,21 +375,23 @@ require (DIR_WS_INCLUDES.'head.php');
   <?php }  ?>
 </head>
 <body>
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
-
-    <!-- body //-->
-    <table style="border:none; width:100%;" cellspacing="2" cellpadding="2">
-      <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <!-- left_navigation //-->
-          <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-          <!-- left_navigation_eof //-->
-        </td>
-        <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <table width="100%" cellspacing="0" cellpadding="2">
+		<!-- header //-->
+		<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+		<!-- header_eof //-->
+		<!-- body //-->
+		<table class="tableBody">
+			<tr>
+				<?php //left_navigation
+        if (USE_ADMIN_TOP_MENU == 'false') {
+          echo '<td class="columnLeft2">'.PHP_EOL;
+          echo '<!-- left_navigation //-->'.PHP_EOL;       
+          require_once(DIR_WS_INCLUDES . 'column_left.php');
+          echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+          echo '</td>'.PHP_EOL;      
+        }
+        ?>
+				<!-- body_text //-->
+				<td class="boxCenter">
             <?php
               //----- new_category / edit_category (when ALLOW_CATEGORY_DESCRIPTIONS is 'true') -----
               if ($action == 'new_category' || $action == 'edit_category') {
@@ -405,17 +407,16 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 include (DIR_WS_MODULES.'categories_view.php');
               }
-            ?>
-            <!-- close tables from above modules //-->
-          </table>
+              ?>
+              <!-- close tables from above modules //-->
         </td>
-        <!-- body_text_eof //-->
-      </tr>
-    </table>
-    <!-- body_eof //-->
-    <!-- footer //-->
+				<!-- body_text_eof //-->
+			</tr>
+		</table>
+		<!-- body_eof //-->
+		<!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
-  </body>
+		<!-- footer_eof //-->
+	</body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

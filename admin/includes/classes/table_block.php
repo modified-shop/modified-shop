@@ -38,9 +38,9 @@
         $form_set = true;
         array_shift($contents);
       }
-      $tableBox_string .= '<table class="contentTable" border="' . self::$table_border . '" width="' . self::$table_width . '" cellspacing="' . self::$table_cellspacing . '" cellpadding="' . self::$table_cellpadding . '"';
+      $tableBox_string .= '<table class="contentTable"';
       if (self::$table_parameters != '')
-        $tableBox_string .= ' ' . self::$table_parameters;
+        $tableBox_string .= ' ' . self::$table_parameters; //additional css styles
       $tableBox_string .= '>' . "\n";
       for ($i = 0; $i < sizeof($contents); $i++) {
         $tableBox_string .= '  <tr';
@@ -56,7 +56,7 @@
             if ($contents[$i][$x]['text']) {
               $tableBox_string .= '    <td ';
               if ($contents[$i][$x]['align'] != '')
-                $tableBox_string .= ' align="' . $contents[$i][$x]['align'] . '"';
+                $tableBox_string .= ' style="text-align:' . $contents[$i][$x]['align'] . ';"'; //using css
               if ($contents[$i][$x]['params']) {
                 $tableBox_string .= ' ' . $contents[$i][$x]['params'];
               } elseif (self::$table_data_parameters != '') {
@@ -76,7 +76,7 @@
           if (!isset($contents[$i]['align']))
             $contents[$i]['align'] = '';
           if ($contents[$i]['align'] != '')
-            $tableBox_string .= ' align="' . $contents[$i]['align'] . '"';
+            $tableBox_string .= ' style="text-align:' . $contents[$i]['align'] . ';"'; //using css
           if (isset($contents[$i]['params'])) {
             $tableBox_string .= ' ' . $contents[$i]['params'];
           } elseif (self::$table_data_parameters != '') {

@@ -23,70 +23,68 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-   
-    $confirm_save_entry = 'onclick="return confirm(\''. SAVE_ENTRY .'\')"';
-    if (defined('CONFIRM_SAVE_ENTRY')) {
-      $confirm_save_entry = CONFIRM_SAVE_ENTRY == 'true' ? $confirm_save_entry : '';
-    }
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-    if (isset($_GET['cID']) && (!$_POST) ) {
-      $category_query = xtc_db_query("select * from " .
-                                      TABLE_CATEGORIES . " c, " .
-                                      TABLE_CATEGORIES_DESCRIPTION . " cd
-                                      where c.categories_id = cd.categories_id
-                                      and c.categories_id = '" . (int)$_GET['cID'] . "'");
+  $confirm_save_entry = 'onclick="return confirm(\''. SAVE_ENTRY .'\')"';
+  if (defined('CONFIRM_SAVE_ENTRY')) {
+    $confirm_save_entry = CONFIRM_SAVE_ENTRY == 'true' ? $confirm_save_entry : '';
+  }
 
-      $category = xtc_db_fetch_array($category_query);
+  if (isset($_GET['cID']) && (!$_POST) ) {
+    $category_query = xtc_db_query("select * from " .
+                                    TABLE_CATEGORIES . " c, " .
+                                    TABLE_CATEGORIES_DESCRIPTION . " cd
+                                    where c.categories_id = cd.categories_id
+                                    and c.categories_id = '" . (int)$_GET['cID'] . "'");
 
-      $cInfo = new objectInfo($category);
-    } elseif (xtc_not_null($_POST)) {
-      $cInfo = new objectInfo($_POST);
-      $categories_name = $_POST['categories_name'];
-      $categories_heading_title = $_POST['categories_heading_title'];
-      $categories_description = $_POST['categories_description'];
-      $categories_meta_title = $_POST['categories_meta_title'];
-      $categories_meta_description = $_POST['categories_meta_description'];
-      $categories_meta_keywords = $_POST['categories_meta_keywords'];
-    } else {
-      $cInfo = new objectInfo(array());
-    }
+    $category = xtc_db_fetch_array($category_query);
 
-    $languages = xtc_get_languages();
+    $cInfo = new objectInfo($category);
+  } elseif (xtc_not_null($_POST)) {
+    $cInfo = new objectInfo($_POST);
+    $categories_name = $_POST['categories_name'];
+    $categories_heading_title = $_POST['categories_heading_title'];
+    $categories_description = $_POST['categories_description'];
+    $categories_meta_title = $_POST['categories_meta_title'];
+    $categories_meta_description = $_POST['categories_meta_description'];
+    $categories_meta_keywords = $_POST['categories_meta_keywords'];
+  } else {
+    $cInfo = new objectInfo(array());
+  }
 
-    $cat_id = '';
-    if (!isset($_GET['cID'])) {
-      $cat_id_array = xtc_parse_category_path($cPath);
-      $cat_id = $cPath_array[(sizeof($cat_id_array) - 1)];
-    } else {
-      $cat_id = $_GET['cID'];
-    }
+  $languages = xtc_get_languages();
+  
+  $cat_id = '';
+  if (!isset($_GET['cID'])) {
+    $cat_id_array = xtc_parse_category_path($cPath);
+    $cat_id = $cPath_array[(sizeof($cat_id_array) - 1)];
+  } else {
+    $cat_id = $_GET['cID'];
+  }
+    
+  $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
 
-    $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
-
-    $order_array='';
-    $order_array=array(array('id' => 'p.products_price','text'=>TXT_PRICES),
-                       array('id' => 'pd.products_name','text'=>TXT_NAME),
-                       array('id' => 'p.products_date_added','text'=>TXT_DATE),
-                       array('id' => 'p.products_model','text'=>TXT_MODEL),
-                       array('id' => 'p.products_ordered','text'=>TXT_ORDERED),
-                       array('id' => 'p.products_sort','text'=>TXT_SORT),
-                       array('id' => 'p.products_weight','text'=>TXT_WEIGHT),
-                       array('id' => 'p.products_quantity','text'=>TXT_QTY));
-    $default_value='pd.products_name';
-    $order_array_desc='';
-    $order_array_desc =array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
-                            array('id' => 'DESC','text'=>TEXT_SORT_DESC));
+  $order_array='';
+  $order_array=array(array('id' => 'p.products_price','text'=>TXT_PRICES),
+                     array('id' => 'pd.products_name','text'=>TXT_NAME),
+                     array('id' => 'p.products_date_added','text'=>TXT_DATE),
+                     array('id' => 'p.products_model','text'=>TXT_MODEL),
+                     array('id' => 'p.products_ordered','text'=>TXT_ORDERED),
+                     array('id' => 'p.products_sort','text'=>TXT_SORT),
+                     array('id' => 'p.products_weight','text'=>TXT_WEIGHT),
+                     array('id' => 'p.products_quantity','text'=>TXT_QTY));
+  $default_value='pd.products_name';
+  $order_array_desc='';
+  $order_array_desc =array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
+                          array('id' => 'DESC','text'=>TEXT_SORT_DESC));
 ?>
-  <tr>
-    <td class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></td>
-    <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-  </tr>
-  <tr>
+
+    <div class="pageHeading"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
+
     <?php
     $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';
     echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"'); ?>
-   <td>
+
       <!-- BOF Block1 //-->
       <div style="width: 860px; padding:5px;">
       <table width="100%" border="0" cellpadding="5" cellspacing="0" bgcolor="f3f3f3" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding: 5px;">
@@ -137,7 +135,7 @@
           <td style="border-top: 0px solid;  border-color: #ff0000;" width="204" valign="top" class="main" ><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
           <td style="border: 1px solid; border-color: #ff0000;"  bgcolor="#FFCC33" class="main">
             <?php
-            echo $catfunc->create_permission_checkboxes($category);           
+            echo $catfunc->create_permission_checkboxes($category);
             ?>
           </td>
         </tr>
@@ -222,6 +220,4 @@
         <input type="submit" class="button" name="update_category" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
         <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
       </div>
-    </td>
   </form>
-  </tr>

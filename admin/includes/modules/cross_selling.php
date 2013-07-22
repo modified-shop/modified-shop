@@ -48,8 +48,6 @@
     return $parent_data['parent_id'];
   }
   ?>
-  <tr>
-    <td>
       <table border="0" width="100%" cellspacing="0" cellpadding="0">
         <tr>
           <td class="pageHeading"><?php echo CROSS_SELLING.' : '.$article_data['products_name']; ?></td>
@@ -64,13 +62,7 @@
           </td>
         </tr>
       </table>
-    </td>
-  </tr>
-  <tr>
-    <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-  </tr>
-  <tr>
-    <td>
+
       <?php
       echo xtc_draw_form('cross_selling', FILENAME_CATEGORIES, '', 'GET', '');
         echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
@@ -132,10 +124,8 @@
         </table>
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" onclick="return confirm('<?php echo SAVE_ENTRY; ?>')">
       </form>
-    </td>
-  </tr>
-  <tr>
-    <td class="pageHeading"><hr noshade><?php echo CROSS_SELLING_SEARCH; ?>
+
+<div class="pageHeading"><hr noshade><?php echo CROSS_SELLING_SEARCH; ?></div>
       <table>
         <br /><br />
         <tr class="dataTableRow">
@@ -156,10 +146,7 @@
         </tr>
       </table>
       <hr noshade>
-    </td>
-  </tr>
-  <tr>
-    <td>
+
       <?php
       // search results
       if ($_GET['search']) {
@@ -210,5 +197,3 @@
         <?php
       } 
       ?>
-    </td>
-  </tr>
