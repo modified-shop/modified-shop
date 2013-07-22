@@ -124,9 +124,7 @@ CREATE TABLE database_version (
   version VARCHAR(32) NOT NULL
 ) ENGINE=MyISAM;
 
-# Tomcraft - 2009-11-02 - set global customers-group-permissions (customers_group)
-# web28 - 2010-07-07 - set shop_offline parameter
-# Web28 - 2010-11-13 - add missing listproducts
+# set global customers-group-permissions (customers_group)
 DROP TABLE IF EXISTS admin_access;
 CREATE TABLE admin_access (
   customers_id VARCHAR(32) NOT NULL DEFAULT 0,
@@ -475,7 +473,7 @@ CREATE TABLE customers_status_history (
   PRIMARY KEY (customers_status_history_id)
 ) ENGINE=MyISAM;
 
-# Tomcraft - 2009-11-08 - Added option to deactivate languages (status)
+# Added option to deactivate languages (status)
 DROP TABLE IF EXISTS languages;
 CREATE TABLE languages (
   languages_id INT NOT NULL AUTO_INCREMENT,
@@ -486,6 +484,7 @@ CREATE TABLE languages (
   sort_order INT(3),
   language_charset text NOT NULL,
   status INT(1) NOT NULL DEFAULT 1,
+  status_admin INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (languages_id),
   KEY idx_languages_name (name)
 ) ENGINE=MyISAM;
@@ -549,7 +548,7 @@ CREATE TABLE newsletters_history (
   PRIMARY KEY (news_hist_id)
 ) ENGINE=MyISAM;
 
-# vr - 2012-10-26 add index idx_customers_id
+# add index idx_customers_id
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
   orders_id INT NOT NULL AUTO_INCREMENT,
@@ -573,6 +572,7 @@ CREATE TABLE orders (
   customers_telephone VARCHAR(32) NOT NULL,
   customers_email_address VARCHAR(96) NOT NULL,
   customers_address_format_id INT(5) NOT NULL,
+  customers_country_iso_code_2 varchar(2) NOT NULL,
   delivery_name VARCHAR(64) NOT NULL,
   delivery_firstname VARCHAR(64) NOT NULL,
   delivery_lastname VARCHAR(64) NOT NULL,
@@ -629,7 +629,7 @@ CREATE TABLE orders (
   KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
-# vr - 2010-04-21 add indices idx_orders_id, idx_products_id
+# add indices idx_orders_id, idx_products_id
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   orders_products_id INT NOT NULL AUTO_INCREMENT,
@@ -830,7 +830,7 @@ CREATE TABLE products_notifications (
   PRIMARY KEY (products_id, customers_id)
 ) ENGINE=MyISAM;
 
-# Tomcraft - 2009-11-07 - Added sortorder to products_options
+# sortorder to products_options
 DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id INT NOT NULL DEFAULT 0,
@@ -910,7 +910,7 @@ CREATE TABLE sessions (
   PRIMARY KEY (sesskey)
 ) ENGINE=MyISAM;
 
-# BOF - web28 - 2010-07-07 - set shop offline
+# set shop offline
 DROP TABLE IF EXISTS shop_configuration;
 CREATE TABLE shop_configuration (
   configuration_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -919,10 +919,6 @@ CREATE TABLE shop_configuration (
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM;
-
-INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE', '');
-INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE_MSG', '<p style="text-align: center;"><span style="font-size: large;"><font face="Arial">Unser Shop ist aufgrund von Wartungsarbeiten im Moment nicht erreichbar.<br /></font><font face="Arial">Bitte besuchen Sie uns zu einem sp&auml;teren Zeitpunkt noch einmal.<br /><br /><br /><br /></font></span><font><font><a href="login_admin.php"><font color="#808080">Login</font></a></font></font><span style="font-size: large;"><font face="Arial"><br /></font></span></p>');
-# EOF - web28 - 2010-07-07 - set shop offline
 
 DROP TABLE IF EXISTS specials;
 CREATE TABLE specials (
@@ -1023,7 +1019,7 @@ CREATE TABLE content_manager (
   content_meta_title TEXT,
   content_meta_description TEXT,
   content_meta_keywords TEXT,
-  content_noindex INT(1) NOT NULL DEFAULT 0,
+  content_meta_robots VARCHAR(32) NOT NULL,
   PRIMARY KEY (content_id),
   FULLTEXT idx_content_meta (content_meta_title,content_meta_description,content_meta_keywords)
 ) ENGINE=MyISAM;
@@ -1210,6 +1206,10 @@ INSERT INTO shipping_status VALUES (2, 2, '1 Woche', '');
 INSERT INTO shipping_status VALUES (3, 1, '2 Weeks', '');
 INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '');
 
+# shop offline
+INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE', '');
+INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE_MSG', '<p style="text-align: center;"><span style="font-size: large;"><font face="Arial">Unser Shop ist aufgrund von Wartungsarbeiten im Moment nicht erreichbar.<br /></font><font face="Arial">Bitte besuchen Sie uns zu einem sp&auml;teren Zeitpunkt noch einmal.<br /><br /><br /><br /></font></span><font><font><a href="login_admin.php"><font color="#808080">Login</font></a></font></font><span style="font-size: large;"><font face="Arial"><br /></font></span></p>');
+
 #DokuMan - 2012-08-28 - Track and Trace functionality
 INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_sort_order, carrier_date_added, carrier_last_modified) VALUES
 (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', 10, now(), null),
@@ -1223,27 +1223,25 @@ INSERT INTO carriers (carrier_id, carrier_name, carrier_tracking_link, carrier_s
 (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', 90, now(), null),
 (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', 100, now(), null);
 
-# data
-INSERT INTO content_manager VALUES (1, 0, 0, '', 1, 'Shipping &amp; Returns', 'Shipping &amp; Returns', 'Put here your Shipping &amp; Returns information.', 0, 1, '', 1, 1, 0, '', '', '');
-INSERT INTO content_manager VALUES (2, 0, 0, '', 1, 'Privacy Notice', 'Privacy Notice', 'Put here your Privacy Notice information.', 0, 1, '', 1, 2, 0, '', '', '');
-INSERT INTO content_manager VALUES (3, 0, 0, '', 1, 'Conditions of Use', 'Conditions of Use', 'Conditions of Use<br />Put here your Conditions of Use information.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '');
-INSERT INTO content_manager VALUES (4, 0, 0, '', 1, 'Imprint', 'Imprint', 'Put here your Company information.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '');
-INSERT INTO content_manager VALUES (5, 0, 0, '', 1, 'Index', 'Welcome', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite von der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '');
-INSERT INTO content_manager VALUES (6, 0, 0, '', 2, 'Liefer- und Versandkosten', 'Liefer- und Versandkosten', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Liefer- und Versandkosten ein.', 0, 1, '', 1, 1, 0, '', '', '');
-INSERT INTO content_manager VALUES (7, 0, 0, '', 2, 'Privatsphäre und Datenschutz', 'Privatsphäre und Datenschutz', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Privatsph&auml;re und Datenschutz ein.', 0, 1, '', 1, 2, 0, '', '', '');
-INSERT INTO content_manager VALUES (8, 0, 0, '', 2, 'Unsere AGB', 'Allgemeine Geschäftsbedingungen', '<strong>Allgemeine Gesch&auml;ftsbedingungen<br /></strong><br />F&uuml;gen Sie hier Ihre allgemeinen Gesch&auml;ftsbedingungen ein.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '');
-INSERT INTO content_manager VALUES (9, 0, 0, '', 2, 'Impressum', 'Impressum', 'F&uuml;gen Sie hier Ihr Impressum ein.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '');
-INSERT INTO content_manager VALUES (10, 0, 0, '', 2, 'Index', 'Willkommen', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '');
-INSERT INTO content_manager VALUES (11, 0, 0, '', 1, 'Coupons', 'Coupons FAQ', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Buy Gift Vouchers/Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">If the shop provided gift vouchers or coupons, You can buy them alike all other products. As soon as You have bought and payed the coupon, the shop system will activate Your coupon. You will then see the coupon amount in Your shopping cart. Then You can send the coupon via e-mail by clicking the link "Send Coupon". </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to dispatch Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">To dispatch a coupon, please click the link "Send Coupon" in Your shopping cart. To send the coupon to the correct person, we need the following details: Surname and realname of the recipient and a valid e-mail adress of the recipient, and the desired coupon amount (You can also use only parts of Your balance). Please provide also a short message for the recipient. Please check those information again before You click the "Send Coupon" button. You can change all information at any time before clicking the "Send Coupon" button. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to use Coupons to buy products. </strong></td></tr>\r\n<tr>\r\n<td class="main">As soon as You have a balance, You can use it to pay for Your orders. During the checkout process, You can redeem Your coupon. In case Your balance is less than the value of goods You ordered, You would have to choose Your preferred method of payment for the difference amount. In case Your balance is more than the value of goods You ordered, the remaining amount of Your balance will be saved for Your next order. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to redeem Coupons. </strong></td></tr>\r\n<tr>\r\n<td class="main">In case You have received a coupun via e-mail, You can: <br />1. Click on the link provided in the e-mail. If You do not have an account in this shop already, please create a personal account. <br />2. After having added a product to Your shopping cart, You can enter Your coupon code.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Problems?</strong></td></tr>\r\n<tr>\r\n<td class="main">If You have trouble or problems in using Your coupons, please check back with us via our e-mail: you@yourdomain.com. Please describe the encountered problem as detailed as possible! We need the following information to process Your request quickly: Your user id, the coupon code, error messages the shop system returned to You, and the name of the web browser You are using (e.g. "Internet Explorer 6" or "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '');
-INSERT INTO content_manager VALUES (12, 0, 0, '', 2, 'Gutscheine', 'Gutscheine - Fragen und Antworten', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine kaufen </strong></td></tr>\r\n<tr>\r\n<td class="main">Gutscheine k&ouml;nnen, falls sie im Shop angeboten werden, wie normale Artikel gekauft werden. Sobald Sie einen Gutschein gekauft haben und dieser nach erfolgreicher Zahlung freigeschaltet wurde, erscheint der Betrag unter Ihrem Warenkorb. Nun können Sie über den Link " Gutschein versenden " den gewünschten Betrag per E-Mail versenden.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Wie man Gutscheine versendet</strong></td></tr>\r\n<tr>\r\n<td class="main">Um einen Gutschein zu versenden, klicken Sie bitte auf den Link "Gutschein versenden" in Ihrem Einkaufskorb. Um einen Gutschein zu versenden, benötigen wir folgende Angaben von Ihnen: Vor- und Nachname des Empfängers. Eine gültige E-Mail Adresse des Empfängers. Den gewünschten Betrag (Sie können auch Teilbeträge Ihres Guthabens versenden). Eine kurze Nachricht an den Empfänger. Bitte überprüfen Sie Ihre Angaben noch einmal vor dem Versenden. Sie haben vor dem Versenden jederzeit die Möglichkeit Ihre Angaben zu korrigieren.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Mit Gutscheinen einkaufen.</strong></td></tr>\r\n<tr>\r\n<td class="main">Sobald Sie über ein Guthaben verfügen, können Sie dieses zum Bezahlen Ihrer Bestellung verwenden. Während des Bestellvorganges haben Sie die Möglichkeit Ihr Guthaben einzulösen. Falls das Guthaben unter dem Warenwert liegt müssen Sie Ihre bevorzugte Zahlungsweise für den Differenzbetrag wählen. Übersteigt Ihr Guthaben den Warenwert, steht Ihnen das Restguthaben selbstverständlich für Ihre nächste Bestellung zur Verfügung.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine verbuchen. </strong></td></tr>\r\n<tr>\r\n<td class="main">Wenn Sie einen Gutschein per E-Mail erhalten haben, können Sie den Betrag wie folgt verbuchen: <br />1. Klicken Sie auf den in der E-Mail angegebenen Link. Falls Sie noch nicht über ein persönliches Kundenkonto verfügen, haben Sie die Möglichkeit ein Konto zu eröffnen. <br />2. Nachdem Sie ein Produkt in den Warenkorb gelegt haben, können Sie dort Ihren Gutscheincode eingeben.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Falls es zu Problemen kommen sollte:</strong></td></tr>\r\n<tr>\r\n<td class="main">Falls es wider Erwarten zu Problemen mit einem Gutschein kommen sollte, kontaktieren Sie uns bitte per E-Mail: you@yourdomain.com. Bitte beschreiben Sie möglichst genau das Problem, wichtige Angaben sind unter anderem: Ihre Kundennummer, der Gutscheincode, Fehlermeldungen des Systems sowie der von Ihnen benutzte Browser (z.B. "Internet Explorer 6" oder "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '');
-INSERT INTO content_manager VALUES (13, 0, 0, '', 2, 'Kontakt', 'Kontakt', 'Ihre Kontaktinformationen', 0, 1, '', 1, 7, 0, '', '', '');
-INSERT INTO content_manager VALUES (14, 0, 0, '', 1, 'Contact', 'Contact', 'Please enter your contact information.', 0, 1, '', 1, 7, 0, '', '', '');
-INSERT INTO content_manager VALUES (15, 0, 0, '', 1, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '');
-INSERT INTO content_manager VALUES (16, 0, 0, '', 2, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '');
-# BOF - Tomcraft - 2010-06-09 - Added right of revocation
-INSERT INTO content_manager VALUES (17, 0, 0, '', 1, 'Right of revocation', 'Right of revocation', '<p><strong>Right of revocation<br /></strong><br />Add your right of revocation here.</p>', 0, 1, '', 1, 9, 0, '', '', '');
-INSERT INTO content_manager VALUES (18, 0, 0, '', 2, 'Widerrufsrecht', 'Widerrufsrecht', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p>', 0, 1, '', 1, 9, 0, '', '', '');
-# EOF - Tomcraft - 2010-06-09 - Added right of revocation
+# content manager
+INSERT INTO content_manager VALUES (1, 0, 0, '', 1, 'Shipping & Returns', 'Shipping & Returns', 'Put here your Shipping &amp; Returns information.', 0, 1, '', 1, 1, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (2, 0, 0, '', 1, 'Privacy Notice', 'Privacy Notice', 'Put here your Privacy Notice information.', 0, 1, '', 1, 2, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (3, 0, 0, '', 1, 'Conditions of Use', 'Conditions of Use', 'Conditions of Use<br />Put here your Conditions of Use information.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (4, 0, 0, '', 1, 'Imprint', 'Imprint', 'Put here your Company information.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (5, 0, 0, '', 1, 'Index', 'Welcome', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (6, 0, 0, '', 2, 'Liefer- und Versandkosten', 'Liefer- und Versandkosten', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Liefer- und Versandkosten ein.', 0, 1, '', 1, 1, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (7, 0, 0, '', 2, 'Privatsphäre und Datenschutz', 'Privatsphäre und Datenschutz', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Privatsph&auml;re und Datenschutz ein.', 0, 1, '', 1, 2, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (8, 0, 0, '', 2, 'Unsere AGB', 'Allgemeine Geschäftsbedingungen', '<strong>Allgemeine Gesch&auml;ftsbedingungen<br /></strong><br />F&uuml;gen Sie hier Ihre allgemeinen Gesch&auml;ftsbedingungen ein.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (9, 0, 0, '', 2, 'Impressum', 'Impressum', 'F&uuml;gen Sie hier Ihr Impressum ein.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '', '';
+INSERT INTO content_manager VALUES (10, 0, 0, '', 2, 'Index', 'Willkommen', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (11, 0, 0, '', 1, 'Coupons', 'Coupons FAQ', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Buy Gift Vouchers/Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">If the shop provided gift vouchers or coupons, You can buy them alike all other products. As soon as You have bought and payed the coupon, the shop system will activate Your coupon. You will then see the coupon amount in Your shopping cart. Then You can send the coupon via e-mail by clicking the link "Send Coupon". </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to dispatch Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">To dispatch a coupon, please click the link "Send Coupon" in Your shopping cart. To send the coupon to the correct person, we need the following details: Surname and realname of the recipient and a valid e-mail adress of the recipient, and the desired coupon amount (You can also use only parts of Your balance). Please provide also a short message for the recipient. Please check those information again before You click the "Send Coupon" button. You can change all information at any time before clicking the "Send Coupon" button. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to use Coupons to buy products. </strong></td></tr>\r\n<tr>\r\n<td class="main">As soon as You have a balance, You can use it to pay for Your orders. During the checkout process, You can redeem Your coupon. In case Your balance is less than the value of goods You ordered, You would have to choose Your preferred method of payment for the difference amount. In case Your balance is more than the value of goods You ordered, the remaining amount of Your balance will be saved for Your next order. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to redeem Coupons. </strong></td></tr>\r\n<tr>\r\n<td class="main">In case You have received a coupun via e-mail, You can: <br />1. Click on the link provided in the e-mail. If You do not have an account in this shop already, please create a personal account. <br />2. After having added a product to Your shopping cart, You can enter Your coupon code.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Problems?</strong></td></tr>\r\n<tr>\r\n<td class="main">If You have trouble or problems in using Your coupons, please check back with us via our e-mail: you@yourdomain.com. Please describe the encountered problem as detailed as possible! We need the following information to process Your request quickly: Your user id, the coupon code, error messages the shop system returned to You, and the name of the web browser You are using (e.g. "Internet Explorer 6" or "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '', '');
+INSERT INTO content_manager VALUES (12, 0, 0, '', 2, 'Gutscheine', 'Gutscheine - Fragen und Antworten', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine kaufen </strong></td></tr>\r\n<tr>\r\n<td class="main">Gutscheine k&ouml;nnen, falls sie im Shop angeboten werden, wie normale Artikel gekauft werden. Sobald Sie einen Gutschein gekauft haben und dieser nach erfolgreicher Zahlung freigeschaltet wurde, erscheint der Betrag unter Ihrem Warenkorb. Nun können Sie über den Link " Gutschein versenden " den gewünschten Betrag per E-Mail versenden.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Wie man Gutscheine versendet</strong></td></tr>\r\n<tr>\r\n<td class="main">Um einen Gutschein zu versenden, klicken Sie bitte auf den Link "Gutschein versenden" in Ihrem Einkaufskorb. Um einen Gutschein zu versenden, benötigen wir folgende Angaben von Ihnen: Vor- und Nachname des Empfängers. Eine gültige E-Mail Adresse des Empfängers. Den gewünschten Betrag (Sie können auch Teilbeträge Ihres Guthabens versenden). Eine kurze Nachricht an den Empfänger. Bitte überprüfen Sie Ihre Angaben noch einmal vor dem Versenden. Sie haben vor dem Versenden jederzeit die Möglichkeit Ihre Angaben zu korrigieren.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Mit Gutscheinen einkaufen.</strong></td></tr>\r\n<tr>\r\n<td class="main">Sobald Sie über ein Guthaben verfügen, können Sie dieses zum Bezahlen Ihrer Bestellung verwenden. Während des Bestellvorganges haben Sie die Möglichkeit Ihr Guthaben einzulösen. Falls das Guthaben unter dem Warenwert liegt müssen Sie Ihre bevorzugte Zahlungsweise für den Differenzbetrag wählen. Übersteigt Ihr Guthaben den Warenwert, steht Ihnen das Restguthaben selbstverständlich für Ihre nächste Bestellung zur Verfügung.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine verbuchen. </strong></td></tr>\r\n<tr>\r\n<td class="main">Wenn Sie einen Gutschein per E-Mail erhalten haben, können Sie den Betrag wie folgt verbuchen: <br />1. Klicken Sie auf den in der E-Mail angegebenen Link. Falls Sie noch nicht über ein persönliches Kundenkonto verfügen, haben Sie die Möglichkeit ein Konto zu eröffnen. <br />2. Nachdem Sie ein Produkt in den Warenkorb gelegt haben, können Sie dort Ihren Gutscheincode eingeben.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Falls es zu Problemen kommen sollte:</strong></td></tr>\r\n<tr>\r\n<td class="main">Falls es wider Erwarten zu Problemen mit einem Gutschein kommen sollte, kontaktieren Sie uns bitte per E-Mail: you@yourdomain.com. Bitte beschreiben Sie möglichst genau das Problem, wichtige Angaben sind unter anderem: Ihre Kundennummer, der Gutscheincode, Fehlermeldungen des Systems sowie der von Ihnen benutzte Browser (z.B. "Internet Explorer 6" oder "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '', '');
+INSERT INTO content_manager VALUES (13, 0, 0, '', 2, 'Kontakt', 'Kontakt', 'Ihre Kontaktinformationen', 0, 1, '', 1, 7, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (14, 0, 0, '', 1, 'Contact', 'Contact', 'Please enter your contact information.', 0, 1, '', 1, 7, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (15, 0, 0, '', 1, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (16, 0, 0, '', 2, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (17, 0, 0, '', 1, 'Right of revocation', 'Right of revocation', '<p><strong>Right of revocation<br /></strong><br />Add your right of revocation here.</p>', 0, 1, '', 1, 9, 0, '', '', '', '');
+INSERT INTO content_manager VALUES (18, 0, 0, '', 2, 'Widerrufsrecht', 'Widerrufsrecht', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p>', 0, 1, '', 1, 9, 0, '', '', '', '');
 
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany , 6 - Taiwan , 7 - China
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
@@ -1251,17 +1249,15 @@ INSERT INTO address_format VALUES (2, '$firstname $lastname$cr$streets$cr$city, 
 INSERT INTO address_format VALUES (3, '$firstname $lastname$cr$streets$cr$city$cr$postcode - $statecomma$country','$state / $country');
 INSERT INTO address_format VALUES (4, '$firstname $lastname$cr$streets$cr$city ($postcode)$cr$country', '$postcode / $country');
 INSERT INTO address_format VALUES (5, '$firstname $lastname$cr$streets$cr$postcode $city$cr$country','$city / $country');
-# BOF - DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO address_format VALUES (6, '$firstname $lastname$cr$streets$cr$city $state $postcode$cr$country','$country / $city');
 INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr$postcode $state$cr$country','$country / $city');
 INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
-# EOF - DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 
-# Web28 - 2010-11-13 - add entry for listproducts
+# add entry for listproducts
 INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1);
 
-# configuration_group_id 1
+# configuration_group_id 1, My Shop
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_NAME', 'modified eCommerce Shopsoftware', 1, 1, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_OWNER', 'modified eCommerce Shopsoftware', 1, 2, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_OWNER_EMAIL_ADDRESS', 'owner@your-shop.com', 1, 3, NULL, NOW(), NULL, NULL);
@@ -1282,15 +1278,13 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'PRICE_PRECISION', '4', 1, 28, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CC_KEYCHAIN', 'changeme', 1, 29, NULL, NOW(), NULL, NULL);
 
-#Web28 - 2012-08-28 - Constants for checkout options
+# Constants for checkout options
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'false', 1, 40, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CHECKOUT_SHOW_PRODUCTS_IMAGES', 'true', 1, 41, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 
-# BOF - hendrik - 2011-05-14 - independent billingnumber and date
+# independent billingnumber and date
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'IBN_BILLNR', '1', '1', '99', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'IBN_BILLNR_FORMAT', '{n}-{d}-{m}-{y}', '1', '99', NULL, NOW(), NULL, NULL);
-# EOF - hendrik - 2011-05-14 - independent billingnumber and date
-
 
 # configuration_group_id 2, Minimum Values
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_FIRST_NAME_MIN_LENGTH', '2', 2, 1, NULL, NOW(), NULL, NULL);
@@ -1301,7 +1295,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_COMPANY_MIN_LENGTH', '2', 2, 6, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_POSTCODE_MIN_LENGTH', '4', 2, 7, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_CITY_MIN_LENGTH', '3', 2, 8, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_STATE_MIN_LENGTH', '0', 2, 9, NULL, NOW(), NULL, NULL); # h-h-h change state_min_length 2 to 0
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_STATE_MIN_LENGTH', '0', 2, 9, NULL, NOW(), NULL, NULL); 
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_TELEPHONE_MIN_LENGTH', '3', 2, 10, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ENTRY_PASSWORD_MIN_LENGTH', '5', 2, 11, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CC_OWNER_MIN_LENGTH', '3', 2, 12, NULL, NOW(), NULL, NULL);
@@ -1368,11 +1362,8 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'PRODUCT_IMAGE_POPUP_DROP_SHADOW', '', 4, 35, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'PRODUCT_IMAGE_POPUP_MOTION_BLUR', '', 4, 36, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'MO_PICS', '0', '4', '3', NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'IMAGE_MANIPULATOR', 'image_manipulator_GD2.php', '4', '3', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'image_manipulator_GD2.php\',\'image_manipulator_GD2_advanced.php\', \'image_manipulator_GD1.php\'),');
-
-# BOF - Web28 - 2011-03-27 - Option no enlarge product image under default
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'IMAGE_MANIPULATOR', 'image_manipulator_GD2.php', '4', '3', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'image_manipulator_GD2.php\', \'image_manipulator_GD2_advanced.php\', \'image_manipulator_GD1.php\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', 4, 6, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(''true'', ''false''), ');
-# EOF - Web28 - 2011-03-27 - Option no enlarge product image under default
 
 # configuration_group_id 5, Customer Details
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ACCOUNT_GENDER', 'true', 5, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
@@ -1489,7 +1480,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'EMAIL_BILLING_SUBJECT_ORDER', 'Ihre Bestellung {$nr} vom {$date}', 12, 38, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'EMAIL_BILLING_ATTACHMENTS', '', 12, 39, NULL, NOW(), NULL, NULL);
 
-#Web28 - 2012-08-28 Constants for images
+# Constants for images
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHOW_IMAGES_IN_EMAIL', 'false', '12', '50', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHOW_IMAGES_IN_EMAIL_DIR', 'thumbnail', '12', '51', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'thumbnail\', \'info\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHOW_IMAGES_IN_EMAIL_STYLE', 'max-width:90px;max-height:120px;', '12', '52', NULL, NOW(), NULL, NULL);
@@ -1543,13 +1534,8 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'QUICKLINK_ACTIVATED', 'true', 17, 11, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ACTIVATE_REVERSE_CROSS_SELLING', 'true', 17, 12, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DISPLAY_REVOCATION_ON_CHECKOUT', 'true', 17, 13, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
-# BOF - Tomcraft - 2010-06-09 - predefined revocation_id
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'REVOCATION_ID', '9', 17, 14, NULL, NOW(), NULL, NULL);
-# EOF - Tomcraft - 2010-06-09 - predefined revocation_id
-
-# BOF - DokuMan - 2010-08-13 - Google RSS Feed REFID configuration
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'GOOGLE_RSS_FEED_REFID', '', 17, 15, NULL, NOW(), NULL, NULL);
-# EOF - DokuMan - 2010-08-13 - Google RSS Feed REFID configuration
 
 #configuration_group_id 18, VAT reg no
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ACCOUNT_COMPANY_VAT_CHECK', 'true', 18, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
@@ -1567,9 +1553,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 
 #configuration_group_id 20, Import/export
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CSV_TEXTSIGN', '"', '20', '1', NULL, NOW(), NULL, NULL);
-# BOF - DokuMan - 2010-02-11 - set DEFAULT separator sign to semicolon ';' instead of tabulator '\t'
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CSV_SEPERATOR', ';', '20', '2', NULL, NOW(), NULL, NULL);
-# EOF - DokuMan - 2010-02-11 - set DEFAULT separator sign to semicolon ';' instead of tabulator '\t'
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'COMPRESS_EXPORT', 'false', '20', '3', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'CSV_CATEGORY_DEFAULT', '0', '20', '4', NULL, NOW(), NULL, 'xtc_cfg_get_category_tree(');
 
@@ -1586,16 +1570,13 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'SEARCH_IN_DESC', 'true', '22', '2', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'SEARCH_IN_ATTR', 'true', '22', '3', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'ADVANCED_SEARCH_DEFAULT_OPERATOR', 'and', '22', '4', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'and\', \'or\'),');
-# BOF - h-h-h - 2011-04-13 - Highlight Search Terms
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'SEARCH_HIGHLIGHT', 'true', '22', '5', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'SEARCH_HIGHLIGHT_STYLE', 'color:#000;background-color:#eee;border:dotted #000 1px;', '22', '6', NULL, NOW(), NULL, NULL);
-# EOF - h-h-h - 2011-04-13 - Highlight Search Terms
 
 #configuration_group_id 23, econda
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'TRACKING_ECONDA_ACTIVE', 'false', 23, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'TRACKING_ECONDA_ID','', 23, 2, NULL, NOW(), NULL, NULL);
 
-#Dokuman - 2012-08-27 - added entries for new google analytics & piwik tracking
 #configuration_group_id 24, google analytics & piwik tracking
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'TRACKING_COUNT_ADMIN_ACTIVE', 'false', 24, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'TRACKING_GOOGLEANALYTICS_ACTIVE', 'false', 24, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
@@ -1605,7 +1586,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'TRACKING_PIWIK_ID','1', 24, 6, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'TRACKING_PIWIK_GOAL','1', 24, 7, NULL, NOW(), NULL, NULL);
 
-#Dokuman - 2009-10-02 - added entries for new moneybookers payment module version 2.4
 #configuration_group_id 31, Moneybookers
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', '_PAYMENT_MONEYBOOKERS_EMAILID', '', 31, 1, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', '_PAYMENT_MONEYBOOKERS_PWD','', 31, 2, NULL, NOW(), NULL, NULL);
@@ -1642,6 +1622,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'WHOS_ONLINE_IP_WHOIS_SERVICE', 'http://www.utrace.de/?query=', '1000', '62', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CONFIRM_SAVE_ENTRY', 'true', '1000', '70', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'USE_ADMIN_FIXED_TOP', 'true', '1000', '23', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_STATS_RESULTS', '30', '1000', '51', NULL , NOW(), NULL , NULL);
 
 INSERT INTO configuration_group VALUES (1,'My Store','General information about my store',1,1);
 INSERT INTO configuration_group VALUES (2,'Minimum Values','The minimum values for functions / data',2,1);
@@ -1665,9 +1646,8 @@ INSERT INTO configuration_group VALUES (19,'Google Conversion','Google Conversio
 INSERT INTO configuration_group VALUES (20,'Import/Export','Import/Export',20,1);
 INSERT INTO configuration_group VALUES (21,'Afterbuy','Afterbuy.de',21,1);
 INSERT INTO configuration_group VALUES (22,'Search Options','Additional Options for search function',22,1);
-#franky_n - 2010-12-24 - added configuration_group entries for econda and moneybookers
 INSERT INTO configuration_group VALUES (23,'Econda Tracking','Econda Tracking System',23,1);
-INSERT INTO configuration_group VALUES (24,'PIWIK &amp; Google Analytics Tracking','Settings for PIWIK &amp; Google Analytics Tracking',24,1); #Dokuman - 2012-08-27 - added entries for new google analytics & piwik tracking
+INSERT INTO configuration_group VALUES (24,'PIWIK & Google Analytics Tracking','Settings for PIWIK & Google Analytics Tracking',24,1); 
 INSERT INTO configuration_group VALUES (31,'Moneybookers','Moneybookers System',31,1);
 INSERT INTO configuration_group VALUES (40,'Popup Window Configuration','Popup Window Parameters',40,1);
 INSERT INTO configuration_group VALUES (1000,'Adminarea Options','Adminarea Configuration', 1000,1);
@@ -1716,9 +1696,7 @@ INSERT INTO countries VALUES (40,'Cayman Islands','KY','CYM',1,1);
 INSERT INTO countries VALUES (41,'Central African Republic','CF','CAF',1,1);
 INSERT INTO countries VALUES (42,'Chad','TD','TCD',1,1);
 INSERT INTO countries VALUES (43,'Chile','CL','CHL',1,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (44,'China','CN','CHN',7,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (45,'Christmas Island','CX','CXR',1,1);
 INSERT INTO countries VALUES (46,'Cocos (Keeling) Islands','CC','CCK',1,1);
 INSERT INTO countries VALUES (47,'Colombia','CO','COL',1,1);
@@ -1777,9 +1755,7 @@ INSERT INTO countries VALUES (99,'India','IN','IND',1,1);
 INSERT INTO countries VALUES (100,'Indonesia','ID','IDN',1,1);
 INSERT INTO countries VALUES (101,'Iran (Islamic Republic of)','IR','IRN',1,1);
 INSERT INTO countries VALUES (102,'Iraq','IQ','IRQ',1,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (103,'Ireland','IE','IRL',6,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (104,'Israel','IL','ISR',1,1);
 INSERT INTO countries VALUES (105,'Italy','IT','ITA',1,1);
 INSERT INTO countries VALUES (106,'Jamaica','JM','JAM',1,1);
@@ -1882,9 +1858,7 @@ INSERT INTO countries VALUES (202,'Swaziland','SZ','SWZ',1,1);
 INSERT INTO countries VALUES (203,'Sweden','SE','SWE',1,1);
 INSERT INTO countries VALUES (204,'Switzerland','CH','CHE',5,1);
 INSERT INTO countries VALUES (205,'Syrian Arab Republic','SY','SYR',1,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (206,'Taiwan','TW','TWN',6,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (207,'Tajikistan','TJ','TJK',1,1);
 INSERT INTO countries VALUES (208,'Tanzania, United Republic of','TZ','TZA',1,1);
 INSERT INTO countries VALUES (209,'Thailand','TH','THA',1,1);
@@ -1900,9 +1874,7 @@ INSERT INTO countries VALUES (218,'Tuvalu','TV','TUV',1,1);
 INSERT INTO countries VALUES (219,'Uganda','UG','UGA',1,1);
 INSERT INTO countries VALUES (220,'Ukraine','UA','UKR',1,1);
 INSERT INTO countries VALUES (221,'United Arab Emirates','AE','ARE',1,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (222,'United Kingdom','GB','GBR',8,1);
-#DokuMan - 2011-03-28 - Added address_format for Taiwan, Ireland, China and Great Britain
 INSERT INTO countries VALUES (223,'United States','US','USA', '2','1');
 INSERT INTO countries VALUES (224,'United States Minor Outlying Islands','UM','UMI',1,1);
 INSERT INTO countries VALUES (225,'Uruguay','UY','URY',1,1);
@@ -1916,34 +1888,23 @@ INSERT INTO countries VALUES (232,'Virgin Islands (U.S.)','VI','VIR',1,1);
 INSERT INTO countries VALUES (233,'Wallis and Futuna Islands','WF','WLF',1,1);
 INSERT INTO countries VALUES (234,'Western Sahara','EH','ESH',1,1);
 INSERT INTO countries VALUES (235,'Yemen','YE','YEM',1,1);
-# BOF - Tomcraft - 2010-07-02 - Deleted Yugoslavia
-#INSERT INTO countries VALUES (236,'Yugoslavia','YU','YUG',1,1);
-# EOF - Tomcraft - 2010-07-02 - Deleted Yugoslavia
 INSERT INTO countries VALUES (237,'Zaire','ZR','ZAR',1,1);
 INSERT INTO countries VALUES (238,'Zambia','ZM','ZMB',1,1);
 INSERT INTO countries VALUES (239,'Zimbabwe','ZW','ZWE',1,1);
-# BOF - Tomcraft - 2010-07-02 - Added Serbia & Montenegro
 INSERT INTO countries VALUES (240,'Serbia','RS','SRB',1,1);
 INSERT INTO countries VALUES (241,'Montenegro','ME','MNE',1,1);
-# EOF - Tomcraft - 2010-07-02 - Added Serbia & Montenegro
 
-# BOF - DokuMan - 2012-11-26 - Added more shop currencies by default
 INSERT INTO currencies VALUES
 (1, 'EUR', 'Euro', '', '&euro;', ',', '.', '2', 1.0000, '2012-11-26 00:00:00'),
 (2, 'USD', 'United States Dollar', '$', '', '.', ',', '2', 1.2978, '2012-11-26 00:00:00'),
 (3, 'CHF', 'Schweizer Franken', 'CHF', '', '.', '', '2', 1.2044, '2012-11-26 00:00:00'),
 (4, 'GBP', 'Great Britain Pound', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
-# EOF - DokuMan - 2012-11-26 - Added more shop currencies by default
 
-# BOF - Tomcraft - 2009-11-08 - Added option to deactivate languages (status 1)
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'utf-8',1);
 INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'utf-8',1);
-# EOF - Tomcraft - 2009-11-08 - Added option to deactivate languages (status 1)
 
-# BOF - Tomcraft - 2011-03-02 - Added status for cancelled orders
 INSERT INTO orders_status VALUES (0,1,'Cancelled');
 INSERT INTO orders_status VALUES (0,2,'Storniert');
-# EOF - Tomcraft - 2011-03-02 - Added status for cancelled orders
 INSERT INTO orders_status VALUES (1,1,'Pending');
 INSERT INTO orders_status VALUES (1,2,'Offen');
 INSERT INTO orders_status VALUES (2,1,'Processing');
@@ -2034,7 +1995,6 @@ INSERT INTO zones VALUES (77,38,'SK','Saskatchewan');
 INSERT INTO zones VALUES (78,38,'YT','Yukon Territory');
 
 # Germany
-# Dokuman - 2009-08-21 - Bundesländer->ISO-3166-2
 INSERT INTO zones VALUES (79,81,'NI','Niedersachsen');
 INSERT INTO zones VALUES (80,81,'BW','Baden-Württemberg');
 INSERT INTO zones VALUES (81,81,'BY','Bayern');
@@ -2252,7 +2212,6 @@ INSERT INTO zones VALUES ('',47,'VAU','Vaupes');
 INSERT INTO zones VALUES ('',47,'VIC','Vichada');
 
 #France
-# BOF - web28 - 2010-07-07 - FIX special character
 INSERT INTO zones VALUES ('',73,'Et','Etranger');
 INSERT INTO zones VALUES ('',73,'01','Ain');
 INSERT INTO zones VALUES ('',73,'02','Aisne');
@@ -2360,7 +2319,6 @@ INSERT INTO zones VALUES ('',73,'984 (TOM)','Terres australes et Antartiques fra
 INSERT INTO zones VALUES ('',73,'985 (TOM)','Nouvelle Calédonie');
 INSERT INTO zones VALUES ('',73,'986 (TOM)','Wallis et Futuna');
 INSERT INTO zones VALUES ('',73,'987 (TOM)','Polynésie française');
-# EOF - web28 - 2010-07-07 - FIX special character
 
 #India
 INSERT INTO zones VALUES ('',99,'DL','Delhi');

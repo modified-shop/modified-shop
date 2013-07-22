@@ -99,7 +99,7 @@
                       echo draw_hidden_fields(); ?>
                   <table border="0" width="100%" cellspacing="0" cellpadding="0">
                     <tr>
-                      <td align="center"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                      <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
                       <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry"></td>
                     </tr>
                   </table>
@@ -125,7 +125,7 @@
                       <?php
                         } else {
                       ?>
-                          <td align="right"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_continue.gif"></a></td>
+                          <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_continue.gif"></a></td>
                       <?php
                         }
                       ?>

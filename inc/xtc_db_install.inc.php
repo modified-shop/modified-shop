@@ -33,6 +33,9 @@ function xtc_db_install($database, $sql_file) {
       if (file_exists($sql_file)) {
         $fd = fopen($sql_file, 'rb');
         $restore_query = fread($fd, filesize($sql_file));
+        if (INSTALL_CHARSET == 'utf8') {
+          $restore_query = utf8_encode(html_entity_decode($restore_query)); 
+        }
         fclose($fd);
       } else {
         $db_error = 'SQL file does not exist: ' . $sql_file;

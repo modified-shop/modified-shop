@@ -275,3 +275,5 @@
   define ('FTP_PASSWORD', 'FTP password');
   define ('CONNECT_FTP', 'FTP connect');
   // EOC flth new permission change system
+
+  define('TITLE_SELECT_CHARSET', 'Select a Charset!');
