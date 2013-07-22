@@ -30,6 +30,6 @@
    define('TEXT_PRODUCTS','Products');
    define('TEXT_EXPORT','Create exportfile and save in /export Folder');
    define('CSV_CATEGORY_DEFAULT_TITLE','Category for Import');
-   define('CSV_CATEGORY_DEFAULT_DESC','Select default Category for new Products<br/><b>Attention:</b>it is not possible to import Products to Level Top !');
+   define('CSV_CATEGORY_DEFAULT_DESC','All products in the csv-importfile that do <b>not</b> have a category defined will be imported into this category.<br/><b>Attention:</b> If you do not want to import products which have no category defined, then select category "Top" as it is not possible to import into this category.');
 
 ?>
