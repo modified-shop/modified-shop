@@ -218,7 +218,7 @@
                     </td>
                   </tr>
                   <tr>
-                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />UTF-8</td>
+                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />UTF-8 (Beta)</td>
                     <td>
                     <?php echo xtc_draw_radio_field_installer('char', 'utf8', ((INSTALL_CHARSET=='utf8')?true:false)); ?> </td>
                   </tr>
