@@ -148,8 +148,8 @@ require (DIR_WS_INCLUDES.'head.php');
               ?>
             </table>
 
-            <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></td>
-            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+            <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
 
           </td>
           <?php

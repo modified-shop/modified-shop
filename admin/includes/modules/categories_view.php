@@ -285,7 +285,7 @@
                  <?php
                  }
                  ?>
-                 <td class="categories_view_data txta-c" style="padding-left: 5px;">
+                 <td class="categories_view_data txta-l" style="padding-left: 5px;">
                    <?php
                    echo '<a href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) .$cPath_back). '">'.xtc_image(DIR_WS_ICONS . 'folder_parent.gif', ICON_FOLDER) .' ..</a>';
                    ?>
@@ -989,7 +989,7 @@
             <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
             <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'action', 'pID', 'cID')) ); ?></div>
           </td>
-        <td>&nbsp;</td>
+          <td>&nbsp;</td>
         </tr>
         <tr>
           <td>            
