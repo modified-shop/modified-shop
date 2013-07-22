@@ -10,7 +10,6 @@
    
   /*######################################*/
   
-  define('INSTALL_CHARSET', 'utf8'); //latin1 oder utf8
   define('DIR_MODIFIED_INSTALLER', '_installer');
   define('MODIFIED_SQL', 'modified_utf8.sql');
   define('DISABLE_PATH_CHECK', false); //default false

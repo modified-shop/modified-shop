@@ -180,7 +180,7 @@
             <br />
             <table border="0" width="95%" cellspacing="0" cellpadding="0">
               <tr>
-                <td align="right"><a href="index.php?lg=<?php echo $lang; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif" border="0" alt="Continue"></td>
+                <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif" border="0" alt="Continue"></td>
               </tr>
             </table>
           </form>

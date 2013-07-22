@@ -63,7 +63,7 @@
       $messageStack->add('index', SELECT_LANGUAGE_ERROR);
     }
     if ($error == false) {
-      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lang, '', 'NONSSL'));
+      xtc_redirect(xtc_href_link('install_step1.php?lg='. $lang .'&char='.INSTALL_CHARSET, '', 'NONSSL'));
     }
   }
 
@@ -205,6 +205,22 @@
                     <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />English</td>
                     <td><img src="images/icons/icon-eng.gif" width="30" height="16" alt="" />
                     <?php echo xtc_draw_radio_field_installer('lg', 'english', (($lang=='english')?true:false)); ?> </td>
+                  </tr>
+                </table>
+                <br/>
+                <strong><?php echo TITLE_SELECT_CHARSET; ?></strong><br />
+                <img src="images/break-el.gif" width="100%" height="1" alt="" /><br />
+                <table width="300" border="0" cellpadding="0" cellspacing="4">
+                  <tr>
+                    <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />ISO-8859-15</td>
+                    <td width="192">
+                      <?php echo xtc_draw_radio_field_installer('char', 'latin1', ((INSTALL_CHARSET=='latin1')?true:false)); ?>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />UTF-8 (Beta)</td>
+                    <td>
+                    <?php echo xtc_draw_radio_field_installer('char', 'utf8', ((INSTALL_CHARSET=='utf8')?true:false)); ?> </td>
                   </tr>
                 </table>
                 <?php // BOF - web28 - 2010.12.13 - NEW db-upgrade ?>
