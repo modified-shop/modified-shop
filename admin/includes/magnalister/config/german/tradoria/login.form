@@ -1,0 +1,1 @@
+{"login":{"headline":"_#_platformName_#_ Zugangsdaten","fields":[{"label":"Kundennummer","key":"_#_platform_#_.mpusername","type":"text"},{"label":"Passwort","key":"_#_platform_#_.mppassword","type":"password","settings":{"save":false}},{"label":"_#_platformName_#_ API Key","key":"_#_platform_#_.apikey","type":"text"}]}}

@@ -1,0 +1,2586 @@
+/**
+ * 888888ba                 dP  .88888.                    dP                
+ * 88    `8b                88 d8'   `88                   88                
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ *
+ *                          m a g n a l i s t e r
+ *                                      boost your Online-Shop
+ *
+ * -----------------------------------------------------------------------------
+ * $Id: magnalister.css 2395 2013-04-25 13:02:41Z tim.neumann $
+ *
+ * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ *     Released under the MIT License (Expat)
+ * -----------------------------------------------------------------------------
+ */
+
+body.magna {
+	font-family: Arial, sans-serif;
+	margin: 0;
+	padding: 0;
+	background: #fff;
+	color: #000;
+}
+body.magna.xonsoft {
+	background: #d4d4d4;
+}
+body.magna table {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+}
+body.magna td,
+body.magna th,
+body.magna div, 
+body.magna select,
+body.magna option {
+	font-family: Arial, sans-serif;
+}
+
+body.magna table td.boxCenter {
+	font-family: sans-serif;
+	font-size: 12px;
+}
+
+div.magnamain {
+	font-family: sans-serif;
+	font-size: 12px;
+	background: inherit;
+	color: #000;
+	position: relative;
+	padding-top: 5px;
+	min-height: 150px;
+}
+
+/** Reset Shop CSS */
+body.magna div.magnamain li {
+    list-style-type: inherit;
+    margin-left: auto;
+}
+
+body.ielt9 div.magnamain {
+	background: #fff;
+}
+body.xtcmodified div.magnamain,
+body.ielt9.xtcmodified div.magnamain,
+body.ielt9.xtcommerce div.magnamain {
+	background: #f7f7f7;
+}
+body.xonsoft div.magnamain {
+	background: #e8e8e8;
+}
+
+div#pageContent {
+	line-height: 1.5em;
+	padding-bottom: 2em;
+}
+div#pageContent a {
+	text-decoration: underline;
+}
+div#pageContent a img {
+	border: none;
+}
+body.ielt9 div.magnamain {
+	/*height: expression( this.scrollHeight < 181 ? "180px" : "auto" ); */
+}
+div#content.magnamain {
+	margin-top: 0px;
+}
+body.xtcommerce div.magnamain {
+	background: #F7F7F7;
+}
+body.oscommerce div.magnamain {
+	background: #fff;
+}
+body.oscommerce table.columnLeft {
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+body.oscommerce table.columnLeftOSC2010 div#adminAppMenu {
+	padding: 0;
+}
+body.oscommerce table.columnLeftOSC2010 h3 {
+	font-size: 85%;
+}
+body.xonsoft table.columnLeft {
+	border-collapse: separate;
+	border-spacing: 3px;
+	padding: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+	color: black;
+	background: none;
+	font-weight: normal;
+	padding: .5em 0 0 0;
+	margin: 0 0 .17em 0;
+	border-bottom: 1px solid #aaa;
+}
+h1 { font-size: 188%; }
+h1 span { font-size: 53%; }
+h1#threeDots span { font-size: 100%; }
+h2 { font-size: 150%; }
+h2 span { font-size: 67%; }
+h3, h4, h5, h6 {
+	border-bottom: none;
+	font-weight: bold;
+}
+h3 { font-size: 132%; }
+h3 span { font-size: 76%; font-weight: normal; }
+h4 { font-size: 116%; }
+h4 span { font-size: 86%; font-weight: normal; }
+h5 { font-size: 100%; }
+h5 span { font-weight: normal; }
+h6 { font-size: 80%;  }
+h6 span { font-size: 125%; font-weight: normal; }
+
+hr {
+	color: #fff;
+	background: transparent;
+	margin: 0 0 0.5em 0;
+	padding: 0 0 0.5em 0;
+	border: 0;
+	border-bottom: 1px #aaa solid;
+}
+
+table th {
+	text-align: left;
+}
+
+body.magna td.boxCenter a {
+	font-family: sans-serif;
+	font-size: inherit;
+	color: inherit;
+}
+body.magna td.boxCenter a:hover,
+body.magna.veyton a:hover {
+	color: #46f;
+}
+body.magna td.boxCenter p a {
+	text-decoration: underline;
+}
+
+/* General */
+.bold {
+	font-weight: bold !important;
+}
+.italic {
+	font-style: italic !important;
+}
+.center {
+	text-align: center !important;
+}
+.underline,
+a.underline,
+.normaltext a {
+	text-decoration: underline !important;
+}
+.notice {
+	color: #900 !important;
+}
+.error {
+	color: #f00 !important;
+}
+.magnatext {
+	color: #DC043D !important;
+}
+.larger {
+	font-size: 120% !important;
+}
+.left {
+	float: left;
+}
+.textleft {
+	text-align: left !important;
+}
+.right {
+	float: right;
+}
+.textright {
+	text-align: right !important;
+}
+.textcenter {
+	text-align: center !important;
+}
+.small {
+	font-size: 80% !important;
+}
+.normal {
+	font-weight: normal !important;
+	font-style: normal !important;
+	text-decoration: none !important;
+}
+.nowrap {
+	white-space: nowrap !important;
+}
+.tt {
+	font-family: monospace !important;
+	margin: 0 !important;
+}
+.visualClear {
+	clear: both !important;
+}
+.grey {
+	color: #999 !important;
+}
+.fullWidth {
+	width: 100% !important;
+}
+.autoWidth {
+	width: auto !important;
+} 
+.inline {
+	display: inline !important;
+}
+.paddingBottom {
+	padding-bottom: 1em !important;
+}
+.paddingRight {
+	padding-right: 1em !important;
+}
+.nopadding {
+	padding: 0 !important;
+}
+.valigntop,
+.valigntop th,
+.valigntop td {
+	vertical-align: top !important;
+}
+.valignmid {
+	vertical-align: middle;
+}
+.valignbottom {
+	vertical-align: bottom;
+}
+.successBox {
+	border-width: 1px 1px 1px 5px;
+	border-style: solid;
+	border-color: #0e0;
+	padding: 5px;
+	background: #cfc;
+	margin: 0 0 1em 0;
+	text-align: left;
+}
+.successBoxBlue {
+	border-width: 1px 1px 1px 5px;
+	border-style: solid;
+	border-color: #00e;
+	padding: 5px;
+	background: #ccf;	
+	margin: 0 0 1em 0;
+	text-align: left;
+}
+.noticeBox {
+	border-width: 1px 1px 1px 5px;
+	border-style: solid;
+	border-color: #F00;
+	padding: 5px;
+	background: #FA2;
+	margin: 0 0 1em 0;
+	text-align: left;
+}
+.errorBox {
+	border-width: 2px 2px 2px 6px;
+	border-style: solid;
+	border-color: #f90;
+	padding: 5px;
+	background: #900;
+	color: #fff;
+	margin: 0 0 1em 0;
+	text-align: left;
+}
+.errorBox .error {
+	color: #FA2 !important;
+}
+input.fullwidth,
+textarea.fullwidth {
+	width: 100%;
+}
+span.cp_next {
+	margin-top: -0.5em;
+}
+.strike {
+    text-decoration: line-through !important;
+}
+.offer {
+	color: #f00 !important;
+}
+
+h1#magnalogo {
+	float: left;
+	margin-top: 10px;
+	margin-bottom: -10px;
+	border: none;
+	color: transparent;
+}
+h1#magnalogo a,
+h1#magnalogo a img {
+	padding: 0; 
+	margin: 0;
+	border: none;
+}
+div#antlogo {
+	background-image: url('../images/ameise_logo.png');
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	width: 96px;
+	height: 72px;
+	float: right;
+	margin-bottom: -40px;
+}
+div#globalButtonBox {
+    float: right;
+    height: 22px;
+    margin-top: 32px;
+    margin-right: 25px;
+    text-align: right;
+}
+
+body.magna div.marketing {
+	margin-top: 1em;
+	border-top: 1px dotted #999;
+}
+table#magnafooter td {
+	position: relative;
+}
+table#magnafooter div.debug {
+	display: none;
+	text-align: left;
+	border: 2px solid #4a4a4a;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	padding: 5px;
+	position: absolute;
+	background: #f4f4f4;
+	margin-top: -124px;
+	box-shadow: 0 0 30px -4px #000000;
+	-moz-box-shadow: 0 0 30px -4px #000000;
+	-webkit-box-shadow: 0 0 30px -4px #000000;
+	z-index: 1;
+}
+table#magnafooter:hover div.debug {
+	display: block;
+}
+body.ielt8 table#magnafooter div.debug {
+	left: 0;
+	width: 180px;
+	margin-top: -154px;
+}
+table#magnafooter div.copyleft {
+	font-size: 8.5px;
+	color: #555;
+	padding-top: 1px;
+}
+body.magna div#content .button,
+body.magna .ui-dialog .button {
+	font-family: Verdana, Arial, sans-serif;
+	font-weight: normal;
+	text-transform: none;
+	text-decoration: none;
+	width: auto;
+	font-size: 10px;
+	line-height: 12px !important;
+	padding: 1px 5px;
+	display: inline-block;
+	text-align: center;
+
+	border: 1px solid #999;
+	outline: none;
+	background: #a1b8f1;
+	background: -moz-linear-gradient(
+		center bottom,
+		#a1b8f1 0%,
+		#ffffff 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, #a1b8f1),
+		color-stop(1, #ffffff)
+	);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#a1b8f1');
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	color: #000;
+	margin: 6px;
+	height: 20px;
+	
+	white-space: nowrap;
+}
+input#unprepare.button, input#reset_description.button {
+	min-width: 253px;
+}
+input#unprepare.button {
+	margin-bottom: 4px !important;
+} 
+input#reset_description.button{
+	margin-top: 0px !important;
+}
+body.magna div#content .button:hover,
+body.magna .ui-dialog .button:hover {
+	background: #a7bbff;
+	background: -moz-linear-gradient(
+		center bottom,
+		#a7bbff 0%,
+		#ffffff 70%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, #a7bbff),
+		color-stop(0.7, #ffffff)
+	);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#a7bbff');
+}
+body.magna div#content .button:active,
+body.magna .ui-dialog .button:active {
+	background: #d5dcf8;
+	background: -moz-linear-gradient(
+		center bottom,
+		#d5dcf8 30%,
+		#a1b8f1 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.3, #d5dcf8),
+		color-stop(1, #a1caf1)
+	);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d5dcf8', endColorstr='#a1caf1');
+}
+
+body.magna div#content .button:focus,
+body.magna div#content .button::-moz-focus-inner,
+body.magna .ui-dialog .button:focus,
+body.magna .ui-dialog .button::-moz-focus-inner {
+	outline: none;
+}
+
+body.magna div#content .button.smallmargin,
+body.magna .ui-dialog .button.smallmargin {
+	margin: 1px;
+}
+body.magna div#content .button img,
+body.magna .ui-dialog .button img {
+	border: none;
+	outline: none;
+	vertical-align: text-top;
+	margin-top: -3px;
+}
+body.magna div#content button.button img {
+	vertical-align: text-top;
+	margin-top: -2px;
+	margin-left: -2px;
+	margin-bottom: -2px;
+}
+body.magna div#content input.button,
+body.magna div#content button.button {
+	padding-top: 0;
+	padding-bottom: 2px;
+	display: inline-block;
+}
+body.magna.webkit div#content input.button,
+body.magna.webkit div#content button.button {
+	padding-top: 1px;
+	padding-bottom: 1px;
+	display: inline-block;
+}
+body.magna div#content a.button {
+	height: 15px;
+	padding: 3px 4px 0px 4px;
+}
+body.magna.ielt9 div#content a.button {
+	height: 15px;
+	padding: 2px 4px 0 4px;
+}
+body.magna .ui-dialog span.button {
+	height: 1.3em;
+	margin: 0;
+	vertical-align: top;
+	cursor: default;
+}
+
+/* GFX Buttons */
+.gfxbutton {
+	width: 18px;
+	height: 18px;
+	display: inline-block;
+	border: none;
+	outline: none;
+	background-color: transparent;
+	color: transparent;
+	background-position: 0 0;
+	background-repeat: no-repeat;
+	padding: 0;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border: 1px solid transparent;
+}
+body.ielt9 .gfxbutton {
+	color: #fff;
+}
+.gfxbutton:hover {
+	border: 1px solid #aaa;
+	background-color: #ddd;
+	box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+	-moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+	-webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
+}
+.gfxbutton:active {
+	border: 1px solid #999;
+	background-color: #ccc;
+	outline: none;
+}
+.gfxbutton.small {
+	background-position: -1px -1px;
+	width: 16px;
+	height: 16px;
+	margin: 0 0 -5px !important;
+}
+.gfxbutton.medium {
+	background-position: 3px 3px;
+	width: 22px;
+	height: 22px;
+}
+.gfxbutton.large {
+	background-position: 7px 7px;
+	width: 30px;
+	height: 30px;
+	margin: 0 0 -5px !important;
+}
+.gfxbutton::-moz-focus-inner {
+	outline: none;
+	border: none;
+}
+.gfxbutton.edit {
+	background-image: url('../images/pencil.png');
+}
+.gfxbutton.delete {
+	background-image: url('../images/cross.png');
+}
+.gfxbutton.magnifier {
+	background-image: url('../images/magnifier.png');
+}
+.gfxbutton.refresh {
+	background-image: url('../images/arrow_rotate_clockwise_top.png');
+}
+.gfxbutton.info {
+	background-image: url('../images/information.png');
+}
+.gfxbutton.cog {
+	background-image: url('../images/icons/cog.png');
+}
+/* GFX Buttons w Border */
+.gfxbutton.border {
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border: 1px solid rgba(0, 0, 0, 0.07);
+
+	box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
+	-moz-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
+	-webkit-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
+}
+.gfxbutton.border:hover {
+	border: 1px solid #aaa;
+	
+	box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
+}
+.gfxbutton.border:active {
+	outline: none;
+
+	border-width: 1px;
+	border-style: solid;
+	border-color: #999 #aaa #aaa #999;
+
+	box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
+}
+.gfxbutton.visiblebg {
+	background-color: rgba(0, 0, 0, 0.05);
+}
+div#globalButtonBox .gfxbutton {
+	background-repeat: no-repeat;
+	background-position: 3px 3px;
+	width: 22px;
+	height: 22px;
+	background-color: rgba(0, 0, 0, 0.05);
+	background-image: url('../images/icons/buttonbox.png');
+	margin-left: 5px;
+}
+div#globalButtonBox .gfxbutton.cart {
+	background-position: 0px 0;	
+}
+div#globalButtonBox .gfxbutton.sync {
+	background-position: -22px 0;	
+}
+div#globalButtonBox .gfxbutton.upload {
+	background-position: -44px 0;	
+}
+div#globalButtonBox .gfxbutton.update {
+	background-position: -66px 0;
+}
+/* Update Error */
+table.updateError td {
+	padding: 1px 3px;
+}
+table.updateError thead td {
+	border: 1px solid #999;
+	background: #ccc;
+	font-weight: bold;
+	text-align: center
+}
+table.updateError tbody td {
+	border: 1px solid #bbb;
+	background: #eee;
+}
+
+/* MagnaError */
+div#magnaErrors {
+	display: none;
+	position: relative;
+}
+div#magnaErrors table {
+	border-collapse: separate;
+	border-spacing: 2px;
+	width: 100%;
+	position: relative;
+	border: 2px solid #f00;
+}
+div#magnaErrors table th,
+div#magnaErrors table td {
+	padding: 3px 5px;
+	vertical-align: top;
+}
+div#magnaErrors table thead th {
+	background: #444;
+	color: #fff;
+	font-weight: bold;
+}
+div#magnaErrors table tbody.odd td {
+	background: #aaa;
+	color: #000;
+}
+div#magnaErrors table tbody.even td {
+	background: #ccc;
+	color: #000;
+}
+div#magnaErrors table tbody td.level {	
+	font-weight: bold;
+}
+div#magnaErrors table tbody td.level.notice {	
+	background: #C9FF48;
+	color: #000;
+}
+div#magnaErrors table tbody td.level.warning {	
+	background: #FFB548;
+	color: #000;
+}
+div#magnaErrors table tbody td.level.fatal {	
+	background: #FF4848;
+	color: #000;
+}
+div#magnaErrors table tbody td.message {
+	position: relative;
+}
+div#magnaErrors table tbody td.message.pre {
+    font: 10px/9px monospace;
+    white-space: pre;
+}
+div#magnaErrors table tbody td.action textarea,
+div#magnaErrors table tbody td.message pre {
+	display: none;
+	position: absolute;
+	background: #fff;
+	color: #000;
+	border: 2px solid #999;
+	z-index: 2;
+	padding: 3px;
+	margin-top: -2px;
+	left: 0;
+	width: 100%;
+	overflow: auto;
+}
+div#magnaErrors table tbody td.message:hover pre {
+	display: block;
+	max-height: 450px;
+}
+div#magnaErrors table tbody td.action:hover textarea {
+	display: block;
+    color: #333333;
+    height: 300px !important;
+    overflow: auto;
+    padding: 3px 3px 0 !important;
+    width: 100% !important;
+    font: 11px/1em monospace;
+}
+
+div.magnamain table {
+	font-size: 12px;
+}
+table.matching,
+table.amazon_properties {
+	font-size: 11px;
+	border-collapse: collapse;
+	border-spacing: 0px;
+	width: 100%;
+}
+table.amazon_properties {
+	margin-bottom: 2em;
+}
+table.matching th,
+table.matching td,
+table.amazon_properties th,
+table.amazon_properties td {
+	padding: 4px 6px;
+	margin: 0;
+}
+table.matching tbody.product th,
+table.amazon_properties thead th {
+	border: 1px solid #000;
+	font-size: 14px;
+	background: #555;
+	color: #fff;
+	text-align: left;
+}
+table.amazon_properties thead th {
+	text-align: center;
+}
+table.matching tbody.product th div.title {
+	color: #fff;
+	float: left;
+	padding-top: 1px;
+}
+table.matching tbody.product th div.title span.darker {
+	color: #ccc;
+	font-size: 14px;
+}
+table.matching tbody.product th span {
+	font-weight: normal;
+	font-size: 12px;
+}
+table.matching tbody.headline th {
+	background: #ddd url('../images/grid.gif') repeat-x 50% 0;
+	color: #000;
+	border-left: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+	white-space: nowrap;
+}
+table.matching tbody.headline th.input {
+	text-align: center;
+	width: 1%;
+	white-space: nowrap;
+}
+table.matching tbody.headline th.asin {
+	text-align: center;
+}
+table.matching tbody.options tr td,
+table.amazon_properties tbody tr td {
+	background: #fff;
+	color: #000;
+	border-bottom: 1px solid #e6e6e6;
+	border-left: 1px solid #e6e6e6;
+	border-right: 1px solid #e6e6e6;
+}
+table.matching tbody.options tr.odd td,
+table.amazon_properties tbody tr.odd td {
+	background: #f6f6f6;
+	color: #000;
+	border-bottom: 1px solid #dfdfdf;
+	border-left: 1px solid #dfdfdf;
+	border-right: 1px solid #dfdfdf;
+}
+table.matching tbody.options td.input {
+	text-align: center;
+	vertical-align: middle;
+	padding: 0;
+}
+table.matching tbody.options td.input input {
+	margin: 0 2px;
+	padding: 0;
+}
+table.matching tbody.options td.title {
+
+}
+table.matching tbody.options tr.searchFailed td {
+	color: #000;
+	background: #ffd3d3;
+	border-bottom: 1px solid #888888;
+}
+table.matching tbody.options tr.searchFailed td.title {
+	border-left: 2px solid #f00;
+	border-right: 1px solid #bfbfbf;
+}
+table.matching tbody.options tr.noItem td {
+	background: #f2f8ff;
+}
+table.matching tbody.options tr.noItem td.title {
+	color: #2153A2;
+	border-left: 2px solid #00f;
+	border--right: 1px solid #000000;
+}
+table.matching tbody.options td.lowestprice,
+table.matching tbody.options td.productGroup {
+	white-space: nowrap;
+}
+table.matching tbody.options td.asin {
+	text-align: left;
+	width: 1%;
+	white-space: nowrap;
+}
+table.matching tbody.options td.asin a {
+	font-family: Verdana, Arial, sans-serif;
+	font-size: 10px;
+}
+table.matching tbody.clear {
+	border-top: 1px solid #000;
+}
+table.matching tbody.headline th.input,
+table.matching tbody.options tr td.input,
+table.matching tbody.options tr.odd td.input,
+table.amazon_properties tbody tr td.label {
+	border-left: 1px solid #000;
+}
+table.matching tbody.headline th.asin,
+table.matching tbody.options tr td.asin,
+table.matching tbody.options tr.odd td.asin,
+table.amazon_properties tbody tr td.options {
+	border-right: 1px solid #000;
+}
+table.matching tbody.options tr.last td {
+	border-bottom: 1px solid #888;
+}
+table.amazon_properties tbody tr.last td {
+	border-bottom: 1px solid #000;
+}
+table.matching tbody.func td {
+	background: #eee;
+	color: #000;
+	border-bottom: 1px solid #000;
+	border-left: 1px solid #000;
+	border-right: 1px solid #000;
+	padding: 5px 5px;
+}
+table.matching tbody.func td div {
+	float: left;
+	margin-right: 1em;
+	
+}
+/*
+table.matching tbody.product div.productDescBtn {
+	background: transparent url('../images/page_white_magnify.png') no-repeat 0 0;
+	width: 16px;
+	height: 16px;
+	cursor: pointer;
+	float: right;
+}
+*/
+table.matching tbody.product div.productDescBtn {
+	display: block;
+	float: right;
+	padding: 3px 4px 3px 22px;
+	color: #fff;
+	background: #888 url('../images/page_white_magnify.png') no-repeat 2px 1px;
+	font-weight: normal;
+	text-decoration: none;
+	font-size: 12px;
+	border-width: 1px;
+	border-style: solid;
+	border-color: #eee #bbb #aaa #bbb;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	box-shadow: 0px 0px 3px #000;
+	-moz-box-shadow: 0px 0px 3px #000;
+	-webkit-box-shadow: 0px 0px 3px #000;
+	text-shadow: 0px 0px 3px rgba(0, 0, 0, 0.3);
+	margin-top: -1px;
+	margin-bottom: -1px;
+	line-height: 1em;
+	cursor: pointer;
+}
+
+table.matchingDetailInfo {
+	border-collapse: separate;
+	border-spacing: 2px;
+	width: 100%;
+}
+table.matchingDetailInfo tbody tr th,
+table.matchingDetailInfo tbody tr td {
+	padding: 4px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;	
+}
+table.matchingDetailInfo tbody tr th {
+	background: #eee;
+	border: 1px solid #d0d0d0;
+}
+table.matchingDetailInfo tbody tr td {
+	border: 1px solid #e0e0e0;
+}
+table.matchingDetailInfo tbody tr th.smallwidth {
+	white-space: nowrap;
+	width: 5em;
+}
+table.matchingDetailInfo tbody tr.desc td div.mlDesc {
+	height: 300px;
+	overflow-y: auto;
+	border: 1px solid #aaa;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+table.matchingDetailInfo tbody tr.images td div.main {
+	height: 75px;
+	overflow-y: auto;
+	border: 1px solid #aaa;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+}
+table.matchingDetailInfo tbody tr.images td div.main table {
+	border: 1px solid #ccc;
+	padding: 3px;
+	float: left;
+	margin: 0 3px 3px 0;
+}
+table.matchingDetailInfo tbody tr.images td div.main div img {
+	vertical-align: middle;
+}
+table.matchingDetailInfo tbody tr.desc td,
+table.matchingDetailInfo tbody tr.images td {
+	border: none;
+	padding: 0;
+}
+table.matchingDetailInfo tbody tr.desc td div,
+table.matchingDetailInfo tbody tr.images td div.main {
+	padding: 4px;
+}
+table.amazon_properties td.top {
+	vertical-align: top;
+}
+table.amazon_properties td.label {
+	width: 1%;
+	white-space: nowrap;
+	font-weight: bold;
+}
+table.amazon_properties tr td table.image tr td {
+	border: none;
+	padding: 2px;
+	margin: 0;
+}
+table.amazon_properties tr td table.image tr.top td {
+	padding-bottom: 0;
+}
+table.amazon_properties tr td table.image tr.bottom td {
+	padding-top: 0;
+}
+table td.infoBoxContent div.separator {
+	padding-top: 5px;
+	font-weight: bold;
+	width: 90%;
+	border-top: 1px solid black;
+	margin-top: 5px;
+}
+
+table.amazon_properties td.small_cell {
+	width: 7em;
+}
+
+table.amazon_properties table.image {
+	float: left;
+	border: 1px solid #bbb;
+	margin-right: 2px;
+	margin-bottom: 2px;
+}
+table.noborders tbody tr td {
+	border: none;
+}
+
+table.nospacing {
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+input.refresh {
+	height: 20px;
+	width: 20px;
+	background: url('../images/resultset_first.png') no-repeat 50% 50%;
+	border-width: 1px;
+	margin-right: 2px;
+	cursor: help;
+}
+body.magna div#content input.button.refresh {
+	height: 20px;
+	width: 20px;
+	background-image: url('../images/resultset_first.png');
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	border-width: 1px;
+	margin: 0px 6px 0px 2px;
+	vertical-align: top;
+	cursor: help;
+}
+
+/**
+ * Configuration form
+ */
+form.config table.conftbl {
+	width: 100%;
+	margin: -1em 0 2.5em 0;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+form.config table.conftbl.tabident {
+	margin-top: -6px;
+}
+form.config table.conftbl tr.text h3 {
+	margin-top: 0.7em;
+}
+form.config table.conftbl tr.text p {
+	margin: 0 0 0.7em 0;
+}
+form.config table.conftbl tr.text.noheadline p {
+	margin: 0.5em 0;
+}
+form.config table.conftbl tr.conf {
+	border-top: 1px solid #999;	
+}
+form.config table.conftbl tr.conf td,
+form.config table.conftbl tr.conf th {
+	border-bottom: 1px solid #999;
+	border-top: 1px solid #999;
+}
+form.config table.conftbl tr.conf th label.missing {
+	color: #a00000;
+}
+form.config table.conftbl tr.conf th label.expert {
+	color: #004090;
+	font-style: italic;
+}
+form.config table.conftbl tr.conf th,
+form.config table.conftbl tr td.externalDesc {
+	padding: 3px 5px;
+	width: 3em;
+	white-space: nowrap;
+	background: #e0e0e0;
+	text-align: left;
+}
+form.config table.conftbl tr td.externalDesc {
+	vertical-align: top;
+	white-space: normal;
+	padding: 3px 8px;
+	width: 18em;
+}
+form.config table.conftbl tr.conf th.desc {
+	width: 1px;
+}
+body.ielt9 form.config table.conftbl tr.invisible td {
+	border: none;
+	height: 1px;
+	color: transparent;
+	background: transparent;
+}
+form.config table.conftbl tr td.externalDesc dl {
+	font-size: 11px;
+}
+form.config table.conftbl tr td.externalDesc dl dt {
+	font-weight: bold;
+}
+form.config table.conftbl tr td.externalDesc dl dd {
+	margin-left: 1em;
+	margin-bottom: 4px;
+	color: #444;
+}
+body.magna div#content form.config table.conftbl tr th.space .button {
+	margin-top: 0;
+	margin-bottom: 0;
+}
+body.magna div#content form.config table.conftbl tr th.space .button:last-child {
+	margin-right: 0;
+}
+/*
+form.config table.conftbl tr.conf td {
+	padding: 0 0 0 5px;
+	background: #fff url('../images/inputLeft.png') no-repeat 0 0;
+	border-right: 1px solid #f0f0f0;
+}
+form.config table.conftbl tr.conf td input {
+	/* -moz-box-shadow: 2px 2px 3px #ccc inset; * /
+	background: #fff url('../images/inputTop.png') repeat-x 0 -1px;
+	border: 1px solid transparent;
+	padding: 4px 5px 4px 0px;
+	margin: 0;
+	width: 100%;
+	top: 0;
+	left: 5px;
+}
+*/
+form.config table.conftbl tr.conf td,
+form.config table.conftbl tr td.editor {
+	box-shadow: inset 2px 2px 3px #ccc;
+	-moz-box-shadow: inset 2px 2px 3px #ccc;
+	-webkit-box-shadow: inset 2px 2px 3px #ccc;
+	padding: 4px 5px;
+	background: #fff;
+}
+form.config table.conftbl tr td.editor,
+form.config table.conftbl tr td.externalDesc {
+	border-bottom: 1px solid #999;
+	border-top: 1px solid #999;
+}
+form.config table.conftbl tr td.editor {
+	vertical-align: top;
+}
+form.config table.conftbl tr.conf td[colspan="3"] {
+	border-right: 1px solid #f0f0f0;
+}
+form.config table.conftbl tr.conf td input[type="text"],
+form.config table.conftbl tr.conf td input[type="password"] {
+	width: 100%;
+}
+form.config table.conftbl tr.conf table.inlinetable td input[type="text"],
+form.config table.conftbl tr.conf table.inlinetable td input[type="password"] {
+	width: auto;
+}
+form.config table.conftbl tr.conf td input[type="text"],
+form.config table.conftbl tr.conf td input[type="password"],
+form.config table.conftbl tr.conf td select,
+form.config table.conftbl tr.conf td textarea {
+	font-size: 11px;
+	border: 1px solid #818181;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	-ms-box-sizing: border-box;
+}
+form.config table.conftbl tr.conf td input[type="text"],
+form.config table.conftbl tr.conf td input[type="password"] {
+	padding: 2px 0 2px 2px;
+}
+form.config table.conftbl tr.conf td input[type="text"].missing,
+form.config table.conftbl tr.conf td input[type="password"].missing,
+form.config table.conftbl tr.conf td select.missing,
+form.config table.conftbl tr.conf td textarea.missing {
+	border: 1px solid #ff8181;
+}
+form.config table.conftbl tr.conf td input[type="radio"],
+form.config table.conftbl tr.conf td input[type="checkbox"] {
+	margin: 1px;
+	vertical-align: sub;
+}
+body.mac form.config table.conftbl tr.conf td input[type="radio"],
+body.mac form.config table.conftbl tr.conf td input[type="checkbox"],
+body.webkit form.config table.conftbl tr.conf td input[type="radio"],
+body.webkit form.config table.conftbl tr.conf td input[type="checkbox"] {
+	margin: 0 1px;
+	vertical-align: text-top;
+}
+body.mac.webkit form.config table.conftbl tr.conf td input[type="checkbox"] {
+	margin-top: 1px;
+}
+body.mac.gecko form.config table.conftbl tr.conf td input[type="checkbox"] {
+	margin-top: -1px;
+}
+body.mac.gecko form.config table.conftbl tr.conf td input[type="radio"] {
+	margin-top: 0px;
+}
+body.windows.gecko form.config table.conftbl tr.conf td input[type="radio"],
+body.windows.gecko form.config table.conftbl tr.conf td input[type="checkbox"] {
+	margin: 2px -2px 2px 1px;
+}
+form.config table.conftbl tr.conf td.input label {
+	padding-left: 3px;
+}
+form.config table.conftbl tr.conf td span {
+	margin-right: 1em;
+}
+form.config table.conftbl tr.conf td label.savedPassword {
+	padding: 0;
+}
+form.config table.conftbl tr.conf td label.savedPassword span {
+	color: #808080;
+	font-style: italic;
+	opacity: 1;
+	padding: 1px 1px 1px 5px;
+	position: absolute;
+	z-index: 5;
+}
+form.config table.conftbl tr.conf td .rightSpacer {
+	margin-right: 1em;
+}
+form.config table.conftbl tr.conf td .leftSpacer {
+	margin-left: 1em;
+}
+
+form.config table.conftbl tr.conf td .smalltext {
+	font-size: smaller;
+}
+
+tr.bottomDashed {
+    border-bottom: 1px dashed #ccc;
+}
+
+body.mac form.config table.conftbl tr.conf td label.savedPassword span,
+body.webkit form.config table.conftbl tr.conf td label.savedPassword span {
+	padding-top: 4px;
+}
+form.config table.conftbl tr.conf td label.savedPassword.partial span {
+	color: #c0c0c0;
+}
+form.config table.conftbl tr.conf td label.savedPassword.hidden span {
+	display: none;
+}
+form.config table.conftbl tr.conf td.hint,
+form.config table.conftbl tr.conf td.error {
+	white-space: nowrap;
+	width: 1%;
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	background: #eee;
+	color: #000;
+	border-left: 1px solid #eaeaea;
+}
+form.config table.conftbl tr.conf td.error {
+	color: #900;
+}
+form.config p {
+	margin-bottom: 0;
+}
+
+form.config table.conftbl tr.conf td.subtable,
+form.config table.conftbl tr td.subconf,
+form.config table.conftbl tr table.inlinetable td {
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	padding: 0;
+	border-bottom: 1px solid #999999;
+}
+form.config table.conftbl tr table.inlinetable td {
+	border-top: none;
+	border-bottom: none;
+}
+form.config table.conftbl tr table.nostyle td {
+	box-shadow: none;
+	-moz-box-shadow: none;
+	-webkit-box-shadow: none;
+	border-bottom: 1px solid #999999;
+	border-top: none;
+	border-bottom: none;	
+}
+form.config table.conftbl tr table.inlinetable td.nowrap {
+	white-space: nowrap;
+}
+form.config table.conftbl tr.conf td.subtable table,
+form.config table.conftbl tr td.subconf table.subtable,
+form.config table.conftbl tr table.inlinetable {
+	width: 100%;
+	border-collapse: collapse;
+	border-spacing: 0px;
+}
+form.config table.conftbl tr.conf td.subtable table td, 
+form.config table.conftbl tr.conf td.subtable table th,
+form.config table.conftbl tr td.subconf table.subtable td.noborder, 
+form.config table.conftbl tr td.subconf table.subtable th.noborder,
+form.config table.conftbl tr table.inlinetable {
+	border-top: none;
+	border-bottom: none;
+}
+form.config table.conftbl tr.conf td.subtable table th.desc {
+	width: 3em;
+	text-align: center;
+}
+table.magnaframe div.desc,
+table.actions div.desc,
+form.config div.desc {
+	width: 16px;
+	height: 16px;
+	background: transparent url('../images/information.png') no-repeat 0 0;
+	cursor: pointer;
+	display: inline-block;
+	vertical-align: top;
+}
+form.config table.conftbl tr.conf td.input div.desc {
+	background-position: 0px 1px;
+	margin-top: 1px;
+}
+body.ielt9 table.magnaframe div.desc,
+body.ielt9 table.actions div.desc,
+body.ielt9 form.config div.desc {
+	display: block;
+}
+table.magnaframe div.desc span,
+table.actions div.desc span,
+form.config div.desc span {
+	display: none;
+}
+/* Fixes fuer den <ironie>besten</ironie> Browser der Welt! */
+body.ielt8 form.config table.conftbl tr.conf th,
+body.ielt8 form.config table.conftbl tr.conf th.desc,
+body.ielt8 form.config table.conftbl tr.conf td.hint,
+body.ielt8 form.config table.conftbl tr.conf td.error {
+	width: auto;
+}
+body.ielt8 form#conf_general table.conftbl tr.conf th,
+body.ielt8 form#conf_general table.conftbl tr.conf th.desc {
+	width: 20px;
+}
+
+form.config table.conftbl tr table.shippingDetails {
+	margin-bottom: 0.7em;
+}
+form.config table.conftbl tr table.shippingDetails:last-child {
+	margin-bottom: 0;
+}
+form.config table.conftbl tr table.shippingDetails tr.row1 td {
+	padding-bottom: 3px;
+}
+
+table.magnaframe {
+	border: 1px solid #999;
+	border-collapse: separate;
+	border-spacing: 1px;
+	width: 100%;
+	margin-bottom: 1.5em;
+}
+table.magnaframe thead td,
+table.magnaframe thead th {
+	padding: 4px 6px;
+	background: #ccc;
+	color: #000;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 23px;
+}
+table.magnaframe tbody td {
+	background: #eaeaea;
+}
+table.magnaframe tbody td p {
+	margin: 5px;
+}
+/**
+ * Listing Table & Category View Table
+ */
+div.magnamain form.categoryView table {
+	padding: 0;
+	width: 100%;
+}
+div.magnamain form.categoryView table.main {
+	border-collapse: collapse;
+}
+div.magnamain table.datagrid,
+div.magnamain form.categoryView table.list,
+table.actions {
+	width: 100%;
+	font-size: 10px;
+	border: 1px solid #999;
+	margin: 0 0 1em 0;
+	border-collapse: separate;
+	border-spacing: 1px;
+}
+table.datagrid thead tr td,
+table.datagrid thead tr th,
+table.datagrid tbody tr td,
+table.datagrid tbody tr th,
+form.categoryView table.list thead tr td,
+form.categoryView table.list tbody tr td,
+table.actions tr th,
+table.actions tr td {
+	padding: 4px 6px;
+}
+table.datagrid tbody tr td pre {
+	margin: 0;
+	font-size: 11px;
+}
+table.datagrid thead tr td,
+table.datagrid thead tr th,
+form.categoryView table.list thead tr td,
+table.actions th {
+	font-size: 110%;
+	background: #ccc;
+	border-bottom: 1px solid #b8b8b8;
+	font-weight: bold;
+	/*line-height: 23px;*/
+	padding-top: 8px;
+	padding-bottom: 8px;
+	line-height: 1em;
+	/*white-space: nowrap;*/
+}
+table.datagrid thead tr td.smallCell,
+table.datagrid tbody tr td.smallCell {
+ 	width: 1%;
+ 	white-space: nowrap;
+}
+table.datagrid thead tr th span.lighter,
+table.datagrid thead tr td span.lighter {
+	color: #555;
+}
+table.datagrid thead tr td input,
+form.categoryView table.list thead tr td input {
+	vertical-align: baseline;
+	padding: 0;
+	margin-top: -2px;
+	margin-bottom: -2px;
+}
+table.datagrid thead tr td input[type="checkbox"],
+form.categoryView table.list thead tr td input[type="checkbox"] {
+	margin: -1px 4px 0 4px;
+	vertical-align: sub;
+}
+table.datagrid thead tr td a.sorting,
+table.datagrid thead tr td a.sorting:active,
+table.datagrid thead tr td a.sorting:hover,
+table.datagrid thead tr td a.sorting img,
+table.datagrid thead tr td a.sorting:active img,
+table.datagrid thead tr td a.sorting:hover img,
+form.categoryView table.list thead tr td a.sorting,
+form.categoryView table.list thead tr td a.sorting:active,
+form.categoryView table.list thead tr td a.sorting:hover,
+form.categoryView table.list thead tr td a.sorting img,
+form.categoryView table.list thead tr td a.sorting:active img,
+form.categoryView table.list thead tr td a.sorting:hover img {
+	outline: none !important;
+	border: none !important;
+	text-decoration: none;
+}
+table.datagrid tr td a.sorting img,
+form.categoryView table.list thead tr td a.sorting img {
+	margin-top: 0px;
+	vertical-align: text-bottom;
+}
+table.datagrid tbody tr.odd td,
+table.datagrid tbody tr.odd th,
+form.categoryView table.list tbody tr.odd td,
+table.actions tr td {
+	background: #eaeaea;
+	border-top: 1px solid #e0e0e0;
+	border-bottom: 1px solid #e0e0e0;
+}
+/* IE lt 9 stinkt ab und ignoriert gleich die ganze deklaration... wtf. */
+table.datagrid.autoOddEven tbody tr:nth-child(odd) td,
+table.datagrid.autoOddEven tbody tr:nth-child(odd) th {
+	background: #eaeaea;
+	border-top: 1px solid #e0e0e0;
+	border-bottom: 1px solid #e0e0e0;	
+}
+table.actions tr td {
+	background: #eaeaea;
+	border: none;
+}
+table.datagrid tbody tr.even td,
+table.datagrid tbody tr.even th,
+form.categoryView table.list tbody tr.even td {
+	background: #fff;
+	border-top: 1px solid #fafafa;
+	border-bottom: 1px solid #fafafa;
+}
+table.datagrid.autoOddEven tbody tr:nth-child(even) td,
+table.datagrid.autoOddEven tbody tr:nth-child(even) th {
+	background: #fff;
+	border-top: 1px solid #fafafa;
+	border-bottom: 1px solid #fafafa;
+}
+table.datagrid tbody tr.odd:hover td,
+table.datagrid tbody tr.even:hover td,
+form.categoryView table.list tbody tr.odd:hover td,
+form.categoryView table.list tbody tr.even:hover td {
+	background: #fff;
+	border-top: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+table.datagrid.hover.autoOddEven tbody tr:nth-child(odd):hover td,
+table.datagrid.hover.autoOddEven tbody tr:nth-child(even):hover td {
+	background: #fff;
+	border-top: 1px solid #aaa;
+	border-bottom: 1px solid #aaa;
+}
+table.datagrid tbody tr td.fail {
+	cursor: help;
+}
+table.datagrid tbody tr.failed.odd td {
+	background: #e3c1c1;
+}
+table.datagrid tbody tr.failed.even td {
+	background: #ffe0e0;
+}
+table.datagrid tbody tr.flast td {
+	border-bottom: 2px solid #a00 !important;
+}
+table.datagrid tbody tr td ul.reason {
+	display: none;
+}
+form.categoryView table.list tbody tr td.image {
+	width: 20px;
+	text-align: center;
+}
+form.categoryView table.list tbody tr td img {
+	vertical-align: bottom;
+	border: none;
+}
+form.categoryView table.list tbody tr td.edit {
+	width: 3.5em;
+}
+form.categoryView table.list thead tr td.katProd {
+
+}
+form.categoryView table.list thead tr td.price,
+form.categoryView table.list thead tr td.lowestprice,
+form.categoryView table.list thead tr td.amazonPrice {
+	width: 12.5em;
+	white-space: nowrap;
+}
+body.ielt8 form.categoryView table.list thead tr td.price {
+	width: 13em;
+}
+body.ielt8 form.categoryView table.list thead tr td.amazonPrice {
+	width: 13.5em;
+}
+form.categoryView table.list thead tr td.matched {
+	width: 6em;
+}
+form.categoryView table.list thead tr td.add {
+	width: 3em;
+}
+form.categoryView table.list tbody tr td.add {
+	text-align: center;
+	padding-top: 0;
+	padding-bottom: 0;
+	white-space: nowrap;
+}
+form.categoryView table.list input.checkbox {
+	display: inline-block;
+	width: 17px;
+	height: 17px;
+	background: transparent url('../images/checkbox2.png') no-repeat 0 0;
+	border: none;
+	outline: none;
+	padding: 0;
+	vertical-align:baseline;
+	margin-right: 3px;
+}
+form.categoryView table.list input.checkbox:active,
+form.categoryView table.list input.checkbox::-moz-focus-inner {
+	outline-style: none;
+	border-style: none;
+}
+
+form.categoryView table.list input.checkbox.checked	    { background-position: 0 -34px; }
+form.categoryView table.list input.checkbox.semichecked { background-position: 0 -17px; }
+form.categoryView table.list input.checkbox.unchecked   { background-position: 0  0;    }
+
+form.categoryView table.list input.checkbox.checked:hover     { background-position: -17px -34px; }
+form.categoryView table.list input.checkbox.semichecked:hover { background-position: -17px -17px; }
+form.categoryView table.list input.checkbox.unchecked:hover   { background-position: -17px  0;    }
+
+body.magna table.actions tbody tr:first-child td:first-child {
+	padding: 0 3px;
+}
+body.magna table.actions tbody tr.firstChild td.firstChild {
+	padding: 0 3px;
+}
+body.magna table.actions table {
+	width: 100%;
+}
+body.magna table.actions table table {
+	width: auto;
+}
+body.magna table.actions table td {
+	padding: 0;
+}
+body.magna table.actions table td:first-child {
+	padding-right: 2px;
+	text-align: left;
+	width: 30%;
+}
+body.magna table.actions table td.firstChild {
+	padding-right: 2px;
+	text-align: left;
+	width: 30%;
+}
+body.magna table.actions table td table td:first-child {
+	width: auto;
+}
+body.magna table.actions table td table td.firstChild {
+	width: auto;
+}
+body.magna table.actions table td:last-child {
+	padding-left: 2px;
+	text-align: right;
+}
+body.magna table.actions table td.lastChild {
+	padding-left: 2px;
+	text-align: right;
+}
+body.magna table.actions table td.inputCell {
+	padding-left: 3px;
+	padding-right: 3px;
+}
+body.magna table.actions table td.bottom {
+	vertical-align: bottom;
+}
+table.actions tr td[colspan="2"] {
+	padding: 3px;
+}
+table.actions tr td[colspan="2"] > div:first-child {
+	font-weight: bold;
+	font-size: 116%;
+}
+
+div.magnamain table.datagrid a,
+div.magnamain form.categoryView table.list a {
+	text-decoration: none;
+}
+div.magnamain table.datagrid a.underline,
+div.magnamain form.categoryView table.list a.underline {
+	text-decoration: underline;
+}
+table.nostyle {
+	padding: 0;
+	margin: 0;
+	border: 0;
+	border-collapse: collapse;
+	border-spacing: 0;
+	background: transparent;
+	color: inherit;
+	font: inherit;
+}
+table.datagrid table.nostyle,
+form.categoryView table.list table.nostyle {
+	font-size: 10px;
+}
+table.nostyle tr td,
+table.datagrid tbody tr td table.nostyle tr td,
+table.datagrid tbody tr:hover td table.nostyle tr td,
+form.categoryView table.list tbody tr td table.nostyle tr td,
+form.categoryView table.list tbody tr:hover td table.nostyle tr td {
+	font: inherit;
+    background: transparent;
+    color: inherit;
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+form.categoryView table.list td.icoWidth {
+	width: 19px;
+}
+form.categoryView table.list table.nostyle tr td.artNr,
+table.datagrid tbody table.nostyle tr td.artNr,
+form.categoryView table.list table.nostyle tr span.artNr,
+table.datagrid tbody tr span.artNr {
+	color: #666;
+}
+table.datagrid .gfxbutton,
+form.categoryView table.list .gfxbutton,
+body.magna table.actions .gfxbutton {
+	margin-bottom: -7px;
+	margin-top: -3px;
+}
+
+table.datagrid table.nostyle.addData th, 
+table.datagrid table.nostyle.addData td {
+    border-bottom: 1px solid #FAFAFA;
+    border-top: 1px solid #FAFAFA;
+}
+table.datagrid tr.odd table.nostyle.addData th, 
+table.datagrid tr.odd table.nostyle.addData td,
+table.datagrid tr:hover td table.nostyle.addData tr td,
+table.datagrid tr:hover td table.nostyle.addData tr th {
+    border-bottom: 1px solid #E0E0E0;
+    border-top: 1px solid #E0E0E0;
+}
+table.datagrid tr:hover td table.nostyle.addData tr th {
+	background: #EAEAEA;
+}
+table.datagrid table.nostyle.addData td,
+table.datagrid tr:hover td table.nostyle.addData tr td {
+	padding-left: 3px;
+	padding-right: 5px;
+}
+table.datagrid table.nostyle.addData th {
+	width: 1px;
+	padding-right: 3px;
+}
+table.datagrid table.nostyle.addData td a {
+	color: #1431AD;
+	text-decoration: underline;
+}
+table.datagrid table.nostyle.addData td a:hover {
+	color: #4466FF;
+}
+table.nostyle td.label,
+table.nostyle th.label {
+	white-space: nowrap;
+	width: 1px;
+}
+table.nosytle td.paddingRight,
+table.nosytle th.paddingRight {
+	padding-right: 3px;
+}
+table.attributesTable {
+	width: 100%;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+table.attributesTable th,
+table.attributesTable td {
+	border-width: 1px;
+	border-style: solid dashed;
+	border-color: #747474 #c4c4c4;
+	padding: 3px 5px;
+	vertical-align: top;
+}
+table.attributesTable > tbody > tr > th,
+table.attributesTable > tbody > tr > td {
+	background: #fafafa;
+}
+table.attributesTable tr.even th,
+table.attributesTable tr.even td {
+	background: #eee;
+}
+table.attributesTable th {
+	width: 10em;
+	border-left: 1px solid #747474;
+}
+table.attributesTable th span,
+span.bull {
+	font-size: 120%;
+	line-height: 0.83%;
+	vertical-align: super;
+	color: #f00;
+}
+table.attributesTable td.info {
+	width: 20em;
+	color: #555;
+	font-size: 90%;
+	border-right: 1px solid #747474;
+}
+table.attributesTable tr.headline td {
+	background: #aaa;
+	border: 1px solid #555;
+}
+table.attributesTable tr.headline td h4 {
+	padding: 0;
+	margin: 0.2em 0;
+}
+table.attributesTable tr.desc td {
+	background: #ddd;
+	border: 1px solid #555;
+}
+table.attributesTable tr.spacer td {
+	background: transparent;
+	border: none;
+}
+table.attributesTable td input.fullwidth {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+table.attributesTable table.imageBox {
+	border: 1px solid #555;
+	margin: 0 5px 5px 0;
+	float: left;
+	border-spacing: 0px;
+	border-collapse: collapse;
+}
+table.attributesTable table.imageBox td {
+	border: 1px solid #555;
+	text-align: center;
+	vertical-align: middle;
+	padding: 0;
+}
+table.attributesTable table.imageBox td.image {
+	width: 60px;
+	height: 61px !important;
+	overflow: hidden;
+}
+table.attributesTable table.imageBox td.cb {
+	background: #eee;
+}
+table.attributesTable table.attrTable {
+	width: 100%;
+	border-spacing: 0px;
+	border-collapse: collapse;
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+table.attributesTable table.attrTable td {
+	border-width: 1px;
+	border-style: solid dashed;
+	border-color: #747474 #c4c4c4;
+}
+table.attributesTable table.attrTable td.first {
+	padding-left: 0;
+}
+table.attributesTable table.attrTable td.last {
+	padding-right: 0;
+}
+table.attributesTable table.attrTable tr.first td {
+	border-top: none;
+}
+table.attributesTable table.attrTable tr.last td {
+	border-bottom: none;
+}
+table.attributesTable table.attrTable td.key {
+	width: 5em;
+	white-space: nowrap;
+	border-left: none;
+}
+table.attributesTable table.attrTable td.input {
+	padding-right: 4px;
+}
+table.attributesTable table.attrTable td.info {
+	border-right: none;
+}
+table.attributesTable table.attrTable td select,
+table.attributesTable table.attrTable td input[type="text"] {
+	width: 100%;
+}
+table.attributesTable table.attrTable.noborder tr td {
+	border: none;
+}
+table.attributesTable tr#additionalAttributes > td.input {
+	border-right: 1px solid #747474;
+	padding: 0;
+}
+table.attributesTable .o2k7SkinSilver .mceToolbar,
+table.attributesTable .o2k7SkinSilver .mceStatusbar {
+	border-style: solid none;
+}
+table.attributesTable .o2k7SkinSilver .mceIframeContainer {
+	border-style: none;
+}
+table.attributesTable td input[type="text"], 
+table.attributesTable td input[type="password"], 
+table.attributesTable td select,
+table.attributesTable td textarea {
+    -moz-box-sizing: border-box;
+    border: 1px solid #818181;
+    font-size: 11px;
+}
+table.attributesTable td input[type="text"].wrong,
+table.attributesTable td select.wrong,
+table.attributesTable td textarea.wrong {
+	border-color: #d30;
+	background-color: #fff0d8;
+}
+table.attributesTable td input.blocked,
+table.attributesTable td select.blocked,
+table.attributesTable td textarea.blocked {
+	background-color: #eee;
+	color: #808080;
+}
+table.attributesTable td input.blocked.wrong,
+table.attributesTable td select.blocked.wrong,
+table.attributesTable td textarea.blocked.wrong {
+	border-color: #dc8e76;
+	background-color: #eee5d6;
+	color: #908070;
+}
+table.attributesTable td table span.o2k7Skin iframe {
+	border: 1px solid #bbb;
+}
+table.attributesTable td table span.o2k7Skin table td.mceIframeContainer {
+	padding: 0 4px 0 2px;
+}
+table.attributesTable td table span.o2k7Skin table.mceToolbar table.mceSplitButton td.mceFirst span {
+	border-top: 1px solid #bbb;
+}
+
+
+
+form.listings {
+	position: relative;
+}
+form.listings div {
+	padding: 0.5em 0;
+}
+table.datagrid ul {
+	margin: 0;
+	padding: 0 0 0 1em;
+	list-style: none;
+	text-indent: -1em;
+}
+table.datagrid ul li {
+	margin: 0;
+	padding: 0;
+}
+table.datagrid ul li:before {
+	content: "\00BB \0020";
+}
+
+div#listingsBar {
+	position: relative;
+	border: 1px solid #333;
+	height: 15px;
+	background: #555 url('../images/barBG.png') repeat-x 0 0;
+	color: #fff;
+	width: 100%;
+}
+div#listingsBar img {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;	
+	width: 100%;
+}
+div#listingsBar div.bar {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+	background: #555 url('../images/barBG.png') repeat-x 0 0;
+}
+div#listingsBar div.bar_sep {
+	position: absolute;
+	top: 0;
+	left: 0;
+	height: 100%;
+	background: transparent url('../images/listingsbar_seperator.png') repeat-x 0 0;
+}
+div#listingsBar div.percent {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+	font-weight: bold;
+	cursor: help;
+	line-height: 15px;
+	color: #fff;
+	text-shadow: 0 0 1px #000000, 0 0 1px #000000;
+}
+
+#managerUIElements {
+	padding-bottom: 6px;
+}
+form#templateSelection {
+	display: inline;
+	margin-bottom: 0.5em;
+}
+form#templateSelection label .gfxbutton.info {
+	background-position: 1px 1px;
+	vertical-align: middle;
+}
+form#deletedArticlesSelection {
+	display: block;
+    margin-top: 0.6em;
+}
+form#deletedArticlesSelection label .gfxbutton.info {
+	background-position: 1px 1px;
+	vertical-align: middle;
+}
+#editTemplates {
+	line-height: 1em;
+}
+#editTemplates img {
+	margin: 0.5em 0em -0.6em 0em;
+	border: none;
+}
+
+/**
+ * Debug Box
+ */
+div#debugBox {
+	height: 300px;
+	overflow: auto;
+	border: 1px solid #999;
+	background: #fff;
+	padding: 5px;
+	position: relative;
+	margin: 2em 5px 5px 5px;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+div#debugBox pre {
+	width: 100%;
+	margin-top: 0;
+	overflow: visible;
+	display: block;
+	display: -moz-box;
+}
+textarea#debugBox,
+textarea.debugBox {
+	height: 300px;	
+	border: 1px solid #999;
+	background: #fff;
+	position: relative;
+	width: 100%;
+	font: 12px monospace;
+	white-space: nowrap;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	margin-bottom: 1em;
+}
+table#magnafooter td div.bold {
+	position: relative;
+}
+table#magnafooter span.build {
+	font-weight: normal;
+	color: #aaa;
+	position: absolute;
+	right: 0;
+	display: inline;
+}
+
+table#magnafooter span.customerinfo {
+	color: #AAAAAA;
+	display: inline;
+	font-weight: normal;
+	left: 0;
+	position: absolute;
+}
+
+/* Dialogs v2 */
+div.dialog2 {
+	display: none;
+	margin-top: 5px;
+	line-height: 1.5em;
+}
+div.dialog2 dl dt {
+	font-weight: bold;
+}
+div.dialog2 dl dd {
+	margin-bottom: 1.4em;
+}
+
+
+/* Tabs */
+body.magna div.magnaTabs2 ul {
+	border-bottom: 1px solid #aeaeae;
+	margin: 10px 0 0 0;
+	padding: 0 1em 0 1em;
+}
+body.magna.ielt9 div.magnaTabs2 ul {
+	padding-bottom: 0.5em;
+}
+body.magna div.magnaTabs2 ul li {
+	display: inline;
+	line-height: 2em;
+	white-space: nowrap;
+}
+body.magna.ielt9 div.magnaTabs2 ul li {
+	background: #fff;
+	line-height: 1em;
+}
+body.magna div.magnaTabs2 ul li a,
+body.magna div.magnaTabs2 ul li span {
+	font-size: 10px;
+	background-color: #C8C8C8;
+	background: -moz-linear-gradient(
+		center bottom,
+		rgb(220,220,220) 80%,
+		rgb(255,255,255) 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.8, rgb(220,220,220)),
+		color-stop(1, rgb(255,255,255))
+	);
+	border-color: #c9c9c9;
+	border-style: solid;
+	border-width: 1px;
+	color: #555;
+	padding: 5px 7px 100px 7px;
+	text-decoration: none;
+	font-weight: bold;
+	outline: none;
+	/* white-space:nowrap causes bugs in IE 6 */
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+	-moz-border-radius-topleft: 4px;
+	-moz-border-radius-topright: 4px;
+	-webkit-border-top-left-radius: 4px;
+	-webkit-border-top-right-radius: 4px;
+}
+body.magna.ielt10 div.magnaTabs2 ul li a,
+body.magna.ielt10 div.magnaTabs2 ul li span {
+	background: #dcdcdc url('../images/gradient_inactive.png') repeat-x 0 0;
+}
+body.magna div.magnaTabs2 ul li a img,
+body.magna div.magnaTabs2 ul li span img {
+	border: none;
+	margin-bottom: -6px;
+}
+
+body.magna div.magnaTabs2 ul li.inactive span {
+	color: #555;
+	background: #ddd;
+	cursor: not-allowed;
+}
+body.magna div.magnaTabs2 ul li.selected a,
+body.magna div.magnaTabs2 ul li a:hover {
+	background-color: #fff;
+	background: -moz-linear-gradient(
+		center bottom,
+		#fff 80%,
+		#d0d0d0 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.8, #fff),
+		color-stop(1, #d0d0d0)
+	);
+	border-color: #aeaeae;
+	border-bottom-width: 0;
+	text-decoration: none;
+	font-weight: bold;
+	color: #000000;
+}
+body.magna div.magnaTabs2 ul li.selected a,
+body.magna div.magnaTabs2 ul li.selected span {
+	position: relative;
+	top: -3px;
+	box-shadow: 2px -1px 4px -1px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: 2px -1px 4px -1px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: 2px -1px 4px -1px rgba(0, 0, 0, 0.2);
+}
+body.magna.ielt10 div.magnaTabs2 ul li.selected a,
+body.magna.ielt10 div.magnaTabs2 ul li a:hover {
+	background: #fff url('../images/gradient_active.png') repeat-x 0 0;
+}
+
+body.magna.xtcmodified div.magnaTabs2 ul li.selected a,
+body.magna.xtcmodified div.magnaTabs2 ul li a:hover,
+body.magna.xtcommerce div.magnaTabs2 ul li.selected a,
+body.magna.xtcommerce div.magnaTabs2 ul li a:hover {
+	background-color: #f7f7f7;
+	background: -moz-linear-gradient(
+		center bottom,
+		#f7f7f7 80%,
+		#d0d0d0 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.8, #f7f7f7),
+		color-stop(1, #d0d0d0)
+	);
+
+}
+body.magna.xonsoft div.magnaTabs2 ul li.selected a,
+body.magna.xonsoft div.magnaTabs2 ul li a:hover {
+	background-color: #e8e8e8;
+	background: -moz-linear-gradient(
+		center bottom,
+		#e8e8e8 80%,
+		#cbcbcb 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0.8, #e8e8e8),
+		color-stop(1, #cbcbcb)
+	);
+
+}
+body.magna.ielt10.xtcmodified div.magnaTabs2 ul li.selected a,
+body.magna.ielt10.xtcmodified div.magnaTabs2 ul li a:hover,
+body.magna.ielt10.xtcommerce div.magnaTabs2 ul li.selected a,
+body.magna.ielt10.xtcommerce div.magnaTabs2 ul li a:hover {
+	background: #f7f7f7 url('../images/gradient_active_xtc.png') repeat-x 0 0;
+}
+
+body.magna div.magnaTabs2 ul li a:visited {
+	font-weight: bold;
+}
+/* Amazon Prepare */
+input#removeapply.button, input#resetapply.button {
+	min-width: 278px;
+}
+input#removeapply.button {
+	margin-bottom: 0 !important;
+}
+input#resetapply.button {
+	margin-top: 4px !important;
+}
+
+/* Amazon Listings */
+table#inventory tbody tr {
+	color: #555;
+}
+table#inventory tbody tr.inventory {
+	color: #000;
+}
+table#inventory tbody tr.incomplete {
+	color: #555;
+	font-style: italic;
+}
+table.listingInfo {
+	width: 100%;
+	border-top: 1px solid #999;
+	border-bottom: 1px solid #999;
+	margin-bottom: 1em;
+}
+table.listingProcessDetails {
+	width: 100%;
+	vertical-align: middle;
+}
+table.listingProcessDetails p {
+	margin: 0;
+}
+body.magna div#content table.listingProcessDetails a.button {
+	margin: 0 0 0 5px;
+}
+
+table#errorlog tbody td.errormessage span {
+	display: none;
+}
+table#errorlog tbody td.errormessage span[title].inline {
+	cursor: help;
+}
+/* Datepicker fixes */
+body.magna.jqueryui .ui-widget {
+	font-family: sans-serif;
+	font-size: 13px;
+}
+body.magna.jqueryui .ui-widget a {
+	font-family: sans-serif !important;
+}
+body.magna.jqueryui .ui-dialog a {
+	text-decoration: underline;
+	font-size: 13px;
+}
+body.magna.jqueryui .ui-widget .ui-widget-header a:hover {
+	font-size: inherit;
+}
+
+/* Pagination */
+body.magna table.pagination {
+	width: 100%;
+}
+body.magna table.pagination input {
+	border: none;
+	padding: 0;
+	margin: 0;
+	background: transparent;
+	color: #000;
+	font: 11px sans-serif;
+}
+
+/* Einstellvorgang */
+div#checkinSubmit {
+	text-align: center;
+	padding-top: 3em;
+	padding-top: 1.5em;
+}
+div#checkinSubmit h1#threeDots {
+	font-weight: bold;
+	font-size: 170%;
+	margin-bottom: 1.4em;
+	border: none;
+}
+div#checkinSubmit h1#threeDots span#headline {
+	margin-left: 1.5em;
+}
+div#checkinSubmit h1#threeDots span.alldots {
+	display: inline-block;
+	width: 1.5em;
+	text-align: left;
+}
+@-webkit-keyframes pulsar {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0.3;
+	}
+}
+@keyframes pulsar {
+	from {
+		opacity: 1;
+	}
+	to {
+		opacity: 0.3;
+	}
+}
+.pulse {
+	-webkit-animation: pulsar 1s infinite;
+	-webkit-animation-direction: alternate;
+	animation: pulsar 1s infinite;
+	animation-direction: alternate;
+}
+div#checkinSubmit h1#threeDots span.alldots span.dot {
+	display: inline;
+}
+
+/* Yatego Category Matching */
+table#catMatch {
+	width: 100%;
+	font-size: 12px;
+	line-height: 1em;
+}
+table#catMatch td {
+	width: 33%;
+}
+table#catMatch td.spacer {
+	width: 1em;
+}
+table#catMatch td.catView {
+	vertical-align: top;
+	border: 1px solid #666;
+	background: #fff;
+	padding: 0 0 2px 0;
+}
+table#catMatch td div.catView {
+	height: 440px;
+	overflow: auto;
+	padding: 7px 0 0 7px;
+	margin: 0 0 -2px 0;
+	overflow: auto;
+}
+table#catMatch td#yategoCustomCats div.catView {
+	height: 150px;
+}
+table#catMatch span.toggle {
+	width: 26px;
+	height: 16px;
+	vertical-align: text-bottom;
+	background: transparent url("../images/togglebuttons.png") no-repeat 0 0;
+	display: inline-block;
+	cursor: pointer;
+}
+table#catMatch span.toggle.minus {
+	background-position: 0 -16px;
+}
+table#catMatch span.toggle.leaf {
+	background-position: 0 -32px;
+}
+table#catMatch span.toggle.tick {
+	background-position: 0 -48px;
+}
+table#catMatch span.toggle.minus.tick {
+	background-position: 0 -64px;
+}
+table#catMatch span.toggle.leaf.tick {
+	background-position: 0 -80px;
+}
+table#catMatch span.catname {
+	cursor: pointer;
+}
+table#catMatch td#selectedShopCategory {
+	height: 100px;
+}
+table#catMatch td#selectedShopCategory div.catView {
+	height: 100px;
+}
+table#catMatch td#selectedYategoCategories {
+	height: 315px;
+}
+table#catMatch td#selectedYategoCategories div.catView {
+	height: 315px;
+}
+table#catMatch td.headline {
+	height: 15px;
+}
+table#catMatch td div.catname {
+	display: inline;
+}
+table#catMatch td div.catname div.catelem {
+	margin-left: 1em;
+}
+table#catMatch td#selectedYategoCategories div.yategoCategory div.y_rm_handle {
+	width: 16px;
+	background: transparent url("../images/bullet_cross.png") no-repeat 0 0;
+	display: inline-block;
+	cursor: pointer;
+	display: block;
+	float: left;
+}
+table#catMatch td#selectedYategoCategories div.yategoCategory div.ycpath {
+	margin-left: 16px;
+}
+table#catMatch td#selectedYategoCategories div.yategoCategory div.ycpath span.invalid {
+	color: #755;
+	font-style: italic;
+}
+table#catMatch td.catVisual {
+	display: inline-block;
+	width: 100%;
+	height: 2em;
+	line-height: 1.5em;
+	background: #fff;
+	color: #000;
+	border: 1px solid #999;
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+}
+/* Additional CSS for blockUIProgress */
+div.progressBarContainer {
+	height: 17px;
+	width: 100%;
+	border: 1px solid #999;
+	padding: 0;
+	position: relative;
+	text-align: center;
+	background: #fff url('../images/progressbar.png') repeat-x 0 -15px;
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+}
+div.progressBarContainer div.progressBar {
+	position: relative;
+	left: 0;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 0%;
+	transition-property: width;
+	background: #b6cbff url('../images/progressbar.png') repeat-x 0px 0;
+}
+div.progressBarContainer div.progressPercent {
+	position: relative;
+	left: 0;
+	top: -15px;
+	padding: 0;
+	margin: 0;
+	height: 100%;
+	width: 100%;
+	font-weight: normal;
+	font-size: 11px;
+	line-height: 15px;
+	color: #000;
+	text-align: center;
+}
+
+/* Global Stats */
+div#stats {
+	padding-top: 8px;
+	margin-bottom: -8px;
+}
+div#stats div.stat {
+	float: left;
+	border: 1px solid #ddd;
+	padding: 8px;
+	margin: 0 8px 8px 0;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	box-shadow: inset 3px 3px 10px -4px rgba(0, 0, 0, 0.2);
+	-moz-box-shadow: inset 3px 3px 10px -4px rgba(0, 0, 0, 0.2);
+	-webkit-box-shadow: inset 3px 3px 10px -4px rgba(0, 0, 0, 0.2);
+	background: -moz-linear-gradient(
+		center bottom,
+		#f0f0f0 0%,
+		#ffffff 100%
+	);
+	background: -webkit-gradient(
+		linear,
+		left bottom,
+		left top,
+		color-stop(0, #f0f0f0),
+		color-stop(1, #ffffff)
+	);
+	filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#f0f0f0');
+}
+
+textarea.apiRequestTime {
+	border: 2px solid #ccc;
+	background: #f8f8f8;
+	color: #f8f8f8;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	width: 5px !important;
+	height: 5px !important;
+	padding: 0 !important;
+	margin: 0 0 3px 0;
+	overflow: hidden;
+	font: 11px/1em monospace;
+	display: block;
+	-moz-box-sizing: content-box;
+	-webkit-box-sizing: content-box;
+	resize: none;
+}
+textarea.apiRequestTime:hover {
+	color: #333;
+	width: 100% !important;
+	height: 300px !important;
+	margin-top: -298px;
+	position: relative;
+	overflow: auto;
+	padding: 3px 3px 0 3px !important;
+	box-shadow: 0 0 15px rgba(0, 0, 0, 0.7), 0 0 2px 2px rgba(0, 0, 0, 0.3);
+	-moz-box-shadow: 0 0 15px rgba(0, 0, 0, 0.7), 0 0 2px 2px rgba(0, 0, 0, 0.3);
+	-webkit-box-shadow: 0 0 15px rgba(0, 0, 0, 0.7), 0 0 2px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Gambio Fixes */
+#gm_fav_dropzone {
+	z-index: 4;
+}
+
+/* jqueryui und tinyMCE fixes */
+body.jqueryui .ui-widget-overlay,
+body.magna div#mceModalBlocker { 
+	background: #000; 
+	opacity: .50;
+	filter:Alpha(Opacity=50);
+}
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget {
+	padding: 0;
+	margin-bottom: 0;
+}
+/* Removes the white gap at the bottom of the page where the datepicker is used. */
+body.magna .ui-datepicker.ui-helper-hidden-accessible {
+    top: 0;
+}
+
+/* eBay prepare view */
+.iceCrystal {
+	display: inline-block;
+	width: 16px;	
+	height: 16px;
+	background: transparent url('../images/icons/ice_crystal.png') no-repeat 0px 0px;
+}
+.iceCrystal.active {
+	background-position: 0 -16px;
+}
+
+#freezePrice {
+	vertical-align: text-bottom;
+}
+
+div.ebay .errPanel {
+	padding: 10px 10px 5px 10px;
+}
+div.ebay .errPanel .panel-head {
+    background: rgba(255, 255, 230, 0.3);
+    padding: 5px 5px 0px 5px;
+    border-radius: 5px;
+    border: 1px solid #500;
+}
+div.ebay .errPanel .panel-head .error {
+    color: #FFD300 !important;
+    text-shadow: 0px 0px 2px #000;
+}
+div.ebay div.itemident {
+	font-style: italic;
+	color: #EBE6E6;
+	margin-bottom: 0.5em;
+}
+div.ebay div.itemident span.label {
+	font-weight: bold;
+	color: #fff;
+}
