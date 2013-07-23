@@ -177,6 +177,7 @@ switch ($action) {
     $order_updated = false;
     $check_status_query = xtc_db_query("-- /admin/orders.php
                                         SELECT customers_name,
+                                               customers_status,
                                                customers_email_address,
                                                orders_status,
                                                date_purchased,
