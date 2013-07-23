@@ -47,7 +47,7 @@
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $sort = " ORDER BY orders_id DESC";
+                $sort = " ORDER BY o.orders_id DESC";
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
                   $orders_query_raw = "-- /admin/orders.php
