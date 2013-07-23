@@ -217,7 +217,7 @@
     if ($dpaymentAmountKomma == '') $dpaymentAmountKomma = 0;
     $dpayment = $dpaymentAmount.'.'.$dpaymentAmountKomma;
     if ($_POST['dpaymentDay'] > 0 && $_POST['dpaymentDay'] <= 31) {
-      if ($_POST['dpaymentDay'] > 0 && $_POST['dpaymentDay'] < 10) {
+      if ($_POST['dpaymentDay'] > 0 && $_POST['dpaymentDay'] < 10 && substr($_POST['dpaymentDay'],0,1) != 0) {
         $dpaymentDay = '0'.$_POST['dpaymentDay'];
       } else {
         $dpaymentDay = $_POST['dpaymentDay'];
@@ -226,8 +226,8 @@
       $dpaymentDay = date('d');
     }
     if ($_POST['dpaymentMonth'] > 0 && $_POST['dpaymentMonth'] <= 12) {
-      if ($_POST['dpaymentMonth'] > 0 && $_POST['dpaymentMonth'] < 10) {
-        $dpaymentMonth = '0'.$_POST['dpaymentDay'];
+      if ($_POST['dpaymentMonth'] > 0 && $_POST['dpaymentMonth'] < 10 && substr($_POST['dpaymentDay'],0,1) != 0) {
+        $dpaymentMonth = '0'.$_POST['dpaymentMonth'];
       } else {
         $dpaymentMonth = $_POST['dpaymentMonth'];
       }
