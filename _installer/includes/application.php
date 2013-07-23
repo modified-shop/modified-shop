@@ -159,15 +159,18 @@
       $domain = str_replace($tmp[0].'.','',$domain);
     }
     $document_root = str_replace($_SERVER["PHP_SELF"],'',$_SERVER["SCRIPT_FILENAME"]);
+    //Unterverzeichnis ermitteln
+    $subdir = str_replace(DIR_MODIFIED_INSTALLER.'/index.php','', $_SERVER["PHP_SELF"]);
     //Prüfen ob Domain im Pfad enthalten ist, wenn nein Pfad Stratopfad erzeugen: /home/strato/www/ersten zwei_buchstaben/www.wunschname.de/htdocs/
     if(stristr($document_root, $domain) === FALSE) {
       //Erste 2 Buchstaben der Domain ermittlen
       $domain2 = substr($tmp[count($tmp)-2], 0, 2);
       //Korrektur Unterverzeichnis
-      $htdocs = str_replace($_SERVER["SCRIPT_NAME"],'',$_SERVER["SCRIPT_FILENAME"]);
-      $htdocs = '/htdocs' . str_replace($_SERVER["DOCUMENT_ROOT"],'',$htdocs);
+      $htdocs = '/htdocs' . $subdir;
       //MUSTER: /home/strato/www/wu/www.wunschname.de/htdocs/
       $document_root = '/home/strato/www/'.$domain2. '/www.'.$domain.$htdocs;
+    } else {
+      $document_root = detectDocumentRoot();
     }
     return $document_root;
   }
