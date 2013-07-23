@@ -1,0 +1,1 @@
+{"orders":{"fields":{"importpaidorders":{"label":"Nur bezahlte Bestellungen importieren","key":"_#_platformName_#_.order.importonlypaid","type":"radio","submit":"Orders.ImportOnlyPaid","values":{"true":"Ja","false":"Nein"},"default":"false"}}}}

@@ -1,0 +1,1 @@
+{"login":{"headline":"_#_platformName_#_ Zugangsdaten","fields":[{"label":"Benutzername","key":"_#_platform_#_.username","type":"text"},{"label":"Passwort","key":"_#_platform_#_.password","type":"password","settings":{"save":false}}]}}

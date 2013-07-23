@@ -87,6 +87,14 @@ if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
 }
 /******** SHOPGATE **********/
 
+/* magnalister v1.0.0 */
+if (isset($admin_access['magnalister'])) {
+	echo mainMenue(BOX_HEADING_MAGNALISTER);
+	if ($admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> - '.BOX_MAGNALISTER.'</a></li>';
+	echo endMenue();
+}
+/* END magnalister */
+
 //---------------------------XSBOOSTER
 if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS =='True') {
 echo mainMenue(BOX_HEADING_XSBOOSTER);

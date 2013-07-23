@@ -1,0 +1,1 @@
+{"checkin":{"fields":{"region":{"label":"Einstellregion","key":"_#_platform_#_.checkin.region","type":"checkbox","values":{"DE":"Deutschland","EU":"Europa","GUS":"GUS-Staaten"},"default":{"DE":true,"EU":false,"GUS":false}}}}}
