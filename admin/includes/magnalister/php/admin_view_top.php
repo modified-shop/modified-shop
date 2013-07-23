@@ -79,10 +79,8 @@ if (MLBrowserDetect::gi()->compare('Browser', 'msie', '==')) {
 	}
 }
 
-?><!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
-<html <?php echo HTML_PARAMS; ?>>
-	<head>
-		<?php
+require (DIR_WS_INCLUDES.'head.php'); 
+
 /* Force IE into Standards Mode */
 if (MLBrowserDetect::gi()->compare('Browser', 'msie', '==')) {
 	echo '		<meta http-equiv="x-ua-compatible" content="IE='.((int)MLBrowserDetect::gi()->get('BVersion')).'">'."\n";
@@ -92,8 +90,6 @@ if (MLBrowserDetect::gi()->compare('Browser', 'msie', '==')) {
 		<?php if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 			echo '<noscript><meta http-equiv="refresh" content="0;URL='.toURL(array('module' => 'nojs')).'"></noscript>'."\n";
 		} ?>
-		<title><?php echo TITLE; ?> :: Magnalister<?php echo $_mainTitle; ?></title>
-		<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />
 		<link rel="stylesheet" type="text/css" href="includes/magnalister/css/jqueryui/jquery-ui-1.9.1.custom.css" />
 		<link rel="stylesheet" type="text/css" href="includes/magnalister/css/magnalister.css?<?php echo CLIENT_BUILD_VERSION?>" /><?php
 			if (isset($_pageCSS) && ($_pageCSS = trim($_pageCSS)) && !empty($_pageCSS)) {
