@@ -1,0 +1,1 @@
+[{"headline":"Standardwerte beim Einstellen in Daparto","fields":[{"label":"TecDoc Daten","key":"daparto.tecdoc","type":"selection","values":["Nein","Ja"],"desc":"Handelt es sich bei Ihren Produktdaten um Daten aus dem TecDoc Katalog?"},{"label":"Zustand","key":"daparto.condition","type":"selection","values":{"1":"neu","2":"&uuml;berholt","4":"gebraucht"}}]}]

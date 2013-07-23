@@ -509,3 +509,8 @@ define('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Anzeigezeitraum in Sek.: %s. Nach di
 define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Art.-Nr.');
 define('TEXT_INFO_MODULE_RESET', 'Wollen sie die Standard Einstellungen wieder herstellen ?<br/><br/><b>ACHTUNG</b>: Es werden alle bisher vorgenommen Einstellungen in diesem Modul gel&ouml;scht.');
 define('TEXT_INFO_MODULE_REMOVE', 'Wollen sie das Modul deinstallieren ?<br/><br/><b>ACHTUNG</b>: Es wird ein Backup aller bisherigen Einstellungen in diesem Modul gemacht, welches beim erneuten Installieren wieder hergestellt werden.');
+
+/* magnalister v1.0.0 */
+define('BOX_HEADING_MAGNALISTER', 'magnalister');
+define('BOX_MAGNALISTER', 'magnalister Admin');
+/* END magnalister */

@@ -399,3 +399,11 @@ if (xtc_check_permission($pagename) == '0') {
 
 // Include Template Engine
 require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'Smarty_2.6.27/Smarty.class.php');
+
+/* magnalister v1.0.1 */
+if (!defined('MAGNALISTER_PLUGIN') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
+	ob_start();
+	require_once (DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
+	ob_end_clean();
+}
+/* END magnalister */

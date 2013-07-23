@@ -1,0 +1,1 @@
+{"checkin":{"fields":{"tax":{"label":"Steuerklassen<br \/> Kategorie-Matching","desc":"Shop-eigene Steuerklassen denen von _#_platformName_#_ zuordnen.","type":"extern","key":"_#_platform_#_.checkin.taxmatching","procFunc":"TaxMatching","params":[]}}}}

@@ -507,3 +507,8 @@ define ('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Display period in seconds:% s After
 define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Products Model');
 define('TEXT_INFO_MODULE_RESET', 'Reset all Definitions ?<br/><br/><b>ATTENTION</b>: All variables from this Module will be deleted.');
 define('TEXT_INFO_MODULE_REMOVE', 'Deinstall this Module ?<br/><br/><b>ATTENTION</b>: A Backup of all variables will be made and restored on a Reinstall.');
+
+/* magnalister v1.0.0 */
+define('BOX_HEADING_MAGNALISTER', 'magnalister');
+define('BOX_MAGNALISTER', 'magnalister Admin');
+/* END magnalister */

@@ -301,6 +301,12 @@
         </table>
         <!-- EOC ORDER BLOCK -->
 
+        <?php
+          /* magnalister v1.0.0 */
+          if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderDetails', array('oID' => $oID), array('order_details.php'));
+          /* END magnalister */
+        ?>
+
         <!-- BOC ORDER HISTORY BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>
         <table cellspacing="0" cellpadding="2" class="table">
@@ -381,8 +387,11 @@
           </tr>
           <tr>
             <td class="main"><b><?php echo ENTRY_STATUS; ?></b> <?php echo xtc_draw_pull_down_menu('status', $orders_statuses, $order->info['orders_status']); ?></td>
-          </tr>
-          <tr>
+          </tr><?php
+            /* magnalister v2.0.0 */
+            if (function_exists('magnaExecute')) magnaExecute('magnaRenderOrderStatusSync', array(), array('order_details.php'));
+            /* END magnalister */
+        ?><tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
               <tr>

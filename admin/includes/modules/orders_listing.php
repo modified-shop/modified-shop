@@ -47,7 +47,7 @@
                   <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $sort = " ORDER BY o.orders_id DESC";
+                $sort = " ORDER BY o.date_purchased DESC";
                 if (isset($_GET['cID'])) {
                   $cID = (int) $_GET['cID'];
                   $orders_query_raw = "-- /admin/orders.php
@@ -117,7 +117,11 @@
                   }
                   ?>
                 <tr <?echo $tr_attributes;?>>
-                  <td class="dataTableContent"><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;' . $orders['customers_name']; ?></td>
+                  <td class="dataTableContent" <?php 
+                    /* magnalister v1.0.0 */
+                    if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderPlatformIcon', array('oID' => $orders['orders_id']), array('order_details.php'));
+                    /* END magnalister */
+                  ?>><?php echo '<a href="' . $orders_link . '">' . $orders_image_preview . '</a>&nbsp;' . $orders['customers_name']; ?></td>
                   <td class="dataTableContent" align="right"><?php echo $orders['orders_id']; ?></td>
                   <td class="dataTableContent" align="right"><?php echo $orders['delivery_country']; ?>&nbsp;</td>
                   <td class="dataTableContent" align="right"><?php echo format_price(get_order_total($orders['orders_id']), 1, $orders['currency'], 0, 0); ?></td>
