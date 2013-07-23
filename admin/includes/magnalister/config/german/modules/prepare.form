@@ -1,0 +1,1 @@
+{"prepare":{"headline":"Artikelvorbereitung","fields":{"filter":{"label":"Statusfilter","key":"_#_platform_#_.prepare.status","type":"checkbox","values":{"val":"nur aktive Artikel &uuml;bernehmen"},"default":{"val":false}},"lang":{"label":"Artikelbeschreibung","key":"_#_platform_#_.lang","type":"selection","values":null}}}}
