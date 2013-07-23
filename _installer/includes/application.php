@@ -166,11 +166,12 @@
       //Erste 2 Buchstaben der Domain ermittlen
       $domain2 = substr($tmp[count($tmp)-2], 0, 2);
       //Korrektur Unterverzeichnis      
-      $htdocs = '/htdocs' . $subdir;
+      $htdocs = str_replace($_SERVER["SCRIPT_NAME"],'',$_SERVER["SCRIPT_FILENAME"]);
+      $htdocs = '/htdocs' . str_replace($_SERVER["DOCUMENT_ROOT"],'',$htdocs);
       //MUSTER: /home/strato/www/wu/www.wunschname.de/htdocs/
       $document_root = '/home/strato/www/'.$domain2. '/www.'.$domain.$htdocs;
     } else {
-      $document_root = detectDocumentRoot();
+      $document_root .= $subdir;
     }
     return $document_root;
   }
