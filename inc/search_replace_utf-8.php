@@ -50,7 +50,6 @@ function shopstat_getRegExps()
             "'&(rdquo|#8221);|”'i" => '',         //-- doppeltes Anführungszeichen rechts ### NICHT in iso-8859-15 enthalten ###
             "'&(bdquo|#8222);|„'i" => '',         //-- Doppelte Anführungszeichen links unten ### NICHT in iso-8859-15 enthalten ###
             
-            "'&'"                  => '-',        //--Kaufmännisches Und
             "'%'"                  => '',         //--Prozent
             "/[\[\({]/"            => '',         //--öffnende Klammern nach Bindestriche
             "/[\)\]\}]/"           => '',         //--schliessende Klammern 
