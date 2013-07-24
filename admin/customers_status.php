@@ -425,6 +425,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_ATTRIBUTES_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_DISCOUNT_ATTRIBUTES . ' ' . xtc_draw_pull_down_menu('customers_status_discount_attributes', $customers_status_discount_attributes_array, $cInfo->customers_status_discount_attributes ));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_OT_XMEMBER_INTRO . '<br /> ' . ENTRY_OT_XMEMBER . ' ' . xtc_draw_pull_down_menu('customers_status_ot_discount_flag', $customers_status_ot_discount_flag_array, $cInfo->customers_status_ot_discount_flag). '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_PRICE . ' ' . xtc_draw_input_field('customers_status_ot_discount', $cInfo->customers_status_ot_discount));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_GRADUATED_PRICES_INTRO . '<br />' . ENTRY_GRADUATED_PRICES . ' ' . xtc_draw_pull_down_menu('customers_status_graduated_prices', $customers_status_graduated_prices_array, $cInfo->customers_status_graduated_prices));
+                            $payment_unallowed = array();
                             $customers_status_payment_unallowed = explode(',', $cInfo->customers_status_payment_unallowed);
                             foreach ($customers_status_payment_unallowed as $value) {
                               $payment_unallowed[] = $value;
@@ -441,7 +442,8 @@ require (DIR_WS_INCLUDES.'head.php');
                               $unallowed_payment = TEXT_PAYMENT_ERROR;
                             }
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_PAYMENT_UNALLOWED_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_PAYMENT_UNALLOWED . '<br/>' . $unallowed_payment);
-                          
+                            
+                            $shipping_status = array();
                             $customers_status_shipping_unallowed = explode(',', $cInfo->customers_status_shipping_unallowed);
                             foreach ($customers_status_shipping_unallowed as $value) {
                               $shipping_unallowed[] = $value;
