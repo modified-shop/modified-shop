@@ -206,10 +206,14 @@ class main {
   function getVPEtext($product, $price) {
     global $xtPrice;
     require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
-    if (!is_array($product))
+    if (!is_array($product)) {
       $product = $this->data;
+    }
+    $this->vpe_name = '';
     if (isset($product['products_vpe_status']) && $product['products_vpe_status'] == 1 && $product['products_vpe_value'] != 0.0 && $price > 0) {
-      return $xtPrice->xtcFormat($price * (1 / $product['products_vpe_value']), true).TXT_PER.xtc_get_vpe_name($product['products_vpe']);
+      $this->vpe_name = xtc_get_vpe_name($product['products_vpe']);
+      echo $this->vpe_name;
+      return $xtPrice->xtcFormat($price * (1 / $product['products_vpe_value']), true).TXT_PER.$this->vpe_name;
     }
     return;
   }
