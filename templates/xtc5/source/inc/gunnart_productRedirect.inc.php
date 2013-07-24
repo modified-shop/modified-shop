@@ -56,7 +56,7 @@
   // -----------------------------------------------------------------------------------------
   function productRedirect() {
     // Wenn wir auf ner Produkt-Info-Seite sind
-    if(basename($_SERVER['SCRIPT_NAME']) == FILENAME_PRODUCT_INFO) {
+    if(basename($_SERVER['SCRIPT_NAME']) == FILENAME_PRODUCT_INFO && strpos($_GET['products_id'],'{') === false) {
       //BOF - web28 - 2010-08-16 - New SSL  handling  defined by $request_type
       global $actual_products_id, $request_type;
       //EOF - web28 - 2010-08-16 - New SSL  handling  defined by $request_type

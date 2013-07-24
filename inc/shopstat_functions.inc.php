@@ -98,6 +98,9 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
   } elseif (strlen($action)>0) {
     //-- Andere Aktion
     $go = false;
+  } elseif (strpos($prodid,'{') !== false) {
+    //-- Produkt mit Attributen
+    $go = false;
   }
 
   //BOF web28 - 2010-08-18 -- Falls eine Sprache übergeben wurde, wird diese als 'Linksprache' definiert
