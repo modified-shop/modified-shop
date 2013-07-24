@@ -476,6 +476,7 @@
                 if ($processed == true) {
                   echo $cInfo->payment_unallowed.xtc_draw_hidden_field('payment_unallowed[]');
                 } else {
+                  $payment_unallowed = array();
                   $customers_payment_unallowed = explode(',', $cInfo->payment_unallowed);
                   foreach ($customers_payment_unallowed as $value) {
                     $payment_unallowed[] = $value;
@@ -502,6 +503,7 @@
                 if ($processed == true) {
                   echo $cInfo->shipping_unallowed.xtc_draw_hidden_field('shipping_unallowed[]');
                 } else {
+                  $shipping_unallowed = array();
                   $customers_status_shipping_unallowed = explode(',', $cInfo->shipping_unallowed);
                   foreach ($customers_status_shipping_unallowed as $value) {
                     $shipping_unallowed[] = $value;
