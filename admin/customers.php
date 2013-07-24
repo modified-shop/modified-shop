@@ -272,8 +272,8 @@
       $entry_zone_id = (isset($_POST['entry_zone_id']) ? xtc_db_prepare_input($_POST['entry_zone_id']) : '');
       $memo_title = xtc_db_prepare_input($_POST['memo_title']);
       $memo_text = xtc_db_prepare_input($_POST['memo_text']);
-      $payment_unallowed = xtc_db_prepare_input($_POST['payment_unallowed']);
-      $shipping_unallowed = xtc_db_prepare_input($_POST['shipping_unallowed']);
+      $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
+      $shipping_unallowed = implode(',', (is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
       $password = xtc_db_prepare_input($_POST['entry_password']);
       if ($memo_text != '' && $memo_title != '') {
         $sql_data_array = array ('customers_id' => (int)$_GET['cID'], 

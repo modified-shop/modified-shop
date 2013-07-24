@@ -70,8 +70,8 @@
 
     $customers_mail_comments = xtc_db_prepare_input($_POST['mail_comments']);
 
-    $payment_unallowed = xtc_db_prepare_input($_POST['payment_unallowed']);
-    $shipping_unallowed = xtc_db_prepare_input($_POST['shipping_unallowed']);
+    $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
+    $shipping_unallowed = implode(',', (is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
 
     if ($customers_password_encrypted == '') { //DokuMan - 2012-11-27 - fix empty admin passwords in customer's email
       //BOF - DokuMan - 2012-11-27 - use xtc_create_password() function to also create an encrypted random password
@@ -799,13 +799,47 @@ require (DIR_WS_INCLUDES.'head.php');
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_PAYMENT_UNALLOWED; ?></td>
-                      <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('payment_unallowed','','maxlength="255" style="width:98%"'); ?></td>
-                      
+                      <td class="dataTableConfig col-single-right">
+                      <?php
+                        $customers_payment_unallowed = explode(',', $customers_payment_unallowed);
+                        foreach ($customers_payment_unallowed as $value) {
+                          $payment_unallowed[] = $value;
+                        }
+                        if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
+                          $payment_status = explode(';', MODULE_PAYMENT_INSTALLED);
+                          for ($p=0, $x=sizeof($payment_status); $p<$x; $p++) {
+                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
+                              include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p]);
+                            }
+                            echo xtc_draw_checkbox_field('payment_unallowed[]', substr($payment_status[$p], 0,-4), (in_array(substr($payment_status[$p], 0,-4), $payment_unallowed) ? true : false)).constant('MODULE_PAYMENT_'.strtoupper(substr($payment_status[$p], 0,-4)).'_TEXT_TITLE').' ('.$payment_status[$p].')<br/>';
+                          }
+                        } else {
+                          echo TEXT_PAYMENT_ERROR;
+                        }
+                      ?>                     
+                      </td>                     
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_SHIPPING_UNALLOWED; ?></td>
-                      <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('shipping_unallowed','','maxlength="255" style="width:98%"'); ?></td>
-                      
+                      <td class="dataTableConfig col-single-right">
+                      <?php
+                        $customers_status_shipping_unallowed = explode(',', $customers_shipping_unallowed);
+                        foreach ($customers_status_shipping_unallowed as $value) {
+                          $shipping_unallowed[] = $value;
+                        }
+                        if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
+                          $shipping_status = explode(';', MODULE_SHIPPING_INSTALLED);
+                          for ($s=0, $x=sizeof($shipping_status); $s<$x; $s++) {
+                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s])) {
+                              include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s]);
+                            }
+                            echo xtc_draw_checkbox_field('shipping_unallowed[]', substr($shipping_status[$s], 0,-4), (in_array(substr($shipping_status[$s], 0,-4), $shipping_unallowed) ? true : false)).constant('MODULE_SHIPPING_'.strtoupper(substr($shipping_status[$s], 0,-4)).'_TEXT_TITLE').' ('.$shipping_status[$s].')<br/>';
+                          }
+                        } else {
+                          echo TEXT_SHIPPING_ERROR;
+                        }
+                      ?>
+                      </td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_PASSWORD; ?></td>
