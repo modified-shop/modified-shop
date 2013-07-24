@@ -2545,5 +2545,43 @@
     return $response;
   }
   //EOF - DokuMan - 2011-01-06 - added GEOIP-function
-?>
 
+  function xtc_cfg_checkbox_unallowed_payment() {
+  
+    $payment_unallowed = '';
+    $customers_status_payment_unallowed = explode(',', DOWNLOAD_UNALLOWED_PAYMENT);
+    foreach ($customers_status_payment_unallowed as $value) {
+      $payment_unallowed[] = $value;
+    }
+    if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
+      $payment_status = explode(';', MODULE_PAYMENT_INSTALLED);
+      for ($p=0, $x=sizeof($payment_status); $p<$x; $p++) {
+        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
+          include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p]);
+        }
+        $unallowed_payment .= xtc_draw_checkbox_field('DOWNLOAD_UNALLOWED_PAYMENT[]', substr($payment_status[$p], 0,-4), (in_array(substr($payment_status[$p], 0,-4), $payment_unallowed) ? true : false)).constant('MODULE_PAYMENT_'.strtoupper(substr($payment_status[$p], 0,-4)).'_TEXT_TITLE').' ('.$payment_status[$p].')<br/>';
+      }
+    } else {
+      $unallowed_payment = TEXT_PAYMENT_ERROR;
+    }
+    
+    return $unallowed_payment;
+  }
+
+  function xtc_cfg_checkbox_allowed_orders_status() {
+
+    $statuses_allowed = '';
+    $orders_status_allowed = explode(',', DOWNLOAD_MIN_ORDERS_STATUS);
+    foreach ($orders_status_allowed as $key => $value) {
+      $status_allowed[$value] = $value;
+    }
+    $orders_status = xtc_get_orders_status();
+    if (is_array($orders_status)) {
+      for ($s=0, $x=sizeof($orders_status); $s<$x; $s++) {
+        $statuses_allowed .= xtc_draw_checkbox_field('DOWNLOAD_MIN_ORDERS_STATUS[]', $orders_status[$s]['id'], (in_array($orders_status[$s]['id'], $status_allowed) ? true : false)).$orders_status[$s]['text'].'<br/>';
+      }
+    }
+  
+    return $statuses_allowed;
+  }                    
+?>

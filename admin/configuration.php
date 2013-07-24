@@ -59,6 +59,9 @@
         $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
         while ($configuration = xtc_db_fetch_array($configuration_query)) {
           $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
+          if (is_array($_POST[$configuration['configuration_key']])) {
+            $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
+          }
           if ($_POST[$configuration['configuration_key']] != $configuration['configuration_value']) {
             //value_limits min
             if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
