@@ -824,10 +824,10 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_SHIPPING_UNALLOWED; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
-                        $shipping_unallowed = array();
-                        $customers_status_shipping_unallowed = explode(',', $customers_shipping_unallowed);
-                        foreach ($customers_status_shipping_unallowed as $value) {
-                          $shipping_unallowed[] = $value;
+                        $customers_shipping_unallowed = array();
+                        $shipping_unallowed = explode(',', $shipping_unallowed);
+                        foreach ($shipping_unallowed as $value) {
+                          $customers_shipping_unallowed[] = $value;
                         }
                         if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
                           $shipping_status = explode(';', MODULE_SHIPPING_INSTALLED);
@@ -835,7 +835,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s])) {
                               include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s]);
                             }
-                            echo xtc_draw_checkbox_field('shipping_unallowed[]', substr($shipping_status[$s], 0,-4), (in_array(substr($shipping_status[$s], 0,-4), $shipping_unallowed) ? true : false)).constant('MODULE_SHIPPING_'.strtoupper(substr($shipping_status[$s], 0,-4)).'_TEXT_TITLE').' ('.$shipping_status[$s].')<br/>';
+                            echo xtc_draw_checkbox_field('shipping_unallowed[]', substr($shipping_status[$s], 0,-4), (in_array(substr($shipping_status[$s], 0,-4), $customers_shipping_unallowed) ? true : false)).constant('MODULE_SHIPPING_'.strtoupper(substr($shipping_status[$s], 0,-4)).'_TEXT_TITLE').' ('.$shipping_status[$s].')<br/>';
                           }
                         } else {
                           echo TEXT_SHIPPING_ERROR;
