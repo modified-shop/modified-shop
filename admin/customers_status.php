@@ -64,8 +64,8 @@
           $customers_status_graduated_prices = $_POST['customers_status_graduated_prices'];
           $customers_status_discount_attributes = $_POST['customers_status_discount_attributes'];
           $customers_status_add_tax_ot = $_POST['customers_status_add_tax_ot'];
-          $customers_status_payment_unallowed = preg_replace("'[\r\n\s]+'",'',$_POST['customers_status_payment_unallowed']);
-          $customers_status_shipping_unallowed = preg_replace("'[\r\n\s]+'",'',$_POST['customers_status_shipping_unallowed']);
+          $customers_status_payment_unallowed = implode(',', (is_array($_POST['customers_status_payment_unallowed']) ? $_POST['customers_status_payment_unallowed'] : array()));
+          $customers_status_shipping_unallowed = implode(',', (is_array($_POST['customers_status_shipping_unallowed']) ? $_POST['customers_status_shipping_unallowed'] : array()));
           $customers_fsk18 = $_POST['customers_fsk18'];
           $customers_fsk18_display = $_POST['customers_fsk18_display'];
           $customers_status_write_reviews = $_POST['customers_status_write_reviews'];
@@ -425,8 +425,39 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_ATTRIBUTES_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_DISCOUNT_ATTRIBUTES . ' ' . xtc_draw_pull_down_menu('customers_status_discount_attributes', $customers_status_discount_attributes_array, $cInfo->customers_status_discount_attributes ));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_OT_XMEMBER_INTRO . '<br /> ' . ENTRY_OT_XMEMBER . ' ' . xtc_draw_pull_down_menu('customers_status_ot_discount_flag', $customers_status_ot_discount_flag_array, $cInfo->customers_status_ot_discount_flag). '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_PRICE . ' ' . xtc_draw_input_field('customers_status_ot_discount', $cInfo->customers_status_ot_discount));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_GRADUATED_PRICES_INTRO . '<br />' . ENTRY_GRADUATED_PRICES . ' ' . xtc_draw_pull_down_menu('customers_status_graduated_prices', $customers_status_graduated_prices_array, $cInfo->customers_status_graduated_prices));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_PAYMENT_UNALLOWED_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_PAYMENT_UNALLOWED . ' ' . xtc_draw_input_field('customers_status_payment_unallowed', $cInfo->customers_status_payment_unallowed ));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SHIPPING_UNALLOWED_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_SHIPPING_UNALLOWED . ' ' . xtc_draw_input_field('customers_status_shipping_unallowed', $cInfo->customers_status_shipping_unallowed ));
+                            $customers_status_payment_unallowed = explode(',', $cInfo->customers_status_payment_unallowed);
+                            foreach ($customers_status_payment_unallowed as $value) {
+                              $payment_unallowed[] = $value;
+                            }
+                            if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
+                              $payment_status = explode(';', MODULE_PAYMENT_INSTALLED);
+                              for ($p=0, $x=sizeof($payment_status); $p<$x; $p++) {
+                                if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
+                                  include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p]);
+                                }
+                                $unallowed_payment .= xtc_draw_checkbox_field('customers_status_payment_unallowed[]', substr($payment_status[$p], 0,-4), (in_array(substr($payment_status[$p], 0,-4), $payment_unallowed) ? true : false)).constant('MODULE_PAYMENT_'.strtoupper(substr($payment_status[$p], 0,-4)).'_TEXT_TITLE').' ('.$payment_status[$p].')<br/>';
+                              }
+                            } else {
+                              $unallowed_payment = TEXT_PAYMENT_ERROR;
+                            }
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_PAYMENT_UNALLOWED_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_PAYMENT_UNALLOWED . '<br/>' . $unallowed_payment);
+                          
+                            $customers_status_shipping_unallowed = explode(',', $cInfo->customers_status_shipping_unallowed);
+                            foreach ($customers_status_shipping_unallowed as $value) {
+                              $shipping_unallowed[] = $value;
+                            }
+                            if (xtc_not_null(MODULE_SHIPPING_INSTALLED)) {
+                              $shipping_status = explode(';', MODULE_SHIPPING_INSTALLED);
+                              for ($s=0, $x=sizeof($shipping_status); $s<$x; $s++) {
+                                if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s])) {
+                                  include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $shipping_status[$s]);
+                                }
+                                $unallowed_shipping .= xtc_draw_checkbox_field('customers_status_shipping_unallowed[]', substr($shipping_status[$s], 0,-4), (in_array(substr($shipping_status[$s], 0,-4), $shipping_unallowed) ? true : false)).constant('MODULE_SHIPPING_'.strtoupper(substr($shipping_status[$s], 0,-4)).'_TEXT_TITLE').' ('.$shipping_status[$s].')<br/>';
+                              }
+                            } else {
+                              $unallowed_shipping = TEXT_SHIPPING_ERROR;
+                            }
+                          $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SHIPPING_UNALLOWED_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_SHIPPING_UNALLOWED . '<br/>' . $unallowed_shipping);                          
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_FSK18_INTRO . '<br />' . ENTRY_CUSTOMERS_FSK18 . ' ' . xtc_draw_pull_down_menu('customers_fsk18', $customers_fsk18_array, $cInfo->customers_fsk18 ));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO . '<br />' . ENTRY_CUSTOMERS_FSK18_DISPLAY . ' ' . xtc_draw_pull_down_menu('customers_fsk18_display', $customers_fsk18_display_array, $cInfo->customers_fsk18_display));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_write_reviews', $customers_status_write_reviews_array, $cInfo->customers_status_write_reviews));
