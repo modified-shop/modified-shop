@@ -801,6 +801,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_PAYMENT_UNALLOWED; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
+                        $payment_unallowed = array();
                         $customers_payment_unallowed = explode(',', $customers_payment_unallowed);
                         foreach ($customers_payment_unallowed as $value) {
                           $payment_unallowed[] = $value;
@@ -823,6 +824,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       <td class="dataTableConfig col-left"><?php echo ENTRY_SHIPPING_UNALLOWED; ?></td>
                       <td class="dataTableConfig col-single-right">
                       <?php
+                        $shipping_unallowed = array();
                         $customers_status_shipping_unallowed = explode(',', $customers_shipping_unallowed);
                         foreach ($customers_status_shipping_unallowed as $value) {
                           $shipping_unallowed[] = $value;
