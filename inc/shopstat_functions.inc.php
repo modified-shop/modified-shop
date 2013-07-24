@@ -275,9 +275,6 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
   
   $charset = strtoupper($_SESSION['language_charset']);
 
-  //Geschütztes Leerzeichen entfernen - VOR html_entity_decode
-  $newstring  = str_replace("&nbsp;", "-",$newstring);
-  
   //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
   if ($charset != "UTF-8") {
     $newstring = iconv("ISO-8859-15", "UTF-8", $newstring);
@@ -292,10 +289,10 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
   //-- Definierte Zeichen entfernen
   $newstring  = preg_replace($char_search, $char_replace, $newstring);
 
-  //--Restliche HTML-Codierungen entfernen (&uuml; etc.)
+  //--Restliche HTML-Codierungen entfernen
   $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
   
-  //--Resrliche Kaufmännisches Und entfernen
+  //--Restliche Kaufmännische Und entfernen
   $newstring  = preg_replace("'&'","-",$newstring);
 
   //-- String URL-codieren
@@ -303,10 +300,10 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
     $newstring  = urlencode($newstring);
   }
 
-  //-- Die nun noch (komisch aussehenden) doppelten Bindestriche entfernen
+  //-- Doppelte Bindestriche entfernen
   $newstring  = preg_replace("/(-){2,}/","-",$newstring);
 
-  //web28 - 2010-08-18 - Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
+  //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
   $newstring = rtrim($newstring,"-");
   
   //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
