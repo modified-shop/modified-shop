@@ -421,6 +421,8 @@ class product {
                           'PRODUCTS_EAN'=> isset($array['products_ean']) ? $array['products_ean'] : '',
                           'PRODUCTS_MANUFACTURERS_MODEL'=> isset($array['products_manufacturers_model']) ? $array['products_manufacturers_model'] : '',
                           'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
+                          'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
+                          'PRODUCTS_VPE_NAME' => $main->vpe_name,
                           'PRODUCTS_IMAGE' => $products_image,
                           'PRODUCTS_IMAGE_SIZE' => $img_attr,
                           'PRODUCTS_IMAGE_TITLE' => str_replace('"','',$array['products_name']),

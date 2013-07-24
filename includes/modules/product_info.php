@@ -147,6 +147,8 @@ if (!is_object($product) || !$product->isProduct()) {
 
   //get products vpe
   $info_smarty->assign('PRODUCTS_VPE',$main->getVPEtext($product->data, $products_price['plain'])); //web28 - 2012-04-17 - use classes function getVPEtext() 
+  $info_smarty->assign('PRODUCTS_VPE_VALUE',$product->data['products_vpe_value']);
+  $info_smarty->assign('PRODUCTS_VPE_NMAE',$main->vpe_name);
 
   // products id
   $info_smarty->assign('PRODUCTS_ID', $product->data['products_id']);
