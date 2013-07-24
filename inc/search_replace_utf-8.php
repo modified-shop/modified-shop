@@ -50,16 +50,16 @@ function shopstat_getRegExps()
             "'&(rdquo|#8221);|”'i" => '',         //-- doppeltes Anführungszeichen rechts ### NICHT in iso-8859-15 enthalten ###
             "'&(bdquo|#8222);|„'i" => '',         //-- Doppelte Anführungszeichen links unten ### NICHT in iso-8859-15 enthalten ###
             
-            "'%'"                  => '',         //--Prozent
+            "'&#37;|%'i"           => '',         //--Prozent
             "/[\[\({]/"            => '',         //--öffnende Klammern nach Bindestriche
             "/[\)\]\}]/"           => '',         //--schliessende Klammern 
-            "/ß/"                  => 'ss',       //--Umlaute etc.
-            "/ä/"                  => 'ae',       //--Umlaute etc.
-            "/ü/"                  => 'ue',       //--Umlaute etc.
-            "/ö/"                  => 'oe',       //--Umlaute etc.
-            "/Ä/"                  => 'Ae',       //--Umlaute etc.
-            "/Ü/"                  => 'Ue',       //--Umlaute etc.
-            "/Ö/"                  => 'Oe',       //--Umlaute etc.
+            "'&(szlig|#223);|ß'i"  => 'ss',       //--Umlaute etc.
+            "'&(auml|#228);|ä'i"   => 'ae',       //--Umlaute etc.
+            "'&(uuml|#252);|ü'i"   => 'ue',       //--Umlaute etc.
+            "'&(ouml|#246);|ö'i"   => 'oe',       //--Umlaute etc.
+            "'&(Auml|#196);|Ä'i"   => 'Ae',       //--Umlaute etc.
+            "'&(Uuml|#220);|Ü'i"   => 'Ue',       //--Umlaute etc.
+            "'&(Ouml|#214);|Ö'i"   => 'Oe',       //--Umlaute etc.
             "/'|\"|´|`/"           => '',         //--Anführungszeichen 
             "/[: => '',\.!?\*\+]/" => '-'         //--Doppelpunkte => '', Komma => '', Punkt etc. 
          );
