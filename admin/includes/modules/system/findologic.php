@@ -25,8 +25,8 @@ define('MODULE_FINDOLOGIC_TEXT_DESCRIPTION', 'FINDOLOGIC ist die ultimative Such
 define('MODULE_FINDOLOGIC_SHOP_ID_TITLE' , '<hr noshade>Shopkey');
 define('MODULE_FINDOLOGIC_SHOP_ID_DESC' , 'Ihr Shopkey<br />Sie finden den Shopkey im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
 
-define('MODULE_FINDOLOGIC_SHOP_URL_TITLE' , '<hr noshade>Shop-URL');
-define('MODULE_FINDOLOGIC_SHOP_URL_DESC' , 'Die URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die Shop-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
+//define('MODULE_FINDOLOGIC_SHOP_URL_TITLE' , '<hr noshade>Shop-URL'); // Changed to static value
+//define('MODULE_FINDOLOGIC_SHOP_URL_DESC' , 'Die URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die Shop-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.'); // Changed to static value
 
 define('MODULE_FINDOLOGIC_SERVICE_URL_TITLE' , '<hr noshade>FINDOLOGIC/Service-URL');
 define('MODULE_FINDOLOGIC_SERVICE_URL_DESC' , 'Die FINDOLOGIC/Service-URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die FINDOLOGIC/Service-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
@@ -95,13 +95,13 @@ class findologic {
 
   function install() {
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SHOP_ID', 'ABCDEFABCDEFABCDEFABCDEFABCDEFAB',  '6', '1', '', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SHOP_URL', 'http://www.mein-laden.de/shop/',  '6', '1', '', now())");
+    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SHOP_URL', 'http://www.mein-laden.de/shop/',  '6', '1', '', now())"); // Changed to static value
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SERVICE_URL', 'http://srvXY.findologic.com/ps/mein-laden.de/',  '6', '1', '', now())");
-    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_NET_PRICE', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_ALIVE_TEST_TIMEOUT', '1',  '6', '1', '', now())");
-    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_REQUEST_TIMEOUT', '3',  '6', '1', '', now())");
+    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_NET_PRICE', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())"); // Changed to static value
+    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_ALIVE_TEST_TIMEOUT', '1',  '6', '1', '', now())"); // Changed to static value
+    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_REQUEST_TIMEOUT', '3',  '6', '1', '', now())"); // Changed to static value
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_EXPORT_FILENAME', 'findologic.csv',  '6', '1', '', now())");
-    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_REVISION', '204',  '6', '1', '', now())");
+    //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_REVISION', '204',  '6', '1', '', now())"); // Changed to static value
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_LANG', 'de',  '6', '1', '', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_CUSTOMER_GROUP', '1',  '6', '1', '', now())"); // interne Funktion vorhanden?
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_CURRENCY', 'EUR',  '6', '1', '', now())"); // interne Funktion vorhanden?
@@ -114,7 +114,7 @@ class findologic {
 
   function keys() {
     //return array('MODULE_FINDOLOGIC_STATUS','MODULE_FINDOLOGIC_SHOP_ID','MODULE_FINDOLOGIC_SHOP_URL','MODULE_FINDOLOGIC_SERVICE_URL','MODULE_FINDOLOGIC_NET_PRICE','MODULE_FINDOLOGIC_ALIVE_TEST_TIMEOUT','MODULE_FINDOLOGIC_REQUEST_TIMEOUT','MODULE_FINDOLOGIC_EXPORT_FILENAME','MODULE_FINDOLOGIC_REVISION','MODULE_FINDOLOGIC_LANG','MODULE_FINDOLOGIC_CUSTOMER_GROUP','MODULE_FINDOLOGIC_CURRENCY');
-    return array('MODULE_FINDOLOGIC_STATUS','MODULE_FINDOLOGIC_SHOP_ID','MODULE_FINDOLOGIC_SHOP_URL','MODULE_FINDOLOGIC_SERVICE_URL','MODULE_FINDOLOGIC_EXPORT_FILENAME','MODULE_FINDOLOGIC_LANG','MODULE_FINDOLOGIC_CUSTOMER_GROUP','MODULE_FINDOLOGIC_CURRENCY'); // Changed to static value
+    return array('MODULE_FINDOLOGIC_STATUS','MODULE_FINDOLOGIC_SHOP_ID','MODULE_FINDOLOGIC_SERVICE_URL','MODULE_FINDOLOGIC_EXPORT_FILENAME','MODULE_FINDOLOGIC_LANG','MODULE_FINDOLOGIC_CUSTOMER_GROUP','MODULE_FINDOLOGIC_CURRENCY'); // Changed to static value
   }
 }
 ?>
