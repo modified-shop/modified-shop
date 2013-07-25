@@ -7,13 +7,9 @@
 	 */
 	require_once("findologic_config.inc.php");
 
-	require_once("includes/application_top.php");
-	require_once("includes/classes/language.php");
-
-	require_once('includes/classes/xtcPrice.php');
-
-	error_reporting(E_ALL);
-	ini_set('display_errors', true);
+	if ((!array_key_exists("shop", $_GET)) || ($_GET["shop"] != FL_SHOP_ID)) {
+		die('Unauthorized access!');
+	}
 
 	/* ensure that strings are not utf8-encoded twice */
 	function ensure_encoding($string) {
@@ -45,10 +41,6 @@
 		return DIR_FS_DOCUMENT_ROOT.'export/findologic.csv';
 	}
 	
-	function get_domain() {
-		return FL_SHOP_URL;
-	}
-
 	function get_image($image) {
 	if (!empty($image)) {
 		$bild = HTTP_SERVER . DIR_WS_CATALOG . DIR_WS_ORIGINAL_IMAGES . $image;
@@ -61,14 +53,7 @@
 	function get_taxzone() {
 		return 1;
 	}
-	
-	function get_price($row) {
-		global $xtcPrice;
-		/* an error is thrown when the product has no tax class assigned, supress it */
-		$price = @$xtcPrice->xtcGetPrice($row['products_id'], false, 1, $row['products_tax_class_id'], 0, 0, 0);
-		return $price;
-	}
-	
+		
 	function get_instead($row) {
 		global $xtcPrice;
 		$pPrice = $xtcPrice->getPprice($row['products_id']);
@@ -104,16 +89,8 @@
 		return $taxrate;
 	}
 	
-	function get_taxname($row) {
-		return $row['tax_description'];
-	}
-
-	function get_summary($row) {
-		return (extract_text($row['products_short_description']));
-	}
-
-	function get_description($row) {
-		return (extract_text("Artikelnummer: " . str_pad($row['products_model'], 7 ,'0', STR_PAD_LEFT) . " " . $row['products_description']));
+	function get_description($model, $description) {
+		return (extract_text("Artikelnummer: " . str_pad($model, 7 ,'0', STR_PAD_LEFT) . " " .$description));
 	}
 	
 	function get_columns() {
@@ -145,29 +122,8 @@
 		return "_";
 	}
 
-	function has_keywords() {
-		$sql = "SHOW CREATE TABLE products_description;";
-		$result = mysql_query($sql) OR die(mysql_error());
-		if (mysql_num_rows($result) and $row = mysql_fetch_row($result)) {
-			return strstr($row[1], 'products_keywords');
-		}
-		return false;
-	}
-
-	if ((!array_key_exists("shop", $_GET)) || ($_GET["shop"] != FL_SHOP_ID)) {
-		die('Unauthorized access!');
-	}
-	$host = DB_SERVER;
-	$user = DB_SERVER_USERNAME;
-	$pass = DB_SERVER_PASSWORD;
-	$connection = @mysql_connect($host, $user, $pass) OR die(mysql_error());
-	$database = DB_DATABASE;
-	mysql_select_db($database) OR die(mysql_error());
-
-	$useKeywords = has_keywords();
-	if ($useKeywords) echo "Keywords used.\r\n<br />";
-	else echo "Keywords not supported.\r\n<br />";
-
+	
+	$useKeywords = true;
 	$debug = false;
 
 	/* print out database information about a certain product by passing ...&debug=<product_id> */
@@ -289,7 +245,7 @@
 	}
 	
 	function select_product($product_nr, $useKeywords, $debug = false) {
-		global $fp;
+		global $fp, $xtcPrice;
 
 		$keywordsQuery = $useKeywords ? "pd.products_keywords" : "'' AS products_keywords";
 
@@ -404,13 +360,13 @@
 				"id" => $row['products_id'],
 				"ordernumber" => $row['products_model'],
 				"name" => $row['products_name'],
-				"summary" => get_summary($row),
-				"description" => get_description($row),
-				"price" => get_price($row),
+				"summary" => extract_text($row['products_short_description']),
+				"description" => get_description($row['products_model'], $row['products_short_description']),
+				"price" => $xtcPrice->xtcGetPrice($row['products_id'], false, 1, $row['products_tax_class_id'], 0, 0, 0),
 				"instead" => get_instead($row),
 				"maxprice" => get_maxprice($row),
 				"taxrate" => get_taxrate($row),
-				"url" => get_url($row),
+				"url" => xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$row['products_id']),
 				"image" => get_image($row['products_image']),
 				"attributes" => $attributes_enc,
 				"keywords" => $row['products_keywords'],

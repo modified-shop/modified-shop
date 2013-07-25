@@ -91,7 +91,7 @@
 	} else {
 		// user is searching:
 		// load SESSION from XT-Commerce
-		include('includes/application_top.php');
+		//include('includes/application_top.php'); // allready included via findologic_config.inc.php
 
 		$do_findologic_search = ($_SESSION['language'] == 'german') && is_alive(FL_SERVICE_URL);
 
@@ -113,11 +113,25 @@
 		}
 
 		if (!$do_findologic_search) {
+			// BOF - Fixed redirect
+			/*
 			// findologic search not appropriate or failed: use standard search
 			$standard_search = FL_SHOP_URL.'advanced_search_result.php?'.$_SERVER['QUERY_STRING'];
 
 			// rediret to standard search
 			header("Location: $standard_search");
+			*/
+			$action = FILENAME_DEFAULT;
+			if ((isset($_GET['search']) && xtc_not_null($_GET['search'])) || (isset($_GET['keywords']) && xtc_not_null($_GET['keywords']))) {
+			  $action = FILENAME_ADVANCED_SEARCH_RESULT;
+			  if (isset($_GET['search']) && xtc_not_null($_GET['search'])) {
+			    $params = 'keywords='.$_GET['search'];
+			  } else {
+			    $params = 'keywords='.$_GET['keywords'];
+			  }
+			}
+			xtc_redirect(xtc_href_link($action, $params, 'NONSSL'));
+			// EOF - Fixed redirect
 		} else {
 			// create smarty element
 			$smarty = new Smarty;
