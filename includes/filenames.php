@@ -30,7 +30,7 @@ define('FILENAME_ACCOUNT_DELETE', 'account_delete.php');
 define('FILENAME_ADDRESS_BOOK', 'address_book.php');
 define('FILENAME_ADDRESS_BOOK_PROCESS', 'address_book_process.php');
 define('FILENAME_ADVANCED_SEARCH', 'advanced_search.php');
-if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'true') {
+if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
   define('FILENAME_ADVANCED_SEARCH_RESULT', 'findologic.php');
 } else {
   define('FILENAME_ADVANCED_SEARCH_RESULT', 'advanced_search_result.php');
