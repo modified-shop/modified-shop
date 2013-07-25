@@ -187,7 +187,7 @@ function xtDBquery($query) {
 
 function CacheCheck() {
 	if (USE_CACHE == 'false') return false;
-	if (!isset($_COOKIE['XTCsid'])) return false;
+	if (!isset($_COOKIE['MODsid'])) return false;
 	return true;
 }
 
