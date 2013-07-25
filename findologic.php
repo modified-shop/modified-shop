@@ -85,8 +85,8 @@
 
 		// redirect to product-page
 		$productpage = urldecode($_GET['target']);
-		if ($_GET['XTCsid'] != '')
-			$productpage .= '&XTCsid='.$_GET['XTCsid'];
+		if ($_GET['MODsid'] != '')
+			$productpage .= '&MODsid='.$_GET['MODsid'];
 		header("Location: $productpage");
 	} else {
 		// user is searching:
