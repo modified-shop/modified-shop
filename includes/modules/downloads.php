@@ -83,8 +83,12 @@ if (xtc_db_num_rows($downloads_query) > 0) {
   $module_smarty->assign('dl', (isset($dl) ? $dl : array()));
 }
 
+if ($send_order) {
+  $module_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+} else {
+  $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+}
 $module_smarty->assign('language', $_SESSION['language']);
-$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 $module_smarty->caching = 0;
 $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/downloads.html');
 $smarty->assign('downloads_content', $module);
