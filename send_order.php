@@ -175,6 +175,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   // EOF - Tomcraft - 2011-06-17 - Added revocation to email
 
   if (DOWNLOAD_ENABLED == 'true') {
+    $send_order = true;
     $_GET['order_id'] = $order->info['order_id'];
     include (DIR_WS_MODULES.'downloads.php');
   }
