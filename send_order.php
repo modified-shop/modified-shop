@@ -172,8 +172,12 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $revocation = $shop_content_data['content_text'];  
   $smarty->assign('REVOCATION_HTML', $revocation);
   $smarty->assign('REVOCATION_TXT', $revocation); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail  function
-
   // EOF - Tomcraft - 2011-06-17 - Added revocation to email
+
+  if (DOWNLOAD_ENABLED == 'true') {
+    $_GET['order_id'] = $order->info['order_id'];
+    include (DIR_WS_MODULES.'downloads.php');
+  }
 
   $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.html');
   $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/order_mail.txt');
