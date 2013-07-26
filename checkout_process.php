@@ -412,7 +412,7 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
                                    'orders_products_filename' => $attributes_values['products_attributes_filename'],
                                    'download_maxdays' => $attributes_values['products_attributes_maxdays'],
                                    'download_count' => $attributes_values['products_attributes_maxcount'],
-                                   'download_key' => md5($insert_id.$order_products_id.$_SESSION['customer_id'])
+                                   'download_key' => md5($insert_id.$order_products_id.$_SESSION['customer_id'].$order->customer['email_address'].$attributes_values['products_attributes_filename'])
                                   );
           xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
         }
