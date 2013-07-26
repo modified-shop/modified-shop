@@ -66,21 +66,23 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
     $allowed_status = explode(',', DOWNLOAD_MIN_ORDERS_STATUS);
     if (in_array($check_status['orders_status'], $allowed_status)) {
       // status allowed for download
+      $customercheck = '';
+      if (isset($_SESSION['customer_id'])) {
+        $customercheck = " AND o.customers_id = '".$_SESSION['customer_id']."'";
+      }
       $downloads_query = xtc_db_query("SELECT opd.orders_products_filename
-                                         FROM ".TABLE_ORDERS." o,
-                                              ".TABLE_ORDERS_PRODUCTS." op,
-                                              ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                         FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd
+                                         JOIN ".TABLE_ORDERS." o
+                                              ON o.orders_id = opd.orders_id
                                         WHERE o.orders_id = '".$check_status['orders_id']."'
-                                          AND o.orders_id = op.orders_id
-                                          AND op.orders_products_id = opd.orders_products_id
                                           AND opd.orders_products_download_id = '".$check_status['orders_products_download_id']."'
                                           AND opd.orders_products_filename != ''
                                           AND DATE_SUB(CURDATE(), INTERVAL opd.download_maxdays DAY) <= '".$check_status['date_purchased']."'
-                                          AND opd.download_count > '0'");
+                                          AND opd.download_count > '0'
+                                              ".$customercheck);
       if (xtc_db_num_rows($downloads_query) > 0) {
         $downloads = xtc_db_fetch_array($downloads_query);
-        
-        // Die if file is not there
+                
         if (!file_exists(DIR_FS_DOWNLOAD.$downloads['orders_products_filename'])) {
           $smarty->assign('dl_not_found', 'true');
           $smarty->assign('dl_prevented', 'true');
