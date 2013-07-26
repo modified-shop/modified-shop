@@ -44,6 +44,7 @@ if (!in_array($order_status, $allowed_status)) {
 
 // Get all downloadable products in that order
 $downloads_query = xtc_db_query("select o.customers_id,
+                                        o.customers_email_address,
                                         op.products_name, 
                                         opd.orders_products_download_id, 
                                         opd.orders_products_filename, 
@@ -74,8 +75,8 @@ if (xtc_db_num_rows($downloads_query) > 0) {
     {
       $dl[$jj]['allowed'] = true;
     }
-    $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id']));
-    $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'])).'">'.$downloads['products_name'].'</a>';
+    $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename']));
+    $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($last_order.$downloads['orders_products_id'].$downloads['customers_id'].$downloads['customers_email_address'].$downloads['orders_products_filename'])).'">'.$downloads['products_name'].'</a>';
     $dl[$jj]['date'] = xtc_date_long($downloads['download_expiry']);
     $dl[$jj]['count'] = $downloads['download_count'];
     $jj ++;
