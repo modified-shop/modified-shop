@@ -23,6 +23,9 @@ include ('includes/application_top.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_random_name.inc.php');
 require_once (DIR_FS_INC.'xtc_unlink_temp_dir.inc.php');
+if (!function_exists('xtc_date_long')) {
+	require_once (DIR_FS_INC.'xtc_date_long.inc.php');
+}
 
 // function readfile
 function readfile_chunked($file, $chunksize) {
@@ -74,7 +77,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
                                           AND opd.orders_products_filename != ''
                                           AND DATE_SUB(CURDATE(), INTERVAL opd.download_maxdays DAY) <= '".$check_status['date_purchased']."'
                                           AND opd.download_count > '0'");
-      if (xtc_db_num_rows($downloads_query) > 1) {
+      if (xtc_db_num_rows($downloads_query) > 0) {
         $downloads = xtc_db_fetch_array($downloads_query);
         
         // Die if file is not there
@@ -159,6 +162,10 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
     }
   } else {
     die(DOWNLOAD_NOT_ALLOWED);
+  }
+  // Button Back to Account History for customers only
+  if (isset ($_SESSION['customer_id'])) {
+    $smarty->assign('BUTTON_BACK','<a href="' . xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id='.(int)$_GET['order'], 'SSL') . '">' . xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK) . '</a>');
   }
 } else {
   die(DOWNLOAD_NOT_ALLOWED);

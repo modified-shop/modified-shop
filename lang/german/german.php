@@ -380,6 +380,7 @@ define('NAVBAR_TITLE_PASSWORD_DOUBLE_OPT','Passwort vergessen?');
 define('NAVBAR_TITLE_NEWSLETTER','Newsletter');
 define('NAVBAR_GV_REDEEM', 'Gutschein einl&ouml;sen');
 define('NAVBAR_GV_SEND', 'Gutschein versenden');
+define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
 
 /*
  * 
