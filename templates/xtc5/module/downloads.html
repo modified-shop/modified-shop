@@ -3,17 +3,17 @@
   {config_load file="$language/lang_$language.conf" section="login"}
   <h1>{#heading_download#}</h1>
   {if $FORM_ACTION}
-    {if $info_message!=''}
-      <div class="errormessage">{$info_message}</div>
+    {if $error != ''}
+      <div class="errormessage">{$error}</div>
     {/if}
     {$FORM_ACTION}
     <div class="highlightbox">
-      <table width="100" border="0" cellspacing="4" cellpadding="0">
+      <table width="100%" border="0" cellspacing="4" cellpadding="0">
         <tr>
           <td colspan="2">{#text_confirm_download#}</td>
         </tr>
         <tr>
-          <td style="white-space:nowrap;"><strong>{#text_email#}</strong></td>
+          <td width="120"><strong>{#text_email#}</strong></td>
           <td>{$INPUT_MAIL}</td>
         </tr>
       </table>
