@@ -147,8 +147,8 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
           {
             $dl[$jj]['allowed'] = true;
           }
-          $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($check_status['orders_id'].$downloads['orders_products_download_id'].$downloads['customers_id']));
-          $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$last_order.'&id='.$downloads['orders_products_download_id'].'&key='.md5($check_status['orders_id'].$downloads['orders_products_download_id'].$downloads['customers_id'])).'">'.$downloads['products_name'].'</a>';
+          $dl[$jj]['pic_link'] = xtc_href_link(FILENAME_DOWNLOAD, 'order='.$check_status['orders_id'].'&id='.$downloads['orders_products_download_id'].'&key='.md5($check_status['orders_id'].$downloads['orders_products_download_id'].$downloads['customers_id']));
+          $dl[$jj]['download_link'] = '<a href="'.xtc_href_link(FILENAME_DOWNLOAD, 'order='.$check_status['orders_id'].'&id='.$downloads['orders_products_download_id'].'&key='.md5($check_status['orders_id'].$downloads['orders_products_download_id'].$downloads['customers_id'])).'">'.$downloads['products_name'].'</a>';
           $dl[$jj]['date'] = xtc_date_long($downloads['download_expiry']);
           $dl[$jj]['count'] = $downloads['download_count'];
           $jj ++;
