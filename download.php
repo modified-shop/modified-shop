@@ -65,7 +65,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
     $sutomers_id = $check_email['customers_id'];
   } else {
 		$messageStack->add_session('download', ENTRY_EMAIL_ADDRESS_ERROR, 'error');
-		xtc_redirect(xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params(), 'SSL'));
+		xtc_redirect(xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params(array('action')), 'SSL'));
   }
 }
 
