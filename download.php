@@ -69,7 +69,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
   }
 }
 
-if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['key']) && strlen($_GET['key']) == '50') {
+if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['key']) && strlen($_GET['key']) == '32') {
   // check for Geust Accounts
   if (!xtc_not_null($sutomers_id)) {
     $smarty->assign('FORM_ACTION', xtc_draw_form('downloads', xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params().'action=process', 'SSL')));
