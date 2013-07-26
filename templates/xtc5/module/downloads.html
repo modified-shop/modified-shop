@@ -15,9 +15,9 @@
       <tr>
         <td class="icon">
         {if $dl_data.allowed}
-          <a href="{$dl_data.pic_link}"><img src="{if $logo_path}{$logo_path}{else}{$tpl_path}{/if}img/img_download.jpg" alt="" border="0" /></a>
+          <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download.jpg" alt="" border="0" /></a>
         {else}
-          <a href="{$dl_data.pic_link}"><img src="{if $logo_path}{$logo_path}{else}{$tpl_path}{/if}img/img_download_locked.jpg" alt="" border="0" /></a>
+          <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download_locked.jpg" alt="" border="0" /></a>
         {/if}
       </td>
         <td class="downloadlink">
