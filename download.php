@@ -49,9 +49,8 @@ function readfile_chunked($file, $chunksize) {
 // init Smarty
 $smarty = new Smarty();
 
-$sutomers_id = '';
 if (isset($_SESSION['customer_id'])) {
-  $sutomers_id = $_SESSION['customer_id'];
+  $_SESSION['customer_id_download'] = $_SESSION['customer_id'];
 }
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
@@ -62,7 +61,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
                                       WHERE orders_id = '".(int)$_GET['order']."'");
 	$check_email = xtc_db_fetch_array($check_email_query);
 	if ($email_address == $check_email['customers_email_address']) {
-    $sutomers_id = $check_email['customers_id'];
+    $_SESSION['customer_id_download'] = $check_email['customers_id'];
   } else {
 		$messageStack->add_session('download', ENTRY_EMAIL_ADDRESS_CHECK_ERROR, 'error');
 		xtc_redirect(xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params(array('action')), 'SSL'));
@@ -71,7 +70,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 
 if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) && is_numeric($_GET['id']) && isset($_GET['key']) && strlen($_GET['key']) == '32') {
   // check for Geust Accounts
-  if (!xtc_not_null($sutomers_id)) {
+  if (!isset($_SESSION['customer_id_download'])) {
     $smarty->assign('FORM_ACTION', xtc_draw_form('downloads', xtc_href_link(FILENAME_DOWNLOAD, xtc_get_all_get_params().'action=process', 'SSL')));
     $smarty->assign('INPUT_MAIL', xtc_draw_input_field('email_address'));
     $smarty->assign('FORM_END', '</form>');
@@ -102,7 +101,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
                                             AND opd.orders_products_filename != ''
                                             AND DATE_SUB(CURDATE(), INTERVAL opd.download_maxdays DAY) <= '".$check_status['date_purchased']."'
                                             AND opd.download_count > '0'
-                                            AND o.customers_id = '".$sutomers_id."'");
+                                            AND o.customers_id = '".(int)$_SESSION['customer_id_download']."'");
         if (xtc_db_num_rows($downloads_query) > 0) {
           $downloads = xtc_db_fetch_array($downloads_query);
                 
