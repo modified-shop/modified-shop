@@ -9,7 +9,7 @@
 </table>
 {else}
 <table class="shippingblock" width="100%" border="0" cellspacing="0" cellpadding="6">
-{foreach name=aussenshipping item=module_data from=$module_content}
+{foreach name=outer item=module_data from=$module_content}
   <tr>
     <td colspan="3" class="header"><strong>{$module_data.module}</strong></td>
   </tr>
@@ -20,7 +20,7 @@
     <td class="price">&nbsp;</td>
   </tr>
   {else}
-  {foreach name=aussen item=method_data from=$module_data.methods} 
+  {foreach name=inner item=method_data from=$module_data.methods} 
   <tr>
     <td class="radiobutton">{$method_data.radio_field}</td>
     <td class="description">{$method_data.title}</td>
@@ -28,7 +28,7 @@
   </tr>
   {/foreach}
   {/if}
-  {if !$smarty.foreach.aussenshipping.last}  
+  {if !$smarty.foreach.outer.last}  
   <tr>
     <td colspan="3" class="filler">&nbsp;</td>
   </tr>
