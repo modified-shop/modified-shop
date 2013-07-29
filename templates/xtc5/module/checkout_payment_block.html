@@ -1,5 +1,5 @@
 <table class="paymentblock" width="100%" border="0" cellspacing="0" cellpadding="6">
-{foreach name=aussen item=module_data from=$module_content}
+{foreach name=outer item=module_data from=$module_content}
   <tr>
     <td class="header left" width="1%">{$module_data.selection}</td>
     <td class="header" width="89%">{$module_data.module}</td>
@@ -33,7 +33,7 @@
     </td>
   </tr>
   {/if}
-  {if !$smarty.foreach.aussen.last}  
+  {if !$smarty.foreach.outer.last}  
   <tr>
     <td colspan="3" class="filler">&nbsp;</td>
   </tr>
