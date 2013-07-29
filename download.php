@@ -101,7 +101,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
                                             AND opd.orders_products_filename != ''
                                             AND DATE_SUB(CURDATE(), INTERVAL opd.download_maxdays DAY) <= '".$check_status['date_purchased']."'
                                             AND opd.download_count > '0'
-                                            AND opd.download_key = '".xtc_db_input($_GET['key'])."'")."'
+                                            AND opd.download_key = '".xtc_db_input($_GET['key'])."'
                                             AND o.customers_id = '".(int)$_SESSION['customer_id_download']."'");
         if (xtc_db_num_rows($downloads_query) > 0) {
           $downloads = xtc_db_fetch_array($downloads_query);
