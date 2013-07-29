@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaFunctionLib.php 2918 2013-07-11 19:56:13Z derpapst $
+ * $Id: magnaFunctionLib.php 3047 2013-07-26 15:14:32Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -899,7 +899,7 @@ function magnaSKU2pOpt($sku, $language = 'en') {
 	     LIMIT 1 		 
 	');
 
-	if (($option === false) || ($option['options_id'] <= 0) || ($option['options_values_id'] <= 0)) {
+	if ($option === false) {
 		return $ret;
 	}
 

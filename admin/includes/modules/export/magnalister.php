@@ -5,7 +5,7 @@
  *
  * Licensed under GNU/GPL v2
  *
- * Id: $Id: magnalister.php 69 2010-09-22 09:17:05Z root $
+ * Id: $Id: magnalister.php 69 2010-09-22 09:17:05Z derpapst $
  */
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 

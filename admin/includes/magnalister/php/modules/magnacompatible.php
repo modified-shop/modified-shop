@@ -288,7 +288,7 @@ class MagnaCompatMarketplace {
 			$c->process();
 		} else {
 			if ($this->isAjax) {
-				echo '{error: \'This is not supported\'}';
+				echo '{"error": "This is not supported"}';
 			} else {
 				echo 'This is not supported';
 			}

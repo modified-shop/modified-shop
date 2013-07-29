@@ -141,7 +141,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			&& isset($authError['ERRORS']) && !empty($authError['ERRORS'])
 		) {
 			foreach ($authError['ERRORS'] as $err) {
-				$errors[] = $err['ERRORMESSAGE'];
+				$errors[] = fixHTMLUTF8Entities($err['ERRORMESSAGE']);
 				if (isset($err['ERRORCODE']) && ($err['ERRORCODE'] == 'MARKETPLACE_TIMEOUT')) {
 					$mpTimeOut = true;
 				}
@@ -207,7 +207,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			)
 		) {
 			$this->boxes .= $this->renderAuthError();
-		}		
+		}
 		#echo print_m($missingKeys, '$missingKeys');
 		#echo print_m($this->authConfigKeys, '$this->authConfigKeys');
 		if (!array_key_exists('conf', $_POST)) {
@@ -247,7 +247,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 			} catch (MagnaException $e) {
 				$e->setCriticalStatus(false);
 				setDBConfigValue($this->marketplace.'.autherror', $this->mpID, $e->getErrorArray(), false);
-				$this->renderAuthError();
+				$this->boxes .= $this->renderAuthError();
 			}
 
 		} else {

@@ -415,6 +415,7 @@ if ($auth['state']) {
 		#setDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], $form['listingdefaults']['fields']['imagepath']['default'], true);
 		setDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['imagepath']['default'], true);
 	}
+	# Bilder
 	if (false === getDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], false)) {
 		# normalerweise dasselbe wie fuer die Hauptbilder
 		#$form['listingdefaults']['fields']['galleryimagepath']['default'] =
@@ -424,6 +425,10 @@ if ($auth['state']) {
 		#setDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], $form['listingdefaults']['fields']['galleryimagepath']['default'], true);
 		setDBConfigValue('ebay.gallery.imagepath', $_MagnaSession['mpID'], $form['images']['fields']['galleryimagepath']['default'], true);
 	}
+	# Ruecknahmebedingungen
+	$form['returnpolicy']['fields']['returnsaccepted']['values']    = geteBaySingleReturnPolicyDetail('ReturnsAccepted');
+	$form['returnpolicy']['fields']['returnswithin']['values']      = geteBaySingleReturnPolicyDetail('ReturnsWithin');
+	$form['returnpolicy']['fields']['shippingcostpaidby']['values'] = geteBaySingleReturnPolicyDetail('ShippingCostPaidBy');
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {

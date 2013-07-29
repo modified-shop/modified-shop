@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazon.php 59 2010-08-11 11:43:14Z root $
+ * $Id: amazon.php 59 2010-08-11 11:43:14Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the GNU General Public License v2 or later

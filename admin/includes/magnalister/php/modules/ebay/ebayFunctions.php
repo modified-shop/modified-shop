@@ -298,7 +298,7 @@ function geteBayShippingDiscountProfiles($forceRefresh = false) {
 	$myPrice = new SimplePrice(null,
 					(getCurrencyFromMarketplace($_MagnaSession['mpID'])
 					? getCurrencyFromMarketplace($_MagnaSession['mpID'])
-					: 'EUR')
+					: DEFAULT_CURRENCY)
 			   );
 	# aufbereiten
 	if (array_key_exists('Profiles', $storedProfileData)) {
@@ -360,6 +360,56 @@ function geteBayPaymentOptions() {
 	}
 	$_MagnaSession[$mpID]['eBayPaymentOptions'] = $paymentOptions['DATA']['PaymentOptions'];
 	return $paymentOptions['DATA']['PaymentOptions'];
+}
+
+function geteBayReturnPolicyDetails() {
+	global $_MagnaSession;
+
+	#echo print_m($_MagnaSession,'$_MagnaSession');
+
+	$mpID = $_MagnaSession['mpID'];
+	$site = getDBConfigValue('ebay.site', $mpID);
+
+	#echo print_m($site,'$site');
+	
+	if(@isset($_MagnaSession[$mpID]['eBayReturnPolicyDetails']['Site']) && 
+		($_MagnaSession[$mpID]['eBayReturnPolicyDetails']['Site'] == getDBConfigValue('ebay.site', $mpID, '999'))
+	) { # 999 um keine falsche Gleichheit bei nicht gesetzten Werten zu bekommen
+		return $_MagnaSession[$mpID][$site]['eBayReturnPolicyDetails'];
+	} else {
+		try { $returnPolicyDetails = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetReturnPolicyDetails',
+				'DATA' => array('Site' => $site),
+			  ));
+		} catch (MagnaException $e) {
+			$returnPolicyDetails = array(
+				'DATA' => false
+			);
+		}
+		if (!is_array($returnPolicyDetails) || @empty($returnPolicyDetails['DATA'])) {
+			return false;
+		}
+		arrayEntitiesFixHTMLUTF8($returnPolicyDetails['DATA']['ReturnPolicyDetails']);
+	}
+	$_MagnaSession[$mpID]['eBayReturnPolicyDetails'] = $returnPolicyDetails['DATA']['ReturnPolicyDetails'];
+	return $returnPolicyDetails['DATA']['ReturnPolicyDetails'];
+}
+
+# einzelnes Detail: ReturnsAccepted, ReturnsWithin, ShippingCostPaidBy oder RefundOption
+# (letzteres noch nicht implementiert, gibts in Europa nicht)
+function geteBaySingleReturnPolicyDetail($detailName) {
+	global $_MagnaSession;
+	$mpID = $_MagnaSession['mpID'];
+	if (   (!isset   ($_MagnaSession[$mpID]['eBayReturnPolicyDetails']))
+	    || (!is_array($_MagnaSession[$mpID]['eBayReturnPolicyDetails']))) {
+		$returnPolicyDetails = geteBayReturnPolicyDetails();
+	} else {
+		$returnPolicyDetails = $_MagnaSession[$mpID]['eBayReturnPolicyDetails'];
+	}
+	if (!isset($returnPolicyDetails[$detailName])) {
+		return array('' => '-');
+	}
+	return $returnPolicyDetails[$detailName];
 }
 
 function getEBayAttributes($cID, $mode, $preselectedValues = array()) {

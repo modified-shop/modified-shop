@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: admin_view_top.php 3048 2013-07-29 10:39:15Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -79,26 +79,34 @@ if (MLBrowserDetect::gi()->compare('Browser', 'msie', '==')) {
 	}
 }
 
-require (DIR_WS_INCLUDES.'head.php'); 
-
+if ((SHOPSYSTEM == 'xtcmodified') && defined('RUN_MODE_ADMIN')) {
+	require (DIR_WS_INCLUDES.'head.php');
+} else {
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html '.HTML_PARAMS.'>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'">
+		<title>'.TITLE.' :: Magnalister'.$_mainTitle.'</title>
+		<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />'."\n";
+}
 /* Force IE into Standards Mode */
 if (MLBrowserDetect::gi()->compare('Browser', 'msie', '==')) {
 	echo '		<meta http-equiv="x-ua-compatible" content="IE='.((int)MLBrowserDetect::gi()->get('BVersion')).'">'."\n";
 }
-		?>
-		<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
-		<?php if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
-			echo '<noscript><meta http-equiv="refresh" content="0;URL='.toURL(array('module' => 'nojs')).'"></noscript>'."\n";
-		} ?>
+if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
+	echo '		<noscript><meta http-equiv="refresh" content="0;URL='.toURL(array('module' => 'nojs')).'"></noscript>'."\n";
+}
+?>
 		<link rel="stylesheet" type="text/css" href="includes/magnalister/css/jqueryui/jquery-ui-1.9.1.custom.css" />
-		<link rel="stylesheet" type="text/css" href="includes/magnalister/css/magnalister.css?<?php echo CLIENT_BUILD_VERSION?>" /><?php
+		<link rel="stylesheet" type="text/css" href="includes/magnalister/css/magnalister.css?<?php echo CLIENT_BUILD_VERSION?>" />
+<?php
 			if (isset($_pageCSS) && ($_pageCSS = trim($_pageCSS)) && !empty($_pageCSS)) {
 				echo '
 		<style type="text/css">
 '.$_pageCSS.'
 		</style>'."\n";
 			}
-		?>
+?>
 		<script type="text/javascript" src="includes/magnalister/js/debugFunctions.js"></script>
 		<script type="text/javascript">/*<![CDATA[*/
 			var debugging = true;/*<?php echo (MAGNA_DEBUG) ? 'true' : 'false'; ?>;*/
