@@ -140,8 +140,7 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
             }
           }
         } else {
-          $smarty->assign('dl_not_found', 'true');
-          $smarty->assign('dl_prevented', 'true');
+          die(DOWNLOAD_NOT_ALLOWED);
         }
       } else {
         // Show Downloadlink
