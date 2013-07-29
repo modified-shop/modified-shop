@@ -286,12 +286,17 @@ function SendOrders ()
   if (!isset($order_status) && !isset($order_from))
   {
     $order_status = 1;
-    $sql .= "and orders_status = " . $order_status;
+
+    // PayPal Status
+    $iPayPalInvoice = 5;
+    $iPayPalWait = 6;
+
+    // alte Abfrage
+    //$sql .= " and orders_status = " . $order_status;
+
+    $sql .= " and orders_status IN(". $order_status .",". $iPayPalInvoice .",". $iPayPalWait .")";
   }
   if ($order_status!='')
-  {
-    $sql .= " and orders_status = " . $order_status;
-  }
   $orders_query = xtc_db_query($sql);
 
   while ($orders = xtc_db_fetch_array($orders_query))
@@ -1690,6 +1695,18 @@ function ProductsUpdate ()
   if (isset($_POST['products_me'])) $products_vpe = xtc_db_prepare_input($_POST['products_me']);
   if (isset($_POST['products_tax_class_id'])) $products_tax_class_id = xtc_db_prepare_input($_POST['products_tax_class_id']);
 
+//VPE Frank
+  if (isset($_POST['products_basis_factor'])) $products_vpe_value = xtc_db_prepare_input($_POST['products_basis_factor']);
+// Wird von CAO noch fehlerhaft übergeben  if (isset($_POST['products_basis_me'])) $products_vpe = xtc_db_prepare_input($_POST['products_basis_me']);
+
+  if ($_POST['products_basis_factor'] == 1) {
+	$products_vpe_status = 0;
+  } else {
+	$products_vpe_status = 1;
+  }
+
+//VPE Frank Ende
+
   if (file_exists('cao_produpd_1.php')) { include('cao_produpd_1.php'); }
 
   // Comment: SWITCH_MWST nun an der richtigen Var. ; TKI 2005-08-24
@@ -1725,7 +1742,11 @@ function ProductsUpdate ()
                          'products_fsk18' => $products_fsk18,
                          'products_shippingtime' => $products_shippingtime,
                          'products_tax_class_id' => $products_tax_class_id,
-                         'manufacturers_id' => $manufacturers_id);
+                         'manufacturers_id' => $manufacturers_id,
+                         //VPE Frank
+                         'products_vpe_value' => $products_vpe_value,
+                         'products_vpe_status' => $products_vpe_status);
+                         //VPE Frank Ende
 
   if ((defined('TABLE_PRODUCTS_VPE')) and (USE_VPE==true))
   {
@@ -1904,6 +1925,39 @@ function ProductsUpdate ()
     }
   }
 
+  //Burn VK1-4 an die jeweiligen Gruppen übergeben
+
+    if (isset($_POST['products_vk1']))               $products_vk1               = xtc_db_prepare_input($_POST['products_vk1']);
+    if (isset($_POST['products_vk2']))               $products_vk2               = xtc_db_prepare_input($_POST['products_vk2']);
+    if (isset($_POST['products_vk3']))               $products_vk3               = xtc_db_prepare_input($_POST['products_vk3']);
+    if (isset($_POST['products_vk4']))               $products_vk4               = xtc_db_prepare_input($_POST['products_vk4']);
+    if (isset($_POST['products_vk5']))               $products_vk5               = xtc_db_prepare_input($_POST['products_vk5']);
+
+// Hier die Preise den Gruppen zuordnen ID => Aufsteigend, GRP => Gruppen ID aus dem Shop, PREIS => vk1-4
+    $vk_array = array(
+            1 => array('ID' => '1','GRP' => '0','PREIS' => $products_vk2),
+            2 => array('ID' => '2','GRP' => '1','PREIS' => $products_vk2),
+            3 => array('ID' => '3','GRP' => '2','PREIS' => $products_vk2),
+            4 => array('ID' => '4','GRP' => '3','PREIS' => $products_vk2),
+            5 => array('ID' => '5','GRP' => '4','PREIS' => $products_vk3),
+            6 => array('ID' => '6','GRP' => '5','PREIS' => $products_vk4),
+         );
+
+   for ($i = 1; $i < count($vk_array)+1; $i++)
+   {
+
+         $sql_data_array = array('products_id' => $products_id,
+                          'quantity' => '1',
+                          'personal_offer' => $vk_array[$i]['PREIS']);
+
+
+         $delete = xtc_db_query("delete from personal_offers_by_customers_status_" . $vk_array[$i]['GRP'] . " where products_id='" . $products_id . "'");
+         $insert_sql_data = array('products_id' => $products_id);
+         $sql_data_array = array_merge($sql_data_array, $insert_sql_data);
+         xtc_db_perform(personal_offers_by_customers_status_ . $vk_array[$i]['GRP'], $sql_data_array);
+   }
+
+//Burn Ende
 
   if (file_exists('cao_produpd_2.php')) { include('cao_produpd_2.php'); }
 
@@ -2320,7 +2374,7 @@ function OrderUpdate ()
           $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
           $smarty->config_dir=DIR_FS_CATALOG.'lang';
           //BOF - GTB - 2010-08-03 - Security Fix - Base
-      $smarty->assign('tpl_path',DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+          $smarty->assign('tpl_path',DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
           //$smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
           //EOF - GTB - 2010-08-03 - Security Fix - Base
           $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
@@ -2434,6 +2488,11 @@ function CustomersUpdate ()
   if (isset($_POST['customers_tele'])) $sql_customers_data_array['customers_telephone'] = $_POST['customers_tele'];
   if (isset($_POST['customers_fax'])) $sql_customers_data_array['customers_fax'] = $_POST['customers_fax'];
   if (isset($_POST['customers_gender'])) $sql_customers_data_array['customers_gender'] = $_POST['customers_gender'];
+  if ($_POST['customers_price_level'] == 5) $sql_customers_data_array['customers_status'] = 6;
+  if ($_POST['customers_price_level'] == 4) $sql_customers_data_array['customers_status'] = 5;
+  if ($_POST['customers_price_level'] == 3) $sql_customers_data_array['customers_status'] = 4;
+  if ($_POST['customers_price_level'] == 2) $sql_customers_data_array['customers_status'] = 2;
+  if ($_POST['customers_price_level'] == 1) $sql_customers_data_array['customers_status'] = 0;
 
   if (file_exists('cao_custupd_1.php')) { include('cao_custupd_1.php'); }
 
@@ -2520,9 +2579,9 @@ function CustomersUpdate ()
     $smarty->config_dir=DIR_FS_CATALOG.'lang';
 
     //BOF - GTB - 2010-08-03 - Security Fix - Base
-  $smarty->assign('tpl_path',DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  //$smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
+    $smarty->assign('tpl_path',DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
+    //$smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
+    //EOF - GTB - 2010-08-03 - Security Fix - Base
     $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('NAME',$sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname']);
     $smarty->assign('EMAIL',$sql_customers_data_array['customers_email_address']);
