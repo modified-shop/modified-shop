@@ -34,6 +34,7 @@ Your ordered following products
 {$order_total_values.TITLE}{$order_total_values.TEXT}
 {/foreach}
 
+{$downloads_content_txt}
 
 {if $address_label_payment}
 Paymentaddress

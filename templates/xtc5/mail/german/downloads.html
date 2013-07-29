@@ -1,0 +1,23 @@
+{if $dl neq ''}
+  {config_load file="$language/lang_$language.conf" section="downloads_module"}
+  <h1>{#heading_download#}</h1>
+  {if $dl|@sizeof > 0}
+    <table width="100%" border="0" cellspacing="0" cellpadding="4" class="downloadbox">
+    {foreach name=aussen item=dl_data from=$dl}
+      <tr>
+        <td class="icon">
+        {if $dl_data.allowed}
+          <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download.jpg" alt="" border="0" /></a>
+        {else}
+          <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download_locked.jpg" alt="" border="0" /></a>
+        {/if}
+      </td>
+        <td class="downloadlink">
+        <strong>{$dl_data.download_link}</strong><br />
+        {#table_heading_download_date#}&nbsp;{$dl_data.date}, <strong>{$dl_data.count}</strong>&nbsp;{#table_heading_download_count#}
+      </td>
+      </tr>
+    {/foreach}
+    </table>
+  {/if}
+{/if}
