@@ -89,8 +89,8 @@ $module_smarty->caching = 0;
 
 if ($send_order) {
   $module_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
-  $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'downloads.txt');
-  $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'downloads.html');
+  $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/downloads.txt');
+  $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/downloads.html');
   $smarty->assign('downloads_content_html', $module_html);
   $smarty->assign('downloads_content_txt', $module_txt);
 } else {
