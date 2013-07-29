@@ -154,13 +154,15 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
                                                 opd.download_count,
                                                 opd.orders_products_id,
                                                 if(opd.download_maxdays = 0, current_date, date(o.date_purchased)) + interval opd.download_maxdays + 1 day - interval 1 second download_expiry 
-                                           from ".TABLE_ORDERS." o
-                                           join ".TABLE_ORDERS_PRODUCTS." op 
+                                           FROM ".TABLE_ORDERS." o
+                                           JOIN ".TABLE_ORDERS_PRODUCTS." op 
                                                 on op.orders_id = o.orders_id
-                                           join ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
+                                           JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
                                                 on opd.orders_products_id = op.orders_products_id
-                                          where o.orders_id = '".$check_status['orders_id']."'
-                                            and opd.orders_products_filename != ''");
+                                          WHERE o.orders_id = '".$check_status['orders_id']."'
+                                            AND opd.orders_products_filename != ''
+                                            AND opd.download_key = '".xtc_db_input($_GET['key'])."'
+                                            AND o.customers_id = '".(int)$_SESSION['customer_id_download']."'");
 
         if (xtc_db_num_rows($downloads_query) > 0) {
           $jj = 0;
@@ -183,8 +185,10 @@ if (isset ($_GET['order']) && is_numeric($_GET['order']) && isset ($_GET['id']) 
             $dl[$jj]['count'] = $downloads['download_count'];
             $jj ++;
           }
+          $smarty->assign('dl_prevented', 'true');
+        } else {
+          die(DOWNLOAD_NOT_ALLOWED);
         }
-        $smarty->assign('dl_prevented', 'true');
       }
     } else {
       die(DOWNLOAD_NOT_ALLOWED);
