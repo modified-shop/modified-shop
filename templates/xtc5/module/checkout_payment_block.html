@@ -1,5 +1,5 @@
 <table class="paymentblock" width="100%" border="0" cellspacing="0" cellpadding="6">
-{foreach name=aussenpayment item=module_data from=$module_content}
+{foreach name=outer item=module_data from=$module_content}
   <tr>
     <td class="header left" width="1%">{$module_data.selection}</td>
     <td class="header" width="84%"><label for="{$smarty.foreach.aussen.iteration}">{$module_data.module}</label></td>
@@ -21,7 +21,7 @@
     <td class="payleft">&nbsp;</td>
     <td class="payright" colspan="2">
     <table border="0" cellspacing="0" cellpadding="0">
-    {foreach name=aussen item=method_data from=$module_data.fields}
+    {foreach name=inner item=method_data from=$module_data.fields}
       <tr>
         <td>{$method_data.title}</td>
         <td>&nbsp;</td>
@@ -33,7 +33,7 @@
     </td>
   </tr>
   {/if}
-  {if !$smarty.foreach.aussenpayment.last}  
+  {if !$smarty.foreach.outer.last}  
   <tr>
     <td colspan="3" class="filler">&nbsp;</td>
   </tr>
