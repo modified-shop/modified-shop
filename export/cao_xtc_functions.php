@@ -288,16 +288,16 @@ function SendOrders ()
     $order_status = 1;
 
     // PayPal Status
-    $iPayPalInvoice = 5;
-    $iPayPalWait = 6;
+    $iPayPalInvoice = PAYPAL_ORDER_STATUS_SUCCESS_ID;
+    $iPayPalWait = PAYPAL_ORDER_STATUS_PENDING_ID;
 
     // alte Abfrage
     //$sql .= " and orders_status = " . $order_status;
 
-    $sql .= " and orders_status IN(". $order_status .",". $iPayPalInvoice .",". $iPayPalWait .")";
+    $sql .= " and orders_status IN ('". $order_status ."', '". $iPayPalInvoice ."', '". $iPayPalWait ."')";
   }
   if ($order_status!='')
-  $orders_query = xtc_db_query($sql);
+    $orders_query = xtc_db_query($sql);
 
   while ($orders = xtc_db_fetch_array($orders_query))
   {
