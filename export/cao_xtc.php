@@ -139,6 +139,9 @@ $order_total_class['ot_loworderfee']['tax'] = '19';
 $order_total_class['ot_shipping']['prefix'] = '+';
 $order_total_class['ot_shipping']['tax'] = '19';
 
+$order_total_class['ot_payment']['prefix'] = '+';
+$order_total_class['ot_payment']['tax'] = '19';
+
 
 define ('_VALID_XTC',false);
 
