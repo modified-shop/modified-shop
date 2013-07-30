@@ -316,7 +316,7 @@ function_exists('SEQ_SECURE_SESSION') ? SEQ_SECURE_SESSION() : '';
 
 // check the Agent
 $truncate_session_id = false;
-if (CHECK_CLIENT_AGENT && xtc_check_agent() == 1) {
+if (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
   $truncate_session_id = true;
 }
 
@@ -356,15 +356,6 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
 }
 
-// Redirect search engines with session id to the same url without session id to prevent indexing session id urls
-if ( $truncate_session_id == true ) {
-  if (preg_match('/' . xtc_session_name() . '/i', $_SERVER['REQUEST_URI']) ){
-    $location = xtc_href_link(basename($_SERVER['SCRIPT_NAME']), xtc_get_all_get_params(array(xtc_session_name())), 'NONSSL', false);
-    header("HTTP/1.0 301 Moved Permanently");
-    header("Location: $location");
-  }
-}
-
 if (!(preg_match('/^[a-z0-9]{26}$/i', session_id()) || preg_match('/^[a-z0-9]{32}$/i', session_id()))) {
   session_regenerate_id(true); // Thanks to HHGAG ;-)
 }
@@ -395,6 +386,15 @@ if (isset($_SESSION['currency']) && $_SESSION['currency'] == '') {
 
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
+
+// Redirect search engines with session id to the same url without session id to prevent indexing session id urls
+if ( $truncate_session_id == true ) {
+  if (preg_match('/' . xtc_session_name() . '/i', $_SERVER['REQUEST_URI'])) {
+    $location = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), 'NONSSL', false);
+    header("HTTP/1.0 301 Moved Permanently");
+    header("Location: $location");
+  }
+}
 
 // main class
 require (DIR_WS_CLASSES.'main.php');
