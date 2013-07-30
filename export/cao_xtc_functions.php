@@ -283,24 +283,18 @@ function SendOrders ()
   echo $schema;
 
   $sql ="select * from " . TABLE_ORDERS . " where orders_id >= '" . xtc_db_input($order_from) . "'";
-  if (!isset($order_status) && !isset($order_from))
-  {
-    $order_status = 1;
-
-    // PayPal Status
-    $iPayPalInvoice = PAYPAL_ORDER_STATUS_SUCCESS_ID;
-    $iPayPalWait = PAYPAL_ORDER_STATUS_PENDING_ID;
-
-    // alte Abfrage
-    //$sql .= " and orders_status = " . $order_status;
-
-    $sql .= " and orders_status IN ('". $order_status ."', '". $iPayPalInvoice ."', '". $iPayPalWait ."')";
+  
+  if ($order_to) {
+    $sql .= " and orders_id <= " . $order_to;
   }
-  if ($order_status!='')
-  {
+
+  if (!$order_status && !$order_from) {    
+    $sql .= " and orders_status IN ('". DEFAULT_ORDERS_STATUS_ID ."', '". PAYPAL_ORDER_STATUS_SUCCESS_ID ."', '". PAYPAL_ORDER_STATUS_PENDING_ID ."')";
+  } elseif ($order_status) {
     $sql .= " and orders_status = " . $order_status;
   }
-    $orders_query = xtc_db_query($sql);
+ 
+  $orders_query = xtc_db_query($sql);
 
   while ($orders = xtc_db_fetch_array($orders_query))
   {
