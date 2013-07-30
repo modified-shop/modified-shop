@@ -297,6 +297,9 @@ function SendOrders ()
     $sql .= " and orders_status IN ('". $order_status ."', '". $iPayPalInvoice ."', '". $iPayPalWait ."')";
   }
   if ($order_status!='')
+  {
+    $sql .= " and orders_status = " . $order_status;
+  }
     $orders_query = xtc_db_query($sql);
 
   while ($orders = xtc_db_fetch_array($orders_query))
@@ -1914,8 +1917,8 @@ function ProductsUpdate ()
             2 => array('ID' => '2','GRP' => '1','PREIS' => $products_vk2),
             3 => array('ID' => '3','GRP' => '2','PREIS' => $products_vk2),
             4 => array('ID' => '4','GRP' => '3','PREIS' => $products_vk2),
-            5 => array('ID' => '5','GRP' => '4','PREIS' => $products_vk3),
-            6 => array('ID' => '6','GRP' => '5','PREIS' => $products_vk4),
+            //5 => array('ID' => '5','GRP' => '4','PREIS' => $products_vk3),
+            //6 => array('ID' => '6','GRP' => '5','PREIS' => $products_vk4),
          );
 
    for ($i = 1; $i < count($vk_array)+1; $i++)
