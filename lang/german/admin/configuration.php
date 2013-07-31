@@ -807,4 +807,7 @@ define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','Bei "true" wird eine eMail an den Kunde
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Admin Seitenkopf fixieren?');
 define('USE_ADMIN_FIXED_TOP_DESC', 'Soll der Seitenkopf beim Scrollen immer sichtbar sein? Standard: true (ja)');
+
+define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
+define('SMTP_SECURE_DESC' , 'Erfordert der SMTP Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');
 ?>

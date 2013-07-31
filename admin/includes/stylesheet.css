@@ -508,13 +508,13 @@ background-color:#F1F1F1;
 background-color:#e8e8e8;
 width:80%;
 }
+.tableConfig td.mark{
+background-color:#c8c8c8;
+}
 .configPartner{
 float:left;
 width: 150px;
 text-align: center;
-}
-.border0{
-border:0;
 }
 .mrg5{
 margin:5px;
@@ -540,4 +540,17 @@ min-width:50%;
 }
 .colorRed{
 color:#ff0000;
+}
+.tableInput{
+width: 100%; 
+border: 1px solid #aaaaaa; 
+padding: 2px;
+background: #f3f3f3;
+}
+.tableInput td{
+vertical-align: top;
+padding:3px;
+}
+.border0{
+border:0;
 }
