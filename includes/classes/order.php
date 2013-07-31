@@ -550,6 +550,9 @@
                                                                      'price' => $attributes['options_values_price'],
                                                                      'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
                                                                      );
+            //TODO
+            //$this->products[$index]['attributes'][$subindex]['price'] = $attributes['options_values_scale_price'];
+            
             $subindex++;
           }
         }

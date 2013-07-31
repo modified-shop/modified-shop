@@ -101,7 +101,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
   if (EMAIL_TRANSPORT == 'smtp') {
     $mail->IsSMTP();
     $mail->SMTPKeepAlive = true; // set mailer to use SMTP
-    $mail->SMTPAuth = SMTP_AUTH == 'true' ? true : false; // turn on SMTP authentication true/false
+    $mail->SMTPAuth = (SMTP_AUTH == 'true') ? true : false; // turn on SMTP authentication true/false
+    $mail->SMTPSecure = (defined('SMTP_SECURE') && SMTP_SECURE != 'none') ? SMTP_SECURE : ''; // turn on SMTP secure ssl
     $mail->Port = SMTP_PORT; // SMTP port
     $mail->Username = SMTP_USERNAME; // SMTP username
     $mail->Password = SMTP_PASSWORD; // SMTP password
