@@ -808,4 +808,4 @@ define('USE_ADMIN_FIXED_TOP_TITLE', 'Fixate admin page header?');
 define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header allways be visable when scrolling? Standard: true (yes)');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
-define('SMTP_SECURE_DESC' , 'The SMTP server requires a secure connection? The necessary settings, contact your ISP.');
+define('SMTP_SECURE_DESC' , 'Does the SMTP server require a secure connection? Contact your ISP for the appropriate settings.');
