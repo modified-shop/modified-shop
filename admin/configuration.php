@@ -296,10 +296,15 @@
                         if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
                           $configuration_key_desc = encode_htmlentities($configuration_key_desc);
                         }
+                        $class_mark = strpos(strtoupper($configuration['configuration_key']), 'SMTP') !== false || 
+                                      strpos(strtoupper($configuration['configuration_key']), 'CONTACT_US') !== false || 
+                                      strpos(strtoupper($configuration['configuration_key']), 'EMAIL_BILLING') !== false
+                                      ? ' mark' 
+                                      : '';
                         echo '
                               <tr>
                                 <td class="dataTableConfig col-left">'.$configuration_key_title.'</td>
-                                <td class="dataTableConfig col-middle">'.$value_field.'</td>
+                                <td class="dataTableConfig col-middle'.$class_mark.'">'.$value_field.'</td>
                                 <td class="dataTableConfig col-right">'.$configuration_key_desc.'</td>
                               </tr>
                              ';

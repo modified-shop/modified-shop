@@ -807,4 +807,7 @@ define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where t
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Fixate admin page header?'); 
 define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header allways be visable when scrolling? Standard: true (yes)');
+
+define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
+define('SMTP_SECURE_DESC' , 'The SMTP server requires a secure connection? The necessary settings, contact your ISP.');
 ?>
