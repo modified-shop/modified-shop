@@ -49,7 +49,7 @@ ALTER TABLE products_images ADD INDEX dx_products_id (products_id);
 ALTER TABLE sessions ADD INDEX idx_expiry (expiry);
 
 #GTB - 2013-08-02 - Add new index on whos_online
-ALTER TABLE whos_online ADD ADD PRIMARY KEY (session_id);
+ALTER TABLE whos_online ADD PRIMARY KEY (session_id);
 ALTER TABLE whos_online ADD INDEX idx_time_last_click (time_last_click);
 
 #GTB - 2013-08-02 - Add new index on coupons
