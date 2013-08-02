@@ -50,7 +50,7 @@
         if (isset ($_GET['manufacturers_id']) && ($_GET['manufacturers_id'] == $manufacturers['manufacturers_id'])) {
           $manufacturers_name = '<strong>'.$manufacturers_name.'</strong>';
         }
-        $manufacturers_list .= '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'manufacturers_id='.$manufacturers['manufacturers_id']).'">'.$manufacturers_name.'</a><br />';
+        $manufacturers_list .= '<a href="'.xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturers['manufacturers_id'],$manufacturers['manufacturers_name'])).'">'.$manufacturers_name.'</a><br />';
       }
       $box_content = $manufacturers_list;
     } else {
