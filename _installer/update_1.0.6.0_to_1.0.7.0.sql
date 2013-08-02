@@ -43,7 +43,7 @@ ALTER TABLE customers_basket_attributes ADD INDEX idx_customers_id (customers_id
 ALTER TABLE orders_products_download ADD download_key VARCHAR(32) NOT NULL DEFAULT '';
 
 #GTB - 2013-08-02 - Add new index on products_images
-ALTER TABLE products_images ADD INDEX dx_products_id (products_id);
+ALTER TABLE products_images ADD INDEX idx_products_id (products_id);
 
 #GTB - 2013-08-02 - Add new index on sessions
 ALTER TABLE sessions ADD INDEX idx_expiry (expiry);
