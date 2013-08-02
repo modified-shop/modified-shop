@@ -393,7 +393,8 @@ CREATE TABLE customers_basket (
   customers_basket_quantity INT(2) NOT NULL,
   final_price DECIMAL(15,4) NOT NULL,
   customers_basket_date_added CHAR(8),
-  PRIMARY KEY (customers_basket_id)
+  PRIMARY KEY (customers_basket_id),
+  KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_basket_attributes;
@@ -403,7 +404,8 @@ CREATE TABLE customers_basket_attributes (
   products_id TINYTEXT NOT NULL,
   products_options_id INT NOT NULL,
   products_options_value_id INT NOT NULL,
-  PRIMARY KEY (customers_basket_attributes_id)
+  PRIMARY KEY (customers_basket_attributes_id),
+  KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_info;
@@ -698,6 +700,7 @@ CREATE TABLE orders_products_download (
   orders_products_filename VARCHAR(255) NOT NULL DEFAULT '',
   download_maxdays INT(2) NOT NULL DEFAULT 0,
   download_count INT(2) NOT NULL DEFAULT 0,
+  download_key VARCHAR(32) NOT NULL DEFAULT '',
   PRIMARY KEY (orders_products_download_id)
 ) ENGINE=MyISAM;
 
@@ -815,7 +818,8 @@ CREATE TABLE products_images (
   products_id INT NOT NULL,
   image_nr SMALLINT NOT NULL,
   image_name VARCHAR(254) NOT NULL,
-  PRIMARY KEY (image_id)
+  PRIMARY KEY (image_id),
+  KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_notifications;
@@ -903,7 +907,8 @@ CREATE TABLE sessions (
   expiry INT(11) unsigned NOT NULL,
   value text NOT NULL,
   flag VARCHAR( 5 ) NULL DEFAULT NULL,
-  PRIMARY KEY (sesskey)
+  PRIMARY KEY (sesskey),
+  KEY idx_expiry (expiry)
 ) ENGINE=MyISAM;
 
 # set shop offline
@@ -973,7 +978,9 @@ CREATE TABLE whos_online (
   time_entry VARCHAR(14) NOT NULL,
   time_last_click VARCHAR(14) NOT NULL,
   last_page_url VARCHAR(255) NOT NULL,
-  http_referer VARCHAR(255) NOT NULL
+  http_referer VARCHAR(255) NOT NULL,
+  PRIMARY KEY (session_id),
+  KEY idx_time_last_click (time_last_click)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS zones;
@@ -1149,7 +1156,8 @@ CREATE TABLE coupons (
   coupon_active CHAR(1) NOT NULL DEFAULT 'Y',
   date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   date_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (coupon_id)
+  PRIMARY KEY (coupon_id),
+  KEY idx_coupon_code (coupon_code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupons_description;
@@ -1385,7 +1393,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 
 # configuration_group_id 10, Logging
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_PAGE_PARSE_TIME', 'false', 10, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_PAGE_PARSE_TIME_LOG', 'page_parse_time.log', 10, 2, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_PAGE_PARSE_TIME_LOG', 'query.log', 10, 2, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_PARSE_DATE_TIME_FORMAT', '%d/%m/%Y %H:%M:%S', 10, 3, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DISPLAY_PAGE_PARSE_TIME', 'true', 10, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_DB_TRANSACTIONS', 'false', 10, 5, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
@@ -1453,7 +1461,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DOWNLOAD_ENABLED', 'false', 13, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DOWNLOAD_BY_REDIRECT', 'false', 13, 2, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DOWNLOAD_UNALLOWED_PAYMENT', 'banktransfer,cod,invoice,moneyorder', 13, 5, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DOWNLOAD_MIN_ORDERS_STATUS', '1', 13, 5, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'DOWNLOAD_MIN_ORDERS_STATUS', '1', 13, 5, NULL, NOW(), NULL, 'xtc_cfg_checkbox_allowed_orders_status(');
 
 # configuration_group_id 14, GZIP Kompression
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'GZIP_COMPRESSION', 'false', 14, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
