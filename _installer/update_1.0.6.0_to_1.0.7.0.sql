@@ -33,4 +33,26 @@ ALTER TABLE orders ADD customers_country_iso_code_2 varchar(2) NOT NULL AFTER cu
 #GTB - 2013-07-22 - Add new index on products_model
 ALTER TABLE products ADD INDEX idx_products_model (products_model);
 
+#GTB - 2013-08-02 - Add new index on customers_basket
+ALTER TABLE customers_basket ADD INDEX idx_customers_id (customers_id);
+
+#GTB - 2013-08-02 - Add new index on customers_basket_attributes
+ALTER TABLE customers_basket_attributes ADD INDEX idx_customers_id (customers_id);
+
+#GTB - 2013-08-02 - Add new column on orders_products_download
+ALTER TABLE orders_products_download ADD download_key VARCHAR(32) NOT NULL DEFAULT '';
+
+#GTB - 2013-08-02 - Add new index on products_images
+ALTER TABLE products_images ADD INDEX dx_products_id (products_id);
+
+#GTB - 2013-08-02 - Add new index on sessions
+ALTER TABLE sessions ADD INDEX idx_expiry (expiry);
+
+#GTB - 2013-08-02 - Add new index on whos_online
+ALTER TABLE whos_online ADD ADD PRIMARY KEY (session_id);
+ALTER TABLE whos_online ADD INDEX idx_time_last_click (time_last_click);
+
+#GTB - 2013-08-02 - Add new index on coupons
+ALTER TABLE coupons ADD INDEX idx_coupon_code (coupon_code);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
