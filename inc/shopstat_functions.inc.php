@@ -150,7 +150,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
       $link .= shopstat_hrefContlink($content, $coid);
     } elseif(xtc_not_null($maid)) {
       $manufacturers = xtc_get_manufacturers();      
-      $maname = $manufacturer[$maid]['text'];        
+      $maname = $manufacturers[$maid]['text'];        
       $link .= shopstat_hrefManulink($maname, $maid, $pager);
     }
     $separator  = '?';
