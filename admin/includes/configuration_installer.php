@@ -44,10 +44,6 @@ $values_group_update = array();
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'true', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 //configuration_group_id 10 --- "Logging Optionen"
-  $values_update[] = array (
-                           'values' => "configuration_group_id = '10', configuration_value = 'query.log'",
-                           'configuration_key' => 'STORE_PAGE_PARSE_TIME_LOG'
-                           );
 
 //configuration_group_id 11 --- "Cache Optionen"
 

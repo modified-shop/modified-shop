@@ -55,4 +55,7 @@ ALTER TABLE whos_online ADD INDEX idx_time_last_click (time_last_click);
 #GTB - 2013-08-02 - Add new index on coupons
 ALTER TABLE coupons ADD INDEX idx_coupon_code (coupon_code);
 
+#GTB - 2013-08-02 - Changed Logging filename
+UPDATE configuration SET configuration_value = 'query.log' WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
