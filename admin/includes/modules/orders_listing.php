@@ -116,7 +116,7 @@
                     $orders_action_image = '<a href="' . xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('oID')) . 'oID=' . $orders['orders_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>';
                   }
                   ?>
-                <tr <?echo $tr_attributes;?>>
+                <tr <?php echo $tr_attributes;?>>
                   <td class="dataTableContent" <?php 
                     /* magnalister v1.0.0 */
                     if (function_exists('magnaExecute')) echo magnaExecute('magnaRenderOrderPlatformIcon', array('oID' => $orders['orders_id']), array('order_details.php'));
