@@ -73,7 +73,6 @@
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_plz = $order->delivery['postcode'];
       $dest_zone = 0;
-      $world_zone = 0;
       $error = false;
 
       for ($i=1; $i<=$this->num_gls; $i++) {
@@ -85,13 +84,9 @@
         }
         // rest of the world
         if ($countries_table == 'WORLD') {
-          $world_zone = $i;
+          $dest_zone = $i;
         }
         // rest of the world eof
-      }
-
-      if ($dest_zone == 0 && $world_zone != 0) {
-        $dest_zone = $world_zone;
       }
 
       $plz_table = constant('MODULE_SHIPPING_GLS_POSTCODE');

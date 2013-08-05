@@ -80,7 +80,6 @@
 
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
-      $world_zone = 0;
       for ($i = 1; $i <= $this->num_chronopost; $i ++) {
         $countries_table = constant('MODULE_SHIPPING_CHRONOPOST_COUNTRIES_' . $i);
         $country = explode(",", $countries_table); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
@@ -90,15 +89,10 @@
         }
         // rest of the world
         if ($countries_table == 'WORLD') {
-          $world_zone = $i;
+          $dest_zone = $i;
         }
         // rest of the world eof
       }
-
-      if ($dest_zone == 0 && $world_zone != 0) {
-        $dest_zone = $world_zone;
-      }
-
       if ($dest_zone == 0) {
         $this->quotes['error'] = MODULE_SHIPPING_CHRONOPOST_INVALID_ZONE;
         return $this->quotes;
