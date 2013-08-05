@@ -1,5 +1,9 @@
 '''Deutsch'''
 
+'''Version 2.1.23'''
+* Unterstützung für SEO-URLs beim Export der Produkte und Kategorien
+* CSS-Klassen für die Darstellung im Backend angepasst
+
 '''Version 2.1.22'''
 * Beim Produktexport ist es nun möglich eine Kombination aus der Artikelbeschreibung und der Kurzbeschreibung zu verwenden. Einstellbar über die Konfigurationsseite.
 * Der Adresszusatz bei Shopgate-Bestellungen wird beim Bestellungsimport nun berücksichtigt
@@ -143,6 +147,10 @@
 
 
 '''English'''
+
+'''Version 2.1.23'''
+* added support for SEO URLs to export of products and categories
+* adapted CSS classes for backend
 
 '''Version 2.1.22'''
 * it is now possible to choose a combination of the products description and the short description on the Shopgate settings page

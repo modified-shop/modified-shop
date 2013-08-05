@@ -1,5 +1,5 @@
 <?php
-define('SHOPGATE_PLUGIN_VERSION', '2.1.22');
+define('SHOPGATE_PLUGIN_VERSION', '2.1.23');
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -144,7 +144,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			}
 			
 			$row["is_active"] = $item["categories_status"];
-			$row["url_deeplink"] = HTTP_SERVER.DIR_WS_CATALOG."index.php?cat=c" . $item["categories_id"];
+			$row['url_deeplink'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($item['categories_id'], $item['categories_name']), 'NONSSL', false);
 			
 			$this->addCategoryRow($row);
 			
@@ -262,9 +262,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			// Get Image Urls
 			$images = $this->_getProductsImages($item);
 			
-			$httpServer = HTTP_SERVER;
-			if(empty($httpServer)) $httpServer = "http://".$_SERVER["HTTP_HOST"];
-			$deeplink = $httpServer.DIR_WS_CATALOG."product_info.php?". xtc_product_link($item['products_id'], $item['products_name']);
+			// get deeplink
+			$deeplink = xtc_href_link('product_info.php', xtc_product_link($item['products_id'], $item['products_name']), 'NONSSL', false);
 			
 			// Calculate the price
 			$price = $item["products_price"];
