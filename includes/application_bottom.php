@@ -21,7 +21,10 @@ if (STORE_PAGE_PARSE_TIME == 'true') {
   $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
   error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
 }
-if (DISPLAY_PAGE_PARSE_TIME == 'true') {
+if (DISPLAY_PAGE_PARSE_TIME == 'all') {
+  $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
+  echo '<div class="parseTime">Parse Time: ' . $parse_time . 's</div>';
+} else if (DISPLAY_PAGE_PARSE_TIME == 'admin' && $_SESSION['customers_status']['customers_status'] == '0') {
   $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
   echo '<div class="parseTime">Parse Time: ' . $parse_time . 's</div>';
 }
