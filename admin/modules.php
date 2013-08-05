@@ -69,8 +69,9 @@
 
       case 'install':
       case 'update':
+      case 'backupconfirm':
       case 'removeconfirm':
-      case 'resetconfirm':
+      case 'restoreconfirm':
         $file_extension = substr($PHP_SELF, strrpos($PHP_SELF, '.'));
         $class = basename($module_class);
         if (file_exists($module_directory . $class . $file_extension)) {
@@ -78,24 +79,20 @@
           $module = new $class();
           if ($action == 'install') {
             $module->install();
-            // restore old values
-            xtc_restore_configuration($module->keys());
           } elseif ($action == 'removeconfirm') {
-            // save old values
-            xtc_backup_configuration($module->keys());
             $module->remove();
           } elseif ($action == 'update') {
             // update keys             
             $module->update();
-          } elseif ($action == 'resetconfirm') {
-            // reset to defualt values 
-            xtc_reset_configuration($module->keys());  
-            if (is_callable(array($module, 'reset'))) {
-              $module->reset();
-            } else {
-              $module->remove();
-              $module->install();
-            }
+            $messageStack->add_session(MODULE_UPDATE_CONFIRM, 'success');
+          } elseif ($action == 'backupconfirm') {            
+            // save values
+            xtc_backup_configuration($module->keys());
+            $messageStack->add_session(MODULE_BACKUP_CONFIRM, 'success');            
+          } elseif ($action == 'restoreconfirm') {
+            // reset backup values 
+            xtc_restore_configuration($module->keys());
+            $messageStack->add_session(MODULE_RESTORE_CONFIRM, 'success');            
           }
           
         }
@@ -356,17 +353,37 @@ if (xtc_not_null($action) && !$box) {
                     $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('paypaldelete').' '.BUTTON_MODULE_REMOVE);
                     $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_START .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
                     break;
-                  // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-                case 'reset':
+                case 'restore':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=resetconfirm'));
-                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESET);
-                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESET .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
+                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm'));
+                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESTORE);
+                    if (isset($mInfo->properties['restore']) && count($mInfo->properties['restore']) > 0) {
+                      foreach($mInfo->properties['restore'] as $key) {
+                        $contents[] = array ('text' => '<br />'.$key);
+                      }
+                    }
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESTORE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
+                    break;
+                case 'backup':
+                    $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
+                    $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=backupconfirm'));
+                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_BACKUP);
+                    if (isset($mInfo->properties['backup']) && count($mInfo->properties['backup']) > 0) {
+                      foreach($mInfo->properties['backup'] as $key) {
+                        $contents[] = array ('text' => '<br />'.$key);
+                      }
+                    }
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_BACKUP .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
                 case 'remove':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class . '&action=removeconfirm'));
                     $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_REMOVE);
+                    if (isset($mInfo->properties['remove']) && count($mInfo->properties['remove']) > 0) {
+                      foreach($mInfo->properties['remove'] as $key) {
+                        $contents[] = array ('text' => '<br />'.$key);
+                      }
+                    }
                     $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_MODULE_REMOVE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a><br/><br/>');
                     break;
                 case 'edit':
@@ -429,7 +446,8 @@ if (xtc_not_null($action) && !$box) {
                       }
                       $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                       $contents[] = array('align' => 'center', 
-                                          'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=reset&box=1') . '">' . BUTTON_RESET . '</a>'.
+                                          'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=backup&box=1') . '">' . BUTTON_BACKUP . '</a>'.
+                                                    '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=restore&box=1') . '">' . BUTTON_RESTORE . '</a>'.
                                                     '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove&box=1') . '">' . BUTTON_MODULE_REMOVE . '</a>'. 
                                                     '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULES, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_EDIT . '</a>'.
                                                     (isset($mInfo->properties['button_update']) ? $mInfo->properties['button_update'] : '')

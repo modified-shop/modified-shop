@@ -510,6 +510,16 @@ CREATE TABLE manufacturers_info (
   PRIMARY KEY (manufacturers_id, languages_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS module_backup;
+CREATE TABLE module_backup (
+  configuration_id int(11) NOT NULL AUTO_INCREMENT,
+  configuration_key varchar(64) NOT NULL,
+  configuration_value varchar(255) NOT NULL,
+  last_modified datetime DEFAULT NULL,
+  PRIMARY KEY (configuration_id),
+  KEY idx_configuration_key (configuration_key)
+) ENGINE=MyISAM
+
 DROP TABLE IF EXISTS newsletters;
 CREATE TABLE newsletters (
   newsletters_id INT NOT NULL AUTO_INCREMENT,
