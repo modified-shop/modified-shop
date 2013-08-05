@@ -75,6 +75,7 @@ function quote($method = '') {
 
 	$dest_country = $order->delivery['country']['iso_code_2'];
 	$dest_zone = 0;
+	$world_zone = 0;
 	$error = false;
 	$freeship = false;
 	$lowship = false;
@@ -88,11 +89,14 @@ function quote($method = '') {
 		}
 		// rest of the world
 		if ($countries_table == 'WORLD') {
-		  $dest_zone = $i;
-		  break;
+		  $world_zone = $i;
 		}
 		// rest of the world eof
 	}
+
+  if ($dest_zone == 0 && $world_zone != 0) {
+    $dest_zone = $world_zone;
+  }
 
 	if ($dest_zone == 0) {
 		$error = true;
