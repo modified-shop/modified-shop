@@ -76,8 +76,8 @@
   //check MySQL *server* version
   if (!$db_error) {
     if (function_exists('version_compare')) {
-      if(version_compare(mysql_get_server_info(), "4.1.2", "<") && strpos(strtolower(mysql_get_server_info()), 'native')=== false){
-        $db_error = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 4.1.2. <br /><br />' . TEXT_DB_SERVER_VERSION . mysql_get_server_info() . '</strong>.';
+      if(version_compare(mysql_get_server_info(), "5.0.0", "<=") && strpos(strtolower(mysql_get_server_info()), 'native')=== false){
+        $db_error = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 5.0.0. <br /><br />' . TEXT_DB_SERVER_VERSION . mysql_get_server_info() . '</strong>.';
       }
     }
   }
@@ -86,7 +86,7 @@
   if (!$db_error) {
     if (function_exists('version_compare')) {
       preg_match("/[0-9]\.[0-9]\.[0-9]/",mysql_get_client_info(), $client_info);
-      if(version_compare($client_info[0], "4.1.2", "<") && strpos(strtolower(mysql_get_client_info()), 'native')=== false){
+      if(version_compare($client_info[0], "5.0.0", "<=") && strpos(strtolower(mysql_get_client_info()), 'native')=== false){
         $db_warning = '<strong>' . TEXT_DB_CLIENT_VERSION_WARNING .  '<br /><br />' . TEXT_DB_CLIENT_VERSION . mysql_get_client_info() . '</strong>.';
       }
     }
