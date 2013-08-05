@@ -66,7 +66,7 @@ define('BOX_TITLE_STATISTICS','Statistik:');
 define('BOX_ENTRY_CUSTOMERS','Kunden:');
 define('BOX_ENTRY_PRODUCTS','Artikel:');
 define('BOX_ENTRY_REVIEWS','Bewertungen:');
-define('TEXT_VALIDATING','Nicht best&auml;tigt:');
+define('TEXT_VALIDATING','Nicht best&auml;tigt');
 
 // manufacturer box text
 define('BOX_MANUFACTURER_INFO_HOMEPAGE', '%s Homepage');
