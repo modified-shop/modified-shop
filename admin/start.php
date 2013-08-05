@@ -89,8 +89,12 @@ $orders_query = xtc_db_query('select os.orders_status_name status, coalesce(o.or
                 where os.language_id = ' . $language_id . '
                 order by os.orders_status_id');
 $orders = array();
-while ($row = xtc_db_fetch_array($orders_query))
+while ($row = xtc_db_fetch_array($orders_query)) {
   $orders[] = $row;
+}
+$orders_status_validating = xtc_db_num_rows(xtc_db_query("select orders_status from " . TABLE_ORDERS ." where orders_status ='0'"));
+$orders[] = array('status' => TEXT_VALIDATING, 'order_count' => $orders_status_validating);
+
 // specials 
 $specials_query = xtc_db_query("select count(*) as specials_count from " . TABLE_SPECIALS);
 $specials = xtc_db_fetch_array($specials_query);
