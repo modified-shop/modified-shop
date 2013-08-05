@@ -58,4 +58,13 @@ ALTER TABLE coupons ADD INDEX idx_coupon_code (coupon_code);
 #GTB - 2013-08-02 - Changed Logging filename
 UPDATE configuration SET configuration_value = 'query.log' WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
 
+#Web28 - 2013-08-02 - Add new table for module backups
+CREATE TABLE module_backup (
+  configuration_id int(11) NOT NULL AUTO_INCREMENT,
+  configuration_key varchar(64) NOT NULL,
+  configuration_value varchar(255) NOT NULL,
+  last_modified datetime DEFAULT NULL,
+  PRIMARY KEY (configuration_id),
+  KEY idx_configuration_key (configuration_key)
+) ENGINE=MyISAM
 # Keep an empty line at the end of this file for the db_updater to work properly
