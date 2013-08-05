@@ -79,11 +79,11 @@ define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nic
                                    WHERE os.language_id = ' .  (int)$_SESSION['languages_id'] . '
                                 ORDER BY os.orders_status_id');
   $orders = array();
-$orders_status_validating = xtc_db_num_rows(xtc_db_query("select orders_status from " . TABLE_ORDERS ." where orders_status ='0'"));
-$orders[] = array('status' => TEXT_VALIDATING, 'order_count' => $orders_status_validating);
-while ($row = xtc_db_fetch_array($orders_query)) {
-  $orders[] = $row;
-}
+  $orders_status_validating = xtc_db_num_rows(xtc_db_query("select orders_status from " . TABLE_ORDERS ." where orders_status ='0'"));
+  $orders[] = array('status' => TEXT_VALIDATING, 'order_count' => $orders_status_validating);
+  while ($row = xtc_db_fetch_array($orders_query)) {
+    $orders[] = $row;
+  }
 
   // specials
   $specials_query = xtc_db_query('-- admin/start.php
