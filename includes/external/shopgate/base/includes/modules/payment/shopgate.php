@@ -2,7 +2,6 @@
 
 ##### XTCM BOF #####
 include_once DIR_FS_CATALOG.'includes/external/shopgate/base/shopgate_config.php';
-include_once DIR_FS_CATALOG.'includes/external/shopgate/base/lang/'.$_SESSION['language'].'/modules/payment/shopgate.php';
 ##### XTCM EOF #####
 
 class shopgate {
@@ -335,13 +334,4 @@ class shopgate {
 		
 		return !$exists;
 	}
-
-  function process($file) {
-
-  }
-
-  function display() {
-    return array('text' => '<br/>' . xtc_button(BUTTON_REVIEW_APPROVE) . '&nbsp;' .
-                           xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=shopgate')));
-  }
 }
