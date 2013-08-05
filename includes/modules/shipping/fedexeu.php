@@ -73,6 +73,7 @@
 
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
+      $world_zone = 0;
       $error = false;
 
       for ($j=1; $j<=$this->num_fedexeu; $j++) {
@@ -84,10 +85,13 @@
         }
         // rest of the world
         if ($countries_table == 'WORLD') {
-          $dest_zone = $j;
-          break;
+          $world_zone = $j;
         }
         // rest of the world eof
+      }
+
+      if ($dest_zone == 0 && $world_zone != 0) {
+        $dest_zone = $world_zone;
       }
 
       if ($dest_zone == 0) {
