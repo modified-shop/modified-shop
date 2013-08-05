@@ -63,7 +63,6 @@
 	
       $dest_country = $order->delivery['country']['iso_code_2'];
       $dest_zone = 0;
-      $world_zone = 0;
       
       for ($i=1; $i<=$this->num_freeamount; $i++) {
         $countries_table = constant('MODULE_SHIPPING_FREEAMOUNT_COUNTRIES_' . $i);
@@ -75,13 +74,9 @@
         }
         // rest of the world
         if ($countries_table == 'WORLD') {
-          $world_zone = $i;
+          $dest_zone = $i;
         }
         // rest of the world eof
-      }
-
-      if ($dest_zone == 0 && $world_zone != 0) {
-        $dest_zone = $world_zone;
       }
 
       $this->quotes = array('id' => $this->code,
