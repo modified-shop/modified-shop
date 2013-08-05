@@ -19,7 +19,7 @@
 ?>
 <!-- BOF HEADER.PHP -->
 <div id="main">
-	<div id="logo">
+	<div id="logo_safeterms">
 		<img src="includes/safeterms/images/logo.png" />
 	</div>
 	<div id="box">
