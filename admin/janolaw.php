@@ -88,7 +88,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       AGB Hosting-Service                        
                     </td>
                     <td valign="middle" class="dataTableHeadingContent"  style="border-right: 0px;">
-                      <a href="<?php echo xtc_href_link('module_export.php', 'set=&module=janolaw'); ?>"><u>Einstellungen</u></a>  
+                      <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=janolaw'); ?>"><u>Einstellungen</u></a>  
                     </td>
                   </tr>
                 </table>
