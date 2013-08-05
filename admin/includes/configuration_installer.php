@@ -220,10 +220,13 @@ function update_config_table($values)
     if (strpos($value['values'], 'configuration_value') === false) {
       $cfg_values = rtrim($value['values'],',');
       $cfg_key = trim($value['configuration_key']);
-      //only update if values are different
-      $check = " AND (" . str_replace(array("=",","),array("!="," OR "),$cfg_values). ")";      
-
-
+      
+      //only update if values are different       
+      $check = str_replace("),'","|#|", $cfg_values);
+      $check = str_replace(array(", \'",",\'",",'"),"|##|", $check);     
+      $check = " AND (" . str_replace(array("=", ","),array("!=", " OR "),$check). ")"; 
+      $check = str_replace(array("|##|","|#|"), array(", \'","),'"), $check);
+    
       $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". $check." LIMIT 1");
       if (xtc_db_num_rows($result_cfg) != 0) {
         $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
