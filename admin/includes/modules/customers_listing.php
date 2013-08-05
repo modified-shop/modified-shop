@@ -402,23 +402,14 @@
                       // elari cs v3.x changed for added iplog module
                       $contents[] = array (
                                            'align' => 'center',
-                                           'text' => '<table>
-                                                        <tr>
-                                                          <td style="text-align: center;">
-                                                            <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS, 'cID='.$cInfo->customers_id).'">'.BUTTON_ORDERS.'</a>
-                                                          </td>
-                                                          <td style="text-align: center;">
-                                                            <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MAIL, 'selected_box=tools&customer='.$cInfo->customers_email_address).'">'.BUTTON_EMAIL.'</a>
-                                                          </td>
-                                                        </tr>
-                                                        <tr>
-                                                          <td style="text-align: center;">
-                                                            <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=iplog').'">'.BUTTON_IPLOG.'</a></td>
-                                                          <td style="text-align: center;">
-                                                            <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order').'" onclick="return confirm(\''.NEW_ORDER.'\')">'.BUTTON_NEW_ORDER.'</a>
-                                                          </td>
-                                                        </tr>
-                                                      </table>'
+                                           'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS, 'cID='.$cInfo->customers_id).'">'.BUTTON_ORDERS.'</a>
+                                                      <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MAIL, 'selected_box=tools&customer='.$cInfo->customers_email_address).'">'.BUTTON_EMAIL.'</a>'
+                                           );
+                      $contents[] = array (
+                                           'align' => 'center',
+                                           'text' => '<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=iplog').'">'.BUTTON_IPLOG.'</a>
+                                                      <a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$cInfo->customers_id.'&action=new_order').'" onclick="return confirm(\''.NEW_ORDER.'\')">'.BUTTON_NEW_ORDER.'</a>'
+                                                          
                                           );
                       //BOF - DokuMan - 2010-11-02 - Workaround for customer details not showing on iplog-Box
                       if ($action == 'iplog') {
