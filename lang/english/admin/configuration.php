@@ -346,7 +346,7 @@ define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Log file date format');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: %d/%m/%Y %H:%M:%S)');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Display The Page Parse Time');
-define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time (store page parse time must be enabled)');
+define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time<br /><strong>none</strong>: deactivated<br /><strong>admin</strong>: Only the admin sees the page parse time<br /><strong>all</strong>: Everybody sees the page parse time');
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Store Database Queries');
 define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file');
 
