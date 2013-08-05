@@ -513,6 +513,7 @@ define('TEXT_INFO_MODULE_REMOVE', 'Wollen Sie das Modul deinstallieren?<br /><br
 define('TEXT_INFO_MODULE_BACKUP', 'Wollen Sie die Moduleinstellungen sichern?');
 define('MODULE_BACKUP_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich gesichert!');
 define('MODULE_RESTORE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich wiederhergestellt!');
+
 /* magnalister v1.0.0 */
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
 define('BOX_MAGNALISTER', 'magnalister Admin');
