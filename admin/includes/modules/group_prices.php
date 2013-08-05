@@ -42,8 +42,8 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
                            'STATUS_ID' => $group_values['customers_status_id']);
 }
 ?>
-<div class="main" style="margin:10px 5px 5px 5px"><?php echo HEADING_PRICES_OPTIONS; ?></div>
-<table width="100%" border="0" cellpadding="5" cellspacing="0" style="border:1px solid #a3a3a3; background-color:#f3f3f3">
+<div class="main div_header"><?php echo HEADING_PRICES_OPTIONS; ?></div>
+<table class="tableInput">
   <tr>
     <td style="width:120px" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
       <?php
@@ -67,7 +67,7 @@ for ($col = 1, $n = sizeof($group_data); $col < $n +1; $col ++) { //DokuMan - ch
   if ($group_data[$col]['STATUS_NAME'] != '') {
 ?>
   <tr>
-    <td style="border-top: 1px solid; border-color: #cccccc;" valign="top" class="main"><?php echo $group_data[$col]['STATUS_NAME']; ?></td>
+    <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo $group_data[$col]['STATUS_NAME']; ?></td>
       <?php
           if (PRICE_IS_BRUTTO == 'true') {
             $products_price = xtc_round(get_group_price($group_data[$col]['STATUS_ID'], $pInfo->products_id) * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
