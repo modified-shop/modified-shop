@@ -505,8 +505,12 @@ define ('CONFIG_MIN_VALUE_WARNING', '"% s" WARNING:% s input was ignored [Minimu
 define ('WHOS_ONLINE_TIME_LAST_CLICK_INFO', 'Display period in seconds:% s After this time, the entries will be deleted.');
 
 define('TEXT_GLOBAL_PRODUCTS_MODEL', 'Products Model');
-define('TEXT_INFO_MODULE_RESET', 'Reset all Definitions ?<br/><br/><b>ATTENTION</b>: All variables from this Module will be deleted.');
-define('TEXT_INFO_MODULE_REMOVE', 'Deinstall this Module ?<br/><br/><b>ATTENTION</b>: A Backup of all variables will be made and restored on a Reinstall.');
+
+define ('TEXT_INFO_MODULE_RESTORE', 'Do you want to restore the saved settings?<br/> <b> WARNING </ b>: This will overwrite any current settings!');
+define ('TEXT_INFO_MODULE_REMOVE', 'Do you want to uninstall the module? <br/> <b> WARNING </ b>: All module settings are also deleted!');
+define ('TEXT_INFO_MODULE_BACKUP', 'Do you want to secure the module settings?');
+define ('MODULE_BACKUP_CONFIRM', 'The module settings were successfully saved!');
+define ('MODULE_RESTORE_CONFIRM', 'The module settings were restored successfully!');
 
 /* magnalister v1.0.0 */
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
