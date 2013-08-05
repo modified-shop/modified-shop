@@ -461,6 +461,7 @@ min-width:980px;
 width: 380px; 
 border: 1px solid #ff0000;
 background:#FFCC33;
+float:left;
 }
 table.collapse{
 border-collapse:collapse;
@@ -550,6 +551,16 @@ background: #f3f3f3;
 .tableInput td{
 vertical-align: top;
 padding:3px;
+}
+.div_header{
+margin:10px 5px 5px 5px;
+font-weight:bold;
+}
+.div_box {
+border: 1px solid #aaa; 
+padding:5px;
+background:#f3f3f3;
+margin-bottom:15px;
 }
 .border0{
 border:0;
