@@ -826,6 +826,12 @@ background: #f3f3f3;
 vertical-align: top;
 padding:3px;
 }
+.important_info{
+border: 1px red solid; 
+padding:5px; 
+background: #FFD6D6; 
+margin-bottom:2px;
+}
 .border0{
 border:0;
 }

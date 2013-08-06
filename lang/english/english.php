@@ -551,4 +551,6 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home pa
 // EOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 
 define('TEXT_AGB_CHECKOUT','Please take note of our general terms & conditions %s,<br/>as well as our cancellation policy %s');
+
+define('IMAGE_BUTTON_PRODUCT_MORE', 'Details');
 ?>

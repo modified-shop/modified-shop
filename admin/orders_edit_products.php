@@ -41,16 +41,10 @@ $currencies = new currencies();
 
 ?>
 <!-- Begin Infotext //-->
-<table border="0" cellspacing="0" cellpadding="2" style="border: 1px red solid; padding:5px; background: #FFD6D6; margin: 5px 0 5px 0">
-  <tr>
-    <td class="main"> 
-      <?php echo TEXT_ORDERS_PRODUCT_EDIT_INFO;?>
-    </td>
-  </tr>
-</table>
+<div class="main important_info"><?php echo TEXT_ORDERS_PRODUCT_EDIT_INFO;?></div>
 <!-- End Infotext //-->
 <!-- Artikelbearbeitung Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
@@ -132,7 +126,7 @@ $currencies = new currencies();
 <br /><br />
 <!-- Artikelbearbeitung Ende //-->
 <!-- Artikel Einfügen Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent" colspan="2"><b><?php echo TEXT_PRODUCT_SEARCH;?></b></td>
   </tr>
@@ -147,7 +141,7 @@ $currencies = new currencies();
       echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
       //EOF - web28 - 2011-01-16 - FIX missing sessions id
       ?>
-      <td class="dataTableContent" width="40"><?php echo xtc_draw_input_field('search', $_GET['search'], 'size="30"');?></td>
+      <td class="dataTableContent" style="width:40px"><?php echo xtc_draw_input_field('search', $_GET['search'], 'size="30"');?></td>
       <td class="dataTableContent">
         <?php
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
@@ -161,7 +155,7 @@ $currencies = new currencies();
 <?php
 if ($_GET['action'] =='product_search') {  
   ?>
-  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+  <table class="tableBoxCenter collapse">
     <tr class="dataTableHeadingRow">
       <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td> 
       <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_STATUS;?></b></td>
@@ -195,12 +189,16 @@ if ($_GET['action'] =='product_search') {
                                    p.products_tax_class_id,
                                    p.products_date_available,
                                    p.products_status,
+                                   s.specials_quantity,
+                                   s.specials_new_products_price,
+                                   s.expires_date,
                                    pd.products_name                                         
-                              FROM " . TABLE_PRODUCTS . " p,
-                                   " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                             WHERE p.products_id = pd.products_id
-                               AND pd.language_id = '" . $_SESSION['languages_id'] . "'
-                               AND (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 
+                              FROM " . TABLE_PRODUCTS . " p
+                              JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                ON p.products_id = pd.products_id AND pd.language_id = '" . $_SESSION['languages_id'] . "'
+                         LEFT JOIN " . TABLE_SPECIALS . " s
+                                ON p.products_id = s.products_id AND s.status = 1                             
+                             WHERE (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 
                                     p.products_model LIKE ('%" . $_GET['search'] . "%') OR 
                                     p.products_ean LIKE ('%" . $_GET['search'] . "%')
                                    )
@@ -225,9 +223,23 @@ if ($_GET['action'] =='product_search') {
             $products_price = xtc_round($products['products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
             $products_price = $currencies->format($products_price);
             $products_price_netto = $currencies->format($products['products_price']);
+            if (isset($products['specials_new_products_price'])) {
+              $products_special_price_qty = $products['specials_quantity'] > 0 ? '<br />&nbsp;<span class="specialPrice">'.$products['specials_quantity'] .'</span>' : '';
+              $products_special_price = xtc_round($products['specials_new_products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
+              $products_special_price = '<span class="specialPrice">'.$currencies->format($products_special_price).'</span>';
+              $products_special_price_netto = '<span class="specialPrice">'.$currencies->format($products['specials_new_products_price']).'</span>';
+              $products_price = '<span class="oldPrice">'.$products_price.'</span>'.'<br />'.$products_special_price;
+              $products_price_netto = '<span class="oldPrice">'.$products_price_netto.'</span>'.'<br />'.$products_special_price_netto;
+            }
           } else {
             $products_price = $currencies->format($products['products_price']);
             $products_price_netto = '';
+            if (isset($products['specials_new_products_price'])) { 
+              $products_special_price_qty = $products['specials_quantity'] > 0 ? '<br />&nbsp;<span class="specialPrice">'.$products['specials_quantity'] .'</span>' : '';        
+              $products_special_price = '<span class="specialPrice">'.$currencies->format($products['specials_new_products_price']).'</span>';
+              $products_special_price_netto = '';
+              $products_price = '<span class="oldPrice">'.$products_price.'</span>'.'<br />'.$products_special_price;
+            }
           }
           
           echo xtc_draw_form('product_ins', FILENAME_ORDERS_EDIT, 'action=product_ins', 'post');
@@ -254,7 +266,7 @@ if ($_GET['action'] =='product_search') {
           } 
           ?>
           <td class="dataTableContent">&nbsp;<?php echo $products_tax_rate;?></td>
-          <td class="dataTableContent">&nbsp;<?php echo $products['products_quantity'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products['products_quantity'].$products_special_price_qty;?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', '', 'size="4"');?></td>
           <td class="dataTableContent">
             <?php
@@ -265,14 +277,12 @@ if ($_GET['action'] =='product_search') {
       </tr>
       <?php
     }
-    ?>
+    ?>    
   </table>
-  <table border="0" width="100%" cellspacing="0" cellpadding="2">
-    <tr>
-      <td class="smallText" valign="top"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-      <td class="smallText" align="right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></td>
-    </tr>
-  </table>
+
+  <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+  <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></div>
+
   <?php
 }
 ?>

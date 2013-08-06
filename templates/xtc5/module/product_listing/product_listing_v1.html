@@ -24,9 +24,17 @@
             {$module_data.PRODUCTS_SHIPPING_NAME}
           </p>
         {/if}
-        {*BOF NEW PRODUCTS_BUTTON_DETAILS*}
+        {*BOF NEW PRODUCTS_BUTTON_DETAILS}
         <p>{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
-        {*EOF NEW PRODUCTS_BUTTON_DETAILS*}
+        {EOF NEW PRODUCTS_BUTTON_DETAILS*}
+	    <p>
+	    {$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;
+	    {if $module_data.PRODUCTS_BUTTON_PRODUCT_MORE}
+	      {$module_data.PRODUCTS_BUTTON_PRODUCT_MORE}
+	    {else}
+	      <a href="{$module_data.PRODUCTS_LINK}"><img src="{$tpl_path}buttons/{$language}/button_product_more.gif" alt="Details" border="0" /></a>
+	    {/if}
+	    </p>
       </td>
     </tr>
     <tr>
