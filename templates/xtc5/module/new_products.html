@@ -12,7 +12,7 @@
 		{if $module_data.PRODUCTS_SHIPPING_NAME}<p class="shippingtime">{#text_shippingtime#}{if $module_data.PRODUCTS_SHIPPING_IMAGE}<img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />{/if}
 			{$module_data.PRODUCTS_SHIPPING_NAME}</p>
 		{/if}
-    <p>{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
+    <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
 	</td>
   </tr>
   <tr>
