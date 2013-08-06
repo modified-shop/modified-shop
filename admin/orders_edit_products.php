@@ -37,16 +37,10 @@ $currencies = new currencies();
 
 ?>
 <!-- Begin Infotext //-->
-<table border="0" cellspacing="0" cellpadding="2" style="border: 1px red solid; padding:5px; background: #FFD6D6; margin: 5px 0 5px 0">
-  <tr>
-    <td class="main"> 
-      <?php echo TEXT_ORDERS_PRODUCT_EDIT_INFO;?>
-    </td>
-  </tr>
-</table>
+<div class="main important_info"><?php echo TEXT_ORDERS_PRODUCT_EDIT_INFO;?></div>
 <!-- End Infotext //-->
 <!-- Artikelbearbeitung Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_QUANTITY;?></b></td>
@@ -128,7 +122,7 @@ $currencies = new currencies();
 <br /><br />
 <!-- Artikelbearbeitung Ende //-->
 <!-- Artikel Einfügen Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent" colspan="2"><b><?php echo TEXT_PRODUCT_SEARCH;?></b></td>
   </tr>
@@ -143,7 +137,7 @@ $currencies = new currencies();
       echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
       //EOF - web28 - 2011-01-16 - FIX missing sessions id
       ?>
-      <td class="dataTableContent" width="40"><?php echo xtc_draw_input_field('search', $_GET['search'], 'size="30"');?></td>
+      <td class="dataTableContent" style="width:40px"><?php echo xtc_draw_input_field('search', $_GET['search'], 'size="30"');?></td>
       <td class="dataTableContent">
         <?php
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEARCH . '"/>';
@@ -157,7 +151,7 @@ $currencies = new currencies();
 <?php
 if ($_GET['action'] =='product_search') {  
   ?>
-  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+  <table class="tableBoxCenter collapse">
     <tr class="dataTableHeadingRow">
       <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td> 
       <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCTS_STATUS;?></b></td>
@@ -263,12 +257,10 @@ if ($_GET['action'] =='product_search') {
     }
     ?>    
   </table>
-  <table border="0" width="100%" cellspacing="0" cellpadding="2">
-    <tr>
-      <td class="smallText" valign="top"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></td>
-      <td class="smallText" align="right"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></td>
-    </tr>
-  </table>
+
+  <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+  <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_PRODUCTS_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page'))); ?></div>
+
   <?php
 }
 ?>
