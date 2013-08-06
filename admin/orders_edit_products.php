@@ -185,12 +185,16 @@ if ($_GET['action'] =='product_search') {
                                    p.products_tax_class_id,
                                    p.products_date_available,
                                    p.products_status,
+                                   s.specials_quantity,
+                                   s.specials_new_products_price,
+                                   s.expires_date,
                                    pd.products_name                                         
-                              FROM " . TABLE_PRODUCTS . " p,
-                                   " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                             WHERE p.products_id = pd.products_id
-                               AND pd.language_id = '" . $_SESSION['languages_id'] . "'
-                               AND (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 
+                              FROM " . TABLE_PRODUCTS . " p
+                              JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                ON p.products_id = pd.products_id AND pd.language_id = '" . $_SESSION['languages_id'] . "'
+                         LEFT JOIN " . TABLE_SPECIALS . " s
+                                ON p.products_id = s.products_id AND s.status = 1                             
+                             WHERE (pd.products_name LIKE ('%" . $_GET['search'] . "%') OR 
                                     p.products_model LIKE ('%" . $_GET['search'] . "%') OR 
                                     p.products_ean LIKE ('%" . $_GET['search'] . "%')
                                    )
@@ -215,9 +219,23 @@ if ($_GET['action'] =='product_search') {
             $products_price = xtc_round($products['products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
             $products_price = $currencies->format($products_price);
             $products_price_netto = $currencies->format($products['products_price']);
+            if (isset($products['specials_new_products_price'])) {
+              $products_special_price_qty = $products['specials_quantity'] > 0 ? '<br />&nbsp;<span class="specialPrice">'.$products['specials_quantity'] .'</span>' : '';
+              $products_special_price = xtc_round($products['specials_new_products_price'] * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
+              $products_special_price = '<span class="specialPrice">'.$currencies->format($products_special_price).'</span>';
+              $products_special_price_netto = '<span class="specialPrice">'.$currencies->format($products['specials_new_products_price']).'</span>';
+              $products_price = '<span class="oldPrice">'.$products_price.'</span>'.'<br />'.$products_special_price;
+              $products_price_netto = '<span class="oldPrice">'.$products_price_netto.'</span>'.'<br />'.$products_special_price_netto;
+            }
           } else {
             $products_price = $currencies->format($products['products_price']);
             $products_price_netto = '';
+            if (isset($products['specials_new_products_price'])) { 
+              $products_special_price_qty = $products['specials_quantity'] > 0 ? '<br />&nbsp;<span class="specialPrice">'.$products['specials_quantity'] .'</span>' : '';        
+              $products_special_price = '<span class="specialPrice">'.$currencies->format($products['specials_new_products_price']).'</span>';
+              $products_special_price_netto = '';
+              $products_price = '<span class="oldPrice">'.$products_price.'</span>'.'<br />'.$products_special_price;
+            }
           }
           
           echo xtc_draw_form('product_ins', FILENAME_ORDERS_EDIT, 'action=product_ins', 'post');
@@ -244,7 +262,7 @@ if ($_GET['action'] =='product_search') {
           } 
           ?>
           <td class="dataTableContent">&nbsp;<?php echo $products_tax_rate;?></td>
-          <td class="dataTableContent">&nbsp;<?php echo $products['products_quantity'];?></td>
+          <td class="dataTableContent">&nbsp;<?php echo $products['products_quantity'].$products_special_price_qty;?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_quantity', '', 'size="4"');?></td>
           <td class="dataTableContent">
             <?php
