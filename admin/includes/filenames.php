@@ -98,4 +98,6 @@ define('FILENAME_PARCEL_CARRIERS', 'parcel_carriers.php'); //Dokuman - 2012-11-1
 define('FILENAME_HAENDLERBUND', 'haendlerbund.php'); //Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 define('FILENAME_XTBOOSTER', 'xtbooster.php'); // xs:booster
 define('FILENAME_SAFETERMS','safeterms.php'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
+
+auto_require(DIR_FS_ADMIN.'includes/extra_filenames/','php');
 ?>

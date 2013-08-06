@@ -109,4 +109,6 @@ define('FILENAME_GOOGLE_SITEMAP', '../google_sitemap.php'); // GOOGLE SITEMAP
 define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_PAYPAL', 'paypal.php');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+
+auto_require(DIR_FS_CATALOG.'includes/extra_filenames/','php');
 ?>

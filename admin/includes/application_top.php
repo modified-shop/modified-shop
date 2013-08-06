@@ -112,6 +112,8 @@ define('LOCAL_EXE_GUNZIP', '/usr/bin/gunzip');
 define('LOCAL_EXE_ZIP', '/usr/local/bin/zip');
 define('LOCAL_EXE_UNZIP', '/usr/local/bin/unzip');
 
+require_once (DIR_FS_INC . 'auto_require.inc.php');
+
 // list of project database tables
 require_once ('../' . DIR_WS_INCLUDES . 'database_tables.php');
 
