@@ -439,10 +439,9 @@ class product {
                           'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '', //DokuMan - 2010-02-26 - set Undefined index
                           'PRODUCTS_SHORT_DESCRIPTION' => isset($array['products_short_description']) ? $array['products_short_description'] : '', //DokuMan - 2010-02-26 - set Undefined index
                           'PRODUCTS_FSK18' => isset($array['products_fsk18']) ? $array['products_fsk18'] : 0, //DokuMan - 2010-02-26 - set Undefined index
-                          'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_NOW).'</a>' //GTB - 2010-08-27 make Button Details global
+                          'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>' //GTB - 2010-08-27 make Button Details global
                          );
 
-    $productData['PRODUCTS_BUTTON_PRODUCT_MORE'] = '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', IMAGE_BUTTON_PRODUCT_MORE).'</a>';
     return $productData;
   }
 

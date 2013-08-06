@@ -16,14 +16,7 @@
           {$module_data.PRODUCTS_SHIPPING_NAME}</p>
       {/if}
     {/if}
-    <p>
-    {$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;
-    {if $module_data.PRODUCTS_BUTTON_PRODUCT_MORE}
-      {$module_data.PRODUCTS_BUTTON_PRODUCT_MORE}
-    {else}
-      <a href="{$module_data.PRODUCTS_LINK}"><img src="{$tpl_path}buttons/{$language}/button_product_more.gif" alt="Details" border="0" /></a>
-    {/if}
-    </p>
+    <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
     </td>
   </tr>
   <tr>
