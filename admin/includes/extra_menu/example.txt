@@ -1,0 +1,26 @@
+MUSTER für DATEI in admin/includes/extra_menu - Dateiname 01_example.php
+Damit ist es moeglich das Adminmenue mit weiteren Eintraegen beliebig zu ergaenzen
+Die neuen Menueeintaege werden unten an die bestehenden Eintraege hinzugefuegt
+Die Reihenfolge der neuen Einträge kann mit einer vorangestellten Nummer im Dateinamen gesteuert werden
+
+
+<?php
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+//Sprachabhaengiger Menueeintrag, kann fuer weiter Sprachen ergaenzt werden
+if ($_SESSION['language_code'] == 'de') {
+    define('BOX_NAME_BEISPIEL','Beispiel');    
+} else {
+    define('BOX_NAME_BEISPIEL','Example');     
+}
+
+//BOX_HEADING_TOOLS = Name der box in der der neue Menueeintrag erscheinen soll
+$add_contents[BOX_HEADING_TOOLS][] = array( 'admin_access_name' => 'example', //Eintrag fuer Adminrechte
+                                            'filename' => 'example.php', //Dateiname der neuen Admindatei
+                                            'boxname' => BOX_NAME_BEISPIEL, //Anzeigename im Menue
+                                            'parameter' => '', //zusaetzliche Parameter z.B. 'set=export'
+                                            'ssl' => ''//SSL oder NONSSL, kein Eintrag = NONSSL
+                                            );
+                                            
+
+                                            
