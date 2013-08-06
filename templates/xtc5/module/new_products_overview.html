@@ -15,8 +15,14 @@
 		{if $module_data.PRODUCTS_SHIPPING_NAME}<p class="shippingtime">{#text_shippingtime#}{if $module_data.PRODUCTS_SHIPPING_IMAGE}<img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />{/if}
 			{$module_data.PRODUCTS_SHIPPING_NAME}</p>
 		{/if}
-		
-		<p>{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;<a href="{$module_data.PRODUCTS_LINK}"><img src="{$tpl_path}buttons/{$language}/button_product_more.gif" alt="Details" border="0" /></a></p>
+    <p>
+    {$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;
+    {if $module_data.PRODUCTS_BUTTON_PRODUCT_MORE}
+      {$module_data.PRODUCTS_BUTTON_PRODUCT_MORE}
+    {else}
+      <a href="{$module_data.PRODUCTS_LINK}"><img src="{$tpl_path}buttons/{$language}/button_product_more.gif" alt="Details" border="0" /></a>
+    {/if}
+    </p>
 	</td>
   </tr>
   <tr>
