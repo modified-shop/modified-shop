@@ -530,4 +530,6 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','Sie werden in %s Sekunden auf unsere Homep
 
 define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformation %s sowie unsere Widerrufsbelehrung %s zur Kenntnis.');
 define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
+
+define('IMAGE_BUTTON_PRODUCT_MORE', 'Details');
 ?>
