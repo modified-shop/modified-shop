@@ -1294,75 +1294,59 @@ function get_c_infos($customers_id, $delivery_country_iso_code_2) {
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
-  <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
-    <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
-      <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
-        </td>
-        <!-- body_text //-->
-        <td width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="0">
-            <tr>
-              <td width="100%" colspan="2">
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td class="pageHeading"><?php echo TABLE_HEADING;?></td>
-                    <!--td class="pageHeading" align="right"></td-->
-                  </tr>
-                </table>
-              </td>
-            </tr>
-            <tr>
-              <td  valign="top">
+<body>
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
+        <div class="pageHeading pdg2"><?php echo TABLE_HEADING; ?></div>
+        <table class="tableCenter">           
+          <tr>
+            <td class="boxCenterLeft">
                 <!-- Anfang //-->
-                <!--br /><br /-->
+                
                 <?php
                 if ($_GET['text'] == 'address') {
                   ?>
-                  <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                    <tr>
-                      <td class="main">
-                        <b>
-                          <?php
-                          if ($_GET['text'] == 'address') {
-                            echo TEXT_EDIT_ADDRESS_SUCCESS;
-                          }
-                          ?>
-                        </b>
-                      </td>
-                    </tr>
-                  </table>
+                  
+                  <?php
+                  if ($_GET['text'] == 'address') {
+                    echo TEXT_EDIT_ADDRESS_SUCCESS;
+                  }
+                  ?>
+                        
                   <?php
                 }
                 ?>
                 <?php
                 //BOF -web28- 2010-12-07 - add TEXT_ORDERS_EDIT_INFO
                 if (!isset($_GET['edit_action'])) {
-                  ?>
-                  <table border="0" width="100%" cellspacing="0" cellpadding="2" style="border: 1px #a3a3a3 solid; padding:5px;">
-                    <tr>
-                      <td class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;">
-                        <?php echo TEXT_ORDERS_EDIT_INFO;?>
-                      </td>
-                    </tr>
-                  </table>
+                  ?>                
+                  <div class="main important_info">
+                    <?php echo TEXT_ORDERS_EDIT_INFO;?>
+                  </div>
                   <?php
                 }
                 //EOF -web28- 2010-12-07 - add TEXT_ORDERS_EDIT_INFO
                 ?>
                 <!-- Meldungen Ende //-->
                 <?php
-                if ($_GET['edit_action'] == 'address') {
-                  include ('orders_edit_address.php');
+                if ($_GET['edit_action'] == 'address') {                  
+                  include ('orders_edit_address.php');                  
                 } elseif ($_GET['edit_action'] == 'products') {
                   include ('orders_edit_products.php');
                 } elseif ($_GET['edit_action'] == 'other') {
@@ -1372,10 +1356,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 ?>
                 <!-- Bestellung Sichern Anfang //-->
-                <!--br /><br /-->
-                <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr class="dataTableRow">
-                    <td class="dataTableContent" align="right">
+                <div class="smallText pdg2 flt-r mrg5">
                       <?php
                       echo TEXT_SAVE_ORDER;
                       echo xtc_draw_form('save_order', FILENAME_ORDERS_EDIT, 'action=save_order', 'post');
@@ -1393,60 +1374,56 @@ require (DIR_WS_INCLUDES.'head.php');
                         }
                         //EOF - web28 -2011-06-08 - add back buttons
                         ?>
-                      </form>
-                    </td>
-                  </tr>
-                </table>
-                <!--br /><br /-->
+                      </form>                    
+                </div>
                 <!-- Bestellung Sichern Ende //-->
-                <!-- Ende //-->
-              </td>
-              <?php
-              $heading = array ();
-              $contents = array ();
-              // KLARNA ORDERSTATUS UPDATE START
-              require_once DIR_FS_DOCUMENT_ROOT . 'includes/external/klarna/class.KlarnaCore.php';
-              if ($_GET['edit_action']=="klarna_check_orderstatus") {
-                include_once DIR_FS_ADMIN. 'klarna_check_orderstatus.php';
-                $orderStatus = new KlarnaCheckOrder;
-                $orderStatus->checkOrder($_GET['oID'], $order->info['payment_method']);
-              }
-              if ($order->info['payment_method'] == 'klarna_partPayment' || $order->info['payment_method'] == 'klarna_invoice' || $order->info['payment_method'] == 'klarna_SpecCamp') {
-                echo "<link href='" . KlarnaUtils::getStaticPath() .
-                     "images.css' type='text/css' rel='stylesheet'/>";
-                $contents[] = array ('align' => 'center',
-                                     'text' => '<br /><span class="klarna_logo_small"></span><br /><br />'.'<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=klarna_check_orderstatus&oID='.$_GET['oID']).'">Check Order Status</a><br /><br />'
-                                     );
-              }
-              // KLARNA ORDERSTATUS UPDATE END
-              switch ($action) {
-                default :
-                  if (is_object($order)) {
-                    $heading[] = array ('text' => '<b>'.TABLE_HEADING_ORDER.(int)$_GET['oID'].'</b>');
-                    $contents[] = array ('align' => 'center', 'text' => '<br />'.TEXT_EDIT_ADDRESS.'<br /><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=address&oID='.(int)$_GET['oID']).'">'.BUTTON_EDIT.'</a><br /><br />');
-                    $contents[] = array ('align' => 'center', 'text' => '<br />'.TEXT_EDIT_PRODUCTS.'<br /><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=products&oID='.(int)$_GET['oID']).'">'.BUTTON_EDIT.'</a><br /><br />');
-                    $contents[] = array ('align' => 'center', 'text' => '<br />'.TEXT_EDIT_OTHER.'<br /><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=other&oID='.(int)$_GET['oID']).'">'.BUTTON_EDIT.'</a><br /><br />');
-                  }
-                  break;
-              }
-              if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
-                echo '            <td width="20%" valign="top">'."\n";
-                $box = new box;
-                echo $box->infoBox($heading, $contents);
-                echo '            </td>'."\n";
-              }
-              ?>
-            </tr>
-            <!-- body_text_eof //-->
-          </table>
-        </td>
-      </tr>
-    </table>
-    <!-- body_eof //-->
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
-    <br />
-  </body>
+              <!-- Ende //-->
+            </td>
+            <?php
+            $heading = array ();
+            $contents = array ();
+            // KLARNA ORDERSTATUS UPDATE START
+            require_once DIR_FS_DOCUMENT_ROOT . 'includes/external/klarna/class.KlarnaCore.php';
+            if ($_GET['edit_action'] == "klarna_check_orderstatus") {
+              include_once DIR_FS_ADMIN. 'klarna_check_orderstatus.php';
+              $orderStatus = new KlarnaCheckOrder;
+              $orderStatus->checkOrder($_GET['oID'], $order->info['payment_method']);
+            }
+            if ($order->info['payment_method'] == 'klarna_partPayment' || $order->info['payment_method'] == 'klarna_invoice' || $order->info['payment_method'] == 'klarna_SpecCamp') {
+              echo "<link href='" . KlarnaUtils::getStaticPath() . "images.css' type='text/css' rel='stylesheet'/>";
+              $contents[] = array ('align' => 'center',
+                                   'text' => '<br /><span class="klarna_logo_small"></span><br /><br />'.'<a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=klarna_check_orderstatus&oID='.$_GET['oID']).'">Check Order Status</a><br /><br />'
+                                   );
+            }
+            // KLARNA ORDERSTATUS UPDATE END
+            switch ($action) {
+              default :
+                if (is_object($order)) {
+                  $heading[] = array ('text' => '<b>'.TABLE_HEADING_ORDER.(int)$_GET['oID'].'</b>');
+                  $contents[] = array ('align' => 'center', 'text' => '<br />'.TEXT_EDIT_ADDRESS.'<br /><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=address&oID='.(int)$_GET['oID']).'">'.BUTTON_EDIT.'</a><br /><br />');
+                  $contents[] = array ('align' => 'center', 'text' => '<br />'.TEXT_EDIT_PRODUCTS.'<br /><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=products&oID='.(int)$_GET['oID']).'">'.BUTTON_EDIT.'</a><br /><br />');
+                  $contents[] = array ('align' => 'center', 'text' => '<br />'.TEXT_EDIT_OTHER.'<br /><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=other&oID='.(int)$_GET['oID']).'">'.BUTTON_EDIT.'</a><br /><br />');
+                }
+                break;
+            }
+            if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
+               echo '            <td class="boxRight">' . "\n";
+              $box = new box;
+              echo $box->infoBox($heading, $contents);
+              echo '            </td>'."\n";
+            }
+            ?>
+          </tr>
+        </table>
+      </td>            
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
+</body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

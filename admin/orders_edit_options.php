@@ -32,7 +32,7 @@
 <?php
   $attributes_query = xtc_db_query("select * from " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " where orders_id = '" . (int)$_GET['oID'] . "' and orders_products_id = '" . (int)$_GET['opID'] . "'");
 ?>
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION_VALUE;?></b></td>
@@ -59,12 +59,12 @@
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options', $attributes['products_options'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('products_options_values', $attributes['products_options_values'], 'size="20"');?></td>
           <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
-          <td class="dataTableContent" align="center"><?php echo $attributes['price_prefix'];?></td>
+          <td class="dataTableContent txta-c"><?php echo $attributes['price_prefix'];?></td>
           <td class="dataTableContent">
-            <SELECT name="prefix">
-              <OPTION value="+">+
-              <OPTION value="-">-
-            </SELECT>
+            <select name="prefix">
+              <option value="+">+
+              <option value="-">-
+            </select>
           </td>
           <td class="dataTableContent">
             <?php
@@ -105,7 +105,7 @@
                                    WHERE products_id = '" . (int)$_GET['pID'] . "'
                                 ORDER BY sortorder");
 ?>
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_ID;?></b></td>
     <td class="dataTableHeadingContent"><b><?php echo TEXT_PRODUCT_OPTION;?></b></td>

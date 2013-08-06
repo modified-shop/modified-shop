@@ -27,9 +27,10 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
 <!-- Sprachen Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
-    <td class="dataTableHeadingContent" width="100%" colspan="3"><b><?php echo TEXT_LANGUAGE; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:250px"><b><?php echo TEXT_LANGUAGE; ?></b></td>
+    <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
   echo xtc_draw_form('lang_edit', FILENAME_ORDERS_EDIT, 'action=lang_edit', 'post');
@@ -37,23 +38,15 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     while($lang = xtc_db_fetch_array($lang_query)){
       ?>
       <tr class="dataTableRow">
-        <td class="dataTableContent" align="left" width="30%"><?php echo $lang['name'];?></td>
-        <td class="dataTableContent" align="left" width="30%">
-          <?php
-          if ($lang['directory']==$order->info['language']){
-            echo xtc_draw_radio_field('lang', $lang['languages_id'], 'checked');
-          }else{
-            echo xtc_draw_radio_field('lang', $lang['languages_id']);
-          }
-          ?>
-        </td>
-        <td class="dataTableContent" align="left">&nbsp;</td>
+        <td class="dataTableContent"><?php echo $lang['name'];?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_radio_field('lang', $lang['languages_id'], ($lang['directory']==$order->info['language']) ?'checked' : '');?></td>        
       </tr>
       <?php
     }
     ?>
     <tr class="dataTableRow">
-      <td class="dataTableContent" align="left" colspan="3">
+      <td class="dataTableContent">&nbsp;</td>
+      <td class="dataTableContent">
         <?php
         echo xtc_draw_hidden_field('oID', $_GET['oID']);
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
@@ -65,9 +58,10 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 <!-- Sprachen Ende //-->
 <br /><br />
 <!-- Währungen Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
-    <td class="dataTableHeadingContent" width="100%" colspan="3"><b><?php echo TEXT_CURRENCIES; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:250px"><b><?php echo TEXT_CURRENCIES; ?></b></td>
+    <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
     echo xtc_draw_form('curr_edit', FILENAME_ORDERS_EDIT, 'action=curr_edit', 'post');
@@ -75,23 +69,15 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     while($curr = xtc_db_fetch_array($curr_query)){
       ?>
       <tr class="dataTableRow">
-        <td class="dataTableContent" align="left" width="30%"><?php echo $curr['title'];?></td>
-        <td class="dataTableContent" align="left" width="30%">
-          <?php
-          if ($curr['code']==$order->info['currency']){
-            echo xtc_draw_radio_field('currencies_id', $curr['currencies_id'], 'checked');
-          }else{
-            echo xtc_draw_radio_field('currencies_id', $curr['currencies_id']);
-          }
-          ?>
-        </td>
-        <td class="dataTableContent" align="left">&nbsp;</td>
+        <td class="dataTableContent"><?php echo $curr['title'];?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_radio_field('currencies_id', $curr['currencies_id'], ($curr['code']==$order->info['currency']) ? 'checked' : '');?></td>        
       </tr>
       <?php
     }
     ?>
     <tr class="dataTableRow">
-      <td class="dataTableContent" align="left" colspan="3">
+      <td class="dataTableContent">&nbsp;</td>
+      <td class="dataTableContent">
         <?php
         echo xtc_draw_hidden_field('old_currency', $order->info['currency']);
         echo xtc_draw_hidden_field('oID', $_GET['oID']);
@@ -104,9 +90,11 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 <!-- Währungen Ende //-->
 <br /><br />
 <!-- Zahlung Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
-    <td class="dataTableHeadingContent" width="100%" colspan="4"><b><?php echo TEXT_PAYMENT; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:250px"><b><?php echo TEXT_PAYMENT; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:300px"><b><?php echo TEXT_NEW; ?></b></td>
+    <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
   //BOF - web28 - 2011-06-08 - FIX for no installed payment modules
@@ -135,33 +123,24 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   }
   //EOF - web28 - 2011-06-08 - FIX for no installed payment modules
   echo xtc_draw_form('payment_edit', FILENAME_ORDERS_EDIT, 'action=payment_edit', 'post');
+  echo xtc_draw_hidden_field('oID', $_GET['oID']);
     ?>
     <tr class="dataTableRow">
-      <td class="dataTableContent" align="left" width="30%">
-        <?php
-        echo TEXT_ACTUAL . $order_payment_text;
-        ?>
-      </td>
-      <td class="dataTableContent" align="left" width="30%">
-        <?php
-        echo TEXT_NEW . xtc_draw_pull_down_menu('payment', $payment_array, $order_payment); //web28 - 2011-06-10 add default entry
-        ?>
-      </td>
-      <td class="dataTableContent" align="left">
-        <?php
-        echo xtc_draw_hidden_field('oID', $_GET['oID']);
-        echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
-        ?>
-      </td>
+      <td class="dataTableContent"><?php echo TEXT_ACTUAL . $order_payment_text;?></td>
+      <td class="dataTableContent"><?php echo xtc_draw_pull_down_menu('payment', $payment_array, $order_payment);?></td> 
+      <td class="dataTableContent"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';?></td>       
     </tr>
   </form>
 </table>
 <!-- Zahlung Ende //-->
 <br /><br />
 <!-- Versand Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
-    <td class="dataTableHeadingContent" width="100%" colspan="4"><b><?php echo TEXT_SHIPPING; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:250px"><b><?php echo TEXT_SHIPPING; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:300px"><?php echo TEXT_NEW; ?></td>
+    <td class="dataTableHeadingContent" style="width:200px"><?php echo TEXT_PRICE ; ?></td>
+    <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
   $shippings = explode(';', MODULE_SHIPPING_INSTALLED); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
@@ -191,28 +170,28 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
   echo xtc_draw_form('shipping_edit', FILENAME_ORDERS_EDIT, 'action=shipping_edit', 'post');
     ?>
     <tr class="dataTableRow">
-      <td class="dataTableContent" align="left" width="30%">
+      <td class="dataTableContent">
         <?php
         echo TEXT_ACTUAL . $order_shipping_text;
         ?>
       </td>
-      <td class="dataTableContent" align="left" width="30%">
+      <td class="dataTableContent">
         <?php
-        echo TEXT_NEW . xtc_draw_pull_down_menu('shipping', $shipping_array, $order_shipping); //web28 - 2011-06-10 add default entry
+        echo xtc_draw_pull_down_menu('shipping', $shipping_array, $order_shipping); //web28 - 2011-06-10 add default entry
         ?>
       </td>
-      <td class="dataTableContent" align="left">
+      <td class="dataTableContent">
         <?php
         $order_total_query = xtc_db_query("select value from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . $_GET['oID'] . "' and class = 'ot_shipping' ");
         $order_total = xtc_db_fetch_array($order_total_query);
-        echo TEXT_PRICE . xtc_draw_input_field('value', $order_total['value']);
+        echo xtc_draw_input_field('value', $order_total['value']);        
         ?>
       </td>
-      <td class="dataTableContent" align="left">
+       <td class="dataTableContent">
         <?php
         echo xtc_draw_hidden_field('oID', $_GET['oID']);
         echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
-        ?>
+       ?>
       </td>
     </tr>
   </form>
@@ -220,12 +199,13 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 <!-- Versand Ende //-->
 <br /><br />
 <!-- OT Module Anfang //-->
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
+<table class="tableBoxCenter collapse">
   <tr class="dataTableHeadingRow">
-    <td class="dataTableHeadingContent" style="width:200px"><b><?php echo TEXT_ORDER_TOTAL; ?></b></td>
+    <td class="dataTableHeadingContent" style="width:250px"><b><?php echo TEXT_ORDER_TOTAL; ?></b></td>
     <td class="dataTableHeadingContent" style="width:300px"><b><?php echo TEXT_ORDER_TITLE; ?></b></td>
     <td class="dataTableHeadingContent" style="width:200px"><b><?php echo TEXT_ORDER_VALUE; ?></b></td>
-    <td class="dataTableHeadingContent" width="" colspan="2">&nbsp;</td>
+    <td class="dataTableHeadingContent">&nbsp;</td>
+    <td class="dataTableHeadingContent">&nbsp;</td>
   </tr>
   <?php
   $totals = explode(';', MODULE_ORDER_TOTAL_INSTALLED); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
@@ -241,10 +221,10 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     ?>
     <tr class="dataTableRow">
       <?php echo xtc_draw_form('ot_edit', FILENAME_ORDERS_EDIT, 'action=ot_edit', 'post'); ?>
-       <td class="dataTableContent" align="left"><?php echo $total_text; ?></td>
-        <td class="dataTableContent" align="left"><?php echo xtc_draw_input_field('title', $ototal['title'], 'size=40'); ?></td>
-        <td class="dataTableContent" align="left" width="20%"><?php echo xtc_draw_input_field('value', $ototal['value']); ?></td>
-        <td class="dataTableContent" align="left">
+        <td class="dataTableContent"><?php echo $total_text; ?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('title', $ototal['title'], 'size=40'); ?></td>
+        <td class="dataTableContent"><?php echo xtc_draw_input_field('value', $ototal['value']); ?></td>
+        <td class="dataTableContent">
           <?php
           echo xtc_draw_hidden_field('class', $total);
           echo xtc_draw_hidden_field('sort_order', constant(MODULE_ORDER_TOTAL_.strtoupper($total_name)._SORT_ORDER));
@@ -253,7 +233,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
           ?>
         </td>
       </form>
-      <td>
+      <td class="dataTableContent">
         <?php
           echo xtc_draw_form('ot_delete', FILENAME_ORDERS_EDIT, 'action=ot_delete', 'post');
           echo xtc_draw_hidden_field('oID', $_GET['oID']);
