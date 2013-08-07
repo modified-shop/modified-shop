@@ -193,10 +193,10 @@ if ($billsafe_orders['type'] == 'invoice') {
     $smarty->assign('BillsafeText2', '<b>'.$ins->note.'</b>');
     $smarty->assign('recipient', MODULE_PAYMENT_BILLSAFE_2_RECIPIENT.':');
     $smarty->assign('recipientValue', $ins->recipient);
-    $smarty->assign('account', MODULE_PAYMENT_BILLSAFE_2_ACCOUNT_NUMBER.':');
-    $smarty->assign('accountValue', $ins->accountNumber);
-    $smarty->assign('bankcode', MODULE_PAYMENT_BILLSAFE_2_BANK_CODE.':');
-    $smarty->assign('bankcodeValue', $ins->bankCode);
+    //$smarty->assign('account', MODULE_PAYMENT_BILLSAFE_2_ACCOUNT_NUMBER.':'); // Commented out for SEPA solution
+    //$smarty->assign('accountValue', $ins->accountNumber); // Commented out for SEPA solution
+    //$smarty->assign('bankcode', MODULE_PAYMENT_BILLSAFE_2_BANK_CODE.':'); // Commented out for SEPA solution
+    //$smarty->assign('bankcodeValue', $ins->bankCode); // Commented out for SEPA solution
     $smarty->assign('bank', MODULE_PAYMENT_BILLSAFE_2_BANK_NAME.':');
     $smarty->assign('bankValue', $ins->bankName);
     $smarty->assign('bic', MODULE_PAYMENT_BILLSAFE_2_BIC.':');
