@@ -82,7 +82,7 @@
                     FROM " . TABLE_TAX_RATES . " tr,
                          " . TABLE_PRODUCTS . " p
                    WHERE tr.tax_class_id = p. products_tax_class_id
-                     AND p.products_id = '". (int)$_POST['products_id'] . "' ";
+                     AND p.products_id = '". (int)$_POST['products_up_id'] . "' ";
           $tax_query = xtc_db_query($sql);
           $tax = xtc_db_fetch_array($tax_query);
           $_POST['specials_price'] = ($_POST['specials_price']/($tax[tax_rate]+100)*100);
@@ -193,17 +193,21 @@ require (DIR_WS_INCLUDES.'head.php');
             }
           }
 
-
           $price=$sInfo->products_price;
           $new_price=$sInfo->specials_new_products_price;
+          $new_price_netto = '';
+          $price_netto = '';
           if (PRICE_IS_BRUTTO=='true'){
-            $price_netto=xtc_round($price,PRICE_PRECISION);
-            $new_price_netto=xtc_round($new_price,PRICE_PRECISION);
+            $price_netto = ' ' . TEXT_NETTO.'<strong>'.xtc_round($price,PRICE_PRECISION).'</strong>  ';
+            if ($price > 0) {
+              $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
+            }            
             $price= ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
             $new_price= ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
           }
           $price=xtc_round($price,PRICE_PRECISION);
           $new_price=xtc_round($new_price,PRICE_PRECISION);              
+
           ?>
                   
             <?php
@@ -217,7 +221,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <table class="tableConfig">
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_PRODUCT; echo ($sInfo->products_name) ? "" :  ''; ?>&nbsp;</td>
-                <td class="dataTableConfig col-middle"><?php echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' <small>(' . $xtPrice->xtcFormat($price,true). ')</small>' : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
+                <td class="dataTableConfig col-middle"><?php echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' <small>(' . $xtPrice->xtcFormat($price,true). ')' . $price_netto .'</small>' : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
                 <td class="dataTableConfig col-right">&nbsp;</td>
               </tr>
               <?php
@@ -233,7 +237,7 @@ require (DIR_WS_INCLUDES.'head.php');
               ?>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;</td>
-                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_price', $new_price);?> </td>
+                <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_price', $new_price).'&nbsp;&nbsp;&nbsp;' .$new_price_netto;?> </td>
                 <td class="dataTableConfig col-right">&nbsp;</td>
               </tr>
               <tr>
