@@ -370,13 +370,6 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
     if (isset ($order->products[$i]['attributes'])) {
       $attributes_exist = '1';
       for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
-        $left_join_downloads = $add_products_attributes = '';
-        if (DOWNLOAD_ENABLED == 'true') {
-          $left_join_downloads = "LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad ON pa.products_attributes_id=pad.products_attributes_id";
-          $add_products_attributes = 'pad.products_attributes_maxdays,
-                                      pad.products_attributes_maxcount,
-                                      pad.products_attributes_filename,';
-        }
 
         // update attribute stock
         if (STOCK_LIMITED == 'true') {
@@ -388,33 +381,43 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
                          ");
         }
 
-        $attributes_values = $main->getAttributes( $order->products[$i]['id'],
-                                                   $order->products[$i]['attributes'][$j]['option_id'],
-                                                   $order->products[$i]['attributes'][$j]['value_id'],
-                                                   $add_products_attributes,
-                                                   $left_join_downloads
-                                                  );
-
+        //update attributes
         $sql_data_array = array ('orders_id' => $insert_id,
                                  'orders_products_id' => $order_products_id,
-                                 'products_options' => $attributes_values['products_options_name'],
-                                 'products_options_values' => $attributes_values['products_options_values_name'],
-                                 'options_values_price' => $attributes_values['options_values_price'],
-                                 'price_prefix' => $attributes_values['price_prefix'],
+                                 'products_options' => $order->products[$i]['attributes'][$j]['option'],
+                                 'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
+                                 'options_values_price' => $order->products[$i]['attributes'][$j]['price'],
+                                 'price_prefix' => $order->products[$i]['attributes'][$j]['prefix']
                                  'orders_products_options_id' => $order->products[$i]['attributes'][$j]['option_id'],
                                  'orders_products_options_values_id' => $order->products[$i]['attributes'][$j]['value_id']
                                 );
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-        if ((DOWNLOAD_ENABLED == 'true') && isset ($attributes_values['products_attributes_filename']) && xtc_not_null($attributes_values['products_attributes_filename'])) {
-          $sql_data_array = array ('orders_id' => $insert_id,
-                                   'orders_products_id' => $order_products_id,
-                                   'orders_products_filename' => $attributes_values['products_attributes_filename'],
-                                   'download_maxdays' => $attributes_values['products_attributes_maxdays'],
-                                   'download_count' => $attributes_values['products_attributes_maxcount'],
-                                   'download_key' => md5($insert_id.$order_products_id.$_SESSION['customer_id'].$order->customer['email_address'].$attributes_values['products_attributes_filename'])
-                                  );
-          xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
+        //update attributes download
+        if ((DOWNLOAD_ENABLED == 'true') {
+          $attributes_dl_query = xtc_db_query("SELECT pad.products_attributes_maxdays,
+                                                      pad.products_attributes_maxcount,
+                                                      pad.products_attributes_filename
+                                                 FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                            LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                   ON pa.products_attributes_id = pad.products_attributes_id
+                                                WHERE pa.products_id = '".$order->products[$i]['id']."'
+                                                  AND pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."'
+                                                  AND pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'
+                                             ");
+                                              
+          $attributes_dl_array = xtc_db_fetch_array($attributes_dl_query);
+          
+          if (isset ($attributes_dl_array['products_attributes_filename']) && xtc_not_null($attributes_dl_array['products_attributes_filename'])) {
+            $sql_data_array = array ('orders_id' => $insert_id,
+                                     'orders_products_id' => $order_products_id,
+                                     'orders_products_filename' => $attributes_dl_array['products_attributes_filename'],
+                                     'download_maxdays' => $attributes_dl_array['products_attributes_maxdays'],
+                                     'download_count' => $attributes_dl_array['products_attributes_maxcount'],
+                                     'download_key' => md5($insert_id.$order_products_id.$_SESSION['customer_id'].$order->customer['email_address'].$attributes_dl_array['products_attributes_filename'])
+                                    );
+            xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
+          }
         }
       }
     }
