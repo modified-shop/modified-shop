@@ -179,8 +179,10 @@ class billsafe_2 {
     $total = $total + $schg_amount;
     $total = round($xtPrice->xtcCalculateCurrEx($total, $_SESSION['currency']), $xtPrice->get_decimal_places($_SESSION['currency']));
     $total = number_format(round(($total + $shipping_cost), $xtPrice->get_decimal_places($currency)), 2, '.', '');
-    $company_b = md5($order->billing['company']);
-    $company_d = md5($order->delivery['company']);
+    //$company_b = md5($order->billing['company']);
+    $company_b = $order->billing['company'];
+    //$company_d = md5($order->delivery['company']);
+    $company_d = $order->delivery['company'];
     $firstname_b = md5($order->billing['firstname']);
     $firstname_d = md5($order->delivery['firstname']);
     $lastname_b = md5($order->billing['lastname']);
