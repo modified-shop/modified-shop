@@ -15,11 +15,11 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 if (!function_exists('extraMenue')) {
   function extraMenue() {
     $add_contents = array();
-    if ($extra_files = @scandir(DIR_WS_INCLUDES . 'extra_menu')) {      
+    if ($extra_files = @scandir(DIR_WS_INCLUDES . 'extra/menu')) {      
       foreach ($extra_files as $filename) {
         $file_ext = end(explode('.',$filename));
         if($file_ext == 'php') {          
-          require_once(DIR_WS_INCLUDES . 'extra_menu/' . $filename);
+          require_once(DIR_WS_INCLUDES . 'extra/menu/' . $filename);
         }
       }
     }

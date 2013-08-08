@@ -152,5 +152,5 @@ foreach ($constants['user'] AS $k=>$v) {
 }
 // EOF - cYbercOsmOnauT - 2011-02-11 - New DB Cache System
 
-auto_require(DIR_FS_CATALOG.'includes/extra_database_tables/','php');
+auto_require(DIR_FS_CATALOG.'includes/extra/database_tables/','php');
 ?>
