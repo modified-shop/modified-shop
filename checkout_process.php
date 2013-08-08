@@ -394,7 +394,7 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
         //update attributes download
-        if ((DOWNLOAD_ENABLED == 'true') {
+        if (DOWNLOAD_ENABLED == 'true') {
           $attributes_dl_query = xtc_db_query("SELECT pad.products_attributes_maxdays,
                                                       pad.products_attributes_maxcount,
                                                       pad.products_attributes_filename
