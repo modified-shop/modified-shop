@@ -45,21 +45,6 @@ define('MODULE_SITEMAPORG_EXPORT_DESC', 'm&ouml;chten Sie die Datei Herunterlade
 define('MODULE_SITEMAPORG_YAHOO_TITLE', 'YahooID');
 define('MODULE_SITEMAPORG_YAHOO_DESC','Geben Sie hier Ihre die Yahoo ID an! Diese wird ben&ouml;tigt, um Yahoo die Sitemap mitzuteilen');
 
-// New function for List:
-function xtc_sitemap_cfg_select_option($select_array, $key_value, $key = '') {
-	$name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
-	$string = '<select name="'.$name.'">';
-	for ($i = 0, $n = sizeof($select_array); $i < $n; $i ++) {
-		$string .= '<option value="'.htmlspecialchars($select_array[$i]).'"';
-		if ($key_value == $select_array[$i])
-			$string .= ' selected="selected"';
-		$string .= '> '.htmlspecialchars($select_array[$i]).'</option>';
-	}
-	$string .= '</select>';
-	return $string;
-}
-
-
 require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
 
   class sitemaporg {
@@ -293,9 +278,9 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_FILE', 'sitemap.xml',  '6', '1', '', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_ROOT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_CHANGEFREQ', 'weekly',  '6', '1', 'xtc_sitemap_cfg_select_option(array(\'always\', \'hourly\', \'daily\', \'weekly\', \'monthly\', \'yearly\', \'never\'), ', now())");     
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_LIST', '0.5',  '6', '1', 'xtc_sitemap_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_PRODUCT', '0.8',  '6', '1', 'xtc_sitemap_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_CHANGEFREQ', 'weekly',  '6', '1', 'xtc_cfg_select_option(array(\'always\', \'hourly\', \'daily\', \'weekly\', \'monthly\', \'yearly\', \'never\'), ', now())");     
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_LIST', '0.5',  '6', '1', 'xtc_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
+      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_PRODUCT', '0.8',  '6', '1', 'xtc_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_GZIP', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_EXPORT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_YAHOO', 'YahooDemo',  '6', '1', '', now())");
