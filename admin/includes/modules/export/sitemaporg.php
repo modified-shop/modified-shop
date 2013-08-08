@@ -148,8 +148,8 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
 
       $content_query = xtDBquery($content_query);
 
-      while ($content_data=xtc_db_fetch_array(&$content_query,true)) {
-		if(SEARCH_ENGINE_FRIENDLY_URLS == 'true') { $params = '&'.xtc_cleanName($content_data['content_title']); }
+      while ($content_data=xtc_db_fetch_array($content_query,true)) {
+		  if(SEARCH_ENGINE_FRIENDLY_URLS == 'true') { $params = '&'.xtc_cleanName($content_data['content_title']); }
           $link = htmlspecialchars(xtc_catalog_href_link('shop_content.php','coID='.$content_data['content_group'].$params));
         $entry=$this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;          
@@ -167,7 +167,7 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
  
       $manufacturers_query = xtDBquery($manufacturers_query);
 
-      while ($manufacturers_data=xtc_db_fetch_array(&$manufacturers_query,true)) {
+      while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query,true)) {
         $link = htmlspecialchars(xtc_catalog_href_link('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id']));
         $entry=$this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;          
@@ -194,7 +194,7 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
                             c.sort_order ASC";
 
       $categories_query = xtDBquery($categories_query);
-      while ($categories = xtc_db_fetch_array(&$categories_query,true)) {
+      while ($categories = xtc_db_fetch_array($categories_query,true)) {
           $link = htmlspecialchars(xtc_catalog_href_link('index.php',xtc_category_link($categories['categories_id'],$categories['categories_name'])));
 		  $date = (empty($categories['last_modified']) ? $categories['date_added'] : $categories['last_modified'] );
           $entry=$this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
