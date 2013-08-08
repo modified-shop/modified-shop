@@ -50,27 +50,6 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
   class sitemaporg {
     var $code, $title, $description, $enabled;
 
-
-    function curl( $notify_url , $mixed=array() ) {
-      $allow_url_fopen = ini_get("allow_url_fopen");
-      foreach ($mixed as $value) {
-        if($allow_url_fopen == 0 || function_exists('curl_exec') == true) {
-          @ob_start();
-          $ch = curl_init();
-          @curl_setopt($ch, CURLOPT_URL, $value . urlencode($notify_url));
-          $user_agent = 'Mozilla/4.0 (compatible; xtc; sitemap-submitter) xt:commerce sitemap-submitter';
-          @curl_setopt ( $ch , CURLOPT_USERAGENT, $user_agent);
-          $test = @curl_exec($ch);
-          @curl_close($ch);
-          $ob_get_contents = @ob_get_contents();
-          @ob_end_clean();
-        } elseif($allow_url_fopen == 1) {
-          @fopen($value.urlencode($notify_url), 'r');
-          @file_get_contents($value . urlencode($notify_url));
-        }
-      }
-    }
-	
     function sitemaporg() {
       global $order;
 
@@ -85,7 +64,7 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
 // -------------------- XML Generator ----------------------
     function xls_sitemap_top( ) {
       $ret ='<?xml version="1.0" encoding="utf-8"?>'."\n";
-      $ret.='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+      $ret.='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">'."\n";
       return $ret;
     }
     
@@ -110,8 +89,8 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
       if( $lastmod != '' ) {
         $ret.="\t\t<lastmod>" . $lastmod . "</lastmod>\n";
       }
-      $ret.="\t\t<changefreq>" . $changefreq . "</changefreq>\n";
-      $ret.="\t\t<priority>" . $priority . "</priority>\n";
+      //$ret.="\t\t<changefreq>" . $changefreq . "</changefreq>\n";
+      //$ret.="\t\t<priority>" . $priority . "</priority>\n";
       $ret.="\t</url>\n";
       
       return $ret;
@@ -250,13 +229,6 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
 		      break;
         case 'no':
           $sitemap = HTTP_SERVER.DIR_WS_CATALOG.(($_POST['configuration']['MODULE_SITEMAPORG_ROOT']=='no') ? 'export/':'').$file;
-          $seo[] = 'http://submissions.ask.com/ping?sitemap=';
-          $seo[] = 'http://www.google.com/webmasters/sitemaps/ping?sitemap=';
-          $seo[] = 'http://webmaster.live.com/webmaster/ping.aspx?siteMap=';
-          if($_POST['configuration']['MODULE_SITEMAPORG_YAHOO']!='YahooDemo' || !empty($_POST['configuration']['MODULE_SITEMAPORG_YAHOO'])) {
-            $seo[] = 'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid='.urlencode($_POST['configuration']['MODULE_SITEMAPORG_YAHOO']).'&url=';
-          }
-          $this->curl($sitemap, $seo);
           break;
       }
     }
@@ -278,9 +250,6 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_FILE', 'sitemap.xml',  '6', '1', '', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_ROOT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_CHANGEFREQ', 'weekly',  '6', '1', 'xtc_cfg_select_option(array(\'always\', \'hourly\', \'daily\', \'weekly\', \'monthly\', \'yearly\', \'never\'), ', now())");     
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_LIST', '0.5',  '6', '1', 'xtc_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_PRODUCT', '0.8',  '6', '1', 'xtc_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_GZIP', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_EXPORT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_YAHOO', 'YahooDemo',  '6', '1', '', now())");
@@ -291,7 +260,12 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
     }
 
     function keys() {
-      return array('MODULE_SITEMAPORG_STATUS','MODULE_SITEMAPORG_FILE','MODULE_SITEMAPORG_STATUS','MODULE_SITEMAPORG_ROOT','MODULE_SITEMAPORG_CHANGEFREQ','MODULE_SITEMAPORG_PRIORITY_LIST','MODULE_SITEMAPORG_PRIORITY_PRODUCT','MODULE_SITEMAPORG_GZIP','MODULE_SITEMAPORG_YAHOO','MODULE_SITEMAPORG_EXPORT');
+      return array('MODULE_SITEMAPORG_STATUS',
+                   'MODULE_SITEMAPORG_FILE',
+                   'MODULE_SITEMAPORG_STATUS',
+                   'MODULE_SITEMAPORG_ROOT',
+                   'MODULE_SITEMAPORG_GZIP',
+                   'MODULE_SITEMAPORG_EXPORT');
     }
     
   }
