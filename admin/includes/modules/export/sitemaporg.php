@@ -45,47 +45,11 @@ define('MODULE_SITEMAPORG_EXPORT_DESC', 'm&ouml;chten Sie die Datei Herunterlade
 define('MODULE_SITEMAPORG_YAHOO_TITLE', 'YahooID');
 define('MODULE_SITEMAPORG_YAHOO_DESC','Geben Sie hier Ihre die Yahoo ID an! Diese wird ben&ouml;tigt, um Yahoo die Sitemap mitzuteilen');
 
-// New function for List:
-function xtc_sitemap_cfg_select_option($select_array, $key_value, $key = '') {
-	$name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
-	$string = '<select name="'.$name.'">';
-	for ($i = 0, $n = sizeof($select_array); $i < $n; $i ++) {
-		$string .= '<option value="'.htmlspecialchars($select_array[$i]).'"';
-		if ($key_value == $select_array[$i])
-			$string .= ' selected="selected"';
-		$string .= '> '.htmlspecialchars($select_array[$i]).'</option>';
-	}
-	$string .= '</select>';
-	return $string;
-}
-
-
-require_once(DIR_FS_INC.'xtc_category_link.inc.php');
+require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
 
   class sitemaporg {
     var $code, $title, $description, $enabled;
 
-
-	function curl( $notify_url , $mixed=array() ) {
-		$allow_url_fopen = ini_get("allow_url_fopen");
-		foreach ($mixed as $value) {
-			if($allow_url_fopen == 0 || function_exists('curl_exec') == true) {
-				@ob_start();
-				$ch = curl_init();
-				@curl_setopt($ch, CURLOPT_URL, $value . urlencode($notify_url));
-				$user_agent = 'Mozilla/4.0 (compatible; xtc; sitemap-submitter) xt:commerce sitemap-submitter';
-				@curl_setopt ( $ch , CURLOPT_USERAGENT, $user_agent);
-				$test = @curl_exec($ch);
-				@curl_close($ch);
-				$ob_get_contents = @ob_get_contents();
-				@ob_end_clean();
-			} elseif($allow_url_fopen == 1) {
-				@fopen($value.urlencode($notify_url), 'r');
-				@file_get_contents($value . urlencode($notify_url));
-			}
-		}
-	}
-	
     function sitemaporg() {
       global $order;
 
@@ -100,7 +64,7 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
 // -------------------- XML Generator ----------------------
     function xls_sitemap_top( ) {
       $ret ='<?xml version="1.0" encoding="utf-8"?>'."\n";
-      $ret.='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'."\n";
+      $ret.='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">'."\n";
       return $ret;
     }
     
@@ -125,8 +89,8 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
       if( $lastmod != '' ) {
         $ret.="\t\t<lastmod>" . $lastmod . "</lastmod>\n";
       }
-      $ret.="\t\t<changefreq>" . $changefreq . "</changefreq>\n";
-      $ret.="\t\t<priority>" . $priority . "</priority>\n";
+      //$ret.="\t\t<changefreq>" . $changefreq . "</changefreq>\n";
+      //$ret.="\t\t<priority>" . $priority . "</priority>\n";
       $ret.="\t</url>\n";
       
       return $ret;
@@ -135,40 +99,35 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
 // -------------------- Contents ----------------------
     function process_contents( &$schema ) {
       global $_POST;
-      $content_query="SELECT
- 					              content_id,
- 					              categories_id,
- 					              parent_id,
- 					              content_title,
- 					              content_group
- 					            FROM ".TABLE_CONTENT_MANAGER."
- 					            WHERE languages_id='".(int)$_SESSION['languages_id']."'
- 					               ".$group_check." and content_status=1 or content_group>=100 order by sort_order
- 					               ";
+      $content_query = "SELECT content_id,
+                               categories_id,
+                               parent_id,
+                               content_title,
+                               content_group
+ 					                FROM ".TABLE_CONTENT_MANAGER."
+ 					               WHERE languages_id='".(int)$_SESSION['languages_id']."'
+ 					                     ".$group_check." 
+ 					                 and content_status = '1' 
+ 					            order by sort_order";
 
       $content_query = xtDBquery($content_query);
-
       while ($content_data=xtc_db_fetch_array($content_query,true)) {
-		  if(SEARCH_ENGINE_FRIENDLY_URLS == 'true') { $params = '&'.xtc_cleanName($content_data['content_title']); }
-          $link = htmlspecialchars(xtc_catalog_href_link('shop_content.php','coID='.$content_data['content_group'].$params));
-        $entry=$this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
+        $link = htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group']));
+        $entry=$this->xls_sitemap_entry($link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;          
       }
-      
     }
 
 // ------------------- Manufacturer ---------------------
     function process_manufacturers( &$schema ) {
       global $_POST;
-      $manufacturers_query="SELECT
- 					              manufacturers_id,
- 					              manufacturers_name
-  					            FROM ". TABLE_MANUFACTURERS;
+      $manufacturers_query = "SELECT manufacturers_id,
+ 					                           manufacturers_name
+  					                    FROM ". TABLE_MANUFACTURERS;
  
       $manufacturers_query = xtDBquery($manufacturers_query);
-
       while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query,true)) {
-        $link = htmlspecialchars(xtc_catalog_href_link('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id']));
+        $link = htmlspecialchars(xtc_href_link_from_admin('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id']));
         $entry=$this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;          
       }
@@ -177,75 +136,60 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
       
 // -------------------- Categories ----------------------
     function process_categories( &$schema ) {
-	  global $_POST;
-      $categories_query ="SELECT c.categories_image,
-							c.categories_id,
-  							cd.categories_name,
-							c.date_added,
-							c.last_modified
-                          FROM 
-                            " . TABLE_CATEGORIES . " c left join
-  							" . TABLE_CATEGORIES_DESCRIPTION ." cd on c.categories_id = cd.categories_id
-                          WHERE 
-                            c.categories_status = '1'                      and 
-                            cd.language_id = ".$_SESSION['languages_id']." and 
-                            c.parent_id = '0' ".$group_check."
-                          ORDER BY 
-                            c.sort_order ASC";
+	    global $_POST;
+      $categories_query = "SELECT c.categories_image,
+                                  c.categories_id,
+                                  cd.categories_name,
+                                  c.date_added,
+                                  c.last_modified
+                             FROM " . TABLE_CATEGORIES . " c 
+                        left join " . TABLE_CATEGORIES_DESCRIPTION ." cd 
+                                  on c.categories_id = cd.categories_id
+                            WHERE c.categories_status = '1'                      
+                              and cd.language_id = ".$_SESSION['languages_id']." 
+                              and c.parent_id = '0' 
+                                  ".$group_check."
+                         ORDER BY c.sort_order ASC";
 
       $categories_query = xtDBquery($categories_query);
       while ($categories = xtc_db_fetch_array($categories_query,true)) {
-          $link = htmlspecialchars(xtc_catalog_href_link('index.php',xtc_category_link($categories['categories_id'],$categories['categories_name'])));
-		  $date = (empty($categories['last_modified']) ? $categories['date_added'] : $categories['last_modified'] );
-          $entry=$this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
-          $schema .= $entry;          
-
-        $category_tree=$this->get_category_tree($categories['categories_id']);
-        foreach( $category_tree as $category_entry ) {
-          $link = $category_entry['link'];
-          $entry=$this->xls_sitemap_entry( $link , '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST']);     
-          $schema .= $entry;          
-        }
+        $link = htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$categories['categories_id']));
+        $date = (empty($categories['last_modified']) ? $categories['date_added'] : $categories['last_modified'] );
+        $entry=$this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
+        $schema .= $entry;
       }
-     
     }
     
 
 // -------------------- Products ----------------------
     function process_products( &$schema ) {      
       global $_POST;
-      $export_query =xtc_db_query("SELECT
-                                     p.products_id,
-                                     p.products_last_modified, 
-                                     pd.products_name
-                                   FROM
-                                     " . TABLE_PRODUCTS . " p, 
-                                     " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                   WHERE
-                                     products_status = 1 and
-                                     p.products_id=pd.products_id and
-                                     pd.language_id=".$_SESSION['languages_id']."
-                                     
-                                   ORDER BY
-                                     p.products_id");
+      $export_query =xtc_db_query("SELECT p.products_id,
+                                          p.products_last_modified, 
+                                          pd.products_name
+                                     FROM " . TABLE_PRODUCTS . " p, 
+                                          " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                    WHERE p.products_status = 1 and
+                                          p.products_id=pd.products_id and
+                                          pd.language_id=".$_SESSION['languages_id']."
+                                 ORDER BY p.products_id");
 
       while ($products = xtc_db_fetch_array($export_query)) {
-          $link = htmlspecialchars(xtc_catalog_href_link('product_info.php',xtc_product_link($products['products_id'], $products['products_name'])));
+          $link = htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id']));
           $entry=$this->xls_sitemap_entry( $link, $products['products_last_modified'], $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_PRODUCT']);     
           $schema .= $entry;
       }
-
     }
 
 
     function process($file) {
-		global $_POST;
-		$file = $_POST['configuration']['MODULE_SITEMAPORG_FILE'];
+		  global $_POST;
+		  $file = $_POST['configuration']['MODULE_SITEMAPORG_FILE'];
       @xtc_set_time_limit(0);
      
       $schema = $this->xls_sitemap_top();
 
-      $schema.= $this->xls_sitemap_entry(xtc_catalog_href_link('',''), '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );
+      $schema.= $this->xls_sitemap_entry(xtc_href_link_from_admin('index.php'), '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );
       $this->process_contents($schema);
       $this->process_categories($schema);
       $this->process_products($schema);
@@ -259,49 +203,39 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
         $filename = DIR_FS_DOCUMENT_ROOT.'export/' . $_POST['configuration']['MODULE_SITEMAPORG_FILE'];
       }
 	  
-	  if($_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') { $filename = $filename.'_tmp_'.time(); }
-	  
-	  if($_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') {
-		  $filename = $filename.'.gz';
-		  $gz = gzopen($filename,'w');
-		  gzwrite($gz, $schema);
-		  gzclose($gz);
-		  $file = $file.'.gz';
-		  
-	  } else {
-		  $fp = fopen($filename, "w");
-		  fputs($fp, $schema);
-		  fclose($fp);
-	  }
+      if($_POST['configuration']['MODULE_SITEMAPORG_EXPORT'] == 'yes') { $filename = $filename.'_tmp_'.time(); }
+    
+      if($_POST['configuration']['MODULE_SITEMAPORG_GZIP'] == 'yes') {
+        $filename = $filename.'.gz';
+        $gz = gzopen($filename,'w');
+        gzwrite($gz, $schema);
+        gzclose($gz);
+        $file = $file.'.gz';
+      
+      } else {
+        $fp = fopen($filename, "w");
+        fputs($fp, $schema);
+        fclose($fp);
+      }
 	  
       switch ($_POST['configuration']['MODULE_SITEMAPORG_EXPORT']) {
         case 'yes':
-            // send File to Browser
-            header('Content-type: application/x-octet-stream');
-            header('Content-disposition: attachment; filename=' . $file);
-            readfile ( $filename );
-			unlink( $filename );
-            exit;
-		 break;
-		case 'no':
-			$sitemap = HTTP_SERVER.DIR_WS_CATALOG.(($_POST['configuration']['MODULE_SITEMAPORG_ROOT']=='no') ? 'export/':'').$file;
-			$seo[] = 'http://submissions.ask.com/ping?sitemap=';
-			$seo[] = 'http://www.google.com/webmasters/sitemaps/ping?sitemap=';
-			$seo[] = 'http://webmaster.live.com/webmaster/ping.aspx?siteMap=';
-			if($_POST['configuration']['MODULE_SITEMAPORG_YAHOO']!='YahooDemo' || !empty($_POST['configuration']['MODULE_SITEMAPORG_YAHOO'])) {
-				$seo[] = 'http://search.yahooapis.com/SiteExplorerService/V1/updateNotification?appid='.urlencode($_POST['configuration']['MODULE_SITEMAPORG_YAHOO']).'&url=';
-			}
-			$this->curl($sitemap, $seo);
-		break;
+          // send File to Browser
+          header('Content-type: application/x-octet-stream');
+          header('Content-disposition: attachment; filename=' . $file);
+          readfile ( $filename );
+          unlink( $filename );
+          exit;
+		      break;
+        case 'no':
+          $sitemap = HTTP_SERVER.DIR_WS_CATALOG.(($_POST['configuration']['MODULE_SITEMAPORG_ROOT']=='no') ? 'export/':'').$file;
+          break;
       }
-
     }
 
     function display() {
-
-      return array('text' => 
-                            '<br />' . xtc_button(BUTTON_EXPORT) .
-                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=sitemaporg')));
+      return array('text' => '<br />' . xtc_button(BUTTON_EXPORT) .
+                              xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=sitemaporg')));
     }
 
     function check() {
@@ -316,9 +250,6 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_FILE', 'sitemap.xml',  '6', '1', '', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_ROOT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_CHANGEFREQ', 'weekly',  '6', '1', 'xtc_sitemap_cfg_select_option(array(\'always\', \'hourly\', \'daily\', \'weekly\', \'monthly\', \'yearly\', \'never\'), ', now())");     
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_LIST', '0.5',  '6', '1', 'xtc_sitemap_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_PRIORITY_PRODUCT', '0.8',  '6', '1', 'xtc_sitemap_cfg_select_option(array(\'0.1\', \'0.2\', \'0.3\', \'0.4\', \'0.5\', \'0.6\', \'0.7\', \'0.8\', \'0.9\', \'1\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_GZIP', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_EXPORT', 'no',  '6', '1', 'xtc_cfg_select_option(array(\'yes\', \'no\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_SITEMAPORG_YAHOO', 'YahooDemo',  '6', '1', '', now())");
@@ -329,57 +260,13 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
     }
 
     function keys() {
-      return array('MODULE_SITEMAPORG_STATUS','MODULE_SITEMAPORG_FILE','MODULE_SITEMAPORG_STATUS','MODULE_SITEMAPORG_ROOT','MODULE_SITEMAPORG_CHANGEFREQ','MODULE_SITEMAPORG_PRIORITY_LIST','MODULE_SITEMAPORG_PRIORITY_PRODUCT','MODULE_SITEMAPORG_GZIP','MODULE_SITEMAPORG_YAHOO','MODULE_SITEMAPORG_EXPORT');
-    }
-
-    function get_category_tree( $parent_id = '0', 
-                                $spacing = '', 
-                                $exclude = '', 
-                                $category_tree_array = '', 
-                                $include_itself = false, 
-                                $cPath = '' ) {
-      global $SITEMAP;
-
-	    if ($parent_id == 0){ 
-        $cPath = ''; 
-      } else {	
-        $cPath .= $parent_id . '_'; 
-      }
-      if (!is_array($category_tree_array)) 
-        $category_tree_array = array();
-        
-      if ($include_itself) {
-        $category_query = "select cd.categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " cd where cd.language_id = '" . $_SESSION['languages_id'] . "' and c.categories_status = '1' and cd.categories_id = '" . $parent_id . "'";
-        $category_query = xtDBquery($category_query);
-        $category = xtc_db_fetch_array($category_query,true);
-        $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
-      }
-
-      $categories_query = "select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . $_SESSION['languages_id'] . "' and c.parent_id = '" . $parent_id . "' and c.categories_status = '1' order by c.sort_order, cd.categories_name";
-      $categories_query = xtDBquery($categories_query);
-      while ($categories = xtc_db_fetch_array($categories_query,true)) {
-        if ($exclude != $categories['categories_id']) {
-          $listing_data = array();
-
-          if($SITEMAP['get_products'] && xtc_count_products_in_category($categories['categories_id']) > 0) {
-            $listing_data = get_all_products($categories['categories_id']);
-          }
-            $link = xtc_catalog_href_link('index.php',xtc_category_link($categories['categories_id'],$categories['categories_name']));
-          $category_tree_array[] = array( 'id'    => $categories['categories_id'],
-                                          'text'  => $spacing . $categories['categories_name'],
-                                          'link'  => $link,
-                                          'pcount'=> sizeof($listing_data),
-                                          'products'=>$listing_data
-                                        );
-          $category_tree_array = $this->get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);
-        }
-      }
-
-      return $category_tree_array;
+      return array('MODULE_SITEMAPORG_STATUS',
+                   'MODULE_SITEMAPORG_FILE',
+                   'MODULE_SITEMAPORG_STATUS',
+                   'MODULE_SITEMAPORG_ROOT',
+                   'MODULE_SITEMAPORG_GZIP',
+                   'MODULE_SITEMAPORG_EXPORT');
     }
     
   }
-  
-  
-  
 ?>

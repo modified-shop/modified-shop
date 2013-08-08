@@ -58,8 +58,9 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
     require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
   } else {
     require_once(DIR_FS_INC . 'xtc_get_products_name.inc.php');
-    require_once(DIR_FS_INC . 'xtc_get_manufacturers.inc.php');
   }
+
+  require_once(DIR_FS_INC . 'xtc_get_manufacturers.inc.php');
 
   //-- XTC
   (!isset($languages_id)) ? $languages_id = $_SESSION['languages_id'] : false;
