@@ -106,7 +106,7 @@ echo endMenue();
 
 //---------------------------MODULE
 echo mainMenue(BOX_HEADING_MODULES);
-    echo '<li><a href="' . xtc_href_link(FILENAME_GOOGLE_SITEMAP, 'auto=true&ping=true') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
+    if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=sitemaporg', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=payment', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PAYMENT . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHIPPING . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
