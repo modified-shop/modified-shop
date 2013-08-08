@@ -387,7 +387,7 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
                                  'products_options' => $order->products[$i]['attributes'][$j]['option'],
                                  'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
                                  'options_values_price' => $order->products[$i]['attributes'][$j]['price'],
-                                 'price_prefix' => $order->products[$i]['attributes'][$j]['prefix']
+                                 'price_prefix' => $order->products[$i]['attributes'][$j]['prefix'],
                                  'orders_products_options_id' => $order->products[$i]['attributes'][$j]['option_id'],
                                  'orders_products_options_values_id' => $order->products[$i]['attributes'][$j]['value_id']
                                 );
