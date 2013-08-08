@@ -351,13 +351,13 @@ require_once(DIR_FS_INC.'xtc_category_link.inc.php');
       if ($include_itself) {
         $category_query = "select cd.categories_name from " . TABLE_CATEGORIES_DESCRIPTION . " cd where cd.language_id = '" . $_SESSION['languages_id'] . "' and c.categories_status = '1' and cd.categories_id = '" . $parent_id . "'";
         $category_query = xtDBquery($category_query);
-        $category = xtc_db_fetch_array(&$category_query,true);
+        $category = xtc_db_fetch_array($category_query,true);
         $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
       }
 
       $categories_query = "select c.categories_id, cd.categories_name, c.parent_id from " . TABLE_CATEGORIES . " c, " . TABLE_CATEGORIES_DESCRIPTION . " cd where c.categories_id = cd.categories_id and cd.language_id = '" . $_SESSION['languages_id'] . "' and c.parent_id = '" . $parent_id . "' and c.categories_status = '1' order by c.sort_order, cd.categories_name";
       $categories_query = xtDBquery($categories_query);
-      while ($categories = xtc_db_fetch_array(&$categories_query,true)) {
+      while ($categories = xtc_db_fetch_array($categories_query,true)) {
         if ($exclude != $categories['categories_id']) {
           $listing_data = array();
 
