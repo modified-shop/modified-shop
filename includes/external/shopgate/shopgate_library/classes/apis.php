@@ -75,8 +75,6 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 				'get_log_file',
 				'clear_log_file',
 				'clear_cache',
-				'check_coupon',
-				'redeem_coupon'
 		);
 	}
 
@@ -124,8 +122,9 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 			// enable debugging if requested
 			if (!empty($data['debug_log'])) {
 				ShopgateLogger::getInstance()->enableDebug();
+				ShopgateLogger::getInstance()->keepDebugLog(!empty($data['keep_debug_log']));
 			}
-
+			
 			// call the action
 			$action = $this->camelize($this->params['action']);
 			$this->{$action}();
@@ -252,7 +251,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		$responses['execution_time'] = $runtime;
 
 		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
-		$this->responseData = array_merge($responses);
+		$this->responseData = $responses;
 	}
 
 	/**
@@ -278,7 +277,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		
 		$orderData = $this->plugin->addOrder($orders[0]);
 		if (is_array($orderData)) {
-			$this->responseData = array_merge($orderData, $this->responseData);
+			$this->responseData = $orderData;
 		} else {
 			$this->responseData['external_order_id'] = $orderData;
 			$this->responseData['external_order_number'] = null;
@@ -323,7 +322,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		
 		$orderData = $this->plugin->updateOrder($orders[0]);
 		if (is_array($orderData)) {
-			$this->responseData = array_merge($orderData, $this->responseData);
+			$this->responseData = $orderData;
 		} else {
 			$this->responseData['external_order_id'] = $orderData;
 			$this->responseData['external_order_number'] = null;
@@ -620,23 +619,21 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	 */
 	private $apiUrl;
 	
-	private $curlOpt = array();
-	
 	public function __construct(ShopgateAuthentificationServiceInterface $authService, $shopNumber, $apiUrl) {
 		$this->authService = $authService;
 		$this->shopNumber = $shopNumber;
 		$this->apiUrl = $apiUrl;
-		$this->curlOpt = $this->getCurlOptArray();
 	}
 	
 	/**
 	 * Returns an array of curl-options for requests
 	 *
-	 * @return mixed[]
+	 * @param mixed[] $override cURL options to override for this request.
+	 * @return mixed[] The default cURL options for a Shopgate Merchant API request merged with the options in $override.
 	 */
-	protected function getCurlOptArray() {
+	protected function getCurlOptArray($override = array()) {
 		$opt = array();
-
+		
 		$opt[CURLOPT_HEADER] = false;
 		$opt[CURLOPT_USERAGENT] = 'ShopgatePlugin/'.(defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'called outside plugin');
 		$opt[CURLOPT_SSL_VERIFYPEER] = false;
@@ -651,29 +648,31 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 		$opt[CURLOPT_TIMEOUT] = 30; // Default timeout 30sec
 		$opt[CURLOPT_POST] = true;
 		
-		return $opt;
+		return ($override + $opt);
 	}
 	
 	/**
 	 * Prepares the request and sends it to the configured Shopgate Merchant API.
 	 *
 	 * @param mixed[] $parameters The parameters to send.
+	 * @param mixed[] $curlOptOverride cURL options to override for this request.
 	 * @return ShopgateMerchantApiResponse The response object.
 	 * @throws ShopgateLibraryException in case the connection can't be established, the response is invalid or an error occured.
 	 */
-	protected function sendRequest($parameters) {
+	protected function sendRequest($parameters, $curlOptOverride = array()) {
 		$parameters['shop_number'] = $this->shopNumber;
 		$parameters['trace_id'] = 'spa-'.uniqid();
 		
 		$this->log('Sending request to "'.$this->apiUrl.'": '.ShopgateLogger::getInstance()->cleanParamsForLog($parameters), ShopgateLogger::LOGTYPE_REQUEST);
 		
+		// init new auth session and generate cURL options
 		$this->authService->startNewSession();
+		$curlOpt = $this->getCurlOptArray($curlOptOverride);
 		
+		// init cURL connection and send the request
 		$curl = curl_init($this->apiUrl);
-		
 		curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
-		curl_setopt_array($curl, $this->curlOpt);
-		
+		curl_setopt_array($curl, $curlOpt);
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
 		curl_close($curl);
@@ -732,13 +731,14 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 		return $response;
 	}
 	
-	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false) {
+	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false, $sendCustomerMail = true) {
 		$request = array(
-				'action' => 'add_order_delivery_note',
-				'order_number' => $orderNumber,
-				'shipping_service_id' => $shippingServiceId,
-				'tracking_number' => (string) $trackingNumber,
-				'mark_as_completed' => $markAsCompleted,
+			'action' => 'add_order_delivery_note',
+			'order_number' => $orderNumber,
+			'shipping_service_id' => $shippingServiceId,
+			'tracking_number' => (string) $trackingNumber,
+			'mark_as_completed' => $markAsCompleted,
+			'send_customer_mail' => $sendCustomerMail,
 		);
 		
 		return $this->sendRequest($request);
@@ -774,26 +774,20 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	 * @deprecated
 	 */
 	public function getMobileRedirectKeywords() {
-		// Set timeout to 1 second
-		$this->curlOpt[CURLOPT_TIMEOUT] = 1;
-		
 		$request = array(
 				'action' => 'get_mobile_redirect_keywords',
 		);
 		
-		$response = $this->sendRequest($request);
+		$response = $this->sendRequest($request, array(CURLOPT_TIMEOUT => 1));
 		return $response->getData();
 	}
 	
 	public function getMobileRedirectUserAgents() {
-		// Set timeout to 1 second
-		$this->curlOpt[CURLOPT_TIMEOUT] = 1;
-		
 		$request = array(
 				'action' => 'get_mobile_redirect_user_agents',
 		);
 		
-		$response = $this->sendRequest($request);
+		$response = $this->sendRequest($request, array(CURLOPT_TIMEOUT => 1));
 		
 		$responseData = $response->getData();
 		if(!isset($responseData["keywords"]) || !isset($responseData["skip_keywords"])) {
@@ -1058,8 +1052,14 @@ class ShopgateAuthentificationService extends ShopgateObject implements Shopgate
 	 * @param string $customerNumber
 	 * @param int $timestamp
 	 * @param string $apiKey
+	 * @throws ShopgateLibraryException when no customer number or API key is set
+	 * @return string The SHA-1 hash Auth Token for Shopgate's Authentication
 	 */
 	protected function buildCustomAuthToken($prefix, $customerNumber, $timestamp, $apiKey) {
+		if (empty($customerNumber) || empty($apiKey)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_INVALID_VALUE, 'Shopgate customer number or  API key not set.', true, false);
+		}
+		
 		return sha1("{$prefix}-{$customerNumber}-{$timestamp}-{$apiKey}");
 	}
 }
@@ -1354,6 +1354,7 @@ interface ShopgateMerchantApiInterface {
 	 * @param string $shippingServiceId
 	 * @param int $trackingNumber
 	 * @param bool $markAsCompleted
+	 * @param bool $sendCustomerMail
 	 *
 	 * @return ShopgateMerchantApiResponse
 	 *
@@ -1362,7 +1363,7 @@ interface ShopgateMerchantApiInterface {
 	 *
 	 * @see http://wiki.shopgate.com/Merchant_API_add_order_delivery_note/
 	 */
-	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false);
+	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false, $sendCustomerMail = true);
 	
 	/**
 	 * Represents the "set_order_shipping_completed" action.

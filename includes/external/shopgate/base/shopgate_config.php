@@ -44,6 +44,7 @@ class ShopgateConfigModified extends ShopgateConfig {
 ##### GambioGX | osCommerce | ZenCart BOF #####
 	protected $shopgate_table_version;
 ##### GambioGX | osCommerce | ZenCart EOF #####
+	protected $maximum_category_export_depth;
 	
 	public function startup() {
 		// overwrite some library defaults
@@ -119,6 +120,7 @@ class ShopgateConfigModified extends ShopgateConfig {
 ##### GambioGX | osCommerce | ZenCart BOF #####
 		$this->shopgate_table_version = '';
 ##### GambioGX | osCommerce | ZenCart EOF #####
+		$this->maximum_category_export_depth = '';
 	}
 	
 	
@@ -210,6 +212,10 @@ class ShopgateConfigModified extends ShopgateConfig {
 	}
 ##### XTC3 | XTCM | GambioGX | osCommerce | ZenCart EOF #####
 	
+	public function getMaximumCategoryExportDepth() {
+		return $this->maximum_category_export_depth;
+	}
+	
 	public function setRedirectLanguages($value) {
 		$this->redirect_languages = $value;
 	}
@@ -279,4 +285,8 @@ class ShopgateConfigModified extends ShopgateConfig {
 		$this->shopgate_table_version = $value;
 	}
 ##### XTC3 | XTCM | GambioGX | osCommerce | ZenCart EOF #####
+	
+	public function setMaximumCategoryExportDepth($value) {
+		$this->maximum_category_export_depth = $value;
+	}
 }
