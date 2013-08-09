@@ -19,6 +19,7 @@ class shopgate {
 //
 //
 		$this->enabled = ((MODULE_PAYMENT_SHOPGATE_STATUS == 'True') ? true : false);
+		$this->sort_order = 88457;
 ###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
 	}
 	
@@ -93,8 +94,8 @@ class shopgate {
 			define('TABLE_ORDERS_SHOPGATE_ORDER', 'orders_shopgate_order');
 		}
 		xtc_db_query("delete from ".TABLE_CONFIGURATION." where configuration_key in ('MODULE_PAYMENT_SHOPGATE_STATUS', 'MODULE_PAYMENT_SHOPGATE_ALLOWED', 'MODULE_PAYMENT_SHOPGATE_ORDER_STATUS_ID')");
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_SHOPGATE_STATUS', 'True',  '6', '".$this->sort_order."', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
-		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_ALLOWED', '0',   '6', '".$this->sort_order."', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_SHOPGATE_STATUS', 'True', '6', '".$this->sort_order."', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_SHOPGATE_ALLOWED', '0', '6', '".$this->sort_order."', now())");
 		
 		$this->installTable();
 		$this->updateDatabase();
@@ -173,7 +174,6 @@ class shopgate {
 					PRIMARY KEY (`shopgate_order_id`)
 			) ENGINE=MyISAM; ");
 ###### XTC3 | XTCM | GambioGX | osCommerce BOF #####
-
 //
 //
 //
@@ -182,7 +182,6 @@ class shopgate {
 //
 //
 ###### XTC3 | XTCM | GambioGX | osCommerce EOF #####
-
 	}
 	
 	/**
@@ -250,7 +249,6 @@ class shopgate {
 			$languageCodes[] = $language['code'];
 			
 			switch($language['code']) {
-
 				case 'de':
 					$statusNameNew = 'Versand blockiert (Shopgate)';
 					$statusNameSearch = '%shopgate%';
@@ -259,25 +257,24 @@ class shopgate {
 					$statusNameNew = 'Shipping blocked (Shopgate)';
 					$statusNameSearch = '%shopgate%';
 					break;
-
 				default: continue 2;
 			}
 			
-			$checkShippingBlocked = xtc_db_fetch_array(xtc_db_query(
+			$result = xtc_db_query(
 				"SELECT `orders_status_id`, `orders_status_name` ".
 				"FROM `".TABLE_ORDERS_STATUS."` ".
-
 				"WHERE LOWER(`orders_status_name`) LIKE '".xtc_db_input($statusNameSearch)."' ".
-
 				"AND `language_id` = ".xtc_db_input($language['languages_id']).";"
-			));
+			);
+			$checkShippingBlocked = xtc_db_fetch_array($result);
 			
 			if(!empty($checkShippingBlocked)) {
 				$orderStatusShippingBlockedId = $checkShippingBlocked['orders_status_id'];
 			} else {
 				// if no orders_status_id has been determined yet and the status could not be found, create a new one
 				if(!isset($orderStatusShippingBlockedId)) {
-					$nextId = xtc_db_fetch_array(xtc_db_query("SELECT max(orders_status_id) AS orders_status_id FROM " . TABLE_ORDERS_STATUS));
+					$result = xtc_db_query("SELECT max(orders_status_id) AS orders_status_id FROM " . TABLE_ORDERS_STATUS);
+					$nextId = xtc_db_fetch_array($result);
 					$orderStatusShippingBlockedId = $nextId['orders_status_id'] + 1;
 				}
 				

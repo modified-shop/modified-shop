@@ -1,5 +1,5 @@
 <?php
-define('SHOPGATE_PLUGIN_VERSION', '2.1.23');
+define('SHOPGATE_PLUGIN_VERSION', '2.1.24');
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -48,18 +48,21 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		
 		// fetch country
 		$qry = "SELECT * FROM `".TABLE_COUNTRIES."` WHERE UPPER(countries_iso_code_2) = UPPER('".$this->config->getCountry()."')";
-		$qry = xtc_db_fetch_array(xtc_db_query($qry));
+		$result = xtc_db_query($qry);
+		$qry = xtc_db_fetch_array($result);
 		$this->countryId = !empty($qry['countries_id']) ? $qry['countries_id'] : 'DE';
 
 		// fetch language
 		$qry = "SELECT * FROM `".TABLE_LANGUAGES."` WHERE UPPER(code) = UPPER('".$this->config->getLanguage()."')";
-		$qry = xtc_db_fetch_array(xtc_db_query($qry));
+		$result = xtc_db_query($qry);
+		$qry = xtc_db_fetch_array($result);
 		$this->languageId = !empty($qry['languages_id']) ? $qry['languages_id'] : 2;
 		$this->language = !empty($qry['directory']) ? $qry['directory'] : 'german';
 
 		// fetch currency
 		$qry = "SELECT * FROM `".TABLE_CURRENCIES."` WHERE UPPER(code) = UPPER('".$this->config->getCurrency()."')";
-		$qry = xtc_db_fetch_array(xtc_db_query($qry));
+		$result = xtc_db_query($qry);
+		$qry = xtc_db_fetch_array($result);
 		$this->exchangeRate = !empty($qry['value']) ? $qry['value'] : 1;
 		$this->currencyId = !empty($qry['currencies_id']) ? $qry['currencies_id'] : 1;
 		$this->currency = !empty($qry)
@@ -95,7 +98,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			$maxOrder = 0;
 		} else {
 			$qry = "SELECT MAX( sort_order ) sort_order FROM " . TABLE_CATEGORIES;
-			$maxOrder = xtc_db_fetch_array( xtc_db_query( $qry ) );
+			$result = xtc_db_query( $qry );
+			$maxOrder = xtc_db_fetch_array( $result );
 			$maxOrder = $maxOrder["sort_order"] + 1;
 		}
 
@@ -155,6 +159,64 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 	}
 
 	/**
+	 * returns all sub categories including the given parent as a list that is a mapping from one category to a higher category if a given depth is exceeded
+	 * @param int $maxDepth
+	 * @param int $parentId
+	 * @param int $copyId
+	 * @param int $depth
+	 * @throws ShopgateLibraryException
+	 * @return array
+	 */
+	private function _getCategoryReducementMap($maxDepth = null, $parentId = null, $copyId = null, $depth = null) {
+		$circularDepthStop = 50;
+		if(empty($depth)) {
+			$depth = 1;
+		} elseif($depth > $circularDepthStop) {
+			// disallow circular category connections (detect by a maximum depth)
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'error on loading sub-categories: Categories-Depth exceedes a value of '.$circularDepthStop.'. Check if there is a circular connection (referenced categories ids: '.$parentId.'=>'.$row['categories_id'].')', true);
+		}
+		
+		$qry =
+			"SELECT `categories_id` FROM `".TABLE_CATEGORIES."` WHERE" .
+			// select by parent id, if set
+			(!empty($parentId)
+				? " (`parent_id` = '{$parentId}')"
+				: " (`parent_id` IS NULL OR `parent_id` = 0 OR `parent_id` = '')"
+			)
+		;
+		
+		$qryResult = xtc_db_query($qry);
+		if(!$qryResult) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DATABASE_ERROR, 'error on selecting categories', true);
+		}
+		
+		// add all sub categories to a simple one-dimensional array
+		$categoryMap = array();
+		while($row = xtc_db_fetch_array($qryResult)) {
+			// copy only if a maximum depth is set, yet
+			if(!empty($maxDepth)) {
+				if($depth == $maxDepth) {
+					$copyId = $row['categories_id'];
+				}
+			}
+			// Check if a mapping to a higher category needs to be applied
+			if(!empty($copyId) && !empty($row['categories_id'])) {
+				$categoryMap[$row['categories_id']] = $copyId;
+			} else {
+				// no mapping to other categories, map to itself!
+				$categoryMap[$row['categories_id']] = $row['categories_id'];
+			}
+			
+			$subCategories = $this->_getCategoryReducementMap($maxDepth, $row['categories_id'], $copyId, $depth+1);
+			if(!empty($subCategories)) {
+				$categoryMap = $categoryMap+$subCategories;
+			}
+		}
+		
+		return $categoryMap;
+	}
+	
+	/**
 	 * @see ShopgatePluginApi::createItemsCsv()
 	 */
 	protected function createItemsCsv() {
@@ -181,6 +243,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			if(!empty($customerGroupResult) && isset($customerGroupResult['customers_status_discount'])) {
 				$customerGroupDiscountAttributes = $customerGroupResult['customers_status_discount_attributes'] ? true : false;
 			}
+		}
+		
+		$categoryReducementMap = array();
+		$maxCatDepth = $this->config->getMaximumCategoryExportDepth();
+		if(!empty($maxCatDepth)) {
+			$categoryReducementMap = $this->_getCategoryReducementMap($maxCatDepth);
 		}
 		
 		$qry = "
@@ -226,14 +294,22 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		if(STOCK_CHECK == "true" && STOCK_ALLOW_CHECKOUT == 'false') {
 			$qry .= " AND p.products_quantity > 0 ";
 		}
+		
+		// Code for enabling to download specific products (for debugging purposes only, at this time)
+		if(!empty($_REQUEST['item_numbers']) && is_array($_REQUEST['item_numbers'])) {
+			$qry .= " AND p.products_id IN ('".implode("', '", $_REQUEST['item_numbers'])."') ";
+		}
+		
 		// Ahorn24 fix. 10 products were not found without sorting.
 		$qry .= ' ORDER BY p.products_id ASC ';
 
-		$maxId = xtc_db_fetch_array( xtc_db_query("SELECT MAX(products_id) max_id FROM ".TABLE_PRODUCTS) );
+		$result = xtc_db_query("SELECT MAX(products_id) max_id FROM ".TABLE_PRODUCTS);
+		$maxId = xtc_db_fetch_array( $result );
 		$maxId = $maxId["max_id"];
 
 		// order_index for the products
-		$orderIndices = xtc_db_fetch_array( xtc_db_query("SELECT MIN(products_sort) AS 'min_order', MAX(products_sort) AS 'max_order' FROM ".TABLE_PRODUCTS) );
+		$result = xtc_db_query("SELECT MIN(products_sort) AS 'min_order', MAX(products_sort) AS 'max_order' FROM ".TABLE_PRODUCTS);
+		$orderIndices = xtc_db_fetch_array( $result );
 		$maxOrder = $orderIndices["max_order"]+1;
 		$minOrder = $orderIndices["min_order"];
 		$addToOrderIndex = 0;
@@ -315,6 +391,19 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			}
 			
 			$category_numbers = $this->_getProductCategoryNumbers($item, $maxOrder, $addToOrderIndex);
+			// check if there is a category replacement map to reduce categories depth
+			if(!empty($categoryReducementMap)) {
+				foreach($category_numbers as &$categoryNumber) {
+					// can possibly contain a split symbol "=>"
+					if(strpos($categoryNumber, '=>') !== FALSE) {
+						$catNumberParts = explode('=>', $categoryNumber);
+						$catNumberParts[0] = $categoryReducementMap[$catNumberParts[0]];
+						$categoryNumber = implode('=>', $catNumberParts);
+					} else {
+						$categoryNumber = $categoryReducementMap[$categoryNumber];
+					}
+				}
+			}
 			
 			$price *= $this->exchangeRate;
 			$price = $price * ( 1 + ( $tax_rate / 100 ) );
@@ -1258,7 +1347,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			INNER JOIN ".TABLE_SHOPGATE_ORDERS." so ON (so.orders_id = o.orders_id)
 			WHERE so.shopgate_order_number = '{$order->getOrderNumber()}'
 		";
-		$dbOrder = xtc_db_fetch_array( xtc_db_query( $qry ) );
+		$result = xtc_db_query( $qry );
+		$dbOrder = xtc_db_fetch_array( $result );
 
 		if(!empty($dbOrder)) {
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_DUPLICATE_ORDER, 'external_order_number: '. $dbOrder["orders_id"], true);
@@ -1274,7 +1364,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$shopCustomer = array();
 		if (!empty($customerId)) {
 			$this->log('db: customer', ShopgateLogger::LOGTYPE_DEBUG);
-			$shopCustomer = xtc_db_fetch_array(xtc_db_query("SELECT * FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '{$customerId}'"));
+			$result = xtc_db_query("SELECT * FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '{$customerId}'");
+			$shopCustomer = xtc_db_fetch_array($result);
 		}
 		if (empty($shopCustomer)) {
 			$this->log('create Guest User', ShopgateLogger::LOGTYPE_DEBUG);
@@ -1325,7 +1416,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		$this->log('db: customer_status', ShopgateLogger::LOGTYPE_DEBUG);
 		
-		$customersStatus = xtc_db_fetch_array(xtc_db_query("SELECT * FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id = '{$this->languageId}' AND customers_status_id = '{$shopCustomer["customers_status"]}'"));
+		$result = xtc_db_query("SELECT * FROM " . TABLE_CUSTOMERS_STATUS . " WHERE language_id = '{$this->languageId}' AND customers_status_id = '{$shopCustomer["customers_status"]}'");
+		$customersStatus = xtc_db_fetch_array($result);
 		if (empty($customersStatus)) throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_NO_CUSTOMER_GROUP_FOUND, print_r($shopCustomer,true));
 
 
@@ -1338,9 +1430,12 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 
 		$this->log('db: countries', ShopgateLogger::LOGTYPE_DEBUG);
 		
-		$customersCountry = xtc_db_fetch_array(xtc_db_query("SELECT * FROM ".TABLE_COUNTRIES." WHERE countries_id = '{$customersAddress['entry_country_id']}'"));
-		$deliveryCountry = xtc_db_fetch_array(xtc_db_query("SELECT * FROM ".TABLE_COUNTRIES." WHERE countries_iso_code_2 = '{$delivery->getCountry()}'"));
-		$invoiceCountry = xtc_db_fetch_array(xtc_db_query("SELECT * FROM ".TABLE_COUNTRIES." WHERE countries_iso_code_2 = '{$invoice->getCountry()}'"));
+		$result = xtc_db_query("SELECT * FROM ".TABLE_COUNTRIES." WHERE countries_id = '{$customersAddress['entry_country_id']}'");
+		$customersCountry = xtc_db_fetch_array($result);
+		$result = xtc_db_query("SELECT * FROM ".TABLE_COUNTRIES." WHERE countries_iso_code_2 = '{$delivery->getCountry()}'");
+		$deliveryCountry = xtc_db_fetch_array($result);
+		$result = xtc_db_query("SELECT * FROM ".TABLE_COUNTRIES." WHERE countries_iso_code_2 = '{$invoice->getCountry()}'");
+		$invoiceCountry = xtc_db_fetch_array($result);
 		if(empty($customersCountry)) {
 			$customersCountry = $invoiceCountry;
 		}
@@ -1509,7 +1604,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		INNER JOIN ".TABLE_SHOPGATE_ORDERS." so ON (so.orders_id = o.orders_id)
 		WHERE so.shopgate_order_number = '{$order->getOrderNumber()}'
 		";
-		$dbOrder = xtc_db_fetch_array( xtc_db_query( $qry ) );
+		$result = xtc_db_query( $qry );
+		$dbOrder = xtc_db_fetch_array( $result );
 
 		if($dbOrder == false){
 			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_ORDER_NOT_FOUND, "Shopgate order number: '{$order->getOrderNumber()}'.");
@@ -1607,7 +1703,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 								*
 							FROM banktransfer b
 							WHERE b.orders_id = '{$dbOrder['orders_id']}'";
-						$dbBanktransfer = xtc_db_fetch_array( xtc_db_query( $qry ) );
+						$result = xtc_db_query( $qry );
+						$dbBanktransfer = xtc_db_fetch_array( $result );
 
 						if(!empty($dbBanktransfer)){
 							$banktransferData = array();
@@ -1746,6 +1843,9 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		} else {
 			$comment .= "\nHinweis: Der Versand der Bestellung ist bei Shopgate blockiert!";
 			$currentOrderStatus = $this->config->getOrderStatusShippingBlocked();
+		}
+		if ($order->getIsCustomerInvoiceBlocked()) {
+			$comment .= "\nHinweis: Für diese Bestellung darf keine Rechnung versendet werden!";
 		}
 
 		$comment = $this->stringFromUtf8($comment, $this->config->getEncoding());
@@ -2461,7 +2561,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 			";
 		}
 
-		$item = xtc_db_fetch_array(xtc_db_query($qry));
+		$result = xtc_db_query($qry);
+		$item = xtc_db_fetch_array($result);
 		return $item["address_format_id"];
 	}
 
@@ -2541,7 +2642,8 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$customerMemo["poster_id"] = null;
 		xtc_db_perform("customers_memo", $customerMemo);
 
-		$customer = xtc_db_fetch_array(xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = " . $customerId));
+		$result = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = " . $customerId);
+		$customer = xtc_db_fetch_array($result);
 		return $customer;
 	}
 	

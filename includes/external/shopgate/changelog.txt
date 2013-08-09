@@ -1,5 +1,11 @@
 '''Deutsch'''
 
+'''Version 2.1.24'''
+* Änderungen des modified eCommerce Teams in das Plugin eingepflegt
+* Auf Anfrage besteht nun die Möglichkeit, Kategorien auf eine Maximaltiefe zu reduzieren. Tieferliegende Produkte werden dabei der tiefsten verfügbaren Elternkategorie zugeordnet.
+* Es wurde ein Problem behoben, bei dem das Shopgate Modul bei den CSV-Exporten und bei Bestelloungimporten Warnmeldungen verursachte, wenn das Error-Level des Servers auf streng eingestellt war
+* nutzt die Shopgate Library 2.1.29
+
 '''Version 2.1.23'''
 * Unterstützung für SEO-URLs beim Export der Produkte und Kategorien
 * CSS-Klassen für die Darstellung im Backend angepasst
@@ -147,6 +153,12 @@
 
 
 '''English'''
+
+'''Version 2.1.24'''
+* applied all plugin modifications, done by the modified eCommerce team
+* it's now possible to reduce the category depth to a maximum value upon request, where products deeper will be assigned to the deepest exported parent
+* a problem has been solved, that happened to cause warnings while csv exports and order imports on servers that has set its error level to strict
+* uses Shopgate Library 2.1.29
 
 '''Version 2.1.23'''
 * added support for SEO URLs to export of products and categories
