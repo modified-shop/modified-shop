@@ -1,5 +1,19 @@
 '''Deutsch'''
 
+'''Version 2.1.29'''
+* die Header für die Authentifizierung werden jetzt bei jedem Request per ShopgateMerchantApi-Klasse neu generiert
+* die Einstellung "enable_get_redirect_keywords" wird jetzt konsequent als Boolean genutzt, die Nutzung als Zeitangabe für die Cache-Lifetime entfällt
+* es gibt einen neuen Weiterleitungstyp "default", der für Seiten eingesetzt wird, die nicht zugeordnet werden können
+* es gibt eine neue Einstellung "enable_default_redirect", mit denen die "default"-Weiterleitung (de-)aktiviert werden kann
+* die Einstellung "server" wurde um den Wert "sl" erweitert, mit dem der Shopgate Spotlight-Server angesprochen werden kann (API, Mobile Header, Weiterleitung)
+
+'''Version 2.1.28'''
+* die ShopgateOrder Klasse wurde um Shipping-Informationen erweitert, welche über die Shopgate Merchant API verfügbar sind 
+
+'''Version 2.1.27'''
+* neuen Schalter für die Standard-Weiterleitung von Contentseiten zur mobilen Startseite in der Klasse ShopgateConfig hinzugefügt
+* Paramater send_customer_mail zu Merchant API Methode addOrderDeliveryNote() hinzugefügt 
+
 '''Version 2.1.26'''
 * die Konvertierung der Zeichensätze wird jetzt optional mit iconv durchgeführt, wenn die mb_string-Erweiterung für PHP nicht installiert ist
 * Logik zur dateibasierten Verarbeitung einer globalen Konfiguration und mehreren sprachabhängigen Konfigurationen implementiert
@@ -101,6 +115,20 @@
 
 
 '''English'''
+
+'''Version 2.1.29'''
+* the authentication headers are regenerated on every call via the ShopgateMerchantApi class
+* the setting "enable_get_redirect_keywords" is now all boolean; the prior use of it as cache lifetime does not apply any longer
+* added new redirect type "default" for pages whose type cannot be determined
+* added new setting "enable_default_redirect" to (de-)activate the "default" redirect type
+* added new value "sl" for the setting "server" to enbale switching to Shopgate's Spotlight environment (API, Mobile Header, Mobile Redirect)
+
+'''Version 2.1.28'''
+* added additional information about shipping into the ShopgateOrder class, that is available by the Shopgate Merchant API
+
+'''Version 2.1.27'''
+* added switch for default redirect from content pages to mobile homepage in class ShopgateConfig
+* added paramater send_customer_mail to Merchant API method addOrderDeliveryNote()
 
 '''Version 2.1.26'''
 * conversion of encodings is now performed via iconv if the mb_string extension for PHP is not installed

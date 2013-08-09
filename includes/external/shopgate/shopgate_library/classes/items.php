@@ -1,11 +1,4 @@
 <?php
-
-/**
- * Shogate Category Object
- *
- * @author Shopgate GmbH, 35510 Butzbach, DE
- * @see http://wiki.shopgate.com/Merchant_API_get_categories/
- */
 class ShopgateCategory extends ShopgateContainer {
 	protected $category_number = null;
 	protected $name = null;

@@ -3,7 +3,7 @@
 ###################################################################################
 # define constants
 ###################################################################################
-define('SHOPGATE_LIBRARY_VERSION', '2.1.26');
+define('SHOPGATE_LIBRARY_VERSION', '2.1.29');
 define('SHOPGATE_LIBRARY_ENCODING' , 'UTF-8');
 define('SHOPGATE_BASE_DIR', realpath(dirname(__FILE__).'/../'));
 
@@ -354,7 +354,6 @@ class ShopgateLogger {
 		$this->debug = false;
 	}
 	
-
 	/**
 	 * @return ShopgateLogger
 	 */
@@ -377,7 +376,7 @@ class ShopgateLogger {
 	
 	/**
 	 * Sets the paths to the log files.
-	 * 
+	 *
 	 * @param string $accessLogPath
 	 * @param string $requestLogPath
 	 * @param string $errorLogPath
@@ -396,8 +395,8 @@ class ShopgateLogger {
 			$this->files[self::LOGTYPE_ERROR]['path'] = $errorLogPath;
 		}
 		
-		if (!empty($debugLogErrorPath)) {
-			$this->files[self::LOGTYPE_DEBUG]['path'] = $debugLogErrorPath;
+		if (!empty($debugLogPath)) {
+			$this->files[self::LOGTYPE_DEBUG]['path'] = $debugLogPath;
 		}
 	}
 	
@@ -431,8 +430,9 @@ class ShopgateLogger {
 	 * <br />
 	 * to the selected log file. If an unknown log type is passed the message will be logged to the error log file.<br />
 	 * <br />
-	 * Logging to LOGTYPE_DEBUG only occurs after $this->enableDebug() has been called. The debug log file will be truncated
-	 * on opening.
+	 * Logging to LOGTYPE_DEBUG only is done after $this->enableDebug() has been called and $this->disableDebug() has not
+	 * been called after that. The debug log file will be truncated on opening by default. To prevent this call
+	 * $this->keepDebugLog(true).
 	 *
 	 * @param string $msg The error message.
 	 * @param string $type The log type, that would be one of the ShopgateLogger::LOGTYPE_* constants.
@@ -455,7 +455,7 @@ class ShopgateLogger {
 		}
 
 		// if debug logging is requested but not activated, simply return
-		if (($type === self::LOGTYPE_DEBUG) && !$this->debug ) {
+		if (($type === self::LOGTYPE_DEBUG) && !$this->debug) {
 			return true;
 		}
 
@@ -480,7 +480,7 @@ class ShopgateLogger {
 	 * @param bool $keep
 	 */
 	public function keepDebugLog($keep) {
-		if($keep)
+		if ($keep)
 			$this->files[self::LOGTYPE_DEBUG]["mode"]  = "a+";
 		else
 			$this->files[self::LOGTYPE_DEBUG]["mode"]  = "w+";
@@ -787,16 +787,16 @@ abstract class ShopgateObject {
 	
 	/**
 	 * Converts a string's encoding to another.
-	 * 
+	 *
 	 * This wraps the mb_convert_encoding() and iconv() functions of PHP. If the mb_string extension is not installed,
 	 * iconv() will be used instead.
-	 * 
+	 *
 	 * If iconv() must be used and an array is passed as $sourceEncoding all encodings will be tested and the (probably)
 	 * best encoding will be used for conversion.
 	 *
 	 * @see http://php.net/manual/en/function.mb-convert-encoding.php
 	 * @see http://php.net/manual/en/function.iconv.php
-	 * 
+	 *
 	 * @param string $string The string to decode.
 	 * @param string $destinationEncoding The desired encoding of the return value.
 	 * @param string|string[] $sourceEncoding The (possible) encoding(s) of $string.
@@ -1419,6 +1419,8 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * This method gets called on instantiation of a ShopgatePlugin child class and serves as __construct() replacement.
 	 *
 	 * Important: Initialize $this->config here if you have your own config class.
+	 *
+	 * @see http://wiki.shopgate.com/Shopgate_Library#startup.28.29
 	 */
 	public abstract function startup();
 
@@ -1448,6 +1450,8 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * The method should not abort on soft errors like when the street or phone number of a customer can't be found.
 	 *
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_customer#API_Response
+	 *
 	 * @param string $user The user name the customer entered at Shopgate Connect.
 	 * @param string $pass The password the customer entered at Shopgate Connect.
 	 * @return ShopgateCustomer A ShopgateCustomer object.
@@ -1457,6 +1461,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 
 	/**
 	 * Performs the necessary queries to add an order to the shop system's database.
+	 *
+	 * @see http://wiki.shopgate.com/Merchant_API_get_orders#API_Response
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_add_order#API_Response
 	 *
 	 * @param ShopgateOrder $order The ShopgateOrder object to be added to the shop system's database.
 	 * @return array(
@@ -1471,8 +1478,10 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	/**
 	 * Performs the necessary queries to update an order in the shop system's database.
 	 *
-	 * @param ShopgateOrder $order The ShopgateOrder object to be update in the shop system's database.
-	 * @param bool $payment True if the payment status of an order should be updated, false otherwise.
+	 * @see http://wiki.shopgate.com/Merchant_API_get_orders#API_Response
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_update_order#API_Response
+	 *
+	 * @param ShopgateOrder $order The ShopgateOrder object to be updated in the shop system's database.
 	 * @return array(
 	 *          <ul>
 	 *          	<li>'external_order_id' => <i>string</i>, # the ID of the order in your shop system's database</li>
@@ -1490,6 +1499,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * Use ShopgatePlugin::buildDefaultItemRow() to get the correct indices for the field names in a Shopgate items csv and
 	 * use ShopgatePlugin::addItemRow() to add it to the output buffer.
 	 *
+	 * @see http://wiki.shopgate.com/CSV_File_Items
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_items_csv
+	 *
 	 * @throws ShopgateLibraryException
 	 */
 	protected abstract function createItemsCsv();
@@ -1500,6 +1512,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 * Use ShopgatePlugin::buildDefaultCategoryRow() to get the correct indices for the field names in a Shopgate categories csv and
 	 * use ShopgatePlugin::addCategoryRow() to add it to the output buffer.
 	 *
+	 * @see http://wiki.shopgate.com/CSV_File_Categories
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_categories_csv
+	 *
 	 * @throws ShopgateLibraryException
 	 */
 	protected abstract function createCategoriesCsv();
@@ -1509,6 +1524,9 @@ abstract class ShopgatePlugin extends ShopgateObject {
 	 *
 	 * Use ShopgatePlugin::buildDefaultReviewRow() to get the correct indices for the field names in a Shopgate reviews csv and
 	 * use ShopgatePlugin::addReviewRow() to add it to the output buffer.
+	 *
+	 * @see http://wiki.shopgate.com/CSV_File_Reviews
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_reviews_csv
 	 *
 	 * @throws ShopgateLibraryException
 	 */
@@ -2298,11 +2316,9 @@ class ShopgateContainerToArrayVisitor implements ShopgateContainerVisitor {
 	}
 
 	protected function sanitizeSimpleVar($v) {
-		if (is_int($v)) {
+		if (is_bool($v)) {
 			return (int) $v;
-		} elseif (is_bool($v)) {
-			return (int) $v;
-		} elseif (is_string($v)) {
+		} else {
 			return $v;
 		}
 	}

@@ -11,6 +11,24 @@ class ShopgateOrder extends ShopgateContainer {
 	const KLARNA_INV = "KLARNA_INV";
 	const BILLSAFE = "BILLSAFE";
 
+	// shipping groups
+	const DHL			= "DHL"; // DHL
+	const DHLEXPRESS	= "DHLEXPRESS"; // DHLEXPRESS
+	const DP			= "DP"; // Deutsche Post
+	const DPD			= "DPD"; // Deutscher Paket Dienst
+	const FEDEX			= "FEDEX"; // FedEx
+	const GLS			= "GLS"; // GLS
+	const HLG			= "HLG"; // Hermes
+	const OTHER			= "OTHER"; // Anderer Lieferant
+	const TNT			= "TNT"; // TNT
+	const TOF			= "TOF"; // Trnas-o-Flex
+	const UPS			= "UPS"; // UPS
+	const USPS			= "USPS"; // USPS
+	
+	// shipping types
+	const MANUAL		= "MANUAL";
+	const USPS_API_V1	= "USPS_API_V1";
+	const UPS_API_V1	= "UPS_API_V1";
 
 	protected $order_number;
 	protected $customer_number;
@@ -26,6 +44,10 @@ class ShopgateOrder extends ShopgateContainer {
 	protected $mobile;
 
 	protected $confirm_shipping_url;
+
+	protected $shipping_group;
+	protected $shipping_type;
+	protected $shipping_infos;
 
 	protected $created_time;
 
@@ -158,6 +180,32 @@ class ShopgateOrder extends ShopgateContainer {
 	 * @param string $value
 	 */
 	public function setConfirmShippingUrl($value) { $this->confirm_shipping_url = $value; }
+
+	/**
+	 * The shipping_group aka shipping service id
+	 *
+	 * @param string $value
+	 */
+	public function setShippingGroup($value) { $this->shipping_group = $value; }
+
+	/**
+	 * The shipping_type states if an API was used
+	 *
+	 * @param string $value
+	 */
+	public function setShippingType($value) { $this->shipping_type = $value; }
+
+	/**
+	 * The shipping_infos contain an array with all information to the shipping
+	 * - name: i.e "DHL Express"
+	 * - description: i.e "Delivery via DHL Express"
+	 * - amount: complete shipping price for the order
+	 * - weight: weight in gramm
+	 * - api_response: only if shipping_type is not "MANUAL"
+	 *
+	 * @param string $value
+	 */
+	public function setShippingInfos($value) { $this->shipping_infos = $value; }
 
 	/**
 	 * The DateTime when the order was created
@@ -526,6 +574,32 @@ class ShopgateOrder extends ShopgateContainer {
 	 *  @return string
 	 */
 	public function getConfirmShippingUrl() { return $this->confirm_shipping_url ; }
+
+	/**
+	 * The shipping_group aka shipping service id
+	 *
+	 *  @return string
+	 */
+	public function getShippingGroup() { return $this->shipping_group ; }
+
+	/**
+	 * The shipping_type states if an API was used
+	 *
+	 *  @return string
+	 */
+	public function getShippingType() { return $this->shipping_type ; }
+
+	/**
+	 * The shipping_infos contain an array with all information to the shipping
+	 * - name: i.e "DHL Express"
+	 * - description: i.e "Delivery via DHL Express"
+	 * - amount: complete shipping price for the order
+	 * - weight: weight in gramm
+	 * - api_response: only if shipping_type is not "MANUAL"
+	 *
+	 *  @return string
+	 */
+	public function getShippingInfos() { return $this->shipping_infos ; }
 
 	/**
 	 * The DateTime when the order was created
