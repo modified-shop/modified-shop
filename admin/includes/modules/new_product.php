@@ -219,7 +219,7 @@
       </script>
       <?php } ?>
       
-      <div class="main" style="margin-bottom:10px;float:right;">
+      <div class="main" style="padding-bottom:5px;margin-bottom:10px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         &nbsp;&nbsp;
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>

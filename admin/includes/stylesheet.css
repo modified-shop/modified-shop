@@ -398,6 +398,7 @@ background: #F7F7F7;
 width: 100%;
 padding: 2px;
 border-collapse: collapse;
+table-layout: fixed;
 }
 .boxCenterLeft {
 width: 75%;
@@ -484,6 +485,7 @@ width:100%;
 padding:2px;
 border-collapse: collapse;
 margin-top: 5px;
+table-layout: fixed;
 }
 .tableConfig td{
 padding:8px; 
@@ -525,6 +527,7 @@ width:600px;
 padding:2px;
 border-collapse: collapse;
 margin-top: 5px;
+table-layout: fixed;
 }
 .tableConfirm td{
 padding:5px;
@@ -547,6 +550,7 @@ width: 100%;
 border: 1px solid #aaaaaa; 
 padding: 2px;
 background: #f3f3f3;
+table-layout: fixed;
 }
 .tableInput td{
 vertical-align: top;
