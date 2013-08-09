@@ -200,11 +200,10 @@
 			echo '<table style="font: 12px Arial, Helvetica, sans-serif;">';
 				echo '<tr>';
 					echo '<td><a href="' . $billpay->_buildTcTermsUrl() . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK1 . '</a></td>';
-					//echo '<td><a href="' . $_SESSION['rr_data']['termsUrl'] . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK1 . '</a></td>';
 				echo '</tr><tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK2 . '</td>';
+					echo '<td><a href="' . $billpay->_buildTcPrivacyUrl() . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK2 . '</a></td>';
 				echo '</tr><tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK3 . '</td>';
+					echo '<td><a href="' . $billpay->_buildTcConditionsUrl() . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK3 . '</a></td>';;
 				echo '</tr>';
 			echo '</table>';
 		echo '</td></tr></table>';

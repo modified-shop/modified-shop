@@ -13,21 +13,33 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+	require_once(DIR_FS_CATALOG . 'includes/modules/payment/billpay.php');
 	$paymentMethod = $order->info['payment_method'];
-	
 	if ($paymentMethod == 'billpay') {
-		if(isset($_SESSION['billpay_transaction_id'])) {
+		//if(isset($_SESSION['billpay_transaction_id'])) {
 			$billpay = new billpay(strtoupper($order->info['payment_method']));
 			
-			$billpay_bankdata_query = "SELECT account_holder, account_number, bank_code, bank_name ".
-			                            "FROM billpay_bankdata ".
-				                            "WHERE tx_id = '".$_SESSION['billpay_transaction_id']."'";
-			
+			if(isset($_SESSION['billpay_transaction_id'])) {
+				$billpay_bankdata_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
+			    						  "FROM billpay_bankdata ".
+				                          "WHERE tx_id = '".$_SESSION['billpay_transaction_id']."'";
+			}else {
+				$billpay_bankdata_query = "SELECT account_holder, account_number, bank_code, bank_name, invoice_reference ".
+			    						  "FROM billpay_bankdata ".
+				                          "WHERE api_reference_id = '".$oID."'";
+			}
+
 			$billpay_bankdata_result = xtc_db_query($billpay_bankdata_query);
 			$billpay_bankdata = xtc_db_fetch_array($billpay_bankdata_result);
 			//$billpay_infotext = MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL . '<br /><br />';
+
+			if(!$billpay_bankdata['api_reference']){
+				$invoiceReference = $billpay->generateInvoiceReference($insert_id);
+			} else {
+				$invoiceReference = $billpay_bankdata['invoice_reference'];
+			}
 			
-			$invoiceReference = $billpay->generateInvoiceReference($insert_id);
+			//$invoiceReference = $billpay->generateInvoiceReference($insert_id);
 			
 			$billpay_infotext = sprintf(MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO_MAIL, $invoiceReference) . '<br /><br />';
 			$billpay_infotext .= MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER .': '. $billpay_bankdata['account_holder'].'<br />';
@@ -44,7 +56,7 @@
 			}
 			$smarty->assign('PAYMENT_INFO_HTML', $billpay_infotext);
 			$smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_infotext));
-		}
+	//	}
 	}
 	else if ($paymentMethod == 'billpaydebit') {
 		$billpay_infotext = '<br /><br />' . MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1;
