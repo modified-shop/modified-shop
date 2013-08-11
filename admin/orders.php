@@ -187,6 +187,7 @@ switch ($action) {
                                       );
     $check_status = xtc_db_fetch_array($check_status_query);
     if ($check_status['orders_status'] != $status || $comments != '') {
+      require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_status_requests.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
       xtc_db_query("-- /admin/orders.php
                     UPDATE ".TABLE_ORDERS."
                        SET orders_status = ".$status.",

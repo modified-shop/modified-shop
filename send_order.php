@@ -112,6 +112,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('EMAIL', $order->customer['email_address']);
   $smarty->assign('PHONE',$order->customer['telephone']);
 
+  require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+
   //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
   unset ($_SESSION['paypal_link']);
   if ($order->info['payment_method'] == 'paypal_ipn') {

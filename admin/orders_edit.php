@@ -68,7 +68,9 @@ require_once (DIR_FS_INC.'xtc_oe_customer_infos.inc.php');
 require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 // Benötigte Funktionen und Klassen Ende
-
+if (file_exists(DIR_FS_EXTERNAL . 'billpay/utils/billpay_edit_orders.php')) {
+  require_once (DIR_FS_EXTERNAL . 'billpay/utils/billpay_edit_orders.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+}
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
 // Adressbearbeitung Anfang
