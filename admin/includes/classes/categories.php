@@ -177,7 +177,9 @@ class categories {
       xtc_db_perform(TABLE_CATEGORIES, $sql_data_array, 'update', 'categories_id = \''.$categories_id.'\'');
     }
 
-    xtc_set_groups($categories_id, $permission_array);
+    if (isset($categories_data['set_groups_permissions']) && $categories_data['set_groups_permissions'] != 0) {
+      xtc_set_groups($categories_id, $permission_array);
+    }
     $languages = xtc_get_languages();
     foreach ($languages AS $lang) {
       if (isset($categories_data['name'])) $categories_name_array = $categories_data['name'];

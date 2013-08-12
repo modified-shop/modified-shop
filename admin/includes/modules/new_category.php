@@ -125,9 +125,9 @@
         </tr>
       </table>
       </div>
-      <!-- EOF - Tomcraft - 2009-11-02 - Block1 //-->
+      <!-- EOF Block1 //-->
 
-      <!-- BOF - Tomcraft - 2009-11-02 - Customers group block //-->
+      <!-- BOF Customers group block //-->
       <?php
       if (GROUP_CHECK=='true') {
       ?>
@@ -140,13 +140,20 @@
             echo $catfunc->create_permission_checkboxes($category);
             ?>
           </div>
+          <div style="clear:both;padding:5px;"></div>
+          <div class="main flt-l" style="width:214px">&nbsp;</div>
+          <div class="main">
+            <?php          
+            echo xtc_draw_selection_field('set_groups_permissions', 'checkbox', '1', false). ' ' . TEXT_SET_GROUP_PERMISSIONS;
+            ?>           
+          </div>
           <div style="clear:both"></div>            
         </div>      
       </div>
       <?php
       }
       ?>
-      <!-- EOF - Tomcraft - 2009-11-02 - Customers group block //-->
+      <!-- EOF Customers group block //-->
 
       <link rel="stylesheet" type="text/css" href="includes/lang_tabs_menu/lang_tabs_menu.css" />
       <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
