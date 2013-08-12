@@ -220,4 +220,6 @@ define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Bestellbeschreibung - Anzeige am Ende 
 // web28 - redirect to product input mask
 define('TEXT_HOW_TO_LINK', '<b>Seitenaufruf nach dem Kopieren/Verlinken</b>');
 define('TEXT_HOW_TO_LINK_INFO', 'Artikeleingabemaske<br/ >(Bei mehreren Artikel zum Letzten in der Liste)');
+
+define('TEXT_SET_GROUP_PERMISSIONS', 'Kundengruppen Berechtigungen f&uuml;r alle Unterordner und Artikel &uuml;bernehmen?');
 ?>
