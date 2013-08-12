@@ -79,7 +79,7 @@
                           array('id' => 'DESC','text'=>TEXT_SORT_DESC));
 ?>
 
-    <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id); ?></div>
+    <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
 
     <div style="width:900px;">    
 
