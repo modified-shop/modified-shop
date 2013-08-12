@@ -88,7 +88,7 @@
   function xtc_image($src, $alt = '', $width = '', $height = '', $params = '') {
     $params  = preg_replace("'\s+=\s+'",'=',$params);
     $params  = preg_replace("'\s+:\s+'",'=',$params);
-    if (strpos($params,'style="') !== false &&  strpos($params,'border:') !== false) {
+    if (strpos($params,'style="') !== false &&  strpos($params,'border:') === false) {
       $params = str_replace('style="','style="border:0;',$params);
     } else {
       $params .= ' style="border:0;"';
