@@ -12,10 +12,9 @@
    --------------------------------------------------------------*/
 
 require('includes/application_top.php');
+require (DIR_WS_INCLUDES.'head.php');
 
 $blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/Bankleitzahlen/2012_12_02/blz_2012_09_03_txt.txt?__blob=publicationFile';
-
-require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
 <body>

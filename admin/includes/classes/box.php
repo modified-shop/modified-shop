@@ -1,16 +1,17 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: box.php 2666 2012-02-23 11:38:17Z dokuman $   
+   $Id: box.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(box.php,v 1.5 2002/03/16); www.oscommerce.com 
    (c) 2003	 nextcommerce (box.php,v 1.5 2003/08/18); www.nextcommerce.org
+   (c) 2003-2006 XT-Commerce
 
    Released under the GNU General Public License 
     
