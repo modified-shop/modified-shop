@@ -30,7 +30,7 @@ define('BOX_SHOPGATE_CONFIG', 'Einstellungen');
 define('BOX_SHOPGATE_MERCHANT', 'Shopgate-Login');
 
 ### Links ###
-define('SHOPGATE_LINK_HOME', 'http://www.shopgate.com/welcome?partner=30051');
+define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/welcome?partner=30051');
 define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register?partner=30051');
 define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2?partner=30051');
 
