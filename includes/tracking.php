@@ -16,11 +16,7 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-
-// referrer #todo sec
-$ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : $current_domain.$_SERVER['REQUEST_URI']));
-if (!isset($_SESSION['tracking']['http_referer']))  $_SESSION['tracking']['http_referer']= $ref_url;
-
+   
 // IP
 if (!isset($_SESSION['tracking']['ip'])) {
   if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] != '') {
@@ -35,20 +31,21 @@ if (!isset($_SESSION['tracking']['ip'])) {
 }
 
 // campaigns
-if (!isset ($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
-  $campaign_check_query_raw = "SELECT * FROM ".TABLE_CAMPAIGNS." WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'";
-  $campaign_check_query = xtc_db_query($campaign_check_query_raw);
+if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
+  $campaign_check_query = xtc_db_query("SELECT * FROM ".TABLE_CAMPAIGNS." WHERE campaigns_refID = '".xtc_db_input($_GET['refID'])."'");
   if (xtc_db_num_rows($campaign_check_query) > 0) {
     $_SESSION['tracking']['refID'] = xtc_db_input($_GET['refID']);
     xtc_db_perform(TABLE_CAMPAIGNS_IP, array('user_ip'=>$_SESSION['tracking']['ip'],'campaign'=>xtc_db_input($_GET['refID']),'time'=>'now()'));
   }
 }
 
+// referrer
+$ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? strip_tags($_SERVER['HTTP_REFERER']) : $current_domain.$_SERVER['REQUEST_URI']));
+if (!isset($_SESSION['tracking']['http_referer']))  $_SESSION['tracking']['http_referer']= $ref_url;
 // datetime
 if (!isset ($_SESSION['tracking']['date']))  $_SESSION['tracking']['date'] = (date("Y-m-d H:i:s"));
-
-// browser #todo sec
-if (!isset ($_SESSION['tracking']['browser']))  $_SESSION['tracking']['browser'] = $_SERVER['HTTP_USER_AGENT'];
+// browser
+if (!isset ($_SESSION['tracking']['browser']))  $_SESSION['tracking']['browser'] = strip_tags($_SERVER['HTTP_USER_AGENT']);
 
 // pageview history
 if (!isset($_SESSION['tracking']['pageview_history'])) $_SESSION['tracking']['pageview_history'] = array();
@@ -58,7 +55,7 @@ if ($i > 6) {
   $_SESSION['tracking']['pageview_history'][6] = $ref_url;
 } else {
   $_SESSION['tracking']['pageview_history'][$i] = $ref_url;
-  if (isset($_SESSION['tracking']['http_referer']) && $_SESSION['tracking']['pageview_history'][$i] == $_SESSION['tracking']['http_referer']) {
+  if ($_SESSION['tracking']['pageview_history'][$i] == $_SESSION['tracking']['http_referer']) {
     array_shift($_SESSION['tracking']['pageview_history']);
   }
 }
