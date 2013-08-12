@@ -220,5 +220,5 @@ define('TEXT_PRODUCTS_ORDER_DESCRIPTION','Order description');
 define('TEXT_HOW_TO_LINK', '<b>Page view after copying / link</b>');
 define('TEXT_HOW_TO_LINK_INFO', 'Item entry screen <br/> (For multiple items to last in the list)');
 
-define('TEXT_SET_GROUP_PERMISSIONS', 'Customer groups permissions to all subfolders and items to take?');
+define('TEXT_SET_GROUP_PERMISSIONS', 'Inherit customer group permissions to all subfolders and products?');
 ?>
