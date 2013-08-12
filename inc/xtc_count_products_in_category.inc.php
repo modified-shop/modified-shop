@@ -29,14 +29,12 @@
     // products status
     $products_status = $include_inactive ? " AND p.products_status = 1 " : '';
 
-    $products_query = "SELECT count(*) as total 
-                         FROM " . TABLE_PRODUCTS . " p,                               
-                         JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                           ON (p.products_id = p2c.products_id                                  
-                               AND p2c.categories_id = '" . $category_id . "'
-                                   ". $products_status . $fsk_lock . $p_group_check);  
-
-    $products_query = xtDBquery($products_query);
+    $products_query = xtDBquery("SELECT count(*) as total 
+                                   FROM " . TABLE_PRODUCTS . " p,                               
+                                   JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                     ON (p.products_id = p2c.products_id                                  
+                                         AND p2c.categories_id = '" . $category_id . "'
+                                             ". $products_status . $fsk_lock . $p_group_check); 
 
     $products = xtc_db_fetch_array($products_query,true);
     $products_count += $products['total'];
