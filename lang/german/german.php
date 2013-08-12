@@ -202,7 +202,7 @@ define('IMAGE_BUTTON_PRODUCT_EDIT', 'Produkt bearbeiten');
 // define('IMAGE_BUTTON_LOGIN', 'Anmelden');
 // EOF - vr - 2010-02-20 removed double definition 
 define('IMAGE_BUTTON_SEND', 'Absenden'); //DokuMan - 2010-03-15 - Added button description for contact form
-define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Einkauf Fortsetzen'); //Hendrik - 2010-11-12 - used in default template ...shopping_cart.html
+define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Einkauf fortsetzen'); //Hendrik - 2010-11-12 - used in default template ...shopping_cart.html
 
 define('SMALL_IMAGE_BUTTON_DELETE', 'L&ouml;schen');
 define('SMALL_IMAGE_BUTTON_EDIT', '&Auml;ndern');
