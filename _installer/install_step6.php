@@ -341,10 +341,10 @@
             break;
           case '204':
             // Schweiz
-            $tax_normal='7.6000';
-            $tax_normal_text='7,6%';
-            $tax_special='2.4000';
-            $tax_special_text='2,4%';
+            $tax_normal='8.0000';
+            $tax_normal_text='8%';
+            $tax_special='2.5000';
+            $tax_special_text='2,5%';
             break;
           case '222':
             // UK
