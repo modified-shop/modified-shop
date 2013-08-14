@@ -18,10 +18,11 @@ define('ATTENTION_TITLE','! ATTENTION !');
 
 // text for Warnings:
 if (!defined('APS_INSTALL')) { //DokuMan - use alternative text for TEXT_FILE_WARNING when using APS package installation
-  define('TEXT_FILE_WARNING','<b>WARNING:</b><br />Following files are writeable. Please change the permissions of these files for security reasons. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.');
+  define('TEXT_FILE_WARNING_WRITABLE','<b>WARNING:</b><br />Following files are writeable. Please change the permissions of these files for security reasons. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.');
 } else {
-  define('TEXT_FILE_WARNING','<b>WARNING:</b><br />Following files are writeable. Please change the permissions of these files for security reasons. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.<br />In case that this software was installed by a software package of your webhoster, the file permissions may have to be set differently (HostEurope: <b>CHMOD 400</b> or <b>CHMOD 440</b>)');
+  define('TEXT_FILE_WARNING_WRITABLE','<b>WARNING:</b><br />Following files are writeable. Please change the permissions of these files for security reasons. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.<br />In case that this software was installed by a software package of your webhoster, the file permissions may have to be set differently (HostEurope: <b>CHMOD 400</b> or <b>CHMOD 440</b>)');
 }
+define('TEXT_FILE_WARNING','<b>WARNING:</b><br />Following files must be writeable. Please change the permissions of these files. <b>(777)</b> in unix, <b>(read-write)</b> in Win32.');
 define('TEXT_FOLDER_WARNING','<b>WARNING:</b><br />Following folders must be writeable. Please change the permissions of these folders. <b>(777)</b> in unix, <b>(read-write)</b> in Win32.');
 define('REPORT_GENERATED_FOR','Report For:');
 define('REPORT_GENERATED_ON','Generated On:');
