@@ -18,10 +18,11 @@ define('ATTENTION_TITLE','! ACHTUNG !');
 
 // text for Warnings:
 if (!defined('APS_INSTALL')) { //DokuMan - use alternative text for TEXT_FILE_WARNING when using APS package installation
-  define('TEXT_FILE_WARNING','<b>WARNUNG:</b><br />Folgende Dateien sind vom Server beschreibbar. Bitte &auml;ndern Sie die Zugriffsrechte (Permissions) dieser Datei aus Sicherheitsgr&uuml;nden. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.');
+  define('TEXT_FILE_WARNING_WRITABLE','<b>WARNUNG:</b><br />Folgende Dateien sind vom Server beschreibbar. Bitte &auml;ndern Sie die Zugriffsrechte (Permissions) dieser Datei aus Sicherheitsgr&uuml;nden. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.');
 } else {
-  define('TEXT_FILE_WARNING','<b>WARNUNG:</b><br />Folgende Dateien sind vom Server beschreibbar. Bitte &auml;ndern Sie die Zugriffsrechte (Permissions) dieser Datei aus Sicherheitsgr&uuml;nden. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.<br />Falls die Installation durch ein Softwarepaket eines Providers ausgef&uuml;hrt wurde, sind die Zugriffsrechte evtl. anders anzupassen (HostEurope: <b>CHMOD 400</b> oder <b>CHMOD 440</b>)');
+  define('TEXT_FILE_WARNING_WRITABLE','<b>WARNUNG:</b><br />Folgende Dateien sind vom Server beschreibbar. Bitte &auml;ndern Sie die Zugriffsrechte (Permissions) dieser Datei aus Sicherheitsgr&uuml;nden. <b>(444)</b> in unix, <b>(read-only)</b> in Win32.<br />Falls die Installation durch ein Softwarepaket eines Providers ausgef&uuml;hrt wurde, sind die Zugriffsrechte evtl. anders anzupassen (HostEurope: <b>CHMOD 400</b> oder <b>CHMOD 440</b>)');
 }
+define('TEXT_FILE_WARNING','<b>WARNUNG:</b><br />Folgende Dateien m&uuml;ssen vom Server beschreibbar sein. Bitte &auml;ndern Sie die Zugriffsrechte (Permissions) dieser Dateien. <b>(777)</b> in unix, <b>(read-write)</b> in Win32.');
 define('TEXT_FOLDER_WARNING','<b>WARNUNG:</b><br />Folgende Verzeichnisse m&uuml;ssen vom Server beschreibbar sein. Bitte &auml;ndern Sie die Zugriffsrechte (Permissions) dieser Verzeichnisse. <b>(777)</b> in unix, <b>(read-write)</b> in Win32.');
 define('REPORT_GENERATED_FOR','Report f&uuml;r:');
 define('REPORT_GENERATED_ON','Erstellt am:');
