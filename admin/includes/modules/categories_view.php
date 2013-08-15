@@ -47,6 +47,9 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
   $search = (isset($_GET['search']) ? $_GET['search'] : '');
 
+  $search_inactive = (isset($_GET['search_inactive']) ? true : false);
+  $display_categories = !$search_inactive;
+
   // get sorting option and switch accordingly
   $sorting = (isset($_GET['sorting']) ? $_GET['sorting'] : '');
   if (xtc_not_null($sorting)) {
@@ -133,6 +136,15 @@
       </div>
       <div class="smallText pdg2 flt-l">
         <?php
+        echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
+        echo '<label for="search_inactive" style="vertical-align:middle;" >'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
+        echo '<div style="display:inline;">' . xtc_draw_selection_field('search_inactive', 'checkbox', '1', $search_inactive, '', 'style="vertical-align:middle;" onclick="this.form.submit();"'). '</div>';
+        echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+        ?>
+        </form>
+      </div>
+      <div class="smallText pdg2 flt-l">
+        <?php
         echo xtc_draw_form('search', FILENAME_CATEGORIES, '', 'get');
         echo HEADING_TITLE_SEARCH . ' ' . xtc_draw_input_field('search', $search).xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
         ?>
@@ -216,6 +228,7 @@
                echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
              }
 
+            if($display_categories){
              // ----------------------------------------------------------------------------------------------------- //
              // WHILE loop to display categories STARTS
              // ----------------------------------------------------------------------------------------------------- //
@@ -379,6 +392,7 @@
              // ----------------------------------------------------------------------------------------------------- //
              } // WHILE loop to display categories ENDS
              // ----------------------------------------------------------------------------------------------------- //
+             }
 
              //get products data
              $products_count = 0;
@@ -472,6 +486,12 @@
                   $add_where = '';
                   $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
                 }
+                //display only inactive products
+                if ($search_inactive) {
+                  $add_where = ' WHERE p.products_status = 0 ';
+                  $add_join = '';
+                } 
+    
                 $select_str = "SELECT p.products_tax_class_id,
                                       p.products_sort,
                                       p.products_id,
