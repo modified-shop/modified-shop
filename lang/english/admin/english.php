@@ -519,3 +519,6 @@ define ('MODULE_RESTORE_CONFIRM', 'The module settings were restored successfull
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
 define('BOX_MAGNALISTER', 'magnalister Admin');
 /* END magnalister */
+
+define('CHARS_LEFT', 'chars left');
+define('CHARS_MAX', 'of max.');
