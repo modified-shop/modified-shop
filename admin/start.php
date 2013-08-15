@@ -235,8 +235,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                 <td style="background:#e4e4e4"><?php echo $products['active_count']; ?></td>
                               </tr>
                               <tr>
-                                <td style="background:#e4e4e4"><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></td>
-                                <td style="background:#e4e4e4"><?php echo $products['inactive_count']; ?></td>
+                                <td style="background:#e4e4e4"><a href="<?php echo xtc_href_link('categories.php', 'search_inactive=1');?>" style="font-size:12px"><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></a></td>
+                                <td style="background:#e4e4e4"><a href="<?php echo xtc_href_link('categories.php', 'search_inactive=1');?>" style="font-size:12px"><?php echo $products['inactive_count']; ?></a></td>
                               </tr>
                               <tr>
                                 <td style="background:#e4e4e4"><strong><?php echo TOTAL_PRODUCTS; ?>:</strong></td>

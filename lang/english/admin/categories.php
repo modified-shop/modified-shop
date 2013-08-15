@@ -222,4 +222,6 @@ define ('TEXT_HOW_TO_LINK', '<b>Page view after copying/linking</ b>');
 define ('TEXT_HOW_TO_LINK_INFO', 'Product input mask<br/> (If there are several items goto last in the list)');
 
 define('TEXT_SET_GROUP_PERMISSIONS', 'Inherit customer group permissions to all subfolders and products?');
+
+define('HEADING_TITLE_ONLY_INACTIVE_PRODUCTS', 'Show only inactive products');
 ?>
