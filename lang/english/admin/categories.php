@@ -221,4 +221,6 @@ define('TEXT_HOW_TO_LINK', '<b>Page view after copying / link</b>');
 define('TEXT_HOW_TO_LINK_INFO', 'Item entry screen <br/> (For multiple items to last in the list)');
 
 define('TEXT_SET_GROUP_PERMISSIONS', 'Inherit customer group permissions to all subfolders and products?');
+
+define('HEADING_TITLE_ONLY_INACTIVE_PRODUCTS', 'Show only inactive products');
 ?>
