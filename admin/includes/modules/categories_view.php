@@ -488,7 +488,8 @@
                 }
                 //display only inactive products
                 if ($search_inactive) {
-                  $add_where .= ($add_where == '') ? ' WHERE p.products_status = 0 ' : ' AND p.products_status = 0 ';
+                  $add_where = ' WHERE p.products_status = 0 ';
+                  $add_join = '';
                 } 
     
                 $select_str = "SELECT p.products_tax_class_id,
