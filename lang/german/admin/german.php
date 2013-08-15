@@ -518,3 +518,6 @@ define('MODULE_RESTORE_CONFIRM', 'Die Moduleinstellungen wurden erfolgreich wied
 define('BOX_HEADING_MAGNALISTER', 'magnalister');
 define('BOX_MAGNALISTER', 'magnalister Admin');
 /* END magnalister */
+
+define('CHARS_LEFT', 'Zeichen &uuml;brig');
+define('CHARS_MAX', 'von max.');

@@ -333,6 +333,11 @@ require (DIR_WS_INCLUDES.'head.php');
 <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript" src="includes/javascript/categories.js"></script>
+  <script type="text/javascript"> 
+    var lang_chars_left = '<?php echo CHARS_LEFT; ?>'; 
+    var lang_chars_max = '<?php echo CHARS_MAX; ?>'; 
+  </script>  
+  <script type="text/javascript" src="includes/javascript/countdown.js"></script> 
 <?php
 //jQueryDatepicker
 require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
