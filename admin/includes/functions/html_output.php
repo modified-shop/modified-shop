@@ -218,7 +218,7 @@
 
   ////
   // Output a selection field - alias function for xtc_draw_checkbox_field() and xtc_draw_radio_field()
-  function xtc_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '') {
+  function xtc_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '', $parameters = '') {
     $selection = '<input type="' . $type . '" name="' . $name . '"';
     if ($value != '') {
       $selection .= ' value="' . $value . '"';
@@ -227,22 +227,25 @@
     if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
     //if ( ($checked == true) || ($GLOBALS[$name] == 'on') || ($value && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
     //EOF - DokuMan - 2010-09-08 - set undefined index
-      $selection .= ' CHECKED';
+      $selection .= ' checked="checked"';
     }
+    
+    if (xtc_not_null($parameters)) $selection .= ' ' . $parameters;
+    
     $selection .= '>';
     return $selection;
   }
 
   ////
   // Output a form checkbox field
-  function xtc_draw_checkbox_field($name, $value = '', $checked = false, $compare = '') {
-    return xtc_draw_selection_field($name, 'checkbox', $value, $checked, $compare);
+  function xtc_draw_checkbox_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
+    return xtc_draw_selection_field($name, 'checkbox', $value, $checked, $compare, $parameters);
   }
 
   ////
   // Output a form radio field
-  function xtc_draw_radio_field($name, $value = '', $checked = false, $compare = '') {
-    return xtc_draw_selection_field($name, 'radio', $value, $checked, $compare);
+  function xtc_draw_radio_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
+    return xtc_draw_selection_field($name, 'radio', $value, $checked, $compare, $parameters);
   }
 
   ////
