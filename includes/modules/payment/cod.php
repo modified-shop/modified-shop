@@ -30,7 +30,7 @@ class cod {
 		$this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_COD_TEXT_INFO;
 		$this->cost = '';
-                $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
+    $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
 
 		if ((int) MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
 			$this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
@@ -73,14 +73,16 @@ class cod {
 	function selection() {
 		global $xtPrice,$order;
 
-      if($this->limit_subtotal && round($order->info['subtotal']) >= $this->limit_subtotal) return;  // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
-		
+      if($this->limit_subtotal && round($order->info['subtotal']) >= $this->limit_subtotal) {
+        return;  // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
+		  }
+      
       if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
 
         $cod_country = false;
 
         //process installed shipping modules
-        $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode($_SESSION['shipping']['id'])));
+        $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
         $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
 
         for ($i = 0; $i < count($cod_zones); $i++) {
@@ -179,7 +181,7 @@ class cod {
                   'MODULE_PAYMENT_COD_ZONE',
                   'MODULE_PAYMENT_COD_ORDER_STATUS_ID',
                   'MODULE_PAYMENT_COD_SORT_ORDER',
-		  'MODULE_PAYMENT_COD_LIMIT_ALLOWED'
+		              'MODULE_PAYMENT_COD_LIMIT_ALLOWED'
                   );
 	}
 }
