@@ -28,4 +28,6 @@ define('MODULE_PAYMENT_COD_SORT_ORDER_TITLE', 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_COD_SORT_ORDER_DESC', 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
 define('MODULE_PAYMENT_COD_ORDER_STATUS_ID_TITLE', 'Bestellstatus festlegen');
 define('MODULE_PAYMENT_COD_ORDER_STATUS_ID_DESC', 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
+define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_TITLE', 'Ab welchem Betrag soll Nachnahme nicht mehr erlaubt werden');
+define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_DESC', 'Der eingegebene Wert wird mit der Zwischensumme (subtotal) verglichen, welche gerundet wird.<br />Das bedeutet, da&szlig; der nur reine Warenwert, ohne Versandkosten und evtl. Zuschl&auml;ge ber&uuml;cksichtigt wird.');
 ?>

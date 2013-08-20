@@ -28,4 +28,6 @@ define('MODULE_PAYMENT_COD_SORT_ORDER_TITLE' , 'Sort order of display');
 define('MODULE_PAYMENT_COD_SORT_ORDER_DESC' , 'Sort order of display. Lowest is displayed first.');
 define('MODULE_PAYMENT_COD_ORDER_STATUS_ID_TITLE' , 'Set Order Status');
 define('MODULE_PAYMENT_COD_ORDER_STATUS_ID_DESC' , 'Set the status of orders made with this payment module to this value');
+define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_TITLE', 'From which amount shall cod not be allowed');
+define('MODULE_PAYMENT_COD_LIMIT_ALLOWED_DESC', 'The entered value will be compared with the subtotal which will be rounded.<br />This means, that only the pure merchandise value will be considered, without shipping costs and any possible additional fees.');
 ?>
