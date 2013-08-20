@@ -73,7 +73,7 @@ class cod {
 	function selection() {
 		global $xtPrice,$order;
 
-      if(round($order->info['subtotal']) >= $this->limit_subtotal) return;  // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
+      if($this->limit_subtotal && round($order->info['subtotal']) >= $this->limit_subtotal) return;  // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
 		
       if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
 
