@@ -30,6 +30,7 @@ class cod {
 		$this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
 		$this->info = MODULE_PAYMENT_COD_TEXT_INFO;
 		$this->cost = '';
+                $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
 
 		if ((int) MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
 			$this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
@@ -72,12 +73,14 @@ class cod {
 	function selection() {
 		global $xtPrice,$order;
 
+      if(round($order->info['subtotal']) >= $this->limit_subtotal) return;  // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
+		
       if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
 
         $cod_country = false;
 
         //process installed shipping modules
-		    $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode($_SESSION['shipping']['id'])));
+        $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode($_SESSION['shipping']['id'])));
         $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
 
         for ($i = 0; $i < count($cod_zones); $i++) {
@@ -142,7 +145,7 @@ class cod {
 		global $insert_id;
 		if ($this->order_status) {
 			xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
-    }
+		}
 	}
 
 	function get_error() {
@@ -163,6 +166,7 @@ class cod {
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_COD_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_COD_SORT_ORDER', '0',  '6', '0', now())");
 		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_COD_ORDER_STATUS_ID', '0','6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
+		xtc_db_query("insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_COD_LIMIT_ALLOWED', '600', '6', '3', now())");
 	}
 
 	function remove() {
@@ -174,7 +178,8 @@ class cod {
                   'MODULE_PAYMENT_COD_ALLOWED',
                   'MODULE_PAYMENT_COD_ZONE',
                   'MODULE_PAYMENT_COD_ORDER_STATUS_ID',
-                  'MODULE_PAYMENT_COD_SORT_ORDER'
+                  'MODULE_PAYMENT_COD_SORT_ORDER',
+		  'MODULE_PAYMENT_COD_LIMIT_ALLOWED'
                   );
 	}
 }
