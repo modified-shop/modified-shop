@@ -15,7 +15,7 @@ define('FILENAME_ACCOUNTING', 'accounting.php');
 define('FILENAME_BACKUP', 'backup.php');
 define('FILENAME_BANNER_MANAGER', 'banner_manager.php');
 define('FILENAME_BANNER_STATISTICS', 'banner_statistics.php');
-define('FILENAME_CACHE', 'cache.php');
+//define('FILENAME_CACHE', 'cache.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_CAMPAIGNS', 'campaigns.php');
 define('FILENAME_CATALOG_ACCOUNT_HISTORY_INFO', 'account_history_info.php');
 define('FILENAME_CATALOG_NEWSLETTER', 'newsletter.php');
@@ -26,9 +26,9 @@ define('FILENAME_CURRENCIES', 'currencies.php');
 define('FILENAME_CUSTOMERS', 'customers.php');
 define('FILENAME_CUSTOMERS_STATUS', 'customers_status.php');
 define('FILENAME_DEFAULT', 'start.php');
-define('FILENAME_DEFINE_LANGUAGE', 'define_language.php');
-define('FILENAME_FORMS', 'forms.php');
-define('FILENAME_FORM_VALUES', 'form_values.php');
+//define('FILENAME_DEFINE_LANGUAGE', 'define_language.php'); // Tomcraft - 2013-08-21 - File is obsolete
+//define('FILENAME_FORMS', 'forms.php'); // Tomcraft - 2013-08-21 - File is obsolete
+//define('FILENAME_FORM_VALUES', 'form_values.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_GEO_ZONES', 'geo_zones.php');
 define('FILENAME_LANGUAGES', 'languages.php');
 define('FILENAME_MAGNALISTER','magnalister.php'); /* magnalister v1.0.0 */
@@ -36,8 +36,8 @@ define('FILENAME_MAIL', 'mail.php');
 define('FILENAME_MANUFACTURERS', 'manufacturers.php');
 define('FILENAME_MODULES', 'modules.php');
 define('FILENAME_ORDERS', 'orders.php');
-define('FILENAME_ORDERS_INVOICE', 'invoice.php');
-define('FILENAME_ORDERS_PACKINGSLIP', 'packingslip.php');
+//define('FILENAME_ORDERS_INVOICE', 'invoice.php'); // Tomcraft - 2013-08-21 - File is obsolete
+//define('FILENAME_ORDERS_PACKINGSLIP', 'packingslip.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_ORDERS_STATUS', 'orders_status.php');
 define('FILENAME_ORDERS_EDIT', 'orders_edit.php');
 define('FILENAME_POPUP_IMAGE', 'popup_image.php');
@@ -46,7 +46,7 @@ define('FILENAME_PRODUCTS_EXPECTED', 'products_expected.php');
 define('FILENAME_REVIEWS', 'reviews.php');
 define('FILENAME_SERVER_INFO', 'server_info.php');
 define('FILENAME_BLZ_UPDATE', 'blz_update.php');
-define('FILENAME_SHIPPING_MODULES', 'shipping_modules.php');
+//define('FILENAME_SHIPPING_MODULES', 'shipping_modules.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_SPECIALS', 'specials.php');
 define('FILENAME_STATS_CUSTOMERS', 'stats_customers.php');
 define('FILENAME_STATS_PRODUCTS_PURCHASED', 'stats_products_purchased.php');
@@ -57,13 +57,13 @@ define('FILENAME_WHOS_ONLINE', 'whos_online.php');
 define('FILENAME_ZONES', 'zones.php');
 define('FILENAME_START', 'start.php');
 define('FILENAME_STATS_STOCK_WARNING', 'stats_stock_warning.php');
-define('FILENAME_TPL_BOXES','templates_boxes.php');
-define('FILENAME_TPL_MODULES','templates_modules.php');
+//define('FILENAME_TPL_BOXES','templates_boxes.php'); // Tomcraft - 2013-08-21 - File is obsolete
+//define('FILENAME_TPL_MODULES','templates_modules.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_NEW_ATTRIBUTES','new_attributes.php');
 define('FILENAME_LOGOUT','logoff.php');
 define('FILENAME_LOGIN','login.php');
 define('FILENAME_CREATE_ACCOUNT','create_account.php');
-define('FILENAME_CREATE_ACCOUNT_SUCCESS','create_account_success.php');
+//define('FILENAME_CREATE_ACCOUNT_SUCCESS','create_account_success.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_CUSTOMER_MEMO','customer_memo.php');
 define('FILENAME_CONTENT_MANAGER','content_manager.php');
 define('FILENAME_CONTENT_PREVIEW','content_preview.php');
@@ -80,12 +80,12 @@ define('FILENAME_POPUP_MEMO', 'popup_memo.php');
 define('FILENAME_SHIPPING_STATUS', 'shipping_status.php');
 define('FILENAME_SALES_REPORT','stats_sales_report.php');
 define('FILENAME_MODULE_EXPORT','module_export.php');
-define('FILENAME_EASY_POPULATE','easypopulate.php');
+//define('FILENAME_EASY_POPULATE','easypopulate.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_BLACKLIST', 'blacklist.php');
 define('FILENAME_PRODUCTS_VPE','products_vpe.php');
 define('FILENAME_CAMPAIGNS_REPORT','stats_campaigns.php');
 define('FILENAME_XSELL_GROUPS','cross_sell_groups.php');
-define('FILENAME_GOOGLE_SITEMAP', '../google_sitemap.php');
+//define('FILENAME_GOOGLE_SITEMAP', '../google_sitemap.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_PAYPAL','paypal.php');
 define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_REMOVEOLDPICS', 'removeoldpics.php');

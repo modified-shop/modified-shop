@@ -21,8 +21,8 @@ define('FILENAME_ACCOUNT', 'account.php');
 define('FILENAME_ACCOUNT_EDIT', 'account_edit.php');
 define('FILENAME_ACCOUNT_HISTORY', 'account_history.php');
 define('FILENAME_ACCOUNT_HISTORY_INFO', 'account_history_info.php');
-define('FILENAME_ACCOUNT_NEWSLETTERS', 'account_newsletters.php');
-define('FILENAME_ACCOUNT_NOTIFICATIONS', 'account_notifications.php');
+//define('FILENAME_ACCOUNT_NEWSLETTERS', 'account_newsletters.php'); // Tomcraft - 2013-08-21 - File is obsolete
+//define('FILENAME_ACCOUNT_NOTIFICATIONS', 'account_notifications.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_ACCOUNT_PASSWORD', 'account_password.php');
 //BOF - Dokuman - 2009-08-21 - Added 'delete account' functionality for customers
 define('FILENAME_ACCOUNT_DELETE', 'account_delete.php');
@@ -46,11 +46,11 @@ define('FILENAME_CHECKOUT_SUCCESS', 'checkout_success.php');
 define('FILENAME_COOKIE_USAGE', 'cookie_usage.php');
 define('FILENAME_CUSTOMERS','admin/customers.php');
 define('FILENAME_CREATE_ACCOUNT', 'create_account.php');
-define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success.php');
+//define('FILENAME_CREATE_ACCOUNT_SUCCESS', 'create_account_success.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_DEFAULT', 'index.php');
 define('FILENAME_DOWNLOAD', 'download.php');
 define('FILENAME_NEW_PRODUCTS', 'new_products.php');
-define('FILENAME_INFO_SHOPPING_CART', 'info_shopping_cart.php');
+//define('FILENAME_INFO_SHOPPING_CART', 'info_shopping_cart.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_LOGIN', 'login.php');
 define('FILENAME_LOGOFF', 'logoff.php');
 define('FILENAME_NEWSLETTER', 'newsletter.php');
@@ -58,7 +58,7 @@ define('FILENAME_POPUP_IMAGE', 'popup_image.php');
 define('FILENAME_POPUP_SEARCH_HELP', 'popup_search_help.php');
 define('FILENAME_PRODUCT_INFO', 'product_info.php');
 define('FILENAME_PRODUCT_LISTING', 'product_listing.php');
-define('FILENAME_PRODUCT_NOTIFICATIONS', 'product_notifications.php');
+//define('FILENAME_PRODUCT_NOTIFICATIONS', 'product_notifications.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_PRODUCT_REVIEWS', 'product_reviews.php');
 define('FILENAME_PRODUCT_REVIEWS_INFO', 'product_reviews_info.php');
 define('FILENAME_PRODUCT_REVIEWS_WRITE', 'product_reviews_write.php');
@@ -75,7 +75,7 @@ define('FILENAME_CENTER_MODULES', 'center_modules.php');
 define('FILENAME_ORDERS', 'admin/orders.php');
 define('FILENAME_METATAGS', 'metatags.php');
 define('FILENAME_MINIMUM_ORDER', 'reviews.php');
-define('FILENAME_XSELL_PRODUCTS', 'xsell_products.php');
+//define('FILENAME_XSELL_PRODUCTS', 'xsell_products.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_PRODUCTS_MEDIA', 'products_media.php');
 define('FILENAME_MEDIA_CONTENT', 'media_content.php');
 define('FILENAME_PASSWORD_DOUBLE_OPT', 'password_double_opt.php');
@@ -93,10 +93,10 @@ define('FILENAME_PRODUCT_LISTING_COL', 'product_listing_col.php');
 define('FILENAME_POPUP_COUPON_HELP', 'popup_coupon_help.php');
 define('FILENAME_POPUP_CONTENT', 'popup_content.php');
 define('FILENAME_EDIT_PRODUCTS', 'admin/categories.php');
-define('FILENAME_METATAGS_PRODUCTS_INFO', 'metatags_product_info.php');
+//define('FILENAME_METATAGS_PRODUCTS_INFO', 'metatags_product_info.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_GRADUATED_PRICE', 'graduated_prices.php');
 
-define('FILENAME_PDF_DATASHEET', 'pdf_datasheet.php');
+//define('FILENAME_PDF_DATASHEET', 'pdf_datasheet.php'); // Tomcraft - 2013-08-21 - File is obsolete
 define('FILENAME_PRINT_PRODUCT_INFO', 'print_product_info.php');
 define('FILENAME_PRINT_ORDER', 'print_order.php');
 
