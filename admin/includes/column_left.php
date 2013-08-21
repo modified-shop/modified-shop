@@ -30,9 +30,9 @@ if (!function_exists('mainMenue')) { // erste ebene
   function mainMenue($box_title) {
     $html  = '<li>';            
     if (defined('NEW_ADMIN_STYLE')) {
-      $html .= '<div class="dataTableHeadingContent"><a href="#"><strong>'.$box_title.'</strong></a></div>';
+      $html .= '<div class="dataNavHeadingContent"><a href="#"><strong>'.$box_title.'</strong></a></div>';
     } else {
-      $html .= '<div class="dataTableHeadingContent"><strong>'.$box_title.'</strong></div>';
+      $html .= '<div class="dataNavHeadingContent"><strong>'.$box_title.'</strong></div>';
     }
     $html .= PHP_EOL .'<ul>'.PHP_EOL;
     return $html;
