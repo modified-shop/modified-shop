@@ -107,11 +107,11 @@ padding-top: 1em;
 	text-align: center;
 	letter-spacing: normal;
 }
-.suckertreemenu .dataTableHeadingContent{
+.suckertreemenu .dataNavHeadingContent{
 	font-family: Verdana, Arial, Helvetica, sans-serif;
 	font-size: 10px;
 	font-weight: bold;
-	padding: 0px 10px 0px 10px;
+	padding: 1px 10px 0px 10px;
 	border-bottom: 1px solid #b40076;
 	border-left-width: 0px;
 	border-right-width: 0px;
