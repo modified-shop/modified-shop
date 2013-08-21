@@ -4,7 +4,7 @@ $Id$
 
 * XTC Datenbank Manager Version 1.92 utf8
 *(c) by  web28 - www.rpa-com.de
-* Convert UFT-8
+* Convert UTF-8
 * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
 * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
  * 2011-11-23 - restore in separate file
