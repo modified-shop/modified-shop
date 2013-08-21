@@ -137,6 +137,7 @@ echo mainMenue(BOX_HEADING_STATISTICS);
     if ($admin_access['stats_products_purchased'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_STATS_PRODUCTS_PURCHASED, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_PURCHASED . '</a></li>';
     if ($admin_access['stats_customers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_STATS_CUSTOMERS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_STATS_CUSTOMERS . '</a></li>';
     if ($admin_access['stats_sales_report'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SALES_REPORT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SALES_REPORT . '</a></li>';
+    if ($admin_access['stats_stock_warning'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_STATS_STOCK_WARNING, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_STOCK_WARNING . '</a></li>';
     if ($admin_access['stats_campaigns'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CAMPAIGNS_REPORT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CAMPAIGNS_REPORT . '</a></li>';
 echo endMenue(BOX_HEADING_STATISTICS);
 

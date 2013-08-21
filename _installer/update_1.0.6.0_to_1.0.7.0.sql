@@ -68,4 +68,9 @@ CREATE TABLE module_backup (
   KEY idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM
 
+#Tomcraft - 2013-08-21 - Added hidden stock feature
+ALTER TABLE admin_access ADD stats_stock_warning INT(1) NOT NULL DEFAULT 0 AFTER stats_sales_report;
+UPDATE admin_access SET stats_stock_warning = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET stats_stock_warning = 5 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
