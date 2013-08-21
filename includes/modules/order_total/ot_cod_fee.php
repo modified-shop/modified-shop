@@ -59,7 +59,7 @@
         //check if payment method is cod. If yes, check if cod is possible.
         if (isset($_SESSION['payment']) && $_SESSION['payment'] == 'cod') {
           //process installed shipping modules
-          $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode($_SESSION['shipping']['id'])));
+          $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
           $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
           for ($i = 0; $i < count($cod_zones); $i++) {
           if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
