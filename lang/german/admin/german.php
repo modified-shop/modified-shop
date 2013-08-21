@@ -27,7 +27,7 @@
 // on FreeBSD 4.0 I use 'de_DE.ISO_8859-1'
 // this may not work under win32 environments..
 
-setlocale(LC_TIME, 'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German', 'de_UFT-8', 'German');
+@setlocale(LC_TIME, 'de_DE.UTF-8' ,'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German','de_DE.ISO_8859-15');
 define('DATE_FORMAT_SHORT', '%d.%m.%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A, %d. %B %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'd.m.Y');  // this is used for strftime()
