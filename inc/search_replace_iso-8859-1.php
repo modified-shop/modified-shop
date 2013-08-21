@@ -17,7 +17,7 @@ function shopstat_getRegExps(&$search, &$replace)
 						"'&(lt|#60);'i",	     	//--öffnende spitze Klammer
 						"'&(gt|#62);'i",	     	//--schließende spitze Klammer
 						"'&(nbsp|#160);'i",	      	//--Erzwungenes Leerzeichen					
-						//BOF - web28 - 2010-04-16 - UFT-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
+						//BOF - web28 - 2010-04-16 - UTF-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
 						"'&(iexcl|#161);|¡'i", 		//umgekehrtes Ausrufezeichen
 						"'&(cent|#162);|¢'i", 		//Cent-Zeichen
 						"'&(pound|#163);|£'i", 		//Pfund-Zeichen
@@ -47,7 +47,7 @@ function shopstat_getRegExps(&$search, &$replace)
 						"'&(rdquo|#8221);'i", 	//-- doppeltes Anführungszeichen rechts  ### NICHT in iso-8859-1 enthalten ###
 						"'&(bdquo|#8222);'i", 	//-- Doppelte Anführungszeichen links unten   ### NICHT in iso-8859-1 enthalten ###
 						//EOF - web28 - 2010-05-13 - Benannte Zeichen für Interpunktion
-						//EOF - web28 - 2010-04-16 - UFT-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
+						//EOF - web28 - 2010-04-16 - UTF-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
 						"'&'", 	                  //--Kaufmännisches Und 
 						"'%'", 	                  //--Prozent muss weg
 						"/[\[\({]/",              //--öffnende Klammern nach Bindestriche
@@ -172,7 +172,7 @@ function shopstat_getRegExps(&$search, &$replace)
 						"-",		//--öffnende spitze Klammer
 						"-",		//--schließende spitze Klammer
 						"",			//--Erzwungenes Leerzeichen
-						//BOF - web28 - 2010-04-16 - UFT-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
+						//BOF - web28 - 2010-04-16 - UTF-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
 						"", 		//chr(161), //umgekehrtes Ausrufezeichen
 						"ct", 		//chr(162), //Cent-Zeichen
 						"GBP", 		//chr(163), //Pfund-Zeichen
@@ -202,7 +202,7 @@ function shopstat_getRegExps(&$search, &$replace)
 						"", 		//-- doppeltes Anführungszeichen rechts 
 						"", 		//-- doppeltes low-9-Zeichen rechts
 						//EOF - web28 - 2010-05-13 - Benannte Zeichen für Interpunktion	
-						//EOF - web28 - 2010-04-16 - UFT-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
+						//EOF - web28 - 2010-04-16 - UTF-8 kompatibel +  Eingetragene Marke, Trademark, Eurozeichen
 						"-",		//--Kaufmännisches Und 
 						"-",		//--Prozent 
 			            "-",		//--öffnende Klammern
