@@ -60,8 +60,8 @@ define('FILENAME_STATS_STOCK_WARNING', 'stats_stock_warning.php');
 define('FILENAME_TPL_BOXES','templates_boxes.php');
 define('FILENAME_TPL_MODULES','templates_modules.php');
 define('FILENAME_NEW_ATTRIBUTES','new_attributes.php');
-define('FILENAME_LOGOUT','../logoff.php');
-define('FILENAME_LOGIN','../login.php');
+define('FILENAME_LOGOUT','logoff.php');
+define('FILENAME_LOGIN','login.php');
 define('FILENAME_CREATE_ACCOUNT','create_account.php');
 define('FILENAME_CREATE_ACCOUNT_SUCCESS','create_account_success.php');
 define('FILENAME_CUSTOMER_MEMO','customer_memo.php');
@@ -94,4 +94,6 @@ define('FILENAME_JANOLAW','janolaw.php');
 define('FILENAME_HAENDLERBUND', 'haendlerbund.php'); //Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
 define('FILENAME_XTBOOSTER','xtbooster.php'); // xs:booster
 define('FILENAME_SAFETERMS','safeterms.php'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
+
+auto_require(DIR_FS_ADMIN.'includes/extra/filenames/','php');
 ?>

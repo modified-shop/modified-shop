@@ -63,8 +63,11 @@ if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
+require_once (DIR_FS_INC . 'auto_require.inc.php');
 // include the list of project filenames
 require (DIR_WS_INCLUDES.'filenames.php');
+
+// default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
   date_default_timezone_set('Europe/Berlin');
 }

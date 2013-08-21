@@ -108,4 +108,6 @@ define('FILENAME_BANNER', 'banners.php');
 define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_PAYPAL', 'paypal.php');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+
+auto_require(DIR_FS_CATALOG.'includes/extra/filenames/','php');
 ?>
