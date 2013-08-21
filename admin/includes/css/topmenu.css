@@ -86,16 +86,17 @@ color:#fff;
 #cssmenu1 .active > a:hover {
 color:#fff;
 }
-#cssmenu ul li .dataTableHeadingContent {
+#cssmenu ul li .dataNavHeadingContent {
 background:#dbdbdb url(images/trenner.gif) no-repeat center right;
 border: none;
+padding: 5px;
 border-bottom:2px solid #AF417E;
 }
 /* IE-HACK */
-* + html #cssmenu ul li .dataTableHeadingContent {
+* + html #cssmenu ul li .dataNavHeadingContent {
 border-bottom: 0px;
 }
-#cssmenu ul li .dataTableHeadingContent a {
+#cssmenu ul li .dataNavHeadingContent a {
 background: transparent;
 border: none;
 padding: 0px 5px;
@@ -107,7 +108,7 @@ text-align:center;
 text-decoration:none;
 white-space: nowrap;
 }
-#cssmenu .dataTableHeadingContent a:hover {
+#cssmenu .dataNavHeadingContent a:hover {
 color:#000;
 }
 #cssmenu .menuBoxContentLink {

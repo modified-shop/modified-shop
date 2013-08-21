@@ -238,9 +238,9 @@ font-weight: normal;
 }
 .dataTableHeadingContent {
   font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 10px !important;
+  font-size: 10px;
   font-weight: bold;
-  padding: 5px!important;
+  padding: 5px;
   background-color: #f1f1f1;
   border: 1px solid #CCCCCC;
 }
