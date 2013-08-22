@@ -17,6 +17,8 @@
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE', 'Stock');
+define('TABLE_HEADING_MODEL', 'Products model');
+define('TABLE_HEADING_NUMBER', 'No.');
 define('TABLE_HEADING_PRODUCTS', 'Products');
 define('TABLE_HEADING_QUANTITY', 'Quantity');
 ?>
