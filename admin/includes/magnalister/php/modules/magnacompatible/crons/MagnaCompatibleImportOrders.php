@@ -718,7 +718,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				 WHERE products_id=\''.(int)$this->p['products_id'].'\'
 			');
 			if ($row !== false) {
-				$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$this->cur['BuyerCountry']['ID']);
+				$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$this->cur['ShippingCountry']['ID']);
 				$this->p['products_model'] = $row['products_model'];
 			}
 		}

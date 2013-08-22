@@ -429,6 +429,10 @@ if ($auth['state']) {
 	$form['returnpolicy']['fields']['returnsaccepted']['values']    = geteBaySingleReturnPolicyDetail('ReturnsAccepted');
 	$form['returnpolicy']['fields']['returnswithin']['values']      = geteBaySingleReturnPolicyDetail('ReturnsWithin');
 	$form['returnpolicy']['fields']['shippingcostpaidby']['values'] = geteBaySingleReturnPolicyDetail('ShippingCostPaidBy');
+	# Shop-URL: Nicht erlaubt
+	$form['mail']['fields']['subject']['default'] = str_replace('#SHOPURL#', '', $form['mail']['fields']['subject']['default']);
+	$form['mail']['fields']['mail']['default'] = str_replace(' unter <strong>#SHOPURL#</strong>', '', $form['mail']['fields']['mail']['default']);
+	$form['mail']['fields']['mail']['externalDesc'] = str_replace('<dt>#SHOPURL#</dt>', '', str_replace('<dd>URL zu Ihrem Shop</dd>', '',  str_replace('<dd>URL to your shop</dd>', '', $form['mail']['fields']['mail']['externalDesc'])));
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {

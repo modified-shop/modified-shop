@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: functionLib.php 2999 2013-07-19 11:46:03Z MaW $
+ * $Id: functionLib.php 3133 2013-08-21 22:06:22Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -546,7 +546,7 @@ function smartstripslashes($str) {
  */
 function deepLower($text) {
 	if (function_exists('mb_strtolower')) {
-		return mb_strtolower($text, 'UFT-8');
+		return mb_strtolower($text, 'UTF-8');
 	}
 	$charMap = array (
 		'\xc380' => '\xc3a0', '\xc381' => '\xc3a1', '\xc382' => '\xc3a2', '\xc383' => '\xc3a3', '\xc384' => '\xc3a4', 

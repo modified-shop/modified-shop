@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: orders_import.php 2407 2013-04-29 11:12:36Z MaW $
+ * $Id: orders_import.php 3092 2013-08-06 16:11:55Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -126,7 +126,7 @@ function magnaImportAllOrders() {
 	if ($doImports) {
 		$modules = magnaGetInvolvedMarketplaces();
 
-		ini_set('memory_limit', '512M');
+		#ini_set('memory_limit', '512M');
 		MagnaConnector::gi()->setTimeOutInSeconds(
 			MAGNA_DEBUG && defined('MAGNALISTER_PLUGIN') && MAGNALISTER_PLUGIN 
 				? 1 

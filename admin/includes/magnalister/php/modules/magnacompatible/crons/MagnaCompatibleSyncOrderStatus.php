@@ -74,6 +74,11 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 */
 	protected $unprocessed = array();
 	
+	/**
+	 * Size of request batch.
+	 * @var int
+	 */
+	protected $sizeOfBatch = 0xffff;
 	
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);  
@@ -227,11 +232,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * Processes the current order.
 	 * @return void
 	 */
-	protected function prepareSingleOrder() {
-		$this->decodeData();
-		
-		$date = $this->getStatusChangeTimestamp();
-		
+	protected function prepareSingleOrder($date) {
 		if ($this->oOrder['orders_status_shop'] == $this->config['StatusShipped']) {
 			$this->confirmations[] = $this->confirmShipment($date);
 		} else if ($this->oOrder['orders_status_shop'] == $this->config['StatusCancelled']) {
@@ -359,9 +360,9 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * @return void
 	 */
 	protected function submitStatusUpdate($action, $data) {
-		if (empty($data)) {	
+		if (empty($data)) {
 			return;
-		}	
+		}
 		$request = $this->getBaseRequest();
 		$request['ACTION'] = $action;
 		$request['DATA'] = $data; 
@@ -398,13 +399,14 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		if ($this->_debugDryRun) {
 			return;
 		}
-		MagnaDB::gi()->query("
-		    UPDATE `".TABLE_MAGNA_ORDERS."` mo,
-		           `".TABLE_ORDERS."` o 
+		MagnaDB::gi()->query('
+		    UPDATE '.TABLE_MAGNA_ORDERS.' mo,
+		           '.TABLE_ORDERS.' o 
 		       SET mo.orders_status = o.orders_status
 		     WHERE mo.orders_id = o.orders_id
-		           AND mo.orders_id IN ('".implode("', '", $this->unprocessed)."')
-		");
+		           AND mo.mpID = "'.$this->mpID.'"
+		           AND mo.orders_id IN ("'.implode('", "', $this->unprocessed).'")
+		');
 	}
 	
 	/**
@@ -417,13 +419,12 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		    SELECT mo.orders_id, mo.orders_status, mo.data,
 		           mo.internaldata, mo.special,
 		           o.orders_status AS orders_status_shop
-		         --  "3" AS orders_status_shop
 		      FROM `'.TABLE_MAGNA_ORDERS.'` mo,
 		           `'.TABLE_ORDERS.'` o
 		     WHERE mo.orders_id=o.orders_id
 		           AND mo.mpID = "'.$this->mpID.'"
 		           AND mo.orders_status <> o.orders_status
-		         --  AND mo.orders_id = 400358
+		  ORDER BY mo.orders_id DESC
 		', $this->_debugLevel >= self::DBGLV_HIGH));
 	}
 	
@@ -432,11 +433,14 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * @return void
 	 */
 	protected function saveDirtyOrders() {
-		foreach ($this->aOrders as $oOrder) {
+		foreach ($this->aOrders as $key => $oOrder) {
 			if (!isset($oOrder['__dirty']) || ($oOrder['__dirty'] !== true)) {
 				continue;
 			}
+			
 			unset($oOrder['__dirty']);
+			unset($this->aOrders[$key]['__dirty']);
+			
 			// Store the new order status. 
 			$oOrder['orders_status'] = $oOrder['orders_status_shop'];
 			unset($oOrder['orders_status_shop']);
@@ -470,6 +474,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		
 		if (empty($this->aOrders)) return true;
 		
+		#return true;
 		$this->confirmations = array();
 		$this->cancellations = array();
 		$this->unprocessed = array();
@@ -483,17 +488,34 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 				unset($this->aOrders[$key]);
 				continue;
 			}
+			$this->decodeData();
 			// add order to lookup table
 			$this->addToLookupTable();
-			$this->prepareSingleOrder();
+			$this->prepareSingleOrder($this->getStatusChangeTimestamp());
+			
+			$requestSend = false;
+			if (count($this->confirmations) >= $this->sizeOfBatch) {
+				$this->submitStatusUpdate('ConfirmShipment', $this->confirmations);
+				$this->confirmations = array();
+				$requestSend = true;
+			}
+			if (count($this->cancellations) >= $this->sizeOfBatch) {
+				$this->submitStatusUpdate('CancelShipment', $this->cancellations);
+				$this->cancellations = array();
+				$requestSend = true;
+			}
+			if ($requestSend) {
+				$this->saveDirtyOrders();
+			}
 		}
+		//*
 		$this->submitStatusUpdate('ConfirmShipment', $this->confirmations);
 		$this->submitStatusUpdate('CancelShipment',  $this->cancellations);
 		
 		$this->saveDirtyOrders();
 		
 		$this->updateUnprocessed();
-		
+		//*/
 		return true;
 	}
 }

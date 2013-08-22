@@ -111,6 +111,21 @@ class MeinpaketSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		}
 		return $cncl;
 	}
+		
+	/**
+	 * Processes the current order.
+	 * @return void
+	 */
+	protected function prepareSingleOrder($date) {
+		if ($this->oOrder['orders_status_shop'] == $this->config['StatusShipped']) {
+			$this->confirmations[] = $this->confirmShipment($date);
+		} else if (in_array($this->oOrder['orders_status_shop'], array(
+			$this->config['StatusCancelledCR'], $this->config['StatusCancelledOOS'],
+			$this->config['StatusCancelledDG'], $this->config['StatusCancelledDR']
+		))) {
+			$this->cancellations[] = $this->cancelOrder($date);
+		}
+	}
 	
 	/**
 	 * Adds an error to the meinpaket error log.

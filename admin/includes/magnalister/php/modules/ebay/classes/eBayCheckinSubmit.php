@@ -58,7 +58,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			    WHERE mpID=\''.$this->_magnasession['mpID'].'\' AND
 			        selectionname=\''.$this->settings['selectionName'].'\' AND
 			        session_id=\''.session_id().'\' AND
-			        pd.language_id = \''.$_SESSION['languages_id'].'\' AND
+			        pd.language_id = \''.$this->settings['language'].'\' AND
                     p.products_quantity > 0 AND p.products_price > 0.0 AND
 			        p.products_id = ms.pID AND
 			        pd.products_id = ms.pID
@@ -76,7 +76,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 			 WHERE mpID=\''.$this->_magnasession['mpID'].'\' AND
 			       selectionname=\''.$this->settings['selectionName'].'\' AND
 			       session_id=\''.session_id().'\' AND
-			       pd.language_id = \''.$_SESSION['languages_id'].'\' AND
+			       pd.language_id = \''.$this->settings['language'].'\' AND
 			       pd.products_id = ms.pID
 		  ORDER BY pd.products_name ASC
 			 LIMIT '.$offset.','.$limit.'

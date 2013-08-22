@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ErrorView.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: ErrorView.php 3057 2013-07-30 16:09:20Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -230,6 +230,7 @@ $(document).ready(function() {
 		foreach ($this->errorLog as $item) {
 			$dateadded = strtotime($item['dateadded']);
 			$hdate = date("d.m.Y", $dateadded).' &nbsp;&nbsp;<span class="small">'.date("H:i", $dateadded).'</span>';
+			$item['errormessage'] = fixHTMLUTF8Entities($item['errormessage']);
 			$shortMessage = (
 				(strlen($item['errormessage']) > $this->settings['maxTitleChars'] + 2) ? 
 					(substr($item['errormessage'], 0, $this->settings['maxTitleChars']).'&hellip;') : 

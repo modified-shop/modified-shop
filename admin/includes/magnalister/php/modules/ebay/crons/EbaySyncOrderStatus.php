@@ -21,11 +21,76 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncOrderStatus.php');
-#require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
-
 
 class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
+		
+		$this->confirmationResponseField = 'DATA';
+		$this->sizeOfBatch = 8;
+	}
+	
+	/**
+	 * Adds the current order's index to a lookup table where the key is
+	 * the MOrderID. Joined orders are split.
+	 * @return void
+	 */
+	protected function addToLookupTable() {
+		$mOrderIds = explode("\n", $this->oOrder['special']);
+		foreach ($mOrderIds as $mOrderId) {
+			$this->aMorderId2Order[$mOrderId] = $this->iOrderIndex;
+		}
+	}
+	
+	/**
+	 * Builds an element for the ConfirmShipment request.
+	 * @return void
+	 */
+	protected function confirmShipment($date) {
+		$cfirm = parent::confirmShipment($date);
+		// DON'T flag order as dirty, so the status doesn't get updated.
+		$this->oOrder['__dirty'] = false;
+		return $cfirm;
+	}
+	
+	/**
+	 * Builds an element for the CancelShipment request
+	 * @return void
+	 */
+	protected function cancelOrder($date) {
+		$cncl = parent::cancelOrder($date);
+		// DON'T flag order as dirty, so the status doesn't get updated.
+		$this->oOrder['__dirty'] = false;
+		return $cncl;
+	}
+	
+	/**
+	 * Processes the confirmations send from the API.
+	 * @param array $result
+	 *   The entire API result.
+	 * @return void
+	 */
+	protected function processResponseConfirmations($result) {
+		if (!isset($result[$this->confirmationResponseField][0])) {
+			return;
+		}
+		
+		foreach ($result[$this->confirmationResponseField] as $cData) {
+			/* $cData = array (
+					[MOrderID] => 370836896301-496024749024
+					[TooOld] => false
+					[ShippingDate] => 2013-07-26 10:06:10
+					[Status] => Success
+				)
+			*/
+			if (!isset($cData['MOrderID']) || ('Success' != $cData['Status'])) {
+				continue;
+			}
+			$oOrder = &$this->getFromLookupTable($cData['MOrderID']);
+			if ($oOrder !== null) {
+				// save the confirmation and update the status.
+				$oOrder['__dirty'] = true;
+			}
+		}
 	}
 }
