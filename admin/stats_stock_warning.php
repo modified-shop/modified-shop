@@ -46,7 +46,7 @@ require (DIR_WS_INCLUDES.'head.php');
       
       <table class="tableCenter collapse">
         <tr class="dataTableHeadingRow">
-          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_NUMBER; ?></td>
+          <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
           <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_QUANTITY; ?>&nbsp;</td>
         </tr>
         <?php
