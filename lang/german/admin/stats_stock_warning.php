@@ -16,6 +16,6 @@
    --------------------------------------------------------------*/
 
 define('HEADING_TITLE', 'Lagerbestand');
-define('TABLE_HEADING_MODEL', 'Artikelnummer');
+define('TABLE_HEADING_PRODUCTS', 'Artikel');
 define('TABLE_HEADING_QUANTITY', 'Anzahl');
 ?>
