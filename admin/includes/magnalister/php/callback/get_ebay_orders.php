@@ -695,10 +695,13 @@ function magnaImportEbayOrders($mpID) {
 						 WHERE products_id=\''.(int)$prodOrderData['products_id'].'\'
 					');
 					if ($row !== false) {
-						$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$billingCountry['countries_id']);
+						$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$shippingCountry['countries_id']);
 						$prodOrderData['products_model'] = $row['products_model'];
 					} else {
-						$tax = (float)getDBConfigValue($mp.'.mwstfallback', $mpID);
+						$tax = 
+							isDomestic($shippingCountry['countries_id'])
+							? (float)getDBConfigValue($mp.'.mwstfallback', $mpID)
+							: 0.0;
 					}
 				}
 				$prodOrderData['products_tax'] = $tax;
@@ -815,7 +818,7 @@ function magnaImportEbayOrders($mpID) {
 						'#PASSWORD#' => $customers_password,
 						'#ORDERSUMMARY#' => $mailOrderSummary,
 						'#MARKETPLACE#' => $_modules['ebay']['title'],
-						'#SHOPURL#' => HTTP_SERVER.DIR_WS_CATALOG,
+						'#SHOPURL#' => '',
 					)
 				);
 			}

@@ -394,6 +394,7 @@ define('ML_GENERIC_STATUS_LOGIN_SAVED', 'The access informations had been submit
 define('ML_GENERIC_STATUS_LOGIN_SAVEERROR', 'The access data could not be submitted to the magnalister-service.');
 define('ML_GENERIC_DELETE_LISTINGS', 'Do you really want to delete the selected items?');
 define('ML_GENERIC_DELETE_ERROR_MESSAGES', 'Do you really want to delete the selected error messages?');
+define('ML_GENERIC_ORDER_DETAILS_CURRENCY_CONVERSION_TEXT',  'Currency: {#Currency#} &nbsp;&nbsp;&nbsp;&nbsp; Exchange ratio: {#CurrencyValue#} &nbsp;&nbsp;&nbsp;&nbsp; Value in default currency ({#DefaultCurrency#}): {#Value#}');
 define('ML_GENERIC_ERROR_WRONG_CURRENCY', 'The currency of the marketplace (%s) differs from the default currency of the shop (%s).  The conversion factor is set in the configuration tab.');
 define('ML_GENERIC_ERROR_CURRENCY_NOT_IN_SHOP', 'The currency of the marketplace does not exist in the shop. Please define the marketplace currency in the shop settings, to upload items to the marketplace .');
 define('ML_GENERIC_ERROR_PRODUCTS_WITHOUT_MODEL_EXIST', 'We recognized items with no or double item number. Due to this reason, you can not submit any items: You\'ve selected "Item number (Shop) = SKU (Marketplace). To set empty item numbers automatically, or to set double numbers unique, please click <a href="#LINK#"><b>here</b></a>.<br><br>

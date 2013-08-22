@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: get_amazon_orders.php 2923 2013-07-11 23:09:34Z derpapst $
+ * $Id: get_amazon_orders.php 3091 2013-08-06 15:41:45Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -345,12 +345,15 @@ function magnaImportAmazonOrders($mpID) {
 			) {
 				# Bestellung existiert bereits.
 				if ($verbose) echo "Order already exists.\n";
+				$orderUpdate = true;
+				
+				//*
 				$processedOrders[] = array (
 					'MOrderID' => $order['orderInfo']['AmazonOrderID'],
 					'ShopOrderID' => $ordersId,
 				);
-				$orderUpdate = true;
 				continue;
+				//*/
 			}
 			
 			# Bestellung anlegen.
@@ -440,16 +443,16 @@ function magnaImportAmazonOrders($mpID) {
 			);
 			
 			/* Bestellung in unserer Tabelle registrieren */
-			if ($orderUpdate) {
+			if (!$orderUpdate || !MagnaDB::gi()->recordExists(TABLE_MAGNA_ORDERS, array (
+				'orders_id' => $ordersId,
+			))) {
+				$MagnaDB->insert(TABLE_MAGNA_ORDERS, $magnaOrder);
+			} else {
 				/*
 				$MagnaDB->update(TABLE_MAGNA_ORDERS, $magnaOrder, array (
 					'orders_id' => $ordersId
 				));
-				*/
-			} else {
-				$MagnaDB->insert(TABLE_MAGNA_ORDERS, $magnaOrder);
-				# OrderId merken
-				# $ordersId = $MagnaDB->getLastInsertID();
+				//*/
 			}
 			// echo 'DELETE FROM '.TABLE_MAGNA_ORDERS.' WHERE orders_id=\''.$ordersId.'\';'."\n\n";
 			
@@ -465,24 +468,28 @@ function magnaImportAmazonOrders($mpID) {
 				$order['orderStatus']['comments']
 			);
 			
-			#if (!$orderUpdate) {
+			if (!$orderUpdate || !MagnaDB::gi()->recordExists(TABLE_ORDERS_STATUS_HISTORY, array (
+				'orders_id' => $ordersId,
+			))) {
 				$MagnaDB->insert(TABLE_ORDERS_STATUS_HISTORY, $order['orderStatus']);
-			#}
+			}
 			// echo 'DELETE FROM '.TABLE_ORDERS_STATUS_HISTORY.' WHERE orders_id=\''.$ordersId.'\';'."\n\n";
 			
-			
+			$saveOrdersTotal = (!$orderUpdate || !MagnaDB::gi()->recordExists(TABLE_ORDERS_TOTAL, array (
+				'orders_id' => $ordersId,
+			)));
 			foreach ($order['orderTotal'] as $key => &$entry) {
 				$entry['orders_id'] = $ordersId;
 				if (defined($entry['title'])) {
 					$entry['title'] = constant($entry['title']);
 				}
 				$entry['text'] = $simplePrice->setPrice($entry['value'])->format();
-				#if (!$orderUpdate) {
+				if ($saveOrdersTotal) {
 					$MagnaDB->insert(TABLE_ORDERS_TOTAL, $entry);
-				#}
+				}
 			}
 			// echo 'DELETE FROM '.TABLE_ORDERS_TOTAL.' WHERE orders_id=\''.$ordersId.'\';'."\n\n";
-	
+			
 			$mailOrderSummary = array();
 			$taxes = array();
 			#echo print_m($order['products']);
@@ -545,7 +552,7 @@ function magnaImportAmazonOrders($mpID) {
 						 WHERE products_id=\''.(int)$prodOrderData['products_id'].'\'
 					');
 					if ($row !== false) {
-						$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$billingCountry['countries_id']);
+						$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$shippingCountry['countries_id']);
 						$prodOrderData['products_model'] = $row['products_model'];
 					} else {
 						$tax = (float)getDBConfigValue($mp.'.mwstfallback', $mpID);
@@ -566,27 +573,34 @@ function magnaImportAmazonOrders($mpID) {
 					$prodOrderData['products_price'] = $priceWOTax;
 					$prodOrderData['final_price'] = $prodOrderData['products_price'];
 				}
-	
+				
 				# Produktdatensatz in Tabelle "orders_products".
-				$MagnaDB->insert(TABLE_ORDERS_PRODUCTS, $prodOrderData);
-				$ordersProductsId = $MagnaDB->getLastInsertID();
-	
-				// orders_products_attributes:
-				$prodOrderAttrData = array(
-					'orders_id' => $prodOrderData['orders_id'],
-					'orders_products_id' => $ordersProductsId,
-					'products_options' => $attrValues['options_name'],
-					'products_options_values' => $attrValues['options_values_name'],
-					'options_values_price' => 0.0,
-					'price_prefix' => ''
-				);
-				if (!empty($attrValues['options_name'])) {
-					if (MagnaDB::gi()->columnExistsInTable('products_options_id', TABLE_ORDERS_PRODUCTS_ATTRIBUTES)) {
-						$prodOrderAttrData['products_options_id'] = $attrValues['options_id'];
-						$prodOrderAttrData['products_options_values_id'] = $attrValues['options_values_id'];
+				if (!$orderUpdate || !MagnaDB::gi()->recordExists(TABLE_ORDERS_PRODUCTS, array (
+					'orders_id' => $ordersId,
+					'products_model' => $prodOrderData['products_model']
+				))) {
+					$MagnaDB->insert(TABLE_ORDERS_PRODUCTS, $prodOrderData);
+					$ordersProductsId = $MagnaDB->getLastInsertID();
+					
+					// orders_products_attributes:
+					$prodOrderAttrData = array(
+						'orders_id' => $prodOrderData['orders_id'],
+						'orders_products_id' => $ordersProductsId,
+						'products_options' => $attrValues['options_name'],
+						'products_options_values' => $attrValues['options_values_name'],
+						'options_values_price' => 0.0,
+						'price_prefix' => ''
+					);
+					if (!empty($attrValues['options_name'])) {
+						if (MagnaDB::gi()->columnExistsInTable('products_options_id', TABLE_ORDERS_PRODUCTS_ATTRIBUTES)) {
+							$prodOrderAttrData['products_options_id'] = $attrValues['options_id'];
+							$prodOrderAttrData['products_options_values_id'] = $attrValues['options_values_id'];
+						}
+						
+						$MagnaDB->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 					}
-					$MagnaDB->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 				}
+
 			}
 			// echo 'DELETE FROM '.TABLE_ORDERS_PRODUCTS.' WHERE orders_id=\''.$ordersId.'\';'."\n\n";
 	
@@ -615,10 +629,12 @@ function magnaImportAmazonOrders($mpID) {
 					$taxEntry['text'] = $simplePrice->setPrice($taxEntry['value'])->format();
 					++$otc;
 	
-					$MagnaDB->insert(TABLE_ORDERS_TOTAL, $taxEntry);
+					if ($saveOrdersTotal) {
+						$MagnaDB->insert(TABLE_ORDERS_TOTAL, $taxEntry);
+					}
 				}
 			}
-	
+			
 			if (getDBConfigValue($mp.'.mail.send', $mpID, 'false') == 'true') {
 				sendSaleConfirmationMail(
 					$mpID,
