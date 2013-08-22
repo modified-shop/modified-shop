@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: order_details.php 2488 2013-05-14 10:34:59Z MaW $
+ * $Id: order_details.php 3131 2013-08-21 13:29:57Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -186,7 +186,7 @@ table.magnaOrderDetails tbody tr td.key {
 			SELECT `value` FROM orders_total WHERE orders_id="400375" AND `class`="ot_total"
 		');
 		if ($total > 0) {
-			$total = round($total * $details['CurrencyValue'], 2);
+			$total = round($total * 1 / $details['CurrencyValue'], 2);
 			$text = str_replace(array (
 				'{#Currency#}', '{#CurrencyValue#}', '{#DefaultCurrency#}', '{#Value#}'
 			), array (

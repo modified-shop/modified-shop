@@ -52,7 +52,7 @@ class eBayCheckinCategoryView extends SimpleCheckinCategoryView {
 				if($sFilterBy=='-1'){
 					$sDeletedFilter = " AND deletedBy !='empty' ";
 				}else{
-					$sDeletedFilter = ' AND deletedBy='.(int)$_POST['FilterBy'].' ';
+					$sDeletedFilter = ' AND deletedBy='.(int)$sFilterBy.' ';
 				}
 			}
 		}

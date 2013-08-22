@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinSubmit.php 2668 2013-06-11 14:19:37Z MaW $
+ * $Id: CheckinSubmit.php 3078 2013-08-02 10:21:49Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -100,7 +100,8 @@ abstract class CheckinSubmit {
 		}
 
 		/* Init all resources needed */
-		$this->submitSession = array();
+		$this->_magnasession[$this->mpID]['submit'] = array();
+		$this->submitSession = &$this->_magnasession[$this->mpID]['submit'];
 		$this->submitSession['state'] = array (
 			'total' => $items,
 			'submitted' => 0,
@@ -110,6 +111,7 @@ abstract class CheckinSubmit {
 		$this->submitSession['proceed'] = true;
 		$this->submitSession['mode'] = $mode;
 		$this->submitSession['initialmode'] = $mode;
+		#echo print_m($this, __METHOD__.'('.__LINE__.')');
 	}
 	
 	abstract public function makeSelectionFromErrorLog();

@@ -1110,7 +1110,7 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
                 p.products_price Price, p.products_image image 
 				FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
 				WHERE p.products_id = pd.products_id
-				AND pd.language_id = \''.$_SESSION['languages_id'].'\'
+				AND pd.language_id = \''.getDBConfigValue('ebay.lang', $_MagnaSession['mpID'], $_SESSION['languages_id']).'\'
 				AND p.products_id IN ('.implode($pIDs, ', ').')';
 	
 	$more_data = MagnaDB::gi()->fetchArray($more_data_select);
