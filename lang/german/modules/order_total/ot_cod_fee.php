@@ -48,7 +48,9 @@
             00 als ISO2-Code erm&ouml;glicht den Nachnahmeversand in alle L&auml;nder. Wenn 
             00 verwendet wird, muss dieses als letztes Argument eingetragen werden. Wenn 
             kein 00:9.99 eingetragen ist, wird der Nachnahmeversand ins Ausland nicht berechnet 
-            (nicht m&ouml;glich).');
+            (nicht m&ouml;glich). Um nur ein Land ausschlie&szlig;en, keine Kosten f&uuml;r dieses Land 
+	    eingeben. Beispiel: DE:4.00,CH:,00:9.99<br />-&gt; Erkl&auml;rung: Versand nach DE: 4&euro; / 
+            Versand nach CH: nicht m&ouml;glich / Versand in den Rest der Welt: 9,99&euro;');
                 }          
     }
   }

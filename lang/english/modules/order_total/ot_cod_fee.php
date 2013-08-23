@@ -48,7 +48,9 @@
             00 as ISO2-Code allows the COD shipping in all countries. If
             00 is used you have to enter it as last argument. If
             no 00:9.99 is entered the COD shipping into foreign countries will not be calculated
-            (not possible).');
+            (not possible). To exclude only one country, do not enter costs for this country. 
+            Example: DE:4.00,CH:,00:9.99<br />-> Explanation: Shipping to DE: 4&euro; / Shipping to CH: not possible 
+            / Shipping to the rest of the world: 9,99&euro;');
                 }          
     }
   }
