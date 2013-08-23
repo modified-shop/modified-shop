@@ -175,8 +175,17 @@
     }
     $translation_table = array_flip($translation_table);
     $Return= strtr($Text,$translation_table);
-    return preg_replace( '/&#(\d+);/me',"chr('\\1')",$Return);
+
+    // BOF - DokuMan - 2013-08-23 - Fix:  preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead
+    //return preg_replace('/&#(\d+);/me',"chr('\\1')",$Return);
+    return preg_replace_callback('/&#(\d+);/m',
+          function ($m) {
+            return chr($m[1]);
+          },
+          $Return);
+    // EOF - DokuMan - 2013-08-23 - Fix:  preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead
   }
+
   function metaHtmlEntities($Text) {
     //BOF web28 2011-12-02 UTF-8
     if(strtoupper($_SESSION['language_charset']) == 'UTF-8') {
@@ -462,12 +471,12 @@ switch(basename($PHP_SELF)) {
           $contents_meta['content_text'] .= ' '.implode(' ', @file(DIR_FS_CATALOG.'media/content/'.$contents_meta['content_file']));
         }
       }
-      
+
       // meta robots
       if ($contents_meta['content_meta_robots']!='') {
         $meta_robots = $contents_meta['content_meta_robots'];
       }
-      
+
       // KeyWords ...
       if(!empty($contents_meta['content_meta_keywords'])) {
         $meta_keyw = $contents_meta['content_meta_keywords'];
