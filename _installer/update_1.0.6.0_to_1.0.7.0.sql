@@ -73,4 +73,28 @@ ALTER TABLE admin_access ADD stats_stock_warning INT(1) NOT NULL DEFAULT 0 AFTER
 UPDATE admin_access SET stats_stock_warning = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET stats_stock_warning = 5 WHERE customers_id = 'groups' LIMIT 1;
 
+#Tomcraft - 2013-08-23 - Added swedish provinces
+# Sweden
+INSERT INTO zones VALUES ('',203,'K','Blekinge');
+INSERT INTO zones VALUES ('',203,'W','Dalarna');
+INSERT INTO zones VALUES ('',203,'I','Gotland');
+INSERT INTO zones VALUES ('',203,'X','Gävleborg');
+INSERT INTO zones VALUES ('',203,'N','Halland');
+INSERT INTO zones VALUES ('',203,'Z','Jämtland');
+INSERT INTO zones VALUES ('',203,'F','Jönköping');
+INSERT INTO zones VALUES ('',203,'H','Kalmar');
+INSERT INTO zones VALUES ('',203,'G','Kronoberg');
+INSERT INTO zones VALUES ('',203,'BD','Norrbotten');
+INSERT INTO zones VALUES ('',203,'T','Örebro');
+INSERT INTO zones VALUES ('',203,'E','Östergötland');
+INSERT INTO zones VALUES ('',203,'M','Skåne');
+INSERT INTO zones VALUES ('',203,'AB','Stockholm');
+INSERT INTO zones VALUES ('',203,'D','Södermanland');
+INSERT INTO zones VALUES ('',203,'C','Uppsala');
+INSERT INTO zones VALUES ('',203,'S','Värmland');
+INSERT INTO zones VALUES ('',203,'AC','Västerbotten');
+INSERT INTO zones VALUES ('',203,'Y','Västernorrland');
+INSERT INTO zones VALUES ('',203,'U','Västmanland');
+INSERT INTO zones VALUES ('',203,'O','Västra Götaland');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
