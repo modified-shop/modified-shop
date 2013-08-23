@@ -179,10 +179,10 @@
     // BOF - DokuMan - 2013-08-23 - Fix:  preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead
     //return preg_replace('/&#(\d+);/me',"chr('\\1')",$Return);
     return preg_replace_callback('/&#(\d+);/m',
-          function ($m) {
-            return chr($m[1]);
-          },
-          $Return);
+    function ($m) {
+      return chr($m[1]);
+    },
+    $Return);
     // EOF - DokuMan - 2013-08-23 - Fix:  preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead
   }
 
