@@ -195,7 +195,7 @@ if (xtc_not_null($action) && !$box) {
                         } else {
                           $messageStack->add_session(sprintf(TEXT_MODULE_FILE_MISSING, $_SESSION['language'], $file), 'warning');
                         }
-                        if ($module->check() > 0) {
+                        if ($module instanceof $class && $module->check() > 0) { //DokuMan - 2013-08-23 - added instanceof for fixing fatal error on PHP5.5
                           if (!is_numeric($module->sort_order)) {
 
                             $module->sort_order = 0;
