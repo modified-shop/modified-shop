@@ -1511,3 +1511,11 @@ font-weight:bold;
 }
 ul.contentmenu li.activeparent2 a  { font-style:italic; background:#e1e1e1; }
 ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
+
+/* INFO MESSAGES */
+.infomessage {
+	border: 2px solid green;
+	padding: 15px;
+	background-color: #e5ffe8;
+	margin-bottom: 10px;
+}
