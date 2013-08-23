@@ -32,7 +32,7 @@ class cod {
     $this->enabled = ((MODULE_PAYMENT_COD_STATUS == 'True') ? true : false);
     $this->info = MODULE_PAYMENT_COD_TEXT_INFO;
     $this->cost = '';
-    $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // for comparison to be able to limit order subtotal sum where cod allowed
+    $this->limit_subtotal = MODULE_PAYMENT_COD_LIMIT_ALLOWED; // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
 
     if ((int) MODULE_PAYMENT_COD_ORDER_STATUS_ID > 0) {
       $this->order_status = MODULE_PAYMENT_COD_ORDER_STATUS_ID;
@@ -92,38 +92,34 @@ class cod {
   function selection() {
     global $xtPrice,$order;
 
-      // limit sum where cod allowed
-      if($this->limit_subtotal && ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) >= $this->limit_subtotal)) {
-        return;
+      if($this->limit_subtotal && round($order->info['subtotal']) >= $this->limit_subtotal) {
+        return;  // added $order->info['sub_total'] comparison to be able to limit sum where cod allowed
       }
       
       if (MODULE_ORDER_TOTAL_COD_FEE_STATUS == 'true') {
 
         $cod_country = false;
-        $cod_zones = array(); // added variable
 
         //process installed shipping modules
         $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
         $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
-        // dont't show cod on checkout_payment when shipping module doesn't offer cod
-        if (count($cod_zones) == 0 || (!in_array(($order->delivery['country']['iso_code_2']), $cod_zones) && !in_array('00', $cod_zones))) {
-          return;
-        }
 
-        for ($i = 0; $i < count($cod_zones); $i++) {
-          if ($cod_zones[$i] == $order->delivery['country']['iso_code_2'] || $cod_zones[$i] == '00') {
-            $cod_cost = $cod_zones[$i + 1];
-            if ($cod_cost == '') {
-              return;
+            for ($i = 0; $i < count($cod_zones); $i++) {
+            if ($cod_zones[$i] == $order->delivery['country']['iso_code_2']) {
+                  $cod_cost = $cod_zones[$i + 1];
+                  $cod_country = true;
+                  break;
+                } elseif ($cod_zones[$i] == '00') {
+                  $cod_cost = $cod_zones[$i + 1];
+                  $cod_country = true;
+                  break;
+                } else {
+                }
+              $i++;
             }
-            $cod_country = true;
-            break;
+          } else {
+            //COD selected, but no shipping module which offers COD
           }
-          $i++;
-        }
-      } else {
-        //COD selected, but no shipping module which offers COD
-      }
 
         if ($cod_country) {
             $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
