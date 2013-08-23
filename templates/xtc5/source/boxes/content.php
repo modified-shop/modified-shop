@@ -81,7 +81,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
 	  }
   }
 
-  if ($coPath) {
+  if (isset($coPath)) {
     $new_path = '';
     $coid = explode('_', $coPath);
     reset($coid);
