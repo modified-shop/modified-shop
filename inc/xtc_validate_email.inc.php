@@ -62,24 +62,37 @@
 
     $email = trim($email);
     $valid_address = false;
-    if (strlen($email) > 255) {
-      $valid_address = false;    
+
+    //BOF - Dokuman - 2013-08-26 - Validation of email addresses
+    if (function_exists('filter_var') && filter_var($email, FILTER_VALIDATE_EMAIL)) { //since PHP 5.2
+      $valid_address = true;
     } else {
-      if ( substr_count( $email, '@' ) > 1 ) {
+    //EOF - Dokuman - 2013-08-26 - Validation of email addresses
+
+      if (strlen($email) > 255) {
         $valid_address = false;
-      }     
-      
-      //web28 - 2011-07-28 - new $regex see http://www.regular-expressions.info/email.html      
-      $regex = "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$/i";
-      $valid_address = preg_match($regex, $email);      
-    }
-    
-    if ($valid_address && ENTRY_EMAIL_ADDRESS_CHECK == 'true') {
+      } else {
+        if (substr_count( $email, '@' ) > 1 ) {
+          $valid_address = false;
+        }
+
+        //web28 - 2011-07-28 - new $regex see http://www.regular-expressions.info/email.html
+        //BOF - Dokuman - 2013-08-26 - Validation of email addresses - do not rely on domain names here, checkdnsrr() will do that
+        //$regex = "/^[a-z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+(?:[A-Z]{2}|com|org|net|edu|gov|mil|biz|info|mobi|name|aero|asia|jobs|museum)$/i";
+        //$valid_address = preg_match($regex, $email)
+        if(preg_match('/^[a-zA-z0-9]+@[a-zA-z0-9]+\.[a-zA-z0-9]+$/', $email)){ //use simplified check here -> let the email confirmation-check handle the rest
+          $valid_address = true;
+        }
+        //EOF - Dokuman - 2013-08-26 - Validation of email addresses - do not rely on domain names here, checkdnsrr() will do that
+      }
+    } //Dokuman - 2013-08-26 - Validation of email addresses
+
+    if ($valid_address && defined('ENTRY_EMAIL_ADDRESS_CHECK') && ENTRY_EMAIL_ADDRESS_CHECK == 'true') {
       $domain = explode('@', $email);
       if (!checkdnsrr($domain[1], "MX") && !checkdnsrr($domain[1], "A")) {
         $valid_address = false;
       }
-    }    
+    }
     return $valid_address;
   }
 ?>
