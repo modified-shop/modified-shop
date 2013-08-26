@@ -31,7 +31,7 @@
   if (isset($_GET['clear_id'])){
       xtc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = '0' where products_id ='".$_GET['clear_id']."'");
   }
-  if (isset($_GET['clear_id']) && $_GET['clear_all']=='true'){
+  if (isset($_GET['clear_all']) && $_GET['clear_all']=='true'){
     xtc_db_query("update " . TABLE_PRODUCTS . " set products_ordered = '0' ");
   }
   //EOF - DokuMan - 2010-08-12 - added possibility to reset admin statistics
