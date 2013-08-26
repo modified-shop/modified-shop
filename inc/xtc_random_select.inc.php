@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_random_select($query) {
-    $random_product = '';
+    $random_product = array();
     $random_query = xtc_db_query($query);
     $num_rows = xtc_db_num_rows($random_query);
     if ($num_rows > 0) {
