@@ -24,6 +24,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
   <title><?php echo TITLE; ?></title>
+  <meta http-equiv="pragma" content="no-cache">
   <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">  
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   
