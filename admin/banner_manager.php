@@ -56,7 +56,8 @@
         if (empty($banners_image_local)) {
           $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
           $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
-          if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types) && $_POST['banners_image_local'] == '') {
+          //if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types) && $_POST['banners_image_local'] == '') {
+          if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types)) { //Fix Dokuman - save banner image name im DB
             $messageStack->add(ERROR_BANNER_IMAGE_REQUIRED, 'error');
             $banner_error = true;
           }
@@ -119,9 +120,9 @@
         if (isset($_POST['delete_image']) && ($_POST['delete_image'] == 'on')) {
           $banner_query = xtc_db_query("select banners_image from " . TABLE_BANNERS . " where banners_id = '" . (int)$banners_id . "'");
           $banner = xtc_db_fetch_array($banner_query);
-          if (is_file(DIR_FS_CATALOG_IMAGES . 'banner/' .$banner['banners_image'])) { //DokuMan - 2012-07-02 - Added missing path to subdirectory 'banner/'
-            if (is_writeable(DIR_FS_CATALOG_IMAGES . 'banner/' .$banner['banners_image'])) { //DokuMan - 2012-07-02 - Added missing path to subdirectory 'banner/'
-              unlink(DIR_FS_CATALOG_IMAGES .'banner/'. $banner['banners_image']); //DokuMan - 2012-07-02 - Added missing path to subdirectory 'banner/'
+          if (is_file(DIR_FS_CATALOG_IMAGES . 'banner/' . $banners_image_target . $banner['banners_image'])) { //DokuMan - 2012-07-02 - Added missing path to subdirectory 'banner/' and $banners_image_target
+            if (is_writeable(DIR_FS_CATALOG_IMAGES . 'banner/' . $banners_image_target . $banner['banners_image'])) { //DokuMan - 2012-07-02 - Added missing path to subdirectory 'banner/'
+              unlink(DIR_FS_CATALOG_IMAGES .'banner/' . $banners_image_target . $banner['banners_image']); //DokuMan - 2012-07-02 - Added missing path to subdirectory 'banner/' and $banners_image_target
             } else {
               $messageStack->add_session(ERROR_IMAGE_IS_NOT_WRITEABLE, 'error');
             }
