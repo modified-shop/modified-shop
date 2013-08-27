@@ -512,6 +512,9 @@ width:80%;
 .tableConfig td.mark{
 background-color:#c8c8c8;
 }
+.valign_m td.col-left, .valign_m td.col-middle{
+vertical-align: middle;
+}
 .configPartner{
 float:left;
 width: 150px;
@@ -571,3 +574,7 @@ margin-bottom:2px;
 .border0{
 border:0;
 }
+input[type="file"]{
+font-size:12px;
+width:270px;
+} 
