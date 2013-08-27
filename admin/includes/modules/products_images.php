@@ -15,14 +15,14 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 //include needed functions
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 
-//clearstatcache();
+clearstatcache();
 
 // show images
 if ($_GET['action'] == 'new_product') {
 
   echo '<div class="div_box">';
   // display images fields:  
-  $rowspan = ' rowspan="'. 3 ).'"';
+  $rowspan = ' rowspan="'. 3 .'"';
   ?>
   <table class="tableConfig borderall">
     <tr>
