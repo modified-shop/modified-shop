@@ -202,11 +202,12 @@ class xtc_afterbuy_functions {
 			// Gutschein
 			if ($order_total_values['class'] == 'ot_gv') {
 				$gv_flag = true;
-				$gv = $order_total_values['value'];
+				$gv = ($order_total_values['value'] * (-1));
 			}
+			// Coupon
 			if ($order_total_values['class'] == 'ot_coupon') {
 				$coupon_flag = true;
-				$coupon = $order_total_values['value'];
+				$coupon = ($order_total_values['value'] * (-1));
 			}
 
 		}
