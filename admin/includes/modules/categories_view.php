@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: categories_view.php 3072 2012-06-18 15:01:13Z hhacker $
+   $Id: categories_view.php 5390 2013-08-15 12:14:27Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -888,7 +888,7 @@
                   // category info box contents
                   $heading[]  = array('align' => 'center', 'text' => '<b>' . $cInfo->categories_name . '</b>');
                   //Multi Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 90%;">' . TEXT_MARKED_ELEMENTS . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_delete" onclick="this.blur();" value="'. BUTTON_DELETE . '">&nbsp;<input type="submit" class="button" onclick="this.blur();" name="multi_move" value="' . BUTTON_MOVE . '">&nbsp;<input type="submit" class="button" onclick="this.blur();" name="multi_copy" value="' . BUTTON_COPY . '">');
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status_on" onclick="this.blur();" value="'. BUTTON_STATUS_ON . '">&nbsp;<input type="submit" class="button" onclick="this.blur();" name="multi_status_off" value="' . BUTTON_STATUS_OFF . '">');
                   // BOF - Tomcraft - 2009-11-28 - Included xs:booster
@@ -898,12 +898,10 @@
                   // EOF - Tomcraft - 2009-11-28 - Included xs:booster
                   $contents[] = array('text'  => '</form>');
                   //Single Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 90%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>
-                                                                      <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '</a>');
                   //Insert new Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 90%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {
                     $buttons_new_elements = '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>';
                     if ($cPath != '0') {
@@ -913,7 +911,7 @@
                     $contents[] = array('align' => 'center', 'text' => $buttons_new_elements);
                   }
                   //Informations
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 90%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
                   $contents[] = array('text'  => '<div style="padding-left: 50px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($cInfo->date_added) . '</div>');
                   if (xtc_not_null($cInfo->last_modified)) {
                     $contents[] = array('text' => '<div style="padding-left: 50px;">' . TEXT_LAST_MODIFIED . ' ' . xtc_date_short($cInfo->last_modified) . '</div>');
@@ -923,7 +921,7 @@
                   // product info box contents
                   $heading[]  = array('align' => 'center', 'text' => '<b>' . xtc_get_products_name($pInfo->products_id, $_SESSION['languages_id']) . '</b>');
                   //Multi Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 90%;">' . TEXT_MARKED_ELEMENTS . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
                   $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_DELETE, 'submit', 'name="multi_delete"').'&nbsp;'.xtc_button(BUTTON_MOVE, 'submit', 'name="multi_move"').'&nbsp;'.xtc_button(BUTTON_COPY, 'submit', 'name="multi_copy"'));
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_status_on" onclick="this.blur();" value="'. BUTTON_STATUS_ON . '">&nbsp;<input type="submit" class="button" onclick="this.blur();" name="multi_status_off" value="' . BUTTON_STATUS_OFF . '">');
                   // BOF - Tomcraft - 2009-11-28 - Included xs:booster
