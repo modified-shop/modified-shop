@@ -103,14 +103,13 @@
   ?>
   
 <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>
-<div style="width: 870px; margin:5px; padding:5px; border: 1px solid; border-color: #aaaaaa; background:#f3f3f3;">
-    
-      <table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td width="58%" valign="top">
-            <table width="100%" border="0" cellspacing="0" cellpadding="3">
+<div class="div_box" style="width: 900px; margin:5px;">
+      
+      
+        <div style="float:left; width:58%; vertical-align:top">
+          <table class="tableInput border0">
             <tr>
-              <td width="260"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
+              <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
               <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_status', $product_status_array, $status, 'style="width: 135px"'); ?></span></td>
             </tr>
             <tr>
@@ -131,12 +130,10 @@
             </tr>
             <tr>
               <td>
-                <table width="100%" border="0" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td><span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE.xtc_draw_selection_field('products_vpe_status', 'checkbox', '1',$pInfo->products_vpe_status==1 ? true : false);?></span></td>
-                    <td align="right"><span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span></td>
-                  </tr>
-                </table>
+                <span class="main"><?php echo TEXT_PRODUCTS_VPE_VISIBLE. xtc_draw_selection_field('products_vpe_status', 'checkbox', '1',$pInfo->products_vpe_status==1 ? true : false);?></span>
+                <div class="flt-r">
+                <span class="main"><?php echo TEXT_PRODUCTS_VPE_VALUE; ?></span>
+                </div>                
               </td>
               <td><span class="main"><?php echo xtc_draw_input_field('products_vpe_value', $pInfo->products_vpe_value,'style="width: 135px"'); ?></span></td>
             </tr>
@@ -149,12 +146,12 @@
               <td><span class="main"><?php echo xtc_draw_checkbox_field('fsk18', '1', $pInfo->products_fsk18=='1'); ?></span></td>
             </tr>
           </table>
-        </td>
-        <td width="4%"><?php echo xtc_draw_separator('pixel_trans.gif', '24', '15'); ?></td>
-        <td width="38%" valign="top">
-          <table width="100%" border="0" cellspacing="0" cellpadding="3">
+        </div>
+        
+        <div style="float:left;width:42%; vertical-align:top">
+          <table class="tableInput border0">
             <tr>
-              <td><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
+              <td style="width:180px"><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
               <td><span class="main"><?php echo xtc_draw_input_field('products_quantity', $pInfo->products_quantity, 'style="width: 135px"'); ?></span></td>
             </tr>
             <tr>
@@ -187,18 +184,12 @@
               <td><span class="main">&nbsp;</span></td>
               <td><span class="main">&nbsp;</span></td>
             </tr>
-            <tr>
-              <td><span class="main">&nbsp;</span></td>
-              <td><span class="main">&nbsp;</span></td>
-            </tr>
-            </table>
-          </td>
-        </tr>
-      </table>
+          </table>
+        </div>
 
-      <table width="500" border="0" cellpadding="3" cellspacing="0">
+      <table class="tableInput border0">
         <tr>
-          <td width="260"><span class="main">&nbsp;</span></td>
+          <td style="width:260px"><span class="main">&nbsp;</span></td>
           <td><span class="main">&nbsp;</span></td>
         </tr>
         <tr>
@@ -223,12 +214,12 @@
       <div class="main" style="float:left;">
         <div id="butSpecial">&nbsp;</div>
       </div>
-      <script language="JavaScript" type="text/JavaScript">
+      <script type="text/javascript">
         document.getElementById('butSpecial').innerHTML= '<a href="JavaScript:showSpecial()" class="button">Sonderangebot &raquo;</a>';
       </script>
       <?php } ?>
       
-      <div class="main" style="margin-bottom:10px;float:right;">
+      <div class="main" style="padding-bottom:5px;margin-bottom:10px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         &nbsp;&nbsp;
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
@@ -236,19 +227,19 @@
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
-          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
+          echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
         }
         echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
         ?>
       </div>
 
       <!-- BOF Block2 //-->
-      <div style="width: 860px; padding:5px;clear:both;">
+      <div style="padding:5px;clear:both;">
         <link rel="stylesheet" type="text/css" href="includes/lang_tabs_menu/lang_tabs_menu.css">
         <script type="text/javascript" src="includes/lang_tabs_menu/lang_tabs_menu.js"></script>
         <?php
         $langtabs = '<div class="tablangmenu"><ul>';
-        $csstabstyle = 'border: 1px solid #aaaaaa; padding: 5px; width: 850px; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
+        $csstabstyle = 'border: 1px solid #aaaaaa; padding: 4px; width: 99%; margin-top: -1px; margin-bottom: 10px; float: left;background: #F3F3F3;';
         $csstab = '<style type="text/css">' .  '#tab_lang_0' . '{display: block;' . $csstabstyle . '}';
         $csstab_nojs = '<style type="text/css">';
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
@@ -292,15 +283,15 @@
              <?php echo xtc_draw_textarea_field('products_description_' . $languages[$i]['id'], 'soft', '103', '30', (isset($products_description[$languages[$i]['id']]) ? stripslashes($products_description[$languages[$i]['id']]) : $products_desc_fields['products_description'])); ?>
           </div>
           <div style="height: 8px;"></div>
-          <div width="100%" valign="top" class="main" style="padding: 3px; line-height:20px;">
+          <div class="main" style="width:100%; vertical-align:top; padding: 3px; line-height:20px;">
             <b><?php echo $lng_image . '&nbsp;' . TEXT_PRODUCTS_SHORT_DESCRIPTION; ?></b><br />
             <?php echo xtc_draw_textarea_field('products_short_description_' . $languages[$i]['id'], 'soft', '103', '20', (isset($products_short_description[$languages[$i]['id']]) ? stripslashes($products_short_description[$languages[$i]['id']]) : $products_desc_fields['products_short_description'])); ?>
           </div>
-          <div valign="top" class="main" style="padding: 3px; line-height:20px;">
+          <div class="main" style="vertical-align:top; padding: 3px; line-height:20px;">
             <b><?php echo $lng_image . '&nbsp;' . TEXT_PRODUCTS_ORDER_DESCRIPTION; ?></b><br />
             <?php echo xtc_draw_textarea_field('products_order_description[' . $languages[$i]['id'] . ']', 'soft', '103', '10', (isset($products_order_description[$languages[$i]['id']]) ? stripslashes($products_order_description[$languages[$i]['id']]) : $products_desc_fields['products_order_description']), 'style="width:100%; height:50px;"'); ?>
           </div>
-          <div class="main" valign="top" style="padding: 3px; line-height:20px;">
+          <div class="main" style="vertical-align:top; padding: 3px; line-height:20px;">
               <?php echo $lng_image. '&nbsp;'. TEXT_PRODUCTS_KEYWORDS . ' (max. 255 '. TEXT_CHARACTERS .')'; ?> <br/>
               <?php echo xtc_draw_input_field('products_keywords[' . $languages[$i]['id'] . ']',(isset($products_keywords[$languages[$i]['id']]) ? stripslashes($products_keywords[$languages[$i]['id']]) : $products_desc_fields['products_keywords']), 'style="width:100%" maxlength="255"'); ?><br/>
               <?php echo $lng_image. '&nbsp;'. TEXT_META_TITLE. ' (max. 50 '. TEXT_CHARACTERS .')'; ?> <br/>
@@ -329,31 +320,29 @@
       }
       ?>
 
-      <div style="width: 860px; padding:5px;">
+      <div style="padding:5px;">
          <!-- BOF Product images //-->
-        <div class="main" style="margin:10px 5px 5px 5px"><?php echo HEADING_PRODUCT_IMAGES; ?></div>
-          <table width="100%" border="0" bgcolor="f3f3f3" style="border: 1px solid #aaaaaa; padding:5px;">
-            <?php
+        <div class="main div_header"><?php echo HEADING_PRODUCT_IMAGES; ?></div>
+          <?php
             include (DIR_WS_MODULES.'products_images.php');
-            ?>
-          </table>
+          ?>
+        <div style="clear:both;"></div>          
         <!-- EOF Product images //-->
 
         <?php
         //Customers group block
         if (GROUP_CHECK == 'true') {
           ?>
-          <div class="main" style="margin:10px 5px 5px 5px;font-weight:bold;"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
-          <table width="100%" border="0" bgcolor="f3f3f3" style="border: 1px solid #aaaaaa; padding:5px;">
-            <tr>
-              <td style="border-top: 0px solid; border-color: #ff0000;" valign="top" class="main" ><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
-              <td style="border: 1px solid #ff0000;"  bgcolor="#FFCC33" class="main">
-                <?php
-                echo $catfunc->create_permission_checkboxes($product);
-                ?>
-              </td>
-            </tr>
-          </table>
+          <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
+          <div class="div_box">
+            <div class="main flt-l" style="width:130px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
+            <div class="main customers-groups">
+              <?php
+              echo $catfunc->create_permission_checkboxes($product);
+              ?>
+            </div>
+            <div style="clear:both"></div>            
+          </div>
           <?php
         }
 
@@ -376,7 +365,7 @@
           <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
           <?php
           if (isset($_GET['pID']) && $_GET['pID'] > 0) {
-            echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('../product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
+            echo '&nbsp;&nbsp;<a class="button" href="' . xtc_catalog_href_link('product_info.php', 'products_id=' . $_GET['pID']) . '" target="_blank">' . BUTTON_VIEW_PRODUCT . '</a>';
           }
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . $catfunc->page_parameter . ((isset($_GET['pID']) && $_GET['pID']!='') ? '&pID=' . (int)$_GET['pID'] : '')) . '">' . BUTTON_CANCEL . '</a>';
           ?>
