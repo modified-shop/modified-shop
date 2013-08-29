@@ -172,6 +172,7 @@ define('BOX_SHOP','Shop');
 define('BOX_LOGOUT','Abmelden');
 define('BOX_CREDITS','Credits');
 define('BOX_UPDATE','Update');
+define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
