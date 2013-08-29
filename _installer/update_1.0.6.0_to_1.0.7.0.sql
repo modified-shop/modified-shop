@@ -66,7 +66,7 @@ CREATE TABLE module_backup (
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_key (configuration_key)
-) ENGINE=MyISAM
+) ENGINE=MyISAM;
 
 #Tomcraft - 2013-08-21 - Added hidden stock feature
 ALTER TABLE admin_access ADD stats_stock_warning INT(1) NOT NULL DEFAULT 0 AFTER stats_sales_report;
