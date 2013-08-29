@@ -97,4 +97,10 @@ INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'Y','Väst
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'U','Västmanland');
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'O','Västra Götaland');
 
+#Tomcraft - 2013-08-29 - Added easymarketing
+ALTER TABLE admin_access
+  ADD easymarketing INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
