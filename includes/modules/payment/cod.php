@@ -103,7 +103,7 @@ class cod {
         $cod_zones = array(); // added variable
 
         //process installed shipping modules
-        $shipping_code = ($shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
+        $shipping_code = (isset($shipping_code) && $shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . strtoupper(array_shift(explode('_',$_SESSION['shipping']['id'])));
         $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
         // dont't show cod on checkout_payment when shipping module doesn't offer cod
         if (count($cod_zones) == 0 || (!in_array(($order->delivery['country']['iso_code_2']), $cod_zones) && !in_array('00', $cod_zones))) {
