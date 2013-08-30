@@ -396,14 +396,14 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
                                  'products_options' => $order->products[$i]['attributes'][$j]['option'],
                                  'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
                                  'options_values_price' => $order->products[$i]['attributes'][$j]['price'],
-                                 'price_prefix' => $order->products[$i]['attributes'][$j]['prefix']
+                                 'price_prefix' => $order->products[$i]['attributes'][$j]['prefix'],
                                  'orders_products_options_id' => $order->products[$i]['attributes'][$j]['option_id'],
                                  'orders_products_options_values_id' => $order->products[$i]['attributes'][$j]['value_id']
                                 );
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
         //update attributes download
-        if ((DOWNLOAD_ENABLED == 'true') {
+        if (DOWNLOAD_ENABLED == 'true') {
           $attributes_dl_query = xtc_db_query("SELECT pad.products_attributes_maxdays,
                                                       pad.products_attributes_maxcount,
                                                       pad.products_attributes_filename
