@@ -58,6 +58,18 @@ if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS==
   echo $shopgateJsHeader;
 }
 /******** SHOPGATE **********/
+
+/******** Findologic **********/
+if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
+  echo '
+  <script
+      type="text/javascript"
+      src="https://secure.findologic.com/autocomplete/require.js"
+      data-main="https://secure.findologic.com/autocomplete/A21478CDF6DAA6580D38AF3018A2F413/autocomplete.js">
+  </script>
+  ';
+}
+/******** Findologic **********/
 ?>
 <?php include(DIR_WS_MODULES.FILENAME_METATAGS); ?>
 <link rel="shortcut icon" href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/favicon.ico';?>" type="image/x-icon" />
