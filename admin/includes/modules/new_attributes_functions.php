@@ -47,15 +47,9 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
                                  or die(mysql_error());
         $attr_dl_array = xtc_db_fetch_array($dl_sql);
         // download function end
-
-        //price prefixes
-        $attr_array['posCheck'] = $line['price_prefix'] == '+' ? ' SELECTED': '';
-        $attr_array['negCheck'] = $line['price_prefix'] == '-' ? ' SELECTED': '';
-        //weight prefixes
-        $attr_array['posCheck_weight'] = $line['weight_prefix'] == '+' ? ' SELECTED': '';
-        $attr_array['negCheck_weight'] = $line['weight_prefix'] == '-' ? ' SELECTED': '';
-        //echo print_r($attr_array).'<br>';
       }
+      //echo <<pre>.print_r($attr_array,true).'</pre><br>';
+      //echo <<pre>.print_r($attr_dl_array,true).'</pre><br>';
       return true;
     } else {      
       return false;
