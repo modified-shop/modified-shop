@@ -20,6 +20,41 @@ class idealo_csv_universal {
 	public $minorderBorder = '';
 	
 	
+	public $separatorArray = array ('0' => array('separator'	=> '|', 
+												 'comes' 	 	=> 0,),
+									'1' => array('separator' 	=> ';', 
+												 'comes' 	 	=> 0,),			 
+									'2' => array('separator' 	=> '$', 
+												 'comes' 	 	=> 0,),			 
+									'3' => array('separator'	=> '~', 
+												 'comes' 	 	=> 0,),			 
+									'4' => array('separator' 	=> ',', 
+												 'comes' 	 	=> 0,),
+									'5' => array('separator' 	=> '@', 
+												 'comes' 	 	=> 0,),
+									'6' => array('separator' 	=> '*', 
+												 'comes' 	 	=> 0,),
+									'7' => array('separator' 	=> '%', 
+												 'comes' 	 	=> 0,),
+									'8' => array('separator' 	=> '<', 
+												 'comes' 	 	=> 0,),
+									'9' => array('separator'	=> '>', 
+												 'comes' 	 	=> 0,),
+									'10' => array('separator' 	=> '#', 
+												 'comes' 		=> 0,),
+									'11' => array('separator' 	=> '{', 
+												 'comes' 		=> 0,),
+									'12' => array('separator' 	=> '}', 
+												 'comes' 		=> 0,),
+									'13' => array('separator' 	=> '^', 
+												 'comes' 		=> 0,),			 			 			 			 			 			 
+									);			 
+												 	
+	public $separatorWarning = false;
+	
+	public $separatorInt = 0;
+	
+	
 	 public function checkMinExtraPrice ( $art_price ){	
 
 	 	if ( ( float ) $this->minorderBorder > ( float ) $art_price ){
@@ -33,6 +68,33 @@ class idealo_csv_universal {
 	 } 
 	 
 	 
+	 
+	 public function checkSeparator( $text, $separator ){
+
+	 	if ( strpos ($text, $separator ) !== false ){
+	 		
+	 		$this->separatorWarning = true;
+	 		$this->separatorInt++;
+	 		
+	 	}
+	 	
+	 	foreach ( $this->separatorArray as $key => $separ ){
+	 		
+	 		if ( $separ != $separator ){
+	 			
+	 			if ( strpos ($text, $separ['separator'] ) !== false ){
+	 			
+		 			$this->separatorArray[$key]['comes']++;
+		 			
+		 		}
+		 		
+	 		}
+	 		
+	 	}
+	 	
+	 	return $text;
+	 	
+	 }
 	
 	 
 	public function checkMinOrder ( $art_price ){
@@ -88,49 +150,17 @@ class idealo_csv_universal {
 	    return $check;
 	    
 	}
-	
-	
-	 public function prepareText( $string ){
-	 	
-	 	$spaceToReplace = array ( "$", ".", "|" );
-	 	
-	 	$string = str_replace ( $spaceToReplace, " ", $string );
-	 	
-	 	$string = str_replace ( "ä", "ae", $string );
-	 	$string = str_replace ( "ü", "ue", $string );
-	 	$string = str_replace ( "ö", "oe", $string );
-	 	$string = str_replace ( "Ä", "Ae", $string );
-	 	$string = str_replace ( "Ü", "ue", $string );
-	 	$string = str_replace ( "Ö", "Oe", $string );
-	 	
-	 	$string = str_replace ( "ß", "ss", $string );
-	 	
-		return $string;	 
-			
-	 }
+
 	 
 	 
     public function cleanText( $text, $cut ){
-				
-		if ( mb_detect_encoding( $text, 'UTF-8, ISO-8859-1' ) !== 'UTF-8' ){
-			
-			$text = utf8_encode ( $text );
-			
-		}
-    	$text = str_replace ( array ( "\r\n", "\r", "\n", "|", "&nbsp;" ), "", $text );
-		$spaceToReplace = array ( "<br>", "<br />", "\n", "\r", "\t", "\v", chr(13) );
+		$spaceToReplace = array ( "&nbsp;", "\r\n", "\n", "\r", "\t", "\v", chr(13) );
 		$commaToReplace = array ( "'" );
-        $text = strip_tags ( $text );
 		$text = str_replace ( $spaceToReplace, " ", $text );
 		$text = str_replace ( $commaToReplace, ", ", $text ) ;
 		$Regex = '/<.*>/';
 		$Ersetzen = ' ';
 		$text = preg_replace ( $Regex, $Ersetzen, $text );
-		$text = html_entity_decode ( $text, ENT_QUOTES, "UTF-8" );
-		
-		$text = $this->prepareText ( $text );
-		$regex ='/[^\d\w\s_\!\$\%&;:+\^\~#\-|\/]/';
-		$text = preg_replace ( $regex, '', $text );
 		if ( function_exists ( mb_substr ) ){
 			
 			$text = mb_substr ( $text, 0, $cut );
@@ -139,9 +169,8 @@ class idealo_csv_universal {
 			 
 		 	$text = substr( $text, 0, $cut );
 		 		
-		}
-		$text = htmlentities ( $text, ENT_QUOTES, "UTF-8" );
-
+		}	
+		
 		return $text;
 				
     }

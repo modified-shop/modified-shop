@@ -41,7 +41,7 @@ class Communication extends communication_universal{
 			$this->login = array(	'shop_id'	=> $login [ 'idealo_shop_id' ],
 									'user'		=> $login [ 'user' ],
 									'password'	=> $login [ 'password' ],
-									'url'		=> $login [ 'webservice' ],
+									'url'		=> $this->getPWSURL(),
 									'pagesize'	=> $login [ 'pagesize' ],
 									'testmode'	=> '0'
 								);

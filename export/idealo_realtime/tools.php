@@ -387,7 +387,7 @@ class tools extends idealo_universal{
 				
 			$products = $this->getArticle ( $id );
 	
-			$xml .= '<offer>';
+			$xml = '';
 				
 			$products_price = $this->getPrice ( $products [ 'products_tax_class_id' ], $products [ 'products_price' ], $id );
 	        $categorie_query = xtc_db_query("	SELECT
@@ -415,7 +415,7 @@ class tools extends idealo_universal{
 				$this->filter ( $id, $products[ 'manufacturers_name' ] ) === true && 
 				$this->filterCat ( $cat ) === true 		
 			){		
-				
+				$xml .= '<offer>';
 				$xml .= '<command>InsertOrReplace</command>'.
 							'<sku><![CDATA[' . $id . ']]></sku>';
 	
@@ -526,15 +526,17 @@ class tools extends idealo_universal{
 		      		
 	      		}
 				$xml .= '<shippingComment>' . $portocoment . '</shippingComment>';
+				$xml .= '</offer>';
 			
 			}elseif ($id!=''){
-				
+				$xml .= '<offer>';
 				$xml .=	'<command>DELETE</command>'.				
 						'<sku>' . $id . '</sku>';
+				$xml .= '</offer>';
 				
 			}
 			
-			$xml .= '</offer>';
+			
 			
 		    return $xml;
 		      
