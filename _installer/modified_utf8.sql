@@ -525,7 +525,7 @@ CREATE TABLE module_backup (
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_key (configuration_key)
-) ENGINE=MyISAM
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS newsletters;
 CREATE TABLE newsletters (
