@@ -29,10 +29,6 @@ $testmode_db = xtc_db_fetch_array($testmode_query); // false if 'MODULE_IDEALO_R
 $campaign_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CAMPAIGN' LIMIT 1");
 $campaign_db = xtc_db_fetch_array($campaign_query); // false if 'MODULE_IDEALO_CAMPAIGN' doesn't exist
 
-// check if URL is already in db
-$url_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_URL' LIMIT 1");
-$url_db = xtc_db_fetch_array($url_query); // false if 'MODULE_IDEALO_REALTIME_url' doesn't exist
-
 // check if shop_id is already in db
 $shop_id_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_SHOP_ID' LIMIT 1");
 $shop_id_db = xtc_db_fetch_array($shop_id_query); // false if 'MODULE_IDEALO_REALTIME_SHOP_ID' doesn't exist
@@ -317,48 +313,6 @@ if( isset($_POST['campaign'])) {
 	$campaign = stripcslashes($_POST['campaign']);
 } else {
 	$campaign = "";
-}
-
-
-/*
- * URL 
- */
-// is a specific url set?
-if( isset($_POST['url_input'])) {
-	// db does not care for extra slashes
-	$dbValue = $_POST['url_input'];
-
-	// check if slashes need to be stripped
-	if( $_POST['url_input'] != stripslashes($_POST['url_input']) ) {
-		$_POST['url_input'] = stripslashes($_POST['url_input']);
-	}
-
-	// hack
-	if( $_POST['url_input'] == '\t' ) {
-		$_POST['url_input'] = "\t";
-	}
-
-	// does a dataset exist?
-	if( $url_db !== false ) {
-
-		// update value if $_POST['url_input'] != $url_db
-		if( $_POST['url_input'] != $url_db['configuration_value'] ) {
-			xtc_db_query("update " . TABLE_CONFIGURATION . "
-					      set configuration_value = '" . $dbValue . "'
-					      where configuration_key = 'MODULE_IDEALO_REALTIME_URL'");
-		}
-	} else {
-		// insert data
-		xtc_db_query("insert into " . TABLE_CONFIGURATION . "
-					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
-					  values ('MODULE_IDEALO_REALTIME_URL', '" . $dbValue . "', 6, 1, '', now()) ");
-	}
-
-	$url = $_POST['url_input'];
-
-} else {
-	// if nothing is entered by the admin: https://partner.idealo.de/partnerWs/ as default
-	$url = "https://partner.idealo.de/partnerWs/";
 }
 
 
