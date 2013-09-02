@@ -376,7 +376,7 @@ require (DIR_WS_INCLUDES.'write_customers_status.php');
 
 // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
 if ( $truncate_session_id == true ) {
-  if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
+  if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/MODsid/i', $_SERVER['REQUEST_URI'])) {
     $location = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), 'NONSSL', false);
     header("HTTP/1.0 301 Moved Permanently");
     header("Location: $location");
