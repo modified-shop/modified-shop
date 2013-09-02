@@ -16,17 +16,58 @@
 
 
 
-
-
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-require_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_set_and_get_setting.php' );
-require_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_tools.php' );
-include_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_shipping.php' );
-include_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_payment.php' ); 
-require_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_definition.php' );
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_set_and_get_setting.php') ){
+	$missingClasses [] = 'idealo_csv_set_and_get_setting.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_set_and_get_setting.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_tools.php') ){
+	$missingClasses [] = 'idealo_csv_tools.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_tools.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_shipping.php') ){
+	$missingClasses [] = 'idealo_csv_shipping.php';
+}else{
+	include_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_shipping.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_payment.php') ){
+	$missingClasses [] = 'idealo_csv_payment.php';
+}else{
+	include_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_payment.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_definition.php') ){
+	$missingClasses [] = 'idealo_csv_definition.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo/idealo_csv_definition.php' );	
+}
+
+if ( !empty ($missingClasses) ){
+	
+	$javaSK = '<script type="text/javascript">
+						alert("Die folgenden Dateien existieren nicht, bzw. koennen nicht geoeffnet werden:\n\n';
+
+						foreach ($missingClasses as $miss ){
+			    				
+			    			$javaSK .= '\ ' . $miss . '\n';
+		    			
+		    			}
 
 
+					$javaSK .= '\ \nUeberpruefen Sie in den Ordner export/idealo/, ob die Dateien vorhanden sind und gelesen werden koennen.\n\n' .
+							'Ohne diese Dateien kann das Modul nicht ausgefuehrt werden!");</script>';
+	
+	
+	
+	echo$javaSK;
+	
+}
 class idealo{
     public $code;
     public $title;
@@ -36,7 +77,7 @@ class idealo{
 	public $payment = array();
 	
     public $shipping = array();	
-
+    
     public function __construct() {
 
       $this->saveUrl();
@@ -55,7 +96,7 @@ class idealo{
       $this->CAT=array();
       $this->PARENT=array();
       $this->productsPrice = 0;
-      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-mQSVVZsF/pics/logos/logo_blue_big.png"></a></center>';
+      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png"></a></center>';
       $this->country_array = array();
     }
 
@@ -97,7 +138,7 @@ class idealo{
 				$sql2 .= ", '0'";
 				
 				$costs = 'idealo_' . $ship['country'] . '_costs';
-				$sql .= ", `" . $costs . "` varchar(100)";
+				$sql .= ", `" . $costs . "` varchar(300)";
 				$sql2 .= ", ''";
 				
 				$free = 'idealo_' . $ship['country'] . '_free';
@@ -206,7 +247,7 @@ class idealo{
 			 			<form action="javascript:history.back()">
 			 				<br><br>
 			 				<div id="logo">
-								<a href="http://www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-mQSVVZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+								<a href="http://www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
 							</div>
 										
 							<br><br>
@@ -467,16 +508,78 @@ class idealo{
 		if ( $this->saveSetting() ){
 
 	    	@xtc_set_time_limit(0);
-	
+	    	
+	    	$export_query = xtc_db_query( " SELECT count(*) FROM " . TABLE_PRODUCTS . ";" );
+	                            
+			$articleCount = xtc_db_fetch_array ( $export_query);
+			
+			$articleCount = $articleCount  ['count(*)'];
+
 	    	$tools = new idealo_csv_tools();
 	    	
 	    	$tools->AllNeeded();
 	    	
 	    	$schema = $tools->createHeader();
 	    	
-	    	$schema .= $tools->exportArticle();
+	    	$tools->createFile($schema);
+			
+			$begin = 0;
+						
+			$step = 10;
+			
+			do{
+				$schema = $tools->exportArticle( $begin, $step );
 	           
-    		$tools->openCSVFile($schema);
+    			$tools->openCSVFile($schema);
+    			
+    			$begin += $step;
+    			
+			}while ( $begin < ($articleCount + $step));	    	
+	    	
+	    	if ( $tools->separatorWarning ){
+
+	    		$separatorInt = false;
+	    		
+	    		foreach ($tools->separatorArray as $separ ){
+	    			
+	    			if ( $separ[ 'comes' ] == 0 ){
+	    				
+	    				$separatorInt = true;
+	    				
+	    			}
+	    			
+	    		}
+	    		
+	    		$javaSK = '<script type="text/javascript">
+						alert("Der eingestellte Spaltentrenner \"'. IDEALO_CSV_SEPARATOR . '\" kommt in Ihren Texten '. $tools->separatorInt .' mal vor!\n\n' .
+								'\Dies kann zur Spaltenverschiebungen in Ihrer Datei fuehren\n\n' .
+								'\Alternativ sollten Sie einen der folgenden Spaltentrenner verwenden:\n\n';
+
+						if ( !$separatorInt ){
+							
+							$javaSK .= '\Leider kann Ihnen das Modul keinen Vorschlag machen. Wenden Sie sich bitte an csv@idealo.de';
+							
+						}else{
+							
+							foreach ($tools->separatorArray as $separ ){
+	    			
+				    			if ( $separ[ 'comes' ] == 0 ){
+				    				
+				    				$javaSK .= '\ ' . $separ[ 'separator' ] . '\n';
+				    				
+				    			}
+			    			
+			    			}
+							
+						}
+
+					$javaSK .= '\ ");</script>';
+					
+					echo $javaSK;
+	    		
+	    	}
+	    	
+	    	$this->backToBackend(substr ( $_SERVER [ 'PHP_SELF' ], 0, -24));
 			    
 		}else{
 			die();
@@ -485,7 +588,39 @@ class idealo{
 
 	}
 	
-		
+	
+	 public function backToBackend ( $url ){
+
+	 $html = '	<body bgcolor="#99CCFF">
+					<b>
+					<center>
+					<font face="Arial,MS Sans Serif">
+		 				<br><br>
+		 				<div id="logo">
+							<a href="www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+						</div><br><br>';
+									
+		$html .= '<br><br>';
+					
+		$html .=		'Ihre Artikel wurden erfolgreich exportiert.<br><br>
+
+						Sie k&ouml;nnen die Datei hier herunterladen:<br><br>
+						<a href="' . $url . '/export/idealo.csv"><img src="' . $url . '/export/idealo/idealo_csv_file.gif"></a><br><br>
+						Link zu der CSV Datei:<br><br>'.
+							$url . '/export/idealo.csv<br><br>'
+
+						.'Schicken Sie diesen Link bitte an csv@idealo.de<br><br>
+						<form name="back" action="javascript:history.back()">
+	    				<input id="back" type="submit" name="back" value="zur&uuml;ck zum Backend" />
+	    			</form>		
+	    			</font>
+					</center>
+					</b>
+				</body>';
+			
+			echo $html;die();
+				 
+	 }	
 	
     public function display() {
 

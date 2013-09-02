@@ -13,8 +13,8 @@
 */
 
 
-$version_number_idealo = '1.3.2';
-$version_date = '08.05.2013';
+$version_number_idealo = '1.3.4';
+$version_date = '02.08.2013';
 $idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_REALTIME_MODIFIED', $idealo_module_modified );
@@ -201,7 +201,7 @@ define('IDEALO_REALTIME_MIN_ORDER_VALUE', '<b>Mindestbestellwert</b>');
 define('IDEALO_REALTIME_MIN_ORDER_TEXT', 'Tragen Sie Ihren Mindestbestellwert ein. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 5.00. Die betreffenden Angebote erhalten automatisch einen entsprechenden Versandkommentar.');
 define('IDEALO_REALTIME_MIN_ORDER_BORDER_TEXT', 'Tragen Sie die H&ouml;he des Zuschlages ein. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 2.99. ');
 define('IDEALO_REALTIME_MIN_ORDER_BORDER_VALUE', '<b>Mindermengengrenze</b>');
-define('IDEALO_REALTIME_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab welchem der Mindermengenzuschlag nicht mehr anfällt. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 49.95');
+define('IDEALO_REALTIME_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab welchem der Mindermengenzuschlag nicht mehr anf&auml;llt. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 49.95');
 
 define('IDEALO_REALTIME_EXPORT_TEXT', '<hr noshade><b>Aktualisieren</b>');
  

@@ -16,19 +16,74 @@
 
 
 
-ini_set('memory_limit', '8M');
+   
+//ini_set('memory_limit', '32M');
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_set_and_get_setting.php' );
-require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/tools.php' );
-require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/communication.php' );
-include_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_shipping.php' );
-include_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_payment.php' ); 
-require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition.php' );
-require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition_universal.php' );
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_set_and_get_setting.php') ){
+	$missingClasses [] = 'idealo_set_and_get_setting.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_set_and_get_setting.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/tools.php') ){
+	$missingClasses [] = 'tools.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/tools.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/communication.php') ){
+	$missingClasses [] = 'communication.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/communication.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_shipping.php') ){
+	$missingClasses [] = 'idealo_shipping.php';
+}else{
+	include_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_shipping.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_payment.php') ){
+	$missingClasses [] = 'idealo_payment.php';
+}else{
+	include_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_payment.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition.php') ){
+	$missingClasses [] = 'idealo_definition.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition.php' );	
+}
+
+if (!file_exists ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition_universal.php') ){
+	$missingClasses [] = 'idealo_definition_universal.php';
+}else{
+	require_once ( DIR_FS_CATALOG . 'export/idealo_realtime/idealo_definition_universal.php' );	
+}
 
 
+if ( !empty ($missingClasses) ){
+	
+	$javaSK = '<script type="text/javascript">
+						alert("Die folgenden Dateien existieren nicht, bzw. koennen nicht geoeffnet werden:\n\n';
+
+						foreach ($missingClasses as $miss ){
+			    				
+			    			$javaSK .= '\ ' . $miss . '\n';
+		    			
+		    			}
+
+
+					$javaSK .= '\ \nUeberpruefen Sie in den Ordner export/idealo_realtime/, ob die Dateien vorhanden sind und gelesen werden koennen.\n\n' .
+							'Ohne diese Dateien kann das Modul nicht ausgefuehrt werden!");</script>';
+	
+	
+	
+	echo$javaSK;
+	
+}
 
 class idealo_real{
     public $code;
@@ -197,7 +252,7 @@ class idealo_real{
 				$sql2 .= ", '0'";
 				
 				$costs = 'idealo_' . $ship['country'] . '_costs';
-				$sql .= ", `" . $costs . "` varchar(100)";
+				$sql .= ", `" . $costs . "` varchar(300)";
 				$sql2 .= ", ''";
 				
 				$free = 'idealo_' . $ship['country'] . '_free';
@@ -325,12 +380,6 @@ class idealo_real{
 	   			   			
 	   		}
 	
-	   		if ( $_POST [ 'url_input' ] == '' ){
-	   			
-	   			$not_set [] = 'url_input';
-	   			   			
-	   		}
-	   		
 	   		if ( $_POST [ 'shop_id_input' ] == '' ){
 	   			
 	   			$not_set [] = 'shop_id_input';
@@ -526,9 +575,10 @@ class idealo_real{
 						   $error, 
 						   $baseUrl, 
 						   MODULE_VERSION_TEXT, 
-						   $baseUrl . 'export/log_' . date( "n_Y" ) . '.log', 
+						   $baseUrl . 'export/log_' . date( "n_Y" ) . '.html', 
 						   $baseUrl . 'export/last_answer.xml',
-						   $baseUrl . 'export/last_request.xml' );
+						   $baseUrl . 'export/last_request.xml',
+						   $baseUrl . 'export/idealo_realtime/idealo_realtime.php' );
 						   
 		 $html = '	<body bgcolor="#99CCFF">
 					<b>
@@ -569,8 +619,10 @@ class idealo_real{
 		
 		$tools = new tools();
 	     $this->login = $tools->getLogin();
+		
+		$communication = new Communication( $this->login );
 
-		if ( $this->saveSetting() ){
+		if ( $this->saveSetting() && $communication->testLogin() ){
 
 	    	@xtc_set_time_limit(0);
 	    	$tools->cleanTableIdealoRealtimeUpdate();
@@ -654,6 +706,8 @@ class idealo_real{
 			}
 	    	
 		}else{
+			
+			$this->backToBackendFailed();
 			die();
 			
 		}		
@@ -702,6 +756,26 @@ class idealo_real{
 	 		
 	    			</form><br><br>
 	    			<form name="back" action="javascript:history.back()">
+	    				<input id="back" type="submit" name="back" value="zur&uuml;ck zum Backend" />
+	    			</form>		
+	    			</font>
+					</center>
+					</b>
+				</body>';
+			
+			echo $html;
+				 
+	 }
+
+
+ public function backToBackendFailed ( ){
+	 	
+	 $html = '	<body bgcolor="#99CCFF">
+					<b>
+					<center>
+					<font face="Arial,MS Sans Serif">
+					Es konnten keine Daten an idealo &uuml;bertragen werden!
+					<form name="back" action="javascript:history.back()">
 	    				<input id="back" type="submit" name="back" value="zur&uuml;ck zum Backend" />
 	    			</form>		
 	    			</font>
@@ -812,10 +886,6 @@ class idealo_real{
 		$shipping_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_SHIPPINGCOMMENT' LIMIT 1");
 		$shipping_comment_db = xtc_db_fetch_array($shipping_input_query);
 		$shipping_comment_text = ( $shipping_comment_db !== false ) ? $shipping_comment_db['configuration_value'] : '';
-		$url_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_URL' LIMIT 1");
-		$url_db = xtc_db_fetch_array($url_query);
-		
-		$url = $url_db['configuration_value'];
 		$shop_id_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_SHOP_ID' LIMIT 1");
 		$shop_id_db = xtc_db_fetch_array($shop_id_query);
 
@@ -950,11 +1020,6 @@ class idealo_real{
 	    return array('text' => 	$missing_config_user. '<br><br>' .
 	    						
 	    						$testmode . '<br>' .
-	    							    						
-	    						URL . '<br>' .
-	    						URL_HINT . '<br>' .
-	    						xtc_draw_input_field('url_input', $url) . '<br>' .
-	    						$missing_config_url_input . '<br><br>' .
 	    						
 	    						SHOP_ID . '<br>' .
 	    						SHOP_ID_HINT . '<br>' .
@@ -963,7 +1028,7 @@ class idealo_real{
 	    						
 								PASSWORT . '<br>' .
 	    						PASSWORT_HINT . '<br>' .
-	    						xtc_draw_input_field('password_input', $password) . '<br>' .
+	    						xtc_draw_password_field('password_input', $password) . '<br>' .
 	    						$missing_config_password_input . '<br><br>' .
 	    						
 	    						PAGESIZE . '<br>' .

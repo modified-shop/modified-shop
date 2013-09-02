@@ -27,6 +27,8 @@ class communication_universal{
 
 	public $login = array();
 	
+	private $PWSURL = 'http://ftp.idealo.de/software/modules/version.xml';
+	
 	 public function checkShopStatus ( $result_exec ){
 	 	foreach ( $this->modul_deactivate as $rule ){
 	 		
@@ -44,6 +46,15 @@ class communication_universal{
 	 	return true;
 	 	
 	 }
+
+
+	public function getPWSURL(){
+		
+		$xml_idealo = simplexml_load_file ( $this->PWSURL );
+		
+		return ( string ) $xml_idealo->partenws->live_v1;
+		
+	}
 
 	
 	public function getTestLogin(){
@@ -104,131 +115,314 @@ class communication_universal{
 		
 	}
 	
-	  public function sendRequest($xml, $showLog = false, $db_request_failed_id = '-1' ){
-
-		$ch = curl_init ($this->login [ 'url' ] . "updateOffers" );
-
-		$this->createErrorTable();
-		setlocale ( LC_ALL, 'de_DE' ); 
-		date_default_timezone_set ( 'Europe/Berlin' );
-		$date = date( "j.n.Y H:i:s " ); 
-
-		$header = array(
-		            	'shopId: ' . $this->login [ 'shop_id' ],
-		           		'Content-Type: application/xml',
-		           		'Expect:'.''
-		  	           );
-				
-		curl_setopt($ch, CURLOPT_POST, TRUE);
-		curl_setopt($ch, CURLOPT_TIMEOUT, 180);
-		curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
-		curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-		curl_setopt($ch, CURLOPT_USERPWD, $this->login [ 'user' ] . ':' . $this->login [ 'password' ]);
-
-		if ( $this->certificate === false ){
+	
+	
+	public function checkXML ( $xml ){
+		
+		$dom = new DOMDocument();
+		
+		$dom->loadXML($xml);
+		
+		$elements = $dom->getElementsByTagName('*');
+		
+		foreach($elements as $element) {
+		
+		   if ( ! $element->hasChildNodes() OR $element->nodeValue == '') {
+		       $element->parentNode->removeChild($element);
+		   }
+		
+		} 
+		
+		if ( $dom->getElementsByTagName ( 'offers' )->length > 0 ) {
 			
-			curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+			return $dom->saveXML();
+		}else{
+			
+			return false;
 			
 		}
-		$result_exec = curl_exec ( $ch );
-
-		if ( $this->checkShopStatus ( $result_exec ) === true ){				
-			
-			$ws_result = '';
-			$missed = false;
-			$error_message = '';
-			
-			$info = curl_getinfo ( $ch );
-			
-			$error = curl_error ( $ch );
-	
-			$xml_elements = '';
-
-			try{
-				
-				@$ws_result = new SimpleXMLElement ( $result_exec );
-
-				$xml_elements = count ( $ws_result );
 		
-				$ws_error = '';
-				if ( isset ( $ws_result->error[0]->message ) || isset ( $ws_result->error[0]->code ) ){
+	}
+	
+	
+	public function sendRequest($xml, $showLog = false, $db_request_failed_id = '-1' ){
+
+		if ( $xml !== false ){
+		
+			$ch = curl_init ($this->login [ 'url' ] . "updateOffers" );
+	
+			$this->createErrorTable();
+			setlocale ( LC_ALL, 'de_DE' ); 
+			date_default_timezone_set ( 'Europe/Berlin' );
+			$date = date( "j.n.Y H:i:s " ); 
+	
+			$header = array(
+			            	'shopId: ' . $this->login [ 'shop_id' ],
+			           		'Content-Type: application/xml',
+			           		'Expect:'.''
+			  	           );
 					
-					$ws_error = 'PartnerWS:<br><br>';
+			curl_setopt($ch, CURLOPT_POST, TRUE);
+			curl_setopt($ch, CURLOPT_TIMEOUT, 180);
+			curl_setopt($ch, CURLOPT_POSTFIELDS, $xml);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+			curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+			curl_setopt($ch, CURLOPT_USERPWD, $this->login [ 'user' ] . ':' . $this->login [ 'password' ]);
+	
+			if ( $this->certificate === false ){
+				
+				curl_setopt( $ch, CURLOPT_SSL_VERIFYPEER, false );
+				
+			}
+			$result_exec = curl_exec ( $ch );
+	
+			if ( $this->checkShopStatus ( $result_exec ) === true ){				
+				
+				$ws_result = '';
+				$missed = false;
+				$error_message = '';
+				
+				$info = curl_getinfo ( $ch );
+				
+				$error = curl_error ( $ch );
+		
+				$xml_elements = '';
+	
+				try{
 					
-					for ( $i = 0; $i < $xml_elements; $i++ ){
+					@$ws_result = new SimpleXMLElement ( $result_exec );
+	
+					$xml_elements = count ( $ws_result );
+			
+					$ws_error = '';
+					if ( isset ( $ws_result->error[0]->message ) || isset ( $ws_result->error[0]->code ) ){
 						
-						$message = '';
+						$ws_error = 'PartnerWS:<br><br>';
 						
-						if ( isset ( $ws_result->error[ $i ]->message ) ){
+						for ( $i = 0; $i < $xml_elements; $i++ ){
 							
-							$message = $ws_result->error[ $i ]->message;
+							$message = '';
+							
+							if ( isset ( $ws_result->error[ $i ]->message ) ){
+								
+								$message = $ws_result->error[ $i ]->message;
+								
+							}
+							
+							$code = '';
+							
+							if ( isset ( $ws_result->error[ $i ]->code ) ){
+								
+								$code = $ws_result->error[ $i ]->code;
+								
+							}
+							
+							$ws_error .= 'MESSAGE: '. $message . '   WS_CODE: ' . $code . '<br>';
 							
 						}
 						
-						$code = '';
 						
-						if ( isset ( $ws_result->error[ $i ]->code ) ){
-							
-							$code = $ws_result->error[ $i ]->code;
-							
-						}
+					}else{
 						
-						$ws_error .= 'MESSAGE: '. $message . '   WS_CODE: ' . $code . '<br>';
+						$ws_error = '';
+						
+					}
+			
+					$result = array (	'info' 		=> $info,
+									  	'error'		=> $error,
+									  	'ws_error'	=> $ws_error
+									);
+	
+					if( $result [ 'error' ] != '' || $result [ 'info' ] [ 'http_code' ] != '200' || $result [ 'ws_error' ] != '' ){
+						
+						$error_message = $result [ 'error' ] . '<br>' . $result [ 'ws_error' ];
+						$missed = true;
 						
 					}
 					
+				} catch ( Exception $e ){
 					
-				}else{
+					$error_message = $result_exec . '<br>HTTP_CODE: ' . $info [ 'http_code' ] . '<br>' . $error;
 					
-					$ws_error = '';
-					
-				}
-		
-				$result = array (	'info' 		=> $info,
-								  	'error'		=> $error,
-								  	'ws_error'	=> $ws_error
-								);
-
-				if( $result [ 'error' ] != '' || $result [ 'info' ] [ 'http_code' ] != '200' || $result [ 'ws_error' ] != '' ){
-					
-					$error_message = $result [ 'error' ] . '<br>' . $result [ 'ws_error' ];
 					$missed = true;
 					
 				}
 				
-			} catch ( Exception $e ){
+				$login = false;
 				
-				$error_message = $result_exec . '<br>HTTP_CODE: ' . $info [ 'http_code' ] . '<br>' . $error;
+				if ( strpos( $result_exec, 'Access denied' ) || strpos( $result_exec, 'This request requires HTTP authentication' ) ){
+									
+					curl_close ( $ch );
+					
+					echo '<script type="text/javascript">
+						alert("Zugriff verweigert!\nShopID, Nutzername, oder Passwort falsch!");
+					</script>';
+					return false;
+					
+				}
 				
-				$missed = true;
-				
-			}
-			if ( $missed ){
-				
-				if (isset($this->login ['testmode'] )){
-				
-					if ($this->login ['testmode'] == '0' ){
+				if ( $missed ){
+					
+					if (isset($this->login ['testmode'] )){
+					
+						if ($this->login ['testmode'] == '0' ){
+							
+							$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
+							
+						}
 						
+					}else{
+	
 						$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
 						
 					}
 					
+				}
+				
+				$path = $this->path.'export/';
+				
+				if ( $missed && isset ($this->login ['testmode'] ) ){
+					
+					if ( $this->login ['testmode'] == '1' ){
+					
+						$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
+						$zeile = fgets( $dateihandle, 4096 );
+											
+						if( $zeile == 'no errors' ){		
+		
+							$fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
+							fputs ( $fp,  $error_message);
+					    	fclose ( $fp );
+					    	
+						}else{
+							
+							$fp = fopen ( $path . 'idealo_realtime_test.html', "a+" );
+							fputs ( $fp,  $error_message);
+					    	fclose ( $fp );
+							
+						}
+						
+					}
+	
+				}			
+				
+		        $fp = fopen ( $path . 'last_answer.xml', "w+" );
+		        @chmod ( $path . 'last_answer.xml', 0666 );
+		        fputs ( $fp, $result_exec );
+		        fclose ( $fp );
+		        $fp = fopen ( $path . 'last_request.xml', "w+" );
+		       	@chmod ( $path . 'last_request.xml', 0666 );
+		        fputs ( $fp, $xml );
+		        fclose ( $fp );
+				$function = $this->getListFromXML ( $path . 'last_request.xml' ,"offer", "command" );
+				$status_array = array();
+				$sku_array = array();
+				$statusMsg_array = array();
+				$idealo_id_array = array();
+				$log ='';
+				$log .= 'request at ' . $date;
+				$log .= "<br><br>";
+				$timestamp = false;
+				if( $missed ){
+					
+					$log .= $error_message;
+					$log .= "<br><br>";
+				}elseif( strpos ( $xml, '<updateTimestamp>' ) ){
+					
+					$timestamp = true;
+					$stemp = $this->getListFromXML ( $path . 'last_request.xml', "offers", "updateTimestamp" );			
+					$stemp = str_replace ( "T", " ", $stemp[0] );
+					if ( $missed ){
+						
+						$log = 'Timestamp updated from shop: ' . $this->login[ 'shop_id' ] . ' at ' . $stemp . ' FAILED';
+						
+					}else{
+						
+						$log = 'Timestamp was updated from shop: ' . $this->login[ 'shop_id' ] . ' at ' . $stemp;
+						
+					}	
+						
+					$log .= "<br>";
+					
 				}else{
-
-					$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login[ 'shop_id' ], $date, $error_message );
+					
+					$products_errors = '';
+					for( $i = 0; $i < $xml_elements ; $i++ ){
+						
+						$statusMsg = '';
+						
+						if ( isset ( $ws_result->offerResponse[ $i ]->statusMsg ) ){
+							
+							$statusMsg = $ws_result->offerResponse[ $i ]->statusMsg;
+							
+						}
+						
+						$sku = $ws_result->offerResponse[ $i ]->sku;
+						$status = $ws_result->offerResponse[ $i ]->status;
+						$idealo_id = $ws_result->offerResponse[ $i ]->id;
+						
+						if ( ($idealo_id == '-1' || $status == 'FAILED' ) && $status != 'IGNORED' ) {
+							
+							if ( strpos ( $statusMsg, 'Failed to deactivate Offer' ) === false 
+								 && strpos ( $statusMsg, 'No offer with given sku found' ) === false 
+								 ){
+								
+								$products_errors .= '<br>SKU:</b> ' . $sku . ' <b>STATUS:</b> ' . $status . ' <b>STATUS_MSG:</b> ' . $statusMsg . ' <b>idealo_ID:</b> ' . $idealo_id . '<br><br>';
+								
+							}
+							
+						}
+						
+						$status_array [ $i ] = $status;
+						$sku_array [ $i ] = $sku;
+						$statusMsg_array [ $i ] = $statusMsg;
+						$idealo_id_array [ $i ] = $idealo_id;
+						$log .= 'product was "' . $function [ $i ] . '" sku = '. $sku . '; idealo_ID = '. $idealo_id . '; transfer = ' . $status . ' ' . $statusMsg;
+						$log .= "<br>";
+						
+					}
+					
+					if ( $products_errors != '' ){
+						
+						if ( isset ($this->login ['testmode'] ) ){
+							
+							if ( $this->login ['testmode'] == '0' ){
+								
+								$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
+								
+							}
+							
+						}else{
+							
+							$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
+							
+						}
+											
+					}
 					
 				}
 				
-			}
-			
-			$path = $this->path.'export/';
-			
-			if ( $missed && isset ($this->login ['testmode'] ) ){
-				
-				if ( $this->login ['testmode'] == '1' ){
-				
+				if ( $db_request_failed_id != '-1' && $missed !== true ) {
+					
+					if (isset ($this->login ['testmode'] ) ){
+						
+						if ( $this->login ['testmode'] == '0' ){
+							
+							$this->deleteFromErrorTable ( $db_request_failed_id );
+							
+						}
+						
+					}else{
+						
+						$this->deleteFromErrorTable ( $db_request_failed_id );
+						
+					}
+							
+				}
+					
+				if( $products_errors != '' ){
+					
 					$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
 					$zeile = fgets( $dateihandle, 4096 );
 										
@@ -239,178 +433,53 @@ class communication_universal{
 				    	fclose ( $fp );
 				    	
 					}else{
-						
-						$fp = fopen ( $path . 'idealo_realtime_test.html', "a+" );
-						fputs ( $fp,  $error_message);
+					
+						$fp = fopen ( $this->path . 'export/idealo_realtime_test.html', "a+" );
+						fputs ( $fp,  $products_errors);
 				    	fclose ( $fp );
-						
 					}
-					
-				}
-
-			}			
-			
-	        $fp = fopen ( $path . 'last_answer.xml', "w+" );
-	        @chmod ( $path . 'last_answer.xml', 0666 );
-	        fputs ( $fp, $result_exec );
-	        fclose ( $fp );
-	        $fp = fopen ( $path . 'last_request.xml', "w+" );
-	       	@chmod ( $path . 'last_request.xml', 0666 );
-	        fputs ( $fp, $xml );
-	        fclose ( $fp );
-			$function = $this->getListFromXML ( $path . 'last_request.xml' ,"offer", "command" );
-			$status_array = array();
-			$sku_array = array();
-			$statusMsg_array = array();
-			$idealo_id_array = array();
-			$log ='';
-			$log .= 'request at ' . $date;
-			$log .= "<br><br>";
-			$timestamp = false;
-			if( $missed ){
-				
-				$log .= $error_message;
-				$log .= "<br><br>";
-			}elseif( strpos ( $xml, '<updateTimestamp>' ) ){
-				
-				$timestamp = true;
-				$stemp = $this->getListFromXML ( $path . 'last_request.xml', "offers", "updateTimestamp" );			
-				$stemp = str_replace ( "T", " ", $stemp[0] );
-				if ( $missed ){
-					
-					$log = 'Timestamp updated from shop: ' . $this->login[ 'shop_id' ] . ' at ' . $stemp . ' FAILED';
-					
-				}else{
-					
-					$log = 'Timestamp was updated from shop: ' . $this->login[ 'shop_id' ] . ' at ' . $stemp;
-					
-				}	
-					
-				$log .= "<br>";
-				
-			}else{
-				
-				$products_errors = '';
-				for( $i = 0; $i < $xml_elements ; $i++ ){
-					
-					$statusMsg = '';
-					
-					if ( isset ( $ws_result->offerResponse[ $i ]->statusMsg ) ){
-						
-						$statusMsg = $ws_result->offerResponse[ $i ]->statusMsg;
-						
-					}
-					
-					$sku = $ws_result->offerResponse[ $i ]->sku;
-					$status = $ws_result->offerResponse[ $i ]->status;
-					$idealo_id = $ws_result->offerResponse[ $i ]->id;
-					
-					if ( ($idealo_id == '-1' || $status == 'FAILED' ) && $status != 'IGNORED' ) {
-						
-						if ( strpos ( $statusMsg, 'Failed to deactivate Offer' ) === false 
-							 && strpos ( $statusMsg, 'No offer with given sku found' ) === false 
-							 ){
-							
-							$products_errors .= '<br>SKU:</b> ' . $sku . ' <b>STATUS:</b> ' . $status . ' <b>STATUS_MSG:</b> ' . $statusMsg . ' <b>IDEALO_ID:</b> ' . $idealo_id . '<br><br>';
-							
-						}
-						
-					}
-					
-					$status_array [ $i ] = $status;
-					$sku_array [ $i ] = $sku;
-					$statusMsg_array [ $i ] = $statusMsg;
-					$idealo_id_array [ $i ] = $idealo_id;
-					$log .= 'product was "' . $function [ $i ] . '" sku = '. $sku . '; Idealo_ID = '. $idealo_id . '; transfer = ' . $status . ' ' . $statusMsg;
-					$log .= "<br>";
-					
+	
 				}
 				
-				if ( $products_errors != '' ){
-					
-					if ( isset ($this->login ['testmode'] ) ){
-						
-						if ( $this->login ['testmode'] == '0' ){
-							
-							$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
-							
-						}
-						
-					}else{
-						
-						$this->updateErrorTable ( $xml, $db_request_failed_id, $this->login [ 'shop_id' ], $date, $products_errors );
-						
-					}
-										
-				}
-				
-			}
-			
-			if ( $db_request_failed_id != '-1' && $missed !== true ) {
-				
-				if (isset ($this->login ['testmode'] ) ){
-					
-					if ( $this->login ['testmode'] == '0' ){
-						
-						$this->deleteFromErrorTable ( $db_request_failed_id );
-						
-					}
-					
-				}else{
-					
-					$this->deleteFromErrorTable ( $db_request_failed_id );
-					
-				}
-						
-			}
-				
-			if( $products_errors != '' ){
-				
-				$dateihandle = fopen( $path . 'idealo_realtime_test.html', "r" );
-				$zeile = fgets( $dateihandle, 4096 );
-									
-				if( $zeile == 'no errors' ){		
-
-					$fp = fopen ( $path . 'idealo_realtime_test.html', "w" );
-					fputs ( $fp,  $error_message);
-			    	fclose ( $fp );
-			    	
-				}else{
-				
-					$fp = fopen ( $this->path . 'export/idealo_realtime_test.html', "a+" );
-					fputs ( $fp,  $products_errors);
-			    	fclose ( $fp );
-				}
-
-			}
-			
-			$log = str_replace ( "<br>", "\n", $log );
-			
-			$log = "\n\n" . $log;
-			$fp = fopen ( $path . 'log_' . date( "n_Y" ) . '.log', "a+" );
-	        @chmod ( $path . 'log_' . date ( "n_Y" ) . '.log', 0666 );
-	        fputs ( $fp, $log );
-	        fclose ( $fp );
-	        if( $missed !== true && $timestamp !== true ){
-	        	
-	        	if ( isset ($this->login ['testmode'] )){
-	        		
-	        		if ( $this->login ['testmode'] == '1' ){
-	        			
-	        			$this->createTestfile( $path, $status_array, $statusMsg_array, $xml, $idealo_id_array );	
-	        			
-	        		}
-	        		
-	        	}
-	        		        	
+				$log = "<br><br>" . $log;
+				$fp = fopen ( $path . 'log_' . date( "n_Y" ) . '.html', "a+" );
+		        @chmod ( $path . 'log_' . date ( "n_Y" ) . '.html', 0666 );
+		        fputs ( $fp, $log );
+		        fclose ( $fp );
+		        if( $missed !== true && $timestamp !== true ){
+		        	
+		        	if ( isset ($this->login ['testmode'] )){
+		        		
+		        		if ( $this->login ['testmode'] == '1' ){
+		        			
+		        			$this->createTestfile( $path, $status_array, $statusMsg_array, $xml, $idealo_id_array );	
+		        			
+		        		}
+		        		
+		        	}
+		        		        	
+		        }
+		        
 	        }
+	
+	        curl_close ( $ch );
 	        
-        }
-
-        curl_close ( $ch );
+	        return true;
+	        
+		}else{
+			
+			return false;
+			
+		}
 
 	  }
 	  
+	  
+	  public function testLogin(){
+	  	
+	  	return $this->setTimeStamp();
+	  	
+	  }
 	  	  
 	
 	public function createTestfile( $path, $status_array, $statusMsg_array, $xml, $result_idealo_id ){
@@ -474,38 +543,52 @@ class communication_universal{
 	}
 	
 	
+	public function deleteProduct( $list, $showLog = false  ){
+
+			while ( count ( $list ) >= $this->login [ 'pagesize' ] ){
+
+				$this->deleteFromIdealo( array_splice ( $list, 0, $this->login [ 'pagesize' ], array () ) );
+				
+			}
+			
+			if ( !empty ( $list ) ){
+				$this->deleteFromIdealo( $list );
+			}
+	
+	}	
 	
 	
-	public function deleteProduct( $list, $showLog = false ){	
+	
+	public function deleteFromIdealo( $list, $showLog = false ){	
 
 		try{
-
-			$request_text =	'<?xml version="1.0" encoding="UTF-8"?>' .
-							'<offers>';
-			
-			if ( isset ($this->login ['testmode'] ) ){
-					
-				if ( $this->login ['testmode'] != '0' ){
-					
-					
-					$request_text .= '<testMode>true</testMode>';
+			if ( !empty ( $list ) ){
+				$request_text =	'<?xml version="1.0" encoding="UTF-8"?>' .
+								'<offers>';
+				
+				if ( isset ($this->login ['testmode'] ) ){
+						
+					if ( $this->login ['testmode'] != '0' ){
+						
+						
+						$request_text .= '<testMode>true</testMode>';
+						
+					}
 					
 				}
+				foreach( $list as $id ){
+					
+					$request_text .= 	'<offer>';
+					
+					$request_text .=	'<command>DELETE</command>'.				
+										'<sku><![CDATA[' . $id . ']]></sku>' .
+										'</offer>'; 
+				}
 				
+				$request_text .=	'</offers>';				
+	
+				$this->sendRequest( $request_text, $showLog );			
 			}
-			foreach( $list as $id ){
-				
-				$request_text .= 	'<offer>';
-				
-				$request_text .=	'<command>DELETE</command>'.				
-									'<sku><![CDATA[' . $id . ']]></sku>' .
-									'</offer>'; 
-			}
-			
-			$request_text .=	'</offers>';				
-
-			$this->sendRequest( $request_text, $showLog );			
-
 		} catch ( Exception $e ){}
 
 	}
@@ -729,7 +812,7 @@ class communication_universal{
 				   '<updateTimestamp>' . $date . 'T' . $time . '</updateTimestamp>' .		
 				   '</offers>';			
 	
-			$this->sendRequest ( $xml, false );
+			return $this->sendRequest ( $xml, false );
 		
 		} catch ( Exception $e ){}
 		
