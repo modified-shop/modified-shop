@@ -23,6 +23,8 @@
 
   function xtc_db_fetch_array(&$db_query,$cq=false) {
 
+      if ($db_query === false) return false;
+      
       //BOF - DokuMan - 2010-02-25 - also check for defined DB_CACHE constant
       if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
       //if (DB_CACHE=='true' && $cq) {
