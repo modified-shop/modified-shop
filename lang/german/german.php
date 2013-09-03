@@ -532,4 +532,5 @@ define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformation %s
 define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
 
 define('TEXT_INFO_DETAILS', ' Details');
+define('TEXT_SAVED_BASKET', 'Bitte &uuml;berprŸfen sie ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
 ?>

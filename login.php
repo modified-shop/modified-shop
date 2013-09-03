@@ -82,10 +82,21 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			
 			if (is_object($econda)) $econda->_loginUser();			
       
-      if (isset($_SESSION['REFERER']) && !empty($_SESSION['REFERER'])) { 
-        xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id','action')).(isset($_GET['review_prod_id'])?'products_id='.$_GET['review_prod_id']:''))); 
-      } elseif ($_SESSION['cart']->count_contents() > 0  && !isset($_GET['review_prod_id'])  && !isset($_GET['order_id'])) { 
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART),'NONSSL'); 
+      /*
+      echo 'referer: '.$_SESSION['REFERER'];
+      echo 'old: '.$_SESSION['old_customers_basket'];
+      exit();
+      */
+      $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, FILENAME_CHECKOUT_SHIPPING, FILENAME_PRODUCT_REVIEWS_WRITE);
+      if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket'] === false) {
+        xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 
+      } elseif ($_SESSION['cart']->count_contents() > 0) {
+        $info_message = '';
+        if ($_SESSION['old_customers_basket'] === true) {
+          unset($_SESSION['old_customers_basket']);
+          $info_message = 'info_message=TEXT_SAVED_BASKET';
+        }
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, $info_message),'NONSSL'); 
       } else {          
         xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');           
       } 

@@ -530,4 +530,5 @@ define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %
 define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
 
 define('TEXT_INFO_DETAILS', ' Details');
+define('TEXT_SAVED_BASKET', 'Please check your shopping cart. THere are products from a last visit.');
 ?>
