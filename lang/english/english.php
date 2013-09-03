@@ -553,4 +553,5 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home pa
 define('TEXT_AGB_CHECKOUT','Please take note of our general terms & conditions %s,<br/>as well as our cancellation policy %s');
 
 define('TEXT_INFO_DETAILS', ' Details');
+define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products from a last visit.');
 ?>
