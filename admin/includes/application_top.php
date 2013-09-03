@@ -110,22 +110,14 @@ require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
 // list of project database tables
 require_once(DIR_FS_CATALOG.DIR_WS_INCLUDES.'database_tables.php');
 
+// define mysql type ste to 'mysql' or 'mysqli'
+define('MYSQL_TYPE', 'mysqli');
+
+// Database
+require_once (DIR_FS_INC.'db_functions_'.MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions.inc.php');
+
 // include needed functions
-require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_queryCached.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
-require_once(DIR_FS_INC . 'xtc_db_prepare_input.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_ip_address.inc.php');
 require_once(DIR_FS_INC . 'xtc_setcookie.inc.php');
 require_once(DIR_FS_INC . 'xtc_validate_email.inc.php');
@@ -402,9 +394,11 @@ if (xtc_check_permission($pagename) == '0') {
 require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'Smarty_2.6.27/Smarty.class.php');
 
 /* magnalister v1.0.1 */
+/* committed out till magnalister updated to mysqli
 if (!defined('MAGNALISTER_PLUGIN') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
 	ob_start();
 	require_once (DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
 	ob_end_clean();
 }
+*/
 /* END magnalister */

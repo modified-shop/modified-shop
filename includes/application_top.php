@@ -110,22 +110,12 @@ define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
 // graduated prices model or products assigned ?
 define('GRADUATED_ASSIGN', 'true');
 
+// define mysql type ste to 'mysql' or 'mysqli'
+define('MYSQL_TYPE', 'mysqli');
+
 // Database
-require_once (DIR_FS_INC.'xtc_db_connect.inc.php');
-require_once (DIR_FS_INC.'xtc_db_close.inc.php');
-require_once (DIR_FS_INC.'xtc_db_error.inc.php');
-require_once (DIR_FS_INC.'xtc_db_perform.inc.php');
-require_once (DIR_FS_INC.'xtc_db_query.inc.php');
-require_once (DIR_FS_INC.'xtc_db_queryCached.inc.php');
-require_once (DIR_FS_INC.'xtc_db_fetch_array.inc.php');
-require_once (DIR_FS_INC.'xtc_db_num_rows.inc.php');
-require_once (DIR_FS_INC.'xtc_db_data_seek.inc.php');
-require_once (DIR_FS_INC.'xtc_db_insert_id.inc.php');
-require_once (DIR_FS_INC.'xtc_db_free_result.inc.php');
-require_once (DIR_FS_INC.'xtc_db_fetch_fields.inc.php');
-require_once (DIR_FS_INC.'xtc_db_output.inc.php');
-require_once (DIR_FS_INC.'xtc_db_input.inc.php');
-require_once (DIR_FS_INC.'xtc_db_prepare_input.inc.php');
+require_once (DIR_FS_INC.'db_functions_'.MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // html basics
 require_once (DIR_FS_INC.'xtc_href_link.inc.php');
@@ -195,6 +185,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
     define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
   }
 }
+
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
 if(SECURITY_CODE_LENGTH=='')
@@ -497,11 +488,13 @@ if($coo_janolaw->get_status() == true) {
 xtc_count_cart();
 
 /* magnalister v1.0.0 */
+/* committed out till magnalister updated to mysqli
 if (!defined('MAGNA_CALLBACK_MODE') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
 	ob_start();
 	require_once(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
 	magnaExecute('magnaCollectStats');
 	ob_end_clean();
 }
+*/
 /* END magnalister */
 ?>
