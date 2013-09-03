@@ -31,6 +31,7 @@
 
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_2.0.0.0');
+
 //Run Mode
 define('RUN_MODE_ADMIN',true);
 
@@ -50,11 +51,11 @@ if (function_exists('ini_set')) {
 }
 
 // configuration parameters
-if (file_exists('includes/local/configure.php')) {
-  include ('includes/local/configure.php');
+if (file_exists('../includes/local/configure.php')) {
+  include ('../includes/local/configure.php');
   $dev_mode = 1;
 } else {
-  require ('includes/configure.php');
+  require ('../includes/configure.php');
 }
 
 /**
@@ -98,13 +99,6 @@ if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
 // Base/PHP_SELF/SSL-PROXY
 require_once(DIR_FS_INC . 'set_php_self.inc.php'); 
 $PHP_SELF = set_php_self();
-$ssl_proxy = '';
-if (isset($_SERVER['HTTP_X_FORWARDED_HOST']))
-  $ssl_proxy = '/' . $_SERVER['HTTP_HOST'];
-define('DIR_WS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/'));
-
-// SQL caching dir
-define('SQL_CACHEDIR', DIR_FS_CATALOG . 'cache/');
 
 define('TAX_DECIMAL_PLACES', 0);
 
@@ -116,11 +110,8 @@ define('LOCAL_EXE_UNZIP', '/usr/local/bin/unzip');
 // list of project database tables
 require_once ('../' . DIR_WS_INCLUDES . 'database_tables.php');
 
-// define mysql type ste to 'mysql' or 'mysqli'
-define('MYSQL_TYPE', 'mysqli');
-
 // Database
-require_once (DIR_FS_INC.'db_functions_'.MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // include needed functions

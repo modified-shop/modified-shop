@@ -109,27 +109,15 @@ if (file_exists('includes/request_type.php')) {
 // Base/PHP_SELF/SSL-PROXY
 require_once(DIR_FS_INC . 'set_php_self.inc.php'); 
 $PHP_SELF = set_php_self();
-$ssl_proxy = '';
-if ($request_type == 'SSL' && ENABLE_SSL == true && defined('USE_SSL_PROXY') && USE_SSL_PROXY == true) {
-  $ssl_proxy = '/' . $_SERVER['HTTP_HOST'];
-}
-define('DIR_WS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/'));
-
 
 // list of project database tables
 require (DIR_WS_INCLUDES.'database_tables.php');
 
-// SQL caching dir
-define('SQL_CACHEDIR', DIR_FS_CATALOG.'cache/');
-
 // graduated prices model or products assigned ?
 define('GRADUATED_ASSIGN', 'true');
 
-// define mysql type ste to 'mysql' or 'mysqli'
-define('MYSQL_TYPE', 'mysqli');
-
 // Database
-require_once (DIR_FS_INC.'db_functions_'.MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // html basics

@@ -19,7 +19,7 @@
   $ftp_message = '';
   $files_to_check = array('files' => array('includes/configure.php',
                                            //'includes/configure.org.php',
-                                           'admin/includes/configure.php',
+                                           //'admin/includes/configure.php',
                                            //'admin/includes/configure.org.php',
                                            //'export/rss_cache.txt',  // is generated automatically
                                            'admin/magnalister.php',

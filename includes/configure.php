@@ -15,37 +15,30 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-// Define the webserver and path parameters
-// * DIR_FS_* = Filesystem directories (local/physical)
-// * DIR_WS_* = Webserver directories (virtual/URL)
+  // Define the webserver and path parameters
+  // * DIR_FS_* = Filesystem directories (local/physical)
+  // * DIR_WS_* = Webserver directories (virtual/URL)
+
+  // global defines
   define('HTTP_SERVER', 'http://localhost'); // eg, http://localhost - should not be empty for productive servers
   define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
+  define('DIR_FS_DOCUMENT_ROOT', '/var/www/modified-shop-2.00/'); // absolute path required
+  define('DIR_WS_CATALOG', '/modified-shop-2.00/'); // relative path required
+  define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
+
+  // defines for admin
+  define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+  define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
+  define('DIR_WS_ADMIN', DIR_WS_CATALOG.'admin/');
+  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.'admin/');
+
+  // secure SSL
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
+  define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
   define('USE_SSL_PROXY', false); // using SSL proxy?
-  define('DIR_WS_CATALOG', '/');
-  define('DIR_FS_DOCUMENT_ROOT', '/web1/modified-shop/'); // absolute path required
-  define('DIR_FS_CATALOG', '/web1/modified-shop/'); // absolute path required
-  define('DIR_WS_ADMIN', 'admin/');
-  define('DIR_WS_IMAGES', 'images/');
-  define('DIR_WS_ORIGINAL_IMAGES', DIR_WS_IMAGES .'product_images/original_images/');
-  define('DIR_WS_THUMBNAIL_IMAGES', DIR_WS_IMAGES .'product_images/thumbnail_images/');
-  define('DIR_WS_INFO_IMAGES', DIR_WS_IMAGES .'product_images/info_images/');
-  define('DIR_WS_POPUP_IMAGES', DIR_WS_IMAGES .'product_images/popup_images/');
-  define('DIR_WS_ICONS', DIR_WS_IMAGES . 'icons/');
-  define('DIR_WS_INCLUDES', DIR_FS_DOCUMENT_ROOT . 'includes/');
-  define('DIR_WS_FUNCTIONS', DIR_WS_INCLUDES . 'functions/');
-  define('DIR_WS_CLASSES', DIR_WS_INCLUDES . 'classes/');
-  define('DIR_WS_MODULES', DIR_WS_INCLUDES . 'modules/');
-  define('DIR_WS_LANGUAGES', DIR_FS_CATALOG . 'lang/');
-  define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
-  define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
-
-  define('DIR_WS_DOWNLOAD_PUBLIC', DIR_WS_CATALOG . 'pub/');
-  define('DIR_FS_DOWNLOAD', DIR_FS_CATALOG . 'download/');
-  define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
-  define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
-
-// define our database connection
+  
+  // define our database connection
+  define('DB_MYSQL_TYPE', 'mysql'); // define mysql type set to 'mysql' or 'mysqli'
   define('DB_SERVER', 'localhost'); // eg, localhost - should not be empty for productive servers
   define('DB_SERVER_USERNAME', '');
   define('DB_SERVER_PASSWORD', '');
@@ -53,4 +46,11 @@
   define('USE_PCONNECT', 'false'); // use persistent connections?
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'utf8'); // set db charset utf8 or latin1
+
+  // include standard settings
+  if (defined('RUN_MODE_ADMIN')) {
+    require (DIR_FS_ADMIN.'includes/paths.php');
+  } else {
+    require (DIR_FS_CATALOG.'includes/paths.php');
+  }
 ?>
