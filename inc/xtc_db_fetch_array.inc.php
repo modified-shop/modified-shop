@@ -15,11 +15,6 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-  /*
-  function xtc_db_fetch_array($db_query) {
-    return mysql_fetch_array($db_query, MYSQL_ASSOC);
-  }
-  */
 
   function xtc_db_fetch_array(&$db_query,$cq=false) {
     //BOF - DokuMan - 2010-08-30 - if db_query not a valid result, return false
