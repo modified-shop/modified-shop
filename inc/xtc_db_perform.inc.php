@@ -27,13 +27,13 @@
       $query = substr($query, 0, -2) . ') values (';
       reset($data);
       while (list(, $value) = each($data)) {
-      	 $value = (is_Float($value) & defined('PHP4_3_10')) ? sprintf("%.F",$value) : (string)($value);
+      	 $value = (is_Float($value) && defined('PHP4_3_10') && PHP4_3_10 === true) ? sprintf("%.F",$value) : (string)($value);
         switch ($value) {
           case 'now()':
             $query .= 'now(), ';
             break;
           case 'null':
-            $query .= 'null, ';
+            $query .= $columns . ' = null, ';
             break;
           default:
             $query .= '\'' . xtc_db_input($value) . '\', ';
@@ -44,7 +44,7 @@
     } elseif ($action == 'update') {
       $query = 'update ' . $table . ' set ';
       while (list($columns, $value) = each($data)) {
-         $value = (is_Float($value) & defined('PHP4_3_10')) ? sprintf("%.F",$value) : (string)($value);
+         $value = (is_Float($value) && defined('PHP4_3_10') && PHP4_3_10 === true) ? sprintf("%.F",$value) : (string)($value);
       	switch ($value) {
           case 'now()':
             $query .= $columns . ' = now(), ';
