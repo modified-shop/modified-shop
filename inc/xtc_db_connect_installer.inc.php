@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_db_connect_installer.inc.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id: xtc_db_connect_installer.inc.php 4454 2013-02-12 19:47:42Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -37,12 +37,12 @@
     if(!defined('DB_SERVER_CHARSET')) {
       define('DB_SERVER_CHARSET','latin1');
     }
- 
+
     if(function_exists('mysql_set_charset')) { //requires MySQL 5.0.7 or later
       mysql_set_charset(DB_SERVER_CHARSET);
     } else {
       $collation = DB_SERVER_CHARSET == 'utf8' ? 'utf8_general_ci' : 'latin1_german1_ci';      
-      mysql_query('SET NAMES '.DB_SERVER_CHARSET. ' COLLATE '. $collation );      
+      mysql_query('SET NAMES '.DB_SERVER_CHARSET. ' COLLATE '. $collation );
     }
 
     return $$link;
