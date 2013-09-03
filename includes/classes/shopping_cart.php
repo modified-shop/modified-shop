@@ -503,7 +503,7 @@ class shoppingCart {
                                                p.products_weight,
                                                p.products_tax_class_id,
                                                p.products_status
-                                          FROM ".TABLE_PRODUCTS." p,
+                                          FROM ".TABLE_PRODUCTS." p
                                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                                ON pd.products_id = p.products_id
                                                   AND pd.language_id = '".(int)$_SESSION['languages_id']."'
@@ -613,12 +613,12 @@ class shoppingCart {
         if (isset ($this->contents[$products_id]['attributes'])) {
           reset($this->contents[$products_id]['attributes']);
           while (list (, $value) = each($this->contents[$products_id]['attributes'])) {
-            $virtual_check_query = xtc_db_query("select count(*) as total
-                                                   from ".TABLE_PRODUCTS_ATTRIBUTES." pa,
-                                                        ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
-                                                  where pa.products_id = '".(int)$products_id."'
-                                                    and pa.options_values_id = '".(int)$value."'
-                                                    and pa.products_attributes_id = pad.products_attributes_id
+            $virtual_check_query = xtc_db_query("SELECT count(*) as total
+                                                   FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                                   JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                        ON pa.products_attributes_id = pad.products_attributes_id
+                                                  WHERE pa.products_id = '".(int)$products_id."'
+                                                    AND pa.options_values_id = '".(int)$value."'
                                                   ");
             $virtual_check = xtc_db_fetch_array($virtual_check_query);
             if ($virtual_check['total'] > 0) {
