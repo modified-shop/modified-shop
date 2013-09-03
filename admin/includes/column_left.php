@@ -99,7 +99,7 @@ if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
 if (isset($admin_access['magnalister'])) {
 	echo mainMenue(BOX_HEADING_MAGNALISTER);
 	if ($admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> - '.BOX_MAGNALISTER.'</a></li>';
-	echo endMenue();
+	echo endMenue(BOX_HEADING_MAGNALISTER);
 }
 /* END magnalister */
 
