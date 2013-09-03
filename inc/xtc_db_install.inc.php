@@ -1,16 +1,17 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_db_install.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: xtc_db_install.inc.php 5218 2013-07-22 14:49:40Z Tomcraft $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(database.php,v 1.2 2002/03/02); www.oscommerce.com 
    (c) 2003	 nextcommerce (xtc_db_install.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -53,13 +54,13 @@ function xtc_db_install($database, $sql_file) {
             if (trim($restore_query[$j]) != '') {
               $next = substr($restore_query, $j, 6);
               if ($next[0] == '#') {
-// find out where the break position is so we can remove this line (#comment line)
+                // find out where the break position is so we can remove this line (#comment line)
                 for ($k=$j; $k<$sql_length; $k++) {
                   if ($restore_query[$k] == "\n") break;
                 }
                 $query = substr($restore_query, 0, $i+1);
                 $restore_query = substr($restore_query, $k);
-// join the query before the comment appeared, with the rest of the dump
+                // join the query before the comment appeared, with the rest of the dump
                 $restore_query = $query . $restore_query;
                 $sql_length = strlen($restore_query);
                 $i = strpos($restore_query, ';')-1;

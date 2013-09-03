@@ -1,15 +1,15 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_db_queryCached.inc.php 782 2005-02-19 19:26:00Z khan_thep $
+   $Id: xtc_db_queryCached.inc.php 5463 2013-09-03 13:52:45Z GTB $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2002-2003 osCommerce(database.php,v 1.19 2003/03/22); www.oscommerce.com
-
+   (c) 2006 XT-Commerce (xtcPrice.php 1316 2005-10-21)
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

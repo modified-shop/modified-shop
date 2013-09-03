@@ -1,20 +1,21 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_db_perform.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: xtc_db_perform.inc.php 5470 2013-09-03 15:20:39Z Tomcraft $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(database.php,v 1.19 2003/03/22); www.oscommerce.com 
-   (c) 2003	 nextcommerce (xtc_db_perform.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(database.php,v 1.19 2003/03/22); www.oscommerce.com
+   (c) 2003	nextcommerce (xtc_db_perform.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2006 XT-Commerce (xtc_db_perform.inc.php 899 2005-04-29)
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
+
   function xtc_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
     reset($data);
 
@@ -49,11 +50,7 @@
             $query .= $columns . ' = now(), ';
             break;
           case 'null':
-            //BOF - Dokuman - 2009-11-30 - fixed minor typo (=)
-            //$query .= $columns .= ' = null, ';
             $query .= $columns . ' = null, ';
-            //EOF - Dokuman - 2009-11-30 - fixed minor typo (=)
-            
             break;
           default:
             $query .= $columns . ' = \'' . xtc_db_input($value) . '\', ';
@@ -65,4 +62,4 @@
 
     return xtc_db_query($query, $link);
   }
- ?>
+?>

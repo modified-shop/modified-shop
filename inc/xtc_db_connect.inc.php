@@ -56,7 +56,7 @@
       mysql_set_charset(DB_SERVER_CHARSET);
     } else {
       mysql_query('SET NAMES '.DB_SERVER_CHARSET);
-    }    
+    }
 
     return $$link;
   }

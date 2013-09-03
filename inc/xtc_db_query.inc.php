@@ -1,23 +1,24 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_db_query.inc.php 1195 2005-08-28 21:10:52Z mz $
+   $Id: xtc_db_query.inc.php 5463 2013-09-03 13:52:45Z GTB $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(database.php,v 1.19 2003/03/22); www.oscommerce.com
-   (c) 2003	 nextcommerce (xtc_db_query.inc.php,v 1.4 2003/08/13); www.nextcommerce.org
+   (c) 2003 nextcommerce (xtc_db_query.inc.php,v 1.4 2003/08/13); www.nextcommerce.org
+   (c) 2006 XT-Commerce (xtc_db_query.inc.php 1195 2005-08-28)
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
+
   // include needed functions
   include_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-  
+
   function xtc_db_query($query, $link = 'db_link') {
     global $$link;
 
