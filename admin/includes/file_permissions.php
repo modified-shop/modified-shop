@@ -17,7 +17,6 @@
 
 $configFiles = array(
   DIR_FS_CATALOG.'includes/configure.php',
-  DIR_FS_ADMIN.'includes/configure.php',
 );
 
 $writeableFiles = array(

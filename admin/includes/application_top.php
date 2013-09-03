@@ -31,6 +31,7 @@
 
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_1.0.6.0');
+
 //Run Mode
 define('RUN_MODE_ADMIN',true);
 
@@ -46,10 +47,10 @@ if (function_exists('ini_set')) {
 }
 
 // configuration parameters
-if (file_exists('includes/local/configure.php')) {
-  include('includes/local/configure.php');
+if (file_exists('../includes/local/configure.php')) {
+  include('../includes/local/configure.php');
 } else {
-  require('includes/configure.php');
+  require('../includes/configure.php');
 }
 
 /**
@@ -87,15 +88,6 @@ date_default_timezone_set('Europe/Berlin');
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
 
-//compatibility for modified eCommerce Shopsoftware 1.06 files
-define('DIR_WS_BASE', '');
-
-// SQL caching dir
-define('SQL_CACHEDIR',DIR_FS_CATALOG.'cache/');
-
-// LOG dir
-define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
-
 define('TAX_DECIMAL_PLACES', 0);
 
 // Used in the "Backup Manager" to compress backups
@@ -110,11 +102,8 @@ require (DIR_FS_ADMIN.DIR_WS_INCLUDES.'filenames.php');
 // list of project database tables
 require_once(DIR_FS_CATALOG.DIR_WS_INCLUDES.'database_tables.php');
 
-// define mysql type ste to 'mysql' or 'mysqli'
-define('MYSQL_TYPE', 'mysqli');
-
 // Database
-require_once (DIR_FS_INC.'db_functions_'.MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // include needed functions

@@ -95,26 +95,14 @@ if (file_exists('includes/request_type.php')) {
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
 
-//compatibility for modified eCommerce Shopsoftware 1.06 files
-define('DIR_WS_BASE', '');
-
 // list of project database tables
 require (DIR_WS_INCLUDES.'database_tables.php');
-
-// SQL caching dir
-define('SQL_CACHEDIR', DIR_FS_CATALOG.'cache/');
-
-// LOG dir
-define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
 
 // graduated prices model or products assigned ?
 define('GRADUATED_ASSIGN', 'true');
 
-// define mysql type ste to 'mysql' or 'mysqli'
-define('MYSQL_TYPE', 'mysqli');
-
 // Database
-require_once (DIR_FS_INC.'db_functions_'.MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // html basics
