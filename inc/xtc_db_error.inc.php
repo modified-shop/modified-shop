@@ -41,5 +41,17 @@
     } else {
       die('<font color="#ff0000"><strong>Es ist ein Fehler aufgetreten!<br />There was an error!<br />Il y avait une erreur!</strong></font>');
     }
+
+    //and display an info message for the shop customer and redirect him
+    echo '<p>'.ERROR_SQL_DB_QUERY.'</p>';    
+    if ($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] != $_SERVER['HTTP_HOST']) {
+      $redirect_time = 5; // in seconds
+      echo '<p>'.sprintf(ERROR_SQL_DB_QUERY_REDIRECT, $redirect_time).'</p>';      
+      echo '<script language="javascript">';
+      $redirect_time = $redirect_time * 1000; // convert to milliseconds for javascript redirect
+      echo 'setTimeout(\'location.href="http://' . $_SERVER['HTTP_HOST'] . '"\','.$redirect_time.');';
+      echo '</script>';
+    }
+    exit(); 
   }
  ?>
