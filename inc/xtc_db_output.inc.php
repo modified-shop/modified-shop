@@ -16,6 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
+  //fix for conectors like facturama
   if (!function_exists('encode_htmlspecialchars')) {
     require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
   }

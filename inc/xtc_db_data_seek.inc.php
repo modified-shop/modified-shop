@@ -24,9 +24,9 @@
       }
       return $db_query[$row_number];
     } else {
-        if (!is_array($db_query)) {
-          return mysql_data_seek($db_query, $row_number);
-        }
+      if (!is_array($db_query)) {
+        return mysql_data_seek($db_query, $row_number);
+      }
     }
   }
 ?>

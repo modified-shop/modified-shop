@@ -15,8 +15,6 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-
-  // include needed functions
   
   function xtc_redirect($url, $ssl='') {
   	global $request_type, $PHP_SELF;
