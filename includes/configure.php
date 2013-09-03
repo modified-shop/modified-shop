@@ -1,20 +1,19 @@
 <?php
 /* --------------------------------------------------------------
+   $Id: configure.php 4649 2013-04-26 10:46:04Z GTB $
 
-  modified eCommerce Shopsoftware
-  http://www.modified.org-shop
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 modified eCommerce Shopsoftware
-   Released under the GNU General Public License (Version 2)
-   [http://www.gnu.org/licenses/gpl-2.0.html]
-  --------------------------------------------------------------
-  based on:
-  (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-  (c) 2002-2003 osCommerce (configure.php,v 1.13 2003/02/10); www.oscommerce.com
-  (c) 2003 XT-Commerce (configure.php)
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   --------------------------------------------------------------
+   based on:
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce (configure.php,v 1.13 2003/02/10); www.oscommerce.com
+   (c) 2003 XT-Commerce (configure.php)
 
-  Released under the GNU General Public License
-  --------------------------------------------------------------*/
+   Released under the GNU General Public License
+   --------------------------------------------------------------*/
 
   // Define the webserver and path parameters
   // * DIR_FS_* = Filesystem directories (local/physical)
