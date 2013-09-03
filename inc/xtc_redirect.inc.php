@@ -17,29 +17,25 @@
    ---------------------------------------------------------------------------------------*/
 
   // include needed functions
-
-  //BOF - web28 - 2010-07-19 - New SSL  parameter
-  //function xtc_redirect($url) {
+  
   function xtc_redirect($url, $ssl='') {
-  //EOF - web28 - 2010-07-19 - New SSL  parameter
+  	global $request_type, $PHP_SELF;
 
-  //BOF - web28 - 2010-07-19 - FIX switch to NONSSL & New SSL  handling  defined by $request_type
-    //if ( (ENABLE_SSL == true) && (getenv('HTTPS') == 'on' || getenv('HTTPS') == '1') ) { // We are loading an SSL page
-    global $request_type;
-    if ( (ENABLE_SSL == true) && ($request_type == 'SSL') && ($ssl != 'NONSSL') ) { // We are loading an SSL page
-  //EOF - web28 - 2010-07-19 - FIX switch to NONSSL & New SSL  handling  defined by $request_type
-      if (substr($url, 0, strlen(HTTP_SERVER)) == HTTP_SERVER) { // NONSSL url
-          $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER)); // Change it to SSL
-      }
+    if ( (ENABLE_SSL == true) && ($request_type == 'SSL') && ($ssl != 'NONSSL') ) {
+		  if (substr($url, 0, strlen(HTTP_SERVER)) == HTTP_SERVER) {
+		    $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER));
+		  }
     }
-
-    $_SESSION['REFERER'] = basename(parse_url($_SERVER['SCRIPT_NAME'], PHP_URL_PATH)); // GTB - 2011-03-21 - write referer to Session
-
-    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url))); //Hetfield - 2009-08-11 - replaced deprecated function eregi_replace with preg_replace to be ready for PHP >= 5.3
-
-    //BOF -  DokuMan - 2011-08-31 - there is no php function 'session_close'
-    //xtc_exit(); //xtc_session_close() and xtc_exit() is obsolete
+    
+    $_SESSION['REFERER'] = '';
+    if (strpos($PHP_SELF, 'admin') === false && 
+        strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false &&
+        strpos($PHP_SELF, FILENAME_LOGIN) === false) 
+    {
+      $_SESSION['REFERER'] = basename($PHP_SELF);
+    }
+    
+    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     exit();
-    //EOF -  DokuMan - 2011-08-31 - there is no php function 'session_close'
   }
 ?>
