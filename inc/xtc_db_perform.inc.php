@@ -33,7 +33,7 @@
             $query .= 'now(), ';
             break;
           case 'null':
-            $query .= $columns . ' = null, ';
+            $query .= 'null, ';
             break;
           default:
             $query .= '\'' . xtc_db_input($value) . '\', ';
@@ -50,7 +50,7 @@
             $query .= $columns . ' = now(), ';
             break;
           case 'null':
-            $query .= $columns .= ' = null, ';
+            $query .= $columns . ' = null, ';
             break;
           default:
             $query .= $columns . ' = \'' . xtc_db_input($value) . '\', ';
