@@ -15,17 +15,10 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-
-  //BOF - DokuMan - 2011-05-09 - pass the connection identifier link to the mysql_insert_id() function
-  /*
-  function xtc_db_insert_id() {
-    return mysql_insert_id();
-  }
-  */
+   
   function xtc_db_insert_id($link = 'db_link') {
     global $$link;
 
     return mysql_insert_id($$link);
   }
-  //EOF - DokuMan - 2011-05-09 - pass the connection identifier link to the mysql_insert_id() function
 ?>

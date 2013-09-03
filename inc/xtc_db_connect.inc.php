@@ -47,7 +47,7 @@
       die();
     }
     // EOF - Dokuman - 2010-11-23 - revised database connection for error reporting
-    
+
     // set charset defined in configure.php
     if(!defined('DB_SERVER_CHARSET')) {
       define('DB_SERVER_CHARSET','utf8');

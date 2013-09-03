@@ -19,14 +19,14 @@
   function xtc_db_error($query, $errno, $error) {
 
     // Deliver 503 Error on database error (so crawlers won't index the error page)
-        if (!defined('DIR_FS_ADMIN')) {
+    if (!defined('DIR_FS_ADMIN')) {
       header("HTTP/1.1 503 Service Temporarily Unavailable");
       header("Status: 503 Service Temporarily Unavailable");
       header("Connection: Close");
     }
     
     // Send an email to the shop owner if a sql error occurs
-    if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {      
+    if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {
       if (defined('RUN_MODE_ADMIN')) {
         require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
         require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
@@ -42,7 +42,7 @@
     } else {
       die('<font color="#ff0000"><strong>Es ist ein Fehler aufgetreten!<br />There was an error!<br />Il y avait une erreur!</strong></font>');
     }
-    
+
     //and display an info message for the shop customer and redirect him
     echo '<p>'.ERROR_SQL_DB_QUERY.'</p>';    
     if ($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] != $_SERVER['HTTP_HOST']) {
@@ -54,6 +54,5 @@
       echo '</script>';
     }
     exit(); 
-    
   }
 ?>
