@@ -70,7 +70,7 @@
 
     // set charset defined in configure.php
     if(!defined('DB_SERVER_CHARSET')) {
-      define('DB_SERVER_CHARSET','latin1');
+      define('DB_SERVER_CHARSET','utf8');
     }
     if(function_exists('mysqli_set_charset')) { //requires MySQL 5.0.6 or later
       mysqli_set_charset($$link, DB_SERVER_CHARSET);
