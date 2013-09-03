@@ -45,21 +45,49 @@ function xtc_db_queryCached($query, $link = 'db_link') {
 	if ($isSelect) {
 		// Only SELECT queries have to be cached
 		if (file_exists($file) && filemtime($file) > (time() - DB_CACHE_EXPIRE)) {
-			// get cached results
-			$result = unserialize(file_get_contents($file));
-		}
-		else {
+
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+        $queryStartTime = array_sum(explode(" ",microtime()));
+      }
+
+      // get cached resulst
+      $result = unserialize(base64_decode(file_get_contents($file)));
+
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+        $queryEndTime = array_sum(explode(" ",microtime())); 
+        $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+        if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY CACHED ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+        $result_error = mysql_error();
+        if ($result_error) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR CACHED ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+      }
+
+    } else {
 			// Nothing found or too old file
 			if (file_exists($file))
 				@unlink($file);
+
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+        $queryStartTime = array_sum(explode(" ",microtime()));
+      }
 			
 			// get result from DB and create new file
 			$res = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
 			
-			if (STORE_DB_TRANSACTIONS == 'true') {
-				$result_error = mysql_error();
-				error_log('RESULT ' . $res . ' ' . $result_error . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
-			}
+      if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+        $queryEndTime = array_sum(explode(" ",microtime())); 
+        $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+        if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+        $result_error = mysql_error();
+        if ($result_error) {
+          error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+        }
+      }
 			
 			$result = array(); //DokuMan - 2010-08-23 - set undefinded variable
 			// fetch data into array
@@ -100,9 +128,25 @@ function xtc_db_queryCached($query, $link = 'db_link') {
 				break;
 			}
 		}
+
+    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
+      $queryStartTime = array_sum(explode(" ",microtime()));
+    }
 		
 		// Everything done now fire the query already
 		$result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
+
+    if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
+      $queryEndTime = array_sum(explode(" ",microtime())); 
+      $processTime = number_format(round($queryEndTime - $queryStartTime, 3), 3, '.', '');
+      if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
+        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+      }
+      $result_error = mysql_error();
+      if ($result_error) {
+        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
+      }
+    }
 	}
 	return $result;
 }
