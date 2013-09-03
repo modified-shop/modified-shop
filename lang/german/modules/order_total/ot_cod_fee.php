@@ -30,13 +30,13 @@
   function define_shipping_titles() {
     $module_keys = str_replace('.php','',MODULE_SHIPPING_INSTALLED);
     $installed_shipping_modules = explode(';',$module_keys);
-    $title = '';
 
     if (count($installed_shipping_modules) > 0) {
         foreach($installed_shipping_modules as $shipping_code) {
             $module_type = 'shipping';
             $file = $shipping_code.'.php';
             $shipping_code = strtoupper($shipping_code);
+            $title = '';
             if (defined('DIR_FS_LANGUAGES') && file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
                 include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
                 $title = constant('MODULE_SHIPPING_'.$shipping_code.'_TEXT_TITLE');
