@@ -5,7 +5,9 @@
 	 *
 	 *  FINDOLOGIC GmbH
 	 */
-	require_once("findologic_config.inc.php");
+	
+	require ('includes/application_top.php');
+	require_once(DIR_WS_INCLUDES . "findologic_config.inc.php");
 
 	if ((!array_key_exists("shop", $_GET)) || ($_GET["shop"] != FL_SHOP_ID)) {
 		die('Unauthorized access!');
@@ -137,7 +139,7 @@
 				ON pc.categories_id = c.categories_id
 			WHERE pr.products_id = $debugId
 			ORDER BY id";
-		$result = mysql_query($sql) OR die(mysql_error());
+		$result = xtc_db_query($sql);
 	} else {
 		$filename = get_output_filename();
 		if (!is_writeable($filename)) {
@@ -171,8 +173,8 @@
 				ON pc.categories_id = c.categories_id
 			WHERE (pc.categories_id = 0 OR c.categories_status = 1) 
 				AND products_status = 1";
-		$result = mysql_query($sql) OR die(mysql_error());
-		if (mysql_num_rows($result) and $row = mysql_fetch_assoc($result)) {
+		$result = xtc_db_query($sql);
+		if (xtc_db_num_rows($result) and $row = xtc_db_fetch_array($result)) {
 			$productCount = $row["productCount"];
 		} else {
 			$productCount = 0;
@@ -191,15 +193,15 @@
 			$sql .= " LIMIT $count OFFSET $first";
 		}
 
-		$result = mysql_query($sql) OR die(mysql_error());
+		$result = xtc_db_query($sql);
 	}
 
 	$products = 0;
 	$n = 0;
 	echo "\r\n";
-	if(mysql_num_rows($result)) 
+	if(xtc_db_num_rows($result)) 
 	{
-		while ($row = mysql_fetch_assoc($result)) {
+		while ($row = xtc_db_fetch_array($result)) {
 
 			if ($debug) {
 				output_row($row);
@@ -295,9 +297,9 @@
 			GROUP BY
 				pr.products_id";
 
-		$result = mysql_query($sql) OR die(mysql_error());
+		$result = xtc_db_query($sql);
 
-		if (mysql_num_rows($result) and $row = mysql_fetch_assoc($result)) {
+		if (xtc_db_num_rows($result) and $row = xtc_db_fetch_array($result)) {
 
 			if ($debug) {
 				output_row($row);
@@ -324,9 +326,9 @@
 				LEFT OUTER JOIN products_options_values pov
 					ON (pa.options_values_id = pov.products_options_values_id AND pov.language_id = " . FL_LANG_ID . ")
 				WHERE pa.products_id = $product_nr";
-			$result_fla = mysql_query($sql) OR die(mysql_error());
+			$result_fla = xtc_db_query($sql);
 
-			while ($row_fla = mysql_fetch_assoc($result_fla)) {
+			while ($row_fla = xtc_db_fetch_array($result_fla)) {
 
 				if ($debug) {
 					output_row($row_fla);
@@ -393,9 +395,9 @@
 	function get_all_product_category_names($productId, $debug = false) {
 		$categories = array();
 		$sql = "SELECT pc.categories_id AS cat FROM products_to_categories pc WHERE pc.products_id = ".$productId;
-		$result = mysql_query($sql) OR die(mysql_error());
-		if (mysql_num_rows($result)) {
-			while ($row = mysql_fetch_assoc($result)) {
+		$result = xtc_db_query($sql);
+		if (xtc_db_num_rows($result)) {
+			while ($row = xtc_db_fetch_array($result)) {
 
 				if ($debug) {
 					output_row($row);
@@ -428,9 +430,9 @@
 				WHERE
 					c.categories_id = ".$catid.";";
 
-			$result = mysql_query($sql) OR die(mysql_error());
+			$result = xtc_db_query($sql);
 
-			if (mysql_num_rows($result) && ($row = mysql_fetch_assoc($result))) {
+			if (xtc_db_num_rows($result) && ($row = xtc_db_fetch_array($result))) {
 
 				if ($debug) {
 					output_row($row);

@@ -6,7 +6,8 @@
 	 *  FINDOLOGIC GmbH
 	 */
 
-	require_once('./findologic_config.inc.php');
+	require ('includes/application_top.php');
+	require_once(DIR_WS_INCLUDES . "findologic_config.inc.php");
 
 	function curl_http_request($link, $timeout) {
 		$http_response = '';
@@ -74,7 +75,7 @@
 		}
 	}
 
-	if ($_GET['target'] != '') {
+	if (isset($_GET['target']) && xtc_not_null($_GET['target'])) {
 		// user clicked on product:
 		// notify service
 		$url = FL_SERVICE_URL.'index.php?'.
@@ -85,9 +86,11 @@
 
 		// redirect to product-page
 		$productpage = urldecode($_GET['target']);
-		if ($_GET['MODsid'] != '')
+		if ($_GET['MODsid'] != '') {
 			$productpage .= '&MODsid='.$_GET['MODsid'];
-		header("Location: $productpage");
+		}
+		xtc_redirect($productpage);
+		//header("Location: $productpage");
 	} else {
 		// user is searching:
 		// load SESSION from XT-Commerce
@@ -121,13 +124,17 @@
 			// rediret to standard search
 			header("Location: $standard_search");
 			*/
+			$params = '';
 			$action = FILENAME_DEFAULT;
-			if ((isset($_GET['search']) && xtc_not_null($_GET['search'])) || (isset($_GET['keywords']) && xtc_not_null($_GET['keywords']))) {
+			if ((isset($_GET['search']) && xtc_not_null($_GET['search'])) 
+			    || (isset($_GET['keywords']) && xtc_not_null($_GET['keywords']))) 
+			{
 			  $action = FILENAME_ADVANCED_SEARCH_RESULT;
+			  $params = 'f=true&'
 			  if (isset($_GET['search']) && xtc_not_null($_GET['search'])) {
-			    $params = 'keywords='.$_GET['search'];
+			    $params .= 'keywords='.$_GET['search'];
 			  } else {
-			    $params = 'keywords='.$_GET['keywords'];
+			    $params .= 'keywords='.$_GET['keywords'];
 			  }
 			}
 			xtc_redirect(xtc_href_link($action, $params, 'NONSSL'));
@@ -143,7 +150,7 @@
 			$smarty->assign('main_content', $content);
 			$smarty->assign('language', $_SESSION['language']);
 			$smarty->caching = 0;
-			if (!defined(RM))
+			if (!defined('RM'))
 				$smarty->load_filter('output', 'note');
 
 			$smarty->display(CURRENT_TEMPLATE.'/index.html');
