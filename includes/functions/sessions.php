@@ -21,7 +21,7 @@
    @ini_set("session.gc_maxlifetime", 1440);
    @ini_set("session.gc_probability", 100);
 
-  if (STORE_SESSIONS == 'mysql') {
+  if (STORE_SESSIONS == 'mysql') {  
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
       $SESS_LIFE = 1440;
     }
@@ -100,13 +100,14 @@
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
+    register_shutdown_function('session_write_close');
   }
 
 
   function xtc_session_start() {
-  	if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
-  	  xtc_session_id(md5(uniqid(rand(), true)));
-  	}
+    if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
+      xtc_session_id(md5(uniqid(rand(), true)));
+    }
     $temp = session_start();
 
     return $temp;
@@ -138,9 +139,9 @@
   function xtc_session_id($sessid = '') {
     if (!empty($sessid)) {
       $tempSessid = $sessid;
-  	  if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '') {
-  	    $sessid = md5(uniqid(rand(), true));
-  	  }
+      if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '') {
+       $sessid = md5(uniqid(rand(), true));
+      }
       return session_id($sessid);
     } else {
       return session_id();
@@ -150,7 +151,7 @@
   function xtc_session_name($name = '') {
     if (!empty($name)) {
       $tempName = $name;
-      if (preg_replace('/[a-zA-Z0-9]/', '', $tempName) == '') {
+      if (preg_replace('/[a-zA-Z]/', '', $tempName) == '') {
         return session_name($name);
       }
       return false;
