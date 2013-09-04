@@ -6,7 +6,7 @@
 	 *  FINDOLOGIC GmbH
 	 */
 
-  require ('includes/application_top.php');
+	require ('includes/application_top.php');
 	require_once(DIR_WS_INCLUDES . "findologic_config.inc.php");
 
 	function curl_http_request($link, $timeout) {
