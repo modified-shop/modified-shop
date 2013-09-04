@@ -19,15 +19,7 @@
    
 // IP
 if (!isset($_SESSION['tracking']['ip'])) {
-  if (isset($_SERVER['HTTP_X_CLUSTER_CLIENT_IP']) && $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'] != '') {
-    $ip = $_SERVER['HTTP_X_CLUSTER_CLIENT_IP'];
-  } elseif (isset($_SERVER['HTTP_X_FORWARDED_FOR']) && $_SERVER['HTTP_X_FORWARDED_FOR'] != '') {
-    $ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-  } else  {
-    $ip = $_SERVER['REMOTE_ADDR'];
-  }
-  $ip_array = explode(',', $ip);
-  $_SESSION['tracking']['ip'] = trim($ip_array[0]);
+  $_SESSION['tracking']['ip'] = xtc_get_ip_address();
 }
 
 // campaigns
