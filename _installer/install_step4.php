@@ -15,7 +15,23 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-   require('includes/application.php');
+  
+  require('includes/application.php');
+
+  // include Database functions for installer
+  require_once(DIR_FS_INC.'xtc_db_prepare_input.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_close.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_fetch_array.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_num_rows.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_data_seek.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_insert_id.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_free_result.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
 
   include('language/'.$lang.'.php');
 
@@ -80,12 +96,14 @@
                   <strong><font color="#FF0000" size="2"><?php echo TITLE_STEP4_ERROR; ?></font></strong>
                 </p>
                   <div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_STEP4_ERROR; ?>
+             <?php /*
                     <ul class="boxMe">
                       <li>cd <?php echo DIR_FS_CATALOG; ?>admin/includes/</li>
                       <li>touch configure.php</li>
                       <li>chmod 706 configure.php</li>
               <?php //<li>chmod 706 configure.org.php</li> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
                     </ul>
+                  */ ?>
                     <ul class="boxMe">
                       <li>cd <?php echo DIR_FS_CATALOG; ?>includes/</li>
                       <li>touch configure.php</li>
@@ -117,7 +135,7 @@
                       <br />
                       includes/configure.php<br />
               <?php //includes/configure.org.php<br /> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
-                      admin/includes/configure.php<br />
+              <?php //admin/includes/configure.php<br /> ?>
               <?php //admin/includes/configure.org.php<br /> - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure ?>
                     </p>
                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
@@ -166,19 +184,20 @@
                     <p><?php echo TEXT_WS_ROOT_INFO; ?></p>
                     <?php //EOF - web28 - 2010.02.20 -  NEW ROOT INFO ?>                    
                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                      <tr>
+                      <tr>                        
                         <td style="border-top: 1px solid; border-color: #CFCFCF">&nbsp;</td>
                       </tr>
                     </table>
                     <?php
+                      echo xtc_draw_hidden_field_installer('DB_MYSQL_TYPE', $_POST['DB_MYSQL_TYPE']);
                       echo xtc_draw_hidden_field_installer('DB_SERVER', $_POST['DB_SERVER']);
                       echo xtc_draw_hidden_field_installer('DB_SERVER_USERNAME', $_POST['DB_SERVER_USERNAME']);
                       echo xtc_draw_hidden_field_installer('DB_SERVER_PASSWORD', $_POST['DB_SERVER_PASSWORD']);
                       echo xtc_draw_hidden_field_installer('DB_DATABASE', $_POST['DB_DATABASE']);
                       echo xtc_draw_hidden_field_installer('install_db', $_POST['install_db']);
                       echo xtc_draw_hidden_field_installer('install_cfg', $_POST['install_cfg']);
-                      echo xtc_draw_hidden_field_installer('STORE_SESSIONS', 'mysql', true); 
-                    ?>
+                      echo xtc_draw_hidden_field_installer('STORE_SESSIONS', 'mysql', true);
+                    ?>                     
                   </div>
                   <br />
                   <table border="0" width="100%" cellspacing="0" cellpadding="0">
