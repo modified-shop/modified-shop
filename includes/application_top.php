@@ -242,8 +242,10 @@ require (DIR_WS_FUNCTIONS.'compatibility.php');
 require (DIR_WS_FUNCTIONS.'sessions.php');
 
 // set the session name and save path
-session_name('MODsid');
-if (STORE_SESSIONS != 'mysql') session_save_path(SESSION_WRITE_DIRECTORY);
+xtc_session_name('MODsid');
+if (STORE_SESSIONS != 'mysql') {
+  xtc_session_save_path(SESSION_WRITE_DIRECTORY);
+}
 
 // set the session cookie parameters
 if (function_exists('session_set_cookie_params')) {
@@ -254,63 +256,68 @@ if (function_exists('session_set_cookie_params')) {
   ini_set('session.cookie_domain', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
 }
 // set the session ID if it exists
-if (isset ($_POST[session_name()])) {
-  session_id($_POST[session_name()]);
+if (isset ($_POST[xtc_session_name()])) {
+  xtc_session_id($_POST[xtc_session_name()]);
 }
-elseif (($request_type == 'SSL') && isset ($_GET[session_name()])) {
-  session_id($_GET[session_name()]);
+elseif (($request_type == 'SSL') && isset ($_GET[xtc_session_name()])) {
+  xtc_session_id($_GET[xtc_session_name()]);
 }
 
 // start the session
 $session_started = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
-  xtc_setcookie('cookie_test', 'please_accept_for_session', time() + 60 * 60 * 24 * 30, '/', $current_domain);
-  if (isset ($_COOKIE['cookie_test'])) {
-    session_start();
+  xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, '/', (xtc_not_null($current_domain) ? $current_domain : ''));
+  if (isset($_COOKIE['cookie_test'])) {
+    xtc_session_start();
     $session_started = true;
   }
+} elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
+  if (isset($_GET[xtc_session_name()]) && xtc_not_null($_GET[xtc_session_name()])) {
+    header("HTTP/1.1 301 Moved Permanently");
+    xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), $request_type, false));
+    die();
+  }
+  $session_started = false;
 } else {
-  session_start();  
+  xtc_session_start();
   $session_started = true;
 }
 
 // check for Cookie usage
 $cookie = false;
 if (HTTP_SERVER == HTTPS_SERVER) {
-  if (isset ($_COOKIE[session_name()])) {
+  if (isset ($_COOKIE[xtc_session_name()])) {
     $cookie = true;
   }
 }
 
 include (DIR_WS_INCLUDES.'tracking.php');
 
-// check the Agent
-$truncate_session_id = false;
-if (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
-  $truncate_session_id = true;
-}
-
 // verify the ssl_session_id if the feature is enabled
 if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true)) {
-  $ssl_session_id = getenv('SSL_SESSION_ID');
+  $ssl_session_id  = $_SERVER['SSL_SESSION_ID'];
+  $ssl_session_id2 = getenv('SSL_SESSION_ID');
+  $ssl_session_id  = ($ssl_session_id == $ssl_session_id2) ? $ssl_session_id : $ssl_session_id.';'.$ssl_session_id2;
   if (!isset($_SESSION['SSL_SESSION_ID'])) {
     $_SESSION['SESSION_SSL_ID'] = $ssl_session_id;
   }
   if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
-    session_destroy();
+    xtc_session_recreate();
+    xtc_session_destroy();
     xtc_redirect(xtc_href_link(FILENAME_SSL_CHECK));
   }
 }
 
 // verify the browser user agent if the feature is enabled
 if (SESSION_CHECK_USER_AGENT == 'True') {
-  $http_user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  $http_user_agent  = strtolower($_SERVER['HTTP_USER_AGENT']);
   $http_user_agent2 = strtolower(getenv("HTTP_USER_AGENT"));
-  $http_user_agent = ($http_user_agent == $http_user_agent2) ? $http_user_agent : $http_user_agent.';'.$http_user_agent2;
+  $http_user_agent  = ($http_user_agent == $http_user_agent2) ? $http_user_agent : $http_user_agent.';'.$http_user_agent2;
   if (!isset ($_SESSION['SESSION_USER_AGENT'])) {
     $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
   } elseif ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
-    session_destroy();
+    xtc_session_recreate();
+    xtc_session_destroy();
     xtc_redirect(xtc_href_link(FILENAME_LOGIN));
   }
 }
@@ -321,13 +328,14 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
     $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
   } elseif ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
-    session_destroy();
+    xtc_session_recreate();
+    xtc_session_destroy();
     xtc_redirect(xtc_href_link(FILENAME_LOGIN));
   }
 }
 
 if (!(preg_match('/^[a-z0-9]{26}$/i', session_id()) || preg_match('/^[a-z0-9]{32}$/i', session_id()))) {
-  session_regenerate_id(true); // Thanks to HHGAG ;-)
+  xtc_session_recreate(); // Thanks to HHGAG ;-)
 }
 
 // set the language

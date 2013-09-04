@@ -100,12 +100,18 @@
     }
 
     session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
-    register_shutdown_function('session_write_close');
   }
 
+
   function xtc_session_start() {
-    return session_start();
+  	if (preg_replace('/[a-zA-Z0-9]/', '', session_id()) != '') {
+  	  xtc_session_id(md5(uniqid(rand(), true)));
+  	}
+    $temp = session_start();
+
+    return $temp;
   }
+
 
 //removed deprecated function session_register to be ready for PHP >= 5.3
 /*
@@ -128,8 +134,13 @@
   }
 */
 
+
   function xtc_session_id($sessid = '') {
     if (!empty($sessid)) {
+      $tempSessid = $sessid;
+  	  if (preg_replace('/[a-zA-Z0-9]/', '', $tempSessid) != '') {
+  	    $sessid = md5(uniqid(rand(), true));
+  	  }
       return session_id($sessid);
     } else {
       return session_id();
@@ -138,7 +149,11 @@
 
   function xtc_session_name($name = '') {
     if (!empty($name)) {
-      return session_name($name);
+      $tempName = $name;
+      if (preg_replace('/[a-zA-Z0-9]/', '', $tempName) == '') {
+        return session_name($name);
+      }
+      return false;
     } else {
       return session_name();
     }
@@ -163,16 +178,21 @@
   }
 
   function xtc_session_recreate() {
+    global $http_domain, $https_domain;
+    
+    if ($http_domain == $https_domain) {
       $session_backup = $_SESSION;
-      unset($_COOKIE[xtc_session_name()]);
-      xtc_session_destroy();
-
-      if (STORE_SESSIONS == 'mysql') {
-        session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
-        register_shutdown_function('session_write_close');
-      }
-      xtc_session_start();
+      $old_session_id = session_id();
+      session_regenerate_id();
+      $new_session_id = xtc_session_id();
+      session_id($old_session_id);
+      session_id($new_session_id);
       $_SESSION = $session_backup;
-      unset($session_backup);
+      
+      // update whos_online
+      xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
+                       SET session_id = '".xtc_db_input($new_session_id)."' 
+                     WHERE session_id = '".xtc_db_input($old_session_id)."'");
+    }
   }
 ?>
