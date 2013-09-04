@@ -16,6 +16,21 @@
    --------------------------------------------------------------*/
   require('includes/application.php');
 
+  // include Database functions for installer
+  require_once(DIR_FS_INC.'xtc_db_prepare_input.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_close.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_fetch_array.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_num_rows.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_data_seek.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_insert_id.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_free_result.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+
   include('language/'.$lang.'.php');
 
 ?>
@@ -67,18 +82,19 @@
               <?php 
                 if(isset($_POST['install_db']) && $_POST['install_db'] == 1) {
                   $db = array();
+                  $db['DB_MYSQL_TYPE'] = trim(stripslashes($_POST['DB_MYSQL_TYPE']));
                   $db['DB_SERVER'] = trim(stripslashes($_POST['DB_SERVER']));
                   $db['DB_SERVER_USERNAME'] = trim(stripslashes($_POST['DB_SERVER_USERNAME']));
                   $db['DB_SERVER_PASSWORD'] = trim(stripslashes($_POST['DB_SERVER_PASSWORD']));
                   $db['DB_DATABASE'] = trim(stripslashes($_POST['DB_DATABASE']));
-                  xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
-                  $sql = 'ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation.";";
-                  @mysql_query($sql);
-                  $sql = 'SET NAMES '.$character_set.' COLLATE '.$collation.";";
-                  @mysql_query($sql);
+                  xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
+                  
+                  @xtc_db_query_installer('ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
+                  @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
+
                   $db_error = false;
                   $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL;
-                  xtc_db_install($db['DB_DATABASE'], $sql_file);
+                  xtc_db_install($db['DB_DATABASE'], $db['DB_MYSQL_TYPE'], $sql_file);
                   if ($db_error) {
                 ?>
                 <table width="100%" border="0" cellpadding="0" cellspacing="0">

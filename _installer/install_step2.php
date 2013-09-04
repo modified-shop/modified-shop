@@ -18,6 +18,21 @@
 
   require('includes/application.php');
 
+  // include Database functions for installer
+  require_once(DIR_FS_INC.'xtc_db_prepare_input.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_close.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_fetch_array.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_num_rows.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_data_seek.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_insert_id.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_free_result.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+
   // include needed functions
   require_once(DIR_FS_INC.'xtc_redirect.inc.php');
   require_once(DIR_FS_INC.'xtc_href_link.inc.php');
@@ -61,39 +76,41 @@
 
   //connect to database
   $db = array();
+  $db['DB_MYSQL_TYPE'] = trim(stripslashes($_POST['DB_MYSQL_TYPE']));
   $db['DB_SERVER'] = trim(stripslashes($_POST['DB_SERVER']));
   $db['DB_SERVER_USERNAME'] = trim(stripslashes($_POST['DB_SERVER_USERNAME']));
   $db['DB_SERVER_PASSWORD'] = trim(stripslashes($_POST['DB_SERVER_PASSWORD']));
   $db['DB_DATABASE'] = trim(stripslashes($_POST['DB_DATABASE']));
 
   $db_error = false;
-  xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
-  $sql = 'ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation.";";
-  @mysql_query($sql);
-  $sql = 'SET NAMES '.$character_set.' COLLATE '.$collation.";";
-  @mysql_query($sql);
+  xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
+
+  @xtc_db_query_installer('ALTER DATABASE '.$db['DB_DATABASE'].' DEFAULT CHARACTER SET '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
+  @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
   //check MySQL *server* version
   if (!$db_error) {
     if (function_exists('version_compare')) {
-      if(version_compare(mysql_get_server_info(), "5.0.0", "<=") && strpos(strtolower(mysql_get_server_info()), 'native')=== false){
-        $db_error = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 5.0.0. <br /><br />' . TEXT_DB_SERVER_VERSION . mysql_get_server_info() . '</strong>.';
+      if(version_compare(xtc_db_get_server_info($db['DB_MYSQL_TYPE']), "5.0.0", "<=") && strpos(strtolower(xtc_db_get_server_info($db['DB_MYSQL_TYPE'])), 'native')=== false){
+        $db_error = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 5.0.0. <br /><br />' . TEXT_DB_SERVER_VERSION . xtc_db_get_server_info($db['DB_MYSQL_TYPE']) . '</strong>.';
       }
     }
   }
+  
   //check MySQL *client* version
   $db_warning = '';
   if (!$db_error) {
     if (function_exists('version_compare')) {
-      preg_match("/[0-9]\.[0-9]\.[0-9]/",mysql_get_client_info(), $client_info);
-      if(version_compare($client_info[0], "5.0.0", "<=") && strpos(strtolower(mysql_get_client_info()), 'native')=== false){
-        $db_warning = '<strong>' . TEXT_DB_CLIENT_VERSION_WARNING .  '<br /><br />' . TEXT_DB_CLIENT_VERSION . mysql_get_client_info() . '</strong>.';
+      preg_match("/[0-9]\.[0-9]\.[0-9]/",xtc_db_get_client_info($db['DB_MYSQL_TYPE']), $client_info);
+      if(version_compare($client_info[0], "5.0.0", "<=") && strpos(strtolower(xtc_db_get_client_info($db['DB_MYSQL_TYPE'])), 'native')=== false){
+        $db_warning = '<strong>' . TEXT_DB_CLIENT_VERSION_WARNING .  '<br /><br />' . TEXT_DB_CLIENT_VERSION . xtc_db_get_client_info($db['DB_MYSQL_TYPE']) . '</strong>.';
       }
     }
   }
+      
   //check db permission
   if (!$db_error) {    
-    xtc_db_test_create_db_permission($db['DB_DATABASE']);
+    xtc_db_test_create_db_permission($db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
   }
 
 ?>
