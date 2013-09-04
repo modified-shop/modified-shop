@@ -14,7 +14,7 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
-
+  
   // reset var
   $box_smarty = new smarty;
   $box_content='';

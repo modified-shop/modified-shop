@@ -29,8 +29,6 @@
   // defines for admin
   define('HTTP_CATALOG_SERVER', HTTP_SERVER);
   define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
-  define('DIR_WS_ADMIN', DIR_WS_CATALOG.'admin/');
-  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.'admin/');
 
   // secure SSL
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?

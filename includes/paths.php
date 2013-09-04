@@ -38,4 +38,8 @@
   // external
   define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
+
+  // admin directory
+  require_once (DIR_FS_INC . 'set_admin_directory.inc.php');
+  set_admin_directory();
 ?>

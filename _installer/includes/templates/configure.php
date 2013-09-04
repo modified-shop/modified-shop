@@ -30,8 +30,6 @@ $file_contents =
 '// defines for admin' . PHP_EOL .
 '  define(\'HTTP_CATALOG_SERVER\', HTTP_SERVER);' . PHP_EOL .
 '  define(\'HTTPS_CATALOG_SERVER\', HTTPS_SERVER);' . PHP_EOL .
-'  define(\'DIR_WS_ADMIN\', DIR_WS_CATALOG.\'admin/\');' . PHP_EOL .
-'  define(\'DIR_FS_ADMIN\', DIR_FS_DOCUMENT_ROOT.\'admin/\');' . PHP_EOL .
 '' . PHP_EOL .
 '// secure SSL' . PHP_EOL .
 '  define(\'ENABLE_SSL\', ' . (($_POST['ENABLE_SSL'] == 'true') ? 'true' : 'false') . '); // secure webserver for checkout procedure?' . PHP_EOL .
