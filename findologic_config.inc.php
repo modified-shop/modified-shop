@@ -6,8 +6,6 @@
 	 *  FINDOLOGIC GmbH
 	 */
 
-	require_once("includes/application_top.php");
-
 	// e.g.              "ABCDEFABCDEFABCDEFABCDEFABCDEFAB"
 	define("FL_SHOP_ID", MODULE_FINDOLOGIC_SHOP_ID);
 
