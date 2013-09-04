@@ -16,6 +16,21 @@
 
   require('includes/application.php');
 
+  // include Database functions for installer
+  require_once(DIR_FS_INC.'xtc_db_prepare_input.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_close.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_fetch_array.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_num_rows.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_data_seek.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_insert_id.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_free_result.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+
   include('language/'.$lang.'.php');
 
   // Fix possible end slash
@@ -66,14 +81,15 @@
                 <div style="border:1px solid #ccc; background:#fff; padding:10px;">
                   <?php
                     $db = array();
+                    $db['DB_MYSQL_TYPE'] = trim(stripslashes($_POST['DB_MYSQL_TYPE']));
                     $db['DB_SERVER'] = trim(stripslashes($_POST['DB_SERVER']));
                     $db['DB_SERVER_USERNAME'] = trim(stripslashes($_POST['DB_SERVER_USERNAME']));
                     $db['DB_SERVER_PASSWORD'] = trim(stripslashes($_POST['DB_SERVER_PASSWORD']));
                     $db['DB_DATABASE'] = trim(stripslashes($_POST['DB_DATABASE']));
                     $db_error = false;
-                    xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD']);
+                    xtc_db_connect_installer($db['DB_SERVER'], $db['DB_SERVER_USERNAME'], $db['DB_SERVER_PASSWORD'], $db['DB_MYSQL_TYPE']);
                     if (!$db_error) {
-                      xtc_db_test_connection($db['DB_DATABASE']);
+                      xtc_db_test_connection($db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
                     }
                     if ($db_error) {
                   ?>
@@ -159,11 +175,12 @@
                           // REM - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure
 
                           //create  admin/includes/configure.php
+                          /*
                           include ('includes/templates/configure_admin.php');
                           $fp = fopen(DIR_FS_CATALOG . 'admin/includes/configure.php', 'w');
                           fputs($fp, $file_contents);
                           fclose($fp);
-
+                          */
                           // REM - 2011-10-20 - h-h-h - Remove/comment out unneeded secondary configure
 
                           //BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL

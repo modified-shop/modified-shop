@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-function xtc_db_test_create_db_permission($database) {
+function xtc_db_test_create_db_permission($database, $type) {
     global $db_error;
 
     $db_created = false;
@@ -30,15 +30,11 @@ function xtc_db_test_create_db_permission($database) {
     if (!$db_error) {
       if (!@xtc_db_select_db($database)) {
         $db_created = true;
-// BOF - Dokuman - 2009-05-27 - xtc_db_query_installer typo      
-//        if (!@xtc_db_query_installer_installer('create database ' . $database)) {
         if (!@xtc_db_query_installer('create database ' . $database)) {
-// EOF - Dokuman - 2009-05-27 - xtc_db_query_installer typo
-        
-          $db_error = mysql_error();
+          $db_error = xtc_db_error_installer($type);
         }
       } else {
-        $db_error = mysql_error();
+        $db_error = xtc_db_error_installer($type);
       }
       
       if (!$db_error) {
@@ -48,17 +44,17 @@ function xtc_db_test_create_db_permission($database) {
               if ($db_created) {
                 if (@xtc_db_query_installer('drop database ' . $database)) {
                 } else {
-                  $db_error = mysql_error();
+                  $db_error = xtc_db_error_installer($type);
                 }
               }
             } else {
-              $db_error = mysql_error();
+              $db_error = xtc_db_error_installer($type);
             }
           } else {
-            $db_error = mysql_error();
+            $db_error = xtc_db_error_installer($type);
           }
         } else {
-          $db_error = mysql_error();
+          $db_error = xtc_db_error_installer($type);
         }
       }
     }

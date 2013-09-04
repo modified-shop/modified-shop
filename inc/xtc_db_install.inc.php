@@ -16,16 +16,16 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-function xtc_db_install($database, $sql_file) {
+function xtc_db_install($database, $type, $sql_file) {
     global $db_error;
 
     $db_error = false;
 
-    if (!@xtc_db_select_db($database)) {
-      if (@xtc_db_query_installer('create database ' . $database)) {
-        xtc_db_select_db($database);
+    if (!@xtc_db_select_db($database, $type)) {
+      if (@xtc_db_query_installer('create database ' . $database, $type)) {
+        xtc_db_select_db($database, $type);
       } else {
-        $db_error = mysql_error();
+        $db_error = xtc_db_error_installer($type);
       }
     }
 
@@ -97,14 +97,14 @@ function xtc_db_install($database, $sql_file) {
       }
       //BOF - Dokuman - 2009-10-14 - Added missing table entries
       //xtc_db_query_installer("drop table if exists address_book, address_format, banners, banners_history, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, currencies, customers, customers_basket, customers_basket_attributes, customers_info, languages, manufacturers, manufacturers_info, orders, orders_products, orders_status, orders_status_history, orders_products_attributes, orders_products_download, products, products_attributes, products_attributes_download, prodcts_description, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, reviews, reviews_description, sessions, specials, tax_class, tax_rates, geo_zones, whos_online, zones, zones_to_geo_zones");
-      xtc_db_query_installer("drop table if exists address_book, address_format, banktransfer, banners, banners_history, campaigns, campaigns_ip, card_blacklist, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, coupons, coupons_description, currencies, customers, customers_basket, customers_basket_attributes, customers_info, customers_ip, database_version, geo_zones, languages, manufacturers, manufacturers_info, module_newsletter, newsletters_history, newsletter_recipients, orders, orders_products, orders_status, orders_status_history, orders_products_attributes, orders_products_download, orders_total,  personal_offers_by_customers_status_0, personal_offers_by_customers_status_1, personal_offers_by_customers_status_2, personal_offers_by_customers_status_3, products, products_content, products_images, products_attributes, products_attributes_download, prodcts_description, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, products_vpe, products_xsell, products_xsell_grp_name, reviews, reviews_description, sessions, specials, tax_class, tax_rates, geo_zones, whos_online, zones, zones_to_geo_zones");
+      xtc_db_query_installer("drop table if exists address_book, address_format, banktransfer, banners, banners_history, campaigns, campaigns_ip, card_blacklist, categories, categories_description, configuration, configuration_group, counter, counter_history, countries, coupons, coupons_description, currencies, customers, customers_basket, customers_basket_attributes, customers_info, customers_ip, database_version, geo_zones, languages, manufacturers, manufacturers_info, module_newsletter, newsletters_history, newsletter_recipients, orders, orders_products, orders_status, orders_status_history, orders_products_attributes, orders_products_download, orders_total,  personal_offers_by_customers_status_0, personal_offers_by_customers_status_1, personal_offers_by_customers_status_2, personal_offers_by_customers_status_3, products, products_content, products_images, products_attributes, products_attributes_download, prodcts_description, products_options, products_options_values, products_options_values_to_products_options, products_to_categories, products_vpe, products_xsell, products_xsell_grp_name, reviews, reviews_description, sessions, specials, tax_class, tax_rates, geo_zones, whos_online, zones, zones_to_geo_zones", $type);
       //EOF - Dokuman - 2009-10-14 - Added missing table entries
 
       for ($i=0; $i<sizeof($sql_array); $i++) {
         if (INSTALL_CHARSET == 'utf8') {
           $sql_array[$i] = mb_convert_encoding($sql_array[$i], 'utf-8', 'ISO-8859-15');
         }
-        xtc_db_query_installer($sql_array[$i]);
+        xtc_db_query_installer($sql_array[$i], $type);
       }
     } else {
       return false;
