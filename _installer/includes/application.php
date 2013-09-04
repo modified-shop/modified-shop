@@ -60,21 +60,6 @@
   require_once(DIR_FS_INC.'xtc_set_time_limit.inc.php');
   require_once(DIR_FS_INC.'xtc_check_agent.inc.php');
 
-  // include Database functions for installer
-  require_once(DIR_FS_INC.'xtc_db_prepare_input.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_close.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_num_rows.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_data_seek.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_insert_id.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_free_result.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
-
   // include Html output functions
   require_once(DIR_FS_INC.'xtc_draw_input_field_installer.inc.php');
   require_once(DIR_FS_INC.'xtc_draw_password_field_installer.inc.php');
