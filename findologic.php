@@ -75,7 +75,7 @@
 		}
 	}
 
-	if ($_GET['target'] != '') {
+	if (isset($_GET['target']) && xtc_not_null($_GET['target'])) {
 		// user clicked on product:
 		// notify service
 		$url = FL_SERVICE_URL.'index.php?'.
@@ -86,9 +86,11 @@
 
 		// redirect to product-page
 		$productpage = urldecode($_GET['target']);
-		if ($_GET['MODsid'] != '')
+		if ($_GET['MODsid'] != '') {
 			$productpage .= '&MODsid='.$_GET['MODsid'];
-		header("Location: $productpage");
+		}
+		xtc_redirect($productpage);
+		//header("Location: $productpage");
 	} else {
 		// user is searching:
 		// load SESSION from XT-Commerce
