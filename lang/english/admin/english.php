@@ -170,7 +170,7 @@ define('BOX_SAFETERMS','Safeterms - AGB Service'); // Tomcraft - 2013-06-21 - Sa
 define('BOX_SHOP','Shop');
 define('BOX_LOGOUT','Logout');
 define('BOX_CREDITS','Credits');
-define('BOX_UPDATE','Update');
+define('BOX_UPDATE','Check Version');
 define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added easymarketing
 
 define('TXT_GROUPS','<b>Groups</b>:');
