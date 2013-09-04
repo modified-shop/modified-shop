@@ -4,11 +4,9 @@ $file_contents =
 '/* --------------------------------------------------------------' . PHP_EOL .
 '' . PHP_EOL .
 '  modified eCommerce Shopsoftware' . PHP_EOL .
-'  http://www.modified.org-shop' . PHP_EOL .
+'  http://www.modified-shop.org' . PHP_EOL .
 '' . PHP_EOL .
-'   Copyright (c) 2009 - 2012 modified eCommerce Shopsoftware' . PHP_EOL .
-'   Released under the GNU General Public License (Version 2)' . PHP_EOL .
-'   [http://www.gnu.org/licenses/gpl-2.0.html]' . PHP_EOL .
+'   Copyright (c) 2009 - 2013 [www.modified-shop.org]' . PHP_EOL .
 '  --------------------------------------------------------------' . PHP_EOL .
 '  based on:' . PHP_EOL .
 '  (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)' . PHP_EOL .
