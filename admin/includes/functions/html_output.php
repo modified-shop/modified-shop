@@ -59,6 +59,15 @@
   
     $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
 
+    if (!xtc_not_null($page)) {
+      $page = 'index.php';
+    }
+    
+    // GTB - 2012-04-10 - remove index.php from Startpage
+    if ($page == 'index.php' && !xtc_not_null($parameters)) {
+      $page = '';
+    }
+
     if ($connection == 'NONSSL') {
       $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
     } elseif ($connection == 'SSL') {
