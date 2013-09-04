@@ -243,8 +243,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                  <td style="background:#e4e4e4"><?php echo $products['active_count']; ?></td>
                               </tr>
                               <tr>
-                                 <td style="background:#e4e4e4"><a href="<?php echo xtc_href_link('categories.php', 'search_inactive=1');?>" style="font-size:12px"><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></a></td>
-                                 <td style="background:#e4e4e4"><a href="<?php echo xtc_href_link('categories.php', 'search_inactive=1');?>" style="font-size:12px"><?php echo $products['inactive_count']; ?></a></td>
+                                 <td style="background:#e4e4e4"><a href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'search_inactive=1');?>" style="font-size:12px"><strong><?php echo TOTAL_PRODUCTS_INACTIVE; ?>:</strong></a></td>
+                                 <td style="background:#e4e4e4"><a href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'search_inactive=1');?>" style="font-size:12px"><?php echo $products['inactive_count']; ?></a></td>
 					                    </tr>
                               <tr>
                                  <td style="background:#e4e4e4"><strong><?php echo TOTAL_PRODUCTS; ?>:</strong></td>
@@ -313,10 +313,10 @@ require (DIR_WS_INCLUDES.'head.php');
                                           }     
                                           ?>
                                           <tr>
-                                            <td class="dataTableContent" width="22%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></td>
-                                            <td class="dataTableContent" width="33%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo $whos_online['full_name']; ?></a></td>
-                                            <td class="dataTableContent" align="center" width="33%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></td>
-                                            <td class="dataTableContent" align="center" width="33%"><a href="whos_online.php?info=<?php echo $whos_online['session_id']; ?>"><font color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></td>
+                                            <td class="dataTableContent" width="22%"><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo gmdate('H:i:s', $time_online); ?></a></td>
+                                            <td class="dataTableContent" width="33%"><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo $whos_online['full_name']; ?></a></td>
+                                            <td class="dataTableContent" align="center" width="33%"><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></a></td>
+                                            <td class="dataTableContent" align="center" width="33%"><a href="<?php echo xtc_href_link(FILENAME_WHOS_ONLINE, 'info='.$whos_online['session_id']); ?>"><font color="#800000"><strong><?php echo TABLE_CELL_USERS_ONLINE_INFO; ?></strong></font></a></td>
                                           </tr>
                                         <?php 
                                         } 
@@ -396,15 +396,15 @@ require (DIR_WS_INCLUDES.'head.php');
                                       </tr>
                                       <?php
                                         $abfrage = "SELECT * FROM " . TABLE_ORDERS . " ORDER BY orders_id DESC LIMIT 20";
-                                        $ergebnis = mysql_query($abfrage);
-                                        while($row = mysql_fetch_object($ergebnis)){
+                                        $ergebnis = xtc_db_query($abfrage);
+                                        while($row = xtc_db_fetch_array($ergebnis)){
                                       ?>
                                       <tr>
-                                        <td class="dataTableContent" width="25%"><?php echo $row-> orders_id; ?></td>
-                                        <td class="dataTableContent" width="25%"><p align="center"><?php echo $row-> date_purchased; ?></td>
-                                        <td class="dataTableContent" align="center" width="25%"><?php echo $row-> delivery_name; ?></td>
-                                        <td class="dataTableContent" align="center" width="12%"><a href="orders.php?page=1&oID=<?php echo $row-> orders_id; ?>&action=edit"><font color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></td>
-                                        <td class="dataTableContent" align="center" width="12%"><a href="orders.php?page=1&oID=<?php echo $row-> orders_id; ?>&action=delete"><font color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></font></a></td>
+                                        <td class="dataTableContent" width="25%"><?php echo $row['orders_id']; ?></td>
+                                        <td class="dataTableContent" width="25%"><p align="center"><?php echo $row['date_purchased']; ?></td>
+                                        <td class="dataTableContent" align="center" width="25%"><?php echo $row['delivery_name']; ?></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$row['orders_id'].'&action=edit'); ?>"><font color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'page=1&oID='.$row['orders_id'].'&action=delete'); ?>"><font color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_DELETE; ?></strong></font></a></td>
                                       </tr>
                                       <?php
                                         }
@@ -432,19 +432,18 @@ require (DIR_WS_INCLUDES.'head.php');
                                         <td class="dataTableHeadingContent" align="center" bgcolor="#D9D9D9" height="20" width="12%"><strong><?php echo TABLE_HEADING_NEW_CUSTOMERS_ORDERS; ?></strong></td>
                                       </tr>
                                       <?php
-                                        $abfrage = "SELECT * FROM " . TABLE_CUSTOMERS . " ORDER BY customers_date_added DESC LIMIT 15";
-                                        $ergebnis = mysql_query($abfrage);
-                                        while($row = mysql_fetch_object($ergebnis)) {
+                                        $ergebnis = xtc_db_query("SELECT * FROM " . TABLE_CUSTOMERS . " ORDER BY customers_date_added DESC LIMIT 15");
+                                        while($row = xtc_db_fetch_array($ergebnis)) {
                                       ?>
                                       <tr>
-                                        <td class="dataTableContent" width="25%"><?php echo $row-> customers_lastname; ?>
+                                        <td class="dataTableContent" width="25%"><?php echo $row['customers_lastname']; ?>
                                         </td>
-                                        <td class="dataTableContent" width="25%"><?php echo $row-> customers_firstname; ?>
+                                        <td class="dataTableContent" width="25%"><?php echo $row['customers_firstname']; ?>
                                         </td>
-                                        <td class="dataTableContent" align="center" width="25%"><?php echo $row-> customers_date_added; ?>
+                                        <td class="dataTableContent" align="center" width="25%"><?php echo $row['customers_date_added']; ?>
                                         </td>
-                                        <td class="dataTableContent" align="center" width="12%"><a href="customers.php?page=1&cID=<?php echo $row-> customers_id; ?>&action=edit"><font color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></td>
-                                        <td class="dataTableContent" align="center" width="12%"><a href="orders.php?cID=<?php echo $row-> customers_id; ?>"><font color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, 'page=1&cID='.$row['customers_id'].'&action=edit'); ?>"><font color="#800000"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_EDIT; ?></strong></font></a></td>
+                                        <td class="dataTableContent" align="center" width="12%"><a href="<?php echo xtc_href_link(FILENAME_ORDERS, 'cID='.$row['customers_id']); ?>"><font color="#7691A2"><strong><?php echo TABLE_CELL_NEW_CUSTOMERS_ORDERS; ?></strong></font></a></td>
                                       </tr>
                                       <?php
                                       } 
