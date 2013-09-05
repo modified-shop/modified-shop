@@ -175,9 +175,12 @@
   define('TEXT_SSL_PROXY_EXP','<b>SSL Proxy examples of some providers: </b><br /><br /><div class="prov">Hosteurope: </div><div class="proxy">https://ssl.webpack.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">ALL-INKL.COM: </div><div class="proxy">https://ssl-account.com/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">1und1: </div><div class="proxy">https://ssl.kundenserver.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">Strato: </div><div class="proxy">https://www.ssl-id.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">domainFactory: </div><div class="proxy">https://sslsites.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div>');
   //EOF - GTB - 2010-08-31 - Layout correction
   //EOF - web28 - 2010-03-02 - New SSL-PROXY info
+  define('TEXT_ADMIN_DIRECTORY','Admin Directory');
+  define('TEXT_ADMIN_DIRECTORY_LONG', '<span style="color:red;">On Seurity reasons change the name of the admin directory.</span><br/>This is a generated Suggest: ');
 
   // install_step5.php
   define('TEXT_WS_CONFIGURATION_SUCCESS','The <strong>modified eCommerce Shopsoftware</strong> Webserver configuration was successful');
+  define('TEXT_ADMIN_DIRECTORY_ERROR','<b>ATTENTION:</b><br/>Admin Directory could not be renamed! Please do it manually.<br/><br/>');
 
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator configuration');

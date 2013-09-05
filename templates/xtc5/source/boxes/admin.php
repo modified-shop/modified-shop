@@ -15,7 +15,7 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-
+  
   $box_smarty = new smarty;
 
   $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');

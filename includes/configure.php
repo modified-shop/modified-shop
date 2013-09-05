@@ -29,8 +29,6 @@
   // defines for admin
   define('HTTP_CATALOG_SERVER', HTTP_SERVER);
   define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
-  define('DIR_WS_ADMIN', DIR_WS_CATALOG.'admin/');
-  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.'admin/');
 
   // secure SSL
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
@@ -47,10 +45,15 @@
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'utf8'); // set db charset utf8 or latin1
 
-  // include standard settings
-  if (defined('RUN_MODE_ADMIN')) {
-    require (DIR_FS_ADMIN.'includes/paths.php');
-  } else {
-    require (DIR_FS_CATALOG.'includes/paths.php');
+  if (DB_DATABASE != '') {
+    // admin directory
+    require_once (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
+    set_admin_directory();
+    // include standard settings
+    if (defined('RUN_MODE_ADMIN')) {
+      require (DIR_FS_CATALOG . DIR_ADMIN.'includes/paths.php');
+    } else {
+      require (DIR_FS_CATALOG.'includes/paths.php');
+    }
   }
 ?>

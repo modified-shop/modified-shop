@@ -49,4 +49,8 @@
   // external
   define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
+
+  // admin directory
+  define('DIR_WS_ADMIN', DIR_WS_CATALOG.DIR_ADMIN);
+  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.DIR_ADMIN);
 ?>
