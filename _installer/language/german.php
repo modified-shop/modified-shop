@@ -177,9 +177,12 @@
   define('TEXT_SSL_PROXY_EXP','<b>SSL Proxy Beispiele f&uuml;r einige Provider: </b><br /><br /><div class="prov">Hosteurope: </div><div class="proxy">https://ssl.webpack.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">ALL-INKL.COM: </div><div class="proxy">https://ssl-account.com/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">1und1: </div><div class="proxy">https://ssl.kundenserver.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">Strato: </div><div class="proxy">https://www.ssl-id.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div><div class="prov">domainFactory: </div><div class="proxy">https://sslsites.de/nureinbeispiel.de</div><div class="clear">&nbsp;</div>');
   //EOF - GTB - 2010-08-31 - Layout correction
   //EOF - web28 - 2010-03-02 - New SSL-PROXY info
+  define('TEXT_ADMIN_DIRECTORY','Admin Verzeichnis');
+  define('TEXT_ADMIN_DIRECTORY_LONG', '<span style="color:red;">Bitte &auml;ndern sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.</span><br/>Hier ein per Zufallsgenerator generierter Vorschlag: ');
 
   // install_step5.php
   define('TEXT_WS_CONFIGURATION_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Webserver Konfiguration war erfolgreich');
+  define('TEXT_ADMIN_DIRECTORY_ERROR','<b>HINWEIS:</b><br/>Das Admin Verzeichnis konnte nicht umbenannt werden! Bitte &auml;ndern sie das Verzeichnis manuell.<br/><br/>');
 
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator Konfiguration');

@@ -29,6 +29,16 @@
   // Fix possible end slash
   $http_server = rtrim($_POST['HTTP_SERVER'], '/');
   $https_server = rtrim($_POST['HTTPS_SERVER'], '/');  
+  
+  $admin_error = false;
+  if (isset($_POST['admin_directory']) && $_POST['admin_directory'] != trim(DIR_ADMIN, '/')) {
+    $new_admin_dir = preg_replace('/^[a-zA-Z0-9]/', '', $_POST['admin_directory']);
+    if (!is_dir(DIR_FS_CATALOG.$new_admin_dir)) {
+      if (rename(DIR_FS_CATALOG.trim(DIR_ADMIN, '/'), DIR_FS_CATALOG.$new_admin_dir) === false) {
+        $admin_error = true;
+      }
+    }
+  }  
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
@@ -184,6 +194,11 @@
                           <font color="#000000" size="2" face="Verdana, Arial, Helvetica, sans-serif">
                             <br />
                             <br />
+                            <?php
+                              if ($admin_error === true) {
+                                echo TEXT_ADMIN_DIRECTORY_ERROR;
+                              }
+                            ?>
                             <?php echo TEXT_WS_CONFIGURATION_SUCCESS; ?>
                           </font>
                         </center>
