@@ -484,13 +484,11 @@ if($coo_janolaw->get_status() == true) {
 xtc_count_cart();
 
 /* magnalister v1.0.0 */
-/* committed out till magnalister updated to mysqli
 if (!defined('MAGNA_CALLBACK_MODE') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
 	ob_start();
 	require_once(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
 	magnaExecute('magnaCollectStats');
 	ob_end_clean();
 }
-*/
 /* END magnalister */
 ?>
