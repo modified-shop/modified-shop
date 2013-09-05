@@ -40,6 +40,7 @@ $writeableDirs = array(
   DIR_FS_CATALOG.'images/product_images/popup_images',
   DIR_FS_CATALOG.'images/product_images/thumbnail_images',
   DIR_FS_CATALOG.'images/manufacturers',
+  DIR_FS_CATALOG.'images/icons',
   DIR_FS_CATALOG.'import',
   DIR_FS_CATALOG.'log',
   DIR_FS_CATALOG.'media/content/',
