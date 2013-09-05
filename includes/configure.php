@@ -45,9 +45,13 @@
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset utf8 or latin1
 
+  // admin directory
+  require_once (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
+  set_admin_directory();
+
   // include standard settings
   if (defined('RUN_MODE_ADMIN')) {
-    require (DIR_FS_ADMIN.'includes/paths.php');
+    require (DIR_FS_CATALOG . DIR_ADMIN.'includes/paths.php');
   } else {
     require (DIR_FS_CATALOG.'includes/paths.php');
   }
