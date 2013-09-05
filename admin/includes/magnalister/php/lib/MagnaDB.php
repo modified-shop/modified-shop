@@ -57,7 +57,7 @@ define('MAGNADB_ENABLE_LOGGING', MAGNA_DEBUG && false);
 
 class MagnaDB {
 	private static $instance = NULL;
-	private $link;
+	private $mlink;
 	private $resourcelink;
 	private $selfConnected = false;
 	private $destructed = false;
@@ -86,11 +86,11 @@ class MagnaDB {
 	/**
 	 * Class constructor
 	 */
-	private function __construct($link = 'db_link') {
-		global $$link, $_MagnaSession, $_MagnaShopSession;
+	private function __construct($mlink = 'mdb_link') {
+		global $$mlink, $_MagnaSession, $_MagnaShopSession;
 
-		$this->link          = &$link;
-		$this->resourcelink  = &$$link;
+		$this->link          = &$mlink;
+		$this->resourcelink  = &$$mlink;
 		$this->start         = microtime(true);
 		$this->count         = 0;
 		$this->querytime     = 0;
@@ -129,9 +129,9 @@ class MagnaDB {
 	/**
 	 * Singleton - gets Instance
 	 */
-	public static function gi($link = 'db_link') {
+	public static function gi($mlink = 'mdb_link') {
 		if (self::$instance == NULL) {
-			self::$instance = new self($link);
+			self::$instance = new self($mlink);
 		}
 		return self::$instance;
 	}

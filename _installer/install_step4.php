@@ -19,19 +19,15 @@
   require('includes/application.php');
 
   // include Database functions for installer
-  require_once(DIR_FS_INC.'xtc_db_prepare_input.inc.php');
   require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
   require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_close.inc.php');
   require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_num_rows.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_data_seek.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_insert_id.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_free_result.inc.php');
   require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
   require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
   require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+
+  require_once(DIR_FS_INC.'xtc_random_charcode.inc.php');
+  require_once(DIR_FS_INC.'xtc_rand.inc.php');
 
   include('language/'.$lang.'.php');
 
@@ -183,6 +179,11 @@
                     </span>
                     <p><?php echo TEXT_WS_ROOT_INFO; ?></p>
                     <?php //EOF - web28 - 2010.02.20 -  NEW ROOT INFO ?>                    
+                    <p>
+                      <b><?php echo TEXT_ADMIN_DIRECTORY; ?>*</b><br />
+                      <?php echo xtc_draw_input_field_installer('admin_directory', trim(DIR_ADMIN, '/'), '', 'style="width:250px;"'); ?> <br />
+                      <?php echo TEXT_ADMIN_DIRECTORY_LONG . '<b>'.xtc_random_charcode(10).'</b>'; ?>
+                    </p>
                     <table width="100%" border="0" cellpadding="0" cellspacing="0">
                       <tr>                        
                         <td style="border-top: 1px solid; border-color: #CFCFCF">&nbsp;</td>

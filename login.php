@@ -95,11 +95,6 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 
       if (isset($econda) && is_object($econda)) $econda->_loginUser();
       
-      /*
-      echo 'referer: '.$_SESSION['REFERER'];
-      echo 'old: '.$_SESSION['old_customers_basket'];
-      exit();
-      */
       $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, FILENAME_CHECKOUT_SHIPPING, FILENAME_PRODUCT_REVIEWS_WRITE);
       if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket'] === false) {
         xtc_redirect(xtc_href_link($_SESSION['REFERER'], xtc_get_all_get_params(array('review_prod_id', 'action')).(isset($_GET['review_prod_id']) ? 'products_id=' .$_GET['review_prod_id'] : ''))); 

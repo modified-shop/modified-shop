@@ -30,8 +30,6 @@ $file_contents =
 '// defines for admin' . PHP_EOL .
 '  define(\'HTTP_CATALOG_SERVER\', HTTP_SERVER);' . PHP_EOL .
 '  define(\'HTTPS_CATALOG_SERVER\', HTTPS_SERVER);' . PHP_EOL .
-'  define(\'DIR_WS_ADMIN\', DIR_WS_CATALOG.\'admin/\');' . PHP_EOL .
-'  define(\'DIR_FS_ADMIN\', DIR_FS_DOCUMENT_ROOT.\'admin/\');' . PHP_EOL .
 '' . PHP_EOL .
 '// secure SSL' . PHP_EOL .
 '  define(\'ENABLE_SSL\', ' . (($_POST['ENABLE_SSL'] == 'true') ? 'true' : 'false') . '); // secure webserver for checkout procedure?' . PHP_EOL .
@@ -48,11 +46,17 @@ $file_contents =
 '  define(\'STORE_SESSIONS\', \'' . (($_POST['STORE_SESSIONS'] == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
 '  define(\'DB_SERVER_CHARSET\', \'' . DB_SERVER_CHARSET . '\'); // set db charset \'utf8\' or \'latin1\'' . PHP_EOL . 
 '' . PHP_EOL .
-'// include standard settings' . PHP_EOL .
-'  if (defined(\'RUN_MODE_ADMIN\')) {' . PHP_EOL .
-'    require (DIR_FS_ADMIN.\'includes/paths.php\');' . PHP_EOL .
-'  } else {' . PHP_EOL .
-'    require (DIR_FS_CATALOG.\'includes/paths.php\');' . PHP_EOL .
+'  if (DB_DATABASE != \'\') {' . PHP_EOL . 
+'  // admin directory' . PHP_EOL . 
+'    require_once (DIR_FS_CATALOG . \'inc/set_admin_directory.inc.php\');' . PHP_EOL .
+'    set_admin_directory();' . PHP_EOL .
+'' . PHP_EOL .
+'  // include standard settings' . PHP_EOL .
+'    if (defined(\'RUN_MODE_ADMIN\')) {' . PHP_EOL .
+'      require (DIR_FS_CATALOG.DIR_ADMIN.\'includes/paths.php\');' . PHP_EOL .
+'    } else {' . PHP_EOL .
+'      require (DIR_FS_CATALOG.\'includes/paths.php\');' . PHP_EOL .
+'    }' . PHP_EOL .
 '  }' . PHP_EOL .
 '?>';
 ?>
