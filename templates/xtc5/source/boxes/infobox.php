@@ -25,7 +25,7 @@ $box_smarty->assign('tpl_path', 'templates/' . CURRENT_TEMPLATE . '/');
 $box_content = '';
 
 if ($_SESSION['customers_status']['customers_status_image'] != '') {
-	$loginboxcontent = xtc_image('admin/images/icons/' . $_SESSION['customers_status']['customers_status_image']) . '<br />';
+	$loginboxcontent = xtc_image('images/icons/' . $_SESSION['customers_status']['customers_status_image']) . '<br />';
 }
 $loginboxcontent .= BOX_LOGINBOX_STATUS . ' <strong>' . $_SESSION['customers_status']['customers_status_name'] . '</strong><br />';
 if ($_SESSION['customers_status']['customers_status_show_price'] == 0) {
