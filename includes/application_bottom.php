@@ -41,6 +41,18 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require_once (DIR_FS_EXTERNAL . 'econda/econda.php');
 }
 
+/******** Findologic **********/
+if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
+  echo '
+  <script
+      type="text/javascript"
+      src="https://secure.findologic.com/autocomplete/require.js"
+      data-main="https://secure.findologic.com/autocomplete/A21478CDF6DAA6580D38AF3018A2F413/autocomplete.js">
+  </script>
+  ';
+}
+/******** Findologic **********/
+
 // end of page
 echo '</body>';
 echo '</html>';
