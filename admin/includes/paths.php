@@ -10,6 +10,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  // admin directory
+  define('DIR_WS_ADMIN', DIR_WS_CATALOG.DIR_ADMIN);
+  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.DIR_ADMIN);
+
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
   define('DIR_FS_CATALOG_ORIGINAL_IMAGES', DIR_FS_CATALOG_IMAGES .'product_images/original_images/');
@@ -47,7 +51,4 @@
   define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
 
-  // admin directory
-  define('DIR_WS_ADMIN', DIR_WS_CATALOG.DIR_ADMIN);
-  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.DIR_ADMIN);
 ?>
