@@ -87,7 +87,7 @@ class MasterpaymentActions
 				$order_id = $this->getOrderId();
 	
 				$check_query = xtc_db_query('select masterpayment_status from ' . TABLE_ORDERS . ' where orders_id = "' . xtc_db_input($order_id) . '" limit 1');
-				$num_check = mysql_num_rows($check_query);
+				$num_check = xtc_db_num_rows($check_query);
 				
 				if($num_check > 0)
 				{
@@ -132,7 +132,7 @@ class MasterpaymentActions
 			$_order_id = (int)$this->getOrderId();
 			
 			$check_payment = xtc_db_query("select masterpayment_status from " . TABLE_ORDERS . " where orders_id = '".xtc_db_input($_order_id)."' limit 1");
-			$num_check = mysql_num_rows($check_payment);
+			$num_check = xtc_db_num_rows($check_payment);
 			
 			if($num_check < 1)
 			{

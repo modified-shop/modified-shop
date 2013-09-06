@@ -137,7 +137,7 @@ class debug {
 
         case 'sqltime': {
           try {
-            if (mysql_get_server_info() >= '5.0.37') { //Mysql from Version 5.0.37 required for this feature
+            if (xtc_db_get_server_info() >= '5.0.37') { //Mysql from Version 5.0.37 required for this feature
               //Start mysql profiling before executing a query
               xtc_db_query("SET profiling = 1");
             }
@@ -151,12 +151,12 @@ class debug {
             $phptime = round($phptime_end - $phptime_start, 8); //round precision 10^-8
 
             if (!empty($sql_result)) {
-              $firephp->group('MYSQL_DUMP ('. mysql_get_server_info().') => '.$sql_result);
+              $firephp->group('MYSQL_DUMP ('. xtc_db_get_server_info().') => '.$sql_result);
               $firephp->info($variables, 'SQL-Query');
               $firephp->info($phptime, 'SQL-Query Time (+PHP Overhead)');
 
               //Display the measured time, SQL requires for the SQL-Query
-              if (mysql_get_server_info() >= '5.0.37') {
+              if (xtc_db_get_server_info() >= '5.0.37') {
                 $sql_profile = xtc_db_query("SHOW PROFILES"); //precision is 10^-8
                 while($sql_time_row = xtc_db_fetch_array($sql_profile)) {
                   $firephp->info($sql_time_row['Duration'], 'SQL-Query Time (-PHP Overhead)');
