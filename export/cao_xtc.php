@@ -119,8 +119,8 @@ define('USE_VPE',false);
 // Emails beim Kundenanlegen versenden ?
 define('SEND_ACCOUNT_MAIL',false);
 
-// Die Route entfernen um Fehlermeldung bzgl. des Logins darzustellen.
-#define('CAO_DEBUG_LOGIN', 'true);
+// Das Doppelkreuz entfernen um Fehlermeldung bzgl. des Logins darzustellen.
+#define('CAO_DEBUG_LOGIN', 'true');
 
 // Default-Sprache
 $LangID = 2;
