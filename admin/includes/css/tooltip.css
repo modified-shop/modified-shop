@@ -1,0 +1,26 @@
+.tooltip {
+position: relative;
+/*border-bottom: 1px dotted #C20; */
+cursor: pointer;
+}
+.tooltip:hover {
+text-decoration:none;
+z-index: 1;
+}
+.tooltip em {
+display: none;
+}
+.tooltip:hover em {
+display: block;
+position: absolute;
+width: 420px; 
+color: #000044; /*#D3A7A7;*/
+font-size: 12px;
+font-style: normal;
+border: 1px solid #000; /*2px solid #00ACE6;*/
+padding: 3px;
+background: #FFFFCC; /*#4B4B4E;*/
+/*left: 110%; 
+top: 0;*/
+bottom: 20px;
+}

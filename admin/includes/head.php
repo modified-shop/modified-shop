@@ -27,6 +27,7 @@
   <meta http-equiv="pragma" content="no-cache">
   <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">  
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
