@@ -112,7 +112,7 @@
 			} else {
 				$content = http_request($url);
 			}
-			if (strlen($content) == 0) $do_findologic_search = false;
+			if (strlen($content)-strlen($_GET['keywords']) <= NO_RESULT_LENGTH) $do_findologic_search = false;
 		}
 
 		if (!$do_findologic_search) {
@@ -130,7 +130,7 @@
 			    || (isset($_GET['keywords']) && xtc_not_null($_GET['keywords']))) 
 			{
 			  $action = FILENAME_ADVANCED_SEARCH_RESULT;
-			  $params = 'f=true&'
+			  $params = 'f=true&';
 			  if (isset($_GET['search']) && xtc_not_null($_GET['search'])) {
 			    $params .= 'keywords='.$_GET['search'];
 			  } else {
