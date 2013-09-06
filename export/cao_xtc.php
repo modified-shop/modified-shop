@@ -43,6 +43,7 @@
 * (c) 2003 www.websl.de, Karl Langmann                                                         *
 * (c) 2003 RV-Design Raphael Vullriede                                                         *
 * (c) 2004 XT-Commerce                                                                         *
+* (c) 2009 - 2013 modified eCommerce Shopsoftware - www.modified-shop.org                      *
 *                                                                                              *
 * Released under the GNU General Public License                                                *
 *                                                                                              *
@@ -118,6 +119,9 @@ define('USE_VPE',false);
 // Emails beim Kundenanlegen versenden ?
 define('SEND_ACCOUNT_MAIL',false);
 
+// Die Route entfernen um Fehlermeldung bzgl. des Logins darzustellen.
+#define('CAO_DEBUG_LOGIN', 'true);
+
 // Default-Sprache
 $LangID = 2;
 $Lang_folder = 'german';
@@ -147,32 +151,24 @@ define ('_VALID_XTC',false);
 
 require('../includes/application_top_export.php');
 
+// Die Ausgabe von Fehlern bezüglich des Logins unterdruecken
+$debug_login = (defined('CAO_DEBUG_LOGIN') && CAO_DEBUG_LOGIN == 'true' ? true : false);
+
 // Kundengruppen ID für Neukunden (default "neue Kunden einstellungen in XTC")
 define('STANDARD_GROUP',DEFAULT_CUSTOMERS_STATUS_ID);
 
-//KL02062005
-if (file_exists(DIR_FS_DOCUMENT_ROOT.'admin/includes/classes/image_manipulator.php'))
-{
-  // für XTC 2.x
-  include(DIR_FS_DOCUMENT_ROOT.'admin/includes/classes/image_manipulator.php');
-} else {
-  // für XTC ab 3.x
-  include(DIR_FS_DOCUMENT_ROOT.'admin/includes/classes/'.IMAGE_MANIPULATOR);
-} //KL02062005_ENDE
+include(DIR_FS_DOCUMENT_ROOT.'admin/includes/classes/'.IMAGE_MANIPULATOR);
 
-if ((isset($_POST['user']))and(isset($_POST['password']))) 
-{
-   $user=$_POST['user'];
-   $password=$_POST['password'];
-} 
-  else 
-{
-   $user=$_GET['user'];
-   $password=$_GET['password'];
+
+if ((isset($_POST['user']))and(isset($_POST['password']))) {
+   $user = $_POST['user'];
+   $password = $_POST['password'];
+} else {
+   $user = $_GET['user'];
+   $password = $_GET['password'];
 }
 
-if ($user=='' or $password=='')
-{
+if ($user == '' || $password == '') {
 ?>
 <html><head><title></title></head><body>
 <h3><a href="http://www.cao-faktura.de">CAO-Faktura - modified eCommerce Shopsoftware Anbindung</a></h3>
@@ -184,50 +180,44 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
 </body></html>
 <?php
   exit;
-}
-  else
-{
+
+} else {
+
   require ('cao_xtc_functions.php');
   
   // security  1.check if admin user with this mailadress exits, and got access to xml-export
   //           2.check if pasword = true
-  if (column_exists ('admin_access','xml_export')==false)
-  {
+  if (column_exists ('admin_access','xml_export')==false) {
      xtc_db_query('ALTER TABLE admin_access ADD xml_export INT(1)  DEFAULT "0";');
      xtc_db_query('UPDATE admin_access SET xml_export= 1 WHERE customers_id=\'1\';');
   }
  
-  $check_customer_query=xtc_db_query("select customers_id,
-                                      customers_status,
-                                      customers_password
-                                      from " . TABLE_CUSTOMERS . " where
-                                      customers_email_address = '" . xtc_db_input($user) . "'"); // 2011-08-21 - h-h-h - SQL Injection FIX
+  $check_customer_query = xtc_db_query("SELECT customers_id, customers_status, customers_password
+                                          FROM " . TABLE_CUSTOMERS . "
+                                         WHERE customers_email_address = '" . xtc_db_input($user) . "'");
 
-  if (!xtc_db_num_rows($check_customer_query))
-  {
+  if (!xtc_db_num_rows($check_customer_query)) {
+    if (!$debug_login) exit;
     SendXMLHeader ();
     print_xml_status (105, $_POST['action'], 'WRONG LOGIN', '', '', '');	 
     exit; 
-  }
-    else
-  {
+  } else {
     $check_customer = xtc_db_fetch_array($check_customer_query);
     // check if customer is Admin
-    if ($check_customer['customers_status']!='0') 
-    {
+    if ($check_customer['customers_status'] != '0') {
+      if (!$debug_login) exit;
       SendXMLHeader ();
       print_xml_status (106, $_POST['action'], 'WRONG LOGIN', '', '', '');	  
       exit;
     }
 
     // check if Admin is allowed to access xml_export
-    $access_query=xtc_db_query("SELECT
-                                xml_export
-                                from admin_access
-                                WHERE customers_id='".$check_customer['customers_id']."'");
+    $access_query=xtc_db_query("SELECT xml_export
+                                  FROM admin_access
+                                 WHERE customers_id='".$check_customer['customers_id']."'");
     $access_data = xtc_db_fetch_array($access_query);
-    if ($access_data['xml_export']!=1) 
-    {
+    if ($access_data['xml_export'] != 1) {
+      if (!$debug_login) exit;
       SendXMLHeader ();
       print_xml_status (107, $_POST['action'], 'WRONG LOGIN', '', '', '');
       exit;
@@ -236,8 +226,8 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
     if (!( ($check_customer['customers_password'] == $password) or 
              ($check_customer['customers_password'] == md5($password)) or
              ($check_customer['customers_password'] == md5(substr($password,2,40)))
-       ))
-    {
+       )) {
+      if (!$debug_login) exit;
       SendXMLHeader ();
       print_xml_status (108, $_POST['action'], 'WRONG PASSWORD', '', '', '');	  	
       exit;
@@ -246,203 +236,167 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
 }
 
 
-if ($_SERVER['REQUEST_METHOD']=='GET') 
-{
+if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   switch ($_GET['action']) 
   {
      case 'version':        // Ausgabe Scriptversion
-     
        SendXMLHeader ();
        SendScriptVersion ();
        exit; 
      
      case 'categories_export':
-     
        SendXMLHeader ();
        SendCategories ();
        exit;
      
      case 'manufacturers_export':
-     
        SendXMLHeader ();
        SendManufacturers ();
        exit;
      
      case 'orders_export':
-     
        SendXMLHeader ();
        SendOrders ();
        exit;
      
      case 'products_export':
-     
        SendXMLHeader ();
        SendProducts ();
        exit;
      
      case 'customers_export':
-     
        SendXMLHeader ();
        SendCustomers ();
        exit;
      
      case 'customers_newsletter_export':
-     
        SendXMLHeader ();
        SendCustomersNewsletter ();
        exit;
      
      case 'config_export':
-     
        SendXMLHeader ();
        SendShopConfig ();
        exit;
        
      case 'update_tables':
-     
        UpdateTables ();
        exit;
        
      case 'send_log':
-     
        SendLog ();
        exit;
        
-     default :     
-       
+     default:
        ShowHTMLMenu ();
        exit;
        
-   } // End Case   
-} // End Method POST
- else 
-{
-  if ($_SERVER['REQUEST_METHOD']=='POST') 
-  {
+   } // End Case  
+   
+} elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
     switch ($_POST['action']) 
     {
       case 'manufacturers_image_upload':
-     
         SendXMLHeader ();
         ManufacturersImageUpload ();
         exit;
      
      case 'categories_image_upload':
-     
         SendXMLHeader ();
         CategoriesImageUpload ();
         exit;
      
      case 'products_image_upload':
-     
         SendXMLHeader ();
         ProductsImageUpload ();
         exit;   
         
      case 'products_image_upload_med':
-     
         SendXMLHeader ();
         ProductsImageUploadMed ();
         exit;   
         
      case 'products_image_upload_large':
-     
         SendXMLHeader ();
         ProductsImageUploadLarge ();
         exit;   
         
      case 'manufacturers_update':
-     
         SendXMLHeader ();
         ManufacturersUpdate ();
         exit;   
         
       case 'manufacturers_erase':
-     
         SendXMLHeader ();
         ManufacturersErase ();
         exit;   
         
       case 'products_update':
-        
         SendXMLHeader ();
         ProductsUpdate ();
         exit;
         
       case 'products_erase':
-        
         SendXMLHeader ();
         ProductsErase ();
         exit;
         
       case 'products_specialprice_update':
-        
         SendXMLHeader ();
         ProductsSpecialPriceUpdate ();
         exit;
         
-      case 'products_specialprice_erase':  
-        
+      case 'products_specialprice_erase':
         SendXMLHeader ();
         ProductsSpecialPriceErase ();
         exit;
         
       case 'categories_update':
-        
         SendXMLHeader ();
         CategoriesUpdate ();
         exit;
         
       case 'categories_erase':
-        
         SendXMLHeader ();  
         CategoriesErase ();
         exit;
         
       case 'prod2cat_update':
-
         SendXMLHeader ();  
         Prod2CatUpdate ();
         exit;
 
       case 'prod2cat_erase':
-
         SendXMLHeader ();  
         Prod2CatErase ();
         exit;
         
       case 'order_update':
-      
         SendXMLHeader ();  
         OrderUpdate ();
         exit;
         
       case 'customers_update':
-      
         SendXMLHeader ();  
         CustomersUpdate ();
         exit;
       
       case 'customers_erase':
-      
         SendXMLHeader ();  
         CustomersErase ();
         exit;
         
       case 'xsell_update':
-     
         SendXMLHeader ();
         XsellUpdate ();
         exit;
        
       case 'xsell_erase':
-     
         SendXMLHeader ();
         XsellErase ();
         exit;  
           
     } // End Case
-  }  // End Method POST
 }
 
 ?>
