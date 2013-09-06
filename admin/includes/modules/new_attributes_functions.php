@@ -43,8 +43,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
                                        products_attributes_filename,
                                        products_attributes_maxcount
                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
-                                 WHERE products_attributes_id = '" . $line['products_attributes_id'] . "'")
-                                 or die(mysql_error());
+                                 WHERE products_attributes_id = '" . $line['products_attributes_id'] . "'");
         $attr_dl_array = xtc_db_fetch_array($dl_sql);
         // download function end
       }
