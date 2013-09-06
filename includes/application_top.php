@@ -77,7 +77,7 @@ include_once(DIR_WS_CLASSES.FILENAME_DEBUG);
 $log = new debug;
 
 // SSEQ-Lib integration - call SSEQ earlier
-require_once (DIR_FS_EXTERNAL . 'sseq-lib/seq_lib.php');
+// require_once (DIR_FS_EXTERNAL . 'sseq-lib/seq_lib.php');
 
 // solve compatibility issues
 require_once (DIR_WS_FUNCTIONS.FILENAME_COMPATIBILITY);
