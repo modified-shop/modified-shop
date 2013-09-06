@@ -277,7 +277,7 @@
     $res=xtc_db_query($sql);
     if ($res) {
       $insert='INSERT INTO `'.$table.'` (';
-      while ($row=mysql_fetch_object($res)) {
+      while ($row=xtc_db_fetch_object($res)) {
         $insert.='`'.$row->Field.'`,';
       }
       $insert=substr($insert,0,strlen($insert)-1).') ';

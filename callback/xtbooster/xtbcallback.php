@@ -16,7 +16,7 @@ function xsb_db_affected_rows() {
 	if (is_object($db) && method_exists($db, 'Affected_Rows')) {
 		return $db->Affected_Rows();
 	}
-	return mysql_affected_rows();
+	return xtc_db_affected_rows();
 }
 
 function xsb_session_register($var) {

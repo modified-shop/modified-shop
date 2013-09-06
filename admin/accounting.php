@@ -28,13 +28,13 @@
                                               FROM " . TABLE_ADMIN_ACCESS . "
                                              WHERE customers_id = '" . (int)$_GET['cID'] . "'");
         $admin_access = xtc_db_fetch_array($admin_access_query);
-        $fields = mysql_list_fields(DB_DATABASE, TABLE_ADMIN_ACCESS);
-        $columns = mysql_num_fields($fields);
-        for ($i = 0; $i < $columns; $i++) {
-          $field=mysql_field_name($fields, $i);
-          if ($field!='customers_id') {
-            xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS."
-                             SET ".$field."=0
+        $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
+        $columns = xtc_db_num_rows($fields);
+
+        while ($field = xtc_db_fetch_array($fields)) {
+          if ($field['Field'] != 'customers_id') {
+            xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." 
+                             SET ".$field['Field']."='0'
                            WHERE customers_id='".(int)$_GET['cID']."'");
           }
         }
@@ -194,16 +194,18 @@ require (DIR_WS_INCLUDES.'head.php');
                                                   WHERE customers_id = 'groups'");
                     $group_access = xtc_db_fetch_array($group_query); // DokuMan - 2011-07-26 - fixed $group_access array - thx to Webkiste
 
-                    $fields = mysql_list_fields(DB_DATABASE, TABLE_ADMIN_ACCESS);
-                    $columns = mysql_num_fields($fields);
-                    for ($i = 0; $i < $columns; $i++) {
-                      $field=mysql_field_name($fields, $i);
-                      if ($field!='customers_id') {
+                    $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
+                    $columns = xtc_db_num_rows($fields);
+
+                    while ($field = xtc_db_fetch_array($fields)) {
+                      if ($field['Field'] != 'customers_id') {
                         $checked='';
-                        if ($admin_access[$field] == '1')
+                        if ($admin_access[$field['Field']] == '1') {
                           $checked='checked';
+						}
+						
                         // colors
-                        switch ($group_access[$field]) {
+                        switch ($group_access[$field['Field']]) {
                           case '1':
                             $color='#FF6969';
                             break;
@@ -224,8 +226,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                   '.xtc_draw_separator('pixel_trans.gif',15, 15).'
                                 </td>
                                 <td width="100%" class="dataTableContentRow">
-                                  <input type="checkbox" name="access[]" value="'.$field.'"'.$checked.' />
-                                  '.$field.'
+                                  <input type="checkbox" name="access[]" value="'.$field['Field'].'"'.$checked.' />
+                                  '.$field['Field'].'
                                 </td>
                                 <td>
                                 </td>

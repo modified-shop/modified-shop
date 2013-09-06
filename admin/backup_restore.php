@@ -105,9 +105,9 @@
     unset($_SESSION['dump']);
     xtc_set_time_limit(0);
     //BOF Disable "STRICT" mode!
-    $vers = @mysql_get_client_info();
+    $vers = @xtc_db_get_client_info();
     if(substr($vers,0,1) > 4) {
-      @mysql_query("SET SESSION sql_mode=''");
+      @xtc_db_query("SET SESSION sql_mode=''");
     }
     //EOF Disable "STRICT" mode!
     $restore['file'] = DIR_FS_BACKUP . $_GET['file'];
@@ -159,17 +159,17 @@
 
     // Disable Keys of actual table to speed up restoring
     if (sizeof($restore['tables_to_restore'])==0 && ($restore['actual_table'] > ''&& $restore['actual_table']!='unbekannt'))
-      @mysql_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
+      @xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
     while (($a < $restore['anzahl_zeilen']) && (!$restore['fileEOF']) && !$restore['EOB']) {
       xtc_set_time_limit(0);
       $sql_command = get_sqlbefehl();
       //Echo $sql_command;
       if ($sql_command > '') {
         if (!RESTORE_TEST) {
-          $res = mysql_query($sql_command);
+          $res = xtc_db_query($sql_command);
           if ($res===false) {
             // Bei MySQL-Fehlern sofort abbrechen und Info ausgeben
-            $meldung=@mysql_error;
+            $meldung=((defined('DB_MYSQL_TYPE') && DB_MYSQL_TYPE=='mysqli') ? @xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link)) : @xtc_db_error($query, mysql_errno($$link), mysql_error($$link)));
             if ($meldung!='')
               die($sql_command.' -> '.$meldung);
           }
