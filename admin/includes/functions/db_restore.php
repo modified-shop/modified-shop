@@ -289,17 +289,17 @@ function submit_create_action($sql)
 	*/
 	
 	if (!RESTORE_TEST) {
-		$res=@mysql_query($sql);
+		$res=@xtc_db_query($sql);
 		if ($res===false)
 		{
 			// erster Versuch fehlgeschlagen -> zweiter Versuch - vielleicht versteht der Server die Inline-Kommentare nicht?
 			$sql=del_inline_comments($sql);
-			$res=@mysql_query(downgrade($sql));
+			$res=@xtc_db_query(downgrade($sql));
 			if ($res===false)
 			{
 				// wieder nichts. Ok, haben wir hier einen alten MySQL-Server 3.x oder 4.0.x?			
 				// versuchen wir es mal mit der alten Syntax
-				$res=@mysql_query(downgrade($sql));
+				$res=@xtc_db_query(downgrade($sql));
 			}
 		}
 		if ($res===false)
@@ -317,11 +317,11 @@ function get_insert_syntax($table)
 {
 	$insert='';
 	$sql='SHOW COLUMNS FROM `'.$table.'`';	
-	$res=mysql_query($sql);
+	$res=xtc_db_query($sql);
 	if ($res)
 	{
 		$insert='INSERT INTO `'.$table.'` (';
-		while ($row=mysql_fetch_object($res))
+		while ($row=xtc_db_fetch_object($res))
 		{
 			$insert.='`'.$row->Field.'`,';
 		}

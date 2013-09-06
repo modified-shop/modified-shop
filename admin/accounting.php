@@ -23,22 +23,20 @@
 
 
       // reset values before writing
-       $admin_access_query = xtc_db_query("select * from " . TABLE_ADMIN_ACCESS . " where customers_id = '" . (int)$_GET['cID'] . "'");
-       $admin_access = xtc_db_fetch_array($admin_access_query);
+      $admin_access_query = xtc_db_query("select * from " . TABLE_ADMIN_ACCESS . " where customers_id = '" . (int)$_GET['cID'] . "'");
+      $admin_access = xtc_db_fetch_array($admin_access_query);
 
-       $fields = mysql_list_fields(DB_DATABASE, TABLE_ADMIN_ACCESS);
-       $columns = mysql_num_fields($fields);
+      $fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
+      $columns = xtc_db_num_rows($fields);
 
-		for ($i = 0; $i < $columns; $i++) {
-             $field=mysql_field_name($fields, $i);
-                    if ($field!='customers_id') {
+      while ($field = xtc_db_fetch_array($fields)) {
+        if ($field['Field'] != 'customers_id') {
+          xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." 
+                           SET ".$field['Field']."='0'
+                         WHERE customers_id='".(int)$_GET['cID']."'");
 
-                    xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET
-                                  ".$field."=0 where customers_id='".(int)$_GET['cID']."'");
-    		}
         }
-
-
+      }
 
       $access_ids='';
         if(isset($_POST['access'])) foreach($_POST['access'] as $key){
@@ -164,17 +162,18 @@ function set_checkbox (set) {
       $admin_access = xtc_db_fetch_array($admin_access_query);
     }
 
-$fields = mysql_list_fields(DB_DATABASE, TABLE_ADMIN_ACCESS);
-$columns = mysql_num_fields($fields);
+$fields = xtc_db_query("SHOW COLUMNS FROM `".TABLE_ADMIN_ACCESS."` FROM `".DB_DATABASE."`");
+$columns = xtc_db_num_rows($fields);
 
-for ($i = 0; $i < $columns; $i++) {
-    $field=mysql_field_name($fields, $i);
-    if ($field!='customers_id') {
+while ($field = xtc_db_fetch_array($fields)) {
+  if ($field['Field'] != 'customers_id') {
     $checked='';
-    if ($admin_access[$field] == '1') $checked='checked';
-
+    if ($admin_access[$field['Field']] == '1') {
+      $checked='checked';
+    }
+    
     // colors
-    switch ($group_access[$field]) {
+    switch ($group_access[$field['Field']]) {
             case '1':
             $color='#FF6969';
             break;
@@ -191,11 +190,12 @@ for ($i = 0; $i < $columns; $i++) {
             $color='#FFE6A8';
 
     }
+    
     echo '<tr class="dataTable">
     <td style="border: 1px solid; border-color: #000000;" width="10" bgcolor="'.$color.'" >'.xtc_draw_separator('pixel_trans.gif',15, 15).'</td>
         <td width="100%" class="dataTableContentRow">
-        <input type="checkbox" name="access[]" value="'.$field.'"'.$checked.'>
-        '.$field.'</td>
+        <input type="checkbox" name="access[]" value="'.$field['Field'].'"'.$checked.'>
+        '.$field['Field'].'</td>
         <td></td></tr>';
     }
 }

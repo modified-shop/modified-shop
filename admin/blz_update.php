@@ -140,8 +140,8 @@ $blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Kernge
             $sql = sprintf('insert into banktransfer_blz (blz, bankname, prz) values (%s, \'%s\', \'%s\')',
            (int)$rec['blz'], xtc_db_input($rec['bankname']), xtc_db_input($rec['prz']));
             xtc_db_query($sql);
-            if(mysql_affected_rows() != 0) {
-              $j = $j + mysql_affected_rows(); // sum up affected rows
+            if(xtc_db_affected_rows() != 0) {
+              $j = $j + xtc_db_affected_rows(); // sum up affected rows
             }
           }
           echo '<span class="messageStackSuccess">'.$j.BLZ_UPDATE_SUCCESS_TEXT.'</span>';

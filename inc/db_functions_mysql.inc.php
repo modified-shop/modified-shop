@@ -33,6 +33,32 @@
   }
 
 
+  function xtc_db_get_client_info($link='db_link') {
+    global $$link;
+
+    return mysql_get_client_info();
+  }
+
+
+  function xtc_db_get_server_info($link='db_link') {
+    global $$link;
+
+    return mysql_get_server_info($$link);
+  }
+
+
+  function xtc_db_fetch_object($db_query) {
+    return mysql_fetch_object($db_query);
+  }
+
+
+  function xtc_db_affected_rows($link='db_link') {
+    global $$link;
+
+    return mysqli_affected_rows($$link);
+  }
+
+
   function xtc_db_insert_id($link='db_link') {
     global $$link;
 
@@ -53,7 +79,7 @@
       $$link = @mysql_connect($server, $username, $password);
     }
 
-    if(version_compare(@mysql_get_server_info(), '5.0.0', '>=')) {
+    if(version_compare(@xtc_db_get_server_info(), '5.0.0', '>=')) {
       @mysql_query("SET SESSION sql_mode=''");
     }
 
@@ -63,7 +89,7 @@
         die();
       }
     } else {
-      xtc_db_error('', mysql_errno(), mysql_error());
+      xtc_db_error('', mysql_errno($$link), mysql_error($$link));
       die();
     }
 
@@ -137,7 +163,7 @@
   }
 
 
-  function xtc_db_fetch_array(&$db_query, $cq=false) {
+  function xtc_db_fetch_array(&$db_query, $cq=false, $result_type='MYSQL_ASSOC') {
 
     if ($db_query === false) {
       return false;
@@ -155,7 +181,30 @@
         next($db_query);
         return $curr;
       }
-      return mysql_fetch_array($db_query, MYSQL_ASSOC);
+      return mysql_fetch_array($db_query, $result_type);
+    }
+  }
+
+
+  function xtc_db_fetch_row(&$db_query, $cq=false) {
+
+    if ($db_query === false) {
+      return false;
+    }
+    if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
+      if (!is_array($db_query) || !count($db_query)) {
+        return false;
+      }
+      $curr = current($db_query);
+      next($db_query);
+      return $curr;
+    } else {
+      if (is_array($db_query)) {
+        $curr = current($db_query);
+        next($db_query);
+        return $curr;
+      }
+      return mysql_fetch_row($db_query);
     }
   }
 
@@ -167,7 +216,7 @@
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
     
-    $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
+    $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno($$link), mysql_error($$link));
 
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
       $queryEndTime = array_sum(explode(" ",microtime())); 
@@ -176,7 +225,7 @@
       if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
         error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
       }
-      $result_error = mysql_error();
+      $result_error = mysql_error($$link);
       if ($result_error) {
         error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
       }
@@ -213,7 +262,7 @@
         if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
           error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY CACHED ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }
-        $result_error = mysql_error();
+        $result_error = mysql_error($$link);
         if ($result_error) {
           error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR CACHED ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }
@@ -228,7 +277,7 @@
       }
 
       // get result from DB and create new file
-      $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno(), mysql_error());
+      $result = mysql_query($query, $$link) or xtc_db_error($query, mysql_errno($$link), mysql_error($$link));
 
       if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
         $queryEndTime = array_sum(explode(" ",microtime())); 
@@ -236,7 +285,7 @@
         if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
           error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }
-        $result_error = mysql_error();
+        $result_error = mysql_error($$link);
         if ($result_error) {
           error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }

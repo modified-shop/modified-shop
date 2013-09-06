@@ -155,8 +155,8 @@
                     // Paypal Express Modul
                     if(defined('TABLE_PAYPAL')) {
                       $db_installed = false;
-                      $tables = mysql_query('SHOW TABLES FROM `' . DB_DATABASE . '`');
-                      while ($row = mysql_fetch_row($tables)) {
+                      $tables = xtc_db_query('SHOW TABLES FROM `' . DB_DATABASE . '`');
+                      while ($row = xtc_db_fetch_row($tables)) {
                         if ($row[0] == TABLE_PAYPAL) $db_installed = true;
                       }
                       if ($db_installed) {

@@ -68,8 +68,8 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   function GetTableInfo($table) {
     //BOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER -  functions_dump.php line 133
     $data = "DROP TABLE IF EXISTS `$table`;\n";
-    $res = mysql_query('SHOW CREATE TABLE `'.$table.'`');
-    $row = @mysql_fetch_row($res);
+    $res = xtc_db_query('SHOW CREATE TABLE `'.$table.'`');
+    $row = @xtc_db_fetch_row($res);
     $data .= $row[1].';'."\n\n";
     $data .= "/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\n";
     //EOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER
@@ -78,8 +78,8 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
 
     //Datensaetze feststellen
     $sql="SELECT count(*) as `count_records` FROM `".$table."`";
-    $res=@mysql_query($sql);
-    $res_array = mysql_fetch_array($res);
+    $res=@xtc_db_query($sql);
+    $res_array = xtc_db_fetch_array($res);
 
     return $res_array['count_records'];
   }
@@ -90,13 +90,13 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) && ($table != TABLE_ADMIN_ACTIVITY_LOG) ) {
 
       $table_list = array();
-      $fields_query = mysql_query("SHOW COLUMNS FROM " . $table);
-      while ($fields = mysql_fetch_array($fields_query)) {
+      $fields_query = xtc_db_query("SHOW COLUMNS FROM " . $table);
+      while ($fields = xtc_db_fetch_array($fields_query)) {
         $table_list[] = $fields['Field'];
       }
 
-      $rows_query = mysql_query('select `' . implode('`,`', $table_list) . '` from '.$table . ' limit '.$dump['zeilen_offset'].','.($dump['anzahl_zeilen']));
-      $ergebnisse = @mysql_num_rows($rows_query);
+      $rows_query = xtc_db_query('select `' . implode('`,`', $table_list) . '` from '.$table . ' limit '.$dump['zeilen_offset'].','.($dump['anzahl_zeilen']));
+      $ergebnisse = @xtc_db_num_rows($rows_query);
 
       $data = '';
 
@@ -113,14 +113,14 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
         //BOF Complete Inserts ja/nein
         if ($_SESSION['dump']['complete_inserts'] == 'yes') {
 
-          while ($rows = mysql_fetch_array($rows_query)) {
+          while ($rows = xtc_db_fetch_array($rows_query)) {
             $insert = 'INSERT INTO `'.$table.'` (`' . implode('`, `', $table_list) . '`) VALUES (';
             foreach ($table_list as $column) {
               //EOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER -functions_dump.php line 186
               if (!isset($rows[$column])) {
                 $insert.='NULL,';
               } else if ($rows[$column]!='') {
-                $insert.='\''.mysql_real_escape_string($rows[$column]).'\',';
+                $insert.='\''.xtc_db_input($rows[$column]).'\',';
               } else {
                 $insert.='\'\',';
               }
@@ -131,14 +131,14 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
         } else {
 
           $lines = array();
-          while ($rows = mysql_fetch_array($rows_query)) {
+          while ($rows = xtc_db_fetch_array($rows_query)) {
             $values=array();
             foreach ($table_list as $column) {
               //EOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER
               if (!isset($rows[$column])) {
                 $values[] ='NULL';
               } else if ($rows[$column]!='') {
-                $values[] ='\''.mysql_real_escape_string($rows[$column]).'\'';
+                $values[] ='\''.xtc_db_input($rows[$column]).'\'';
               } else {
                 $values[] ='\'\'';
               }
@@ -176,14 +176,14 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     @xtc_set_time_limit(0);
 
     //BOF Disable "STRICT" mode!
-    $vers = @mysql_get_client_info();
+    $vers = @xtc_db_get_client_info();
     if(substr($vers,0,1) > 4) {
-      @mysql_query("SET SESSION sql_mode=''");
+      @xtc_db_query("SET SESSION sql_mode=''");
     }
     //EOF Disable "STRICT" mode!
 
-    if (function_exists('mysql_get_client_info')) {
-      $mysql_version = '-- MySQL-Client-Version: ' . mysql_get_client_info() . "\n--\n";
+    if (function_exists('xtc_db_get_client_info')) {
+      $mysql_version = '-- MySQL-Client-Version: ' . xtc_db_get_client_info() . "\n--\n";
     } else {
       $mysql_verion = '';
     }
@@ -212,14 +212,14 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
       $dump['complete_inserts']  = 'yes';
     }
 
-    $tabellen = mysql_query('SHOW TABLE STATUS');
-    $dump['num_tables'] = mysql_num_rows($tabellen);
+    $tabellen = xtc_db_query('SHOW TABLE STATUS');
+    $dump['num_tables'] = xtc_db_num_rows($tabellen);
 
     //Tabellennamen in Array einlesen
     $dump['tables'] = Array();
     if ($dump['num_tables'] > 0){
       for ($i=0; $i < $dump['num_tables']; $i++){
-        $row = mysql_fetch_array($tabellen);
+        $row = xtc_db_fetch_array($tabellen);
         $dump['tables'][$i] = $row['Name'];
       }
       $dump['nr'] = 0;

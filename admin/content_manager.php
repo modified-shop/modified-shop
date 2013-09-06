@@ -79,7 +79,7 @@
     $content_meta_robots = implode(', ', is_array($_POST['cont_meta_robots']) ? array_map('xtc_db_prepare_input', $_POST['cont_meta_robots']) : array());
         
     $content_query = xtc_db_query("SELECT MAX(content_group) AS content_group FROM ".TABLE_CONTENT_MANAGER."");
-    $content_data = mysql_fetch_row($content_query);
+    $content_data = xtc_db_fetch_row($content_query);
     if ($_POST['content_group'] == '0' || $_POST['content_group'] == '') {
       $group_id = $content_data[0] + 1;
     } else {
