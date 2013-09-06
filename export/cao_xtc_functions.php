@@ -43,6 +43,7 @@
 * (c) 2003 www.websl.de, Karl Langmann                                                         *
 * (c) 2003 RV-Design Raphael Vullriede                                                         *
 * (c) 2004 XT-Commerce                                                                         *
+* (c) 2009 - 2013 modified eCommerce Shopsoftware - www.modified-shop.org                      *
 *                                                                                              *
 * Released under the GNU General Public License                                                *
 *                                                                                              *
@@ -2751,19 +2752,19 @@ function SendLog ()
        {
          while (list($key1, $value1) = each($value))
           {
-           $pdata .= xtc_db_input($key)."[" . xtc_db_input($key1)."] => ".xtc_db_input($value1)."\\r\\n";// 2011-08-21 - h-h-h - SQL Injection FIX
+           $pdata .= xtc_db_input($key)."[" . xtc_db_input($key1)."] => ".xtc_db_input($value1)."\\r\\n";
          }
        }
          else
        {
-         $pdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";// 2011-08-21 - h-h-h - SQL Injection FIX
+         $pdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";
        }
     }
 
     $gdata ='';
     while (list($key, $value) = each($_GET))
     {
-       $gdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";// 2011-08-21 - h-h-h - SQL Injection FIX
+       $gdata .= xtc_db_input($key)." => ".xtc_db_input($value)."\\r\\n";
     }
 
 
@@ -2771,7 +2772,7 @@ function SendLog ()
      {
         xtc_db_query("INSERT INTO cao_log
                   (date,user,pw,method,action,post_data,get_data) VALUES
-                  (NOW(),'".xtc_db_input($user)."','".xtc_db_input($password)."','".$REQUEST_METHOD."','".xtc_db_input($_POST['action'])."','".$pdata."','".$gdata."')"); // 2011-08-21 - h-h-h - SQL Injection FIX
+                  (NOW(),'".xtc_db_input($user)."','".xtc_db_input($password)."','".$REQUEST_METHOD."','".xtc_db_input($_POST['action'])."','".$pdata."','".$gdata."')");
      }
   }
 
