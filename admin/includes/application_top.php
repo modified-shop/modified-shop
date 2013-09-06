@@ -96,10 +96,6 @@ if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
   date_default_timezone_set('Europe/Berlin');
 }
 
-// Base/PHP_SELF/SSL-PROXY
-require_once(DIR_FS_INC . 'set_php_self.inc.php'); 
-$PHP_SELF = set_php_self();
-
 define('TAX_DECIMAL_PLACES', 0);
 
 // Used in the "Backup Manager" to compress backups

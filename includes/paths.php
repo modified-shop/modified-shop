@@ -26,7 +26,11 @@
   define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
 
-  //compatibility for modified eCommerce Shopsoftware 1.06 files
+   // Base/PHP_SELF/SSL-PROXY
+  require_once(DIR_FS_INC . 'set_php_self.inc.php'); 
+  $PHP_SELF = set_php_self();
+
+ //compatibility for modified eCommerce Shopsoftware 1.06 files
   $ssl_proxy = '';
   if ($request_type == 'SSL' && ENABLE_SSL == true && defined('USE_SSL_PROXY') && USE_SSL_PROXY == true) {
     $ssl_proxy = '/' . $_SERVER['HTTP_HOST'];

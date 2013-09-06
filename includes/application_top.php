@@ -106,10 +106,6 @@ if (file_exists('includes/request_type.php')) {
   $request_type = 'NONSSL';
 }
 
-// Base/PHP_SELF/SSL-PROXY
-require_once(DIR_FS_INC . 'set_php_self.inc.php'); 
-$PHP_SELF = set_php_self();
-
 // list of project database tables
 require (DIR_WS_INCLUDES.'database_tables.php');
 
