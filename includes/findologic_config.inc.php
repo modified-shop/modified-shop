@@ -41,5 +41,5 @@
 	/* which currency to use for the prices, be sure to use the code (currencies.code in the database) */
 	define('CURRENCY', MODULE_FINDOLOGIC_CURRENCY);
 
-  /* define length for no results - default: 4500 */
-  define('NO_RESULT_LENGTH', 4500);
+	/* define length for no results - default: 4500 */
+	define('NO_RESULT_LENGTH', 4500);
