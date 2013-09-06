@@ -164,7 +164,7 @@
   }
 
 
-  function xtc_db_fetch_array(&$db_query, $cq=false, $result_type=MYSQL_ASSOC) {
+  function xtc_db_fetch_array(&$db_query, $cq=false, $result_type='MYSQL_ASSOC') {
     
     if ($db_query === false) {
       return false;
@@ -278,7 +278,7 @@
       }
 
       // get result from DB and create new file
-      $result = mysqli_query($link, $query) or xtc_db_error($query, mysqli_errno($link), mysqli_error($link));
+      $result = mysqli_query($$link, $query) or xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link));
 
       if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {
         $queryEndTime = array_sum(explode(" ",microtime())); 
@@ -286,7 +286,7 @@
         if (defined('STORE_DB_SLOW_QUERY') && ((STORE_DB_SLOW_QUERY == 'true' && $processTime >= STORE_DB_SLOW_QUERY_TIME) || STORE_DB_SLOW_QUERY == 'false')) {
           error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'QUERY ' . $query . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }
-        $result_error = mysqli_error($link);
+        $result_error = mysqli_error($$link);
         if ($result_error) {
           error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $processTime . 's] ' . 'ERROR ' . $result_error . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
         }
