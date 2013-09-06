@@ -47,7 +47,7 @@ if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
   <script
       type="text/javascript"
       src="https://secure.findologic.com/autocomplete/require.js"
-      data-main="https://secure.findologic.com/autocomplete/A21478CDF6DAA6580D38AF3018A2F413/autocomplete.js">
+      data-main="https://secure.findologic.com/autocomplete/' . strtoupper(md5(MODULE_FINDOLOGIC_SHOP_ID)) . '/autocomplete.js">
   </script>
   ';
 }
