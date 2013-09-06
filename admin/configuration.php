@@ -312,7 +312,7 @@
                       }
                     ?>
                   </table>
-                  <div class="main pdg2 flt-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?= BUTTON_SAVE ?>"/></div>
+                  <div class="main pdg2 flt-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/></div>
                 </form>
         </td>
         <!-- body_text_eof //-->
