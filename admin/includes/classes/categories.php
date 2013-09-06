@@ -703,14 +703,12 @@ class categories {
                                         WHERE products_id = '".$src_products_id."'");
 
     $product = xtc_db_fetch_array($product_query);
-    if ($dest_categories_id == 0) { $startpage = 1; $products_status = 1; } else { $startpage= 0; $products_status = $product['products_status'];}
+    
     //copy data
     $sql_data_array = $product;
     //set new data (overrides)
     unset($sql_data_array['products_id']);
-    $sql_data_array['products_startpage'] = $startpage;
     $sql_data_array['products_date_added'] = 'now()';
-    $sql_data_array['products_status'] = $products_status;
     $sql_data_array['products_ordered'] = ''; // reset products ordered - ticket #27
 
     //get customers statuses and set group_permissions
