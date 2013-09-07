@@ -30,11 +30,13 @@
     $products_status = $include_inactive ? " AND p.products_status = 1 " : '';
 
     $products_query = xtDBquery("SELECT count(*) as total 
-                                   FROM " . TABLE_PRODUCTS . " p,                               
+                                   FROM " . TABLE_PRODUCTS . " p                               
                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                     ON (p.products_id = p2c.products_id                                  
-                                         AND p2c.categories_id = '" . $category_id . "'
-                                             ". $products_status . $fsk_lock . $p_group_check); 
+                                        ON (p.products_id = p2c.products_id                                  
+                                            AND p2c.categories_id = '" . $category_id . "')
+                                        ". $products_status ."
+                                        ". $fsk_lock . "
+                                        ". $p_group_check); 
 
     $products = xtc_db_fetch_array($products_query,true);
     $products_count += $products['total'];
@@ -42,9 +44,9 @@
     $c_group_check = GROUP_CHECK == 'true' ? " AND group_permission_".$_SESSION['customers_status']['customers_status_id']."= 1 " : '';
 		
     $child_categories_query = "SELECT categories_id 
-                                FROM " . TABLE_CATEGORIES . " 
-                               WHERE parent_id = '" . $category_id . "'
-                                     ".$c_group_check;
+                                 FROM " . TABLE_CATEGORIES . " 
+                                WHERE parent_id = '" . $category_id . "'
+                                      ".$c_group_check;
 
     $child_categories_query = xtDBquery($child_categories_query);
     if (xtc_db_num_rows($child_categories_query,true)) {
