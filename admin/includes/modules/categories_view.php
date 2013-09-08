@@ -954,7 +954,7 @@
                                                  <input type="hidden" name="cpath" value="' . $cPath  . '">
                                                  <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_EDIT_CROSS_SELLING . '">
                                                  </form>                                                   
-                                                 <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
+                                                 <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'] : '') .'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
                                                  );
                   
                   // BOC Included xs:booster                  
