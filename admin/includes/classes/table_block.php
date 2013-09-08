@@ -82,7 +82,7 @@
           } elseif (self::$table_data_parameters != '') {
             $tableBox_string .= ' ' . self::$table_data_parameters;
           }
-          $tableBox_string .= '>' . $contents[$i]['text'] . '</td>' . "\n";
+          $tableBox_string .= '>' . (isset($contents[$i]['text']) ? $contents[$i]['text'] : '') . '</td>' . "\n";
         }
         $tableBox_string .= '  </tr>' . "\n";
       }
