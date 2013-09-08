@@ -15,9 +15,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  // include needed functions
-  require_once(DIR_FS_INC . 'xtc_get_all_get_params.inc.php');
-
   if (!isset($lng) || !is_object($lng)) {
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language;
