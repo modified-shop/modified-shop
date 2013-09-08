@@ -1040,8 +1040,7 @@ class categories {
 
   function create_permission_checkboxes($t_array) {
     $customers_statuses_array = xtc_get_customers_statuses();
-    $customers_statuses_array = array_merge(array (array ('id' => 'all', 'text' => TXT_ALL)), $customers_statuses_array);
-    $input = '';
+    $input = '<input type="checkbox" name="groups[]" value="all"> '.TXT_ALL.'<br />'. PHP_EOL;
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
       $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? 'checked ' : '';
       $preselect = $i==0 ? true : false; //preselect all
