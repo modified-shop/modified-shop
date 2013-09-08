@@ -46,7 +46,7 @@
       $this->tax_class = MODULE_SHIPPING_DPD_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_DPD_STATUS == 'True') ? true : false);
 
-      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_DPD_ZONE > 0) ) {
+      if ($this->enabled == true && is_object($order) && (int)MODULE_SHIPPING_DPD_ZONE > 0) {
         $check_flag = false;
         $check_query_string = "select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_DPD_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id";
         $check_query = xtc_db_query($check_query_string);
@@ -193,14 +193,9 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DPD_TAX_CLASS', '0', '6', '0', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_SHIPPING_DPD_ZONE', '0', '6', '0', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
 
-
-      if (xtc_db_query("DROP TABLE IF EXISTS dpd_country_to_postal")){
-      } else {
-      }
       // Table structure for table `dpd_country_to_postal`
-      if (xtc_db_query("CREATE TABLE dpd_country_to_postal (dpd_country char(2) NOT NULL default '', dpd_postal_reference int(11) NOT NULL default '0', PRIMARY KEY  (dpd_country)) ENGINE=MyISAM")){
-      } else {
-      }
+      xtc_db_query("DROP TABLE IF EXISTS dpd_country_to_postal");
+      xtc_db_query("CREATE TABLE dpd_country_to_postal (dpd_country char(2) NOT NULL default '', dpd_postal_reference int(11) NOT NULL default '0', PRIMARY KEY  (dpd_country)) ENGINE=MyISAM");
 
       // Dumping data for table `dpd_country_to_postal`
       xtc_db_query("insert into dpd_country_to_postal (dpd_country, dpd_postal_reference) values ('AE', 26)");
@@ -356,17 +351,11 @@
       xtc_db_query("insert into dpd_country_to_postal (dpd_country, dpd_postal_reference) values ('ZM', 25)");
       xtc_db_query("insert into dpd_country_to_postal (dpd_country, dpd_postal_reference) values ('ZW', 25)");
 
-
-      if (xtc_db_query("DROP TABLE IF EXISTS dpd_postal_to_weight")){
-      } else {
-      }
       // Table structure for table `dpd_postal_to_weight`
-      if (xtc_db_query("CREATE TABLE dpd_postal_to_weight (dpd_postal_reference int(11) NOT NULL default '0', dpd_from_postal varchar(10) NOT NULL default '', dpd_to_postal varchar(10) NOT NULL default '', dpd_weight_ref char(3) NOT NULL default '', PRIMARY KEY  (dpd_postal_reference,dpd_from_postal)) ENGINE=MyISAM")){
-      } else {
-      }
+      xtc_db_query("DROP TABLE IF EXISTS dpd_postal_to_weight");
+      xtc_db_query("CREATE TABLE dpd_postal_to_weight (dpd_postal_reference int(11) NOT NULL default '0', dpd_from_postal varchar(10) NOT NULL default '', dpd_to_postal varchar(10) NOT NULL default '', dpd_weight_ref char(3) NOT NULL default '', PRIMARY KEY  (dpd_postal_reference,dpd_from_postal)) ENGINE=MyISAM");
 
       // Dumping data for table `dpd_postal_to_weight`
-
       // GERMANY
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (1, '00000', '18564', 'DE1')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (1, '18565', '18565', 'DE2')");
@@ -422,7 +411,6 @@
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (5, '98000', '98999', 'FR1')");
 
       // GREECE
-
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (6, '10000', '10699', 'GR1')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (6, '11100', '11899', 'GR1')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (6, '12100', '12499', 'GR1')");
@@ -608,7 +596,6 @@
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (18, '51000', '52999', 'ES3')");
 
       // NO POSTAL ZONES
-
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (13, '', '', 'PT')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (14, '', '', 'SE')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (15, '', '', 'CH')");
@@ -623,15 +610,11 @@
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (24, '', '', 'G3')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (25, '', '', 'G4')");
       xtc_db_query("insert into dpd_postal_to_weight (dpd_postal_reference, dpd_from_postal, dpd_to_postal, dpd_weight_ref) values (26, '', '', 'G5')");
-
-      if (xtc_db_query("DROP TABLE IF EXISTS dpd_weight")){
-      } else {
-      }
+      
       // Table structure for table `dpd_weight`
-      if (xtc_db_query("CREATE TABLE dpd_weight (dpd_weight_ref char(3) NOT NULL default '', dpd_weight_price_string text NOT NULL, dpd_free_shipping_over decimal(15,4) NOT NULL default '-1.0000', dpd_shipping_subsidized decimal(15,4) NOT NULL default '-1.0000', PRIMARY KEY  (dpd_weight_ref)) ENGINE=MyISAM")){
-      } else {
-      }
-
+      xtc_db_query("DROP TABLE IF EXISTS dpd_weight");
+      xtc_db_query("CREATE TABLE dpd_weight (dpd_weight_ref char(3) NOT NULL default '', dpd_weight_price_string text NOT NULL, dpd_free_shipping_over decimal(15,4) NOT NULL default '-1.0000', dpd_shipping_subsidized decimal(15,4) NOT NULL default '-1.0000', PRIMARY KEY  (dpd_weight_ref)) ENGINE=MyISAM");
+      
       // Dumping data for table `dpd_weight`
       xtc_db_query("insert into dpd_weight (dpd_weight_ref, dpd_weight_price_string, dpd_free_shipping_over, dpd_shipping_subsidized) values ('DE1', '0-5:3.07,5-8:4.19,8-10:4.86,10-15:6.54,15-20:8.44,20-25:9.97,25-32:13.04,32-40:15.34', '350.0000', '-1.0000')");
       xtc_db_query("insert into dpd_weight (dpd_weight_ref, dpd_weight_price_string, dpd_free_shipping_over, dpd_shipping_subsidized) values ('DE2', '0-5:11.23,5-8:11.86,8-10:12.53,10-15:14.21,15-20:16.11,20-25:19.23,25-32:20.71,32-40:23.01', '350.0000', '-1.0000')");
@@ -682,7 +665,12 @@
 
     //disabled the next one because of some problems: If module is installed and this set to 0, checkout doesn't work.
     function keys() {
-      $keys = array('MODULE_SHIPPING_DPD_STATUS', 'MODULE_SHIPPING_DPD_HANDLING','MODULE_SHIPPING_DPD_ALLOWED', 'MODULE_SHIPPING_DPD_SORT_ORDER', 'MODULE_SHIPPING_DPD_TAX_CLASS', 'MODULE_SHIPPING_DPD_ZONE');
+      $keys = array('MODULE_SHIPPING_DPD_STATUS', 
+                    'MODULE_SHIPPING_DPD_HANDLING',
+                    'MODULE_SHIPPING_DPD_ALLOWED', 
+                    'MODULE_SHIPPING_DPD_SORT_ORDER', 
+                    'MODULE_SHIPPING_DPD_TAX_CLASS', 
+                    'MODULE_SHIPPING_DPD_ZONE');
 
       return $keys;
     }
