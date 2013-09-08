@@ -79,8 +79,8 @@ $_csv_new_idealo_version_text = '';
 	 }
    
 define( 'NEW_IDEALO_CSV_VERSION_TEXT', $_csv_new_idealo_version_text );
-define( 'MODULE_IDEALO_CSV_TEXT_TITLE',  'idealo.de - CSV');
-define( 'MODULE_IDEALO_CSV_TEXT_DESCRIPTION', '<center> Deutschlands gro&szlig;er Preisvergleich mit &uuml;ber 124 Millionen Angeboten von mehr als 33.200 Online-Shops <br> <a href="http://www.idealo.de" target="_blank">www.idealo.de</a></center>' );
+define( 'MODULE_IDEALO_CSV_TEXT_DESCRIPTION', 'CSV - Idealo' );
+define( 'MODULE_IDEALO_CSV_TEXT_TITLE',  '<img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"> - CSV');
 
 
 define('MODULE_IDEALO_CSV_FILE_TITLE' , '<hr noshade>User');

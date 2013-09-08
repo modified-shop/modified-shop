@@ -96,6 +96,7 @@ class idealo{
       $this->CAT=array();
       $this->PARENT=array();
       $this->productsPrice = 0;
+      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png"></a></center>';
       $this->country_array = array();
     }
 
