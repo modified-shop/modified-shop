@@ -31,14 +31,16 @@ define('DIR_MODIFIED_INSTALLER', '_installer');
 
 //SET SHOP OFFLINE 503 STATUS CODE
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
-if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {	   
-	header("HTTP/1.1 503 Service Temporarily Unavailable");
+if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {
+  header("HTTP/1.1 503 Service Temporarily Unavailable");
   header("Status: 503 Service Temporarily Unavailable");
+  exit();
 }
 //SET 410 STATUS CODE
 elseif (isset($error) && ($error == CATEGORIE_NOT_FOUND || $error == TEXT_PRODUCT_NOT_FOUND)) {
   header("HTTP/1.0 410 Gone"); 
-  header("Status: 410 Gone"); // FAST CGI 
+  header("Status: 410 Gone"); // FAST CGI
+  exit();
 }
 
 /******** SHOPGATE **********/
@@ -55,9 +57,7 @@ if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS==
 <meta http-equiv="Content-Style-Type" content="text/css" />
 <?php
 /******** SHOPGATE **********/
-if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
-  echo $shopgateJsHeader;
-}
+if(isset($shopgateJsHeader)) echo $shopgateJsHeader;
 /******** SHOPGATE **********/
 ?>
 <?php include(DIR_WS_MODULES.FILENAME_METATAGS); ?>
@@ -87,7 +87,6 @@ Information and contribution at http://www.xt-commerce.com
 Please visit our website: www.modified-shop.org
 =========================================================
 -->
-
 <meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ------ http://www.modified-shop.org" />
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 <?php
@@ -361,31 +360,30 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 
 include(DIR_WS_INCLUDES.FILENAME_BANNER);
 
-//SHOP OFFLINE INFO
+// SHOP OFFLINE INFO
 if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {	
-	$smarty->assign('language', $_SESSION['language']);
-	$smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
+  $smarty->assign('language', $_SESSION['language']);
+  $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
   $smarty->display(CURRENT_TEMPLATE.'/offline.html');	
-	EXIT;
+  exit();
 }
 
-//BOF - Dokuman - 2012-06-19 - BILLSAFE payment module (BillSAFE-Layer Start)
-if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER')) {
-  if (preg_match('/checkout_payment/',$_SERVER['PHP_SELF']) && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
+### BILLSAFE payment module - BillSAFE-Layer Start
+if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
+  $bs_error = '';
+  if (basename($PHP_SELF) == 'checkout_payment.php') {
     if (isset($_GET['payment_error'])) {
       $bs_error = stripslashes(html_entity_decode('payment_error='.$_GET['payment_error'].'&error_message='.$_GET['error_message']));
-    } else {
-      $bs_error = '';
     }
-    echo '<script type="text/javascript"><!--
-      if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");
-    --></script>';
+    echo '<script type="text/javascript"><!--' .
+         ' if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");' .
+         '--></script>' . PHP_EOL;
   }
-  if (preg_match('/checkout_success/',$_SERVER['PHP_SELF']) && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
-    echo '<script type="text/javascript"><!--
-      if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");
-    --></script>';
+  if (basename($PHP_SELF) == 'checkout_success.php') {
+    echo '<script type="text/javascript"><!--' .
+         '  if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");' .
+         '--></script>' . PHP_EOL;
   }
 }
-//EOF - Dokuman - 2012-06-19 - BILLSAFE payment module - BillSAFE-Layer End
+### BILLSAFE payment module - BillSAFE-Layer End
 ?>
