@@ -40,7 +40,7 @@
       $this->tax_class = MODULE_SHIPPING_UPSE_TAX_CLASS;
       $this->enabled = ((MODULE_SHIPPING_UPSE_STATUS == 'True') ? true : false);
 
-      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_UPSE_ZONE > 0) ) {
+      if ( ($this->enabled == true) && ((int)MODULE_SHIPPING_UPSE_ZONE > 0) && is_object($order)) {
         $check_flag = false;
         $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_UPSE_ZONE . "' and zone_country_id = '" . $order->delivery['country']['id'] . "' order by zone_id");
         while ($check = xtc_db_fetch_array($check_query)) {
