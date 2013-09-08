@@ -25,8 +25,8 @@
   define('HEADING_IMAGE_WIDTH',57);
   define('HEADING_IMAGE_HEIGHT',40);
   
-  ((strip_tags($_GET['search']) != $_GET['search']) ? $_GET['search']=NULL : false);
-  ((strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email']=NULL : false);
+  ((isset($_GET['search']) && strip_tags($_GET['search']) != $_GET['search']) ? $_GET['search'] = NULL : false);
+  ((isset($_GET['search_email']) && strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email'] = NULL : false);
   
   // Admin Language Switch
   $languages_string = '';
