@@ -211,7 +211,7 @@
                   <?php
                   }
                   ?>
-                  <td class="dataTableContent"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td><?php// web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
+                  <td class="dataTableContent"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td><?php // web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array ?>
                   <?php
                     if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
                       echo '<td class="dataTableContent">';

@@ -52,8 +52,8 @@ if ($_GET['action'] == 'new_product') {
       <table class="tableConfig borderall">
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
-          <td class="dataTableConfig col-middle"><?php echo $mo_images[$i]['image_name']; ?></td>
-          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo $mo_images[$i]['image_name'] ? xtc_image(DIR_WS_CATALOG_INFO_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1)) : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_INFO_WIDTH, 10); ?></td>
+          <td class="dataTableConfig col-middle"><?php echo (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''); ?></td>
+          <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php echo (isset($mo_images[$i]['image_name']) ? xtc_image(DIR_WS_CATALOG_INFO_IMAGES.$mo_images[$i]['image_name'], 'Image '. ($i +1)) : xtc_draw_separator('pixel_trans.gif', PRODUCT_IMAGE_INFO_WIDTH, 10)); ?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_PRODUCTS_IMAGE.' '. ($i +1); ?></td>
@@ -61,11 +61,11 @@ if ($_GET['action'] == 'new_product') {
         </tr>        
         <tr>
           <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
-          <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_mo_pic[]', 'checkbox', $mo_images[$i]['image_name']); ?></td>      
+          <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_mo_pic[]', 'checkbox', (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : '')); ?></td>      
         </tr>
       </table>
       <?php
-      echo xtc_draw_hidden_field('products_previous_image_'. ($i +1), $mo_images[$i]['image_name']);
+      echo xtc_draw_hidden_field('products_previous_image_'. ($i +1), (isset($mo_images[$i]['image_name']) ? $mo_images[$i]['image_name'] : ''));
     }
   }
   echo '<div style="clear:both;"></div>';
