@@ -51,7 +51,7 @@
       }
       
       if ($this->check() > 0) {      
-        $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_ZONES_COUNTRIES_%' AND configuration_key NOT LIKE 'MODULE_SHIPPING_ZONES_COUNTRIES_%_BAK'");
+        $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_SHIPPING_ZONES_COUNTRIES_%'");
         $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
 
         if ($check_zones_rows_query != $this->num_zones) {
