@@ -34,6 +34,8 @@ if (!isset($_SESSION['tracking']['refID']) && isset($_GET['refID'])) {
 // referrer
 $ref_url = parse_url((isset($_SERVER['HTTP_REFERER']) ? strip_tags($_SERVER['HTTP_REFERER']) : $current_domain.$_SERVER['REQUEST_URI']));
 if (!isset($_SESSION['tracking']['http_referer']))  $_SESSION['tracking']['http_referer']= $ref_url;
+// host
+if (!isset ($_SESSION['tracking']['http_referer']['host']))  $_SESSION['tracking']['http_referer']['host'] = strip_tags($_SERVER['HTTP_HOST']);
 // datetime
 if (!isset ($_SESSION['tracking']['date']))  $_SESSION['tracking']['date'] = (date("Y-m-d H:i:s"));
 // browser

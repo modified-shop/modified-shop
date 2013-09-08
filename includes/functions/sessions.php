@@ -184,12 +184,17 @@
     if ($http_domain == $https_domain) {
       $session_backup = $_SESSION;
       $old_session_id = session_id();
-      session_regenerate_id();
+      session_regenerate_id(true);
       $new_session_id = xtc_session_id();
-      session_id($old_session_id);
+      //session_id($old_session_id);
       session_id($new_session_id);
       $_SESSION = $session_backup;
       
+      if (STORE_SESSIONS == 'mysql') {
+        session_set_save_handler('_sess_open', '_sess_close', '_sess_read', '_sess_write', '_sess_destroy', '_sess_gc');
+        register_shutdown_function('session_write_close');
+      }
+            
       // update whos_online
       xtc_db_query("UPDATE " . TABLE_WHOS_ONLINE . "
                        SET session_id = '".xtc_db_input($new_session_id)."' 
