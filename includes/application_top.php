@@ -270,6 +270,7 @@ elseif (($request_type == 'SSL') && isset ($_GET[xtc_session_name()])) {
 
 // start the session
 $session_started = false;
+$truncate_session_id = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
   xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, '/', (xtc_not_null($current_domain) ? $current_domain : ''));
   if (isset($_COOKIE['cookie_test'])) {
@@ -277,11 +278,7 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $session_started = true;
   }
 } elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
-  if (isset($_GET[xtc_session_name()]) && xtc_not_null($_GET[xtc_session_name()])) {
-    header("HTTP/1.1 301 Moved Permanently");
-    xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), $request_type, false));
-    die();
-  }
+  $truncate_session_id == true;
   $session_started = false;
 } else {
   xtc_session_start();
@@ -374,7 +371,7 @@ if (isset($_SESSION['currency']) && $_SESSION['currency'] == '') {
 require (DIR_WS_INCLUDES.'write_customers_status.php');
 
 // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
-if ( $truncate_session_id == true ) {
+if ($truncate_session_id === true) {
   if (preg_match('/' . xtc_session_name() . '/i', $_SERVER['REQUEST_URI'])) {
     $location = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), 'NONSSL', false);
     header("HTTP/1.0 301 Moved Permanently");

@@ -93,7 +93,9 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
       // restore cart contents
       $_SESSION['cart']->restore_contents();
 
-      if (isset($econda) && is_object($econda)) $econda->_loginUser();
+      if (isset($econda) && is_object($econda)) {
+        $econda->_loginUser();			
+      }
       
       $redirect_array = array(FILENAME_ACCOUNT_HISTORY_INFO, FILENAME_ACCOUNT, FILENAME_CHECKOUT_SHIPPING, FILENAME_PRODUCT_REVIEWS_WRITE);
       if (isset($_SESSION['REFERER']) && xtc_not_null($_SESSION['REFERER']) && in_array($_SESSION['REFERER'], $redirect_array) && $_SESSION['old_customers_basket'] === false) {
