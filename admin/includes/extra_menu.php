@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: extra_menu.php 5349 2013-08-08 10:00:09Z web28 $
+   $Id: extra_menu.php 5568 2013-09-08 13:47:05Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -57,8 +57,8 @@ if (!function_exists('subMenue')){ // zweite ebene
 if (!function_exists('dynamicsAdds')){ // Menüpunkte dynamisch ergänzen
     function dynamicsAdds($box){
         global $add_contents;
-        if(isset($add_contents[$box]) && count($add_contents[$box] > 0)) {
-            $html = '';
+        $html = '';
+        if(isset($add_contents[$box]) && count($add_contents[$box] > 0)) {            
             foreach ($add_contents[$box] as $key) {
                 $html.= subMenue($key['admin_access_name'],
                                  $key['filename'],
