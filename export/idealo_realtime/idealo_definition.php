@@ -79,8 +79,8 @@ $new_idealo_version_text = '';
 	 }
    
 define( 'NEW_IDEALO_REALTIME_VERSION_TEXT', $new_idealo_version_text );
-define( 'MODULE_IDEALO_REALTIME_TEXT_DESCRIPTION', 'Realtime - Idealo' );
-define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  '<img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"> - Realtime');
+define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  'idealo.de - Realtime');
+define( 'MODULE_IDEALO_REALTIME_TEXT_DESCRIPTION', '<center>Idealo Realtime -  Deutschlands gro&szlig;er Preisvergleich mit &uuml;ber 124 Millionen Angeboten von mehr als 33.200 Online-Shops <br> <a href="http://www.idealo.de" target="_blank">www.idealo.de</a></center>');
 
 
 define('MODULE_IDEALO_REALTIME_FILE_TITLE' , '<hr noshade>User');
