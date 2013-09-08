@@ -399,6 +399,9 @@ width: 100%;
 padding: 2px;
 border-collapse: collapse;
 }
+.tableCenter td{
+padding: 3px;
+}
 .boxCenterLeft {
 width: 75%;
 vertical-align: top;
