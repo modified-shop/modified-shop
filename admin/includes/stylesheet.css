@@ -674,6 +674,9 @@ width: 100%;
 padding: 2px;
 border-collapse: collapse;
 }
+.tableCenter td{
+padding: 3px;
+}
 .boxCenterLeft {
 width: 75%;
 vertical-align: top;
@@ -786,6 +789,9 @@ width:80%;
 }
 .tableConfig td.mark{
 background-color:#c8c8c8;
+}
+.valign_m td.col-left, .valign_m td.col-middle{
+vertical-align: middle;
 }
 .configPartner{
 float:left;
