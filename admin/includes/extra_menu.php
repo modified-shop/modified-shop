@@ -57,8 +57,8 @@ if (!function_exists('subMenue')){ // zweite ebene
 if (!function_exists('dynamicsAdds')){ // Menüpunkte dynamisch ergänzen
     function dynamicsAdds($box){
         global $add_contents;
-        if(isset($add_contents[$box]) && count($add_contents[$box] > 0)) {
-            $html = '';
+        $html = '';
+        if(isset($add_contents[$box]) && count($add_contents[$box] > 0)) {            
             foreach ($add_contents[$box] as $key) {
                 $html.= subMenue($key['admin_access_name'],
                                  $key['filename'],
