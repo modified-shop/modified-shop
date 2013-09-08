@@ -90,7 +90,7 @@ echo mainMenue(BOX_HEADING_PRODUCTS);
 echo endMenue(BOX_HEADING_PRODUCTS);
 
 /******** SHOPGATE **********/
-if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
+if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
   include_once (DIR_FS_EXTERNAL.'shopgate/base/admin/includes/column_left.php');
 }
 /******** SHOPGATE **********/

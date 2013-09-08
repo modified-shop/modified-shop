@@ -270,6 +270,9 @@
 
             //BOF - web28- 2010-11-24 FIX undefined $cPath_back
             $cPath_back = '';
+            if (!isset($cPath_array)) {
+              $cPath_array = array();
+            }
             if ($cPath_array) {
               for($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i++) {
                 if ($cPath_back == '') {
@@ -991,11 +994,11 @@
                   $price = $pInfo->products_price;
                   $price = xtc_round($price,PRICE_PRECISION);
                   $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price);
-                  if (PRICE_IS_BRUTTO=='true' && ($_GET['read'] == 'only' || $action != 'new_product_preview') ){
+                  if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview') ){
                     $price_netto = xtc_round($price,PRICE_PRECISION);
                     $tax_query = xtc_db_query("select tax_rate from " . TABLE_TAX_RATES . " where tax_class_id = '" . $pInfo->products_tax_class_id . "' ");
                     $tax = xtc_db_fetch_array($tax_query);
-                    $price = ($price*($tax[tax_rate]+100)/100);
+                    $price = ($price*($tax['tax_rate']+100)/100);
                     $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . '<br/>' . TXT_NETTO . $currencies->format($price_netto);
                   }
                   $contents[] = array('text' => '<div style="padding-left: 30px;">' . $price_string.  '</div><div style="padding-left: 30px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . ' %</div><div style="padding-left: 30px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
