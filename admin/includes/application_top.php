@@ -61,13 +61,15 @@ if (file_exists('../includes/local/configure.php')) {
 /**
  * set the level of error reporting
  */
-if (file_exists(DIR_FS_CATALOG.'export/_error_reporting.all') || file_exists(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
-  @ini_set('display_errors', true);
+@ini_set('display_errors', true);
+if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
   error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
-} elseif (file_exists(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
-  @ini_set('display_errors', true);
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
+  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
   error_reporting(-1); // Development value
 } else {
+  @ini_set('display_errors', false);
   error_reporting(0);
 }
 
