@@ -537,9 +537,6 @@ define('ACTIVATE_GIFT_SYSTEM_DESC','Activate gift voucher system<br/><br/><b>Att
 define('ACTIVATE_SHIPPING_STATUS_TITLE','Display Shipping Status');
 define('ACTIVATE_SHIPPING_STATUS_DESC','Show shipping status? (Different dispatch times can be specified for individual products. If enabled, a new item <b>Delivery Status</b> is displayed on product input)');
 
-define('SECURITY_CODE_LENGTH_TITLE','Security Code Length');
-define('SECURITY_CODE_LENGTH_DESC','Security code length (Gift voucher)');
-
 define('IMAGE_QUALITY_TITLE','Image Quality');
 define('IMAGE_QUALITY_DESC','Image quality (0= highest compression, 100=best quality)');
 
