@@ -16,9 +16,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // include needed functions
-  require_once(DIR_FS_INC . 'xtc_get_all_get_params.inc.php');
-
   //BOF - 2010-02-28 - Fix Undefined variable: lng
   //if (!isset($lng) && !is_object($lng)) {
   if (!isset($lng) || (isset($lng) && !is_object($lng))) {

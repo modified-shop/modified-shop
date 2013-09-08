@@ -27,7 +27,6 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_count_customer_orders.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
-require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 
 if (!isset ($_SESSION['customer_id']))
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));

@@ -46,6 +46,7 @@ if (file_exists('includes/local/configure.php')) {
 // call Installer
 if (DB_DATABASE == '' && is_dir('./_installer')) {
   header("Location: ./_installer");
+  exit();
 }
 
 /**
@@ -278,7 +279,10 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $session_started = true;
   }
 } elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
-  $truncate_session_id == true;
+  if (isset($_GET[xtc_session_name()]) && xtc_not_null($_GET[xtc_session_name()])) {
+    header("HTTP/1.1 301 Moved Permanently");
+    xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), $request_type, false));
+  }
   $session_started = false;
 } else {
   xtc_session_start();
