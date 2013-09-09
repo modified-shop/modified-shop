@@ -324,15 +324,18 @@ class product {
       } else {
         $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
       }
-     $vpe = '';
-     if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
+      $vpe = '';
+      if (isset($this->data) && $this->data['products_vpe_status'] == 1 && $this->data['products_vpe_value'] != 0.0 && $staffel[$i]['price'] > 0) {
         $vpe = $staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount;
         $vpe = $vpe * (1 / $this->data['products_vpe_value']);
         $vpe = BASICPRICE_VPE_TEXT.$xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
       }
       $staffel_data[$i] = array ('QUANTITY' => $quantity,
+                                 'PLAIN_QUANTITY' => $staffel[$i]['stk'],
                                  'VPE' => $vpe,
-                                 'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']));
+                                 'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
+                                 'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
+                                 );
     }
     return $staffel_data;
   }
@@ -442,6 +445,12 @@ class product {
                           'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>' //GTB - 2010-08-27 make Button Details global
                          );
 
+    if (count($products_price) > 0) {
+      foreach($products_price as $key => $entry) {                  
+         $productData['PRODUCTS_'.strtoupper($key)] = $entry;
+      }
+    }
+    //echo '<pre>'.print_r($productData,true).'</pre>';
     return $productData;
   }
 
