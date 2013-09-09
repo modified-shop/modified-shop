@@ -156,7 +156,7 @@ class product {
    * @return string
    */
   function getBreadcrumbModel() {
-    if ($this->data['products_model'] != "") {
+    if (($this->data['products_model'] != "") && DISPLAY_BREADCRUMB_OPTION == 'model') {
       return $this->data['products_model'];
     }
     return $this->data['products_name'];
