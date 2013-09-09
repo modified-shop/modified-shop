@@ -53,6 +53,18 @@ if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
 }
 /******** Findologic **********/
 
+/**
+ * new error handling
+ */
+if (is_array($error_exceptions)) {
+  if ((DISPLAY_ERROR_REPORTING == 'all') || (DISPLAY_ERROR_REPORTING == 'admin' && $_SESSION['customers_status']['customers_status'] == '0')) {
+    echo '<div style="width:1000px; margin:20px auto;">' . PHP_EOL .
+           '<h2 style="color: rgb(190, 50, 50);">Exception Occured:</h2>' . PHP_EOL;
+           echo implode(PHP_EOL, $error_exceptions);
+    echo '</div>';
+  }
+}
+
 // end of page
 echo '</body>';
 echo '</html>';

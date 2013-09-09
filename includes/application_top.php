@@ -64,6 +64,11 @@ if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
   error_reporting(0);
 }
 
+/**
+ * new error handling
+ */
+require_once (DIR_WS_INCLUDES.'error_reporting.php');
+
 /*
  * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
  */

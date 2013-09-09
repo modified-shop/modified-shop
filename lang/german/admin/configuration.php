@@ -809,3 +809,6 @@ define('USE_ADMIN_FIXED_TOP_DESC', 'Soll der Seitenkopf beim Scrollen immer sich
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
 define('SMTP_SECURE_DESC' , 'Erfordert der SMTP Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');
+
+define('DISPLAY_ERROR_REPORTING_TITLE', 'Error Reporting');
+define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte Liste im Footer angezeigt werden?');

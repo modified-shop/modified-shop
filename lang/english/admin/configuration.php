@@ -809,3 +809,6 @@ define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header allways be visable whe
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
 define('SMTP_SECURE_DESC' , 'Does the SMTP server require a secure connection? Contact your ISP for the appropriate settings.');
+
+define('DISPLAY_ERROR_REPORTING_TITLE', 'Error reporting');
+define('DISPLAY_ERROR_REPORTING_DESC', 'Display formatted error reporting in footer?');
