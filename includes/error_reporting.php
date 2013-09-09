@@ -20,15 +20,28 @@ function log_exception(Exception $e)
     if (!is_array($error_exceptions)) {
       $error_exceptions = array();
     }
+    
+    $error_number = $e->getseverity();
+    $error_name = error_level($error_number);
+    $error_line = $e->getLine();
+    $error_file = $e->getFile();
+    $error_message = $e->getMessage();
+    $index = md5($error_name.$error_line.$error_file.$error_message);
+    
+    if (!isset($error_exceptions[$index])) {
+        $error_exceptions[$index] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
+                              '  <tr style="color:#000; background-color:rgb(230,230,230);"><th style="width:100px;">Type</th><td style="width:900px;">'.$error_name.'</td></tr>' . PHP_EOL .
+                              '  <tr style="color:#000; background-color:rgb(240,240,240);"><th>Message</th><td>'.$error_message.'</td></tr>' . PHP_EOL .
+                              '  <tr style="color:#000; background-color:rgb(230,230,230);"><th>File</th><td>'.$error_file.'</td></tr>' . PHP_EOL .
+                              '  <tr style="color:#000; background-color:rgb(240,240,240);"><th>Line</th><td>'.$error_line.'</td></tr>' . PHP_EOL .
+                              '</table>' . PHP_EOL .
+                              '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
 
-    $error_exceptions[] = '<table style="width: 1000px; display: inline-block;">' . PHP_EOL .
-                          '  <tr style="color:#000; background-color:rgb(230,230,230);"><th style="width:100px;">Type</th><td style="width:900px;">' . error_level($e->getseverity()) . '</td></tr>' . PHP_EOL .
-                          '  <tr style="color:#000; background-color:rgb(240,240,240);"><th>Message</th><td>'.$e->getMessage().'</td></tr>' . PHP_EOL .
-                          '  <tr style="color:#000; background-color:rgb(230,230,230);"><th>File</th><td>'.$e->getFile().'</td></tr>' . PHP_EOL .
-                          '  <tr style="color:#000; background-color:rgb(240,240,240);"><th>Line</th><td>'.$e->getLine().'</td></tr>' . PHP_EOL .
-                          '</table>' . PHP_EOL .
-                          '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
-
+        // write Logfile
+        if ($error_number != E_NOTICE) {
+            error_log(strftime('%d/%m/%Y %H:%M:%S') . ' ' . $error_name . ' - ' . $error_message . ' in File: ' . $error_file . ' on Line: ' . $error_line . "\n", 3, DIR_FS_LOG.'error.log');
+        }
+    }
 }
 
 /**
