@@ -812,3 +812,6 @@ define('SMTP_SECURE_DESC' , 'Does the SMTP server require a secure connection? C
 
 define('DISPLAY_ERROR_REPORTING_TITLE', 'Error reporting');
 define('DISPLAY_ERROR_REPORTING_DESC', 'Display formatted error reporting in footer?');
+
+define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb navigation');
+define('DISPLAY_BREADCRUMB_OPTION_DESC', 'name: In the breadcrumb navigation, the article name is displayed.<br />model: In the breadcrumb navigation, the item number is displayed if it is available. Otherwise fallback to the article name.');
