@@ -810,4 +810,7 @@ define('SMTP_SECURE_DESC' , 'Erfordert der SMTP Server eine sichere Verbindung? 
 
 define('DISPLAY_ERROR_REPORTING_TITLE', 'Error Reporting');
 define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte Liste im Footer angezeigt werden?');
+
+define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb Navigation');
+define('DISPLAY_BREADCRUMB_OPTION_DESC', 'model: In der Breadcrumb Navigation wird die Artikelnummer angezeigt, sofern sie vorhanden ist. Ansonsten Fallback auf auf Artikelname.<br />name: In der Breadcrumb Navigation wird der komplette Artikelname angezeigt angezeigt.');
 ?>

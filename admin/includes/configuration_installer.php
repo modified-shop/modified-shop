@@ -79,6 +79,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SESSION_LIFE_ADMIN', '7200', '15', '21', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 16 --- "Metatags Suchmaschinen"
+  $values[] = "(NULL, 'DISPLAY_BREADCRUMB_OPTION', 'name', '16', '15', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'name\', \'model\'),');";
 
 //configuration_group_id 17 --- "Zusatzmodule"
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";
