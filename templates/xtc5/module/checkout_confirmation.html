@@ -16,7 +16,7 @@
 
   <div class="{if $REVOCATION}checkoutInfoBoxes{else}checkoutInfoBoxesLarge{/if}" style="text-align: justify;">
     {#text_information#}
-    {if $IP_LOG=='true'}
+    {if $IP_LOG == 'true'}
     <p>{#text_ip#}:&nbsp;<strong>{$CUSTOMERS_IP}</strong></p>
     {/if}
   </div>
@@ -53,7 +53,7 @@
     </div>
   {/if}
 
-  {if $PAYMENT_METHOD!=''}
+  {if $PAYMENT_METHOD != ''}
     <div class="checkoutNav2Boxes">
       <h2>{#text_payment_method#}</h2>
       <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
@@ -62,14 +62,14 @@
   {/if}
   <div style="clear:both"></div>
 
-  {if $ORDER_COMMENTS!=''}
+  {if $ORDER_COMMENTS != ''}
     <br />
     <h2>{#text_comments#}</h2>
     <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
     <div style="clear:both;padding: 0 5px;">{$ORDER_COMMENTS}</div>
   {/if}
 
-  {if $PAYMENT_INFORMATION!=''}
+  {if $PAYMENT_INFORMATION != ''}
     <br />
     <h2>{#text_payment_info#}</h2>
     <table style="clear:both">
@@ -105,7 +105,8 @@
       <td class="main_row" align="left" valign="top">{$data.qty}</td>
       <td class="main_row" align="left" valign="top">
         <div style="width:90px; float:left;">{$data.image}</div>
-        <div style="width:420px; float:left;">{$data.link}
+        <div style="width:420px; float:left;">
+          {$data.link}
           {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
           {if $data.shipping_time}<br /><span class="nobr small">{$data.shipping_time}</span>{/if}
           {foreach key=a_data item=attrib_data from=$data.attributes}
@@ -135,5 +136,5 @@
     <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
   {/if}
   <br />
-  <div style="text-align:right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS!=''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}</div>
+  <div style="text-align:right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}</div>
 </div>

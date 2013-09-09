@@ -321,7 +321,7 @@ ul#categorymenu li.level1 a:hover {
   font-weight:bold;
 }
 ul#categorymenu li.activeparent1 a  { font-style:italic; background:#eee; }
-ul#categorymenu li.active1 a  {	font-style: italic; background: #d7c9d1;}
+ul#categorymenu li.active1 a  { font-style: italic; background: #d7c9d1;}
 /* 2nd TIER */
 ul#categorymenu li.level2 {
   list-style-type:none;
@@ -1307,112 +1307,112 @@ ol#address_block, div.agbframe ol, div.agbframe ul  {
 
 /*address block */
 div#address_block div.address{
-width: 260px;
-float:left;
-height:140px;
-padding:5px; 
-margin:0 15px 15px 0;
-border: solid 1px #a3a3a3;
-background:#F8F8F8;
+  width: 260px;
+  float:left;
+  height:140px;
+  padding:5px; 
+  margin:0 15px 15px 0;
+  border: solid 1px #a3a3a3;
+  background:#F8F8F8;
 }
 div#address_block input{
-vertical-align: middle;
+  vertical-align: middle;
 }
 
 /*new checkout*/
 div.checkout_infos{
-width:940px;
-border: 0px solid red;
+  width:940px;
+  border: 0px solid red;
 }
 div.checkout_infos h2{
-font-family: Arial, Sans-serif;
-color:#333; /*#1e3630;*/
-font-weight:bold;
-font-size:15px;
-margin: 0px;
-float:left;
+  font-family: Arial, Sans-serif;
+  color:#333; /*#1e3630;*/
+  font-weight:bold;
+  font-size:15px;
+  margin: 0px;
+  float:left;
 }
 div.checkout_infos a{
-font-style:italic;
-color:#009933; /*#1e3630;*/
+  font-style:italic;
+  color:#009933; /*#1e3630;*/
 }
 div.checkout_infos div.text,p.text{
-margin-top:0px;
+  margin-top:0px;
 }
 div#address_block div.address{
-width: 260px;
-float:left;
-height:140px;
-padding:5px; 
-margin:0 15px 15px 0;
-border: solid 1px #a3a3a3;
-background:#F8F8F8;
+  width: 260px;
+  float:left;
+  height:140px;
+  padding:5px; 
+  margin:0 15px 15px 0;
+  border: solid 1px #a3a3a3;
+  background:#F8F8F8;
 }
 div#address_block input{
-vertical-align: middle;
+  vertical-align: middle;
 }
 div.checkoutInfoBoxes{
-width:438px;
-border: 0px solid #a3a3a3;
-padding:5px;
-margin-right:20px;
-float:left;
+  width:438px;
+  border: 0px solid #a3a3a3;
+  padding:5px;
+  margin-right:20px;
+  float:left;
 }
 div.checkoutInfoBoxes  a.more_info{
-color: red!important;
+  color: red!important;
 }
 div.checkoutInfoBoxesLarge{
-width:910px;
-border: 0px solid #a3a3a3;
-padding:5px;
-margin-right:0px;
-float:left;
+  width:910px;
+  border: 0px solid #a3a3a3;
+  padding:5px;
+  margin-right:0px;
+  float:left;
 }
 div.checkoutNavBoxes{
-width:438px;
-border: 1px solid #a3a3a3;
-/*background:#F8F8F8;*/
-padding:5px;
-margin-right:20px;
-float:left;
-height:120px;
+  width:438px;
+  border: 1px solid #a3a3a3;
+  /*background:#F8F8F8;*/
+  padding:5px;
+  margin-right:20px;
+  float:left;
+  height:120px;
 }
 div.checkoutNav2Boxes{
-width:438px;
-border: 1px solid #a3a3a3;
-padding:5px;
-margin-right:20px;
-min-height: 70px;
-float:left;
+  width:438px;
+  border: 1px solid #a3a3a3;
+  padding:5px;
+  margin-right:20px;
+  min-height: 70px;
+  float:left;
 }
 div.checkoutbox{
-border: 2px solid #999!important;
-background: #E3F4DA!important; /*diese Farbe muss sich erheblich abheben*/
+  border: 2px solid #999!important;
+  background: #E3F4DA!important; /*diese Farbe muss sich erheblich abheben*/
 }
 div.checkoutbox .image{
-max-width:80px;
+  max-width:80px;
 }
 div.checkoutbox td.main_row {
-border-top: 1px solid #666;
+  border-top: 1px solid #666;
 }
 div.checkoutbox div.hr{
-border:none;
-border-top: 1px solid #666;
-color: #E3F4DA; /*wie hintergrundfarbe*/
-background-color:#E3F4DA; /*wie hintergrundfarbe*/
-height: 1px;
+  border:none;
+  border-top: 1px solid #666;
+  color: #E3F4DA; /*wie hintergrundfarbe*/
+  background-color:#E3F4DA; /*wie hintergrundfarbe*/
+  height: 1px;
 }
 div.checkoutbox .details{
-padding: 0 12px 0 0; 
-background: url(img/external.gif) no-repeat 100% 0px;
-color: #000;
-font-weight: bold;
+  padding: 0 12px 0 0; 
+  background: url(img/external.gif) no-repeat 100% 0px;
+  color: #000;
+  font-weight: bold;
 }
 div.checkoutbox .total table td {
-padding:0px;
+  padding:0px;
 }
 div.checkoutbox .small{
-font-size: 11px;
+  font-size: 11px;
 }
 
 /************************************************
@@ -1422,32 +1422,32 @@ BASIC Template for AGB Hosting Content
 ************************************************/
 /* janolaw BOF */
 .janolaw-absatz {
-	font-size: 12px;
-	margin: 8px 4px 4px 8px;        
+  font-size: 12px;
+  margin: 8px 4px 4px 8px;        
 }
 .janolaw-paragraph {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
-	margin: 16px 4px 4px 8px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin: 16px 4px 4px 8px;
 }
 #janolaw-paragraph {
-	font-size: 14px;
-	font-weight: bold;
-	text-align: center;
-	margin: 16px 4px 4px 8px;
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+  margin: 16px 4px 4px 8px;
 }
 .janolaw-text {
-	font-size: 12px;
-	margin: 8px 4px 4px 8px;
+  font-size: 12px;
+  margin: 8px 4px 4px 8px;
 }
 .janolaw-adress {
-	font-size: 12px;
-	margin: 8px 4px 4px 8px;
+  font-size: 12px;
+  margin: 8px 4px 4px 8px;
 }
 .janolaw-block {
-	font-size: 12px;
-	margin: 8px 4px 4px 8px;
+  font-size: 12px;
+  margin: 8px 4px 4px 8px;
 }
 #janolaw-footer{
 }
@@ -1458,56 +1458,64 @@ BASIC Template for AGB Hosting Content
 
 /* Content */
 ul.contentmenu {
-background-color:#ededed;
-margin-bottom:15px;
-border:solid #ccc;
-border-width:0 1px 1px 1px;
+  background-color:#ededed;
+  margin-bottom:15px;
+  border:solid #ccc;
+  border-width:0 1px 1px 1px;
 }
 ul.contentmenu li a.actparentlink { font-style:italic; }
 ul.contentmenu li a.actlink { font-style:italic; text-decoration:underline; }
 /* 1st TIER */
 ul.contentmenu li.level1 {
-list-style-type:none;
-border:solid #fff;
-border-width:1px 0 0 0;
+  list-style-type:none;
+  border:solid #fff;
+  border-width:1px 0 0 0;
 }
 ul.contentmenu li.level1 a {
-text-decoration:none;
-outline:none;
-color:#333;
-background:#eee;
-font-weight:bold;
-padding:4px 0 4px 6px;
-display:block;
+  text-decoration:none;
+  outline:none;
+  color:#333;
+  background:#eee;
+  font-weight:bold;
+  padding:4px 0 4px 6px;
+  display:block;
 }
 ul.contentmenu li.level1 a:hover {
-text-decoration:none;
-color:#333;
-background-color:#e1e1e1;
-font-weight:bold;
+  text-decoration:none;
+  color:#333;
+  background-color:#e1e1e1;
+  font-weight:bold;
 }
 ul.contentmenu li.activeparent1 a  { font-style:italic; background:#eee; }
-ul.contentmenu li.active1 a  {	font-style: italic; background: #d7c9d1;}
+ul.contentmenu li.active1 a  {  font-style: italic; background: #d7c9d1;}
 /* 2nd TIER */
 ul.contentmenu li.level2 {
-list-style-type:none;
-border:solid #fff;
-border-width:1px 0 0 0;
+  list-style-type:none;
+  border:solid #fff;
+  border-width:1px 0 0 0;
 }
 ul.contentmenu li.level2 a {
-text-decoration:none;
-outline:none;
-color:#333;
-background:url(img/dotted1.gif) no-repeat 8px 9px #e1e1e1;
-font-weight:bold;
-padding:4px 0 4px 18px;
-display:block;
+  text-decoration:none;
+  outline:none;
+  color:#333;
+  background:url(img/dotted1.gif) no-repeat 8px 9px #e1e1e1;
+  font-weight:bold;
+  padding:4px 0 4px 18px;
+  display:block;
 }
 ul.contentmenu li.level2 a:hover {
-text-decoration:none;
-color:#333;
-background-color:#c7c7c7;
-font-weight:bold;
+  text-decoration:none;
+  color:#333;
+  background-color:#c7c7c7;
+  font-weight:bold;
 }
 ul.contentmenu li.activeparent2 a  { font-style:italic; background:#e1e1e1; }
 ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
+
+/* INFO MESSAGES */
+.infomessage {
+  border: 2px solid green;
+  padding: 15px;
+  background-color: #e5ffe8;
+  margin-bottom: 10px;
+}

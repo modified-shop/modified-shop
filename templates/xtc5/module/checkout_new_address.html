@@ -3,7 +3,7 @@
 <p>{#text_new_address#}</p>
 <div class="highlightbox">
 <table width="100%" border="0" cellspacing="2" cellpadding="0">
-  {if $gender=='1'}
+  {if $gender == '1'}
   <tr>
     <td>{#text_gender#}</td>
     <td>
@@ -24,7 +24,7 @@
     <td>{#text_lastname#}</td>
     <td align="left">{$INPUT_LASTNAME}</td>
   </tr>
-  {if $company=='1'}
+  {if $company == '1'}
   <tr>
     <td>&nbsp;</td>
     <td align="left"></td>
@@ -42,7 +42,7 @@
     <td >{#text_street#}</td>
     <td align="left">{$INPUT_STREET}</td>
   </tr>
-  {if $suburb=='1'}
+  {if $suburb == '1'}
   <tr>
     <td>{#text_suburb#}</td>
     <td align="left">{$INPUT_SUBURB}</td>
@@ -56,7 +56,7 @@
     <td>{#text_city#}</td>
     <td align="left">{$INPUT_CITY}</td>
   </tr>
-  {if $state=='1'}
+  {if $state == '1'}
   <tr>
     <td>{#text_state#}</td>
     <td align="left">{$INPUT_STATE}</td>
@@ -66,7 +66,7 @@
     <td>{#text_country#}</td>
     <td align="left">{$SELECT_COUNTRY}</td>
   </tr>
-  {if $new=='1'}
+  {if $new == '1'}
   <tr>
     <td>&nbsp;</td>
     <td align="left">{$CHECKBOX_PRIMARY} {#text_standard#}</td>

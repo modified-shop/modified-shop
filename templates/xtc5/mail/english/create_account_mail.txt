@@ -11,13 +11,13 @@ You now have access to the following features:
 
 If this account wasn't created by you, please contact us at {$content.MAIL_REPLY_ADDRESS}.
 
-{if $SEND_GIFT==true}
+{if $SEND_GIFT == true}
 As a thank you for creating your account, you've received a {$GIFT_AMMOUNT} gift voucher!
 
 Redeem your voucher with the following code - {$GIFT_CODE} - when placing an order or simply by clicking the following link {$GIFT_LINK}.
 {/if}
 
-{if $SEND_COUPON==true}
+{if $SEND_COUPON == true}
 As a thank you for creating your account, you've recieved a discount voucher!
 
 The voucher details are: {$COUPON_DESC}

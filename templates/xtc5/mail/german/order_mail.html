@@ -27,7 +27,7 @@
           {if $address_label_payment!=$address_label_shipping}<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font></td>{/if}
         </tr>
       </table>
-      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sehr geehrte{if $GENDER=='Herr'}r{/if} {$GENDER} {$LASTNAME},
+      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
         <br /><br />vielen Dank f&uuml;r Ihre Bestellung.<br />
  {$PAYMENT_INFO_HTML}</font>
         <br />{if $COMMENTS}<br />
@@ -65,7 +65,7 @@
         <tr>
           <td width="20" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_QTY}</font></div></td>
           <td width="20" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">x</font></div></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{$order_values.PRODUCTS_NAME}</strong>{if ACTIVATE_SHIPPING_STATUS=='true'}{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}{/if}<em><br />
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{$order_values.PRODUCTS_NAME}</strong>{if ACTIVATE_SHIPPING_STATUS == 'true'}{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}{/if}<em><br />
             {$order_values.PRODUCTS_ATTRIBUTES}</em></font></td>
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_MODEL}<br />
             <em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></font></td>

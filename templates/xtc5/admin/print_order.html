@@ -81,7 +81,7 @@
                 <td width="20" class="border"><div align="center">{$order_values.PRODUCTS_QTY}</div></td>
                 <td width="20" class="border"><div align="center">x</div></td>
                 <td class="border"><strong>{$order_values.PRODUCTS_NAME}</strong>
-                  {if ACTIVATE_SHIPPING_STATUS=='true'}
+                  {if ACTIVATE_SHIPPING_STATUS == 'true'}
                     {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}
                     {/if}
                   {/if}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>

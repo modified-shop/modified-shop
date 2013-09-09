@@ -10,7 +10,7 @@
 </div>
 <h1>{#title_addresses#}</h1>
 {foreach name=aussen item=addresses from=$addresses_data}
-<p><strong>{$addresses.NAME} {if $addresses.PRIMARY=='1'} ({#title_standard#}) {/if}</strong><br />
+<p><strong>{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}</strong><br />
 {$addresses.ADDRESS}</p>
 <p>{$addresses.BUTTON_EDIT}&nbsp;{$addresses.BUTTON_DELETE}</p>
 <div class="hr"></div>

@@ -2,13 +2,13 @@
 {if $deny_cart neq 'true'}
   <h2 class="boxcartheader">{#heading_cart#}</h2>
   <div{if !isset($GV_AMOUNT)} class="boxcartbody" {else} class="boxcartbody"{/if}>
-    {if $ACTIVATE_GIFT=='true'}
+    {if $ACTIVATE_GIFT == 'true'}
       {if isset($GV_AMOUNT)}
         <p><strong>{#voucher_balance#}</strong>&nbsp;{$GV_AMOUNT}</p>
         <div class="hr"></div>
       {/if}
     {/if}
-    {if $empty=='false'}
+    {if $empty == 'false'}
       {* cart has content *}
       {foreach name=aussen item=products_data from=$products}
         <p>{$products_data.QTY}&nbsp;x&nbsp;<a href="{$products_data.LINK}">{$products_data.NAME|truncate:20:"...":true}</a></p>
