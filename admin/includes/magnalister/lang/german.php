@@ -160,7 +160,6 @@ define('ML_LABEL_PARENT', 'Elternartikel');
 define('ML_LABEL_MARKETPLACE_ORDER_ID', 'Marketplace Bestellnummer');
 define('ML_LABEL_MARKETPLACE_PAYMENT_METHOD', 'Zahlart');
 define('ML_LABEL_MARKETPLACE_SHIPPING_METHOD', 'Versandart');
-define('ML_LABEL_MARKETPLACE_SHIPPING_METHOD', 'Versandart');
 define('ML_LABEL_MARKETPLACE_SHIPPING_TIME', 'Versandzeit');
 define('ML_LABEL_MARKETPLACE_SHIPPING_TIME_VALUE', 'In den n&auml;chsten %s Tagen');
 define('ML_LABEL_SKU_NOT_IN_SHOP', 'Ein Artikel mit dieser SKU ist nicht (mehr) im Shop zu finden');
