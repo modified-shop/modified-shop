@@ -169,7 +169,6 @@ require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
-require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -177,9 +176,7 @@ xtc_db_connect() or die('Unable to connect to database server!');
 // load configuration
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from '.TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-  if (substr($configuration['cfgKey'], -4) != '_BAK') {
-    define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
-  }
+  define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
 }
 
 // Set the length of the redeem code, the longer the more secure
