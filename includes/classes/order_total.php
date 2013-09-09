@@ -75,8 +75,8 @@ class order_total {
       $close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
       // EOF - vr - 2010-03-03 fix gv display on checkout
 
-      $output_string = '';
       reset($this->modules);
+      $output_string = '';
       while (list (, $value) = each($this->modules)) {
         $class = substr($value, 0, strrpos($value, '.'));
         if ($GLOBALS[$class]->enabled && isset($GLOBALS[$class]->credit_class) && $GLOBALS[$class]->credit_class) {
@@ -248,12 +248,12 @@ class order_total {
           for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i ++) {
             if (xtc_not_null($GLOBALS[$class]->output[$i]['title']) && xtc_not_null($GLOBALS[$class]->output[$i]['text'])) {
               $order_total_array[] = array (
-              'code' => $GLOBALS[$class]->code,
-              'title' => $GLOBALS[$class]->output[$i]['title'],
-              'text' => $GLOBALS[$class]->output[$i]['text'],
-              'value' => $GLOBALS[$class]->output[$i]['value'],
-              'sort_order' => $GLOBALS[$class]->sort_order
-              );
+                'code' => $GLOBALS[$class]->code,
+                'title' => $GLOBALS[$class]->output[$i]['title'],
+                'text' => $GLOBALS[$class]->output[$i]['text'],
+                'value' => $GLOBALS[$class]->output[$i]['value'],
+                'sort_order' => $GLOBALS[$class]->sort_order
+                );
             }
           }
         }
@@ -272,8 +272,8 @@ class order_total {
         if ($GLOBALS[$class]->enabled) {
           $size = sizeof($GLOBALS[$class]->output);
           for ($i = 0; $i < $size; $i ++) {
-            $output_string .= '<tr><td align="right" class="main">'.$GLOBALS[$class]->output[$i]['title'].'</td><td align="right" class="main">'.$GLOBALS[$class]->output[$i]['text'].'</td></tr>';
-          }
+            $output_string .= '              <tr>'."\n".'                <td align="right" class="main">'.$GLOBALS[$class]->output[$i]['title'].'</td>'."\n".'                <td align="right" class="main">'.$GLOBALS[$class]->output[$i]['text'].'</td>'."\n".'              </tr>';
+					}
         }
       }
     }
@@ -281,23 +281,27 @@ class order_total {
     return $output_string;
   }
 
+  function output_array() {
+		$arr_output = array();
+		if (is_array($this->modules)) {
+			reset($this->modules);
+			while (list (, $value) = each($this->modules)) {
+				$class = substr($value, 0, strrpos($value, '.'));
+				if ($GLOBALS[$class]->enabled) {
+					$size = sizeof($GLOBALS[$class]->output);
+					for ($i = 0; $i < $size; $i ++) {
+						$arr_output[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
+					}
+				}
+			}
+		}
+
+		return $arr_output;
+	}
+
   //BOF - web28 - 2011-02-01 -  PayPal Express
   function pp_output() {
-    $output_string = '';
-    if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
-        $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
-          $size = sizeof($GLOBALS[$class]->output);
-          for ($i = 0; $i < $size; $i ++) {
-            $output_string[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
-          }
-        }
-      }
-    }
-
-    return $output_string;
+    return output_array();   
   }
   //EOF - web28 - 2011-02-01 -  PayPal Express
 }

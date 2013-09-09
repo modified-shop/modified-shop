@@ -194,6 +194,7 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
   //EOF - DokuMan - 2011-05-09 - Process the Order Total Modules Earlier on the Checkout Confirmation Page
   $total_block = $order_total_modules->output();
   $smarty->assign('TOTAL_BLOCK', $total_block);
+  $smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_modules->output_array());
 }
 
 // create payment information
