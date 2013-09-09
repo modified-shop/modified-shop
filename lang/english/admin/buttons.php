@@ -1,18 +1,19 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: buttons.php 1125 2005-07-28 09:59:44Z novalis $   
+   $Id: buttons.php 4892 2013-06-06 16:34:15Z Tomcraft $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(categories.php,v 1.22 2002/08/17); www.oscommerce.com 
-   (c) 2003	 nextcommerce (categories.php,v 1.10 2003/08/14); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(categories.php,v 1.22 2002/08/17); www.oscommerce.com
+   (c) 2003 nextcommerce (categories.php,v 1.10 2003/08/14); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    --------------------------------------------------------------*/
 
 // buttons
@@ -34,6 +35,7 @@ define('BUTTON_EDIT_ATTRIBUTES', 'Edit Attributes');
 define('BUTTON_INSERT', 'Insert');
 define('BUTTON_UPDATE', 'Update');
 define('BUTTON_EXPORT', 'Export');
+define('BUTTON_CURRENCY_UPDATE', 'Update currency exchange rates');
 define('BUTTON_REVIEW_APPROVE', 'OK');
 define('BUTTON_SEND_EMAIL', 'Send E-Mail');
 define('BUTTON_SEND_COUPON', 'Send Coupon');
@@ -62,7 +64,6 @@ define('BUTTON_RESTORE', 'Restore');
 define('BUTTON_NEW_BANNER', 'New Banner');
 define('BUTTON_UPLOAD', 'Upload');
 define('BUTTON_IMPORT', 'Import');
-define('BUTTON_EXPORT', 'Export');
 define('BUTTON_CONFIRM', 'Confirm');
 define('BUTTON_REPORT', 'Report');
 define('BUTTON_RELEASE', 'Redeem');

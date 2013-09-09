@@ -1,11 +1,12 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: buttons.php 1125 2005-07-28 09:59:44Z novalis $   
+   $Id: buttons.php 4892 2013-06-06 16:34:15Z Tomcraft $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
 
-   Copyright (c) 2003 XT-Commerce
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
@@ -34,6 +35,7 @@ define('BUTTON_EDIT_ATTRIBUTES', 'Attribute editieren');
 define('BUTTON_INSERT', 'Einf&uuml;gen');
 define('BUTTON_UPDATE', 'Aktualisieren');
 define('BUTTON_EXPORT', 'Exportieren');
+define('BUTTON_CURRENCY_UPDATE', 'W&auml;hrungskurse aktualisieren');
 define('BUTTON_REVIEW_APPROVE', 'OK');
 define('BUTTON_SEND_EMAIL', 'E-Mail senden');
 define('BUTTON_SEND_COUPON', 'Gutschein senden');
@@ -62,7 +64,6 @@ define('BUTTON_RESTORE', 'Wiederherstellen');
 define('BUTTON_NEW_BANNER', 'Neuer Banner');
 define('BUTTON_UPLOAD', 'Hochladen');
 define('BUTTON_IMPORT', 'Importieren');
-define('BUTTON_EXPORT', 'Exportieren');
 define('BUTTON_CONFIRM', 'Best&auml;tigen');
 define('BUTTON_REPORT', 'Report');
 define('BUTTON_RELEASE', 'Einl&ouml;sen');
