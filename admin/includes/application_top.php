@@ -395,9 +395,11 @@ if (xtc_check_permission($pagename) == '0') {
 require (DIR_FS_EXTERNAL . 'smarty/Smarty.class.php');
 
 /* magnalister v1.0.1 */
-if (!defined('MAGNALISTER_PLUGIN') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
-	ob_start();
-	require_once (DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
-	ob_end_clean();
+if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
+  if (!defined('MAGNALISTER_PLUGIN') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
+    ob_start();
+    require_once (DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
+    ob_end_clean();
+  }
 }
 /* END magnalister */
