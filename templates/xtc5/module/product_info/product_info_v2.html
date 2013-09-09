@@ -35,22 +35,25 @@
             {if $PRODUCTS_EXPIRES}
               <p class="taxandshippinginfo">{#text_expires_date#} {$PRODUCTS_EXPIRES}</p>
             {/if}
-            {if $MANUFACTURER != ''}
-              <div class="hrlightgrey"></div>
-              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a>
-            {/if}
-            {if $MANUFACTURER_IMAGE != ''}
-              <p class="boxbody"><a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /></a></p>
-            {/if}
             {if $PRODUCTS_MODEL != ''}
               <div class="hrlightgrey"></div>
               <strong>{#model#}</strong> {$PRODUCTS_MODEL}<br />
             {/if}
-			{if $PRODUCTS_EAN != ''}<strong>{#ean#}</strong> {$PRODUCTS_EAN}<br />{/if}
-			{if $PRODUCTS_MANUFACTURERS_MODEL != ''}<strong>{#manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}<br />{/if}
-			{if $MANUFACTURER != ''}<strong>{#manufacturer#}</strong> {$MANUFACTURER}<br />{/if}
-			{if $MANUFACTURER_IMAGE != ''}<img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /><br />{/if}
-			{if $MANUFACTURER_LINK != ''}{#manufacturer_more_of#} <a href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />{/if}
+            {if $PRODUCTS_EAN != ''}
+              <strong>{#ean#}</strong> {$PRODUCTS_EAN}<br />
+            {/if}
+            {if $PRODUCTS_MANUFACTURERS_MODEL != ''}
+              <strong>{#manufacturer_model#}</strong> {$PRODUCTS_MANUFACTURERS_MODEL}<br />
+            {/if}
+            {if $MANUFACTURER != ''}
+              <strong>{#manufacturer#}</strong> {$MANUFACTURER}<br />
+            {/if}
+            {if $MANUFACTURER_IMAGE != ''}
+              <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /></a><br />
+            {/if}
+            {if $MANUFACTURER_LINK != ''}
+              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
+            {/if}
             {if $PRODUCTS_URL != ''}
               <div class="hrlightgrey"></div>
               <div style="padding-top:5px;">{$PRODUCTS_URL}</div>
