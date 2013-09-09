@@ -535,7 +535,11 @@ class xtcPrice {
   function xtcFormatSpecialDiscount($pID, $discount, $pPrice, $format, $vpeStatus = 0) {
     $sPrice = $pPrice - ($pPrice / 100) * $discount;
     if ($format) {
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $this->xtcFormat($pPrice, $format) . '</del></span><br />' . ONLY . $this->checkAttributes($pID) . $this->xtcFormat($sPrice, $format) . '<br /><small>' . YOU_SAVE . round(($pPrice - $sPrice) / $pPrice * 100) . ' % /' . $this->xtcFormat($pPrice - $sPrice, $format);
+      $old_price = $this->xtcFormat($pPrice, $format);
+      $special_price = $this->xtcFormat($sPrice, $format);
+      $save_percent = round(($pPrice - $sPrice) / $pPrice * 100);
+      $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $this->checkAttributes($pID) . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
       if ($discount != 0) {
         // customer group discount
         $price .= '<br />' . BOX_LOGINBOX_DISCOUNT . ': ' . round($discount) . ' %';
@@ -546,7 +550,11 @@ class xtcPrice {
       } else {
         return array(
           'formated' => $price,
-          'plain' => $sPrice
+          'plain' => $sPrice,
+          'special_price' =>  $special_price,
+          'old_price' =>  $old_price,
+          'save_percent' =>  $save_percent,
+          'save_diff' =>  $save_diff
         );
       }
     } else {
@@ -555,18 +563,28 @@ class xtcPrice {
   }
   
   function xtcFormatSpecial($pID, $sPrice, $pPrice, $format, $vpeStatus = 0) {
-    if ($format) {
+    if ($format) {      
       if (!isset($pPrice) || $pPrice == 0)
         $discount = 0;
       else
         $discount = ($pPrice - $sPrice) / $pPrice * 100;
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $this->xtcFormat($pPrice, $format) . '</del></span><br />' . ONLY . $this->checkAttributes($pID) . $this->xtcFormat($sPrice, $format) . '<br /><small>' . YOU_SAVE . round($discount) . ' % /' . $this->xtcFormat($pPrice - $sPrice, $format) . '</small>';
+        
+      $old_price = $this->xtcFormat($pPrice, $format);
+      $special_price = $this->xtcFormat($sPrice, $format);
+      $save_percent = round($discount);
+      $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
+      
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $this->checkAttributes($pID) . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
       if ($vpeStatus == 0) {
         return $price;
       } else {
         return array(
           'formated' => $price,
-          'plain' => $sPrice
+          'plain' => $sPrice,
+          'special_price' =>  $special_price,
+          'old_price' =>  $old_price,
+          'save_percent' =>  $save_percent,
+          'save_diff' =>  $save_diff
         );
       }
     } else {
@@ -597,14 +615,20 @@ class xtcPrice {
                              FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
                             WHERE products_id='" . $pID . "'");
       $sQuery = xtc_db_fetch_array($sQuery, true);
+      $old_price = '';
+      $special_price = '';
       if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
         $bestPrice = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
         if ($discount) {
           $bestPrice -= $bestPrice / 100 * $discount;
         }
-        $price = FROM . $this->xtcFormat($bestPrice, $format, $tax_class) . ' <br /><small>' . UNIT_PRICE . $this->xtcFormat($sPrice, $format) . '</small>';
+        $old_price = $this->xtcFormat($bestPrice, $format, $tax_class);
+        $special_price = $this->xtcFormat($sPrice, $format);
+        $price = FROM . $old_price . ' <br /><small>' . UNIT_PRICE . $special_price . '</small>';
       } else if ($sPrice != $pPrice) {
-        $price = '<span class="productOldPrice">' . MSRP . ' ' . $this->xtcFormat($pPrice, $format) . '</span><br />' . YOUR_PRICE . $this->checkAttributes($pID) . $this->xtcFormat($sPrice, $format);
+        $old_price = $this->xtcFormat($pPrice, $format);
+        $special_price = $this->xtcFormat($sPrice, $format);
+        $price = '<span class="productOldPrice">' . MSRP . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $this->checkAttributes($pID) . $special_price;
       } else {
         $price = $this->xtcFormat($sPrice, $format);
       }
@@ -614,7 +638,9 @@ class xtcPrice {
       } else {
         return array(
           'formated' => $price,
-          'plain' => $sPrice
+          'plain' => $sPrice,
+          'special_price' =>  $special_price,
+          'old_price' =>  $old_price
         );
       }
     } else {

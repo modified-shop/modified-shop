@@ -44,7 +44,7 @@ if (!is_object($product) || !$product->isProduct()) {
 } else {
 
   $info_smarty = new Smarty;
-  $info_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $info_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
   if(defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS') && MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'klarna_partPayment') === false){
     include_once(DIR_WS_INCLUDES.'modules/payment/klarna/display_klarna_price.php'); // Klarna payment module integration
   }
@@ -144,6 +144,13 @@ if (!is_object($product) || !$product->isProduct()) {
 
   //products formated price
   $info_smarty->assign('PRODUCTS_PRICE', $products_price['formated']);
+  
+  //products price additional
+  if (count($products_price) > 0) {
+    foreach($products_price as $key => $entry) {                  
+       $info_smarty->assign('PRODUCTS_'.strtoupper($key),$entry);
+    }
+  }
 
   //get products vpe
   $info_smarty->assign('PRODUCTS_VPE',$main->getVPEtext($product->data, $products_price['plain'])); //web28 - 2012-04-17 - use classes function getVPEtext() 
