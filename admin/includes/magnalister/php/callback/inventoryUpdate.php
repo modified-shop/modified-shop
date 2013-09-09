@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: inventoryUpdate.php 2337 2013-04-05 16:34:05Z MaW $
+ * $Id: inventoryUpdate.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *	 Released under the GNU General Public License v2 or later
@@ -365,7 +365,7 @@ function magnaInventoryUpdateByEdit() {
 		return;
 	}
 
-	$productsData = MagnaDB::gi()->getProductById($pID);
+	$productsData = MLProduct::gi()->getProductById($pID);
 	if ($productsData === false) {
 		if (defined('ML_LOG_INVENTORY_CHANGE') && ML_LOG_INVENTORY_CHANGE) {
 			file_put_contents(DIR_MAGNALISTER_CALLBACK.'inventoryUpdate.dat', 'Return '.__LINE__.': ($productsData === false); $pID: '.$pID.';'."\n\n", FILE_APPEND);

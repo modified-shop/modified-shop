@@ -521,6 +521,7 @@ function VariationsEnabled($cID) {
 }
 
 function substitutePictures($tmplStr, $pID, $imagePath) {
+	$undo = ml_extractBase64($tmplStr);
 	# Tabelle nur bei xtCommerce- und Gambio- Shops vorhanden (nicht OsC)
 	if (defined('TABLE_PRODUCTS_IMAGES') && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_IMAGES) && 
 		MagnaDB::gi()->columnExistsInTable('image_name', TABLE_PRODUCTS_IMAGES)
@@ -538,14 +539,16 @@ function substitutePictures($tmplStr, $pID, $imagePath) {
 			$i++;
 		}
 		# Uebriggebliebene #PICTUREx# loeschen
-        $str = preg_replace('/#PICTURE\d+#/','',
-            preg_replace('/<[^<]*(src|SRC|href|HREF|rev|REV)\s*=\s*(\'|")#PICTURE\d+#(\'|")[^>]*\/*>/','',$tmplStr));
+		$tmplStr = preg_replace('/<[^<]*(src|SRC|href|HREF|rev|REV)\s*=\s*(\'|")#PICTURE\d+#(\'|")[^>]*\/*>/', '', $tmplStr);
+		$tmplStr = preg_replace('/#PICTURE\d+#/','', $tmplStr);
+		$str = ml_restoreBase64($tmplStr, $undo);
 	} else {
-        $str = preg_replace('/#PICTURE\d+#/','',
-            preg_replace('/<[^<]*(src|SRC|href|HREF|rev|REV)\s*=\s*(\'|")#PICTURE\d+#(\'|")[^>]*\/*>/','',$tmplStr));
+		$tmplStr = preg_replace('/<[^<]*(src|SRC|href|HREF|rev|REV)\s*=\s*(\'|")#PICTURE\d+#(\'|")[^>]*\/*>/', '', $tmplStr);
+		$tmplStr = preg_replace('/#PICTURE\d+#/','', $tmplStr);
+		$str = ml_restoreBase64($tmplStr, $undo);
 	}
 	# ggf. leere image tags loeschen
-    $str = preg_replace('/<img[^>]*src=(""|\'\')[^>]*>/i', '', $str);
+	$str = preg_replace('/<img[^>]*src=(""|\'\')[^>]*>/i', '', $str);
 	return $str;
 }
 

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: apply.php 2437 2013-05-06 13:32:58Z tim.neumann $
+ * $Id: apply.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -60,7 +60,7 @@ function populateGenericData($pID, $edit = false) {
 		}
 		return $genericDataStructure;
 	}
-	$product = MagnaDB::gi()->getProductById(
+	$product = MLProduct::gi()->getProductById(
 		$pID, getDBConfigValue('amazon.lang', $_MagnaSession['mpID'], $_SESSION['languages_id'])
 	);
 	if ($product === false) {
@@ -341,7 +341,7 @@ if (array_key_exists('saveApplyData', $_POST)) {
 						</tr>';
 					break;
 				}
-				$product = MagnaDB::gi()->getProductById($pID);
+				$product = MLProduct::gi()->getProductById($pID);
 				echo '
 						<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 							<td>'.$pID.'</td>

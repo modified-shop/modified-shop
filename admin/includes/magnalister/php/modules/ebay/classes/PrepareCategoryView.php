@@ -64,7 +64,12 @@ class PrepareCategoryView extends QuickCategoryView {
 		          FROM '.TABLE_PRODUCTS_TO_CATEGORIES.' p2c
 				  LEFT JOIN '.TABLE_PRODUCTS.' p ON p2c.products_id=p.products_id
 		         WHERE p2c.categories_id IN(' . implode(', ', $aCatIds) . ')
-		        '.(getDBConfigValue('general.keytype', '0') == 'artNr'
+		        '.(
+						$this->showOnlyActiveProducts
+								? 'AND p.products_status<>0'
+								: ''
+				).'
+				'.(getDBConfigValue('general.keytype', '0') == 'artNr'
 		            ? " AND p.products_model!='' AND p.products_model IS NOT NULL"
 		            : ""
 		        ).'

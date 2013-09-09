@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaFunctionLib.php 3047 2013-07-26 15:14:32Z derpapst $
+ * $Id: magnaFunctionLib.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -247,10 +247,10 @@ function substituteTemplate($tmplStr, $substitution) {
 
 	# relative Pfade bei (nicht von uns eingesetzten) Bildern und Links ersetzen
 	if (   ('none_none' != getDBConfigValue('general.editor',0,'tinyMCE')) 
-	    && (preg_match('/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(?!http|HTTP|mailto|javascript|#|\+|\'\+|"\+)/', $str))
+	    && (preg_match('/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(?!http|HTTP|mailto|javascript|data:image|#|\+|\'\+|"\+)/', $str))
 	) {
 		$str = preg_replace(
-			'/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(?!http|HTTP|mailto|javascript|#|\+|\'\+|"\+)/',
+			'/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(?!http|HTTP|mailto|javascript|data:image|#|\+|\'\+|"\+)/',
 			'\1\2\3'.HTTP_CATALOG_SERVER.DIR_WS_CATALOG.'\4', 
 			preg_replace(
 				'/(src|SRC|href|HREF|rev|REV)(\s*=\s*)(\'|")(\/)/',
@@ -406,48 +406,59 @@ function sendTestMail($mpID) {
 }
 
 function delete_double_orders() {
-	$orders_id_array = MagnaDB::gi()->fetchArray('SELECT DISTINCT mo2.orders_id orders_id
-				FROM '.TABLE_MAGNA_ORDERS.' mo1, '.TABLE_MAGNA_ORDERS.' mo2
-				 WHERE mo1.orders_id < mo2.orders_id AND mo1.special=mo2.special
-				 AND mo1.data = mo2.data AND mo1.mpID=mo2.mpID
-				ORDER BY mo2.orders_id');
+	$orders_id_array = MagnaDB::gi()->fetchArray('
+		SELECT DISTINCT mo2.orders_id orders_id
+		FROM '.TABLE_MAGNA_ORDERS.' mo1, '.TABLE_MAGNA_ORDERS.' mo2
+		 WHERE mo1.orders_id < mo2.orders_id AND mo1.special=mo2.special
+		 AND mo1.data = mo2.data AND mo1.mpID=mo2.mpID
+		ORDER BY mo2.orders_id
+	');
 	$orders_id_list = '';
-	foreach($orders_id_array as $current_order)
+	foreach ($orders_id_array as $current_order) {
 		$orders_id_list .= ', '.$current_order['orders_id'];
+	}
 	$orders_id_list = trim($orders_id_list, ', ');
-	if(empty($orders_id_list)) return true;
-	$orders_tables = array( TABLE_ORDERS,
-				TABLE_ORDERS_STATUS_HISTORY,
-				TABLE_ORDERS_TOTAL,
-				TABLE_ORDERS_PRODUCTS,
-				TABLE_ORDERS_PRODUCTS_ATTRIBUTES);
+	if (empty($orders_id_list)) {
+		return true;
+	}
+	$orders_tables = array(
+		TABLE_ORDERS,
+		TABLE_ORDERS_STATUS_HISTORY,
+		TABLE_ORDERS_TOTAL,
+		TABLE_ORDERS_PRODUCTS,
+		TABLE_ORDERS_PRODUCTS_ATTRIBUTES
+	);
 	foreach($orders_tables as $current_table) {
-		MagnaDB::gi()->query('DELETE FROM '.$current_table.'
-					WHERE orders_id IN ('.$orders_id_list.')
-				');
+		MagnaDB::gi()->query('
+			DELETE FROM '.$current_table.'
+			WHERE orders_id IN ('.$orders_id_list.')
+		');
 	}
 	return true;
 }
 
 function delete_double_customers() {
 	return true;
-	$customers_id_array = MagnaDB::gi()->fetchArray('SELECT DISTINCT
-				c2.customers_id customers_id, c2.customers_default_address_id address_book_id
-				FROM '.TABLE_CUSTOMERS.' c1, '.TABLE_CUSTOMERS.' c2
-				WHERE c1.customers_firstname = c2.customers_firstname
-				AND c1.customers_lastname=c2.customers_lastname
-				AND c1.customers_email_address = c2.customers_email_address
-				AND c2.customers_id > c1.customers_id
-				ORDER BY c2.customers_id');
+	$customers_id_array = MagnaDB::gi()->fetchArray('
+		SELECT DISTINCT c2.customers_id customers_id, c2.customers_default_address_id address_book_id
+		  FROM '.TABLE_CUSTOMERS.' c1, '.TABLE_CUSTOMERS.' c2
+		 WHERE c1.customers_firstname = c2.customers_firstname
+		        AND c1.customers_lastname=c2.customers_lastname
+		        AND c1.customers_email_address = c2.customers_email_address
+		        AND c2.customers_id > c1.customers_id
+		ORDER BY c2.customers_id
+	');
 	$customers_id_list = '';
 	$address_book_id_list = '';
 	$customers_info_id_list = '';
-	foreach($customers_id_array as $current_customer) {
+	foreach ($customers_id_array as $current_customer) {
 		$customers_id_list .= ', '.$current_customer['customers_id'];
 		$address_book_id_list .= ', '.$current_customer['address_book_id'];
 	}
 	$customers_id_list = trim($customers_id_list, ', ');
-	if(empty($customers_id_list)) return true;
+	if (empty($customers_id_list)) {
+		return true;
+	}
 	$address_book_id_list = trim($address_book_id_list, ', ');
 	MagnaDB::gi()->query('DELETE FROM '.TABLE_CUSTOMERS.' WHERE customers_id in ('.$customers_id_list.')');
 	MagnaDB::gi()->query('DELETE FROM '.TABLE_CUSTOMERS_INFO.' WHERE customers_info_id in ('.$customers_id_list.')');
@@ -463,15 +474,18 @@ function delete_double_ot_lines() {
 		  WHERE ot.orders_id=mo.orders_id
 		   GROUP BY ot.orders_id, ot.class, ot.title, ot.text
 		   HAVING cnt > 1');
-    if (empty($doubleOTLines) || !is_array($doubleOTLines))
+	if (empty($doubleOTLines) || !is_array($doubleOTLines)) {
 		return;
+	}
 	$surplus_orders_total_ids = '';
 	foreach ($doubleOTLines as $OTLine) {
 		$surplus_orders_total_ids .= ', '.$OTLine['max_orders_total_id'];
 	}
 	$surplus_orders_total_ids = trim($surplus_orders_total_ids, ', ');
-	MagnaDB::gi()->query('DELETE FROM '.TABLE_ORDERS_TOTAL.'
-		WHERE orders_total_id IN ('.$surplus_orders_total_ids.')');
+	MagnaDB::gi()->query('
+		DELETE FROM '.TABLE_ORDERS_TOTAL.'
+		WHERE orders_total_id IN ('.$surplus_orders_total_ids.')
+	');
 }
 
 function magnaFixOrders() {
@@ -892,11 +906,11 @@ function magnaSKU2pOpt($sku, $language = 'en') {
 	if ($aID === false) {
 		return $ret;
 	}
-	$option = MagnaDB::gi()->fetchRow(' 		 
-		SELECT options_id, options_values_id, options_values_price, price_prefix 		 
-		  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'  		 
-	     WHERE products_attributes_id = \''.$aID.'\'
-	     LIMIT 1 		 
+	$option = MagnaDB::gi()->fetchRow('
+		SELECT options_id, options_values_id, options_values_price, price_prefix
+		  FROM '.TABLE_PRODUCTS_ATTRIBUTES.'
+		 WHERE products_attributes_id = \''.$aID.'\'
+		 LIMIT 1
 	');
 
 	if ($option === false) {
@@ -1008,7 +1022,7 @@ function renderPagination ($currentPage, $pages, $baseURL, $type = 'link') {
 function renderCategoryPath($id, $from = 'category') {
 	$calculated_category_path_string = '';
 	$appendedText = '&nbsp;<span class="cp_next">&gt;</span>&nbsp;';
-	$calculated_category_path = MagnaDB::gi()->generateCategoryPath($id, $from);
+	$calculated_category_path = MLProduct::gi()->generateCategoryPath($id, $from);
 	for ($i = 0, $n = sizeof($calculated_category_path); $i < $n; $i ++) {
 		for ($j = 0, $k = sizeof($calculated_category_path[$i]); $j < $k; $j ++) {
 			$calculated_category_path_string .= fixHTMLUTF8Entities($calculated_category_path[$i][$j]['text']).$appendedText;
@@ -1017,9 +1031,9 @@ function renderCategoryPath($id, $from = 'category') {
 	}
 	$calculated_category_path_string = substr($calculated_category_path_string, 0, -4);
 
-	if (strlen($calculated_category_path_string) < 1)
+	if (strlen($calculated_category_path_string) < 1) {
 		$calculated_category_path_string = ML_LABEL_CATEGORY_TOP;
-
+	}
 	return $calculated_category_path_string;
 }
 
@@ -1111,20 +1125,19 @@ function magna_wysiwyg($params, $value = '') {
 	}
 	$html .= '>'.str_replace('<', '&lt;', (string)$value).'</textarea>';
 
-    if ('tinyMCE' == getDBConfigValue('general.editor',0,'tinyMCE')) {
-
-	    $html .= '<script type="text/javascript" src="includes/magnalister/js/tiny_mce/tiny_mce.js"></script>';
-
-	    ob_start();?>
-        <script type="text/javascript">/*<![CDATA[*/
-    	    <?php echo getTinyMCEDefaultConfigObject(); ?>
+	if ('tinyMCE' == getDBConfigValue('general.editor',0,'tinyMCE')) {
+		$html .= '<script type="text/javascript" src="includes/magnalister/js/tiny_mce/tiny_mce.js"></script>';
+		
+		ob_start();?>
+		<script type="text/javascript">/*<![CDATA[*/
+		    <?php echo getTinyMCEDefaultConfigObject(); ?>
 		    $(document).ready(function() {
 			    tinyMCE.init(tinyMCEMagnaDefaultConfig);
 		    });
-	    /*]]>*/</script><?php
-	    $html .= ob_get_contents();
-	    ob_end_clean();
-    }
+		/*]]>*/</script><?php
+		$html .= ob_get_contents();
+		ob_end_clean();
+	}
 	return $html;
 }
 
@@ -1279,9 +1292,9 @@ function magnaFooterDebugTimers() {
 				API-Request Time: '.microtime2human(MagnaConnector::gi()->getRequestTime()).'. <br/>
 				Processing Time: '.microtime2human($_executionTime - MagnaConnector::gi()->getRequestTime()).'. <br/><hr/>
 				'.(($memory !== false) ? 'Max. Memory used: <b>'.$memory.'</b>. <br/><hr/>' : '').'
-		     	DB-Stats (only MagnaDB Queries!): <br/>
-		     	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Queries used: <b>'.MagnaDB::gi()->getQueryCount().'</b><br/>
-		     	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Query time: '.microtime2human(MagnaDB::gi()->getRealQueryTime()).'<br/><hr/>
+				DB-Stats (only MagnaDB Queries!): <br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Queries used: <b>'.MagnaDB::gi()->getQueryCount().'</b><br/>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Query time: '.microtime2human(MagnaDB::gi()->getRealQueryTime()).'<br/><hr/>
 			';
 		}
 		if (class_exists('MagnaConnector')) {
@@ -1379,8 +1392,8 @@ function magnaGenerateNavStructure() {
 							? $item['subtitle'] 
 							: $item['title'];
 			$curItem['label'] = isset($item['label'])
-                            ? $item['label']
-                            : '';
+							? $item['label']
+							: '';
 			$curItem['url']   = toURL(array('module' => $key));
 			$curItem['image'] = isset($item['logo'])
 							? DIR_MAGNALISTER_IMAGES.'logos/'.$item['logo'].'_inactive.png'
@@ -1427,22 +1440,22 @@ function magnaGenerateSideNav($args) {
 						'<a id="FILENAME_MAGNALISTER_TOP" href="' . toURL() . '" class="fav_drag_item ui-draggable">'.
 						'Marketing</a></div>
 					<div class="leftmenu_collapse leftmenu_collapse_opened"> </div>
-	       			<ul class="leftmenu_box" id="BOX_MAGNALISTER_LINK">';
-       			foreach ($structure as $item) {
-       				$item['title'] .= !empty($item['label']) 
-       					? ' :: '.strip_tags(str_replace(
+					<ul class="leftmenu_box" id="BOX_MAGNALISTER_LINK">';
+				foreach ($structure as $item) {
+					$item['title'] .= !empty($item['label']) 
+						? ' :: '.strip_tags(str_replace(
 							array('&lt;', '&gt;', '&quot;'),
 							array('<', '>', '"'),
 							fixHTMLUTF8Entities($item['label'])
 						)) 
-       					: '';
-       				$html .= '<li class="leftmenu_body_item '.$item['class'].'">'.
-       					'<a id="BOX_MAGNA_'.strtoupper($item['key']).'" href="'.$item['url'].'" '.
-       						'class="fav_drag_item ui-draggable" '.
-       						'title="'.$item['title'].'">'.$item['title'].'</a></li>';
-       			}
-	       		$html .= '</ul>';
-	       	}
+						: '';
+					$html .= '<li class="leftmenu_body_item '.$item['class'].'">'.
+						'<a id="BOX_MAGNA_'.strtoupper($item['key']).'" href="'.$item['url'].'" '.
+							'class="fav_drag_item ui-draggable" '.
+							'title="'.$item['title'].'">'.$item['title'].'</a></li>';
+				}
+				$html .= '</ul>';
+			}
 		}
 	}
 	return $html;
@@ -1650,20 +1663,41 @@ function magnaGetTimezoneOffset($remote_tz, $origin_tz = null) {
  * @return $localTimeval (YYYY-mm-dd HH:MM:ss)
  */
 function magnaTimeToLocalTime($magnaTimeval, $reverse = false) {
-    $offset = magnaGetTimezoneOffset('Europe/Berlin');
-    if (false == $offset) {
+	$offset = magnaGetTimezoneOffset('Europe/Berlin');
+	if (false == $offset) {
 		return $magnaTimeval;
 	}
 	if ($reverse) {
 		$offset = (int)((-1) * $offset);
 	}
-    return date('Y-m-d H:i:s', mktime(
-        substr($magnaTimeval, 11,2), substr($magnaTimeval, 14,2), substr($magnaTimeval, 17,2),
-        substr($magnaTimeval, 5,2),  substr($magnaTimeval, 8,2),  substr($magnaTimeval, 0,4)
-        ) + $offset);
-}   
+	return date('Y-m-d H:i:s', mktime(
+	    substr($magnaTimeval, 11,2), substr($magnaTimeval, 14,2), substr($magnaTimeval, 17,2),
+	    substr($magnaTimeval, 5,2),  substr($magnaTimeval, 8,2),  substr($magnaTimeval, 0,4)
+	    ) + $offset);
+}
 
 function localTimeToMagnaTime($localTimeval) {
 	# call magnaTimeToLocalTime with reverse == true
 	return magnaTimeToLocalTime($localTimeval, true);
+}
+
+function ml_extractBase64(&$in) {
+	$matches = array();
+	$out = array();
+	if (preg_match_all('/="(data:[^"]+)"/', $in, $matches)) {
+		$i = 1;
+		foreach ($matches[1] as $m) {
+			$phold = '{#Base64_'.($i++).'#}';
+			$in = str_replace($m, $phold, $in);
+			$out[$phold] = $m;
+		}
+	}
+	return $out;
+}
+
+function ml_restoreBase64($in, $baseIndex) {
+	if (empty($baseIndex)) {
+		return $in;
+	}
+	return str_replace(array_keys($baseIndex), array_values($baseIndex), $in);
 }

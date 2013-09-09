@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCheckinSubmit.php 2556 2013-05-24 09:16:36Z tim.neumann $
+ * $Id: AmazonCheckinSubmit.php 3152 2013-09-05 11:26:04Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -238,7 +238,27 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				$item['Quantity'] = 0;
 			}
 			$item['Tax'] = $tax;
-			$this->simpleprice->setPrice($data['price'])->removeTax($tax);
+			$this->simpleprice->setPrice($data['price']);
+			if (getDBConfigValue(
+					$this->_magnasession['currentPlatform'].'.price.addkind',
+					$this->_magnasession['mpID']
+				) == 'percent'
+			) {
+				$this->simpleprice->removeTax((float)getDBConfigValue(
+					$this->_magnasession['currentPlatform'].'.price.factor',
+					$this->_magnasession['mpID']
+				));
+			} else if (getDBConfigValue(
+					$this->_magnasession['currentPlatform'].'.price.addkind',
+					$this->_magnasession['mpID']
+				) == 'addition'
+			) {
+				$this->simpleprice->subLump((float)getDBConfigValue(
+					$this->_magnasession['currentPlatform'].'.price.factor',
+					$this->_magnasession['mpID']
+				));
+			}
+			$this->simpleprice->removeTax($tax);
 
 			$this->simpleprice->addLump($item['aPrice'] * (($item['aPricePrefix'] == '-') ? -1 : 1));
 

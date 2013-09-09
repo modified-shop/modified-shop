@@ -11,9 +11,9 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 2600 2013-05-29 13:31:39Z tim.neumann $
+ * $Id: magnaCallback.php 3163 2013-09-09 10:28:26Z derpapst $
  *
- * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -22,6 +22,7 @@ defined('E_RECOVERABLE_ERROR') OR define('E_RECOVERABLE_ERROR', 0x1000);
 defined('E_DEPRECATED')        OR define('E_DEPRECATED',        0x2000);
 defined('E_USER_DEPRECATED')   OR define('E_USER_DEPRECATED',   0x4000);
 defined('PHP_INT_MAX')         OR define('PHP_INT_MAX',     2147483647); // for PHP < 5.0.5
+
 
 //The timestamp of the start of the request. Available since PHP 5.1.0. 
 $_SERVER['REQUEST_TIME'] = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_TIME'] : time();
@@ -429,7 +430,8 @@ function magnaInstalled($woDBCheck = false) {
 	if ($woDBCheck) {
 		return $_magnaFilesInstalled;
 	}
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaDB.php');
+	require_once(DIR_MAGNALISTER_INCLUDES.'lib/MLTables.php');
+	require_once(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php');
 	$_magnaIsInstalled = MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
 	if (!$_magnaIsInstalled) return $_magnaIsInstalled;
 	
@@ -440,15 +442,15 @@ function magnaInstalled($woDBCheck = false) {
 	}
 
 	$dbDir = DIR_MAGNALISTER.'db/';
-    if (!$dirhandle = @opendir($dbDir)) {
-    	$_magnaIsInstalled = false;
+	if (!$dirhandle = @opendir($dbDir)) {
+		$_magnaIsInstalled = false;
 		return $_magnaIsInstalled;
-    }
+	}
 	$sqlFiles = array();
-    while (false !== ($filename = readdir($dirhandle))) {
-    	if (!preg_match('/^[0-9]*\.sql\.php$/', $filename)) continue;
-    	$sqlFiles[] = $filename;
-    }
+	while (false !== ($filename = readdir($dirhandle))) {
+		if (!preg_match('/^[0-9]*\.sql\.php$/', $filename)) continue;
+		$sqlFiles[] = $filename;
+	}
 	sort($sqlFiles);
 	$nDBV = (int)array_pop($sqlFiles);
 	#var_dump($dbV, $nDBV, $dbV < $nDBV);
@@ -626,16 +628,18 @@ function magnaCallbackRun() {
 	include_once(DIR_MAGNALISTER_INCLUDES . 'identifyShop.php');
 	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/json_wrapper.php');
 	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/functionLib.php');
+	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MLTables.php');
 	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaDB.php');
+	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MLProduct.php');
 	/* Language-Foo */
 	$_magnaAvailableLanguages = magnaGetAvailableLanguages();
-    $defaultLanguage = MagnaDB::gi()->fetchOne(' 
-        SELECT directory 
-         FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c 
-        WHERE c.configuration_key = \'DEFAULT_LANGUAGE\' 
-         AND c.configuration_value = l.code 
-        LIMIT 1 
-        ');
+	$defaultLanguage = MagnaDB::gi()->fetchOne(' 
+	    SELECT directory 
+	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c 
+	     WHERE c.configuration_key = \'DEFAULT_LANGUAGE\' 
+	          AND c.configuration_value = l.code 
+	     LIMIT 1 
+	');
 	if (in_array($defaultLanguage, $_magnaAvailableLanguages)) {
 		$_magnaLanguage = $defaultLanguage;
 	} else {

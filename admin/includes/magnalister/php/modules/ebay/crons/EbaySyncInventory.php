@@ -269,7 +269,12 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		
 		# ist es eine Variante?
 		$currVarQty = makeVariationQuantity($this->cItem['pID'], $this->cItem['SKU']);
-		$currPrice = $this->calcPrice($currVarQty !== false);
+		if ($currVarQty !== false) {
+			$currPrice = $this->calcPrice(true);
+			$mainPrice = $this->calcPrice(false);
+		} else {
+			$currPrice = $mainPrice = $this->calcPrice(false);
+		}
 
 		$this->log(
 			"\n\teBay Quantity: ".$this->cItem['Quantity'].
@@ -306,8 +311,8 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		$data['DEBUG']['contrib'] = false;
 		$data['DEBUG']['calledBy'] = 'SyncInventory';
 		
-		if ($currPrice !== false) {
-			$data['Price'] = $currPrice;
+		if ($mainPrice !== false) {
+			$data['Price'] = $mainPrice;
 		}
 		
 		/* {Hook} "EBay_SyncInventory_UpdateItem": Runs during the inventory synchronization from your shop to eBay, directly before the 
@@ -337,7 +342,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 			   Usually the martix only has to be calcullated when there is a definitive update,
 			   but the data has to be available for the hook as well. Slows things down.
 			*/
-			$data['Variations'] = $this->calcVariationMatrix($blVariations, $currPrice);
+			$data['Variations'] = $this->calcVariationMatrix($blVariations, $mainPrice);
 			require($hp);
 			
 			// submit the contrib for debugging purposes.
@@ -379,7 +384,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		) {
 			/* Calculate the variations for all other customers who don't use the EBay_SyncInventory_UpdateItem hook */
 			if ($hp === false) {
-				$data['Variations'] = $this->calcVariationMatrix($blVariations, $currPrice);
+				$data['Variations'] = $this->calcVariationMatrix($blVariations, $mainPrice);
 			}
 			
 			$this->updateItems($data);
