@@ -710,5 +710,5 @@ define('ERROR_SQL_DB_QUERY_REDIRECT','Sie werden in %s Sekunden auf unsere Homep
 define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformationen %s,<br/>sowie unsere Widerrufsbelehrung %s zur Kenntnis.');
 
 define('TEXT_INFO_DETAILS', ' Details');
-define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
+define('TEXT_SAVED_BASKET', 'Ihr Warenkorb beinhaltet noch Artikel aus einem vorangegangenen Besuch.');
 ?>
