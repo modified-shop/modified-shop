@@ -136,7 +136,7 @@ function renderSinglePrepareView($data) {
 					<table class="lightstlye line15"><tbody>
 						<tr>
 							<td>'.ML_EBAY_PRICE_CALCULATED.': </td>
-							<td>
+							<td id="showCalcPrice" name="showCalcPrice">
 								'.$fixedPrice.' '.getDBConfigValue('ebay.currency', $_MagnaSession['mpID']).'
 								<input type="hidden" value="'.$fixedPrice.'" name="Price" id="Price" />
 							</td>
@@ -509,7 +509,7 @@ function renderMultiPrepareView($data) {
     }
 	$html .= '/>'.ML_EBAY_PRIVATE_LISTING_YES_NO.'
 				</td>
-				<td class="info">'.ML_EBAY_PRIVATE_LISTING.'</td>
+				<td class="info">'.ML_EBAY_PRIVATE_LISTING.'<span style="color:red;"> '.ML_EBAY_CAUSES_COSTS.'</span></td>
 			</tr>
 			<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'" name="bestOfferRow" id="bestOfferRow">
 				<th>'.ML_EBAY_BESTPRICE_SHORT.'</th>
@@ -800,6 +800,10 @@ function renderMultiPrepareView($data) {
 			$shipProc = new eBayShippingDetailsProcessor(array(
 				'content' => $prefilledShippingDetailsArray['InternationalShippingServiceOption'],
 			), 'ebay.default.shipping.international', $tmpURL);
+		} else if (isset($prefilledShippingDetails) && !isset($prefilledShippingDetailsArray['InternationalShippingServiceOption'])) {
+			$shipProc = new eBayShippingDetailsProcessor(array(
+				'content' => array (array('ShippingService' =>'', 'ShipToLocation' => 'None')),
+			), 'ebay.default.shipping.international', $tmpURL);
 		} else {
 			$shipProc = new eBayShippingDetailsProcessor(array(
 				'key' => 'ebay.default.shipping.international',
@@ -961,6 +965,7 @@ function updatePrice() {
 		success: function(data) {
 			jQuery.unblockUI();
 			$('#Price').val(data);
+			$('#showCalcPrice').val(data);
 		},
 		error: function() {
 			jQuery.unblockUI();

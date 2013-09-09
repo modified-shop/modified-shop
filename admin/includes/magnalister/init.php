@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: init.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: init.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -156,6 +156,7 @@ if (MAGNA_DEBUG && isset($_GET['MagnaRAW'])) {
 
 if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'keepAlive')) {
 	if (file_exists(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php')) {
+		require_once(DIR_MAGNALISTER_INCLUDES.'lib/MLTables.php');
 		require_once(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php');
 		MagnaDB::gi();
 	}
@@ -343,6 +344,7 @@ if (MAGNA_SAFE_MODE) {
 		&& file_exists(DIR_MAGNALISTER_INCLUDES.'lib/json_wrapper.php')
 		&& file_exists(DIR_MAGNALISTER_INCLUDES.'config.php')
 	) {
+		require_once(DIR_MAGNALISTER_INCLUDES.'lib/MLTables.php');
 		require_once(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php');
 		require_once(DIR_MAGNALISTER_INCLUDES.'lib/json_wrapper.php');
 		require_once(DIR_MAGNALISTER_INCLUDES.'config.php');
@@ -447,26 +449,26 @@ if (!is_writable(DIR_MAGNALISTER_CACHE)) {
 		),
 		(($_SESSION['language'] == 'german') 
 			? (MAGNA_SAFE_MODE 
-				? 'Aufgrund der Safe Mode Beschr&auml;nkung kann das Cache Verzeichnis 
+			    ? 'Aufgrund der Safe Mode Beschr&auml;nkung kann das Cache Verzeichnis 
 			       (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) nicht
-	   		       erstellt und/oder schreibbar gemacht werden. 
-	   		       Bitte erstellen Sie das Verzeichnis und stellen Sie sicher, dass es vom Webserver geschrieben werden kann.'
-	   		    : 'Das Cache Verzeichnis (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) konnte nicht
-	   		       erstellt und/oder schreibbar gemacht werden. Bitte &uuml;berpr&uuml;fen Sie die Dateirechte des
-	   		       magnalister Verzeichnisses und legen Sie gegebenenfalls das Cache Verzeichnis selbst an. Es muss
-	   		       vom Webserver geschrieben werden k&ouml;nnen.'
-	   		  )
+			       erstellt und/oder schreibbar gemacht werden. 
+			       Bitte erstellen Sie das Verzeichnis und stellen Sie sicher, dass es vom Webserver geschrieben werden kann.'
+			    : 'Das Cache Verzeichnis (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) konnte nicht
+			       erstellt und/oder schreibbar gemacht werden. Bitte &uuml;berpr&uuml;fen Sie die Dateirechte des
+			       magnalister Verzeichnisses und legen Sie gegebenenfalls das Cache Verzeichnis selbst an. Es muss
+			       vom Webserver geschrieben werden k&ouml;nnen.'
+			  )
 			: (MAGNA_SAFE_MODE 
-				? 'The cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
+			    ? 'The cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
 			       cannot be created and/or made writable 
 			       because of the Safe Mode restriction. 
 			       Please create this directory and make sure it is writable by the webserver.'
-	   		    : 'The  cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
+			    : 'The  cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
 			       cannot be created and/or made writable. Please check the file permissions of the 
 			       magnalister directory and create the cache directory if necessary. Make sure it is
 			       writable by the webserver.'
-	   		  )
-	    )
+			  )
+		)
 	);
 }
 $_updaterTime = microtime(true) - $_updaterTime;
@@ -494,8 +496,10 @@ if (defined('DIR_FS_CATALOG_ORIGINAL_IMAGES')) {
 }
 
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/json_wrapper.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/MLTables.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php');
-$magnaDB = MagnaDB::gi();	/* Database Connector */
+$magnaDB = MagnaDB::gi(); /* Database Connector */
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/MLProduct.php');
 
 /* Detect products_ean-like field if it exists. */
 $productsFields = array_flip((array)MagnaDB::gi()->getTableCols(TABLE_PRODUCTS));
@@ -626,7 +630,7 @@ $requiredConfigKeys = array (
 );
 
 /* Is magic_quotes on? */
-if (get_magic_quotes_gpc()) {
+if ((defined('PHP_VERSION_ID') && (PHP_VERSION_ID >= 50300)) ? false : get_magic_quotes_gpc()) {
 	/* Strip the added slashes */
 	$_REQUEST = arrayMap('stripslashes', $_REQUEST);
 	$_GET     = arrayMap('stripslashes', $_GET);

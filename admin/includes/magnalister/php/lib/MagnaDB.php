@@ -11,70 +11,37 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 2908 2013-07-11 14:24:33Z MaW $
+ * $Id: MagnaDB.php 3163 2013-09-09 10:28:26Z derpapst $
  *
- * (c) 2010 - 2011 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-define('TABLE_MAGNA_CONFIG', 'magnalister_config');
-define('TABLE_MAGNA_SESSION', 'magnalister_session');
-define('TABLE_MAGNA_SELECTION', 'magnalister_selection');
-define('TABLE_MAGNA_SELECTION_TEMPLATES', 'magnalister_selection_templates');
-define('TABLE_MAGNA_SELECTION_TEMPLATE_ENTRIES', 'magnalister_selection_template_entries');
-define('TABLE_MAGNA_ORDERS', 'magnalister_orders');
-define('TABLE_MAGNA_VARIATIONS', 'magnalister_variations');
-define('TABLE_MAGNA_AMAZON_PROPERTIES', 'magnalister_amazon_properties');
-define('TABLE_MAGNA_AMAZON_ERRORLOG', 'magnalister_amazon_errorlog');
-define('TABLE_MAGNA_AMAZON_APPLY', 'magnalister_amazon_apply');
-define('TABLE_MAGNA_CS_ERRORLOG', 'magnalister_cs_errorlog');
-define('TABLE_MAGNA_CS_DELETEDLOG', 'magnalister_cs_deletedlog');
-define('TABLE_MAGNA_YATEGO_CATEGORIES', 'magnalister_yatego_categories');
-define('TABLE_MAGNA_YATEGO_CUSTOM_CATEGORIES', 'magnalister_yatego_custom_categories');
-define('TABLE_MAGNA_YATEGO_CATEGORYMATCHING', 'magnalister_yatego_categorymatching');
-define('TABLE_MAGNA_EBAY_CATEGORIES', 'magnalister_ebay_categories');
-define('TABLE_MAGNA_EBAY_PROPERTIES', 'magnalister_ebay_properties');
-define('TABLE_MAGNA_EBAY_LISTINGS', 'magnalister_ebay_listings');
-define('TABLE_MAGNA_EBAY_ERRORLOG', 'magnalister_ebay_errorlog');
-define('TABLE_MAGNA_EBAY_DELETEDLOG', 'magnalister_ebay_deletedlog');
-define('TABLE_MAGNA_TECDOC', 'magnalister_tecdoc');
-define('TABLE_MAGNA_API_REQUESTS', 'magnalister_api_requests');
-define('TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING', 'magnalister_meinpaket_categorymatching');
-define('TABLE_MAGNA_MEINPAKET_CATEGORIES', 'magnalister_meinpaket_categories');
-define('TABLE_MAGNA_MEINPAKET_ERRORLOG', 'magnalister_meinpaket_errorlog');
-define('TABLE_MAGNA_COMPAT_CATEGORYMATCHING', 'magnalister_magnacompat_categorymatching');
-define('TABLE_MAGNA_COMPAT_CATEGORIES', 'magnalister_magnacompat_categories');
-define('TABLE_MAGNA_COMPAT_ERRORLOG', 'magnalister_magnacompat_errorlog');
-define('TABLE_MAGNA_COMPAT_DELETEDLOG', 'magnalister_magnacompat_deletedlog');
-define('TABLE_MAGNA_HITMEISTER_PREPARE', 'magnalister_hitmeister_prepare');
 
 define('MAGNADB_ENABLE_LOGGING', MAGNA_DEBUG && false);
 
-
-
 class MagnaDB {
-	private static $instance = NULL;
-	private $mlink;
-	private $resourcelink;
+	private static $instance = null;
+	private $resourcelink = null;
 	private $selfConnected = false;
 	private $destructed = false;
 
-	private $query;
-	private $error;
-	private $result;
+	private $query = '';
+	private $error = '';
+	private $result = null;
 
-	private $start;
-	protected $count;
-	private $querytime;
+	private $start = 0;
+	protected $count = 0;
+	private $querytime = 0;
 	private $doLogQueryTimes = true;
 	private $timePerQuery = array();
 
 	private $availabeTables = array();
 
-	private $escapeStrings;
+	private $escapeStrings = false;
 
 	private $sessionLifetime;
 	
@@ -86,28 +53,23 @@ class MagnaDB {
 	/**
 	 * Class constructor
 	 */
-	private function __construct($mlink = 'mdb_link') {
-		global $$mlink, $_MagnaSession, $_MagnaShopSession;
-
-		$this->link          = &$mlink;
-		$this->resourcelink  = &$$mlink;
+	private function __construct() {
 		$this->start         = microtime(true);
 		$this->count         = 0;
 		$this->querytime     = 0;
-		$this->escapeStrings = get_magic_quotes_gpc();
-
+		// magic quotes are deprecated as of php 5.3
+		$this->escapeStrings = (defined('PHP_VERSION_ID') && (PHP_VERSION_ID >= 50300)) ? false : get_magic_quotes_gpc();
+		
+		// we prefer mysqli only for php 5.3 or greater as this version introduces persistent connections
+		$this->driver = (function_exists('mysqli_query') && defined('PHP_VERSION_ID') && (PHP_VERSION_ID >= 50300) && true)
+			? 'mysqli'
+			: 'mysql';
+		
 		// self connected from the beginning or not... that is the question.
 		$this->selfConnected = $this->selfConnect();
 
 		$this->availabeTables = $this->fetchArray('SHOW TABLES', true);
-
-		if ($this->tableExists(TABLE_MAGNA_SESSION)) {
-			$this->sessionLifetime = (int)ini_get("session.gc_maxlifetime");
-			$this->sessionGarbageCollector();
-
-			$_MagnaSession = $this->sessionRead();
-			$_MagnaShopSession = $this->shopSessionRead();
-		}
+		
 		if (MAGNADB_ENABLE_LOGGING) {
 			$dbt = @debug_backtrace();
 			if (!empty($dbt)) {
@@ -124,14 +86,17 @@ class MagnaDB {
 			}
 			unset($dbt);
 		}
+		
+		$this->initSession();
+		
 	}
 	
 	/**
 	 * Singleton - gets Instance
 	 */
-	public static function gi($mlink = 'mdb_link') {
+	public static function gi() {
 		if (self::$instance == NULL) {
-			self::$instance = new self($mlink);
+			self::$instance = new self();
 		}
 		return self::$instance;
 	}
@@ -164,16 +129,26 @@ class MagnaDB {
 		$this->closeConnection();
 	}
 	
+	public function selectDatabase($db) {
+		$this->query('USE '.$db);
+	}
+	
+	protected function isConnected() {
+		return is_resource($this->resourcelink) || is_object($this->resourcelink);
+	}
+	
 	protected function selfConnect($forceReconnect = false) {
 		# Wenn keine Verbindung im klassischen Sinne besteht, selbst eine herstellen.
-		if (is_resource($this->resourcelink) && !$forceReconnect) {
+		if ($this->isConnected() && !$forceReconnect) {
 			return false;
 		}
 		
-		if (USE_PCONNECT == 'true') {
-			$this->resourcelink = mysql_pconnect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD);
+		if ($this->driver == 'mysqli') {
+			$this->resourcelink = mysqli_connect(((USE_PCONNECT == 'true') ? 'p:' : '').DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD);
 		} else {
-			$this->resourcelink = mysql_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD);
+			$this->resourcelink = (USE_PCONNECT == 'true')
+				? mysql_pconnect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD)
+				: mysql_connect(DB_SERVER, DB_SERVER_USERNAME, DB_SERVER_PASSWORD);
 		}
 		
 		if (isset($_GET['MLDEBUG']) && isset($_GET['LEVEL']) && ($_GET['MLDEBUG'] === 'true') && (strtolower($_GET['LEVEL']) == 'high')) {
@@ -181,7 +156,7 @@ class MagnaDB {
 			var_dump($this->resourcelink);
 		}
 		
-		if (!is_resource($this->resourcelink)) {
+		if (!$this->isConnected()) {
 			// called in the destructor: Just leave. No need to close connection, it's lost
 			if ($this->destructed) exit;
 			// die is bad behaviour. But meh...
@@ -193,12 +168,12 @@ class MagnaDB {
 				</span>'
 			);
 		}
-		
-		$vers = @mysql_get_server_info($this->resourcelink);
+		$infofn = $this->driver.'_get_server_info';
+		$vers = $infofn($this->resourcelink);
 		if (substr($vers, 0, 1) > 4) {
-			@mysql_query("SET SESSION sql_mode=''", $this->resourcelink);
+			$this->query("SET SESSION sql_mode=''");
 		}
-		mysql_select_db(DB_DATABASE, $this->resourcelink);
+		$this->selectDatabase(DB_DATABASE);
 		
 		// If the db connection was lost in __destruct() we have to close the databse connection
 		// at the end of __destruct() ourselves.
@@ -209,18 +184,33 @@ class MagnaDB {
 		return true;
 	}
 	
-	protected function closeConnection() {
-		if ($this->selfConnected && is_resource($this->resourcelink) && !(defined('USE_PCONNECT') && (USE_PCONNECT == 'true'))) {
-			mysql_close($this->resourcelink);
+	
+	protected function closeConnection($force = false) {
+		if (   $force
+			|| ($this->selfConnected && $this->isConnected() && !(defined('USE_PCONNECT') && (USE_PCONNECT == 'true')))
+		) {
+			if ($this->driver == 'mysqli') {
+				mysqli_close($this->resourcelink);
+			} else {
+				mysql_close($this->resourcelink);
+			}
 		}
 	}
 	
 	private function prepareError() {
-		$errNo = mysql_errno($this->resourcelink);
-		if ($errNo == 0) {
-			return '';
+		if ($this->driver == 'mysqli') {
+			$errNo = $this->resourcelink->errno;
+			if ($errNo == 0) {
+				return '';
+			}
+			return $this->resourcelink->error.' ('.$errNo.')';
+		} else {
+			$errNo = mysql_errno($this->resourcelink);
+			if ($errNo == 0) {
+				return '';
+			}
+			return mysql_error($this->resourcelink).' ('.$errNo.')';
 		}
-		return mysql_error($this->resourcelink).' ('.$errNo.')';
 	}
 
 	public function logQueryTimes($b) {
@@ -284,23 +274,33 @@ class MagnaDB {
 		
 		do {
 			$errno = 0;
-			$result = mysql_query($query, $this->resourcelink);
-			if ($result === false) {
-				$errno = mysql_errno($this->resourcelink);
+			if ($this->driver == 'mysqli') {
+				$result = $this->resourcelink->query($query);
+				if ($result === false) {
+					$errno = $this->resourcelink->errno;
+				}
+			} else {
+				$result = mysql_query($query, $this->resourcelink);
+				if ($result === false) {
+					$errno = mysql_errno($this->resourcelink);
+				}
 			}
+
 			//if (defined('MAGNALISTER_PLUGIN')) echo 'mmysql_query errorno: '.var_export($errno, true)."\n";
 			if (($errno === false) || ($errno == 2006)) {
-				mysql_close($this->resourcelink);
-				
+				$this->closeConnection(true);
 				usleep(100000);
-				
 				$this->selfConnect(true);
 			}
 			# Retry if '2006 MySQL server has gone away'
 		} while (($errno == 2006) && (--$i >= 0));
 		
 		if ($errno != 0) {
-			$this->fatalError($query, $errno, mysql_error($this->resourcelink));
+			$this->fatalError(
+				$query, $errno, ($this->driver == 'mysqli')
+					? $this->resourcelink->error 
+					: mysql_error($this->resourcelink)
+			);
 		}
 	
 		return $result;
@@ -354,11 +354,11 @@ class MagnaDB {
 	}
 
 	private function sessionRead() {
-		$result = $this->fetchOne(
-			"SELECT data FROM ".TABLE_MAGNA_SESSION." ".
-			"WHERE session_id = '".session_id()."' AND expire > '".time()."'",
-			true
-		);
+		$result = $this->fetchOne('
+			SELECT data FROM '.TABLE_MAGNA_SESSION.'
+			 WHERE session_id = "'.session_id().'"
+			       AND expire > "'.time().'"
+		', true);
 		if (!empty($result)) {
 			return @unserialize($result);
 		}
@@ -367,18 +367,29 @@ class MagnaDB {
 
 	private function shopSessionRead() {
 		/* This "Session" is for all Backend users and it _never_ expires! */
-		$result = $this->fetchOne(
-			"SELECT data FROM ".TABLE_MAGNA_SESSION." ".
-			"WHERE session_id = '0'",
-			true
-		);
+		$result = $this->fetchOne('
+			SELECT data FROM '.TABLE_MAGNA_SESSION.'
+			 WHERE session_id = "0"
+		', true);
 
 		if (!empty($result)) {
 			return @unserialize($result);
 		}
 		return array();
 	}
+	
+	protected function initSession() {
+		global $_MagnaSession, $_MagnaShopSession;
+		
+		if ($this->tableExists(TABLE_MAGNA_SESSION)) {
+			$this->sessionLifetime = (int)ini_get("session.gc_maxlifetime");
+			$this->sessionGarbageCollector();
 
+			$_MagnaSession = $this->sessionRead();
+			$_MagnaShopSession = $this->shopSessionRead();
+		}
+	}
+	
 	private function sessionStore($data, $sessionID) {
 		if (empty($sessionID) && ($sessionID != '0')) return;
 		
@@ -435,7 +446,7 @@ class MagnaDB {
 			$object = array_map(array($this, 'escape'), $object);
 		} else if (is_string($object)) {
 			$tObject = $this->escapeStrings ? stripslashes($object) : $object;
-			if (!is_resource($this->resourcelink)) {
+			if (!$this->isConnected()) {
 				// mimic mysql_real_escape_string
 				$object = str_replace(
 					array('\\',   "\0",  "\n",  "\r",  "'",   '"',   "\x1a"),
@@ -443,7 +454,9 @@ class MagnaDB {
 					$tObject
 				);
 			} else {
-				$object = mysql_real_escape_string($tObject, $this->resourcelink);
+				$object = ($this->driver == 'mysqli')
+					? $this->resourcelink->real_escape_string($tObject)
+					: mysql_real_escape_string($tObject, $this->resourcelink);
 			}
 		}
 		return $object;
@@ -456,28 +469,30 @@ class MagnaDB {
 		if ($result === null) {
 			$result = $this->result;
 		}
-
+		
 		if ($result === false) {
 			return false;
 		}
-
-		return mysql_num_rows($result);
+		
+		return ($this->driver == 'mysqli') ? $result->num_rows : mysql_num_rows($result);
 	}
-
+	
 	/**
 	 * Get number of changed/affected rows
 	 */
 	public function affectedRows() {
-		return mysql_affected_rows($this->resourcelink);
+		return ($this->driver == 'mysqli')
+			? $this->resourcelink->affected_rows
+			: mysql_affected_rows($this->resourcelink);
 	}
-
+	
 	/**
 	 * Get number of found rows
 	 */
 	public function foundRows() {
 		return $this->fetchOne("SELECT FOUND_ROWS()");
 	}
-
+	
 	/**
 	 * Get a single value
 	 */
@@ -515,17 +530,19 @@ class MagnaDB {
 		if ($result === null) {
 			$result = $this->result;
 		}
-
+		
 		if ($this->numRows($result) < 1) {
 			return false;
 		} else {
-			$row = mysql_fetch_array($result, MYSQL_ASSOC);
+			$row = ($this->driver == 'mysqli')
+				? $result->fetch_array(MYSQLI_ASSOC)
+				: mysql_fetch_array($result, MYSQL_ASSOC);
 			if (!$row) {
 				$this->error = $this->prepareError();
 				return false;
-	 		}
+			}
 		}
-
+		
 		return $row;
 	}
 
@@ -589,20 +606,12 @@ class MagnaDB {
 
 	public function mysqlVariableValue($variable) {
 		$showVariablesLikeVariable = $this->fetchRow("SHOW VARIABLES LIKE '$variable'");
-		if ($showVariablesLikeVariable)
+		if ($showVariablesLikeVariable) {
 			return $showVariablesLikeVariable['Value'];
-		else return null;
+		}
 		# nicht false zurueckgeben, denn dies koennte ein gueltiger Variablenwert sein
-	}
+		return null;
 	
-	// for testing purposes. But seems useless, special characters turn out broken.
-	private function useDatabaseCharset() {
-		$databaseCharset = $this->mysqlVariableValue('character_set_database');
-		# die Fallbacks sollten nicht noetig sein, aber vorsichtshalber
-		if (empty($databaseCharset)) $databaseCharset = $this->mysqlVariableValue('character_set_server');
-		if (empty($databaseCharset)) $databaseCharset = $this->mysqlVariableValue('character_set_system');
-		if (empty($databaseCharset)) return;
-		$this->query("SET names $databaseCharset");
 	}
 	
 	public function mysqlSetHigherTimeout($timeoutToSet = 3600) {
@@ -649,8 +658,9 @@ class MagnaDB {
 	}
 
 	public function recordExists($table, $conditions, $getQuery = false) {
-		if (!is_array($conditions) || empty($conditions))
+		if (!is_array($conditions) || empty($conditions)) {
 			trigger_error(sprintf("%s: Second parameter has to be an array may not be empty!", __FUNCTION__), E_USER_WARNING);
+		}
 		$fields = array();
 		$values = array();
 		foreach ($conditions as $f => $v) {
@@ -667,193 +677,7 @@ class MagnaDB {
 		}
 		return false;
 	}
-
-	public function getProductById($pID, $languages_id = false, $addQuery = '') {
-		$lIDs = $this->fetchArray('
-			SELECT language_id FROM '.TABLE_PRODUCTS_DESCRIPTION.' WHERE products_id=\''.$pID.'\'
-		', true);
-
-		if ($languages_id === false) {
-			$languages_id = $_SESSION['languages_id'];
-		}
-		
-		if (!empty($lIDs) && !in_array($languages_id, $lIDs)) {
-			$languages_id = array_shift($lIDs);
-		}
-
-		if (is_array($pID)) {
-			$where = 'p.products_id IN (\''.implode('\', \'',  $pID).'\')';
-		} else {
-			$where = 'p.products_id = \''.(int) $pID.'\'';
-		}
-
-		$products = $this->fetchArray('
-			SELECT *, date_format(p.products_date_available, \'%Y-%m-%d\') AS products_date_available 
-			  FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
-			 WHERE '.$where.'
-			   AND p.products_id = pd.products_id
-			   AND pd.language_id = \''.$languages_id.'\'
-			   '.$addQuery.'
-		');
-
-		if (!is_array($products) || empty($products)) return false;
-
-		$finalProducts = array();
-		foreach ($products as &$product) {
-			if (SHOPSYSTEM == 'gambio') {
-				$product['products_description'] = preg_replace('/\[TAB:[^\]]+\]/', '', $product['products_description']);
-			}
-			if ($product['products_image']) {
-				$product['products_allimages'] = array($product['products_image']);
-			} else {
-				$product['products_allimages'] = array();
-			}
-			if ($this->tableExists(TABLE_PRODUCTS_IMAGES)) {
-				$cols = $this->getTableCols(TABLE_PRODUCTS_IMAGES);
-				$orderBy = (in_array('image_nr', $cols) 
-					? 'image_nr' 
-					: (in_array('sort_order', $cols) 
-						? 'sort_order' 
-						: ''
-					)
-				);
-				if (!empty($orderBy)) {
-					$orderBy = 'ORDER BY '.$orderBy;
-				}
-				$colname = (in_array('image', $cols) 
-					? 'image' 
-					: (in_array('image_name', $cols) 
-						? 'image_name' 
-						: ''
-					)
-				);
-				if (!empty($colname)) {
-					$product['products_allimages'] = array_merge(
-						$product['products_allimages'],
-						(array)$this->fetchArray('
-							SELECT '.$colname.'
-							  FROM '.TABLE_PRODUCTS_IMAGES.'
-							 WHERE products_id = \''.$product['products_id'].'\'
-						  '.$orderBy.'
-						', true)
-					);
-				}
-			}
-			if (isset($product['products_head_keywords_tag'])) {
-				$product['products_meta_keywords'] = $product['products_head_keywords_tag'];
-				unset($product['products_head_keywords_tag']);
-			}
-			if (isset($product['products_head_desc_tag'])) {
-				$product['products_meta_description'] = $product['products_head_desc_tag'];
-				unset($product['products_head_desc_tag']);
-			}
-			if (isset($product['products_vpe'])
-			    && isset($product['products_vpe_value'])
-			    && $this->tableExists(TABLE_PRODUCTS_VPE)
-			) {
-				$product['products_vpe_name'] = stringToUTF8(MagnaDB::gi()->fetchOne('
-				    SELECT products_vpe_name 
-				      FROM '.TABLE_PRODUCTS_VPE.'
-				     WHERE products_vpe_id = \''.$product['products_vpe'].'\'
-				           AND language_id = \''.$languages_id.'\'
-				  ORDER BY products_vpe_id, language_id 
-				     LIMIT 1
-				'));
-			}
-			$finalProducts[$product['products_id']] = $product;
-		}
-		if (!is_array($pID)) {
-			return $products[0];
-		}
-		unset($products);
-		return $finalProducts;
-	}
 	
-	public function getCategoryPath($id, $for = 'category', &$cPath = array()) {
-		if ($for == 'product') {
-			$cIDs = $this->fetchArray('
-				SELECT categories_id FROM '.TABLE_PRODUCTS_TO_CATEGORIES.'
-				 WHERE products_id=\''.$this->escape($id).'\'
-			', true);
-			if (empty($cIDs)) {
-				return array();
-			}
-			$return = array();
-			foreach ($cIDs as $cID) {
-				if ((int)$cID == 0) {
-					$return[] = array('0');
-				} else {
-					$cPath = $this->getCategoryPath($cID);
-					array_unshift($cPath, $cID);
-					$return[] = $cPath;
-				}
-			}
-			return $return;
-		} else {
-			$meh = $this->fetchOne(
-				'SELECT parent_id FROM '.TABLE_CATEGORIES.' WHERE categories_id=\''.$this->escape($id).'\''
-			);
-			$cPath[] = (int)$meh;
-			if ($meh != '0') {
-				$this->getCategoryPath($meh, 'category', $cPath);
-			}
-			return $cPath;
-		}
-	}
-
-	/* xt:Commerce Nachbildung */
-	public function generateCategoryPath($id, $from = 'category', $categories_array = array(), $index = 0, $callCount = 0) {
-		if ($from == 'product') {
-			$categories_query = $this->query('
-				SELECT categories_id FROM '.TABLE_PRODUCTS_TO_CATEGORIES.'
-				 WHERE products_id = \''.$id.'\'
-			');
-			while ($categories = $this->fetchNext($categories_query)) {
-				if ($categories['categories_id'] == '0') {
-					$categories_array[$index][] = array ('id' => '0', 'text' => ML_LABEL_CATEGORY_TOP);
-				} else {
-					$category_query = $this->query('
-						SELECT cd.categories_name, c.parent_id 
-						  FROM '.TABLE_CATEGORIES.' c, '.TABLE_CATEGORIES_DESCRIPTION.' cd 
-						 WHERE c.categories_id = \''.$categories['categories_id'].'\' 
-						       AND c.categories_id = cd.categories_id 
-						       AND cd.language_id = \''.$_SESSION['languages_id'].'\'
-					');
-					$category = $this->fetchNext($category_query);
-					$categories_array[$index][] = array (
-						'id' => $categories['categories_id'],
-						'text' => $category['categories_name']
-					);
-					if (($category['parent_id'] != '') && ($category['parent_id'] != '0')) {
-						$categories_array = $this->generateCategoryPath($category['parent_id'], 'category', $categories_array, $index);
-					}
-				}
-				++$index;
-			}
-		} else if ($from == 'category') {
-			$category_query = $this->query('
-				SELECT cd.categories_name, c.parent_id 
-				  FROM '.TABLE_CATEGORIES.' c, '.TABLE_CATEGORIES_DESCRIPTION.' cd
-				 WHERE c.categories_id = \''.$id.'\' 
-				       AND c.categories_id = cd.categories_id
-				       AND cd.language_id = \''.$_SESSION['languages_id'].'\'
-			');
-			$category = $this->fetchNext($category_query);
-			$categories_array[$index][] = array (
-				'id' => $id,
-				'text' => $category['categories_name']
-			);
-			if (($category['parent_id'] != '') && ($category['parent_id'] != '0')) {
-				$categories_array = $this->generateCategoryPath($category['parent_id'], 'category', $categories_array, $index, $callCount + 1);
-			}
-			if ($callCount == 0) {
-				$categories_array[$index] = array_reverse($categories_array[$index]);
-			}
-		}
-	
-		return $categories_array;
-	}
-
 	/**
 	 * Insert an array of values
 	 */
@@ -931,7 +755,9 @@ class MagnaDB {
 	 * Get last auto-increment value
 	 */
 	public function getLastInsertID() {
-		return mysql_insert_id($this->resourcelink);
+		return ($this->driver == 'mysqli')
+			? $this->resourcelink->insert_id
+			: mysql_insert_id($this->resourcelink);
 	}
 
 	/**
@@ -1014,9 +840,12 @@ class MagnaDB {
 
 	public function freeResult($result = null) {
 		if ($result !== null) {
-			mysql_free_result($result);
+			$result = $this->result;
+		}
+		if ($this->driver == 'mysqli') {
+			$result->free_result();
 		} else {
-			mysql_free_result($this->result);
+			mysql_free_result($result);
 		}
 		return true;
 	}
@@ -1025,9 +854,9 @@ class MagnaDB {
 	 * Unescapes strings / arrays of strings
 	 */
 	public function unescape($object) {
-		return is_array($object) ?
-			array_map(array('MySQL', 'unescape'), $object) :
-				stripslashes($object);
+		return is_array($object)
+			? array_map(array('MySQL', 'unescape'), $object)
+			: stripslashes($object);
 	}
 	
 	public function getTableCols($table) {

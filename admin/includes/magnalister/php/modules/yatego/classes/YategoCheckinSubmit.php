@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: YategoCheckinSubmit.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: YategoCheckinSubmit.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -49,7 +49,7 @@ class YategoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 		}
 		$data['submit']['Images'] = $images;
 
-		$cPaths = MagnaDB::gi()->getCategoryPath($pID, 'product');
+		$cPaths = MLProduct::gi()->getCategoryPath($pID, 'product');
 		$data['submit']['YategoCategories'] = array();
 		if (!empty($cPaths)) {
 			foreach ($cPaths as $cPath) {

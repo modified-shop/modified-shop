@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinSubmit.php 3078 2013-08-02 10:21:49Z derpapst $
+ * $Id: CheckinSubmit.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -167,7 +167,7 @@ abstract class CheckinSubmit {
 				$data['submit'] = array();
 			}
 			
-			$product = MagnaDB::gi()->getProductById($pID, $this->settings['language']);
+			$product = MLProduct::gi()->getProductById($pID, $this->settings['language']);
 
 			if (!$this->checkSingleItem($pID, $product, $data) || !is_array($product)) {
 				$this->badItems[] = $pID;
