@@ -174,6 +174,7 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
   $order_total_modules->process();
   $total_block = $order_total_modules->output();
   $smarty->assign('TOTAL_BLOCK', $total_block);
+  $smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_modules->output_array());
 }
 
 if (is_array($payment_modules->modules)) {

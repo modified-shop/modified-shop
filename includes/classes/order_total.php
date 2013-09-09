@@ -1,16 +1,17 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: order_total.php 1029 2005-07-14 19:08:49Z mz $   
+   $Id: order_total.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(order_total.php,v 1.4 2003/02/11); www.oscommerce.com 
-   (c) 2003	 nextcommerce (order_total.php,v 1.6 2003/08/13); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(order_total.php,v 1.4 2003/02/11); www.oscommerce.com
+   (c) 2003 nextcommerce (order_total.php,v 1.6 2003/08/13); www.nextcommerce.org
+   (c) 2006 XT-Commerce (order_total.php 1029 2005-07-14)
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
@@ -19,7 +20,7 @@
    Credit Class/Gift Vouchers/Discount Coupons (Version 5.10)
    http://www.oscommerce.com/community/contributions,282
    Copyright (c) Strider | Strider@oscworks.com
-   Copyright (c  Nick Stanko of UkiDev.com, nick@ukidev.com
+   Copyright (c) Nick Stanko of UkiDev.com, nick@ukidev.com
    Copyright (c) Andre ambidex@gmx.net
    Copyright (c) 2001,2002 Ian C Wilson http://www.phesis.org
 
@@ -246,12 +247,13 @@ class order_total {
 
 					for ($i = 0, $n = sizeof($GLOBALS[$class]->output); $i < $n; $i ++) {
 						if (xtc_not_null($GLOBALS[$class]->output[$i]['title']) && xtc_not_null($GLOBALS[$class]->output[$i]['text'])) {
-							$order_total_array[] = array ('code' => $GLOBALS[$class]->code, 
-                                            'title' => $GLOBALS[$class]->output[$i]['title'], 
-                                            'text' => $GLOBALS[$class]->output[$i]['text'], 
-                                            'value' => $GLOBALS[$class]->output[$i]['value'], 
-                                            'sort_order' => $GLOBALS[$class]->sort_order
-                                            );
+							$order_total_array[] = array (
+                'code' => $GLOBALS[$class]->code, 
+                'title' => $GLOBALS[$class]->output[$i]['title'], 
+                'text' => $GLOBALS[$class]->output[$i]['text'], 
+                'value' => $GLOBALS[$class]->output[$i]['value'], 
+                'sort_order' => $GLOBALS[$class]->sort_order
+                );
 						}
 					}
 				}
@@ -279,23 +281,27 @@ class order_total {
 		return $output_string;
 	}
 
+  function output_array() {
+		$arr_output = array();
+		if (is_array($this->modules)) {
+			reset($this->modules);
+			while (list (, $value) = each($this->modules)) {
+				$class = substr($value, 0, strrpos($value, '.'));
+				if ($GLOBALS[$class]->enabled) {
+					$size = sizeof($GLOBALS[$class]->output);
+					for ($i = 0; $i < $size; $i ++) {
+						$arr_output[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
+					}
+				}
+			}
+		}
+
+		return $arr_output;
+	}
+
   //BOF - web28 - 2011-02-01 -  PayPal Express
   function pp_output() {
-    $output_string = '';
-    if (is_array($this->modules)) {
-      reset($this->modules);
-      while (list (, $value) = each($this->modules)) {
-        $class = substr($value, 0, strrpos($value, '.'));
-        if ($GLOBALS[$class]->enabled) {
-          $size = sizeof($GLOBALS[$class]->output);
-          for ($i = 0; $i < $size; $i ++) {
-            $output_string[] = array('title'=>$GLOBALS[$class]->output[$i]['title'], 'text'=>$GLOBALS[$class]->output[$i]['text']);
-          }
-        }
-      }
-    }
-
-    return $output_string;
+    return output_array();   
   }
   //EOF - web28 - 2011-02-01 -  PayPal Express
 }
