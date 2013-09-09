@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: multimatching.php 2437 2013-05-06 13:32:58Z tim.neumann $
+ * $Id: multimatching.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -49,9 +49,9 @@ if (empty($_MagnaSession['amazon']['multimatching']['items']) ||
 		MagnaDB::gi()->query('
 			DELETE FROM '.TABLE_MAGNA_SELECTION.'
 			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		           selectionname=\''.$matchingSetting['selectionName'].'\' AND
-		           session_id=\''.session_id().'\' AND
-		           pID IN (\''.implode('\', \'', $alreadyMatched).'\')
+			       selectionname=\''.$matchingSetting['selectionName'].'\' AND
+			       session_id=\''.session_id().'\' AND
+			       pID IN (\''.implode('\', \'', $alreadyMatched).'\')
 		');
 	}
 
@@ -82,7 +82,7 @@ if (!empty($_MagnaSession['amazon']['multimatching']['items'])) {
 	$price->setCurrency(getCurrencyFromMarketplace($_MagnaSession['mpID']));
 
 	foreach ($currentItems as $current_product_id) {
-		$productsData = MagnaDB::gi()->getProductById($current_product_id);
+		$productsData = MLProduct::gi()->getProductById($current_product_id);
 		$asin = MagnaDB::gi()->fetchOne('
 			SELECT `asin` FROM '.TABLE_MAGNA_AMAZON_PROPERTIES.'
 			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND

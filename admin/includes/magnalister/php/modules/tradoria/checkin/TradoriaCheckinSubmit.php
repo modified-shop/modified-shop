@@ -121,22 +121,26 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		if (empty($cPath)) {
 			return;
 		}
+		$catIDs = array();
 		$finalpaths = array();
+		// merge all paths so that each category is only included once.
 		foreach ($cPath as $subpath) {
+			$subpath = array_values($subpath);
+			// only the deepest element of the path is the category id of this product. not the entire path!
+			// make it independent of sort-order.
+			if (isset($subpath[0]['ParentID'])) {
+				$catIDs[] = $subpath[0]['ID'];
+			} else if (isset($subpath[0]['ID'])) {
+				$catIDs[] = $subpath[count($subpath) - 1]['ID'];
+			}
 			foreach ($subpath as $c) {
-				$finalpaths[$c['ID']] =  $c;
+				$finalpaths[$c['ID']] = $c;
 			}
 		}
 		$finalpaths = array_values($finalpaths);
-		//echo print_m($finalpaths);
 		
-		$data['submit']['ShopCategory'] = MagnaDB::gi()->fetchArray('
-			SELECT categories_id
-			  FROM '.TABLE_PRODUCTS_TO_CATEGORIES.'
-			 WHERE products_id = \''.$pID.'\'
-		', true);
+		$data['submit']['ShopCategory'] = $catIDs;
 		$data['submit']['ShopCategoryStructure'] = $finalpaths;
-
 	}
 	
 	protected function appendAdditionalData($pID, $product, &$data) {

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaketConfig.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: meinpaketConfig.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -97,7 +97,7 @@ function meinpaketDescFieldSelector($args, &$value = '') {
 		 LIMIT 1
 	');
 	$savedVal = getDBConfigValue($args['key'], $_MagnaSession['mpID'], '');
-	$p = MagnaDB::gi()->getProductById($pID);
+	$p = MLProduct::gi()->getProductById($pID);
 	$html = '
 		<select name="conf['.$args['key'].']">
 			<option value="">'.ML_LABEL_USE_STANDARD.'</option>';
