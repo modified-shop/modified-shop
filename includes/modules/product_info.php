@@ -145,6 +145,13 @@ if (!is_object($product) || !$product->isProduct()) {
   //products formated price
   $info_smarty->assign('PRODUCTS_PRICE', $products_price['formated']);
 
+  //products price additional
+  if (count($products_price) > 0) {
+    foreach($products_price as $key => $entry) {                  
+       $info_smarty->assign('PRODUCTS_'.strtoupper($key),$entry);
+    }
+  }
+
   //get products vpe
   $info_smarty->assign('PRODUCTS_VPE',$main->getVPEtext($product->data, $products_price['plain'])); //web28 - 2012-04-17 - use classes function getVPEtext() 
   $info_smarty->assign('PRODUCTS_VPE_VALUE',$product->data['products_vpe_value']);
@@ -172,7 +179,7 @@ if (!is_object($product) || !$product->isProduct()) {
   $info_smarty->assign('PRODUCTS_WEIGHT', $product->data['products_weight']);
   $info_smarty->assign('PRODUCTS_STATUS', $product->data['products_status']);
   $info_smarty->assign('PRODUCTS_ORDERED', $product->data['products_ordered']);
-  $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', $product->data['products_name'], 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')"'));
+  $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', $product->data['products_name'], 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
   $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
   $info_smarty->assign('PRODUCTS_IMAGE', $product->productImage($product->data['products_image'], 'info'));
