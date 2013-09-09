@@ -1,6 +1,6 @@
 
 
-Sehr geehrte{if $GENDER=='Herr'}r{/if} {$GENDER} {$LASTNAME},
+Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
 
 Sie haben soeben Ihr Kundenkonto erfolgreich erstellt, als registrierter Kunde haben Sie folgende Vorteile in unserem Shop. 
 

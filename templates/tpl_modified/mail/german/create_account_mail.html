@@ -3,7 +3,7 @@
     <td style="border-bottom: 1px solid; border-color: #cccccc;"><div align="right"><img src="{$logo_path}logo.gif"></div></td>
   </tr>
   <tr>
-    <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Sehr geehrte{if $GENDER=='Herr'}r{/if} {$GENDER} {$LASTNAME},</strong></font> <br />
+    <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},</strong></font> <br />
       <br />
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">Sie haben soeben Ihr Kundenkonto erfolgreich erstellt, als registrierter Kunde haben Sie folgende Vorteile in unserem Shop.</font><br />
       <br />
@@ -21,7 +21,7 @@
     <br />
 
 
-    {if $SEND_GIFT==true}
+    {if $SEND_GIFT == true}
     <br />
     Als kleines Willkommensgeschenk senden wir Ihnen einen Gutschein &uuml;ber: <b>{$GIFT_AMMOUNT}</b><br />
     <br />
@@ -30,7 +30,7 @@ Ihr pers&ouml;nlicher Gutscheincode lautet <b>{$GIFT_CODE}</b>. Sie k&ouml;nnen 
 Um den Gutschein einzul&ouml;sen klicken Sie bitte auf <a href="{$GIFT_LINK}">[Gutschein Einl&ouml;sen]</a>.
 {/if}
 
-{if $SEND_COUPON==true}
+{if $SEND_COUPON == true}
  Als kleines Willkommensgeschenk senden wir Ihnen einen Kupon.<br />
  Kuponbeschreibung: <b>{$COUPON_DESC}</b>
 

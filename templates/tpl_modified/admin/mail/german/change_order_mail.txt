@@ -1,5 +1,5 @@
 
-Sehr geehrte{if $GENDER=='Herr'}r{/if} {$GENDER} {$LASTNAME},
+Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
 
 Der Status Ihrer Bestellung {if $ORDER_NR}Nr. {$ORDER_NR}{/if} {if $ORDER_DATE}vom {$ORDER_DATE}{/if} wurde geändert.
 

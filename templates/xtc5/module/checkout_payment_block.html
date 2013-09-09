@@ -5,13 +5,13 @@
     <td class="header" width="89%">{$module_data.module}</td>
     <td class="header right" width="10%">{$module_data.module_cost}</td>
   </tr>
-  {if $module_data.description!=''}
+  {if $module_data.description != ''}
   <tr>
     <td class="payleft">&nbsp;</td>
     <td class="payright" colspan="2" width="100%"><strong>{$module_data.description}</strong></td>
   </tr>
   {/if}
-  {if $module_data.error!=''}
+  {if $module_data.error != ''}
   <tr>
     <td class="payleft">&nbsp;</td>
     <td class="payright" colspan="2">{$module_data.error}</td>
