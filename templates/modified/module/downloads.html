@@ -1,0 +1,24 @@
+{config_load file="$language/lang_$language.conf" section="downloads_module"}
+{if !empty($dl)}
+  <h1>{#heading_download#}</h1>{if $dl_redirected == 'true'} {#download_save_as#} {/if}
+  {if $dl_prevented == 'true'}
+    <p>{#download_not_allowed#}</p>
+  {/if}
+  {foreach name=aussen item=dl_data from=$dl}
+    <table width="100%" border="0" cellspacing="0" cellpadding="4" class="downloadbox">
+      <tr>
+        <td class="icon">
+          {if $dl_data.pic_link}
+            <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download.jpg" alt="" border="0" /></a>
+          {else}
+            <img src="{$tpl_path}img/img_download_locked.jpg" alt="" />
+          {/if}
+        </td>
+        <td class="downloadlink">
+          <strong>{$dl_data.download_link}</strong><br />
+          {#table_heading_download_date#}&nbsp;{$dl_data.date}, <strong>{$dl_data.count}</strong>&nbsp;{#table_heading_download_count#}
+        </td>
+      </tr>
+    </table>
+  {/foreach}
+{/if}

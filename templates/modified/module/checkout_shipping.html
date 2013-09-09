@@ -1,0 +1,21 @@
+{config_load file="$language/lang_$language.conf" section="checkout_shipping"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+<ul id="checkoutnavigation">
+  <li class="active"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
+  <li class="inactive"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
+  <li class="inactive"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
+</ul>
+<br class="clearfix" />
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<h1>{#heading_shipping#}</h1>
+{$FORM_ACTION}
+<p><span style="float:right">{$BUTTON_ADDRESS}</span>
+  <strong>{#title_address#}:</strong><br />{$ADDRESS_LABEL}</p>
+<br />
+<h1>{#title_shipping#}</h1>
+<p>{#text_shipping#}</p>
+<p>{$SHIPPING_BLOCK}</p>
+<div class="button_right">{$BUTON_CONTINUE}</div>
+<br class="clearfix" />
+{$FORM_END}

@@ -1,0 +1,33 @@
+{if $FREE_SHIPPING} 
+<table class="shippingblock" border="0" width="100%" cellspacing="0" cellpadding="6">
+  <tr> 
+    <td class="header"><strong>{$FREE_SHIPPING_TITLE}</strong></td>
+  </tr>
+  <tr> 
+    <td width="100%">{$FREE_SHIPPING_DESCRIPTION}</td>
+  </tr>
+</table>
+{else}
+{foreach name=outer item=module_data from=$module_content} 
+<table class="shippingblock" width="100%" border="0" cellspacing="0" cellpadding="6">
+  <tr>
+    <td colspan="4" class="header"><strong>{$module_data.module}</strong></td>
+  </tr>
+  {if $module_data.error != ''}
+  <tr>
+    <td>&nbsp;</td>
+    <td colspan="3">{$module_data.error}</td>
+  </tr>
+  {else}
+  {foreach name=inner item=method_data from=$module_data.methods} 
+  <tr>
+    <td class="radiobutton">{$method_data.radio_field}</td>
+    <td class="icon">{$module_data.icon}</td>
+    <td class="description"><label for="{$smarty.foreach.outer.iteration}">{$method_data.title}</lable></td>
+    <td class="price">{$method_data.price}</td>
+  </tr>
+  {/foreach}
+  {/if}
+</table>
+{/foreach}
+{/if}

@@ -1,0 +1,17 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<div class="box2">
+  <div class="box_header">{#heading_best_sellers#}</div>
+  <div class="box_line"></div>
+  {foreach name=aussen item=box_data from=$box_content}
+  <div class="boxlist_bestseller" {if $smarty.foreach.aussen.last} style="border-bottom:none;padding-bottom:0px;"{/if}>
+    <div class="boxtitle">{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{textformat wrap=18 wrap_cut=true}{$box_data.PRODUCTS_NAME}{/textformat}</a></div>
+    <div class="boxlist_bestseller_image"><a href="{$box_data.PRODUCTS_LINK}">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="" title="" />{/if}</a></div>  
+    <div class="boxlist_besteller_content">
+      <div class="boxlist_besteller_price">{$box_data.PRODUCTS_PRICE}</div>
+      {if $box_data.PRODUCTS_VPE}<div class="boxlist_besteller_vpe">{$box_data.PRODUCTS_VPE}</div>{/if}
+      <div class="boxlist_besteller_tax">{$box_data.PRODUCTS_TAX_INFO}{$box_data.PRODUCTS_SHIPPING_LINK}</div>
+    </div>
+    <div class="clearfix"></div>
+  </div>
+  {/foreach}
+</div>

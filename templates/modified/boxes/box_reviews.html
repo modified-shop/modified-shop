@@ -1,0 +1,16 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{if $RANDOM}
+<div class="box1">
+  <div class="box_header">
+    <span class="show_title">{#heading_reviews#}</span> 
+    <a class="show_all" href="{$REVIEWS_LINK}">{#show_all#} <span class="arrow">&raquo;</span></a>
+    <br class="clearfix" />
+  </div>
+  <div class="box_line"></div>
+  <div class="box_title"><a href="{$PRODUCTS_LINK}"><strong>{$PRODUCTS_NAME}</strong></a></div>
+  {if $PRODUCTS_IMAGE!=''}<div class="box_image"><a href="{$PRODUCTS_LINK}">{$PRODUCTS_IMAGE}</a></div>{/if}
+  <div class="box_line abstand"></div>
+  <div class="box_text">{$REVIEWS}</div>
+  <div class="box_reviews_image">{$REVIEWS_IMAGE}</div>
+</div>
+{/if}

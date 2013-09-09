@@ -1,0 +1,27 @@
+<table  width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
+  <tr> 
+    <td style="border-bottom: 1px solid; border-color: #cccccc;">
+      <div align="right"><img src="{$logo_path}logo.gif"></div>
+    </td>
+  </tr>
+  <tr> 
+    <td>
+      <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
+        <strong>Dear {$GENDER} {$LASTNAME},</strong>
+      </font>
+      <font size="2" face="Verdana, Arial, Helvetica, sans-serif"><br />
+        <br />
+        we just created your customer account. <br />
+        <br />
+        {if $COMMENTS} Note: {$COMMENTS} <br />{/if}
+        <br />
+        <br />
+        You can login our store with your e-mail-address and password:<br />
+        <br />
+        e-mail-address: {$EMAIL}
+        <br />
+        Password: {$PASSWORD} 
+      </font>
+    </td>
+  </tr>
+</table>

@@ -1,0 +1,28 @@
+{config_load file="$language/lang_$language.conf" section="sitemap"}
+{if isset($herror)}
+  <div class="error">{$herror}</div><br />
+{/if}
+<div class="sitemapwrap">
+  {foreach name=aussen item=module_data from=$module_content}
+    {if $smarty.foreach.aussen.iteration % 2 == 1}
+      <div class="sitemapleft">
+    {else}
+      <div class="sitemapright">
+    {/if}
+        <div class="sitemapheader"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a></div>
+        <div class="sitemapcontent">
+        {if $module_data.SCATS|@sizeof!=0}
+          <ul>
+          {foreach key=key_data item=item_data from=$module_data.SCATS}
+            <li><a href="{$item_data.link}">{$item_data.text}</a></li>
+          {/foreach}
+          </ul>
+        {/if}
+        </div>
+      </div>
+    {if $smarty.foreach.aussen.iteration % 2 == 0}
+      <div style="clear:both;"></div>
+    {/if}
+  {/foreach}
+  <div style="clear:both;"></div>
+</div>

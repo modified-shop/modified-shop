@@ -1,0 +1,45 @@
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+<div class="highlightbox">
+
+<table class="orderdetails" width="100%" border="0" cellspacing="0" cellpadding="6">
+  <tr class="headerrow">
+    <td class="left">&nbsp;</td>
+    <td class="center">{#text_qty#}</td>
+    <td class="left">{#text_article#}</td>
+    <td class="right">{#text_single#}</td>
+    <td class="right">{#text_total#}</td>
+    <td class="center">{#text_remove#}</td>
+  </tr>
+  {foreach name=aussen item=module_data from=$module_content} 
+  <tr class="{cycle values="contentrow1,contentrow2"}">
+    <td class="image"><img class="warenkorb_image" src="{$module_data.PRODUCTS_IMAGE}" alt="" /></td>
+    <td class="quantity">{$module_data.PRODUCTS_QTY}</td>
+    <td class="productname"><strong><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></strong><br />
+
+		{if $module_data.ATTRIBUTES!=''} 
+      		<table class="productattributes" width="100%" border="0" cellspacing="0" cellpadding="0">
+        	{foreach key=key_data item=item_data from=$module_data.ATTRIBUTES} 
+        	<tr> 
+          		<td class="attribute"><strong>{$item_data.NAME}:</strong></td>
+          		<td class="value">{$item_data.VALUE_NAME}</td>
+        	</tr>
+        	{/foreach} 
+      		</table>
+       {/if}
+    </td>
+    <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
+    <td class="totalprice">{$module_data.PRODUCTS_PRICE}</td>
+    <td class="delete">{$module_data.BUTTON_DELETE}</td>
+  </tr>
+  {/foreach}
+  <tr>
+    <td colspan="5" class="subtotal">{$UST_CONTENT}<strong>{$TOTAL_CONTENT}</strong>{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}</td>
+    <td class="subtotal">&nbsp;</td>
+  </tr> 
+</table>
+
+
+
+
+
+</div>

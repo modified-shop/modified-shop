@@ -1,0 +1,16 @@
+{if $options!=''}
+
+{foreach name=outer item=options_data from=$options}
+<div class="row">
+  <div class="dropdowntitle">{$options_data.NAME}:</div> 
+  <div class="dropdownentry">
+  <select name="id[{$options_data.ID}]" id="{$options_data.ID}">
+    {foreach key=key_data item=item_data from=$options_data.DATA}
+    <option value="{$item_data.ID}">&nbsp;{$item_data.TEXT} {if $item_data.PRICE !=''}{$item_data.PREFIX} {$item_data.PRICE}{/if}&nbsp; </option>
+    {/foreach}
+  </select>
+  </div>
+  <br class="clearfix" />
+</div>
+{/foreach}
+{/if}

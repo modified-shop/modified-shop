@@ -1,0 +1,16 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+<h1>{#heading_reviews#} {$PRODUCTS_NAME}</h1>
+<table width="100%" border="0" cellspacing="0" cellpadding="4" class="reviewlist">
+  <tr class="header"> 
+    <td>{#title_date#}</td>
+    <td><strong>{#title_author#}</strong></td>
+    <td><strong>{#title_rating#}</strong></td>
+  </tr>
+  {foreach name=aussen item=module_data from=$module_content} 
+  <tr class="{cycle values="contentrow1,contentrow2"}"> 
+    <td>{$module_data.DATE}</td>
+    <td>{$module_data.AUTHOR}</td>
+    <td width="100%">{$module_data.RATING}</td>
+  </tr>
+  {/foreach} 
+</table>

@@ -1,0 +1,33 @@
+{config_load file="$language/lang_$language.conf" section="account_delete"}
+{if $info_message!=''}
+<div class="errormessage">{$info_message}</div>
+{/if}
+
+{if $BUTTON_CONTINUE}
+<h1>{#heading_account_deleted#}</h1>
+<div class="highlightbox">
+  <h4>{#heading_account_deleted#}</h4>
+  <p>{#account_deleted#}</p>
+</div>
+<div class="button_right">{$BUTTON_CONTINUE}</div>
+<br class="clearfix" />
+
+{else}
+
+<h1>{#heading_delete_account#}</h1>
+<div class="highlightbox">
+  {$FORM_ACTION}
+  <h4>{#heading_delete_account#}</h4>
+  <p>{#delete_account#}</p>
+  <div class="fieldrow half">
+    <div class="fieldrow_title">{#text_password#}</div>
+    <div class="fieldrow_entry left">{$INPUT_PASSWORD}</div>
+  </div>
+  <br class="clearfix" />
+</div>
+
+<div class="button_left">{$BUTTON_BACK}</div>
+<div class="button_right">{$BUTTON_SUBMIT}</div>
+<br class="clearfix" />
+{$FORM_END}
+{/if}

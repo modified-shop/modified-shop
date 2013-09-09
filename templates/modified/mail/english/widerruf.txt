@@ -1,0 +1,3 @@
+__________________________________________________________________
+
+Add your right of revocation here (plain text only)
