@@ -22,4 +22,16 @@
       $logger = new logger;
     echo $logger->timer_stop(DISPLAY_PAGE_PARSE_TIME);
   }
+
+  /**
+   * new error handling
+   */
+  if (is_array($error_exceptions)) {
+    if ((DISPLAY_ERROR_REPORTING == 'all') || DISPLAY_ERROR_REPORTING == 'admin') {
+      echo '<div style="width:1000px; margin:20px auto;">' . PHP_EOL .
+             '<h2 style="color: rgb(190, 50, 50);">Exception Occured:</h2>' . PHP_EOL;
+             echo implode(PHP_EOL, $error_exceptions);
+      echo '</div>';
+    }
+  }
 ?>
