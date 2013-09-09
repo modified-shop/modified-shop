@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: saveMatching.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: saveMatching.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -229,7 +229,7 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 	$leadtimeToShip = getDBConfigValue('amazon.leadtimetoship', $_MagnaSession['mpID'], '0');
 	foreach ($items as $productID => $asin) {
 		if ($asin != 'false') {
-			$product = MagnaDB::gi()->getProductById($productID);
+			$product = MLProduct::gi()->getProductById($productID);
 
 			$data = array('mpID' => $_MagnaSession['mpID']);
 			$data['products_id'] = $product['products_id'];
@@ -243,8 +243,8 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 			$data['lowestprice'] = $_POST['lowprice'][$asin];
 			
 			if (defined('DEVELOPMENT_TEST')) {
-		    	$data['item_note'] = DEVELOPMENT_TEST;
-		    }
+				$data['item_note'] = DEVELOPMENT_TEST;
+			}
 
 		} else {
 			$data = array(

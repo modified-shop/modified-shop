@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: singlematching.php 2437 2013-05-06 13:32:58Z tim.neumann $
+ * $Id: singlematching.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -29,7 +29,7 @@ $current_product_id = MagnaDB::gi()->fetchOne('
 	 LIMIT 1
 ');
 
-$productsData = MagnaDB::gi()->getProductById($current_product_id);
+$productsData = MLProduct::gi()->getProductById($current_product_id);
 $amazonProperties = MagnaDB::gi()->fetchRow('
 	SELECT * FROM '.TABLE_MAGNA_AMAZON_PROPERTIES.' 
 	 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND

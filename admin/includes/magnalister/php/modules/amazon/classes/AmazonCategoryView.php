@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCategoryView.php 2503 2013-05-16 09:29:43Z tim.neumann $
+ * $Id: AmazonCategoryView.php 3157 2013-09-06 12:06:19Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -69,6 +69,11 @@ class AmazonCategoryView extends QuickCategoryView {
 						  LEFT JOIN '.TABLE_PRODUCTS.' p on p2c.products_id=p.products_id
 							  WHERE p2c.categories_id IN(' . implode(', ', $aCatIds) . ')
                     '.(
+						$this->showOnlyActiveProducts
+								? 'AND p.products_status<>0'
+								: ''
+					).'
+					'.(
                         getDBConfigValue('general.keytype', '0') == 'artNr'
                         ?	  " AND p.products_model != '' and p.products_model is not null"
                         :	  ""

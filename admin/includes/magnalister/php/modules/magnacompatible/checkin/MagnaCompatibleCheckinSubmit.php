@@ -32,6 +32,8 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 	protected $quantitySub = false;
 	protected $quantityLumb = false;
 
+	protected $showOnlyActiveElements = false;
+
 	public function __construct($settings = array()) {
 		global $_MagnaSession;
 		
@@ -75,6 +77,11 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 			);
 		}
 
+		$this->showOnlyActiveElements = getDBConfigValue(
+			array($this->marketplace.'.checkin.status', 'val'),
+			$this->mpID,
+			false
+		);
 	}
 
 	private function loadMPConfig() {
@@ -110,7 +117,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 	private function processShopCategoryLevel($cID, $descCol, $langID) {
 		$trim = " \n\r\0\x0B\xa0\xc2"; # last 2 ones are utf8 &nbsp;
 		$category = MagnaDB::gi()->fetchRow('
-			SELECT cd.categories_name AS `name`, cd.'.$descCol.' AS `desc`, c.parent_id AS `parent`
+			SELECT cd.categories_name AS `name`, cd.'.$descCol.' AS `desc`, c.parent_id AS `parent`, c.categories_status AS `status`
 			  FROM '.TABLE_CATEGORIES.' c, '.TABLE_CATEGORIES_DESCRIPTION.' cd 
 			 WHERE c.categories_id = \''.$cID.'\' 
 			       AND c.categories_id = cd.categories_id 
@@ -121,6 +128,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 			'Name' => trim(html_entity_decode(strip_tags($category['name']), ENT_QUOTES, 'UTF-8'), $trim),
 			'Description' => trim(html_entity_decode($category['desc'], ENT_QUOTES, 'UTF-8'), $trim),
 			'ParentID' => $category['parent'],
+			'Status' => $this->showOnlyActiveElements ? (bool)$category['status'] : true, 
 		);
 		if ($c['ParentID'] == '0') {
 			unset($c['ParentID']);
@@ -131,7 +139,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 		return $c;
 	}
 
-	protected function generateShopCategoryPath($id, $from = 'category', $langID, $categoriesArray = array(), $index = 0, $callCount = 0) {
+	protected function generateShopCategoryPath($id, $from = 'category', $langID, $categoriesArray = array(), $index = 0) {
 		$descCol = '';
 		if (MagnaDB::gi()->columnExistsInTable('categories_description', TABLE_CATEGORIES_DESCRIPTION)) {
 			$descCol = 'categories_description';
@@ -142,26 +150,40 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 			$categoriesQuery = MagnaDB::gi()->query('
 				SELECT categories_id AS code
 				  FROM '.TABLE_PRODUCTS_TO_CATEGORIES.'
-				 WHERE products_id = \''.$id.'\'
+				 WHERE products_id = "'.$id.'"
 			');
 			while ($categories = MagnaDB::gi()->fetchNext($categoriesQuery)) {
 				if ($categories['code'] != '0') {
-					$categoriesArray[$index][] = $category = $this->processShopCategoryLevel($categories['code'], $descCol, $langID);
+					$category = $this->processShopCategoryLevel($categories['code'], $descCol, $langID);
+					if (!$category['Status']) {
+						continue;
+					}
+					$categoriesArray[$index][] = $category;
 					if (isset($category['ParentID'])) {
 						$categoriesArray = $this->generateShopCategoryPath($category['ParentID'], 'category', $langID, $categoriesArray, $index);
+						if (empty($categoriesArray[$index])) {
+							// This category contained an inactive element. Skip this index.
+							unset($categoriesArray[$index]);
+							continue;
+						}
 					}
 				}
 				++$index;
 			}
 		} else if ($from == 'category') {
-			$categoriesArray[$index][] = $category = $this->processShopCategoryLevel($id, $descCol, $langID);
+			$category = $this->processShopCategoryLevel($id, $descCol, $langID);
+			if (!$category['Status']) {
+				// An element of this path is inactive. Remove the entire path.
+				$categoriesArray[$index] = array();
+				return $categoriesArray;
+			}
+			$categoriesArray[$index][] = $category;
 			if (isset($category['ParentID'])) {
 				$categoriesArray = $this->generateShopCategoryPath($category['ParentID'], 'category', $langID, $categoriesArray, $index);
 			}
-			if ($callCount == 0) {
-				$categoriesArray[$index] = array_reverse($categoriesArray[$index]);
-			}
+			$categoriesArray[$index] = array_reverse($categoriesArray[$index]);
 		}
+		
 		return $categoriesArray;
 	}
 	

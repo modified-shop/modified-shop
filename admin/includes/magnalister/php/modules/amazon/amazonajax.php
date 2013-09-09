@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonajax.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: amazonajax.php 3163 2013-09-09 10:28:26Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -27,7 +27,7 @@ if (isset($_POST['request'])) {
 	if ($r == 'ItemSearch') {
 		include_once(DIR_MAGNALISTER_MODULES.'amazon/matching/matchingViews.php');
 		if (isset($_POST['search']) && !empty($_POST['search']) &&
-		    isset($_POST['productID']) && !empty($_POST['productID'])) {
+			isset($_POST['productID']) && !empty($_POST['productID'])) {
 			$search = $_POST['search'];
 			$productID = $_POST['productID'];
 
@@ -40,17 +40,17 @@ if (isset($_POST['request'])) {
 				$result = array('DATA' => array());
 			}
 			if (!empty($result['DATA'])) {
-			    foreach ($result['DATA'] as &$data) {
-			    	if (!empty($data['Author'])) {
-			    		$data['Title'] .= ' ('.$data['Author'].')';
-			    	}
-			    	$price = new SimplePrice($data['LowestPrice']['Price'], $data['LowestPrice']['CurrencyCode']);
-			    	$data['LowestPrice'] = $data['LowestPrice']['Price'];
-			    	$data['LowestPriceFormated'] = $price->format();
-			    }
+				foreach ($result['DATA'] as &$data) {
+					if (!empty($data['Author'])) {
+						$data['Title'] .= ' ('.$data['Author'].')';
+					}
+					$price = new SimplePrice($data['LowestPrice']['Price'], $data['LowestPrice']['CurrencyCode']);
+					$data['LowestPrice'] = $data['LowestPrice']['Price'];
+					$data['LowestPriceFormated'] = $price->format();
+				}
 			}
 
-			$dbProd = MagnaDB::gi()->getProductById($productID);
+			$dbProd = MLProduct::gi()->getProductById($productID);
 			header('Content-Type: text/html; charset=ISO-8859-1');
 			renderMathingResultTr($productID, $search, '', $result['DATA']);
 		}
@@ -59,7 +59,7 @@ if (isset($_POST['request'])) {
 	if ($r == 'ItemLookup') {
 		include_once(DIR_MAGNALISTER_MODULES.'amazon/matching/matchingViews.php');
 		if (isset($_POST['asin']) && !empty($_POST['asin']) &&
-		    isset($_POST['productID']) && !empty($_POST['productID'])) {
+			isset($_POST['productID']) && !empty($_POST['productID'])) {
 			$asin = $_POST['asin'];
 			$productID = $_POST['productID'];
 
@@ -71,17 +71,17 @@ if (isset($_POST['request'])) {
 			} catch (MagnaException $e) {
 				$result = array('DATA' => array());
 			}
-			$dbProd = MagnaDB::gi()->getProductById($productID);
+			$dbProd = MLProduct::gi()->getProductById($productID);
 
 			if (!empty($result['DATA'])) {
-			    foreach ($result['DATA'] as &$data) {
-			    	if (array_key_exists('Author', $data) && !empty($data['Author'])) {
-			    		$data['Title'] .= ' ('.$data['Author'].')';
-			    	}
-			    	$price = new SimplePrice($data['LowestPrice']['Price'], $data['LowestPrice']['CurrencyCode']);
-			    	$data['LowestPrice'] = $data['LowestPrice']['Price'];
-			    	$data['LowestPriceFormated'] = $price->format();
-			    }
+				foreach ($result['DATA'] as &$data) {
+					if (array_key_exists('Author', $data) && !empty($data['Author'])) {
+						$data['Title'] .= ' ('.$data['Author'].')';
+					}
+					$price = new SimplePrice($data['LowestPrice']['Price'], $data['LowestPrice']['CurrencyCode']);
+					$data['LowestPrice'] = $data['LowestPrice']['Price'];
+					$data['LowestPriceFormated'] = $price->format();
+				}
 			}
 			header('Content-Type: text/html; charset=ISO-8859-1');
 			renderMathingResultTr($productID, $dbProd['products_name'], '', $result['DATA']);
