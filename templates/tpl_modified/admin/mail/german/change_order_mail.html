@@ -7,7 +7,7 @@
   <tr> 
     <td>
       <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-        <strong>Sehr geehrte{if $GENDER=='Herr'}r{/if} {$GENDER} {$LASTNAME},</strong><br />
+        <strong>Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},</strong><br />
         <br />
         Der Status Ihrer Bestellung {if $ORDER_NR}Nr. {$ORDER_NR}{/if} {if $ORDER_DATE}vom
         {$ORDER_DATE}{/if} wurde ge&auml;ndert.<br />

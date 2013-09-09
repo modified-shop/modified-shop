@@ -1,15 +1,15 @@
 {config_load file="$language/lang_$language.conf" section="checkout_payment"}
 {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 <ul id="checkoutnavigation">
-	<li class="inactive"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
-	<li class="active"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
-	<li class="inactive"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
-	<li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
+  <li class="inactive"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
+  <li class="active"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
+  <li class="inactive"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
 </ul>
 <div style="clear:both"></div>
 <br />
-{if $error!=''}{$error}{/if}
-{if $step2!='true'}
+{if $error != ''}{$error}{/if}
+{if $step2 != 'true'}
 <h1>{#title_address#}</h1>
 {$FORM_ACTION}
 <p>{$ADDRESS_LABEL}</p>
@@ -17,8 +17,8 @@
 <h1>{#title_payment#}</h1>
 <p>{#text_payment#}</p>
 {/if}
-{if $GV_COVER!='true'}{$PAYMENT_BLOCK}{$module_gift}{else}{#text_gccover#}{/if}
-{if $step2!='true'}
+{if $GV_COVER != 'true'}{$PAYMENT_BLOCK}{$module_gift}{else}{#text_gccover#}{/if}
+{if $step2 != 'true'}
 <h2>{#title_comments#}</h2>
 <p class="checkoutcomment">{$COMMENTS}</p>
 <h2>{#title_agb#}</h2>

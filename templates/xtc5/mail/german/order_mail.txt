@@ -26,7 +26,7 @@ Ihre bestellten Produkte zur Kontrolle
 {$order_values.PRODUCTS_QTY} x {$order_values.PRODUCTS_NAME} {$order_values.PRODUCTS_PRICE}
 {if $order_values.PRODUCTS_ORDER_DESCRIPTION neq ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
 {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
-{if $order_values.PRODUCTS_ATTRIBUTES !=''}{$order_values.PRODUCTS_ATTRIBUTES}{/if}
+{if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}{/if}
 
 {/foreach}
 

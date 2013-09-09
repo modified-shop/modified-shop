@@ -1,6 +1,6 @@
 
 
-Sehr geehrte{if $GENDER=='Herr'}r{/if} {$GENDER} {$LASTNAME},
+Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
 
 es wurde ein Account für Sie eingerichtet, Sie können sich mit folgenden Daten in unseren Shop einloggen.
 

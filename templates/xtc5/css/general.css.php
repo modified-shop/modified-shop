@@ -2,11 +2,14 @@
 /* -----------------------------------------------------------------------------------------
    $Id: general.js.php 1262 2005-09-30 10:00:32Z mz $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2006 XT-Commerce
+
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
