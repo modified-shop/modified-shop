@@ -32,7 +32,7 @@
 
  //compatibility for modified eCommerce Shopsoftware 1.06 files
   $ssl_proxy = '';
-  if ($request_type == 'SSL' && ENABLE_SSL == true && defined('USE_SSL_PROXY') && USE_SSL_PROXY == true) {
+  if (isset($request_type) && $request_type == 'SSL' && ENABLE_SSL == true && defined('USE_SSL_PROXY') && USE_SSL_PROXY == true) {
     $ssl_proxy = '/' . $_SERVER['HTTP_HOST'];
   }
   define('DIR_WS_BASE', $ssl_proxy . preg_replace('/\\' . DIRECTORY_SEPARATOR . '\/|\/\//', '/', dirname($PHP_SELF) . '/'));
