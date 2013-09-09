@@ -1,0 +1,81 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<div id="cart_short"{if $empty=='false'} style="cursor:pointer"{/if}>
+  {if $empty=='false'}
+  <a href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>{$PRODUCTS}</strong> Artikel{#text_article#} &nbsp;&bull;&nbsp; {#text_total#}:<strong>{$TOTAL}</strong></span></a>
+  {else}
+  <a href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>0</strong> Artikel{#text_article#} &nbsp;&bull;&nbsp; {#text_total#}: <strong>0,00 &euro;</strong></span></a>
+  {/if}
+</div>
+
+
+{if $empty=='false'}
+<div id="cart_long">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%" class="cartbox">
+    <tr>
+      <td class="head" colspan="3">&nbsp;</td>
+      <td class="head">Artikel</td>
+      <td class="head right">Einzelpreis</td>
+      <td class="head right">Summe</td>
+    </tr>
+    {foreach name=aussen item=products_data from=$products}
+    <tr class="cartrow">
+      <td class="cart_image"><img src="{$products_data.IMAGE}" alt="{$products_data.NAME}" /></td>
+      <td class="cart_quantity">{$products_data.QTY}</td>
+      <td class="cart_x">x</td>
+      <td class="cart_product"><a href="{$products_data.LINK}">{$products_data.NAME|truncate:50:"...":true}</a></td>
+      <td class="cart_single">{$products_data.PRODUCTS_SINGLE_PRICE}</td>
+      <td class="cart_sum">{$products_data.PRODUCTS_PRICE}</td>
+    </tr>
+  {/foreach}
+  </table>
+	<div class="cart_mini">{$UST}
+	<strong>{#text_total#}:{$TOTAL}</strong>
+  {if $SHIPPING_INFO}<br />{$SHIPPING_INFO}{/if}
+  </div>
+  <div class="cart_buttons">
+    <a href="{$LINK_CART}"><img src="{$tpl_path}buttons/{$language}/button_box_warenkorb.gif" alt="" border="0" /></a><a href="{$LINK_CHECKOUT}"><img src="{$tpl_path}buttons/{$language}/button_box_checkout.gif" alt="" border="0" /></a>
+  </div>
+
+</div>
+{/if}
+
+{php}
+/*
+{if $empty=='false'}
+<div id="cart_long">
+	{foreach name=aussen item=products_data from=$products}
+  <div class="cartrow">
+    <div class="cartrow_image"><img src="{$products_data.IMAGE}" alt="{$products_data.NAME}" /></div> 
+    <div class="cartrow_text">
+      {$products_data.QTY} x <a href="{$products_data.LINK}">{$products_data.NAME|truncate:50:"...":true}</a><br />
+      {$products_data.PRODUCTS_SINGLE_PRICE} - {$products_data.PRODUCTS_PRICE}
+    </div>      
+    <div class="clearfix"></div>
+  </div>
+  {/foreach}
+	<div class="cart_mini">{$UST}
+	<strong>{#text_total#}:{$TOTAL}</strong>
+  {if $SHIPPING_INFO}<br />{$SHIPPING_INFO}{/if}
+  </div>
+  <div class="cart_buttons">
+    <a href="{$LINK_CART}"><img src="{$tpl_path}buttons/{$language}/button_box_warenkorb.gif" alt="" border="0" /></a><a href="{$LINK_CHECKOUT}"><img src="{$tpl_path}buttons/{$language}/button_box_checkout.gif" alt="" border="0" /></a>
+  </div>
+
+</div>
+{/if}
+*/
+{/php}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

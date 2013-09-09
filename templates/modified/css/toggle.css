@@ -1,0 +1,147 @@
+/* TOGGLE MENU CSS */
+#admin{
+	position: fixed;
+	display: block;
+	left: 0px;
+	top: 0px;
+	width: 100%;
+	background: #434343;
+	z-index: 99;
+	height:35px;
+}
+
+#admin ul{
+	display: block;
+	margin: 0;
+	padding: 0;
+	width: 1000px;
+	margin: 0 auto;
+}
+
+#admin ul li{
+	display: block;
+	float: left;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: relative;
+}
+
+#admin ul li.admin_logo a{
+	display: block;
+	float: left;
+	width: 24px;
+	height: 20px;
+	background: url(../img/general/adminlogo.png) no-repeat;
+	margin-right: 15px;
+	margin-top: 10px;
+}
+
+#admin ul li.admin_logo img{
+	display: none;
+}
+
+#admin ul li a.togglelink{
+	display: block;
+	font-size: 12px;
+	font-weight: bold;
+	color: #fff;
+	padding: 8px 15px;
+	float: left;
+	margin-right: 5px;
+	border: 1px solid transparent;
+}
+
+#admin ul li:hover a.togglelink{
+	background: #fff;
+	text-decoration: none;
+	border: 1px solid #bbb;
+	padding: 3px 15px 6px 15px;
+	margin-top: 7px;
+	border-bottom: 0;
+	color: #333;
+}
+
+#admin ul ul{
+	position: absolute;
+	background: #fff;
+	padding: 15px;
+	width: 250px;
+	display: none;
+	top: 35px;
+	left: 0;
+	border: 1px solid #bbb;
+	border-top: 0;
+}
+
+#admin ul li:hover ul{
+	display: block;
+}
+
+#admin ul ul li{
+	display: block;
+	float: none;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	position: relative;
+}
+
+#admin ul ul a{
+	display: block;
+	padding: 0;
+	line-height: 25px;
+	clear: both;
+	margin-bottom: 5px;
+}
+
+#admin ul ul a:hover{
+  text-decoration:none;
+  color: #fff; 
+  background: #7b3c62;
+  font-weight: bold;
+  padding-left: 5px;  
+}
+
+#admin ul ul em{
+	display: block;
+	width: auto;
+	float: right;
+	background: #eee;
+	color: #333;
+	padding: 0 3px;
+	min-width: 20px;
+	text-align: center;
+	font-weight: bold;
+	font-style: normal;
+}
+
+#admin ul ul li a:hover em{
+	background: #999;
+	color: #fff;
+}
+
+#admin ul ul li.attention em{
+	background: #fbdc88;
+}
+
+#admin ul ul li.attention a:hover em{
+	background: #ff9900;
+}
+
+#admin ul ul li.finish em{
+	background: #b0fc9c;
+}
+
+#admin ul ul li.finish a:hover em{
+	background: #0c0;
+}
+
+/* SPECIAL CSS */
+.spacer {
+  height:35px;
+}
+
+.errormessage {
+  display:none !important;
+}

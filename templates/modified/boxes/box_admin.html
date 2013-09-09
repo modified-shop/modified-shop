@@ -1,0 +1,29 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<ul>
+  <li class="start">
+    <a class="togglelink" href="{$START}">Admin</a>
+  </li>
+  <li class="orders togglemenu">
+    <a class="togglelink" href="{$ORDERS}">Bestellungen</a>
+    <ul>
+      {$ORDERS_CONTENT}
+    </ul>
+  </li>
+  {if $EDIT_CONTENT || $EDIT_PRODUCT || $EDIT_CATEGORY}
+    <li class="orders togglemenu">
+      <a class="togglelink" href="">Bearbeiten</a>
+      <ul>  
+        {if $EDIT_CONTENT}
+          <li><a href="{$EDIT_CONTENT}">Content</a></li>
+        {/if}  
+        {if $EDIT_PRODUCT}
+          <li><a href="{$EDIT_PRODUCT}">Artikel</a></li>
+          <li><a href="{$EDIT_PRODUCT_ATTRIBUTES}">Attribute editieren</a></li>
+        {/if}
+        {if $EDIT_CATEGORY}
+          <li><a href="{$EDIT_CATEGORY}">Kategorie</a></li>
+        {/if}
+      </ul>
+    </li>
+  {/if}
+</ul>
