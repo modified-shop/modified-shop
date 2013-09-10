@@ -17,145 +17,63 @@
    ---------------------------------------------------------------------------------------*/
 
   // The HTML href link wrapper function
-  function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode=false) {
+  function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false, $admin = false) {
     global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
 
-    $parameters = str_replace('&amp;', '&', $parameters); // web28 - 2010-09-02 -- making link W3C-Conform
+    $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
-    if (!xtc_not_null($page)) {
-      $page = FILENAME_DEFAULT;
-    }
-    
-    // GTB - 2012-04-10 - remove index.php from Startpage
-    if ($page == FILENAME_DEFAULT && !xtc_not_null($parameters)) {
-      $page = '';
-    }
-    
-    if ($connection == 'NONSSL' || $connection == '') {
-      $link = HTTP_SERVER . DIR_WS_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL == true) {
-        $link = HTTPS_SERVER . DIR_WS_CATALOG;
-      } else {
-        $link = HTTP_SERVER . DIR_WS_CATALOG;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
-    }
+    $page = (!xtc_not_null($page) ? FILENAME_DEFAULT : $page); // if page is not defined then use index.php
 
-    if (xtc_not_null($parameters)) {
-      $link .= $page . '?' . $parameters;
+    $page = (($page == FILENAME_DEFAULT && empty($parameters)) ? '' : $page); // remove index.php from startpage
+
+    $link = ($connection == 'SSL' && ENABLE_SSL == true ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG;
+
+    $link .= $page;
+    $separator = '?';
+    if (!empty($parameters)) {
+      $link .= '?' . $parameters;
       $separator = '&';
-
-    } else {
-      $link .= $page;
-      $separator = '?';
     }
 
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) {
-      $link = substr($link, 0, -1);
-    }
+    $link = rtrim($link, '&?'); // strip ?/& from the end of link
 
-    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ((($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False') && !$cookie) || (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8))) {
-      if (defined('SID') && xtc_not_null(SID)) {
-        $sid = SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-        if ($http_domain != $https_domain) {
-          $sid = session_name() . '=' . session_id();
-        }
-      }
-    }
-
-    //--- SEO Hartmut König -----------------------------------------//
-    if ((isset($_REQUEST['test']) && $_REQUEST['test'])
-        || ((SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true)) ) {
+    ### shopstat SEO URL
+    if (!$admin && (SEARCH_ENGINE_FRIENDLY_URLS == 'true') && ($search_engine_safe == true)) {
         require_once(DIR_FS_INC . 'shopstat_functions.inc.php');
-
-        $seolink = shopstat_getSEO( $page,
-                                    $parameters,
-                                    $connection,
-                                    $add_session_id,
-                                    $search_engine_safe,
-                                    'user');
+        $seolink = shopstat_getSEO($page, $parameters, $connection, $add_session_id, $search_engine_safe, 'user');
         if($seolink){
-            $link       = $seolink;
-            $elements   = parse_url($link);
-            (isset($elements['query']))
-                ? $separator = '&'
-                : $separator = '?';
+            $link      = $seolink;
+            $elements  = parse_url($link);
+            $separator = (isset($elements['query']) ? '&' : '?');
          }
     }
-    //--- SEO Hartmut König -----------------------------------------//
+    ### shopstat SEO URL
 
-    // remove session if useragent is a known Spider
-    if (isset($truncate_session_id) && $truncate_session_id) {
-      $sid=NULL;
+    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if ( (!isset($truncate_session_id) || $truncate_session_id === false) # no session if useragent is a known Spider
+        && $add_session_id == true && $session_started == true
+        && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie))
+		|| (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8)
+       ) {
+      if (defined('SID') && xtc_not_null(SID)) {
+        $link .= $separator . SID;
+      } elseif ( 
+        ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
+          || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
+        ) && $http_domain != $https_domain) {
+        $link .= $separator . session_name() . '=' . session_id();
+      }
     }
 
-    if (isset($sid)) {
-      $link .= $separator . $sid;
-    }
+    // W3C-Conform
+    $link = ($urlencode !== false ? htmlentities($link) : str_replace('&', '&amp;', $link));
 
-    //-- W3C-Conform
-    if($urlencode) {
-      $link = htmlentities($link);
-    } else {
-      $link = str_replace('&', '&amp;', $link); // web28 - 2010-09-02 -- making link W3C-Conform
-    }
     return $link;
   }
 
-  function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true) {
-    global $request_type, $session_started, $http_domain, $https_domain;
-
-    if (!xtc_not_null($page)) {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />');
-    }
-
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER . DIR_WS_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL == true) {
-        $link = HTTPS_SERVER . DIR_WS_CATALOG;
-      } else {
-        $link = HTTP_SERVER . DIR_WS_CATALOG;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL</strong><br /><br />');
-    }
-
-    if (xtc_not_null($parameters)) {
-      $link .= $page . '?' . $parameters;
-      $separator = '&';
-    } else {
-      $link .= $page;
-      $separator = '?';
-    }
-
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') ) {
-      $link = substr($link, 0, -1);
-    }
-
-    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
-    if ((($add_session_id == true) && ($session_started == true) && (SESSION_FORCE_COOKIE_USE == 'False')) || (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8))) {
-      if (defined('SID') && xtc_not_null(SID)) {
-        $sid = SID;
-      } elseif ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) ) || ( ($request_type == 'SSL') && ($connection == 'NONSSL') ) ) {
-        if ($http_domain != $https_domain) {
-          $sid = session_name() . '=' . session_id();
-        }
-      }
-    }
-
-    if (isset($truncate_session_id) && $truncate_session_id) {
-      $sid=NULL; // DokuMan - 2011-03-01 - reenabled
-    }
-
-    if (isset($sid)) {
-      $link .= $separator . $sid;
-    }
-
+    
+  function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false) {
+    $link = xtc_href_link($page, $parameters, $connection, $add_session_id, $search_engine_safe, $urlencode, true);
     return $link;
   }
 ?>
