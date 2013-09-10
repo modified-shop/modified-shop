@@ -1100,7 +1100,8 @@ class Smarty
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
     {
-        $msg = htmlentities($error_msg);
+        //$msg = htmlentities($error_msg);
+        $msg = encode_htmlentities($error_msg); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
         trigger_error("Smarty error: $msg", $error_type);
     }
 
