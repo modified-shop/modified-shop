@@ -118,7 +118,6 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
   }
 }
 
-// Include Template Engine
-require(DIR_WS_CLASSES . 'Smarty_2.6.27/Smarty.class.php');
-
+  // Smarty Template Engine
+  require(DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
 ?>
