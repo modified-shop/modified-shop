@@ -524,23 +524,25 @@ class shoppingCart {
                                                     $products['products_tax_class_id'],
                                                     $products['products_price']);
 
-            $products_array[] = array ( 'id' => $products_id,
-                                        'name' => $products['products_name'],
-                                        'description' => $products['products_description'],
-                                        'short_description' => $products['products_short_description'],
-                                        'order_description' => $products['products_order_description'],
-                                        'model' => $products['products_model'],
-                                        'image' => $products['products_image'],
-                                        'price' => $products_price + $this->attributes_price($products_id),
-                                        'vpe' => $main->getVPEtext($products, $products_price),
-                                        'quantity' => $this->contents[$products_id]['qty'],
-                                        'weight' => $products['products_weight'],
-                                        'shipping_time' =>(ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null,
-                                        'final_price' => ($products_price + $this->attributes_price($products_id)),
-                                        'tax_class_id' => $products['products_tax_class_id'],
-                                        'tax' => isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0,
-                                        'attributes' => isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : '',
-                                      );
+            $products_array[] = array ( 
+                'id' => $products_id,
+                'name' => $products['products_name'],
+                'description' => $products['products_description'],
+                'short_description' => $products['products_short_description'],
+                'order_description' => $products['products_order_description'],
+                'model' => $products['products_model'],
+                'image' => $products['products_image'],
+                'price' => $products_price + $this->attributes_price($products_id),
+                'vpe' => $main->getVPEtext($products, $products_price),
+                'quantity' => $this->contents[$products_id]['qty'],
+                'qty' => $this->contents[$products_id]['qty'],
+                'weight' => $products['products_weight'],
+                'shipping_time' =>(ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null,
+                'final_price' => ($products_price + $this->attributes_price($products_id) * $this->contents[$products_id]['qty']),
+                'tax_class_id' => $products['products_tax_class_id'],
+                'tax' => isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0,
+                'attributes' => isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : '',
+              );
           }
         }
       }
