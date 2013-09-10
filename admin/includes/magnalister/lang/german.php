@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: german.php 2760 2013-06-26 16:40:58Z MaW $
+ * $Id: german.php 3166 2013-09-09 23:19:01Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)

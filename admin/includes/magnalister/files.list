@@ -159,7 +159,7 @@ php/lib/phplot/contrib/color_range.test2.php	70eb63c50b29906ad2da45b7435cee82
 php/lib/phplot/README.txt	7ed2a26119505621867a1cff658ec73d
 php/lib/phplot/ChangeLog	7afbe991a85c4a6fed5f7147c816e90f
 php/lib/phplot/COPYING	e093b2834f66453149ff85a29d701027
-php/lib/MagnaDB.php	1fc73899f14756e517b8d3804907116f
+php/lib/MagnaDB.php	9d0e9ba0597348439860e69e039b0436
 php/lib/magnaFunctionLib.php	fad9442857c3c66340c77b3aac6017f6
 php/lib/listingsBox.php	377142a070219fb06f84d31f4dff033b
 php/lib/MagnaTestDB.php	190c926cced45c8dd6308a58c7f5e6a8
@@ -501,7 +501,7 @@ db/005.sql.php	4594e46f17e8e11b29ed98f4877d3f28
 db/002.sql.php	e8d160c3615ffb07c8a54730a9435116
 db/003.sql.php	ee625b23ae1233ea2f09a8349e3ecb75
 lang/	0
-lang/german.php	adbff5aa44415e0c8a2661a9e72e81c8
+lang/german.php	1384c66ed55b68703e2df5913cb592de
 lang/french.php	82b2e97790dd1762430f7947e94e8207
 lang/english.php	844a91d7175bae723fe9660918f2e12e
 ftp.php	8693351e3583d8ab29fe3f24772708ec
