@@ -3,31 +3,24 @@
 # Damit ist es moeglich das Adminmenue mit weiteren Eintraegen beliebig zu ergaenzen
 # Die neuen Menueeintaege werden unten an die bestehenden Eintraege hinzugefuegt
 # Die Reihenfolge der neuen Einträge kann mit einer vorangestellten Nummer im Dateinamen gesteuert werden
+
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 //Sprachabhaengiger Menueeintrag, kann fuer weiter Sprachen ergaenzt werden
 switch ($_SESSION['language_code']) {
   case 'de':
-    define('BOX_NAME_BEISPIEL','Beispiel');
+    define('MENU_NAME_EXAMPLE','Beispiel');
     break;
-  case 'en':
-    define('BOX_NAME_BEISPIEL','Example');
+  default:
+    define('MENU_NAME_EXAMPLE','Example');
     break;
 }
 
 //BOX_HEADING_TOOLS = Name der box in der der neue Menueeintrag erscheinen soll
-$add_contents[BOX_HEADING_TOOLS][] = array(
-  // Eintrag fuer Adminrechte
-    'admin_access_name' => 'example',
-  // Dateiname der neuen Admindatei
-    'filename' => 'example.php',
-  // Anzeigename im Menue
-    'boxname' => BOX_NAME_BEISPIEL,
-  // zusaetzliche Parameter z.B. 'set=export'
-    'parameters' => '',
-  // SSL oder NONSSL, kein Eintrag = NONSSL
-    'ssl' => ''
+$add_contents[BOX_HEADING_TOOLS][] = array( 
+    'admin_access_name' => 'example',   //Eintrag fuer Adminrechte
+    'filename' => 'example.php',        //Dateiname der neuen Admindatei
+    'boxname' => MENU_NAME_EXAMPLE,     //Anzeigename im Menue
+    'parameter' => '',                  //zusaetzliche Parameter z.B. 'set=export'
+    'ssl' => ''                         //SSL oder NONSSL, kein Eintrag = NONSSL
   );
-                                            
-
-                                            
