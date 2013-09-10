@@ -31,13 +31,19 @@
 // start the timer for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime(true));
 
-
 // configuration parameters
 if (file_exists('includes/local/configure.php')) {
   include ('includes/local/configure.php');
 } else {
   include ('includes/configure.php');
 }
+
+// admin directory
+require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
+set_admin_directory();
+
+// include standard settings
+require (DIR_FS_CATALOG.'includes/paths.php');
 
 // call Installer
 if (DB_DATABASE == '' && is_dir('./_installer')) {

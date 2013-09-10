@@ -12,18 +12,9 @@
 
   function set_admin_directory() {
     foreach (new DirectoryIterator(DIR_FS_CATALOG) as $shoproot) {
-      if ($shoproot->isDot() || $shoproot->isFile()) continue;
-      if ($shoproot->isDir()) {
-        foreach (new DirectoryIterator(DIR_FS_CATALOG.$shoproot->getFilename()) as $admin) {
-          if ($admin->isDir() || $admin->isDot()) continue;
-          if ($admin->getFilename() == 'check_update.php') {
-           define('DIR_ADMIN', $shoproot->getFilename().'/');
-           break;
-          }
-        }
-        if (defined('DIR_ADMIN')) {
-          break;
-        }
+      if ($shoproot->isDir() && is_file($shoproot->getFilename() . '/check_update.php') {
+        define('DIR_ADMIN', $shoproot->getFilename() . '/');
+        break;
       }
     }
   }
