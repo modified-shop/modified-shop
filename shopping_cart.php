@@ -139,9 +139,10 @@ if ($_SESSION['cart']->count_contents() > 0) {
   $smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type))); //GTB - 2010-11-26 - fix SSL/NONSSL to request
   $smarty->assign('FORM_END', '</form>');
   $_SESSION['any_out_of_stock'] = 0;
-  $products = $_SESSION['cart']->get_products();
+
   require (DIR_WS_MODULES.'order_details_cart.php');
-$_SESSION['allow_checkout'] = 'true';
+  
+  $_SESSION['allow_checkout'] = 'true';
   if (STOCK_CHECK == 'true') {
     if ($_SESSION['any_out_of_stock'] == 1) {
       if (STOCK_ALLOW_CHECKOUT == 'true') {
