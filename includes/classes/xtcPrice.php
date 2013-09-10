@@ -205,7 +205,6 @@ class xtcPrice {
       return false;
     }
     for ($i=0, $n=sizeof($_SESSION['xtb0']['tx']); $i<$n; $i++) {
-    //foreach ($_SESSION['xtb0']['tx'] as $tx) {
       if ($_SESSION['xtb0']['tx'][$i]['products_id'] == $pID && $_SESSION['xtb0']['tx'][$i]['XTB_QUANTITYPURCHASED'] != 0) {
         $this->actualCurr = $_SESSION['xtb0']['tx'][$i]['XTB_AMOUNTPAID_CURRENCY'];
         return round($_SESSION['xtb0']['tx'][$i]['XTB_AMOUNTPAID'], $this->currencies[$this->actualCurr]['decimal_places']);
