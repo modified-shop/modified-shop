@@ -347,18 +347,7 @@ include (DIR_WS_MODULES.'set_language_sessions.php');
 require (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
 
 // currency
-if (!isset ($_SESSION['currency']) || isset ($_GET['currency']) || ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $_SESSION['currency']))) {
-  if (isset ($_GET['currency'])) {
-    $_GET['currency'] = xtc_input_validation($_GET['currency'], 'char', '');
-    if (!$_SESSION['currency'] = xtc_currency_exists($_GET['currency']))
-      $_SESSION['currency'] = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
-  } else {
-    $_SESSION['currency'] = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
-  }
-}
-if (isset ($_SESSION['currency']) && $_SESSION['currency'] == '') {
-  $_SESSION['currency'] = DEFAULT_CURRENCY;
-}
+include (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
@@ -467,6 +456,7 @@ $account_type_query = xtc_db_query("-- /includes/application_top.php
 
 // modification for nre graduated system
 unset ($_SESSION['actual_content']);
+xtc_count_cart();
 
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE == 'true') {
@@ -484,7 +474,6 @@ if($coo_janolaw->get_status() == true) {
 }
 // EOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
 
-xtc_count_cart();
 
 /* magnalister v1.0.0 */
 if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
