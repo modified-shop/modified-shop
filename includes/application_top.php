@@ -464,10 +464,5 @@ $account_type_query = xtc_db_query("-- /includes/application_top.php
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-// econda tracking
-if (TRACKING_ECONDA_ACTIVE == 'true') {
-  require(DIR_FS_EXTERNAL . 'econda/emos.php');
-}
-
 auto_require(DIR_FS_CATALOG.'includes/external/application_top/','php');
 ?>
