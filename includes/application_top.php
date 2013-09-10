@@ -193,6 +193,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 // PHPMailer
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
 
+
 // move to xtc_db_queryCached.inc.php
 function xtDBquery($query) {
   if (defined('DB_CACHE') && DB_CACHE == 'true') {
@@ -357,18 +358,7 @@ function_exists('SEQ_SECURE_SESSION') ? SEQ_SECURE_SESSION() : '';
 require (DIR_WS_LANGUAGES.$_SESSION['language'].'/'.$_SESSION['language'].'.php');
 
 // currency
-if (!isset($_SESSION['currency']) || isset($_GET['currency']) || ((USE_DEFAULT_LANGUAGE_CURRENCY == 'true') && (LANGUAGE_CURRENCY != $_SESSION['currency']))) {
-  if (isset($_GET['currency'])) {
-    $_GET['currency'] = xtc_input_validation($_GET['currency'], 'char', '');
-    if (!$_SESSION['currency'] = xtc_currency_exists($_GET['currency']))
-      $_SESSION['currency'] = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
-  } else {
-    $_SESSION['currency'] = (USE_DEFAULT_LANGUAGE_CURRENCY == 'true') ? LANGUAGE_CURRENCY : DEFAULT_CURRENCY;
-  }
-}
-if (isset($_SESSION['currency']) && $_SESSION['currency'] == '') {
-  $_SESSION['currency'] = DEFAULT_CURRENCY;
-}
+include (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
