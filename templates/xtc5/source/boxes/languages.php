@@ -16,10 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  //BOF - 2010-02-28 - Fix Undefined variable: lng
-  //if (!isset($lng) && !is_object($lng)) {
   if (!isset($lng) || (isset($lng) && !is_object($lng))) {
-  //EOF - 2010-02-28 - Fix Undefined variable: lng
     include(DIR_WS_CLASSES . 'language.php');
     $lng = new language;
   }
@@ -29,22 +26,23 @@
   reset($lng->catalog_languages);
   while (list($key, $value) = each($lng->catalog_languages)) {
     $count_lng++;    
-    $languages_string .= ' <a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) . '</a> ';
+    $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
+    $languages_string .= ' <a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . $lng_link_txt . '</a> ';
   }
 
   // dont show box if there's only 1 language
   if ($count_lng > 1 ) {
     $box_smarty = new smarty;
-    //BOF - GTB - 2010-08-03 - Security Fix - Base
     $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-    //$box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-    //EOF - GTB - 2010-08-03 - Security Fix - Base
+
     $box_content='';
     $box_smarty->assign('BOX_CONTENT', $languages_string);
     $box_smarty->assign('language', $_SESSION['language']);
+
     // set cache ID
     $box_smarty->caching = 0;
     $box_languages= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_languages.html');
+
     $smarty->assign('box_LANGUAGES',$box_languages);
   }
 ?>
