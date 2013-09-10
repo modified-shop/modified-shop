@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 3163 2013-09-09 10:28:26Z derpapst $
+ * $Id: MagnaDB.php 3165 2013-09-09 16:18:35Z tim.neumann $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -128,9 +128,9 @@ class MagnaDB {
 		}
 		$this->closeConnection();
 	}
-	
+
 	public function selectDatabase($db) {
-		$this->query('USE '.$db);
+		$this->query('USE `'.$db.'`');
 	}
 	
 	protected function isConnected() {
@@ -839,7 +839,7 @@ class MagnaDB {
 	}
 
 	public function freeResult($result = null) {
-		if ($result !== null) {
+		if ($result === null) {
 			$result = $this->result;
 		}
 		if ($this->driver == 'mysqli') {
