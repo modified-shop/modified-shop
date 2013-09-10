@@ -10,9 +10,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function set_admin_directory() {
+   function set_admin_directory() {
     foreach (new DirectoryIterator(DIR_FS_CATALOG) as $shoproot) {
-      if ($shoproot->isDir() && is_file($shoproot->getFilename() . '/check_update.php') {
+      if ($shoproot->isDir() && is_file($shoproot->getFilename() . '/check_update.php')) {
         define('DIR_ADMIN', $shoproot->getFilename() . '/');
         break;
       }
