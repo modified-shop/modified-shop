@@ -123,6 +123,6 @@
     }
   }
 
-  // Include Template Engine
-  require(DIR_FS_EXTERNAL.'smarty/Smarty.class.php');
+  // Smarty Template Engine
+  require(DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
 ?>

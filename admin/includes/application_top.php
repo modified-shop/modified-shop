@@ -392,7 +392,7 @@ if (xtc_check_permission($pagename) == '0') {
 }
 
 // Smarty Template Engine
-require (DIR_FS_EXTERNAL . 'smarty/Smarty.class.php');
+require (DIR_FS_EXTERNAL . 'smarty/smarty_2/Smarty.class.php');
 
 /* magnalister v1.0.1 */
 if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
