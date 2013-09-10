@@ -371,8 +371,8 @@ require (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
 
 // econda tracking
-if (TRACKING_ECONDA_ACTIVE=='true') {
-  require(DIR_WS_INCLUDES . 'econda/class.econda304SP2.php');
+if (TRACKING_ECONDA_ACTIVE == 'true') {
+  require(DIR_FS_EXTERNAL . 'econda/class.econda304SP2.php');
   $econda = new econda();
 }
 
@@ -460,11 +460,11 @@ xtc_count_cart();
 
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE == 'true') {
-  require(DIR_WS_INCLUDES . 'econda/emos.php');
+  require(DIR_FS_EXTERNAL . 'econda/emos.php');
 }
 
 // BOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
-require_once(DIR_FS_CATALOG.'includes/janolaw/janolaw.php');
+require_once(DIR_FS_CATALOG.'includes/external/janolaw/janolaw.php');
 $coo_janolaw = new janolaw();
 if($coo_janolaw->get_status() == true) {
   $coo_janolaw->get_page_content('agb', true, true, 'checkout-agb');

@@ -38,7 +38,7 @@ if ((GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded == true) && ($ini_zlib_out
 
 // econda tracking
 if (TRACKING_ECONDA_ACTIVE == 'true') {
-  require_once (DIR_WS_INCLUDES . 'econda/econda.php');
+  require_once (DIR_FS_EXTERNAL . 'econda/econda.php');
 }
 
 /******** Findologic **********/

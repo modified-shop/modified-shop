@@ -1,12 +1,14 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: econda.php 899 2006-07-29 02:40:57Z mz $   
+   $Id: class.econda304SP2.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2006 xt:Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2006 xt:Commerce
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
