@@ -175,10 +175,6 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
 // Paypal API Modul Änderungen:
 require (DIR_WS_FUNCTIONS.'sessions.php');
    
-// Include Template Engine
-// BOF - Tomcraft - 2009-05-26 - update smarty template engine to 2.6.26
-////  require(DIR_WS_CLASSES . 'Smarty_2.6.22/Smarty.class.php');
-//  require(DIR_WS_CLASSES . 'Smarty_2.6.26/Smarty.class.php');
-// EOF - Tomcraft - 2009-05-26 - update smarty template engine to 2.6.26
-
+  // Smarty Template Engine
+  //require(DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php'); // Tomcraft - 2011-01-31 - Not needed in apllication_top_callback.php
 ?>

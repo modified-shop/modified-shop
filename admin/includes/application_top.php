@@ -386,8 +386,8 @@ if (xtc_check_permission($pagename) == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN));
 }
 
-// Include Template Engine
-require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'Smarty_2.6.27/Smarty.class.php');
+// Smarty Template Engine
+require (DIR_FS_EXTERNAL . 'smarty/smarty_2/Smarty.class.php');
 
 /* magnalister v1.0.1 */
 if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
