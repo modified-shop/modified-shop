@@ -308,7 +308,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                         $whos_online_query = xtc_db_query("select customer_id, full_name, ip_address, time_entry, time_last_click, last_page_url, session_id from " . TABLE_WHOS_ONLINE ." order by time_last_click desc");
                                         while ($whos_online = xtc_db_fetch_array($whos_online_query)) { 
                                           $time_online = (time() - $whos_online['time_entry']); 
-                                          if ( ((!$_GET['info']) || (@$_GET['info'] == $whos_online['session_id'])) && (!$info) ) { 
+                                          if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info) ) {
                                             $info = $whos_online['session_id']; 
                                           }     
                                           ?>
