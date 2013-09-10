@@ -511,49 +511,39 @@
       // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
       $this->tax_discount = array ();
       // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-      $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart-php function get_products
+      $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         
-        $products_price = $products[$i]['price']; //single plain price including attributes_price
+        //direct array assignment
+        $this->products[$index] = $products[$i];
 
         //using short description  if order description is not defined or empty
-        $products[$i]['short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
-        $products[$i]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $products[$i]['short_description'];
-        $this->products[$index] = array('qty' => $products[$i]['quantity'],
-                                        'name' => $products[$i]['name'],
-                                        'model' => $products[$i]['model'],
-                                        'short_description' => $products[$i]['short_description'],
-                                        'order_description' => $products[$i]['order_description'],
-                                        'image' => !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;',
-                                        'link' => $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details'),
-                                        'tax_class_id'=> $products[$i]['tax_class_id'],
-                                        'tax' => xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
-                                        'tax_description' => xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']),
-                                        'price' =>  $products_price,
-                                        'price_formated' => $xtPrice->xtcFormat($products_price,true),
-                                        'final_price' => $products_price*$products[$i]['quantity'],
-                                        'final_price_formated' => $xtPrice->xtcFormat($products_price*$products[$i]['quantity'],true),
-                                        'vpe' => $products[$i]['vpe'],
-                                        'shipping_time'=>$products[$i]['shipping_time'],
-                                        'weight' => $products[$i]['weight'],
-                                        'id' => $products[$i]['id']);
+        $this->products[$index]['short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
+        $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $products[$i]['short_description'];
+
+        $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
+        $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
+        $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
+        $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
+        
+        //$products[$i]['price'] is single plain price including attributes_price
+        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true);        
+        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); 
 
         if ($products[$i]['attributes']) {
           $subindex = 0;
           reset($products[$i]['attributes']);
           while (list($option, $value) = each($products[$i]['attributes'])) {
             $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
-            $this->products[$index]['attributes'][$subindex] = array('option' => $attributes['products_options_name'],
-                                                                     'value' => $attributes['products_options_values_name'],
-                                                                     'option_id' => $option,
-                                                                     'value_id' => $value,
-                                                                     'prefix' => $attributes['price_prefix'],
-                                                                     'price' => $attributes['options_values_price'],
-                                                                     'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
-                                                                     );
-            //TODO
-            //$this->products[$index]['attributes'][$subindex]['price'] = $attributes['options_values_scale_price'];
-            
+            $this->products[$index]['attributes'][$subindex] = array(
+                'option' => $attributes['products_options_name'],
+                'value' => $attributes['products_options_values_name'],
+                'option_id' => $option,
+                'value_id' => $value,
+                'prefix' => $attributes['price_prefix'],
+                'price' => $attributes['options_values_price'],
+                'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
+              );
             $subindex++;
           }
         }
