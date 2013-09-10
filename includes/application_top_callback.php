@@ -155,6 +155,7 @@
   require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
   require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
   require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
+  require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
   //require_once (DIR_FS_INC.'xtc_js_lang.php');
 
   // modification for new graduated system

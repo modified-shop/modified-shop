@@ -99,6 +99,7 @@
   require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
   require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
   require_once(DIR_FS_INC . 'xtc_db_prepare_input.inc.php');
+  require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
   require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
   require_once(DIR_FS_INC . 'xtc_create_random_value.inc.php'); //for cao_xtc_functions.php
