@@ -58,7 +58,8 @@ function smarty_modifier_debug_print_var($var, $depth = 0, $length = 40)
             } elseif (null === $var) {
                 $results = 'null';
             } else {
-                $results = htmlspecialchars((string) $var);
+                //$results = htmlspecialchars((string) $var);
+                $results = encode_htmlspecialchars((string) $var); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
             }
             $results = '<i>' . $results . '</i>';
             break;
@@ -71,7 +72,8 @@ function smarty_modifier_debug_print_var($var, $depth = 0, $length = 40)
             if (strlen($var) > $length ) {
                 $results = substr($var, 0, $length - 3) . '...';
             }
-            $results = htmlspecialchars('"' . $results . '"');
+            //$results = htmlspecialchars('"' . $results . '"');
+            $results = encode_htmlspecialchars('"' . $results . '"'); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
             break;
         case 'unknown type' :
         default :
@@ -79,7 +81,8 @@ function smarty_modifier_debug_print_var($var, $depth = 0, $length = 40)
             if (strlen($results) > $length ) {
                 $results = substr($results, 0, $length - 3) . '...';
             }
-            $results = htmlspecialchars($results);
+            //$results = htmlspecialchars($results);
+            $results = encode_htmlspecialchars($results); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
     }
 
     return $results;
