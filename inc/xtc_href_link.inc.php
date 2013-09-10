@@ -24,13 +24,13 @@
 
     $page = (!xtc_not_null($page) ? FILENAME_DEFAULT : $page); // if page is not defined then use index.php
 
-    $page = (($page == FILENAME_DEFAULT && empty($parameters)) ? '' : $page); // remove index.php from startpage
+    $page = (($page == FILENAME_DEFAULT && !xtc_not_null($parameters)) ? '' : $page); // remove index.php from startpage
 
     $link = ($connection == 'SSL' && ENABLE_SSL == true ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG;
 
     $link .= $page;
     $separator = '?';
-    if (!empty($parameters)) {
+    if (xtc_not_null($parameters)) {
       $link .= '?' . $parameters;
       $separator = '&';
     }
@@ -70,7 +70,8 @@
     return $link;
   }
 
-    
+  // link to admin
+  // used in source/boxes/admin.php, pn_sofortueberweisung.php, account_edit.php
   function xtc_href_link_admin($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false) {
     $link = xtc_href_link($page, $parameters, $connection, $add_session_id, $search_engine_safe, $urlencode, true);
     return $link;
