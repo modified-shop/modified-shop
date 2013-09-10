@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: janolaw.php 2011-11-24 modified-shop $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -11,7 +11,7 @@
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(configuration.php,v 1.40 2002/12/29); www.oscommerce.com
    (c) 2003   nextcommerce (configuration.php,v 1.16 2003/08/19); www.nextcommerce.org
-   (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id: configuration.php 1125 2005-07-28 09:59:44Z novalis $)
+   (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
    (c) 2008 Gambio OHG (gm_trusted_info.php 2008-08-10 gambio)
 
    Released under the GNU General Public License
