@@ -421,13 +421,13 @@ require (DIR_WS_INCLUDES.'head.php');
                             <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                           </tr>
                           <tr>
-                            <td class="smallText"><b><?php echo TEXT_FROM; ?></b><br /><?php echo htmlspecialchars(stripslashes($_POST['from'])); ?></td>
+                            <td class="smallText"><b><?php echo TEXT_FROM; ?></b><br /><?php echo encode_htmlspecialchars(stripslashes($_POST['from'])); ?></td>
                           </tr>
                           <tr>
                             <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                           </tr>
                           <tr>
-                            <td class="smallText"><b><?php echo TEXT_SUBJECT; ?></b><br /><?php echo htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
+                            <td class="smallText"><b><?php echo TEXT_SUBJECT; ?></b><br /><?php echo encode_htmlspecialchars(stripslashes($_POST['subject'])); ?></td>
                           </tr>
                           <tr>
                             <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -445,7 +445,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                 reset($_POST);
                                 while (list($key, $value) = each($_POST)) {
                                   if (!is_array($_POST[$key])) {
-                                    echo xtc_draw_hidden_field($key, htmlspecialchars(stripslashes($value)));
+                                    echo xtc_draw_hidden_field($key, encode_htmlspecialchars(stripslashes($value)));
                                   }
                                 }
                               ?>

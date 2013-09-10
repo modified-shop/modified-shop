@@ -181,9 +181,9 @@
   function xtc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" name="' . $name . '"';
     if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
-      $field .= ' value="' . htmlspecialchars(trim($GLOBALS[$name])) . '"';
+      $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
     } elseif ($value != '') {
-      $field .= ' value="' . htmlspecialchars(trim($value)) . '"';
+      $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
     }
     if ($parameters != '') {
       $field .= ' ' . $parameters;
@@ -198,9 +198,9 @@
   function xtc_draw_small_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" size="3" name="' . $name . '"';
     if ( isset($GLOBALS[$name]) && ($reinsert_value) ) {
-      $field .= ' value="' . htmlspecialchars(trim($GLOBALS[$name])) . '"';
+      $field .= ' value="' . encode_htmlspecialchars(trim($GLOBALS[$name])) . '"';
     } elseif ($value != '') {
-      $field .= ' value="' . htmlspecialchars(trim($value)) . '"';
+      $field .= ' value="' . encode_htmlspecialchars(trim($value)) . '"';
     }
     if ($parameters != '') {
       $field .= ' ' . $parameters;

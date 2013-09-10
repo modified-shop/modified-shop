@@ -324,7 +324,7 @@ if(xtc_count_shipping_modules() > 0) {
 
 if($order->info['total'] > 0) {
   if(isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
-    $smarty->assign('error', htmlspecialchars($error['error']));
+    $smarty->assign('error', encode_htmlspecialchars($error['error']));
   }
   $selection = $payment_modules->selection();
   $radio_buttons = 0;

@@ -211,7 +211,7 @@
     if(strtoupper($_SESSION['language_charset']) == 'UTF-8') {
       $Text = mb_convert_encoding($Text, "UTF-8", "UTF-8"); // workaround for possibly chopped characters with htmlentities
     }
-    $Text = htmlspecialchars(metaNoEntities(strtolower($Text)), ENT_COMPAT, strtoupper($_SESSION['language_charset']));
+    $Text = encode_htmlspecialchars(metaNoEntities(strtolower($Text)), ENT_COMPAT, strtoupper($_SESSION['language_charset']));
     //EOF DokuMan - 2012-06-12 - fix error "function.htmlentities: Invalid multibyte sequence in argument"
     $Text = preg_replace("/\s\-|\-\s/",' ',$Text); // <-- Gegen Trenn- und Gedankenstriche
     $Text = preg_replace("/(&[^aoucizens][^;]*;)/",' ',$Text);
@@ -297,7 +297,7 @@
     if(strtoupper($_SESSION['language_charset']) == 'UTF-8') {
       $Text = mb_convert_encoding($Text, "UTF-8", "UTF-8"); // workaround for possibly chopped characters with htmlentities
     }
-    return htmlentities($Text, ENT_COMPAT, strtoupper($_SESSION['language_charset']));
+    return encode_htmlspecialchars($Text, ENT_COMPAT, strtoupper($_SESSION['language_charset']));
     //EOF DokuMan - 2012-06-12 - fix error "function.htmlentities: Invalid multibyte sequence in argument"
   }
 // ---------------------------------------------------------------------------------------

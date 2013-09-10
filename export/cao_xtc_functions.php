@@ -172,7 +172,7 @@ function SendCategories ()
     $schema  = '<CATEGORIES_DATA>' . "\n" .
                '<ID>' . $cat['categories_id'] . '</ID>' . "\n" .
                '<PARENT_ID>' . $cat['parent_id'] . '</PARENT_ID>' . "\n" .
-               '<IMAGE_URL>' . htmlspecialchars($cat['categories_image']) . '</IMAGE_URL>' . "\n" .
+               '<IMAGE_URL>' . encode_htmlspecialchars($cat['categories_image']) . '</IMAGE_URL>' . "\n" .
                '<SORT_ORDER>' . $cat['sort_order'] . '</SORT_ORDER>' . "\n" .
                '<DATE_ADDED>' . $cat['date_added'] . '</DATE_ADDED>' . "\n" .
                '<LAST_MODIFIED>' . $cat['last_modified'] . '</LAST_MODIFIED>' . "\n";
@@ -189,12 +189,12 @@ function SendCategories ()
     while ($details = xtc_db_fetch_array($detail_query))
     {
       $schema .= "<CATEGORIES_DESCRIPTION ID='" . $details["language_id"] ."' CODE='" . $details["lang_code"] . "' NAME='" . $details["lang_name"] . "'>\n";
-      $schema .= "<NAME>" . htmlspecialchars($details["categories_name"]) . "</NAME>" . "\n";
-      $schema .= "<HEADING_TITLE>" . htmlspecialchars($details["categories_heading_title"]) . "</HEADING_TITLE>" . "\n";
-      $schema .= "<DESCRIPTION>" . htmlspecialchars($details["categories_description"]) . "</DESCRIPTION>" . "\n";
-      $schema .= "<META_TITLE>" . htmlspecialchars($details["categories_meta_title"]) . "</META_TITLE>" . "\n";
-      $schema .= "<META_DESCRIPTION>" . htmlspecialchars($details["categories_meta_description"]) . "</META_DESCRIPTION>" . "\n";
-      $schema .= "<META_KEYWORDS>" . htmlspecialchars($details["categories_meta_keywords"]) . "</META_KEYWORDS>" . "\n";
+      $schema .= "<NAME>" . encode_htmlspecialchars($details["categories_name"]) . "</NAME>" . "\n";
+      $schema .= "<HEADING_TITLE>" . encode_htmlspecialchars($details["categories_heading_title"]) . "</HEADING_TITLE>" . "\n";
+      $schema .= "<DESCRIPTION>" . encode_htmlspecialchars($details["categories_description"]) . "</DESCRIPTION>" . "\n";
+      $schema .= "<META_TITLE>" . encode_htmlspecialchars($details["categories_meta_title"]) . "</META_TITLE>" . "\n";
+      $schema .= "<META_DESCRIPTION>" . encode_htmlspecialchars($details["categories_meta_description"]) . "</META_DESCRIPTION>" . "\n";
+      $schema .= "<META_KEYWORDS>" . encode_htmlspecialchars($details["categories_meta_keywords"]) . "</META_KEYWORDS>" . "\n";
       $schema .= "</CATEGORIES_DESCRIPTION>\n";
     }
 
@@ -230,8 +230,8 @@ function  SendManufacturers ()
   {
     $schema  = '<MANUFACTURERS_DATA>' . "\n" .
                '<ID>' . $cat['manufacturers_id'] . '</ID>' . "\n" .
-               '<NAME>' . htmlspecialchars($cat['manufacturers_name']) . '</NAME>' . "\n" .
-               '<IMAGE>' . htmlspecialchars($cat['manufacturers_image']) . '</IMAGE>' . "\n" .
+               '<NAME>' . encode_htmlspecialchars($cat['manufacturers_name']) . '</NAME>' . "\n" .
+               '<IMAGE>' . encode_htmlspecialchars($cat['manufacturers_image']) . '</IMAGE>' . "\n" .
                '<DATE_ADDED>' . $cat['date_added'] . '</DATE_ADDED>' . "\n" .
                '<LAST_MODIFIED>' . $cat['last_modified'] . '</LAST_MODIFIED>' . "\n";
 
@@ -255,7 +255,7 @@ function  SendManufacturers ()
     while ($details = xtc_db_fetch_array($detail_query))
     {
       $schema .= "<MANUFACTURERS_DESCRIPTION ID='" . $details["languages_id"] ."' CODE='" . $details["lang_code"] . "' NAME='" . $details["lang_name"] . "'>\n";
-      $schema .= "<URL>" . htmlspecialchars($details["manufacturers_url"]) . "</URL>" . "\n" ;
+      $schema .= "<URL>" . encode_htmlspecialchars($details["manufacturers_url"]) . "</URL>" . "\n" ;
       $schema .= "<URL_CLICK>" . $details["url_clicked"] . "</URL_CLICK>" . "\n" ;
       $schema .= "<DATE_LAST_CLICK>" . $details["date_last_click"] . "</DATE_LAST_CLICK>" . "\n" ;
       $schema .= "</MANUFACTURERS_DESCRIPTION>\n";
@@ -333,41 +333,41 @@ function SendOrders ()
                '<ORDER_DATE>' . $orders['date_purchased'] . '</ORDER_DATE>' . "\n" .
                '<ORDER_STATUS>' . $orders['orders_status'] . '</ORDER_STATUS>' . "\n" .
                '<ORDER_IP>' . $orders['customers_ip'] . '</ORDER_IP>' . "\n" .
-               '<ORDER_CURRENCY>' . htmlspecialchars($orders['currency']) . '</ORDER_CURRENCY>' . "\n" .
+               '<ORDER_CURRENCY>' . encode_htmlspecialchars($orders['currency']) . '</ORDER_CURRENCY>' . "\n" .
                '<ORDER_CURRENCY_VALUE>' . $orders['currency_value'] . '</ORDER_CURRENCY_VALUE>' . "\n" .
                '</ORDER_HEADER>' . "\n" .
                '<BILLING_ADDRESS>' . "\n" .
-               '<VAT_ID>' . htmlspecialchars($orders['customers_vat_id']) . '</VAT_ID>' . "\n" . //JP07112005 (Existiert erst ab XTC 3.x)
-               '<COMPANY>' . htmlspecialchars($orders['billing_company']) . '</COMPANY>' . "\n" .
-               '<NAME>' . htmlspecialchars($orders['billing_name']) . '</NAME>' . "\n" .
-               '<FIRSTNAME>' . htmlspecialchars($orders['billing_firstname']) . '</FIRSTNAME>' . "\n" .
-               '<LASTNAME>' . htmlspecialchars($orders['billing_lastname']) . '</LASTNAME>' . "\n" .
-               '<STREET>' . htmlspecialchars($orders['billing_street_address']) . '</STREET>' . "\n" .
-               '<POSTCODE>' . htmlspecialchars($orders['billing_postcode']) . '</POSTCODE>' . "\n" .
-               '<CITY>' . htmlspecialchars($orders['billing_city']) . '</CITY>' . "\n" .
-               '<SUBURB>' . htmlspecialchars($orders['billing_suburb']) . '</SUBURB>' . "\n" .
-               '<STATE>' . htmlspecialchars($orders['billing_state']) . '</STATE>' . "\n" .
-               '<COUNTRY>' . htmlspecialchars($orders['billing_country_iso_code_2']) . '</COUNTRY>' . "\n" .
-               '<TELEPHONE>' . htmlspecialchars($orders['customers_telephone']) . '</TELEPHONE>' . "\n" . // JAN
-               '<EMAIL>' . htmlspecialchars($orders['customers_email_address']) . '</EMAIL>' . "\n" . // JAN
-               '<BIRTHDAY>' . htmlspecialchars($cust_dob) . '</BIRTHDAY>' . "\n" .
-               '<GENDER>' . htmlspecialchars($cust_gender) . '</GENDER>' . "\n" .
+               '<VAT_ID>' . encode_htmlspecialchars($orders['customers_vat_id']) . '</VAT_ID>' . "\n" . //JP07112005 (Existiert erst ab XTC 3.x)
+               '<COMPANY>' . encode_htmlspecialchars($orders['billing_company']) . '</COMPANY>' . "\n" .
+               '<NAME>' . encode_htmlspecialchars($orders['billing_name']) . '</NAME>' . "\n" .
+               '<FIRSTNAME>' . encode_htmlspecialchars($orders['billing_firstname']) . '</FIRSTNAME>' . "\n" .
+               '<LASTNAME>' . encode_htmlspecialchars($orders['billing_lastname']) . '</LASTNAME>' . "\n" .
+               '<STREET>' . encode_htmlspecialchars($orders['billing_street_address']) . '</STREET>' . "\n" .
+               '<POSTCODE>' . encode_htmlspecialchars($orders['billing_postcode']) . '</POSTCODE>' . "\n" .
+               '<CITY>' . encode_htmlspecialchars($orders['billing_city']) . '</CITY>' . "\n" .
+               '<SUBURB>' . encode_htmlspecialchars($orders['billing_suburb']) . '</SUBURB>' . "\n" .
+               '<STATE>' . encode_htmlspecialchars($orders['billing_state']) . '</STATE>' . "\n" .
+               '<COUNTRY>' . encode_htmlspecialchars($orders['billing_country_iso_code_2']) . '</COUNTRY>' . "\n" .
+               '<TELEPHONE>' . encode_htmlspecialchars($orders['customers_telephone']) . '</TELEPHONE>' . "\n" . // JAN
+               '<EMAIL>' . encode_htmlspecialchars($orders['customers_email_address']) . '</EMAIL>' . "\n" . // JAN
+               '<BIRTHDAY>' . encode_htmlspecialchars($cust_dob) . '</BIRTHDAY>' . "\n" .
+               '<GENDER>' . encode_htmlspecialchars($cust_gender) . '</GENDER>' . "\n" .
                '</BILLING_ADDRESS>' . "\n" .
                '<DELIVERY_ADDRESS>' . "\n" .
-               '<COMPANY>' . htmlspecialchars($orders['delivery_company']) . '</COMPANY>' . "\n" .
-               '<NAME>' . htmlspecialchars($orders['delivery_name']) . '</NAME>' . "\n" .
-               '<FIRSTNAME>' . htmlspecialchars($orders['delivery_firstname']) . '</FIRSTNAME>' . "\n" .
-               '<LASTNAME>' . htmlspecialchars($orders['delivery_lastname']) . '</LASTNAME>' . "\n" .
-               '<STREET>' . htmlspecialchars($orders['delivery_street_address']) . '</STREET>' . "\n" .
-               '<POSTCODE>' . htmlspecialchars($orders['delivery_postcode']) . '</POSTCODE>' . "\n" .
-               '<CITY>' . htmlspecialchars($orders['delivery_city']) . '</CITY>' . "\n" .
-               '<SUBURB>' . htmlspecialchars($orders['delivery_suburb']) . '</SUBURB>' . "\n" .
-               '<STATE>' . htmlspecialchars($orders['delivery_state']) . '</STATE>' . "\n" .
-               '<COUNTRY>' . htmlspecialchars($orders['delivery_country_iso_code_2']) . '</COUNTRY>' . "\n" .
+               '<COMPANY>' . encode_htmlspecialchars($orders['delivery_company']) . '</COMPANY>' . "\n" .
+               '<NAME>' . encode_htmlspecialchars($orders['delivery_name']) . '</NAME>' . "\n" .
+               '<FIRSTNAME>' . encode_htmlspecialchars($orders['delivery_firstname']) . '</FIRSTNAME>' . "\n" .
+               '<LASTNAME>' . encode_htmlspecialchars($orders['delivery_lastname']) . '</LASTNAME>' . "\n" .
+               '<STREET>' . encode_htmlspecialchars($orders['delivery_street_address']) . '</STREET>' . "\n" .
+               '<POSTCODE>' . encode_htmlspecialchars($orders['delivery_postcode']) . '</POSTCODE>' . "\n" .
+               '<CITY>' . encode_htmlspecialchars($orders['delivery_city']) . '</CITY>' . "\n" .
+               '<SUBURB>' . encode_htmlspecialchars($orders['delivery_suburb']) . '</SUBURB>' . "\n" .
+               '<STATE>' . encode_htmlspecialchars($orders['delivery_state']) . '</STATE>' . "\n" .
+               '<COUNTRY>' . encode_htmlspecialchars($orders['delivery_country_iso_code_2']) . '</COUNTRY>' . "\n" .
                '</DELIVERY_ADDRESS>' . "\n" .
                '<PAYMENT>' . "\n" .
-               '<PAYMENT_METHOD>' . htmlspecialchars($orders['payment_method']) . '</PAYMENT_METHOD>'  . "\n" .
-               '<PAYMENT_CLASS>' . htmlspecialchars($orders['payment_class']) . '</PAYMENT_CLASS>'  . "\n";
+               '<PAYMENT_METHOD>' . encode_htmlspecialchars($orders['payment_method']) . '</PAYMENT_METHOD>'  . "\n" .
+               '<PAYMENT_CLASS>' . encode_htmlspecialchars($orders['payment_class']) . '</PAYMENT_CLASS>'  . "\n";
 
     switch ($orders['payment_class'])
     {
@@ -389,17 +389,17 @@ function SendOrders ()
               $bank_inh  = $bankdata['banktransfer_owner'];
               $bank_stat = $bankdata['banktransfer_status'];
             }
-             $schema .= '<PAYMENT_BANKTRANS_BNAME>' . htmlspecialchars($bank_name) . '</PAYMENT_BANKTRANS_BNAME>' . "\n" .
-                        '<PAYMENT_BANKTRANS_BLZ>' . htmlspecialchars($bank_blz) . '</PAYMENT_BANKTRANS_BLZ>' . "\n" .
-                        '<PAYMENT_BANKTRANS_NUMBER>' . htmlspecialchars($bank_kto) . '</PAYMENT_BANKTRANS_NUMBER>' . "\n" .
-                        '<PAYMENT_BANKTRANS_OWNER>' . htmlspecialchars($bank_inh) . '</PAYMENT_BANKTRANS_OWNER>' . "\n" .
-                        '<PAYMENT_BANKTRANS_STATUS>' . htmlspecialchars($bank_stat) . '</PAYMENT_BANKTRANS_STATUS>' . "\n";
+             $schema .= '<PAYMENT_BANKTRANS_BNAME>' . encode_htmlspecialchars($bank_name) . '</PAYMENT_BANKTRANS_BNAME>' . "\n" .
+                        '<PAYMENT_BANKTRANS_BLZ>' . encode_htmlspecialchars($bank_blz) . '</PAYMENT_BANKTRANS_BLZ>' . "\n" .
+                        '<PAYMENT_BANKTRANS_NUMBER>' . encode_htmlspecialchars($bank_kto) . '</PAYMENT_BANKTRANS_NUMBER>' . "\n" .
+                        '<PAYMENT_BANKTRANS_OWNER>' . encode_htmlspecialchars($bank_inh) . '</PAYMENT_BANKTRANS_OWNER>' . "\n" .
+                        '<PAYMENT_BANKTRANS_STATUS>' . encode_htmlspecialchars($bank_stat) . '</PAYMENT_BANKTRANS_STATUS>' . "\n";
              break;
     }
     $schema .= '</PAYMENT>' . "\n" .
                '<SHIPPING>' . "\n" .
-               '<SHIPPING_METHOD>' . htmlspecialchars($orders['shipping_method']) . '</SHIPPING_METHOD>'  . "\n" .
-               '<SHIPPING_CLASS>' . htmlspecialchars($orders['shipping_class']) . '</SHIPPING_CLASS>'  . "\n" .
+               '<SHIPPING_METHOD>' . encode_htmlspecialchars($orders['shipping_method']) . '</SHIPPING_METHOD>'  . "\n" .
+               '<SHIPPING_CLASS>' . encode_htmlspecialchars($orders['shipping_class']) . '</SHIPPING_CLASS>'  . "\n" .
                '</SHIPPING>' . "\n" .
                '<ORDER_PRODUCTS>' . "\n";
 
@@ -424,8 +424,8 @@ function SendOrders ()
       $schema .= '<PRODUCT>' . "\n" .
                  '<PRODUCTS_ID>' . $products['products_id'] . '</PRODUCTS_ID>' . "\n" .
                  '<PRODUCTS_QUANTITY>' . $products['products_quantity'] . '</PRODUCTS_QUANTITY>' . "\n" .
-                 '<PRODUCTS_MODEL>' . htmlspecialchars($products['products_model']) . '</PRODUCTS_MODEL>' . "\n" .
-                 '<PRODUCTS_NAME>' . htmlspecialchars($products['products_name']) . '</PRODUCTS_NAME>' . "\n" .
+                 '<PRODUCTS_MODEL>' . encode_htmlspecialchars($products['products_model']) . '</PRODUCTS_MODEL>' . "\n" .
+                 '<PRODUCTS_NAME>' . encode_htmlspecialchars($products['products_name']) . '</PRODUCTS_NAME>' . "\n" .
                  '<PRODUCTS_PRICE>' . $products['final_price']/$products['products_quantity'] . '</PRODUCTS_PRICE>' . "\n" .
                  '<PRODUCTS_TAX>' . $products['products_tax'] . '</PRODUCTS_TAX>' . "\n".
                  '<PRODUCTS_TAX_FLAG>' . $products['allow_tax'] . '</PRODUCTS_TAX_FLAG>' . "\n";
@@ -438,8 +438,8 @@ function SendOrders ()
           require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
           $attributes_model =xtc_get_attributes_model($products['products_id'],$attributes['products_options_values']);
           $schema .= '<OPTION>' . "\n" .
-                     '<PRODUCTS_OPTIONS>' .  htmlspecialchars($attributes['products_options']) . '</PRODUCTS_OPTIONS>' . "\n" .
-                     '<PRODUCTS_OPTIONS_VALUES>' .  htmlspecialchars($attributes['products_options_values']) . '</PRODUCTS_OPTIONS_VALUES>' . "\n" .
+                     '<PRODUCTS_OPTIONS>' .  encode_htmlspecialchars($attributes['products_options']) . '</PRODUCTS_OPTIONS>' . "\n" .
+                     '<PRODUCTS_OPTIONS_VALUES>' .  encode_htmlspecialchars($attributes['products_options_values']) . '</PRODUCTS_OPTIONS_VALUES>' . "\n" .
                      '<PRODUCTS_OPTIONS_MODEL>'.$attributes_model.'</PRODUCTS_OPTIONS_MODEL>'. "\n".
                      '<PRODUCTS_OPTIONS_PRICE>' .  $attributes['price_prefix'] . ' ' . $attributes['options_values_price'] . '</PRODUCTS_OPTIONS_PRICE>' . "\n" .
                      '</OPTION>' . "\n";
@@ -458,12 +458,12 @@ function SendOrders ()
       $total_prefix = $order_total_class[$totals['class']]['prefix'];
       $total_tax = $order_total_class[$totals['class']]['tax'];
       $schema .= '<TOTAL>' . "\n" .
-                 '<TOTAL_TITLE>' . htmlspecialchars($totals['title']) . '</TOTAL_TITLE>' . "\n" .
-                 '<TOTAL_VALUE>' . htmlspecialchars($totals['value']) . '</TOTAL_VALUE>' . "\n" .
-                 '<TOTAL_CLASS>' . htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
-                 '<TOTAL_SORT_ORDER>' . htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .
-                 '<TOTAL_PREFIX>' . htmlspecialchars($total_prefix) . '</TOTAL_PREFIX>' . "\n" .
-                 '<TOTAL_TAX>' . htmlspecialchars($total_tax) . '</TOTAL_TAX>' . "\n" .
+                 '<TOTAL_TITLE>' . encode_htmlspecialchars($totals['title']) . '</TOTAL_TITLE>' . "\n" .
+                 '<TOTAL_VALUE>' . encode_htmlspecialchars($totals['value']) . '</TOTAL_VALUE>' . "\n" .
+                 '<TOTAL_CLASS>' . encode_htmlspecialchars($totals['class']) . '</TOTAL_CLASS>' . "\n" .
+                 '<TOTAL_SORT_ORDER>' . encode_htmlspecialchars($totals['sort_order']) . '</TOTAL_SORT_ORDER>' . "\n" .
+                 '<TOTAL_PREFIX>' . encode_htmlspecialchars($total_prefix) . '</TOTAL_PREFIX>' . "\n" .
+                 '<TOTAL_TAX>' . encode_htmlspecialchars($total_tax) . '</TOTAL_TAX>' . "\n" .
                  '</TOTAL>' . "\n";
     }
     $schema .= '</ORDER_TOTAL>' . "\n";
@@ -480,7 +480,7 @@ function SendOrders ()
     $comments_query = xtc_db_query($sql);
     if ($comments =  xtc_db_fetch_array($comments_query))
     {
-      $schema .=  '<ORDER_COMMENTS>' . htmlspecialchars($comments['comments']) . '</ORDER_COMMENTS>' . "\n";
+      $schema .=  '<ORDER_COMMENTS>' . encode_htmlspecialchars($comments['comments']) . '</ORDER_COMMENTS>' . "\n";
     }
     */
 
@@ -495,7 +495,7 @@ function SendOrders ()
     {
       if (strlen($oc)>0)
       {$oc .="\r\n"; }
-     $oc .= htmlspecialchars($comments['comments']);
+     $oc .= encode_htmlspecialchars($comments['comments']);
     }
     $schema .=  $oc . '</ORDER_COMMENTS>' . "\n";
 
@@ -562,20 +562,20 @@ function SendProducts ()
                '<PRODUCT_ID>'.$products['products_id'].'</PRODUCT_ID>' . "\n" .
 /*               '<PRODUCT_DEEPLINK>'. HTTP_SERVER.DIR_WS_CATALOG.$xtc_filename['product_info'].'?products_id='.$products['products_id'].'</PRODUCT_DEEPLINK>' . "\n" .*/
                '<PRODUCT_QUANTITY>' . $products['products_quantity'] . '</PRODUCT_QUANTITY>' . "\n" .
-               '<PRODUCT_MODEL>' . htmlspecialchars($products['products_model']) . '</PRODUCT_MODEL>' . "\n" .
-               '<PRODUCT_FSK18>' . htmlspecialchars($products['products_fsk18']) . '</PRODUCT_FSK18>' . "\n" .
-               '<PRODUCT_IMAGE>' . htmlspecialchars($products['products_image']) . '</PRODUCT_IMAGE>' . "\n" .
-               '<PRODUCT_EAN>'   . htmlspecialchars($products['products_ean']) . '</PRODUCT_EAN>' . "\n";
+               '<PRODUCT_MODEL>' . encode_htmlspecialchars($products['products_model']) . '</PRODUCT_MODEL>' . "\n" .
+               '<PRODUCT_FSK18>' . encode_htmlspecialchars($products['products_fsk18']) . '</PRODUCT_FSK18>' . "\n" .
+               '<PRODUCT_IMAGE>' . encode_htmlspecialchars($products['products_image']) . '</PRODUCT_IMAGE>' . "\n" .
+               '<PRODUCT_EAN>'   . encode_htmlspecialchars($products['products_ean']) . '</PRODUCT_EAN>' . "\n";
 
     if ((defined('TABLE_PRODUCTS_IMAGES')) and (USE_3IMAGES==true))
     {
-      $schema .= '<PRODUCT_IMAGE_MED>'  . htmlspecialchars($products['image_1']) . '</PRODUCT_IMAGE_MED>' . "\n" .
-                 '<PRODUCT_IMAGE_LARGE>'. htmlspecialchars($products['image_2']) . '</PRODUCT_IMAGE_LARGE>' . "\n";
+      $schema .= '<PRODUCT_IMAGE_MED>'  . encode_htmlspecialchars($products['image_1']) . '</PRODUCT_IMAGE_MED>' . "\n" .
+                 '<PRODUCT_IMAGE_LARGE>'. encode_htmlspecialchars($products['image_2']) . '</PRODUCT_IMAGE_LARGE>' . "\n";
     }
 
     if ((defined('TABLE_PRODUCTS_VPE')) and (USE_VPE==true))
     {
-      $schema .= '<PRODUCT_VPE>'.htmlspecialchars($products['products_vpe_name']) . '</PRODUCT_VPE>' . "\n";
+      $schema .= '<PRODUCT_VPE>'.encode_htmlspecialchars($products['products_vpe_name']) . '</PRODUCT_VPE>' . "\n";
     }
 
     if (file_exists('cao_sendprod_1.php')) { include('cao_sendprod_1.php'); }
@@ -785,18 +785,18 @@ function SendProducts ()
 
       if ($details["products_name"] !='Array')
       {
-        $schema .= "<NAME>" . htmlspecialchars($details["products_name"]) . "</NAME>" . "\n" ;
+        $schema .= "<NAME>" . encode_htmlspecialchars($details["products_name"]) . "</NAME>" . "\n" ;
       }
-      $schema .=  "<URL>" . htmlspecialchars($details["products_url"]) . "</URL>" . "\n" ;
+      $schema .=  "<URL>" . encode_htmlspecialchars($details["products_url"]) . "</URL>" . "\n" ;
 
       $prod_details = $details["products_description"];
       if ($prod_details != 'Array')
       {
-        $schema .=  "<DESCRIPTION>" . htmlspecialchars($details["products_description"]) . "</DESCRIPTION>" . "\n";
-        $schema .=  "<SHORT_DESCRIPTION>" . htmlspecialchars($details["products_short_description"]) . "</SHORT_DESCRIPTION>" . "\n";
-        $schema .=  "<META_TITLE>" . htmlspecialchars($details["products_meta_title"]) . "</META_TITLE>" . "\n";
-        $schema .=  "<META_DESCRIPTION>" . htmlspecialchars($details["products_meta_description"]) . "</META_DESCRIPTION>" . "\n";
-        $schema .=  "<META_KEYWORDS>" . htmlspecialchars($details["products_meta_keywords"]) . "</META_KEYWORDS>" . "\n";
+        $schema .=  "<DESCRIPTION>" . encode_htmlspecialchars($details["products_description"]) . "</DESCRIPTION>" . "\n";
+        $schema .=  "<SHORT_DESCRIPTION>" . encode_htmlspecialchars($details["products_short_description"]) . "</SHORT_DESCRIPTION>" . "\n";
+        $schema .=  "<META_TITLE>" . encode_htmlspecialchars($details["products_meta_title"]) . "</META_TITLE>" . "\n";
+        $schema .=  "<META_DESCRIPTION>" . encode_htmlspecialchars($details["products_meta_description"]) . "</META_DESCRIPTION>" . "\n";
+        $schema .=  "<META_KEYWORDS>" . encode_htmlspecialchars($details["products_meta_keywords"]) . "</META_KEYWORDS>" . "\n";
       }
       $schema .= "</PRODUCT_DESCRIPTION>\n";
     }
@@ -888,24 +888,24 @@ function SendCustomers ()
   while ($address = xtc_db_fetch_array($address_result))
   {
     $schema = '<CUSTOMERS_DATA>' . "\n" .
-              '<CUSTOMERS_ID>' . htmlspecialchars($address['customers_id']) . '</CUSTOMERS_ID>' . "\n" .
-              '<CUSTOMERS_CID>' . htmlspecialchars($address['customers_cid']) . '</CUSTOMERS_CID>' . "\n" .
-              '<GENDER>' . htmlspecialchars($address['customers_gender']) . '</GENDER>' . "\n" .
-              '<COMPANY>' . htmlspecialchars($address['entry_company']) . '</COMPANY>' . "\n" .
-              '<FIRSTNAME>' . htmlspecialchars($address['entry_firstname']) . '</FIRSTNAME>' . "\n" .
-              '<LASTNAME>' . htmlspecialchars($address['entry_lastname']) . '</LASTNAME>' . "\n" .
-              '<STREET>' . htmlspecialchars($address['entry_street_address']) . '</STREET>' . "\n" .
-              '<POSTCODE>' . htmlspecialchars($address['entry_postcode']) . '</POSTCODE>' . "\n" .
-              '<CITY>' . htmlspecialchars($address['entry_city']) . '</CITY>' . "\n" .
-              '<SUBURB>' . htmlspecialchars($address['entry_suburb']) . '</SUBURB>' . "\n" .
-              '<STATE>' . htmlspecialchars($address['entry_state']) . '</STATE>' . "\n" .
-              '<COUNTRY>' . htmlspecialchars($address['countries_iso_code_2']) . '</COUNTRY>' . "\n" .
-              '<TELEPHONE>' . htmlspecialchars($address['customers_telephone']) . '</TELEPHONE>' . "\n" . // JAN
-              '<FAX>' . htmlspecialchars($address['customers_fax']) . '</FAX>' . "\n" . // JAN
-              '<EMAIL>' . htmlspecialchars($address['customers_email_address']) . '</EMAIL>' . "\n" . // JAN
-              '<BIRTHDAY>' . htmlspecialchars($address['customers_dob']) . '</BIRTHDAY>' . "\n" .
-              '<VAT_ID>' . htmlspecialchars($address['vat_id']) . '</VAT_ID>' . "\n" .
-              '<DATE_ACCOUNT_CREATED>' . htmlspecialchars($address['customers_info_date_account_created']) . '</DATE_ACCOUNT_CREATED>' . "\n";
+              '<CUSTOMERS_ID>' . encode_htmlspecialchars($address['customers_id']) . '</CUSTOMERS_ID>' . "\n" .
+              '<CUSTOMERS_CID>' . encode_htmlspecialchars($address['customers_cid']) . '</CUSTOMERS_CID>' . "\n" .
+              '<GENDER>' . encode_htmlspecialchars($address['customers_gender']) . '</GENDER>' . "\n" .
+              '<COMPANY>' . encode_htmlspecialchars($address['entry_company']) . '</COMPANY>' . "\n" .
+              '<FIRSTNAME>' . encode_htmlspecialchars($address['entry_firstname']) . '</FIRSTNAME>' . "\n" .
+              '<LASTNAME>' . encode_htmlspecialchars($address['entry_lastname']) . '</LASTNAME>' . "\n" .
+              '<STREET>' . encode_htmlspecialchars($address['entry_street_address']) . '</STREET>' . "\n" .
+              '<POSTCODE>' . encode_htmlspecialchars($address['entry_postcode']) . '</POSTCODE>' . "\n" .
+              '<CITY>' . encode_htmlspecialchars($address['entry_city']) . '</CITY>' . "\n" .
+              '<SUBURB>' . encode_htmlspecialchars($address['entry_suburb']) . '</SUBURB>' . "\n" .
+              '<STATE>' . encode_htmlspecialchars($address['entry_state']) . '</STATE>' . "\n" .
+              '<COUNTRY>' . encode_htmlspecialchars($address['countries_iso_code_2']) . '</COUNTRY>' . "\n" .
+              '<TELEPHONE>' . encode_htmlspecialchars($address['customers_telephone']) . '</TELEPHONE>' . "\n" . // JAN
+              '<FAX>' . encode_htmlspecialchars($address['customers_fax']) . '</FAX>' . "\n" . // JAN
+              '<EMAIL>' . encode_htmlspecialchars($address['customers_email_address']) . '</EMAIL>' . "\n" . // JAN
+              '<BIRTHDAY>' . encode_htmlspecialchars($address['customers_dob']) . '</BIRTHDAY>' . "\n" .
+              '<VAT_ID>' . encode_htmlspecialchars($address['vat_id']) . '</VAT_ID>' . "\n" .
+              '<DATE_ACCOUNT_CREATED>' . encode_htmlspecialchars($address['customers_info_date_account_created']) . '</DATE_ACCOUNT_CREATED>' . "\n";
 
     if (file_exists('cao_sendcust_1.php')) { include('cao_sendcust_1.php'); }
 
@@ -970,14 +970,14 @@ function SendShopConfig ()
   while ($config = xtc_db_fetch_array($config_res))
   {
     $schema = '<ENTRY ID="' . $config['configuration_id'] . '">' .  "\n" .
-             '<PARAM>' . htmlspecialchars($config['configuration_key']) . '</PARAM>' . "\n" .
-             '<VALUE>' . htmlspecialchars($config['configuration_value']) . '</VALUE>' . "\n" .
-             '<TITLE>' . htmlspecialchars($config['configuration_title']) . '</TITLE>' . "\n" .
-             '<DESCRIPTION>' . htmlspecialchars($config['configuration_description']) . '</DESCRIPTION>' . "\n" .
-             '<GROUP_ID>' . htmlspecialchars($config['config_group_id']) . '</GROUP_ID>' . "\n" .
-             '<SORT_ORDER>' . htmlspecialchars($config['sort_order']) . '</SORT_ORDER>' . "\n" .
-             '<USE_FUNCTION>' . htmlspecialchars($config['use_function']) . '</USE_FUNCTION>' . "\n" .
-             '<SET_FUNCTION>' . htmlspecialchars($config['set_function']) . '</SET_FUNCTION>' . "\n" .
+             '<PARAM>' . encode_htmlspecialchars($config['configuration_key']) . '</PARAM>' . "\n" .
+             '<VALUE>' . encode_htmlspecialchars($config['configuration_value']) . '</VALUE>' . "\n" .
+             '<TITLE>' . encode_htmlspecialchars($config['configuration_title']) . '</TITLE>' . "\n" .
+             '<DESCRIPTION>' . encode_htmlspecialchars($config['configuration_description']) . '</DESCRIPTION>' . "\n" .
+             '<GROUP_ID>' . encode_htmlspecialchars($config['config_group_id']) . '</GROUP_ID>' . "\n" .
+             '<SORT_ORDER>' . encode_htmlspecialchars($config['sort_order']) . '</SORT_ORDER>' . "\n" .
+             '<USE_FUNCTION>' . encode_htmlspecialchars($config['use_function']) . '</USE_FUNCTION>' . "\n" .
+             '<SET_FUNCTION>' . encode_htmlspecialchars($config['set_function']) . '</SET_FUNCTION>' . "\n" .
              '</ENTRY>' . "\n";
     echo $schema;
   }
@@ -994,10 +994,10 @@ function SendShopConfig ()
   while ($tax_class = xtc_db_fetch_array($tax_class_res))
   {
     $schema = '<CLASS ID="' . $tax_class['tax_class_id'] . '">' . "\n" .
-             '<TITLE>' .         htmlspecialchars($tax_class['tax_class_title']) .       '</TITLE>' . "\n" .
-             '<DESCRIPTION>' .   htmlspecialchars($tax_class['tax_class_description']) . '</DESCRIPTION>' . "\n" .
-             '<LAST_MODIFIED>' . htmlspecialchars($tax_class['last_modified']) .         '</LAST_MODIFIED>' . "\n" .
-             '<DATE_ADDED>' .    htmlspecialchars($tax_class['date_added']) .            '</DATE_ADDED>' . "\n" .
+             '<TITLE>' .         encode_htmlspecialchars($tax_class['tax_class_title']) .       '</TITLE>' . "\n" .
+             '<DESCRIPTION>' .   encode_htmlspecialchars($tax_class['tax_class_description']) . '</DESCRIPTION>' . "\n" .
+             '<LAST_MODIFIED>' . encode_htmlspecialchars($tax_class['last_modified']) .         '</LAST_MODIFIED>' . "\n" .
+             '<DATE_ADDED>' .    encode_htmlspecialchars($tax_class['date_added']) .            '</DATE_ADDED>' . "\n" .
               '</CLASS>'. "\n";
     echo $schema;
   }
@@ -1013,13 +1013,13 @@ function SendShopConfig ()
   while ($tax_rates = xtc_db_fetch_array($tax_rates_res))
   {
     $schema = '<RATES ID="' . $tax_rates['tax_rates_id'] . '">' . "\n" .
-              '<ZONE_ID>' .       htmlspecialchars($tax_rates['tax_zone_id']) .     '</ZONE_ID>' . "\n" .
-              '<CLASS_ID>' .      htmlspecialchars($tax_rates['tax_class_id']) .    '</CLASS_ID>' . "\n" .
-              '<PRIORITY>' .      htmlspecialchars($tax_rates['tax_priority']) .    '</PRIORITY>' . "\n" .
-              '<RATE>' .          htmlspecialchars($tax_rates['tax_rate']) .        '</RATE>' . "\n" .
-              '<DESCRIPTION>' .   htmlspecialchars($tax_rates['tax_description']) . '</DESCRIPTION>' . "\n" .
-              '<LAST_MODIFIED>' . htmlspecialchars($tax_rates['last_modified']) .   '</LAST_MODIFIED>' . "\n" .
-              '<DATE_ADDED>' .    htmlspecialchars($tax_rates['date_added']) .      '</DATE_ADDED>' . "\n" .
+              '<ZONE_ID>' .       encode_htmlspecialchars($tax_rates['tax_zone_id']) .     '</ZONE_ID>' . "\n" .
+              '<CLASS_ID>' .      encode_htmlspecialchars($tax_rates['tax_class_id']) .    '</CLASS_ID>' . "\n" .
+              '<PRIORITY>' .      encode_htmlspecialchars($tax_rates['tax_priority']) .    '</PRIORITY>' . "\n" .
+              '<RATE>' .          encode_htmlspecialchars($tax_rates['tax_rate']) .        '</RATE>' . "\n" .
+              '<DESCRIPTION>' .   encode_htmlspecialchars($tax_rates['tax_description']) . '</DESCRIPTION>' . "\n" .
+              '<LAST_MODIFIED>' . encode_htmlspecialchars($tax_rates['last_modified']) .   '</LAST_MODIFIED>' . "\n" .
+              '<DATE_ADDED>' .    encode_htmlspecialchars($tax_rates['date_added']) .      '</DATE_ADDED>' . "\n" .
               '</RATES>' . "\n";
     echo $schema;
   }

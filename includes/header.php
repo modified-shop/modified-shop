@@ -406,17 +406,13 @@ if ( $_SESSION['account_type']=='0') {
 $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL')); // web28 - 2010-09-20 - change SSL -> NONSSL
 $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $smarty->assign('store_name',TITLE);
-
-// BOF - Dokuman - 2009-05-27 - added htmlspecialchars
-//$smarty->assign('store_name',TITLE);
-$smarty->assign('store_name', htmlspecialchars(TITLE));
-// EOF - Dokuman - 2009-05-27 - added htmlspecialchars
+$smarty->assign('store_name', encode_htmlspecialchars(TITLE));
 
 if (isset($_GET['error_message']) && xtc_not_null($_GET['error_message'])) {
-  $smarty->assign('error','<p class="errormessage">'. htmlspecialchars(urldecode($_GET['error_message'])).'</p>');
+  $smarty->assign('error','<p class="errormessage">'. encode_htmlspecialchars(urldecode($_GET['error_message'])).'</p>');
 }
 if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-  $smarty->assign('error','<p class="messageStackSuccess">'.htmlspecialchars($_GET['info_message']).'</p>');
+  $smarty->assign('error','<p class="messageStackSuccess">'.encode_htmlspecialchars($_GET['info_message']).'</p>');
 }
 
 include(DIR_WS_INCLUDES.FILENAME_BANNER);
