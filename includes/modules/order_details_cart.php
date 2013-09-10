@@ -50,6 +50,7 @@ $any_out_of_stock = '';
 $mark_stock = '';
 $hidden_options = '';
 
+$products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
 for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
 
   if (STOCK_CHECK == 'true') {
@@ -86,7 +87,7 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
                                 'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
                                 'BUTTON_DELETE' => $del_button,
                                 'LINK_DELETE' => $del_link,
-                                'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['price'] * $products[$i]['quantity'], true),
+                                'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['final_price'], true),
                                 'PRODUCTS_SINGLE_PRICE' =>$xtPrice->xtcFormat($products[$i]['price'], true),
                                 'PRODUCTS_SHORT_DESCRIPTION' => xtc_get_short_description($products[$i]['id']),
                                 'ATTRIBUTES' => '');
