@@ -181,6 +181,6 @@
   require (DIR_WS_FUNCTIONS.'sessions.php');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
-  // Include Template Engine
-  //require(DIR_FS_EXTERNAL.'smarty/Smarty.class.php'); // Tomcraft - 2011-01-31 - Not needed in apllication_top_callback.php
+  // Smarty Template Engine
+  //require(DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php'); // Tomcraft - 2011-01-31 - Not needed in apllication_top_callback.php
 ?>
