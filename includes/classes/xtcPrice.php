@@ -200,14 +200,15 @@ class xtcPrice {
    * @return Mixed
    */
   function xtcCheckXTBAuction($pID) {
-    if (($pos = strpos($pID, "{")))
-      $pID = substr($pID, 0, $pos);
-    if (@!is_array($_SESSION['xtb0']['tx']))
+    $pID = xtc_get_prid($pID);
+    if (!isset($_SESSION['xtb0']) && !isset($_SESSION['xtb0']['tx'])) {
       return false;
-    foreach ($_SESSION['xtb0']['tx'] as $tx) {
-      if ($tx['products_id'] == $pID && $tx['XTB_QUANTITYPURCHASED'] != 0) {
-        $this->actualCurr = $tx['XTB_AMOUNTPAID_CURRENCY'];
-        return round($tx['XTB_AMOUNTPAID'], $this->currencies[$this->actualCurr]['decimal_places']);
+    }
+    for ($i=0, $n=sizeof($_SESSION['xtb0']['tx']); $i<$n; $i++) {
+    //foreach ($_SESSION['xtb0']['tx'] as $tx) {
+      if ($_SESSION['xtb0']['tx'][$i]['products_id'] == $pID && $_SESSION['xtb0']['tx'][$i]['XTB_QUANTITYPURCHASED'] != 0) {
+        $this->actualCurr = $_SESSION['xtb0']['tx'][$i]['XTB_AMOUNTPAID_CURRENCY'];
+        return round($_SESSION['xtb0']['tx'][$i]['XTB_AMOUNTPAID'], $this->currencies[$this->actualCurr]['decimal_places']);
       }
     }
     return false;
