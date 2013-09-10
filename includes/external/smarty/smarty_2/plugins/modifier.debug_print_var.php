@@ -58,8 +58,8 @@ function smarty_modifier_debug_print_var($var, $depth = 0, $length = 40)
             } elseif (null === $var) {
                 $results = 'null';
             } else {
-              //$results = htmlspecialchars((string) $var);
-              $results = encode_htmlspecialchars((string) $var); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
+                //$results = htmlspecialchars((string) $var);
+                $results = encode_htmlspecialchars((string) $var); // web28 2013-01-11 - use encode_htmlentities (PHP5.4 ready)
             }
             $results = '<i>' . $results . '</i>';
             break;

@@ -62,14 +62,23 @@ function smarty_outputfilter_trimwhitespace($source, &$smarty)
 }
 
 function smarty_outputfilter_trimwhitespace_replace($search_str, $replace, &$subject) {
-    $_len = strlen($search_str);
+    //BOF - DokuMan - 2011-05-11 - Handle case where mbstring overloads substr and strlen functions
+    $strlen = function_exists('mb_orig_strlen') ? 'mb_orig_strlen' : 'strlen';
+    $strpos = function_exists('mb_orig_strpos') ? 'mb_orig_strpos' : 'strpos';
+
+    //$_len = strlen($search_str);  
+    $_len = $strlen($search_str);
+    //EOF - DokuMan - 2011-05-11 - Handle case where mbstring overloads substr and strlen functions
+
     $_pos = 0;
     for ($_i=0, $_count=count($replace); $_i<$_count; $_i++)
-        if (($_pos=strpos($subject, $search_str, $_pos))!==false)
+        //BOF - DokuMan - 2011-05-11 - Handle case where mbstring overloads substr and strlen functions
+        //if (($_pos=strpos($subject, $search_str, $_pos))!==false)
+        if (($_pos=$strpos($subject, $search_str, $_pos))!==false)
+        //EOF - DokuMan - 2011-05-11 - Handle case where mbstring overloads substr and strlen functions
             $subject = substr_replace($subject, $replace[$_i], $_pos, $_len);
         else
             break;
-
 }
 
 ?>

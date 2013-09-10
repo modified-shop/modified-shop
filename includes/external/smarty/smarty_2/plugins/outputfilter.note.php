@@ -27,6 +27,9 @@ function smarty_outputfilter_note($tpl_output, &$smarty) {
   //web28 - making output W3C-Conform: replace ampersands, rest is covered by the modified shopstat_functions.php - preg_replace by cYbercOsmOnauT: don't replace &&
   $tpl_output = preg_replace("/((?<!&))&(?!(&|amp;|#[0-9]+;|[a-z0-9]+;))/i", "&amp;", $tpl_output);
 
+  // uncomment the next line to strip whitespaces (i.e. compress HTML)
+  //$tpl_output =  preg_replace('!\s+!', ' ',$tpl_output);
+
   return $tpl_output.$cop;
 }
 
