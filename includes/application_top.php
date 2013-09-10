@@ -469,26 +469,5 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require(DIR_FS_EXTERNAL . 'econda/emos.php');
 }
 
-// BOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
-require_once(DIR_FS_CATALOG.'includes/external/janolaw/janolaw.php');
-$coo_janolaw = new janolaw();
-if($coo_janolaw->get_status() == true) {
-  $coo_janolaw->get_page_content('agb', true, true, 'checkout-agb');
-  $coo_janolaw->get_page_content('datenschutzerklaerung', true, true, 'checkout-datenschutzerklaerung');
-  $coo_janolaw->get_page_content('impressum', true, true, 'checkout-impressum');
-  $coo_janolaw->get_page_content('widerrufsbelehrung', true, true, 'checkout-widerrufsbelehrung');
-}
-// EOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
-
-
-/* magnalister v1.0.0 */
-if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
-  if (!defined('MAGNA_CALLBACK_MODE') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
-    ob_start();
-    require_once(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
-    magnaExecute('magnaCollectStats');
-    ob_end_clean();
-  }
-}
-/* END magnalister */
+auto_require(DIR_FS_CATALOG.'includes/external/application_top/','php');
 ?>
