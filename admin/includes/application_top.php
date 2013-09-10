@@ -54,7 +54,7 @@ if (file_exists('../includes/local/configure.php')) {
 }
 
 // admin directory
-require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
+require ('../inc/set_admin_directory.inc.php');
 set_admin_directory();
 
 // include standard settings

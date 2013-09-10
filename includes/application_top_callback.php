@@ -47,7 +47,7 @@ require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
 set_admin_directory();
 
 // include standard settings
-require (DIR_FS_CATALOG . DIR_ADMIN.'includes/paths.php');
+require (DIR_FS_CATALOG . 'includes/paths.php');
 
 // BOF - Tomcraft - 2009-11-08 - FIX for PHP5.3 date_default_timezone_set
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
