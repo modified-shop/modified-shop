@@ -53,7 +53,7 @@
     if ( (!isset($truncate_session_id) || $truncate_session_id === false) # no session if useragent is a known Spider
         && $add_session_id == true && $session_started == true
         && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie))
-		|| (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8)
+		|| (substr(HTTP_SERVER, 7)!=substr(HTTPS_SERVER, 8))
        ) {
       if (defined('SID') && xtc_not_null(SID)) {
         $link .= $separator . SID;
