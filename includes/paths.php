@@ -10,14 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  // set admin irectory
-  foreach (new DirectoryIterator(DIR_FS_CATALOG) as $shoproot) {
-    if ($shoproot->isDir() && is_file(DIR_FS_CATALOG . $shoproot->getFilename() . '/check_update.php')) {
-      define('DIR_ADMIN', $shoproot->getFilename() . '/');
-      break;
-    }
-  }
-
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_WS_ORIGINAL_IMAGES', DIR_WS_IMAGES .'product_images/original_images/');
   define('DIR_WS_THUMBNAIL_IMAGES', DIR_WS_IMAGES .'product_images/thumbnail_images/');
@@ -54,4 +46,5 @@
   // external
   define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
+
 ?>
