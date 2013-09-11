@@ -9,10 +9,23 @@
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+  //admin
+  
+  define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+  define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
+  
+  define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
 
   // admin directory
-  define('DIR_WS_ADMIN', DIR_WS_CATALOG.DIR_ADMIN);
-  define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.DIR_ADMIN);
+  $t1 = parse_url(HTTP_SERVER);
+  $p1 = $t1['path'];
+  $t2 = parse_url(HTTPS_SERVER);
+  $p2 = $t2['path'];
+
+  define('DIR_WS_ADMIN', preg_replace('#^' . str_replace('-', '\-', $p1) . '#', '', dirname($_SERVER['SCRIPT_NAME'])) . '/');
+  
+  #define('DIR_WS_ADMIN', DIR_WS_CATALOG.DIR_ADMIN);
+  #define('DIR_FS_ADMIN', DIR_FS_DOCUMENT_ROOT.DIR_ADMIN); 
 
   define('DIR_WS_IMAGES', 'images/');
   define('DIR_FS_CATALOG_IMAGES', DIR_FS_CATALOG . 'images/');
