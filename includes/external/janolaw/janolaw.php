@@ -42,7 +42,7 @@ class janolaw_content {
 
 
   function get_status() {
-    if(defined('MODULE_JANOLAW_STATUS') == false || MODULE_JANOLAW_STATUS == 'False') {
+    if(!defined('MODULE_JANOLAW_STATUS') || MODULE_JANOLAW_STATUS == 'False') {
       return false;
     }
     return true;
