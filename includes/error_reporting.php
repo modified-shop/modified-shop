@@ -15,7 +15,8 @@ function log_exception(Exception $e)
 {
     global $error_exceptions;
     
-    if (strpos($e->getFile(), 'templates_c') !== false) return;
+    if (strpos($e->getFile(), 'templates_c') !== false
+        || strpos($e->getFile(), 'cache') !== false) return;
 
     if (!is_array($error_exceptions)) {
       $error_exceptions = array();
