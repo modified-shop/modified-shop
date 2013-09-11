@@ -20,17 +20,19 @@
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
 define('MODULE_JANOLAW_TEXT_TITLE', 'janolaw AGB Hosting-Service');
-define('MODULE_JANOLAW_TEXT_DESCRIPTION', '
-  <a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><img src="images/janolaw/janolaw_185x35.png" border=0></a><br /><br />Deutschlands gro&szlig;es Rechtsportal janolaw bietet ma&szlig;geschneiderte L&ouml;sungen f&uuml;r Ihre Rechtsfragen - von der Anwaltshotline bis zu individuellen Vertr&auml;gen mit Anwaltsgarantie. Mit dem AGB Hosting-Service f&uuml;r Internetshops k&ouml;nnen Sie die rechtlichen Kerndokumente AGB, Widerrufsbelehrung, Impressum und Datenschutzerkl&auml;rung individuell auf Ihren Shop anpassen und laufend durch das janolaw Team aktualisieren lassen. Mehr Schutz geht nicht.<br /><br /><a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><strong><u>Hier geht&#x27;s zum Angebot<u></strong></a>');
-
-define('MODULE_JANOLAW_USER_ID_TITLE' , '<hr noshade>User-ID');
-define('MODULE_JANOLAW_USER_ID_DESC' , 'Ihre User-ID');
-
-define('MODULE_JANOLAW_SHOP_ID_TITLE' , '<hr noshade>Shop-ID');
-define('MODULE_JANOLAW_SHOP_ID_DESC' , 'Die Shop-ID Ihres Onlineshops');
-
-define('MODULE_JANOLAW_STATUS_DESC','Modul aktivieren?');
-define('MODULE_JANOLAW_STATUS_TITLE','Status');
+define('MODULE_JANOLAW_TEXT_DESCRIPTION', '<a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><img src="images/janolaw/janolaw_185x35.png" border=0></a><br /><br />Deutschlands gro&szlig;es Rechtsportal janolaw bietet ma&szlig;geschneiderte L&ouml;sungen f&uuml;r Ihre Rechtsfragen - von der Anwaltshotline bis zu individuellen Vertr&auml;gen mit Anwaltsgarantie. Mit dem AGB Hosting-Service f&uuml;r Internetshops k&ouml;nnen Sie die rechtlichen Kerndokumente AGB, Widerrufsbelehrung, Impressum und Datenschutzerkl&auml;rung individuell auf Ihren Shop anpassen und laufend durch das janolaw Team aktualisieren lassen. Mehr Schutz geht nicht.<br /><br /><a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><strong><u>Hier geht&#x27;s zum Angebot<u></strong></a>');
+define('MODULE_JANOLAW_USER_ID_TITLE', '<hr noshade>User-ID');
+define('MODULE_JANOLAW_USER_ID_DESC', 'Ihre User-ID');
+define('MODULE_JANOLAW_SHOP_ID_TITLE', '<hr noshade>Shop-ID');
+define('MODULE_JANOLAW_SHOP_ID_DESC', 'Die Shop-ID Ihres Onlineshops');
+define('MODULE_JANOLAW_STATUS_DESC', 'Modul aktivieren?');
+define('MODULE_JANOLAW_STATUS_TITLE', 'Status');
+define('MODULE_JANOLAW_TYPE_TITLE', 'Speichern als');
+define('MODULE_JANOLAW_TYPE_DESC', 'Sollen die Daten in einem File oder in der Datenbank gepseichert werden ?');
+define('MODULE_JANOLAW_FORMAT_TITLE', 'Format Typ');
+define('MODULE_JANOLAW_FORMAT_DESC', 'Sollen die Daten als Text oder HTML gepseichert werden ?');
+define('MODULE_JANOLAW_UPDATE_INTERVAL_TITLE', 'Update Interval');
+define('MODULE_JANOLAW_UPDATE_INTERVAL_DESC', 'In welchen Abst&auml;nden sollen die Daten aktualisiert werden ?');
 
 
 // include needed functions
@@ -43,19 +45,27 @@ class janolaw {
      $this->code = 'janolaw';
      $this->title = MODULE_JANOLAW_TEXT_TITLE;
      $this->description = MODULE_JANOLAW_TEXT_DESCRIPTION;
-     $this->sort_order = MODULE_JANOLAW_SORT_ORDER;
      $this->enabled = ((MODULE_JANOLAW_STATUS == 'True') ? true : false);
-     $this->CAT=array();
-     $this->PARENT=array();
    }
 
   function process($file) {
-
+    require_once(DIR_FS_EXTERNAL.'janolaw/janolaw.php');
+    $janolaw = new janolaw_content();
   }
 
   function display() {
-    return array('text' => '<br /><div align="center">' . xtc_button('OK') .
-                           xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=janolaw')) . "</div>");
+    $interval_array = array(array('id' => '86400', 'text' => '24 Stunden'),
+                            array('id' => '43200', 'text' => '12 Stunden'),
+                            array('id' => '21600', 'text' => '6 Stunden'),
+                            array('id' => '10800', 'text' => '3 Stunden'),
+                            array('id' => '3600',  'text' => '1 Stunden'),
+                           );
+    
+    return array('text' => '<br/><b>'.MODULE_JANOLAW_UPDATE_INTERVAL_TITLE.'</b>
+                            <br/>'.MODULE_JANOLAW_UPDATE_INTERVAL_DESC.'<br/>'.
+                            xtc_draw_pull_down_menu('configuration[MODULE_JANOLAW_UPDATE_INTERVAL]', $interval_array, MODULE_JANOLAW_UPDATE_INTERVAL).'<br />'.
+                           '<br /><div align="center">' . xtc_button('OK') .
+                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=janolaw')) . "</div>");
   }
 
   function check() {
@@ -67,17 +77,28 @@ class janolaw {
   }
 
   function install() {
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_SHOP_ID', '12345',  '6', '1', '', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_USER_ID', '12345',  '6', '1', '', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_SHOP_ID', '12345',  '6', '2', '', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_USER_ID', '12345',  '6', '3', '', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_TYPE', 'Database',  '6', '4', 'xtc_cfg_select_option(array(\'File\', \'Database\'), ', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_FORMAT', 'HTML',  '6', '5', 'xtc_cfg_select_option(array(\'HTML\', \'TXT\'), ', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_UPDATE_INTERVAL', '86400',  '6', '6', '', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_JANOLAW_LAST_UPDATED', '',  '6', '6', '', now())");
   }
 
   function remove() {
     xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key in ('" . implode("', '", $this->keys()) . "')");
+    xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_JANOLAW_UPDATE_INTERVAL'");
+    xtc_db_query("delete from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_JANOLAW_LAST_UPDATED'");
   }
 
   function keys() {
-    return array('MODULE_JANOLAW_STATUS','MODULE_JANOLAW_USER_ID','MODULE_JANOLAW_SHOP_ID');
+    return array('MODULE_JANOLAW_STATUS',
+                 'MODULE_JANOLAW_USER_ID',
+                 'MODULE_JANOLAW_SHOP_ID',
+                 'MODULE_JANOLAW_TYPE',
+                 'MODULE_JANOLAW_FORMAT',
+                 );
   }
 }
 ?>
