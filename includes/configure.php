@@ -27,12 +27,12 @@
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
 
   // defines for admin
-  define('HTTP_CATALOG_SERVER', HTTP_SERVER);
-  define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
+  #define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+  #define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
 
   // secure SSL
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
-  define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
+  #define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
   define('USE_SSL_PROXY', false); // using SSL proxy?
   
   // define our database connection
