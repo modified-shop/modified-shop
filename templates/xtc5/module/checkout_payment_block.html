@@ -2,8 +2,8 @@
 {foreach name=outer item=module_data from=$module_content}
   <tr>
     <td class="header left" width="1%">{$module_data.selection}</td>
-    <td class="header" width="89%">{$module_data.module}</td>
-    <td class="header right" width="10%">{$module_data.module_cost}</td>
+    <td class="header" width="84%"><label for="{$smarty.foreach.aussen.iteration}">{$module_data.module}</label></td>
+    <td class="header right" width="15%" align="right">{$module_data.module_cost}</td>
   </tr>
   {if $module_data.description != ''}
   <tr>
