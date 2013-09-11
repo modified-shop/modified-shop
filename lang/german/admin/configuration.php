@@ -815,6 +815,6 @@ define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb Navigation');
 define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In der Breadcrumb Navigation wird der komplette Artikelname angezeigt angezeigt.<br /><strong>model:</strong> In der Breadcrumb Navigation wird die Artikelnummer angezeigt, sofern sie vorhanden ist. Ansonsten Fallback auf auf Artikelname.');
 
 define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
-define('TEMPLATE_ENGINE_DESC', 'Welche Smarty Version soll verwendet werden ?<br/><br/><b>Hinweis:</b> Bei &auml;lteren oder modifizierten Templates kann es zu Probleme mit Smarty 3 kommen, da sich zum Teil die Syntax ver&auml;ndert hat.');
+define('TEMPLATE_ENGINE_DESC', 'Welche Smarty Version soll verwendet werden?<br/><br/><b>Hinweis:</b> Bei &auml;lteren oder modifizierten Templates kann es zu Problemen mit Smarty 3 kommen, da sich zum Teil die Syntax ver&auml;ndert hat.');
 
 ?>
