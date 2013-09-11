@@ -30,7 +30,7 @@ class janolaw_content {
     $this->enabled = ((MODULE_JANOLAW_STATUS == 'True') ? true : false);
     
     if($this->enabled) {
-      if ((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) {
+      if (((MODULE_JANOLAW_LAST_UPDATED + MODULE_JANOLAW_UPDATE_INTERVAL) <= time()) || define('RUN_MODE_ADMIN')) {
         $this->get_page_content('datenschutzerklaerung', 2);
         $this->get_page_content('agb', 3);
         $this->get_page_content('impressum', 4);
