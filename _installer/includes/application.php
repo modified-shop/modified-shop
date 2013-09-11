@@ -20,13 +20,6 @@
   // configuration parameters
   include('includes/config.php');
 
-  // admin directory
-  require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
-  set_admin_directory();
-
-   // include standard settings
-  require (DIR_FS_CATALOG.'includes/paths.php');
-
   include('includes/version.php');
   
   // Set the level of error reporting
@@ -51,10 +44,13 @@
   if (!defined('DIR_WS_BASE')) {
     define('DIR_WS_BASE',''); //web28 - 2010-12-13 - FIX for $messageStack icons //moved to application.php
   }
-  
-  // set admin directory
-  require_once(DIR_FS_INC.'set_admin_directory.inc.php');
+
+  // admin directory
+  require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
   set_admin_directory();
+
+   // include standard settings
+  require (DIR_FS_CATALOG.'includes/paths.php');
 
   //require('../includes/functions/validations.php');
   require_once(DIR_FS_CATALOG.'inc/auto_require.inc.php');
