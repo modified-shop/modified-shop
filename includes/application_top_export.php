@@ -41,6 +41,8 @@ if (file_exists('../includes/local/configure.php')) {
   include('../includes/configure.php');
 }
 
+require_once (DIR_FS_INC . 'auto_require.inc.php');
+
 // admin directory
 require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
 set_admin_directory();
@@ -82,7 +84,6 @@ require(DIR_WS_INCLUDES . 'filenames.php');
 // include the list of project database tables
 require(DIR_WS_INCLUDES . 'database_tables.php');
 
-
 // Store DB-Querys in a Log File
 define('STORE_DB_TRANSACTIONS', 'false');
 
@@ -101,11 +102,7 @@ require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
 require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
 require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
 require_once(DIR_FS_INC . 'xtc_db_prepare_input.inc.php');
-require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
-
-
-// modification for new graduated system
-
+require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -116,6 +113,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
 }
 
+auto_require(DIR_FS_CATALOG.'includes/extra/application_top__export_begin/','php');
+
 // if gzip_compression is enabled, start to buffer the output
 if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
   if (($ini_zlib_output_compression = (int)ini_get('zlib.output_compression')) < 1) {
@@ -125,6 +124,5 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
   }
 }
 
-  // Smarty Template Engine
-  require(DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
+auto_require(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php');
 ?>
