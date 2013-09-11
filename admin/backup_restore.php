@@ -9,7 +9,6 @@
   * 2011-07-02 - Security Fix - PHP_SELF
   * 2011-09-13 - fix some PHP notices
   ***************************************************************/
-
   //#################################
   define ('ANZAHL_ZEILEN', 10000); //Anzahl der Zeilen die pro Durchlauf bei der Wiederherstellung aus der SQL-Datei eingelesen werden sollen
   define ('RESTORE_TEST', false); //Standard: false - auf true ändern für Simulation für die Wiederherstellung, die SQL Befehle werden in eine Protokolldatei (log) im Backup-Verzeichnis geschrieben
@@ -19,32 +18,26 @@
   // ?file=dbd_mod105sp1b-20111123170925.sql.gz&action=restorenow
 
   define ('_VALID_XTC', true);
+  define('RUN_MODE_ADMIN',true);
+
+  // no error reporting
+  error_reporting(0);
 
   // Set the local configuration parameters - mainly for developers or the main-configure
-  if (file_exists('includes/local/configure.php')) {
-    include('includes/local/configure.php');
+  if (file_exists('../includes/local/configure.php')) {
+    include('../includes/local/configure.php');
   } else {
-    require('includes/configure.php');
+    require('../includes/configure.php');
   }
 
-  require_once('../' . DIR_WS_INCLUDES . 'database_tables.php');
+  // include functions
+  require_once(DIR_FS_INC.'auto_require.inc.php');
+  require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
+  require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
 
-  require_once('includes/functions/general.php');
-
-  require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_queryCached.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
+  // Database
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
