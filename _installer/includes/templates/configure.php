@@ -27,13 +27,8 @@ $file_contents =
 '  define(\'DIR_WS_CATALOG\', \'' . $_POST['DIR_WS_CATALOG'] . '\'); // relative path required' . PHP_EOL .
 '  define(\'DIR_FS_CATALOG\', DIR_FS_DOCUMENT_ROOT);' . PHP_EOL .
 '' . PHP_EOL .
-'// defines for admin' . PHP_EOL .
-'  define(\'HTTP_CATALOG_SERVER\', HTTP_SERVER);' . PHP_EOL .
-'  define(\'HTTPS_CATALOG_SERVER\', HTTPS_SERVER);' . PHP_EOL .
-'' . PHP_EOL .
 '// secure SSL' . PHP_EOL .
 '  define(\'ENABLE_SSL\', ' . (($_POST['ENABLE_SSL'] == 'true') ? 'true' : 'false') . '); // secure webserver for checkout procedure?' . PHP_EOL .
-'  define(\'ENABLE_SSL_CATALOG\', ((ENABLE_SSL === true) ? \'true\' : \'false\'));' . PHP_EOL .
 '  define(\'USE_SSL_PROXY\', ' . (($_POST['USE_SSL_PROXY'] == 'true') ? 'true' : 'false') . '); // using SSL proxy?' . PHP_EOL .
 '' . PHP_EOL .
 '// define our database connection' . PHP_EOL .
