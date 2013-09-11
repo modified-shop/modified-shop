@@ -343,7 +343,10 @@ if (isset($_SESSION['customer_id'])) {
 }
 $smarty->assign('index',xtc_href_link(FILENAME_DEFAULT));
 if ( $_SESSION['account_type']=='0') {
-$smarty->assign('account',xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+  $smarty->assign('account',xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
+}
+if ($_SESSION['customers_status']['customers_status'] == '1') {
+  $smarty->assign('create_account',xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 }
 $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));

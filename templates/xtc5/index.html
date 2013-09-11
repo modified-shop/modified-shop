@@ -12,7 +12,7 @@
         <li><a href="{$account}">{#link_account#}</a></li>
       {/if}
       {if $smarty.session.customers_status.customers_status_id == '1'}
-        <li><a href="{php}echo xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL');{/php}">{#new_customer#}</a></li>
+        <li><a href="{create_account}">{#new_customer#}</a></li>
       {/if}
       <li><a href="{$checkout}">{#link_checkout#}</a></li>
       {if isset($smarty.session.customer_id)}
