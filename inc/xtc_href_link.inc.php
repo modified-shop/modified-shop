@@ -58,7 +58,7 @@
       if (defined('SID') 
           && SID != '') 
       {
-        $link .= $separator . SID;
+        $link .= $separator . session_name() . '=' . session_id();
       } elseif ( 
         ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
           || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
