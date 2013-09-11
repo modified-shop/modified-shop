@@ -243,7 +243,7 @@ if($_GET["sg_option"] === "config") {
 			require(DIR_FS_LANGUAGES . $languageDirectory . '/modules/shipping/' . $shippingModule);
 			
 			$shippingModule = substr($shippingModule, 0, strrpos($shippingModule, '.'));
-			$sgInstalledShippingModules[$shippingModule] = constant(MODULE_SHIPPING_.strtoupper($shippingModule)._TEXT_TITLE);
+			$sgInstalledShippingModules[$shippingModule] = constant('MODULE_SHIPPING_'.strtoupper($shippingModule).'_TEXT_TITLE');
 		}
 	}
 	

@@ -341,13 +341,13 @@ function calculateModuleTax($moduleClass, $amount) {
 
 	if ($moduleName != 'discount') {
 		if ($moduleName != 'shipping') {
-			$moduleTaxClass = constant(MODULE_ORDER_TOTAL_.strtoupper($moduleName)._TAX_CLASS);
+			$moduleTaxClass = constant('MODULE_ORDER_TOTAL_'.strtoupper($moduleName).'_TAX_CLASS');
 		} 
 		else {
 			$moduleTmpName = explode('_', $order->info['shipping_class']);
 			$moduleTmpName = $moduleTmpName[0];
 			if ($moduleTmpName != 'selfpickup' && $moduleTmpName != 'free') {
-				$moduleTaxClass = constant(MODULE_SHIPPING_.strtoupper($moduleTmpName)._TAX_CLASS);
+				$moduleTaxClass = constant('MODULE_SHIPPING_'.strtoupper($moduleTmpName).'_TAX_CLASS');
 			} else {
 				$moduleTaxClass = '0';
 			}

@@ -32,23 +32,23 @@ class ot_payment
     {
         $this->code = 'ot_payment';
         $this->num = 3;
-        $this->title = MODULE_ORDER_TOTAL_PAYMENT_TITLE;
-        $this->description = MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION;
+        $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';
+        $this->description = defined('MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION')?MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION:'';
         $this->enabled = MODULE_ORDER_TOTAL_PAYMENT_STATUS=='true' ? true : false;
-        $this->sort_order = MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER;
-        $this->include_shipping = MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING;
-        $this->include_tax = MODULE_ORDER_TOTAL_PAYMENT_INC_TAX;
-        $this->calculate_tax = MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX;
+        $this->sort_order = defined('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER')?MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER:'';
+        $this->include_shipping = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING')?MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING:'';
+        $this->include_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_INC_TAX:'';
+        $this->calculate_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX:'';
         // is not used
         // $this->howto_calc = MODULE_ORDER_TOTAL_PAYMENT_HOWTO_CALC;
-        $this->tax_class = MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS;
+        $this->tax_class = defined('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS')?MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS:'';
         $this->output = array();
         $this->amount = 0;
         $this->original_total = 0;
         $this->discount = array();
         $this->amounts = array();
         $this->show_in_checkout_payment = MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT=='true' ? true : false;
-        $this->show_type = MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE;
+        $this->show_type = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE')?MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE:'';
         // Rabattfelder
         if ($this->enabled) {
             for ($k=1; $k<=$this->num; $k++) {
