@@ -30,7 +30,7 @@
   </tr>
   {/foreach}
   <tr>
-    <td colspan="4" class="subtotal">{$UST_CONTENT}<strong>{$TOTAL_CONTENT}</strong>{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}{if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}</td>
+    <td colspan="4" class="subtotal">{$UST_CONTENT}<strong>{$TOTAL_CONTENT}</strong>{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}{if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if}{if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}</td>
     <td class="subtotal">&nbsp;</td>
   </tr>
 </table>

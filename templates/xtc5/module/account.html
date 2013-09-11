@@ -42,8 +42,8 @@
   <h2>{#title_viewed_products#}</h2>
     <div class="highlightbox">
     <ul>
-    {foreach name=history_products item=products_history from=$products_history}
-      <li><a href="{$products_history.PRODUCTS_LINK}">{$products_history.PRODUCTS_NAME} / {$products_history.PRODUCTS_PRICE}</a></li>
+    {foreach name=history_products item=prod_history_data from=$products_history}
+      <li><a href="{$prod_history_data.PRODUCTS_LINK}">{$prod_history_data.PRODUCTS_NAME} / {$prod_history_data.PRODUCTS_PRICE}</a></li>
     {/foreach}
     </ul>
     </div>
