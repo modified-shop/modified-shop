@@ -34,13 +34,11 @@ require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php');
 if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {
   header("HTTP/1.1 503 Service Temporarily Unavailable");
   header("Status: 503 Service Temporarily Unavailable");
-  exit();
 }
 //SET 410 STATUS CODE
-elseif (isset($error) && ($error == CATEGORIE_NOT_FOUND || $error == TEXT_PRODUCT_NOT_FOUND)) {
+elseif (isset($error) && ($error === CATEGORIE_NOT_FOUND || $error === TEXT_PRODUCT_NOT_FOUND)) {
   header("HTTP/1.0 410 Gone"); 
   header("Status: 410 Gone"); // FAST CGI
-  exit();
 }
 
 /******** SHOPGATE **********/
