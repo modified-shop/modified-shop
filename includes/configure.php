@@ -27,12 +27,12 @@
   define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
 
   // defines for admin
-  define('HTTP_CATALOG_SERVER', HTTP_SERVER);
-  define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
+  #define('HTTP_CATALOG_SERVER', HTTP_SERVER);
+  #define('HTTPS_CATALOG_SERVER', HTTPS_SERVER);
 
   // secure SSL
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
-  define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
+  #define('ENABLE_SSL_CATALOG', ((ENABLE_SSL === true) ? 'true' : 'false'));
   define('USE_SSL_PROXY', false); // using SSL proxy?
   
   // define our database connection
@@ -46,12 +46,10 @@
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset utf8 or latin1
 
   if (DB_DATABASE != '') {
-    // admin directory
-    require_once (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
-    set_admin_directory();
     // include standard settings
     if (defined('RUN_MODE_ADMIN')) {
-      require (DIR_FS_CATALOG . DIR_ADMIN.'includes/paths.php');
+      define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
+      require (DIR_FS_ADMIN.'includes/paths.php');
     } else {
       require (DIR_FS_CATALOG.'includes/paths.php');
     }
