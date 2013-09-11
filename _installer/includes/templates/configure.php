@@ -45,4 +45,18 @@ $file_contents =
 '  define(\'USE_PCONNECT\', \'' . (($_POST['USE_PCONNECT'] == 'true') ? 'true' : 'false') . '\'); // use persistent connections?' . PHP_EOL .
 '  define(\'STORE_SESSIONS\', \'' . (($_POST['STORE_SESSIONS'] == 'files') ? '' : 'mysql') . '\'); // leave empty \'\' for default handler or set to \'mysql\'' . PHP_EOL .                     
 '  define(\'DB_SERVER_CHARSET\', \'' . DB_SERVER_CHARSET . '\'); // set db charset \'utf8\' or \'latin1\'' . PHP_EOL . '?>';
+'' . PHP_EOL .
+'  if (DB_DATABASE != \'\') {' . PHP_EOL . 
+'  // admin directory' . PHP_EOL . 
+'    require_once (DIR_FS_CATALOG . \'inc/set_admin_directory.inc.php\');' . PHP_EOL .
+'    set_admin_directory();' . PHP_EOL .
+'' . PHP_EOL .
+'  // include standard settings' . PHP_EOL .
+'    if (defined(\'RUN_MODE_ADMIN\')) {' . PHP_EOL .
+'      require (DIR_FS_CATALOG.DIR_ADMIN.\'includes/paths.php\');' . PHP_EOL .
+'    } else {' . PHP_EOL .
+'      require (DIR_FS_CATALOG.\'includes/paths.php\');' . PHP_EOL .
+'    }' . PHP_EOL .
+'  }' . PHP_EOL .
+'?>';
 ?>
