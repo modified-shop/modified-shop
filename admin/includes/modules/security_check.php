@@ -60,6 +60,18 @@ if (!empty($check)) {
   $warnings[] = '<p>'.TEXT_FILE_WARNING.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
 }
 
+if((defined('MODULE_JANOLAW_STATUS') == true || MODULE_JANOLAW_STATUS == 'True')) && ((defined('MODULE_JANOLAW_TYPE') == 'file') {
+  $check = array();
+  foreach($writeableJanolawFiles as $file) {
+    if (!is_writable($file)) {
+      $check[] = $file;
+    }
+  }
+  if (!empty($check)) {
+    $warnings[] = '<p>'.TEXT_FILE_WARNING.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
+  }
+}
+
 /*******************************************************************************
  ** check folder permissions
  ******************************************************************************/
