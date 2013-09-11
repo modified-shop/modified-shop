@@ -56,7 +56,7 @@
        ) 
     {
       if (defined('SID') 
-          && xtc_not_null(SID)) 
+          && SID != '') 
       {
         $link .= $separator . SID;
       } elseif ( 
