@@ -25,6 +25,13 @@ $writeableFiles = array(
   DIR_FS_ADMIN.'magnalister.php',
 );
 
+$writeableJanolawFiles = array(
+  DIR_FS_CATALOG.'media/content/datenschutzerklaerung.html',
+  DIR_FS_CATALOG.'media/content/agb.html',
+  DIR_FS_CATALOG.'media/content/impressum.html',
+  DIR_FS_CATALOG.'media/content/widerrufsbelehrung.html',
+);
+
 $writeableDirs = array(
   DIR_FS_ADMIN.'backups',
   DIR_FS_ADMIN.'images/graphs',
