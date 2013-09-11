@@ -188,6 +188,8 @@ require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 
+auto_require(DIR_FS_CATALOG.'includes/extra/functions/','php');
+
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
 
@@ -195,6 +197,14 @@ xtc_db_connect() or die('Unable to connect to database server!');
 $configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+}
+
+auto_require(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php');
+
+// Set the length of the redeem code, the longer the more secure
+// Kommt eigentlich schon aus der Table configuration
+if(!defined('SECURITY_CODE_LENGTH')) {
+  define('SECURITY_CODE_LENGTH', '10');
 }
 
 // PHPMailer
@@ -255,104 +265,25 @@ require (DIR_WS_CLASSES.'navigation_history.php');
 require (DIR_WS_FUNCTIONS.'sessions.php');
 
 // set the session name and save path
-xtc_session_name('MODsid');
-if (STORE_SESSIONS != 'mysql') {
-  xtc_session_save_path(SESSION_WRITE_DIRECTORY);
-}
-
 // set the session cookie parameters
-if (function_exists('session_set_cookie_params')) {
-  session_set_cookie_params(0, '/', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
-} elseif (function_exists('ini_set')) {
-  ini_set('session.cookie_lifetime', '0');
-  ini_set('session.cookie_path', '/');
-  ini_set('session.cookie_domain', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
-}
 // set the session ID if it exists
-if (isset ($_POST[xtc_session_name()])) {
-  xtc_session_id($_POST[xtc_session_name()]);
-}
-elseif (($request_type == 'SSL') && isset ($_GET[xtc_session_name()])) {
-  xtc_session_id($_GET[xtc_session_name()]);
-}
-
-//DokuMan - 2011-01-06 - set session.use_only_cookies when force cookie is enabled
-@ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
-
 // start the session
-$session_started = false;
-$truncate_session_id = false;
-if (SESSION_FORCE_COOKIE_USE == 'True') {
-  xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, '/', (xtc_not_null($current_domain) ? $current_domain : ''));
-  if (isset($_COOKIE['cookie_test'])) {
-    xtc_session_start();
-    $session_started = true;
-  }
-} elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
-  $truncate_session_id == true;
-  $session_started = false;
-} else {
-  xtc_session_start();
-  $session_started = true;
-}
-
+// Redirect search engines with session id to the same url without session id to prevent indexing session id urls
 // check for Cookie usage
-$cookie = false;
-if (HTTP_SERVER == HTTPS_SERVER) {
-  if (isset ($_COOKIE[xtc_session_name()])) {
-    $cookie = true;
-  }
-}
+// check the Agent
+include (DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
+// user tracking
 include (DIR_WS_INCLUDES.'tracking.php');
 
 // SSEQ-Lib integration
 function_exists('SEQ_SECURE_SESSION') ? SEQ_SECURE_SESSION() : '';
 
 // verify the ssl_session_id if the feature is enabled
-if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true)) {
-  $ssl_session_id  = $_SERVER['SSL_SESSION_ID'];
-  $ssl_session_id2 = getenv('SSL_SESSION_ID');
-  $ssl_session_id  = ($ssl_session_id == $ssl_session_id2) ? $ssl_session_id : $ssl_session_id.';'.$ssl_session_id2;
-  if (!isset($_SESSION['SSL_SESSION_ID'])) {
-    $_SESSION['SESSION_SSL_ID'] = $ssl_session_id;
-  }
-  if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_SSL_CHECK));
-  }
-}
-
 // verify the browser user agent if the feature is enabled
-if (SESSION_CHECK_USER_AGENT == 'True') {
-  $http_user_agent  = strtolower($_SERVER['HTTP_USER_AGENT']);
-  $http_user_agent2 = strtolower(getenv("HTTP_USER_AGENT"));
-  $http_user_agent  = ($http_user_agent == $http_user_agent2) ? $http_user_agent : $http_user_agent.';'.$http_user_agent2;
-  if (!isset($_SESSION['SESSION_USER_AGENT'])) {
-    $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
-  } elseif ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
-  }
-}
-
 // verify the IP address if the feature is enabled
-if (SESSION_CHECK_IP_ADDRESS == 'True') {
-  $ip_address = xtc_get_ip_address();
-  if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
-    $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
-  } elseif ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
-  }
-}
+include (DIR_WS_MODULES.'verify_session.php');
 
-if (!(preg_match('/^[a-z0-9]{26}$/i', session_id()) || preg_match('/^[a-z0-9]{32}$/i', session_id()))) {
-  xtc_session_recreate(); // Thanks to HHGAG ;-)
-}
 
 // set the language
 include (DIR_WS_MODULES.'set_language_sessions.php');
@@ -369,16 +300,6 @@ include (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
-
-// Redirect search engines with session id to the same url without session id to prevent indexing session id urls
-if ($truncate_session_id === true) {
-  if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
-    $location = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), 'NONSSL', false);
-    header("HTTP/1.0 301 Moved Permanently");
-    header("Location: $location");
-    exit();
-  }
-}
 
 // main class
 require (DIR_WS_CLASSES.'main.php');
@@ -445,36 +366,12 @@ define('WARN_SESSION_DIRECTORY_NOT_WRITEABLE', 'true');
 define('WARN_SESSION_AUTO_START', 'true');
 define('WARN_DOWNLOAD_DIRECTORY_NOT_READABLE', 'true');
 
-// Smarty Template Engine 
-require (DIR_FS_EXTERNAL.'smarty/'.TEMPLATE_ENGINE.'/Smarty.class.php');
-
-if (isset($_SESSION['customer_id'])) {
-  $account_type_query = xtc_db_query("-- /includes/application_top.php
-                                      SELECT account_type,
-                                             customers_default_address_id
-                                        FROM ".TABLE_CUSTOMERS."
-                                       WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
-  $account_type = xtc_db_fetch_array($account_type_query);
-
-  // check if zone id is unset bug
-  if (!isset($_SESSION['customer_country_id'])) {
-    $zone_query = xtc_db_query("-- /includes/application_top.php
-                                SELECT entry_country_id
-                                  FROM ".TABLE_ADDRESS_BOOK."
-                                 WHERE customers_id='".(int) $_SESSION['customer_id']."'
-                                   AND address_book_id='".$account_type['customers_default_address_id']."'");
-
-    $zone = xtc_db_fetch_array($zone_query);
-    $_SESSION['customer_country_id'] = $zone['entry_country_id'];
-  }
-  $_SESSION['account_type'] = $account_type['account_type'];
-} else {
-  $_SESSION['account_type'] = '0';
-}
+// set account_type
+include (DIR_WS_MODULES.'set_account_type.php');
 
 // modification for nre graduated system
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-auto_require(DIR_FS_CATALOG.'includes/external/application_top/','php');
+auto_require(DIR_FS_CATALOG.'includes/extra/application_top_end/','php');
 ?>

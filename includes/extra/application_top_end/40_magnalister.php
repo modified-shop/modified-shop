@@ -1,5 +1,4 @@
 <?php
-
 /* magnalister v1.0.0 */
 if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
   if (!defined('MAGNA_CALLBACK_MODE') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
@@ -9,3 +8,4 @@ if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True')
     ob_end_clean();
   }
 }
+?>

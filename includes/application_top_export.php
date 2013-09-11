@@ -42,6 +42,8 @@
     include('../includes/configure.php');
   }
 
+require_once (DIR_FS_INC . 'auto_require.inc.php');
+
   // admin directory
   require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
   set_admin_directory();
@@ -122,6 +124,8 @@
     define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
   }
 
+auto_require(DIR_FS_CATALOG.'includes/extra/application_top__export_begin/','php');
+
   // if gzip_compression is enabled, start to buffer the output
   if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
     if (($ini_zlib_output_compression = (int)ini_get('zlib.output_compression')) < 1) {
@@ -131,6 +135,5 @@
     }
   }
 
-  // Smarty Template Engine
-  require(DIR_FS_EXTERNAL.'smarty/smarty_2/Smarty.class.php');
+auto_require(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php');
 ?>
