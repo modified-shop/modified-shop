@@ -19,32 +19,22 @@
   // ?file=dbd_mod105sp1b-20111123170925.sql.gz&action=restorenow
 
   define ('_VALID_XTC', true);
+  define('RUN_MODE_ADMIN',true);
 
   // Set the local configuration parameters - mainly for developers or the main-configure
-  if (file_exists('includes/local/configure.php')) {
-    include('includes/local/configure.php');
+  if (file_exists('../includes/local/configure.php')) {
+    include('../includes/local/configure.php');
   } else {
-    require('includes/configure.php');
+    require('../includes/configure.php');
   }
 
-  require_once('../' . DIR_WS_INCLUDES . 'database_tables.php');
+  require_once(DIR_FS_CATALOG . DIR_WS_INCLUDES . 'database_tables.php');
 
-  require_once('includes/functions/general.php');
+  require_once(DIR_FS_ADMIN.DIR_WS_FUNCTIONS.'general.php');
 
-  require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_queryCached.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
+  // Database
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
 
   xtc_db_connect() or die('Unable to connect to database server!');
 
