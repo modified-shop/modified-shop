@@ -12,12 +12,14 @@
    (c) 2002-2003 osCommerce(application.php,v 1.4 2002/11/29); www.oscommerce.com
    (c) 2003	nextcommerce (application.php,v 1.16 2003/08/13); www.nextcommerce.org
    (c) 2006 xt:Commerce (application.php 1119 2005-07-25); www.xtcommerce.com
+   (c) 2011 Strato document-root function v. 1.00 by web28 - www.rpa-cpm.de
 
    Released under the GNU General Public License
-  (c) 2011 Strato document-root function v. 1.00 by web28 - www.rpa-cpm.de
    --------------------------------------------------------------*/
 
+  // configuration parameters
   include('includes/config.php');
+
   include('includes/version.php');
   
   // Set the level of error reporting
@@ -42,10 +44,13 @@
   if (!defined('DIR_WS_BASE')) {
     define('DIR_WS_BASE',''); //web28 - 2010-12-13 - FIX for $messageStack icons //moved to application.php
   }
-  
-  // set admin directory
-  require_once(DIR_FS_INC.'set_admin_directory.inc.php');
+
+  // admin directory
+  require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
   set_admin_directory();
+
+   // include standard settings
+  require (DIR_FS_CATALOG.'includes/paths.php');
 
   //require('../includes/functions/validations.php');
   require_once(DIR_FS_CATALOG.'inc/auto_require.inc.php');

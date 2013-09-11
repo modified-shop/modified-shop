@@ -43,6 +43,13 @@ if (file_exists('includes/local/configure.php')) {
   include ('includes/configure.php');
 }
 
+// admin directory
+require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
+set_admin_directory();
+
+// include standard settings
+require (DIR_FS_CATALOG.'includes/paths.php');
+
 // call Installer
 if (DB_DATABASE == '' && is_dir('./_installer')) {
   header("Location: ./_installer");
@@ -185,9 +192,9 @@ require_once (DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 xtc_db_connect() or die('Unable to connect to database server!');
 
 // load configuration
-$configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from '.TABLE_CONFIGURATION);
+$configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-  define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
+  define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
 // PHPMailer
@@ -365,10 +372,11 @@ require (DIR_WS_INCLUDES.'write_customers_status.php');
 
 // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
 if ($truncate_session_id === true) {
-  if (preg_match('/' . xtc_session_name() . '/i', $_SERVER['REQUEST_URI'])) {
+  if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
     $location = xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(), 'NONSSL', false);
     header("HTTP/1.0 301 Moved Permanently");
     header("Location: $location");
+    exit();
   }
 }
 
