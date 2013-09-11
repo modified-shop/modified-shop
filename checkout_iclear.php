@@ -206,7 +206,7 @@ $smarty->assign('PRODUCTS_BLOCK', $data_products);
 
 if ($order->info['payment_method'] != 'no_payment' && $order->info['payment_method'] != '') {
   include (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_method'] . '.php');
-  $smarty->assign('PAYMENT_METHOD', constant(MODULE_PAYMENT_ . strtoupper($order->info['payment_method']) . _TEXT_TITLE));
+  $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_'. strtoupper($order->info['payment_method']) .'_TEXT_TITLE'));
 }
 $smarty->assign('PAYMENT_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 

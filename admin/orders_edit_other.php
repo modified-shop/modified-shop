@@ -197,7 +197,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     require(DIR_FS_LANGUAGES . $order->info['language'] . '/modules/order_total/' . $totals[$i]);
     $total = substr($totals[$i], 0, strrpos($totals[$i], '.'));
     $total_name = str_replace('ot_','',$total);
-    $total_text = constant(MODULE_ORDER_TOTAL_.strtoupper($total_name)._TITLE);
+    $total_text = constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_TITLE');
     $ototal_query = xtc_db_query("select orders_total_id, title, value, class from " . TABLE_ORDERS_TOTAL . " where orders_id = '" . $_GET['oID'] . "' and class = '" . $total . "' ");
     $ototal = xtc_db_fetch_array($ototal_query);
     //if (($total != 'ot_subtotal')&&($total != 'ot_subtotal_no_tax')&&($total != 'ot_total')&&($total != 'ot_tax')){
@@ -211,7 +211,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
         <td class="dataTableContent">
           <?php
           echo xtc_draw_hidden_field('class', $total);
-          echo xtc_draw_hidden_field('sort_order', constant(MODULE_ORDER_TOTAL_.strtoupper($total_name)._SORT_ORDER));
+          echo xtc_draw_hidden_field('sort_order', constant('MODULE_ORDER_TOTAL_'.strtoupper($total_name).'_SORT_ORDER'));
           echo xtc_draw_hidden_field('oID', $_GET['oID']);
           echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
           ?>
