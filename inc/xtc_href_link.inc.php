@@ -59,7 +59,7 @@
           && SID != '') 
       {
         $link .= $separator . SID;
-      } elseif {
+      } elseif ( 
         ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
           || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
         ) && $http_domain != $https_domain) {
