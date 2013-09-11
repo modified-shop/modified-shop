@@ -815,3 +815,6 @@ define('DISPLAY_ERROR_REPORTING_DESC', 'Display formatted error reporting in foo
 
 define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb navigation');
 define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In the breadcrumb navigation, the article name is displayed.<br /><strong>model:</strong> In the breadcrumb navigation, the item number is displayed if it is available. Otherwise fallback to the article name.');
+
+define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
+define('TEMPLATE_ENGINE_DESC', 'Choose the Smarty version.<br/><br/><b>Attention:</b> In Smarty 3 there is a new syntax and older templates may not work properly.');
