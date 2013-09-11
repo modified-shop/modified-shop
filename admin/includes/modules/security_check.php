@@ -60,7 +60,7 @@ if (!empty($check)) {
   $warnings[] = '<p>'.TEXT_FILE_WARNING.'</p><ul><li>'.implode('</li><li>',$check).'</li></ul>';
 }
 
-if((defined('MODULE_JANOLAW_STATUS') == true || MODULE_JANOLAW_STATUS == 'True') && (defined('MODULE_JANOLAW_TYPE') == 'file')) {
+if((defined('MODULE_JANOLAW_STATUS') == true || MODULE_JANOLAW_STATUS == 'True') && (MODULE_JANOLAW_TYPE == 'File')) {
   $check = array();
   foreach($writeableJanolawFiles as $file) {
     if (!is_writable($file)) {
