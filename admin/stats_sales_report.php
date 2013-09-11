@@ -318,7 +318,7 @@
                                   for ($i=0; $i<count($payments); $i++){
                                     require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payments[$i]);
                                     $payment = substr($payments[$i], 0, strrpos($payments[$i], '.'));
-                                    $payment_text = constant(MODULE_PAYMENT_.strtoupper($payment)._TEXT_TITLE);
+                                    $payment_text = constant('MODULE_PAYMENT_'.strtoupper($payment).'_TEXT_TITLE');
                                     ?>
                                     <option value="<?php echo $payment; ?>"<?php if ($srPayment === $payment) echo " selected"; ?>><?php echo $payment_text ; ?></option>
                                     <?php

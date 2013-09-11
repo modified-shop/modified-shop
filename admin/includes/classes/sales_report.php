@@ -1,21 +1,22 @@
 <?php
-/* --------------------------------------------------------------
-   $Id: sales_report.php 1311 2005-10-18 12:30:40Z mz $
+  /* --------------------------------------------------------------
+   $Id: sales_report.php 4824 2013-05-24 09:41:50Z Tomcraft $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce coding standards; www.oscommerce.com
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
    --------------------------------------------------------------
    Third Party contribution:
 
-   stats_sales_report (c) Charly Wilhelm  charly@yoshi.ch
+   stats_sales_report (c) Charly Wilhelm charly@yoshi.ch
 
    possible views (srView):
   1 yearly
@@ -63,7 +64,7 @@
       // startDate and endDate have to be a unix timestamp. Use mktime !
       // if set then both have to be valid startDate and endDate
       $this->mode = $mode;
-      $this->tax_include = DISPLAY_PRICE_WITH_TAX;
+      $this->tax_include = defined('DISPLAY_PRICE_WITH_TAX')?DISPLAY_PRICE_WITH_TAX:'';
 
       $this->statusFilter = $statusFilter;
       $this->paymentFilter = $payment;     
