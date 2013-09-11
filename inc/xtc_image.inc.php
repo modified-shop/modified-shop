@@ -35,14 +35,20 @@
     */
 //EOF - Dokuman - 2009-10-14 - Remove title-attribute from images to avoid "keyword stuffing" (SEO), as it is identical to the alt-attribute
 
-    if ( (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
+    if (defined('CONFIG_CALCULATE_IMAGE_SIZE') && (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
       if ($image_size = @getimagesize($src)) {
         if (empty($width) && xtc_not_null($height)) {
           $ratio = $height / $image_size[1];
-          $width = $image_size[0] * $ratio;
+          //BOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
+          //$width = $image_size[0] * $ratio;
+          $width = (int)($image_size[0] * $ratio);
+          //EOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
         } elseif (xtc_not_null($width) && empty($height)) {
           $ratio = $width / $image_size[0];
-          $height = $image_size[1] * $ratio;
+          //BOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
+          //$height = $image_size[1] * $ratio;
+          $height = (int)($image_size[1] * $ratio);
+          //EOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
         } elseif (empty($width) && empty($height)) {
           $width = $image_size[0];
           $height = $image_size[1];
