@@ -28,11 +28,11 @@ define('MODULE_JANOLAW_SHOP_ID_DESC', 'Die Shop-ID Ihres Onlineshops');
 define('MODULE_JANOLAW_STATUS_DESC', 'Modul aktivieren?');
 define('MODULE_JANOLAW_STATUS_TITLE', 'Status');
 define('MODULE_JANOLAW_TYPE_TITLE', 'Speichern als');
-define('MODULE_JANOLAW_TYPE_DESC', 'Sollen die Daten in einem File oder in der Datenbank gepseichert werden ?');
+define('MODULE_JANOLAW_TYPE_DESC', 'Sollen die Daten in einer Datei oder in der Datenbank gepseichert werden?');
 define('MODULE_JANOLAW_FORMAT_TITLE', 'Format Typ');
-define('MODULE_JANOLAW_FORMAT_DESC', 'Sollen die Daten als Text oder HTML gepseichert werden ?');
+define('MODULE_JANOLAW_FORMAT_DESC', 'Sollen die Daten als Text oder HTML gepseichert werden?');
 define('MODULE_JANOLAW_UPDATE_INTERVAL_TITLE', 'Update Interval');
-define('MODULE_JANOLAW_UPDATE_INTERVAL_DESC', 'In welchen Abst&auml;nden sollen die Daten aktualisiert werden ?');
+define('MODULE_JANOLAW_UPDATE_INTERVAL_DESC', 'In welchen Abst&auml;nden sollen die Daten aktualisiert werden?');
 
 
 // include needed functions
