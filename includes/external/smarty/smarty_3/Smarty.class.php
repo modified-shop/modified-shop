@@ -264,7 +264,7 @@ class Smarty extends Smarty_Compatibility {
      * plugins directory
      * @var array
      */
-    private $plugins_dir = array(MY_TEMPLATE_PLUGINS);
+    private $plugins_dir = array();
     /**
      * cache directory
      * @var string
@@ -638,6 +638,9 @@ class Smarty extends Smarty_Compatibility {
         if (isset($_SERVER['SCRIPT_NAME'])) {
             $this->assignGlobal('SCRIPT_NAME', $_SERVER['SCRIPT_NAME']);
         }
+        
+        // register {php} tag
+        $this->registerPlugin('block', 'php', 'smarty_php_tag');
     }
 
 
