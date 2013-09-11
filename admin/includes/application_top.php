@@ -58,13 +58,6 @@ if (file_exists('../includes/local/configure.php')) {
   require ('../includes/configure.php');
 }
 
-// admin directory
-require ('../inc/set_admin_directory.inc.php');
-set_admin_directory();
-
-// include standard settings
-require (DIR_FS_CATALOG . DIR_ADMIN.'includes/paths.php');
-
 /**
  * set the level of error reporting
  */

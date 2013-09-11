@@ -45,4 +45,13 @@
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'utf8'); // set db charset utf8 or latin1
 
+  if (DB_DATABASE != '') {
+    // include standard settings
+    if (defined('RUN_MODE_ADMIN')) {
+      define('DIR_FS_ADMIN', realpath(dirname(__FILE__) . '/../') . '/');
+      require (DIR_FS_ADMIN.'includes/paths.php');
+    } else {
+      require (DIR_FS_CATALOG.'includes/paths.php');
+    }
+  }
 ?>
