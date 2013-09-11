@@ -41,7 +41,7 @@
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset utf8 or latin1
 
   if (DB_DATABASE != '') {
-    // set admin irectory
+    // set admin directory
     foreach (new DirectoryIterator(DIR_FS_CATALOG) as $shoproot) {
       if ($shoproot->isDir() && is_file(DIR_FS_CATALOG . $shoproot->getFilename() . '/check_update.php')) {
         define('DIR_ADMIN', $shoproot->getFilename() . '/');
