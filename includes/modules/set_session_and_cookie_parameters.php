@@ -54,7 +54,6 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     header("Location: $location");
     exit();
   }
-}
 } else {
   xtc_session_start();
   $session_started = true;

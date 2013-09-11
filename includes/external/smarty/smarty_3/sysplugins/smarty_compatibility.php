@@ -418,6 +418,21 @@ abstract class Smarty_Compatibility extends Smarty_Internal_TemplateBase {
     {
         trigger_error("Smarty error: $error_msg", $error_type);
     }
+}
 
+
+/**
+ * Smarty {php}{/php} block function
+ *
+ * @param array   $params   parameter list
+ * @param string  $content  contents of the block
+ * @param object  $template template object
+ * @param boolean &$repeat  repeat flag
+ * @return string content re-formatted
+ */
+function smarty_php_tag($params, $content, $template, &$repeat)
+{
+    eval($content);
+    return '';
 }
 ?>

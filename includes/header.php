@@ -401,6 +401,9 @@ $smarty->assign('LINK_INDEX',$link_index);
 if ( $_SESSION['account_type']=='0') {
   $smarty->assign('account',xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 }
+if ($_SESSION['customers_status']['customers_status'] == '1') {
+  $smarty->assign('create_account',xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
+}
 $smarty->assign('cart',xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL')); // web28 - 2010-09-20 - change SSL -> NONSSL
 $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $smarty->assign('store_name',TITLE);
