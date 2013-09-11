@@ -31,10 +31,6 @@
 // start the timer for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime());
 
-// set the level of error reporting
-error_reporting(E_ALL & ~E_NOTICE);
-//  error_reporting(E_ALL);
-
 // Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
 if (file_exists('../../includes/local/configure.php')) {
 	include dirname ( __FILE__ ) . '/../../includes/local/configure.php';
@@ -42,12 +38,25 @@ if (file_exists('../../includes/local/configure.php')) {
 	include dirname ( __FILE__ ) . '/../../includes/configure.php';
 }
 
-// admin directory
-require (DIR_FS_CATALOG . 'inc/set_admin_directory.inc.php');
-set_admin_directory();
+/**
+ * set the level of error reporting
+ */
+@ini_set('display_errors', true);
+if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
+  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
+  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
+  error_reporting(-1); // Development value
+} else {
+  @ini_set('display_errors', false);
+  error_reporting(0);
+}
 
-// include standard settings
-require (DIR_FS_CATALOG.'includes/paths.php');
+/**
+ * new error handling
+ */
+require_once (DIR_WS_INCLUDES.'error_reporting.php');
 
 $php4_3_10 = (0 == version_compare(phpversion(), "4.3.10"));
 define('PHP4_3_10', $php4_3_10);
@@ -65,9 +74,6 @@ require (DIR_WS_INCLUDES.'filenames.php');
 
 // include the list of project database tables
 require (DIR_WS_INCLUDES.'database_tables.php');
-
-// SQL caching dir
-define('SQL_CACHEDIR', DIR_FS_CATALOG.'cache/');
 
 // Below are some defines which affect the way the discount coupon/gift voucher system work
 // Be careful when editing them.
@@ -92,21 +98,9 @@ define('GRADUATED_ASSIGN', 'true');
 // include used functions
 
 // Database
-require_once (DIR_FS_INC.'xtc_db_connect.inc.php');
-require_once (DIR_FS_INC.'xtc_db_close.inc.php');
-require_once (DIR_FS_INC.'xtc_db_error.inc.php');
-require_once (DIR_FS_INC.'xtc_db_perform.inc.php');
-require_once (DIR_FS_INC.'xtc_db_query.inc.php');
-require_once (DIR_FS_INC.'xtc_db_queryCached.inc.php');
-require_once (DIR_FS_INC.'xtc_db_fetch_array.inc.php');
-require_once (DIR_FS_INC.'xtc_db_num_rows.inc.php');
-require_once (DIR_FS_INC.'xtc_db_data_seek.inc.php');
-require_once (DIR_FS_INC.'xtc_db_insert_id.inc.php');
-require_once (DIR_FS_INC.'xtc_db_free_result.inc.php');
-require_once (DIR_FS_INC.'xtc_db_fetch_fields.inc.php');
-require_once (DIR_FS_INC.'xtc_db_output.inc.php');
-require_once (DIR_FS_INC.'xtc_db_input.inc.php');
-require_once (DIR_FS_INC.'xtc_db_prepare_input.inc.php');
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions.inc.php');
+
 require_once (DIR_FS_INC.'xtc_get_top_level_domain.inc.php');
 
 // html basics
@@ -248,7 +242,5 @@ require (DIR_WS_FUNCTIONS.'compatibility.php');
 
 // define how the session functions will be used
 require (DIR_WS_FUNCTIONS.'sessions.php');
-
-
 
 ?>
