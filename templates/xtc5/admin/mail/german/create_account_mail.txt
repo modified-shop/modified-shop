@@ -1,8 +1,8 @@
 
 
-Sehr geehrter Kunde, 
+Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
 
-Es wurde ein Account für Sie eingerichtet, Sie können mit folgenden Daten in Unseren Shop einloggen.
+es wurde ein Account für Sie eingerichtet, Sie können sich mit folgenden Daten in unseren Shop einloggen.
 
 {if $COMMENTS} Anmerkungen: {$COMMENTS}{/if}
 
