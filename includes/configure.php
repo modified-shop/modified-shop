@@ -40,19 +40,10 @@
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset utf8 or latin1
 
-  if (DB_DATABASE != '') {
-    // set admin directory
-    foreach (new DirectoryIterator(DIR_FS_CATALOG) as $shoproot) {
-      if ($shoproot->isDir() && is_file(DIR_FS_CATALOG . $shoproot->getFilename() . '/check_update.php')) {
-        define('DIR_ADMIN', $shoproot->getFilename() . '/');
-        break;
-      }
-    }
+  if (DB_DATABASE != '') { 
+    // set admin irectory 
+    require(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
     // include standard settings
-    if (defined('RUN_MODE_ADMIN')) {
-      require (DIR_FS_DOCUMENT_ROOT.DIR_ADMIN.'includes/paths.php');
-    } else {
-      require (DIR_FS_CATALOG.'includes/paths.php');
-    }
+    require(DIR_FS_CATALOG.(defined('RUN_MODE_ADMIN')? DIR_ADMIN : '').'includes/paths.php');
   }
 ?>
