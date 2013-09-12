@@ -16,6 +16,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+//compatibility for modified eCommerce Shopsoftware 1.06 files
+if (!defined('DIR_ADMIN')) {
+  define('DIR_ADMIN','admin/');
+}
+
 // define the filenames used in the project
 define('FILENAME_ACCOUNT', 'account.php');
 define('FILENAME_ACCOUNT_EDIT', 'account_edit.php');
