@@ -109,7 +109,7 @@ define('TOTAL_TURNOVER', 'Total turnover');
 // main heading
 define('HEADING_TITLE', 'Welcome to the Admin Area');
 // users online
-define('TABLE_CAPTION_USERS_ONLINE', 'Users Online');
+define('TABLE_CAPTION_USERS_ONLINE', 'Users Online (last %s Customers)');
 define('TABLE_CAPTION_USERS_ONLINE_HINT', '***Please click user name for details***');
 define('TABLE_HEADING_USERS_ONLINE_SINCE', 'Online Since');
 define('TABLE_HEADING_USERS_ONLINE_NAME', 'Name');
