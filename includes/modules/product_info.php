@@ -61,12 +61,12 @@ if (!is_object($product) || !$product->isProduct()) {
         break;
       }
     }
-	if (isset($xsb_tx['products_id'])) {           // replace || with && ?
+    if (isset($xsb_tx['products_id'])) {           // replace || with && ?
       $hide_qty = (@$xsb_tx['XTB_ALLOW_USER_CHQTY'] != 'true' || $xsb_tx['products_id'] == $product->data['products_id']) ? 1 : 0;
       if(isset($xsb_tx['XTB_REDIRECT_USER_TO']) && $xsb_tx['products_id'] == $product->data['products_id']) {
         $info_smarty->assign('XTB_REDIRECT_USER_TO', $xsb_tx['XTB_REDIRECT_USER_TO']);
       }
-	  }
+    }
   }
 
   if (ACTIVATE_NAVIGATOR == 'true') {
