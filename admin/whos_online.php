@@ -82,18 +82,16 @@
                           <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_HTTP_REFERER; ?></td>
                         </tr>
                         <?php
-                        $whos_online_query_raw = "select customer_id,
-                                                         full_name,
-                                                         ip_address,
-                                                         time_entry,
-                                                         time_last_click,
-                                                         last_page_url,
-                                                         session_id,
-                                                         http_referer
-                                                    from " . TABLE_WHOS_ONLINE ."
-                                                order by time_last_click desc";
-                        $whos_online_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $whos_online_query_raw, $whos_online_query_numrows);
-                        $whos_online_query = xtc_db_query($whos_online_query_raw);                        
+                        $whos_online_query = xtc_db_query("select customer_id,
+                                                                  full_name,
+                                                                  ip_address,
+                                                                  time_entry,
+                                                                  time_last_click,
+                                                                  last_page_url,
+                                                                  session_id,
+                                                                  http_referer
+                                                             from " . TABLE_WHOS_ONLINE ."
+                                                             order by time_last_click desc");
                         while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                           $time_online = (time() - $whos_online['time_entry']);
                           if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info) ) {
@@ -134,20 +132,13 @@
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                           <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
-                          <td class="dataTableContent"><?php echo htmlentities($whos_online['http_referer']); ?></td>
+                <td class="dataTableContent"><?php echo encode_htmlentities($whos_online['http_referer']); ?></td>
                         </tr>
                         <?php
                         }
                         ?>
                         <tr>
-                          <td colspan="7">
-                            <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                              <tr>
-                                <td class="smallText" valign="top"><?php echo $whos_online_split->display_count($whos_online_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></td>
-                                <td class="smallText" align="right"><?php echo $whos_online_split->display_links($whos_online_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
-                              </tr>
-                            </table>
-                          </td>
+                          <td class="smallText" colspan="7"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, xtc_db_num_rows($whos_online_query)); ?></td>
                         </tr>
                       </table>
                     </td>
@@ -158,7 +149,12 @@
                       $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
                       $session_data = '';
                       if (STORE_SESSIONS == 'mysql') {
+                      //BOF - GTB - 2011-05-04 - BUGFIX base64decoded Session caused empty cart
+                      //  $session_data = xtc_db_query("select value from " . TABLE_SESSIONS . " WHERE sesskey = '" . $info . "'");
+                      //  $session_data = xtc_db_fetch_array($session_data);
+                      //  $session_data = trim($session_data['value']);
                         $session_data = _sess_read($info);
+                      //EOF - GTB - 2011-05-04 - BUGFIX base64decoded Session caused empty cart
                       } else {
                         if ( (file_exists(xtc_session_save_path() . '/sess_' . $info)) && (filesize(xtc_session_save_path() . '/sess_' . $info) > 0) ) {
                           $session_data = file(xtc_session_save_path() . '/sess_' . $info);
