@@ -52,6 +52,9 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
 }
 
-if (!(preg_match('/^[a-z0-9]{26}$/i', session_id()) || preg_match('/^[a-z0-9]{32}$/i', session_id()))) {
+// check session_id for valid signs and length
+if (!(preg_match('/^[a-z0-9]{26}$/i', session_id()) 
+      || preg_match('/^[a-z0-9]{32}$/i', session_id())
+      || preg_match('/^[a-z0-9]{52}$/i', session_id()))) {
   xtc_session_recreate(); // Thanks to HHGAG ;-)
 }
