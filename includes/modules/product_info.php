@@ -145,27 +145,19 @@ if (!is_object($product) || !$product->isProduct()) {
   //products formated price
   $info_smarty->assign('PRODUCTS_PRICE', $products_price['formated']);
   
-  //products price additional
-  if (count($products_price) > 0) {
-    foreach($products_price as $key => $entry) {                  
-       $info_smarty->assign('PRODUCTS_'.strtoupper($key),$entry);
-    }
-  }
-
   // load all definitions from product class
-  $info_smarty->assign('product_data', $product->buildDataArray($product->data));
-
+  foreach ($product->buildDataArray($product->data) as $key => $value) {
+    $info_smarty->assign($key, $value);
+  }
+  
   //get products vpe
   $info_smarty->assign('PRODUCTS_VPE',$main->getVPEtext($product->data, $products_price['plain'])); //web28 - 2012-04-17 - use classes function getVPEtext() 
   $info_smarty->assign('PRODUCTS_VPE_VALUE',$product->data['products_vpe_value']);
-  $info_smarty->assign('PRODUCTS_VPE_NMAE',$main->vpe_name);
+  $info_smarty->assign('PRODUCTS_VPE_NAME',$main->vpe_name);
   
   // products id
   $info_smarty->assign('PRODUCTS_ID', $product->data['products_id']);
   
-  // products name
-  $info_smarty->assign('PRODUCTS_NAME', $product->data['products_name']);
-
   // price incl tax and shipping link
   if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
     if (isset($xtPrice->TAX[$product->data['products_tax_class_id']])) {
