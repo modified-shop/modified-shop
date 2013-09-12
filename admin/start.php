@@ -280,7 +280,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             <!--  BOF START INFOS USER ONLINE + NEUE KUNDEN  + LETZTE BESTELLUNGEN +  NEWSFEED-->
                             <table border="0" width="100%" cellspacing="0">
                               <tr>
-                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_USERS_ONLINE; ?></strong></td>
+                                <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo sprintf(TABLE_CAPTION_USERS_ONLINE, MAX_DISPLAY_SEARCH_RESULTS); ?></strong></td>
                                 <td width="4%"><p style="margin-left: 3px"></p></td>
                                 <td width="48%" class="infoBoxHeading" style="border: 1px solid #b40076; border-bottom: 1px solid #b40076;"><strong><?php echo TABLE_CAPTION_NEWSFEED; ?></strong> <a href="<?php echo RSS_FEED_LINK; ?>" target="_blank">modified eCommerce Shopsoftware - Blog</a></td>
                               </tr>
@@ -306,7 +306,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                                                               last_page_url,
                                                                               session_id
                                                                          FROM ' . TABLE_WHOS_ONLINE .'
-                                                                     ORDER BY time_last_click DESC');
+                                                                     ORDER BY time_last_click DESC
+                                                                         LIMIT '.MAX_DISPLAY_SEARCH_RESULTS);
                                     $info='';
                                     while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                                       $time_online = (time() - $whos_online['time_entry']);
