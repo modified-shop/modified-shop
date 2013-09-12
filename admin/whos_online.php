@@ -17,6 +17,9 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  
+  // include needed functions
+  require(DIR_FS_INC. 'xtc_get_products.inc.php');
 
   $time_last_click = 900;
   if (defined('WHOS_ONLINE_TIME_LAST_CLICK')) {
@@ -24,11 +27,10 @@
   }
   $xx_mins_ago = (time() - $time_last_click);
 
-  require(DIR_FS_INC. 'xtc_get_products.inc.php');
   // remove entries that have expired
   xtc_db_query("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE time_last_click < '" . $xx_mins_ago . "'");
   
-    require (DIR_WS_INCLUDES.'head.php');
+  require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
@@ -82,16 +84,18 @@
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_HTTP_REFERER; ?></td>
               </tr>
               <?php
-              $whos_online_query = xtc_db_query("select customer_id,
-                                                        full_name,
-                                                        ip_address,
-                                                        time_entry,
-                                                        time_last_click,
-                                                        last_page_url,
-                                                        session_id,
-                                                        http_referer
-                                                   from " . TABLE_WHOS_ONLINE ."
-                                               order by time_last_click desc");
+              $whos_online_query_raw = "select customer_id,
+                                               full_name,
+                                               ip_address,
+                                               time_entry,
+                                               time_last_click,
+                                               last_page_url,
+                                               session_id,
+                                               http_referer
+                                          from " . TABLE_WHOS_ONLINE ."
+                                      order by time_last_click desc");
+              $whos_online_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $whos_online_query_raw, $whos_online_query_numrows);
+              $whos_online_query = xtc_db_query($whos_online_query_raw);                        
               while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                 $time_online = (time() - $whos_online['time_entry']);
                 if ((!isset($_GET['info']) || (isset($_GET['info']) && ($_GET['info'] == $whos_online['session_id']))) && !isset($info) ) {
@@ -99,10 +103,8 @@
                 }
                 if ($whos_online['session_id'] === $info) {
                   echo '              <tr class="dataTableRowSelected">' . "\n";
-                  //BOF - DokuMan - 2011-02-07 - don't show a link for users/bots without a session id
                   } elseif (($whos_online['session_id'] == '') || (substr($whos_online['session_id'],0,1) == '[')) {
                     echo '              <tr class="dataTableRow">' . "\n";
-                  //EOF - DokuMan - 2011-02-07 - don't show a link for users/bots without a session id
                 } else {
                   echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_WHOS_ONLINE, xtc_get_all_get_params(array('info', 'action')) . 'info=' . $whos_online['session_id'], 'NONSSL') . '\'">' . "\n";
                 }
@@ -138,7 +140,14 @@
                 }
               ?>
               <tr>
-                <td class="smallText" colspan="7"><?php echo sprintf(TEXT_NUMBER_OF_CUSTOMERS, xtc_db_num_rows($whos_online_query)); ?></td>
+                <td colspan="7">
+                  <table border="0" width="100%" cellspacing="0" cellpadding="2">
+                  <tr>
+                    <td class="smallText" valign="top"><?php echo $whos_online_split->display_count($whos_online_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></td>
+                    <td class="smallText" align="right"><?php echo $whos_online_split->display_links($whos_online_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
+                  </tr>
+                  </table>
+                </td>
               </tr>
             </table>
           </td>
@@ -149,12 +158,7 @@
             $heading[] = array('text' => '<strong>' . TABLE_HEADING_SHOPPING_CART . '</strong>');
             $session_data = '';
             if (STORE_SESSIONS == 'mysql') {
-                              //BOF - GTB - 2011-05-04 - BUGFIX base64decoded Session caused empty cart
-                              //  $session_data = xtc_db_query("select value from " . TABLE_SESSIONS . " WHERE sesskey = '" . $info . "'");
-                              //  $session_data = xtc_db_fetch_array($session_data);
-                              //  $session_data = trim($session_data['value']);
-                                $session_data = _sess_read($info);
-                              //EOF - GTB - 2011-05-04 - BUGFIX base64decoded Session caused empty cart
+              $session_data = _sess_read($info);
             } else {
               if ( (file_exists(xtc_session_save_path() . '/sess_' . $info)) && (filesize(xtc_session_save_path() . '/sess_' . $info) > 0) ) {
                 $session_data = file(xtc_session_save_path() . '/sess_' . $info);
