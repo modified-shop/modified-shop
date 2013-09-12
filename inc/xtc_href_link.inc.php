@@ -55,8 +55,8 @@
         && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie))
        ) 
     {
-      if (defined('SID') 
-          && SID != '') 
+      if (defined('SID')
+          && constant('SID') != '')
       {
         $link .= $separator . session_name() . '=' . session_id();
       } elseif ( 
