@@ -1089,15 +1089,15 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
 
   function create_permission_checkboxes($t_array) {
     $customers_statuses_array = xtc_get_customers_statuses();
-    $input = '<input type="checkbox" name="groups[]" value="all"> '.TXT_ALL.'<br />'. PHP_EOL;
+    $input = '<label><input type="checkbox" name="groups[]" value="all"> '.TXT_ALL.'</label><br />'. PHP_EOL;
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
-      $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? 'checked ' : '';
+      $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? ' checked' : '';
       $preselect = $i==0 ? true : false; //preselect all
       //$preselect = $customers_statuses_array[$i]['id']=='0' ? true : false; //preselect admin
       if( !isset($_GET['pID']) && !isset($_GET['cID']) && $preselect) {
-        $checked = 'checked ';
+        $checked = ' checked';
       }
-      $input .= '<input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'<br />'. PHP_EOL;
+      $input .= '<label><input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'</label><br />'. PHP_EOL;
     }
     return $input;
 
