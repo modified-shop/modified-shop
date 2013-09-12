@@ -417,37 +417,37 @@ class product {
     }
 
     //products data array
-    $productData = array ('PRODUCTS_NAME' => $array['products_name'],
-                          'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
-                          'PRODUCTS_ID'=> $array['products_id'],
-                          'PRODUCTS_MODEL'=> isset($array['products_model']) ? $array['products_model'] : '',
-                          'PRODUCTS_EAN' => isset($array['products_ean']) ? $array['products_ean'] : '',
-                          'PRODUCTS_MANUFACTURERS_MODEL' => isset($array['products_manufacturers_model']) ? $array['products_manufacturers_model'] : '',
-                          'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
-                          'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
-                          'PRODUCTS_VPE_NAME' => $main->vpe_name,
-                          'PRODUCTS_IMAGE' => $products_image,
-                          'PRODUCTS_IMAGE_SIZE' => $img_attr,
-                          'PRODUCTS_IMAGE_TITLE' => str_replace('"','',$array['products_name']),
-                          'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])),
-                          'PRODUCTS_PRICE' => $products_price['formated'],
-                          'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
-                          'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
-                          'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
-                          'PRODUCTS_SHIPPING_NAME'=>$shipping_status_name,
-                          'PRODUCTS_SHIPPING_IMAGE'=>$shipping_status_image,
-                          'PRODUCTS_DESCRIPTION' => isset($array['products_description']) ? $array['products_description'] : '', //DokuMan - 2010-02-26 - set Undefined index
-                          'PRODUCTS_QUANTITY' => isset($array['products_quantity']) ? $array['products_quantity'] : '',
-                          'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0, //DokuMan - 2010-02-26 - set Undefined index
-                          'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '', //DokuMan - 2010-02-26 - set Undefined index
-                          'PRODUCTS_SHORT_DESCRIPTION' => isset($array['products_short_description']) ? $array['products_short_description'] : '', //DokuMan - 2010-02-26 - set Undefined index
-                          'PRODUCTS_FSK18' => isset($array['products_fsk18']) ? $array['products_fsk18'] : 0, //DokuMan - 2010-02-26 - set Undefined index
-                          'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>' //GTB - 2010-08-27 make Button Details global
-                         );
+    $productData = array();
+    if (count($array) > 0) {
+      foreach($array as $key => $entry) {                  
+         $productData[strtoupper($key)] = $entry;
+      }
+    }
+    $productDataAdds = array (
+        'PRODUCTS_PRICE' => $products_price['formated'],
+        'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
+        'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
+        'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
+        'PRODUCTS_VPE_NAME' => $main->vpe_name,
+        'PRODUCTS_IMAGE' => $products_image,
+        'PRODUCTS_IMAGE_SIZE' => $img_attr,
+        'PRODUCTS_IMAGE_TITLE' => str_replace('"','',$array['products_name']),
+        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])),
+        'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
+        'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
+        'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
+        'PRODUCTS_SHIPPING_NAME'=>$shipping_status_name,
+        'PRODUCTS_SHIPPING_IMAGE'=>$shipping_status_image,
+        'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0, //DokuMan - 2010-02-26 - set Undefined index
+        'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '', //DokuMan - 2010-02-26 - set Undefined index
+        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>' //GTB - 2010-08-27 make Button Details global
+      );
+                         
+    $productData = array_merge($productData,$productDataAdds);                     
 
     if (count($products_price) > 0) {
       foreach($products_price as $key => $entry) {                  
-         $productData['PRODUCTS_'.strtoupper($key)] = $entry;
+         $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
       }
     }
     //echo '<pre>'.print_r($productData,true).'</pre>';
