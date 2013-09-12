@@ -41,7 +41,7 @@
   define('DB_SERVER_CHARSET', 'utf8'); // set db charset utf8 or latin1
 
   if (DB_DATABASE != '') { 
-    // set admin irectory 
+    // set admin directory DIR_ADMIN
     require(DIR_FS_CATALOG.'inc/set_admin_directory.inc.php');
     // include standard settings
     require(DIR_FS_CATALOG.(defined('RUN_MODE_ADMIN')? DIR_ADMIN : '').'includes/paths.php');
