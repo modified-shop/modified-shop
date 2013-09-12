@@ -93,7 +93,7 @@
                                                session_id,
                                                http_referer
                                           from " . TABLE_WHOS_ONLINE ."
-                                      order by time_last_click desc");
+                                      order by time_last_click desc";
               $whos_online_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $whos_online_query_raw, $whos_online_query_numrows);
               $whos_online_query = xtc_db_query($whos_online_query_raw);                        
               while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
