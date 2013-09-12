@@ -66,7 +66,7 @@ if (!is_object($product) || !$product->isProduct()) {
       if(isset($xsb_tx['XTB_REDIRECT_USER_TO']) && $xsb_tx['products_id'] == $product->data['products_id']) {
         $info_smarty->assign('XTB_REDIRECT_USER_TO', $xsb_tx['XTB_REDIRECT_USER_TO']);
       }
-	}
+	  }
   }
 
   if (ACTIVATE_NAVIGATOR == 'true') {
@@ -101,16 +101,6 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
   }
 
-  // build products price
-  $products_price = $xtPrice->xtcGetPrice(
-                                $product->data['products_id'],
-                                $format = true,
-                                1,
-                                $product->data['products_tax_class_id'],
-                                $product->data['products_price'],
-                                1
-                              );
-
   // check if customer is allowed to add to cart
   if ($_SESSION['customers_status']['customers_status_show_price'] != '0'
       && (($_SESSION['customers_status']['customers_fsk18'] == '1' && $product->data['products_fsk18'] == '0')
@@ -120,6 +110,20 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('ADD_CART_BUTTON', xtc_image_submit('button_in_cart.gif', IMAGE_BUTTON_IN_CART));
   }
 
+  // form tags
+  $info_smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params(array ('action')).'action=add_product')));
+  $info_smarty->assign('FORM_END', '</form>');
+  
+  // load all definitions from product class
+  foreach ($product->buildDataArray($product->data, 'info') as $key => $value) {
+    $info_smarty->assign($key, $value);
+  }
+  
+  /*
+   * assign smarty additional variables or overwrite them
+   * START
+   */
+   
   // show expiry date of active special products
   $special_expires_date_query = "SELECT expires_date
                                    FROM ".TABLE_SPECIALS."
@@ -137,26 +141,6 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('SHIPPING_NAME', $main->getShippingStatusName($product->data['products_shippingtime']));
     $info_smarty->assign('SHIPPING_IMAGE', $main->getShippingStatusImage($product->data['products_shippingtime']));
   }
-
-  // form tags
-  $info_smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_get_all_get_params(array ('action')).'action=add_product')));
-  $info_smarty->assign('FORM_END', '</form>');
-
-  //products formated price
-  $info_smarty->assign('PRODUCTS_PRICE', $products_price['formated']);
-  
-  // load all definitions from product class
-  foreach ($product->buildDataArray($product->data) as $key => $value) {
-    $info_smarty->assign($key, $value);
-  }
-  
-  //get products vpe
-  $info_smarty->assign('PRODUCTS_VPE',$main->getVPEtext($product->data, $products_price['plain'])); //web28 - 2012-04-17 - use classes function getVPEtext() 
-  $info_smarty->assign('PRODUCTS_VPE_VALUE',$product->data['products_vpe_value']);
-  $info_smarty->assign('PRODUCTS_VPE_NAME',$main->vpe_name);
-  
-  // products id
-  $info_smarty->assign('PRODUCTS_ID', $product->data['products_id']);
   
   // price incl tax and shipping link
   if ($_SESSION['customers_status']['customers_status_show_price'] != '0') {
@@ -167,17 +151,12 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('PRODUCTS_SHIPPING_LINK',$main->getShippingLink());
   }
 
-  $info_smarty->assign('PRODUCTS_MODEL', $product->data['products_model']);
-  $info_smarty->assign('PRODUCTS_EAN', $product->data['products_ean']);
-  $info_smarty->assign('PRODUCTS_MANUFACTURERS_MODEL', $product->data['products_manufacturers_model']);
-  $info_smarty->assign('PRODUCTS_QUANTITY', $product->data['products_quantity']);
   $info_smarty->assign('PRODUCTS_WEIGHT', $product->data['products_weight']);
   $info_smarty->assign('PRODUCTS_STATUS', $product->data['products_status']);
   $info_smarty->assign('PRODUCTS_ORDERED', $product->data['products_ordered']);
   $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', $product->data['products_name'], 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
   $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
-  $info_smarty->assign('PRODUCTS_IMAGE', $product->productImage($product->data['products_image'], 'info'));
   $info_smarty->assign('PRODUCTS_POPUP_LINK', 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID=0').'\')');
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 
@@ -208,6 +187,19 @@ if (!is_object($product) || !$product->isProduct()) {
       $info_smarty->assign('PRODUCTS_DISCOUNT', $discount.'%');
   }
 
+  // date available/added
+  if ($product->data['products_date_available'] > date('Y-m-d H:i:s')) {
+    $info_smarty->assign('PRODUCTS_DATE_AVIABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available'])));
+    $info_smarty->assign('PRODUCTS_DATE_AVAILABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available']))); 
+  } elseif ($product->data['products_date_added'] != '0000-00-00 00:00:00') {
+    $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
+  }
+
+  /*
+   * assign smarty additional variables or overwrite them
+   * END
+   */
+
   //include modules
   if ($_SESSION['customers_status']['customers_status_graduated_prices'] == 1) {
     include (DIR_WS_MODULES.FILENAME_GRADUATED_PRICE);
@@ -217,14 +209,6 @@ if (!is_object($product) || !$product->isProduct()) {
   include (DIR_WS_MODULES.FILENAME_PRODUCTS_MEDIA);
   include (DIR_WS_MODULES.FILENAME_ALSO_PURCHASED_PRODUCTS);
   include (DIR_WS_MODULES.FILENAME_CROSS_SELLING);
-
-  // date available/added
-  if ($product->data['products_date_available'] > date('Y-m-d H:i:s')) {
-    $info_smarty->assign('PRODUCTS_DATE_AVIABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available'])));
-    $info_smarty->assign('PRODUCTS_DATE_AVAILABLE', sprintf(TEXT_DATE_AVAILABLE, xtc_date_long($product->data['products_date_available']))); 
-  } elseif ($product->data['products_date_added'] != '0000-00-00 00:00:00') {
-    $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
-  }
 
   // get default product_info template
   if ($product->data['product_template'] == '' || $product->data['product_template'] == 'default') {
