@@ -152,6 +152,9 @@ if (!is_object($product) || !$product->isProduct()) {
     }
   }
 
+  // load all definitions from product class
+  $info_smarty->assign('product_data', $product->buildDataArray($product->data));
+
   //get products vpe
   $info_smarty->assign('PRODUCTS_VPE',$main->getVPEtext($product->data, $products_price['plain'])); //web28 - 2012-04-17 - use classes function getVPEtext() 
   $info_smarty->assign('PRODUCTS_VPE_VALUE',$product->data['products_vpe_value']);
