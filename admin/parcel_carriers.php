@@ -68,7 +68,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <td>
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_configuration.gif'); ?></td>
+                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></td>
                     <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
                   </tr>
                   <tr>

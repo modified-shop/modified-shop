@@ -38,7 +38,7 @@ $blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Kernge
               <td>
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
-                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_content.gif'); ?></td>
+                    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></td>
                     <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
                   </tr>
                   <tr>
