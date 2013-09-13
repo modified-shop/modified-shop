@@ -43,9 +43,6 @@ define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS','ACHTUNG! Eine Standard Kundengru
 define('ERROR_STATUS_USED_IN_CUSTOMERS', 'Error: Diese Kundengruppe ist zur Zeit bei Kunden in Verwendung.');
 define('ERROR_STATUS_USED_IN_HISTORY', 'Error: Diese Kundengruppe wird zur Zeit in der Bestell&uuml;bersicht verwendet.');
 
-define('YES','ja');
-define('NO','nein');
-
 define('TABLE_HEADING_ACTION','Aktion');
 define('TABLE_HEADING_CUSTOMERS_GRADUATED','Staffelpreis');
 define('TABLE_HEADING_CUSTOMERS_STATUS','Kundengruppe');

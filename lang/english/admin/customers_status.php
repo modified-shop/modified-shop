@@ -43,9 +43,6 @@ define('ERROR_REMOVE_DEFAULT_CUSTOMERS_STATUS','ERROR! You cant delete a standar
 define('ERROR_STATUS_USED_IN_CUSTOMERS', 'Error: This customer group is actually in use.');
 define('ERROR_STATUS_USED_IN_HISTORY', 'Error: This customer group is actually in use for order history.');
 
-define('YES','yes');
-define('NO','no');
-
 define('TABLE_HEADING_ACTION','Action');
 define('TABLE_HEADING_CUSTOMERS_GRADUATED','Graduated Price');
 define('TABLE_HEADING_CUSTOMERS_STATUS','Customers Group');
