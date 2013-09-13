@@ -49,103 +49,94 @@
       case 'insert':
       case 'save':
         $customers_status_id = xtc_db_prepare_input($_GET['cID']);
+
         $languages = xtc_get_languages();
-        for ($i=0; $i < sizeof($languages); $i++) {
-          $language_id = $languages[$i]['id'];
+        for ($i=0; $i<sizeof($languages); $i++) {
+          $customers_status_name_array = $_POST['customers_status_name'];
+          $customers_status_public = $_POST['customers_status_public'];
+          $customers_status_show_price = $_POST['customers_status_show_price'];
+          $customers_status_show_price_tax = $_POST['customers_status_show_price_tax'];
+          $customers_status_min_order = $_POST['customers_status_min_order'];
+          $customers_status_max_order = $_POST['customers_status_max_order'];
+          $customers_status_discount = $_POST['customers_status_discount'];
+          $customers_status_ot_discount_flag = $_POST['customers_status_ot_discount_flag'];
+          $customers_status_ot_discount = $_POST['customers_status_ot_discount'];
+          $customers_status_graduated_prices = $_POST['customers_status_graduated_prices'];
+          $customers_status_discount_attributes = $_POST['customers_status_discount_attributes'];
+          $customers_status_add_tax_ot = $_POST['customers_status_add_tax_ot'];
           $customers_status_payment_unallowed = implode(',', (is_array($_POST['customers_status_payment_unallowed']) ? $_POST['customers_status_payment_unallowed'] : array()));
           $customers_status_shipping_unallowed = implode(',', (is_array($_POST['customers_status_shipping_unallowed']) ? $_POST['customers_status_shipping_unallowed'] : array()));
+          $customers_fsk18 = $_POST['customers_fsk18'];
+          $customers_fsk18_display = $_POST['customers_fsk18_display'];
+          $customers_status_write_reviews = $_POST['customers_status_write_reviews'];
+          $customers_status_read_reviews = $_POST['customers_status_read_reviews'];
+          $customers_base_status = $_POST['customers_base_status'];
+
+          $language_id = $languages[$i]['id'];
+
           $sql_data_array = array(
-              'customers_status_name' => xtc_db_prepare_input($_POST['customers_status_name'][$language_id]),
-              'customers_status_public' => xtc_db_prepare_input($_POST['customers_status_public']),
-              'customers_status_show_price' => xtc_db_prepare_input($_POST['customers_status_show_price']),
-              'customers_status_show_price_tax' => xtc_db_prepare_input($_POST['customers_status_show_price_tax']),
-              'customers_status_min_order' => xtc_db_prepare_input($_POST['customers_status_min_order']),
-              'customers_status_max_order' => xtc_db_prepare_input($_POST['customers_status_max_order']),
-              'customers_status_discount' => xtc_db_prepare_input($_POST['customers_status_discount']),
-              'customers_status_ot_discount_flag' => xtc_db_prepare_input($_POST['customers_status_ot_discount_flag']),
-              'customers_status_ot_discount' => xtc_db_prepare_input($_POST['customers_status_ot_discount']),
-              'customers_status_graduated_prices' => xtc_db_prepare_input($_POST['customers_status_graduated_prices']),
-              'customers_status_add_tax_ot' => xtc_db_prepare_input($_POST['customers_status_add_tax_ot']),
-              'customers_status_payment_unallowed' => xtc_db_prepare_input($customers_status_payment_unallowed),
-              'customers_status_shipping_unallowed' => xtc_db_prepare_input($customers_status_shipping_unallowed),
-              'customers_fsk18' => xtc_db_prepare_input($_POST['customers_fsk18']),
-              'customers_fsk18_display' => xtc_db_prepare_input($_POST['customers_fsk18_display']),
-              'customers_status_write_reviews' => xtc_db_prepare_input($_POST['customers_status_write_reviews']),
-              'customers_status_read_reviews' => xtc_db_prepare_input($_POST['customers_status_read_reviews']),
-              'customers_status_discount_attributes' => xtc_db_prepare_input($_POST['customers_status_discount_attributes'])
-            );
+                                  'customers_status_name' => xtc_db_prepare_input($customers_status_name_array[$language_id]),
+                                  'customers_status_public' => xtc_db_prepare_input($customers_status_public),
+                                  'customers_status_show_price' => xtc_db_prepare_input($customers_status_show_price),
+                                  'customers_status_show_price_tax' => xtc_db_prepare_input($customers_status_show_price_tax),
+                                  'customers_status_min_order' => xtc_db_prepare_input($customers_status_min_order),
+                                  'customers_status_max_order' => xtc_db_prepare_input($customers_status_max_order),
+                                  'customers_status_discount' => xtc_db_prepare_input($customers_status_discount),
+                                  'customers_status_ot_discount_flag' => xtc_db_prepare_input($customers_status_ot_discount_flag),
+                                  'customers_status_ot_discount' => xtc_db_prepare_input($customers_status_ot_discount),
+                                  'customers_status_graduated_prices' => xtc_db_prepare_input($customers_status_graduated_prices),
+                                  'customers_status_add_tax_ot' => xtc_db_prepare_input($customers_status_add_tax_ot),
+                                  'customers_status_payment_unallowed' => xtc_db_prepare_input($customers_status_payment_unallowed),
+                                  'customers_status_shipping_unallowed' => xtc_db_prepare_input($customers_status_shipping_unallowed),
+                                  'customers_fsk18' => xtc_db_prepare_input($customers_fsk18),
+                                  'customers_fsk18_display' => xtc_db_prepare_input($customers_fsk18_display),
+                                  'customers_status_write_reviews' => xtc_db_prepare_input($customers_status_write_reviews),
+                                  'customers_status_read_reviews' => xtc_db_prepare_input($customers_status_read_reviews),
+                                  'customers_status_discount_attributes' => xtc_db_prepare_input($customers_status_discount_attributes)
+                                 );
           if ($action == 'insert') {
             if (!xtc_not_null($customers_status_id)) {
               $next_id_query = xtc_db_query("SELECT MAX(customers_status_id) AS customers_status_id FROM " . TABLE_CUSTOMERS_STATUS . "");
               $next_id = xtc_db_fetch_array($next_id_query);
               $customers_status_id = $next_id['customers_status_id'] + 1;
+              // Check if table exists and delete it first
+              xtc_db_query("DROP TABLE IF EXISTS personal_offers_by_customers_status_" . $customers_status_id);
+              // We want to create a personal offer table corresponding to each customers_status
+              xtc_db_query("CREATE TABLE personal_offers_by_customers_status_" . $customers_status_id . " (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, products_id int NOT NULL, quantity int, personal_offer decimal(15,4))");
+              
+              //Check if table column exists 
+              if (!get_table_columns(TABLE_PRODUCTS,'group_permission_' . $customers_status_id)) {
+                xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD  group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
+              }
+              //Check if table column exists
+              if (!get_table_columns(TABLE_CATEGORIES,'group_permission_' . $customers_status_id)) {
+                xtc_db_query("ALTER TABLE  ".TABLE_CATEGORIES." ADD  group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
+              }
+
+              $products_query = xtc_db_query("SELECT price_id, products_id, quantity, personal_offer FROM personal_offers_by_customers_status_" . $customers_base_status ."");
+              while($products = xtc_db_fetch_array($products_query)){
+                $product_data_array = array(
+                                            'price_id' => xtc_db_prepare_input($products['price_id']),
+                                            'products_id' => xtc_db_prepare_input($products['products_id']),
+                                            'quantity' => xtc_db_prepare_input($products['quantity']),
+                                            'personal_offer' => xtc_db_prepare_input($products['personal_offer'])
+                                           );
+                xtc_db_perform('personal_offers_by_customers_status_' . $customers_status_id, $product_data_array);
+              }
             }
             $insert_sql_data = array('customers_status_id' => xtc_db_prepare_input($customers_status_id), 'language_id' => xtc_db_prepare_input($language_id));
             $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_CUSTOMERS_STATUS, $sql_data_array);
           } elseif ($action == 'save') {
+            //BOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
             $customers_status_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS_STATUS." WHERE language_id = '".$language_id."' AND customers_status_id = '".xtc_db_input($customers_status_id)."'");
             if (xtc_db_num_rows($customers_status_query) == 0)
               xtc_db_perform(TABLE_CUSTOMERS_STATUS, array ('customers_status_id' => xtc_db_input($customers_status_id), 'language_id' => $language_id));
-              xtc_db_perform(TABLE_CUSTOMERS_STATUS, $sql_data_array, 'update', "customers_status_id = '" . xtc_db_input($customers_status_id) . "' AND language_id = '" . $language_id . "'");
-          }
-        } # end of languages for-loop
-
-        if ($action == 'insert') {
-          // Check if table exists and delete it first
-          xtc_db_query("DROP TABLE IF EXISTS personal_offers_by_customers_status_" . $customers_status_id);
-
-          // We want to create a personal offer table corresponding to each customers_status
-          xtc_db_query("CREATE TABLE personal_offers_by_customers_status_" . $customers_status_id . " (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, products_id int NOT NULL, quantity int, personal_offer decimal(15,4))");
-
-          // Check if table column exists 
-          if (!get_table_columns(TABLE_PRODUCTS,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD  group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
-          }
-
-          // Check if table column exists
-          if (!get_table_columns(TABLE_CATEGORIES,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD  group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
-          }
-
-          // adopt customer group permission
-          if (isset($_POST['customers_group_adopt_permission']) && $_POST['customers_group_adopt_permission'] !== '') {
-            $adopt_permission = (int)$_POST['customers_group_adopt_permission'];
-            // categories
-            $adopt_categories_permission = xtc_db_query("SELECT categories_id, group_permission_".$adopt_permission." FROM " . TABLE_CATEGORIES);
-            while($adopt_catp = xtc_db_fetch_array($adopt_categories_permission)) {
-              xtc_db_query("UPDATE ".TABLE_CATEGORIES."
-                               SET group_permission_" . $customers_status_id . "=".$adopt_catp['group_permission_'.$adopt_permission]."
-                             WHERE categories_id=".$adopt_catp['categories_id']);
-            }
-            // products
-            $adopt_products_permission = xtc_db_query("SELECT products_id, group_permission_".$adopt_permission." FROM " . TABLE_PRODUCTS);
-            while($adopt_pp = xtc_db_fetch_array($adopt_products_permission)) {
-              xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                               SET group_permission_" . $customers_status_id . "=".$adopt_pp['group_permission_'.$adopt_permission]." 
-                             WHERE products_id=".$adopt_pp['products_id']);
-            }
-            // content
-            $adopt_content_permission = xtc_db_query("SELECT content_id, group_ids FROM " . TABLE_CONTENT_MANAGER . " WHERE group_ids LIKE '%c_".$adopt_permission."_group%'");
-            while ($adopt_cp = xtc_db_fetch_array($adopt_content_permission)) {
-              xtc_db_query("UPDATE " . TABLE_CONTENT_MANAGER . "
-                               SET group_ids=CONCAT(group_ids, ',c_" . $customers_status_id . "_group')
-                             WHERE content_id=" . $adopt_cp['content_id']);
-            }
-          }
-
-          // adopt customer prices
-          $products_query = xtc_db_query("SELECT price_id, products_id, quantity, personal_offer FROM personal_offers_by_customers_status_".(int)$_POST['customers_base_status']."");
-          while($products = xtc_db_fetch_array($products_query)){
-            $product_data_array = array(
-                'price_id' => xtc_db_prepare_input($products['price_id']),
-                'products_id' => xtc_db_prepare_input($products['products_id']),
-                'quantity' => xtc_db_prepare_input($products['quantity']),
-                'personal_offer' => xtc_db_prepare_input($products['personal_offer'])
-              );
-            xtc_db_perform('personal_offers_by_customers_status_' . $customers_status_id, $product_data_array);
+            //EOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
+            xtc_db_perform(TABLE_CUSTOMERS_STATUS, $sql_data_array, 'update', "customers_status_id = '" . xtc_db_input($customers_status_id) . "' AND language_id = '" . $language_id . "'");
           }
         }
+
         $accepted_customers_status_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
         $accepted_customers_status_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
         if ($customers_status_image = xtc_try_upload('customers_status_image', DIR_FS_CATALOG.DIR_WS_ICONS, '', $accepted_customers_status_image_files_extensions, $accepted_customers_status_image_files_mime_types)) {
@@ -404,7 +395,6 @@ require (DIR_WS_INCLUDES.'head.php');
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_write_reviews', $customers_status_write_reviews_array, $cInfo->customers_status_write_reviews));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_READ_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_read_reviews', $customers_status_read_reviews_array, $cInfo->customers_status_read_reviews));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
-                          $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
                           $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                           $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
                           break;
