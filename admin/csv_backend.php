@@ -78,7 +78,7 @@
       <tr>
         <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
   <tr>
-    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading_news.gif'); ?></td>
+    <td width="80" rowspan="2"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></td>
     <td class="pageHeading">CSV Import/Export</td>
   </tr>
   <tr>
