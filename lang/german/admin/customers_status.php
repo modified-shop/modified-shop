@@ -92,6 +92,6 @@ define('ENTRY_CUSTOMERS_STATUS_BASE', 'wird als Grundlage f&uuml;r die Preise de
 
 define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Sichtbarkeitsrechte von einer anderen Kundengruppe &uuml;bernehmen</strong>');
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Die Kategorie-, Artikel- und Content-Sichtbarkeitsrechte von folgender Kundengruppe &uuml;bernehmen:');
-define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Keine Rechte übernehmen');
+define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Keine Rechte &uuml;bernehmen');
 
 ?>
