@@ -352,7 +352,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         }
                         ?>
                         <tr>
-                          <td colspan="6">
+                          <td colspan="11">
                             <table border="0" width="100%" cellspacing="0" cellpadding="2">
                               <tr>
                                 <td class="smallText" valign="top"><?php echo $customers_status_split->display_count($customers_status_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS_STATUS); ?></td>
