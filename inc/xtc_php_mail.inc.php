@@ -147,7 +147,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
   $mail->AddReplyTo($reply_address, $reply_address_name);
 
-  $mail->WordWrap = 50; // set word wrap to 50 characters
+  $mail->WordWrap = (int)EMAIL_WORD_WRAP; // set word wrap
   //create attachments array for better handling
   $attachments = attachments_array($path_to_attachments,$path_to_more_attachments);
   // add attachments
