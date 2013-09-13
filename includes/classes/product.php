@@ -25,7 +25,7 @@ class product {
    * @return product
    */
   function product($pID = 0) {
-    $this->pID = (int)$pID; // DokuMan - 2010-08-28 - typecasting
+    $this->pID = (int)$pID;
     
     //set default select, using in function getAlsoPurchased, getCrossSells, getReverseCrossSells
     $this->default_select ='p.products_fsk18,
@@ -41,11 +41,10 @@ class product {
                             pd.products_name,
                             pd.products_short_description';
 
-    // BOF - Tomcraft - 2009-10-30 - noimage.gif is displayed, when no image is defined
-    //$this->useStandardImage=false;
+    // default products image
     $this->useStandardImage=true;
-    // EOF - Tomcraft - 2009-10-30 - noimage.gif is displayed, when no image is defined
     $this->standardImage='noimage.gif';
+
     if ($pID == 0) {
       $this->isProduct = false;
       return;
@@ -119,7 +118,6 @@ class product {
    * @return array
    */
   function getReviews() {
-    $data_reviews = array ();
     $reviews_query = xtDBquery("SELECT r.reviews_rating,
                                        r.reviews_id,
                                        r.customers_name,
@@ -135,16 +133,15 @@ class product {
                               ORDER BY reviews_id DESC
                               ");
     if (xtc_db_num_rows($reviews_query, true)) {
-      $row = 0;
       $data_reviews = array ();
       while ($reviews = xtc_db_fetch_array($reviews_query, true)) {
-        $row ++;
-        $data_reviews[] = array ('AUTHOR' => $reviews['customers_name'],
-                                 'DATE' => xtc_date_short($reviews['date_added']),
-                                 'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
-                                 'TEXT' => nl2br($reviews['reviews_text']));
-        if ($row == PRODUCT_REVIEWS_VIEW)
-          break;
+        $data_reviews[] = array (
+            'AUTHOR' => $reviews['customers_name'],
+            'DATE' => xtc_date_short($reviews['date_added']),
+            'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+            'TEXT' => nl2br($reviews['reviews_text'])
+          );
+        if (count($data_reviews) == PRODUCT_REVIEWS_VIEW) break;
       }
     }
     return $data_reviews;
@@ -246,9 +243,10 @@ class product {
                       ORDER BY xp.sort_order asc";
         $cross_query = xtDBquery($cross_query);
         if (xtc_db_num_rows($cross_query, true) > 0)
-          $cross_sell_data[$cross_sells['products_xsell_grp_name_id']] = array ('GROUP' => xtc_get_cross_sell_name($cross_sells['products_xsell_grp_name_id']),
-                                                                                'PRODUCTS' => array ()
-                                                                               );
+          $cross_sell_data[$cross_sells['products_xsell_grp_name_id']] = array (
+              'GROUP' => xtc_get_cross_sell_name($cross_sells['products_xsell_grp_name_id']),
+              'PRODUCTS' => array ()
+            );
         while ($xsell = xtc_db_fetch_array($cross_query, true)) {
           $cross_sell_data[$cross_sells['products_xsell_grp_name_id']]['PRODUCTS'][] = $this->buildDataArray($xsell);
         }
@@ -264,6 +262,7 @@ class product {
    */
   function getReverseCrossSells() {
     global $xtPrice;
+
     $fsk_lock = '';
     if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
       $fsk_lock = ' AND p.products_fsk18!=1';
@@ -311,9 +310,10 @@ class product {
                               ORDER BY quantity ASC");
     $staffel = array ();
     while ($staffel_values = xtc_db_fetch_array($staffel_query, true)) {
-      $staffel[] = array ('stk' => $staffel_values['quantity'],
-                          'price' => $staffel_values['personal_offer']
-                         );
+      $staffel[] = array (
+          'stk' => $staffel_values['quantity'],
+          'price' => $staffel_values['personal_offer']
+        );
     }
     $staffel_data = array ();
     for ($i = 0, $n = sizeof($staffel); $i < $n; $i ++) {
@@ -330,12 +330,13 @@ class product {
         $vpe = $vpe * (1 / $this->data['products_vpe_value']);
         $vpe = BASICPRICE_VPE_TEXT.$xtPrice->xtcFormat($vpe, true, $this->data['products_tax_class_id']).TXT_PER.xtc_get_vpe_name($this->data['products_vpe']);
       }
-      $staffel_data[$i] = array ('QUANTITY' => $quantity,
-                                 'PLAIN_QUANTITY' => $staffel[$i]['stk'],
-                                 'VPE' => $vpe,
-                                 'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
-                                 'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
-                                 );
+      $staffel_data[$i] = array (
+          'QUANTITY' => $quantity,
+          'PLAIN_QUANTITY' => $staffel[$i]['stk'],
+          'VPE' => $vpe,
+          'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
+          'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
+        );
     }
     return $staffel_data;
   }
@@ -380,37 +381,31 @@ class product {
    * @return array
    */
   function buildDataArray(&$array,$image='thumbnail') {
-    global $xtPrice,$main;
+    global $xtPrice, $main;
 
     //get tax rate
-    $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0; //DokuMan: set Undefined index
+    $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;
 
     //get products price , returns array
     $products_price = $xtPrice->xtcGetPrice($array['products_id'], $format = true, 1, $array['products_tax_class_id'], $array['products_price'], 1);
 
     //create buy now button
     $buy_now = '';
-    if ($_SESSION['customers_status']['customers_status_show_price'] != '0' && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false') {
-      if ($_SESSION['customers_status']['customers_fsk18'] == '1') {
-        if (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')
-          $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
-      } else {
-        $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
-      }
+    if ($_SESSION['customers_status']['customers_status_show_price'] != '0' && defined('SHOW_BUTTON_BUY_NOW') && SHOW_BUTTON_BUY_NOW != 'false'
+        && ($_SESSION['customers_status']['customers_fsk18'] != '1' || (isset($array['products_fsk18']) && $array['products_fsk18'] == '0')) ) {
+      $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
     }
 
     //get $shipping_status_name, $shipping_status_image
+    $shipping_status_name = $shipping_status_image = '';
     if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
       $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
       $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);
-    } else {
-      $shipping_status_name = '';
-      $shipping_status_image = '';
     }
     
     //get products image, imageinfo array
     $products_image = $this->productImage($array['products_image'], $image);    
-    $p_img = substr($products_image,strlen(DIR_WS_BASE)); //web28 - 2011-01-24 - FIX DIR_WS_BASE
+    $p_img = substr($products_image, strlen(DIR_WS_BASE));
     $img_attr = '';
     if (file_exists($p_img)) {
       list($width, $height, $type, $img_attr) = getimagesize($p_img);
@@ -418,11 +413,10 @@ class product {
 
     //products data array
     $productData = array();
-    if (count($array) > 0) {
-      foreach($array as $key => $entry) {                  
-         $productData[strtoupper($key)] = $entry;
-      }
+    foreach((array)$array as $key => $entry) {                  
+      $productData[strtoupper($key)] = $entry;
     }
+
     $productDataAdds = array (
         'PRODUCTS_PRICE' => $products_price['formated'],
         'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
@@ -438,18 +432,17 @@ class product {
         'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
         'PRODUCTS_SHIPPING_NAME'=>$shipping_status_name,
         'PRODUCTS_SHIPPING_IMAGE'=>$shipping_status_image,
-        'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0, //DokuMan - 2010-02-26 - set Undefined index
-        'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '', //DokuMan - 2010-02-26 - set Undefined index
-        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>' //GTB - 2010-08-27 make Button Details global
+        'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
+        'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
+        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>'
       );
-                         
+
     $productData = array_merge($productData,$productDataAdds);                     
 
-    if (count($products_price) > 0) {
-      foreach($products_price as $key => $entry) {                  
-         $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
-      }
+    foreach((array)$products_price as $key => $entry) {                  
+      $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
     }
+
     //echo '<pre>'.print_r($productData,true).'</pre>';
     return $productData;
   }
@@ -474,12 +467,10 @@ class product {
         break;
     }
 
-    if (empty($name)) { // vr - 2010-04-09 no distinction between "name is null" and "name == ''"
-      // BOF - Tomcraft - 2009-11-12 - noimage.gif is displayed, when no image is defined
+    if (empty($name)) {
       //if ($this->useStandardImage == 'true' && $this->standardImage != '') // comment in when "noimage.gif" should be displayed when there is no image defined in the database
       //  return $path.$this->standardImage; // comment in when "noimage.gif" should be displayed when there is no image defined in the database
       return $name; // comment out when "noimage.gif" should be displayed when there is no image defined in the database
-      // EOF - Tomcraft - 2009-11-12 - noimage.gif is displayed, when no image is defined
     } else {
       // check if image exists
       if (!file_exists($path.$name)) {
