@@ -818,3 +818,6 @@ define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In der Breadcru
 
 define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
 define('TEMPLATE_ENGINE_DESC', 'Welche Smarty Version soll verwendet werden?<br/><br/><b>Hinweis:</b> Bei &auml;lteren oder modifizierten Templates kann es zu Problemen mit Smarty 3 kommen, da sich zum Teil die Syntax ver&auml;ndert hat.');
+
+define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text E-Mails');
+define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).');

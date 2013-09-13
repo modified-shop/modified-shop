@@ -818,3 +818,6 @@ define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In the breadcru
 
 define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
 define('TEMPLATE_ENGINE_DESC', 'Choose the Smarty version.<br/><br/><b>Attention:</b> In Smarty 3 there is a new syntax and older templates may not work properly.');
+
+define('EMAIL_WORD_WRAP_TITLE', 'WordWrap for text e-mails');
+define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).');
