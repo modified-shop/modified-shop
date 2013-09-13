@@ -93,4 +93,7 @@ define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'New Customer Group');
 define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Basis Kundengruppe für Artikelpreise</strong>');
 define('ENTRY_CUSTOMERS_STATUS_BASE', 'wird als Grundlage für die Preise der neuen Kundengruppe gewählt. Wenn Auswahl = Admin werden keine Preise für die neue Kundengruppe angelegt.');
 
+define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Adopt customer group permissions</strong>');
+define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Adopt visibility rights for categories, products and content pages of the following customer group:');
+define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Don\'t adopt any rights');
 ?>
