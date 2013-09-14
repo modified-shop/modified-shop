@@ -820,4 +820,4 @@ define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
 define('TEMPLATE_ENGINE_DESC', 'Welche Smarty Version soll verwendet werden?<br/><br/><b>Hinweis:</b> Bei &auml;lteren oder modifizierten Templates kann es zu Problemen mit Smarty 3 kommen, da sich zum Teil die Syntax ver&auml;ndert hat.');
 
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text E-Mails');
-define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).');
+define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');

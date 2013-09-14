@@ -820,4 +820,4 @@ define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
 define('TEMPLATE_ENGINE_DESC', 'Choose the Smarty version.<br/><br/><b>Attention:</b> In Smarty 3 there is a new syntax and older templates may not work properly.');
 
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap for text e-mails');
-define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).');
+define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).<br /><strong>Attention:</strong> A character count greater than 76 may cause the shop mails to be categorized as SPAM by SpamAssassin.<br />More infos <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">here</a>.');
