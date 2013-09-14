@@ -225,7 +225,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_get_path($current_category_id = '', $clean = false) {
     global $cPath_array;
     if (empty($current_category_id)) {
-      $cPath_new = implode('_', $cPath_array);
+      $cPath_new = implode('_', (array)$cPath_array);
     } else {
       if (sizeof($cPath_array) == 0) {
         $cPath_new = $current_category_id;
