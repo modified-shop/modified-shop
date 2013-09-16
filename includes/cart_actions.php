@@ -37,7 +37,7 @@ if (xtc_not_null($action)) {
     xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
   }
 
-  $parameters = array ('action', 'products_id', 'pid');
+  $parameters = array ('action', 'products_id', 'pid', 'info_message_3');
   if (DISPLAY_CART == 'true') {
     $goto = FILENAME_SHOPPING_CART;
     $parameters[] = 'cPath';
@@ -78,8 +78,10 @@ if (xtc_not_null($action)) {
           $econda->_delArticle($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $_POST['old_qty'][$i]);
 
         } else {
-          if ($cart_quantity > MAX_PRODUCTS_QTY)
+          if ($cart_quantity > MAX_PRODUCTS_QTY) {
             $cart_quantity = MAX_PRODUCTS_QTY;
+            $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
+          }
           $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
 
           if (isset($econda) && is_object($econda)) {
@@ -90,7 +92,7 @@ if (xtc_not_null($action)) {
           unset($cart_quantity);
         }
       }
-      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters), 'NONSSL'));
+      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
       break;
 
     // customer adds a product from the products page
@@ -99,6 +101,7 @@ if (xtc_not_null($action)) {
         $cart_quantity = (xtc_remove_non_numeric($_POST['products_qty']) + $_SESSION['cart']->get_quantity(xtc_get_uprid($_POST['products_id'], isset($_POST['id'])?$_POST['id']:'')));
         if ($cart_quantity > MAX_PRODUCTS_QTY) {
           $cart_quantity = MAX_PRODUCTS_QTY;
+          $info_message = '&info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
         }
         if (isset($econda) && is_object($econda)) {
           $econda->_emptyCart();
@@ -107,7 +110,7 @@ if (xtc_not_null($action)) {
         }
         $_SESSION['cart']->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:''); //DokuMan - 2012-06-11 - added isset-check for $_POST['id']
       }
-      xtc_redirect(xtc_href_link($goto, 'products_id=' . (int)$_POST['products_id'] . '&' . xtc_get_all_get_params($parameters)));
+      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . 'products_id=' . (int)$_POST['products_id'] . $info_message));
       break;
 
     case 'check_gift':
@@ -154,11 +157,12 @@ if (xtc_not_null($action)) {
         }
         if ($_POST['quickie'] != '') {
           $act_qty = $_SESSION['cart']->get_quantity(xtc_get_uprid($quickie['products_id'], 1));
-          if ($act_qty > MAX_PRODUCTS_QTY) {
+          if ($act_qty+1 > MAX_PRODUCTS_QTY) {
             $act_qty = MAX_PRODUCTS_QTY - 1;
+            $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
           }
           $_SESSION['cart']->add_cart($quickie['products_id'], $act_qty +1, 1);
-          xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params(array('action')), 'NONSSL'));
+          xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
         } else {
           xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords=' . $quicky, 'NONSSL'));
         }
@@ -196,6 +200,7 @@ if (xtc_not_null($action)) {
             $cart_quantity = ($_SESSION['cart']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'],''))+1);
             if ($cart_quantity > MAX_PRODUCTS_QTY) {
               $cart_quantity = MAX_PRODUCTS_QTY;
+              $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
             }
             if (isset($econda) && is_object($econda)) {
               $econda->_emptyCart();
@@ -208,7 +213,7 @@ if (xtc_not_null($action)) {
           }
         }
       }
-      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params(array ('action','BUYproducts_id'))));
+      xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message));
       break;
 
     case 'cust_order':
