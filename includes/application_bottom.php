@@ -42,7 +42,7 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
 }
 
 /******** Findologic **********/
-if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True') {
+if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True' && MODULE_FINDOLOGIC_AUTOCOMPLETE == 'True') {
   echo '
   <script
       type="text/javascript"
