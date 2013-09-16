@@ -85,18 +85,6 @@ if ($gv_result = xtc_db_fetch_array($gv_query)) {
 }
 // GV Code End
 
-// Google Conversion tracking
-if (GOOGLE_CONVERSION == 'true') {
-  $smarty->assign('google_tracking', 'true');
-  $smarty->assign('tracking_code', '
-    <noscript>
-    <a href="http://services.google.com/sitestats/'.GOOGLE_LANG.'.html" onclick="window.open(this.href); return false;">
-    <img height=27 width=135 border=0 src="http://www.googleadservices.com/pagead/conversion/'.GOOGLE_CONVERSION_ID.'/?hl='.GOOGLE_LANG.'" />
-    </a>
-    </noscript>
-        ');
-}
-
 if (DOWNLOAD_ENABLED == 'true') {
   include (DIR_WS_MODULES.'downloads.php');
 }
