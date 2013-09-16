@@ -570,7 +570,7 @@ function xtcCheckSpecial($pID) {
           'save_percent' =>  $save_percent,
           'save_diff' =>  $save_diff,
           'from' =>  $from,
-          'flag' = 'SpecialDiscount'          
+          'flag' => 'SpecialDiscount'          
         );
       }
     } else {
