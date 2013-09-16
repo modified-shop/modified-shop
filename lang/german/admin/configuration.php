@@ -576,6 +576,8 @@ define('GOOGLE_CONVERSION_ID_TITLE','Conversion ID');
 define('GOOGLE_CONVERSION_ID_DESC','Ihre Google Conversion ID');
 define('GOOGLE_LANG_TITLE','Google Sprache');
 define('GOOGLE_LANG_DESC','ISO Code der verwendeten Sprache');
+define('GOOGLE_CONVERSION_LABEL_TITLE','Google Conversion Label');
+define('GOOGLE_CONVERSION_LABEL_DESC','Ihr Google Conversion Label');
 
 // Afterbuy
 define('AFTERBUY_ACTIVATED_TITLE','Aktiv');
