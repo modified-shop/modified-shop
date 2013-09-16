@@ -369,10 +369,11 @@ class xtcPrice {
    * @return Double special offer
    */
   function xtcCheckSpecial($pID) {
-    $product_query = xtDBquery("select specials_new_products_price
-                                from ".TABLE_SPECIALS."
-                                where products_id = '".$pID."'
-                                and status=1");
+    $product_query = xtDBquery("SELECT specials_new_products_price
+                                  FROM ".TABLE_SPECIALS."
+                                 WHERE products_id = '".$pID."'
+                                   AND status = 1
+                               ");
     $product = xtc_db_fetch_array($product_query, true);
     return $product['specials_new_products_price'];
   }
@@ -551,7 +552,8 @@ return array(
       $special_price = $this->xtcFormat($sPrice, $format);
       $save_percent = round(($pPrice - $sPrice) / $pPrice * 100);
       $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $this->checkAttributes($pID) . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
+      $from = $this->checkAttributes($pID);
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $from . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
       if ($discount != 0) {
         // customer group discount
         $price .= '<br />' . BOX_LOGINBOX_DISCOUNT . ': ' . round($discount) . ' %';
@@ -566,7 +568,9 @@ return array(
           'special_price' =>  $special_price,
           'old_price' =>  $old_price,
           'save_percent' =>  $save_percent,
-          'save_diff' =>  $save_diff
+          'save_diff' =>  $save_diff,
+          'from' =>  $from,
+          'flag' = 'SpecialDiscount'          
         );
       }
     } else {
@@ -595,8 +599,8 @@ return array(
       $special_price = $this->xtcFormat($sPrice, $format);
       $save_percent = round($discount);
       $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
-      
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $this->checkAttributes($pID) . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
+      $from = $this->checkAttributes($pID);
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $from . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
       if ($vpeStatus == 0) {
         return $price;
       } else {
@@ -606,7 +610,9 @@ return array(
           'special_price' =>  $special_price,
           'old_price' =>  $old_price,
           'save_percent' =>  $save_percent,
-          'save_diff' =>  $save_diff
+          'save_diff' =>  $save_diff,
+          'from' =>  $from,
+          'flag' = 'Special' 
         );
       }
     } else {
@@ -639,6 +645,7 @@ return array(
       $sQuery = xtc_db_fetch_array($sQuery, true);
       $old_price = '';
       $special_price = '';
+      $from = '';
       if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
         $bestPrice = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
         if ($discount) {
@@ -650,7 +657,8 @@ return array(
       } else if ($sPrice != $pPrice) {
         $old_price = $this->xtcFormat($pPrice, $format);
         $special_price = $this->xtcFormat($sPrice, $format);
-        $price = '<span class="productOldPrice">' . MSRP . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $this->checkAttributes($pID) . $special_price;
+        $from = $this->checkAttributes($pID);
+        $price = '<span class="productOldPrice">' . MSRP . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $from . $special_price;
       } else {
         $price = $this->xtcFormat($sPrice, $format);
       }
@@ -662,7 +670,9 @@ return array(
           'formated' => $price,
           'plain' => $sPrice,
           'special_price' =>  $special_price,
-          'old_price' =>  $old_price
+          'old_price' =>  $old_price,
+          'from' =>  $from,
+          'flag' = 'SpecialGraduated' 
         );
       }
     } else {
