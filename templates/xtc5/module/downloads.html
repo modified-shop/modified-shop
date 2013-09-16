@@ -24,6 +24,8 @@
     {if $dl_prevented eq 'true'}
       {if $dl_not_found}
         <p>{#download_not_found#}</p>
+      {elseif $dl_exceeded eq 'true'}
+        <p>{#download_exceeded#}</p>
       {else}
         <p>{#download_not_allowed#}</p>
       {/if}
