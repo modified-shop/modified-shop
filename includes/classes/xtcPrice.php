@@ -672,7 +672,7 @@ function xtcCheckSpecial($pID) {
           'special_price' =>  $special_price,
           'old_price' =>  $old_price,
           'from' =>  $from,
-          'flag' = 'SpecialGraduated' 
+          'flag' => 'SpecialGraduated' 
         );
       }
     } else {
