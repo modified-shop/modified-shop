@@ -104,7 +104,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
         $info_message = '';
         if ($_SESSION['old_customers_basket'] === true) {
           unset($_SESSION['old_customers_basket']);
-          $info_message = 'info_message_3=TEXT_SAVED_BASKET';
+          $info_message = 'info_message=TEXT_SAVED_BASKET';
         }
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, $info_message),'NONSSL'); 
       } else {          
