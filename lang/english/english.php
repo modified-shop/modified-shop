@@ -531,5 +531,5 @@ define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify t
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products from a last visit.');
-define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.');
+define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum Quantity for the last added / updated Article reached. The Quantity was reduced automatically.');
 ?>
