@@ -128,7 +128,9 @@
                           <td class="dataTableContent" align="center"><?php echo $whos_online['customer_id']; ?></td>
                           <td class="dataTableContent" align="center"><?php echo $whos_online['full_name']; ?></td>
                           <td class="dataTableContent" align="center"><a href="<?php echo WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address']; ?>" style="font-weight:bold; text-decoration:underline;" target="_blank"><?php echo $whos_online['ip_address']; ?></a><?php echo (isset($whos_online_hostname) ? $whos_online_hostname : ''); ?></td>
-                          <!--td class="dataTableContent" align="center"><?php echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')'; ?></td-->
+                          <!--td class="dataTableContent" align="center"><?php if (isset($geoip_data['geoplugin_countryName'])) {
+                                                                                  echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')';
+                                                                                } ?></td-->
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
                           <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                           <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
