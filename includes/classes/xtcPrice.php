@@ -612,7 +612,7 @@ function xtcCheckSpecial($pID) {
           'save_percent' =>  $save_percent,
           'save_diff' =>  $save_diff,
           'from' =>  $from,
-          'flag' = 'Special' 
+          'flag' => 'Special' 
         );
       }
     } else {
