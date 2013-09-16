@@ -261,8 +261,12 @@ if ($_SESSION['cart']->count_contents() > 0) {
   $smarty->assign('cart_empty', $cart_empty);
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 }
+
 if (isset($_GET['info_message'])) {
   $smarty->assign('info_message', constant($_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+}
+if (isset($_GET['info_message_3'])) {
+  $smarty->assign('info_message_3', constant($_GET['info_message_3']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
 }
 //BOF - web28 - 2011-05-15 - new continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
