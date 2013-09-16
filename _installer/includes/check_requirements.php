@@ -21,14 +21,11 @@
       $php_flag = true;
       $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
     }
-    /*
     if(version_compare(phpversion(), PHP_VERSION_MAX, ">")){
       $error_flag = true;
       $php_flag = true;
       $message .= '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.';
     }
-    */
-    //EOF - Dokuman - 2012-11-19: remove irritating PHP-Version message
   } else {
     $error_flag = true;
     $php_flag = true;
