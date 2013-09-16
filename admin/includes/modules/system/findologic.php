@@ -56,8 +56,11 @@ define('MODULE_FINDOLOGIC_CUSTOMER_GROUP_DESC' , 'Bitte w&auml;hlen Sie die Kund
 define('MODULE_FINDOLOGIC_CURRENCY_TITLE' , '<hr noshade>W&auml;hrung:');
 define('MODULE_FINDOLOGIC_CURRENCY_DESC' , 'W&auml;hrung in der Exportdatei');
 
-define('MODULE_FINDOLOGIC_STATUS_DESC','Modul aktivieren?');
-define('MODULE_FINDOLOGIC_STATUS_TITLE','Status');
+define('MODULE_FINDOLOGIC_STATUS_TITLE' , 'Status');
+define('MODULE_FINDOLOGIC_STATUS_DESC' , 'Modul aktivieren?');
+
+define('MODULE_FINDOLOGIC_AUTOCOMPLETE_TITLE' , 'Autocomplete Suche');
+define('MODULE_FINDOLOGIC_AUTOCOMPLETE_DESC' , 'Autocomplete Feature in der Suchbox aktivieren?');
 
 
 // include needed functions
@@ -106,6 +109,7 @@ class findologic {
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_CUSTOMER_GROUP', '1',  '6', '1', '', now())"); // interne Funktion vorhanden?
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_CURRENCY', 'EUR',  '6', '1', '', now())"); // interne Funktion vorhanden?
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_AUTOCOMPLETE', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
   }
 
   function remove() {
@@ -114,7 +118,7 @@ class findologic {
 
   function keys() {
     //return array('MODULE_FINDOLOGIC_STATUS','MODULE_FINDOLOGIC_SHOP_ID','MODULE_FINDOLOGIC_SHOP_URL','MODULE_FINDOLOGIC_SERVICE_URL','MODULE_FINDOLOGIC_NET_PRICE','MODULE_FINDOLOGIC_ALIVE_TEST_TIMEOUT','MODULE_FINDOLOGIC_REQUEST_TIMEOUT','MODULE_FINDOLOGIC_EXPORT_FILENAME','MODULE_FINDOLOGIC_REVISION','MODULE_FINDOLOGIC_LANG','MODULE_FINDOLOGIC_CUSTOMER_GROUP','MODULE_FINDOLOGIC_CURRENCY');
-    return array('MODULE_FINDOLOGIC_STATUS','MODULE_FINDOLOGIC_SHOP_ID','MODULE_FINDOLOGIC_SERVICE_URL','MODULE_FINDOLOGIC_EXPORT_FILENAME','MODULE_FINDOLOGIC_LANG','MODULE_FINDOLOGIC_CUSTOMER_GROUP','MODULE_FINDOLOGIC_CURRENCY'); // Changed to static value
+    return array('MODULE_FINDOLOGIC_STATUS','MODULE_FINDOLOGIC_SHOP_ID','MODULE_FINDOLOGIC_SERVICE_URL','MODULE_FINDOLOGIC_EXPORT_FILENAME','MODULE_FINDOLOGIC_LANG','MODULE_FINDOLOGIC_CUSTOMER_GROUP','MODULE_FINDOLOGIC_CURRENCY','MODULE_FINDOLOGIC_AUTOCOMPLETE'); // Changed to static value
   }
 }
 ?>
