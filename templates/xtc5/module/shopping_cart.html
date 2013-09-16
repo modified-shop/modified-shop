@@ -5,7 +5,6 @@
   <p>{#text_empty#}</p>
   <p>{$BUTTON_CONTINUE}</p>
 {else}
-  {if $info_message_3 != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$info_message_3}</div>{/if}
   {$FORM_ACTION}
   {$HIDDEN_OPTIONS}
   <p>{$MODULE_order_details}</p>

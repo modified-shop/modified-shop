@@ -711,5 +711,4 @@ define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformationen 
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
-define('TEXT_PRODUCTS_QTY_REDUCED', 'Die maximal erlaubte St&uuml;ckzahl f&uuml;r den zuletzt hinzugef&uuml;gten bzw. ge&auml;nderten Artikel wurde &uuml;berschritten. Die St&uuml;ckzahl wurde automatisch auf die maximal erlaubte St&uuml;ckzahl reduziert.');
 ?>

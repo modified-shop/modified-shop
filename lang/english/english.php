@@ -554,5 +554,4 @@ define('TEXT_AGB_CHECKOUT','Please take note of our general terms & conditions %
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products from a last visit.');
-define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.');
 ?>
