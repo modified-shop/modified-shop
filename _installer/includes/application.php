@@ -52,10 +52,9 @@
   require_once(DIR_FS_CATALOG.'includes/filenames.php');
   require_once(DIR_FS_CATALOG.'includes/database_tables.php');
   require_once(DIR_FS_INC.'xtc_image.inc.php');
-  require_once(DIR_FS_INC.'set_admin_directory.inc.php');
   
   // set admin directory
-  set_admin_directory();
+  require_once(DIR_FS_INC.'set_admin_directory.inc.php');
 
   define('CR', "\n");
   define('BOX_BGCOLOR_HEADING', '#bbc3d3');

@@ -570,7 +570,7 @@ return array(
           'save_percent' =>  $save_percent,
           'save_diff' =>  $save_diff,
           'from' =>  $from,
-          'flag' = 'SpecialDiscount'          
+          'flag' => 'SpecialDiscount'          
         );
       }
     } else {
@@ -612,7 +612,7 @@ return array(
           'save_percent' =>  $save_percent,
           'save_diff' =>  $save_diff,
           'from' =>  $from,
-          'flag' = 'Special' 
+          'flag' => 'Special' 
         );
       }
     } else {
@@ -672,7 +672,7 @@ return array(
           'special_price' =>  $special_price,
           'old_price' =>  $old_price,
           'from' =>  $from,
-          'flag' = 'SpecialGraduated' 
+          'flag' => 'SpecialGraduated' 
         );
       }
     } else {
