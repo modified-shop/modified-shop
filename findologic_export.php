@@ -7,7 +7,7 @@
 	 */
 	
 	require ('includes/application_top.php');
-	require_once(DIR_WS_INCLUDES . "findologic_config.inc.php");
+  require_once (DIR_FS_EXTERNAL.'findologic/findologic_config.inc.php');
 
 	if ((!array_key_exists("shop", $_GET)) || ($_GET["shop"] != FL_SHOP_ID)) {
 		die('Unauthorized access!');
