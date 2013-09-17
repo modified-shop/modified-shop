@@ -34,12 +34,14 @@ UPDATE admin_access SET xajax = 1 WHERE customers_id = 'groups' LIMIT 1;
 UPDATE tax_rates SET tax_description = '19%', last_modified = NOW() WHERE tax_description = 'MwSt 19%';
 UPDATE tax_rates SET tax_description = '7%', last_modified = NOW() WHERE tax_description = 'MwSt 7%';
 
-#Tomcraft - 2011-03-02 - Added status for cancelled orders
+#Tomcraft - 2011-03-02 - Added status for cancelled orders with ID 0
 #(Set next available number for status ID in both languages)
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
-  SELECT MAX(orders_status_id)+1, 1, 'Cancelled' FROM orders_status;
-INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
-  SELECT MAX(orders_status_id)+1, 2, 'Storniert' FROM orders_status;
+INSERT INTO orders_status VALUES (0,1,'Cancelled');
+INSERT INTO orders_status VALUES (0,2,'Storniert');
+#INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
+#  SELECT MAX(orders_status_id)+1, 1, 'Cancelled' FROM orders_status;
+#INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
+#  SELECT MAX(orders_status_id)+1, 2, 'Storniert' FROM orders_status;
 
 # hendrik - 2011-05-14 - independent invoice number and date
 ALTER TABLE orders
