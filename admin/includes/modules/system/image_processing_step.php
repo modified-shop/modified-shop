@@ -52,15 +52,14 @@ if ( !class_exists( "image_processing_step" ) ) {
       global $current_page;
       $this->code = 'image_processing_step';
       $this->title = MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE;
-      $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, $_GET['max']);
-      $this->sort_order = MODULE_STEP_IMAGE_PROCESS_SORT_ORDER;
+      $this->description = sprintf(MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION, 5);
+      $this->sort_order = defined('MODULE_STEP_IMAGE_PROCESS_SORT_ORDER')?MODULE_STEP_IMAGE_PROCESS_SORT_ORDER:0;
       $this->enabled = ((MODULE_STEP_IMAGE_PROCESS_STATUS == 'True') ? true : false);
       $this->module_filename = $current_page;
       $this->properties = array();
 
       //define used get parameters
       $this->get_params = array('set' => $_GET['set'],
-                                'file'=> $_GET['file'],
                                 'module'=> $this->code,
                                 'start'=> 0,
                                 'action' => 'module_processing_do'
@@ -68,7 +67,9 @@ if ( !class_exists( "image_processing_step" ) ) {
       //define used post parameters
       $this->post_params = array('max_datasets','only_missing_images');
 
-      $this->ready_text = IMAGE_STEP_INFO . $_GET['count']. IMAGE_STEP_INFO_READY;
+      if (isset($_GET['count'])) {
+        $this->ready_text = IMAGE_STEP_INFO . $_GET['count']. IMAGE_STEP_INFO_READY;
+      }
     }
 
 
@@ -100,7 +101,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       $limit = $offset + $step;
       for ($i=$offset; $i<$limit; $i++) {
         if ($i >= $max_files) { // FERTIG
-          xtc_redirect(xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&action=ready&module='.$this->code.'&count='. $count.'&max_datasets='. $_GET['max_datasets'])); //FERTIG
+          xtc_redirect(xtc_href_link($this->module_filename, 'set=' . $this->get_params['set'] . '&action=ready&module='.$this->code.'&count='. $count.'&max_datasets='. $_GET['max_datasets'])); //FERTIG
         }
         $products_image_name = $files[$i]['text'];
 
