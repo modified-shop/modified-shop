@@ -1,52 +1,32 @@
 <?php
-	/*	File:		autocomplete.php
-	*	Version:	4.1
-	*	Date:		21.Jan.2010
-	*       $Revision: 216 $
-	*	FINDOLOGIC GmbH
-	*/
+/* -----------------------------------------------------------------------------------------
+   $Id$
 
-	/* check if the server allows fopen with URLs */
-	if (!ini_get('allow_url_fopen')) {
-		die('allow_url_fopen is not enabled, please check your server config');
-	}
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-	require('includes/application_top.php');
-	require_once(DIR_WS_INCLUDES . 'findologic_config.inc.php');
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2010 FINDOLOGIC GmbH - Version: 4.1 (216)
 
-	/*
-	 *	do http-request
-	 */
-	$parameters = $_GET;
-	$parameters['shopkey'] = FL_SHOP_ID;
-	$parameters['revision'] = FL_REVISION;
+   Released under the GNU General Public License 
+   ---------------------------------------------------------------------------------------*/
 
-	/* manually pass the arg_separator as '&' to avoid problems with different configurations */
-	$url = FL_SERVICE_URL."autocomplete.php?" . http_build_query($parameters, '', '&');
+  require('includes/application_top.php');
+  require_once (DIR_FS_EXTERNAL.'findologic/findologic_config.inc.php');
 
-	$handle = fopen($url,'r');
+  // load needed function
+  require_once (DIR_FS_INC.'get_external_content.inc.php');
 
-	/* check if the connection to the autocomplete service was successful */
-	if ($handle === false) {
-		die('Could not connect to search service, please check your shop config');
-	}
+  // do http-request
+  $parameters = $_GET;
+  $parameters['shopkey'] = FL_SHOP_ID;
+  $parameters['revision'] = FL_REVISION;
 
-	/* get the Content-type (which includes the charset) from the http response and pass it through */
-	$meta_data = stream_get_meta_data($handle);
-	$meta_data = $meta_data['wrapper_data'];
-	$meta_data = array_values(preg_grep('/Content-Type/', $meta_data));
-	if (count($meta_data) == 1) {
-		header($meta_data[0]);
-	}
+  /* manually pass the arg_separator as '&' to avoid problems with different configurations */
+  $url = FL_SERVICE_URL."autocomplete.php?" . http_build_query($parameters, '', '&');
+  $content = get_external_content($url, FL_ALIVE_TEST_TIMEOUT, false);   
+  echo $content;
 
-	if (!$handle) {
-		$content = "";
-	} else {
-		$content = "";
-		while (!feof($handle)) {
-			$content .= fread($handle, 512);
-		}
-		fclose($handle);
-	}
-
-	echo $content;
+?>
