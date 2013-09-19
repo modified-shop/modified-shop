@@ -14,13 +14,13 @@ include 'includes/' . (isset($_REQUEST['speed']) ? (file_exists('includes/local/
 
 // extension
 $ajax_ext = preg_replace("/[^a-z0-9\\.\\_]/i", "", $_REQUEST['ext']);
-$ajax_ext_file = DIR_WS_MODULES . 'ajax/' . $ajax_ext . '.php';
+$ajax_ext_file = DIR_WS_INCLUDES . 'extra/ajax/' . $ajax_ext . '.php';
 
 // response type (e.g. json, xml or html): default is json
 $ajax_rt = (isset($_REQUEST['type']) ?  preg_replace("/[^h-x]/i", "", $_REQUEST['type']) : 'json');
 
 // return error if file not exist or include it
-(!file_exists($ajax_ext_file) ? die('extension does not exist!') : include $ajax_ext_file);
+(!file_exists($ajax_ext_file) ? die('extension '.$ajax_ext.' does not exist!') : include $ajax_ext_file);
 
 // execute extension in ajax module dir
 $response = (function_exists($ajax_ext) ? $ajax_ext() : (is_object($ajax_ext) ? new $ajax_ext : die("function/object $ajax_ext does not exist")));

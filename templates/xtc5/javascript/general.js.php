@@ -17,10 +17,8 @@
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.js" type="text/javascript"></script>
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/thickbox.js" type="text/javascript"></script>
 
-<?php // BOF - web28 - 2010-07-09 - TABS/ACCORDION in product_info ?>
-<?php
-if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
-?>
+
+<?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info - web28 ?>
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
@@ -35,7 +33,39 @@ if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
 	});
 /*]]>*/
 </script>
-<?php
+<?php } // TABS/ACCORDION in product_info - web28 ?>
+
+<?php // Ajax State/District/Bundesland Updater - h-h-h
+$state_pages = array('address_book_process.php','create_account.php','create_guest_account.php','checkout_shipping_address.php','checkout_payment_address.php');
+if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) { ?>
+<script type="text/javascript">
+/* <![CDATA[ */
+function load_state() {
+  var selection = $("select[name='country']").val();
+  $.get('ajax.php', {ext: 'get_states', country: selection, speed: 1}, function(data) {
+    if (data != '' && data != undefined) {  
+      $("[name='state']").replaceWith('<select name="state"></select>');
+      var stateSelect = $("[name='state']");
+      $.each(data, function(id, text) {
+        $("<option />", {
+          "value"   : text,
+          "text"    : text
+        }).appendTo(stateSelect);
+      });
+    } else {
+      $("[name='state']").replaceWith('<input type="text" name="state"></input>');
+    }
+  });
 }
-?>
-<?php // EOF - web28 - 2010-07-09 - TABS/ACCORDION in product_info ?>
+$(function() {
+  if ($("[name=state]").length) {
+    $("select[name='country']").change(function() { load_state(); });
+    if ($('div.errormessage').length == 0 && $("select[type=state] option:selected").length == 0) {
+      load_state();
+    }
+  }
+});
+/*]]>*/
+</script>
+<?php } // Ajax State/District/Bundesland Updater - h-h-h ?>
+
