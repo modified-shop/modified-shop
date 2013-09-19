@@ -289,10 +289,9 @@ $main = new main();
 require (DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
 
-// econda tracking
-if (TRACKING_ECONDA_ACTIVE == 'true') {
-  require(DIR_FS_EXTERNAL . 'econda/class.econda304SP2.php');
-  $econda = new econda();
+// create the shopping cart & fix the cart if necesary
+if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
+  $_SESSION['cart'] = new shoppingCart();
 }
 
 // PayPal Express
@@ -301,9 +300,11 @@ if (defined('PAYPAL_API_VERSION')) {
   $o_paypal = new paypal_checkout();
 }
 
-// create the shopping cart & fix the cart if necesary
-if (!isset($_SESSION['cart']) || !is_object($_SESSION['cart'])) {
-  $_SESSION['cart'] = new shoppingCart();
+// econda tracking
+if (TRACKING_ECONDA_ACTIVE == 'true') {
+  require(DIR_FS_EXTERNAL . 'econda/class.econda.php');
+  require(DIR_FS_EXTERNAL . 'econda/emos.php');
+  $econda = new econda();
 }
 
 require (DIR_WS_INCLUDES.FILENAME_CART_ACTIONS);
