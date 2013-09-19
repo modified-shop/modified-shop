@@ -60,9 +60,6 @@ if (xtc_not_null($action)) {
 
     // customer wants to update the product quantity in their shopping cart
     case 'update_product':
-      if (isset($econda) && is_object($econda)) {
-        $econda->_emptyCart();
-      }
       for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
 
           $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);
@@ -74,9 +71,6 @@ if (xtc_not_null($action)) {
           if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array ()))) {
           $_SESSION['cart']->remove($_POST['products_id'][$i]);
 
-          if (isset($econda) && is_object($econda))
-          $econda->_delArticle($_POST['products_id'][$i], $_POST['cart_quantity'][$i], $_POST['old_qty'][$i]);
-
         } else {
           if ($cart_quantity > MAX_PRODUCTS_QTY) {
             $cart_quantity = MAX_PRODUCTS_QTY;
@@ -84,10 +78,6 @@ if (xtc_not_null($action)) {
           }
           $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
 
-          if (isset($econda) && is_object($econda)) {
-            $old_quantity = $_SESSION['cart']->get_quantity(xtc_get_uprid($_POST['products_id'][$i], $_POST['id'][$i]));
-            $econda->_updateProduct($_POST['products_id'][$i], $cart_quantity, $old_quantity);
-          }
           $_SESSION['cart']->add_cart($_POST['products_id'][$i], $cart_quantity, $attributes, false);
           unset($cart_quantity);
         }
@@ -103,12 +93,7 @@ if (xtc_not_null($action)) {
           $cart_quantity = MAX_PRODUCTS_QTY;
           $info_message = '&info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
         }
-        if (isset($econda) && is_object($econda)) {
-          $econda->_emptyCart();
-          $old_quantity = $_SESSION['cart']->get_quantity(xtc_get_uprid($_POST['products_id'], isset($_POST['id'])?$_POST['id']:''));
-          $econda->_addProduct($_POST['products_id'], $cart_quantity, $old_quantity);
-        }
-        $_SESSION['cart']->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:''); //DokuMan - 2012-06-11 - added isset-check for $_POST['id']
+        $_SESSION['cart']->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:'');
       }
       xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . 'products_id=' . (int)$_POST['products_id'] . $info_message));
       break;
@@ -201,11 +186,6 @@ if (xtc_not_null($action)) {
             if ($cart_quantity > MAX_PRODUCTS_QTY) {
               $cart_quantity = MAX_PRODUCTS_QTY;
               $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
-            }
-            if (isset($econda) && is_object($econda)) {
-              $econda->_emptyCart();
-              $old_quantity = $_SESSION['cart']->get_quantity($_GET['BUYproducts_id']);
-              $econda->_addProduct($_GET['BUYproducts_id'], $cart_quantity, $old_quantity);
             }
             $_SESSION['cart']->add_cart($_GET['BUYproducts_id'], $cart_quantity);
           } else {
