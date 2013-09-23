@@ -106,7 +106,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
 }
 
-auto_require(DIR_FS_CATALOG.'includes/extra/application_top__export_begin/','php');
+eval(auto_require(DIR_FS_CATALOG.'includes/extra/application_top__export_begin/','php'));
 
 // if gzip_compression is enabled, start to buffer the output
 if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
@@ -117,5 +117,5 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
   }
 }
 
-auto_require(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php');
+eval(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php'));
 ?>

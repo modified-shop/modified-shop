@@ -125,5 +125,5 @@
   define('TABLE_EASYBILL_DATEV', 'easybill_datev');
 	define('TABLE_EASYBILL', 'easybill');
   
-  auto_require(DIR_FS_CATALOG.'includes/extra/database_tables/','php');
+  eval(auto_require(DIR_FS_CATALOG.'includes/extra/database_tables/','php'));
 ?>
