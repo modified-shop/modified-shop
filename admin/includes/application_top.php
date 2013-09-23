@@ -382,9 +382,7 @@ if (!isset($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN));
 }
 
-if (xtc_check_permission($pagename) == '0') {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN));
-}
+xtc_check_permission($pagename);
 
 // Smarty Template Engine
 require (DIR_FS_EXTERNAL . 'smarty/smarty_2/Smarty.class.php');
