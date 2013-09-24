@@ -263,7 +263,7 @@ if (SESSION_CHECK_USER_AGENT == 'True') {
   }
   if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
     session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 }
 
@@ -275,7 +275,7 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   }
   if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
     session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 }
 
@@ -303,7 +303,7 @@ if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_
 // write customers status in session
 require ('../' . DIR_WS_INCLUDES . 'write_customers_status.php');
 if (file_exists($current_page) == false OR $_SESSION['customers_status']['customers_status_id'] !== '0') {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+  xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
 }
 
 // for tracking of customers
@@ -384,12 +384,10 @@ xtc_get_customers_statuses();
 
 $pagename = strtok($current_page, '.');
 if (!isset($_SESSION['customer_id'])) {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+  xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
 }
 
-if (xtc_check_permission($pagename) == '0') {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN));
-}
+xtc_check_permission($pagename);
 
 // Smarty Template Engine
 require (DIR_FS_EXTERNAL . 'smarty/smarty_2/Smarty.class.php');

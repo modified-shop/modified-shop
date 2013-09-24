@@ -174,16 +174,13 @@
    */
   function xtc_check_permission($pagename) {
     if ($pagename != 'index') {
-      $access_permission_query = xtc_db_query("select ".$pagename." from ".TABLE_ADMIN_ACCESS." where customers_id = '".$_SESSION['customer_id']."'");
+      $access_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
       $access_permission = xtc_db_fetch_array($access_permission_query);
-      if (($_SESSION['customers_status']['customers_status_id'] == '0') && ($access_permission[$pagename] == '1')) {
+      if (($_SESSION['customers_status']['customers_status_id'] == '0') && isset($access_permission[$pagename]) && ($access_permission[$pagename] == '1')) { 
         return true;
-      } else {
-        return false;
-      }
-    } else {
-      xtc_redirect(xtc_href_link(FILENAME_LOGIN));
-    }
+      } 
+    } 
+    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 
   // Redirect to another page or site
