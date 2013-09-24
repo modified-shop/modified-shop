@@ -96,5 +96,5 @@ define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_PAYPAL', 'paypal.php');
 define('FILENAME_FINDOLOGIC', 'findologic.php');
 
-eval(auto_require(DIR_FS_CATALOG.'includes/extra/filenames/','php'));
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
 ?>

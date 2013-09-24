@@ -12,14 +12,14 @@
 
 function auto_require($dir, $ext='php') 
 {
-    $str_auto_require = '';
+    $arr_auto_require = array();
     if ($extra_files = @scandir($dir)) {            
         foreach ($extra_files as $filename) {
             $filename_array = explode('.', $filename);
             if (end($filename_array) == $ext) { 
-                $str_auto_require .= 'require("'.$dir . $filename.'");'. PHP_EOL;                
+                $arr_auto_require[] = $dir . $filename;                
             }
         }
     }
-    return $str_auto_require;
+    return $arr_auto_require;
 }
