@@ -180,7 +180,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
         return true;
       }
     }
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN));
+    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 
   // Redirect to another page or site
