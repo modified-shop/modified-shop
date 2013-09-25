@@ -1,0 +1,38 @@
+<?php
+/**
+ * $Id: get_states.php 7777 2012-06-15 20:20:00Z h-h-h $
+ *
+ * modified eCommerce Shopsoftware
+ * http://www.modified-shop.org
+ *
+ * Copyright (c) 2009 - 2013 [www.modified-shop.org]
+ *
+ *
+ * Hacker Solutions - AJAX GET STATES
+ * web: www.hackersolutions.com 
+ * mail: support@hackersolutions.com
+ * 
+ * Released under the GNU General Public License
+ */
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+
+function get_states() {
+
+  xtc_db_connect() or die('Unable to connect to database server!');
+
+  $query = xtc_db_query("
+      SELECT zone_name
+        FROM zones
+       WHERE zone_country_id = '".(int)$_GET['country']."'
+    ORDER BY zone_name");
+
+  $zones = array ();
+  if (xtc_db_num_rows($query)) {
+    while ($zones_values = xtc_db_fetch_array($query)) {
+      $zones[] = iconv("ISO-8859-1", "UTF-8", $zones_values['zone_name']);
+    }
+  }
+
+  return $zones;
+}
+?>
