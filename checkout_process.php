@@ -59,58 +59,19 @@ if($error_mess!='') {
 }
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
-// if the customer is not logged on, redirect them to the login page
-if (!isset ($_SESSION['customer_id'])) {
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-}
-
-if ($_SESSION['customers_status']['customers_status_show_price'] != '1') {
-  //BOF - web28.de - FIX redirect to NONSSL
-  //xtc_redirect(xtc_href_link(FILENAME_DEFAULT, '', ''));
-  xtc_redirect(xtc_href_link(FILENAME_DEFAULT,'','NONSSL'));
-  //EOF - web28.de - FIX redirect to NONSSL
-}
-
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-/*
-if (!isset ($_SESSION['sendto'])) {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-}
-
-if ((xtc_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset ($_SESSION['payment']))) {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-}
-
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
-  if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-  }
-}
-*/
-if (!isset ($_SESSION['sendto'])) {
-  if($_SESSION['payment']=='paypalexpress') {
+### Paypal Express Modul
+if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
+  // avoid hack attempts during the checkout procedure by checking the internal cartID
+  if (isset($_SESSION['cartID']) && $_SESSION['cart']->cartID != $_SESSION['cartID']) {
     xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
-  } else {
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+  }
+  if (!isset($_SESSION['sendto'])) {
+    xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
   }
 }
+### Paypal Express Modul
 
-if ((xtc_not_null(MODULE_PAYMENT_INSTALLED)) && (!isset ($_SESSION['payment']))) {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
-}
-
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
-  if ($_SESSION['cart']->cartID != $_SESSION['cartID']) {
-    if($_SESSION['payment']=='paypalexpress') {
-      xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
-    } else {
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-    }
-  }
-}
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
 require_once  (DIR_WS_CLASSES.'payment.php');
@@ -118,11 +79,6 @@ if (isset ($_SESSION['credit_covers'])) {
   $_SESSION['payment'] = ''; //ICW added for CREDIT CLASS 
 }
 $payment_modules = new payment($_SESSION['payment']);
-
-// if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!isset ($_SESSION['shipping'])) {
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-}
 
 // load the selected shipping module
 require (DIR_WS_CLASSES.'shipping.php');
