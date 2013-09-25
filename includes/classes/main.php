@@ -31,10 +31,10 @@ class main {
                              WHERE language_id = ".(int)$_SESSION['languages_id']);
 
     while ($status_data=xtc_db_fetch_array($status_query,true)) {
-           $this->SHIPPING[$status_data['shipping_status_id']] = array(
-             'name'=>$status_data['shipping_status_name'],
-             'image'=>$status_data['shipping_status_image']
-           );
+      $this->SHIPPING[$status_data['shipping_status_id']] = array(
+        'name'=>$status_data['shipping_status_name'],
+        'image'=>$status_data['shipping_status_image']
+        );
     }
   }
 
@@ -45,7 +45,7 @@ class main {
    * @return  string
    */
   function getShippingStatusName($id) {
-    return isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '';
+     return isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '';
   }
 
   /**
@@ -56,7 +56,7 @@ class main {
    */
   function getShippingStatusImage($id) {
     if (isset($this->SHIPPING[$id]['image']) && $this->SHIPPING[$id]['image'] != '') {
-      return DIR_WS_BASE.'images/icons/'.$this->SHIPPING[$id]['image']; //DokuMan - 2011-09-06 - move images from admin directory to public images/icons/ directory
+      return DIR_WS_CATALOG.DIR_WS_IMAGES.$this->SHIPPING[$id]['image'];
     } else {
       return;
     }
@@ -155,16 +155,16 @@ class main {
     if (!defined('POPUP_CONTENT_LINK_CLASS')) {
       define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
     }
-    return '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.POPUP_CONTENT_LINK_PARAMETERS, $ssl).'" title="Information" class="'.POPUP_CONTENT_LINK_CLASS.'"><font color="#ff0000">'.$text.'</font></a>';
+    return '<a style="color:#ff0000;" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.POPUP_CONTENT_LINK_PARAMETERS, $ssl).'" title="Information" class="'.POPUP_CONTENT_LINK_CLASS.'">'.$text.'</a>';
   }
-
+  
   /**
    * getContentData
    *
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID) {
+  function getContentData($coID) { 
     $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'" : '';
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,

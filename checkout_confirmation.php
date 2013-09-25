@@ -134,20 +134,6 @@ if (is_array($payment_modules->modules)) {
 // $shipping_modules = new shipping($_SESSION['shipping']);
 // EOF - tonne1 2012-04-22 - moved up so GLOBALS is complete for OT process
 
-// Stock Check
-$any_out_of_stock = false;
-if (STOCK_CHECK == 'true') {
-  for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
-    if (xtc_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
-      $any_out_of_stock = true;
-    }
-  }
-  // Out of Stock
-  if ((STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true)) {
-    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-  }
-}
-
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
 

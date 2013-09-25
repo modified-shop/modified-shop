@@ -61,7 +61,6 @@ class ot_coupon {
 
   function process() {
     global $order, $xtPrice;
-    //BOF -web28- 2010-05-23 - BUGFIX - tax_deduction, $order->info['subtotal']
     $order_total = $this->get_order_total(); //Betrag,  der für die Kuponberechnung verwendet wird
     $od_amount = $this->calculate_credit($order_total);  //Kuponbetrag berechnen
     $this->deduction = $od_amount;
@@ -74,11 +73,12 @@ class ot_coupon {
       $order->info['total'] = $xtPrice->xtcFormat($order->info['total'] - $od_amount, false);
       $order->info['deduction'] = $od_amount;
       $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;
-      $this->output[] = array ('title' => $this->title.' '.$this->coupon_code.$this->tax_info.':',
-                               'text' => '<strong><font color="#ff0000">'.$xtPrice->xtcFormat($od_amount*(-1), true).'</font></strong>',
-                               'value' => $od_amount *(-1)); //2011-08-25 - web28 - fix negativ sign
+      $this->output[] = array (
+          'title' => $this->title.' '.$this->coupon_code.$this->tax_info.':',
+          'text'  => '<b style="#ff0000">'.$xtPrice->xtcFormat($od_amount*(-1), true).'</b>',
+          'value' => $od_amount *(-1) // web28 - 2011-08-25 - fix negativ sign
+        );
     }
-    //EOF -web28- 2010-05-23 - BUGFIX - tax_deduction, $order->info['subtotal']
   }
 
 ///////////////////////////////////////////////////////////////////////
@@ -96,8 +96,7 @@ class ot_coupon {
 ///////////////////////////////////////////////////////////////////////
 
   function use_credit_amount() {
-    $output_string = ''; //DokuMan - 2010-08-30 - set missing variable
-    return $output_string;
+    return '';
   }
 
 ///////////////////////////////////////////////////////////////////////
