@@ -45,35 +45,11 @@ require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
 require (DIR_WS_CLASSES.'http_client.php');
 
-// check if checkout is allowed
-if (isset($_SESSION['allow_checkout']) && $_SESSION['allow_checkout'] == 'false') {
-  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-}
-
-// if the customer is not logged on, redirect them to the login page
-if (!isset ($_SESSION['customer_id'])) {
-  if (ACCOUNT_OPTIONS == 'guest') {
-    xtc_redirect(xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'));
-  } else {
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
-}
-
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-if ($_SESSION['cart']->count_contents() < 1) {
-  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-}
-//BOF - Dokuman - 2009-06-06 - checkout only if minimum order value is reached
-if ($_SESSION['cart']->show_total() > 0 ) {
-  if ($_SESSION['cart']->show_total() < $_SESSION['customers_status']['customers_status_min_order'] ) {
-    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-  }
-}
-//EOF - Dokuman - 2009-06-06 - checkout only if minimum order value is reached
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // if no shipping destination address was selected, use the customers own address as default
 if (!isset ($_SESSION['sendto'])) {
-  $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
+	$_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 } else {
   // verify the selected shipping address
   $check_address_query = xtc_db_query("select count(*) as total from ".TABLE_ADDRESS_BOOK." where customers_id = '".(int) $_SESSION['customer_id']."' and address_book_id = '".(int) $_SESSION['sendto']."'");

@@ -73,9 +73,11 @@ class ot_gv {
       $order->info['total'] = $order->info['total'] - $od_amount;
 
       if ($od_amount > 0) {
-        $this->output[] = array ('title' => $this->title.':', 
-                                 'text' => '<strong><font color="#ff0000">'.$xtPrice->xtcFormat($od_amount *(-1), true).'</font></strong>', //2011-08-25 - web28 - fix negativ sign
-                                 'value' => $xtPrice->xtcFormat($od_amount *(-1), false)); //2011-08-25 - web28 - fix negativ sign //DokuMan - 2011-11-18 - from SP1b
+        $this->output[] = array (
+            'title' => $this->title . ':', 
+            'text'  => '<b style="color:#ff0000">'.$xtPrice->xtcFormat($od_amount *(-1), true).'</b>', //2011-08-25 - web28 - fix negativ sign
+            'value' => $xtPrice->xtcFormat($od_amount *(-1), false) //2011-08-25 - web28 - fix negativ sign
+          );
       }
     }
   }
