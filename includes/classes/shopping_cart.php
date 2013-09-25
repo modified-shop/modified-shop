@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: shopping_cart.php 1922 2011-05-09 13:43:48Z dokuman $
+   $Id: shopping_cart.php 5640 2013-09-10 14:49:46Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
