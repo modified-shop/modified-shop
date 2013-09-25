@@ -432,11 +432,6 @@ define('ERROR_INVALID_STARTDATE_COUPON','Your coupon is not available yet.');
 define('ERROR_INVALID_FINISDATE_COUPON','Your voucher is already expired.');
 define('PERSONAL_MESSAGE', '%s writes:');
 
-//Popup Window
-// BOF - DokuMan - 2010-02-25 removed double definition 
-//define('TEXT_CLOSE_WINDOW', 'Close window.');
-// EOF - DokuMan - 2010-02-25 removed double definition 
-
 /*
  *
  * CUOPON POPUP
@@ -454,23 +449,20 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />This voucher is valid from: %s to %
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Product / Category Restrictions');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
-//BOF - DokuMan - 2010-10-28 - Added text-constant for emailing voucher
+
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
-//EOF - DokuMan - 2010-10-28 - Added text-constant for emailing voucher
 
 // VAT Reg No
 define('ENTRY_VAT_TEXT','* for EU-Countries only'); // anmerkung: besser wenn laden im EU ausland ist
 define('ENTRY_VAT_ERROR', 'The chosen VAT Reg No is not valid or cannot be verified at the moment! Please enter a valid VAT Reg No or leave this field empty.');
 define('MSRP','MSRP');
 define('YOUR_PRICE','your price ');
-// BOF - Tomcraft - 2009-10-09 - Added text-constant for unit price
 define('UNIT_PRICE','unit price ');
-// EOF - Tomcraft - 2009-10-09 - Added text-constant for unit price
-define('ONLY',' Now only ');// DokuMan - Werbung mit durchgestrichenen Statt-Preisen ist zulässig
+define('ONLY',' Now only ');
 define('FROM','from ');
 define('YOU_SAVE','you save ');
-define('INSTEAD','Our previous price ');// DokuMan - Werbung mit durchgestrichenen Statt-Preisen ist zulässig
+define('INSTEAD','Our previous price ');
 define('TXT_PER',' per ');
 define('TAX_INFO_INCL','%s VAT incl.');
 define('TAX_INFO_EXCL','%s VAT excl.');
@@ -478,18 +470,15 @@ define('TAX_INFO_ADD','%s VAT plus.');
 define('SHIPPING_EXCL','excl.');
 define('SHIPPING_COSTS','Shipping costs'); 
 
-// changes 3.0.4 SP2
 define('SHIPPING_TIME','Shipping time: ');
 define('MORE_INFO','[More]');
 
-// changes 3.0.4 SP2.2
 define('ENTRY_PRIVACY_ERROR','Please accept our privacy policy!');
 define('TEXT_PAYMENT_FEE','Paymentfee');
 
 define('_MODULE_INVALID_SHIPPING_ZONE', 'Unfortunately we do not deliver to the chosen country.');
 define('_MODULE_UNDEFINED_SHIPPING_RATE', 'Shipping costs cannot be calculated at the moment, please contact us.');
 
-//Dokuman - 2009-08-21 - Added 'delete account' functionality for customers
 define('NAVBAR_TITLE_1_ACCOUNT_DELETE', 'Your account');
 define('NAVBAR_TITLE_2_ACCOUNT_DELETE', 'Delete account');	
 
@@ -498,7 +487,13 @@ define('ERROR_EMAIL','<p><b>Your e-mail address:</b> None or invalid input!</p>'
 define('ERROR_VVCODE','<p><b>Security code:</b> No match, please enter your security code again!</p>');
 define('ERROR_MSG_BODY','<p><b>Your message:</b> No input!</p>');
 
-// BOF - web28 - 2010-05-07 - PayPal API Modul
+//Table Header checkout_confirmation.php
+define('HEADER_QTY', 'Number');
+define('HEADER_ARTICLE', 'Item');    
+define('HEADER_SINGLE', 'Singleprice');
+define('HEADER_TOTAL','Total');
+
+### PayPal API Modul
 define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
 define('PAYPAL_ERROR','PayPal abort');
 define('PAYPAL_NOT_AVIABLE','PayPal Express is not available.<br />Please select another method of payment<br />or try again later.<br />');
@@ -511,20 +506,16 @@ define('PAYPAL_TAX','Tax');
 define('PAYPAL_EXP_WARN','Note! Possibly resulting forwarding expenses are only computed in the shop finally.');
 define('PAYPAL_EXP_VORL','Provisional forwarding expenses');
 define('PAYPAL_EXP_VERS','12.90');
-// 09.01.11
 define('PAYPAL_ADRESSE','The country in your PayPal dispatch address is not registered in our shop.<br />Please contact us.<br />Thanks for you understanding.<br />From PayPal received country: ');
-// 17.09.11
 define('PAYPAL_AMMOUNT_NULL','The order sum which can be expected (without dispatch) is directly 0.<br />Thus PayPal express is not available.<br />Please select another payment means.<br />Thanks for your understanding.<br />');
-// EOF - web28 - 2010-05-07 - PayPal API Modul
+### PayPal API Modul
 
-define('BASICPRICE_VPE_TEXT','in this volume only '); // Hetfield - 2009-11-26 - Added language definition for vpe at graduated prices
-//web - 2010-07-11 - Preisanzeige bei Staffelpreisen (größte Staffel)
+define('BASICPRICE_VPE_TEXT','in this volume only ');
 define('GRADUATED_PRICE_MAX_VALUE', 'from');
+define('_SHIPPING_TO', 'shipping to ');
 
-// BOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 define('ERROR_SQL_DB_QUERY','We are sorry, but an database error has occurred somewhere on this page!');
 define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home page in %s seconds!');
-// EOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 
 define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %s and Cancellation Policy %s');
 define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');

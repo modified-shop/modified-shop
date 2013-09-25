@@ -41,25 +41,19 @@ require_once (DIR_FS_INC . 'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 
-// BOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
-require (DIR_WS_LANGUAGES.$_SESSION['language'].'/checkout_confirmation.php');
-// EOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
-
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 //check if display conditions on checkout page is true
-
-if (isset ($_POST['payment']))
+if (isset($_POST['payment']))
   $_SESSION['payment'] = xtc_db_prepare_input($_POST['payment']);
 
 if ($_POST['comments_added'] != '')
   $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
 
-//-- TheMedia Begin check if display conditions on checkout page is true
-if (isset ($_POST['cot_gv']))
-  $_SESSION['cot_gv'] = true;
-// if conditions are not accepted, redirect the customer to the payment method selection page
+// check if display conditions on checkout page is true
+if (isset($_POST['cot_gv']))  $_SESSION['cot_gv'] = true;
 
+// if conditions are not accepted, redirect the customer to the payment method selection page
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
   if (!isset($_POST['conditions']) || $_POST['conditions'] == false) {
     $error = str_replace('\n', '<br />', ERROR_CONDITIONS_NOT_ACCEPTED);
@@ -69,7 +63,7 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-if (isset ($_SESSION['credit_covers']) || !isset($_SESSION['payment'])) { //DokuMan - 2010-10-14 - check that payment is not yet set
+if (isset($_SESSION['credit_covers']) || !isset($_SESSION['payment'])) {
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
 }
 $payment_modules = new payment($_SESSION['payment']);
@@ -88,8 +82,8 @@ $order_total_modules->pre_confirmation_check();
 // GV Code End
 
 // GV Code line changed
-if(isset($_SESSION['payment']) && $_SESSION['payment'] != 'no_payment') { //web28 - 2012-04-27 - fix for coupon amount == order total
-  if ((is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && (!is_object($$_SESSION['payment'])) && (!isset ($_SESSION['credit_covers']))) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false))) {
+if(isset($_SESSION['payment']) && $_SESSION['payment'] != 'no_payment') { // fix for coupon amount == order total
+  if ((is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && (!is_object($$_SESSION['payment'])) && (!isset($_SESSION['credit_covers']))) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false))) {
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
   }
 }
@@ -97,6 +91,7 @@ if(isset($_SESSION['payment']) && $_SESSION['payment'] != 'no_payment') { //web2
 if (is_array($payment_modules->modules)) {
   $payment_modules->pre_confirmation_check();
 }
+
 // load the selected shipping module
 require (DIR_WS_CLASSES . 'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
@@ -118,7 +113,7 @@ $smarty->assign('DELIVERY_LABEL', xtc_address_format($order->delivery['format_id
 if (!isset($_SESSION['credit_covers']) || $_SESSION['credit_covers'] != '1') {
   $smarty->assign('BILLING_LABEL', xtc_address_format($order->billing['format_id'], $order->billing, 1, ' ', '<br />'));
 }
-$smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL')); // web28 - 2011-04-14 - change SSL -> NONSSL
+$smarty->assign('PRODUCTS_EDIT', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
 $smarty->assign('SHIPPING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL'));
 $smarty->assign('BILLING_ADDRESS_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT_ADDRESS, '', 'SSL'));
 
@@ -131,7 +126,6 @@ if ($_SESSION['sendto'] != false) {
 
 //new output array, set in includes/classes/order.php function cart
 $smarty->assign('PRODUCTS_ARRAY', $order->products);
-//echo print_r($order->products);  //DEBUG
 
 $smarty->assign('ORDER_TAX_GROUPS', sizeof($order->info['tax_groups']));
 
@@ -148,57 +142,43 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
   $smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_modules->output_array());
 }
 
-if (is_array($payment_modules->modules)) {
-  if ($confirmation = $payment_modules->confirmation()) {
-    $payment_info = '';//$confirmation['title'];
-    if (isset($confirmation['fields'])) { //DokuMan - 2010-09-17 - Undefined index
-      $smarty->assign('PAYMENT_INFORMATION', $confirmation['fields']);
-    }
-  }
+if (is_array($payment_modules->modules) && ($confirmation = $payment_modules->confirmation())) { // $confirmation['title'];
+  $smarty->assign('PAYMENT_INFORMATION', (isset($confirmation['fields']) ? $confirmation['fields'] : ''));
 }
 
 if (xtc_not_null($order->info['comments'])) {
   $smarty->assign('ORDER_COMMENTS', nl2br(encode_htmlspecialchars($order->info['comments'])) . xtc_draw_hidden_field('comments', $order->info['comments']));
 }
 
-if (isset ($$_SESSION['payment']->form_action_url) && (!isset($$_SESSION['payment']->tmpOrders) || !$$_SESSION['payment']->tmpOrders)) {
+if (isset($$_SESSION['payment']->form_action_url) && (!isset($$_SESSION['payment']->tmpOrders) || !$$_SESSION['payment']->tmpOrders)) {
   $form_action_url = $$_SESSION['payment']->form_action_url;
 } else {
   $form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 }
 $smarty->assign('CHECKOUT_FORM', xtc_draw_form('checkout_confirmation', $form_action_url, 'post'));
-$payment_button = '';
-if (is_array($payment_modules->modules)) {
-  $payment_button .= $payment_modules->process_button();
-}
-$smarty->assign('MODULE_BUTTONS', $payment_button);
+$smarty->assign('MODULE_BUTTONS', (is_array($payment_modules->modules) ? $payment_modules->process_button() : ''));
 $smarty->assign('CHECKOUT_BUTTON', xtc_image_submit('button_confirm_order.gif', IMAGE_BUTTON_CONFIRM_ORDER) . '</form>' . "\n");
 
 //check if display conditions on checkout page is true
 if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   //revocation  
   $shop_content_data = $main->getContentData(REVOCATION_ID);
-
   $smarty->assign('REVOCATION', $shop_content_data['content_text']);
   $smarty->assign('REVOCATION_TITLE', $shop_content_data['content_heading']);
-  $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL'));
-
+  $smarty->assign('REVOCATION_LINK', $main->getContentLink(REVOCATION_ID, MORE_INFO, 'SSL'));
   //agb
   $shop_content_data = $main->getContentData(3);
-
   $smarty->assign('AGB_TITLE', $shop_content_data['content_heading']);
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
   $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
 }
 
 $smarty->assign('language', $_SESSION['language']);
-//$smarty->assign('PAYMENT_BLOCK', $payment_block); //DokuMan - PAYMENT_BLOCK not needed in checkout_confimation
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
-if (!defined('RM')) {
-  $smarty->load_filter('output', 'note');
-}
+if (!defined('RM')) $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE . '/index.html');
+
 include ('includes/application_bottom.php');
 ?>
