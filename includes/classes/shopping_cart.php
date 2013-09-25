@@ -538,7 +538,7 @@ class shoppingCart {
                 'qty' => $this->contents[$products_id]['qty'],
                 'weight' => $products['products_weight'],
                 'shipping_time' =>(ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null,
-                'final_price' => ($products_price + $this->attributes_price($products_id) * $this->contents[$products_id]['qty']),
+                'final_price' => (($products_price + $this->attributes_price($products_id)) * $this->contents[$products_id]['qty']),
                 'tax_class_id' => $products['products_tax_class_id'],
                 'tax' => isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0,
                 'attributes' => isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null
