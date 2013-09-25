@@ -44,23 +44,8 @@ require_once (DIR_FS_INC . 'xtc_display_tax_value.inc.php');
 // BOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
 require (DIR_WS_LANGUAGES.$_SESSION['language'].'/checkout_confirmation.php');
 // EOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
-// if the customer is not logged on, redirect them to the login page
-if (!isset ($_SESSION['customer_id']))
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-if ($_SESSION['cart']->count_contents() < 1)
-  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
-  if ($_SESSION['cart']->cartID != $_SESSION['cartID'])
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-}
-
-// if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!isset ($_SESSION['shipping']))
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 //check if display conditions on checkout page is true
 
@@ -115,20 +100,6 @@ if (is_array($payment_modules->modules)) {
 // load the selected shipping module
 require (DIR_WS_CLASSES . 'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
-
-// Stock Check
-$any_out_of_stock = false;
-if (STOCK_CHECK == 'true') {
-  for ($i = 0, $n = sizeof($order->products); $i < $n; $i++) {
-    if (xtc_check_stock($order->products[$i]['id'], $order->products[$i]['qty'])) {
-      $any_out_of_stock = true;
-   }
-  }
-  // Out of Stock
-  if ((STOCK_ALLOW_CHECKOUT != 'true') && ($any_out_of_stock == true)) {
-    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-  }
-}
 
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
 $breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);

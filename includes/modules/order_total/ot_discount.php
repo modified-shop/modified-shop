@@ -37,9 +37,11 @@
       $this->title = $_SESSION['customers_status']['customers_status_ot_discount'] . ' % ' . MODULE_ORDER_TOTAL_DISCOUNT_TITLE;
       if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1' && $_SESSION['customers_status']['customers_status_ot_discount']!='0.00') {
         $discount_price = $xtPrice->xtcFormat($order->info['subtotal'], false) / 100 * $_SESSION['customers_status']['customers_status_ot_discount']*-1;
-        $this->output[] = array('title' => $this->title . ':',
-                                'text' => '<font color="#ff0000">'.$xtPrice->xtcFormat($discount_price,true).'</font>',
-                                'value' => $discount_price);
+        $this->output[] = array(
+            'title' => $this->title . ':',
+            'text'  => '<b style="color:#ff0000">'.$xtPrice->xtcFormat($discount_price,true).'</b>',
+            'value' => $discount_price
+          );
       }
     }
 

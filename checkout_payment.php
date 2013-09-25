@@ -47,42 +47,10 @@ require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); //Dokuman - 2009-10-02 - added moneybookers payment module version 2.4
 
-// if the customer is not logged on, redirect them to the login page
-if (!isset ($_SESSION['customer_id'])) {
-  if (ACCOUNT_OPTIONS == 'guest') {
-    xtc_redirect(xtc_href_link(FILENAME_CREATE_GUEST_ACCOUNT, '', 'SSL'));
-  } else {
-    xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-  }
-}
+if (isset($_SESSION['credit_covers']))
+  unset($_SESSION['credit_covers']); //ICW ADDED FOR CREDIT CLASS SYSTEM
 
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-if ($_SESSION['cart']->count_contents() < 1)
-  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-
-// if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!isset ($_SESSION['shipping']))
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
-  if ($_SESSION['cart']->cartID != $_SESSION['cartID'])
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-}
-
-if (isset ($_SESSION['credit_covers']))
-  unset ($_SESSION['credit_covers']); //ICW ADDED FOR CREDIT CLASS SYSTEM
-// Stock Check
-if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
-  $products = $_SESSION['cart']->get_products();
-  $any_out_of_stock = 0;
-  for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
-    if (xtc_check_stock($products[$i]['id'], $products[$i]['quantity']))
-      $any_out_of_stock = 1;
-  }
-  if ($any_out_of_stock == 1)
-    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-}
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // if no billing destination address was selected, use the customers own address as default
 if (!isset ($_SESSION['billto'])) {

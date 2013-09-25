@@ -110,7 +110,7 @@
 
   function xtc_db_data_seek($db_query, $row_number, $cq=false) {
 
-    if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) { //Dokuman - 2011-02-11 - check for defined DB_CACHE
+    if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) {
       if (!count($db_query)) {
         return;
       }
@@ -139,15 +139,15 @@
         require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
       }
       $subject = 'DATA BASE ERROR AT - ' . STORE_NAME;
-      $message = '<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br />Request URL: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'<br /><br /><small><font color="#ff0000">[XT SQL Error]</font></small><br /><br /></strong></font>';
+      $message = '<b style="color:#ff0000;">' . $errno . ' - ' . $error . '<br><br>' . $query . '<br><br>Request URL: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'].'<br><br><small style="color:#ff0000">[XT SQL Error]</small></b>';
       xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, '', '', STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, '', '', $subject, nl2br($message), $message);
     }
     
     // show the full sql error + full query only to logged-in admins or error_reporting() != 0
     if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0' || error_reporting() != 0) {
-      die('<font color="#000000"><strong>' . $errno . ' - ' . $error . '<br /><br />' . $query . '<br /><br /><small><font color="#ff0000">[MOD SQL Error]</font></small><br /><br /></strong></font>');
+      die('<b style="color:#000000;">' . $errno . ' - ' . $error . '<br><br>' . $query . '<br><br><small style="color:#ff0000;">[MOD SQL Error]</small></b>');
     } else {
-      die('<font color="#ff0000"><strong>Es ist ein Fehler aufgetreten!<br />There was an error!<br />Il y avait une erreur!</strong></font>');
+      die('<b style="color:#ff0000;">Es ist ein Fehler aufgetreten!<br>There was an error!<br>Il y avait une erreur!</b>');
     }
 
     //and display an info message for the shop customer and redirect him
@@ -325,7 +325,7 @@
     if ($db_query === false) {
       return false;
     }
-    if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) { //Dokuman - 2011-02-11 - check for defined DB_CACHE
+    if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) {
       if (!count($db_query)) {
         return false;
       }
