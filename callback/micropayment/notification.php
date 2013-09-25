@@ -33,7 +33,7 @@ if($ok && (empty($data['orderid']))) {
     }
 }
 // Secret Field Check
-
+//TODO: Amount Check
 if($ok && ((empty($data[MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD]) || $data[MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD] != MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE))) {
     $ok = false;
     $error = MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH;
@@ -50,10 +50,6 @@ if($ok && (xtc_db_num_rows($order_query) != 1)) {
     $total_query = xtc_db_query('SELECT value from '.TABLE_ORDERS_TOTAL.' WHERE orders_id = "'.(int) $data['orderid'].'"');
     $total = xtc_db_fetch_array($total_query);
     $total = $total['value'];
-}
-if($ok && (!preg_match('/^[\d]{1,}$/',$data['amount']) || abs($total-$data['amount']/100) > 1)) {
-    $ok = false;
-    $error = MODULE_PAYMENT_MCP_SERVICE_ERROR_AMOUNT_MISSMATCH;
 }
 
 // Sanity Checks end
@@ -79,7 +75,7 @@ switch($data['function']) {
             // Cleaning up the Cart.
         }
 
-        $xtc_url = xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+        $xtc_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 
         if($ok) {
             $result = array(
@@ -113,7 +109,7 @@ switch($data['function']) {
             xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
         }
 
-        $xtc_url = xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL');
+        $xtc_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 
         if($ok) {
             $result = array(
@@ -183,32 +179,41 @@ switch($data['function']) {
         }
     break;
     case 'payin':
-        $comment = sprintf(MODULE_PAYMENT_MCP_PREPAY_COMMENT_PAYIN,$data['amount']/100,$data['currency']);
-        $sql_data_array = array(
-            'orders_id'         => (int) $data['orderid'],
-            'orders_status_id'  => $order['order_status'],
-            'date_added'        => 'now()' ,
-            'customer_notified' => 0,
-            'comments'          => $comment
-        );
-        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        echo 'status=OK';
+        if($ok) {
+            $comment = sprintf(MODULE_PAYMENT_MCP_PREPAY_COMMENT_PAYIN,$data['amount']/100,$data['currency']);
+            $sql_data_array = array(
+                'orders_id'         => (int) $data['orderid'],
+                'orders_status_id'  => $order['order_status'],
+                'date_added'        => 'now()' ,
+                'customer_notified' => 0,
+                'comments'          => $comment
+            );
+            xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+            echo 'status=OK';
+        }
     break;
     case 'change':
-        $comment = sprintf(MODULE_PAYMENT_MCP_SERVICE_PREPAY_CHANGE,$data['amount']/100,$data['openamount']/100,$data['paidamount']/100);
-        $sql_data_array = array(
-            'orders_id'         => (int) $data['orderid'],
-            'orders_status_id'  => $order['order_status'],
-            'date_added'        => 'now()' ,
-            'customer_notified' => 0,
-            'comments'          => $comment
-        );
-        xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-        echo 'status=OK';
+        if($ok) {
+            $comment = sprintf(MODULE_PAYMENT_MCP_SERVICE_PREPAY_CHANGE,$data['amount']/100,$data['openamount']/100,$data['paidamount']/100);
+            $sql_data_array = array(
+                'orders_id'         => (int) $data['orderid'],
+                'orders_status_id'  => $order['order_status'],
+                'date_added'        => 'now()' ,
+                'customer_notified' => 0,
+                'comments'          => $comment
+            );
+            xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+            echo 'status=OK';
+        }
     break;
     default:
         echo 'status=ERROR'.PHP_EOL.'message=unknown+function';
     break;
 }
-
-?>
+if($ok) {
+    exit();
+}
+if(!$ok) {
+    echo 'status=ERROR'.PHP_EOL.
+         'errorMsg='.urlencode($error).PHP_EOL;
+}
