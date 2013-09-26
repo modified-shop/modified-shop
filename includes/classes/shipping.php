@@ -150,5 +150,48 @@
       }
 
     }
+
+    function javascript_validation() {
+      $js = '';
+      if (is_array($this->modules)) {
+        $js = '<script type="text/javascript"><!-- ' . "\n" .
+              'function check_form() {' . "\n" .
+              '  var error = 0;' . "\n" .
+              '  var error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
+              '  var shipping_value = null;' . "\n" .
+              '  if (document.getElementById("checkout_address").shipping.length) {' . "\n" .
+              '    for (var i=0; i<document.getElementById("checkout_address").shipping.length; i++) {' . "\n" .
+              '      if (document.getElementById("checkout_address").shipping[i].checked) {' . "\n" .
+              '        shipping_value = document.getElementById("checkout_address").shipping[i].value;' . "\n" .
+              '      }' . "\n" .
+              '    }' . "\n" .
+              '  } else if (document.getElementById("checkout_address").shipping.checked) {' . "\n" .
+              '    shipping_value = document.getElementById("checkout_address").shipping.value;' . "\n" .
+              '  } else if (document.getElementById("checkout_address").shipping.value) {' . "\n" .
+              '    shipping_value = document.getElementById("checkout_address").shipping.value;' . "\n" .
+              '  }' . "\n\n";
+
+        reset($this->modules);
+        while (list(, $value) = each($this->modules)) {
+          $class = substr($value, 0, strrpos($value, '.'));
+          if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled && method_exists($GLOBALS[$class], 'javascript_validation')) {
+            $js .= $GLOBALS[$class]->javascript_validation();
+          }
+        }
+        $js .= "\n" . '  if (shipping_value == null) {' . "\n" .
+               '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_NO_SHIPPING_MODULE_SELECTED) . '");' . "\n" .
+               '    error = 1;' . "\n" .
+               '  }' . "\n\n" .
+               '  if (error == 1) {' . "\n" . 
+               '    alert(error_message);' . "\n" .
+               '    return false;' . "\n" .
+               '  } else {' . "\n" .
+               '    return true;' . "\n" .
+               '  }' . "\n" .
+               '}' . "\n" .
+               '//--></script>' . "\n";
+      }
+      return $js;
+    }
   }
 ?>

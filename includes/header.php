@@ -137,6 +137,10 @@ if (strstr($PHP_SELF, FILENAME_CHECKOUT_PAYMENT)) {
  echo $payment_modules->javascript_validation();
 }
 
+if (strstr($PHP_SELF, FILENAME_CHECKOUT_SHIPPING)) {
+ echo $shipping_modules->javascript_validation();
+}
+
 if (strstr($PHP_SELF, FILENAME_CREATE_ACCOUNT)) {
   require('includes/form_check.js.php');
 }
