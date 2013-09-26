@@ -76,8 +76,9 @@
                                     ORDER BY sort_order");
       while ($totals = xtc_db_fetch_array($totals_query)) {
         $this->totals[] = array('title' => $totals['title'],
-                                 'text' => $totals['text'],
-                                 'value'=> $totals['value']
+                                'text' => $totals['text'],
+                                'value'=> $totals['value'],
+                                'class'=> $totals['class']
                                );
       }
 
@@ -513,7 +514,12 @@
       $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         
-        //direct array assignment
+        //attribute mapping
+        if ($products[$i]['attributes']) {
+          $products_attributes = $products[$i]['attributes']; //contains only option_id and value_id
+          unset($products[$i]['attributes']); //remove from array for direct array mapping
+        }
+        //direct array mapping
         $this->products[$index] = $products[$i];
 
         //using short description  if order description is not defined or empty
@@ -529,10 +535,10 @@
         $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true);        
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); 
 
-        if ($products[$i]['attributes']) {
+        if ($products_attributes) {
           $subindex = 0;
-          reset($products[$i]['attributes']);
-          while (list($option, $value) = each($products[$i]['attributes'])) {
+          reset($products_attributes);
+          while (list($option, $value) = each($products_attributes)) {
             $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
             $this->products[$index]['attributes'][$subindex] = array(
                 'option' => $attributes['products_options_name'],
