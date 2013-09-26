@@ -67,8 +67,9 @@ if (isset($_SESSION['credit_covers'])) {
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
 }
 
-if (!isset ($_SESSION['payment']))
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
+if (!isset($_SESSION['payment'])) {
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+}
 
 $payment_modules = new payment($_SESSION['payment']);
 
