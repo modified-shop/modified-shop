@@ -147,10 +147,8 @@ if ($xtPrice->xtcFormat($order->info['total'], false) > 0) {
   }
   $module_smarty->assign('module_content', $selection);
 } else {
+  $order_total_modules->pre_confirmation_check();
   $smarty->assign('GV_COVER', 'true');
-  if (isset($_SESSION['payment'])){
-    unset ($_SESSION['payment']); // fix for order_total <= 0
-  }
 }
 
 ### Paypal Express Modul
