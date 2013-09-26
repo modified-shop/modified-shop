@@ -156,6 +156,10 @@ class order_total {
 	//
 	function pre_confirmation_check() {
 		global $order;
+		
+		// fisrt unset session
+		unset ($_SESSION['credit_covers']);
+		
 		if (MODULE_ORDER_TOTAL_INSTALLED) {
 			$total_deductions = 0;
 			reset($this->modules);
