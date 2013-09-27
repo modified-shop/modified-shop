@@ -111,5 +111,6 @@ define('FILENAME_PAYPAL_CHECKOUT', 'paypal_checkout.php');
 define('FILENAME_PAYPAL', 'paypal.php');
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
-auto_require(DIR_FS_CATALOG.'includes/extra/filenames/','php');
+require_once(DIR_FS_INC.'auto_require.inc.php');
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/filenames/','php') as $file) require ($file);
 ?>

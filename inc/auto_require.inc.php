@@ -10,13 +10,16 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-function auto_require($dir, $ext='php') {
+function auto_require($dir, $ext='php') 
+{
+    $arr_auto_require = array();
     if ($extra_files = @scandir($dir)) {            
         foreach ($extra_files as $filename) {
             $filename_array = explode('.', $filename);
             if (end($filename_array) == $ext) { 
-                require($dir . $filename);           
+                $arr_auto_require[] = $dir . $filename;                
             }
         }
     }
+    return $arr_auto_require;
 }
