@@ -181,7 +181,7 @@ require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 
-auto_require(DIR_FS_CATALOG.'includes/extra/functions/','php');
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require ($file);
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -192,7 +192,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
-auto_require(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php');
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require ($file);
 
 // Set the length of the redeem code, the longer the more secure
 // Kommt eigentlich schon aus der Table configuration
@@ -367,5 +367,5 @@ include (DIR_WS_MODULES.'set_account_type.php');
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-auto_require(DIR_FS_CATALOG.'includes/extra/application_top_end/','php');
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
 ?>
