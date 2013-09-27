@@ -86,21 +86,11 @@ require_once (DIR_FS_INC . 'auto_require.inc.php');
   // include the list of project database tables
   require(DIR_WS_INCLUDES . 'database_tables.php');
 
+  // Database
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
+
   // include used functions
-  require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_prepare_input.inc.php');
   require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
   require_once(DIR_FS_INC . 'xtc_validate_password.inc.php');
   require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
