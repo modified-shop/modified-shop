@@ -52,23 +52,7 @@ unset($_SESSION['tmp_oID']);
 // EOF - Tomcraft - 2009-10-02 - Include "Single Price" in checkout_confirmation
 //EOF - DokuMan - 2010-09-06 - contact_us.php language file not needed any more, added constants to main language file
 
-// if the customer is not logged on, redirect them to the login page
-if (!isset ($_SESSION['customer_id']))
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-
-// if there is nothing in the customers cart, redirect them to the shopping cart page
-if ($_SESSION['cart']->count_contents() < 1)
-  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-
-// avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
-  if ($_SESSION['cart']->cartID != $_SESSION['cartID'])
-    xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-}
-
-// if no shipping method has been selected, redirect the customer to the shipping method selection page
-if (!isset ($_SESSION['shipping']))
-  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 //check if display conditions on checkout page is true
 
