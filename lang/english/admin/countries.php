@@ -1,16 +1,17 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: countries.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: countries.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(countries.php,v 1.8 2002/01/19); www.oscommerce.com 
    (c) 2003	 nextcommerce (countries.php,v 1.4 2003/08/14); www.nextcommerce.org
+   (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
@@ -32,4 +33,6 @@ define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete this country?'
 define('TEXT_INFO_HEADING_NEW_COUNTRY', 'New Country');
 define('TEXT_INFO_HEADING_EDIT_COUNTRY', 'Edit Country');
 define('TEXT_INFO_HEADING_DELETE_COUNTRY', 'Delete Country');
+
+define('TABLE_HEADING_REQUIRED_ZONES','Show zones');
 ?>
