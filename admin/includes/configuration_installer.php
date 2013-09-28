@@ -70,7 +70,7 @@ $values_group_update = array();
 
 //configuration_group_id 13 --- "Download Optionen"
   $values_update[] = array (
-                           'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_checkbox_allowed_orders_status('",
+                           'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \',\', '",
                            'configuration_key' => 'DOWNLOAD_MIN_ORDERS_STATUS'
                            );
 
@@ -180,7 +180,7 @@ $cfg_update = update_config_table($values_update);
 
 //redirect
 if ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update) {
-  xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
+  #xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));#???
 }
 
 //---------- FUNCTIONS ----------//

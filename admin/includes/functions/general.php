@@ -2489,10 +2489,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   }
   //EOF - DokuMan - 2011-01-06 - added missing function xtc_get_products_special_price
 
-  //BOF - franky_n - 2011-01-17 - added value correction function for wrong input prices, weight, dicscount
   /**
    * xtc_convert_value()
-   *
+   * @note value correction function for wrong input prices, weight, dicscount
+   * @author franky_n
+   * @date 2011-01-17
    * @param mixed $number
    * @return
    */
@@ -2509,12 +2510,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
     return $number;
   }
-  //EOF - franky_n - 2011-01-17 - added value correction function for wrong input prices, weight, dicscount
 
-  //BOF - DokuMan - 2011-03-16 - added GEOIP-function
   /**
    * xtc_get_geoip_data()
    *
+   * @author DokuMan
+   * @date 2011-03-16
    * @param mixed $host
    * @return
    *
@@ -2560,7 +2561,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
     return $response;
   }
-  //EOF - DokuMan - 2011-01-06 - added GEOIP-function
 
   function xtc_cfg_checkbox_unallowed_payment() {
   
@@ -2584,20 +2584,29 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $unallowed_payment;
   }
 
-  function xtc_cfg_checkbox_allowed_orders_status() {
-
-    $statuses_allowed = '';
-    $orders_status_allowed = explode(',', DOWNLOAD_MIN_ORDERS_STATUS);
-    foreach ($orders_status_allowed as $key => $value) {
-      $status_allowed[$value] = $value;
+  /**
+   * xtc_cfg_multi_checkbox()
+   *
+   * @author Hacker Solutions
+   * @date 2013-09-27
+   * @param string|array $format
+   *   function that returns an array or array only with this pattern
+   *   array( array('id' => 'db_key', 'text' => 'desc for key'), ...)
+   * @param string $separator for configuration_value (e.g. ',' or ';')
+   * @param string $checked is automatically configuration_value
+   *
+   * @return string html checkboxes by configuration set_function
+   */
+  function xtc_cfg_multi_checkbox($format, $separator, $checked) {
+    $checkboxes = '';
+    $checkedboxes = (array) explode($separator, $checked);
+    $format_array = (array) function_exists($format) ? $format() : $format;
+    foreach ($format_array as $data) {
+      $checkboxes .= '<label>';
+      $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $data['id'], (bool)in_array($data['id'], $checkedboxes));
+      $checkboxes .= $data['text'];
+      $checkboxes .= '</label><br>';
     }
-    $orders_status = xtc_get_orders_status();
-    if (is_array($orders_status)) {
-      for ($s=0, $x=sizeof($orders_status); $s<$x; $s++) {
-        $statuses_allowed .= xtc_draw_checkbox_field('DOWNLOAD_MIN_ORDERS_STATUS[]', $orders_status[$s]['id'], (in_array($orders_status[$s]['id'], $status_allowed) ? true : false)).$orders_status[$s]['text'].'<br/>';
-      }
-    }
-  
-    return $statuses_allowed;
-  }                    
+    return $checkboxes;
+  }
 ?>
