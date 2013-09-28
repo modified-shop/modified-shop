@@ -337,6 +337,7 @@ CREATE TABLE countries (
   countries_iso_code_3 CHAR(3) NOT NULL,
   address_format_id INT NOT NULL,
   status INT(1) DEFAULT 1 NULL,
+  required_zones INT(1) DEFAULT '0',
   PRIMARY KEY (countries_id),
   KEY IDX_COUNTRIES_NAME (countries_name)
 ) ENGINE=MyISAM;
