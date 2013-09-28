@@ -1,63 +1,89 @@
 <?php
-/* --------------------------------------------------------------
-   $Id: countries.php 1123 2005-07-27 09:00:31Z novalis $   
+  /* --------------------------------------------------------------
+   $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
 
-   Copyright (c) 2003 XT-Commerce
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+
    --------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(countries.php,v 1.26 2003/05/17); www.oscommerce.com 
-   (c) 2003	 nextcommerce (countries.php,v 1.9 2003/08/18); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(countries.php,v 1.26 2003/05/17); www.oscommerce.com
+   (c) 2003	nextcommerce (countries.php,v 1.9 2003/08/18); www.nextcommerce.org
+   (c) 2006 XT-Commerce (countries.php 1123 2005-07-27)
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  
+  $_GET['cID'] = isset($_GET['cID']) ? (int)$_GET['cID'] : '';
+  $_GET['page'] = isset($_GET['page']) ? (int)$_GET['page'] : '';
+  
+  $arr_action = array(
+    'insert',
+    'save',
+    'deleteconfirm',
+    'setlflag',
+    'setzones',
+    'setallflags',
+    'new',
+    'edit',
+    'delete'    
+  );
+  
+  $_GET['action'] = isset($_GET['action']) && in_array($_GET['action'],$arr_action) ? $_GET['action'] : null;
 
   if ($_GET['action']) {
     switch ($_GET['action']) {
       case 'insert':
-        $countries_name = xtc_db_prepare_input($_POST['countries_name']);
-        $countries_iso_code_2 = xtc_db_prepare_input($_POST['countries_iso_code_2']);
-        $countries_iso_code_3 = xtc_db_prepare_input($_POST['countries_iso_code_3']);
-        $address_format_id = xtc_db_prepare_input($_POST['address_format_id']);
-
-        xtc_db_query("insert into " . TABLE_COUNTRIES . " (countries_name, countries_iso_code_2, countries_iso_code_3, address_format_id) values ('" . xtc_db_input($countries_name) . "', '" . xtc_db_input($countries_iso_code_2) . "', '" . xtc_db_input($countries_iso_code_3) . "', '" . xtc_db_input($address_format_id) . "')");
+        $sql_data_array = array(
+          'countries_name' => xtc_db_prepare_input($_POST['countries_name']), 
+          'countries_iso_code_2' => xtc_db_prepare_input($_POST['countries_iso_code_2']), 
+          'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
+          'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
+        );
+        xtc_db_perfom(TABLE_COUNTRIES,$sql_data_array);
         xtc_redirect(xtc_href_link(FILENAME_COUNTRIES));
         break;
-      case 'save':
-        $countries_id = xtc_db_prepare_input($_GET['cID']);
-        $countries_name = xtc_db_prepare_input($_POST['countries_name']);
-        $countries_iso_code_2 = xtc_db_prepare_input($_POST['countries_iso_code_2']);
-        $countries_iso_code_3 = xtc_db_prepare_input($_POST['countries_iso_code_3']);
-        $address_format_id = xtc_db_prepare_input($_POST['address_format_id']);
-
-        xtc_db_query("update " . TABLE_COUNTRIES . " set countries_name = '" . xtc_db_input($countries_name) . "', countries_iso_code_2 = '" . xtc_db_input($countries_iso_code_2) . "', countries_iso_code_3 = '" . xtc_db_input($countries_iso_code_3) . "', address_format_id = '" . xtc_db_input($address_format_id) . "' where countries_id = '" . xtc_db_input($countries_id) . "'");
-        xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id));
+      case 'save':       
+        $sql_data_array = array(
+          'countries_name' => xtc_db_prepare_input($_POST['countries_name']), 
+          'countries_iso_code_2' => xtc_db_prepare_input($_POST['countries_iso_code_2']), 
+          'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
+          'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
+        );
+        xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$_GET['cID']."'");
+        xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
         break;
       case 'deleteconfirm':
-        $countries_id = xtc_db_prepare_input($_GET['cID']);
-
-        xtc_db_query("delete from " . TABLE_COUNTRIES . " where countries_id = '" . xtc_db_input($countries_id) . "'");
+        xtc_db_query("DELETE FROM " . TABLE_COUNTRIES . " WHERE countries_id = '" . $_GET['cID'] . "'");
         xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page']));
         break;
       case 'setlflag':
-        $countries_id = xtc_db_prepare_input($_GET['cID']);
-        $status = xtc_db_prepare_input($_GET['flag']);      
-        xtc_db_query("update " . TABLE_COUNTRIES . " set status = '" . xtc_db_input($status) . "' where countries_id = '" . xtc_db_input($countries_id) . "'");
-        xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries_id));      
+        $sql_data_array = array(
+          'status' => xtc_db_prepare_input($_GET['flag'])
+        );
+        xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$_GET['cID']."'");       
+        xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));      
       break;
-	  //BOF - web28 - 2010.05.30 - set/unset all flags
-	  case 'setallflags':
-        $countries_id = xtc_db_prepare_input($_GET['cID']);
-        $status = xtc_db_prepare_input($_GET['flag']);      
-        xtc_db_query("update " . TABLE_COUNTRIES . " set status = '" . xtc_db_input($status) . "'");
+      case 'setzones':
+        $sql_data_array = array(
+          'required_zones' => xtc_db_prepare_input($_GET['required_zones'])
+        );
+        xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id = '".$_GET['cID']."'");
+        xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $_GET['cID']));
+      break;
+	    case 'setallflags':
+        $sql_data_array = array(
+          'status' => xtc_db_prepare_input($_GET['flag'])
+        );
+        xtc_db_perform(TABLE_COUNTRIES, $sql_data_array, 'update', "countries_id > '0'");        
         xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page']));      
       break;
-	  //EOF - web28 - 2010.05.30 - set/unset all flags	  
     }
   }
   require (DIR_WS_INCLUDES.'head.php');
@@ -100,37 +126,48 @@
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_COUNTRY_NAME; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_REQUIRED_ZONES; ?></td>
                   <td class="dataTableHeadingContent txta-c" colspan="2"><?php echo TABLE_HEADING_COUNTRY_CODES; ?></td>
                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?></td>                
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                  $countries_query_raw = "select countries_id, countries_name, countries_iso_code_2, countries_iso_code_3, status, address_format_id from " . TABLE_COUNTRIES . " order by countries_name";
+                  $countries_query_raw = "SELECT * FROM " . TABLE_COUNTRIES . " ORDER BY countries_name";
                   $countries_split = new splitPageResults($_GET['page'], '20', $countries_query_raw, $countries_query_numrows);
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
                     if (((!$_GET['cID']) || (@$_GET['cID'] == $countries['countries_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                       $cInfo = new objectInfo($countries);
                     }
-
-                    if ( (is_object($cInfo)) && ($countries['countries_id'] == $cInfo->countries_id) ) {
-                      echo '                  <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit') . '\'">' . "\n";
+                    
+                    $zones_query_raw = "SELECT zone_id FROM " . TABLE_ZONES . " WHERE zone_country_id ='". (int)$countries['countries_id'] ."'";
+                    $zones_query = xtc_db_query($zones_query_raw);
+                    if (xtc_db_num_rows($zones_query) > 0) {
+                      if ($countries['required_zones'] == '1') {
+                        $required_zones = xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setzones&required_zones=0&cID=' . $countries['countries_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
+                      } else {
+                        $required_zones = '<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setzones&required_zones=1&cID=' . $countries['countries_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+                      }
+                    }
+                    
+                    if ($countries['status'] == '1') {
+                      $status = xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setlflag&flag=0&cID=' . $countries['countries_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
                     } else {
-                      echo '                  <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) . '\'">' . "\n";
+                      $status = '<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setlflag&flag=1&cID=' . $countries['countries_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
+                    }
+                    
+                    if ( (is_object($cInfo)) && ($countries['countries_id'] == $cInfo->countries_id) ) {
+                      $tr_attributes = 'class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $cInfo->countries_id . '&action=edit') .'\'"';
+                    } else {
+                      $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) .'\'"';
                     }
                 ?>
+                <tr <?echo $tr_attributes;?>>
                   <td class="dataTableContent"><?php echo $countries['countries_name']; ?></td>
-                  <td class="dataTableContent txta-c" width="40"><?php echo $countries['countries_iso_code_2']; ?></td>
-                  <td class="dataTableContent txta-c" width="40"><?php echo $countries['countries_iso_code_3']; ?></td>
-                  <td class="dataTableContent txta-c">
-                  <?php               
-                        if ($countries['status'] == '1') {
-                          echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setlflag&flag=0&cID=' . $countries['countries_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
-                        } else {
-                          echo '<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setlflag&flag=1&cID=' . $countries['countries_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10) . '</a>&nbsp;&nbsp;' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
-                        }                
-                  ?>
-                  </td>   
+                  <td class="dataTableContent txta-c" style="width:100px">&nbsp;<?php echo $required_zones; ?></td>
+                  <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_2']; ?></td>
+                  <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_3']; ?></td>
+                  <td class="dataTableContent txta-c"><?php echo $status; ?></td>
                   <td class="dataTableContent txta-r"><?php if ( (is_object($cInfo)) && ($countries['countries_id'] == $cInfo->countries_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>
             <?php
