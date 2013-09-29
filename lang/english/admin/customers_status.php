@@ -47,8 +47,8 @@ define('ERROR_STATUS_USED_IN_HISTORY', 'Error: This customer group is actually i
 define('TABLE_HEADING_ACTION','Action');
 define('TABLE_HEADING_CUSTOMERS_GRADUATED','Graduated Price');
 define('TABLE_HEADING_CUSTOMERS_STATUS','Customers Group');
-define('TABLE_HEADING_CUSTOMERS_UNALLOW','not allowed Paymentmethods');
-define('TABLE_HEADING_CUSTOMERS_UNALLOW_SHIPPING','not allowed Shipping');
+define('TABLE_HEADING_CUSTOMERS_UNALLOW','not allowed payment methods');
+define('TABLE_HEADING_CUSTOMERS_UNALLOW_SHIPPING','not allowed shipping');
 define('TABLE_HEADING_DISCOUNT','Discount');
 define('TABLE_HEADING_TAX_PRICE','Price / Tax');
 
