@@ -78,11 +78,11 @@ if (($orders_total = xtc_count_customer_orders()) > 0) {
 }
 
 if ($orders_total > 0) {
-	$smarty->assign('SPLIT_BAR', '
-	          <div class="smallText" style="clear:both;"><div style="float:left;">'.$history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS).'</div>
-              <div align="right">'.TEXT_RESULT_PAGE.' '.$history_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-              </div>');
-
+  $smarty->assign('DISPLAY_COUNT', $history_split->display_count(TEXT_DISPLAY_NUMBER_OF_ORDERS));
+  $smarty->assign('DISPLAY_LINKS', $history_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
+  $smarty->caching = 0;
+  $navigation = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+  $smarty->assign('SPLIT_BAR', $navigation);  
 }
 $smarty->assign('order_content', $module_content);
 $smarty->assign('language', $_SESSION['language']);

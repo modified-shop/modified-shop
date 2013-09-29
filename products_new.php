@@ -46,7 +46,6 @@ if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 	$date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
 	$days = " and p.products_date_added > '".$date_new_products."' ";
 }
-//BOF - web28 - 2010.06.09 - added p.products_shippingtime
 $products_new_query_raw = "select distinct
                                     p.products_id,
                                     p.products_fsk18,
@@ -78,29 +77,24 @@ $products_new_query_raw = "select distinct
                                     ".$days."
                            order by p.products_date_added DESC ";
 
-//EOF - web28 - 2010.06.09 - added p.products_shippingtime
 
 $products_new_split = new splitPageResults($products_new_query_raw, $_GET['page'], MAX_DISPLAY_PRODUCTS_NEW, 'p.products_id');
-//BOF - Hetfield - 2009-08-11 - no longer empty site products_new.php
+
 if (($products_new_split->number_of_rows > 0)) {
-$module_content = '';
-//BOF - Hetfield - 2009-08-11 - replace table with div
-	$smarty->assign('NAVIGATION_BAR', '
-		   <div style="width:100%;font-size:smaller">
-		          <div style="float:left">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div>
-		          <div style="float:right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-		          <br style="clear:both" />
-		   </div>		
-		   ');
-//EOF - Hetfield - 2009-08-11 - replace table with div
+  $module_content = '';
+
+  $smarty->assign('DISPLAY_COUNT', $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW));
+  $smarty->assign('DISPLAY_LINKS', $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
+  $smarty->caching = 0;
+  $navigation = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+  $smarty->assign('NAVIGATION_BAR', $navigation);  
+
 	$products_new_query = xtc_db_query($products_new_split->sql_query);
 	while ($products_new = xtc_db_fetch_array($products_new_query)) {
-		//BOF - Hetfield - 2009-08-11 - products_new uses now the product class
 		$module_content[] = $product->buildDataArray($products_new);
-		//EOF - Hetfield - 2009-08-11 - products_new uses now the product class
 	}
 } else {
-    //BOF - web28 - 2010.06.09 - added p.products_shippingtime
+
 	$new_products_query = "select distinct
                                     p.products_id,
                                     p.products_fsk18,
@@ -130,9 +124,7 @@ $module_content = '';
                                     ".$group_check."
                                     ".$fsk_lock."
 	                       order by p.products_date_added DESC limit 10";
-	
-	//EOF - web28 - 2010.06.09 - added p.products_shippingtime
-	
+		
 	$module_content = array ();
 	$new_products_query = xtDBquery($new_products_query);
 	while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
@@ -141,7 +133,7 @@ $module_content = '';
 	}
 	$smarty->assign('NO_NEW_PRODUCTS', TEXT_NO_NEW_PRODUCTS);
 }
-//EOF - Hetfield - 2009-08-11 - no longer empty site products_new.php
+
 $smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
 $smarty->assign('module_content', $module_content);

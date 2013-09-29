@@ -54,26 +54,11 @@ $reviews_query_raw = "select r.reviews_id,
 $reviews_split = new splitPageResults($reviews_query_raw, (int)$_GET['page'], MAX_DISPLAY_NEW_REVIEWS);
 
 if ($reviews_split->number_of_rows > 0) {
-
-//BOF - Dokuman - 2009-06-05 - replace table with div
-	/*
-	$smarty->assign('NAVBAR', '
-	   <table border="0" width="100%" cellspacing="0" cellpadding="2">
-	          <tr>
-	            <td class="smallText">'.$reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS).'</td>
-	            <td align="right" class="smallText">'.TEXT_RESULT_PAGE.' '.$reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</td>
-	          </tr>
-	        </table>
-	');	        
-	*/
-	$smarty->assign('NAVBAR', '
-	<div style="width:100%;font-size:smaller">
-		<div style="float:left">'.$reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS).'</div>
-		<div style="float:right">'.TEXT_RESULT_PAGE.' '.$reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-	<br style="clear:both" /></div>
-	');
-//EOF - Dokuman - 2009-06-05 - replace table with div
-	  
+  $smarty->assign('DISPLAY_COUNT', $reviews_split->display_count(TEXT_DISPLAY_NUMBER_OF_REVIEWS));
+  $smarty->assign('DISPLAY_LINKS', $reviews_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
+  $smarty->caching = 0;
+  $navigation = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+  $smarty->assign('NAVBAR', $navigation);  
 }
 
 $module_data = array ();

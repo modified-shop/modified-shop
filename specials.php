@@ -73,25 +73,11 @@ while ($specials = xtc_db_fetch_array($specials_query)) {
 }
 
 if (($specials_split->number_of_rows > 0)) {
-//BOF - Dokuman - 2009-06-05 - replace table with div
-/*
-  $smarty->assign('NAVBAR', '
-  <table border="0" width="100%" cellspacing="0" cellpadding="2">
-            <tr>
-              <td class="smallText">'.$specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS).'</td>
-              <td align="right" class="smallText">'.TEXT_RESULT_PAGE.' '.$specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</td>
-            </tr>
-          </table>
-  ');
-*/
-  $smarty->assign('NAVBAR', '
-  <div style="width:100%;font-size:smaller">
-    <div style="float:left">'.$specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS).'</div>
-    <div style="float:right">'.TEXT_RESULT_PAGE.' '.$specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-    <br style="clear:both" />
-  </div>
-  ');
-//EOF - Dokuman - 2009-06-05 - replace table with div
+  $smarty->assign('DISPLAY_COUNT', $specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS));
+  $smarty->assign('DISPLAY_LINKS', $specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
+  $smarty->caching = 0;
+  $navigation = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+  $smarty->assign('NAVBAR', $navigation);
 }
 
 $smarty->assign('language', $_SESSION['language']);
