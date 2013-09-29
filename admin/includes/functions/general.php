@@ -2543,42 +2543,67 @@
   }
   //EOF - DokuMan - 2011-01-06 - added GEOIP-function
 
-  function xtc_cfg_checkbox_unallowed_payment() {
-  
-    $payment_unallowed = '';
-    $customers_status_payment_unallowed = explode(',', DOWNLOAD_UNALLOWED_PAYMENT);
-    foreach ($customers_status_payment_unallowed as $value) {
-      $payment_unallowed[] = $value;
+  /**
+   * xtc_cfg_checkbox_unallowed_module()
+   *
+   * @author rpa-com.de
+   * @date 2013-09-29
+   * @param string $module_type like payment, shipping
+   * @param string $checkbox_name is database field
+   * @param string $data is database field data
+   *
+   * @return string html checkboxes by configuration set_function
+   */
+  function xtc_cfg_checkbox_unallowed_module($module_type,$checkbox_name,$data) 
+  {
+    $module_unallowed = array();
+    $unallowed_module = '';
+    $customers_status_module_unallowed = explode(',', $data);
+    foreach ($customers_status_module_unallowed as $value) {
+      $module_unallowed[] = $value;
     }
-    if (xtc_not_null(MODULE_PAYMENT_INSTALLED)) {
-      $payment_status = explode(';', MODULE_PAYMENT_INSTALLED);
-      for ($p=0, $x=sizeof($payment_status); $p<$x; $p++) {
-        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p])) {
-          include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_status[$p]);
+    $module_const = constant('MODULE_'.strtoupper($module_type).'_INSTALLED');
+    if (xtc_not_null($module_const)) {
+      $module_array = explode(';', $module_const);
+      for ($p=0, $x=sizeof($module_array); $p<$x; $p++) {
+        if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p])) {
+          include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/'.$module_type.'/' . $module_array[$p]);
         }
-        $unallowed_payment .= xtc_draw_checkbox_field('DOWNLOAD_UNALLOWED_PAYMENT[]', substr($payment_status[$p], 0,-4), (in_array(substr($payment_status[$p], 0,-4), $payment_unallowed) ? true : false)).constant('MODULE_PAYMENT_'.strtoupper(substr($payment_status[$p], 0,-4)).'_TEXT_TITLE').' ('.$payment_status[$p].')<br/>';
+        $module_name = substr($module_array[$p], 0,-4);
+        $unallowed_module .= xtc_draw_checkbox_field($checkbox_name.'[]', $module_name, (in_array($module_name, $module_unallowed) ? true : false)).constant('MODULE_'.strtoupper($module_type).'_'.strtoupper($module_name).'_TEXT_TITLE').' ('.$module_array[$p].')<br/>';
       }
     } else {
-      $unallowed_payment = TEXT_PAYMENT_ERROR;
+      $unallowed_module = constant('TEXT_'.strtoupper($module_type).'_ERROR');
     }
-    
-    return $unallowed_payment;
+    return $unallowed_module;                           
+  }   
+
+  /**
+   * xtc_cfg_multi_checkbox()
+   *
+   * @author Hacker Solutions
+   * @date 2013-09-27
+   * @param string|array $format
+   *   function that returns an array or array only with this pattern
+   *   array( array('id' => 'db_key', 'text' => 'desc for key'), ...)
+   * @param string $separator for configuration_value (e.g. ',' or ';')
+   * @param string $checked is automatically configuration_value
+   *
+   * @return string html checkboxes by configuration set_function
+   */
+  function xtc_cfg_multi_checkbox($format, $separator, $checked) {
+    if (preg_match("'chr\(([0-9]{1,3})\)'",$separator, $matches)) {
+      $separator  = chr($matches[1]);
+    }
+    $checkboxes = '';
+    $checkedboxes = (array) explode($separator, $checked);
+    $format_array = (array) function_exists($format) ? $format() : $format;
+    foreach ($format_array as $data) {
+      $checkboxes .= '<label>';
+      $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $data['id'], (bool)in_array($data['id'], $checkedboxes));
+      $checkboxes .= $data['text'];
+      $checkboxes .= '</label><br>';
+    }
+    return $checkboxes;
   }
-
-  function xtc_cfg_checkbox_allowed_orders_status() {
-
-    $statuses_allowed = '';
-    $orders_status_allowed = explode(',', DOWNLOAD_MIN_ORDERS_STATUS);
-    foreach ($orders_status_allowed as $key => $value) {
-      $status_allowed[$value] = $value;
-    }
-    $orders_status = xtc_get_orders_status();
-    if (is_array($orders_status)) {
-      for ($s=0, $x=sizeof($orders_status); $s<$x; $s++) {
-        $statuses_allowed .= xtc_draw_checkbox_field('DOWNLOAD_MIN_ORDERS_STATUS[]', $orders_status[$s]['id'], (in_array($orders_status[$s]['id'], $status_allowed) ? true : false)).$orders_status[$s]['text'].'<br/>';
-      }
-    }
-  
-    return $statuses_allowed;
-  }                    
 ?>
