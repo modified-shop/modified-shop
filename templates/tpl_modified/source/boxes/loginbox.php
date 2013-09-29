@@ -27,9 +27,9 @@
     $box_smarty = new smarty;
     $box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
     $box_smarty->assign('FORM_ACTION', '<form id="loginbox" method="post" action="'.xtc_href_link(FILENAME_LOGIN, 'action=process', 'SSL').'">');
-    $box_smarty->assign('FIELD_EMAIL', xtc_draw_input_field('email_address', '', 'maxlength="50" style="width:170px;"'));
-    $box_smarty->assign('FIELD_PWD', xtc_draw_password_field('password', '', 'maxlength="30" style="width:80px;"'));
-    $box_smarty->assign('BUTTON', xtc_image_submit('button_login_small.gif', IMAGE_BUTTON_LOGIN));
+    $box_smarty->assign('FIELD_EMAIL', xtc_draw_input_field('email_address', '', 'maxlength="50" class="boxfield_lang"'));
+    $box_smarty->assign('FIELD_PWD', xtc_draw_password_field('password', '', 'maxlength="30" class="boxfield_kurz"'));
+    $box_smarty->assign('BUTTON', xtc_image_submit('button_login_small.gif', IMAGE_BUTTON_LOGIN,'class="box_button"'));
     $box_smarty->assign('LINK_LOST_PASSWORD', xtc_href_link(FILENAME_PASSWORD_DOUBLE_OPT, '', 'SSL'));
     $box_smarty->assign('FORM_END', '</form>');
     $box_smarty->assign('BOX_CONTENT', '');
