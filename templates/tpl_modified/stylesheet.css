@@ -197,32 +197,59 @@ a img {
   border:none;
   outline:none;
 }
+
 /* INPUT ELEMENTS GLOBAL (CSS 1 compatible) */
 input {
-  font-family:Arial, Sans-serif;
-  font-size:12px;
+  font-size: 12px;
 }
 textarea {
-  font-family:Arial, Sans-serif;
   font-size:12px;
-  border:1px solid #666;
-  padding:10px;
-  background:url(img/input_bg.gif) no-repeat;
+  background-color:#f4f4f4;
+  border:1px solid #d0d0d0;
+  padding:5px;
+  color:#444;
 }
 select {
-  font-family:Arial, Sans-serif;
   font-size:12px;
-  border:1px solid #666;
+  background-color:#f4f4f4;
+  border:1px solid #d0d0d0;
+  padding:7px 4px 7px 2px;
+  color:#444;
 }
+
 /* INPUT ELEMENTS DETAILED (CSS 2 compatible - works only in new browsers (FF 2.0, IE 7...) */
 input[type=text], input[type=password] {
-  border:1px solid #666;
-  padding:2px;
-  background:url(img/input_bg.gif) no-repeat;
+  background-color:#f4f4f4;
+  border:1px solid #d0d0d0;
+  padding:0px 5px 0px 5px;
+  height:30px;
+  line-height:30px;
+  color:#444;
 }
-input[type=radio], input[type=checkbox] {
-  margin: 0 3px;
+input[type=text]:focus, input[type=password]:focus, textarea:focus {
+  background-color:#fff;
 }
+
+.boxfield_lang {
+  width:212px;
+}
+.boxfield_kurz {
+  float:left;
+  width:136px;
+}
+.box_button {
+  float:right;
+  width:76px;
+}
+.box_footer_button {
+  float:right;
+  width:90px;
+}
+.boxfield_newsletter {
+  float:left;
+  width:138px;
+}
+
 /* PARAGRAPH GLOBAL */
 p {
   margin:8px 0;
