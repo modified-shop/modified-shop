@@ -31,7 +31,7 @@ $box_smarty->assign('FORM_ACTION', xtc_draw_form('quick_find', xtc_href_link(FIL
 //$box_smarty->assign('INPUT_SEARCH', xtc_draw_input_field('keywords', '', 'size="20" maxlength="30"'));
 //BOF - web28 - 2010-04-11 - change input html size to css width
 //$box_smarty->assign('INPUT_SEARCH', xtc_draw_input_field('keywords', IMAGE_BUTTON_SEARCH, 'size="20" maxlength="30" onfocus="if(this.value==this.defaultValue) this.value=\'\';" onblur="if(this.value==\'\') this.value=this.defaultValue;"'));
-$box_smarty->assign('INPUT_SEARCH', xtc_draw_input_field('keywords', IMAGE_BUTTON_SEARCH, 'class="search_field" maxlength="30" onfocus="if(this.value==this.defaultValue) this.value=\'\';" onblur="if(this.value==\'\') this.value=this.defaultValue;"'));
+$box_smarty->assign('INPUT_SEARCH', xtc_draw_input_field('keywords', IMAGE_BUTTON_SEARCH_HEAD, 'class="search_field" maxlength="30" onfocus="if(this.value==this.defaultValue) this.value=\'\';" onblur="if(this.value==\'\') this.value=this.defaultValue;"'));
 //EOF - web28 - 2010-04-11 - change input html size to css width
 //EOF - Dokuman - 14.08.2009 - Put dynamic "search"-text into box
 $box_smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_quick_find_head.gif', IMAGE_BUTTON_SEARCH,'class="search_button"'));
