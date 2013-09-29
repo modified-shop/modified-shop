@@ -8,7 +8,7 @@
 
 define('HEADING_TITLE', 'Set customer group authorizations');
 
-define('TEXT_CATEGORIES', 'Cetegories');
+define('TEXT_CATEGORIES', 'Categories');
 define('TEXT_PRODUCTS', 'Products');
 define('TEXT_CONTENT', 'Content (Contentmanager)');
 define('TEXT_PERMISSION', 'Authorization');
