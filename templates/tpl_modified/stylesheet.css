@@ -124,7 +124,7 @@ ul.topnavigation li a:hover {
 #search {
   float:right;
   width:300px;
-  border:0px solid blue;
+  border:0px solid transparent;
   padding-top:22px;
 }
 .search_field {
@@ -144,8 +144,6 @@ ul.topnavigation li a:hover {
 
 
 
-
-
 /* HEADINGS */
 h1 {
   color:#000;
@@ -158,34 +156,52 @@ h1 {
   border-width:0 0 1px 0;
 }
 h2 {
-  color:#000;
-  font-weight:bold;
-  font-size:16px;
-  margin:15px 0 8px 0;
-  padding:0;
+	color:#444444;
+	font-weight:bold;
+	font-size:14px;
+	margin:20px 0px 8px 0px;
+	padding:0px;
+	width:auto;
+	border: #999999 dotted;
+	border-width:0px 0px 1px 0px;
+	padding-bottom:5px;
 }
+
 h3 {
   color:#555;
   font-weight:bold;
   font-size:12px;
 }
+
+h4 {
+	color:#6d2551;
+	font-weight:bold;
+	font-size:14px;
+	margin:0px 0px 14px 0px;
+	padding:0px;
+	width:auto;
+	border: #999999 dotted;
+	border-width:0px 0px 1px 0px;
+	padding-bottom:5px;
+}
+
 /* LINKS GLOBAL */
-a, a:link, a:link, a:link, a:hover {
+a, a:link, a:visited, a:active, a:hover {
   background:transparent;
   text-decoration:none;
   outline:none;
   cursor:pointer;
 }
 a:link {
-  color:#893769;
+  color:#6d2551;
   outline:none;
 }
 a:visited {
-  color:#893769;
+  color:#6d2551;
   outline:none;
 }
 a:hover, a:active {
-  color:#893769;
+  color:#6d2551;
   outline:none;
 }
 a:hover {
@@ -254,6 +270,187 @@ input[type=text]:focus, input[type=password]:focus, textarea:focus {
 p {
   margin:8px 0;
 }
+
+#layout_content {
+  width:1000px;
+  min-height:600px;
+  margin: 0px auto;
+}
+#col_left {
+  float:left;
+  width:246px;
+}
+#col_right {
+  float:right;
+  width:734px;
+}
+#col_full {
+  width:1000px;
+}
+
+
+.full_col1 {
+  float:left;
+  width:490px;  
+}
+.full_col2 {
+  float:right;
+  width:490px;  
+}
+
+
+
+#content_navbar {
+  background-color:#939393;
+  border-top: 1px solid #a1a1a1;
+  border-bottom: 1px solid #6d6d6d;
+  height:40px;
+}
+
+ul.contentnavigation {
+  height:40px;
+  width:100%;
+  list-style-type:none;
+}
+ul.contentnavigation li {
+  float:left;
+  padding: 0px 20px 0px 20px;
+  height:12px;  
+  line-height:12px;
+  margin: 14px 0px;
+  border-right: 1px solid #fff;
+  color:#fff;
+  font-size:12px;
+}
+ul.contentnavigation li.first {
+  padding: 0px 20px 0px 10px;
+}
+ul.contentnavigation li.last {
+  border:none;
+}
+
+ul.contentnavigation li a {
+  color:#ffffff;
+  font-weight:normal;
+  text-decoration:none;
+}
+ul.contentnavigation li a:hover {
+  color:#6d2551;
+  text-decoration:none;
+}
+
+ul.contentnavigation li.cart {
+  float:right;
+  border:none;
+  padding: 0px 10px 0px 10px;
+  margin: 0px;
+  line-height:40px;
+  height:40px;
+  position:relative;
+}
+ul.contentnavigation li.cart a {
+  background: transparent url(img/img_cart_sprite.png) no-repeat 0px 9px;
+  padding-left:34px;
+  display:block;
+  height:40px;
+  line-height:40px;
+}
+ul.contentnavigation li.cart a:hover {
+  background: transparent url(img/img_cart_sprite.png) no-repeat 0px -71px;
+  display:block;
+  color:#6d2551;
+  text-decoration:none;
+}
+.cart_content {
+  padding: 0px 0px 0px 20px;
+}
+
+#cart_short {
+  position:relative;
+  background: transparent;
+  height:40px;
+  z-index:1000;
+}
+#cart_long {
+  position:absolute;
+  top:40px;
+  width:360px;
+  right:0px;
+  background:#222;
+  z-index:900;
+  padding:10px 10px 10px 10px;
+  opacity:0.9;
+}
+#cart_long a, #cart_long a:hover {
+  background:none ;
+  padding-left:0px;
+  display:inline;
+  height:auto;
+  font-size:12px;
+  line-height:18px;
+}
+.cartrow {
+  padding: 10px 0px;
+  border-bottom: 1px dashed #ccc;
+}
+.cartrow .cartrow_image {
+  float:left;
+  width:40px;
+  height:40px;
+  overflow:hidden;
+  margin: 0px 0px 0px 0px;
+}
+.cartrow .cartrow_image img {
+  max-width:40px;
+  max-height:40px;
+} 
+.cartrow .cartrow_text {
+  float:right;
+  width:300px;
+  font-size:12px !important;
+  line-height:20px !important;
+  height:40px;
+}
+.cartrow .cartrow_text a {
+  background:none !important;
+  padding-left:0px !important;
+  display:inline !important;
+  height:auto !important;
+  font-size:12px !important;
+  line-height:20px !important;
+}
+.cartrow .cartrow_text a:hover {
+  background:none !important;
+  padding-left:0px !important;
+  display:inline !important;
+  height:auto !important;
+  font-size:12px !important;
+  line-height:20px !important;
+}
+.cart_mini {
+  padding: 5px 0 10px 0;
+  font-size:12px;
+  line-height:18px;
+  text-align:right;
+  color:#fff;
+}
+.cart_mini a {
+  background:none !important;
+  padding-left:0px !important;
+  display:inline !important;
+  height:auto !important;
+  font-size:12px !important;
+  line-height:18px !important;
+}
+.cart_buttons {
+  text-align:center;
+  margin: 10px 0 0 0;  
+}
+.cart_buttons img {
+  padding: 0px 10px;
+}
+
+
 /* FAKE HR DIV CAUSE OF IE TROUBLES */
 div.hr {
   padding-top:1px;

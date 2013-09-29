@@ -29,6 +29,64 @@
   </div>
 </div>
 
+<div id="layout_content">
+
+{if (!strpos($smarty.server.PHP_SELF, 'checkout')) && 
+    (!strpos($smarty.server.PHP_SELF, 'shopping_cart')) && 
+    (!strpos($smarty.server.PHP_SELF, 'login')) && 
+    (!strpos($smarty.server.PHP_SELF, 'create')) }
+
+  <div id="col_left">
+    {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
+    {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
+    {if isset($box_LOGIN)}{$box_LOGIN}{/if}
+    {if isset($box_WHATSNEW)}{$box_WHATSNEW}{/if}
+    {if isset($box_SPECIALS)}{$box_SPECIALS}{/if}
+    {if isset($box_LAST_VIEWED)}{$box_LAST_VIEWED}{/if}
+    {if isset($box_REVIEWS)}{$box_REVIEWS}{/if}
+
+  </div>
+  <div id="col_right">
+    <div id="content_navbar">
+      <ul class="contentnavigation"> 
+        <li class="first"><a href="{php}echo xtc_href_link(FILENAME_CONTENT, 'coID=7');{/php}">Kontakt</a></li>
+        <li><a href="{php}echo xtc_href_link(FILENAME_CONTENT, 'coID=4');{/php}">Impressum</a></li>
+        <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+        <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
+      </ul>
+    </div>
+    {if $home}
+      {if isset($BANNER)}{$BANNER}{/if}
+    {else}
+      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span> {$navtrail}{/if}</div>
+    {/if}
+
+    {if isset($main_content)}{$main_content}{/if}
+   
+
+  </div>
+  <br class="clearfix" />
+
+{else}
+  <div id="col_full">
+
+    <div id="content_navbar">
+      <ul class="contentnavigation"> 
+        <li class="first"><a href="{php}echo xtc_href_link(FILENAME_CONTENT, 'coID=7');{/php}">Kontakt</a></li>
+        <li><a href="{php}echo xtc_href_link(FILENAME_CONTENT, 'coID=4');{/php}">Impressum</a></li>
+        <li class="last"><a href="{$checkout}"><strong>{#link_checkout#}</strong></a></li>
+        <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
+      </ul>
+    </div>
+    <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span> {$navtrail}{/if}</div>
+    {if isset($main_content)}{$main_content}{/if}
+
+  </div>
+{/if}
+
+</div>
+
+
 
 
 

@@ -1,0 +1,23 @@
+<table border="0" width="100%" cellspacing="0" cellpadding="2">
+  <tr>
+    <td class="smallText">{$DISPLAY_COUNT}</td>
+    <td class="smallText" align="right">
+    {if is_array($DISPLAY_LINKS)}
+    <div class="pagination">
+      {$smarty.const.TEXT_RESULT_PAGE}&nbsp;
+      <ul>
+        {if isset($DISPLAY_LINKS.previous)}<li>{$DISPLAY_LINKS.previous}</li>{/if}
+        {if isset($DISPLAY_LINKS.previouspages)}<li>{$DISPLAY_LINKS.previouspages}</li>{/if}
+        {foreach key="keys" name="outer" item="pages" from=$DISPLAY_LINKS.pages}
+          <li class="{$keys}">{$pages}</li>
+        {/foreach}
+        {if isset($DISPLAY_LINKS.nextpages)}<li>{$DISPLAY_LINKS.nextpages}</li>{/if}
+        {if isset($DISPLAY_LINKS.next)}<li>{$DISPLAY_LINKS.next}</li>{/if}
+      </ul>
+    </div>
+    {else}
+      {$smarty.const.TEXT_RESULT_PAGE}&nbsp;{$DISPLAY_LINKS}
+    {/if}
+    </td>
+  </tr>
+</table>
