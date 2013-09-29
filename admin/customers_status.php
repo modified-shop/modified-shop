@@ -420,10 +420,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
 
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_NAME . $customers_status_inputs_string);
-                          // BOF - Tomcraft - 2010-04-08 - Removed line break for better layout
-                          //$contents[] = array('text' => '<br />' . xtc_image(DIR_WS_ICONS . $cInfo->customers_status_image, $cInfo->customers_status_name) . '<br />' . DIR_WS_ICONS . '<br /><b>' . $cInfo->customers_status_image . '</b>');
                           $contents[] = array('text' => '<br />' . xtc_image(DIR_WS_CATALOG.DIR_WS_ICONS . $cInfo->customers_status_image, $cInfo->customers_status_name) . '<br />' . DIR_WS_CATALOG.DIR_WS_ICONS . '<b>' . $cInfo->customers_status_image . '</b>'); 
-                          // EOF - Tomcraft - 2010-04-08 - Removed line break for better layout
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_IMAGE . '<br />' . xtc_draw_file_field('customers_status_image', $cInfo->customers_status_image) . ' (jpg,jpeg,jpe,gif,png,bmp,tiff,tif,bmp)');
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_PUBLIC_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_PUBLIC . ' ' . xtc_draw_pull_down_menu('customers_status_public', $customers_status_public_array, $cInfo->customers_status_public ));
                           $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_MIN_ORDER_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_MIN_ORDER . ' ' . xtc_draw_input_field('customers_status_min_order', $cInfo->customers_status_min_order ));
@@ -469,11 +466,9 @@ require (DIR_WS_INCLUDES.'head.php');
                               $customers_status_inputs_string .= '<br />' . xtc_image(DIR_WS_CATALOG.'lang/'. $languages[$i]['directory'] . '/admin/images/' . $languages[$i]['image'], $languages[$i]['name']) . '&nbsp;' . xtc_get_customers_status_name($cInfo->customers_status_id, $languages[$i]['id']);
                             }
                             $contents[] = array('text' => $customers_status_inputs_string);
-                            //BOC - web28 - add price infos
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_INTRO. '<br />' . ENTRY_CUSTOMERS_STATUS_SHOW_PRICE . ': ' . $customers_status_show_price_array[$cInfo->customers_status_show_price]['text'] . ' (' . $cInfo->customers_status_show_price . ')');
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_INTRO. '<br />' . ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX . ': ' . $customers_status_show_price_tax_array[$cInfo->customers_status_show_price_tax]['text'] . ' (' . $cInfo->customers_status_show_price_tax . ')');
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_ADD_TAX_INTRO. '<br />' . ENTRY_CUSTOMERS_STATUS_ADD_TAX . ': ' . $customers_status_add_tax_ot_array[$cInfo->customers_status_add_tax_ot]['text'] . ' (' . $cInfo->customers_status_add_tax_ot . ')');
-                            //EOC - web28 - add price infos
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_PRICE_INTRO . '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_PRICE . ' ' . $cInfo->customers_status_discount . '%');
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_DISCOUNT_OT_XMEMBER_INTRO . '<br />' . ENTRY_OT_XMEMBER . ' ' . $customers_status_ot_discount_flag_array[$cInfo->customers_status_ot_discount_flag]['text'] . ' (' . $cInfo->customers_status_ot_discount_flag . ')' . ' - ' . $cInfo->customers_status_ot_discount . '%');
                             $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_GRADUATED_PRICES_INTRO . '<br />' . ENTRY_GRADUATED_PRICES . ' ' . $customers_status_graduated_prices_array[$cInfo->customers_status_graduated_prices]['text'] . ' (' . $cInfo->customers_status_graduated_prices . ')' );
