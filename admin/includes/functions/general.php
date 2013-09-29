@@ -2598,6 +2598,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return string html checkboxes by configuration set_function
    */
   function xtc_cfg_multi_checkbox($format, $separator, $checked) {
+    if (preg_match("'chr\(([0-9]{1,3})\)'",$separator, $matches)) {
+      $separator  = chr($matches[1]);
+    }
     $checkboxes = '';
     $checkedboxes = (array) explode($separator, $checked);
     $format_array = (array) function_exists($format) ? $format() : $format;

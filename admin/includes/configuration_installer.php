@@ -71,7 +71,7 @@ $values_group_update = array();
 
 //configuration_group_id 13 --- "Download Optionen"
   $values_update[] = array (
-                           'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \',\', '",
+                           'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\','",
                            'configuration_key' => 'DOWNLOAD_MIN_ORDERS_STATUS'
                            );
 
@@ -181,7 +181,7 @@ $cfg_update = update_config_table($values_update);
 
 //redirect
 if ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update) {
-  #xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));#???
+  xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
 }
 
 //---------- FUNCTIONS ----------//
@@ -236,8 +236,9 @@ function update_config_table($values)
       $check = str_replace(array(", \'",",\'",",'"),"|##|", $check);     
       $check = " AND (" . str_replace(array("=", ","),array("!=", " OR "),$check). ")"; 
       $check = str_replace(array("|##|","|#|"), array(", \'","),'"), $check);
+      $check = str_replace("\', \')", "\',')",$check); 
     
-      $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". $check." LIMIT 1");
+      $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". trim($check)." LIMIT 1");
       if (xtc_db_num_rows($result_cfg) != 0) {
         $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";
 
