@@ -711,7 +711,7 @@ define('MAX_DISPLAY_ORDER_RESULTS_TITLE', 'Number of orders per page');
 define('MAX_DISPLAY_ORDER_RESULTS_DESC', 'Maximum number of orders that are to be displayed in the grid per page.');
 define('MAX_DISPLAY_LIST_PRODUCTS_TITLE', 'Number of products per page');
 define('MAX_DISPLAY_LIST_PRODUCTS_DESC', 'Maximum number of products that are to be displayed in the grid per page.');
-define('MAX_DISPLAY_LIST_CUSTOMERS_TITLE', 'Number of customres per page');
+define('MAX_DISPLAY_LIST_CUSTOMERS_TITLE', 'Number of customers per page');
 define('MAX_DISPLAY_LIST_CUSTOMERS_DESC', 'Maximum number of customers that are to be displayed in the grid per page.');
 define ('MAX_ROW_LISTS_ATTR_OPTIONS_TITLE', 'Product Options: Number of Product Options per page');
 define ('MAX_ROW_LISTS_ATTR_OPTIONS_DESC', 'Maximum number of Product Options to be displayed per page.');
