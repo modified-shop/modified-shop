@@ -98,12 +98,12 @@
       $class = 'class="pageResults"';
 
       $parameters = str_replace('&amp;', '&', $parameters);
-      /*
+      
       if (xtc_not_null($parameters) && (substr($parameters, -1) != '&')) {
         $parameters = ltrim($parameters,'&'); //remove left standing '&'
         $parameters .= '&'; //add '&' added to the right
       } 
-      */
+      
       
       // previous button - not displayed on first page
       if ($this->current_page_number > 1) {
