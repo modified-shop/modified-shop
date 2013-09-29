@@ -57,7 +57,7 @@
       // Display a drop-down
       $manufacturers_array = array ();
       if (MAX_MANUFACTURERS_LIST < 2) {
-        $manufacturers_array[] = array ('id' => '', 'text' => PULL_DOWN_DEFAULT);
+        $manufacturers_array[] = array ('id' => '', 'text' => PULL_DOWN_MANUFACTURER);
       }
       while ($manufacturers = xtc_db_fetch_array($manufacturers_query, true)) {
         $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN).'..' : $manufacturers['manufacturers_name']);
