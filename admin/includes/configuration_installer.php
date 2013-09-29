@@ -74,6 +74,10 @@ $values_group_update = array();
                            'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\','",
                            'configuration_key' => 'DOWNLOAD_MIN_ORDERS_STATUS'
                            );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_checkbox_unallowed_module(\'payment\', \'DOWNLOAD_UNALLOWED_PAYMENT\','",
+                           'configuration_key' => 'DOWNLOAD_UNALLOWED_PAYMENT'
+                           );
 
 //configuration_group_id 14 --- "GZIP Kompression"
 
