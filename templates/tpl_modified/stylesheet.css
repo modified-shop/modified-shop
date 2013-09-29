@@ -11,13 +11,14 @@
    (c) 2002-2003 osCommerce(stylesheet.css,v 1.54 2003/05/27); www.oscommerce.com
    (c) 2003 nextcommerce (stylesheet.css,v 1.7 2003/08/13); www.nextcommerce.org
    (c) 2004 XT-Commerce (stylesheet.css 1262 2005-09-30); www.xt-commerce.com
+   (c) 2007 Ing. Michael Fuerst, bluegate communications, http://www.bluegate.at - xtc5 Template & Stylesheets
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
-
-   xtc5 Template & Stylesheets
-   (c) 2007 Ing. Michael Fuerst, bluegate communications, http://www.bluegate.at
+   (c) 2013 modified eCommerce Shopsoftware - http://www.modified-shop.org     
    ---------------------------------------------------------------------------------------*/
+
+
 
 /* THE BIG GUYS */
 * {
@@ -371,84 +372,7 @@ ul.contentnavigation li.cart a:hover {
   height:40px;
   z-index:1000;
 }
-#cart_long {
-  position:absolute;
-  top:40px;
-  width:360px;
-  right:0px;
-  background:#222;
-  z-index:900;
-  padding:10px 10px 10px 10px;
-  opacity:0.9;
-}
-#cart_long a, #cart_long a:hover {
-  background:none ;
-  padding-left:0px;
-  display:inline;
-  height:auto;
-  font-size:12px;
-  line-height:18px;
-}
-.cartrow {
-  padding: 10px 0px;
-  border-bottom: 1px dashed #ccc;
-}
-.cartrow .cartrow_image {
-  float:left;
-  width:40px;
-  height:40px;
-  overflow:hidden;
-  margin: 0px 0px 0px 0px;
-}
-.cartrow .cartrow_image img {
-  max-width:40px;
-  max-height:40px;
-} 
-.cartrow .cartrow_text {
-  float:right;
-  width:300px;
-  font-size:12px !important;
-  line-height:20px !important;
-  height:40px;
-}
-.cartrow .cartrow_text a {
-  background:none !important;
-  padding-left:0px !important;
-  display:inline !important;
-  height:auto !important;
-  font-size:12px !important;
-  line-height:20px !important;
-}
-.cartrow .cartrow_text a:hover {
-  background:none !important;
-  padding-left:0px !important;
-  display:inline !important;
-  height:auto !important;
-  font-size:12px !important;
-  line-height:20px !important;
-}
-.cart_mini {
-  padding: 5px 0 10px 0;
-  font-size:12px;
-  line-height:18px;
-  text-align:right;
-  color:#fff;
-}
-.cart_mini a {
-  background:none !important;
-  padding-left:0px !important;
-  display:inline !important;
-  height:auto !important;
-  font-size:12px !important;
-  line-height:18px !important;
-}
-.cart_buttons {
-  text-align:center;
-  margin: 10px 0 0 0;  
-}
-.cart_buttons img {
-  padding: 0px 10px;
-}
+
 
 
 /* FAKE HR DIV CAUSE OF IE TROUBLES */
@@ -491,32 +415,9 @@ table td {
   border-width:0 10px 10px 10px;
   margin:0 auto 10px;
 }
-/* HEADER WITH LOGO, SEARCH BOX AND LANGUAGE SELECTION */
-#header {
-  height:115px;
-  background:#893769 url(img/top_logo.jpg) no-repeat;
-  border-top:10px solid #fff;
-  border-bottom:1px solid #fff;
-}
-#header #logo {
-  float:left
-}
-#header #search {
-  width:230px;
-  height:75px;
-  float:right;
-  color:#fff;
-  padding:30px 0 0 60px
-}
-#header #search a {
-  color:#fff;
-  font-size:11px;
-  outline:none;
-}
-#header td {
-  padding-top:1px;
-  padding-right:4px;
-}
+
+
+
 /* BREADCRUMB PATH AS LIST */
 #breadcrumb {
   clear:both;
@@ -538,41 +439,10 @@ table td {
   margin:0;
   padding:0;
 }
-/* TOPMENU AS LIST */
-#topmenuwrap {
-  background:#333 url(img/bg_topmenu.gif) repeat-x;
-}
-#topmenu {
-  float:left;
-  padding:0;
-  margin:0;
-  list-style-type:none;
-  height:36px;
-  font-size:13px;
-  background:url(img/bg_topmenu.gif) repeat-x;
-}
-#topmenu li {
-  height:36px;
-  float:left;
-  padding:0 25px;
-  margin:0;
-  background:url(img/bg_topmenu_breakline.gif) no-repeat;
-  background-position:right;
-}
-#topmenu a, #topmenu a:link, #topmenu a:visited, #topmenu a:hover, #topmenu a:active {
-  line-height:36px;
-  vertical-align:middle;
-  text-decoration:none;
-  outline:none;
-  font-weight:bold;
-  cursor:pointer;
-  color:#fff;
-  margin:0;
-  padding:0;
-}
-#topmenu a:hover {
-  color:#ccc;
-}
+
+
+
+
 
 
 
