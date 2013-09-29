@@ -1,0 +1,12 @@
+
+{$MESSAGE}
+  
+Gutscheinwert {$AMMOUNT}
+
+Ihr Gutscheincode lautet: {$GIFT_ID}
+
+Um Ihren Gutschein zu verbuchen, klicken Sie auf den nachfolgenden Link - {$GIFT_LINK}.
+
+Falls es wider Erwarten zu Problemen beim verbuchen kommen sollte, besuchen Sie unsere Webseite {$WEBSITE} und geben den Gutschein-Code bitte manuell ein.
+
+[SIGNATUR]

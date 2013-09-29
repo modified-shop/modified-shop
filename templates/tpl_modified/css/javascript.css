@@ -1,0 +1,46 @@
+/* -----------------------------------------------------------------------------------------
+   $Id: javascript.css 4202 2013-01-10 20:27:44Z Tomcraft1980 $
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+/*LOADING CSS by Javascript */
+#tabbed_product_info ul {
+display:block;
+margin:0;
+}
+
+#accordion_product_info h3 a {
+display:block;
+}
+
+#tabbed_product_info,#accordion_product_info {
+margin-top:10px;
+}
+
+#tabbed_product_info .morepics {
+background-color:transparent;
+width:506px;
+margin-bottom:0;
+padding-bottom:0;
+border-width:0;
+}
+
+#accordion_product_info .morepics {
+background-color:transparent;
+width:460px;
+margin-bottom:0;
+padding-bottom:0;
+padding-left:0;
+border-width:0;
+}
+
+#tab_description ol,#tab_description ul,#accordion_product_info ol,#accordion_product_info ul {
+display:block;
+margin:10px 0 10px 22px;
+}

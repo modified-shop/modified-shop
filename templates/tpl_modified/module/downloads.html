@@ -1,0 +1,55 @@
+{if $dl neq ''}
+  {config_load file="$language/lang_$language.conf" section="downloads_module"}
+  {config_load file="$language/lang_$language.conf" section="login"}
+  <h1>{#heading_download#}</h1>
+  {if $FORM_ACTION}
+    {if $error != ''}
+      <div class="errormessage">{$error}</div>
+    {/if}
+    {$FORM_ACTION}
+    <div class="highlightbox">
+      <table width="100%" border="0" cellspacing="4" cellpadding="0">
+        <tr>
+          <td colspan="2">{#text_confirm_download#}</td>
+        </tr>
+        <tr>
+          <td width="120"><strong>{#text_email#}</strong></td>
+          <td>{$INPUT_MAIL}</td>
+        </tr>
+      </table>
+    </div>
+    <p>{$BUTTON_LOGIN}</p>
+    {$FORM_END}
+  {else}
+    {if $dl_prevented eq 'true'}
+      {if $dl_not_found}
+        <p>{#download_not_found#}</p>
+      {elseif $dl_exceeded eq 'true'}
+        <p>{#download_exceeded#}</p>
+      {else}
+        <p>{#download_not_allowed#}</p>
+      {/if}
+    {/if}
+
+    {if $dl|@sizeof > 0}
+      <table width="100%" border="0" cellspacing="0" cellpadding="4" class="downloadbox">
+      {foreach name=aussen item=dl_data from=$dl}
+        <tr>
+          <td class="icon">
+          {if $dl_data.allowed}
+            <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download.jpg" alt="" border="0" /></a>
+          {else}
+            <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download_locked.jpg" alt="" border="0" /></a>
+          {/if}
+        </td>
+          <td class="downloadlink">
+          <strong>{$dl_data.download_link}</strong><br />
+          {#table_heading_download_date#}&nbsp;{$dl_data.date}, <strong>{$dl_data.count}</strong>&nbsp;{#table_heading_download_count#}
+        </td>
+        </tr>
+      {/foreach}
+      </table>
+    {/if}
+  {/if}
+{/if}
+{if $BUTTON_BACK && !$FORM_ACTION}<p>{$BUTTON_BACK}</p>{/if}

@@ -1,0 +1,12 @@
+__________________________________________________________________
+
+Firma
+Adresse
+Ort
+Homepage
+E-Mail
+Fon:
+Fax:
+USt-IdNr.:
+Handelsregister
+Geschäftsführer:

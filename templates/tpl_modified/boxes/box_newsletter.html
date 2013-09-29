@@ -1,0 +1,10 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<h2 class="boxheader">{#heading_guestnewsletter#}</h2>
+<div class="boxbody">
+  {$FORM_ACTION}
+    <p>{#text_email#}:</p>
+    <p>{$FIELD_EMAIL}</p>
+    <p>{$BUTTON}</p>
+    <p>{#text_newsletter#}</p>
+  {$FORM_END}
+</div>
