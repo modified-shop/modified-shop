@@ -40,7 +40,7 @@
         xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . (int)$manufacturers_id . "'");
       }
 
-      $dir_manufacturers=DIR_FS_CATALOG_IMAGES."/manufacturers/";
+      $dir_manufacturers = DIR_FS_CATALOG_IMAGES."/manufacturers/";
       if ($_POST['delete_image'] == 'on') {
         if (file_exists($dir_manufacturers.$_POST['manufacturers_image'])) {
           @unlink($dir_manufacturers.$_POST['manufacturers_image']);
