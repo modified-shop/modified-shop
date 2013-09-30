@@ -39,29 +39,23 @@ require_once (DIR_FS_INC.'changedatain.inc.php');
 // initialize smarty
 $smarty = new Smarty;
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-if (@is_array($_SESSION['nvpReqArray']) && $_SESSION['payment'] == 'paypalexpress') {
+### Paypal Express Modul
+if (isset($_SESSION['nvpReqArray']) && is_array($_SESSION['nvpReqArray']) && $_SESSION['payment'] == 'paypalexpress') {
   if ($_POST['comments_added'] != '') {
     $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
   }
-}
-$error_mess='';
-if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-  if (@is_array($_SESSION['nvpReqArray']) && $_POST['conditions'] != 'conditions' && $_SESSION['payment'] == 'paypalexpress') {
-    $error_mess='1';
+  $error_mess  = '';
+  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && $_POST['conditions'] != 'conditions') {
+    $error_mess = '1';
+  }
+  if ($_POST['check_address'] != 'address') {
+    $error_mess .= '2';
+  }
+  if($error_mess != '') {
+    xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, 'error_message='.$error_mess, 'SSL', true, false));
   }
 }
-if (@is_array($_SESSION['nvpReqArray']) && $_POST['check_address'] != 'address' && $_SESSION['payment'] == 'paypalexpress') {
-  $error_mess.='2';
-}
-if($error_mess!='') {
-  xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, 'error_message='.$error_mess, 'SSL', true, false));
-}
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-
-### Paypal Express Modul
 if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
-  // avoid hack attempts during the checkout procedure by checking the internal cartID
   if (isset($_SESSION['cartID']) && $_SESSION['cart']->cartID != $_SESSION['cartID']) {
     xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
   }
@@ -75,7 +69,7 @@ require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
 require_once  (DIR_WS_CLASSES.'payment.php');
-if (isset ($_SESSION['credit_covers'])) {
+if (isset($_SESSION['credit_covers'])) {
   $_SESSION['payment'] = ''; //ICW added for CREDIT CLASS
 }
 $payment_modules = new payment($_SESSION['payment']);
@@ -84,10 +78,7 @@ $payment_modules = new payment($_SESSION['payment']);
 require (DIR_WS_CLASSES.'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
 
-//--- SHOPSTAT -------------------------//
-//require (DIR_WS_CLASSES.'order.php');
 require_once(DIR_WS_CLASSES.'order.php');
-//--- SHOPSTAT -------------------------//
 $order = new order();
 
 //$payment_modules->before_process(); // DokuMan - 2011-05-09 - Load the Order Total Modules Before Loading the Payment Modules
@@ -99,13 +90,13 @@ $order_totals = $order_total_modules->process();
 $payment_modules->before_process(); // DokuMan - 2011-05-09 - Load the Order Total Modules Before Loading the Payment Modules
 
 // check if tmp order id exists
-if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokuman - 2009-10-11 - Paypal fix for infinite loop see, http://www.modified-shop.org/forum/topic.php?id=2235
+if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   $tmp = false;
   $insert_id = $_SESSION['tmp_oID'];
 } else {
   // check if tmp order needs to be created
   // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-  //if (isset ($$_SESSION['payment']->form_action_url) && $$_SESSION['payment']->tmpOrders) {
+  //if (isset($$_SESSION['payment']->form_action_url) && $$_SESSION['payment']->tmpOrders) {
   if (isset($$_SESSION['payment']->tmpOrders) && $$_SESSION['payment']->tmpOrders == true) {
   // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
     $tmp = true;
@@ -122,7 +113,6 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
   }
   // BMC CC Mod End
 
-  // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == 1) {
     $discount = $_SESSION['customers_status']['customers_status_ot_discount'];
   } else {
@@ -135,103 +125,107 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
     $customers_ip = $_SERVER['REMOTE_ADDR'];
   }
 
-  $sql_data_array = array ('customers_id' => $_SESSION['customer_id'],
-                           'customers_name' => $order->customer['firstname'].' '.$order->customer['lastname'],
-                           'customers_firstname' => $order->customer['firstname'],
-                           'customers_lastname' => $order->customer['lastname'],
-                           'customers_cid' => $order->customer['csID'],
-                           'customers_vat_id' => $_SESSION['customer_vat_id'],
-                           'customers_company' => $order->customer['company'],
-                           'customers_status' => $_SESSION['customers_status']['customers_status_id'],
-                           'customers_status_name' => $_SESSION['customers_status']['customers_status_name'],
-                           'customers_status_image' => $_SESSION['customers_status']['customers_status_image'],
-                           'customers_status_discount' => $discount,
-                           'customers_street_address' => $order->customer['street_address'],
-                           'customers_suburb' => $order->customer['suburb'],
-                           'customers_city' => $order->customer['city'],
-                           'customers_postcode' => $order->customer['postcode'],
-                           'customers_state' => $order->customer['state'],
-                           'customers_country' => $order->customer['country']['title'],
-                           'customers_telephone' => $order->customer['telephone'],
-                           'customers_email_address' => $order->customer['email_address'],
-                           'customers_address_format_id' => $order->customer['format_id'],
-                           'delivery_name' => $order->delivery['firstname'].' '.$order->delivery['lastname'],
-                           'delivery_firstname' => $order->delivery['firstname'],
-                           'delivery_lastname' => $order->delivery['lastname'],
-                           'delivery_company' => $order->delivery['company'],
-                           'delivery_street_address' => $order->delivery['street_address'],
-                           'delivery_suburb' => $order->delivery['suburb'],
-                           'delivery_city' => $order->delivery['city'],
-                           'delivery_postcode' => $order->delivery['postcode'],
-                           'delivery_state' => $order->delivery['state'],
-                           'delivery_country' => $order->delivery['country']['title'],
-                           'delivery_country_iso_code_2' => $order->delivery['country']['iso_code_2'],
-                           'delivery_address_format_id' => $order->delivery['format_id'],
-                           'billing_name' => $order->billing['firstname'].' '.$order->billing['lastname'],
-                           'billing_firstname' => $order->billing['firstname'],
-                           'billing_lastname' => $order->billing['lastname'],
-                           'billing_company' => $order->billing['company'],
-                           'billing_street_address' => $order->billing['street_address'],
-                           'billing_suburb' => $order->billing['suburb'],
-                           'billing_city' => $order->billing['city'],
-                           'billing_postcode' => $order->billing['postcode'],
-                           'billing_state' => $order->billing['state'],
-                           'billing_country' => $order->billing['country']['title'],
-                           'billing_country_iso_code_2' => $order->billing['country']['iso_code_2'],
-                           'billing_address_format_id' => $order->billing['format_id'],
-                           'cc_start' => $order->info['cc_start'],
-                           'cc_cvv' => $order->info['cc_cvv'],
-                           'cc_issue' => $order->info['cc_issue'],
-                           'payment_method' => $order->info['payment_method'],
-                           'payment_class' => $order->info['payment_class'],
-                           'shipping_method' => $order->info['shipping_method'],
-                           'shipping_class' => $order->info['shipping_class'],
-                           'cc_type' => $order->info['cc_type'],
-                           'cc_owner' => $order->info['cc_owner'],
-                           'cc_number' => $order->info['cc_number'],
-                           'cc_expires' => $order->info['cc_expires'],
-                           'date_purchased' => 'now()',
-                           'orders_status' => $tmp_status,
-                           'currency' => $order->info['currency'],
-                           'currency_value' => $order->info['currency_value'],
-                           'account_type' => $_SESSION['account_type'], //web28 - 2012-04-12 add missing account-type
-                           'customers_ip' => $customers_ip,
-                           'language' => $_SESSION['language'],
-                           'comments' => $order->info['comments']
-                           );
-  // EOF - Tomcraft - 2009-10-03 -Paypal Express Modul (andere Schreibweise)
+  $sql_data_array = array (
+      'customers_id' => $_SESSION['customer_id'],
+      'customers_name' => $order->customer['firstname'].' '.$order->customer['lastname'],
+      'customers_firstname' => $order->customer['firstname'],
+      'customers_lastname' => $order->customer['lastname'],
+      'customers_cid' => $order->customer['csID'],
+      'customers_vat_id' => $_SESSION['customer_vat_id'],
+      'customers_company' => $order->customer['company'],
+      'customers_status' => $_SESSION['customers_status']['customers_status_id'],
+      'customers_status_name' => $_SESSION['customers_status']['customers_status_name'],
+      'customers_status_image' => $_SESSION['customers_status']['customers_status_image'],
+      'customers_status_discount' => $discount,
+      'customers_street_address' => $order->customer['street_address'],
+      'customers_suburb' => $order->customer['suburb'],
+      'customers_city' => $order->customer['city'],
+      'customers_postcode' => $order->customer['postcode'],
+      'customers_state' => $order->customer['state'],
+      'customers_country' => $order->customer['country']['title'],
+      'customers_telephone' => $order->customer['telephone'],
+      'customers_email_address' => $order->customer['email_address'],
+      'customers_address_format_id' => $order->customer['format_id'],
+      'delivery_name' => $order->delivery['firstname'].' '.$order->delivery['lastname'],
+      'delivery_firstname' => $order->delivery['firstname'],
+      'delivery_lastname' => $order->delivery['lastname'],
+      'delivery_company' => $order->delivery['company'],
+      'delivery_street_address' => $order->delivery['street_address'],
+      'delivery_suburb' => $order->delivery['suburb'],
+      'delivery_city' => $order->delivery['city'],
+      'delivery_postcode' => $order->delivery['postcode'],
+      'delivery_state' => $order->delivery['state'],
+      'delivery_country' => $order->delivery['country']['title'],
+      'delivery_country_iso_code_2' => $order->delivery['country']['iso_code_2'],
+      'delivery_address_format_id' => $order->delivery['format_id'],
+      'billing_name' => $order->billing['firstname'].' '.$order->billing['lastname'],
+      'billing_firstname' => $order->billing['firstname'],
+      'billing_lastname' => $order->billing['lastname'],
+      'billing_company' => $order->billing['company'],
+      'billing_street_address' => $order->billing['street_address'],
+      'billing_suburb' => $order->billing['suburb'],
+      'billing_city' => $order->billing['city'],
+      'billing_postcode' => $order->billing['postcode'],
+      'billing_state' => $order->billing['state'],
+      'billing_country' => $order->billing['country']['title'],
+      'billing_country_iso_code_2' => $order->billing['country']['iso_code_2'],
+      'billing_address_format_id' => $order->billing['format_id'],
+      'cc_start' => $order->info['cc_start'],
+      'cc_cvv' => $order->info['cc_cvv'],
+      'cc_issue' => $order->info['cc_issue'],                           
+      'payment_method' => $order->info['payment_method'],
+      'payment_class' => $order->info['payment_class'],
+      'shipping_method' => $order->info['shipping_method'],
+      'shipping_class' => $order->info['shipping_class'],
+      'cc_type' => $order->info['cc_type'],
+      'cc_owner' => $order->info['cc_owner'],
+      'cc_number' => $order->info['cc_number'],
+      'cc_expires' => $order->info['cc_expires'],
+      'date_purchased' => 'now()',
+      'orders_status' => $tmp_status,
+      'currency' => $order->info['currency'],
+      'currency_value' => $order->info['currency_value'],
+      'account_type' => $_SESSION['account_type'],
+      'customers_ip' => $customers_ip,
+      'language' => $_SESSION['language'],
+      'comments' => $order->info['comments']
+    );  
 
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
   $_SESSION['tmp_oID'] = $insert_id;
 
   for ($i = 0, $n = sizeof($order_totals); $i < $n; $i ++) {
-    $sql_data_array = array ('orders_id' => $insert_id,
-                             'title' => $order_totals[$i]['title'],
-                             'text' => $order_totals[$i]['text'],
-                             'value' => $order_totals[$i]['value'],
-                             'class' => $order_totals[$i]['code'],
-                             'sort_order' => $order_totals[$i]['sort_order']);
+    $sql_data_array = array (
+        'orders_id' => $insert_id,
+        'title' => $order_totals[$i]['title'],
+        'text' => $order_totals[$i]['text'],
+        'value' => $order_totals[$i]['value'],
+        'class' => $order_totals[$i]['code'],
+        'sort_order' => $order_totals[$i]['sort_order']
+      );
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
   }
 
-  /* magnalister v1.0.1 */
+  ### magnalister v1.0.1
   if (function_exists('magnaExecute')) magnaExecute('magnaInsertOrderDetails', array('oID' => $insert_id), array('order_details.php'));
   if (function_exists('magnaExecute')) magnaExecute('magnaInventoryUpdate', array('action' => 'inventoryUpdateOrder'), array('inventoryUpdate.php'));
-  /* END magnalister */
+  ### magnalister
 
   $customer_notification = (SEND_EMAILS == 'true') ? '1' : '0';
 
-  $sql_data_array = array ('orders_id' => $insert_id,
-                           'orders_status_id' => $order->info['order_status'],
-                           'date_added' => 'now()',
-                           'customer_notified' => $customer_notification,
-                           'comments' => $order->info['comments']);
+  $sql_data_array = array (
+      'orders_id' => $insert_id,
+      'orders_status_id' => $order->info['order_status'],
+      'date_added' => 'now()',
+      'customer_notified' => $customer_notification,
+      'comments' => $order->info['comments']
+    );
   xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
 
   // initialized for the email confirmation
-  $products_ordered = '';
-  $products_ordered_html = '';
+  $products_ordered = '';#rem
+  $products_ordered_html = '';#rem
   //$subtotal = 0;  //DokuMan - 2011-05-10 - remove redundant variables
   //$total_tax = 0; //DokuMan - 2011-05-10 - remove redundant variables
 
@@ -258,10 +252,10 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
         }
         $stock_query = xtc_db_query($stock_query_raw);
       } else {
-        $stock_query = xtc_db_query("-- /checkout_process.php
-                                     SELECT products_quantity
-                                       FROM ".TABLE_PRODUCTS."
-                                      WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
+        $stock_query = xtc_db_query(" -- /checkout_process.php
+                                    SELECT products_quantity
+                                      FROM ".TABLE_PRODUCTS."
+                                     WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
       }
       if (xtc_db_num_rows($stock_query) > 0) {
         $stock_values = xtc_db_fetch_array($stock_query);
@@ -288,25 +282,25 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
                      SET products_ordered = products_ordered + ".sprintf('%d', $order->products[$i]['qty'])."
                    WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
 
-    $sql_data_array = array ('orders_id' => $insert_id,
-                             'products_id' => xtc_get_prid($order->products[$i]['id']),
-                             'products_model' => $order->products[$i]['model'],
-                             'products_name' => $order->products[$i]['name'],
-                             'products_shipping_time'=>$order->products[$i]['shipping_time'],
-                             'products_price' => $order->products[$i]['price'],
-                             'final_price' => $order->products[$i]['final_price'],
-                             'products_tax' => $order->products[$i]['tax'],
-                             'products_discount_made' => isset($order->products[$i]['discount_allowed']) ? $order->products[$i]['discount_allowed'] : 0,
-                             'products_quantity' => $order->products[$i]['qty'],
-                             'allow_tax' => $_SESSION['customers_status']['customers_status_show_price_tax']
-    );
-
+    $sql_data_array = array (
+        'orders_id' => $insert_id,
+        'products_id' => xtc_get_prid($order->products[$i]['id']),
+        'products_model' => $order->products[$i]['model'],
+        'products_name' => $order->products[$i]['name'],
+        'products_shipping_time'=>$order->products[$i]['shipping_time'],
+        'products_price' => $order->products[$i]['price'],
+        'final_price' => $order->products[$i]['final_price'],
+        'products_tax' => $order->products[$i]['tax'],
+        'products_discount_made' => isset($order->products[$i]['discount_allowed']) ? $order->products[$i]['discount_allowed'] : 0,
+        'products_quantity' => $order->products[$i]['qty'],
+        'allow_tax' => $_SESSION['customers_status']['customers_status_show_price_tax']
+      );
     $add_data_array = array('products_order_description' => $order->products[$i]['order_description']);
     $sql_data_array = array_merge($sql_data_array, $add_data_array);
     xtc_db_perform(TABLE_ORDERS_PRODUCTS, $sql_data_array);
     $order_products_id = xtc_db_insert_id();
 
-    // Aenderung Specials Quantity Anfang
+    // update specials quantity
     $specials_result = xtc_db_query("SELECT products_id,
                                             specials_quantity
                                        FROM ".TABLE_SPECIALS."
@@ -326,13 +320,12 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
                        WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
       }
     }
-    // Aenderung Ende
 
     $order_total_modules->update_credit_account($i); // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
     //------insert customer choosen option to order--------
     $attributes_exist = '0';
     $products_ordered_attributes = '';
-    if (isset ($order->products[$i]['attributes'])) {
+    if (isset($order->products[$i]['attributes'])) {
       $attributes_exist = '1';
       for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
 
@@ -347,15 +340,16 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
         }
 
         //update attributes
-        $sql_data_array = array ('orders_id' => $insert_id,
-                                 'orders_products_id' => $order_products_id,
-                                 'products_options' => $order->products[$i]['attributes'][$j]['option'],
-                                 'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
-                                 'options_values_price' => $order->products[$i]['attributes'][$j]['price'],
-                                 'price_prefix' => $order->products[$i]['attributes'][$j]['prefix'],
-                                 'orders_products_options_id' => $order->products[$i]['attributes'][$j]['option_id'],
-                                 'orders_products_options_values_id' => $order->products[$i]['attributes'][$j]['value_id']
-                                );
+        $sql_data_array = array (
+            'orders_id' => $insert_id,
+            'orders_products_id' => $order_products_id,
+            'products_options' => $order->products[$i]['attributes'][$j]['option'],
+            'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
+            'options_values_price' => $order->products[$i]['attributes'][$j]['price'],
+            'price_prefix' => $order->products[$i]['attributes'][$j]['prefix'],
+            'orders_products_options_id' => $order->products[$i]['attributes'][$j]['option_id'],
+            'orders_products_options_values_id' => $order->products[$i]['attributes'][$j]['value_id']
+          );
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
         //update attributes download
@@ -374,14 +368,13 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
           $attributes_dl_array = xtc_db_fetch_array($attributes_dl_query);
           
           if (xtc_not_null($attributes_values['products_attributes_filename'])) {
-          
-
-            $sql_data_array = array ('orders_id' => $insert_id,
-                                     'orders_products_id' => $order_products_id,
-                                     'orders_products_filename' => $attributes_dl_array['products_attributes_filename'],
-                                     'download_maxdays' => $attributes_dl_array['products_attributes_maxdays'],
-                                     'download_count' => $attributes_dl_array['products_attributes_maxcount']
-                                    );
+            $sql_data_array = array (
+                'orders_id' => $insert_id,
+                'orders_products_id' => $order_products_id,
+                'orders_products_filename' => $attributes_dl_array['products_attributes_filename'],
+                'download_maxdays' => $attributes_dl_array['products_attributes_maxdays'],
+                'download_count' => $attributes_dl_array['products_attributes_maxcount']
+              );
             xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
           }
         }
@@ -396,7 +389,7 @@ if (isset ($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) { // Dokum
   }
 
   // check refID
-  if (isset ($_SESSION['tracking']['refID'])) {
+  if (isset($_SESSION['tracking']['refID'])) {
     $refferers_id = $_SESSION['tracking']['refID'];
   } else {
     $customers_query = xtc_db_query("SELECT refferers_id as ref FROM ".TABLE_CUSTOMERS." WHERE customers_id='".(int)$_SESSION['customer_id']."'");
@@ -443,8 +436,7 @@ if (!$tmp) {
   // load the after_process function from the payment modules
   $payment_modules->after_process();
 
-  // BOF - Tomcraft - 2009-10-03 - PayPal Express Modul
-  // PayPal ERROR Check, Order gespeichert, Mail gesendet, Cart noch belegt
+  ### PayPal Express Modul - PayPal ERROR Check, Order gespeichert, Mail gesendet, Cart noch belegt
   if( isset($_SESSION['reshash']['ACK']) && strtoupper($_SESSION['reshash']['ACK'])!="SUCCESS" && strtoupper($_SESSION['reshash']['ACK'])!="SUCCESSWITHWARNING") {
     if($_SESSION['payment'] == 'paypalexpress') {
       xtc_redirect($o_paypal->EXPRESS_CANCEL_URL);
@@ -456,36 +448,37 @@ if (!$tmp) {
       }
     }
   }
-  // EOF - Tomcraft - 2009-10-03 - PayPal Express Modul
+  ### PayPal Express Modul
+
   $_SESSION['cart']->reset(true);
 
   // unregister session variables used during checkout
   unset ($_SESSION['sendto']);
   unset ($_SESSION['billto']);
   unset ($_SESSION['shipping']);
-  // BOF - Tomcraft - 2009-10-03 - PayPal Express Modul
+  ### PayPal Express Modul
   //unset ($_SESSION['payment']);
-  // EOF - Tomcraft - 2009-10-03 - PayPal Express Modul
+  ### PayPal Express Modul
   unset ($_SESSION['comments']);
   //unset ($_SESSION['last_order']);
   unset ($_SESSION['tmp_oID']);
   unset ($_SESSION['cc']);
   $last_order = $insert_id;
   //GV Code Start
-  if (isset ($_SESSION['credit_covers'])) {
+  if (isset($_SESSION['credit_covers'])) {
     unset ($_SESSION['credit_covers']);
   }
   $order_total_modules->clear_posts(); //ICW ADDED FOR CREDIT CLASS SYSTEM
   // GV Code End
 
-  // BOF - Tomcraft - 2009-11-28 - Included xs:booster
-  if(@isset($_SESSION['xtb0'])) {
+  ### Included xs:booster
+  if(isset($_SESSION['xtb0'])) {
     define('XTB_CHECKOUT_PROCESS', __LINE__);
-    require_once (DIR_FS_CATALOG.'callback/xtbooster/xtbcallback.php'); //DokuMan - Moved xtbcallback.php to callback directory
+    require_once (DIR_FS_CATALOG.'callback/xtbooster/xtbcallback.php');
   }
-  // EOF - Tomcraft - 2009-11-28 - Included xs:booster
+  ### Included xs:booster
 
-  // BOF - Tomcraft - 2009-10-03 - PayPal Express Modul (PayPal GiroPay aufrufen zum bestätigen)
+  ### PayPal Express Modul - PayPal GiroPay aufrufen zum bestätigen
   if(isset($_SESSION['reshash']['REDIRECTREQUIRED'])  && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED'])=="TRUE") {
     $payment_modules->giropay_process();
   } else {
@@ -493,7 +486,7 @@ if (!$tmp) {
     unset($_SESSION['nvpReqArray']);
     unset($_SESSION['reshash']);
   }
-  // EOF - Tomcraft - 2009-10-03 - PayPal Express Modul (PayPal GiroPay aufrufen zum bestätigen)
+  ### PayPal Express Modul
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }

@@ -27,18 +27,20 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 include ('includes/application_top.php');
-//web28 - 2012-04-27 - pre-selection the cheapest shipping option
+
+// pre-selection the cheapest shipping option
 if (!defined('CHECK_CHEAPEST_SHIPPING_MODUL')) {
-  define ('CHECK_CHEAPEST_SHIPPING_MODUL', false); //true, false - default false
+  define ('CHECK_CHEAPEST_SHIPPING_MODUL', false); // default: false
 }
+
 // create smarty elements
 $smarty = new Smarty;
 $smarty->caching = false; //DokuMan - 2012-10-30 - avoid Smarty caching in order to display the correct data, if caching is enabled in shop backend
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-// include needed functions
 
+// include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
@@ -48,7 +50,7 @@ require (DIR_WS_CLASSES.'http_client.php');
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // if no shipping destination address was selected, use the customers own address as default
-if (!isset ($_SESSION['sendto'])) {
+if (!isset($_SESSION['sendto'])) {
 	$_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 } else {
   // verify the selected shipping address
@@ -57,32 +59,30 @@ if (!isset ($_SESSION['sendto'])) {
 
   if ($check_address['total'] != '1') {
     $_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
-    if (isset ($_SESSION['shipping']))
+    if (isset($_SESSION['shipping']))
       unset ($_SESSION['shipping']);
   }
 }
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+### Paypal Express Modul
 if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
   unset($_SESSION['payment']);
   unset($_SESSION['nvpReqArray']);
   unset($_SESSION['reshash']);
   unset($_SESSION['paypal_express_checkout']);
 }
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+### Paypal Express Modul
 
 require (DIR_WS_CLASSES.'order.php');
 $order = new order();
 
-//BOF - DokuMan - 2010-08-30 - check for cartID also in checkout_shipping
 // avoid hack attempts during the checkout procedure by checking the internal cartID
-if (isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) {
+if (isset($_SESSION['cart']->cartID) && isset($_SESSION['cartID'])) {
     if ($_SESSION['cart']->cartID !== $_SESSION['cartID']) {
       unset($_SESSION['shipping']);
       unset($_SESSION['payment']);
     }
 }
-//EOF - DokuMan - 2010-08-30 - check for cartID also in checkout_shipping
 
 // register a random ID in the session to check throughout the checkout procedure
 // against alterations in the shopping cart contents
@@ -115,11 +115,11 @@ if ($free_shipping == true) {
 }
 
 // process the selected shipping method
-if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
+if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   if ((xtc_count_shipping_modules() > 0) || ($free_shipping == true)) {
-    if ((isset ($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
-      $_SESSION['shipping'] = $_POST['shipping'];
+    if ((isset($_POST['shipping'])) && (strpos($_POST['shipping'], '_'))) {
+      $_SESSION['shipping'] = $_POST['shipping'];#sec
 
       list ($module, $method) = explode('_', $_SESSION['shipping']);
       if ((isset($$module) && is_object($$module) ) || ($_SESSION['shipping'] == 'free_free')) {
@@ -129,14 +129,15 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
         } else {
           $quote = $shipping_modules->quote($method, $module);
         }
-        if (isset ($quote['error'])) {
+        if (isset($quote['error'])) {
           unset ($_SESSION['shipping']);
         } else {
-          if ((isset ($quote[0]['methods'][0]['title'])) && (isset ($quote[0]['methods'][0]['cost']))) {
-            $_SESSION['shipping'] = array ('id' => $_SESSION['shipping'],
+          if ((isset($quote[0]['methods'][0]['title'])) && (isset($quote[0]['methods'][0]['cost']))) {
+            $_SESSION['shipping'] = array (
+			                               'id' => $_SESSION['shipping'],
                                            'title' => (($free_shipping == true) ? $quote[0]['methods'][0]['title'] : $quote[0]['module'].' ('.$quote[0]['methods'][0]['title'].')'),
-                                           'cost' => $quote[0]['methods'][0]['cost']);
-
+                                           'cost' => $quote[0]['methods'][0]['cost']
+										   );
             xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
           }
         }
@@ -159,7 +160,7 @@ $quotes = $shipping_modules->quote();
 // if the modules status was changed when none were available, to save on implementing
 // a javascript force-selection method, also automatically select the cheapest shipping
 // method if more than one module is now enabled
-if ((!isset ($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL) || (isset ($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) { //web28 - 2012-04-27 - pre-selection the cheapest shipping option
+if ((!isset($_SESSION['shipping']) && CHECK_CHEAPEST_SHIPPING_MODUL) || (isset($_SESSION['shipping']) && ($_SESSION['shipping'] == false) && (xtc_count_shipping_modules() > 1))) { //web28 - 2012-04-27 - pre-selection the cheapest shipping option
 	$_SESSION['shipping'] = $shipping_modules->cheapest();
 }
 $breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_SHIPPING, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
@@ -170,12 +171,11 @@ require (DIR_WS_INCLUDES.'header.php');
 $smarty->assign('FORM_ACTION', xtc_draw_form('checkout_address', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL')).xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('ADDRESS_LABEL', xtc_address_label($_SESSION['customer_id'], $_SESSION['sendto'], true, ' ', '<br />'));
 $smarty->assign('BUTTON_ADDRESS', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING_ADDRESS, '', 'SSL').'">'.xtc_image_button('button_change_address.gif', IMAGE_BUTTON_CHANGE_ADDRESS).'</a>');
-// DokuMan - 2009-06-01 - do not correct the name 'BUTON_CONTINUE' to remain compatible to standard templates
-$smarty->assign('BUTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
+$smarty->assign('BUTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));// 'BUTON_CONTINUE' to remain compatible to standard templates
 $smarty->assign('FORM_END', '</form>');
 
 $module_smarty = new Smarty;
-$shipping_block = ''; //DokuMan - 2010-08-30 - set undefined variable
+$shipping_block = '';
 if (xtc_count_shipping_modules() > 0) {
   $showtax = $_SESSION['customers_status']['customers_status_show_price_tax'];
   $module_smarty->assign('FREE_SHIPPING', $free_shipping);
@@ -188,7 +188,7 @@ if (xtc_count_shipping_modules() > 0) {
     $radio_buttons = 0;
     #loop through installed shipping methods...
     for ($i = 0, $n = sizeof($quotes); $i < $n; $i ++) {
-      if (!isset ($quotes[$i]['error'])) {
+      if (!isset($quotes[$i]['error'])) {
         for ($j = 0, $n2 = sizeof($quotes[$i]['methods']); $j < $n2; $j ++) {
           # set the radio button to be checked if it is the method chosen
           $quotes[$i]['methods'][$j]['radio_buttons'] = $radio_buttons;
@@ -222,8 +222,8 @@ $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('SHIPPING_BLOCK', $shipping_block);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/checkout_shipping.html');
 $smarty->assign('main_content', $main_content);
-if (!defined('RM'))
-  $smarty->load_filter('output', 'note');
+if (!defined('RM'))	$smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');
+
 include ('includes/application_bottom.php');
 ?>

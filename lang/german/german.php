@@ -448,10 +448,8 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />Dieser Coupon ist g&uuml;ltig vom %
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Artikel / Kategorie Einschr&auml;nkungen');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Kategorie');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Artikel');
-//BOF - DokuMan - 2010-10-28 - Added text-constant for emailing voucher
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Ung&uuml;ltiger Gutscheinbetrag');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Ung&uuml;ltige E-Mail Adresse');
-//EOF - DokuMan - 2010-10-28 - Added text-constant for emailing voucher
 
 // VAT Reg No
 define('ENTRY_VAT_TEXT', 'Nur f&uuml;r Deutschland und EU!');
@@ -472,11 +470,9 @@ define('TAX_INFO_ADD','zzgl. %s MwSt.');
 define('SHIPPING_EXCL','zzgl.');
 define('SHIPPING_COSTS','Versandkosten');
 
-// changes 3.0.4 SP2
 define('SHIPPING_TIME','Lieferzeit: ');
 define('MORE_INFO','[Mehr]');
 
-// changes 3.0.4 SP2.2
 define('ENTRY_PRIVACY_ERROR','Bitte akzeptieren Sie unsere Datenschutzrichtlinien!');
 define('TEXT_PAYMENT_FEE','Zahlungsgeb&uuml;hr');
 
@@ -514,7 +510,7 @@ define('HEADER_SINGLE', 'Einzelpreis');
 define('HEADER_TOTAL','Summe');
 // EOF - DokuMan - 2010-09-06 - combined checkout_confirmation messages in one language file
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+### PayPal API Modul
 define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
 define('PAYPAL_ERROR','PayPal Abbruch');
 define('PAYPAL_NOT_AVIABLE','PayPal Express steht zur Zeit leider nicht zur Verf&uuml;gung.<br />Bitte w&auml;hlen Sie eine andere Zahlungsart<br />oder versuchen Sie es sp&auml;ter noch einmal.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />');
@@ -527,16 +523,13 @@ define('PAYPAL_TAX','MwSt.');
 define('PAYPAL_EXP_WARN','Achtung! Eventuell anfallende Versandkosten werden erst im Shop endg&uuml;ltig berechnet.');
 define('PAYPAL_EXP_VORL','Vorl&auml;ufige Versandkosten');
 define('PAYPAL_EXP_VERS','6.90');
-// 09.01.11
 define('PAYPAL_ADRESSE','Das Land in Ihrer PayPal-Versand-Adresse ist in unserem Shop nicht eingetragen.<br />Bitte nehmen Sie mit uns Kontakt auf.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />Von PayPal empfangenes Land: ');
-// 17.09.11
 define('PAYPAL_AMMOUNT_NULL','Die zu erwartende Auftrags-Summe (ohne Versand) ist gleich 0.<br />Dadurch steht PayPal Express nicht zur Verf&uuml;gung.<br />Bitte w&auml;hlen Sie eine andere Zahlungsart.<br />Danke f&uuml;r Ihr Verst&auml;ndnis.<br />');
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+### PayPal API Modul
 
-define('BASICPRICE_VPE_TEXT','bei dieser Menge nur '); // Hetfield - 2009-11-26 - Added language definition for vpe at graduated prices
-//web - 2010-07-11 - Preisanzeige bei Staffelpreisen (größte Staffel)
+define('BASICPRICE_VPE_TEXT','bei dieser Menge nur ');
 define('GRADUATED_PRICE_MAX_VALUE', 'ab');
-
+define('_SHIPPING_TO', 'Versand nach ');
 
 // bof - hendrik 2011-07-17 - translations in current language
 // countries[ID of country in database] = name of country in this language if different from english name in database
@@ -694,10 +687,8 @@ define('COUNTRIES_NAMES_CONVERT_SORT_FROM',  'ÄÖÜäöüéãíß'); // special
 define('COUNTRIES_NAMES_CONVERT_SORT_TO',    'aouaoueais'); // for sort convert before to
 // eof - hendrik 2011-07-17 - translations in current language
   
-// BOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 define('ERROR_SQL_DB_QUERY','Es tut uns leid, aber es ist ein Datenbankfehler aufgetreten.');
 define('ERROR_SQL_DB_QUERY_REDIRECT','Sie werden in %s Sekunden auf unsere Homepage weitergeleitet!');
-// EOF - DokuMan - 2011-09-20 - E-Mail SQL errors
 
 define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformationen %s,<br/>sowie unsere Widerrufsbelehrung %s zur Kenntnis.');
 
