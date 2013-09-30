@@ -40,14 +40,15 @@
       if ($_POST['delete_image'] == 'on') {
         if (file_exists($dir_manufacturers.$_POST['manufacturers_image'])) {
           @unlink($dir_manufacturers.$_POST['manufacturers_image']);
-          xtc_db_query("update " . TABLE_MANUFACTURERS . " set manufacturers_image = '' where manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
+          xtc_db_query("UPDATE " . TABLE_MANUFACTURERS . " SET manufacturers_image = '' WHERE manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
         }
       }
-
-      if ($manufacturers_image = xtc_try_upload('manufacturers_image', $dir_manufacturers)) {
-          xtc_db_query("update " . TABLE_MANUFACTURERS . " set
-                                   manufacturers_image = 'manufacturers/".$manufacturers_image->filename . "'
-                                   where manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
+      $accepted_manufacturers_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
+      $accepted_manufacturers_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+      if ($manufacturers_image = xtc_try_upload('manufacturers_image', $dir_manufacturers, '', $accepted_manufacturers_image_files_extensions, $accepted_manufacturers_image_files_mime_types)) {
+          xtc_db_query("UPDATE " . TABLE_MANUFACTURERS . "
+                           SET manufacturers_image = 'manufacturers/" . $manufacturers_image->filename . "'
+                         WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
       }
 
       $languages = xtc_get_languages();
