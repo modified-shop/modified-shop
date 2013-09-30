@@ -2595,7 +2595,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       $unallowed_module = constant('TEXT_'.strtoupper($module_type).'_ERROR');
     }
     return $unallowed_module;                           
-  }   
+  }
+
+  function order_statuses() {
+    $statuses_array = array ();
+    $statuses_query = xtc_db_query("SELECT orders_status_id, orders_status_name FROM ".TABLE_ORDERS_STATUS." WHERE language_id = '".(int)$_SESSION['languages_id']."' ORDER BY orders_status_name");
+    while ($statuses = xtc_db_fetch_array($statuses_query)) {
+      $statuses_array[] = array ('id' => $statuses['orders_status_id'], 'text' => $statuses['orders_status_name']);
+    }
+    return $statuses_array;
+  }
 
   /**
    * xtc_cfg_multi_checkbox()
@@ -2603,10 +2612,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @author Hacker Solutions
    * @date 2013-09-27
    * @param string|array $format
-   *   function that returns an array or array only with this pattern
+   *   the parameter can be the function name which returns an array with 
+   *   the below pattern or the array with the pattern itself
    *   array( array('id' => 'db_key', 'text' => 'desc for key'), ...)
    * @param string $separator for configuration_value (e.g. ',' or ';')
-   * @param string $checked is automatically configuration_value
+   * @param string $checked is programmatically set by the configuration_value in the database
    *
    * @return string html checkboxes by configuration set_function
    */
@@ -2617,11 +2627,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $checkboxes = '';
     $checkedboxes = (array) explode($separator, $checked);
     $format_array = (array) function_exists($format) ? $format() : $format;
-    foreach ($format_array as $data) {
+    foreach ($format_array as $key => $value) {
+      $key   = isset($data['id'])   ? $data['id']   : $key;
+      $value = isset($data['text']) ? $data['text'] : $value;
       $checkboxes .= '<label>';
-      $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $data['id'], (bool)in_array($data['id'], $checkedboxes));
-      $checkboxes .= $data['text'];
-      $checkboxes .= '</label><br>';
+      $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $key, (bool)in_array($key, $checkedboxes));
+      $checkboxes .= $value . '</label><br>';
     }
     return $checkboxes;
   }
