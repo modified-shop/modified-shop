@@ -72,8 +72,8 @@
           <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
         </div>
         <div class="clear"></div>
-        <div class="flt-l"><?php if ($customers_statuses_id_array[$customers['customers_status']]['csa_image'] != '') { echo xtc_image(DIR_WS_ICONS . $customers_statuses_id_array[$customers['customers_status']]['csa_image'], ''); } ?></div><?php// web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
-        <div class="main" style="margin:12px 0;"><?php echo HEADING_TITLE_STATUS  .': ' . $customers_statuses_id_array[$customers['customers_status']]['text'] ; ?></div><?php// web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
+        <div class="flt-l"><?php if ($customers_statuses_id_array[$customers['customers_status']]['csa_image'] != '') { echo xtc_image(DIR_WS_ICONS . $customers_statuses_id_array[$customers['customers_status']]['csa_image'], ''); } ?></div><?php // web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
+        <div class="main" style="margin:12px 0;"><?php echo HEADING_TITLE_STATUS  .': ' . $customers_statuses_id_array[$customers['customers_status']]['text'] ; ?></div><?php // web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array?>
         <div class="clear"></div>
         
         <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post', 'onSubmit="return check_form();"') . xtc_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id) . xtc_draw_hidden_field('address_book_id', $cInfo->address_book_id); ?>
