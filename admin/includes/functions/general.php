@@ -2628,8 +2628,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $checkedboxes = (array) explode($separator, $checked);
     $format_array = (array) function_exists($format) ? $format() : $format;
     foreach ($format_array as $key => $value) {
-      $key   = isset($data['id'])   ? $data['id']   : $key;
-      $value = isset($data['text']) ? $data['text'] : $value;
+      $key   = isset($value['id'])   ? $value['id']   : $key;
+      $value = isset($value['text']) ? $value['text'] : $value;
       $checkboxes .= '<label>';
       $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $key, (bool)in_array($key, $checkedboxes));
       $checkboxes .= $value . '</label><br>';
