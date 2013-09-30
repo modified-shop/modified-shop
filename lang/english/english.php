@@ -96,6 +96,7 @@ define('JS_REVIEW_RATING', '* Enter your review.\n');
 define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please choose a method of payment for your order.\n');
 define('JS_ERROR_SUBMITTED', 'This page has already been confirmed. Please click OK and wait until the process has finished.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please choose a method of payment for your order.');
+define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Please choose a method of shipping for your order.\n');
 
 /*
  *

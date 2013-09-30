@@ -93,6 +93,7 @@ define('JS_REVIEW_RATING', '* Geben Sie Ihre Bewertung ein.\n\n');
 define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.\n');
 define('JS_ERROR_SUBMITTED', 'Diese Seite wurde bereits best&auml;tigt. Klicken Sie bitte auf OK und warten Sie, bis der Prozess durchgef&uuml;hrt wurde.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.');
+define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Versandart f&uuml;r Ihre Bestellung.\n');
 
 /*
  *
