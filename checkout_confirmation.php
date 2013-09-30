@@ -68,9 +68,14 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-if (isset ($_SESSION['credit_covers']) || isset($_SESSION['no_payment'])) {
+if (isset($_SESSION['credit_covers'])) {
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
 }
+
+if (!isset($_SESSION['payment'])) {
+  xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
+}
+
 $payment_modules = new payment($_SESSION['payment']);
 
 // GV Code ICW ADDED FOR CREDIT CLASS SYSTEM
