@@ -61,6 +61,8 @@
         break;
       case 'deleteconfirm':
         xtc_db_query("DELETE FROM " . TABLE_COUNTRIES . " WHERE countries_id = '" . $_GET['cID'] . "'");
+        xtc_db_query("DELETE FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . $_GET['cID'] . "'");
+        xtc_db_query("DELETE FROM " . TABLE_ZONES_TO_GEO_ZONES . " WHERE zone_country_id = '" . $_GET['cID'] . "'");
         xtc_redirect(xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page']));
         break;
       case 'setlflag':
