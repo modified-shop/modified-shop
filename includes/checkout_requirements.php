@@ -54,9 +54,13 @@ if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
 }
 
 if ($current_page == 'checkout_shipping.php') {
-  //  checkout only if minimum order value is reached
   if ($_SESSION['cart']->show_total() > 0 ) {
-    if ($_SESSION['cart']->show_total() < $_SESSION['customers_status']['customers_status_min_order'] ) {
+    // checkout only if minimum order value is reached
+    if ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $_SESSION['customers_status']['customers_status_min_order'] ) {
+      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+    }
+    // Checkout only when maximum order value is not reached
+    if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) > $_SESSION['customers_status']['customers_status_max_order'] ) {
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
     }
   }
