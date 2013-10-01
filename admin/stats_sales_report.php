@@ -418,7 +418,12 @@
                               </tr>
                               <?php
                             } // end of if $srExp < 2 csv export
-                            $sum = 0;
+
+                            $total_order = 0;
+                            $total_item = 0;
+                            $total_total = 0;
+                            $total_shipping = 0;
+                      
                             while ($sr->actDate < $sr->endDate) {
                               $info = $sr->getNext($srDetail);
                               $last = sizeof($info) - 1;
@@ -446,9 +451,13 @@
                                   <td class="dataTableContent txta-r"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
                                   <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
                                   <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
-                                  <td class="dataTableContent txta-r"><?php echo $currencies->format($info[0]['shipping']); ?></td>
+                                  <td class="dataTableContent txta-r"><?php echo (isset($info[0]['shipping']) ? $currencies->format($info[0]['shipping']) : '&nbsp;' ); ?></td>
                                 </tr>
                                 <?php
+                                  $total_order += (isset($info[0]['order']) ? $info[0]['order'] : 0);
+                                  $total_item += (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : 0);
+                                  $total_total += (isset($info[$last]['totsum']) ? $info[$last]['totsum'] : 0);
+                                  $total_shipping += (isset($info[0]['shipping']) ? $info[0]['shipping'] : 0);
                              } else {
                                 // csv export
                                 ('Content-type: application/x-octet-stream');
@@ -525,9 +534,15 @@
                             }
                             if ($srExp < 2) {
                             ?>
+                              <tr class="dataTableHeadingRow">
+                                <td class="dataTableHeadingContent txta-r"><?php echo BOX_ORDER_TOTAL; ?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo $total_order;?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo $total_item; ?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_total);?></td>
+                                <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_shipping);?></td>
+                              </tr>
                           </table>
                         
-                  
             </td>
             <!-- body_text_eof //-->
           </tr>
