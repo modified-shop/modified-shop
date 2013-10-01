@@ -1,8 +1,5 @@
-<table border="0" width="100%" cellspacing="0" cellpadding="2">
-  <tr>
-    <td class="smallText">{$DISPLAY_COUNT}</td>
-    <td class="smallText" align="right">
-    {if is_array($DISPLAY_LINKS)}
+<div class="smallText" style="clear:both;">
+  <div style="float:left;">{$DISPLAY_COUNT}</div>
     <div class="pagination">
       {$smarty.const.TEXT_RESULT_PAGE}&nbsp;
       <ul>
@@ -15,9 +12,5 @@
         {if isset($DISPLAY_LINKS.next)}<li>{$DISPLAY_LINKS.next}</li>{/if}
       </ul>
     </div>
-    {else}
-      {$smarty.const.TEXT_RESULT_PAGE}&nbsp;{$DISPLAY_LINKS}
-    {/if}
-    </td>
-  </tr>
-</table>
+  </div>
+</div>
