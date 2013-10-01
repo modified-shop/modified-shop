@@ -20,7 +20,7 @@
 
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
-	 ab 15.08.2008 Teile vom Hamburger-Internetdienst geändert
+   ab 15.08.2008 Teile vom Hamburger-Internetdienst geändert
    Hamburger-Internetdienst Support Forums at www.forum.hamburger-internetdienst.de
    Stand 04.03.2012
    ---------------------------------------------------------------------------------------*/
@@ -38,14 +38,12 @@ $breadcrumb->add(NAVBAR_TITLE_SHOPPING_CART, xtc_href_link(FILENAME_SHOPPING_CAR
 
 require (DIR_WS_INCLUDES.'header.php');
 
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-if(!isset($_SESSION['paypal_warten']))
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-//EOC - h-h-h - 2011-09-09 - load only if activated
-if (ACTIVATE_GIFT_SYSTEM == 'true') {
-  include (DIR_WS_MODULES.'gift_cart.php');
+if(!isset($_SESSION['paypal_warten'])) { //Tomcraft - 2009-10-03 - Paypal Express Modul
+  if (ACTIVATE_GIFT_SYSTEM == 'true') {
+    include (DIR_WS_MODULES.'gift_cart.php');
+  }
 }
-//EOC - h-h-h - 2011-09-09 - load only if activated
+
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul (PayPal Express abgelehnt und erneut aufrufen!)
 if(isset($_SESSION['reshash']['ACK']) && strtoupper($_SESSION['reshash']['ACK'])!="SUCCESS" && strtoupper($_SESSION['reshash']['ACK'])!="SUCCESSWITHWARNING") {
   if(isset($_SESSION['reshash']['REDIRECTREQUIRED'])  && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED'])=="TRUE") {
@@ -82,10 +80,10 @@ if(isset($_SESSION['paypal_fehler']) && !isset($_SESSION['paypal_warten'])) {
   //BOF - DokuMan - 2010-08-30 - check for cartID also in shopping_cart
   // avoid hack attempts during the checkout procedure by checking the internal cartID
   if ((isset ($_SESSION['cart']->cartID) && isset ($_SESSION['cartID'])) || (!isset($_SESSION['cartID']) && isset($_SESSION['shipping']))) {
-    if ($_SESSION['cart']->cartID !== $_SESSION['cartID']) {
-        unset($_SESSION['shipping']);
-        unset($_SESSION['payment']);
-    }
+      if ($_SESSION['cart']->cartID !== $_SESSION['cartID']) {
+          unset($_SESSION['shipping']);
+          unset($_SESSION['payment']);
+      }
   }
   //EOF - DokuMan - 2010-08-30 - check for cartID also in shopping_cart
 
@@ -133,31 +131,31 @@ if(isset($_SESSION['paypal_fehler']) && !isset($_SESSION['paypal_warten'])) {
 if ($_SESSION['cart']->count_contents() > 0) {
   // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   if(!isset($_SESSION['paypal_warten'])) {
-  // Normaler Warenkorb
-  // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+    // Normaler Warenkorb
+    // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+    
+    $smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type))); //GTB - 2010-11-26 - fix SSL/NONSSL to request
+    $smarty->assign('FORM_END', '</form>');
+    $_SESSION['any_out_of_stock'] = 0;
 
-  $smarty->assign('FORM_ACTION', xtc_draw_form('cart_quantity', xtc_href_link(FILENAME_SHOPPING_CART, 'action=update_product', $request_type))); //GTB - 2010-11-26 - fix SSL/NONSSL to request
-  $smarty->assign('FORM_END', '</form>');
-  $_SESSION['any_out_of_stock'] = 0;
-
-  require (DIR_WS_MODULES.'order_details_cart.php');
-  
-  $_SESSION['allow_checkout'] = 'true';
-  if (STOCK_CHECK == 'true') {
-    if ($_SESSION['any_out_of_stock'] == 1) {
-      if (STOCK_ALLOW_CHECKOUT == 'true') {
-        // write permission in session
-        $_SESSION['allow_checkout'] = 'true';
-        $smarty->assign('info_message', OUT_OF_STOCK_CAN_CHECKOUT);
+    require (DIR_WS_MODULES.'order_details_cart.php');
+    
+    $_SESSION['allow_checkout'] = 'true';
+    if (STOCK_CHECK == 'true') {
+      if ($_SESSION['any_out_of_stock'] == 1) {
+        if (STOCK_ALLOW_CHECKOUT == 'true') {
+          // write permission in session
+          $_SESSION['allow_checkout'] = 'true';
+          $smarty->assign('info_message', OUT_OF_STOCK_CAN_CHECKOUT);
+        } else {
+          $_SESSION['allow_checkout'] = 'false';
+          $smarty->assign('info_message', OUT_OF_STOCK_CANT_CHECKOUT);
+        }
       } else {
-        $_SESSION['allow_checkout'] = 'false';
-        $smarty->assign('info_message', OUT_OF_STOCK_CANT_CHECKOUT);
+        $_SESSION['allow_checkout'] = 'true';
       }
-    } else {
-      $_SESSION['allow_checkout'] = 'true';
     }
-  }
-// BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+    // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
   } else {
     // 2. PayPal Aufruf - nur anzeigen
@@ -185,53 +183,41 @@ if ($_SESSION['cart']->count_contents() > 0) {
   if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
     $smarty->assign('error', $_SESSION['reshash']['FORMATED_ERRORS']);
   }
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+  // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
   // minimum/maximum order value
-  $checkout = true;
   if ($_SESSION['cart']->show_total() > 0 ) {
-   //BOF - Dokuman - 2010-06-07 - fix minimum order value with 2 currencies
-   /*
-   if ($_SESSION['cart']->show_total() < $_SESSION['customers_status']['customers_status_min_order'] ) {
-    $_SESSION['allow_checkout'] = 'false';
-    $more_to_buy = $_SESSION['customers_status']['customers_status_min_order'] - $_SESSION['cart']->show_total();
-    $order_amount=$xtPrice->xtcFormat($more_to_buy, true);
-    $min_order=$xtPrice->xtcFormat($_SESSION['customers_status']['customers_status_min_order'], true);
-    $smarty->assign('info_message_1', MINIMUM_ORDER_VALUE_NOT_REACHED_1);
-    $smarty->assign('info_message_2', MINIMUM_ORDER_VALUE_NOT_REACHED_2);
-    $smarty->assign('order_amount', $order_amount);
-    $smarty->assign('min_order', $min_order);
-   }
-   */
-   if ( $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $_SESSION['customers_status']['customers_status_min_order'] ) {
-    $_SESSION['allow_checkout'] = 'false';
-    $more_to_buy = $_SESSION['customers_status']['customers_status_min_order'] - $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total());
-    $more_to_buy *= $xtPrice->currencies[$xtPrice->actualCurr]['value'];
-    $order_amount=$xtPrice->xtcFormat($more_to_buy, true);
-    $min_order = $_SESSION['customers_status']['customers_status_min_order'];
-    $min_order *= $xtPrice->currencies[$xtPrice->actualCurr]['value'];
-    $min_order=$xtPrice->xtcFormat($min_order, true);
-    $smarty->assign('info_message_1', MINIMUM_ORDER_VALUE_NOT_REACHED_1);
-    $smarty->assign('info_message_2', MINIMUM_ORDER_VALUE_NOT_REACHED_2);
-    $smarty->assign('order_amount', $order_amount);
-    $smarty->assign('min_order', $min_order);
-   }
-   //EOF - Dokuman - 2010-06-07 - fix minimum order value with 2 currencies
 
-   if ($_SESSION['customers_status']['customers_status_max_order'] != 0) {
-    if ($_SESSION['cart']->show_total() > $_SESSION['customers_status']['customers_status_max_order'] ) {
-    $_SESSION['allow_checkout'] = 'false';
-    $less_to_buy = $_SESSION['cart']->show_total() - $_SESSION['customers_status']['customers_status_max_order'];
-    $max_order=$xtPrice->xtcFormat($_SESSION['customers_status']['customers_status_max_order'], true);
-    $order_amount=$xtPrice->xtcFormat($less_to_buy, true);
-    $smarty->assign('info_message_1', MAXIMUM_ORDER_VALUE_REACHED_1);
-    $smarty->assign('info_message_2', MAXIMUM_ORDER_VALUE_REACHED_2);
-    $smarty->assign('order_amount', $order_amount);
-    $smarty->assign('min_order', $max_order);
+    //check customers min-order by currency
+    if ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $_SESSION['customers_status']['customers_status_min_order'] ) {
+      $_SESSION['allow_checkout'] = 'false';
+      $more_to_buy = $_SESSION['customers_status']['customers_status_min_order'] - $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total());
+      $more_to_buy *= $xtPrice->currencies[$xtPrice->actualCurr]['value']; 
+      $order_amount = $xtPrice->xtcFormat($more_to_buy, true);
+      $min_order = $_SESSION['customers_status']['customers_status_min_order'];
+      $min_order *= $xtPrice->currencies[$xtPrice->actualCurr]['value']; 
+      $min_order=$xtPrice->xtcFormat($min_order, true);
+      $smarty->assign('info_message_1', MINIMUM_ORDER_VALUE_NOT_REACHED_1);
+      $smarty->assign('info_message_2', MINIMUM_ORDER_VALUE_NOT_REACHED_2);
+      $smarty->assign('order_amount', $order_amount);
+      $smarty->assign('min_order', $min_order);
+    } 
+
+    //check customers max-order  by currency
+    if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) > $_SESSION['customers_status']['customers_status_max_order'] ) {
+      $_SESSION['allow_checkout'] = 'false';
+      $less_to_buy = $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) - $_SESSION['customers_status']['customers_status_max_order'];
+      $less_to_buy *= $xtPrice->currencies[$xtPrice->actualCurr]['value'];
+      $order_amount = $xtPrice->xtcFormat($less_to_buy, true);
+      $max_order = $_SESSION['customers_status']['customers_status_max_order'];
+      $max_order *= $xtPrice->currencies[$xtPrice->actualCurr]['value']; 
+      $max_order = $xtPrice->xtcFormat($max_order, true);  
+      $smarty->assign('info_message_1', MAXIMUM_ORDER_VALUE_REACHED_1);
+      $smarty->assign('info_message_2', MAXIMUM_ORDER_VALUE_REACHED_2);
+      $smarty->assign('order_amount', $order_amount);
+      $smarty->assign('min_order', $max_order);
     }
-   }
   }
-
   // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   /*
   if ($_GET['info_message'])
@@ -251,7 +237,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     $smarty->assign('BUTTON_RELOAD', xtc_image_submit('button_update_cart.gif', IMAGE_BUTTON_UPDATE_CART));
     $smarty->assign('BUTTON_CHECKOUT', '<a href="'.xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL').'">'.xtc_image_button('button_checkout.gif', IMAGE_BUTTON_CHECKOUT).'</a>');
   }
-// EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
+  // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
 } else {
   // empty cart
