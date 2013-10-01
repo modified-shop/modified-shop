@@ -823,3 +823,6 @@ define('TEMPLATE_ENGINE_DESC', 'Welche Smarty Version soll verwendet werden?<br/
 
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text E-Mails');
 define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');
+
+define('USE_PAGINATION_LIST_TITLE', 'Pagination Liste'); 
+define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.');

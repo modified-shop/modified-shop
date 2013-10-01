@@ -823,3 +823,6 @@ define('TEMPLATE_ENGINE_DESC', 'Choose the Smarty version.<br/><br/><b>Attention
 
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap for text e-mails');
 define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).<br /><strong>Attention:</strong> A character count greater than 76 may cause the shop mails to be categorized as SPAM by SpamAssassin.<br />More infos <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">here</a>.');
+
+define('USE_PAGINATION_LIST_TITLE', 'Pagination List'); 
+define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.'); 
