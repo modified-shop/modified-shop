@@ -17,10 +17,11 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-require_once (DIR_FS_INC.'xtc_get_short_description.inc.php');
 
 $breadcrumb->add(NAVBAR_TITLE_SPECIALS, xtc_href_link(FILENAME_SPECIALS));
 
@@ -32,52 +33,57 @@ if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
 if (GROUP_CHECK == 'true') {
   $group_check = " and p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
 }
-//BOF - DokuMan - 2010-01-26 - use Join on TABLE_PRODUCTS_DESCRIPTION & TABLE_SPECIALS
-$specials_query_raw = "select p.products_id,
+
+$specials_query_raw = "SELECT p.*,
                               pd.products_name,
-                              p.products_price,
-                              p.products_tax_class_id,
-                              p.products_shippingtime,
-                              p.products_image,
-                              p.products_vpe_status,
-                              p.products_vpe_value,
-                              p.products_vpe,
-                              p.products_fsk18,
+                              pd.products_short_description,
+                              m.manufacturers_name,
                               s.expires_date,
                               s.specials_new_products_price
-                             from
-                              ".TABLE_PRODUCTS." p
-                             left join ".TABLE_PRODUCTS_DESCRIPTION." pd
-                              on p.products_id = pd.products_id
-                             left join ".TABLE_SPECIALS." s
-                              on p.products_id = s.products_id
-                             where p.products_status = '1'
-                             and s.products_id = p.products_id
-                             and p.products_id = pd.products_id
-                             ".$group_check."
-                             ".$fsk_lock."
-                             and pd.language_id = '".(int)$_SESSION['languages_id']."'
-                             and s.status = '1'
-                             order by s.specials_date_added DESC";
-//EOF - DokuMan - 2010-01-26 - use Join on TABLE_PRODUCTS_DESCRIPTION & TABLE_SPECIALS
-$specials_split = new splitPageResults($specials_query_raw, isset($_GET['page']) ? $_GET['page'] : 0, MAX_DISPLAY_SPECIAL_PRODUCTS);
+                         FROM ".TABLE_PRODUCTS." p
+                    LEFT JOIN ".TABLE_MANUFACTURERS." m
+                              ON p.manufacturers_id = m.manufacturers_id
+                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                              ON p.products_id = pd.products_id
+                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                    LEFT JOIN ".TABLE_SPECIALS." s
+                              ON p.products_id = s.products_id
+                                 AND s.status = '1'
+                        WHERE p.products_status = '1'
+                              ".$group_check."
+                              ".$fsk_lock."
+                     ORDER BY s.specials_date_added DESC";
 
-$module_content = '';
-$row = 0;
-if ($specials_split->number_of_rows==0) xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
-require (DIR_WS_INCLUDES.'header.php');
-$specials_query = xtc_db_query($specials_split->sql_query);
+$specials_split = new splitPageResults($specials_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SPECIAL_PRODUCTS);
 
-while ($specials = xtc_db_fetch_array($specials_query)) {
-  $module_content[] = $product->buildDataArray($specials);
+if ($specials_split->number_of_rows==0) {
+  xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 }
 
+require (DIR_WS_INCLUDES.'header.php');
+
+$module_content = array();
 if (($specials_split->number_of_rows > 0)) {
-  $smarty->assign('DISPLAY_COUNT', $specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS));
-  $smarty->assign('DISPLAY_LINKS', $specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
-  $smarty->caching = 0;
-  $navigation = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
-  $smarty->assign('NAVBAR', $navigation);
+
+  if (USE_PAGINATION_LIST == 'false') {
+    $smarty->assign('NAVBAR', '<div style="width:100%;font-size:smaller">
+                                 <div style="float:left">'.$specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS).'</div>
+                                 <div style="float:right">'.TEXT_RESULT_PAGE.' '.$specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
+                                 <br style="clear:both" />
+                               </div>');
+  } else {
+    $smarty->assign('DISPLAY_COUNT', $specials_split->display_count(TEXT_DISPLAY_NUMBER_OF_SPECIALS));
+    $smarty->assign('DISPLAY_LINKS', $specials_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
+    $smarty->caching = 0;
+    $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+    $smarty->assign('NAVBAR', $pagination);
+    $smarty->assign('PAGINATION', $pagination);
+  }
+
+  $specials_query = xtc_db_query($specials_split->sql_query);
+  while ($specials = xtc_db_fetch_array($specials_query)) {
+    $module_content[] = $product->buildDataArray($specials);
+  }
 }
 
 $smarty->assign('language', $_SESSION['language']);
