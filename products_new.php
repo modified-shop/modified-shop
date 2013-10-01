@@ -22,132 +22,118 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
-// create smarty elements
+
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 // include needed function
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
-$breadcrumb->add(NAVBAR_TITLE_PRODUCTS_NEW, xtc_href_link(FILENAME_PRODUCTS_NEW));
+$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$products_new_array = array ();
 $fsk_lock = '';
 if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-  $fsk_lock = ' and p.products_fsk18!=1';
+  $fsk_lock = " AND p.products_fsk18 != '1' ";
 }
 $group_check = '';
 if (GROUP_CHECK == 'true') {
-  $group_check = " and p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
+  $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."='1' ";
 }
+$days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
   $date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
-  $days = " and p.products_date_added > '".$date_new_products."' ";
+  $days = " AND p.products_date_added > '".$date_new_products."' ";
 }
-//BOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
-$products_new_query_raw = "select distinct
-                            p.products_id,
-                            p.products_fsk18,
-                            pd.products_name,
-                            pd.products_short_description,
-                            p.products_image,
-                            p.products_quantity,
-                            p.products_price,
-                            p.products_vpe,
-                            p.products_vpe_status,
-                            p.products_vpe_value,
-                            p.products_tax_class_id,
-                            p.products_shippingtime,
-                            p.products_date_added,
-                            m.manufacturers_name
-                           from ".TABLE_PRODUCTS." p
-                           left join ".TABLE_MANUFACTURERS." m
-                            on p.manufacturers_id = m.manufacturers_id
-                           left join ".TABLE_PRODUCTS_DESCRIPTION." pd
-                            on p.products_id = pd.products_id,
-                            ".TABLE_CATEGORIES." c,
-                            ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                           where pd.language_id = ".(int) $_SESSION['languages_id']."
-                           and c.categories_status=1
-                           and p.products_id = p2c.products_id
-                           and c.categories_id = p2c.categories_id
-                           and products_status = 1
-                            ".$group_check."
-                            ".$fsk_lock."
-                            ".$days."
-                           order by p.products_date_added DESC ";
-//EOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
 
-$products_new_split = new splitPageResults($products_new_query_raw, isset($_GET['page']) ? $_GET['page'] : 1, MAX_DISPLAY_PRODUCTS_NEW, 'p.products_id');
-//BOF - Hetfield - 2009-08-11 - no longer empty site products_new.php
+$products_new_query_raw = "SELECT DISTINCT p.*,
+                                           pd.products_name,
+                                           pd.products_short_description,
+                                           m.manufacturers_name
+                                      FROM ".TABLE_PRODUCTS." p 
+                                 LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                           ON p.manufacturers_id = m.manufacturers_id
+                                 LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                           ON p.products_id = pd.products_id
+                                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                      JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                           ON p.products_id = p2c.products_id
+                                      JOIN ".TABLE_CATEGORIES." c
+                                           ON c.categories_id = p2c.categories_id
+                                              AND c.categories_status=1
+                                     WHERE p.products_status = '1'
+                                           ".$group_check."
+                                           ".$fsk_lock."
+                                           ".$days."
+                                  ORDER BY p.products_date_added DESC";
+
+$products_new_split = new splitPageResults($products_new_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_PRODUCTS_NEW, 'p.products_id');
+
 $module_content = array();
 if (($products_new_split->number_of_rows > 0)) {
-//BOF - Hetfield - 2009-08-11 - replace table with div
-  $smarty->assign('NAVIGATION_BAR', '
-       <div style="width:100%;font-size:smaller">
-              <div style="float:left">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div>
-              <div style="float:right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div>
-              <br style="clear:both" />
-       </div>
-       ');
-//EOF - Hetfield - 2009-08-11 - replace table with div
 
+  if (USE_PAGINATION_LIST == 'false') {
+    $smarty->assign('NAVIGATION_BAR', '<div class="smallText" style="clear:both;">
+                                         <div style="float:left;">'.$products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW).'</div> 
+                                         <div align="right">'.TEXT_RESULT_PAGE.' '.$products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))).'</div> 
+                                         <br style="clear:both" />
+                                       </div>'); 
+  } else {
+    $smarty->assign('DISPLAY_COUNT', $products_new_split->display_count(TEXT_DISPLAY_NUMBER_OF_PRODUCTS_NEW));
+    $smarty->assign('DISPLAY_LINKS', $products_new_split->display_links(MAX_DISPLAY_PAGE_LINKS, xtc_get_all_get_params(array ('page', 'info', 'x', 'y'))));
+    $smarty->caching = 0;
+    $pagination = $smarty->fetch(CURRENT_TEMPLATE.'/module/pagination.html');
+    $smarty->assign('NAVIGATION_BAR', $pagination);  
+    $smarty->assign('PAGINATION', $pagination);  
+  }
+  
   $products_new_query = xtc_db_query($products_new_split->sql_query);
   while ($products_new = xtc_db_fetch_array($products_new_query)) {
-    //BOF - Hetfield - 2009-08-11 - products_new uses now the product class
     $module_content[] = $product->buildDataArray($products_new);
-    //EOF - Hetfield - 2009-08-11 - products_new uses now the product class
   }
+  
 } else {
-    //BOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
-  $new_products_query = "select distinct
-                            p.products_id,
-                            p.products_fsk18,
-                            pd.products_name,
-                            pd.products_short_description,
-                            p.products_image,
-                            p.products_quantity,
-                            p.products_price,
-                            p.products_vpe,
-                            p.products_vpe_status,
-                            p.products_vpe_value,
-                            p.products_tax_class_id,
-                            p.products_shippingtime,
-                            p.products_date_added,
-                            m.manufacturers_name
-                           from ".TABLE_PRODUCTS." p
-                           left join ".TABLE_MANUFACTURERS." m
-                            on p.manufacturers_id = m.manufacturers_id
-                           left join ".TABLE_PRODUCTS_DESCRIPTION." pd
-                            on p.products_id = pd.products_id,
-                            ".TABLE_CATEGORIES." c,
-                            ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                           where pd.language_id = ".(int) $_SESSION['languages_id']."
-                           and c.categories_status = 1
-                           and p.products_id = p2c.products_id
-                           and c.categories_id = p2c.categories_id
-                           and products_status = 1
-                            ".$group_check."
-                            ".$fsk_lock."
-                           order by p.products_date_added DESC limit 10";
 
-  //EOF - web28 - 2010.06.09 - added p.products_shippingtime, p.products_quantity,
-
+  $new_products_query = "SELECT DISTINCT p.*,
+                                         pd.products_name,
+                                         pd.products_short_description,
+                                         m.manufacturers_name
+                                    FROM ".TABLE_PRODUCTS." p
+                               LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                         ON p.manufacturers_id = m.manufacturers_id
+                               LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                         ON p.products_id = pd.products_id
+                                            AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                         ON p.products_id = p2c.products_id
+                                    JOIN ".TABLE_CATEGORIES." c
+                                         ON c.categories_id = p2c.categories_id
+                                            AND c.categories_status=1
+                                   WHERE p.products_status = '1'
+                                         ".$group_check."
+                                         ".$fsk_lock."
+                                ORDER BY p.products_date_added DESC 
+                                   LIMIT ".MAX_DISPLAY_PRODUCTS_NEW;
+    
   $new_products_query = xtDBquery($new_products_query);
   while ($new_products = xtc_db_fetch_array($new_products_query, true)) {
     $module_content[] = $product->buildDataArray($new_products);
-
+  
   }
   $smarty->assign('NO_NEW_PRODUCTS', TEXT_NO_NEW_PRODUCTS);
 }
-//EOF - Hetfield - 2009-08-11 - no longer empty site products_new.php
+
 $smarty->assign('language', $_SESSION['language']);
+$smarty->caching = 0;
 $smarty->assign('module_content', $module_content);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/new_products_overview.html');
 $smarty->assign('main_content', $main_content);
+
+$smarty->assign('language', $_SESSION['language']);
 $smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');

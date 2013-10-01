@@ -1519,3 +1519,17 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
   background-color: #e5ffe8;
   margin-bottom: 10px;
 }
+
+/* PAGINATION */ 
+.pagination ul { 
+  list-style-type:none; 
+ 	float:right; 
+ 	margin:0 !important; 
+} 
+.pagination li { 
+  float:left; 
+ 	padding: 0 0 0 3px; 
+ 	} 
+.pagination li.current { 
+  font-weight:bold; 
+}
