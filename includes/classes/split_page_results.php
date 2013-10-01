@@ -93,18 +93,24 @@
       global $PHP_SELF, $request_type;
 
       $display_links_string = '';
+      $display_links_array = array();
 
       $class = 'class="pageResults"';
 
       $parameters = str_replace('&amp;', '&', $parameters);
+      
       if (xtc_not_null($parameters) && (substr($parameters, -1) != '&')) {
         $parameters = ltrim($parameters,'&'); //remove left standing '&'
         $parameters .= '&'; //add '&' added to the right
       } 
-
+      
+      
       // previous button - not displayed on first page
-      if ($this->current_page_number > 1) $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type) . '" class="pageResults" title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
-
+      if ($this->current_page_number > 1) {
+        $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
+        $display_links_array['previous'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';
+      }
+      
       // check if number_of_pages > $max_page_links
       $cur_window_num = (int)($this->current_page_number / $max_page_links);
       if ($this->current_page_number % $max_page_links) $cur_window_num++;
@@ -113,23 +119,37 @@
       if ($this->number_of_pages % $max_page_links) $max_window_num++;
 
       // previous window of pages
-      if ($cur_window_num > 1) $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" class="pageResults" title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
-
+      if ($cur_window_num > 1) {
+        $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
+        $display_links_array['previouspages'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
+      }
+      
       // page nn button
       for ($jump_to_page = 1 + (($cur_window_num - 1) * $max_page_links); ($jump_to_page <= ($cur_window_num * $max_page_links)) && ($jump_to_page <= $this->number_of_pages); $jump_to_page++) {
         if ($jump_to_page == $this->current_page_number) {
           $display_links_string .= '&nbsp;<strong>' . $jump_to_page . '</strong>&nbsp;';
+          $display_links_array['pages']['current'] = $jump_to_page;
         } else {
-          $display_links_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . $jump_to_page, $request_type) . '" class="pageResults" title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '">' . $jump_to_page . '</a>&nbsp;';
+          $display_links_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . $jump_to_page, $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '">' . $jump_to_page . '</a>&nbsp;';
+          $display_links_array['pages'][$jump_to_page] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . $jump_to_page, $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '">' . $jump_to_page . '</a>';
         }
       }
 
       // next window of pages
-      if ($cur_window_num < $max_window_num) $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" class="pageResults" title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '">...</a>&nbsp;';
-
+      if ($cur_window_num < $max_window_num) {
+        $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '">...</a>&nbsp;';
+        $display_links_array['nextpages'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
+      }
+      
        // next button
-      if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) $display_links_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" class="pageResults" title="' . PREVNEXT_TITLE_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
-
+      if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) {
+        $display_links_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
+        $display_links_array['next'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
+      }
+      
+      if (USE_PAGINATION_LIST == 'true') {
+        return $display_links_array;
+      }
       return $display_links_string;
     }
 
