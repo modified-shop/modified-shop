@@ -27,7 +27,7 @@ require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require (DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
 $xtPrice = new xtcPrice(DEFAULT_CURRENCY, $_SESSION['customers_status']['customers_status_id']);
 
-$i = 0;
+$group_array = array();
 $group_query = xtc_db_query("SELECT customers_status_image,
                                     customers_status_id,
                                     customers_status_name
@@ -36,8 +36,7 @@ $group_query = xtc_db_query("SELECT customers_status_image,
                               AND customers_status_id != '0'");
 while ($group_values = xtc_db_fetch_array($group_query)) {
   // load data into array
-  $i ++;
-  $group_data[$i] = array ('STATUS_NAME' => $group_values['customers_status_name'],
+  $group_array[] = array ('STATUS_NAME' => $group_values['customers_status_name'],
                            'STATUS_IMAGE' => $group_values['customers_status_image'],
                            'STATUS_ID' => $group_values['customers_status_id']);
 }
@@ -45,7 +44,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
 <div class="main div_header"><?php echo HEADING_PRICES_OPTIONS; ?></div>
 <table class="tableInput">
   <tr>
-    <td style="width:120px" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
+    <td style="width:140px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
       <?php
       // calculate brutto price for display
       if (PRICE_IS_BRUTTO == 'true') {
@@ -63,37 +62,37 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
     </td>
   </tr>
 <?php
-for ($col = 1, $n = sizeof($group_data); $col < $n +1; $col ++) { //DokuMan - changed $col from 0 to 1 (there is no 0?)
-  if ($group_data[$col]['STATUS_NAME'] != '') {
+foreach($group_array as $group_data) {
+  if ($group_data['STATUS_NAME'] != '') {
 ?>
   <tr>
-    <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo $group_data[$col]['STATUS_NAME']; ?></td>
+    <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo $group_data['STATUS_NAME']; ?></td>
       <?php
           if (PRICE_IS_BRUTTO == 'true') {
-            $products_price = xtc_round(get_group_price($group_data[$col]['STATUS_ID'], $pInfo->products_id) * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
+            $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id) * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
           } else {
-            $products_price = xtc_round(get_group_price($group_data[$col]['STATUS_ID'], $pInfo->products_id), PRICE_PRECISION);
+            $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), PRICE_PRECISION);
           }
       ?>
     <td style="border-top: 1px solid; border-color: #cccccc;" class="main">
       <?php
-          echo xtc_draw_input_field('products_price_'.$group_data[$col]['STATUS_ID'], $products_price);
-          if (PRICE_IS_BRUTTO == 'true' && get_group_price($group_data[$col]['STATUS_ID'], $pInfo->products_id) != '0') {
-            echo TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat(get_group_price($group_data[$col]['STATUS_ID'], $pInfo->products_id), false).'</strong>  ';
+          echo xtc_draw_input_field('products_price_'.$group_data['STATUS_ID'], $products_price);
+          if (PRICE_IS_BRUTTO == 'true' && get_group_price($group_data['STATUS_ID'], $pInfo->products_id) != '0') {
+            echo ' '.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), false).'</strong>  ';
           }
           if ($_GET['pID'] != '') {
             echo ' '.TXT_STAFFELPREIS;
-      ?> <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/arrow_down.gif" height="12" width="12" onclick="javascript:toggleBox('staffel_<?php echo $group_data[$col]['STATUS_ID']; ?>');">
+      ?> <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/arrow_down.gif" height="12" width="12" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');">
       <?php
           }
       ?>
-      <div id="staffel_<?php echo $group_data[$col]['STATUS_ID']; ?>" class="longDescription"><br />
+      <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription"><br />
       <?php
         // ok, lets check if there is already a staffelpreis
         $staffel_query = xtc_db_query("SELECT products_id,
                                               quantity,
                                               personal_offer
-                                         FROM personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID']."
+                                         FROM personal_offers_by_customers_status_".$group_data['STATUS_ID']."
                                         WHERE products_id = '".$pInfo->products_id."' AND quantity != 1
                                      ORDER BY quantity ASC");
         echo '<table width="280" border="0" cellpadding="0" cellspacing="2">';
@@ -117,16 +116,16 @@ for ($col = 1, $n = sizeof($group_data); $col < $n +1; $col ++) { //DokuMan - ch
               }
               ?>
             </td>
-            <td align="left" style="padding-left:5px;"><a class="button" onclick="W4B_graduated_prices_edit_removerow(this);" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&function=delete&quantity=' . $staffel_values['quantity'] . '&statusID=' . $group_data[$col]['STATUS_ID'] . '&action=new_product&pID=' . $_GET['pID']); ?>"><?php echo BUTTON_DELETE; ?></a></td>
+            <td align="left" style="padding-left:5px;"><a class="button" onclick="W4B_graduated_prices_edit_removerow(this);" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&function=delete&quantity=' . $staffel_values['quantity'] . '&statusID=' . $group_data['STATUS_ID'] . '&action=new_product&pID=' . $_GET['pID']); ?>"><?php echo BUTTON_DELETE; ?></a></td>
           </tr>          
           <?php
         }
         echo '</table>';
         echo TXT_STK;
-        echo xtc_draw_small_input_field('products_quantity_staffel_'.$group_data[$col]['STATUS_ID'], 0);
+        echo xtc_draw_small_input_field('products_quantity_staffel_'.$group_data['STATUS_ID'], 0);
         echo TXT_PRICE;
-        echo xtc_draw_input_field('products_price_staffel_'.$group_data[$col]['STATUS_ID'], 0);        
-        echo '&nbsp;<input type="submit" name="graduated_prices_edit" class="button" onclick="W4B_graduated_prices_edit_addrow(this, '.$group_data[$col]['STATUS_ID'].');" value="' . BUTTON_INSERT . '"/>';
+        echo xtc_draw_input_field('products_price_staffel_'.$group_data['STATUS_ID'], 0);        
+        echo '&nbsp;<input type="submit" name="graduated_prices_edit" class="button" onclick="W4B_graduated_prices_edit_addrow(this, '.$group_data['STATUS_ID'].');" value="' . BUTTON_INSERT . '"/>';
         ?>
         <br />
       </div>
