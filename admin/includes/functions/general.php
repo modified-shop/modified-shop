@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: general.php 2752 2012-04-12 13:36:46Z tonne1 $
+   $Id: general.php 5859 2013-10-01 06:45:14Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -2635,5 +2635,47 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       $checkboxes .= $value . '</label><br>';
     }
     return $checkboxes;
+  }
+
+  /**
+   * cfg_save_max_display_results()
+   *
+   * @author rpa-com.de
+   * @date 2013-10-03
+   * @param string configuration key
+   *
+   * @return int configuration value
+   */
+  function xtc_cfg_save_max_display_results($cfg_key)
+  {
+      if (isset($_POST[$cfg_key])) {
+        $configuration_value = preg_replace('/[^0-9-]/','',$_POST[$cfg_key]);
+        $configuration_value = xtc_db_prepare_input($configuration_value);
+        $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                    configuration_value
+                                               FROM " . TABLE_CONFIGURATION . " 
+                                              WHERE configuration_key = '" . xtc_db_input($cfg_key) . "'
+                                           ");
+        if (xtc_db_num_rows($configuration_query) > 0) {
+          //update
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                           SET configuration_value ='" . xtc_db_input($configuration_value) . "', 
+                               last_modified = NOW()
+                         WHERE configuration_key='" . xtc_db_input($cfg_key) . "'");
+        } else {
+          //new entry
+          $sql_data_array = array(
+            'configuration_key' => $cfg_key,
+            'configuration_value' => $configuration_value,
+            'configuration_group_id' => '1000',
+            'sort_order' => '-1',
+            'last_modified' => 'now()',
+            'date_added' => 'now()'
+            );
+          xtc_db_perform(TABLE_CONFIGURATION,$sql_data_array);   
+        }
+        return $configuration_value;
+      }
+      return defined($cfg_max_display_results_key) ? constant($cfg_max_display_results_key) : 30;
   }
 ?>

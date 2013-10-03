@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: configuration.php 3569 2012-08-30 15:39:18Z web28 $
+   $Id: configuration.php 5547 2013-09-06 13:19:01Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -218,7 +218,17 @@
                 <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
                   <table class="tableConfig">
                     <?php
-                      $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
+                      //Display only for sort_order >= 0
+                      $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                                  configuration_id, 
+                                                                  configuration_value, 
+                                                                  use_function,
+                                                                  set_function 
+                                                             FROM " . TABLE_CONFIGURATION . " 
+                                                            WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
+                                                              AND sort_order >= 0
+                                                         ORDER BY sort_order"
+                                                         );
                       while ($configuration = xtc_db_fetch_array($configuration_query)) {
                         $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
                         if ($_GET['gID'] == 6) {
@@ -265,7 +275,15 @@
                           $cfgValue = $configuration['configuration_value'];
                         }
                         if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $configuration['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-                          $cfg_extra_query = xtc_db_query("select configuration_key,configuration_value, date_added, last_modified, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_id = '" . $configuration['configuration_id'] . "'");
+                          $cfg_extra_query = xtc_db_query("SELECT configuration_key,
+                                                                  configuration_value, 
+                                                                  date_added, 
+                                                                  last_modified, 
+                                                                  use_function, 
+                                                                  set_function 
+                                                             FROM " . TABLE_CONFIGURATION . " 
+                                                            WHERE configuration_id = '" . $configuration['configuration_id'] . "'
+                                                          ");
                           $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
                           $cInfo_array = xtc_array_merge($configuration, $cfg_extra);
                           $cInfo = new objectInfo($cInfo_array);
