@@ -20,6 +20,10 @@
 
   require('includes/application_top.php');
   
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_COUNTRIES_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+ 
   $_GET['cID'] = isset($_GET['cID']) ? (int)$_GET['cID'] : '';
   $_GET['page'] = isset($_GET['page']) ? (int)$_GET['page'] : '';
   
@@ -135,10 +139,10 @@
                 </tr>
                 <?php
                   $countries_query_raw = "SELECT * FROM " . TABLE_COUNTRIES . " ORDER BY countries_name";
-                  $countries_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows);
+                  $countries_split = new splitPageResults($_GET['page'], $page_max_display_results, $countries_query_raw, $countries_query_numrows);
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
-                    if (((!isset($_GET['cID'])) || (isset($_GET['cID']) && $_GET['cID'] == $countries['countries_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                    if (((!$_GET['cID']) || (@$_GET['cID'] == $countries['countries_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                       $cInfo = new objectInfo($countries);
                     }
                     
@@ -164,7 +168,7 @@
                       $tr_attributes = 'class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&cID=' . $countries['countries_id']) .'\'"';
                     }
                 ?>
-                <tr <?echo $tr_attributes;?>>
+                <tr <?php echo $tr_attributes;?>>
                   <td class="dataTableContent"><?php echo $countries['countries_name']; ?></td>
                   <td class="dataTableContent txta-c" style="width:100px">&nbsp;<?php echo $required_zones; ?></td>
                   <td class="dataTableContent txta-c" style="width:40px"><?php echo $countries['countries_iso_code_2']; ?></td>
@@ -177,15 +181,23 @@
             ?>                
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $countries_split->display_count($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $countries_split->display_links($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $countries_split->display_count($countries_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $countries_split->display_links($countries_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+           
+            <div class="clear"></div>
+            <div class="smallText pdg2 flt-l">
+              <?php 
+              echo xtc_draw_form('cfg_max', FILENAME_COUNTRIES);         
+              echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+              echo '</form>'; 
+              ?> 
+            </div>
 
             <?php
             if (!$_GET['action']) {
             ?>
-              <div class="clear"></div>
               <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_COUNTRIES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_COUNTRY . '</a>'; ?></div>
-
             <?php
             }
             ?>

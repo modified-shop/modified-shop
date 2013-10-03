@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: split_page_results.php 2135 2011-08-31 12:37:03Z dokuman $
+   $Id: split_page_results.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -18,7 +18,6 @@
 
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 class splitPageResults {
-
 
     function splitPageResults(&$current_page_number, $max_rows_per_page, &$sql_query, &$query_num_rows, $count_key = '*') {
       if (empty($current_page_number)) $current_page_number = 1;
@@ -45,15 +44,19 @@ class splitPageResults {
       $reviews_count = xtc_db_fetch_array($reviews_count_query);
       $query_num_rows = $reviews_count['total'];
         
-        // FIX Division by Zero
-        $num_pages = $max_rows_per_page > 0 ? ceil($query_num_rows / $max_rows_per_page) : 0;        
-        
-        if ($current_page_number > $num_pages) {
-            $current_page_number = $num_pages;
-        }
-        $offset = ($max_rows_per_page * ($current_page_number - 1));
-        if ($offset < 0) $offset=0;
+      // FIX Division by Zero
+      $num_pages = $max_rows_per_page > 0 ? ceil($query_num_rows / $max_rows_per_page) : 0;        
+      
+      if ($current_page_number > $num_pages) {
+          $current_page_number = $num_pages;
+      }
+      $offset = ($max_rows_per_page * ($current_page_number - 1));
+      $offset = $offset < 0 ? 0 : $offset;
+      
+      //no page results limit (-1)
+      if ($max_rows_per_page > (-1)) {
         $sql_query .= " limit " . $offset . ", " . $max_rows_per_page;
+      }
     }
 
     function display_links($query_numrows, $max_rows_per_page, $max_page_links, $current_page_number, $parameters = '', $page_name = 'page') {
@@ -61,9 +64,9 @@ class splitPageResults {
        
         if ( xtc_not_null($parameters) && (substr($parameters, -1) != '&') ) $parameters .= '&';
 
-        // calculate number of pages needing links
-        $num_pages = ceil($query_numrows / $max_rows_per_page);
-
+        // calculate number of pages needing links // FIX Division by Zero
+        $num_pages = $max_rows_per_page > 0 ? ceil($query_numrows / $max_rows_per_page) : 0;
+        
         $pages_array = array();
         for ($i=1; $i<=$num_pages; $i++) {
             $pages_array[] = array('id' => $i, 'text' => $i);
@@ -116,7 +119,12 @@ class splitPageResults {
         } else {
             $from_num++;
         }
-
+        
+        //no page results limit (-1)
+        if ($max_rows_per_page == (-1)) {
+          $from_num = 1;
+          $to_num = $query_numrows; 
+        }
         return sprintf($text_output, $from_num, $to_num, $query_numrows);
     }
 }
