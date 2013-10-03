@@ -259,7 +259,6 @@ while ($options_values = xtc_db_fetch_array($options)) {
     $inputs = '';
     for ($i = 0, $n = sizeof($languages);$i < $n;$i++) {
       $add_select = '';
-      $add_select .= 'is_filter, is_only_filter,'; //Filter
       $option_name = xtc_db_query("-- products_attributes.php
                                   SELECT $add_select
                                   products_options_name
