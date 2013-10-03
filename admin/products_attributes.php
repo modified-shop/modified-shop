@@ -20,13 +20,40 @@ $languages = xtc_get_languages();
 
 //Parameterübergabe
 if (isset($_POST['option_id'])) $_GET['option_id'] = $_POST['option_id'];
-$option_filter = '&option_filter='. $_GET['option_filter'] . '&value_order_by='. $_GET['value_order_by'] . '&option_id='. $_GET['option_id'] ;
+
+$filter_params_arr = array(
+    'option_filter',
+    'value_order_by',
+    'option_id'
+    );
+    
+$filter_arr = array();
+foreach($filter_params_arr as $key) {
+  if (isset($_GET[$key])) {
+    $filter_arr[] = $key .'='.$_GET[$key];
+  }
+}
+$option_filter = '&'. implode('&', $filter_arr);
+
+$page_params_arr = array(
+    'option_page',
+    'value_page',
+    'attribute_page'    
+    );
+    
+$_GET['action'] = isset($_GET['action']) ? $_GET['action'] : '';
 
 if ($_GET['action']) {
   if (isset($_POST['option_filter'])) $_GET['option_filter'] = $_POST['option_filter'];
-  $page_info = 'option_page=' . $_GET['option_page'] . '&value_page=' . $_GET['value_page'] . '&attribute_page=' . $_GET['attribute_page'];
-  $page_info.= $option_filter; //'&option_filter='. $_GET['option_filter'] . '&value_order_by='. $_GET['value_order_by'];
-
+ 
+  $page_filter_arr = array();
+  $page_params_arr = array_merge($page_params_arr,$filter_params_arr);
+  foreach($page_params_arr as $key) {
+    if (isset($_GET[$key])) {
+      $page_filter_arr[] = $key .'='.$_GET[$key];
+    }
+  }
+  $page_info = implode('&', $page_filter_arr);
   $action = $_GET['action'];
   include(DIR_WS_MODULES.'products_attributes_action.php');
 }
