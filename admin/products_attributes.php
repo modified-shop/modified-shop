@@ -64,7 +64,7 @@ require (DIR_WS_INCLUDES.'head.php');
   <!--
    function go_option() {
      if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-       location = "<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
+       location = "<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)); ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
      }
    }
   //-->
