@@ -526,3 +526,5 @@ define('BOX_MAGNALISTER', 'magnalister Admin');
 
 define('CHARS_LEFT', 'Zeichen &uuml;brig');
 define('CHARS_MAX', 'von max.');
+
+define('DISPLAY_PER_PAGE', 'Anzeige pro Seite: ');

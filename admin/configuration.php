@@ -174,23 +174,23 @@ require (DIR_WS_INCLUDES.'head.php');
           </div> 
 
           <div class="main pdg2 flt-l" style="padding-left:30px;">
-                      <?php
-                        if ($_GET['gID']==11) { // delete cache files in admin section
-                          echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=delcache');
-                          echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_CACHE . '"/></form> ';
-                          echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=deltempcache');
-                          echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_TEMP_CACHE . '"/></form>';
-                        }
-                      ?>
+            <?php
+              if ($_GET['gID']==11) { // delete cache files in admin section
+                echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=delcache');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_CACHE . '"/></form> ';
+                echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=deltempcache');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_TEMP_CACHE . '"/></form>';
+              }
+            ?>
           </div>
           <div class="clear"></div>           
 
-                  <?php
-                    switch ($_GET['gID']) {
-                      case 21: //Afterbuy                                  
-                      case 19: // Google Conversion-Tracking
-                      case 111125: // Paypal Express Modul
-                      case 31: // moneybookers payment module version 2.4 & paypal payment module
+            <?php
+              switch ($_GET['gID']) {
+                case 21: //Afterbuy                                  
+                case 19: // Google Conversion-Tracking
+                case 111125: // Paypal Express Modul
+                case 31: // moneybookers payment module version 2.4 & paypal payment module
                    echo '<div class="infoBoxHeading pdg2" style="height:22px">
                           <div class="configPartner">
                             <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
@@ -212,21 +212,31 @@ require (DIR_WS_INCLUDES.'head.php');
                     echo '<div class="main pdg2">'. MB_INFO.'</div>';
                     
                   break;
-                    }
-                  ?>
+              }
+            ?>
  
-                      <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
+                <?php echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=save'); ?>
                   <table class="tableConfig">
-                          <?php
-                            $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
-                            while ($configuration = xtc_db_fetch_array($configuration_query)) {
-                              $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
-                              if ($_GET['gID'] == 6) {
-                                switch ($configuration['configuration_key']) {
-                                  case 'MODULE_PAYMENT_INSTALLED':
-                                    if ($configuration['configuration_value'] != '') {
-                                      $payment_installed = explode(';', $configuration['configuration_value']);
-                                      for ($i = 0, $n = sizeof($payment_installed); $i < $n; $i++) {
+                    <?php
+                      //Display only for sort_order >= 0
+                      $configuration_query = xtc_db_query("SELECT configuration_key,
+                                                                  configuration_id, 
+                                                                  configuration_value, 
+                                                                  use_function,
+                                                                  set_function 
+                                                             FROM " . TABLE_CONFIGURATION . " 
+                                                            WHERE configuration_group_id = '" . (int)$_GET['gID'] . "'
+                                                              AND sort_order >= 0
+                                                         ORDER BY sort_order"
+                                                         );
+                      while ($configuration = xtc_db_fetch_array($configuration_query)) {
+                        $configuration['configuration_value'] = stripslashes($configuration['configuration_value']); //Web28 - 2012-08-09 - fix slashes
+                        if ($_GET['gID'] == 6) {
+                          switch ($configuration['configuration_key']) {
+                            case 'MODULE_PAYMENT_INSTALLED':
+                              if ($configuration['configuration_value'] != '') {
+                                $payment_installed = explode(';', $configuration['configuration_value']);
+                                for ($i = 0, $n = sizeof($payment_installed); $i < $n; $i++) {
                                   include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/' . $payment_installed[$i]); 
                                 }
                               }
@@ -247,53 +257,61 @@ require (DIR_WS_INCLUDES.'head.php');
                                 }
                               }
                               break;
-                                }
-                              }
-                              if (xtc_not_null($configuration['use_function'])) {
-                                $use_function = $configuration['use_function'];
-                                if (preg_match('/->/', $use_function)) {
-                                  $class_method = explode('->', $use_function);
-                                  if (!is_object(${$class_method[0]})) {
-                                    include(DIR_WS_CLASSES . $class_method[0] . '.php');
-                                    ${$class_method[0]} = new $class_method[0]();
-                                  }
-                                  $cfgValue = xtc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
-                                } else {
-                                  $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
-                                }
-                              } else {
-                                $cfgValue = $configuration['configuration_value'];
-                              }
-                              if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $configuration['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
-                                $cfg_extra_query = xtc_db_query("select configuration_key,configuration_value, date_added, last_modified, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_id = '" . $configuration['configuration_id'] . "'");
-                                $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
-                                $cInfo_array = xtc_array_merge($configuration, $cfg_extra);
-                                $cInfo = new objectInfo($cInfo_array);
-                              }
-                              if ($configuration['set_function']) {
-                                eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
-                              } else {
-                                if ( $configuration['configuration_key'] == 'SMTP_PASSWORD') {
-                                  $value_field = xtc_draw_password_field($configuration['configuration_key'], $configuration['configuration_value']);
-                                } else {
-                                  $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'style="width:380px;"');
-                                }
-                              }
-                              if (strstr($value_field,'configuration_value')) {
-                                $value_field = str_replace('configuration_value', $configuration['configuration_key'],$value_field);
-                              }
+                          }
+                        }
+                        if (xtc_not_null($configuration['use_function'])) {
+                          $use_function = $configuration['use_function'];
+                          if (preg_match('/->/', $use_function)) {
+                            $class_method = explode('->', $use_function);
+                            if (!is_object(${$class_method[0]})) {
+                              include(DIR_WS_CLASSES . $class_method[0] . '.php');
+                              ${$class_method[0]} = new $class_method[0]();
+                            }
+                            $cfgValue = xtc_call_function($class_method[1], $configuration['configuration_value'], ${$class_method[0]});
+                          } else {
+                            $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
+                          }
+                        } else {
+                          $cfgValue = $configuration['configuration_value'];
+                        }
+                        if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $configuration['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+                          $cfg_extra_query = xtc_db_query("SELECT configuration_key,
+                                                                  configuration_value, 
+                                                                  date_added, 
+                                                                  last_modified, 
+                                                                  use_function, 
+                                                                  set_function 
+                                                             FROM " . TABLE_CONFIGURATION . " 
+                                                            WHERE configuration_id = '" . $configuration['configuration_id'] . "'
+                                                          ");
+                          $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
+                          $cInfo_array = xtc_array_merge($configuration, $cfg_extra);
+                          $cInfo = new objectInfo($cInfo_array);
+                        }
+                        if ($configuration['set_function']) {
+                          eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
+                        } else {
+                          if ( $configuration['configuration_key'] == 'SMTP_PASSWORD') {
+                            $value_field = xtc_draw_password_field($configuration['configuration_key'], $configuration['configuration_value']);
+                          } else {
+                            $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'style="width:380px;"');
+                          }
+                        }
+                        if (strstr($value_field,'configuration_value')) {
+                          $value_field = str_replace('configuration_value', $configuration['configuration_key'],$value_field);
+                        }
 
-                              // catch up warnings if no language-text defined for configuration-key
-                              $configuration_key_title = strtoupper($configuration['configuration_key'].'_TITLE');
-                              $configuration_key_desc  = strtoupper($configuration['configuration_key'].'_DESC');
-                              if ( defined($configuration_key_title) ) {                        // if language definition
-                                $configuration_key_title = constant($configuration_key_title);
-                                $configuration_key_desc  = constant($configuration_key_desc);
-                              } else {                                                          // if no language
-                                $configuration_key_title = $configuration['configuration_key']; // name = key
-                                $configuration_key_desc  = '&nbsp;';                            // description = empty
-                              }
-                              if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
+                        // catch up warnings if no language-text defined for configuration-key
+                        $configuration_key_title = strtoupper($configuration['configuration_key'].'_TITLE');
+                        $configuration_key_desc  = strtoupper($configuration['configuration_key'].'_DESC');
+                        if ( defined($configuration_key_title) ) {                        // if language definition
+                          $configuration_key_title = constant($configuration_key_title);
+                          $configuration_key_desc  = constant($configuration_key_desc);
+                        } else {                                                          // if no language
+                          $configuration_key_title = $configuration['configuration_key']; // name = key
+                          $configuration_key_desc  = '&nbsp;';                            // description = empty
+                        }
+                        if ($configuration_key_desc!=str_replace("<meta ","",$configuration_key_desc)) {
                           $configuration_key_desc = encode_htmlentities($configuration_key_desc);
                         }
                         $class_mark = strpos(strtoupper($configuration['configuration_key']), 'SMTP') !== false || 
@@ -311,9 +329,9 @@ require (DIR_WS_INCLUDES.'head.php');
 
                       }
                     ?>
-              </table>
+                  </table>
                   <div class="main pdg2 flt-r mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_SAVE; ?>"/></div>
-            </form>                   
+                </form>                   
         </td>
         <!-- body_text_eof //-->
       </tr>
