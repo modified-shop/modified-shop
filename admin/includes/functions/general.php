@@ -2657,6 +2657,6 @@
         }
         return $configuration_value;
       }
-      return defined($cfg_max_display_results_key) ? constant($cfg_max_display_results_key) : 20;
+      return defined($cfg_key) ? constant($cfg_key) : 20;
   }
 ?>
