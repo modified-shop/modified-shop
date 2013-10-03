@@ -142,12 +142,13 @@
                   $countries_split = new splitPageResults($_GET['page'], $page_max_display_results, $countries_query_raw, $countries_query_numrows);
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
-                    if (((!$_GET['cID']) || (@$_GET['cID'] == $countries['countries_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                    if (((!$_GET['cID']) || (@$_GET['cID'] == $countries['countries_id'])) && (!isset($cInfo)) && (substr($_GET['action'], 0, 3) != 'new')) {
                       $cInfo = new objectInfo($countries);
                     }
                     
                     $zones_query_raw = "SELECT zone_id FROM " . TABLE_ZONES . " WHERE zone_country_id ='". (int)$countries['countries_id'] ."'";
                     $zones_query = xtc_db_query($zones_query_raw);
+                    $required_zones = '';
                     if (xtc_db_num_rows($zones_query) > 0) {
                       if ($countries['required_zones'] == '1') {
                         $required_zones = xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10) . '&nbsp;&nbsp;<a href="' . xtc_href_link(FILENAME_COUNTRIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setzones&required_zones=0&cID=' . $countries['countries_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10) . '</a>';
