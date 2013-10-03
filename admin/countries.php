@@ -135,7 +135,7 @@
                 </tr>
                 <?php
                   $countries_query_raw = "SELECT * FROM " . TABLE_COUNTRIES . " ORDER BY countries_name";
-                  $countries_split = new splitPageResults($_GET['page'], '20', $countries_query_raw, $countries_query_numrows);
+                  $countries_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $countries_query_raw, $countries_query_numrows);
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
                     if (((!isset($_GET['cID'])) || (isset($_GET['cID']) && $_GET['cID'] == $countries['countries_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
@@ -177,8 +177,8 @@
             ?>                
             </table>
             
-            <div class="smallText pdg2 flt-l"><?php echo $countries_split->display_count($countries_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $countries_split->display_links($countries_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $countries_split->display_count($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_COUNTRIES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $countries_split->display_links($countries_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
 
             <?php
             if (!$_GET['action']) {
