@@ -524,3 +524,5 @@ define('BOX_MAGNALISTER', 'magnalister Admin');
 
 define('CHARS_LEFT', 'chars left');
 define('CHARS_MAX', 'of max.');
+
+define('DISPLAY_PER_PAGE', 'Display per page: ');
