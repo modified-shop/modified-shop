@@ -18,7 +18,7 @@
 
   function xtc_db_query_installer($query, $type, $link = 'db_link') {
     global $$link;
-    
+    if (!$type) echo 'TYPE ERROR: xtc_db_query_installer<br>';
     switch ($type) {
       case 'mysql':
         return mysql_query($query, $$link);
