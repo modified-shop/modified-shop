@@ -76,7 +76,7 @@
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center">
-                      <a href="<?php echo HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'index.php'; ?>" target="_blank">
+                      <a href="<?php echo HTTP_SERVER . DIR_WS_CATALOG . 'index.php'; ?>" target="_blank">
                         <img src="buttons/<?php echo $lang;?>/button_catalog.gif" border="0" alt="Catalog">
                       </a>
                     </td>
