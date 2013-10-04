@@ -18,7 +18,9 @@
 
   function xtc_db_connect_installer($server, $username, $password, $type, $link = 'db_link') {
     global $$link, $db_error;
-
+    
+    if (!$type) echo 'TYPE ERROR: xtc_db_select_db<br>';
+    
     $db_error = false;
 
     if (!$server) {
