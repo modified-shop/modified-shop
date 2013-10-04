@@ -45,6 +45,9 @@
     define('DIR_WS_BASE',''); //web28 - 2010-12-13 - FIX for $messageStack icons //moved to application.php
   }
 
+  // set admin directory
+  require_once(DIR_FS_INC.'set_admin_directory.inc.php');
+  
   //require('../includes/functions/validations.php');
   require_once(DIR_FS_CATALOG.'inc/auto_require.inc.php');
   require_once(DIR_FS_CATALOG.'includes/classes/boxes.php');
@@ -53,9 +56,6 @@
   require_once(DIR_FS_CATALOG.'includes/database_tables.php');
   require_once(DIR_FS_INC.'xtc_image.inc.php');
   
-  // set admin directory
-  require_once(DIR_FS_INC.'set_admin_directory.inc.php');
-
   define('CR', "\n");
   define('BOX_BGCOLOR_HEADING', '#bbc3d3');
   define('BOX_BGCOLOR_CONTENTS', '#f8f8f9');

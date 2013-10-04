@@ -18,7 +18,7 @@
    
 function xtc_db_test_create_db_permission($database, $type) {
     global $db_error;
-
+    if (!$type) echo 'TYPE ERROR: xtc_db_test_create_db_permission<br>';
     $db_created = false;
     $db_error = false;
 
@@ -28,9 +28,9 @@ function xtc_db_test_create_db_permission($database, $type) {
     }
 
     if (!$db_error) {
-      if (!@xtc_db_select_db($database)) {
+      if (!@xtc_db_select_db($database, $type)) {
         $db_created = true;
-        if (!@xtc_db_query_installer('create database ' . $database)) {
+        if (!@xtc_db_query_installer('create database ' . $database, $type)) {
           $db_error = xtc_db_error_installer($type);
         }
       } else {
@@ -38,11 +38,11 @@ function xtc_db_test_create_db_permission($database, $type) {
       }
       
       if (!$db_error) {
-        if (@xtc_db_select_db($database)) {
-          if (@xtc_db_query_installer('create table temp ( temp_id int(5) )')) {
-            if (@xtc_db_query_installer('drop table temp')) {
+        if (@xtc_db_select_db($database, $type)) {
+          if (@xtc_db_query_installer('create table temp ( temp_id int(5) )', $type)) {
+            if (@xtc_db_query_installer('drop table temp', $type)) {
               if ($db_created) {
-                if (@xtc_db_query_installer('drop database ' . $database)) {
+                if (@xtc_db_query_installer('drop database ' . $database, $type)) {
                 } else {
                   $db_error = xtc_db_error_installer($type);
                 }

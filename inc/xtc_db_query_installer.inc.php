@@ -18,7 +18,7 @@
 
   function xtc_db_query_installer($query, $type, $link = 'db_link') {
     global $$link;
-
+    if (!$type) echo 'TYPE ERROR: xtc_db_query_installer<br>';
     // BOF - Dokuman - 2011-03-01 - get ready for UTF8
     /*
     mysql_query("SET names 'utf8'");

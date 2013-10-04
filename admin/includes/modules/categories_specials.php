@@ -24,7 +24,7 @@
     //BOF web28 - 2010-07-27 - show products_price
     if (PRICE_IS_BRUTTO == 'true') {
       $products_price_sp = xtc_round($pInfo->products_price * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
-      $products_price_netto_sp = TEXT_NETTO.'<strong>'.($pInfo->products_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100).'</strong>  ';
+      $products_price_netto_sp = TEXT_NETTO.'<strong>'. xtc_round($pInfo->products_price,PRICE_PRECISION)  .'</strong>  ';
     } else {
       $products_price_sp = xtc_round($pInfo->products_price, PRICE_PRECISION);
       $products_price_netto_sp = '';
@@ -100,7 +100,7 @@
       echo xtc_draw_hidden_field('specials_id', $sInfo->specials_id);
     }
     ?>
-    <script language="JavaScript" type="text/JavaScript">
+<script type="text/JavaScript">
       function showSpecial() {
         //alert(document.getElementById("special").style.display);
         if (document.getElementById("special").style.display =="none" || document.getElementById("special").style.display =="") {
@@ -112,24 +112,15 @@
         }
       }
     </script>
-    <style type='text/css'>#special{display: none;}</style>
+<style type="text/css">#special{display: none;}</style>
     <noscript>
       <style type="text/css">#special{display: block;}</style>
-    </noscript>
-    <div id="special">
-      <div style="padding: 8px 0px 3px 5px;">
-        <table border="0" cellspacing="0" cellpadding="0">
-          <tr>
-            <td class="main">
-              <strong><?php echo SPECIALS_TITLE; ?></strong>
-            </td>
-          </tr>
-        </table>
-      </div>
-      <table bgcolor="f3f3f3" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding:5px;">
-        <tr>
-          <td>
-            <table width="100%" border="0" cellpadding="3" cellspacing="0" style="border: 0px dotted black;">
+</noscript>
+  <div id="special" style="margin:10px 0;">
+    <div class="main" style="padding: 8px 0px 3px 5px;">      
+      <strong><?php echo SPECIALS_TITLE; ?></strong>          
+    </div>
+         <table class="tableInput">
             <?php if(!isset($_GET['pID'])) { ?>
             <tr>
               <td class="main"><?php echo TEXT_SPECIALS_NO_PID; ?>&nbsp;</td>             
@@ -198,9 +189,6 @@
               </tr>
             <?php } ?>
             </table>
-          </td>
-        </tr>
-      </table>
     </div>
     <?php
   }

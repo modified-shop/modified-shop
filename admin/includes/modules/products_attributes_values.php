@@ -41,6 +41,8 @@
 
     if (isset ($_GET['search_optionsname'])){
       $and .= " AND (po.products_options_name LIKE '%".$_GET['search_optionsname']."%' or pov.products_options_values_name LIKE '%".$_GET['search_optionsname']."%') ";
+    } else {
+      $_GET['search_optionsname'] = '';
     }
 
     $values = "-- products_attributes.php
@@ -63,7 +65,7 @@
       $per_page = (int)MAX_ROW_LISTS_OPTIONS; //aus Sprachdatei (veraltet)
     }
 
-    if (!$_GET['value_page']) {
+    if (!isset($_GET['value_page'])) {
       $_GET['value_page'] = 1;
     }
     $prev_value_page = $_GET['value_page'] - 1;
