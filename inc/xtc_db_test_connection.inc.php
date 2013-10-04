@@ -18,11 +18,13 @@
    
 function xtc_db_test_connection($database, $type) {
     global $db_error;
-
+    
+    if (!$type) echo 'TYPE ERROR: xtc_db_test_connection<br>';
+    
     $db_error = false;
 
     if (!$db_error) {
-      if (!@xtc_db_select_db($database)) {
+      if (!@xtc_db_select_db($database, $type)) {
         $db_error = xtc_db_error_installer($type);
       } else {
         if (!@xtc_db_query_installer('select count(*) from configuration')) {

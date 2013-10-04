@@ -18,7 +18,9 @@
    
 function xtc_db_install($database, $type, $sql_file) {
     global $db_error;
-
+    
+    if (!$type) echo 'TYPE ERROR: xtc_db_install<br>';
+    
     $db_error = false;
 
     if (!@xtc_db_select_db($database, $type)) {

@@ -22,6 +22,8 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if ($_GET['action'] != 'delete_product_option') {
 
+  $_GET['option_order_by'] = isset($_GET['option_order_by']) ? $_GET['option_order_by'] : '';
+  
   $options_dropdown_order = '';
   $options = array();
   $options[] = (array ('id' => 'products_options_id', 'text' => TEXT_OPTION_ID));
@@ -37,7 +39,7 @@ if ($_GET['action'] != 'delete_product_option') {
   }
 
   //BOF Seitenschaltung
-  $option_page = (int)$_GET['option_page'];
+  $option_page = isset($_GET['option_page']) ? (int)$_GET['option_page'] : 1;
   if (defined('MAX_ROW_LISTS_ATTR_OPTIONS')) {
     $per_page = (int)MAX_ROW_LISTS_ATTR_OPTIONS;
   } else {
@@ -50,6 +52,7 @@ if ($_GET['action'] != 'delete_product_option') {
   } else {
     $options = "-- products_attributes.php
       SELECT * FROM " . TABLE_PRODUCTS_OPTIONS . " WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' ORDER BY " . $option_order_by;
+    $_GET['searchoption'] = '';
   }
   if (!$option_page) {
     $option_page = 1;
@@ -235,7 +238,7 @@ if ($_GET['action'] != 'update_option') {
                     <input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">
                     <tr style="background-color: #d4d4d4;">
                       <td align="center" class="smallText">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-                      <td class="smallText"><?php echo TABLE_HEADING_SORTORDER . ':&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;" value="' . $option_name['products_options_sortorder'] . '">'; ?></td>
+                      <td class="smallText"><?php echo TABLE_HEADING_SORTORDER . ':&nbsp;<input type="text" name="products_options_sortorder" style="width:80px;">'; ?></td>
                       <td class="smallText"><?php echo $inputs; ?></td>                      
                       <td class="smallText txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
                     </tr>
@@ -248,6 +251,7 @@ if ($_GET['action'] != 'update_option') {
 // ############  EOF NEW ENTRY  ############ //
 
 $options = xtc_db_query($options);
+$rows = 0;
 while ($options_values = xtc_db_fetch_array($options)) {
   $rows++;
   // ############  BOF UPDATE  ############ //
@@ -255,7 +259,6 @@ while ($options_values = xtc_db_fetch_array($options)) {
     $inputs = '';
     for ($i = 0, $n = sizeof($languages);$i < $n;$i++) {
       $add_select = '';
-      $add_select .= 'is_filter, is_only_filter,'; //Filter
       $option_name = xtc_db_query("-- products_attributes.php
                                   SELECT $add_select
                                   products_options_name
@@ -299,13 +302,13 @@ while ($options_values = xtc_db_fetch_array($options)) {
                       <tr class="<?php echo (floor($rows/2) == ($rows/2) ? 'attributes-even' : 'attributes-odd'); ?>">
                         <td class="smallText txta-c">&nbsp;<?php echo $options_values["products_options_id"]; ?>&nbsp;</td>
                         <td class="smallText">&nbsp;<?php echo $options_values["products_options_sortorder"]; ?>&nbsp;</td>                        
-                        <td class="smallText">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;<?php echo ($options_values['is_filter'] == 1 ? ' (Filter)' : false)?>&nbsp;</td>
+                        <td class="smallText">&nbsp;<?php echo $options_values["products_options_name"]; ?>&nbsp;</td>
                         <td class="smallText txta-c">
                           <?php echo xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option&option_id=' . $options_values['products_options_id'] . '&option_order_by=' .
                           $option_order_by . '&option_page=' . $option_page, 'NONSSL')); ?>&nbsp;&nbsp;
                            <?php
                           //BOF - webkiste - auf der selben Seite bleiben
-                          echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] .'&option_page=' . $_GET['option_page'] , 'NONSSL'));
+                          echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_product_option&option_id=' . $options_values['products_options_id'] .'&option_page=' . $option_page , 'NONSSL'));
                           //EOF - webkiste - auf der selben Seite bleiben
                           ?>
                         </td>
