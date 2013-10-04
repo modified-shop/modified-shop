@@ -16,7 +16,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-  function xtc_db_select_db($database, $type , $link = 'db_link') {
+  function xtc_db_select_db($database, $type, $link = 'db_link') {
     global $$link;
     if (!$type) echo 'TYPE ERROR: xtc_db_select_db<br>';
     switch ($type) {
