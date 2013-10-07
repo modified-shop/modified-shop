@@ -275,6 +275,7 @@ if (!$action) {
                                            ".$query_string."
                                        AND content_id!='".$g_coID."'
                                    ");
+      $content_data_array[] = array('id' => '', 'text' => '---');   
       while ($content_data = xtc_db_fetch_array($content_data_query)) {
         $content_data_array[] = array('id'=>$content_data['content_id'],
                                       'text'=>$content_data['content_title']
