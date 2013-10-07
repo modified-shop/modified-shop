@@ -1575,7 +1575,7 @@ span.cop_grey {
   border-width:1px 0 0 0;
   display:block;
   height:auto;
-  width:512px;
+  width:722px;
   float:left;
   margin-bottom:2px;
 }
@@ -1645,12 +1645,13 @@ ol#address_block, div.agbframe ol, div.agbframe ul  {
   background-color:#ededed;
   padding:6px;
   border-width:1px 0 0 0;
-  width:512px;
+  width:722px;
   margin-bottom:17px;
 }
+
 /* web28 - 2010-07-25 - FIX DER AUFZÄHLUNGEN IM CONTENT  für TABS/ACCORDION in product_info */
 #tab_description ol, #tab_description ul, #accordion_product_info ol, #accordion_product_info ul{
-  margin:10px 0 10px 22px;
+  margin:10px 0 10px 30px;
   display:block;
 }
 /* h-h-h - 2011-05-15 - MOUSE POINTER FOR PRODUCTOPTIONS RADIO BUTTON TEXT */

@@ -14,12 +14,12 @@
    // this javascriptfile get includes at the BOTTOM of every template page in shop
    // you can add your template specific js scripts here
 ?>
-<script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.js" type="text/javascript"></script>
+<script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/thickbox.js" type="text/javascript"></script>
+<script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.easytabs.min.js" type="text/javascript"></script>
 
 
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info - web28 ?>
-<script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery-ui.js" type="text/javascript"></script>
 <script type="text/javascript">
 /* <![CDATA[ */
 	//Laden einer CSS Datei mit jquery	
@@ -28,8 +28,13 @@
 	});
 	
 	$(function() {
-		$("#tabbed_product_info").tabs();
-		$("#accordion_product_info").accordion({ autoHeight: false });
+		$('#tabbed_product_info').easytabs({
+      animate: true,
+      animationSpeed: 1000,
+      cycle: 4000,
+      updateHash: false //Tells easyTabs whether or not to update the browser window's URL hash, useful for SEO and bookmarking. true, false (true)
+    });
+		//$("#accordion_product_info").accordion({ autoHeight: false });
 	});
 /*]]>*/
 </script>

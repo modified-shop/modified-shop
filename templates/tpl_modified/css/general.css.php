@@ -22,7 +22,8 @@
 <?php
 if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) {
 ?>
-<link rel="stylesheet" href="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/css/jquery-ui.css" type="text/css" media="screen" />
+<!--link rel="stylesheet" href="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/css/jquery-ui.css" type="text/css" media="screen" /-->
+<link rel="stylesheet" href="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/css/easytabs.css" type="text/css" media="screen" />
 <?php
 }
 ?>

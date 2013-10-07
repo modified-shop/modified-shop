@@ -88,31 +88,33 @@
 {$FORM_END}
 
 {*BEGIN TABS*}
-<div id="tabbed_product_info">
-  <ul>
-    {if $PRODUCTS_DESCRIPTION != ''}<li><a href="#tab_description">{#description#}</a></li>{/if}
-    {if $more_images|@count > 0}<li><a href="#tab_more_images">{#more_images#}</a></li>{/if}
-    {if $MODULE_products_media != ''}<li><a href="#tab_media">{#products_media#}</a></li>{/if}
-    {if $MODULE_products_reviews != ''}<li><a href="#tab_reviews">{#products_reviews#}</a></li>{/if}
-    {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li><a href="#tab_cross_selling">{#cross_selling#}</a></li>{/if}
-    {if $MODULE_also_purchased != ''}<li><a href="#tab_also_purchased">{#also_purchased#}</a></li>{/if}
+<div id="tabbed_product_info" class="tab-container">
+  <ul class="etabs">
+    {if $PRODUCTS_DESCRIPTION != ''}<li class="tab"><a href="#tab_description">{#description#}</a></li>{/if}
+    {if $more_images|@count > 0}<li class="tab"><a href="#tab_more_images">{#more_images#}</a></li>{/if}
+    {if $MODULE_products_media != ''}<li class="tab"><a href="#tab_media">{#products_media#}</a></li>{/if}
+    {if $MODULE_products_reviews != ''}<li class="tab"><a href="#tab_reviews">{#products_reviews#}</a></li>{/if}
+    {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li class="tab"><a href="#tab_cross_selling">{#cross_selling#}</a></li>{/if}
+    {if $MODULE_also_purchased != ''}<li class="tab"><a href="#tab_also_purchased">{#also_purchased#}</a></li>{/if}
   </ul>
-  {if $PRODUCTS_DESCRIPTION != ''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}</div>{/if}
-  {if $more_images|@count > 0}
-    <div id="tab_more_images">
-      {* More Pictures *}
-      <div class="morepics">
-        {foreach item=more_images_data from=$more_images}
-          <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" /></a>
-        {/foreach}
+  <div class="panel-container">
+    {if $PRODUCTS_DESCRIPTION != ''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}</div>{/if}
+    {if $more_images|@count > 0}
+      <div id="tab_more_images">
+        {* More Pictures *}
+        <div class="morepics">
+          {foreach item=more_images_data from=$more_images}
+            <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" /></a>
+          {/foreach}
+        </div>
+        <div style="clear:both;"></div>
       </div>
-      <div style="clear:both;"></div>
-    </div>
-  {/if}
-  {if $MODULE_products_media != ''}<div id="tab_media">{$MODULE_products_media}</div>{/if}
-  {if $MODULE_products_reviews != ''}<div id="tab_reviews">{$MODULE_products_reviews}</div>{/if}
-  {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div id="tab_cross_selling">{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
-  {if $MODULE_also_purchased != ''}<div id="tab_also_purchased">{$MODULE_also_purchased}</div>{/if}
+    {/if}
+    {if $MODULE_products_media != ''}<div id="tab_media">{$MODULE_products_media}</div>{/if}
+    {if $MODULE_products_reviews != ''}<div id="tab_reviews">{$MODULE_products_reviews}</div>{/if}
+    {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div id="tab_cross_selling">{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+    {if $MODULE_also_purchased != ''}<div id="tab_also_purchased">{$MODULE_also_purchased}</div>{/if}
+  </div>
 </div>
 {*END TABS*}
 
