@@ -142,7 +142,7 @@
                   $countries_split = new splitPageResults($_GET['page'], $page_max_display_results, $countries_query_raw, $countries_query_numrows);
                   $countries_query = xtc_db_query($countries_query_raw);
                   while ($countries = xtc_db_fetch_array($countries_query)) {
-                    if (((!$_GET['cID']) || (@$_GET['cID'] == $countries['countries_id'])) && (!isset($cInfo)) && (substr($_GET['action'], 0, 3) != 'new')) {
+                    if (((!$_GET['cID']) || ($_GET['cID'] == $countries['countries_id'])) && (!isset($cInfo)) && (substr($_GET['action'], 0, 3) != 'new')) {
                       $cInfo = new objectInfo($countries);
                     }
                     
