@@ -825,7 +825,7 @@ define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile 
 define('USE_PAGINATION_LIST_TITLE', 'Pagination Liste');
 define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.');
 
-define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Lieferstatus welcher in der Umsatzstatistik berücksichtigt werden soll.');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Bestellstatus welcher in der Umsatzstatistik berücksichtigt werden soll.');
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier den Bestellstatus ausw&auml;hlen für den die Ums&auml;tze angezeigt werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde den Status w&auml;hlen der bei abgeschlossener Bestellung verwendet wird.)');
 
 ?>
