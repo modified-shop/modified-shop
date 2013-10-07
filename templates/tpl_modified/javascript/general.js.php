@@ -30,7 +30,7 @@
 	$(function() {
 		$('#tabbed_product_info').easytabs({
       animate: true,
-      animationSpeed: 1000,
+      animationSpeed: 300,
       cycle: 4000,
       updateHash: false //Tells easyTabs whether or not to update the browser window's URL hash, useful for SEO and bookmarking. true, false (true)
     });
