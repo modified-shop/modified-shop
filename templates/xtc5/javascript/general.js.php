@@ -14,7 +14,7 @@
    // this javascriptfile get includes at the BOTTOM of every template page in shop
    // you can add your template specific js scripts here
 ?>
-<script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery.js" type="text/javascript"></script>
+<script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="<?php echo 'templates/'.CURRENT_TEMPLATE; ?>/javascript/thickbox.js" type="text/javascript"></script>
 
 
