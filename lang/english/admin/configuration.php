@@ -775,13 +775,14 @@ define ('POPUP_PRODUCT_PRINT_SIZE_DESC', 'Sets the size of the popup window to b
 define ('POPUP_PRINT_ORDER_SIZE_TITLE', 'order window size Print view');
 define ('POPUP_PRINT_ORDER_SIZE_DESC', 'Sets the size of the popup window to be defined - default: width = 640, height = 600');
 
-// BOF - Dokuman - 2012-08-27 - added entries for new google analytics & piwik tracking
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Count page views of the shop owner');
 define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'By activating this option, all page views of the administration usersof the shop owner will be counted as well. This will falsify the visitor stats.');
+
 define('TRACKING_GOOGLEANALYTICS_ACTIVE_TITLE' , 'Activate Google Analytics tracking');
 define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'By activating this option, all page views will be submitted to Google Analytics for later evaluation. Before using this option, you need to register at <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> and create a new account.');
 define('TRACKING_GOOGLEANALYTICS_ID_TITLE' , 'Google Analytics account number');
 define('TRACKING_GOOGLEANALYTICS_ID_DESC' , 'Enter your Google Analytics account number in the format "UA-XXXXXXXX-X" which you received after successfully creating an account.');
+
 define('TRACKING_PIWIK_ACTIVE_TITLE' , 'Activate PIWIK Web-Analytics tracking');
 define('TRACKING_PIWIK_ACTIVE_DESC' , 'In order to use PIWIK at all, you have to download and install it to your webspace at first. See also <a href="http://http://de.piwik.org/" target="_blank"><b>PIWIK Web-Analytics</b></a>. In comparison to Google Analytics all data will be stored locally, i.e. you as show owner have complete control over all data.');
 define('TRACKING_PIWIK_LOCAL_PATH_TITLE' , 'PIWIK install path (without "http://")');
@@ -790,7 +791,6 @@ define('TRACKING_PIWIK_ID_TITLE' , 'PIWIK page ID');
 define('TRACKING_PIWIK_ID_DESC' , 'In the PIWIK administration a page ID will be created per domain (usually "1")');
 define('TRACKING_PIWIK_GOAL_TITLE' , 'PIWIK campaign number (optional)');
 define('TRACKING_PIWIK_GOAL_DESC' , 'Enter your campaign number, if you want to track predefined goals.. Details see <a href="http://piwik.org/docs/tracking-goals-web-analytics/" target="_blank"><b>PIWIK: Tracking Goal Conversions</b></a>');
-// EOF - Dokuman - 2012-08-27 - added entries for new google analytics & piwik tracking
 
 define ('CONFIRM_SAVE_ENTRY_TITLE', 'Confirmation when saving articles/category');
 define ('CONFIRM_SAVE_ENTRY_DESC', 'Should be made a confirmation message when saving products/categories? Default: true (yes)');
@@ -824,4 +824,8 @@ define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in te
 
 define('USE_PAGINATION_LIST_TITLE', 'Pagination List');
 define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination.');
+
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Order status which shall be considered for the sales statistics.');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order status for which the sales statistics shall be displayed.<br />(To show only the real sales volume, the order status which is used for completed orders should be choosen.)');
+
 ?>

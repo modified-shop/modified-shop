@@ -20,6 +20,7 @@ define('REPORT_DATE_FORMAT', 'm. d. Y');
 
 define('HEADING_TITLE', 'Sales Report');
 
+define('REPORT_SALES_STATISTICS', 'sales statistics');
 define('REPORT_TYPE_YEARLY', 'Yearly');
 define('REPORT_TYPE_MONTHLY', 'Monthly');
 define('REPORT_TYPE_WEEKLY', 'Weekly');
@@ -32,6 +33,7 @@ define('REPORT_ALL', 'all');
 define('REPORT_SORT', 'sort');
 define('REPORT_EXP', 'export');
 define('REPORT_SEND', 'send');
+
 define('EXP_NORMAL', 'normal');
 define('EXP_HTML', 'HTML only');
 define('EXP_CSV', 'CSV');
