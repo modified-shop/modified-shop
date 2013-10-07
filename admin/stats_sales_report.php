@@ -301,6 +301,7 @@
                                 <?php echo REPORT_STATUS_FILTER; ?><br />
                                 <select name="status" size="1">
                                   <option value="0"><?php echo REPORT_ALL; ?></option>
+                                  <option value="<?php echo ORDER_STATUSES_FOR_SALES_STATISTICS . '"'.($srStatus == $value["orders_status_id"] ? ' selected':'').'>' . REPORT_SALES_STATISTICS; ?></option>
                                   <?php
                                   foreach ($sr->status as $value) {
                                     ?>

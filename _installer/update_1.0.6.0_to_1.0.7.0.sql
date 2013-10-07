@@ -106,4 +106,8 @@ UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
 #Web28 - 2013-09-28 - Added required_zones
 ALTER TABLE countries ADD required_zones INT(1) DEFAULT '0';
 
+#h-h-h - 2013-10-07 - order statuses for sales statistics
+INSERT INTO configuration (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES
+('ORDER_STATUSES_FOR_SALES_STATISTICS', '3', 1000, 100, '2013-09-30 18:51:38', '0000-00-00 00:00:00', '', 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');
+
 # Keep an empty line at the end of this file for the db_updater to work properly
