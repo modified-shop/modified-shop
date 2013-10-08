@@ -26,9 +26,6 @@
   define('DIR_FS_DOWNLOAD_PUBLIC', DIR_FS_CATALOG . 'pub/');
   define('DIR_FS_INC', DIR_FS_CATALOG . 'inc/');
 
-  //compatibility for modified eCommerce Shopsoftware 1.06 files
-  define('DIR_WS_BASE', '');
-
   // SQL caching dir
   define('SQL_CACHEDIR', DIR_FS_CATALOG . 'cache/');
 
