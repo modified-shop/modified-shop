@@ -489,6 +489,7 @@ class shoppingCart {
 
     $products_array = array ();
     reset($this->contents);
+    $index = 0;
     while (list ($products_id,) = each($this->contents)) {
       if($this->contents[$products_id]['qty'] != 0 || $this->contents[$products_id]['qty'] !=''){
         $products_query = xtc_db_query("SELECT p.products_id,
@@ -524,7 +525,7 @@ class shoppingCart {
                                                     $products['products_tax_class_id'],
                                                     $products['products_price']);
 
-            $products_array[] = array ( 
+            $products_array[$index] = array ( 
                 'id' => $products_id,
                 'name' => $products['products_name'],
                 'description' => $products['products_description'],
@@ -543,6 +544,8 @@ class shoppingCart {
                 'tax' => isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0,
                 'attributes' => isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null
               );
+
+            $index++
           }
         }
       }
