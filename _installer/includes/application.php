@@ -258,4 +258,13 @@
       return $http;
     }
   }
+  
+  function convert_utf8($string)
+  {
+    if (INSTALL_CHARSET == 'utf8') {          
+      $string = mb_convert_encoding($string, 'utf-8', 'ISO-8859-15');
+    }
+    return $string;
+  
+  }
 ?>
