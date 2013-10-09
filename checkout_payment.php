@@ -53,6 +53,11 @@ unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 
 if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']); //ICW ADDED FOR CREDIT CLASS SYSTEM
 
+if (isset($_SESSION['payment'])) {
+  $_SESSION['payment_last_used'] = $_SESSION['payment'];
+  unset($_SESSION['payment']);
+}
+
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // if no billing destination address was selected, use the customers own address as default
@@ -67,8 +72,8 @@ if (!isset($_SESSION['billto'])) {
   $check_address = xtc_db_fetch_array($check_address_query);
   if ($check_address['total'] != '1') {
     $_SESSION['billto'] = $_SESSION['customer_default_address_id'];
-    if (isset($_SESSION['payment'])) {
-      unset ($_SESSION['payment']);
+    if (isset($_SESSION['payment_last_used'])) {
+      unset ($_SESSION['payment_last_used']);
     }
   }
 }
@@ -129,7 +134,7 @@ if ($xtPrice->xtcFormat($order->info['total'], false) > 0) {
       $selection[$i]['module_cost'] = $GLOBALS['ot_payment']->get_module_cost($selection[$i]);
     }
     $selection[$i]['radio_buttons'] = $radio_buttons;
-    if ((isset($_SESSION['payment']) && $selection[$i]['id'] == $_SESSION['payment']) || (!isset($_SESSION['payment']) && $i == 0 && CHECK_FIRST_PAYMENT_MODUL)) { // pre-selection the first payment option
+    if ((isset($_SESSION['payment_last_used']) && $selection[$i]['id'] == $_SESSION['payment_last_used']) || (!isset($_SESSION['payment_last_used']) && $i == 0 && CHECK_FIRST_PAYMENT_MODUL)) { // pre-selection the first payment option
       $selection[$i]['checked'] = 1;
     } else {
       $selection[$i]['checked'] = 0;
