@@ -51,7 +51,10 @@ require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 
-if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']); //ICW ADDED FOR CREDIT CLASS SYSTEM
+if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
+
+if (isset($_SESSION['cot_gv'])) unset($_SESSION['cot_gv']); 
+if (isset($_SESSION['payment_last_used'])) unset($_SESSION['payment_last_used']); 
 
 if (isset($_SESSION['payment'])) {
   $_SESSION['payment_last_used'] = $_SESSION['payment'];
