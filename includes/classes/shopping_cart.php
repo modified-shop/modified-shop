@@ -545,7 +545,7 @@ class shoppingCart {
                 'attributes' => isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null
               );
 
-            $index++
+            $index++;
           }
         }
       }
