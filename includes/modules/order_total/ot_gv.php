@@ -35,6 +35,7 @@ class ot_gv {
     $this->title = MODULE_ORDER_TOTAL_GV_TITLE;
     $this->header = MODULE_ORDER_TOTAL_GV_HEADER;
     $this->description = MODULE_ORDER_TOTAL_GV_DESCRIPTION;
+    $this->info = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->user_prompt = MODULE_ORDER_TOTAL_GV_USER_PROMPT;
     $this->enabled = MODULE_ORDER_TOTAL_GV_STATUS;
     $this->sort_order = MODULE_ORDER_TOTAL_GV_SORT_ORDER;
@@ -126,17 +127,19 @@ class ot_gv {
   } */
 
   function use_credit_amount() {
-    $output_string = ''.
+    //$output_string = ''.
 
     $_SESSION['cot_gv'] = false;
     if ($this->selection_test()) {
       //BOF - DokuMan - 2010-09-29 - remove layout formatting from checkbox
       //$output_string .= '    <td nowrap align="right" class="main">';
       //$output_string .= '<strong>'.$this->checkbox.'</strong>'.'</td>'."\n";
-      $output_string = $this->checkbox;
+      //$output_string = $this->checkbox;
+      return true;
       //EOF - DokuMan - 2010-09-29 - remove layout formatting from checkbox
     }
-    return $output_string;
+    return false;
+    //return $output_string;
   }
 
   function update_credit_account($i) {
@@ -170,6 +173,7 @@ class ot_gv {
   }
 
   function credit_selection() {
+    /*
     global $currencies;
     $selection_string = '';
     $gv_query = xtc_db_query("select coupon_id from ".TABLE_COUPONS." where coupon_type = 'G' and coupon_active='Y'");
@@ -184,7 +188,8 @@ class ot_gv {
       $selection_string .= '</tr>' . "\n";
     }
     */
-    return $selection_string;
+    //return $selection_string;
+    return false;
   }
 
   function apply_credit() {

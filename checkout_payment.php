@@ -52,7 +52,7 @@ unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 
 if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
-if (isset($_SESSION['cot_gv'])) unset($_SESSION['cot_gv']); 
+if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) unset($_SESSION['payment']); 
 
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
@@ -147,7 +147,7 @@ if ($xtPrice->xtcFormat($order->info['total'], false) > 0) {
     }
   }
   $module_smarty->assign('module_content', $selection);
-} else {
+} elseif (!isset($_SESSION['cot_gv'])) {
   $order_total_modules->pre_confirmation_check();
   $smarty->assign('GV_COVER', 'true');
 }
@@ -158,7 +158,16 @@ unset($_SESSION['nvpReqArray']);
 ### Paypal Express Modul
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
-  $smarty->assign('module_gift', $order_total_modules->credit_selection());
+  $credit_selection = $order_total_modules->credit_selection();
+  for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
+    if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
+      $credit_selection[$i]['checked'] = 1;
+    } else {
+      $credit_selection[$i]['checked'] = 0;
+    }
+    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_selection[$i]['id'], $credit_selection[$i]['checked'], 'id="'.($i+1).'"');
+  }
+  $module_smarty->assign('module_gift', $credit_selection);  
 }
 
 $module_smarty->caching = 0;

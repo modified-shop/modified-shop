@@ -45,8 +45,9 @@ class order_total {
 	//
 	function credit_selection() {
 		$selection_string = '';
-		$close_string = '';
-		$credit_class_string = '';
+		//$close_string = '';
+		//$credit_class_string = '';
+		$output_array = array();
 		if (MODULE_ORDER_TOTAL_INSTALLED) {
 		     // BOF - vr - 2010-03-03 fix gv display on checkout
 			/*$header_string = '<tr>'."\n";
@@ -65,7 +66,7 @@ class order_total {
 			$close_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
 			$close_string .= '</tr></table></td></tr></table></td>';
 			$close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';*/
-			
+			/*
 			$header_string  = '<tr><td>';
 			$header_string .= '<table class="paymentblock" border="0" width="100%" cellspacing="0" cellpadding="6">';
 			$header_string .= '<td width="90%" class="header">'.TABLE_HEADING_CREDIT.'</td>';
@@ -74,7 +75,7 @@ class order_total {
 			$header_string .= '</td></tr>';
 			$close_string .= '<tr><td width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
 			// EOF - vr - 2010-03-03 fix gv display on checkout
-			
+			*/
 			reset($this->modules);
 			$output_string = '';
 			while (list (, $value) = each($this->modules)) {
@@ -85,6 +86,11 @@ class order_total {
             $selection_string = $GLOBALS[$class]->credit_selection();
           }
 					if (($use_credit_string != '') || ($selection_string != '')) {
+					  $output_array[] = array ('id' => $GLOBALS[$class]->code,
+                                     'module' => $GLOBALS[$class]->title,
+                                     'description' => $GLOBALS[$class]->info
+                                     );
+					  /*
 						$output_string .= '<tr colspan="4"><td colspan="4" width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
 						$output_string .= '<tr class="moduleRow" onmouseover="rowOverEffect(this)" onmouseout="rowOutEffect(this)" >';
 						$output_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
@@ -95,14 +101,21 @@ class order_total {
 						$output_string .= '<td width="10">'.xtc_draw_separator('pixel_trans.gif', '10', '1').'</td>';
 						$output_string .= '</tr>'."\n";
 						$output_string .= $selection_string;
+						*/
 					}
 				}
 			}
+			if (count($output_array)>0) {
+			  return $output_array;
+			}
+			/*
 			if ($output_string != '') {
 				$output_string = $header_string.$output_string;
 				$output_string .= $close_string;
 			}
+			*/
 		}
+		
 		return $output_string;
 	}
 
