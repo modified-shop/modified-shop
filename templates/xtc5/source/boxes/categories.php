@@ -69,7 +69,7 @@
       $categories['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories_section['categories_id'],$categories_section['categories_name']));
       $foo[$categories['categories_id']] = array (
           'name' => $categories['categories_name'],
-          'link' => $categories_section['cat_link'],
+          'link' => $categories['cat_link'],
           'parent' => $categories['parent_id'],
           'level' => 0,
           'path' => $categories['categories_id'],
@@ -113,7 +113,7 @@
           $new_path .= $value;
           while ($row = xtc_db_fetch_array($categories_query, true)) {
             $row['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($row['categories_id'], $row['categories_name']));
-            $foo_section[$row['categories_id']] = array (
+            $foo[$row['categories_id']] = array (
                 'name' => $row['categories_name'],
                 'link' => $row['cat_link'],
                 'parent' => $row['parent_id'],
