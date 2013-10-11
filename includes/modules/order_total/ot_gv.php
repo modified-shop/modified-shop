@@ -311,6 +311,17 @@ class ot_gv {
     return false;
   }
 
+  function get_credit_amount() {
+    $gv_query = xtc_db_query("SELECT amount FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$_SESSION['customer_id']."'");
+    if (xtc_db_num_rows($gv_query) > 0) {
+      $gv_result = xtc_db_fetch_array($gv_query);
+      if ($gv_result['amount'] > 0) {
+        return $gv_result['amount'];
+      }
+    }
+    return false;
+  }
+
   function get_order_total() {
     global $order;
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] != 0)

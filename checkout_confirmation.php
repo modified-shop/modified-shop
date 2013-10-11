@@ -51,7 +51,7 @@ if ($_POST['comments_added'] != '')
   $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
 
 // check if display conditions on checkout page is true
-if (isset($_POST['cot_gv']))  $_SESSION['cot_gv'] = true;
+if (isset($_POST['cot_gv'])) $_SESSION['cot_gv'] = $_POST['cot_gv'];
 
 // if conditions are not accepted, redirect the customer to the payment method selection page
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
@@ -63,7 +63,7 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 
 // load the selected payment module
 require_once (DIR_WS_CLASSES . 'payment.php');
-if (isset($_SESSION['credit_covers'])) {
+if (isset($_SESSION['credit_covers']) || (isset($_SESSION['cot_gv']) && !isset($_SESSION['payment']))) {
   $_SESSION['payment'] = 'no_payment'; // GV Code Start/End ICW added for CREDIT CLASS
 }
 
@@ -87,7 +87,18 @@ $order_total_modules->pre_confirmation_check();
 // GV Code End
 
 // GV Code line changed
-if ((is_array($payment_modules->modules) && (sizeof($payment_modules->modules) > 1) && (!is_object($$_SESSION['payment'])) && (!isset($_SESSION['credit_covers']))) || (is_object($$_SESSION['payment']) && ($$_SESSION['payment']->enabled == false))) {
+if ((is_array($payment_modules->modules) 
+     && (sizeof($payment_modules->modules) > 1) 
+     && (!is_object($$_SESSION['payment'])) 
+     && (!isset($_SESSION['credit_covers']))) 
+    || 
+    (is_object($$_SESSION['payment']) 
+     && ($$_SESSION['payment']->enabled == false))
+    ||
+    (isset($_SESSION['cot_gv'])
+     && $xtPrice->xtcFormat($order->info['total'], false) > $_SESSION['cot_gv']
+     && $_SESSION['payment'] == 'no_payment')
+  ) {
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode(ERROR_NO_PAYMENT_MODULE_SELECTED), 'SSL'));
 }
 

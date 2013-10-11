@@ -51,9 +51,12 @@ require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 
+$first_call = true;
 if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
-if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) unset($_SESSION['payment']); 
-
+if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) {
+  $first_call = false;
+  unset($_SESSION['payment']); 
+}
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // if no billing destination address was selected, use the customers own address as default
@@ -109,10 +112,26 @@ $smarty->assign('BUTTON_ADDRESS', '<a href="' . xtc_href_link(FILENAME_CHECKOUT_
 $smarty->assign('BUTTON_CONTINUE', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
 
-require (DIR_WS_INCLUDES . 'header.php');
 $module_smarty = new Smarty;
 
-if ($xtPrice->xtcFormat($order->info['total'], false) > 0) {
+$credit_amount = 0;
+if (ACTIVATE_GIFT_SYSTEM == 'true') {
+  $credit_selection = $order_total_modules->credit_selection();
+  for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
+    if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
+      $credit_selection[$i]['checked'] = 1;
+    } else {
+      $credit_selection[$i]['checked'] = 0;
+    }
+    $credit_amount =  $credit_selection[$i]['credit_amount'];
+    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_amount, $credit_selection[$i]['checked'], 'id="'.'c'.$credit_selection[$i]['id'].'"');
+    $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
+  }
+  $module_smarty->assign('module_gift', $credit_selection);  
+}
+
+$total = $xtPrice->xtcFormat($order->info['total'], false);
+if (($total > 0 && $total > $credit_amount) || $first_call === false) {
   if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
     $smarty->assign('error', '<p class="errormessage">'. encode_htmlspecialchars($error['error']).'</p>');
   }
@@ -157,18 +176,8 @@ unset($_SESSION['reshash']);
 unset($_SESSION['nvpReqArray']);
 ### Paypal Express Modul
 
-if (ACTIVATE_GIFT_SYSTEM == 'true') {
-  $credit_selection = $order_total_modules->credit_selection();
-  for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
-    if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
-      $credit_selection[$i]['checked'] = 1;
-    } else {
-      $credit_selection[$i]['checked'] = 0;
-    }
-    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_selection[$i]['id'], $credit_selection[$i]['checked'], 'id="'.($i+1).'"');
-  }
-  $module_smarty->assign('module_gift', $credit_selection);  
-}
+// move header for Javascript form check
+require (DIR_WS_INCLUDES . 'header.php');
 
 $module_smarty->caching = 0;
 $payment_block = $module_smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_payment_block.html');
