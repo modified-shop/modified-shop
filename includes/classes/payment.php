@@ -132,9 +132,7 @@
       }
     }
 
-    function javascript_validation() {
-      global $total, $credit_amount, $first_call;
-      
+    function javascript_validation() {      
       $js = '';
       if (is_array($this->modules)) {
         $js = '<script type="text/javascript"><!-- ' . "\n" .
@@ -160,12 +158,6 @@
           if (isset($GLOBALS[$class]) && $GLOBALS[$class]->enabled) {
             $js .= $GLOBALS[$class]->javascript_validation();
           }
-        }
-        if ($total <= $credit_amount && $first_call === false) {
-          $js .= "\n" . '  if (document.getElementById("checkout_payment").cot_gv.checked) {' . "\n" .
-                 '    payment_value = document.getElementById("checkout_payment").cot_gv.value;' . "\n" .
-                 '    alert(payment_value);' . "\n" .
-                 '  }' . "\n\n";
         }
         if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
         $js .= "\n" . '  if (!document.getElementById("checkout_payment").conditions.checked) {' . "\n" .

@@ -88,7 +88,8 @@ class order_total {
 					if (($use_credit_string != '') || ($selection_string != '')) {
 					  $output_array[] = array ('id' => $GLOBALS[$class]->code,
                                      'module' => $GLOBALS[$class]->title,
-                                     'description' => $GLOBALS[$class]->info
+                                     'description' => $GLOBALS[$class]->info,
+                                     'credit_amount' => method_exists($GLOBALS[$class], 'get_credit_amount') ? $GLOBALS[$class]->get_credit_amount() : '0'
                                      );
 					  /*
 						$output_string .= '<tr colspan="4"><td colspan="4" width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
