@@ -66,7 +66,7 @@
                                     ");
 
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
-      $categories['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories_section['categories_id'],$categories_section['categories_name']));
+      $categories['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'],$categories['categories_name']));
       $foo[$categories['categories_id']] = array (
           'name' => $categories['categories_name'],
           'link' => $categories['cat_link'],
