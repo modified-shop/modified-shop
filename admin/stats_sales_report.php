@@ -63,7 +63,6 @@
   $srDetail = 0;
   $srExp = 0;
   $srMax = 0;
-  $srStatus = 0;
   $srPayment = 0;
   $srSort = 0;
   $srFilter = 0;
@@ -101,12 +100,7 @@
   }
 
   // order status
-  if (isset($_GET['status']) && (xtc_not_null($_GET['status'])) ) {
-    $srStatus = $_GET['status'];
-  }
-  if (!is_numeric($srStatus)) {
-    $srStatus = 0;
-  }
+  $srStatus = (isset($_GET['status']) && preg_match("/^[0-9\,]+$/", $_GET['status'])) ? $_GET['status'] : 0;
 
    // paymenttype
   if (isset($_GET['payment']) && (xtc_not_null($_GET['payment'])) ) {
