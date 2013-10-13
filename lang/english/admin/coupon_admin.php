@@ -40,7 +40,7 @@ define('TEXT_MESSAGE', 'Message:');
 define('TEXT_SELECT_CUSTOMER', 'Select Customer');
 define('TEXT_ALL_CUSTOMERS', 'All Customers');
 define('TEXT_NEWSLETTER_CUSTOMERS', 'To All Newsletter Subscribers');
-define('TEXT_CONFIRM_DELETE', 'By klicking <b>Confirm</b> the selected coupon will be set <b>inactive</b>. Note: This coupon can not be reactivated for further usage. <br /><br />Do you really want to deactivate this coupon?');
+define('TEXT_CONFIRM_DELETE', 'Do you really want to delete this coupon?');
 
 define('TEXT_TO_REDEEM', 'You can redeem this coupon during checkout. Just enter the code in the box provided, and click on the redeem button.');
 define('TEXT_IN_CASE', ' in case you have any problems. ');
