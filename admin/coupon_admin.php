@@ -43,10 +43,10 @@
 
   // initiate template engine for mail
   $smarty = new Smarty;
-
+  
   if ($_GET['selected_box']) {
-    $_GET['action']='';
-    $_GET['old_action']='';
+    $_GET['action'] = '';
+    $_GET['old_action'] = '';
   }
 
   if (($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back_x'])) {
@@ -83,9 +83,15 @@
     } else {
       $coupon_amount = COUPON_INFO . $xtPrice->xtcFormat($coupon_result['coupon_amount'], true) . ' ';
     }
-    if ($coupon_result['coupon_type']=='P') $coupon_amount = COUPON_INFO . number_format($coupon_result['coupon_amount'], 2) . '% ';
-    if ($coupon_result['coupon_minimum_order']>0) $coupon_amount .= COUPON_MINORDER_INFO . $xtPrice->xtcFormat($coupon_result['coupon_minimum_order'], true) . ' ';
-    if (trim($coupon_result['restrict_to_products'])!='' || trim($coupon_result['restrict_to_categories'])!='') $coupon_amount .= COUPON_RESTRICT_INFO;
+    if ($coupon_result['coupon_type']=='P') {
+      $coupon_amount = COUPON_INFO . number_format($coupon_result['coupon_amount'], 2) . '% ';
+    }
+    if ($coupon_result['coupon_minimum_order']>0) {
+      $coupon_amount .= COUPON_MINORDER_INFO . $xtPrice->xtcFormat($coupon_result['coupon_minimum_order'], true) . ' ';
+    }
+    if (trim($coupon_result['restrict_to_products'])!='' || trim($coupon_result['restrict_to_categories'])!='') {
+      $coupon_amount .= COUPON_RESTRICT_INFO;
+    }
     //TODO - Anzeige der gültigen Artikel/Kategorien
     //EOF - web28 - 2011-04-13 - ADD Coupon message infos
 
@@ -102,7 +108,7 @@
       $smarty->compile_dir=DIR_FS_CATALOG.'templates_c';
       $smarty->config_dir=DIR_FS_CATALOG.'lang';
 
-      $smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
+      $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');;
       $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
       $smarty->assign('MESSAGE', stripslashes($_POST['message'])); //web28 2011-07-07 - Fix html email
@@ -222,12 +228,16 @@
           for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
             $language_id = $languages[$i]['id'];
             //BOF - web28 - 2011-04-07 - BUGFIX no entry stored for previous deactivated languages
-            $coupon_query = xtc_db_query("SELECT * FROM ".TABLE_COUPONS_DESCRIPTION." WHERE language_id = '".(int)$language_id."' AND coupon_id = '".(int)$_GET['cid']."'");
+            $coupon_query = xtc_db_query("SELECT * FROM ".TABLE_COUPONS_DESCRIPTION." 
+                                                  WHERE language_id = '".(int)$language_id."' 
+                                                    AND coupon_id = '".(int)$_GET['cid']."'");
             if (xtc_db_num_rows($coupon_query) == 0) xtc_db_perform(TABLE_COUPONS_DESCRIPTION, array ('coupon_id' => (int)$_GET['cid'], 'language_id' => (int)$language_id));
             //EOF - web28 - 2011-04-07 - BUGFIX no entry stored for previous deactivated languages
-            $update = xtc_db_query("update " . TABLE_COUPONS_DESCRIPTION . " SET coupon_name = '" . xtc_db_prepare_input($_POST['coupon_name'][$language_id]) . "',
-                                                                                 coupon_description = '" . xtc_db_prepare_input($_POST['coupon_desc'][$language_id]) . "'
-                                                                           WHERE coupon_id = '" . (int)$_GET['cid'] . "' AND language_id = '" . (int)$language_id . "'");
+            $sql_cdata_array = array(
+                'coupon_name' => xtc_db_prepare_input($_POST['coupon_name'][$language_id]),
+                'coupon_description' => xtc_db_prepare_input($_POST['coupon_desc'][$language_id])
+              );
+            xtc_db_perform(TABLE_COUPONS_DESCRIPTION, $sql_cdata_array, 'update', "coupon_id = '" . (int)$_GET['cid'] . "' AND language_id = '" . (int)$language_id . "'");
           }
         } else {
           $query = xtc_db_perform(TABLE_COUPONS, $sql_data_array);
