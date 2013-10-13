@@ -497,11 +497,11 @@ define('HEADER_TOTAL','Total');
 ### PayPal API Modul
 define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
 define('PAYPAL_ERROR','PayPal abort');
-define('PAYPAL_NOT_AVIABLE','PayPal Express is not available.<br />Please select another method of payment<br />or try again later.<br />');
-define('ERROR_ADDRESS_NOT_ACCEPTED', 'We are not able to accept your order if you do not accept your address!');
+define('PAYPAL_NOT_AVIABLE','PayPal is not available.<br />Please select another payment method <br />or try again later.<br />');
+define('ERROR_ADDRESS_NOT_ACCEPTED', 'Please confirm your address so we can process your order.');
 define('PAYPAL_FEHLER','PayPal announced an error to the completion..<br />Your order is stored, is however not implemented.<br />Please enter a new order.<br />Thanks for your understanding.<br />');
-define('PAYPAL_WARTEN','PayPal announced an error to the completion.<br />You must pay again to PayPal around the order.<br />Down you see the stored order.<br /> Thanks for it pressing to understanding request you again the button PayPal express.<br />');
-define('PAYPAL_NEUBUTTON','Press please again around the order to pay.<br />Every other key leads to the abort of the order.');
+define('PAYPAL_WARTEN','PayPal reported an error while processing the payment.<br />Please login to PayPal and pay the order.<br />Below you see the stored order.<br /> Thanks for your understanding.<br />');
+define('PAYPAL_NEUBUTTON','Press the button again to pay the order.<br />Any other button will cancel.');
 define('PAYPAL_GS','Coupon');
 define('PAYPAL_TAX','Tax');
 define('PAYPAL_EXP_WARN','Note! Possibly resulting forwarding expenses are only computed in the shop finally.');
