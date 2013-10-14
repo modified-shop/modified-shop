@@ -152,8 +152,8 @@
       xtc_db_query("DELETE FROM ".TABLE_COUPONS." WHERE coupon_id = '".(int)$_GET['cid']."'");
       xtc_db_query("DELETE FROM ".TABLE_COUPONS_DESCRIPTION." WHERE coupon_id = '".(int)$_GET['cid']."'");
       // delete coupon reports from DB
-      xtc_db_query("DELETE FROM ".TABLE_COUPONS_EMAIL_TRACK." WHERE coupon_id='".(int)$_GET['cid']."'");
-			xtc_db_query("DELETE FROM ".TABLE_COUPONS_REDEEM_TRACK." WHERE coupon_id='".(int)$_GET['cid']."'");
+      xtc_db_query("DELETE FROM ".TABLE_COUPON_EMAIL_TRACK." WHERE coupon_id='".(int)$_GET['cid']."'");
+			xtc_db_query("DELETE FROM ".TABLE_COUPON_REDEEM_TRACK." WHERE coupon_id='".(int)$_GET['cid']."'");
       xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, xtc_get_all_get_params(array('cid', 'action', 'uid', 'oldaction')) ));
       break;
     case 'update':
