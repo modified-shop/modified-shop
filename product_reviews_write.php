@@ -30,11 +30,16 @@ if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
   }
 }
 
+$review = '';
+$rating = '';
 if (isset ($_GET['action']) && $_GET['action'] == 'process') {
   if (is_object($product) && $product->isProduct()) { // We got to the process but it is an illegal product, don't write
-
+    
+    $review = xtc_db_prepare_input($_POST['review']);
+    $rating = xtc_db_prepare_input($_POST['rating']);
+    
     $error = false;
-    if (strlen($_POST['review']) < REVIEW_TEXT_MIN_LENGTH) {
+    if (strlen($review) < REVIEW_TEXT_MIN_LENGTH) {
       $messageStack->add('product_reviews_write', ERROR_REVIEW_TEXT);
       $error = true;
     }
@@ -59,7 +64,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
       $sql_data_array = array( 'products_id' => $product->data['products_id'],
                                'customers_id' => (int) $_SESSION['customer_id'],
                                'customers_name' => $customer_values['customers_firstname'].' '.$customers_lastname,
-                               'reviews_rating' => xtc_db_prepare_input($_POST['rating']),
+                               'reviews_rating' => $rating,
                                'date_added' =>  'now()'
                              );
       xtc_db_perform(TABLE_REVIEWS,$sql_data_array);
@@ -67,7 +72,7 @@ if (isset ($_GET['action']) && $_GET['action'] == 'process') {
 
       $sql_data_array = array( 'reviews_id' => $insert_id,
                                'languages_id' => (int) $_SESSION['languages_id'],
-                               'reviews_text' => xtc_db_prepare_input(stripslashes($_POST['review']))
+                               'reviews_text' => $review
                              );
       xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
 
@@ -107,8 +112,8 @@ if (!$product->isProduct()) {
   }
   $smarty->assign('PRODUCTS_NAME', $product->data['products_name']);
   $smarty->assign('AUTHOR', $name);
-  $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', isset($_POST['review']) ? $_POST['review'] : ''));
-  $smarty->assign('INPUT_RATING', xtc_draw_radio_field('rating', '1').' '.xtc_draw_radio_field('rating', '2').' '.xtc_draw_radio_field('rating', '3').' '.xtc_draw_radio_field('rating', '4').' '.xtc_draw_radio_field('rating', '5'));
+  $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', $review));
+  $smarty->assign('INPUT_RATING', xtc_draw_radio_field('rating', '1', (($rating == '1') ? true : false)).' '.xtc_draw_radio_field('rating', '2', (($rating == '2') ? true : false)).' '.xtc_draw_radio_field('rating', '3', (($rating == '3') ? true : false)).' '.xtc_draw_radio_field('rating', '4', (($rating == '4') ? true : false)).' '.xtc_draw_radio_field('rating', '5', (($rating == '5') ? true : false)));
   $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&'.xtc_product_link($product->data['products_id'],$product->data['products_name'])), 'post', 'onSubmit="return checkForm();"'));
   $smarty->assign('BUTTON_BACK', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
   $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE).xtc_draw_hidden_field('get_params', xtc_get_all_get_params()));
