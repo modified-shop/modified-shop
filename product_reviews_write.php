@@ -23,44 +23,57 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if ($_SESSION['customers_status']['customers_status_write_reviews'] == 0) {
-  // BOC added review_prod_id as query string for redirect from login.php to products_reviews_write.php in case customer clicked reviews button, noRiddle
-  //xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-  xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'review_prod_id=' .(int)$product->data['products_id'], 'SSL'));
-  // EOC added for reviews, noRiddle
+  if (is_object($product) && $product->isProduct()) {
+    xtc_redirect(xtc_href_link(FILENAME_LOGIN, 'review_prod_id=' .(int)$product->data['products_id'], 'SSL'));
+  } else {
+    xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
+  }
 }
 
 if (isset ($_GET['action']) && $_GET['action'] == 'process') {
   if (is_object($product) && $product->isProduct()) { // We got to the process but it is an illegal product, don't write
 
-		$customer = xtc_db_query("SELECT customers_firstname,
-                                     customers_lastname
-                                FROM ".TABLE_CUSTOMERS."
-                               WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
-		$customer_values = xtc_db_fetch_array($customer);
-		$date_now = date('Ymd');
+    $error = false;
+    if (strlen($_POST['review']) < REVIEW_TEXT_MIN_LENGTH) {
+      $messageStack->add('product_reviews_write', ERROR_REVIEW_TEXT);
+      $error = true;
+    }
+    if (!isset($_POST['rating'])) {
+      $messageStack->add('product_reviews_write', ERROR_REVIEW_RATING);
+      $error = true;
+    }
+    
+    if ($error === false) {
+      $customer = xtc_db_query("SELECT customers_firstname,
+                                       customers_lastname
+                                  FROM ".TABLE_CUSTOMERS."
+                                 WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
+      $customer_values = xtc_db_fetch_array($customer);
+      $date_now = date('Ymd');
 
-    //shorten the reviewer's name from "Max Mustermann" to "Max M."
-		$customers_lastname = $customer_values['customers_lastname']
-                            ? $customer_values['customers_lastname'][0] . '.'
-                            : TEXT_GUEST;
+      //shorten the reviewer's name from "Max Mustermann" to "Max M."
+      $customers_lastname = $customer_values['customers_lastname']
+                              ? $customer_values['customers_lastname'][0] . '.'
+                              : TEXT_GUEST;
 
-    $sql_data_array = array( 'products_id' => $product->data['products_id'],
-                             'customers_id' => (int) $_SESSION['customer_id'],
-                             'customers_name' => $customer_values['customers_firstname'].' '.$customers_lastname,
-                             'reviews_rating' => xtc_db_prepare_input($_POST['rating']),
-                             'date_added' =>  'now()'
-                           );
-    xtc_db_perform(TABLE_REVIEWS,$sql_data_array);
-		$insert_id = xtc_db_insert_id();
+      $sql_data_array = array( 'products_id' => $product->data['products_id'],
+                               'customers_id' => (int) $_SESSION['customer_id'],
+                               'customers_name' => $customer_values['customers_firstname'].' '.$customers_lastname,
+                               'reviews_rating' => xtc_db_prepare_input($_POST['rating']),
+                               'date_added' =>  'now()'
+                             );
+      xtc_db_perform(TABLE_REVIEWS,$sql_data_array);
+      $insert_id = xtc_db_insert_id();
 
-    $sql_data_array = array( 'reviews_id' => $insert_id,
-                             'languages_id' => (int) $_SESSION['languages_id'],
-                             'reviews_text' => xtc_db_prepare_input($_POST['review'])
-                           );
-	  xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
+      $sql_data_array = array( 'reviews_id' => $insert_id,
+                               'languages_id' => (int) $_SESSION['languages_id'],
+                               'reviews_text' => xtc_db_prepare_input(stripslashes($_POST['review']))
+                             );
+      xtc_db_perform(TABLE_REVIEWS_DESCRIPTION,$sql_data_array);
+
+      xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
+    }
   }
-
-  xtc_redirect(xtc_href_link(FILENAME_PRODUCT_REVIEWS, $_POST['get_params']));
 }
 
 $breadcrumb->add(NAVBAR_TITLE_REVIEWS_WRITE, xtc_href_link(FILENAME_PRODUCT_REVIEWS, xtc_get_all_get_params()));
@@ -77,7 +90,11 @@ require (DIR_WS_INCLUDES.'header.php');
 
 if (!$product->isProduct()) {
   $smarty->assign('error', ERROR_INVALID_PRODUCT);
+  $smarty->assign('no_product', true);
 } else {
+  if ($messageStack->size('product_reviews_write') > 0) {
+    $smarty->assign('error', $messageStack->output('product_reviews_write'));
+  }
   $name = "";
   if (isset($customer_info['customers_firstname']) && $customer_info['customers_firstname'] != '') {
     $name .= $customer_info['customers_firstname'].' ';
@@ -90,7 +107,7 @@ if (!$product->isProduct()) {
   }
   $smarty->assign('PRODUCTS_NAME', $product->data['products_name']);
   $smarty->assign('AUTHOR', $name);
-  $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', 60, 15, '', '', false));
+  $smarty->assign('INPUT_TEXT', xtc_draw_textarea_field('review', 'soft', '60', '15', isset($_POST['review']) ? $_POST['review'] : ''));
   $smarty->assign('INPUT_RATING', xtc_draw_radio_field('rating', '1').' '.xtc_draw_radio_field('rating', '2').' '.xtc_draw_radio_field('rating', '3').' '.xtc_draw_radio_field('rating', '4').' '.xtc_draw_radio_field('rating', '5'));
   $smarty->assign('FORM_ACTION', xtc_draw_form('product_reviews_write', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, 'action=process&'.xtc_product_link($product->data['products_id'],$product->data['products_name'])), 'post', 'onSubmit="return checkForm();"'));
   $smarty->assign('BUTTON_BACK', '<a href="javascript:history.back(1)">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
