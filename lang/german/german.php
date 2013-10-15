@@ -517,4 +517,7 @@ define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify t
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
 define('TEXT_PRODUCTS_QTY_REDUCED', 'Die maximal erlaubte St&uuml;ckzahl f&uuml;r den zuletzt hinzugef&uuml;gten bzw. ge&auml;nderten Artikel wurde &uuml;berschritten. Die St&uuml;ckzahl wurde automatisch auf die maximal erlaubte St&uuml;ckzahl reduziert.');
+
+define('ERROR_REVIEW_TEXT', 'Der Bewertungstext muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
+define('ERROR_REVIEW_RATING', 'Bitte Geben Sie Ihre Bewertung ab.');
 ?>
