@@ -118,7 +118,7 @@ $credit_amount = 0;
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $credit_selection = $order_total_modules->credit_selection();
   for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
-    if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
+    if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $credit_selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
       $credit_selection[$i]['checked'] = 1;
     } else {
       $credit_selection[$i]['checked'] = 0;
