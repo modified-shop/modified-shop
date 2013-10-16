@@ -116,8 +116,9 @@ class order_total {
 			}
 			*/
 		}
-		
-		return $output_string;
+  
+    return $output_array;
+		//return $output_string;
 	}
 
 	//            if ($selection_string !='') {
