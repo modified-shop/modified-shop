@@ -519,6 +519,7 @@ function xtcCheckSpecial($pID) {
       $price        = $this->xtcAddTax($price, $products_tax);
     }
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
+    $from = $this->checkAttributes($pID);
     if ($format) {
       $Pprice = number_format(floatval($price), $decimal_places, $this->currencies[$this->actualCurr]['decimal_point'], $this->currencies[$this->actualCurr]['thousands_point']);
       $Pprice = $this->checkAttributes($pID) . $this->currencies[$this->actualCurr]['symbol_left'] . ' ' . $Pprice . ' ' . $this->currencies[$this->actualCurr]['symbol_right'];
@@ -527,7 +528,8 @@ function xtcCheckSpecial($pID) {
       } else {
         return array(
           'formated' => $Pprice,
-          'plain' => $price
+          'plain' => $price,
+          'from' =>  $from
         );
       }
     } else {
