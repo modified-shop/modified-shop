@@ -12,7 +12,6 @@ function shopstat_getRegExps()
 
   $sr_array_default =
     array (
-            "/\//"                 => '-',        //-- Schrägstriche entfernen
             "'\s&\s'"              => '-',        //--Kaufmännisches Und mit Blanks muss raus
             "'[\r\n\s]+'"          => '-',        // strip out white space
             "'&(quote|#34);'i"     => '-',        //--Anführungszeichen oben replace html entities

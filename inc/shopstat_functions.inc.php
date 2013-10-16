@@ -286,10 +286,17 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
 
   //-- HTML entfernen
   $newstring  = strip_tags($newstring);
+  
+  //-- Schrägstriche entfernen
+  if ($urlencode) {
+    $newstring  = preg_replace("/\//","-",$newstring);
+  } else {
+    $newstring  = preg_replace("/\s\/\s/","-",$newstring);
+  }
 
   //-- Definierte Zeichen entfernen
   $newstring  = preg_replace($char_search, $char_replace, $newstring);
-
+  
   //--Restliche HTML-Codierungen entfernen
   $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
   
