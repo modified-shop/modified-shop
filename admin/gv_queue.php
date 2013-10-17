@@ -29,6 +29,11 @@
 
   require('includes/application_top.php');
   
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_GV_QUEUE_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+   
+  
   require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
   require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
 
@@ -111,7 +116,10 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
 
       <td class="boxCenter">
-        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>    
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
+        <div class="flt-l">
+          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+        </div>    
         <table class="tableCenter">
           <tr>
             <td class="boxCenterLeft">
@@ -125,7 +133,7 @@ require (DIR_WS_INCLUDES.'head.php');
               </tr>
               <?php
                 $gv_query_raw = "select c.customers_firstname, c.customers_lastname, gv.unique_id, gv.date_created, gv.amount, gv.order_id from " . TABLE_CUSTOMERS . " c, " . TABLE_COUPON_GV_QUEUE . " gv where (gv.customer_id = c.customers_id and gv.release_flag = 'N')";
-                $gv_split = new splitPageResults($_GET['page'], '20', $gv_query_raw, $gv_query_numrows);
+                $gv_split = new splitPageResults($_GET['page'], $page_max_display_results, $gv_query_raw, $gv_query_numrows);
                 $gv_query = xtc_db_query($gv_query_raw);
                 while ($gv_list = xtc_db_fetch_array($gv_query)) {
                   if (((!$_GET['gid']) || (@$_GET['gid'] == $gv_list['unique_id'])) && (!$gInfo)) {
@@ -148,9 +156,18 @@ require (DIR_WS_INCLUDES.'head.php');
               ?>
             </table>
 
-            <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
-
+            <div class="smallText pdg2 flt-l"><?php echo $gv_split->display_count($gv_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_GIFT_VOUCHERS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $gv_split->display_links($gv_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            
+            <div class="clear"></div>
+            <div class="smallText pdg2 flt-l">
+              <?php 
+              echo xtc_draw_form('cfg_max', FILENAME_GV_QUEUE);         
+              echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+              echo '</form>'; 
+              ?> 
+            </div>
           </td>
           <?php
             $heading = array();

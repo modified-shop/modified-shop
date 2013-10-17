@@ -206,7 +206,11 @@ require (DIR_WS_INCLUDES.'head.php');
         ?>
         <!-- body_text //--> 
         <td class="boxCenter">
-          <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>                  
+          <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
+          <div class="flt-l">
+            <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
+          </div>
+          <div class="clear"></div>          
             <?php
               if ($action == 'new') {
                 $form_action = 'insert';

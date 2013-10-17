@@ -15,37 +15,41 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-  require('includes/application_top.php');
+require('includes/application_top.php');
 
-  if ($_GET['action']) {
-    switch ($_GET['action']) {
-      case 'insert':
-        $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
-        $zone_code = xtc_db_prepare_input($_POST['zone_code']);
-        $zone_name = xtc_db_prepare_input($_POST['zone_name']);
+//display per page
+$cfg_max_display_results_key = 'MAX_DISPLAY_ZONES_RESULTS';
+$page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-        xtc_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . xtc_db_input($zone_country_id) . "', '" . xtc_db_input($zone_code) . "', '" . xtc_db_input($zone_name) . "')");
-        xtc_redirect(xtc_href_link(FILENAME_ZONES));
-        break;
-      case 'save':
-        $zone_id = xtc_db_prepare_input($_GET['cID']);
-        $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
-        $zone_code = xtc_db_prepare_input($_POST['zone_code']);
-        $zone_name = xtc_db_prepare_input($_POST['zone_name']);
+if ($_GET['action']) {
+  switch ($_GET['action']) {
+    case 'insert':
+      $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
+      $zone_code = xtc_db_prepare_input($_POST['zone_code']);
+      $zone_name = xtc_db_prepare_input($_POST['zone_name']);
 
-        xtc_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . xtc_db_input($zone_country_id) . "', zone_code = '" . xtc_db_input($zone_code) . "', zone_name = '" . xtc_db_input($zone_name) . "' where zone_id = '" . xtc_db_input($zone_id) . "'");
-        xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
-        break;
-      case 'deleteconfirm':
-        $zone_id = xtc_db_prepare_input($_GET['cID']);
+      xtc_db_query("insert into " . TABLE_ZONES . " (zone_country_id, zone_code, zone_name) values ('" . xtc_db_input($zone_country_id) . "', '" . xtc_db_input($zone_code) . "', '" . xtc_db_input($zone_name) . "')");
+      xtc_redirect(xtc_href_link(FILENAME_ZONES));
+      break;
+    case 'save':
+      $zone_id = xtc_db_prepare_input($_GET['cID']);
+      $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
+      $zone_code = xtc_db_prepare_input($_POST['zone_code']);
+      $zone_name = xtc_db_prepare_input($_POST['zone_name']);
 
-        xtc_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . xtc_db_input($zone_id) . "'");
-        xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page']));
-        break;
-    }
+      xtc_db_query("update " . TABLE_ZONES . " set zone_country_id = '" . xtc_db_input($zone_country_id) . "', zone_code = '" . xtc_db_input($zone_code) . "', zone_name = '" . xtc_db_input($zone_name) . "' where zone_id = '" . xtc_db_input($zone_id) . "'");
+      xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&cID=' . $zone_id));
+      break;
+    case 'deleteconfirm':
+      $zone_id = xtc_db_prepare_input($_GET['cID']);
+
+      xtc_db_query("delete from " . TABLE_ZONES . " where zone_id = '" . xtc_db_input($zone_id) . "'");
+      xtc_redirect(xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page']));
+      break;
   }
-  
-  require (DIR_WS_INCLUDES.'head.php');
+}
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
@@ -82,7 +86,7 @@
                 </tr>
                 <?php
                   $zones_query_raw = "select z.zone_id, c.countries_id, c.countries_name, z.zone_name, z.zone_code, z.zone_country_id from " . TABLE_ZONES . " z, " . TABLE_COUNTRIES . " c where z.zone_country_id = c.countries_id order by c.countries_name, z.zone_name";
-                  $zones_split = new splitPageResults($_GET['page'], '20', $zones_query_raw, $zones_query_numrows);
+                  $zones_split = new splitPageResults($_GET['page'], $page_max_display_results, $zones_query_raw, $zones_query_numrows);
                   $zones_query = xtc_db_query($zones_query_raw);
                   while ($zones = xtc_db_fetch_array($zones_query)) {
                     if (((!$_GET['cID']) || (@$_GET['cID'] == $zones['zone_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
@@ -104,8 +108,19 @@
               }
             ?>
             </table>
-            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            
+            <div class="clear"></div>
+            <div class="dispperpage smallText pdg2 flt-l">
+              <?php 
+              echo xtc_draw_form('cfg_max', FILENAME_ZONES);         
+              echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+              echo '</form>'; 
+              ?> 
+            </div>
+            
             <?php
             if (!$_GET['action']) {
             ?>

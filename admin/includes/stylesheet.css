@@ -43,7 +43,11 @@ a.splitPageLink:hover { font-family: Verdana, Arial, sans-serif; font-size: 10px
 /* menu box */
 .menuBoxHeading { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #000000; background-color: #f1f1f1; }
 .menuBoxContent { font-family: Verdana, Arial, sans-serif; font-size: 10px; color: #616060; }
-.longDescription { visibility: hidden; display: none; }
+.longDescription { 
+visibility: hidden; 
+display: none;
+margin: 1px 5px 15px 5px;
+}
 
 /* page */
 body { background-color: #ffffff; color: #000000; margin: 0px; }
@@ -84,13 +88,12 @@ background-color: #F6F6F6;
 color: #000000;
 border-bottom: 1px solid;
 border-color: #000000;
-
 }
 .dataTableHeadingContent {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-size: 10px;
     font-weight: bold;
-    padding: 5px;
+   padding: 5px!important;
     background-color: #f1f1f1;
     border: 1px solid #CCCCCC;
 }
@@ -114,7 +117,7 @@ background-color: #F9F0F1;
  color: #000000;
  vertical-align: middle!important;
  border-bottom: 1px dashed #cccccc;
- padding: 2px 0;
+ padding: 5px 2px;
  /*text-align: left;*/
  }
  
@@ -415,6 +418,7 @@ padding: 2px 0;
 .tableBoxCenter{
 width: 100%;
 padding: 2px;
+margin-bottom: 3px;
 }
 .w100{
 width: 100%;

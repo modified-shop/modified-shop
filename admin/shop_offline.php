@@ -43,64 +43,50 @@ if (USE_WYSIWYG == 'true') {
 ?>
 </head>
 <body>
-    <!-- header //-->
-    <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-    <!-- header_eof //-->
-    <!-- body //-->
-    <table border="0" width="100%" cellspacing="2" cellpadding="2">
-      <tr>
-        <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-          <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-            <!-- left_navigation //-->
-            <?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-            <!-- left_navigation_eof //-->
-          </table>
-        </td>
-        <!-- body_text //-->
-        <td class="boxCenter" width="100%" valign="top">
-          <table border="0" width="100%" cellspacing="0" cellpadding="0">
-            <tr>
-              <td>
-                <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
-                <br />
-                <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                  <tr>
-                    <td class="dataTableHeadingContent">
-                      <?php echo BOX_SHOP_OFFLINE; ?>                          
-                    </td>
-                  </tr>
-                </table>
-                <table border="0" width="100%" cellspacing="0" cellpadding="0" style="width: 100%; border: 1px solid; border-color: #aaaaaa; padding: 5px;">
-                  <tr>
-                    <td valign="top" class="main">
-                      <?php 
-                        echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
-                        ?>
-                        <input type="checkbox" name="shop_offline" value="checked" <?php echo xtc_get_shop_conf('SHOP_OFFLINE'); ?>>
-                        <?php echo SETTINGS_OFFLINE ?><br /><br />
-                        <?php echo SETTINGS_OFFLINE_MSG ?>:<br />
-                        <?php
-                          echo xtc_draw_textarea_field('offline_msg', 'soft', '150', '20', stripslashes(xtc_get_shop_conf('SHOP_OFFLINE_MSG')));
-                        ?>
-                        <br />
-                        <br />
-                        <?php echo '<input type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
-                      </form>
-                    </td>
-                  </tr>
-                </table>
-                <br />
-              </td>
-            </tr>
-          </table>
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
+        <div class="main pdg2 flt-l">Configuration</div>
+        <div class="clear dataTableHeadingContent"><?php echo BOX_SHOP_OFFLINE; ?></div>
+        <div valign="top" class="main pdg2">
+          <?php 
+            echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
+            ?>
+            <input type="checkbox" name="shop_offline" value="checked" <?php echo xtc_get_shop_conf('SHOP_OFFLINE'); ?>>
+            <?php echo SETTINGS_OFFLINE ?><br /><br />
+            <?php echo SETTINGS_OFFLINE_MSG ?>:<br />
+            <?php
+              echo xtc_draw_textarea_field('offline_msg', 'soft', '150', '20', stripslashes(xtc_get_shop_conf('SHOP_OFFLINE_MSG')));
+            ?>
+            <br />
+            <br />
+            <?php echo '<input type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
+          </form>
+        </div>                 
         </td>
         <!-- body_text_eof //-->
       </tr>
-    </table>
-    <!-- body_eof //-->
-    <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-    <!-- footer_eof //-->
-  </body>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+</body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

@@ -17,8 +17,9 @@
 
 require ('includes/application_top.php');
 
-  require(DIR_WS_CLASSES . 'currencies.php');
-  $currencies = new currencies();
+//display per page
+$cfg_max_display_results_key = 'MAX_DISPLAY_CAMPAIGNS_RESULTS';
+$page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
 switch ($_GET['action']) {
 	case 'insert' :
@@ -62,163 +63,152 @@ switch ($_GET['action']) {
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
-<!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-<!-- header_eof //-->
-
-<!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top"><table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-<!-- left_navigation //-->
-<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-<!-- left_navigation_eof //-->
-    </table></td>
-<!-- body_text //-->
-    <td class="boxCenter" width="100%" valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
+<body onload="SetFocus();">
+  <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
+        <div class="main pdg2 flt-l">Configuration</div>       
+        <table class="tableCenter">      
           <tr>
-            <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
-          </tr>
-        </table></td>
-      </tr>
-      <tr>
-        <td><table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr class="dataTableHeadingRow">
+            <td class="boxCenterLeft">
+              <table class="tableBoxCenter collapse">
+                <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CAMPAIGNS; ?></td>
-                <td class="dataTableHeadingContent" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
+                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
-<?php
+              <?php
+              $campaigns_query_raw = "select * from ".TABLE_CAMPAIGNS." order by campaigns_name";
+              $campaigns_split = new splitPageResults($_GET['page'], $page_max_display_results, $campaigns_query_raw, $campaigns_query_numrows);
+              $campaigns_query = xtc_db_query($campaigns_query_raw);
+              while ($campaigns = xtc_db_fetch_array($campaigns_query)) {
+                if (((!$_GET['cID']) || (@ $_GET['cID'] == $campaigns['campaigns_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+                  $cInfo = new objectInfo($campaigns);
+                }
 
-$campaigns_query_raw = "select * from ".TABLE_CAMPAIGNS." order by campaigns_name";
-$campaigns_split = new splitPageResults($_GET['page'], '20', $campaigns_query_raw, $campaigns_query_numrows);
-$campaigns_query = xtc_db_query($campaigns_query_raw);
-while ($campaigns = xtc_db_fetch_array($campaigns_query)) {
-	if (((!$_GET['cID']) || (@ $_GET['cID'] == $campaigns['campaigns_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
-		$cInfo = new objectInfo($campaigns);
-	}
-
-	if ((is_object($cInfo)) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id)) {
-		echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns['campaigns_id'].'&action=edit').'\'">'."\n";
-	} else {
-		echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns['campaigns_id']).'\'">'."\n";
-	}
-?>
+                if ((is_object($cInfo)) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id)) {
+                  echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns['campaigns_id'].'&action=edit').'\'">'."\n";
+                } else {
+                  echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\''.xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$campaigns['campaigns_id']).'\'">'."\n";
+                }
+              ?>
                 <td class="dataTableContent"><?php echo $campaigns['campaigns_name']; ?></td>
-<!-- BOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
-<!--
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif'); } else { echo '<a href="' . xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $_GET['page'] . '&cID=' . $campaigns['campaigns_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
--->
-                <td class="dataTableContent" align="right"><?php if ( (is_object($cInfo)) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $_GET['page'] . '&cID=' . $campaigns['campaigns_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-<!-- EOF - Tomcraft - 2009-06-10 - added some missing alternative text on admin icons -->
+                <td class="dataTableContent txta-r"><?php if ( (is_object($cInfo)) && ($campaigns['campaigns_id'] == $cInfo->campaigns_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $_GET['page'] . '&cID=' . $campaigns['campaigns_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
-<?php
+              <?php
+              }
+              ?>
+            </table>
+              
+            <div class="smallText pdg2 flt-l"><?php echo $campaigns_split->display_count($campaigns_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CAMPAIGNS); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $campaigns_split->display_links($campaigns_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            
+            <div class="clear"></div>
+            <div class="dispperpage smallText pdg2 flt-l">
+              <?php 
+              echo xtc_draw_form('cfg_max', FILENAME_CAMPAIGNS);         
+              echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+              echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+              echo '</form>'; 
+              ?> 
+            </div>
+            <?php
+            if ($_GET['action'] != 'new') {
+            ?>
+              <div class="clear"></div>
+              <div class="pdg2 flt-r smallText"><?php echo xtc_button_link(BUTTON_INSERT, xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->campaigns_id . '&action=new')); ?></div>
 
-}
-?>
-              <tr>
-                <td colspan="2"><table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td class="smallText" valign="top"><?php echo $campaigns_split->display_count($campaigns_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CAMPAIGNS); ?></td>
-                    <td class="smallText" align="right"><?php echo $campaigns_split->display_links($campaigns_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
-                  </tr>
-                </table></td>
-              </tr>
-<?php
+            <?php
+            }
+            ?>
+            </td>
+          <?php
+            $heading = array ();
+            $contents = array ();
+            switch ($_GET['action']) {
+              case 'new' :
+                $heading[] = array ('text' => '<b>'.TEXT_HEADING_NEW_CAMPAIGN.'</b>');
 
-if ($_GET['action'] != 'new') {
-?>
-              <tr>
-                <td align="right" colspan="2" class="smallText"><?php echo xtc_button_link(BUTTON_INSERT, xtc_href_link(FILENAME_CAMPAIGNS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->campaigns_id . '&action=new')); ?></td>
-              </tr>
-<?php
+                $contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'action=insert', 'post', 'enctype="multipart/form-data"'));
+                $contents[] = array ('text' => TEXT_NEW_INTRO);
+                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name'));
+                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID'));
+                $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$_GET['cID'])));
+                break;
 
-}
-?>
-            </table></td>
-<?php
+              case 'edit' :
+                $heading[] = array ('text' => '<b>'.TEXT_HEADING_EDIT_CAMPAIGN.'</b>');
 
-$heading = array ();
-$contents = array ();
-switch ($_GET['action']) {
-	case 'new' :
-		$heading[] = array ('text' => '<b>'.TEXT_HEADING_NEW_CAMPAIGN.'</b>');
+                $contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=save', 'post', 'enctype="multipart/form-data"'));
+                $contents[] = array ('text' => TEXT_EDIT_INTRO);
+                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name', $cInfo->campaigns_name));
+                $contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID', $cInfo->campaigns_refID));
+                $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id)));
+                break;
 
-		$contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'action=insert', 'post', 'enctype="multipart/form-data"'));
-		$contents[] = array ('text' => TEXT_NEW_INTRO);
-		$contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name'));
-		$contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID'));
-		$contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$_GET['cID'])));
-		break;
+              case 'delete' :
+                $heading[] = array ('text' => '<b>'.TEXT_HEADING_DELETE_CAMPAIGN.'</b>');
 
-	case 'edit' :
-		$heading[] = array ('text' => '<b>'.TEXT_HEADING_EDIT_CAMPAIGN.'</b>');
+                $contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=deleteconfirm'));
+                $contents[] = array ('text' => TEXT_DELETE_INTRO);
+                $contents[] = array ('text' => '<br /><b>'.$cInfo->campaigns_name.'</b>');
 
-		$contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=save', 'post', 'enctype="multipart/form-data"'));
-		$contents[] = array ('text' => TEXT_EDIT_INTRO);
-		$contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_NAME.'<br />'.xtc_draw_input_field('campaigns_name', $cInfo->campaigns_name));
-		$contents[] = array ('text' => '<br />'.TEXT_CAMPAIGNS_REFID.'<br />'.xtc_draw_input_field('campaigns_refID', $cInfo->campaigns_refID));
-		$contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_SAVE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id)));
-		break;
+                if ($cInfo->refferers_count > 0) {
+                  $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_refferers').' '.TEXT_DELETE_REFFERERS);
+                  $contents[] = array ('text' => '<br />'.sprintf(TEXT_DELETE_WARNING_REFFERERS, $cInfo->refferers_count));
+                }
 
-	case 'delete' :
-		$heading[] = array ('text' => '<b>'.TEXT_HEADING_DELETE_CAMPAIGN.'</b>');
+                $contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_DELETE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id)));
+                break;
 
-		$contents = array ('form' => xtc_draw_form('campaigns', FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=deleteconfirm'));
-		$contents[] = array ('text' => TEXT_DELETE_INTRO);
-		$contents[] = array ('text' => '<br /><b>'.$cInfo->campaigns_name.'</b>');
+              default :
+                if (is_object($cInfo)) {
+                  $heading[] = array ('text' => '<b>'.$cInfo->campaigns_name.'</b>');
 
-		if ($cInfo->refferers_count > 0) {
-			$contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('delete_refferers').' '.TEXT_DELETE_REFFERERS);
-			$contents[] = array ('text' => '<br />'.sprintf(TEXT_DELETE_WARNING_REFFERERS, $cInfo->refferers_count));
-		}
+                  $contents[] = array ('align' => 'center', 'text' => xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=edit')).'&nbsp;'.xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=delete')));
+                  $contents[] = array ('text' => '<br />'.TEXT_DATE_ADDED.' '.xtc_date_short($cInfo->date_added));
+                  if (xtc_not_null($cInfo->last_modified))
+                    $contents[] = array ('text' => TEXT_LAST_MODIFIED.' '.xtc_date_short($cInfo->last_modified));
+                  $contents[] = array ('text' => TEXT_REFERER.'?refID='.$cInfo->campaigns_refID);
+                }
+                break;
+            }
 
-		$contents[] = array ('align' => 'center', 'text' => '<br />'.xtc_button(BUTTON_DELETE).'&nbsp;'.xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id)));
-		break;
-
-	default :
-		if (is_object($cInfo)) {
-			$heading[] = array ('text' => '<b>'.$cInfo->campaigns_name.'</b>');
-
-			$contents[] = array ('align' => 'center', 'text' => xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=edit')).'&nbsp;'.xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_CAMPAIGNS, 'page='.$_GET['page'].'&cID='.$cInfo->campaigns_id.'&action=delete')));
-			$contents[] = array ('text' => '<br />'.TEXT_DATE_ADDED.' '.xtc_date_short($cInfo->date_added));
-			if (xtc_not_null($cInfo->last_modified))
-				$contents[] = array ('text' => TEXT_LAST_MODIFIED.' '.xtc_date_short($cInfo->last_modified));
-			$contents[] = array ('text' => TEXT_REFERER.'?refID='.$cInfo->campaigns_refID);
-		}
-		break;
-}
-
-if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
-	echo '            <td width="25%" valign="top">'."\n";
-
-	$box = new box;
-	echo $box->infoBox($heading, $contents);
-
-	echo '            </td>'."\n";
-}
-?>
+            if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+              echo '            <td class="boxRight">' . "\n";
+              $box = new box;
+              echo $box->infoBox($heading, $contents);
+              echo '            </td>' . "\n";
+            }
+          ?>
           </tr>
-        </table></td>
-      </tr>
-    </table></td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
-<!-- body_eof //-->
-
-<!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //-->
-<br />
+        </table>
+      </td>
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>
