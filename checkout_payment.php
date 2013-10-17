@@ -124,7 +124,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
       $credit_selection[$i]['checked'] = 0;
     }
     $credit_amount =  $credit_selection[$i]['credit_amount'];
-    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_amount, $credit_selection[$i]['checked'], 'id="'.'c'.$credit_selection[$i]['id'].'"');
+    $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_amount, $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
   }
   $module_smarty->assign('module_gift', $credit_selection);  
@@ -156,7 +156,7 @@ if (($total > 0 && $total > $credit_amount) || $first_call === false) {
     }
 
     if (sizeof($selection) > 1) {
-      $selection[$i]['selection'] = xtc_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['checked']), 'id="'.($i+1).'"'); // pre-selection the first payment option
+      $selection[$i]['selection'] = xtc_draw_radio_field('payment', $selection[$i]['id'], ($selection[$i]['checked']), 'id="rd-'.($i+1).'"'); // pre-selection the first payment option
     } else {
       $selection[$i]['selection'] = xtc_draw_hidden_field('payment', $selection[$i]['id']);
     }
