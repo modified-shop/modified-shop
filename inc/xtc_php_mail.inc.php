@@ -21,35 +21,34 @@ function xtc_php_mail($from_email_address, $from_email_name,
                       $email_subject, $message_body_html, $message_body_plain
                      )
 {
-  global $mail_error;
+  global $mail_error, $order;
 
-//*********************************************************************************************
-// Signatur für E-Mails
-// by Dipl.-Ing. Daniel Wallas für www.tuvino.de
-//*********************************************************************************************
   $mailsmarty= new Smarty;
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
-
+    
+  $language = $_SESSION['language'];
+  if (isset($order) && is_object($order)) {
+    $language = $order->info['language'];
+  }
+  
   // load the signatures only, if the appropriate file(s) exists
   $html_signatur = '';
   $txt_signatur = '';
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/signatur.html')) {
-    $html_signatur = '<br />' .$mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/signatur.html'); //web28 - 2011-06-10 - ADD Linebreak
+  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/signatur.html')) {
+    $html_signatur = '<br />' .$mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/signatur.html'); 
   }
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/signatur.txt')) {
-    $txt_signatur = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/signatur.txt'); //web28 - 2011-06-10 - ADD Linebreak
+  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/signatur.txt')) {
+    $txt_signatur = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/signatur.txt'); 
   }
-  //EOF - Dokuman - 2009-10-30 - Check for existing signature files
 
-  //BOF - web28 - 2010-06-05 - Widerruf in Email
   $html_widerruf = '';
   $txt_widerruf = '';
-  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.html')) {
-    $html_widerruf = '<br />' . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.html'); //web28 - 2011-06-10 - ADD Linebreak
+  if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/widerruf.html')) {
+    $html_widerruf = '<br />' . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/widerruf.html'); 
   }
   if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.txt')) {
-    $txt_widerruf = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/widerruf.txt'); //web28 - 2011-06-10 - ADD Linebreak
-  }
+    $txt_widerruf = "\n" . $mailsmarty->fetch(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/mail/'.$language.'/widerruf.txt'); 
+  }  
 
   //Platzhalter [WIDERRUF] durch Widerruf Text ersetzen
   if (strpos($message_body_html,'[WIDERRUF]') !== false) {
@@ -76,9 +75,6 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $message_body_plain = str_replace('[SIGNATUR]', $txt_signatur, $message_body_plain);
     $txt_signatur = '';
   }
-  //EOF - web28 - 2010-06-05 - Widerruf in Email
-
-//**********************************************************************************************
 
   $mail = new PHPMailer();
   $mail->PluginDir = DIR_FS_DOCUMENT_ROOT.'includes/classes/';
