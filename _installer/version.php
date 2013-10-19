@@ -9,4 +9,4 @@
    --------------------------------------------------------------*/
 
 
-  define('INSTALLER_VERSION', 'Installer 107 rev01'); 
+  define('INSTALLER_VERSION', 'Installer 1.07 rev02'); 
