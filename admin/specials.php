@@ -20,10 +20,10 @@
   require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
   $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
-
-  if (!defined('MAX_DISPLAY_LIST_PRODUCTS')) {
-    define('MAX_DISPLAY_LIST_PRODUCTS', 50);     // display products per page
-  }
+  
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_SPECIALS_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $sID = (isset($_GET['sID']) ? (int)$_GET['sID'] : NULL);
   $page_id = (isset($_GET['page']) ? (int)$_GET['page'] : 0);
@@ -303,7 +303,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                               AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
                                               AND p.products_id = s.products_id
                                          ORDER BY pd.products_name";
-                    $specials_split = new splitPageResults($page_id, MAX_DISPLAY_LIST_PRODUCTS, $specials_query_raw, $specials_query_numrows);
+                    $specials_split = new splitPageResults($page_id, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
                     $specials_query = xtc_db_query($specials_query_raw);
                     while ($specials = xtc_db_fetch_array($specials_query)) {
                       $price=$specials['products_price'];
@@ -360,9 +360,17 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 ?>
               </table>
-              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
-              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
-             
+              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, $page_max_display_results, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
+              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
+              <div class="clear"></div>
+              <div class="smallText pdg2 flt-l">
+                <?php 
+                echo xtc_draw_form('cfg_max', FILENAME_SPECIALS);         
+                echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+                echo '</form>'; 
+                ?> 
+              </div>
               <?php
               if (empty($action)) {
               ?>

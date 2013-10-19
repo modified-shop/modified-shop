@@ -20,6 +20,10 @@
   
   // include needed functions
   require(DIR_FS_INC. 'xtc_get_products.inc.php');
+  
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_WHOS_ONLINE_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $time_last_click = 900;
   if (defined('WHOS_ONLINE_TIME_LAST_CLICK')) {
@@ -33,58 +37,52 @@
   require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
-<!-- header //-->
-<?php require(DIR_WS_INCLUDES . 'header.php'); ?>
-<!-- header_eof //-->
-<!-- body //-->
-<table border="0" width="100%" cellspacing="2" cellpadding="2">
-  <tr>
-    <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
-    <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
-<!-- left_navigation //-->
-<?php require(DIR_WS_INCLUDES . 'column_left.php'); ?>
-<!-- left_navigation_eof //-->
-    </table>
-    </td>
-<!-- body_text //-->
-    <td class="boxCenter" width="100%" valign="top">
-    <table border="0" width="100%" cellspacing="0" cellpadding="2">
-      <tr>
-        <td>
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+<body">
+ <!-- header //-->
+  <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
+  <!-- header_eof //-->
+  <!-- body //-->
+  <table class="tableBody">
+    <tr>
+      <?php //left_navigation
+      if (USE_ADMIN_TOP_MENU == 'false') {
+        echo '<td class="columnLeft2">'.PHP_EOL;
+        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        require_once(DIR_WS_INCLUDES . 'column_left.php');
+        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
+        echo '</td>'.PHP_EOL;      
+      }
+      ?>
+      <!-- body_text //-->
+      <td class="boxCenter">
+        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>      
+        <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>
+        <div class="main pdg2 flt-l">Tools</div>
+        <div class="smallText flt-l" style="margin: -15px 0 0 120px;">&nbsp;&nbsp;
+          <?php
+          if (defined('WHOS_ONLINE_TIME_LAST_CLICK_INFO')) {
+            echo sprintf(WHOS_ONLINE_TIME_LAST_CLICK_INFO ,$time_last_click);
+          }
+          ?>
+        </div>
+          
+        <table class="tableCenter">
           <tr>
-            <td class="pageHeading nobr"><?php echo HEADING_TITLE; ?></td>
-            <td class="smallText" align="left" width="100%">&nbsp;&nbsp;
-              <?php
-              if (defined('WHOS_ONLINE_TIME_LAST_CLICK_INFO')) {
-                echo sprintf(WHOS_ONLINE_TIME_LAST_CLICK_INFO ,$time_last_click);
-              }
-              ?>
-            </td>
-          </tr>
-        </table>
-        </td>
-      </tr>
-      <tr>
-        <td>
-        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-          <tr>
-            <td valign="top">
-            <table border="0" width="100%" cellspacing="0" cellpadding="2">
-              <tr class="dataTableHeadingRow">
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_ONLINE; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_FULL_NAME; ?></td>
+            <td class="boxCenterLeft">
+              <table class="tableBoxCenter collapse">
+                <tr class="dataTableHeadingRow">
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_ONLINE; ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CUSTOMER_ID; ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_FULL_NAME; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_IP_ADDRESS; ?></td>
-                <!--td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_COUNTRY; ?></td-->
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_ENTRY_TIME; ?></td>
-                <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_LAST_CLICK; ?></td>
+                <!--td class="dataTableHeadingContent txta-c"><?php //echo TABLE_HEADING_COUNTRY; ?></td-->
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_ENTRY_TIME; ?></td>
+                <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_LAST_CLICK; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_LAST_PAGE_URL; ?></td>
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_HTTP_REFERER; ?></td>
               </tr>
               <?php
-              $whos_online_query_raw = "select customer_id,
+              $whos_online_query_raw = "SELECT customer_id,
                                                full_name,
                                                ip_address,
                                                time_entry,
@@ -92,9 +90,9 @@
                                                last_page_url,
                                                session_id,
                                                http_referer
-                                          from " . TABLE_WHOS_ONLINE ."
-                                      order by time_last_click desc";
-              $whos_online_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $whos_online_query_raw, $whos_online_query_numrows);
+                                          FROM " . TABLE_WHOS_ONLINE ."
+                                      ORDER BY time_last_click desc";
+              $whos_online_split = new splitPageResults($_GET['page'], $page_max_display_results, $whos_online_query_raw, $whos_online_query_numrows);
               $whos_online_query = xtc_db_query($whos_online_query_raw);                        
               while ($whos_online = xtc_db_fetch_array($whos_online_query)) {
                 $time_online = (time() - $whos_online['time_entry']);
@@ -120,39 +118,41 @@
                 //EOF web28 2010-12-03 added Hostname to whois online
                 
                 // last_page_url
-                if (preg_match('/^(.*)' . xtc_session_name() . '=[a-z,0-9]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) { // Hetfield - 2009-08-19 - replaced deprecated function eregi with preg_match to be ready for PHP >= 5.3
+                if (preg_match('/^(.*)' . xtc_session_name() . '=[a-z,0-9]+[&]*(.*)/i', $whos_online['last_page_url'], $array)) {
                   $last_page_url = $array[1] . $array[2];
                 } else {
                   $last_page_url = $whos_online['last_page_url'];
                 }
                 ?>
-                <td class="dataTableContent" align="center"><?php echo gmdate('H:i:s', $time_online); ?></td>
-                <td class="dataTableContent" align="center"><?php echo $whos_online['customer_id']; ?></td>
-                <td class="dataTableContent"  align="center"><?php echo $whos_online['full_name']; ?></td>
-                <td class="dataTableContent" align="center"><a href="<?php echo WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address']; ?>" style="font-weight:bold; text-decoration:underline;" target="_blank"><?php echo $whos_online['ip_address']; ?></a><?php  echo (isset($whos_online_hostname) ? $whos_online_hostname : ''); ?></td>
-                <!--td class="dataTableContent" align="center"><?php if (isset($geoip_data['geoplugin_countryName'])) {
+                <td class="dataTableContent txta-c"><?php echo gmdate('H:i:s', $time_online); ?></td>
+                <td class="dataTableContent txta-c"><?php echo $whos_online['customer_id']; ?></td>
+                <td class="dataTableContent txta-c"><?php echo $whos_online['full_name']; ?></td>
+                <td class="dataTableContent txta-c"><a href="<?php echo WHOS_ONLINE_IP_WHOIS_SERVICE.$whos_online['ip_address']; ?>" style="font-weight:bold; text-decoration:underline;" target="_blank"><?php echo $whos_online['ip_address']; ?></a><?php  echo (isset($whos_online_hostname) ? $whos_online_hostname : ''); ?></td>
+                <!--td class="dataTableContent"><?php if (isset($geoip_data['geoplugin_countryName'])) {
                                                                         echo $geoip_data['geoplugin_countryName'].' ('.$geoip_data['geoplugin_countryCode'].')';
                                                                       } ?></td-->
-                <td class="dataTableContent"  align="center"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
-                <td class="dataTableContent" align="center"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
+                <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_entry']); ?></td>
+                <td class="dataTableContent txta-c"><?php echo date('H:i:s', $whos_online['time_last_click']); ?></td>
                 <td class="dataTableContent"><?php echo $last_page_url; ?>&nbsp;</td>
                 <td class="dataTableContent"><?php echo encode_htmlentities($whos_online['http_referer']); ?></td>
               </tr>
               <?php
                 }
               ?>
-              <tr>
-                <td colspan="7">
-                  <table border="0" width="100%" cellspacing="0" cellpadding="2">
-                  <tr>
-                    <td class="smallText" valign="top"><?php echo $whos_online_split->display_count($whos_online_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></td>
-                    <td class="smallText" align="right"><?php echo $whos_online_split->display_links($whos_online_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></td>
-                  </tr>
-                  </table>
-                </td>
-              </tr>
-            </table>
-          </td>
+              </table>
+                
+              <div class="smallText pdg2 flt-l"><?php echo $whos_online_split->display_count($whos_online_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $whos_online_split->display_links($whos_online_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="clear"></div>
+              <div class="smallText pdg2 flt-l">
+                <?php 
+                echo xtc_draw_form('cfg_max', FILENAME_WHOS_ONLINE);         
+                echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+                echo '</form>'; 
+                ?> 
+              </div>
+            </td>
           <?php
           $heading = array();
           $contents = array();
@@ -185,26 +185,23 @@
             }
           }
           if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
-            echo '            <td width="25%" valign="top">' . "\n";
-            $box = new box;
-            echo $box->infoBox($heading, $contents);
-            echo '            </td>' . "\n";
-          }
+              echo '            <td class="boxRight">' . "\n";
+              $box = new box;
+              echo $box->infoBox($heading, $contents);
+              echo '            </td>' . "\n";
+            }
           ?>
           </tr>
         </table>
-        </td>
-      </tr>
-    </table>
-    </td>
-<!-- body_text_eof //-->
-  </tr>
-</table>
-<!-- body_eof //-->
-<!-- footer //-->
-<?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
-<!-- footer_eof //-->
-<br />
+      </td>
+      <!-- body_text_eof //-->
+    </tr>
+  </table>
+  <!-- body_eof //-->
+  <!-- footer //-->
+  <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+  <!-- footer_eof //-->
+  <br />
 </body>
 </html>
 <?php require(DIR_WS_INCLUDES . 'application_bottom.php'); ?>

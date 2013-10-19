@@ -354,7 +354,12 @@
                   <tr>
                     <td class="dataTableContent"><?php echo $news_data[$i]['date']; ?></td>
                     <td class="dataTableContent"><?php echo xtc_image(DIR_WS_CATALOG.'images/icons/arrow.gif'); ?><a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'ID='.$news_data[$i]['id']); ?>"><b><?php echo $news_data[$i]['title']; ?></b></a></td>
-                    <td class="dataTableContent txta-c"><div class="pdg2"><a class="button" href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=delete&ID='.$news_data[$i]['id']); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')"><?php echo BUTTON_DELETE.'</a><br />'; ?></div></td>
+                    <td class="dataTableContent txta-c">
+                      <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=edit&ID='.$news_data[$i]['id']); ?>">
+                      <?php echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','').'</a>&nbsp;'; ?>
+                      <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=delete&ID='.$news_data[$i]['id']); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
+                      <?php echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'</a>&nbsp;&nbsp;'; ?>
+                    </td>
                   </tr>
                   <?php
                   if ($_GET['ID']!='' && $_GET['ID']==$news_data[$i]['id']) {
@@ -393,7 +398,6 @@
 
                       </td>
                       <td class="dataTableContent txta-c" style="border-bottom: 1px solid; border-color: #999999; vertical-align: bottom!important;">
-                        <div class="pdg2"><a class="button" href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=edit&ID='.$news_data[$i]['id']); ?>"><?php echo BUTTON_EDIT.'</a>'; ?></div>
                         <div class="pdg2"><a class="button" href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=send&ID='.$news_data[$i]['id']); ?>"><?php echo BUTTON_SEND.'</a>'; ?></div>
                       </td>
                       <?php
@@ -438,9 +442,9 @@
                     <td class="dataTableContent" style="border-bottom: 1px solid; border-color: #f1f1f1;"><?php echo $news_data[$i]['date'].'    '; ?><b><?php echo $news_data[$i]['title']; ?></b></td>
                     <td class="dataTableContent txta-c" style="border-bottom: 1px solid; border-color: #f1f1f1;">
                       <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=edit&ID='.$news_data[$i]['id']); ?>">
-                      <?php echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','').'  '.TEXT_EDIT.'</a>'; ?>
+                      <?php echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','').'</a>&nbsp;'; ?>
                       <a href="<?php echo xtc_href_link(FILENAME_MODULE_NEWSLETTER,'action=delete&ID='.$news_data[$i]['id']); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
-                      <?php echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;'; ?>
+                      <?php echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'</a>&nbsp;&nbsp;'; ?>
                     </td>
                   </tr>
                 <?php

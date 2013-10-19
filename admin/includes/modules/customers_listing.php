@@ -10,6 +10,10 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_LIST_CUSTOMERS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
  ?>
 
           
@@ -255,7 +259,15 @@
               </table>
               <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_LIST_CUSTOMERS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
               <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_LIST_CUSTOMERS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
-
+              <div class="clear"></div>
+              <div class="smallText pdg2 flt-l">
+                <?php 
+                echo xtc_draw_form('cfg_max', FILENAME_CUSTOMERS);         
+                echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+                echo '</form>'; 
+                ?> 
+              </div>
               <?php
               if (isset($_GET['search'])) {
               ?>

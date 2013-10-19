@@ -23,7 +23,7 @@
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_COUNTRIES_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
- 
+
   $_GET['cID'] = isset($_GET['cID']) ? (int)$_GET['cID'] : '';
   $_GET['page'] = isset($_GET['page']) ? (int)$_GET['page'] : '';
   

@@ -16,11 +16,15 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  require('includes/application_top.php');
-  xtc_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
+require('includes/application_top.php');
 
+//display per page
+$cfg_max_display_results_key = 'MAX_DISPLAY_PRODUCTS_EXPECTED_RESULTS';
+$page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
-  require (DIR_WS_INCLUDES.'head.php');
+xtc_db_query("update " . TABLE_PRODUCTS . " set products_date_available = '' where to_days(now()) > to_days(products_date_available)");
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
@@ -63,7 +67,7 @@
                                           AND p.products_date_available != ''
                                           AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                      ORDER BY p.products_date_available DESC";
-                $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $products_query_raw, $products_query_numrows);
+                $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows);
                 $products_query = xtc_db_query($products_query_raw);
                 while ($products = xtc_db_fetch_array($products_query)) {
                   if ((!isset($_GET['pID']) || (isset($_GET['pID']) && ($_GET['pID'] == $products['products_id']))) && !isset($pInfo) ) {
@@ -84,9 +88,17 @@
                 ?>
               </table>
                           
-              <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
-                      
+              <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS_EXPECTED); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="clear"></div>
+              <div class="smallText pdg2 flt-l">
+                <?php 
+                echo xtc_draw_form('cfg_max', FILENAME_PRODUCTS_EXPECTED);         
+                echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+                echo '</form>'; 
+                ?> 
+              </div>
             </td>
             <?php
             $heading = array();

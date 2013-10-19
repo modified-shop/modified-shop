@@ -15,9 +15,13 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-  require('includes/application_top.php');
+require('includes/application_top.php');
   
-  require (DIR_WS_INCLUDES.'head.php');
+//display per page
+$cfg_max_display_results_key = 'MAX_DISPLAY_STATS_STATS_PRODUCTS_PURCHASED_RESULTS';
+$page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+  
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
 <body>
@@ -52,7 +56,7 @@
           <td class="dataTableHeadingContent" align="center"><?php echo TABLE_HEADING_QUANTITY; ?>&nbsp;</td>
         </tr>
         <?php
-        $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*MAX_DISPLAY_STATS_RESULTS-MAX_DISPLAY_STATS_RESULTS : 0;             
+        $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*$page_max_display_results-$page_max_display_results : 0;             
         $products_query_raw = "select p.products_id,
                                       p.products_model,  
                                       p.products_ordered,
@@ -65,12 +69,12 @@
                                   and p.products_ordered > 0 
                              group by pd.products_id 
                              order by p.products_ordered DESC, pd.products_name";
-        $products_split = new splitPageResults($_GET['page'], MAX_DISPLAY_STATS_RESULTS, $products_query_raw, $products_query_numrows, 'p.products_id');
+        $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows, 'p.products_id');
 
         $products_query = xtc_db_query($products_query_raw);
         while ($products = xtc_db_fetch_array($products_query)) {
           $rows++;
-          $rows = str_pad($rows, strlen(MAX_DISPLAY_STATS_RESULTS), '0', STR_PAD_LEFT);
+          $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
         ?>
         <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
           <td class="dataTableContent"><?php echo $rows; ?>.</td>
@@ -83,8 +87,17 @@
         }
       ?>
       </table>             
-      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, MAX_DISPLAY_STATS_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
-      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, MAX_DISPLAY_STATS_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+      <div class="smallText pdg2 flt-l"><?php echo $products_split->display_count($products_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_PRODUCTS); ?></div>
+      <div class="smallText pdg2 flt-r"><?php echo $products_split->display_links($products_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+      <div class="clear"></div>
+      <div class="smallText pdg2 flt-l">
+        <?php 
+        echo xtc_draw_form('cfg_max', FILENAME_STATS_PRODUCTS_PURCHASED);         
+        echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+        echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+        echo '</form>'; 
+        ?> 
+      </div>
     </td>
     <!-- body_text_eof //-->
   </tr>

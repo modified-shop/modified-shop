@@ -16,6 +16,11 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
+  
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_REVIEWS_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+  
 
   if ($_GET['action']) {
     switch ($_GET['action']) {
@@ -203,7 +208,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 </tr>
                 <?php
                 $reviews_query_raw = "select reviews_id, products_id, date_added, last_modified, reviews_rating from " . TABLE_REVIEWS . " order by date_added DESC";
-                $reviews_split = new splitPageResults($_GET['page'], '20', $reviews_query_raw, $reviews_query_numrows);
+                $reviews_split = new splitPageResults($_GET['page'], $page_max_display_results, $reviews_query_raw, $reviews_query_numrows);
                 $reviews_query = xtc_db_query($reviews_query_raw);
                 while ($reviews = xtc_db_fetch_array($reviews_query)) {
                   if ( ((!$_GET['rID']) || ($_GET['rID'] == $reviews['reviews_id'])) && (!$rInfo) ) {
@@ -239,8 +244,17 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                 ?>
               </table>             
-              <div class="smallText pdg2 flt-l"><?php echo $reviews_split->display_count($reviews_query_numrows, '20', $_GET['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $reviews_split->display_links($reviews_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $reviews_split->display_count($reviews_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_REVIEWS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $reviews_split->display_links($reviews_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+              <div class="clear"></div>
+              <div class="smallText pdg2 flt-l">
+                <?php 
+                echo xtc_draw_form('cfg_max', FILENAME_REVIEWS);         
+                echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
+                echo '</form>'; 
+                ?> 
+              </div>
             </td>
               <?php
               $heading = array();
