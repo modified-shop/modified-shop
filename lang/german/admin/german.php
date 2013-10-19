@@ -315,7 +315,6 @@ define('TEXT_DISPLAY_NUMBER_OF_TAX_RATES', 'Angezeigt werden <b>%d</b> bis <b>%d
 define('TEXT_DISPLAY_NUMBER_OF_ZONES', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Bundesl&auml;ndern)');
 define('TEXT_DISPLAY_NUMBER_OF_WHOS_ONLINE', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Kunden die online sind)');
 
-
 define('PREVNEXT_BUTTON_PREV', '&lt;&lt;');
 define('PREVNEXT_BUTTON_NEXT', '&gt;&gt;');
 
@@ -345,7 +344,6 @@ define('DELETE_ENTRY','Eintrag l&ouml;schen?');
 define('TEXT_PAYMENT_ERROR','<b>WARNUNG:</b> Bitte Aktivieren Sie ein Zahlungsmodul!');
 define('TEXT_SHIPPING_ERROR','<b>WARNUNG:</b> Bitte Aktivieren Sie ein Versandmodul!');
 define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Bitte konfigurieren Sie die PayPal-Zahlungseinstellungen f&uuml;r den "Live Modus" unter: <a href="%s"><strong>Partner -> PayPal<strong></a>'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
-
 define('TEXT_NETTO','Netto: ');
 
 define('ENTRY_CID','Kundennummer:');
