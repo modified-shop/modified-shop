@@ -1316,6 +1316,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
   }
 
+
   // Sets the status of a product on special
   /**
    * xtc_set_specials_status()
@@ -2676,6 +2677,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
         }
         return $configuration_value;
       }
-      return defined($cfg_key) ? constant($cfg_key) : 20;
+      return defined($cfg_key) && (int)constant($cfg_key) > 0 ? constant($cfg_key) : 20;
   }
 ?>
