@@ -101,7 +101,7 @@ class shoppingCart {
                                            customers_basket_quantity
                                       from ".TABLE_CUSTOMERS_BASKET."
                                      where customers_id = '".(int)$_SESSION['customer_id']."'
-                                       and products_id NOT IN (".xtc_db_input(."'".implode("'", $products_list)."'".).")
+                                       and products_id NOT IN ('".implode("'", xtc_db_input($products_list))."') 
                                   order by customers_basket_id");
     if (xtc_db_num_rows($products_query) > 0) {
       while ($products = xtc_db_fetch_array($products_query)) {
