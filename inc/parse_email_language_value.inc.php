@@ -36,7 +36,7 @@
           return $lang_array['en'];
         } elseif (isset($lang_array[DEFAULT_LANGUAGE])) {
           return $lang_array[DEFAULT_LANGUAGE];
-        } elseif {
+        } else {
           return array_shift($lang_array);
         }
       }
