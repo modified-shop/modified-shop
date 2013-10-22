@@ -23,6 +23,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
 {
   global $mail_error, $order;
 
+  // include needed function
+  require_once(DIR_FS_INC.'parse_email_language_value.inc.php');
+
   $mailsmarty= new Smarty;
   $mailsmarty->compile_dir = DIR_FS_CATALOG.'templates_c';
   
@@ -47,8 +50,17 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $lang_data = xtc_db_fetch_array($lang_query);
   }
   
-  //echo 'DEBUG:<pre>'.print_r($lang_data,true).'</pre>';EXIT;
-    
+  // set parameters
+  $from_email_address = parse_email_language_value($from_email_address, $lang_data['code']);
+  $from_email_name = parse_email_language_value($from_email_name, $lang_data['code']);
+  $to_email_address = parse_email_language_value($to_email_address, $lang_data['code']);
+  $to_name = parse_email_language_value($to_name, $lang_data['code']);
+  $forwarding_to = parse_email_language_value($forwarding_to, $lang_data['code']);
+  $reply_address = parse_email_language_value($reply_address, $lang_data['code']);
+  $reply_address_name = parse_email_language_value($reply_address_name, $lang_data['code']);
+  $path_to_attachments = parse_email_language_value($path_to_attachments, $lang_data['code']);
+  $email_subject = parse_email_language_value($email_subject, $lang_data['code']);
+      
   // load the signatures only, if the appropriate file(s) exists
   $html_signatur = '';
   $txt_signatur = '';

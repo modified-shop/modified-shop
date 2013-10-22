@@ -70,6 +70,87 @@ $values_group_update = array();
   $values[] = "(NULL, 'SEND_EMAILS_DOUBLE_OPT_IN', 'true', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'EMAIL_WORD_WRAP', '50', '12', '18', NULL, NOW(), NULL, NULL);";
 
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_EMAIL_ADDRESS'",
+                           'configuration_key' => 'CONTACT_US_EMAIL_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_NAME'",
+                           'configuration_key' => 'CONTACT_US_NAME'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_REPLY_ADDRESS'",
+                           'configuration_key' => 'CONTACT_US_REPLY_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_REPLY_ADDRESS_NAME'",
+                           'configuration_key' => 'CONTACT_US_REPLY_ADDRESS_NAME'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_EMAIL_SUBJECT'",
+                           'configuration_key' => 'CONTACT_US_EMAIL_SUBJECT'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_FORWARDING_STRING'",
+                           'configuration_key' => 'CONTACT_US_FORWARDING_STRING'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_SUPPORT_ADDRESS'",
+                           'configuration_key' => 'EMAIL_SUPPORT_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_SUPPORT_NAME'",
+                           'configuration_key' => 'EMAIL_SUPPORT_NAME'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_SUPPORT_REPLY_ADDRESS'",
+                           'configuration_key' => 'EMAIL_SUPPORT_REPLY_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_SUPPORT_REPLY_ADDRESS_NAME'",
+                           'configuration_key' => 'EMAIL_SUPPORT_REPLY_ADDRESS_NAME'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_SUPPORT_SUBJECT'",
+                           'configuration_key' => 'EMAIL_SUPPORT_SUBJECT'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_SUPPORT_FORWARDING_STRING'",
+                           'configuration_key' => 'EMAIL_SUPPORT_FORWARDING_STRING'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_ADDRESS'",
+                           'configuration_key' => 'EMAIL_BILLING_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_NAME'",
+                           'configuration_key' => 'EMAIL_BILLING_NAME'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_REPLY_ADDRESS'",
+                           'configuration_key' => 'EMAIL_BILLING_REPLY_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_REPLY_ADDRESS_NAME'",
+                           'configuration_key' => 'EMAIL_BILLING_REPLY_ADDRESS_NAME'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_SUBJECT'",
+                           'configuration_key' => 'EMAIL_BILLING_SUBJECT'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_FORWARDING_STRING'",
+                           'configuration_key' => 'EMAIL_BILLING_FORWARDING_STRING'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_SUBJECT_ORDER'",
+                           'configuration_key' => 'EMAIL_BILLING_SUBJECT_ORDER'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;EMAIL_BILLING_ATTACHMENTS'",
+                           'configuration_key' => 'EMAIL_BILLING_ATTACHMENTS'
+                           );
+
 //configuration_group_id 13 --- "Download Optionen"
   $values_update[] = array (
                            'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\','",
@@ -239,10 +320,17 @@ function update_config_table($values)
       //only update if values are different       
       $check = str_replace("),'","|#|", $cfg_values);
       $check = str_replace(array(", \'",",\'",",'"),"|##|", $check);     
-      $check = " AND (" . str_replace(array("=", ","),array("!=", " OR "),$check). ")"; 
+      $check = str_replace(array('use_function', 'set_function'), 'IFNULL(set_function', $check);
+      $check = " AND (" . str_replace(array("=", ","),array("!=", " OR "),$check); 
+      if (strpos($check, 'IFNULL') !== false) {
+        $check .= '|###| TRUE)';
+      }
+      $check .= ')';
       $check = str_replace(array("|##|","|#|"), array(", \'","),'"), $check);
-      $check = str_replace("\', \')", "\',')",$check); 
-    
+      $check = str_replace("\', \')", "\',')", $check); 
+      $check = str_replace("\'|###|", "',", $check); 
+      $check = str_replace("|###|", ",", $check); 
+      
       $result_cfg = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = '" . $cfg_key ."' ". trim($check)." LIMIT 1");
       if (xtc_db_num_rows($result_cfg) != 0) {
         $update = "UPDATE ".TABLE_CONFIGURATION." SET ".$cfg_values." , last_modified = NOW() WHERE configuration_key = '" . $cfg_key . "'";

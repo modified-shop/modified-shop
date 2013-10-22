@@ -60,7 +60,18 @@
         while ($configuration = xtc_db_fetch_array($configuration_query)) {
           $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
           if (is_array($_POST[$configuration['configuration_key']])) {
-            $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
+            // multi language config
+            if (gettype(array_shift(array_keys($_POST[$configuration['configuration_key']]))) == 'string') {
+              $config_value = array();
+              foreach ($_POST[$configuration['configuration_key']] as $key => $value) {
+                if (xtc_not_null($value)) {
+                  $config_value[] =  $key . '::' . $value;
+                }
+              }
+              $_POST[$configuration['configuration_key']] = implode('||', $config_value);
+            } else {
+              $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
+            }
           }
           if ($_POST[$configuration['configuration_key']] != $configuration['configuration_value']) {
             //value_limits min
@@ -272,7 +283,7 @@
                             $cfgValue = xtc_call_function($use_function, $configuration['configuration_value']);
                           }
                         } else {
-                          $cfgValue = $configuration['configuration_value'];
+                          $cfgValue = encode_htmlspecialchars($configuration['configuration_value']);
                         }
                         if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $configuration['configuration_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
                           $cfg_extra_query = xtc_db_query("SELECT configuration_key,
@@ -289,7 +300,14 @@
                           $cInfo = new objectInfo($cInfo_array);
                         }
                         if ($configuration['set_function']) {
-                          eval('$value_field = ' . $configuration['set_function'] . '"' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
+                          if (strpos($configuration['set_function'], '(') !== false) {
+                            eval('$value_field = ' . $configuration['set_function'] . ' "' . encode_htmlspecialchars($configuration['configuration_value']) . '");');
+                          } else {
+                            $parameters = explode(';', $configuration['set_function']);
+                            $function = trim($parameters[0]);
+                            $parameters[0] = encode_htmlspecialchars($configuration['configuration_value']);
+                            $value_field = xtc_call_function($function, $parameters);
+                          }
                         } else {
                           if ( $configuration['configuration_key'] == 'SMTP_PASSWORD') {
                             $value_field = xtc_draw_password_field($configuration['configuration_key'], $configuration['configuration_value']);
