@@ -10,28 +10,29 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function parse_email_language_value($text, $lang_code, $default=false) {    
+  function parse_email_language_value($text, $lang_code, $admin=false) {    
     
     if (xtc_not_null($text)) {
       $text_array = explode("||",$text);
       $lang_text = '';
+      $default = '';
       foreach ($text_array as $val) {
         $val_array = explode ("::", $val);
         if (count($val_array) > 0) {
-          if (trim(strtolower($val_array[0])) == $lang_code ) {
+          if (trim(strtolower($val_array[0])) == $lang_code && !empty(trim($val_array[1]))) {
             $lang_text = trim($val_array[1]);
-          } elseif ($default === true) {
-            $lang_text = trim($val_array[1]);
+            break;
+          } elseif (!empty(trim($val_array[1])) && empty($default)) {
+            $default = trim($val_array[1]);
           }
         }
         unset ($val_array);
       }
     
-      if ($lang_text == '') {
-        $lang_text = $text;    
-        if (strpos($lang_text, '::') !== false) {
-          $lang_text = xtc_email_lang($lang_text, $lang_code, true);
-        }
+      if ($lang_text == '' && $admin === false && !empty($default)) {
+        $lang_text = $default;    
+      } elseif ($lang_text == '' && $admin === false) {
+        $lang_text = $text;
       }
     } else {
       $lang_text = $text;
