@@ -14,30 +14,32 @@
     
     if (xtc_not_null($text)) {
       $text_array = explode("||",$text);
-      $lang_text = '';
-      $default = '';
+      $lang_array = array();
       foreach ($text_array as $val) {
         $val_array = explode ("::", $val);
-        if (count($val_array) > 0) {
-          if (trim(strtolower($val_array[0])) == $lang_code && !empty(trim($val_array[1]))) {
-            $lang_text = trim($val_array[1]);
-            break;
-          } elseif (!empty(trim($val_array[1])) && empty($default)) {
-            $default = trim($val_array[1]);
+        if (count($val_array) == 2) {
+          if (!empty($val_array[1])) {
+            $lang_array[trim(strtolower($val_array[0]))] = trim($val_array[1]);
           }
         }
         unset ($val_array);
       }
-    
-      if ($lang_text == '' && $admin === false && !empty($default)) {
-        $lang_text = $default;    
-      } elseif ($lang_text == '' && $admin === false) {
-        $lang_text = $text;
+      
+      if (isset($lang_array[$lang_code])) {
+        return $lang_array[$lang_code];
+      } elseif ($admin === false) {
+        if (isset($lang_array['en'])) {
+          return $lang_array['en'];
+        } elseif (isset($lang_array[DEFAULT_LANGUAGE])) {
+          return $lang_array[DEFAULT_LANGUAGE];
+        } else {
+          return array_shift($lang_array);
+        }
+      } else {
+        return '';
       }
     } else {
-      $lang_text = $text;
+      return $text;
     }
-    
-    return $lang_text;
   }
 ?>
