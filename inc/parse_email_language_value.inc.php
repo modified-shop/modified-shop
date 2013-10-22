@@ -25,6 +25,10 @@
         unset ($val_array);
       }
       
+      if (count($lang_array) == 0) {
+        return $text;
+      }
+      
       if (isset($lang_array[$lang_code])) {
         return $lang_array[$lang_code];
       } elseif ($admin === false) {
@@ -32,14 +36,12 @@
           return $lang_array['en'];
         } elseif (isset($lang_array[DEFAULT_LANGUAGE])) {
           return $lang_array[DEFAULT_LANGUAGE];
-        } else {
+        } elseif {
           return array_shift($lang_array);
         }
-      } else {
-        return '';
       }
-    } else {
-      return $text;
     }
+    
+    return '';
   }
 ?>
