@@ -26,7 +26,11 @@
       }
       
       if (count($lang_array) == 0) {
-        return $text;
+        if ($admin === true && $lang_code == DEFAULT_LANGUAGE) {
+          return $text;
+        } elseif ($admin === false) {
+          return $text;
+        }
       }
       
       if (isset($lang_array[$lang_code])) {
