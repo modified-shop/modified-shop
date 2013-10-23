@@ -25,7 +25,8 @@
 
    Released under the GNU General Public License
 
-    BUGFIXES & MODIFIED rev1.3.6 by web28 - www.rpa-com.de
+    BUGFIXES & MODIFIED rev1.3.7 by web28 - www.rpa-com.de
+   1.3.7 remove //KORREKTUR wenn Kunde Nettopreise und Steuer in Rechnung
    1.3.6 fix $od_amount for customers with no tax and percent coupon
    1.3.5 fix xtc_db_fetch_array cache, new restrict_to_categories check
    1.3.4 fix tax deduction
@@ -319,11 +320,12 @@ class ot_coupon {
 
     //KORREKTUR wenn Kunde Nettopreise und Steuer in Rechnung: Couponwert mit Steuersatz prozentual korrigiert
     $this->tax_info = '';
+    /*
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1 && $amount > 0 && $get_result['coupon_type'] != 'P') {
       $od_amount = $od_amount / (1 + $order->info['tax'] / $amount);
       $this->tax_info =  ' ('. trim(str_replace(array(' %s',','), array('',''),TAX_INFO_EXCL)) .')';
     }
-
+    */
     return $od_amount;
   }
 
