@@ -248,21 +248,43 @@ $values_group_update = array();
 
 //##############################//
 
-//install configuration group
-$cfg_group_install = insert_into_config_group_table($values_group);
+$cfg_installer_fileemtime = filemtime(DIR_WS_INCLUDES.'configuration_installer.php');
 
-//update configuration group
-$cfg_group_update = update_config_group_table($values_group_update);
+if (!defined('CFG_INTSTALLER_FILEEMTIME') || CFG_INTSTALLER_FILEEMTIME != $cfg_installer_fileemtime) {
+    if (!defined('CFG_INTSTALLER_FILEEMTIME')) {
+        $cfg_data_array = array(
+            'configuration_key' => 'CFG_INTSTALLER_FILEEMTIME',
+            'configuration_value' => $cfg_installer_fileemtime,
+            'configuration_group_id' => '1000',
+            'sort_order' => '-1',
+            'last_modified' => 'now()',
+            'date_added' => 'now()'
+            );
+        xtc_db_perform(TABLE_CONFIGURATION,$cfg_data_array);   
+    } else {
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                         SET configuration_value = '" . xtc_db_input($cfg_installer_fileemtime) . "', 
+                             last_modified = NOW()
+                       WHERE configuration_key = 'CFG_INTSTALLER_FILEEMTIME'
+                     ");
+    }
 
-//install configuration
-$cfg_install = insert_into_config_table($values);
+    //install configuration group
+    $cfg_group_install = insert_into_config_group_table($values_group);
 
-//update configuration
-$cfg_update = update_config_table($values_update);
+    //update configuration group
+    $cfg_group_update = update_config_group_table($values_group_update);
 
-//redirect
-if ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update) {
-  xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
+    //install configuration
+    $cfg_install = insert_into_config_table($values);
+
+    //update configuration
+    $cfg_update = update_config_table($values_update);
+
+    //redirect
+    if ($cfg_install || $cfg_group_install || $cfg_update || $cfg_group_update) {
+      xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
+    }
 }
 
 //---------- FUNCTIONS ----------//
