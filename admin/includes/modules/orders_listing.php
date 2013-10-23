@@ -100,7 +100,7 @@
                                                    )
                                                   ".$sort;
                 }
-                $orders_split = new splitPageResults($_GET['page'], MAX_DISPLAY_ORDER_RESULTS, $orders_query_raw, $orders_query_numrows);
+                $orders_split = new splitPageResults($_GET['page'], $page_max_display_results, $orders_query_raw, $orders_query_numrows);
                 $orders_query = xtc_db_query($orders_query_raw);
                 while ($orders = xtc_db_fetch_array($orders_query)) {
                   if ((!xtc_not_null($oID) || (isset($oID) && $oID == $orders['orders_id'])) && !isset($oInfo)) { //web28 - 2012-04-14 - FIX !xtc_not_null($oID)
@@ -141,12 +141,12 @@
                 ?>                
               </table>
               
-              <div class="smallText pdg2 flt-l"><?php echo $orders_split->display_count($orders_query_numrows, MAX_DISPLAY_ORDER_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $orders_split->display_links($orders_query_numrows, MAX_DISPLAY_ORDER_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'oID', 'action'))); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $orders_split->display_count($orders_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ORDERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $orders_split->display_links($orders_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'oID', 'action'))); ?></div>
               <div class="clear"></div>
               <div class="smallText pdg2 flt-l">
                 <?php 
-                echo xtc_draw_form('cfg_max', MAX_DISPLAY_ORDER_RESULTS);         
+                echo xtc_draw_form('cfg_max', FILENAME_ORDERS);         
                 echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
                 echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
                 echo '</form>'; 
