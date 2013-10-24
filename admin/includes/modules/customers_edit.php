@@ -50,10 +50,13 @@
                                                     a.entry_city,
                                                     a.entry_state,
                                                     a.entry_country_id,
-                                                    a.entry_zone_id
+                                                    a.entry_zone_id,
+                                                    cgc.amount
                                                FROM ".TABLE_CUSTOMERS." c
                                           LEFT JOIN ".TABLE_ADDRESS_BOOK." a
                                                  ON ".$check."
+                                          LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
+                                                 ON c.customers_id = cgc.customer_id
                                               WHERE a.customers_id = c.customers_id
                                                 AND c.customers_id = '".(int)$_GET['cID']."'"
                                            );
@@ -533,6 +536,23 @@
               // EOF - Christian - 2009-06-26 - delete Newsletter Funktion...
            ?>
            </tr>
+           <?php
+           if (ACTIVATE_GIFT_SYSTEM=='true') {
+           ?>
+           <tr>
+            <td class="dataTableConfig col-left"><?php echo TABLE_HEADING_AMOUNT; ?></td>
+            <td class="dataTableConfig col-single-right">
+            <?php
+              if ($processed == true) {
+                echo $cInfo->amount.xtc_draw_hidden_field('amount');
+              } else {
+                echo xtc_draw_input_field('amount', $cInfo->amount);
+              }
+              ?>
+            </td>
+           <?php
+           }
+           ?>
            <tr>
              <?php 
              include(DIR_WS_MODULES . FILENAME_CUSTOMER_MEMO); 

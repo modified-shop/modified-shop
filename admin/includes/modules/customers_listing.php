@@ -58,6 +58,11 @@
                   <td class="dataTableHeadingContent"><?php echo HEADING_TITLE_VAT; ?></td>
                   <?php
                   }
+                  if (ACTIVATE_GIFT_SYSTEM=='true') {
+                  ?>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_AMOUNT; ?></td>
+                  <?php
+                  }
                   ?>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACCOUNT_CREATED.xtc_sorting(FILENAME_CUSTOMERS,'date_account_created'); ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
@@ -135,8 +140,7 @@
 
                 // BOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
                 $customers_query_raw = "-- admin/customers.php
-                                         SELECT
-                                               c.customers_id,
+                                        SELECT c.customers_id,
                                                c.customers_cid,
                                                c.customers_vat_id,
                                                c.customers_vat_id_status,
@@ -151,14 +155,16 @@
                                                ci.customers_info_date_account_created as date_account_created,
                                                ci.customers_info_date_account_last_modified as date_account_last_modified,
                                                ci.customers_info_date_of_last_logon as date_last_logon,
-                                               ci.customers_info_number_of_logons as number_of_logons
-                                          FROM
-                                               ".TABLE_CUSTOMERS." c ,
-                                               ".TABLE_ADDRESS_BOOK." a,
-                                               ".TABLE_CUSTOMERS_INFO." ci
-                                         WHERE c.customers_id = a.customers_id
-                                           AND c.customers_default_address_id = a.address_book_id
-                                           AND ci.customers_info_id = c.customers_id
+                                               ci.customers_info_number_of_logons as number_of_logons,
+                                               cgc.amount
+                                          FROM ".TABLE_CUSTOMERS." c
+                                          JOIN ".TABLE_ADDRESS_BOOK." a
+                                               ON c.customers_id = a.customers_id
+                                     LEFT JOIN ".TABLE_CUSTOMERS_INFO." ci
+                                               ON ci.customers_info_id = c.customers_id
+                                     LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
+                                               ON c.customers_id = cgc.customer_id
+                                         WHERE c.customers_default_address_id = a.address_book_id
                                                ".$search."
                                                ".$sort;
                 // EOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
@@ -248,6 +254,11 @@
                       </td>
                       <?php
 */
+                    }
+                    if (ACTIVATE_GIFT_SYSTEM=='true') {
+                    ?>
+                      <td class="dataTableContent"><?php if ($customers['amount']>0) { echo $currencies->format($customers['amount']);} ?></td>
+                    <?php
                     }
                   ?>
                   <td class="dataTableContent txta-r"><?php echo xtc_date_short($customers['date_account_created']); ?>&nbsp;</td>
