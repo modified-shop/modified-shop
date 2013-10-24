@@ -322,4 +322,15 @@
     $nav.= xtc_image(DIR_WS_ICONS . 'sort_up.gif', '', '20' ,'20').'</a>';    
     return $nav;
   }
+  
+  function draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results) {
+    $output = '<div class="clear"></div>'. PHP_EOL;
+    $output .= '<div class="smallText pdg2 flt-l">'. PHP_EOL;
+    $output .= xtc_draw_form('cfg_max', basename($PHP_SELF)). PHP_EOL;         
+    $output .= DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"'). PHP_EOL; 
+    $output .= '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'. PHP_EOL; 
+    $output .=  '</form>'. PHP_EOL; 
+    $output .= '</div>'. PHP_EOL; 
+    return $output;
+  }
 ?>
