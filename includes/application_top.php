@@ -151,6 +151,7 @@ require_once (DIR_FS_INC.'xtc_get_uprid.inc.php');
 require_once (DIR_FS_INC.'xtc_get_all_get_params.inc.php');
 require_once (DIR_FS_INC.'xtc_has_product_attributes.inc.php');
 require_once (DIR_FS_INC.'xtc_image.inc.php');
+require_once (DIR_FS_INC.'xtc_check_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_check_stock_attributes.inc.php');
 require_once (DIR_FS_INC.'xtc_currency_exists.inc.php');
 require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
