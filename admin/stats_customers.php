@@ -80,15 +80,7 @@ require (DIR_WS_INCLUDES.'head.php');
       </table>
       <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
       <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?>&nbsp;</div>
-      <div class="clear"></div>
-      <div class="smallText pdg2 flt-l">
-        <?php 
-        echo xtc_draw_form('cfg_max', FILENAME_STATS_CUSTOMERS);         
-        echo DISPLAY_PER_PAGE.xtc_draw_input_field($cfg_max_display_results_key, $page_max_display_results, 'style="width: 40px"');
-        echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>';
-        echo '</form>'; 
-        ?> 
-      </div>
+      <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
      </td>
     <!-- body_text_eof //-->
   </tr>
