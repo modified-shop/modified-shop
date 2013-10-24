@@ -51,7 +51,7 @@ require_once (DIR_FS_INC . 'xtc_check_stock.inc.php');
 unset ($_SESSION['tmp_oID']);
 unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 
-$first_call = true;
+$first_call = false;
 if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
 if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) {
   $first_call = false;
@@ -124,8 +124,11 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
       $credit_selection[$i]['checked'] = 0;
     }
     $credit_amount =  $credit_selection[$i]['credit_amount'];
+    $credit_order_total = $credit_selection[$i]['credit_order_total'];
     $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_amount, $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
+    $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$credit_order_total.'">';
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
+    $module_smarty->assign('credit_amount_payment_info', $credit_amount >= $credit_order_total ? GV_NO_PAYMENT_INFO : GV_ADD_PAYMENT_INFO);
   }
   $module_smarty->assign('module_gift', $credit_selection);  
 }
