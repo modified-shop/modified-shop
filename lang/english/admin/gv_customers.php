@@ -15,4 +15,5 @@ define('HEADING_TITLE', 'Kunden - Credit');
 define('TABLE_HEADING_GV_ID', 'ID');
 define('TABLE_HEADING_GV_NAME', 'Name');
 define('TABLE_HEADING_GV_AMOUNT', 'Credit');
+define('HEADING_TITLE_TOTAL', 'Total credit, all Customers: ');
 ?>
