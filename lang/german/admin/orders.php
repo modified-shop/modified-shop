@@ -95,6 +95,7 @@ define('TEXT_INFO_RESTOCK_PRODUCT_QUANTITY', 'Artikelanzahl dem Lager gutschreib
 define('TEXT_DATE_ORDER_CREATED', 'erstellt am:');
 define('TEXT_DATE_ORDER_LAST_MODIFIED', 'letzte &Auml;nderung:');
 define('TEXT_INFO_PAYMENT_METHOD', 'Zahlungsweise:');
+define('TEXT_INFO_SHIPPING_METHOD', 'Versandart:');
 
 define('TEXT_ALL_ORDERS', 'Alle Bestellungen');
 define('TEXT_NO_ORDER_HISTORY', 'Keine Bestellhistorie verf&uuml;gbar');

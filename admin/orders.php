@@ -48,6 +48,15 @@ function get_payment_name($payment_method) {
   }
   return $payment_method;
 }
+function get_shipping_name($shipping_method) {
+  $shipping_method_array = explode('_', $shipping_method);
+  $shipping_method = $shipping_method_array[0];
+  if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_method.'.php')){
+    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_method.'.php');
+    $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_method.'_TEXT_TITLE'));
+  }
+  return $shipping_method;
+}
 
 function get_order_total($orders_id) {
   $total = '0';
