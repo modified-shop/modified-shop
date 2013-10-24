@@ -1518,6 +1518,7 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
   padding: 15px;
   background-color: #e5ffe8;
   margin-bottom: 10px;
+  line-height: 16px;
 }
 
 /* PAGINATION */

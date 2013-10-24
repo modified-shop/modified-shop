@@ -93,6 +93,7 @@ define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahl
 define('JS_ERROR_SUBMITTED', 'Diese Seite wurde bereits best&auml;tigt. Klicken Sie bitte auf OK und warten Sie, bis der Prozess durchgef&uuml;hrt wurde.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.');
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Versandart f&uuml;r Ihre Bestellung.\n');
+define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht akzeptieren,\n k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
 
 /*
  * 
@@ -262,7 +263,7 @@ define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'Es ist keine Versandart vorhanden.'
 
 //  conditions check
 
-define('ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht akzeptieren,\n k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
+define('ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht akzeptieren, k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!');
 
 define('SUB_TITLE_OT_DISCOUNT','Rabatt:');
 
@@ -520,4 +521,7 @@ define('TEXT_PRODUCTS_QTY_REDUCED', 'Die maximal erlaubte St&uuml;ckzahl f&uuml;
 
 define('ERROR_REVIEW_TEXT', 'Der Bewertungstext muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
 define('ERROR_REVIEW_RATING', 'Bitte Geben Sie Ihre Bewertung ab.');
+
+define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsart!</div>');
+define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsart!</div>');
 ?>

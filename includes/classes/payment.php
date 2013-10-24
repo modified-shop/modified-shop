@@ -161,10 +161,24 @@
         }
         if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
         $js .= "\n" . '  if (!document.getElementById("checkout_payment").conditions.checked) {' . "\n" .
-               '    error_message = error_message + unescape("' . xtc_js_lang(ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
+               '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_CONDITIONS_NOT_ACCEPTED) . '");' . "\n" .
                '    error = 1;' . "\n" .
                '  }' . "\n\n";
         }
+        
+        $js .= "\n" . '  if (document.getElementById("rd-cot_gv")) {' . "\n" .
+               '    var gv_value = document.getElementById("rd-cot_gv").value;' . "\n" .
+               '    var cot_value = 0;' . "\n" .
+               '    if (document.getElementById("cot-cot_gv")) {' . "\n" .
+               '      cot_value = document.getElementById("cot-cot_gv").value;' . "\n" .
+               '    }' . "\n" .
+               '    if (document.getElementById("rd-cot_gv").checked) {' . "\n" .
+               '      if (gv_value >= cot_value) {' . "\n" .
+               '        payment_value = "use_gv";' . "\n" .
+               '      }' . "\n" .  
+               '    }' . "\n" .       
+               '  }' . "\n\n";
+        
         $js .= "\n" . '  if (payment_value == null) {' . "\n" .
                '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
                '    error = 1;' . "\n" .

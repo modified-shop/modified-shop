@@ -89,7 +89,8 @@ class order_total {
 					  $output_array[] = array ('id' => $GLOBALS[$class]->code,
                                      'module' => $GLOBALS[$class]->title,
                                      'description' => $GLOBALS[$class]->info,
-                                     'credit_amount' => method_exists($GLOBALS[$class], 'get_credit_amount') ? $GLOBALS[$class]->get_credit_amount() : '0'
+                                     'credit_amount' => method_exists($GLOBALS[$class], 'get_credit_amount') ? $GLOBALS[$class]->get_credit_amount() : '0',
+                                     'credit_order_total' => method_exists($GLOBALS[$class], 'get_order_total') ? $GLOBALS[$class]->get_order_total() : '0'
                                      );
 					  /*
 						$output_string .= '<tr colspan="4"><td colspan="4" width="100%">'.xtc_draw_separator('pixel_trans.gif', '100%', '10').'</td></tr>';
