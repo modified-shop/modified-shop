@@ -15,6 +15,14 @@
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
 
+  $gv_query_raw = "SELECT SUM(amount) as total 
+                     FROM " . TABLE_COUPON_GV_CUSTOMER . " cgc
+                     JOIN " . TABLE_CUSTOMERS . " c
+                          ON c.customers_id = cgc.customer_id";
+  $gv_query = xtc_db_query($gv_query_raw);
+  $gv = xtc_db_fetch_array($gv_query);
+  $gv_total = $gv['total'];
+  
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 
@@ -37,7 +45,7 @@ require (DIR_WS_INCLUDES.'head.php');
         <td width="100%"><table border="0" width="100%" cellspacing="0" cellpadding="0">
           <tr>
             <td class="pageHeading"><?php echo HEADING_TITLE; ?></td>
-            <td class="pageHeading" align="right"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></td>
+            <td class="pageHeading" align="right"><span style="font-size:12px;"><?php echo HEADING_TITLE_TOTAL . $currencies->format($gv_total); ?></span></td>
           </tr>
         </table></td>
       </tr>
