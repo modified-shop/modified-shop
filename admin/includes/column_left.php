@@ -176,6 +176,7 @@ echo mainMenue(BOX_HEADING_GV_ADMIN);
     if ($admin_access['gv_queue'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_GV_QUEUE, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GV_ADMIN_QUEUE . '</a></li>';
     if ($admin_access['gv_mail'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_GV_MAIL, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GV_ADMIN_MAIL . '</a></li>';
     if ($admin_access['gv_sent'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_GV_SENT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GV_ADMIN_SENT . '</a></li>';
+    if ($admin_access['gv_customers'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_GV_CUSTOMERS, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GV_CUSTOMERS . '</a></li>';
 echo endMenue(BOX_HEADING_GV_ADMIN); 
 }
 
