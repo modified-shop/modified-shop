@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   foreach (new DirectoryIterator(DIR_FS_CATALOG) as $shoproot) {
-    if ($shoproot->isDir() && is_file(DIR_FS_CATALOG . $shoproot->getFilename() . '/check_update.php')) {
+    if (strpos($shoproot->getFilename(), '..') === false && $shoproot->isDir() && is_file(DIR_FS_CATALOG . $shoproot->getFilename() . '/check_update.php')) {
       define('DIR_ADMIN', $shoproot->getFilename() . '/');
       break;
     }
