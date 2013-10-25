@@ -19,7 +19,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-define('NL_REG_MAIL_ADMIN', true);
+define('NL_REG_MAIL_ADMIN', false);
 
 class newsletter {
 	var $message, $message_id;
@@ -76,10 +76,7 @@ class newsletter {
         $this->message = TEXT_EMAIL_ACTIVE_ERROR;
         $this->message_id = 5;
       } else {
-        $sql_data_array = array('mail_status' => '1',
-                                'ip_date_confirmed' => xtc_get_ip_address(),
-                                'date_confirmed' => 'now()'
-                                );
+        $sql_data_array = array('mail_status' => '1');
         xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($email)."'");
         $this->message = TEXT_EMAIL_ACTIVE;
         $this->message_id = 6;
@@ -119,10 +116,7 @@ class newsletter {
           if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
             $this->sendRequestMail($mail);
           } else {
-            $sql_data_array = array('mail_status' => '1',
-                                    'ip_date_confirmed' => xtc_get_ip_address(),
-                                    'date_confirmed' => 'now()'
-                                    );
+            $sql_data_array = array('mail_status' => '1');
             xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
             $this->message = TEXT_EMAIL_ACTIVE;
             $this->message_id = 6;
@@ -161,8 +155,7 @@ class newsletter {
                                  'customers_lastname' => xtc_db_input($customers_lastname), 
                                  'mail_status' => '0', 
                                  'mail_key' => xtc_db_input($this->vlCode), 
-                                 'date_added' => 'now()',
-                                 'ip_date_added' => xtc_get_ip_address()
+                                 'date_added' => 'now()'
                                  );
         xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
 
@@ -172,10 +165,7 @@ class newsletter {
         if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
           $this->sendRequestMail($mail);
         } else {
-          $sql_data_array = array('mail_status' => '1',
-                                  'ip_date_confirmed' => xtc_get_ip_address(),
-                                  'date_confirmed' => 'now()'
-                                  );
+          $sql_data_array = array('mail_status' => '1');
           xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
 
           $this->message = TEXT_EMAIL_ACTIVE;
