@@ -1,14 +1,17 @@
 <?php
+/* -----------------------------------------------------------------------------------------
+   $Id:$
 
-/*------------------------------------------------------------------------------
-   $Id: newsletter.php,v 1.0 
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce www.oscommerce.com 
    (c) 2003	 nextcommerce www.nextcommerce.org
+   (c) 2003 XT-Commerce
    
    XTC-NEWSLETTER_RECIPIENTS RC1 - Contribution for XT-Commerce http://www.xt-commerce.com
    by Matthias Hinsche http://www.gamesempire.de
@@ -30,134 +33,26 @@ require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+require_once (DIR_WS_CLASSES.'class.newsletter.php');
 
-$inp = 'true';
-$del = '';
 $info_message = '';
+$newsletter = new newsletter();
 
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {    
-	
-	$vlcode = xtc_random_charcode(32);
-	$link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($_POST['email']).'&key='.$vlcode, 'SSL');
-
-	// assign language to template for caching
-	$smarty->assign('language', $_SESSION['language']);
-	$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-	$smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-
-	// assign vars
-	$smarty->assign('EMAIL', xtc_db_input($_POST['email']));
-	$smarty->assign('LINK', $link);
-	// dont allow cache
-	$smarty->caching = false;
-
-	// create mails
-	$html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
-	$txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
-
-	if (xtc_validate_email(trim($_POST['email'])) && ($_POST['check'] == 'inp') && (strtoupper($_POST['vvcode']) == $_SESSION['vvcode'])) {
-
-  	// Check if email exists 
-		$check_mail_query = xtc_db_query("select customers_email_address, mail_status from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
-		if (!xtc_db_num_rows($check_mail_query)) {
-		
-      $check_customer_mail_query = xtc_db_query("select customers_id, customers_status, customers_firstname, customers_lastname, customers_email_address from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
-      if (!xtc_db_num_rows($check_customer_mail_query)) {
-        $customers_id = '0';
-        $customers_status = '1';
-        $customers_firstname = TEXT_CUSTOMER_GUEST;
-        $customers_lastname = '';
-      } else {
-        $check_customer = xtc_db_fetch_array($check_customer_mail_query);
-        $customers_id = $check_customer['customers_id'];
-        $customers_status = $check_customer['customers_status'];
-        $customers_firstname = $check_customer['customers_firstname'];
-        $customers_lastname = $check_customer['customers_lastname'];
-      }			
-
-			$sql_data_array = array ('customers_email_address' => xtc_db_input($_POST['email']), 'customers_id' => xtc_db_input($customers_id), 'customers_status' => xtc_db_input($customers_status), 'customers_firstname' => xtc_db_input($customers_firstname), 'customers_lastname' => xtc_db_input($customers_lastname), 'mail_status' => '0', 'mail_key' => xtc_db_input($vlcode), 'date_added' => 'now()');
-			xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array);
-
-			$info_message = TEXT_EMAIL_INPUT;
-
-			if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
-				xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, xtc_db_input($_POST['email']), '', '', EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', TEXT_EMAIL_SUBJECT, $html_mail, $txt_mail);
-			} else {
-			  xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($_POST['email'])."'");
-			  $info_message = TEXT_EMAIL_ACTIVE;
-			}
-
-		} else {
-			$check_mail = xtc_db_fetch_array($check_mail_query);
-
-			if ($check_mail['mail_status'] == '0') {
-
-				$info_message = TEXT_EMAIL_EXIST_NO_NEWSLETTER;
-
-        if (SEND_EMAILS_DOUBLE_OPT_IN == 'true' && SEND_EMAILS == true) {
-          xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, xtc_db_input($_POST['email']), '', '', EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', TEXT_EMAIL_SUBJECT, $html_mail, $txt_mail);
-        } else {
-          xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($_POST['email'])."'");
-          $info_message = TEXT_EMAIL_ACTIVE;
-        }
-
-			} else {
-				$info_message = TEXT_EMAIL_EXIST_NEWSLETTER;
-			}
-
-		}
-
-	} else {
-	  if (!xtc_validate_email(trim($_POST['email']))) $info_message .= ERROR_EMAIL;
-	  if (strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) $info_message .= ERROR_VVCODE;		
-	}
-
-	if (xtc_validate_email(trim($_POST['email'])) && ($_POST['check'] == 'del') && (strtoupper($_POST['vvcode']) == $_SESSION['vvcode'])) {
-		$check_mail_query = xtc_db_query("select customers_email_address from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($_POST['email'])."'");
-		if (!xtc_db_num_rows($check_mail_query)) {
-			$info_message = TEXT_EMAIL_NOT_EXIST;
-		} else {
-			$del_query = xtc_db_query("delete from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address ='".xtc_db_input($_POST['email'])."'");
-			$info_message = TEXT_EMAIL_DEL;
-		}	
-	}	
+  $newsletter->AddUser($_POST['check'], strtoupper($_POST['vvcode']), $_POST['email']);
+  $info_message = $newsletter->message;
 }
 
 // Accountaktivierung per Emaillink
 if (isset ($_GET['action']) && ($_GET['action'] == 'activate')) {
-	$check_mail_query = xtc_db_query("select mail_key from ".TABLE_NEWSLETTER_RECIPIENTS." where customers_email_address = '".xtc_db_input($_GET['email'])."'");
-	if (!xtc_db_num_rows($check_mail_query)) {
-		$info_message = TEXT_EMAIL_NOT_EXIST;
-	} else {	    
-		$check_mail = xtc_db_fetch_array($check_mail_query);
-		if ($check_mail['mail_key'] != $_GET['key']) {
-			$info_message = TEXT_EMAIL_ACTIVE_ERROR;
-		} else {
-			xtc_db_query("update ".TABLE_NEWSLETTER_RECIPIENTS." set mail_status = '1' where customers_email_address = '".xtc_db_input($_GET['email'])."'");
-			$info_message = TEXT_EMAIL_ACTIVE;
-		}
-	}
+  $newsletter->ActivateAddress($_GET['key'], $_GET['email']);
+  $info_message = $newsletter->message;
 }
 
 // Accountdeaktivierung per Emaillink
 if (isset ($_GET['action']) && ($_GET['action'] == 'remove')) {
-	$check_mail_query = xtc_db_query("select customers_email_address,
-                                           mail_key
-                                    from ".TABLE_NEWSLETTER_RECIPIENTS."
-                                    where customers_email_address = '".xtc_db_input($_GET['email'])."' 
-                                    and mail_key = '".xtc_db_input($_GET['key'])."'");
-	if (!xtc_db_num_rows($check_mail_query)) {
-		$info_message = TEXT_EMAIL_NOT_EXIST;
-	} else {
-		$check_mail = xtc_db_fetch_array($check_mail_query);
-		if ($check_mail['mail_key'] != $_GET['key']) {
-			$info_message = TEXT_EMAIL_DEL_ERROR;
-		} else {
-			$del_query = xtc_db_query("delete from ".TABLE_NEWSLETTER_RECIPIENTS." where  customers_email_address ='".xtc_db_input($_GET['email'])."' and mail_key = '".xtc_db_input($_GET['key'])."'");
-			
-			$info_message = TEXT_EMAIL_DEL;
-		}
-	}
+  $newsletter->RemoveFromList($_GET['key'], $_GET['email']);
+  $info_message = $newsletter->message;
 }
 
 $breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '', 'SSL'));
