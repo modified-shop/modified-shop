@@ -48,12 +48,13 @@ function get_payment_name($payment_method) {
   }
   return $payment_method;
 }
-function get_shipping_name($shipping_method) {
-  $shipping_method_array = explode('_', $shipping_method);
-  $shipping_method = $shipping_method_array[0];
-  if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_method.'.php')){
-    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_method.'.php');
-    $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_method.'_TEXT_TITLE'));
+function get_shipping_name($shipping_class) {
+  $shipping_class_array = explode('_', $shipping_class);
+  $shipping_class = $shipping_class_array[0];
+  $shipping_method = $shipping_class;
+  if (file_exists(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php')){
+    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/shipping/'.$shipping_class.'.php');
+    $shipping_method = constant(strtoupper('MODULE_SHIPPING_'.$shipping_class.'_TEXT_TITLE'));
   }
   return $shipping_method;
 }
@@ -99,6 +100,8 @@ $order_select_fields = 'o.orders_id,
                         o.customers_name,
                         o.customers_company,
                         o.payment_method,
+                        o.shipping_method,
+                        o.shipping_class,
                         o.last_modified,
                         o.date_purchased,
                         o.orders_status,
