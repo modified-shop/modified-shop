@@ -108,6 +108,8 @@ ALTER TABLE admin_access
 UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#Web28 - 2013-09-28 - Added required_zones
+ALTER TABLE countries ADD required_zones INT(1) DEFAULT '0';
 
 #Web28 - 2013-10-24 - Added gv_customers
 ALTER TABLE admin_access ADD gv_customers INT(1) NOT NULL DEFAULT 0 AFTER gv_sent;
@@ -122,5 +124,9 @@ ALTER TABLE orders ADD billing_gender char(1) NOT NULL AFTER billing_lastname;
 #Web28 - 2013-10-27 - added IBAN and BIC in banktransfer payment module
 ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
 ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
+
+ALTER TABLE configuration MODIFY configuration_value text;
+ALTER TABLE orders MODIFY payment_method varchar(128);
+ALTER TABLE orders MODIFY shipping_method varchar(128);
 
 # Keep an empty line at the end of this file for the db_updater to work properly

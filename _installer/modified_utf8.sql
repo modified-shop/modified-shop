@@ -301,7 +301,7 @@ DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
   configuration_id INT NOT NULL AUTO_INCREMENT,
   configuration_key VARCHAR(64) NOT NULL,
-  configuration_value VARCHAR(255) NOT NULL,
+  configuration_value text NOT NULL,
   configuration_group_id INT NOT NULL,
   sort_order INT(5) NULL,
   last_modified DATETIME NULL,
@@ -350,8 +350,8 @@ CREATE TABLE countries (
 DROP TABLE IF EXISTS currencies;
 CREATE TABLE currencies (
   currencies_id INT NOT NULL AUTO_INCREMENT,
-  code CHAR(3) NOT NULL,
   title VARCHAR(32) NOT NULL,
+  code CHAR(3) NOT NULL,
   symbol_left VARCHAR(12),
   symbol_right VARCHAR(12),
   decimal_point CHAR(1),
@@ -578,6 +578,7 @@ CREATE TABLE orders (
   customers_name VARCHAR(64) NOT NULL,
   customers_firstname VARCHAR(64) NOT NULL,
   customers_lastname VARCHAR(64) NOT NULL,
+  customers_gender VARCHAR(1) NOT NULL,
   customers_company VARCHAR(64),
   customers_street_address VARCHAR(64) NOT NULL,
   customers_suburb VARCHAR(32),
@@ -592,6 +593,7 @@ CREATE TABLE orders (
   delivery_name VARCHAR(64) NOT NULL,
   delivery_firstname VARCHAR(64) NOT NULL,
   delivery_lastname VARCHAR(64) NOT NULL,
+  delivery_gender VARCHAR(1) NOT NULL,
   delivery_company VARCHAR(64),
   delivery_street_address VARCHAR(64) NOT NULL,
   delivery_suburb VARCHAR(32),
@@ -604,6 +606,7 @@ CREATE TABLE orders (
   billing_name VARCHAR(64) NOT NULL,
   billing_firstname VARCHAR(64) NOT NULL,
   billing_lastname VARCHAR(64) NOT NULL,
+  billing_gender VARCHAR(1) NOT NULL,
   billing_company VARCHAR(64),
   billing_street_address VARCHAR(64) NOT NULL,
   billing_suburb VARCHAR(32),
@@ -613,7 +616,7 @@ CREATE TABLE orders (
   billing_country VARCHAR(32) NOT NULL,
   billing_country_iso_code_2 CHAR(2) NOT NULL,
   billing_address_format_id INT(5) NOT NULL,
-  payment_method VARCHAR(32) NOT NULL,
+  payment_method VARCHAR(128) NOT NULL,
   cc_type VARCHAR(20),
   cc_owner VARCHAR(64),
   cc_number VARCHAR(64),
@@ -630,7 +633,7 @@ CREATE TABLE orders (
   currency_value DECIMAL(14,6),
   account_type INT(1) DEFAULT 0 NOT NULL,
   payment_class VARCHAR(32) NOT NULL,
-  shipping_method VARCHAR(32) NOT NULL,
+  shipping_method VARCHAR(128) NOT NULL,
   shipping_class VARCHAR(32) NOT NULL,
   customers_ip VARCHAR(39) NOT NULL,
   language VARCHAR(32) NOT NULL,
@@ -883,7 +886,7 @@ CREATE TABLE products_graduated_prices (
   KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;
 
-# DokuMan - 2010-10-13 add index idx_categories_id
+# add index idx_categories_id
 DROP TABLE IF EXISTS products_to_categories;
 CREATE TABLE products_to_categories (
   products_id INT NOT NULL,
