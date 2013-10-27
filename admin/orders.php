@@ -81,6 +81,7 @@ $currencies = new currencies();
 
 $action = (isset($_GET['action']) ? xtc_db_prepare_input($_GET['action']) : '');
 $oID = isset($_GET['oID']) ? (int) $_GET['oID'] : '';
+$customer = (isset($_GET['customer']) ? xtc_db_prepare_input($_GET['customer']) : '');
 
 if (($action == 'edit' || $action == 'update_order') && $oID) {
   $orders_query = xtc_db_query("-- /admin/orders.php
