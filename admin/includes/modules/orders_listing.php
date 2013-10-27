@@ -21,12 +21,17 @@
           <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
         </div>
         <div class="flt-r">
-          <div class="pageHeading">
+          <div class="main flt-l pdg2">
             <?php echo xtc_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
             <?php echo HEADING_TITLE_SEARCH . ' ' . xtc_draw_input_field('oID', '', 'size="12"') . xtc_draw_hidden_field('action', 'edit').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
             </form>
           </div>
-          <div class="main">
+          <div class="main flt-l pdg2">
+            <?php echo xtc_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
+            <?php echo ASB_QUICK_SEARCH_CUSTOMER . ' ' . xtc_draw_input_field('customer', '', 'size="12"') . xtc_draw_hidden_field('action', 'search').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+            </form>
+          </div>
+          <div class="main pdg2">
             <?php echo xtc_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
             <?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)),array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
             </form>        
@@ -87,6 +92,19 @@
 
                 } elseif ($action == 'search' && $oID) {
                      // ADMIN SEARCH BAR $orders_query_raw moved it to the top
+                } elseif ($action == 'search' && $customer) {
+                      $orders_query_raw = "-- /admin/orders.php
+                                           SELECT ".$order_select_fields.",
+                                                  s.orders_status_name
+                                             FROM ".TABLE_ORDERS." o
+                                        LEFT JOIN ".TABLE_ORDERS_STATUS." s
+                                               ON (o.orders_status = s.orders_status_id
+                                                    AND s.orders_status_id = '".xtc_db_input($status)."')
+                                            WHERE o.customers_name LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_firstname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_lastname LIKE '%".xtc_db_input($customer)."%'
+                                               OR o.customers_company LIKE '%".xtc_db_input($customer)."%'                       
+                                         ".$sort;
                 } else {
                       $orders_query_raw = "-- /admin/orders.php
                                            SELECT ".$order_select_fields.",
