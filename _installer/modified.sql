@@ -299,7 +299,7 @@ DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
   configuration_id INT NOT NULL AUTO_INCREMENT,
   configuration_key VARCHAR(64) NOT NULL,
-  configuration_value VARCHAR(255) NOT NULL,
+  configuration_value text NOT NULL,
   configuration_group_id INT NOT NULL,
   sort_order INT(5) NULL,
   last_modified DATETIME NULL,
@@ -576,6 +576,7 @@ CREATE TABLE orders (
   customers_name VARCHAR(64) NOT NULL,
   customers_firstname VARCHAR(64) NOT NULL,
   customers_lastname VARCHAR(64) NOT NULL,
+  customers_gender VARCHAR(1) NOT NULL,
   customers_company VARCHAR(64),
   customers_street_address VARCHAR(64) NOT NULL,
   customers_suburb VARCHAR(32),
@@ -590,6 +591,7 @@ CREATE TABLE orders (
   delivery_name VARCHAR(64) NOT NULL,
   delivery_firstname VARCHAR(64) NOT NULL,
   delivery_lastname VARCHAR(64) NOT NULL,
+  delivery_gender VARCHAR(1) NOT NULL,
   delivery_company VARCHAR(64),
   delivery_street_address VARCHAR(64) NOT NULL,
   delivery_suburb VARCHAR(32),
@@ -602,6 +604,7 @@ CREATE TABLE orders (
   billing_name VARCHAR(64) NOT NULL,
   billing_firstname VARCHAR(64) NOT NULL,
   billing_lastname VARCHAR(64) NOT NULL,
+  billing_gender VARCHAR(1) NOT NULL,
   billing_company VARCHAR(64),
   billing_street_address VARCHAR(64) NOT NULL,
   billing_suburb VARCHAR(32),
@@ -611,7 +614,7 @@ CREATE TABLE orders (
   billing_country VARCHAR(32) NOT NULL,
   billing_country_iso_code_2 CHAR(2) NOT NULL,
   billing_address_format_id INT(5) NOT NULL,
-  payment_method VARCHAR(32) NOT NULL,
+  payment_method VARCHAR(128) NOT NULL,
   cc_type VARCHAR(20),
   cc_owner VARCHAR(64),
   cc_number VARCHAR(64),
@@ -628,7 +631,7 @@ CREATE TABLE orders (
   currency_value DECIMAL(14,6),
   account_type INT(1) DEFAULT 0 NOT NULL,
   payment_class VARCHAR(32) NOT NULL,
-  shipping_method VARCHAR(32) NOT NULL,
+  shipping_method VARCHAR(128) NOT NULL,
   shipping_class VARCHAR(32) NOT NULL,
   customers_ip VARCHAR(39) NOT NULL,
   language VARCHAR(32) NOT NULL,
@@ -1239,8 +1242,8 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr
 INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
 
 # add entry for listproducts
-INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1);
 
 # configuration_group_id 1, My Shop
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('', 'STORE_NAME', 'modified eCommerce Shopsoftware', 1, 1, NULL, NOW(), NULL, NULL);
