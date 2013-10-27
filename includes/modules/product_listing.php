@@ -23,8 +23,10 @@ $result = true;
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
 $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SEARCH_RESULTS, 'p.products_id');
+
 $module_content = array ();
 $category = array();
+$image = '';
 
 if ($listing_split->number_of_rows > 0) {
   if (USE_PAGINATION_LIST == 'false') {
@@ -41,28 +43,29 @@ if ($listing_split->number_of_rows > 0) {
     $module_smarty->assign('PAGINATION', $pagination);
   }
   
-  $group_check = '';
-  if (GROUP_CHECK == 'true') {
-    $group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-  }
+  if ($current_category_id != '0') {
+    $group_check = '';
+    if (GROUP_CHECK == 'true') {
+      $group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
+    }
 
-  $category_query = xtDBquery("SELECT cd.categories_description,
-                                      cd.categories_name,
-                                      cd.categories_heading_title,
-                                      c.listing_template,
-                                      c.categories_image
-                                 FROM ".TABLE_CATEGORIES." c,
-                                      ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                WHERE c.categories_id = '".$current_category_id."'
-                                  AND cd.categories_id = '".$current_category_id."'
-                                      ".$group_check."
-                                  AND cd.language_id = '".$_SESSION['languages_id']."'
-                                LIMIT 1");
-  $category = xtc_db_fetch_array($category_query,true);
-  $image = '';
-  if ($category['categories_image'] != '') {
-    $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-    if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
+    $category_query = xtDBquery("SELECT cd.categories_description,
+                                        cd.categories_name,
+                                        cd.categories_heading_title,
+                                        c.listing_template,
+                                        c.categories_image
+                                   FROM ".TABLE_CATEGORIES." c
+                                   JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                        ON c.categories_id = cd.categories_id
+                                           AND cd.language_id = '".$_SESSION['languages_id']."'
+                                  WHERE c.categories_id = '".$current_category_id."'
+                                        ".$group_check."
+                                  LIMIT 1");
+    $category = xtc_db_fetch_array($category_query,true);
+    if ($category['categories_image'] != '') {
+      $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
+      if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
+    }
   }
 
   if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
@@ -76,16 +79,18 @@ if ($listing_split->number_of_rows > 0) {
     }
 
   }
-  //EOF -web28- 2010-08-06 - BUGFIX no manufacturers image displayed
 
-  $module_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
-  $module_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
+  if ($current_category_id == '0' && isset($_GET['keywords'])) {
+    $category['categories_name'] = TEXT_SEARCH_TERM . stripslashes(trim(urldecode($_GET['keywords'])));
+  }
+
+  $module_smarty->assign('CATEGORIES_NAME', isset($category['categories_name']) ? $category['categories_name'] : '');
+  $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
+  $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
   $module_smarty->assign('CATEGORIES_IMAGE', $image);
-  $module_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
-  $rows = 0;
+
   $listing_query = xtDBquery($listing_split->sql_query);
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
-    $rows ++;
     $module_content[] =  $product->buildDataArray($listing);
   }
 } else {
