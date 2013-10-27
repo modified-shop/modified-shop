@@ -125,4 +125,8 @@ ALTER TABLE orders ADD billing_gender char(1) NOT NULL AFTER billing_lastname;
 ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
 ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
 
+ALTER TABLE configuration MODIFY configuration_value text;
+ALTER TABLE orders MODIFY payment_method varchar(128);
+ALTER TABLE orders MODIFY shipping_method varchar(128);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
