@@ -116,9 +116,9 @@ INSERT INTO currencies VALUES
 (4, 'GBP', 'Great Britain Pound', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
 
 # DokuMan - 2012-11-26 - added IBAN and BIC in banktransfer payment module
-ALTER TABLE banktransfer
-  ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz,
-  ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
+#ALTER TABLE banktransfer
+#  ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz,
+#  ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
 
 # DokuMan - 2012-12-04 - rename moneybookers tables to amoneybookers
 ALTER TABLE payment_moneybookers_currencies
