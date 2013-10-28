@@ -126,6 +126,12 @@ if ($action == 'address_edit') {
                            'billing_address_format_id' => xtc_get_address_format_id($_POST['billing_country_id']),
                            'last_modified' => 'now()'
                            );
+  
+  //added gender
+  $sql_data_array['customers_gender'] = xtc_db_prepare_input($_POST['customers_gender']);
+  $sql_data_array['delivery_gender'] = xtc_db_prepare_input($_POST['delivery_gender']);
+  $sql_data_array['billing_gender'] = xtc_db_prepare_input($_POST['billing_gender']);
+  
   xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', 'orders_id = \''.(int)($_POST['oID']).'\'');
 
   xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=address&oID='.(int)$_POST['oID']));

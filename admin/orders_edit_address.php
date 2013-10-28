@@ -58,6 +58,25 @@ if ($_GET['edit_action']=='address') {
   <td class="dataTableHeadingContent" style="width:30%"><?php echo TEXT_BILLING_ADDRESS;?></td>
   </tr>
 
+  <?php
+  if (ACCOUNT_GENDER == 'true') {
+  ?>
+  <tr class="dataTableRow">
+    <td class="dataTableContent"><?php echo ENTRY_GENDER; ?></td>
+    <td class="dataTableContent">
+      <?php	echo xtc_draw_radio_field('customers_gender', 'm', false, $order->customer['gender']).'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, $order->customer['gender']).'&nbsp;&nbsp;'.FEMALE;?>
+    </td>
+    <td class="dataTableContent">
+      <?php	echo xtc_draw_radio_field('delivery_gender', 'm', false, $order->delivery['gender']).'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('delivery_gender', 'f', false, $order->delivery['gender']).'&nbsp;&nbsp;'.FEMALE;?>
+    </td>
+    <td class="dataTableContent">
+      <?php	echo xtc_draw_radio_field('billing_gender', 'm', false, $order->billing['gender']).'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('billing_gender', 'f', false, $order->billing['gender']).'&nbsp;&nbsp;'.FEMALE;?>
+    </td>
+  </tr>
+  <?php
+  }
+  ?>
+
   <tr class="dataTableRow">
   <td class="dataTableContent">
   <?php echo TEXT_COMPANY;?>

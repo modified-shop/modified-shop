@@ -162,6 +162,11 @@
                               'customers_ip' => '',
                               'language' => $_SESSION['language'] //Web28 - 2012-02-26 - BUGFIX: Use Session language
                               );
+
+
+
+
+
       // EOF - DokuMan - 2009-05-22 - BUGFIX: first and last name were not saved when creating manual orders
       xtc_db_perform(TABLE_ORDERS, $sql_data_array);
       $orders_id = xtc_db_insert_id();
@@ -275,6 +280,20 @@
       $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
       $shipping_unallowed = implode(',', (is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
       $password = xtc_db_prepare_input($_POST['entry_password']);
+      /*
+      $amount = xtc_db_prepare_input($_POST['amount']);
+      if ($amount != '') {
+        $sql_data_array = array('customer_id' => (int)$_GET['cID'],
+                                'amount' => $amount
+                                );
+        $check_gv_query = xtc_db_query("SELECT * FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = '".(int)$_GET['cID']."'");
+        if (xtc_db_num_rows($check_gv_query) > 0) {                     
+          xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array, 'update', "customer_id = '".(int)$_GET['cID']."'");
+        } else {
+          xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);        
+        }
+      }
+      */
       if ($memo_text != '' && $memo_title != '') {
         $sql_data_array = array ('customers_id' => (int)$_GET['cID'], 
                                  'memo_date' => date("Y-m-d"), 
@@ -587,6 +606,7 @@
       xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".xtc_db_input($customers_id)."'");
       xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".xtc_db_input($customers_id)."'");
       xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".xtc_db_input($customers_id)."'"); // DokuMan - 2011-04-15 - also delete the newsletter entry of the customer
+      xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".xtc_db_input($customers_id)."'");
       xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action'))));
       break;
     default :
@@ -618,6 +638,8 @@
         FROM ".TABLE_CUSTOMERS." c
    LEFT JOIN ".TABLE_ADDRESS_BOOK." a
           ON c.customers_default_address_id = a.address_book_id
+   LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
+          ON c.customers_id = cgc.customer_id
        WHERE a.customers_id = c.customers_id
          AND c.customers_id = ".(int)$_GET['cID']
          );

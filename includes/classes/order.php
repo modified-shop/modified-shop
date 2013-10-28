@@ -227,6 +227,11 @@
                              'format_id' => $order['billing_address_format_id']
                              );
 
+      //added gender      
+      $this->customer['gender'] =  $order['customers_gender'];
+      $this->delivery['gender'] =  $order['delivery_gender'];
+      $this->billing['gender'] =  $order['billing_gender'];
+
       $index = 0;
       $orders_products_query = xtc_db_query("SELECT *
                                                FROM " . TABLE_ORDERS_PRODUCTS . "
@@ -371,8 +376,9 @@
       global $currencies,$xtPrice,$main;
       $this->content_type = $_SESSION['cart']->get_content_type();
 
+      //added gender
       $default_select =
-        "ab.entry_company, ab.entry_street_address, ab.entry_suburb,
+        "ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_gender,
          ab.entry_postcode, ab.entry_city, ab.entry_zone_id, ab.entry_country_id, ab.entry_state,
          co.countries_name,
          co.countries_id, co.countries_iso_code_2, co.countries_iso_code_3, co.address_format_id,
@@ -506,6 +512,10 @@
                                                ),
                              'country_id' => $billing_address['entry_country_id'],
                              'format_id' => $billing_address['address_format_id']);
+
+      //added gender
+      $this->delivery['gender'] =  $shipping_address['entry_gender'];
+      $this->billing['gender'] =  $billing_addres['entry_gender'];
 
       $index = 0;
       // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
