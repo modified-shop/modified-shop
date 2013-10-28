@@ -162,6 +162,12 @@
                               'customers_ip' => '',
                               'language' => $_SESSION['language'] //Web28 - 2012-02-26 - BUGFIX: Use Session language
                               );
+                              
+      //added gender
+      $sql_data_array['customers_gender'] = xtc_db_prepare_input($customers['entry_gender']);
+      $sql_data_array['delivery_gender'] = xtc_db_prepare_input($customers['entry_gender']);
+      $sql_data_array['billing_gender'] = xtc_db_prepare_input($customers['entry_gender']);
+      
       // EOF - DokuMan - 2009-05-22 - BUGFIX: first and last name were not saved when creating manual orders
       xtc_db_perform(TABLE_ORDERS, $sql_data_array);
       $orders_id = xtc_db_insert_id();
@@ -275,6 +281,7 @@
       $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
       $shipping_unallowed = implode(',', (is_array($_POST['shipping_unallowed']) ? $_POST['shipping_unallowed'] : array()));
       $password = xtc_db_prepare_input($_POST['entry_password']);
+      /*
       $amount = xtc_db_prepare_input($_POST['amount']);
       if ($amount != '') {
         $sql_data_array = array('customer_id' => (int)$_GET['cID'],
@@ -287,6 +294,7 @@
           xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);        
         }
       }
+      */
       if ($memo_text != '' && $memo_title != '') {
         $sql_data_array = array ('customers_id' => (int)$_GET['cID'], 
                                  'memo_date' => date("Y-m-d"), 
