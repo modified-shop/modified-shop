@@ -66,6 +66,10 @@
             }
            //} //DokuMan - 2010-10-01 - remove check if $cinfo is an object, otherwise customer status will be blank
           $newsletter_array = array (array ('id' => '1', 'text' => ENTRY_NEWSLETTER_YES), array ('id' => '0', 'text' => ENTRY_NEWSLETTER_NO));
+          
+          require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
+          $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$cInfo->customers_status);
+          
         ?>
        
       <div class="mrg5" style="width:850px;">   
@@ -542,12 +546,14 @@
            <tr>
             <td class="dataTableConfig col-left"><?php echo TABLE_HEADING_AMOUNT; ?></td>
             <td class="dataTableConfig col-single-right">
-            <?php
+            <?php  echo $xtPrice->xtcFormat($cInfo->amount, true);
+              /*
               if ($processed == true) {
                 echo $cInfo->amount.xtc_draw_hidden_field('amount');
               } else {
                 echo xtc_draw_input_field('amount', $cInfo->amount);
               }
+              */
               ?>
             </td>
            <?php

@@ -185,7 +185,12 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'customers_ip' => $customers_ip,
       'language' => $_SESSION['language'],
       'comments' => $order->info['comments']
-    );  
+    );
+  
+  //added gender
+  $sql_data_array['customers_gender'] = $order->customer['gender'];
+  $sql_data_array['delivery_gender'] = $order->delivery['gender'];
+  $sql_data_array['billing_gender'] = $order->billing['gender'];
 
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
