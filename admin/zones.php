@@ -17,9 +17,15 @@
    --------------------------------------------------------------*/
 
   require('includes/application_top.php');
-  $action = (isset($_GET['action']) ? $_GET['action'] : '');
-  if (xtc_not_null($action)) {
-    switch ($action) {
+
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_ZONES_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
+
+  $_GET['action'] = (isset($_GET['action']) ? $_GET['action'] : '');
+  
+  if ($_GET['action']) {
+    switch ($_GET['action']) {
       case 'insert':
         $zone_country_id = xtc_db_prepare_input($_POST['zone_country_id']);
         $zone_code = xtc_db_prepare_input($_POST['zone_code']);
@@ -83,10 +89,10 @@
                 </tr>
                 <?php
                   $zones_query_raw = "select z.zone_id, c.countries_id, c.countries_name, z.zone_name, z.zone_code, z.zone_country_id from " . TABLE_ZONES . " z, " . TABLE_COUNTRIES . " c where z.zone_country_id = c.countries_id order by c.countries_name, z.zone_name";
-                  $zones_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $zones_query_raw, $zones_query_numrows);
+                  $zones_split = new splitPageResults($_GET['page'], $page_max_display_results, $zones_query_raw, $zones_query_numrows);
                   $zones_query = xtc_db_query($zones_query_raw);
                   while ($zones = xtc_db_fetch_array($zones_query)) {
-                    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $zones['zone_id']))) && !isset($cInfo) && (substr($action, 0, 3) != 'new')) {
+                    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $zones['zone_id']))) && !isset($cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
                       $cInfo = new objectInfo($zones);
                     }
 
@@ -105,10 +111,12 @@
               }
             ?>
             </table>
-            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></div>
-            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <div class="smallText pdg2 flt-l"><?php echo $zones_split->display_count($zones_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_ZONES); ?></div>
+            <div class="smallText pdg2 flt-r"><?php echo $zones_split->display_links($zones_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page']); ?></div>
+            <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
+            
             <?php
-            if (empty($action)) {
+            if (!$_GET['action']) {
             ?>
               <div class="clear"></div>  
               <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_ZONE . '</a>'; ?></div>
@@ -119,7 +127,7 @@
             <?php
               $heading = array();
               $contents = array();
-              switch ($action) {
+              switch ($_GET['action']) {
                 case 'new':
                   $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_ZONE . '</b>');
 
@@ -161,7 +169,8 @@
 
               if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
                 echo '            <td class="boxRight">' . "\n";
-                echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                $box = new box;
+                echo $box->infoBox($heading, $contents);
                 echo '            </td>' . "\n";
               }
            ?>
