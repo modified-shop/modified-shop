@@ -173,6 +173,7 @@ $values_group_update = array();
 //configuration_group_id 17 --- "Zusatzmodule"
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";
   $values[] = "(NULL, 'GOOGLE_RSS_FEED_REFID', '', 17, 15, NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'SAVE_IP_LOG', 'false', 17, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\', \'xxx\'),');";
 
 //configuration_group_id 18 --- "UST-ID"
 
@@ -336,6 +337,7 @@ function update_config_table($values)
   foreach($values as $value) {
     //don't update configuration_value
     if (strpos($value['values'], 'configuration_value') === false) {
+ 
       $cfg_values = rtrim($value['values'],',');
       $cfg_key = trim($value['configuration_key']);
       
