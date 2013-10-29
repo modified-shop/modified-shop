@@ -258,14 +258,10 @@ if(is_array($payment_modules->modules))
 
 $breadcrumb->add(NAVBAR_TITLE_PAYPAL_CHECKOUT, xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
 require(DIR_WS_INCLUDES.'header.php');
+
 if(SHOW_IP_LOG == 'true') {
   $smarty->assign('IP_LOG', 'true');
-  if($_SERVER['HTTP_X_FORWARDED_FOR']) {
-    $customers_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-  } else {
-    $customers_ip = $_SERVER['REMOTE_ADDR'];
-  }
-  $smarty->assign('CUSTOMERS_IP',$customers_ip);
+  $smarty->assign('CUSTOMERS_IP', $_SESSION['tracking']['ip']);
 }
 
 $smarty->assign('FORM_SHIPPING_ACTION', xtc_draw_form('checkout_shipping', xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL')).xtc_draw_hidden_field('action', 'process'));
