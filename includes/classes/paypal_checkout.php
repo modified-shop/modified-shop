@@ -548,12 +548,7 @@ if (defined('PAYPAL_API_VERSION')) {
       // Stand: 05.12.2011
       global $xtPrice,$order;
       $order = new order($insert_id);
-      // IP Adresse
-      if($_SERVER['HTTP_X_FORWARDED_FOR']) {
-        $customers_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-      } else {
-        $customers_ip = $_SERVER['REMOTE_ADDR'];
-      }
+
       // Amt
       $paymentAmount = round($order->info['pp_total'], $xtPrice->get_decimal_places($order->info['currency']));
       // Summen der Order
@@ -595,7 +590,7 @@ if (defined('PAYPAL_API_VERSION')) {
               '&PAYMENTACTION='.$paymentType.
               '&AMT='.$paymentAmount.
               '&CURRENCYCODE='.$currencyCodeType.
-              '&IPADDRESS='.$customers_ip.
+              '&IPADDRESS='.xtc_get_ip_address().
               '&NOTIFYURL='.$notify_url.
               '&INVNUM='.$inv_num.$adress.
               '&BUTTONSOURCE='.$button_source.
