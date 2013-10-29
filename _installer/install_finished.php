@@ -76,7 +76,7 @@
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="center">
-                      <a href="<?php echo HTTP_SERVER . DIR_WS_CATALOG . 'index.php'; ?>" target="_blank">
+                      <a href="<?php echo HTTP_SERVER . DIR_WS_CATALOG; ?>" target="_blank">
                         <img src="buttons/<?php echo $lang;?>/button_catalog.gif" border="0" alt="Catalog">
                       </a>
                     </td>
@@ -93,6 +93,6 @@
       </tr>
     </table>
     <br />
-    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified107.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
+    <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?><br /><img src='http://images.modified-shop.org/modified200.gif' border='0' alt='modified eCommerce Shopsoftware'></div>
   </body>
 </html>

@@ -8,7 +8,7 @@
 #  -----------------------------------------------------------------------------------------
 
 #Tomcraft - 2010-07-19 - changed database_version
-UPDATE database_version SET version = 'MOD_1.0.7.0';
+UPDATE database_version SET version = 'MOD_2.0.0.0';
 
 #Web28 - 2010-11-13 - add missing listproducts to admin_access
 ALTER TABLE admin_access
