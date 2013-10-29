@@ -828,4 +828,6 @@ define('USE_PAGINATION_LIST_DESC', 'Use a HTML list (ul / li Tag) for Pagination
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Order status which shall be considered for the sales statistics.');
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order status for which the sales statistics shall be displayed.<br />(To show only the real sales volume, the order status which is used for completed orders should be choosen.)');
 
+define('SAVE_IP_LOG_TITLE', 'Save IP Address');
+define('SAVE_IP_LOG_DESC', 'Save the IP Address to database ?<br/>With Option xxx the IP will be anonymous.');
 ?>

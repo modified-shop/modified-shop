@@ -16,10 +16,12 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  require_once(DIR_FS_INC.'ip_clearing.inc.php');
+  
   function xtc_write_user_info($customer_id) {
 
       $sql_data_array = array('customers_id' => $customer_id,
-                              'customers_ip' => $_SESSION['tracking']['ip'],
+                              'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
                               'customers_ip_date' => 'now()',
                               'customers_host' => $_SESSION['tracking']['http_referer']['host'],
                               'customers_advertiser' => ((isset($_SESSION['tracking']['refID']))?$_SESSION['tracking']['refID']:''),

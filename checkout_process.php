@@ -35,6 +35,7 @@ include ('includes/application_top.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'changedatain.inc.php');
+require_once (DIR_FS_INC.'ip_clearing.inc.php');
 
 // initialize smarty
 $smarty = new Smarty;
@@ -115,12 +116,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $discount = '0.00';
   }
 
-  if (isset($_SERVER['HTTP_X_FORWARDED_FOR'])) {
-    $customers_ip = $_SERVER['HTTP_X_FORWARDED_FOR'];
-  } else {
-    $customers_ip = $_SERVER['REMOTE_ADDR'];
-  }
-
   $sql_data_array = array (
       'customers_id' => $_SESSION['customer_id'],
       'customers_name' => $order->customer['firstname'].' '.$order->customer['lastname'],
@@ -182,7 +177,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'currency' => $order->info['currency'],
       'currency_value' => $order->info['currency_value'],
       'account_type' => $_SESSION['account_type'],
-      'customers_ip' => $customers_ip,
+      'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
       'language' => $_SESSION['language'],
       'comments' => $order->info['comments']
     );
