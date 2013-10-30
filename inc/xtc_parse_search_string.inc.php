@@ -149,17 +149,10 @@
     $keyword_count = 0;
     $operator_count = 0;
     $balance = 0;
-    $open = 0;
     for($i=0, $n=count($objects); $i<$n; $i++) {
-      if ($objects[$i] == '(') {
-        $balance ++;
-      }
-      if ($objects[$i] == ')') {
-        if ($balance < 1) {
-          $balance --;
-        }
-        $balance --;
-      }
+      if ($objects[$i] == '(') $balance --;
+      if ($objects[$i] == ')') $balance ++;
+      if ($balance > 0) return false; //misconfiguration of clamps
       if (($objects[$i] == 'and') || ($objects[$i] == 'or')) {
         $operator_count ++;
       } elseif (($objects[$i]) && ($objects[$i] != '(') && ($objects[$i] != ')')) {
