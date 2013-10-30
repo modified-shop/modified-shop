@@ -204,16 +204,6 @@ if (EMAIL_TRANSPORT == 'smtp') {
 
 require_once (DIR_FS_INC.'xtc_Security.inc.php');
 
-// move to xtc_db_queryCached.inc.php
-function xtDBquery($query) {
-  if (defined('DB_CACHE') && DB_CACHE == 'true') {
-    $result = xtc_db_queryCached($query);
-  } else {
-    $result = xtc_db_query($query);
-  }
-  return $result;
-}
-
 function CacheCheck() {
   if (USE_CACHE == 'false') return false;
   if (!isset($_COOKIE['MODsid'])) return false;

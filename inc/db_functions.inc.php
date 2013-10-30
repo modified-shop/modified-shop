@@ -83,4 +83,16 @@
 
     return xtc_db_query($query, $link);
   }
+
+
+  function xtDBquery($query, $link='db_link') {
+    global $$link;
+
+    if (defined('DB_CACHE') && DB_CACHE == 'true') {
+      $result = xtc_db_queryCached($query, $link);
+    } else {
+      $result = xtc_db_query($query, $link);
+    }
+    return $result;
+  }
 ?>
