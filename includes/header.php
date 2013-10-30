@@ -27,8 +27,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('DIR_MODIFIED_INSTALLER', '_installer');
-
 //SET SHOP OFFLINE 503 STATUS CODE
 require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
 if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {
@@ -303,15 +301,18 @@ require_once('inc/xtc_draw_separator.inc.php');
 
 // check if the 'install' directory exists, and warn of its existence
 if (WARN_INSTALL_EXISTENCE == 'true') {
-  if (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/' . DIR_MODIFIED_INSTALLER)) {
-    xtc_output_warning(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, dirname($_SERVER['SCRIPT_FILENAME']) . '/_installer'));
+  if (file_exists(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
+    xtc_output_warning(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER));
   }
 }
 
 // check if the configure.php file is writeable
 if (WARN_CONFIG_WRITEABLE == 'true') {
-  if ( (file_exists(dirname($_SERVER['SCRIPT_FILENAME']) . '/includes/configure.php')) && (is_writeable(dirname($_SERVER['SCRIPT_FILENAME']) . '/includes/configure.php')) ) {
-    xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, dirname($_SERVER['SCRIPT_FILENAME']) . '/includes/configure.php'));
+  if ((file_exists(DIR_WS_INCLUDES . 'configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'configure.php'))) {
+    xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'configure.php'));
+  }
+  if ((file_exists(DIR_WS_INCLUDES . 'local/configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'local/configure.php'))) {
+    xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'local/configure.php'));
   }
 }
 

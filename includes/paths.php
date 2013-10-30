@@ -36,4 +36,6 @@
   define('DIR_WS_EXTERNAL', DIR_WS_CATALOG . 'includes/external/');
   define('DIR_FS_EXTERNAL', DIR_FS_CATALOG . 'includes/external/');
 
+  // installer
+  define('DIR_MODIFIED_INSTALLER', '_installer');
 ?>
