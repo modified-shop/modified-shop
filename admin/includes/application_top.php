@@ -148,22 +148,12 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
 
 define('FILENAME_IMAGEMANIPULATOR',IMAGE_MANIPULATOR);
 
-// move to xtc_db_queryCached.inc.php
-function xtDBquery($query) {
-  if (DB_CACHE=='true') {
-    $result=xtc_db_queryCached($query);
-  } else {
-    $result=xtc_db_query($query);
-  }
-return $result;
-}
-
 // security inputfilter for GET/POST/COOKIE
 require (DIR_FS_CATALOG.DIR_WS_CLASSES.'inputfilter.php');
 $inputfilter = new Inputfilter();
 $_GET = $inputfilter->validate($_GET);
 $_POST = $inputfilter->validate($_POST);
-//$_REQUEST = $inputfilter->validate($_REQUEST);
+
 // initialize the logger class
 require(DIR_WS_CLASSES . 'logger.php');
 
