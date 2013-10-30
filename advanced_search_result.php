@@ -43,8 +43,12 @@ $pto = $_GET['pto'] = isset($_GET['pto']) && !empty($_GET['pto']) ? stripslashes
 $manufacturers_id  = $_GET['manufacturers_id'] = isset($_GET['manufacturers_id']) && xtc_not_null($_GET['manufacturers_id']) ? (int)$_GET['manufacturers_id'] : false;
 $categories_id = $_GET['categories_id'] = isset($_GET['categories_id']) && xtc_not_null($_GET['categories_id']) ? (int)$_GET['categories_id'] : false;
 $_GET['inc_subcat'] = isset($_GET['inc_subcat']) && xtc_not_null($_GET['inc_subcat']) ? (int)$_GET['inc_subcat'] : null;
+
 // reset error
 $errorno = 0;
+
+// create $search_keywords array
+xtc_parse_search_string($keywords, $search_keywords);
 
 // error check
 if ($keywords && strlen($keywords) < 3 && strlen($keywords) > 0) {
@@ -62,7 +66,7 @@ if ($pto && !settype($pto, "float")) {
 if ($pfrom && !(($errorno & 10000) == 10000) && $pto && !(($errorno & 100000) == 100000) && $pfrom > $pto) {
   $errorno += 1000000;
 }
-if ($keywords && !xtc_parse_search_string($keywords, $search_keywords)) {
+if ($keywords && !$search_keywords) {
   $errorno += 10000000;
 }
 
@@ -146,7 +150,7 @@ if ($errorno) {
   //build query
   $add_select = 'p.products_manufacturers_model,';
   $select_str = "SELECT distinct
-                    $add_select
+                    ".$add_select."
                     p.products_id,
                     p.products_ean,
                     p.products_quantity,
@@ -164,9 +168,11 @@ if ($errorno) {
                     pd.products_short_description,
                     pd.products_description ";
 
-  $from_str  = "FROM ".TABLE_PRODUCTS." AS p LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id) ";
+  $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
+           LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND pd.language_id = '".$_SESSION['languages_id']."') ";
   $from_str .= $subcat_join;
-  $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
+  $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
+                                            LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
   $from_str .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1'";
 
   if($NeedTax) {
@@ -174,14 +180,14 @@ if ($errorno) {
       $_SESSION['customer_country_id'] = STORE_COUNTRY;
       $_SESSION['customer_zone_id'] = STORE_ZONE;
     }
-    $from_str .= " LEFT OUTER JOIN ".TABLE_TAX_RATES." tr ON (p.products_tax_class_id = tr.tax_class_id) LEFT OUTER JOIN ".TABLE_ZONES_TO_GEO_ZONES." gz ON (tr.tax_zone_id = gz.geo_zone_id) ";
-    $tax_where = " AND (gz.zone_country_id IS NULL OR gz.zone_country_id = '0' OR gz.zone_country_id = '".(int) $_SESSION['customer_country_id']."') AND (gz.zone_id is null OR gz.zone_id = '0' OR gz.zone_id = '".(int) $_SESSION['customer_zone_id']."')";
+    $from_str .= " LEFT OUTER JOIN ".TABLE_TAX_RATES." tr ON (p.products_tax_class_id = tr.tax_class_id) 
+                   LEFT OUTER JOIN ".TABLE_ZONES_TO_GEO_ZONES." gz ON (tr.tax_zone_id = gz.geo_zone_id) ";
+    $tax_where = " AND (gz.zone_country_id IS NULL OR gz.zone_country_id = '0' OR gz.zone_country_id = '".(int) $_SESSION['customer_country_id']."') 
+                   AND (gz.zone_id is null OR gz.zone_id = '0' OR gz.zone_id = '".(int) $_SESSION['customer_zone_id']."')";
   }
 
   //where-string
-  $where_str = "
-  WHERE p.products_status = 1
-  AND pd.language_id = '".$_SESSION['languages_id']."'"  
+  $where_str = " WHERE p.products_status = 1"  
   .$subcat_where
   .$fsk_lock
   .$manu_check
@@ -191,53 +197,52 @@ if ($errorno) {
   .$pto_check;
 
   //go for keywords... this is the main search process
-  if ($keywords) {
-    if (xtc_parse_search_string($keywords, $search_keywords)) {
-      $where_str .= " AND ( ";
-      for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i ++) {
-        switch ($search_keywords[$i]) {
-          case '(' :
-          case ')' :
-          case 'and' :
-          case 'or' :
-            $where_str .= " ".$search_keywords[$i]." ";
-            break;
-          default :
-          $ent_keyword = encode_htmlentities($search_keywords[$i]); // umlauts
-          $ent_keyword = $ent_keyword != $search_keywords[$i] ? addslashes($ent_keyword) : false;
-          $keyword = addslashes($search_keywords[$i]);
-          $where_str .= " ( ";
-          $where_str .= "pd.products_keywords LIKE ('%".$keyword."%') ";
-          $where_str .= $ent_keyword ? "OR pd.products_keywords LIKE ('%".$ent_keyword."%') " : '';
-          if (SEARCH_IN_DESC == 'true') {
-             $where_str .= "OR pd.products_description LIKE ('%".$keyword."%') ";
-             $where_str .= $ent_keyword ? "OR pd.products_description LIKE ('%".$ent_keyword."%') " : '';
-             $where_str .= "OR pd.products_short_description LIKE ('%".$keyword."%') ";
-             $where_str .= $ent_keyword ? "OR pd.products_short_description LIKE ('%".$ent_keyword."%') " : '';
-          }
-          $where_str .= "OR pd.products_name LIKE ('%".$keyword."%') ";
-          $where_str .= $ent_keyword ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
-          $where_str .= "OR p.products_model LIKE ('%".$keyword."%') ";
-          $where_str .= $ent_keyword ? "OR p.products_model LIKE ('%".$ent_keyword."%') " : '';
-          $where_str .= "OR p.products_ean LIKE ('%".$keyword."%') ";
-          $where_str .= $ent_keyword ? "OR p.products_ean LIKE ('%".$ent_keyword."%') " : '';
-          $where_str .= "OR p.products_manufacturers_model LIKE ('%".$keyword."%') ";
-          $where_str .= $ent_keyword ? "OR p.products_manufacturers_model LIKE ('%".$ent_keyword."%') " : '';
-          if (SEARCH_IN_ATTR == 'true') {
-            $where_str .= "OR pa.attributes_model LIKE ('%".$keyword."%') ";
-            $where_str .= ($ent_keyword) ? "OR pa.attributes_model LIKE ('%".$ent_keyword."%') " : '';
-            $where_str .= "OR pa.attributes_ean LIKE ('%".$keyword."%') ";
-            $where_str .= ($ent_keyword) ? "OR pa.attributes_ean LIKE ('%".$ent_keyword."%') " : '';
-            $where_str .= "OR (pov.products_options_values_name LIKE ('%".$keyword."%') ";
-            $where_str .= ($ent_keyword) ? "OR pov.products_options_values_name LIKE ('%".$ent_keyword."%') " : '';
-            $where_str .= "AND pov.language_id = '".(int) $_SESSION['languages_id']."')";
-          }
-          $where_str .= " ) ";
+  if ($keywords && $search_keywords) {
+    
+    $where_str .= " AND ( ";
+    for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i ++) {
+      switch ($search_keywords[$i]) {
+        case '(' :
+        case ')' :
+        case 'and' :
+        case 'or' :
+          $where_str .= " ".$search_keywords[$i]." ";
           break;
+        default :
+        $ent_keyword = encode_htmlentities($search_keywords[$i]); // umlauts
+        $ent_keyword = $ent_keyword != $search_keywords[$i] ? xtc_db_input($ent_keyword) : false;
+        $keyword = xtc_db_input($search_keywords[$i]);
+        $where_str .= " ( ";
+        $where_str .= "pd.products_keywords LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR pd.products_keywords LIKE ('%".$ent_keyword."%') " : '';
+        if (SEARCH_IN_DESC == 'true') {
+           $where_str .= "OR pd.products_description LIKE ('%".$keyword."%') ";
+           $where_str .= $ent_keyword ? "OR pd.products_description LIKE ('%".$ent_keyword."%') " : '';
+           $where_str .= "OR pd.products_short_description LIKE ('%".$keyword."%') ";
+           $where_str .= $ent_keyword ? "OR pd.products_short_description LIKE ('%".$ent_keyword."%') " : '';
         }
+        $where_str .= "OR pd.products_name LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
+        $where_str .= "OR p.products_model LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR p.products_model LIKE ('%".$ent_keyword."%') " : '';
+        $where_str .= "OR p.products_ean LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR p.products_ean LIKE ('%".$ent_keyword."%') " : '';
+        $where_str .= "OR p.products_manufacturers_model LIKE ('%".$keyword."%') ";
+        $where_str .= $ent_keyword ? "OR p.products_manufacturers_model LIKE ('%".$ent_keyword."%') " : '';
+        if (SEARCH_IN_ATTR == 'true') {
+          $where_str .= "OR pa.attributes_model LIKE ('%".$keyword."%') ";
+          $where_str .= ($ent_keyword) ? "OR pa.attributes_model LIKE ('%".$ent_keyword."%') " : '';
+          $where_str .= "OR pa.attributes_ean LIKE ('%".$keyword."%') ";
+          $where_str .= ($ent_keyword) ? "OR pa.attributes_ean LIKE ('%".$ent_keyword."%') " : '';
+          $where_str .= "OR (pov.products_options_values_name LIKE ('%".$keyword."%') ";
+          $where_str .= ($ent_keyword) ? "OR pov.products_options_values_name LIKE ('%".$ent_keyword."%') " : '';
+          $where_str .= "AND pov.language_id = '".(int) $_SESSION['languages_id']."')";
+        }
+        $where_str .= " ) ";
+        break;
       }
-      $where_str .= " ) GROUP BY p.products_id ORDER BY p.products_id ";
     }
+    $where_str .= " ) GROUP BY p.products_id ORDER BY p.products_id ";
   }
 
   // glue together
