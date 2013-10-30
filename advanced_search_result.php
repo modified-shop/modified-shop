@@ -48,7 +48,7 @@ $_GET['inc_subcat'] = isset($_GET['inc_subcat']) && xtc_not_null($_GET['inc_subc
 $errorno = 0;
 
 // create $search_keywords array
-xtc_parse_search_string($keywords, $search_keywords);
+$keywordcheck = xtc_parse_search_string($keywords, $search_keywords);
 
 // error check
 if ($keywords && strlen($keywords) < 3 && strlen($keywords) > 0) {
@@ -66,7 +66,7 @@ if ($pto && !settype($pto, "float")) {
 if ($pfrom && !(($errorno & 10000) == 10000) && $pto && !(($errorno & 100000) == 100000) && $pfrom > $pto) {
   $errorno += 1000000;
 }
-if ($keywords && !$search_keywords) {
+if ($keywords && !$keywordcheck) {
   $errorno += 10000000;
 }
 
@@ -197,7 +197,7 @@ if ($errorno) {
   .$pto_check;
 
   //go for keywords... this is the main search process
-  if ($keywords && $search_keywords) {
+  if ($keywords && $keywordcheck) {
     
     $where_str .= " AND ( ";
     for ($i = 0, $n = sizeof($search_keywords); $i < $n; $i ++) {
