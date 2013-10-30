@@ -198,11 +198,9 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 
 // PHPMailer
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
-if (EMAIL_TRANSPORT == 'smtp') {
-  require_once (DIR_WS_CLASSES.'class.smtp.php');
-}
 
-require_once (DIR_FS_INC.'xtc_Security.inc.php');
+// check for JS XSS
+require_once (DIR_FS_INC.'xtc_security.inc.php');
 
 function CacheCheck() {
   if (USE_CACHE == 'false') return false;
