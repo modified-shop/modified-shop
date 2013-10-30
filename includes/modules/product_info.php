@@ -89,11 +89,11 @@ if (!is_object($product) || !$product->isProduct()) {
                                              mi.manufacturers_url
                                         FROM " . TABLE_MANUFACTURERS . " m
                                    LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi
-                                          ON (m.manufacturers_id = mi.manufacturers_id
-                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'),
-                                             " . TABLE_PRODUCTS . " p
-                                       WHERE p.products_id = '" . $product->data['products_id'] . "'
-                                         AND p.manufacturers_id = m.manufacturers_id");
+                                             ON (m.manufacturers_id = mi.manufacturers_id
+                                                 AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
+                                        JOIN " . TABLE_PRODUCTS . " p
+                                             ON p.manufacturers_id = m.manufacturers_id
+                                       WHERE p.products_id = '" . $product->data['products_id'] . "'");
   if (xtc_db_num_rows($manufacturer_query)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query);
     $info_smarty->assign('MANUFACTURER_IMAGE', (!empty($manufacturer['manufacturers_image']) ? DIR_WS_IMAGES.$manufacturer['manufacturers_image'] : ''));
@@ -151,9 +151,6 @@ if (!is_object($product) || !$product->isProduct()) {
     $info_smarty->assign('PRODUCTS_SHIPPING_LINK',$main->getShippingLink());
   }
 
-  $info_smarty->assign('PRODUCTS_WEIGHT', $product->data['products_weight']);
-  $info_smarty->assign('PRODUCTS_STATUS', $product->data['products_status']);
-  $info_smarty->assign('PRODUCTS_ORDERED', $product->data['products_ordered']);
   $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', $product->data['products_name'], 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
   $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
