@@ -830,4 +830,13 @@ define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier den Bestellstatus ausw&
 
 define('SAVE_IP_LOG_TITLE', 'IP Adresse speichern');
 define('SAVE_IP_LOG_DESC', 'Soll die IP Adresse in der Datenbank gespeichert werden ?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
+
+define('META_MAX_KEYWORD_LENGTH_TITLE', 'Maximum L&auml;nge Meta-Keywords');
+define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
+define('META_DESCRIPTION_LENGTH_TITLE', 'L&auml;nge Meta-Description');
+define('META_DESCRIPTION_LENGTH_DESC', 'Maximum L&auml;nge der Beschreibung (in Buchstaben)');
+define('META_STOP_WORDS_TITLE', 'Stop Words');
+define('META_STOP_WORDS_DESC', 'Bitte geben sie hier Keywords an, die nicht verwendet werden sollen.');
+define('META_GO_WORDS_TITLE', 'Go Words');
+define('META_GO_WORDS_DESC', 'Bitte geben sie Keywords ein, die explizit erlaubt sind.');
 ?>

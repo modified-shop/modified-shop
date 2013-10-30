@@ -56,12 +56,12 @@
 //  Konfiguration ...
 // ---------------------------------------------------------------------------------------
 
-  $metaStopWords   =  ('versandkosten,zzgl,mwst,lieferzeit,aber,alle,alles,als,auch,auf,aus,bei,beim,beinahe,bin,bis,ist,dabei,dadurch,daher,dank,darum,danach,das,daß,dass,dein,deine,dem,den,der,des,dessen,dadurch,deshalb,die,dies,diese,dieser,diesen,diesem,dieses,doch,dort,durch,eher,ein,eine,einem,einen,einer,eines,einige,einigen,einiges,eigene,eigenes,eigener,endlich,euer,eure,etwas,fast,findet,für,gab,gibt,geben,hatte,hatten,hattest,hattet,heute,hier,hinter,ich,ihr,ihre,ihn,ihm,im,immer,in,ist,ja,jede,jedem,jeden,jeder,jedes,jener,jenes,jetzt,kann,kannst,kein,können,könnt,machen,man,mein,meine,mehr,mit,muß,mußt,musst,müssen,müßt,nach,nachdem,neben,nein,nicht,nichts,noch,nun,nur,oder,statt,anstatt,seid,sein,seine,seiner,sich,sicher,sie,sind,soll,sollen,sollst,sollt,sonst,soweit,sowie,und,uns,unser,unsere,unserem,unseren,unter,vom,von,vor,wann,warum,was,war,weiter,weitere,wenn,wer,werde,widmen,widmet,viel,viele,vieles,weil,werden,werdet,weshalb,wie,wieder,wieso,wir,wird,wirst,wohl,woher,wohin,wurdezum,zur,über');
-  $metaGoWords     =  ('tracht,dirndl,kleid,mode,modern,bluse,trachten,hose,leder,schmuck,t-shirt,t-shirts,schuh,schuhe'); // Hier rein, was nicht gefiltert werden soll
-  $metaMinLength   =  5;     // Mindestlänge eines Keywords
-  $metaMaxLength   =  18;    // Maximallänge eines Keywords
-  $metaMaxKeywords =  15;    // Maximall Anzahl der Keywords
-  $metaDesLength   =  150;   // maximale Länge der "description" (in Buchstaben)
+  $metaStopWords   =  META_STOP_WORDS;
+  $metaGoWords     =  META_GO_WORDS;
+  $metaMinLength   =  META_MIN_KEYWORD_LENGTH; // Mindestlänge eines Keywords
+  $metaMaxLength   =  META_MAX_KEYWORD_LENGTH; // Maximallänge eines Keywords
+  $metaMaxKeywords =  META_KEYWORDS_NUMBER;    // Maximall Anzahl der Keywords
+  $metaDesLength   =  META_DESCRIPTION_LENGTH; // maximale Länge der "description" (in Buchstaben)
 // ---------------------------------------------------------------------------------------
   $addPagination        =   true;   // Seiten-Nummern anzeigen, ja/nein?
 // ---------------------------------------------------------------------------------------
