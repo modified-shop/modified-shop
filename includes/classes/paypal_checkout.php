@@ -1195,10 +1195,11 @@ if (defined('PAYPAL_API_VERSION')) {
       $xtc_order_id=(int)substr($this->data['invoice'],strlen(PAYPAL_INVOICE));
       if(isset($xtc_order_id) && is_numeric($xtc_order_id) && ($xtc_order_id > 0)) {
         // order suchen
-        $order_query = xtc_db_query("SELECT currency, currency_value
+        $order_query = xtc_db_query("SELECT currency, currency_value, order_status_id
                                     FROM " . TABLE_ORDERS . "
                                     WHERE orders_id = '" . xtc_db_prepare_input($xtc_order_id) . "'");
         if(xtc_db_num_rows($order_query) > 0) {
+          $orders_status = xtc_db_fetch_array($order_query);
           // order gefunden
           $ipn_charset=xtc_db_prepare_input($this->data['charset']);
           $ipn_data = array();
@@ -1360,7 +1361,7 @@ if (defined('PAYPAL_API_VERSION')) {
               $order_status_id = PAYPAL_ORDER_STATUS_SUCCESS_ID;
             //Set status for Refunded
             } elseif(strtolower($this->data['payment_status']) == 'refunded') {
-              $order_status_id = DEFAULT_ORDERS_STATUS_ID;
+              $order_status_id = $orders_status['orders_status']; // don«t change status
             //Set status for Pendign - eigentlich nicht nötig?
             } elseif(strtolower($this->data['payment_status']) == 'pending') {
               $order_status_id = PAYPAL_ORDER_STATUS_PENDING_ID;
