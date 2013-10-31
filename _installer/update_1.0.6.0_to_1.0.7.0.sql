@@ -132,4 +132,7 @@ ALTER TABLE orders MODIFY shipping_method varchar(128);
 #GTB - 2013-10-31 - added show always tax
 ALTER TABLE customers_status ADD customers_status_show_tax_total int(7) DEFAULT '150' AFTER customers_status_show_price_tax;
 
+ALTER TABLE categories_description MODIFY categories_id INT(11) NOT NULL;
+ALTER TABLE products_description MODIFY products_id INT(11) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

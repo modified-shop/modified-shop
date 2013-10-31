@@ -283,7 +283,7 @@ CREATE TABLE categories (
 
 DROP TABLE IF EXISTS categories_description;
 CREATE TABLE categories_description (
-  categories_id INT DEFAULT 0 NOT NULL,
+  categories_id INT(11) NOT NULL,
   language_id TINYINT DEFAULT 1 NOT NULL,
   categories_name VARCHAR(255) NOT NULL,
   categories_heading_title VARCHAR(255) NOT NULL,
@@ -817,7 +817,7 @@ CREATE TABLE products_attributes_download (
 
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
-  products_id INT NOT NULL AUTO_INCREMENT,
+  products_id INT(11) NOT NULL,
   language_id TINYINT NOT NULL DEFAULT 1,
   products_name VARCHAR(255) NOT NULL DEFAULT '',
   products_description text,
