@@ -30,7 +30,7 @@ if (!CacheCheck()) {
 	$box_smarty->caching = 1;
 	$box_smarty->cache_lifetime = CACHE_LIFETIME;
 	$box_smarty->cache_modified_check = CACHE_CHECK;
-	$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].$coPath;
+	$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].isset($coPath) ? $coPath : '0';
 }
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cache_id) || !$cache) {
@@ -81,7 +81,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
 	  }
   }
 
-  if ($coPath) {
+  if (isset($coPath)) {
     $new_path = '';
     $coid = explode('_', $coPath);
     reset($coid);
