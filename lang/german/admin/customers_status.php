@@ -94,4 +94,6 @@ define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Sichtbarkeitsrecht
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Die Kategorie-, Artikel- und Content-Sichtbarkeitsrechte von folgender Kundengruppe &uuml;bernehmen:');
 define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Keine Rechte &uuml;bernehmen');
 
+define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>MwSt. anzeigen ab Kaufbetrag</b>');
+define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Mindest Kaufbetrag');
 ?>

@@ -87,10 +87,13 @@ define('TEXT_INFO_HEADING_DELETE_CUSTOMERS_STATUS', 'Delete Customer Group');
 define('TEXT_INFO_HEADING_EDIT_CUSTOMERS_STATUS','Edit Group Data');
 define('TEXT_INFO_HEADING_NEW_CUSTOMERS_STATUS', 'New Customer Group');
 
-define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Basis Kundengruppe für Artikelpreise</strong>');
-define('ENTRY_CUSTOMERS_STATUS_BASE', 'wird als Grundlage für die Preise der neuen Kundengruppe gewählt. Wenn Auswahl = Admin werden keine Preise für die neue Kundengruppe angelegt.');
+define('TEXT_INFO_CUSTOMERS_STATUS_BASE', '<strong>Default Customers Group for Price</strong>');
+define('ENTRY_CUSTOMERS_STATUS_BASE', 'This is used for the Article Price.');
 
 define('TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION', '<strong>Adopt customer group permissions</strong>');
 define('ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION', 'Adopt visibility rights for categories, products and content pages of the following customer group:');
 define('CUSTOMERS_GROUP_ADOPT_PERMISSIONS', 'Don\'t adopt any rights');
+
+define('TEXT_INFO_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', '<b>Show VAT at Total</b>');
+define('ENTRY_CUSTOMERS_STATUS_SHOW_PRICE_TAX_TOTAL', 'Minimum Total');
 ?>
