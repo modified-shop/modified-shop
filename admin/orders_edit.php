@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: orders_edit.php 2093 2011-08-14 15:32:50Z web28 $
+   $Id: orders_edit.php 5338 2013-08-06 13:00:51Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -14,29 +14,18 @@
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
-
-    v.1.32 - 2012-05-23 (c) by web28 - www.rpa-com.de
-   Korrektur für Nettosumme bei Modulen ohne Steuersatz
-
-    v.1.31 - 2012-05-23 (c) by web28 - www.rpa-com.de
-    FIX: Preisberechnung Kundengruppenwechsel, Optionspreise bei Sonderpreisen
-
-    v.1.30 - 2012-04-05 (c) by web28 - www.rpa-com.de
-    FIX: order tax by $order->delivery['country_iso_2']
-
-    v.1.28 - 2012-03-22 (c) by web28 - www.rpa-com.de
-    FIX: tax guest account, tax ot_payment, tax cod_fee
-
-    v.1.26 - 2011-11-01 (c) by web28 - www.rpa-com.de
-   NEW Länderwechsel -> delivery_country_iso_code_2, billing_country_iso_code_2
-
+   v.1.32 - 2012-05-23 (c) by web28 - www.rpa-com.de: Korrektur für Nettosumme bei Modulen ohne Steuersatz
+   v.1.31 - 2012-05-23 (c) by web28 - www.rpa-com.de: FIX Preisberechnung Kundengruppenwechsel, Optionspreise bei Sonderpreisen
+   v.1.30 - 2012-04-05 (c) by web28 - www.rpa-com.de: FIX order tax by $order->delivery['country_iso_2']
+   v.1.28 - 2012-03-22 (c) by web28 - www.rpa-com.de: FIX tax guest account, tax ot_payment, tax cod_fee
+   v.1.26 - 2011-11-01 (c) by web28 - www.rpa-com.de: Länderwechsel -> delivery_country_iso_code_2, billing_country_iso_code_2
    TODO Attributpreise und Sonderangebote
-      Bei Sonderangeboten wird der Attributpreis nicht zum Artikelpreis addiert
-    Anpassung in checkout_process.php
+        Bei Sonderangeboten wird der Attributpreis nicht zum Artikelpreis addiert
+        Anpassung in checkout_process.php
    --------------------------------------------------------------*/
 
 //######################//
-//Fuer korrekte Steuerberechnung hier die Rabattmodule eintragen - kommagetrennt
+//Fuer korrekte Steuerberechnung hier die Rabattmodule eintragen - kommagetrennt ohne Leerzeichen
 define('DISCOUNT_MODULES', 'ot_discount,ot_payment');
 
 //######################//
@@ -86,51 +75,52 @@ if ($action == 'address_edit') {
   $status_query = xtc_db_query("select customers_status_name from ".TABLE_CUSTOMERS_STATUS." where customers_status_id = '".(int)$_POST['customers_status']."' and language_id = '".(int)$lang['languages_id']."' ");
   $status = xtc_db_fetch_array($status_query);
 
-  $sql_data_array = array ('customers_vat_id' => xtc_db_prepare_input($_POST['customers_vat_id']),
-                           'customers_status' => xtc_db_prepare_input($_POST['customers_status']),
-                           'customers_status_name' => xtc_db_prepare_input($status['customers_status_name']),
-                           'customers_company' => xtc_db_prepare_input($_POST['customers_company']),
-                           'customers_firstname' => xtc_db_prepare_input($_POST['customers_firstname']),
-                           'customers_lastname' => xtc_db_prepare_input($_POST['customers_lastname']),
-                           'customers_name' => xtc_db_prepare_input($_POST['customers_firstname']) . ' ' . xtc_db_prepare_input($_POST['customers_lastname']),
-                           'customers_street_address' => xtc_db_prepare_input($_POST['customers_street_address']),
-                           'customers_suburb' => xtc_db_prepare_input($_POST['customers_suburb']),
-                           'customers_city' => xtc_db_prepare_input($_POST['customers_city']),
-                           'customers_postcode' => xtc_db_prepare_input($_POST['customers_postcode']),
-                           'customers_country' => $customers_country['countries_name'],
-                           'customers_telephone' => xtc_db_prepare_input($_POST['customers_telephone']),
-                           'customers_email_address' => xtc_db_prepare_input($_POST['customers_email_address']),
-                           'customers_address_format_id' => xtc_get_address_format_id($_POST['customers_country_id']),
-                           'customers_cid' => xtc_db_prepare_input($_POST['customers_cid']),
-                           'delivery_company' => xtc_db_prepare_input($_POST['delivery_company']),
-                           'delivery_firstname' => xtc_db_prepare_input($_POST['delivery_firstname']),
-                           'delivery_lastname' => xtc_db_prepare_input($_POST['delivery_lastname']),
-                           'delivery_name' => xtc_db_prepare_input($_POST['delivery_firstname']) . ' ' . xtc_db_prepare_input($_POST['delivery_lastname']),
-                           'delivery_street_address' => xtc_db_prepare_input($_POST['delivery_street_address']),
-                           'delivery_suburb' => xtc_db_prepare_input($_POST['delivery_suburb']),
-                           'delivery_city' => xtc_db_prepare_input($_POST['delivery_city']),
-                           'delivery_postcode' => xtc_db_prepare_input($_POST['delivery_postcode']),
-                           'delivery_country' => $delivery_country['countries_name'],
-                           'delivery_country_iso_code_2' => $delivery_country['countries_iso_code_2'],
-                           'delivery_address_format_id' => xtc_get_address_format_id($_POST['delivery_country_id']),
-                           'billing_company' => xtc_db_prepare_input($_POST['billing_company']),
-                           'billing_firstname' => xtc_db_prepare_input($_POST['billing_firstname']),
-                           'billing_lastname' => xtc_db_prepare_input($_POST['billing_lastname']),
-                           'billing_name' => xtc_db_prepare_input($_POST['billing_firstname']) . ' ' . xtc_db_prepare_input($_POST['billing_lastname']),
-                           'billing_street_address' => xtc_db_prepare_input($_POST['billing_street_address']),
-                           'billing_suburb' => xtc_db_prepare_input($_POST['billing_suburb']),
-                           'billing_city' => xtc_db_prepare_input($_POST['billing_city']),
-                           'billing_postcode' => xtc_db_prepare_input($_POST['billing_postcode']),
-                           'billing_country' => $billing_country['countries_name'],
-                           'billing_country_iso_code_2' => $billing_country['countries_iso_code_2'],
-                           'billing_address_format_id' => xtc_get_address_format_id($_POST['billing_country_id']),
-                           'last_modified' => 'now()'
-                           );
-  
-  //added gender
-  $sql_data_array['customers_gender'] = xtc_db_prepare_input($_POST['customers_gender']);
-  $sql_data_array['delivery_gender'] = xtc_db_prepare_input($_POST['delivery_gender']);
-  $sql_data_array['billing_gender'] = xtc_db_prepare_input($_POST['billing_gender']);
+  $sql_data_array = array (
+      'customers_vat_id' => xtc_db_prepare_input($_POST['customers_vat_id']),
+      'customers_status' => xtc_db_prepare_input($_POST['customers_status']),
+      'customers_status_name' => xtc_db_prepare_input($status['customers_status_name']),
+      'customers_company' => xtc_db_prepare_input($_POST['customers_company']),
+      'customers_firstname' => xtc_db_prepare_input($_POST['customers_firstname']),
+      'customers_lastname' => xtc_db_prepare_input($_POST['customers_lastname']),
+      'customers_name' => xtc_db_prepare_input($_POST['customers_firstname']) . ' ' . xtc_db_prepare_input($_POST['customers_lastname']),
+      'customers_street_address' => xtc_db_prepare_input($_POST['customers_street_address']),
+      'customers_suburb' => xtc_db_prepare_input($_POST['customers_suburb']),
+      'customers_city' => xtc_db_prepare_input($_POST['customers_city']),
+      'customers_postcode' => xtc_db_prepare_input($_POST['customers_postcode']),
+      'customers_country' => $customers_country['countries_name'],
+      'customers_telephone' => xtc_db_prepare_input($_POST['customers_telephone']),
+      'customers_email_address' => xtc_db_prepare_input($_POST['customers_email_address']),
+      'customers_address_format_id' => xtc_get_address_format_id($_POST['customers_country_id']),
+      'customers_cid' => xtc_db_prepare_input($_POST['customers_cid']),
+      'delivery_company' => xtc_db_prepare_input($_POST['delivery_company']),
+      'delivery_firstname' => xtc_db_prepare_input($_POST['delivery_firstname']),
+      'delivery_lastname' => xtc_db_prepare_input($_POST['delivery_lastname']),
+      'delivery_name' => xtc_db_prepare_input($_POST['delivery_firstname']) . ' ' . xtc_db_prepare_input($_POST['delivery_lastname']),
+      'delivery_street_address' => xtc_db_prepare_input($_POST['delivery_street_address']),
+      'delivery_suburb' => xtc_db_prepare_input($_POST['delivery_suburb']),
+      'delivery_city' => xtc_db_prepare_input($_POST['delivery_city']),
+      'delivery_postcode' => xtc_db_prepare_input($_POST['delivery_postcode']),
+      'delivery_country' => $delivery_country['countries_name'],
+      'delivery_country_iso_code_2' => $delivery_country['countries_iso_code_2'],
+      'delivery_address_format_id' => xtc_get_address_format_id($_POST['delivery_country_id']),
+      'billing_company' => xtc_db_prepare_input($_POST['billing_company']),
+      'billing_firstname' => xtc_db_prepare_input($_POST['billing_firstname']),
+      'billing_lastname' => xtc_db_prepare_input($_POST['billing_lastname']),
+      'billing_name' => xtc_db_prepare_input($_POST['billing_firstname']) . ' ' . xtc_db_prepare_input($_POST['billing_lastname']),
+      'billing_street_address' => xtc_db_prepare_input($_POST['billing_street_address']),
+      'billing_suburb' => xtc_db_prepare_input($_POST['billing_suburb']),
+      'billing_city' => xtc_db_prepare_input($_POST['billing_city']),
+      'billing_postcode' => xtc_db_prepare_input($_POST['billing_postcode']),
+      'billing_country' => $billing_country['countries_name'],
+      'billing_country_iso_code_2' => $billing_country['countries_iso_code_2'],
+      'billing_address_format_id' => xtc_get_address_format_id($_POST['billing_country_id']),
+      'last_modified' => 'now()'
+    );
+  if (ACCOUNT_GENDER == 'true') {
+    $sql_data_array['customers_gender'] = xtc_db_prepare_input($_POST['customers_gender']);
+    $sql_data_array['delivery_gender'] = xtc_db_prepare_input($_POST['delivery_gender']);
+    $sql_data_array['billing_gender'] = xtc_db_prepare_input($_POST['billing_gender']);
+  }
   
   xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', 'orders_id = \''.(int)($_POST['oID']).'\'');
 
@@ -174,12 +164,10 @@ if ($action == 'product_edit') {
   if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0) {
     $tax_rate = 0;
   }
-
   // FIX tax by order delivery country /customer group
   if ($tax_rate > 0 && $product['allow_tax'] == 0 ) {
     $product['products_tax'] = $tax_rate;
   }
-
   // Korrektur Kundengruppenwechsel
   $group_subtax = $group_addtax = false;
   if ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0 && $product['products_tax'] > 0 && $product['allow_tax'] == 1) {
@@ -200,6 +188,7 @@ if ($action == 'product_edit') {
                                       from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
                                      where orders_products_id = '".(int)($_POST['opID'])."'
                                    ");
+
 
   //Produktpreise neu berechnen - Steuer hinzufügen
   if ($group_addtax) {
@@ -538,7 +527,6 @@ if ($action == 'product_option_ins') {
     $tax_rate = 0;
   }
   $price = $xtPrice->xtcAddTax($products_price, $tax_rate); //tax by products
-
   $final_price = $price * $products['products_quantity'];
 
   $sql_data_array = array ('products_price' => xtc_db_prepare_input($price));
@@ -636,7 +624,7 @@ if ($action== 'ot_edit') {
     $sql_data_array = array ('title' => xtc_db_prepare_input($_POST['title']),
                              'text' => $text,
                              'value' => xtc_db_prepare_input($_POST['value']),
-                             'sort_order' => xtc_db_prepare_input($_POST['sort_order']) // web28 - 2011-08-26 - Fix missing sort_order
+                             'sort_order' => xtc_db_prepare_input($_POST['sort_order']) // web28 - 2011-08-26 -Fix missing sort_order
                              );
 
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', 'orders_total_id = \''.(int)($check_total['orders_total_id']).'\'');
@@ -683,7 +671,7 @@ if ($action == 'lang_edit') {
                                       FROM ".TABLE_PRODUCTS_DESCRIPTION."
                                      WHERE products_id = '".(int)$order_products['products_id']."'
                                        AND language_id = '".(int)$_POST['lang']."'
-                                  ");
+                                   ");
     $products = xtc_db_fetch_array($products_query);
 
     $sql_data_array = array ('products_name' => xtc_db_prepare_input($products['products_name']));
@@ -1006,7 +994,7 @@ if ($action == 'save_order') {
       $module_tax = calculate_tax($module_value['value']);
       $module_n_price -= $module_tax; //Korrektur für Nettosumme bei Modulen ohne Steuersatz
     }
-    //EOC  web28 - 2012-03-22 - neue anteilige Steuerberechnung Module - ausgenommen bei Versandkosten  und Nachnahme ohne Steuer
+    //EOC  web28 - 2010-08-25 - neue anteilige Steuerberechnung Module - ausgenommen bei Versandkosten und Nachnahme ohne Steuer
 
     $sql_data_array = array (
                             'orders_id' => (int)($_POST['oID']),
@@ -1094,7 +1082,7 @@ if ($action == 'save_order') {
     }
   }
   //if(!MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS || $status['customers_status_show_price_tax'] ==1) {
-  if (!MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS || ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0)) { //Keine Mwst. auf Rechnung
+	if (!MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS || ($status['customers_status_show_price_tax'] == 0 && $status['customers_status_add_tax_ot'] == 0)) { //Keine Mwst. auf Rechnung
     xtc_db_query("delete from ".TABLE_ORDERS_TOTAL." where orders_id = '".(int)($_POST['oID'])."' and class='ot_subtotal_no_tax'");
   }
   //EOF Web28 - 2010-01-15 -  Gesamtsumme NETTO
@@ -1297,8 +1285,8 @@ function get_c_infos($customers_id, $delivery_country_iso_code_2) {
 
 }
 //EOC - web28 - 2012-01-20 - FIX order tax
-
 //--------------------------------------------------------------------------------------------------------------------------------------
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>

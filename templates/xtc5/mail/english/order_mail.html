@@ -29,7 +29,7 @@
           {if $address_label_payment}<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font></td>{/if}
         </tr>
       </table>
-      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"> Dear {$NAME},<br />
+      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"> Dear {if $GENDER == 'm'}Mr {elseif $GENDER == 'f'}Mrs {/if}{$NAME},<br />
         <br />
  thank you for your order. <br />
  {$PAYMENT_INFO_HTML}</font>

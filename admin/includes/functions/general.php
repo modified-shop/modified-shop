@@ -2706,4 +2706,24 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     
     return $email_fields;
   }
+
+  /** 
+   * xtc_draw_gender_pull_down() 
+   * 
+   * @author MK
+   * @param string $name 
+   * @param string $value 
+   * @return 
+   */ 
+  function xtc_draw_gender_pull_down($name, $value) { 
+    return xtc_draw_pull_down_menu(
+      $name,
+      array(
+        array('id' => '', 'text' => ''),
+        array('id' => 'm', 'text' => TEXT_MR),
+        array('id' => 'f', 'text' => TEXT_MRS)
+      ),
+      $value
+    ); 
+  }
 ?>

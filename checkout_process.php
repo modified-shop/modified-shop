@@ -121,6 +121,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'customers_name' => $order->customer['firstname'].' '.$order->customer['lastname'],
       'customers_firstname' => $order->customer['firstname'],
       'customers_lastname' => $order->customer['lastname'],
+      'customers_gender' => $order->customer['gender'], 
       'customers_cid' => $order->customer['csID'],
       'customers_vat_id' => $_SESSION['customer_vat_id'],
       'customers_company' => $order->customer['company'],
@@ -140,6 +141,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'delivery_name' => $order->delivery['firstname'].' '.$order->delivery['lastname'],
       'delivery_firstname' => $order->delivery['firstname'],
       'delivery_lastname' => $order->delivery['lastname'],
+      'delivery_gender' => $order->delivery['gender'],
       'delivery_company' => $order->delivery['company'],
       'delivery_street_address' => $order->delivery['street_address'],
       'delivery_suburb' => $order->delivery['suburb'],
@@ -152,6 +154,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'billing_name' => $order->billing['firstname'].' '.$order->billing['lastname'],
       'billing_firstname' => $order->billing['firstname'],
       'billing_lastname' => $order->billing['lastname'],
+      'billing_gender' => $order->billing['gender'],
       'billing_company' => $order->billing['company'],
       'billing_street_address' => $order->billing['street_address'],
       'billing_suburb' => $order->billing['suburb'],
@@ -181,11 +184,6 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'language' => $_SESSION['language'],
       'comments' => $order->info['comments']
     );
-  
-  //added gender
-  $sql_data_array['customers_gender'] = $order->customer['gender'];
-  $sql_data_array['delivery_gender'] = $order->delivery['gender'];
-  $sql_data_array['billing_gender'] = $order->billing['gender'];
 
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();

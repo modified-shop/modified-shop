@@ -9,7 +9,7 @@ Ihre E-Mail-Adresse: {$EMAIL}
 ----------------------------------------------------------------------
 
 
-Hallo {$NAME},
+{if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},
 
 vielen Dank für Ihre Bestellung.
 

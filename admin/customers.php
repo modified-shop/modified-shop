@@ -27,190 +27,176 @@
   require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
   require_once (DIR_FS_INC.'xtc_js_lang.php');
 
-  //split page results
+  // split page results
   if(!defined('MAX_DISPLAY_LIST_CUSTOMERS')) {
     define('MAX_DISPLAY_LIST_CUSTOMERS', 100);
   }
 
-  // BOF - JUNG GESTALTEN - 27.11.2008 - KUNDENUMSÄTZE
+  // KUNDENUMSÄTZE
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
-  // EOF - JUNG GESTALTEN - 27.11.2008 - KUNDENUMSÄTZE
 
   $customers_statuses_array = xtc_get_customers_statuses();
-
-  //BOC web28 2011-10-31 - FIX customer groups
+  // changes all $customers_statuses_array[xx] to $customers_statuses_id_array[xx]  in html section
   $customers_statuses_id_array = array();
   for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
     $customers_statuses_id_array[$customers_statuses_array[$i]['id']] = $customers_statuses_array[$i];
   }
-  //changes all $customers_statuses_array[xx] to $customers_statuses_id_array[xx]  in html section
-  //EOC web28 2011-10-31 - FIX customer groups
 
   $processed = false;
   $error = false;
-  $entry_vat_error_text ='';
+  $entry_vat_error_text = '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
+  $customers_id = filter_input(INPUT_GET, 'cID', FILTER_VALIDATE_INT);
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
     $mID = xtc_db_prepare_input($_GET['mID']);
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."'");
-    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'cID='.(int) $_GET['cID'].'&action=edit'));
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'cID='.$customers_id.'&action=edit'));
   }
 
-  if ($action == 'edit' || $action == 'update') {
-  if ((int)$_GET['cID'] == 1 && $_SESSION['customer_id'] == 1) {
-  } else {
-    if ((int)$_GET['cID'] != 1) {
-    } else {
-      xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, ''));
-    }
+  if (($action == 'edit' || $action == 'update') && !(($customers_id == 1 && $_SESSION['customer_id'] == 1) || $customers_id != 1)) {
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, ''));
   }
-}
 
   if ($action) {
     switch ($action) {
     case 'new_order' :
-      $customers1_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_GET['cID']."'");
+      // customers
+      $customers1_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
       $customers1 = xtc_db_fetch_array($customers1_query);
-      //BOC - web28 - 2012-04-08 - set order addresses to customers default address
+
+      // customers default address
       $customers_query = xtc_db_query("SELECT * FROM ".TABLE_ADDRESS_BOOK."
-                                               WHERE customers_id = '".(int)$_GET['cID']."'
-                                                 AND address_book_id =  '".(int)$customers1['customers_default_address_id']."'
-                                      ");
-      //EOC - web28 - 2012-04-08 - set order addresses to customers default address
-
-      //TODO set order addresses to last orders addresses (customers, delivery, billing)
-
+                                        WHERE customers_id = '".$customers_id."'
+                                          AND address_book_id =  '".$customers1['customers_default_address_id']."'");
       $customers = xtc_db_fetch_array($customers_query);
-      //BOF - web28 - 2011-06-10 add missing iso_code2
-      $country_query = xtc_db_query("SELECT countries_name,
-                                            countries_iso_code_2,
-                                            address_format_id
-                                      FROM ".TABLE_COUNTRIES."
-                                      WHERE countries_id = '".(int)$customers['entry_country_id']."'");
-      //EOF - web28 - 2011-06-10 add missing iso_code2
+
+      // countries
+      $country_query = xtc_db_query("SELECT countries_name, countries_iso_code_2, address_format_id
+                                       FROM ".TABLE_COUNTRIES."
+                                      WHERE countries_id = '".$customers['entry_country_id']."'");
       $country = xtc_db_fetch_array($country_query);
+
+      // customers status
       $stat_query = xtc_db_query("SELECT * FROM ".TABLE_CUSTOMERS_STATUS." WHERE customers_status_id = '".(int)$customers1['customers_status']."' ");
       $stat = xtc_db_fetch_array($stat_query);
 
-      // BOF - DokuMan - 2009-05-22 - BUGFIX: first and last name were not saved when creating manual orders
       $sql_data_array = array (
-                              'customers_id' => xtc_db_prepare_input($customers['customers_id']),
-                              'customers_cid' => xtc_db_prepare_input($customers1['customers_cid']),
-                              'customers_vat_id' => xtc_db_prepare_input($customers1['customers_vat_id']),
-                              'customers_status' => xtc_db_prepare_input($customers1['customers_status']),
-                              'customers_status_name' => xtc_db_prepare_input($stat['customers_status_name']),
-                              'customers_status_image' => xtc_db_prepare_input($stat['customers_status_image']),
-                              'customers_status_discount' => xtc_db_prepare_input($stat['customers_status_discount']),
-                              'customers_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
-                              'customers_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
-                              'customers_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
-                              'customers_company' => xtc_db_prepare_input($customers['entry_company']),
-                              'customers_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
-                              'customers_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
-                              'customers_city' => xtc_db_prepare_input($customers['entry_city']),
-                              'customers_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
-                              'customers_state' => xtc_db_prepare_input($customers['entry_state']),
-                              'customers_country' => xtc_db_prepare_input($country['countries_name']),
-                              'customers_telephone' => xtc_db_prepare_input($customers1['customers_telephone']),
-                              'customers_email_address' => xtc_db_prepare_input($customers1['customers_email_address']),
-                              'customers_address_format_id' => xtc_db_prepare_input($country['address_format_id']), //web28 - 2012-04-08 fix country address_format_id
-                              'delivery_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
-                              'delivery_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
-                              'delivery_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
-                              'delivery_company' => xtc_db_prepare_input($customers['entry_company']),
-                              'delivery_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
-                              'delivery_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
-                              'delivery_city' => xtc_db_prepare_input($customers['entry_city']),
-                              'delivery_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
-                              'delivery_state' => xtc_db_prepare_input($customers['entry_state']),
-                              'delivery_country' => xtc_db_prepare_input($country['countries_name']),
-                              'delivery_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']), //web28 - 2011-06-10 add missing iso_code2
-                              'delivery_address_format_id' => xtc_db_prepare_input($country['address_format_id']), //web28 - 2012-04-08 fix country address_format_id
-                              'billing_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
-                              'billing_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
-                              'billing_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
-                              'billing_company' => xtc_db_prepare_input($customers['entry_company']),
-                              'billing_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
-                              'billing_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
-                              'billing_city' => xtc_db_prepare_input($customers['entry_city']),
-                              'billing_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
-                              'billing_state' => xtc_db_prepare_input($customers['entry_state']),
-                              'billing_country' => xtc_db_prepare_input($country['countries_name']),
-                              'billing_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']), //web28 - 2011-06-10 add missing iso_code2
-                              'billing_address_format_id' => xtc_db_prepare_input($country['address_format_id']), //web28 - 2012-04-08 fix country address_format_id
-                              'payment_method' => 'cod',
-                              'cc_type' => '',
-                              'cc_owner' => '',
-                              'cc_number' => '',
-                              'cc_expires' => '',
-                              'cc_start' => '',
-                              'cc_issue' => '',
-                              'cc_cvv' => '',
-                              'comments' => '',
-                              'last_modified' => 'now()',
-                              'date_purchased' => 'now()',
-                              'orders_status' => '1',
-                              'orders_date_finished' => '',
-                              'currency' => DEFAULT_CURRENCY, //Web28 - 2012-02-26 - BUGFIX: DEFAULT_CURRENCY
-                              'currency_value' => '1.0000',
-                              'account_type' => '0',
-                              'payment_class' => 'cod',
-                              'shipping_method' => MODULE_SHIPPING_FLAT_TEXT_TITLE, //Web28 - 2012-02-26 - BUGFIX: Use Session language
-                              'shipping_class' => 'flat_flat',
-                              'customers_ip' => '',
-                              'language' => $_SESSION['language'] //Web28 - 2012-02-26 - BUGFIX: Use Session language
-                              );
-                              
-      //added gender
-      $sql_data_array['customers_gender'] = xtc_db_prepare_input($customers['entry_gender']);
-      $sql_data_array['delivery_gender'] = xtc_db_prepare_input($customers['entry_gender']);
-      $sql_data_array['billing_gender'] = xtc_db_prepare_input($customers['entry_gender']);
-      
-      // EOF - DokuMan - 2009-05-22 - BUGFIX: first and last name were not saved when creating manual orders
+          'customers_id' => xtc_db_prepare_input($customers['customers_id']),
+          'customers_cid' => xtc_db_prepare_input($customers1['customers_cid']),
+          'customers_vat_id' => xtc_db_prepare_input($customers1['customers_vat_id']),
+          'customers_status' => xtc_db_prepare_input($customers1['customers_status']),
+          'customers_status_name' => xtc_db_prepare_input($stat['customers_status_name']),
+          'customers_status_image' => xtc_db_prepare_input($stat['customers_status_image']),
+          'customers_status_discount' => xtc_db_prepare_input($stat['customers_status_discount']),
+          'customers_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
+          'customers_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
+          'customers_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
+          'customers_gender' => xtc_db_prepare_input($customers['entry_gender']), 
+          'customers_company' => xtc_db_prepare_input($customers['entry_company']),
+          'customers_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
+          'customers_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
+          'customers_city' => xtc_db_prepare_input($customers['entry_city']),
+          'customers_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
+          'customers_state' => xtc_db_prepare_input($customers['entry_state']),
+          'customers_country' => xtc_db_prepare_input($country['countries_name']),
+          'customers_telephone' => xtc_db_prepare_input($customers1['customers_telephone']),
+          'customers_email_address' => xtc_db_prepare_input($customers1['customers_email_address']),
+          'customers_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
+          'delivery_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
+          'delivery_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
+          'delivery_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
+          'delivery_gender' => xtc_db_prepare_input($customers['entry_gender']), 
+          'delivery_company' => xtc_db_prepare_input($customers['entry_company']),
+          'delivery_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
+          'delivery_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
+          'delivery_city' => xtc_db_prepare_input($customers['entry_city']),
+          'delivery_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
+          'delivery_state' => xtc_db_prepare_input($customers['entry_state']),
+          'delivery_country' => xtc_db_prepare_input($country['countries_name']),
+          'delivery_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']),
+          'delivery_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
+          'billing_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
+          'billing_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
+          'billing_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
+          'billing_gender' => xtc_db_prepare_input($customers['entry_gender']),
+          'billing_company' => xtc_db_prepare_input($customers['entry_company']),
+          'billing_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
+          'billing_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
+          'billing_city' => xtc_db_prepare_input($customers['entry_city']),
+          'billing_postcode' => xtc_db_prepare_input($customers['entry_postcode']),
+          'billing_state' => xtc_db_prepare_input($customers['entry_state']),
+          'billing_country' => xtc_db_prepare_input($country['countries_name']),
+          'billing_country_iso_code_2' => xtc_db_prepare_input($country['countries_iso_code_2']),
+          'billing_address_format_id' => xtc_db_prepare_input($country['address_format_id']),
+          'payment_method' => 'cod',
+          'cc_type' => '',
+          'cc_owner' => '',
+          'cc_number' => '',
+          'cc_expires' => '',
+          'cc_start' => '',
+          'cc_issue' => '',
+          'cc_cvv' => '',
+          'comments' => '',
+          'last_modified' => 'now()',
+          'date_purchased' => 'now()',
+          'orders_status' => '1',
+          'orders_date_finished' => '',
+          'currency' => DEFAULT_CURRENCY,
+          'currency_value' => '1.0000',
+          'account_type' => '0',
+          'payment_class' => 'cod',
+          'shipping_method' => MODULE_SHIPPING_FLAT_TEXT_TITLE,
+          'shipping_class' => 'flat_flat',
+          'customers_ip' => '',
+          'language' => $_SESSION['language']
+        );
+
       xtc_db_perform(TABLE_ORDERS, $sql_data_array);
       $orders_id = xtc_db_insert_id();
 
-      //BOC - Web28 - 2012-02-26 - BUGFIX: Use Session language
       require_once (DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_total.php');
-      $sql_data_array = array ('orders_id' => (int)$orders_id, 'title' => MODULE_ORDER_TOTAL_TOTAL_TITLE.':', 'text' => '0', 'value' => '0', 'class' => 'ot_total');
-      //EOC - Web28 - 2012-02-26 - BUGFIX: Use Session language
-
-      $insert_sql_data = array ('sort_order' => MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER);
-      $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+      $sql_data_array = array(
+          'orders_id' => (int)$orders_id,
+          'title' => MODULE_ORDER_TOTAL_TOTAL_TITLE.':',
+          'text' => '0',
+          'value' => '0',
+          'class' => 'ot_total',
+          'sort_order' => MODULE_ORDER_TOTAL_TOTAL_SORT_ORDER
+        );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
 
-      //BOC - Web28 - 2012-02-26 - BUGFIX: Use Session language
       require_once (DIR_FS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_subtotal.php');
-      $sql_data_array = array ('orders_id' => (int)$orders_id, 'title' => '<b>'.MODULE_ORDER_TOTAL_SUBTOTAL_TITLE.'</b>:', 'text' => '0', 'value' => '0', 'class' => 'ot_subtotal');
-      //EOC - Web28 - 2012-02-26 - BUGFIX: Use Session language
-
-      $insert_sql_data = array ('sort_order' => MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER);
-      $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
+      $sql_data_array = array(
+          'orders_id' => (int)$orders_id,
+          'title' => '<b>'.MODULE_ORDER_TOTAL_SUBTOTAL_TITLE.'</b>:',
+          'text' => '0',
+          'value' => '0',
+          'class' => 'ot_subtotal',
+          'sort_order' => MODULE_ORDER_TOTAL_SUBTOTAL_SORT_ORDER
+        );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
+
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.(int)$orders_id.'&action=edit'));
+
       break;
     case 'delete_confirm_adressbook' :
-        $customers_id = xtc_db_prepare_input($_GET['cID']);
-
         xtc_db_query("-- admin/customers.php
                       DELETE FROM ".TABLE_ADDRESS_BOOK."
                             WHERE address_book_id = '".(int) $_GET['address_book_id']."'
-                              AND customers_id = '".xtc_db_input($customers_id)."'"
+                              AND customers_id = '".$customers_id."'"
                                   );
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'delete_confirm_adressbook')).'cID='.(int)$customers_id));
         break;
      case 'update_default_adressbook' :
-        $customers_id = xtc_db_prepare_input($_GET['cID']);
-        
         $address_book_query = xtc_db_query("-- admin/customers.php
                                        SELECT entry_gender AS customers_gender,
                                               entry_firstname AS customers_firstname,
                                               entry_lastname AS customers_lastname
                                          FROM ".TABLE_ADDRESS_BOOK."
                                         WHERE address_book_id = '".(int) $_GET['default']."'
-                                          AND customers_id = '".xtc_db_input($customers_id)."'"
+                                          AND customers_id = '".$customers_id."'"
                                            );
         $address_book_array = xtc_db_fetch_array($address_book_query);  
 
@@ -218,15 +204,15 @@
           unset($address_book_array['customers_gender']);
         }
         
-        $sql_data_array = array ('customers_default_address_id' => (int) $_GET['default'],
-                                 'customers_last_modified' => 'now()'
-                                );
+        $sql_data_array = array (
+            'customers_default_address_id' => (int) $_GET['default'],
+            'customers_last_modified' => 'now()'
+          );
         $sql_data_array = array_merge($address_book_array,$sql_data_array);
-        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '". xtc_db_input($customers_id) ."'");
+        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '". $customers_id ."'");
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action', 'update_default_adressbook', 'default')).'cID='.$customers_id.'&action=address_book'));
         break;
     case 'statusconfirm' :
-      $customers_id = xtc_db_prepare_input($_GET['cID']);
       $customer_updated = false;
       $check_status_query = xtc_db_query("SELECT customers_firstname,
                                                  customers_lastname,
@@ -234,27 +220,26 @@
                                                  customers_status,
                                                  member_flag
                                             FROM ".TABLE_CUSTOMERS."
-                                           WHERE customers_id = '".xtc_db_input($_GET['cID'])."'");
+                                           WHERE customers_id = '".$customers_id."'");
       $check_status = xtc_db_fetch_array($check_status_query);
       if ($check_status['customers_status'] != $status) {
-        xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".xtc_db_input($_GET['cID'])."'");
+        xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".$customers_id."'");
         // update customers status in newsletters_recipients
-        xtc_db_query("UPDATE ".TABLE_NEWSLETTER_RECIPIENTS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".xtc_db_input($_GET['cID'])."'");
+        xtc_db_query("UPDATE ".TABLE_NEWSLETTER_RECIPIENTS." SET customers_status = '".xtc_db_input($_POST['status'])."' WHERE customers_id = '".$customers_id."'");
         // create insert for admin access table if customers status is set to 0
         if ($_POST['status'] == 0) {
-          xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".xtc_db_input($_GET['cID'])."','1')");
+          xtc_db_query("INSERT INTO  ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$customers_id."','1')");
         } else {
-          xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".xtc_db_input($_GET['cID'])."'");
+          xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
         }
         //Temporarily set due to above commented lines
         $customer_notified = '0';
-        xtc_db_query("INSERT INTO  ".TABLE_CUSTOMERS_STATUS_HISTORY." (customers_id, new_value, old_value, date_added, customer_notified) VALUES ('".xtc_db_input($_GET['cID'])."', '".xtc_db_input($_POST['status'])."', '".$check_status['customers_status']."', now(), '".$customer_notified."')");
+        xtc_db_query("INSERT INTO  ".TABLE_CUSTOMERS_STATUS_HISTORY." (customers_id, new_value, old_value, date_added, customer_notified) VALUES ('".$customers_id."', '".xtc_db_input($_POST['status'])."', '".$check_status['customers_status']."', now(), '".$customer_notified."')");
         $customer_updated = true;
       }
-      xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'page='.(int)$_GET['page'].'&cID='.(int)$_GET['cID']));
+      xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'page='.(int)$_GET['page'].'&cID='.$customers_id));
       break;
     case 'update' :
-      $customers_id = xtc_db_prepare_input($_GET['cID']);
       $customers_cid = xtc_db_prepare_input($_POST['csID']);
       $customers_vat_id = xtc_db_prepare_input($_POST['customers_vat_id']);
       $customers_vat_id_status = (isset($_POST['customers_vat_id_status']) ? xtc_db_prepare_input($_POST['customers_vat_id_status']) : '');
@@ -264,7 +249,7 @@
       $customers_telephone = xtc_db_prepare_input($_POST['customers_telephone']);
       $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
       $customers_newsletter = (isset($_POST['customers_newsletter']) ? xtc_db_prepare_input($_POST['customers_newsletter']) : '');
-      $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
+      if (ACCOUNT_GENDER == 'true') $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
       $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
       $default_address_id = xtc_db_prepare_input($_POST['default_address_id']);
       $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
@@ -284,19 +269,19 @@
       /*
       $amount = xtc_db_prepare_input($_POST['amount']);
       if ($amount != '') {
-        $sql_data_array = array('customer_id' => (int)$_GET['cID'],
+        $sql_data_array = array('customer_id' => $customers_id,
                                 'amount' => $amount
                                 );
-        $check_gv_query = xtc_db_query("SELECT * FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = '".(int)$_GET['cID']."'");
+        $check_gv_query = xtc_db_query("SELECT * FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = '".$customers_id."'");
         if (xtc_db_num_rows($check_gv_query) > 0) {                     
-          xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array, 'update', "customer_id = '".(int)$_GET['cID']."'");
+          xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array, 'update', "customer_id = '".$customers_id."'");
         } else {
           xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);        
         }
-      }
-      */
+      }*/
+
       if ($memo_text != '' && $memo_title != '') {
-        $sql_data_array = array ('customers_id' => (int)$_GET['cID'], 
+        $sql_data_array = array ('customers_id' => $customers_id, 
                                  'memo_date' => date("Y-m-d"), 
                                  'memo_title' => $memo_title, 
                                  'memo_text' => $memo_text, 
@@ -320,7 +305,6 @@
         $entry_lastname_error = false;
       }
 
-      //BOF - DokuMan - 2011-08-26 - error flag for $entry_gender_error was missing
       if (ACCOUNT_GENDER == 'true') {
         if (($customers_gender != 'm') && ($customers_gender != 'f')) {
           $error = true;
@@ -329,7 +313,6 @@
           $entry_gender_error = false;
         }
       }
-      //EOF - DokuMan - 2011-08-26 - error flag for $entry_gender_error was missing
 
       if (ACCOUNT_DOB == 'true') {
         if (checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
@@ -345,61 +328,47 @@
         require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'vat_validation.php');
         $vatID = new vat_validation($customers_vat_id, $customers_id, '', $entry_country_id);
         $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
-
-        // BOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
+        // display correct error code of VAT ID check
         switch ($customers_vat_id_status) {
-          // 0 = 'VAT invalid'
-          // 1 = 'VAT valid'
-          // 2 = 'SOAP ERROR: Connection to host not possible, europe.eu down?'
-          // 8 = 'unknown country'
-          //94 = 'INVALID_INPUT'       => 'The provided CountryCode is invalid or the VAT number is empty',
-          //95 = 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later',
-          //96 = 'MS_UNAVAILABLE'      => 'The Member State service is unavailable, try again later or with another Member State',
-          //97 = 'TIMEOUT'             => 'The Member State service could not be reached in time, try again later or with another Member State',
-          //98 = 'SERVER_BUSY'         => 'The service cannot process your request. Try again later.'
-          //99 = 'no PHP5 SOAP support'
-          case '0' :
+          case '0' :// 'VAT invalid'
             $entry_vat_error_text = TEXT_VAT_FALSE;
             break;
-          case '1' :
+          case '1' :// 'VAT valid'
             $entry_vat_error_text = TEXT_VAT_TRUE;
             break;
-          case '2' :
+          case '2' :// 'SOAP ERROR: Connection to host not possible, europe.eu down?'
             $entry_vat_error_text = TEXT_VAT_CONNECTION_NOT_POSSIBLE;
             break;
-          case '8' :
+          case '8' :// 'unknown country'
             $entry_vat_error_text = TEXT_VAT_UNKNOWN_COUNTRY;
             break;
-          case '94' :
+          case '94' :// 'INVALID_INPUT' => 'The provided CountryCode is invalid or the VAT number is empty'
             $entry_vat_error_text = TEXT_VAT_INVALID_INPUT;
             break;
-          case '95' :
+          case '95' :// 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later'
             $entry_vat_error_text = TEXT_VAT_SERVICE_UNAVAILABLE;
             break;
-          case '96' :
+          case '96' :// 'MS_UNAVAILABLE' => 'The Member State service is unavailable, try again later or with another Member State'
             $entry_vat_error_text = TEXT_VAT_MS_UNAVAILABLE;
             break;
-          case '97' :
+          case '97' :// 'TIMEOUT' => 'The Member State service could not be reached in time, try again later or with another Member State',
             $entry_vat_error_text = TEXT_VAT_TIMEOUT;
             break;
-          case '98' :
+          case '98' :// 'SERVER_BUSY' => 'The service cannot process your request. Try again later.'
             $entry_vat_error_text = TEXT_VAT_SERVER_BUSY;
             break;
-          case '99' :
+          case '99' :// 'no PHP5 SOAP support'
             $entry_vat_error_text = TEXT_VAT_NO_PHP5_SOAP_SUPPORT;
             break;
           default:
             $entry_vat_error_text = '';
             break;
         }
-        // EOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
-
         if($vatID->vat_info['error']==1){
           $entry_vat_error = true;
           $error = true;
         }
       }
-      // New VAT CHECK END
 
       if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
         $error = true;
@@ -483,19 +452,17 @@
         $entry_telephone_error = false;
       }
 
-      // BOF - DokuMan - 2009-05-22 - Bugfix #0000218 - force to enter password when editing users
-            if (strlen($password) > 0 && strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
+      if (strlen($password) > 0 && strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
         $error = true;
         $entry_password_error = true;
       } else {
         $entry_password_error = false;
       }
-      // EOF - DokuMan - 2009-05-22 - Bugfix #0000218 - force to enter password when editing users
 
       $check_email = xtc_db_query("SELECT customers_email_address
                                     FROM ".TABLE_CUSTOMERS."
                                    WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
-                                     AND customers_id <> '".xtc_db_input($customers_id)."'");
+                                     AND customers_id <> '".$customers_id."'");
       if (xtc_db_num_rows($check_email)) {
         $error = true;
         $entry_email_address_exists = true;
@@ -505,48 +472,42 @@
 
       if ($error == false) {
         $sql_data_array = array (
-                                  'customers_firstname' => $customers_firstname,
-                                  'customers_cid' => $customers_cid,
-                                  'customers_vat_id' => $customers_vat_id,
-                                  'customers_vat_id_status' => $customers_vat_id_status,
-                                  'customers_lastname' => $customers_lastname,
-                                  'customers_email_address' => $customers_email_address,
-                                  'customers_telephone' => $customers_telephone,
-                                  'customers_fax' => $customers_fax,
-                                  'payment_unallowed' => $payment_unallowed,
-                                  'shipping_unallowed' => $shipping_unallowed,
-                                  'customers_newsletter' => $customers_newsletter,
-                                  'customers_last_modified' => 'now()'
-                                  );
+            'customers_firstname' => $customers_firstname,
+            'customers_cid' => $customers_cid,
+            'customers_vat_id' => $customers_vat_id,
+            'customers_vat_id_status' => $customers_vat_id_status,
+            'customers_lastname' => $customers_lastname,
+            'customers_email_address' => $customers_email_address,
+            'customers_telephone' => $customers_telephone,
+            'customers_fax' => $customers_fax,
+            'payment_unallowed' => $payment_unallowed,
+            'shipping_unallowed' => $shipping_unallowed,
+            'customers_newsletter' => $customers_newsletter,
+            'customers_last_modified' => 'now()'
+          );
 
-        // if new password is set
-        if ($password != "") {
-          $sql_data_array['customers_password'] = xtc_encrypt_password($password);          
-        }
+        if ($password != "") $sql_data_array['customers_password'] = xtc_encrypt_password($password);          
+        if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
+        if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
 
-        if (ACCOUNT_GENDER == 'true')
-          $sql_data_array['customers_gender'] = $customers_gender;
-        if (ACCOUNT_DOB == 'true')
-          $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
-
-        //xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."'");
-        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND customers_default_address_id = '".$address_book_id."'");
+        //xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".$customers_id."'");
+        xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND customers_default_address_id = '".$address_book_id."'");
 
           xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO."
                            SET customers_info_date_account_last_modified = now()
-                         WHERE customers_info_id = '".xtc_db_input($customers_id)."'");
+                         WHERE customers_info_id = '".$customers_id."'");
 
         if ($entry_zone_id > 0)
           $entry_state = '';
 
         $sql_data_array = array (
-          'entry_firstname' => $customers_firstname,
-          'entry_lastname' => $customers_lastname,
-          'entry_street_address' => $entry_street_address,
-          'entry_postcode' => $entry_postcode,
-          'entry_city' => $entry_city,
-          'entry_country_id' => $entry_country_id,
-          'address_last_modified' => 'now()'
+            'entry_firstname' => $customers_firstname,
+            'entry_lastname' => $customers_lastname,
+            'entry_street_address' => $entry_street_address,
+            'entry_postcode' => $entry_postcode,
+            'entry_city' => $entry_city,
+            'entry_country_id' => $entry_country_id,
+            'address_last_modified' => 'now()'
           );
 
 
@@ -574,40 +535,37 @@
           $sql_data_array['customers_id'] = $customers_id;
           xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'insert');
         } else {
-          //xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND address_book_id = '".xtc_db_input($default_address_id)."'");
-          xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".xtc_db_input($customers_id)."' AND address_book_id = '".xtc_db_input($address_book_id)."'");
+          //xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND address_book_id = '".xtc_db_input($default_address_id)."'");
+          xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND address_book_id = '".xtc_db_input($address_book_id)."'");
         }   
-        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.(int)$customers_id));
+        xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$customers_id));
       }  elseif ($error == true) {
         $cInfo = new objectInfo($_POST);
         $processed = true;
       }
       break;
     case 'deleteconfirm' :
-      $customers_id = xtc_db_prepare_input($_GET['cID']);
-
       if ($_POST['delete_reviews'] == 'on') {
-        $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".xtc_db_input($customers_id)."'");
+        $reviews_query = xtc_db_query("SELECT reviews_id FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
         while ($reviews = xtc_db_fetch_array($reviews_query)) {
           xtc_db_query("DELETE FROM ".TABLE_REVIEWS_DESCRIPTION." WHERE reviews_id = '".$reviews['reviews_id']."'");
         }
-        xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE customers_id = '".xtc_db_input($customers_id)."'");
+        xtc_db_query("DELETE FROM ".TABLE_REVIEWS." WHERE customers_id = '".$customers_id."'");
       } else {
-        xtc_db_query("UPDATE ".TABLE_REVIEWS." SET customers_id = null WHERE customers_id = '".xtc_db_input($customers_id)."'");
+        xtc_db_query("UPDATE ".TABLE_REVIEWS." SET customers_id = null WHERE customers_id = '".$customers_id."'");
       }
-
-      xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_NOTIFICATIONS." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_WHOS_ONLINE." WHERE customer_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".xtc_db_input($customers_id)."'");
-      xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".xtc_db_input($customers_id)."'"); // DokuMan - 2011-04-15 - also delete the newsletter entry of the customer
-      xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".xtc_db_input($customers_id)."'");
+      xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_BASKET_ATTRIBUTES." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_NOTIFICATIONS." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_WHOS_ONLINE." WHERE customer_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_STATUS_HISTORY." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_IP." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".$customers_id."'");
+      xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$customers_id."'");
       xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action'))));
       break;
     default :
@@ -642,7 +600,7 @@
    LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
           ON c.customers_id = cgc.customer_id
        WHERE a.customers_id = c.customers_id
-         AND c.customers_id = ".(int)$_GET['cID']
+         AND c.customers_id = ".$customers_id
          );
       $customers = xtc_db_fetch_array($customers_query);
       $cInfo = new objectInfo($customers);
@@ -674,16 +632,13 @@ function check_form() {
   var entry_postcode = document.customers.entry_postcode.value;
   var entry_city = document.customers.entry_city.value;
   var customers_telephone = document.customers.customers_telephone.value;
-  <?php
-    if (ACCOUNT_GENDER == 'true') { ?>
-      if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
-      } else {
-        error_message = error_message + "<?php echo xtc_js_lang(JS_GENDER); ?>";
-        error = 1;
-      }
-      <?php
-    }
-  ?>
+  <?php if (ACCOUNT_GENDER == 'true') { ?>
+  if (document.customers.customers_gender[0].checked || document.customers.customers_gender[1].checked) {
+  } else {
+    error_message = error_message + "<?php echo xtc_js_lang(JS_GENDER); ?>";
+    error = 1;
+  }
+  <?php } ?>
 
   if (customers_firstname == "" || customers_firstname.length < <?php echo ENTRY_FIRST_NAME_MIN_LENGTH; ?>) {
     error_message = error_message + "<?php echo xtc_js_lang(JS_FIRST_NAME); ?>";

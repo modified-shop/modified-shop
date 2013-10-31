@@ -139,73 +139,80 @@
       $order_status = (!defined('RUN_MODE_ADMIN')) ? $order_status_array['orders_status_name'] : $order['orders_status'];
 
       $order['order_id'] = $order_id;
-      $this->info = array('order_id' => $order['order_id'], //DokuMan - 2011-08-31 - fix order_id assignment
-                          'currency' => $order['currency'],
-                          'currency_value' => $order['currency_value'],
-                          'payment_method' => $order['payment_method'],
-                          'payment_class' => $order['payment_class'],
-                          'shipping_class' => $order['shipping_class'],
-                          'status' => $order['customers_status'],
-                          'status_name' => $order['customers_status_name'],
-                          'status_image' => $order['customers_status_image'],
-                          'status_discount' => $order['customers_status_discount'],
-                          'cc_type' => $order['cc_type'],
-                          'cc_owner' => $order['cc_owner'],
-                          'cc_number' => $order['cc_number'],
-                          'cc_expires' => $order['cc_expires'],
-                          'cc_start' => $order['cc_start'],
-                          'cc_issue' => $order['cc_issue'],
-                          'cc_cvv' => $order['cc_cvv'],
-                          'date_purchased' => $order['date_purchased'],
-                          'orders_status' => $order_status,
-                          'last_modified' => $order['last_modified'],
-                          'total' => strip_tags($order_total['text']),
-                          // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-                          'pp_total' => $order_total['value'],
-                          'pp_shipping' => $shipping_method['value'],
-                          'pp_tax' => $pp_order_tax,
-                          'pp_disc' => $pp_order_disc,
-                          'pp_gs' => $pp_order_gs,
-                          'pp_fee' => $pp_order_fee,
-                           // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-                          'shipping_method' => ((substr($shipping_method['title'], -1) == ':') ? substr(strip_tags($shipping_method['title']), 0, -1) : strip_tags($shipping_method['title'])),
-                          'comments' => $order['comments'],
-                          'language' => $order['language']
-                          );
 
-      $this->customer = array('id' => $order['customers_id'],
-                              'customers_status' => $order['customers_status'],
-                              'name' => $order['customers_name'],
-                              'firstname' => $order['customers_firstname'],
-                              'lastname' => $order['customers_lastname'],
-                              'csID' => $order['customers_cid'],
-                              'company' => $order['customers_company'],
-                              'street_address' => $order['customers_street_address'],
-                              'suburb' => $order['customers_suburb'],
-                              'city' => $order['customers_city'],
-                              'postcode' => $order['customers_postcode'],
-                              'state' => $order['customers_state'],
-                              'country' => $order['customers_country'],
-                              'format_id' => $order['customers_address_format_id'],
-                              'telephone' => $order['customers_telephone'],
-                              'email_address' => $order['customers_email_address'],
-                              'vat_id' => $order['customers_vat_id'],
-                              'ID' => $order['customers_id'],
-                              'cIP' => $order['customers_ip']
-                              );
+      $this->info = array(
+          'order_id' => $order['order_id'],
+          'currency' => $order['currency'],
+          'currency_value' => $order['currency_value'],
+          'payment_method' => $order['payment_method'],
+          'payment_class' => $order['payment_class'],
+          'shipping_class' => $order['shipping_class'],
+          'status' => $order['customers_status'],
+          'status_name' => $order['customers_status_name'],
+          'status_image' => $order['customers_status_image'],
+          'status_discount' => $order['customers_status_discount'],
+          'cc_type' => $order['cc_type'],
+          'cc_owner' => $order['cc_owner'],
+          'cc_number' => $order['cc_number'],
+          'cc_expires' => $order['cc_expires'],
+          'cc_start' => $order['cc_start'],
+          'cc_issue' => $order['cc_issue'],
+          'cc_cvv' => $order['cc_cvv'],
+          'date_purchased' => $order['date_purchased'],
+          'orders_status' => $order_status,
+          'last_modified' => $order['last_modified'],
+          'total' => strip_tags($order_total['text']),
+          #PayPal API Modul / Paypal Express Modul
+          'pp_total' => $order_total['value'],
+          'pp_shipping' => $shipping_method['value'],
+          'pp_tax' => $pp_order_tax,
+          'pp_disc' => $pp_order_disc,
+          'pp_gs' => $pp_order_gs,
+          'pp_fee' => $pp_order_fee,
+          #Paypal Express Modul
+          'shipping_method' => ((substr($shipping_method['title'], -1) == ':') ? substr(strip_tags($shipping_method['title']), 0, -1) : strip_tags($shipping_method['title'])),
+          'comments' => $order['comments'],
+          'language' => $order['language']
+        );
 
-      $this->delivery = array('name' => $order['delivery_name'],
-                              'firstname' => $order['delivery_firstname'],
-                              'lastname' => $order['delivery_lastname'],
-                              'company' => $order['delivery_company'],
-                              'street_address' => $order['delivery_street_address'],
-                              'suburb' => $order['delivery_suburb'],
-                              'city' => $order['delivery_city'],
-                              'postcode' => $order['delivery_postcode'],
-                              'state' => $order['delivery_state'],
-                              'country' => $order['delivery_country'],
-                              'country_iso_2' => $order['delivery_country_iso_code_2'],
-                              'format_id' => $order['delivery_address_format_id']);
+      $this->customer = array(
+          'id' => $order['customers_id'],
+          'customers_status' => $order['customers_status'],
+          'name' => $order['customers_name'],
+          'firstname' => $order['customers_firstname'],
+          'lastname' => $order['customers_lastname'],
+          'gender' => $order['customers_gender'], 
+          'csID' => $order['customers_cid'],
+          'company' => $order['customers_company'],
+          'street_address' => $order['customers_street_address'],
+          'suburb' => $order['customers_suburb'],
+          'city' => $order['customers_city'],
+          'postcode' => $order['customers_postcode'],
+          'state' => $order['customers_state'],
+          'country' => $order['customers_country'],
+          'format_id' => $order['customers_address_format_id'],
+          'telephone' => $order['customers_telephone'],
+          'email_address' => $order['customers_email_address'],
+          'vat_id' => $order['customers_vat_id'],
+          'ID' => $order['customers_id'],
+          'cIP' => $order['customers_ip']
+        );
+
+      $this->delivery = array(
+          'name' => $order['delivery_name'],
+          'firstname' => $order['delivery_firstname'],
+          'lastname' => $order['delivery_lastname'],
+          'gender' => $order['delivery_gender'],
+          'company' => $order['delivery_company'],
+          'street_address' => $order['delivery_street_address'],
+          'suburb' => $order['delivery_suburb'],
+          'city' => $order['delivery_city'],
+          'postcode' => $order['delivery_postcode'],
+          'state' => $order['delivery_state'],
+          'country' => $order['delivery_country'],
+          'country_iso_2' => $order['delivery_country_iso_code_2'],
+          'format_id' => $order['delivery_address_format_id']
+        );
 
       if(!defined('RUN_MODE_ADMIN')) {
         if (empty($this->delivery['name']) && empty($this->delivery['street_address'])) {
@@ -213,43 +220,41 @@
         }
       }
 
-      $this->billing = array('name' => $order['billing_name'],
-                             'firstname' => $order['billing_firstname'],
-                             'lastname' => $order['billing_lastname'],
-                             'company' => $order['billing_company'],
-                             'street_address' => $order['billing_street_address'],
-                             'suburb' => $order['billing_suburb'],
-                             'city' => $order['billing_city'],
-                             'postcode' => $order['billing_postcode'],
-                             'state' => $order['billing_state'],
-                             'country' => $order['billing_country'],
-                             'country_iso_2' => $order['billing_country_iso_code_2'],
-                             'format_id' => $order['billing_address_format_id']
-                            );
-      
-      //added gender      
-      $this->customer['gender'] =  $order['customers_gender'];
-      $this->delivery['gender'] =  $order['delivery_gender'];
-      $this->billing['gender'] =  $order['billing_gender'];
+      $this->billing = array(
+          'name' => $order['billing_name'],
+          'firstname' => $order['billing_firstname'],
+          'lastname' => $order['billing_lastname'],
+          'gender' => $order['billing_gender'],
+          'company' => $order['billing_company'],
+          'street_address' => $order['billing_street_address'],
+          'suburb' => $order['billing_suburb'],
+          'city' => $order['billing_city'],
+          'postcode' => $order['billing_postcode'],
+          'state' => $order['billing_state'],
+          'country' => $order['billing_country'],
+          'country_iso_2' => $order['billing_country_iso_code_2'],
+          'format_id' => $order['billing_address_format_id']
+        );
 
       $index = 0;
       $orders_products_query = xtc_db_query("SELECT *
                                              FROM " . TABLE_ORDERS_PRODUCTS . "
                                              WHERE orders_id = '" . $order_id . "'");
       while ($orders_products = xtc_db_fetch_array($orders_products_query)) {
-        $this->products[$index] = array('qty' => $orders_products['products_quantity'],
-                                        'id' => $orders_products['products_id'],
-                                        'opid' => $orders_products['orders_products_id'],
-                                        'name' => $orders_products['products_name'],
-                                        'order_description' => $orders_products['products_order_description'],
-                                        'model' => $orders_products['products_model'],
-                                        'tax' => $orders_products['products_tax'],
-                                        'price'=> $orders_products['products_price'],
-                                        'discount' => $orders_products['products_discount_made'],
-                                        'shipping_time'=> $orders_products['products_shipping_time'],
-                                        'final_price' => $orders_products['final_price'],
-                                        'allow_tax' => $orders_products['allow_tax']
-                                       );
+        $this->products[$index] = array(
+            'qty' => $orders_products['products_quantity'],
+            'id' => $orders_products['products_id'],
+            'opid' => $orders_products['orders_products_id'],
+            'name' => $orders_products['products_name'],
+            'order_description' => $orders_products['products_order_description'],
+            'model' => $orders_products['products_model'],
+            'tax' => $orders_products['products_tax'],
+            'price'=> $orders_products['products_price'],
+            'discount' => $orders_products['products_discount_made'],
+            'shipping_time'=> $orders_products['products_shipping_time'],
+            'final_price' => $orders_products['final_price'],
+            'allow_tax' => $orders_products['allow_tax']
+          );
 
         $subindex = 0;
         $attributes_query = xtc_db_query("SELECT *
@@ -259,11 +264,12 @@
                                           ORDER BY orders_products_attributes_id"); //ADD - web28 - 2010-06-11 - order by orders_products_attributes_id
         if (xtc_db_num_rows($attributes_query)) {
           while ($attributes = xtc_db_fetch_array($attributes_query)) {
-            $this->products[$index]['attributes'][$subindex] = array('option' => $attributes['products_options'],
-                                                                     'value' => $attributes['products_options_values'],
-                                                                     'prefix' => $attributes['price_prefix'],
-                                                                     'price' => $attributes['options_values_price']);
-
+            $this->products[$index]['attributes'][$subindex] = array(
+                'option' => $attributes['products_options'],
+                'value' => $attributes['products_options_values'],
+                'prefix' => $attributes['price_prefix'],
+                'price' => $attributes['options_values_price']
+              );
             $subindex++;
           }
         }
@@ -313,21 +319,22 @@
           $order_description = $order_data_values['products_order_description'];
         }
         $order_description = !empty($order_description) ? $order_description : $short_description;
-        $order_data[] = array ('PRODUCTS_ID' => $order_data_values['products_id'],
-                               'PRODUCTS_MODEL' => $order_data_values['products_model'],
-                               'PRODUCTS_NAME' => $order_data_values['products_name'],
-                               'PRODUCTS_IMAGE' => xtc_get_products_image($order_data_values['products_id']),
-                               'PRODUCTS_ORDER_DESCRIPTION' => $order_description,
-                               'PRODUCTS_SHORT_DESCRIPTION' => $short_description,
-                               'PRODUCTS_SHIPPING_TIME' => $order_data_values['products_shipping_time'],
-                               'PRODUCTS_ATTRIBUTES' => $attributes_data,
-                               'PRODUCTS_ATTRIBUTES_MODEL' => $attributes_model,
-                               'PRODUCTS_PRICE' => $xtPrice->xtcFormat($order_data_values['final_price'], true),
-                               'PRODUCTS_SINGLE_PRICE' => $xtPrice->xtcFormat($order_data_values['final_price']/$order_data_values['products_quantity'], true),
-                               'PRODUCTS_TAX' => ($order_data_values['products_tax'] > 0.00) ? number_format($order_data_values['products_tax'], TAX_DECIMAL_PLACES):0,
-                               //'PRODUCTS_VPE' => $order_data_values['products_order_vpe'],
-                               'PRODUCTS_QTY' => $order_data_values['products_quantity']
-                              );
+        $order_data[] = array (
+            'PRODUCTS_ID' => $order_data_values['products_id'],
+            'PRODUCTS_MODEL' => $order_data_values['products_model'],
+            'PRODUCTS_NAME' => $order_data_values['products_name'],
+            'PRODUCTS_IMAGE' => xtc_get_products_image($order_data_values['products_id']),
+            'PRODUCTS_ORDER_DESCRIPTION' => $order_description,
+            'PRODUCTS_SHORT_DESCRIPTION' => $short_description,
+            'PRODUCTS_SHIPPING_TIME' => $order_data_values['products_shipping_time'],
+            'PRODUCTS_ATTRIBUTES' => $attributes_data,
+            'PRODUCTS_ATTRIBUTES_MODEL' => $attributes_model,
+            'PRODUCTS_PRICE' => $xtPrice->xtcFormat($order_data_values['final_price'], true),
+            'PRODUCTS_SINGLE_PRICE' => $xtPrice->xtcFormat($order_data_values['final_price']/$order_data_values['products_quantity'], true),
+            'PRODUCTS_TAX' => ($order_data_values['products_tax'] > 0.00) ? number_format($order_data_values['products_tax'], TAX_DECIMAL_PLACES):0,
+            //'PRODUCTS_VPE' => $order_data_values['products_order_vpe'],
+            'PRODUCTS_QTY' => $order_data_values['products_quantity']
+          );
       }
       return $order_data;
     }
@@ -339,11 +346,7 @@
       $shipping='';
 
       // get order_total data
-      $order_total_query = "SELECT title,
-                                   text,
-                                   class,
-                                   value,
-                                   sort_order
+      $order_total_query = "SELECT title, text, class, value, sort_order
                               FROM ".TABLE_ORDERS_TOTAL."
                              WHERE orders_id='".(int)$oID."'
                           ORDER BY sort_order ASC";
@@ -352,11 +355,12 @@
       $order_total_query = xtc_db_query($order_total_query);
       while ($order_total_values = xtc_db_fetch_array($order_total_query)) {
 
-        $order_total[] = array ('TITLE' => $order_total_values['title'],
-                                'CLASS' => $order_total_values['class'],
-                                'VALUE' => $order_total_values['value'],
-                                'TEXT' => $order_total_values['text']
-                                );
+        $order_total[] = array (
+            'TITLE' => $order_total_values['title'],
+            'CLASS' => $order_total_values['class'],
+            'VALUE' => $order_total_values['value'],
+            'TEXT' => $order_total_values['text']
+          );
 
         if ($order_total_values['class'] == 'ot_total') {
           $total = $order_total_values['value'];
@@ -366,17 +370,17 @@
           $shipping = $order_total_values['value'];
         }
       }
-      return array('data'=>$order_total,
-                   'total'=>$total,
-                   'shipping'=>$shipping
-                  );
+      return array(
+          'data'=>$order_total,
+          'total'=>$total,
+          'shipping'=>$shipping
+        );
     }
 
     function cart() {
       global $currencies,$xtPrice,$main;
       $this->content_type = $_SESSION['cart']->get_content_type();
       
-      //added gender
       $default_select =
         "ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_gender,
          ab.entry_postcode, ab.entry_city, ab.entry_zone_id, ab.entry_country_id, ab.entry_state,
@@ -457,71 +461,78 @@
         }
       }
 
-      $this->customer = array('firstname' => $customer_address['customers_firstname'],
-                              'lastname' => $customer_address['customers_lastname'],
-                              'csID' => $customer_address['customers_cid'],
-                              'gender' => $customer_address['customers_gender'],
-                              'company' => $customer_address['entry_company'],
-                              'street_address' => $customer_address['entry_street_address'],
-                              'suburb' => $customer_address['entry_suburb'],
-                              'city' => $customer_address['entry_city'],
-                              'postcode' => $customer_address['entry_postcode'],
-                              'state' => ((xtc_not_null($customer_address['entry_state'])) ? $customer_address['entry_state'] : $customer_address['zone_name']),
-                              'zone_id' => $customer_address['entry_zone_id'],
-                              'country' => array('id' => $customer_address['countries_id'],
-                                                 'title' => $customer_address['countries_name'],
-                                                 'iso_code_2' => $customer_address['countries_iso_code_2'],
-                                                 'iso_code_3' => $customer_address['countries_iso_code_3']
-                                                ),
-                              'format_id' => $customer_address['address_format_id'],
-                              'telephone' => $customer_address['customers_telephone'],
-                              'payment_unallowed' => $customer_address['payment_unallowed'],
-                              'shipping_unallowed' => $customer_address['shipping_unallowed'],
-                              'email_address' => $customer_address['customers_email_address']);
+      $this->customer = array(
+          'firstname' => $customer_address['customers_firstname'],
+          'lastname' => $customer_address['customers_lastname'],
+          'csID' => $customer_address['customers_cid'],
+          'gender' => $customer_address['customers_gender'],
+          'company' => $customer_address['entry_company'],
+          'street_address' => $customer_address['entry_street_address'],
+          'suburb' => $customer_address['entry_suburb'],
+          'city' => $customer_address['entry_city'],
+          'postcode' => $customer_address['entry_postcode'],
+          'state' => ((xtc_not_null($customer_address['entry_state'])) ? $customer_address['entry_state'] : $customer_address['zone_name']),
+          'zone_id' => $customer_address['entry_zone_id'],
+          'country' => array(
+              'id' => $customer_address['countries_id'],
+              'title' => $customer_address['countries_name'],
+              'iso_code_2' => $customer_address['countries_iso_code_2'],
+              'iso_code_3' => $customer_address['countries_iso_code_3']
+            ),
+          'format_id' => $customer_address['address_format_id'],
+          'telephone' => $customer_address['customers_telephone'],
+          'payment_unallowed' => $customer_address['payment_unallowed'],
+          'shipping_unallowed' => $customer_address['shipping_unallowed'],
+          'email_address' => $customer_address['customers_email_address']
+        );
 
-      $this->delivery = array('firstname' => $shipping_address['entry_firstname'],
-                              'lastname' => $shipping_address['entry_lastname'],
-                              'company' => $shipping_address['entry_company'],
-                              'street_address' => $shipping_address['entry_street_address'],
-                              'suburb' => $shipping_address['entry_suburb'],
-                              'city' => $shipping_address['entry_city'],
-                              'postcode' => $shipping_address['entry_postcode'],
-                              'state' => ((xtc_not_null($shipping_address['entry_state'])) ? $shipping_address['entry_state'] : $shipping_address['zone_name']),
-                              'zone_id' => $shipping_address['entry_zone_id'],
-                              'country' => array('id' => $shipping_address['countries_id'],
-                                                 'title' => $shipping_address['countries_name'],
-                                                 'iso_code_2' => $shipping_address['countries_iso_code_2'],
-                                                 'iso_code_3' => $shipping_address['countries_iso_code_3']
-                                                ),
-                              'country_id' => $shipping_address['entry_country_id'],
-                              'format_id' => $shipping_address['address_format_id']);
+      $this->delivery = array(
+          'firstname' => $shipping_address['entry_firstname'],
+          'lastname' => $shipping_address['entry_lastname'],
+          'gender' => $shipping_address['entry_gender'],
+          'company' => $shipping_address['entry_company'],
+          'street_address' => $shipping_address['entry_street_address'],
+          'suburb' => $shipping_address['entry_suburb'],
+          'city' => $shipping_address['entry_city'],
+          'postcode' => $shipping_address['entry_postcode'],
+          'state' => ((xtc_not_null($shipping_address['entry_state'])) ? $shipping_address['entry_state'] : $shipping_address['zone_name']),
+          'zone_id' => $shipping_address['entry_zone_id'],
+          'country' => array(
+              'id' => $shipping_address['countries_id'],
+              'title' => $shipping_address['countries_name'],
+              'iso_code_2' => $shipping_address['countries_iso_code_2'],
+              'iso_code_3' => $shipping_address['countries_iso_code_3']
+            ),
+          'country_id' => $shipping_address['entry_country_id'],
+          'format_id' => $shipping_address['address_format_id']
+        );
 
-      $this->billing = array('firstname' => $billing_address['entry_firstname'],
-                             'lastname' => $billing_address['entry_lastname'],
-                             'company' => $billing_address['entry_company'],
-                             'street_address' => $billing_address['entry_street_address'],
-                             'suburb' => $billing_address['entry_suburb'],
-                             'city' => $billing_address['entry_city'],
-                             'postcode' => $billing_address['entry_postcode'],
-                             'state' => ((xtc_not_null($billing_address['entry_state'])) ? $billing_address['entry_state'] : $billing_address['zone_name']),
-                             'zone_id' => $billing_address['entry_zone_id'],
-                             'country' => array('id' => $billing_address['countries_id'],
-                                                'title' => $billing_address['countries_name'],
-                                                'iso_code_2' => $billing_address['countries_iso_code_2'],
-                                                'iso_code_3' => $billing_address['countries_iso_code_3']
-                                               ),
-                             'country_id' => $billing_address['entry_country_id'],
-                             'format_id' => $billing_address['address_format_id']);
-                             
-      //added gender
-      $this->delivery['gender'] =  $shipping_address['entry_gender'];
-      $this->billing['gender'] =  $billing_addres['entry_gender'];
+      $this->billing = array(
+          'firstname' => $billing_address['entry_firstname'],
+          'lastname' => $billing_address['entry_lastname'],
+          'gender' => $billing_addres['entry_gender'],
+          'company' => $billing_address['entry_company'],
+          'street_address' => $billing_address['entry_street_address'],
+          'suburb' => $billing_address['entry_suburb'],
+          'city' => $billing_address['entry_city'],
+          'postcode' => $billing_address['entry_postcode'],
+          'state' => ((xtc_not_null($billing_address['entry_state'])) ? $billing_address['entry_state'] : $billing_address['zone_name']),
+          'zone_id' => $billing_address['entry_zone_id'],
+          'country' => array(
+              'id' => $billing_address['countries_id'],
+              'title' => $billing_address['countries_name'],
+              'iso_code_2' => $billing_address['countries_iso_code_2'],
+              'iso_code_3' => $billing_address['countries_iso_code_3']
+            ),
+          'country_id' => $billing_address['entry_country_id'],
+          'format_id' => $billing_address['address_format_id']
+        );
 
       $index = 0;
-      // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-      $this->tax_discount = array ();
-      // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
+      $this->tax_discount = array ();#PayPal API Modul / Paypal Express Modul
+
       $products = $_SESSION['cart']->get_products(); //set in includes/classes/shopping_cart.php function get_products
+
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         
         //attribute mapping
