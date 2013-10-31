@@ -40,7 +40,7 @@
         $this->output[] = array('title' => $this->title . ':',
                                 'text' => '<strong>' . $xtPrice->xtcFormat($order->info['total'], true).'</strong>',
                                 'value' => $xtPrice->xtcFormat($order->info['total'], false));
-      } elseif (MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+      } elseif ((MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) || $order->info['total'] >=  $_SESSION['customers_status']['customers_status_show_tax_total']) {
         //BOC Nettopreis anzeigen, auch wenn Brutto bei Kundengruppe
         //echo 'OTT'.$order->info['tax'];
         $sub_total_price = $order->info['total']-$order->info['tax'];

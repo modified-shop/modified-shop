@@ -129,4 +129,7 @@ ALTER TABLE configuration MODIFY configuration_value text;
 ALTER TABLE orders MODIFY payment_method varchar(128);
 ALTER TABLE orders MODIFY shipping_method varchar(128);
 
+#GTB - 2013-10-31 - added show always tax
+ALTER TABLE customers_status ADD customers_status_show_tax_total int(7) DEFAULT '150' AFTER customers_status_show_price_tax;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
