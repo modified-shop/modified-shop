@@ -236,6 +236,11 @@
           'format_id' => $order['billing_address_format_id']
         );
 
+      //example to extend arrays      
+      //$this->customer['example'] = $order['example'];
+      //$this->delivery['example'] = $order['example'];
+      //$this->billing['example'] = $order['example'];
+
       $index = 0;
       $orders_products_query = xtc_db_query("SELECT *
                                              FROM " . TABLE_ORDERS_PRODUCTS . "
@@ -527,6 +532,11 @@
           'country_id' => $billing_address['entry_country_id'],
           'format_id' => $billing_address['address_format_id']
         );
+
+      //example to extend arrays      
+      //$this->customer['example'] = $order['example'];
+      //$this->delivery['example'] = $order['example'];
+      //$this->billing['example'] = $order['example'];
 
       $index = 0;
       $this->tax_discount = array ();#PayPal API Modul / Paypal Express Modul
