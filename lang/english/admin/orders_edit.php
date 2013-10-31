@@ -84,7 +84,6 @@ define('TEXT_ACTUAL', 'actual:');
 define('TEXT_NEW', 'new:');
 define('TEXT_PRICE', 'Costs: ');
 
-// web28 2010-12-07 add new defines
 define('TEXT_ADD_TAX','incl. ');
 define('TEXT_NO_TAX','plus ');
 
@@ -97,19 +96,22 @@ In this case, depending on the customer group the shippingcost entered gross or 
 
 define('TEXT_CUSTOMER_GROUP_INFO', ' <span style="background:#FFD6D6;padding:3px;border:solid 1px red;">When you change the customer group, all invoice items are newly save!</span>');
 
-//web28 2011-05-08 - new error input handling
+
 define('TEXT_ORDER_TITLE', 'Title:');
 define('TEXT_ORDER_VALUE', 'Value:');
 define('ERROR_INPUT_TITLE', 'No title input');
 define('ERROR_INPUT_EMPTY', 'No title and value input');
 define('ERROR_INPUT_SHIPPING_TITLE', 'It has not yet selected a shipping module!');
 
-//web28 2011-07-11 - new note for graduated prices
+// note for graduated prices
 define('TEXT_ORDERS_PRODUCT_EDIT_INFO', '<b>Note:</b> For volume discounts must be manually adjusted the unit price!');
 
-//web28 2011-09-23 - add first- and lastname
 define('TEXT_FIRSTNAME', 'Firstname:');
 define('TEXT_LASTNAME', 'Lastname:');
+
+define('TEXT_GENDER', 'Salutation:'); 
+define('TEXT_MR', 'Mr'); 
+define('TEXT_MRS', 'Mrs'); 
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Save Customers Data');
 

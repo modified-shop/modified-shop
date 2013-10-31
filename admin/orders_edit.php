@@ -14,25 +14,14 @@
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
    Released under the GNU General Public License
-
-   v.1.32 - 2012-05-23 (c) by web28 - www.rpa-com.de
-   Korrektur für Nettosumme bei Modulen ohne Steuersatz
-
-   v.1.31 - 2012-05-23 (c) by web28 - www.rpa-com.de
-    FIX: Preisberechnung Kundengruppenwechsel, Optionspreise bei Sonderpreisen
-
-    v.1.30 - 2012-04-05 (c) by web28 - www.rpa-com.de
-    FIX: order tax by $order->delivery['country_iso_2']
-
-    v.1.28 - 2012-03-22 (c) by web28 - www.rpa-com.de
-    FIX: tax guest account, tax ot_payment, tax cod_fee
-
-    v.1.26 - 2011-11-01 (c) by web28 - www.rpa-com.de
-   NEW Länderwechsel -> delivery_country_iso_code_2, billing_country_iso_code_2
-
+   v.1.32 - 2012-05-23 (c) by web28 - www.rpa-com.de: Korrektur für Nettosumme bei Modulen ohne Steuersatz
+   v.1.31 - 2012-05-23 (c) by web28 - www.rpa-com.de: FIX Preisberechnung Kundengruppenwechsel, Optionspreise bei Sonderpreisen
+   v.1.30 - 2012-04-05 (c) by web28 - www.rpa-com.de: FIX order tax by $order->delivery['country_iso_2']
+   v.1.28 - 2012-03-22 (c) by web28 - www.rpa-com.de: FIX tax guest account, tax ot_payment, tax cod_fee
+   v.1.26 - 2011-11-01 (c) by web28 - www.rpa-com.de: Länderwechsel -> delivery_country_iso_code_2, billing_country_iso_code_2
    TODO Attributpreise und Sonderangebote
-      Bei Sonderangeboten wird der Attributpreis nicht zum Artikelpreis addiert
-    Anpassung in checkout_process.php
+        Bei Sonderangeboten wird der Attributpreis nicht zum Artikelpreis addiert
+        Anpassung in checkout_process.php
    --------------------------------------------------------------*/
 
 //######################//
@@ -86,46 +75,53 @@ if ($action == 'address_edit') {
   $status_query = xtc_db_query("select customers_status_name from ".TABLE_CUSTOMERS_STATUS." where customers_status_id = '".(int)$_POST['customers_status']."' and language_id = '".(int)$lang['languages_id']."' ");
   $status = xtc_db_fetch_array($status_query);
 
-  $sql_data_array = array ('customers_vat_id' => xtc_db_prepare_input($_POST['customers_vat_id']),
-                           'customers_status' => xtc_db_prepare_input($_POST['customers_status']),
-                           'customers_status_name' => xtc_db_prepare_input($status['customers_status_name']),
-                           'customers_company' => xtc_db_prepare_input($_POST['customers_company']),
-                           'customers_firstname' => xtc_db_prepare_input($_POST['customers_firstname']),
-                           'customers_lastname' => xtc_db_prepare_input($_POST['customers_lastname']),
-                           'customers_name' => xtc_db_prepare_input($_POST['customers_firstname']) . ' ' . xtc_db_prepare_input($_POST['customers_lastname']),
-                           'customers_street_address' => xtc_db_prepare_input($_POST['customers_street_address']),
-                           'customers_suburb' => xtc_db_prepare_input($_POST['customers_suburb']),
-                           'customers_city' => xtc_db_prepare_input($_POST['customers_city']),
-                           'customers_postcode' => xtc_db_prepare_input($_POST['customers_postcode']),
-                           'customers_country' => $customers_country['countries_name'],
-                           'customers_telephone' => xtc_db_prepare_input($_POST['customers_telephone']),
-                           'customers_email_address' => xtc_db_prepare_input($_POST['customers_email_address']),
-                           'customers_address_format_id' => xtc_get_address_format_id($_POST['customers_country_id']),
-                           'customers_cid' => xtc_db_prepare_input($_POST['customers_cid']),
-                           'delivery_company' => xtc_db_prepare_input($_POST['delivery_company']),
-                           'delivery_firstname' => xtc_db_prepare_input($_POST['delivery_firstname']),
-                           'delivery_lastname' => xtc_db_prepare_input($_POST['delivery_lastname']),
-                           'delivery_name' => xtc_db_prepare_input($_POST['delivery_firstname']) . ' ' . xtc_db_prepare_input($_POST['delivery_lastname']),
-                           'delivery_street_address' => xtc_db_prepare_input($_POST['delivery_street_address']),
-                           'delivery_suburb' => xtc_db_prepare_input($_POST['delivery_suburb']),
-                           'delivery_city' => xtc_db_prepare_input($_POST['delivery_city']),
-                           'delivery_postcode' => xtc_db_prepare_input($_POST['delivery_postcode']),
-                           'delivery_country' => $delivery_country['countries_name'],
-                           'delivery_country_iso_code_2' => $delivery_country['countries_iso_code_2'],
-                           'delivery_address_format_id' => xtc_get_address_format_id($_POST['delivery_country_id']),
-                           'billing_company' => xtc_db_prepare_input($_POST['billing_company']),
-                           'billing_firstname' => xtc_db_prepare_input($_POST['billing_firstname']),
-                           'billing_lastname' => xtc_db_prepare_input($_POST['billing_lastname']),
-                           'billing_name' => xtc_db_prepare_input($_POST['billing_firstname']) . ' ' . xtc_db_prepare_input($_POST['billing_lastname']),
-                           'billing_street_address' => xtc_db_prepare_input($_POST['billing_street_address']),
-                           'billing_suburb' => xtc_db_prepare_input($_POST['billing_suburb']),
-                           'billing_city' => xtc_db_prepare_input($_POST['billing_city']),
-                           'billing_postcode' => xtc_db_prepare_input($_POST['billing_postcode']),
-                           'billing_country' => $billing_country['countries_name'],
-                           'billing_country_iso_code_2' => $billing_country['countries_iso_code_2'],
-                           'billing_address_format_id' => xtc_get_address_format_id($_POST['billing_country_id']),
-                           'last_modified' => 'now()'
-                           );
+  $sql_data_array = array (
+      'customers_vat_id' => xtc_db_prepare_input($_POST['customers_vat_id']),
+      'customers_status' => xtc_db_prepare_input($_POST['customers_status']),
+      'customers_status_name' => xtc_db_prepare_input($status['customers_status_name']),
+      'customers_company' => xtc_db_prepare_input($_POST['customers_company']),
+      'customers_firstname' => xtc_db_prepare_input($_POST['customers_firstname']),
+      'customers_lastname' => xtc_db_prepare_input($_POST['customers_lastname']),
+      'customers_name' => xtc_db_prepare_input($_POST['customers_firstname']) . ' ' . xtc_db_prepare_input($_POST['customers_lastname']),
+      'customers_street_address' => xtc_db_prepare_input($_POST['customers_street_address']),
+      'customers_suburb' => xtc_db_prepare_input($_POST['customers_suburb']),
+      'customers_city' => xtc_db_prepare_input($_POST['customers_city']),
+      'customers_postcode' => xtc_db_prepare_input($_POST['customers_postcode']),
+      'customers_country' => $customers_country['countries_name'],
+      'customers_telephone' => xtc_db_prepare_input($_POST['customers_telephone']),
+      'customers_email_address' => xtc_db_prepare_input($_POST['customers_email_address']),
+      'customers_address_format_id' => xtc_get_address_format_id($_POST['customers_country_id']),
+      'customers_cid' => xtc_db_prepare_input($_POST['customers_cid']),
+      'delivery_company' => xtc_db_prepare_input($_POST['delivery_company']),
+      'delivery_firstname' => xtc_db_prepare_input($_POST['delivery_firstname']),
+      'delivery_lastname' => xtc_db_prepare_input($_POST['delivery_lastname']),
+      'delivery_name' => xtc_db_prepare_input($_POST['delivery_firstname']) . ' ' . xtc_db_prepare_input($_POST['delivery_lastname']),
+      'delivery_street_address' => xtc_db_prepare_input($_POST['delivery_street_address']),
+      'delivery_suburb' => xtc_db_prepare_input($_POST['delivery_suburb']),
+      'delivery_city' => xtc_db_prepare_input($_POST['delivery_city']),
+      'delivery_postcode' => xtc_db_prepare_input($_POST['delivery_postcode']),
+      'delivery_country' => $delivery_country['countries_name'],
+      'delivery_country_iso_code_2' => $delivery_country['countries_iso_code_2'],
+      'delivery_address_format_id' => xtc_get_address_format_id($_POST['delivery_country_id']),
+      'billing_company' => xtc_db_prepare_input($_POST['billing_company']),
+      'billing_firstname' => xtc_db_prepare_input($_POST['billing_firstname']),
+      'billing_lastname' => xtc_db_prepare_input($_POST['billing_lastname']),
+      'billing_name' => xtc_db_prepare_input($_POST['billing_firstname']) . ' ' . xtc_db_prepare_input($_POST['billing_lastname']),
+      'billing_street_address' => xtc_db_prepare_input($_POST['billing_street_address']),
+      'billing_suburb' => xtc_db_prepare_input($_POST['billing_suburb']),
+      'billing_city' => xtc_db_prepare_input($_POST['billing_city']),
+      'billing_postcode' => xtc_db_prepare_input($_POST['billing_postcode']),
+      'billing_country' => $billing_country['countries_name'],
+      'billing_country_iso_code_2' => $billing_country['countries_iso_code_2'],
+      'billing_address_format_id' => xtc_get_address_format_id($_POST['billing_country_id']),
+      'last_modified' => 'now()'
+    );
+  if (ACCOUNT_GENDER == 'true') {
+    $sql_data_array['customers_gender'] = xtc_db_prepare_input($_POST['customers_gender']);
+    $sql_data_array['delivery_gender'] = xtc_db_prepare_input($_POST['delivery_gender']);
+    $sql_data_array['billing_gender'] = xtc_db_prepare_input($_POST['billing_gender']);
+  }
+  
   
   //added gender
   $sql_data_array['customers_gender'] = xtc_db_prepare_input($_POST['customers_gender']);

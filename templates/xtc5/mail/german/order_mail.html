@@ -27,7 +27,8 @@
           {if $address_label_payment!=$address_label_shipping}<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font></td>{/if}
         </tr>
       </table>
-      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Sehr geehrte{if $GENDER == 'Herr'}r{/if} {$GENDER} {$LASTNAME},
+      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+      {if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},
         <br /><br />vielen Dank f&uuml;r Ihre Bestellung.<br />
  {$PAYMENT_INFO_HTML}</font>
         <br />{if $COMMENTS}<br />
