@@ -454,6 +454,7 @@ CREATE TABLE customers_status (
   customers_status_graduated_prices VARCHAR(1) NOT NULL DEFAULT '0',
   customers_status_show_price INT(1) NOT NULL DEFAULT 1,
   customers_status_show_price_tax INT(1) NOT NULL DEFAULT 1,
+  customers_status_show_tax_total int(7) DEFAULT '150',
   customers_status_add_tax_ot INT(1) NOT NULL DEFAULT 0,
   customers_status_payment_unallowed VARCHAR(255) NOT NULL,
   customers_status_shipping_unallowed VARCHAR(255) NOT NULL,
