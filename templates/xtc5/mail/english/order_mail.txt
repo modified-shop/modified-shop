@@ -9,7 +9,7 @@ Your e-mail-address: {$EMAIL}
 ----------------------------------------------------------------------
 
 
-Dear {$NAME},
+Dear {if $GENDER == 'm'}Mr {elseif $GENDER == 'f'}Mrs {/if}{$NAME},
 
 thank you for your order.
 

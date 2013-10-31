@@ -16,18 +16,20 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+if(preg_match('#' . basename(__FILE__) . '#', $_SERVER['PHP_SELF'])) {
+  die('Direct Access to this location is not allowed.');
+}
+
 require_once (DIR_FS_INC.'xtc_get_order_data.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
+
 // check if customer is allowed to send this order!
 $order_query_check = xtc_db_query("SELECT customers_id
                                      FROM ".TABLE_ORDERS."
                                     WHERE orders_id='".$insert_id."'");
-
 $order_check = xtc_db_fetch_array($order_query_check);
-//BOF - web28 - 2010-03-20 - Send Order by Admin
-//if ($_SESSION['customer_id'] == $order_check['customers_id'] ) {
-if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) {
-//EOF - web28 - 2010-03-20 - Send Order by Admin
+
+if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) { // Send Order by Admin
 
   $order = new order($insert_id);
 
@@ -42,11 +44,9 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   }
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
-  //BOF - web28 - 2010-03-20 - Send Order by Admin
-  if (isset($send_by_admin)) {//DokuMan - 2010-09-18 - Undefined variable: send_by_admin
+  if (isset($send_by_admin)) {
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
   }
-  //EOF - web28 - 2010-03-20 - Send Order by Admin
 
   $smarty->assign('address_label_customer', xtc_address_format($order->customer['format_id'], $order->customer, 1, '', '<br />'));
   $smarty->assign('address_label_shipping', xtc_address_format($order->delivery['format_id'], $order->delivery, 1, '', '<br />'));
@@ -57,12 +57,11 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('order_data', $order->getOrderData($insert_id)); //ACHTUNG für Bestellbestätigung  aus Admin Funktion in admin/includes/classes/order.php
   $smarty->assign('order_total', $order_total['data']);
 
-  // assign language to template for caching Web28 2012-04-25 - change all $_SESSION['language'] to $order->info['language']
+  // assign language to template for caching
   $smarty->assign('language', $order->info['language']);
   $smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
   $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
-  //$smarty->assign('oID', $insert_id);
-  $smarty->assign('oID', $order->info['order_id']); //DokuMan - 2011-08-31 - fix order_id assignment
+  $smarty->assign('oID', $order->info['order_id']);
 
   //shipping method
   if ($order->info['shipping_class'] != '' && $order->info['shipping_class'] != 'free_free') {
@@ -84,20 +83,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
   $smarty->assign('NAME', $order->customer['name']);
-
-  //BOF - web28 - 2010-08-20 - Fix for more personalized e-mails to the customer (show salutation and surname)
-  $gender_query = xtc_db_query("SELECT customers_gender FROM " . TABLE_CUSTOMERS . " WHERE customers_id = '" . $order->customer['id'] . "'");
-  $gender = xtc_db_fetch_array($gender_query);
-  if ($gender['customers_gender']=='f') {
-    $smarty->assign('GENDER', FEMALE);
-  } elseif ($gender['customers_gender']=='m') {
-    $smarty->assign('GENDER', MALE);
-  } else {
-    $smarty->assign('GENDER', '');
-  }
-  //EOF - web28 - 2010-08-20 - Fix for more personalized e-mails to the customer (show salutation and surname)
-
-  //BOF - web28 - 2010-08-20 - Erweiterung Variablen für Bestätigungsmail
+  $smarty->assign('GENDER', $order->customer['gender']);
   $smarty->assign('CITY', $order->customer['city']);
   $smarty->assign('POSTCODE', $order->customer['postcode']);
   $smarty->assign('STATE', $order->customer['state']);
@@ -105,49 +91,38 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('COMPANY', $order->customer['company']);
   $smarty->assign('STREET', $order->customer['street_address']);
   $smarty->assign('FIRSTNAME', $order->customer['firstname']);
-    $smarty->assign('LASTNAME', $order->customer['lastname']);
-  //EOF - web28 - 2010-08-20 - Erweiterung Variablen für Bestätigungsmail
+  $smarty->assign('LASTNAME', $order->customer['lastname']);
 
   $smarty->assign('COMMENTS', $order->info['comments']);
   $smarty->assign('EMAIL', $order->customer['email_address']);
   $smarty->assign('PHONE',$order->customer['telephone']);
 
-  require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+  #todo: check installed
+  require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); #BILLPAY payment module
 
   //BOF  - web28 - 2010-03-27 PayPal Bezahl-Link
   unset ($_SESSION['paypal_link']);
   if ($order->info['payment_method'] == 'paypal_ipn') {
-
-    //BOF - web28 - 2010-06-11 - Send Order  by Admin Paypal IPN
-    if(isset($send_by_admin)) { //DokuMan - 2010-09-18 - Undefined variable: send_by_admin
+    if(isset($send_by_admin)) {
       require (DIR_FS_CATALOG_MODULES.'payment/paypal_ipn.php');
       include(DIR_FS_LANGUAGES.$order->info['language'].'/modules/payment/paypal_ipn.php');
       $payment_modules = new paypal_ipn;
     }
-    //EOF - web28 - 2010-06-11 - Send Order  by Admin Paypal IPN
-
     $order_id= $insert_id;
     $paypal_link = array();
     $payment_modules->create_paypal_link();
-
     $smarty->assign('PAYMENT_INFO_HTML', $paypal_link['html']);
     $smarty->assign('PAYMENT_INFO_TXT',  MODULE_PAYMENT_PAYPAL_IPN_TXT_EMAIL . $paypal_link['text']);
     $_SESSION['paypal_link']= $paypal_link['checkout'];
-
   }
   //EOF  - web28 - 2010-03-27 PayPal Bezahl-Link
 
   // PAYMENT MODUL TEXTS
-  // EU Bank Transfer
-  if ($order->info['payment_method'] == 'eustandardtransfer') {
-    $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_EUTRANSFER_TEXT_DESCRIPTION);
-    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_EUTRANSFER_TEXT_DESCRIPTION));
-  }
-
-  // MONEYORDER
-  if ($order->info['payment_method'] == 'moneyorder') {
-    $smarty->assign('PAYMENT_INFO_HTML', MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION);
-    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_MONEYORDER_TEXT_DESCRIPTION));
+  $payment_method_array = array('eustandardtransfer','moneyorder');
+  if (in_array($order->info['payment_method'],$payment_method_array)) {
+    $payment_text = defined('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') ? constant('MODULE_PAYMENT_'.strtoupper($order->info['payment_method']).'_TEXT_DESCRIPTION') : '';
+    $smarty->assign('PAYMENT_INFO_HTML', $payment_text);
+    $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $payment_text));
   }
   
   // Cash on Delivery
@@ -169,12 +144,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   // dont allow cache
   $smarty->caching = 0;
 
-  // BOF - Tomcraft - 2011-06-17 - Added revocation to email  
-  $shop_content_data = $main->getContentData(REVOCATION_ID);  
-  $revocation = $shop_content_data['content_text'];  
-  $smarty->assign('REVOCATION_HTML', $revocation);
-  $smarty->assign('REVOCATION_TXT', $revocation); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail  function
-  // EOF - Tomcraft - 2011-06-17 - Added revocation to email
+  // revocation to email  
+  $shop_content_data = $main->getContentData(REVOCATION_ID);
+  $smarty->assign('REVOCATION_HTML', $shop_content_data['content_text']);
+  $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail function
 
   if (DOWNLOAD_ENABLED == 'true') {
     $send_order = true;
@@ -232,20 +205,18 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     if ($aBUY->order_send())
       $aBUY->process_order();
   }
-  //BOF - web28 - 2010-03-20 - Send Order by Admin
-  if(isset($send_by_admin)) { //DokuMan - 2010-09-18 - Undefined variable: send_by_admin
+
+  if(isset($send_by_admin)) {
     $customer_notified = '1';
     $orders_status_id = '1';
     //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nächste Zeile, um die $orders_status_id = '1' zu setzen
     $orders_status_id = ($order->info['orders_status']  < 1) ? '1' : $order->info['orders_status'];
 
-    //web28 - 2011-03-20 - Fix order status
     xtc_db_query("UPDATE ".TABLE_ORDERS."
                      SET orders_status = '".xtc_db_input($orders_status_id)."',
                          last_modified = now()
                    WHERE orders_id = '".xtc_db_input($insert_id)."'");
 
-    //web28 - 2011-08-26 - Fix order status history
     xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY."
                           SET orders_id = '".xtc_db_input($insert_id)."',
                               orders_status_id = '".xtc_db_input($orders_status_id)."',
@@ -255,11 +226,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
     $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
 
-    if (isset($_GET['site']) && $_GET['site'] == 1) { //DokuMan - 2010-09-18 - Undefined variable
+    if (isset($_GET['site']) && $_GET['site'] == 1) {
       xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&action=edit'));
     } else xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID']));
   }
-  //EOF - web28 - 2010-03-20 - Send Order by Admin
 
 } else {
   $smarty->assign('ERROR', 'You are not allowed to view this order!');

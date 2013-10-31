@@ -83,7 +83,6 @@ define('TEXT_ACTUAL', 'Aktuell: ');
 define('TEXT_NEW', 'Neu: ');
 define('TEXT_PRICE', 'Kosten: ');
 
-// web28 2010-12-07 add new defines
 define('TEXT_ADD_TAX','inkl. ');
 define('TEXT_NO_TAX','zzgl. ');
 
@@ -96,19 +95,21 @@ Hierbei sind je nach Kundengruppe die Versandkosten brutto oder netto einzutrage
 
 define('TEXT_CUSTOMER_GROUP_INFO', ' <span style="background:#FFD6D6;padding:3px;border:solid 1px red;">Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!</span>');
 
-//web28 2011-05-08 - new error input handling
 define('TEXT_ORDER_TITLE', 'Titel:');
 define('TEXT_ORDER_VALUE', 'Wert:');
 define('ERROR_INPUT_TITLE', 'Keine Eingabe bei Titel');
 define('ERROR_INPUT_EMPTY', 'Keine Eingabe bei Titel und Wert');
 define('ERROR_INPUT_SHIPPING_TITLE', 'Es wurde noch kein Versandkostenmodul ausgew&auml;hlt!');
 
-//web28 2011-07-11 - new note for graduated prices
+// note for graduated prices
 define('TEXT_ORDERS_PRODUCT_EDIT_INFO', '<b>Hinweis:</b> Bei Staffelpreisen muss der Einzelpreis manuell angepasst werden!');
 
-//web28 2011-09-23 - add first- and lastname
 define('TEXT_FIRSTNAME', 'Vorname:');
 define('TEXT_LASTNAME', 'Nachname:');
+
+define('TEXT_GENDER', 'Anrede:'); 
+define('TEXT_MR', 'Herr'); 
+define('TEXT_MRS', 'Frau'); 
 
 define('TEXT_SAVE_CUSTOMERS_DATA', 'Kundendaten speichern');
 
