@@ -157,12 +157,14 @@
 
               // Banktransfer - START
               $banktransfer_query = xtc_db_query("-- /admin/orders.php
-                                                  SELECT banktransfer_prz,
-                                                         banktransfer_status,
-                                                         banktransfer_owner,
+                                                   SELECT banktransfer_owner,
                                                          banktransfer_number,
                                                          banktransfer_bankname,
                                                          banktransfer_blz,
+                                                         banktransfer_iban,
+                                                         banktransfer_bic,
+                                                         banktransfer_status,
+                                                         banktransfer_prz,
                                                          banktransfer_fax
                                                     FROM ".TABLE_BANKTRANSFER."
                                                    WHERE orders_id = ".$oID);
@@ -187,6 +189,14 @@
                   <tr>
                     <td class="main"><?php echo TEXT_BANK_OWNER; ?></td>
                     <td class="main"><?php echo $banktransfer['banktransfer_owner']; ?></td>
+                  </tr>
+                  <tr>
+                    <td class="main"><?php echo TEXT_BANK_IBAN; ?></td>
+                    <td class="main"><?php echo $banktransfer['banktransfer_iban']; ?></td>
+                  </tr>
+                  <tr>
+                    <td class="main"><?php echo TEXT_BANK_BIC; ?></td>
+                    <td class="main"><?php echo $banktransfer['banktransfer_bic']; ?></td>
                   </tr>
                   <?php  if ($banktransfer['banktransfer_status'] == 0) { ?>
                   <tr>
@@ -394,14 +404,16 @@
         ?><tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
-              <tr>
-                <td class="main"><b><?php echo ENTRY_NOTIFY_CUSTOMER; ?></b></td>
-                <td class="main"><?php echo xtc_draw_checkbox_field('notify', '', true); ?></td>
-                <td class="main"><b><?php echo ENTRY_NOTIFY_COMMENTS; ?></b></td>
-                <td class="main"><?php echo xtc_draw_checkbox_field('notify_comments', '', true); ?></td>
-                <td valign="bottom">&nbsp;&nbsp;&nbsp;<input type="submit" class="button" value="<?php echo BUTTON_UPDATE; ?>"></td>
-              </tr>
-            </table>
+                <tr>
+                  <td class="main"><b><?php echo ENTRY_NOTIFY_CUSTOMER; ?></b></td>
+                  <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify', '', true); ?></td>
+                  <td class="main"><b><?php echo ENTRY_NOTIFY_COMMENTS; ?></b></td>
+                  <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify_comments', '', true); ?></td>
+                </tr>
+              </table>
+              <input type="hidden" name="email_preview" value="">
+              <div style="float:right; margin: 10px 0 0;"><input type="submit" class="button" name="update" value="<?php echo BUTTON_UPDATE; ?>"></div>
+              <div style="float:right; margin: 10px 0 0;"><a class="button" href="Javascript:void()" onclick="email_popup()"><?php echo 'EMAIL '.BUTTON_PREVIEW; ?></a></div>
             </td>
           </tr>
           </form>
