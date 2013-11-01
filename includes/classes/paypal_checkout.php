@@ -1195,7 +1195,7 @@ if (defined('PAYPAL_API_VERSION')) {
       $xtc_order_id=(int)substr($this->data['invoice'],strlen(PAYPAL_INVOICE));
       if(isset($xtc_order_id) && is_numeric($xtc_order_id) && ($xtc_order_id > 0)) {
         // order suchen
-        $order_query = xtc_db_query("SELECT currency, currency_value, order_status_id
+        $order_query = xtc_db_query("SELECT currency, currency_value, orders_status
                                     FROM " . TABLE_ORDERS . "
                                     WHERE orders_id = '" . xtc_db_prepare_input($xtc_order_id) . "'");
         if(xtc_db_num_rows($order_query) > 0) {
