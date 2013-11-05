@@ -71,7 +71,7 @@ if(isset($shopgateJsHeader)) echo $shopgateJsHeader;
 ?>
 <!--
 =========================================================
-modified eCommerce Shopsoftware (c) 2009-2012 [www.modified-shop.org]
+modified eCommerce Shopsoftware (c) 2009-2013 [www.modified-shop.org]
 =========================================================
 
 modified eCommerce Shopsoftware offers you highly scalable E-Commerce-Solutions and Services.
@@ -131,38 +131,32 @@ function popupImageWindow(url) {
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
-if (strstr($PHP_SELF, FILENAME_CHECKOUT_PAYMENT)) {
- echo $payment_modules->javascript_validation();
-}
+switch(trim($PHP_SELF, '/')) {
 
-if (strstr($PHP_SELF, FILENAME_CHECKOUT_SHIPPING)) {
- echo $shipping_modules->javascript_validation();
-}
+  case FILENAME_CHECKOUT_PAYMENT:
+      echo $payment_modules->javascript_validation();
+    break;
 
-if (strstr($PHP_SELF, FILENAME_CREATE_ACCOUNT)) {
-  require('includes/form_check.js.php');
-}
+  case FILENAME_CHECKOUT_SHIPPING:
+      echo $shipping_modules->javascript_validation();
+    break;
 
-if (strstr($PHP_SELF, FILENAME_CREATE_GUEST_ACCOUNT )) {
-  require('includes/form_check.js.php');
-}
-if (strstr($PHP_SELF, FILENAME_ACCOUNT_PASSWORD )) {
-  require('includes/form_check.js.php');
-}
+  case FILENAME_CREATE_ACCOUNT:
+  case FILENAME_CREATE_GUEST_ACCOUNT:
+  case FILENAME_ACCOUNT_PASSWORD:
+  case FILENAME_ACCOUNT_EDIT:
+      require('includes/form_check.js.php');
+    break;
 
-if (strstr($PHP_SELF, FILENAME_ACCOUNT_EDIT )) {
-  require('includes/form_check.js.php');
-}
+  case FILENAME_ADDRESS_BOOK_PROCESS:
+      if (isset($_GET['delete']) == false) {
+        include('includes/form_check.js.php');
+      }
+    break;
 
-if (strstr($PHP_SELF, FILENAME_ADDRESS_BOOK_PROCESS )) {
-  if (isset($_GET['delete']) == false) {
-    include('includes/form_check.js.php');
-  }
-}
-
-if (strstr($PHP_SELF, FILENAME_CHECKOUT_SHIPPING_ADDRESS ) || strstr($PHP_SELF,FILENAME_CHECKOUT_PAYMENT_ADDRESS)) {
-  require('includes/form_check.js.php');
-  ?>
+  case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
+  case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
+      require('includes/form_check.js.php'); ?>
 <script type="text/javascript"><!--
 function check_form_optional(form_name) {
   var form = form_name;
@@ -176,69 +170,13 @@ function check_form_optional(form_name) {
   }
 }
 //--></script>
-  <?php
-}
+<?php break;
 
-if (strstr($PHP_SELF, FILENAME_ADVANCED_SEARCH )) {
-?>
-<script type="text/javascript" src="includes/general.js"></script>
-<script type="text/javascript"><!--
-function check_form() {
-  var error_message = unescape("<?php echo xtc_js_lang(JS_ERROR); ?>");
-  var error_found = false;
-  var error_field;
-  var keywords = document.getElementById("advanced_search").keywords.value;
-  var pfrom = document.getElementById("advanced_search").pfrom.value;
-  var pto = document.getElementById("advanced_search").pto.value;
-  var pfrom_float;
-  var pto_float;
-  if ( (keywords == '' || keywords.length < 1) && (pfrom == '' || pfrom.length < 1) && (pto == '' || pto.length < 1) ) {
-    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_AT_LEAST_ONE_INPUT); ?>");
-    error_field = document.getElementById("advanced_search").keywords;
-    error_found = true;
-  }
-  if (pfrom.length > 0) {
-    pfrom_float = parseFloat(pfrom);
-    if (isNaN(pfrom_float)) {
-      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_PRICE_FROM_MUST_BE_NUM); ?>");
-      error_field = document.getElementById("advanced_search").pfrom;
-      error_found = true;
-    }
-  } else {
-    pfrom_float = 0;
-  }
-  if (pto.length > 0) {
-    pto_float = parseFloat(pto);
-    if (isNaN(pto_float)) {
-      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_PRICE_TO_MUST_BE_NUM); ?>");
-      error_field = document.getElementById("advanced_search").pto;
-      error_found = true;
-    }
-  } else {
-    pto_float = 0;
-  }
-  if ( (pfrom.length > 0) && (pto.length > 0) ) {
-    if ( (!isNaN(pfrom_float)) && (!isNaN(pto_float)) && (pto_float < pfrom_float) ) {
-      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_PRICE_TO_LESS_THAN_PRICE_FROM); ?>");
-      error_field = document.getElementById("advanced_search").pto;
-      error_found = true;
-    }
-  }
-  if (error_found == true) {
-    alert(error_message);
-    error_field.focus();
-    return false;
-  }
-}
-function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
-}
-//--></script>
-<?php
-}
+  case FILENAME_ADVANCED_SEARCH:
+      echo '<script type="text/javascript" src="includes/general.js"></script>' . PHP_EOL;
+    break;
 
-if (strstr($PHP_SELF, FILENAME_PRODUCT_REVIEWS_WRITE )) {
-?>
+  case FILENAME_PRODUCT_REVIEWS_WRITE: ?>
 <script type="text/javascript"><!--
 function checkForm() {
   var error = 0;
@@ -260,10 +198,9 @@ function checkForm() {
   }
 }
 //--></script>
-<?php
-}
-if (strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) {
-?>
+<?php break;
+
+  case FILENAME_POPUP_IMAGE: ?>
 <script type="text/javascript"><!--
 var i=0;
 function resize() {
@@ -272,32 +209,18 @@ function resize() {
   self.focus();
 }
 //--></script>
-<?php 
-}
+<?php break;
+
+} // END SWITCH
+
 ?>
 </head>
 <body<?php if(strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) echo ' onload="resize();"'; ?>>
 <?php
 
-// econda tracking
-if (TRACKING_ECONDA_ACTIVE=='true') { ?>
-<script type="text/javascript"><!--
-var emos_kdnr='<?php echo TRACKING_ECONDA_ID; ?>';
-//--></script>
-<a name="emos_sid" rel="<?php echo session_id(); ?>" rev=""></a>
-<a name="emos_name" title="siteid" rel="<?php echo $_SESSION['languages_id']; ?>" rev=""></a>
-<?php
-}
-
-if (strstr($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) && GOOGLE_CONVERSION == 'true') {
-  require('includes/google_conversiontracking.js.php');
-}
-
 // include needed functions
 require_once('inc/xtc_output_warning.inc.php');
-require_once('inc/xtc_image.inc.php');
 require_once('inc/xtc_parse_input_field_data.inc.php');
-require_once('inc/xtc_draw_separator.inc.php');
 
 // check if the 'install' directory exists, and warn of its existence
 if (WARN_INSTALL_EXISTENCE == 'true') {
@@ -328,7 +251,7 @@ if (WARN_SESSION_DIRECTORY_NOT_WRITEABLE == 'true') {
 }
 
 // check session.auto_start is disabled
-if ( (function_exists('ini_get')) && (WARN_SESSION_AUTO_START == 'true') ) {
+if ( (WARN_SESSION_AUTO_START == 'true') && (function_exists('ini_get')) ) {
   if (ini_get('session.auto_start') == '1') {
     xtc_output_warning(WARNING_SESSION_AUTO_START);
   }
@@ -340,12 +263,12 @@ if ( (WARN_DOWNLOAD_DIRECTORY_NOT_READABLE == 'true') && (DOWNLOAD_ENABLED == 't
   }
 }
 
-$smarty->assign('navtrail',$breadcrumb->trail(' &raquo; '));
+$smarty->assign('navtrail', $breadcrumb->trail(' &raquo; '));
 if (isset($_SESSION['customer_id'])) {
 	$smarty->assign('logoff',xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
 } else {
 	$smarty->assign('login',xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
-	$smarty->assign('create_account',xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL')); //DokuMan also assign create_account-link for new visitors
+	$smarty->assign('create_account',xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
 }
 $smarty->assign('index',xtc_href_link(FILENAME_DEFAULT));
 if ( $_SESSION['account_type']=='0') {
@@ -362,9 +285,10 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 	$smarty->assign('error','<p class="errormessage">'.encode_htmlspecialchars($_GET['info_message']).'</p>');
 }
 
-include(DIR_WS_INCLUDES.FILENAME_BANNER);
+## header_body_extra
 
 // SHOP OFFLINE INFO
+// todo: move SHOP_OFFLINE to configuration
 if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status']['customers_status'] != '0') {	
   $smarty->assign('language', $_SESSION['language']);
   $smarty->assign('shop_offline_msg', xtc_get_shop_conf('SHOP_OFFLINE_MSG'));	
@@ -372,7 +296,25 @@ if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status
   exit();
 }
 
-### BILLSAFE payment module - BillSAFE-Layer Start
+// ECONDA TRACKING
+if (TRACKING_ECONDA_ACTIVE=='true') {
+  echo '<script type="text/javascript"><!--', PHP_EOL,
+       '  var emos_kdnr="', TRACKING_ECONDA_ID, '";', PHP_EOL,
+       '//--></script>', PHP_EOL,
+       '<a name="emos_sid" rel="', session_id(),'"></a>', PHP_EOL,
+       '<a name="emos_name" title="siteid" rel="', $_SESSION['languages_id'],'" rev=""></a>',
+       PHP_EOL;
+}
+
+// GOOGLE CONV. TRACKING
+if (trim($PHP_SELF, '/') == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'true') {
+  require('includes/google_conversiontracking.js.php');
+}
+
+// BANNER SYSTEM
+include(DIR_WS_INCLUDES.FILENAME_BANNER);
+
+// BILLSAFE PAYMENT MODULE
 if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
   $bs_error = '';
   if (basename($PHP_SELF) == 'checkout_payment.php') {
@@ -389,5 +331,5 @@ if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYE
          '--></script>' . PHP_EOL;
   }
 }
-### BILLSAFE payment module - BillSAFE-Layer End
+## header_body_extra
 ?>

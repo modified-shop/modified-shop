@@ -1,15 +1,16 @@
 /* -----------------------------------------------------------------------------------------
-   $Id: general.js 899 2005-04-29 02:40:57Z hhgag $
+   $Id:$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(general.js,v 1.3 2003/02/10); www.oscommerce.com
-   (c) 2003	 nextcommerce (general.js,v 1.3 2003/08/13); www.nextcommerce.org 
+   (c) 2003	nextcommerce (general.js,v 1.3 2003/08/13); www.nextcommerce.org 
+   (c) 2003 XT-Commerce (general.js, 2005/04/29);
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
@@ -192,4 +193,56 @@ function IsLeapYear(intYear) {
   }
 
   return false;
+}
+
+function check_form() {
+  var error_message = unescape("<?php echo xtc_js_lang(JS_ERROR); ?>");
+  var error_found = false;
+  var error_field;
+  var keywords = document.getElementById("advanced_search").keywords.value;
+  var pfrom = document.getElementById("advanced_search").pfrom.value;
+  var pto = document.getElementById("advanced_search").pto.value;
+  var pfrom_float;
+  var pto_float;
+  if ( (keywords == '' || keywords.length < 1) && (pfrom == '' || pfrom.length < 1) && (pto == '' || pto.length < 1) ) {
+    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_AT_LEAST_ONE_INPUT); ?>");
+    error_field = document.getElementById("advanced_search").keywords;
+    error_found = true;
+  }
+  if (pfrom.length > 0) {
+    pfrom_float = parseFloat(pfrom);
+    if (isNaN(pfrom_float)) {
+      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_PRICE_FROM_MUST_BE_NUM); ?>");
+      error_field = document.getElementById("advanced_search").pfrom;
+      error_found = true;
+    }
+  } else {
+    pfrom_float = 0;
+  }
+  if (pto.length > 0) {
+    pto_float = parseFloat(pto);
+    if (isNaN(pto_float)) {
+      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_PRICE_TO_MUST_BE_NUM); ?>");
+      error_field = document.getElementById("advanced_search").pto;
+      error_found = true;
+    }
+  } else {
+    pto_float = 0;
+  }
+  if ( (pfrom.length > 0) && (pto.length > 0) ) {
+    if ( (!isNaN(pfrom_float)) && (!isNaN(pto_float)) && (pto_float < pfrom_float) ) {
+      error_message = error_message + unescape("<?php echo xtc_js_lang(JS_PRICE_TO_LESS_THAN_PRICE_FROM); ?>");
+      error_field = document.getElementById("advanced_search").pto;
+      error_found = true;
+    }
+  }
+  if (error_found == true) {
+    alert(error_message);
+    error_field.focus();
+    return false;
+  }
+}
+
+function popupWindow(url) {
+  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=450,height=280,screenX=150,screenY=150,top=150,left=150')
 }
