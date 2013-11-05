@@ -1,17 +1,18 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: application_top_export.php 1323 2005-10-27 17:58:08Z mz $
+   $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(application_top.php,v 1.273 2003/05/19); www.oscommerce.com
    (c) 2003	 nextcommerce (application_top.php,v 1.54 2003/08/25); www.nextcommerce.org 
-
+   (c) 2003 XT-Commerce
+   
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
    Third Party contribution:
@@ -24,22 +25,20 @@
 define('PAGE_PARSE_START_TIME', microtime());
 
 // set the level of error reporting
-//error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
 error_reporting(0);
-//  error_reporting(E_ALL);
+
+// Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
+if (file_exists('../../includes/local/configure.php')) {
+  include('../../includes/local/configure.php');
+} else {
+  include('../../includes/configure.php');
+}
 
 /*
  * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
  */
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
-
-// Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
-if (file_exists('../includes/local/configure.php')) {
-  include('../includes/local/configure.php');
-} else {
-  include('../includes/configure.php');
-}
 
 require_once (DIR_FS_INC . 'auto_require.inc.php');
 
@@ -52,19 +51,16 @@ if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
 // define the project version
 define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
 
-// BOF - Tomcraft - 2009-11-09 - Added missing definition for TAX_DECIMAL_PLACES
 define('TAX_DECIMAL_PLACES', 0);
-// EOF - Tomcraft - 2009-11-09 - Added missing definition for TAX_DECIMAL_PLACES
 
 // set the type of request (secure or not)
-//BOF - web28 - 2010-09-03 - added native support for SSL-proxy connections
-//$request_type = (getenv('HTTPS') == '1' || getenv('HTTPS') == 'on') ? 'SSL' : 'NONSSL';
 if (file_exists('includes/request_type.php')) {
-	include ('includes/request_type.php');
-} else $request_type = 'NONSSL';
-//EOF - web28 - 2010-09-03 - added native support for SSL-proxy connections
+  include ('includes/request_type.php');
+} else {
+  $request_type = 'NONSSL';
+}
 
-// set php_self in the local scope
+// Base/PHP_SELF/SSL-PROXY
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
 $PHP_SELF = set_php_self();
 
@@ -76,6 +72,7 @@ require(DIR_WS_INCLUDES . 'filenames.php');
 
 // include the list of project database tables
 require(DIR_WS_INCLUDES . 'database_tables.php');
+
 
 // Store DB-Querys in a Log File
 define('STORE_DB_TRANSACTIONS', 'false');
