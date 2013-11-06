@@ -124,30 +124,24 @@ function mod_calculate_shipping_cost($products_id, $products_price) {
   // init shipping content array
   $shipping_content = array ();
   
-  $count = 0;
+  $count = $index = 0;
   if ($free_shipping == true) {
+    $index = $count;
     $shipping_content[$count] = array('country' => $order->delivery['country']['iso_code_2'],
                                       'service' => FREE_SHIPPING_TITLE,
                                       'price' => floatval(0)
                                       );
     $count ++;
   } elseif ($free_shipping_freeamount) {
+    $index = $count;
     $shipping_content[$count] = array('country' => $order->delivery['country']['iso_code_2'],
                                       'service' => $quote['module'],
                                       'price' => floatval(0)
                                       );
     $count ++;
   } else {
-    if ($has_freeamount) {
-      $shipping_content[$count] = array('country' => $order->delivery['country']['iso_code_2'],
-                                        'service' => $quote['error'],
-                                        'price' => floatval(0)
-                                        );
-      $count ++;
-    }
     
     $cheapest = '-1';
-    $index = $count;
     foreach ($quotes AS $quote) {
       if ($quote['id'] != 'freeamount' && $quote['id'] != 'selfpickup') {
         $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
