@@ -124,38 +124,27 @@ function mod_calculate_shipping_cost($products_id, $products_price) {
   // init shipping content array
   $shipping_content = array ();
   
-  $count = $index = 0;
   if ($free_shipping == true) {
-    $index = $count;
-    $shipping_content[$count] = array('country' => $order->delivery['country']['iso_code_2'],
-                                      'service' => FREE_SHIPPING_TITLE,
-                                      'price' => floatval(0)
-                                      );
-    $count ++;
+    $shipping_content[] = array('country' => $order->delivery['country']['iso_code_2'],
+                                'service' => FREE_SHIPPING_TITLE,
+                                'price' => floatval(0)
+                                );
   } elseif ($free_shipping_freeamount) {
-    $index = $count;
-    $shipping_content[$count] = array('country' => $order->delivery['country']['iso_code_2'],
-                                      'service' => $quote['module'],
-                                      'price' => floatval(0)
-                                      );
-    $count ++;
+    $shipping_content[] = array('country' => $order->delivery['country']['iso_code_2'],
+                                'service' => $quote['module'],
+                                'price' => floatval(0)
+                                );
   } else {
     
-    $cheapest = '-1';
     foreach ($quotes AS $quote) {
       if ($quote['id'] != 'freeamount' && $quote['id'] != 'selfpickup') {
         $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
         $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
-        if ($value < $cheapest || $cheapest == '-1') {
-          $cheapest = $value;
-          $index = $count;
-        }
         $value = $xtPrice->xtcFormat($value, false);
-        $shipping_content[$count] = array('country' => $order->delivery['country']['iso_code_2'],
-                                          'service' => $quote['module'] . (!empty($quote['methods'][0]['title']) ? ' - '.$quote['methods'][0]['title'] : ''), 
-                                          'price' => floatval($value),
-                                          );
-        $count ++;
+        $shipping_content[] = array('country' => $order->delivery['country']['iso_code_2'],
+                                    'service' => $quote['module'] . (!empty($quote['methods'][0]['title']) ? ' - '.$quote['methods'][0]['title'] : ''), 
+                                    'price' => floatval($value),
+                                    );
       }
     }
   }
@@ -168,7 +157,7 @@ function mod_calculate_shipping_cost($products_id, $products_price) {
   unset($_SESSION['shipping']);
 
   // return cheapest Shipping module
-  return array($shipping_content[$index]);
+  return $shipping_content;
 }
 
 
