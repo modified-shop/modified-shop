@@ -131,7 +131,7 @@ function popupImageWindow(url) {
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
-switch(trim($PHP_SELF, '/')) {
+switch(basename($PHP_SELF)) {
 
   case FILENAME_CHECKOUT_PAYMENT:
       echo $payment_modules->javascript_validation();
@@ -215,7 +215,7 @@ function resize() {
 
 ?>
 </head>
-<body<?php if(strstr($PHP_SELF, FILENAME_POPUP_IMAGE )) echo ' onload="resize();"'; ?>>
+<body<?php if(basename($PHP_SELF) == FILENAME_POPUP_IMAGE) echo ' onload="resize();"'; ?>>
 <?php
 
 // include needed functions
@@ -307,7 +307,7 @@ if (TRACKING_ECONDA_ACTIVE=='true') {
 }
 
 // GOOGLE CONV. TRACKING
-if (trim($PHP_SELF, '/') == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'true') {
+if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS && GOOGLE_CONVERSION == 'true') {
   require('includes/google_conversiontracking.js.php');
 }
 
