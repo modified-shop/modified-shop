@@ -14,11 +14,12 @@
    ---------------------------------------------------------------------------------------*/
 	
 chdir('../../');
-require ('includes/application_top.php');
+include ('includes/application_top.php');
 
 // include needed functions
 require_once (DIR_FS_EXTERNAL.'findologic/findologic_config.inc.php');
 require_once (FL_FS_API.'includes/functions.php');
+require_once (DIR_WS_CLASSES.'language.php');
 
 // authorized ?
 if (!isset($_GET['shop']) || $_GET['shop'] != FL_SHOP_ID) {
@@ -115,7 +116,7 @@ if (xtc_db_num_rows($result)) {
       output_row($row);
     }
 
-    if (select_product($row['id'], $useKeywords, $debug)) {
+    if (select_product($row['products_id'], $debug)) {
       $products_exported++;
     }
   
