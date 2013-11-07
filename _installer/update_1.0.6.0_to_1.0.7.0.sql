@@ -135,4 +135,6 @@ ALTER TABLE customers_status ADD customers_status_show_tax_total int(7) DEFAULT 
 ALTER TABLE categories_description MODIFY categories_id INT(11) NOT NULL;
 ALTER TABLE products_description MODIFY products_id INT(11) NOT NULL;
 
+ALTER TABLE zones MODIFY zone_name VARCHAR(64) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
