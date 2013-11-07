@@ -13,3 +13,4 @@ Disallow: /pub/
 Disallow: /shopstat/
 Disallow: /templates/
 Disallow: /templates_c/
+Disallow: /findologic.php?
