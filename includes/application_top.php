@@ -206,6 +206,8 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
 
 
+
+
 // move to xtc_db_queryCached.inc.php
 function xtDBquery($query) {
   if (defined('DB_CACHE') && DB_CACHE == 'true') {
@@ -295,6 +297,11 @@ include (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
+
+//Versandkosten im Warenkorb 
+if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
+  unset($_SESSION['country']);
+}
 
 // main class
 require (DIR_WS_CLASSES.'main.php');
