@@ -12,11 +12,7 @@
 
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-$result = true;
-
-// include needed functions
-require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
-require_once (DIR_FS_INC . 'xtc_hide_session_id.inc.php');
+$result = false;
 
 // fsk18 lock
 $fsk_lock = '';
@@ -46,18 +42,23 @@ $module_content = array ();
 $category = array();
 
 if (xtc_db_num_rows($listing_query) > 0) {
-
-  $rows = 0;
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
-    $rows ++;
     $module_content[] =  $product->buildDataArray($listing);
   }
-} else {
-  // no product found
-  $result = false;
+  $result = true;
 }
 
-if ($result != false) {
+if (($count_module = count($module_content)) != ($count_result = count($product_id_array))) {
+  $empty = array('products_image' => 'no_image.gif',
+                 'products_name' => 'Artikel existiert nicht mehr');
+  for ($i=$count_module; $i<$count_result; $i++) {
+    $module_content[] = $product->buildDataArray($empty);
+  }
+  $result = true;
+}
+
+
+if ($result === true) {
   $files = array ();
   if ($dir = opendir(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/product_listing/')) {
     while (($file = readdir($dir)) !== false) {
