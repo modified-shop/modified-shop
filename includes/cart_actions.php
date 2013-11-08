@@ -64,6 +64,12 @@ if (xtc_not_null($action)) {
 
     // customer wants to update the product quantity in their shopping cart
     case 'update_product':
+      // VERSANDKOSTEN IM WARENKORB
+      if (isset($_POST['country'])) {
+        $_SESSION['country'] = xtc_remove_non_numeric($_POST['country']);
+        unset($_SESSION['sendto']);
+      }
+      
       for ($i = 0, $n = sizeof($_POST['products_id']); $i < $n; $i++) {
 
         $cart_quantity = $_POST['cart_quantity'][$i] = xtc_remove_non_numeric($_POST['cart_quantity'][$i]);

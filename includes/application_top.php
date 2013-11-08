@@ -199,6 +199,9 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 // PHPMailer
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
 
+
+
+
 // check for JS XSS
 require_once (DIR_FS_INC.'xtc_security.inc.php');
 
@@ -275,6 +278,11 @@ include (DIR_WS_MODULES.'set_currency_session.php');
 
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
+
+//Versandkosten im Warenkorb 
+if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
+  unset($_SESSION['country']);
+}
 
 // main class
 require (DIR_WS_CLASSES.'main.php');
