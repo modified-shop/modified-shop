@@ -26,7 +26,7 @@
     return strpos($status, 'alive');  
   }
 
-  $do_findologic_search = false;
+  $do_findologic_search = is_alive();
   if ($_SESSION['language'] == 'german' && is_alive() !== false) {
     $url = FL_SERVICE_URL.'index.php?'.
           'shop='.FL_SHOP_ID.
@@ -39,13 +39,15 @@
   
     $regex = "/<div[\s]+id=\"flResults\">[\z\s]+(.*?)<\/div>/si";
     preg_match($regex, $content, $result);
-
+    
+    /*
     if (isset($result[1]) && strpos($result[1], '<flProductID>') !== false) {
       $do_findologic_search = true;
     }
+    */
   }
 
-  if ($do_findologic_search === false) {
+  if ($do_findologic_search === false || isset($_GET['fallback']) && $_GET['fallback'] == '1') {
 
     $params = '';
     $action = FILENAME_DEFAULT;
@@ -72,6 +74,8 @@
     $breadcrumb->add(NAVBAR_TITLE2_ADVANCED_SEARCH, xtc_href_link(FILENAME_FINDOLOGIC, xtc_get_all_get_params()));
 
     $product_id_array = preg_split("/<[^>]*[^\/]>/i" , $result[1], -1, PREG_SPLIT_NO_EMPTY); 
+    $product_id_array = array_filter($product_id_array, 'xtc_not_null');
+
     $products_id = implode("', '", $product_id_array);
     require (DIR_FS_EXTERNAL.'findologic/findologic_listing.php');
   

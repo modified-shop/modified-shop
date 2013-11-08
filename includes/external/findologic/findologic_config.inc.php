@@ -14,8 +14,8 @@
    ---------------------------------------------------------------------------------------*/
 
   define('FL_FS_API', DIR_FS_CATALOG . 'api/findologic/');
-  define('FL_SHOP_ID', MODULE_FINDOLOGIC_SHOP_ID);
-  define('FL_SHOP_URL', HTTP_SERVER.DIR_WS_CATALOG); // Changed to static value
+  define('FL_SHOP_ID', trim(MODULE_FINDOLOGIC_SHOP_ID));
+  define('FL_SHOP_URL', str_replace(array('http://', 'https://'), '', HTTP_SERVER).DIR_WS_CATALOG); // Changed to static value
   define('FL_SERVICE_URL', MODULE_FINDOLOGIC_SERVICE_URL);
   define('FL_NET_PRICE', false); // Changed to static value
   define('FL_ALIVE_TEST_TIMEOUT', 1); // Changed to static value

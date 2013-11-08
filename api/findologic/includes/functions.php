@@ -99,6 +99,7 @@ function select_product($products_id, $debug=false) {
 
   $products_query_raw = "SELECT p.products_id,
                                 p.products_model,
+                                p.products_ean,
                                 p.products_price,
                                 p.products_discount_allowed,
                                 p.products_image,
@@ -128,6 +129,7 @@ function select_product($products_id, $debug=false) {
   if (xtc_db_num_rows($result) > 0) {
     
     $attributes = array();
+    $attributes_model = array();
     
     $row = xtc_db_fetch_array($result);
      
@@ -146,6 +148,8 @@ function select_product($products_id, $debug=false) {
     
     $max_options_values_price = 0;
     $products_options_name_query_raw = "SELECT DISTINCT
+                                               patrib.attributes_model,
+                                               patrib.attributes_ean,
                                                popt.products_options_name,
                                                poptv.products_options_values_name,
                                                MAX(patrib.options_values_price) AS max_options_values_price
@@ -174,6 +178,8 @@ function select_product($products_id, $debug=false) {
         }
         
         $max_options_values_price = $row_fla['max_options_values_price'];
+        $attributes_model[] = $row_fla['attributes_model'];
+        $attributes_model[] = $row_fla['attributes_ean'];
       }			
     }
     
@@ -197,10 +203,13 @@ function select_product($products_id, $debug=false) {
       $attributes_enc = substr($attributes_enc, 1);
     }
     
+    $attributes_model[] = $row['products_model'];
+    $attributes_model[] = $row['products_ean'];
+    $attributes_model = array_filter($attributes_model, 'xtc_not_null');
 
     $product = array(
       "id" => $row['products_id'],
-      "ordernumber" => $row['products_model'],
+      "ordernumber" => implode(',', $attributes_model),
       "name" => $row['products_name'],
       "summary" => extract_text($row['products_short_description']),
       "description" => get_description($row['products_model'], $row['products_short_description']),
@@ -245,9 +254,7 @@ function get_all_product_category_names($productId, $debug=false) {
         output_row($row);
       }
 
-      array_push($categories,
-        get_category_and_parent_category_names($row['cat'], $debug)
-      );
+      array_push($categories, get_category_and_parent_category_names($row['cat'], $debug));
     }
   }
   return $categories;
@@ -271,7 +278,9 @@ function get_category_and_parent_category_names($cat, $debug = false) {
         LEFT OUTER JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
           ON (c.categories_id = cd.categories_id AND cd.language_id = " . FL_LANG_ID . ")
       WHERE
-        c.categories_id = ".$catid.";";
+        c.categories_id = '".$catid."'
+      AND 
+        c.categories_status = '1'";
 
     $result = xtc_db_query($sql);
 
@@ -306,12 +315,10 @@ function get_category_and_parent_category_names($cat, $debug = false) {
 
 
 function output_row($row) {
-
   $fp = fopen('php://output', 'w');
   fputcsv($fp, array_map('extract_text', array_keys($row)), get_column_delimiter());
   fputcsv($fp, array_map('extract_text', array_values($row)), get_column_delimiter());
   fclose($fp);
-
 }
 
 ?>
