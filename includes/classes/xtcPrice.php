@@ -86,7 +86,14 @@ class xtcPrice {
         $tax_address = xtc_db_fetch_array($tax_address_query);
         $this->TAX[$zones_data['class']] = xtc_get_tax_rate($zones_data['class'],$tax_address['entry_country_id'], $tax_address['entry_zone_id']);
       } else {
-        $this->TAX[$zones_data['class']]=xtc_get_tax_rate($zones_data['class']);
+        // BOF VERSANDKOSTEN IM WARENKORB
+        //$this->TAX[$zones_data['class']]=xtc_get_tax_rate($zones_data['class']);
+        $country_id = -1;
+        if (isset($_SESSION['country'])) { // && !isset($_SESSION['customer_id'])) {  //Steuerberechnung nach Versandland, auch bei eingeloggten Kunden
+          $country_id = $_SESSION['country'];
+        }
+        $this->TAX[$zones_data['class']]= xtc_get_tax_rate($zones_data['class'], $country_id);        
+        // EOF VERSANDKOSTEN IM WARENKORB
       }
     }
   }
@@ -519,15 +526,17 @@ class xtcPrice {
 			$price = $this->xtcAddTax($price, $products_tax);
 		} 
     $decimal_places = ($decimal_places > 0) ? $decimal_places : $this->currencies[$this->actualCurr]['decimal_places'];
+    $from = $this->checkAttributes($pID);
 		if ($format) {
 			$Pprice = number_format(floatval($price), $decimal_places, $this->currencies[$this->actualCurr]['decimal_point'], $this->currencies[$this->actualCurr]['thousands_point']);
 			$Pprice = $this->checkAttributes($pID).$this->currencies[$this->actualCurr]['symbol_left'].' '.$Pprice.' '.$this->currencies[$this->actualCurr]['symbol_right'];
 			if ($vpeStatus == 0) {
 				return $Pprice;
 			} else {
-return array(
-          'formated' => $Pprice,
-          'plain' => $price
+        return array(
+         'formated' => $Pprice,
+          'plain' => $price,
+          'from' =>  $from
         );
 			}
 		} else {

@@ -149,6 +149,10 @@ if (SHOW_SHIPPING == 'true') {
 if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
   $module_smarty->assign('UST_CONTENT', $_SESSION['cart']->show_tax());
 }
+
+// VERSANDKOSTEN IM WARENKORB
+include DIR_FS_CATALOG.'/includes/shipping_estimate.php';
+
 $module_smarty->assign('TOTAL_CONTENT', $total_content);
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->assign('module_content', $module_content);
