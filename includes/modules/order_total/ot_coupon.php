@@ -76,7 +76,7 @@ class ot_coupon {
       $order->info['subtotal'] = $order->info['subtotal'] - $od_amount;// web28 - 2010-05-23 - BUGFIX tax_deduction
       $this->output[] = array (
           'title' => $this->title.' '.$this->coupon_code.$this->tax_info.':',
-          'text'  => '<b style="#ff0000">'.$xtPrice->xtcFormat($od_amount*(-1), true).'</b>',
+          'text'  => '<b style="color:#ff0000">'.$xtPrice->xtcFormat($od_amount*(-1), true).'</b>',
           'value' => $od_amount *(-1) // web28 - 2011-08-25 - fix negativ sign
         );
     }
