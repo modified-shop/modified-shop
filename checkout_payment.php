@@ -54,6 +54,7 @@ unset ($_SESSION['transaction_id']); ### moneybookers payment module version 2.4
 //if (isset($_SESSION['credit_covers'])) unset($_SESSION['credit_covers']);
 if (isset($_SESSION['cot_gv']) && isset($_SESSION['payment'])) {
   unset($_SESSION['payment']); 
+  unset($_SESSION['cot_gv']); //ADDED FOR CREDIT CLASS SYSTEM 
 }
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
@@ -114,16 +115,6 @@ $module_smarty = new Smarty;
 
 $credit_amount = 0;
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
-  //set real_order_total for credit_amount_payment_info
-  foreach($order_total as $ot_arr) {
-    if ($ot_arr['code'] == 'ot_gv') {
-      $ot_gv_value = $ot_arr['value'];      
-    }
-    if ($ot_arr['code'] == 'ot_total') {
-      $ot_total_value = $ot_arr['value'];
-    }
-  }
-  $real_order_total = isset($ot_gv_value) ? $ot_total_value - $ot_gv_value : null;
   $credit_selection = $order_total_modules->credit_selection();
   for ($i = 0, $n = sizeof($credit_selection); $i < $n; $i++) {
     if ((isset($_SESSION['c'.$credit_selection[$i]['id']]) && $credit_selection[$i]['id'] == $_SESSION['c'.$credit_selection[$i]['id']])) {
@@ -132,7 +123,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
       $credit_selection[$i]['checked'] = 0;
     }
     $credit_amount =  $credit_selection[$i]['credit_amount'];
-    $credit_order_total = isset($real_order_total) ? $real_order_total : $credit_selection[$i]['credit_order_total'];
+    $credit_order_total = $credit_selection[$i]['credit_order_total'];
     $credit_selection[$i]['selection'] = xtc_draw_checkbox_field('c'.$credit_selection[$i]['id'], $credit_amount, $credit_selection[$i]['checked'], 'id="rd-'.'c'.$credit_selection[$i]['id'].'"');
     $credit_selection[$i]['selection'] .= '<input type="hidden" name="credit_order_total"  id="cot-'.'c'.$credit_selection[$i]['id'].'" value="'.$credit_order_total.'">';
     $credit_selection[$i]['credit_amount'] = $xtPrice->xtcFormat($credit_amount, true);
@@ -141,7 +132,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $module_smarty->assign('module_gift', $credit_selection);  
 }
 
-$total = isset($real_order_total) ? $real_order_total : $xtPrice->xtcFormat($order->info['total'], false);
+$total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
     $smarty->assign('error', '<p class="errormessage">'. encode_htmlspecialchars($error['error']).'</p>');
@@ -179,7 +170,7 @@ if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_cov
   $module_smarty->assign('module_content', $selection);
 } 
 //Coupon 100%
-elseif (isset($_SESSION['cc_id']) && $total == 0) {
+elseif (isset($_SESSION['cc_id']) && $total <= 0) {
   $order_total_modules->pre_confirmation_check();
   $smarty->assign('GV_COVER', 'true');
 } 
