@@ -141,7 +141,7 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
   $module_smarty->assign('module_gift', $credit_selection);  
 }
 
-$total = $xtPrice->xtcFormat($order->info['total'], false);
+$total = isset($real_order_total) ? $real_order_total : $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
     $smarty->assign('error', '<p class="errormessage">'. encode_htmlspecialchars($error['error']).'</p>');
