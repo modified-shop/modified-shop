@@ -167,10 +167,10 @@
         }
         
         $js .= "\n" . '  if (document.getElementById("rd-cot_gv")) {' . "\n" .
-               '    var gv_value = document.getElementById("rd-cot_gv").value;' . "\n" .
+               '    var gv_value = parseFloat(document.getElementById("rd-cot_gv").value);' . "\n" .
                '    var cot_value = 0;' . "\n" .
                '    if (document.getElementById("cot-cot_gv")) {' . "\n" .
-               '      cot_value = document.getElementById("cot-cot_gv").value;' . "\n" .
+               '      cot_value = parseFloat(document.getElementById("cot-cot_gv").value);' . "\n" .
                '    }' . "\n" .
                '    if (document.getElementById("rd-cot_gv").checked) {' . "\n" .
                '      if (gv_value >= cot_value) {' . "\n" .
