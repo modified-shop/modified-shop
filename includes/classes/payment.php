@@ -140,16 +140,18 @@
               '  var error = 0;' . "\n" .
               '  var error_message = unescape("' . xtc_js_lang(JS_ERROR) . '");' . "\n" .
               '  var payment_value = null;' . "\n" .
-              '  if (document.getElementById("checkout_payment").payment.length) {' . "\n" .
-              '    for (var i=0; i<document.getElementById("checkout_payment").payment.length; i++) {' . "\n" .
-              '      if (document.getElementById("checkout_payment").payment[i].checked) {' . "\n" .
-              '        payment_value = document.getElementById("checkout_payment").payment[i].value;' . "\n" .
+              '  if (document.getElementById("checkout_payment").payment) {' . "\n" .
+              '    if (document.getElementById("checkout_payment").payment.length) {' . "\n" .
+              '      for (var i=0; i<document.getElementById("checkout_payment").payment.length; i++) {' . "\n" .
+              '        if (document.getElementById("checkout_payment").payment[i].checked) {' . "\n" .
+              '          payment_value = document.getElementById("checkout_payment").payment[i].value;' . "\n" .
+              '        }' . "\n" .
               '      }' . "\n" .
+              '    } else if (document.getElementById("checkout_payment").payment.checked) {' . "\n" .
+              '      payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
+              '    } else if (document.getElementById("checkout_payment").payment.value) {' . "\n" .
+              '      payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
               '    }' . "\n" .
-              '  } else if (document.getElementById("checkout_payment").payment.checked) {' . "\n" .
-              '    payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
-              '  } else if (document.getElementById("checkout_payment").payment.value) {' . "\n" .
-              '    payment_value = document.getElementById("checkout_payment").payment.value;' . "\n" .
               '  }' . "\n\n";
 
         reset($this->modules);
@@ -179,6 +181,10 @@
                '    }' . "\n" .       
                '  }' . "\n\n";
         
+        $js .= "\n" . '  if (document.getElementById("gccover")) {' . "\n" .
+               '     payment_value = "gccover";' . "\n" .
+               '  }' . "\n\n"; 
+       
         $js .= "\n" . '  if (payment_value == null) {' . "\n" .
                '    error_message = error_message + unescape("' . xtc_js_lang(JS_ERROR_NO_PAYMENT_MODULE_SELECTED) . '");' . "\n" .
                '    error = 1;' . "\n" .
