@@ -147,6 +147,10 @@ if ($order->info['payment_method'] != 'no_payment' && $order->info['payment_meth
   include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/payment/' . $order->info['payment_method'] . '.php');
   $smarty->assign('PAYMENT_METHOD', constant('MODULE_PAYMENT_' . strtoupper($order->info['payment_method']) . '_TEXT_TITLE'));
 }
+if (isset($_SESSION['credit_covers']) && $order->info['payment_method'] == 'no_payment') {
+  include_once (DIR_WS_LANGUAGES . '/' . $_SESSION['language'] . '/modules/order_total/ot_gv.php');
+  $smarty->assign('PAYMENT_METHOD', constant('MODULE_ORDER_TOTAL_GV_TITLE'));
+}
 $smarty->assign('PAYMENT_EDIT', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
 
 if (MODULE_ORDER_TOTAL_INSTALLED) {
