@@ -60,7 +60,7 @@ function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
     $streets = $street;
     if ($suburb != '') $streets = $street . $cr . $suburb;
     if ($firstname == '') $firstname = addslashes($address['name']);
-    if ($country == '') $country = addslashes($address['country']);
+    if ($country == '') $country = addslashes($address['country']['title']);
     if ($state != '') $statecomma = $state . ', ';
 
     $fmt = $address_format['format'];
