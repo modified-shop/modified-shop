@@ -861,7 +861,7 @@ class categories {
 
   function move_product($src_products_id, $src_category_id, $dest_category_id) {
     $src_products_id = (int)$src_products_id;
-    $dest_categories_id = (int)$dest_categories_id;
+    $dest_category_id = (int)$dest_category_id;
     $src_category_id = (int)$src_category_id;
 
     $duplicate_check_query = xtc_db_query("SELECT COUNT(*) AS total
