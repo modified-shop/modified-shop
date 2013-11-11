@@ -96,6 +96,7 @@ if ((is_array($payment_modules->modules)
      && ($$_SESSION['payment']->enabled == false))
     ||
     (isset($_SESSION['cot_gv'])
+     && $_SESSION['cot_gv'] > 0
      && $xtPrice->xtcFormat($order->info['total'], false) > $_SESSION['cot_gv']
      && $_SESSION['payment'] == 'no_payment')
   ) {
