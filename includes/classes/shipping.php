@@ -52,8 +52,8 @@
               $unallowed_zones = array();
             }
             if (in_array($_SESSION['delivery_zone'], $unallowed_zones) == true || count($unallowed_zones) == 0) {
-              include(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
-              include(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
+              include_once(DIR_WS_LANGUAGES . $_SESSION['language'] . '/modules/shipping/' . $include_modules[$i]['file']);
+              include_once(DIR_WS_MODULES . 'shipping/' . $include_modules[$i]['file']);
               $GLOBALS[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
             }
           }
