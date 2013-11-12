@@ -26,8 +26,7 @@ define('TITLE', STORE_NAME);
 define('HEADER_TITLE_TOP', 'Main page');
 define('HEADER_TITLE_CATALOG', 'Catalogue');
 define('HTML_PARAMS','xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en" dir="ltr"');
-//@setlocale(LC_TIME, 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.UTF-8', 'English');
-@setlocale(LC_TIME, 'en_US.UTF-8', 'en_US@euro', 'en_US', 'en-US', 'en', 'en_US.ISO_8859-1', 'English','en_US.ISO_8859-15');
+@setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
 //BOF - Dokuman - 2009-06-03 - correct english date format
 define('DATE_FORMAT_SHORT', '%d/%m/%Y');  // this is used for strftime()
@@ -38,9 +37,9 @@ define('DOB_FORMAT_STRING', 'dd/mm/jjjj');
 
 function xtc_date_raw($date, $reverse = false) {
   if ($reverse) {
-    return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
+    return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
   } else {
-    return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
+    return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
 //EOF - Dokuman - 2009-06-03 - correct english date format
@@ -384,6 +383,7 @@ define('NAVBAR_TITLE_PASSWORD_DOUBLE_OPT','Password forgotten?');
 define('NAVBAR_TITLE_NEWSLETTER','Newsletter');
 define('NAVBAR_GV_REDEEM', 'Redeem Voucher');
 define('NAVBAR_GV_SEND', 'Send Voucher');
+define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
 
 /*
  *
@@ -536,9 +536,12 @@ define('_SHIPPING_TO', 'shipping to ');
 define('ERROR_SQL_DB_QUERY','We are sorry, but an database error has occurred somewhere on this page!');
 define('ERROR_SQL_DB_QUERY_REDIRECT','You will be redirected back to our home page in %s seconds!');
 
-define('TEXT_AGB_CHECKOUT','Please take note of our general terms & conditions %s,<br/>as well as our cancellation policy %s');
+define('TEXT_AGB_CHECKOUT','Please take note of our General Terms & Conditions %s and Cancellation Policy %s');
+define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products from a last visit.');
 define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.');
-?>
+
+define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.');
+define('ERROR_REVIEW_RATING', 'Enter your review.');

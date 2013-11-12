@@ -173,8 +173,8 @@
                   <?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>
                 </td>
                 <td class="main">
-                  <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"'); ?>                
-                </td>        
+                  <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(SPECIALS_DATE_END_TT); ?>                
+                </td>
                 <td class="main">
                   &nbsp;
                   <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
@@ -207,11 +207,9 @@
        if (substr($_POST['specials_price'], -1) == '%')  {
          $_POST['specials_price'] = ($_POST['products_price_hidden'] - (($_POST['specials_price'] / 100) * $_POST['products_price_hidden'])); //web28 - 2010-07-27 - products_price_hidden from  hidden field
        }
-       $expires_date = '';
-       if ($_POST['specials_expires']) {
-         $expires_date = str_replace("-", "", $_POST['specials_expires']);
-       }
-
+       
+       $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
+    
        $sql_data_array = array('products_id' => $products_id,
                                'specials_quantity' => (int)$_POST['specials_quantity'],
                                'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
@@ -237,10 +235,7 @@
         $_POST['specials_price'] = ($_POST['products_price_hidden'] - (($_POST['specials_price'] / 100) * $_POST['products_price_hidden'])); //web28 - 2010-07-27 - products_price_hidden from  hidden field
       }
 
-      $expires_date = 'NULL';      
-      if ($_POST['specials_expires'] && $_POST['specials_status'] == 1) { //DokuMan - 2011-11-8 - from SP1b
-        $expires_date = str_replace("-", "", $_POST['specials_expires']);
-      }
+      $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
 
       $sql_data_array = array(
                         'specials_quantity' => (int)$_POST['specials_quantity'],

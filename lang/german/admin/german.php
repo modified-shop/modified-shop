@@ -529,3 +529,5 @@ define('CHARS_LEFT', 'Zeichen &uuml;brig');
 define('CHARS_MAX', 'von max.');
 
 define('DISPLAY_PER_PAGE', 'Anzeige pro Seite: ');
+
+define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23.59.59 Uhr)');

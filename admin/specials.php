@@ -21,9 +21,9 @@
   $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
 
-  if (!defined('MAX_DISPLAY_LIST_PRODUCTS')) {
-    define('MAX_DISPLAY_LIST_PRODUCTS', 50);     // display products per page
-  }
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_SPECIALS_RESULTS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
 
   $sID = (isset($_GET['sID']) ? (int)$_GET['sID'] : NULL);
   $page_id = (isset($_GET['page']) ? (int)$_GET['page'] : 0);
@@ -61,7 +61,7 @@
           $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
         }
         
-        $expires_date = isset($_POST['specials_expires']) ? $_POST['specials_expires'] : '';
+        $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
 
         $sql_data_array = array('products_id' => (int)$_POST['products_id'],
                                 'specials_quantity' => (int)$_POST['specials_quantity'],
@@ -91,7 +91,8 @@
           $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
         }
         
-        $expires_date = isset($_POST['specials_expires']) ? $_POST['specials_expires'] : '';
+        $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
+
 
         $sql_data_array = array('specials_quantity' => (int)$_POST['specials_quantity'],
                                 'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
@@ -248,7 +249,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
-                <td class="dataTableConfig col-right">&nbsp;</td>
+                <td class="dataTableConfig col-right"><?php echo SPECIALS_DATE_END_TT; ?>&nbsp;</td>
               </tr>
             </table>
 
@@ -303,7 +304,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                               AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
                                               AND p.products_id = s.products_id
                                          ORDER BY pd.products_name";
-                    $specials_split = new splitPageResults($page_id, MAX_DISPLAY_LIST_PRODUCTS, $specials_query_raw, $specials_query_numrows);
+                    $specials_split = new splitPageResults($page_id, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
                     $specials_query = xtc_db_query($specials_query_raw);
                     while ($specials = xtc_db_fetch_array($specials_query)) {
                       $price=$specials['products_price'];
@@ -360,9 +361,9 @@ require (DIR_WS_INCLUDES.'head.php');
                 }
                 ?>
               </table>
-              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
-              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, MAX_DISPLAY_LIST_PRODUCTS, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
-             
+              <div class="smallText flt-l pdg2"><?php echo $specials_split->display_count($specials_query_numrows, $page_max_display_results, $page_id, TEXT_DISPLAY_NUMBER_OF_SPECIALS); ?></div>
+              <div class="smallText flt-r pdg2"><?php echo $specials_split->display_links($specials_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $page_id); ?></div>
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               if (empty($action)) {
               ?>
@@ -400,7 +401,8 @@ require (DIR_WS_INCLUDES.'head.php');
             }
             if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
               echo '            <td class="boxRight">' . "\n";
-              echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+              $box = new box;
+              echo $box->infoBox($heading, $contents);
               echo '            </td>' . "\n";
             }
           }

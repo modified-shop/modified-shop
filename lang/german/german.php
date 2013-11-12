@@ -405,8 +405,8 @@ define('TEXT_CUSTOMER_GUEST',' Gast');
 
 define('TEXT_LINK_MAIL_SENDED','Ihre Anfrage nach einem neuen Passwort muss von Ihnen erst best&auml;tigt werden.<br />Deshalb wurde Ihnen vom System eine E-Mail mit einem Best&auml;tigungslink geschickt. Bitte klicken Sie nach Erhalt der E-Mail auf den mitgeschickten Link, um eine weitere E-Mail mit Ihrem neuen Anmelde-Passwort zu erhalten. Andernfalls wird Ihnen das neue Passwort nicht zugestellt oder eingerichtet!');
 define('TEXT_PASSWORD_MAIL_SENDED','Eine E-Mail mit einem neuen Anmelde-Passwort wurde Ihnen soeben zugestellt.<br />Bitte &auml;ndern Sie nach Ihrer n&auml;chsten Anmeldung Ihr Passwort wie gew&uuml;nscht.');
-define('TEXT_CODE_ERROR','Bitte geben Sie den Sicherheitscode erneut ein.<br />Achten Sie dabei auf Tippfehler!');
-define('TEXT_EMAIL_ERROR','Diese E-Mail Adresse ist bei uns nicht registriert.<br />Achten Sie dabei auf Tippfehler!');
+define('TEXT_CODE_ERROR','Bitte geben Sie Ihre E-Mail-Adresse und den Sicherheitscode erneut ein. <br />Achten Sie dabei auf Tippfehler!');
+define('TEXT_EMAIL_ERROR','Bitte geben Sie Ihre E-Mail-Adresse und den Sicherheitscode erneut ein. <br />Achten Sie dabei auf Tippfehler!');
 define('TEXT_NO_ACCOUNT','Leider m&uuml;ssen wir Ihnen mitteilen, dass Ihre Anfrage f&uuml;r ein neues Anmelde-Passwort entweder ung&uuml;ltig war oder abgelaufen ist.<br />Bitte versuchen Sie es erneut.');
 define('HEADING_PASSWORD_FORGOTTEN','Passwort vergessen?');
 define('TEXT_PASSWORD_FORGOTTEN','&Auml;ndern Sie Ihr Passwort in drei leichten Schritten.');
@@ -691,9 +691,16 @@ define('COUNTRIES_NAMES_CONVERT_SORT_TO',    'aouaoueais'); // for sort convert 
 define('ERROR_SQL_DB_QUERY','Es tut uns leid, aber es ist ein Datenbankfehler aufgetreten.');
 define('ERROR_SQL_DB_QUERY_REDIRECT','Sie werden in %s Sekunden auf unsere Homepage weitergeleitet!');
 
-define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformationen %s,<br/>sowie unsere Widerrufsbelehrung %s zur Kenntnis.');
+define('TEXT_AGB_CHECKOUT','Bitte nehmen Sie unsere AGB und Kundeninformation %s sowie unsere Widerrufsbelehrung %s zur Kenntnis.');
+define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify that you are authorized to access the document requested. Either you supplied the wrong credentials (e.g., bad password), or your browser does not understand how to supply the credentials required.');
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Bitte &uuml;berpr&uuml;fen Sie Ihren Warenkorb. Dieser enth&auml;lt noch Artikel von einem fr&uuml;heren Besuch.');
 define('TEXT_PRODUCTS_QTY_REDUCED', 'Die maximal erlaubte St&uuml;ckzahl f&uuml;r den zuletzt hinzugef&uuml;gten bzw. ge&auml;nderten Artikel wurde &uuml;berschritten. Die St&uuml;ckzahl wurde automatisch auf die maximal erlaubte St&uuml;ckzahl reduziert.');
+
+define('ERROR_REVIEW_TEXT', 'Der Bewertungstext muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
+define('ERROR_REVIEW_RATING', 'Bitte Geben Sie Ihre Bewertung ab.');
+
+define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsweise!</div>');
+define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
 ?>
