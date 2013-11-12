@@ -26,7 +26,7 @@ define('TITLE', STORE_NAME);
 define('HEADER_TITLE_TOP', 'Main page');
 define('HEADER_TITLE_CATALOG', 'Catalogue');
 define('HTML_PARAMS','dir="ltr" xml:lang="en"');
-@setlocale(LC_TIME, 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
+@setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
 //BOF - Dokuman - 2009-06-03 - correct english date format
 define('DATE_FORMAT_SHORT', '%d/%m/%Y');  // this is used for strftime()
@@ -37,9 +37,9 @@ define('DOB_FORMAT_STRING', 'dd/mm/jjjj');
  
 function xtc_date_raw($date, $reverse = false) {
   if ($reverse) {
-    return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
+    return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
   } else {
-    return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
+    return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
 //EOF - Dokuman - 2009-06-03 - correct english date format
@@ -487,6 +487,10 @@ define('NAVBAR_TITLE_2_ACCOUNT_DELETE', 'Delete account');
 define('ERROR_EMAIL','<p><b>Your e-mail address:</b> None or invalid input!</p>');
 define('ERROR_VVCODE','<p><b>Security code:</b> No match, please enter your security code again!</p>');
 define('ERROR_MSG_BODY','<p><b>Your message:</b> No input!</p>');
+
+
+
+
 
 //Table Header checkout_confirmation.php
 define('HEADER_QTY', 'Number');

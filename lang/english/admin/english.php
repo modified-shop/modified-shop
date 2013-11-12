@@ -22,11 +22,11 @@
    --------------------------------------------------------------*/
 
 // look in your $PATH_LOCALE/locale directory for available locales..
-// on RedHat6.0 I used 'en_US'
-// on FreeBSD 4.0 I use 'en_US.ISO_8859-1'
+// on RedHat6.0 I used 'en_GB'
+// on FreeBSD 4.0 I use 'en_GB.ISO_8859-1'
 // this may not work under win32 environments..
 
-setlocale(LC_TIME, 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
+@setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 define('DATE_FORMAT_SHORT', '%d/%m/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'd/m/Y');  // this is used for strftime()
@@ -39,9 +39,9 @@ define('DATE_TIME_FORMAT', DATE_FORMAT_SHORT . ' %H:%M:%S');
 // raw date is in format YYYYMMDD, or DDMMYYYY
 function xtc_date_raw($date, $reverse = false) {
   if ($reverse) {
-    return substr($date, 3, 2) . substr($date, 0, 2) . substr($date, 6, 4);
+    return substr($date, 0, 2) . substr($date, 3, 2) . substr($date, 6, 4);
   } else {
-    return substr($date, 6, 4) . substr($date, 0, 2) . substr($date, 3, 2);
+    return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
 
@@ -523,3 +523,5 @@ define('CHARS_LEFT', 'chars left');
 define('CHARS_MAX', 'of max.');
 
 define('DISPLAY_PER_PAGE', 'Display per page: ');
+
+define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23.59.59)');

@@ -26,7 +26,7 @@
 // on FreeBSD 4.0 I use 'de_DE.ISO_8859-1'
 // this may not work under win32 environments..
 
-setlocale(LC_TIME, 'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German','de_DE.ISO_8859-15');
+@setlocale(LC_TIME, 'de_DE.UTF-8' ,'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German','de_DE.ISO_8859-15');
 define('DATE_FORMAT_SHORT', '%d.%m.%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A, %d. %B %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'd.m.Y');  // this is used for strftime()
@@ -524,3 +524,5 @@ define('CHARS_LEFT', 'Zeichen &uuml;brig');
 define('CHARS_MAX', 'von max.');
 
 define('DISPLAY_PER_PAGE', 'Anzeige pro Seite: ');
+
+define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23.59.59 Uhr)');

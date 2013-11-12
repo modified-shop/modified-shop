@@ -26,8 +26,7 @@ define('TITLE', STORE_NAME);
 define('HEADER_TITLE_TOP', 'Startseite');    
 define('HEADER_TITLE_CATALOG', 'Katalog');
 define('HTML_PARAMS','dir="ltr" xml:lang="de"');
-@setlocale(LC_TIME, 'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German','de_DE.ISO_8859-15');
-
+@setlocale(LC_TIME, 'de_DE.UTF-8' ,'de_DE@euro', 'de_DE', 'de-DE', 'de', 'ge', 'de_DE.ISO_8859-1', 'German','de_DE.ISO_8859-15');
 
 define('DATE_FORMAT_SHORT', '%d.%m.%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A, %d. %B %Y'); // this is used for strftime()
@@ -481,6 +480,8 @@ define('NAVBAR_TITLE_2_ACCOUNT_DELETE', 'Konto l&ouml;schen');
 define('ERROR_EMAIL','<p><b>Ihre E-Mail-Adresse:</b> Keine oder ung&uuml;ltige Eingabe!</p>');
 define('ERROR_VVCODE','<p><b>Sicherheitscode:</b> Keine &Uuml;bereinstimmung, bitte geben Sie den Sicherheitscode erneut ein!</p>');
 define('ERROR_MSG_BODY','<p><b>Ihre Nachricht:</b> Keine Eingabe!</p>');	
+
+
 
 //Table Header checkout_confirmation.php
 define('HEADER_QTY', 'Anzahl');

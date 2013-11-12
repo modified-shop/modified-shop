@@ -61,7 +61,7 @@
           $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
         }
         
-        $expires_date = isset($_POST['specials_expires']) ? $_POST['specials_expires'] : '';
+        $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
 
         $sql_data_array = array('products_id' => (int)$_POST['products_id'],
                                 'specials_quantity' => (int)$_POST['specials_quantity'],
@@ -91,7 +91,8 @@
           $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
         }
         
-        $expires_date = isset($_POST['specials_expires']) ? $_POST['specials_expires'] : '';
+        $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
+
 
         $sql_data_array = array('specials_quantity' => (int)$_POST['specials_quantity'],
                                 'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
@@ -248,7 +249,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
                 <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
-                <td class="dataTableConfig col-right">&nbsp;</td>
+                <td class="dataTableConfig col-right"><?php echo SPECIALS_DATE_END_TT; ?>&nbsp;</td>
               </tr>
             </table>
 
