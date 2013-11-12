@@ -137,4 +137,8 @@ ALTER TABLE products_description MODIFY products_id INT(11) NOT NULL;
 
 ALTER TABLE zones MODIFY zone_name VARCHAR(64) NOT NULL;
 
+#Web28 - 2013-11-11 - Added weight to orders
+ALTER TABLE orders_products ADD products_weight DECIMAL(6,3) NOT NULL;
+ALTER TABLE orders_products_attributes ADD options_values_weight DECIMAL(15,4) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

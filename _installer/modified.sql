@@ -663,6 +663,7 @@ CREATE TABLE orders_products (
   products_quantity INT(2) NOT NULL,
   allow_tax INT(1) NOT NULL,
   products_order_description text,
+  products_weight DECIMAL(6,3) NOT NULL,
   PRIMARY KEY (orders_products_id),
   KEY idx_orders_id (orders_id),
   KEY idx_products_id (products_id)
@@ -710,6 +711,7 @@ CREATE TABLE orders_products_attributes (
   price_prefix CHAR(1) NOT NULL,
   orders_products_options_id INT(11) NOT NULL,
   orders_products_options_values_id INT(11) NOT NULL,
+  options_values_weight DECIMAL(15,4) NOT NULL,
   PRIMARY KEY (orders_products_attributes_id)
 ) ENGINE=MyISAM;
 
