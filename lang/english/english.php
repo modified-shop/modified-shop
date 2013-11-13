@@ -545,3 +545,5 @@ define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updat
 
 define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.');
 define('ERROR_REVIEW_RATING', 'Enter your review.');
+
+define('_SHIPPING_FREE','Free Shipping');
