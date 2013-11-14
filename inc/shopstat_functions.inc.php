@@ -19,7 +19,8 @@ define('SEO_SEPARATOR',':');
 //Sonderzeichen
 define('SPECIAL_CHAR_FR', true);  //Französische Sonderzeichen
 define('SPECIAL_CHAR_ES', true);  //Spanische/Italienische/Portugisische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
-define('SPECIAL_CHAR_PL', true);  //Polnische Sonderzeichen
+define('SPECIAL_CHAR_PL', true);  //Polnische Sonderzeichen (nur aktivieren wenn auch französiche Sonderzeichen aktiviert sind)
+define('SPECIAL_CHAR_CZ', true);  //Tschechische Sonderzeichen (nur aktivieren wenn auch französiche und polnische Sonderzeichen aktiviert sind)
 define('SPECIAL_CHAR_MORE', true);  //Weitere Sonderzeichen
 
 //-- Kategorienamen in Artikellink hinzufügen - Standard true
@@ -37,11 +38,12 @@ define('MAN_DIVIDER',SEO_SEPARATOR.'.'.SEO_SEPARATOR);           //Hersteller ':
 define('PAG_DIVIDER',SEO_SEPARATOR);                             //Seitennummer ':'
 //EOF - web28 - 2010-08-18 -- Definition für die Trennzeichen
 
-if (file_exists(DIR_FS_INC . 'search_replace_'.strtolower($_SESSION['language_charset']) .'.php')) {
-  include (DIR_FS_INC . 'search_replace_'.strtolower($_SESSION['language_charset']) .'.php');
-} else {
-  include (DIR_FS_INC . 'search_replace_default.php');
-}
+include (DIR_FS_INC . 'search_replace_utf-8.php');
+
+global $char_search, $char_replace;
+$char_search = array(); 
+$char_replace = array(); 
+list($char_search, $char_replace) = shopstat_getRegExps();
 
 if(!function_exists('language')) {
   include_once (DIR_WS_CLASSES.'language.php');
@@ -149,12 +151,7 @@ function shopstat_getSEO($page='', $parameters='', $connection='NONSSL', $add_se
       $link .= shopstat_hrefContlink($content, $coid);
     } elseif(xtc_not_null($maid)) {
       $manufacturers = xtc_get_manufacturers();
-      foreach($manufacturers as $manufacturer) {
-        if($manufacturer['id'] == $maid) {
-          $maname = $manufacturer['text'];
-          break;
-        }
-      }
+      $maname = $manufacturers[$maid]['text'];   
       $link .= shopstat_hrefManulink($maname, $maid, $pager);
     }
     $separator  = '?';
@@ -272,18 +269,17 @@ function shopstat_hrefManulink($content_name, $content_id, $pager=false) {
 /*
  * FUNCTION shopstat_hrefSmallmask
  */
-function shopstat_hrefSmallmask($string) {
-  shopstat_getRegExps($search, $replace);
+function shopstat_hrefSmallmask($string, $urlencode = false) {
+  global $char_search, $char_replace;
+
   $newstring = $string;
+  
+  $charset = strtoupper($_SESSION['language_charset']);
 
-  //web28 - 2010-08-17 - Eurozeichen ersetzen
-  $newstring  = str_replace("&euro;", "-EUR-",$newstring);
-
-  //web28 -2011-0812 - Geschütztes Leerzeichen entfernen - VOR html_entity_decode
-  $newstring  = str_replace("&nbsp;", "-",$newstring);
-
-  //web28 - 2010-08-18 -HTML-Codierung entfernen (&uuml; etc.)
-  $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , strtoupper($_SESSION['language_charset']));
+  //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
+  if ($charset != "UTF-8") {
+    $newstring = iconv("ISO-8859-15", "UTF-8", $newstring);
+  }
 
   //-- <br> neutralisieren -  DokuMan - 2010-08-13 - optimize shopstat_getRegExps
   $newstring  = preg_replace("/<br(\s+)?\/?>/i","-",$newstring);
@@ -292,20 +288,35 @@ function shopstat_hrefSmallmask($string) {
   $newstring  = strip_tags($newstring);
 
   //-- Schrägstriche entfernen
-  $newstring  = preg_replace("/\s\/\s/","+",$newstring);
-
+  if ($urlencode) {
+    $newstring  = preg_replace("/\//","-",$newstring);
+  } else {
+    $newstring  = preg_replace("/\s\/\s/","-",$newstring);
+  }
   //-- Definierte Zeichen entfernen
-  $newstring  = preg_replace($search,$replace,$newstring);
+  $newstring  = preg_replace($char_search, $char_replace, $newstring);
 
-  //--Anführungszeichen weg.
-  $newstring  = preg_replace("/'|\"|´|`/","",$newstring);
+  //--Restliche HTML-Codierungen entfernen
+  $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , "UTF-8");
+  
+  //--Restliche Kaufmännische Und entfernen
+  $newstring  = preg_replace("'&'","-",$newstring);
 
-  //-- Die nun noch (komisch aussehenden) doppelten Bindestriche entfernen
+  //-- String URL-codieren
+  if ($urlencode) { 
+    $newstring  = urlencode($newstring);
+  }
+
+  //-- Doppelte Bindestriche entfernen
   $newstring  = preg_replace("/(-){2,}/","-",$newstring);
 
-  //web28 - 2010-08-18 - Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
+  //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
   $newstring = rtrim($newstring,"-");
-
+  
+  //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
+  if (strtoupper($_SESSION['language_charset']) != "UTF-8") { 
+    $newstring = iconv("UTF-8","ISO-8859-15//TRANSLIT",$newstring);
+  }
   //if($_REQUEST['test']){print $newstring."<hr>";}
   return($newstring);
 }
@@ -313,46 +324,7 @@ function shopstat_hrefSmallmask($string) {
 /*
  * FUNCTION shopstat_hrefMask
  */
-function shopstat_hrefMask($string) {
-  shopstat_getRegExps($search, $replace);
-
-  //BOF - DokuMan - 2010-08-13 - optimize shopstat_getRegExps
-  $newstring = $string;
-
-  //web28 - 2010-08-17 - Eurozeichen ersetzen
-  $newstring  = str_replace("&euro;","-EUR-",$newstring);
-
-  //web28 -2011-0812 - Geschütztes Leerzeichen entfernen  - VOR html_entity_decode
-  $newstring  = str_replace("&nbsp;", "-",$newstring);
-
-  //web28 - 2010-08-18 -HTML-Codierung entfernen (&uuml; etc.)
-  $newstring  = html_entity_decode($newstring, ENT_NOQUOTES , strtoupper($_SESSION['language_charset']));
-
-  //-- <br> neutralisieren - DokuMan - 2010-08-13 - optimize shopstat_getRegExps
-  $newstring  = preg_replace("/<br(\s+)?\/?>/i","-",$newstring);
-
-  //-- HTML entfernen
-  $newstring  = strip_tags($newstring);
-
-  //-- Schrägstriche entfernen
-  $newstring  = preg_replace("/\//","-",$newstring);
-
-  //-- Definierte Zeichen entfernen
-  $newstring  = preg_replace($search,$replace,$newstring);
-
-  //--Anführungszeichen weg.
-  $newstring  = preg_replace("/'|\"|´|`/","",$newstring);
-
-  //-- String URL-codieren
-  $newstring  = urlencode($newstring);
-
-  //-- Die nun noch (komisch aussehenden) doppelten Bindestriche entfernen
-  $newstring  = preg_replace("/(-){2,}/","-",$newstring);
-
-  //web28 - 2010-08-13 - Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
-  $newstring = rtrim($newstring,"-");
-
- //if($_REQUEST['test']){print $newstring."<hr>";}
-  return($newstring);
+function shopstat_hrefMask($string) { 
+  return shopstat_hrefSmallmask($string, true);  
 }
 ?>
