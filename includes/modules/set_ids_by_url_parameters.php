@@ -59,8 +59,8 @@ if (isset ($_GET['coID'])) {
 
 if (xtc_not_null($cPath)) {
   $cPath_array = xtc_parse_category_path($cPath);
-  $cPath = implode('_', $cPath_array);
-  $current_category_id = $cPath_array[(sizeof($cPath_array) - 1)];
+  $current_category_id = end($cPath_array);
+  $cPath = xtc_get_category_path($current_category_id); //verify $cPath
 } else {
   $current_category_id = 0;
 }
