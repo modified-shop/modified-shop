@@ -46,6 +46,7 @@ define('MODULE_SITEMAPORG_YAHOO_TITLE', 'YahooID');
 define('MODULE_SITEMAPORG_YAHOO_DESC','Geben Sie hier Ihre die Yahoo ID an! Diese wird ben&ouml;tigt, um Yahoo die Sitemap mitzuteilen');
 
 require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
+require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
 
   class sitemaporg {
     var $code, $title, $description, $enabled;
@@ -136,24 +137,25 @@ require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
       
 // -------------------- Categories ----------------------
     function process_categories( &$schema ) {
-	    global $_POST;
+      global $_POST;
       $categories_query = "SELECT c.categories_image,
                                   c.categories_id,
                                   cd.categories_name,
                                   c.date_added,
                                   c.last_modified
                              FROM " . TABLE_CATEGORIES . " c 
-                        left join " . TABLE_CATEGORIES_DESCRIPTION ." cd 
-                                  on c.categories_id = cd.categories_id
+                        LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd 
+                                  ON c.categories_id = cd.categories_id
                             WHERE c.categories_status = '1'                      
-                              and cd.language_id = ".$_SESSION['languages_id']." 
-                              and c.parent_id = '0' 
+                              AND cd.language_id = ".$_SESSION['languages_id']." 
+
                                   ".$group_check."
                          ORDER BY c.sort_order ASC";
 
       $categories_query = xtDBquery($categories_query);
       while ($categories = xtc_db_fetch_array($categories_query,true)) {
-        $link = htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$categories['categories_id']));
+        $catPath = xtc_get_category_path($categories['categories_id']);
+        $link = htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$catPath));
         $date = (empty($categories['last_modified']) ? $categories['date_added'] : $categories['last_modified'] );
         $entry=$this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;
