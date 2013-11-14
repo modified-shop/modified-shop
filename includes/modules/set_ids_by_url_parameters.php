@@ -20,9 +20,7 @@ if (isset($_GET['info'])) {
   $actual_products_id = (int) $_GET['products_id'];
   $product = new product($actual_products_id);
 }
-if (!isset($product) || !is_object($product)) {
-  $product = new product();
-}
+
 // category URLS
 if (isset($_GET['cat'])) {
   $site = explode('_', $_GET['cat']);
@@ -41,7 +39,7 @@ if (isset($_GET['manu'])) {
 // calculate category path
 if (isset($_GET['cPath'])) {
   $cPath = $_GET['cPath'] = xtc_input_validation($_GET['cPath'], 'cPath', '');
-} elseif (is_object($product) && !isset($_GET['manufacturers_id'])) {
+} elseif (isset($product) && is_object($product) && !isset($_GET['manufacturers_id'])) {
   if ($product->isProduct()) {
     $cPath = xtc_get_product_path($actual_products_id);
   } else {
@@ -50,13 +48,17 @@ if (isset($_GET['cPath'])) {
 } else {
   $cPath = '';
 }
-
+// set default product class
+if (!isset($product) || !is_object($product)) {
+  $product = new product();
+}
+// content URLS
 if (isset ($_GET['coID'])) {
   $coPath_array = xtc_get_content_path($_GET['coID']);
   $coPath_array[sizeof($coPath_array)] = xtc_get_content_id($_GET['coID']);  
   $coPath = implode('_', $coPath_array);
 }
-
+// set $current_category_id and verify $cPath
 if (xtc_not_null($cPath)) {
   $cPath_array = xtc_parse_category_path($cPath);
   $current_category_id = end($cPath_array);
