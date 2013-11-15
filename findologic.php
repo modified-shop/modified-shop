@@ -18,6 +18,7 @@
   
   // load needed function
   require_once (DIR_FS_INC.'get_external_content.inc.php');
+  require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
   
   function is_alive() {
     $url = FL_SERVICE_URL.'alivetest.php?shopkey='.FL_SHOP_ID;
@@ -27,27 +28,22 @@
   }
 
   $do_findologic_search = is_alive();
-  if ($_SESSION['language'] == 'german' && is_alive() !== false) {
+  if ($_SESSION['language'] == 'german' && $do_findologic_search !== false) {
     $url = FL_SERVICE_URL.'index.php?'.
-          'shop='.FL_SHOP_ID.
+          'shopkey='.FL_SHOP_ID.
           '&shopurl='.urlencode(FL_SHOP_URL).
           '&userip='.xtc_get_ip_address().
           '&referer='.(isset($_SERVER['HTTP_REFERER']) ? urlencode($_SERVER['HTTP_REFERER']) : '').
           '&revision='.FL_REVISION.
-          '&'.$_SERVER['QUERY_STRING'];
+          '&'.utf8_decode($_SERVER['QUERY_STRING']);
+
     $content = get_external_content($url, FL_REQUEST_TIMEOUT, false);
-  
+
     $regex = "/<div[\s]+id=\"flResults\">[\z\s]+(.*?)<\/div>/si";
     preg_match($regex, $content, $result);
-    
-    /*
-    if (isset($result[1]) && strpos($result[1], '<flProductID>') !== false) {
-      $do_findologic_search = true;
-    }
-    */
   }
 
-  if ($do_findologic_search === false || isset($_GET['fallback']) && $_GET['fallback'] == '1') {
+  if ($do_findologic_search === false) {
 
     $params = '';
     $action = FILENAME_DEFAULT;
@@ -73,15 +69,21 @@
     $breadcrumb->add(NAVBAR_TITLE1_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
     $breadcrumb->add(NAVBAR_TITLE2_ADVANCED_SEARCH, xtc_href_link(FILENAME_FINDOLOGIC, xtc_get_all_get_params()));
 
-    $product_id_array = preg_split("/<[^>]*[^\/]>/i" , $result[1], -1, PREG_SPLIT_NO_EMPTY); 
-    $product_id_array = array_filter($product_id_array, 'xtc_not_null');
+    if (strpos($result[1], '<flProductID>') !== false) {
+      $product_id_array = preg_split("/<[^>]*[^\/]>/i" , $result[1], -1, PREG_SPLIT_NO_EMPTY); 
+      $product_id_array = array_filter($product_id_array, 'xtc_not_null');
 
-    $products_id = implode("', '", $product_id_array);
-    require (DIR_FS_EXTERNAL.'findologic/findologic_listing.php');
+      $products_id = implode("', '", $product_id_array);
+      require (DIR_FS_EXTERNAL.'findologic/findologic_listing.php');
   
-    $module = '<div style="clear:both;"></div>'.$module;
+      $module = '<div style="clear:both;"></div>'.$module;
+    } else {
+      $error = TEXT_PRODUCT_NOT_FOUND;
+      include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
+    }
+
     $content = preg_replace($regex, $module, $content);
-        
+
     // include boxes & header
     require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
     require (DIR_WS_INCLUDES.'header.php');
