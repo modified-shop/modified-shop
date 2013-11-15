@@ -51,7 +51,7 @@ function get_category_delimiter() {
 
 function get_image($image) {
   if (!empty($image)) {
-    $image = HTTP_SERVER . DIR_WS_CATALOG . DIR_WS_ORIGINAL_IMAGES . $image;
+    $image = HTTP_SERVER . DIR_WS_CATALOG . DIR_WS_POPUP_IMAGES . $image;
   } 
   return $image;
 }
@@ -207,24 +207,23 @@ function select_product($products_id, $debug=false) {
     $attributes_model[] = $row['products_ean'];
     $attributes_model = array_filter($attributes_model, 'xtc_not_null');
 
-    $product = array(
-      "id" => $row['products_id'],
-      "ordernumber" => implode(',', $attributes_model),
-      "name" => $row['products_name'],
-      "summary" => extract_text($row['products_short_description']),
-      "description" => get_description($row['products_model'], $row['products_short_description']),
-      "price" => $xtcPrice->xtcGetPrice($row['products_id'], false, 1, $row['products_tax_class_id']),
-      "instead" => $xtcPrice->xtcFormat($row['products_price'], false, $row['products_tax_class_id']),
-      "maxprice" => $xtcPrice->xtcFormat(($row['products_price'] + $max_options_values_price), false, $row['products_tax_class_id']),
-      "taxrate" => xtc_get_tax_rate($row['products_tax_class_id']),
-      "url" => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($row['products_id'], $row['products_name']), 'NONSSL', false),
-      "image" => get_image($row['products_image']),
-      "attributes" => $attributes_enc,
-      "keywords" => $row['products_keywords'],
-      "groups" => '',
-      "bonus" => '',
-      "shipping" => $main->getShippingStatusName($row['products_shippingtime']),
-    );
+    $product = array("id" => $row['products_id'],
+                     "ordernumber" => implode(',', $attributes_model),
+                     "name" => $row['products_name'],
+                     "summary" => extract_text($row['products_short_description']),
+                     "description" => get_description($row['products_model'], $row['products_short_description']),
+                     "price" => $xtcPrice->xtcGetPrice($row['products_id'], false, 1, $row['products_tax_class_id']),
+                     "instead" => $xtcPrice->xtcFormat($row['products_price'], false, $row['products_tax_class_id']),
+                     "maxprice" => $xtcPrice->xtcFormat(($row['products_price'] + $max_options_values_price), false, $row['products_tax_class_id']),
+                     "taxrate" => xtc_get_tax_rate($row['products_tax_class_id']),
+                     "url" => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($row['products_id'], $row['products_name']), 'NONSSL', false),
+                     "image" => get_image($row['products_image']),
+                     "attributes" => $attributes_enc,
+                     "keywords" => $row['products_keywords'],
+                     "groups" => '',
+                     "bonus" => '',
+                     "shipping" => $main->getShippingStatusName($row['products_shippingtime']),
+                     );
 
     $values = array();
     foreach (get_columns() as $property) {
@@ -245,7 +244,12 @@ function select_product($products_id, $debug=false) {
 
 function get_all_product_category_names($productId, $debug=false) {
   $categories = array();
-  $sql = "SELECT pc.categories_id AS cat FROM ".TABLE_PRODUCTS_TO_CATEGORIES." pc WHERE pc.products_id = ".$productId;
+  $sql = "SELECT pc.categories_id
+            FROM ".TABLE_PRODUCTS_TO_CATEGORIES." pc 
+            JOIN ".TABLE_CATEGORIES." c
+                 ON c.categories_id = pc.categories_id
+                    AND  c.categories_status = '1'
+           WHERE pc.products_id = ".$productId;
   $result = xtc_db_query($sql);
   if (xtc_db_num_rows($result)) {
     while ($row = xtc_db_fetch_array($result)) {
@@ -254,57 +258,52 @@ function get_all_product_category_names($productId, $debug=false) {
         output_row($row);
       }
 
-      array_push($categories, get_category_and_parent_category_names($row['cat'], $debug));
+      array_push($categories, get_category_and_parent_category_names($row['categories_id'], $debug));
     }
   }
-  return $categories;
+  return implode(get_category_delimiter(), $categories);
 }
 
 
-function get_category_and_parent_category_names($cat, $debug = false) {
-  $catid = $cat;
+function get_category_and_parent_category_names($categories_id, $debug=false) {
   $depthLimit = 100;
 
   $categories = array();
   $depthLevel = 0;
-  while ($catid != 0 && $depthLevel < $depthLimit)
-  {
-    $sql =
-      "SELECT
-        c.parent_id AS parent,
-        cd.categories_name AS name
-      FROM
-        ".TABLE_CATEGORIES." c
-        LEFT OUTER JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
-          ON (c.categories_id = cd.categories_id AND cd.language_id = " . FL_LANG_ID . ")
-      WHERE
-        c.categories_id = '".$catid."'
-      AND 
-        c.categories_status = '1'";
+  while ($categories_id != 0 && $depthLevel < $depthLimit) {
+    $sql = "SELECT c.parent_id,
+                   cd.categories_name
+              FROM ".TABLE_CATEGORIES." c
+              JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                   ON (c.categories_id = cd.categories_id 
+                       AND cd.language_id = " . FL_LANG_ID . ")
+             WHERE c.categories_id = '".$categories_id."'
+               AND c.categories_status = '1'";
 
     $result = xtc_db_query($sql);
 
-    if (xtc_db_num_rows($result) && ($row = xtc_db_fetch_array($result))) {
+    if (xtc_db_num_rows($result) > 0) {
+      while ($row = xtc_db_fetch_array($result)) {
 
-      if ($debug) {
-        output_row($row);
+        if ($debug) {
+          output_row($row);
+        }
+
+        $parent = $row['parent_id'];
+        $name = strip_tags($row['categories_name']);
+        $name = str_replace("/", "/&shy;", $name);
+        /* push the parent category on the category stack */
+        array_unshift($categories, $name);
+        if ($parent == $categories_id) {
+          break;
+        }
+        $categories_id = $parent;
+        $depthLevel++;
       }
-
-      $newcatid = $row['parent'];
-      $name = strip_tags($row['name']);
-      $name = str_replace("/", "/&shy;", $name);
-      /* push the parent category on the category stack */
-      array_push($categories, $name);
-      if ($newcatid == $catid) break;
-      $catid = $newcatid;
-      $depthLevel++;
     } else {
       break;
     }
   }
-
-  /* higher categories are further back in the category stack, reverse it */
-  $categories = array_reverse($categories);
 
   if ($depthLevel < $depthLimit) {
     return implode(get_category_delimiter(), $categories);

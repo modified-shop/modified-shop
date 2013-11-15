@@ -30,10 +30,14 @@ if (!isset($_GET['shop']) || $_GET['shop'] != FL_SHOP_ID) {
 @set_time_limit(3000);
 
 // set language
-$language = new language(FL_LANG);
+$lang = FL_LANG;
+if (isset($_GET['language'])) {
+  $lang = xtc_input_validation($_GET['language'], 'char', '');
+}
+$language = new language($lang);
 define("FL_LANG_ID", $language->language['id']);
 
-echo 'Exporting prices for currency ' . CURRENCY . ' and customer group ' . CUSTOMER_GROUP . "\r\n<br />";
+echo 'Exporting language '. $language->language['name'] .' and prices for currency ' . CURRENCY . ' and customer group ' . CUSTOMER_GROUP . "\r\n<br />";
 
 // init price
 $xtcPrice = new xtcPrice(CURRENCY, CUSTOMER_GROUP);
