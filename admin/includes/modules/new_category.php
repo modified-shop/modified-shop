@@ -127,6 +127,11 @@
       </div>
       <!-- EOF Block1 //-->
 
+      <?php //autoload new_category addons 
+      require_once(DIR_FS_INC.'auto_require.inc.php');
+      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/modules/new_category/','php') as $file) require ($file);
+      ?>
+
       <!-- BOF Customers group block //-->
       <?php
       if (GROUP_CHECK=='true') {
