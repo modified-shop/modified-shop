@@ -52,15 +52,11 @@ class findologic {
   var $code, $title, $description, $enabled;
 
   function findologic() {
-    global $order;
-
      $this->code = 'findologic';
      $this->title = MODULE_FINDOLOGIC_TEXT_TITLE;
      $this->description = MODULE_FINDOLOGIC_TEXT_DESCRIPTION;
      $this->sort_order = MODULE_FINDOLOGIC_SORT_ORDER;
      $this->enabled = ((MODULE_FINDOLOGIC_STATUS == 'True') ? true : false);
-     $this->CAT=array();
-     $this->PARENT=array();
    }
 
   function process($file) {
