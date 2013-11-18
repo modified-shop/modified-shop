@@ -17,6 +17,10 @@
 
 require('includes/application_top.php');
 
+// include needed functions
+require_once (DIR_FS_INC.'xtc_get_category_path.inc.php');
+require_once (DIR_FS_INC.'xtc_get_parent_categories.inc.php');
+
 //display per page
 $cfg_max_display_results_key = 'MAX_DISPLAY_STATS_PRODUCTS_VIEWED_RESULTS';
 $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -56,24 +60,27 @@ require (DIR_WS_INCLUDES.'head.php');
         </tr>
         <?php
         $rows = (isset($_GET['page']) && $_GET['page'] > 1) ? $_GET['page']*$page_max_display_results-$page_max_display_results : 0;   
-        $products_query_raw = "select p.products_id,
+        $products_query_raw = "SELECT p.products_id,
                                       p.products_model,                  
                                       pd.products_name, 
-                                      pd.products_viewed, 
+                                      pd.products_viewed,
+                                      p2c.categories_id,
                                       l.name 
-                                 from " . TABLE_PRODUCTS . " p, 
-                                      " . TABLE_PRODUCTS_DESCRIPTION . " pd, 
-                                      " . TABLE_LANGUAGES . " l 
-                                where p.products_id = pd.products_id 
-                                  and l.languages_id = pd.language_id 
-                             order by pd.products_viewed DESC";
+                                 FROM " . TABLE_PRODUCTS . " p
+                                 JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                      ON p.products_id = pd.products_id
+                                 JOIN " . TABLE_LANGUAGES . " l 
+                                      ON l.languages_id = pd.language_id
+                                 JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+                                      ON p2c.products_id = p.products_id 
+                             ORDER BY pd.products_viewed DESC, pd.products_name ASC";
         $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows);
         $products_query = xtc_db_query($products_query_raw);
         while ($products = xtc_db_fetch_array($products_query)) {
           $rows++;
           $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
         ?>                  
-        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_PURCHASED . '?page=' . $_GET['page'], 'NONSSL'); ?>'">
+        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_VIEWED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL'); ?>'">
           <td class="dataTableContent"><?php echo $rows; ?>.</td>
           <td class="dataTableContent"><?php echo $products['products_model']; ?></td>
           <td class="dataTableContent"><?php echo  $products['products_name'] . ' (' . $products['name'] . ')'; ?></td>
