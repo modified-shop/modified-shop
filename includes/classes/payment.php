@@ -69,10 +69,11 @@
         }
         $unallowed_modules_string = preg_replace("'[\r\n\s]+'",'',$unallowed_modules_string);
         $unallowed_modules = explode(',',$unallowed_modules_string);
+
         // add unallowed modules/Download
-        if (isset($order) && is_object($order) && ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight'))) {
-         $download_unallowed_payment = preg_replace("'[\r\n\s]+'",'',DOWNLOAD_UNALLOWED_PAYMENT);
-         $unallowed_modules = array_merge($unallowed_modules,explode(',',$download_unallowed_payment));
+        if (isset($order) && is_object($order) && ($order->content_type == 'virtual' || $order->content_type == 'virtual_weight' || $order->content_type == 'mixed')) {
+          $download_unallowed_payment = preg_replace("'[\r\n\s]+'",'',DOWNLOAD_UNALLOWED_PAYMENT);
+          $unallowed_modules = array_merge($unallowed_modules,explode(',',$download_unallowed_payment));
         }
 
         //print_r($include_modules);
