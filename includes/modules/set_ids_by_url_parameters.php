@@ -53,7 +53,7 @@ if (!isset($product) || !is_object($product)) {
   $product = new product();
 }
 // content URLS
-if (isset ($_GET['coID'])) {
+if (isset ($_GET['coID']) && function_exists('xtc_get_content_path')) {
   $coPath_array = xtc_get_content_path($_GET['coID']);
   $coPath_array[sizeof($coPath_array)] = xtc_get_content_id($_GET['coID']);  
   $coPath = implode('_', $coPath_array);
