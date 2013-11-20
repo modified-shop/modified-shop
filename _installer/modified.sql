@@ -711,8 +711,9 @@ CREATE TABLE orders_products_attributes (
   options_values_price DECIMAL(15,4) NOT NULL,
   price_prefix CHAR(1) NOT NULL,
   orders_products_options_id INT(11) NOT NULL,
-  orders_products_options_values_id INT(11) NOT NULL,
+  orders_products_options_values_id INT(11) NOT NULL,  
   options_values_weight DECIMAL(15,4) NOT NULL,
+  weight_prefix CHAR(1) NOT NULL,
   PRIMARY KEY (orders_products_attributes_id)
 ) ENGINE=MyISAM;
 
