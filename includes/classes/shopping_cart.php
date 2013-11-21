@@ -514,33 +514,28 @@ class shoppingCart {
           if ($products['products_status'] == 0) {
               $this->remove($products_id);
           } else {
-            $products_price = $xtPrice->xtcGetPrice($products['products_id'],
-                                                    $format = false,
-                                                    $this->contents[$products_id]['qty'], //only used by xtcGetGraduatedPrice
-                                                    $products['products_tax_class_id'],
-                                                    $products['products_price']);
+            $products_price = $xtPrice->xtcGetPrice(
+                                  $products['products_id'],
+                                  $format = false,
+                                  $this->contents[$products_id]['qty'], //only used by xtcGetGraduatedPrice
+                                  $products['products_tax_class_id'],
+                                  $products['products_price']
+                                );
 
-            $products_array[$index] = array ( 
-                'id' => $products_id,
-                'name' => $products['products_name'],
-                'description' => $products['products_description'],
-                'short_description' => $products['products_short_description'],
-                'order_description' => $products['products_order_description'],
-                'model' => $products['products_model'],
-                'image' => $products['products_image'],
-                'price' => $products_price + $this->attributes_price($products_id),
-                'vpe' => $main->getVPEtext($products, $products_price),
-                'quantity' => $this->contents[$products_id]['qty'],
-                'qty' => $this->contents[$products_id]['qty'],
-                'weight' => $products['products_weight'],
-                'shipping_time' =>(ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null,
-                'final_price' => (($products_price + $this->attributes_price($products_id)) * $this->contents[$products_id]['qty']),
-                'tax_class_id' => $products['products_tax_class_id'],
-                'tax' => isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0,
-                'attributes' => isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null
-              );
+            $products_data = array();
+            foreach ($products as $key => $value) {
+              $products_data[str_replace('products_', '', $key)] = $value;
+            }
+            $products_data['id'] = $products_id;
+            $products_data['price'] = $products_price + $this->attributes_price($products_id);
+            $products_data['vpe'] = $main->getVPEtext($products, $products_price);
+            $products_data['quantity'] = $products_data['qty'] = $this->contents[$products_id]['qty'];
+            $products_data['shipping_time'] = (ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null;
+            $products_data['final_price'] = (($products_price + $this->attributes_price($products_id)) * $this->contents[$products_id]['qty']);
+            $products_data['tax'] = isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0;
+            $products_data['attributes'] = isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null;
 
-            $index++;
+            $products_array[$index++] = $products_data;
           }
         }
       }
