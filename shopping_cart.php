@@ -229,7 +229,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     $smarty->assign('info_message', $_SESSION['paypal_warten']); //Tomcraft - 2009-12-08 - fixed duplicate error messages in shopping cart
   } else {
     if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-      $smarty->assign('info_message', constant($_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+      $smarty->assign('info_message', (constant(strtoupper($_GET['info_message'])) ? constant(strtoupper($_GET['info_message'])) : $_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
     }
     if (isset($o_paypal) && is_object($o_paypal)) {
       $smarty->assign('BUTTON_PAYPAL', $o_paypal->build_express_checkout_button());
@@ -248,11 +248,17 @@ if ($_SESSION['cart']->count_contents() > 0) {
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT).'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 }
 
+//check coupon minimum order
+if (isset($_SESSION['cc_id']) && $_SESSION['cc_amount_min_order'] > $_SESSION['cart']->total) {
+  unset($_SESSION['cc_id']);
+  $_GET['info'] = 0;
+  $_GET['info_message'] = sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON,$xtPrice->xtcFormat($_SESSION['cc_amount_min_order'],true)).ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD;
+}
 if (isset($_GET['info_message'])) {
-  $smarty->assign('info_message', constant($_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+  $smarty->assign('info_message', (constant(strtoupper($_GET['info_message'])) ? constant(strtoupper($_GET['info_message'])) : $_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
 }
 if (isset($_GET['info_message_3'])) {
-  $smarty->assign('info_message_3', constant($_GET['info_message_3']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+  $smarty->assign('info_message_3', (constant(strtoupper($_GET['info_message_3'])) ? constant(strtoupper($_GET['info_message_3'])) : $_GET['info_message_3']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
 }
 //BOF - web28 - 2011-05-15 - new continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
