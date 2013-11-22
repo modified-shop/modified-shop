@@ -2418,16 +2418,18 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_getDownloads() {
-    $files = array ();
-    $dir = DIR_FS_CATALOG.'download/';
+    $files = $sort_key = array ();
+    $dir = DIR_FS_CATALOG . 'download/';
     if ($fp = opendir($dir)) {
       while ($file = readdir($fp)) {
         if (is_file($dir.$file) && $file != '.htaccess') {
           $size = filesize($dir.$file);
           $files[] = array ('id' => $file, 'text' => $file.' | '.xtc_format_filesize($size), 'size' => $size, 'date' => date("F d Y H:i:s.", filemtime($dir.$file)));
-        } //if
-      } // while
+          $sort_key[] = $file;
+        }
+      }
       closedir($fp);
+      array_multisort($sort_key, SORT_ASC, $files);
     }
     return $files;
   }
