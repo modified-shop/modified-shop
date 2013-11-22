@@ -48,73 +48,88 @@
     <div><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></div>
     <div><?php echo '&nbsp;&nbsp;&nbsp;'.$languages_string ;?></div>
   </div>
-  <table class="favorites">
-    <tr>          
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('orders.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_orders.png', BOX_ORDERS, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_ORDERS) ; ?>
-      </td>          
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('content_manager.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_content.png', BOX_CONTENT, 32, 32);?>          
-        </a>
-        <br />
-        <?php echo (BOX_CONTENT) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('backup.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_backup.png', BOX_BACKUP, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_BACKUP) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('customers.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_customers.png', BOX_CUSTOMERS, 32, 32);?> 
-        </a>
-        <br />
-        <?php echo (BOX_CUSTOMERS) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('categories.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_categories.png', BOX_CATEGORIES, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_CATEGORIES) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_catalog_href_link('index.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_shop.png', BOX_SHOP, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_SHOP) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_catalog_href_link('logoff.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_logout.png', BOX_LOGOUT, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_LOGOUT) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('credits.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_credits.png', BOX_CREDITS, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_CREDITS) ; ?>
-      </td>
-      <td class="fastmenu">
-        <a href="<?php echo xtc_href_link('check_update.php', '', 'NONSSL') ; ?>">
-          <?php echo xtc_image(DIR_WS_ICONS .'fastnav/icon_update.png', BOX_UPDATE, 32, 32);?>
-        </a>
-        <br />
-        <?php echo (BOX_UPDATE) ; ?>
-      </td>
-    </tr>
-  </table>
+  <div class="favorites">
+<?php
+
+  $favorites = array();
+
+  $favorites[0] = array(
+      'file' => 'orders.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_orders.png',
+      'name' => BOX_ORDERS
+    );
+  $favorites[1] = array(
+      'file' => 'content_manager.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_content.png',
+      'name' => BOX_CONTENT
+    );
+  $favorites[2] = array(
+      'file' => 'backup.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_backup.png',
+      'name' => BOX_BACKUP
+    );
+  $favorites[3] = array(
+      'file' => 'customers.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_customers.png',
+      'name' => BOX_CUSTOMERS
+    );
+  $favorites[4] = array(
+      'file' => 'categories.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_categories.png',
+      'name' => BOX_CATEGORIES
+    );
+  $favorites[5] = array(
+      'file' => 'index.php',
+      'par'  => '', 'shop' => 1,
+      'icon'  => 'icon_shop.png',
+      'name' => BOX_SHOP
+    );
+  $favorites[6] = array(
+      'file' => 'logoff.php',
+      'par'  => '', 'shop' => 1,
+      'icon'  => 'icon_logout.png',
+      'name' => BOX_LOGOUT
+    );
+  $favorites[7] = array(
+      'file' => 'credits.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_credits.png',
+      'name' => BOX_CREDITS
+    );
+  $favorites[8] = array(
+      'file' => 'check_update.php',
+      'par'  => '', 'shop' => 0,
+      'icon'  => 'icon_update.png',
+      'name' => BOX_UPDATE
+    );
+
+  // overwrite with hooks
+  $favorites = isset($own_favorites) ? array_merge($favorites, (array)$own_favorites) : $favorites;
+
+  $page_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
+  $page_permission = xtc_db_fetch_array($page_permission_query);
+  
+  foreach ($favorites as $f) {
+    if (is_array($f)) {
+      if ($f['shop']) {
+        $func = 'xtc_catalog_href_link';
+      } else {
+        if ($page_permission[strtok($f['file'], '.')] != '1') continue;
+        $func = 'xtc_href_link';
+      }
+      $link = $func($f['file'], $f['par'], 'NONSSL');
+      echo '    <a href="' . $link . '">'.
+           xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
+           '<br>' . $f['name'] . '</a>' . PHP_EOL;
+    }
+  }
+?>
+  </div>
 </div>
 
 <div id="top2" class="clear"></div>
