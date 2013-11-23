@@ -23,30 +23,53 @@
   defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
   require_once(DIR_FS_INC .'xtc_get_tax_class_id.inc.php');
+  
   //require_once(DIR_FS_INC .'xtc_format_price.inc.php');
+  
   // I found the easiest way to do this is just delete the current attributes & start over =)
   // download function start
-  $delete_sql = xtc_db_query("SELECT products_attributes_id
-                                FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-                               WHERE products_id = '" . $_POST['current_product_id'] . "'");
+  function delete_attributes($options_id = '') {
+    $options_id = $options_id != '' ? " AND options_id = '". (int)$options_id . "'" : '';
+    $delete_sql = xtc_db_query("SELECT products_attributes_id
+                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                 WHERE products_id = '" . (int)$_POST['current_product_id'] . "'
+                                       ".$options_id."
+                               ");
 
-  while($delete_res = xtc_db_fetch_array($delete_sql)) {
-      $delete_download_sql = xtc_db_query("SELECT products_attributes_filename
-                                             FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
-                                            WHERE products_attributes_id = '" . $delete_res['products_attributes_id'] . "'"); //Web28 - 2010-12-16 - fix typo
+    while($delete_res = xtc_db_fetch_array($delete_sql)) {
+        $delete_download_sql = xtc_db_query("SELECT products_attributes_filename
+                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD."
+                                              WHERE products_attributes_id = '" . (int)$delete_res['products_attributes_id'] . "'"); //Web28 - 2010-12-16 - fix typo
 
-      $delete_download_file = xtc_db_fetch_array($delete_download_sql);
-      xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." WHERE products_attributes_id = '" . $delete_res['products_attributes_id'] . "'");
+        $delete_download_file = xtc_db_fetch_array($delete_download_sql);
+        xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." 
+                            WHERE products_attributes_id = '" . (int)$delete_res['products_attributes_id'] . "'
+                     ");
+    }
+
+    // download function end
+    xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
+                        WHERE products_id = '" . $_POST['current_product_id'] . "'
+                              ".$options_id."
+                 ");
   }
-
-  // download function end
-  xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_ATTRIBUTES." WHERE products_id = '" . $_POST['current_product_id'] . "'" );
-
+  
+  //echo '<pre>'.print_r($_POST,true).'</pre>';EXIT;
+  if (isset($_POST['options_id']) && is_array($_POST['options_id'])) {
+    $delete_options_array = $_POST['options_id'];
+    for ($i = 0, $n = sizeof($delete_options_array); $i < $n; $i++) {
+      $options_id = str_replace('oid-','',$delete_options_array[$i]);
+      delete_attributes($options_id);
+    }
+  } elseif (isset($_POST['optionValues']) && is_array($_POST['optionValues'])) {
+    delete_attributes();
+  }
+  
   // Simple, yet effective.. loop through the selected Option Values.. find the proper price & prefix.. insert.. yadda yadda yadda.
-  for ($i = 0; $i < sizeof($_POST['optionValues']); $i++) {
+  for ($i = 0, $n = sizeof($_POST['optionValues']); $i < $n; $i++) {
     $query = "SELECT * 
                 FROM ".TABLE_PRODUCTS_OPTIONS_VALUES_TO_PRODUCTS_OPTIONS." 
-               WHERE products_options_values_id = '" . $_POST['optionValues'][$i] . "'";
+               WHERE products_options_values_id = '" . (int)$_POST['optionValues'][$i] . "'";
     $result = xtc_db_query($query);
     $matches = xtc_db_num_rows($result);
     while ($line = xtc_db_fetch_array($result)) {
@@ -63,16 +86,16 @@
     $value_price=xtc_round($value_price,PRICE_PRECISION);
     
     //default values
-    $sql_data_array = array ('products_id' => $_POST['current_product_id'],
-                             'options_id' => $optionsID,
-                             'options_values_id' => $_POST['optionValues'][$i],
+    $sql_data_array = array ('products_id' => (int)$_POST['current_product_id'],
+                             'options_id' => (int)$optionsID,
+                             'options_values_id' => (int)$_POST['optionValues'][$i],
                              'options_values_price' => $value_price,
-                             'price_prefix' => $_POST[$cv_id . '_prefix'],
+                             'price_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_prefix']),
                              'attributes_model' => xtc_db_prepare_input($_POST[$cv_id . '_model']),
-                             'attributes_stock' => $_POST[$cv_id . '_stock'],
+                             'attributes_stock' => (int)$_POST[$cv_id . '_stock'],
                              'options_values_weight' => $_POST[$cv_id . '_weight'],
-                             'weight_prefix' => $_POST[$cv_id . '_weight_prefix'],
-                             'sortorder' => $_POST[$cv_id . '_sortorder']
+                             'weight_prefix' => xtc_db_prepare_input($_POST[$cv_id . '_weight_prefix']),
+                             'sortorder' => (int)$_POST[$cv_id . '_sortorder']
                              );
     //additional values
     $add_data_array = array ('attributes_ean' => xtc_db_prepare_input($_POST[$cv_id . '_ean']));
@@ -84,7 +107,7 @@
     if ($_POST[$cv_id . '_download_file'] != '') {
       $value_download_file = $_POST[$cv_id . '_download_file'];
       $value_download_expire = $_POST[$cv_id . '_download_expire'];
-      $value_download_count = $_POST[$cv_id . '_download_count'];
+      $value_download_count = (int)$_POST[$cv_id . '_download_count'];
 
       $sql_data_array = array ('products_attributes_id' => $products_attributes_id,
                                'products_attributes_filename' => xtc_db_prepare_input($value_download_file),
