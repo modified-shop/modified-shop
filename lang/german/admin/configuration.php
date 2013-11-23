@@ -451,7 +451,7 @@ define('DOWNLOAD_MAX_DAYS_DESC' , 'Anzahl an Tagen, die ein Download Link f&uuml
 define('DOWNLOAD_MAX_COUNT_TITLE' , 'Maximale Anzahl der Downloads eines gekauften Medienproduktes');
 define('DOWNLOAD_MAX_COUNT_DESC' , 'Stellen Sie die maximale Anzahl an Downloads ein, die Sie dem Kunden erlauben, der einen Artikel dieser Art erworben hat. 0 bedeutet kein Download.');
 define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_TITLE' , 'Mehrfache Attribute f&uuml;r Downloads');
-define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_DESC' , 'Sollen mehrfache Attribute bei Download Artikeln erlaubt sein, damit die Versandart übersprungen wird.');
+define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_DESC' , 'Sollen mehrfache Attribute bei Download Artikeln erlaubt sein, damit die Versandart &uuml;bersprungen wird.');
 
 define('GZIP_COMPRESSION_TITLE' , 'GZip Kompression einschalten');
 define('GZIP_COMPRESSION_DESC' , 'Schalten Sie HTTP GZip Kompression ein um die Seitenaufbaugeschwindigkeit zu optimieren.');
