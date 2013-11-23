@@ -34,4 +34,5 @@
 // EOF - Tomcraft - 2009-11-11 - NEW SORT SELECTION
 
   define('ATTR_EAN', 'EAN-Nr.');
+  define('ATTR_SAVE_ACTIVE', 'Aufgeklappte Attribute speichern');
 ?>
