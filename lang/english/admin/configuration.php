@@ -451,6 +451,8 @@ define('DOWNLOAD_MAX_DAYS_TITLE' , 'Expiry Delay (Days)');
 define('DOWNLOAD_MAX_DAYS_DESC' , 'Set number of days before the download link expires. 0 means no limit.');
 define('DOWNLOAD_MAX_COUNT_TITLE' , 'Maximum Number of Downloads');
 define('DOWNLOAD_MAX_COUNT_DESC' , 'Set the maximum number of downloads. 0 means no download authorized.');
+define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_TITLE' , 'Multiple Attribute for Downloads');
+define('DOWNLOAD_MAX_COUNT_DESC' , 'Allow Multiple Attribute to skip Shipping.');
 
 define('GZIP_COMPRESSION_TITLE' , 'Enable GZip Compression');
 define('GZIP_COMPRESSION_DESC' , 'Enable HTTP gzip compression.');

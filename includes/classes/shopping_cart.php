@@ -612,13 +612,14 @@ class shoppingCart {
       while (list ($products_id,) = each($this->contents)) {
         if (isset ($this->contents[$products_id]['attributes'])) {
           reset($this->contents[$products_id]['attributes']);
-          while (list (, $value) = each($this->contents[$products_id]['attributes'])) {
+          if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
+            // new routine for multiple attributes for downloads
             $virtual_check_query = xtc_db_query("SELECT count(*) as total
                                                    FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
                                                    JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
                                                         ON pa.products_attributes_id = pad.products_attributes_id
                                                   WHERE pa.products_id = '".(int)$products_id."'
-                                                    AND pa.options_values_id = '".(int)$value."'
+                                                    AND pa.options_values_id IN ('".implode("', '", $this->contents[$products_id]['attributes'])."')
                                                   ");
             $virtual_check = xtc_db_fetch_array($virtual_check_query);
             if ($virtual_check['total'] > 0) {
@@ -642,6 +643,41 @@ class shoppingCart {
                 default :
                   $this->content_type = 'physical';
                   break;
+              }
+            }          
+          } else {
+            // old routine as standard
+            while (list (, $options_values_id) = each($this->contents[$products_id]['attributes'])) {
+              $virtual_check_query = xtc_db_query("SELECT count(*) as total
+                                                     FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                                     JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                          ON pa.products_attributes_id = pad.products_attributes_id
+                                                    WHERE pa.products_id = '".(int)$products_id."'
+                                                      AND pa.options_values_id = '".(int)$options_values_id."'
+                                                    ");
+              $virtual_check = xtc_db_fetch_array($virtual_check_query);
+              if ($virtual_check['total'] > 0) {
+                switch ($this->content_type) {
+                  case 'physical' :
+                    $this->content_type = 'mixed';
+                    return $this->content_type;
+                    break;
+
+                  default :
+                    $this->content_type = 'virtual';
+                    break;
+                }
+              } else {
+                switch ($this->content_type) {
+                  case 'virtual' :
+                    $this->content_type = 'mixed';
+                    return $this->content_type;
+                    break;
+
+                  default :
+                    $this->content_type = 'physical';
+                    break;
+                }
               }
             }
           }
@@ -697,7 +733,7 @@ class shoppingCart {
         $no_count = false;
         $gv_query = xtc_db_query("select products_model from ".TABLE_PRODUCTS." where products_id = '".$products_id."'");
         $gv_result = xtc_db_fetch_array($gv_query);
-        if (preg_match('/^GIFT/', $gv_result['products_model'])) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3
+        if (preg_match('/^GIFT/', $gv_result['products_model'])) {
           $no_count = true;
         }
         if (defined('NO_COUNT_ZERO_WEIGHT') && NO_COUNT_ZERO_WEIGHT == 1) {
