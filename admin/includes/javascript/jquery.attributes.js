@@ -70,7 +70,7 @@ $(document).ready(function($) {
         table.hide();
         input.remove();
         //$(input).find('input,select').attr('disabled','disabled');
-        return;
+        //return;
         $('form[name="SUBMIT_ATTRIBUTES"]').submit();
         //$(input).removeAttr('disabled');
     });
