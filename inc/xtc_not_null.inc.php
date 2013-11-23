@@ -13,6 +13,9 @@
    (c) 2003	 nextcommerce (xtc_not_null.inc.php,v 1.3 2003/08/13 23:38:05); www.nextcommerce.org
    (c) 2006 xt:Commerce; www.xt-commerce.com
 
+   new release:
+   (c) 2013 Hacker Solutions - www.hackersolutions.com/modified/xtc_not_null_vs_empty
+
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
