@@ -318,10 +318,13 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $products_ordered_attributes = '';
     if (isset($order->products[$i]['attributes'])) {
       $attributes_exist = '1';
+      $order->products[$i]['attributes'] = array_values($order->products[$i]['attributes']); // reset keys for $j
       for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
 
         // update attribute stock
-        if (STOCK_LIMITED == 'true') {
+        if (STOCK_LIMITED == 'true'
+         && isset($order->products[$i]['attributes'][$j]['value_id'])
+         && isset($order->products[$i]['attributes'][$j]['option_id'])) {
           xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
                            SET attributes_stock=attributes_stock - '".$order->products[$i]['qty']."'
                          WHERE products_id='".$order->products[$i]['id']."'
@@ -335,15 +338,20 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
             'orders_id' => $insert_id,
             'orders_products_id' => $order_products_id,
             'products_options' => $order->products[$i]['attributes'][$j]['option'],
-            'products_options_values' => $order->products[$i]['attributes'][$j]['value'],
-            'options_values_price' => $order->products[$i]['attributes'][$j]['price'],
-            'price_prefix' => $order->products[$i]['attributes'][$j]['prefix'],
-            'orders_products_options_id' => $order->products[$i]['attributes'][$j]['option_id'],
-            'orders_products_options_values_id' => $order->products[$i]['attributes'][$j]['value_id']
+            'products_options_values' => $order->products[$i]['attributes'][$j]['value']
           );
+        if (isset($order->products[$i]['attributes'][$j]['price']))
+          $sql_data_array['options_values_price'] = $order->products[$i]['attributes'][$j]['price'];
+        if (isset($order->products[$i]['attributes'][$j]['prefix']))
+          $sql_data_array['price_prefix'] = $order->products[$i]['attributes'][$j]['prefix'];
+        if (isset($order->products[$i]['attributes'][$j]['option_id']))
+          $sql_data_array['orders_products_options_id'] = $order->products[$i]['attributes'][$j]['option_id'];
+        if (isset($order->products[$i]['attributes'][$j]['value_id']))
+          $sql_data_array['orders_products_options_values_id'] = $order->products[$i]['attributes'][$j]['value_id'];
+
         xtc_db_perform(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $sql_data_array);
 
-        //update attributes download
+        // update attributes download
         if (DOWNLOAD_ENABLED == 'true') {
           $attributes_dl_query = xtc_db_query("SELECT pad.products_attributes_maxdays,
                                                       pad.products_attributes_maxcount,
@@ -355,9 +363,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
                                                   AND pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."'
                                                   AND pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'
                                              ");
-                                              
           $attributes_dl_array = xtc_db_fetch_array($attributes_dl_query);
-          
           if (isset($attributes_dl_array['products_attributes_filename']) && xtc_not_null($attributes_dl_array['products_attributes_filename'])) {
             $sql_data_array = array (
                 'orders_id' => $insert_id,
@@ -370,6 +376,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
             xtc_db_perform(TABLE_ORDERS_PRODUCTS_DOWNLOAD, $sql_data_array);
           }
         }
+
       }
     }
     //------insert customer choosen option eof ----
