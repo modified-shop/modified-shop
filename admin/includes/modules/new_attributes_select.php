@@ -22,70 +22,74 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+$adminImages = DIR_WS_CATALOG . "lang/". $_SESSION['language'] ."/admin/images/buttons/";
 ?>
-  <tr>
-    <td class="pageHeading" colspan="3"><?php echo $pageTitle; ?></td>
-  </tr>
-<form action="<?php echo $PHP_SELF; ?>" name="SELECT_PRODUCT" method="post"><input type="hidden" name="action" value="edit">
-<?php
-  echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-  echo "<TR>";
-  echo "<TD class=\"main\"><br /><strong>".SELECT_PRODUCT."</strong><br /></TD>";
-  echo "</TR>";
-  echo "<TR>";
-  echo "<TD class=\"main\"><SELECT NAME=\"current_product_id\">";
+<tr>
+  <td>
+    <div class="pageHeading pdg2"><?php echo $pageTitle; ?></div>
 
-  $query = "SELECT * FROM  ".TABLE_PRODUCTS_DESCRIPTION."  where products_id LIKE '%' AND language_id = '" . $_SESSION['languages_id'] . "' ORDER BY products_name ASC";
-  $result = xtc_db_query($query);
-  $matches = xtc_db_num_rows($result);
+    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" name="SELECT_PRODUCT" method="post">
+    <input type="hidden" name="action" value="edit">
 
-  if ($matches) {
-    while ($line = xtc_db_fetch_array($result)) {
-      $title = $line['products_name'];
-      $current_product_id = $line['products_id'];
-      echo "<OPTION VALUE=\"" . $current_product_id . "\">" . $title;
-    }
-  } else {
-    echo "You have no products at this time.";
-  }
-  echo "</SELECT>";
-  echo "</TD></TR>";
-  echo "<TR>";
-  echo "<TD class=\"main\">";
-  echo xtc_button(BUTTON_EDIT);
-  echo "</TD>";
-  echo "</TR>";
-  // start change for Attribute Copy
-  echo "<br /><br />";
-  echo "<TR>";
-  echo "<TD class=\"main\"><br /><strong>".SELECT_COPY."</strong><br /></TD>";
-  echo "</TR>";
-  echo "<TR>";
-  echo "<TD class=\"main\"><SELECT NAME=\"copy_product_id\">";
+    <?php
+      echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+      echo '<div class="main pdg2"><br /><strong>'.SELECT_PRODUCT.'</strong><br /></div>'.PHP_EOL;
+      echo '<div class="main pdg2"><select name="current_product_id">'.PHP_EOL;
 
-  $copy_query = xtc_db_query("SELECT pd.products_name,
-                                     pd.products_id
-                               FROM ".TABLE_PRODUCTS_DESCRIPTION."  pd,
-                                    ".TABLE_PRODUCTS_ATTRIBUTES." pa
-                              where pa.products_id = pd.products_id
-                              AND pd.products_id LIKE '%'
-                              AND pd.language_id = '" . $_SESSION['languages_id'] . "'
-                              GROUP BY pd.products_id
-                              ORDER BY pd.products_name ASC");
-  $copy_count = xtc_db_num_rows($copy_query);
+      $query = xtc_db_query("SELECT * 
+                               FROM ".TABLE_PRODUCTS_DESCRIPTION."  
+                              WHERE products_id LIKE '%' 
+                                AND language_id = '" . $_SESSION['languages_id'] . "' 
+                           ORDER BY products_name ASC
+                           ");
 
-  if ($copy_count) {
-    echo '<option value="0">no copy</option>';
-    while ($copy_res = xtc_db_fetch_array($copy_query)) {
-      echo '<option value="' . $copy_res['products_id'] . '">' . $copy_res['products_name'] . '</option>';
-    }
-  }
-  else {
-    echo 'No products to copy attributes from';
-  }
-  echo '</select></td></tr>';
-  echo "<TR>";
-  echo "<TD class=\"main\">".xtc_button(BUTTON_EDIT)."</TD>";
-  echo "</TR>";
-?>
-</form>
+      if (xtc_db_num_rows($query)) {
+        while ($line = xtc_db_fetch_array($query)) {
+          $title = $line['products_name'];
+          $current_product_id = $line['products_id'];
+          echo '<option value="' . $current_product_id . '">' . $title.PHP_EOL;
+        }
+      } else {
+        echo "You have no products at this time.";
+      }
+
+      echo '</select></div>'.PHP_EOL;
+
+      echo '<div class="main pdg2">'. xtc_button(BUTTON_EDIT).'</div>'.PHP_EOL;
+      // start change for Attribute Copy
+
+      echo '<div class="main pdg2"><br /><strong>'.SELECT_COPY.'</strong><br /></div>'.PHP_EOL;
+
+      echo '<div class="main pdg2"><select name="copy_product_id">'.PHP_EOL;
+
+      $copy_query = xtc_db_query("SELECT pd.products_name, 
+                                         pd.products_id 
+                                   FROM ".TABLE_PRODUCTS_DESCRIPTION."  pd, 
+                                        ".TABLE_PRODUCTS_ATTRIBUTES." pa 
+                                  WHERE pa.products_id = pd.products_id 
+                                    AND pd.products_id LIKE '%' 
+                                    AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
+                               GROUP BY pd.products_id 
+                               ORDER BY pd.products_name ASC
+                               ");
+      $copy_count = xtc_db_num_rows($copy_query);
+
+      if ($copy_count) {
+          echo '<option value="0">no copy</option>';
+          while ($copy_res = xtc_db_fetch_array($copy_query)) {
+              echo '<option value="' . $copy_res['products_id'] . '">' . $copy_res['products_name'] . '</option>';
+          }
+      }
+      else {
+          echo 'No products to copy attributes from';
+      }
+      echo '</select></div>'.PHP_EOL;
+
+      echo '<div class="main pdg2">'. xtc_button(BUTTON_EDIT).'</div>'.PHP_EOL;
+
+
+    ?>
+
+    </form>
+  </td>
+</tr>
