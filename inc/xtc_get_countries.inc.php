@@ -18,20 +18,36 @@
    
   function xtc_get_countriesList($countries_id = '', $with_iso_codes = false) {
     $countries_array = array();
+    $no_france_fx = " AND countries_iso_code_2 != 'FX' ";
     if (xtc_not_null($countries_id)) {
       if ($with_iso_codes == true) {
-        $countries = xtc_db_query("select countries_name, countries_iso_code_2, countries_iso_code_3 from " . TABLE_COUNTRIES . " where countries_id = '" . $countries_id . "' and status = '1' order by countries_name");
+        $countries = xtc_db_query("SELECT countries_name, countries_iso_code_2, countries_iso_code_3 
+                                     FROM " . TABLE_COUNTRIES . " 
+                                    WHERE countries_id = '" . $countries_id . "' 
+                                      AND status = '1'
+                                      ".$no_france_fx."
+                                 ORDER BY countries_name
+                                  ");
         $countries_values = xtc_db_fetch_array($countries);
         $countries_array = array('countries_name' => $countries_values['countries_name'],
                                  'countries_iso_code_2' => $countries_values['countries_iso_code_2'],
                                  'countries_iso_code_3' => $countries_values['countries_iso_code_3']);
       } else {
-        $countries = xtc_db_query("select countries_name from " . TABLE_COUNTRIES . " where countries_id = '" . $countries_id . "' and status = '1'");
+        $countries = xtc_db_query("SELECT countries_name 
+                                     FROM " . TABLE_COUNTRIES . " 
+                                    WHERE countries_id = '" . $countries_id . "'
+                                      ".$no_france_fx."                                    
+                                      AND status = '1'
+                                  ");
         $countries_values = xtc_db_fetch_array($countries);
         $countries_array = array('countries_name' => $countries_values['countries_name']);
       }
     } else {
-      $countries = xtc_db_query("select countries_id, countries_name from " . TABLE_COUNTRIES . " where status = '1' order by countries_name");
+      $countries = xtc_db_query("SELECT countries_id, countries_name 
+                                   FROM " . TABLE_COUNTRIES . " 
+                                  WHERE status = '1'
+                                   ".$no_france_fx."                                  
+                               ORDER BY countries_name");
       while ($countries_values = xtc_db_fetch_array($countries)) {
         $countries_array[] = array('countries_id' => $countries_values['countries_id'],
                                    'countries_name' => $countries_values['countries_name']);
