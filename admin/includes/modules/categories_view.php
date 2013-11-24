@@ -400,7 +400,7 @@
              //get products data
              $products_count = 0;
              if (xtc_not_null($search)) {
-               include("../inc/xtc_parse_search_string.inc.php");
+               include(DIR_FS_INC . 'xtc_parse_search_string.inc.php');
                define(ADMIN_SEARCH_IN_ATTR, true); // true = search in attributes
                define(ADMIN_SEARCH_IN_DESC, false); // true = search in description
                //build query
