@@ -50,21 +50,12 @@ class product {
       return;
     }
     // query for Product
-    $group_check = "";
-    if (GROUP_CHECK == 'true') {
-      $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
-
-    $fsk_lock = "";
-    if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-      $fsk_lock = ' AND p.products_fsk18!=1';
-    }
-
     $product_query = "SELECT *
                         FROM ".TABLE_PRODUCTS." AS p
                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON p.products_status = '1'
                          AND p.products_id = '".$this->pID."'
-                         AND pd.products_id = p.products_id ".$group_check.$fsk_lock."
+                         AND pd.products_id = p.products_id
+                         " . PRODUCTS_CONDITIONS_P . "
                          AND pd.language_id = '".(int)$_SESSION['languages_id']."'";
 
     $product_query = xtDBquery($product_query);
@@ -169,15 +160,6 @@ class product {
 
     $module_content = array ();
 
-    $fsk_lock = "";
-    if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-      $fsk_lock = ' AND p.products_fsk18!=1';
-    }
-    $group_check = "";
-    if (GROUP_CHECK == 'true') {
-      $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
-
     $orders_query = "SELECT ".$this->default_select."
                        FROM ".TABLE_ORDERS_PRODUCTS." op1
                        JOIN ".TABLE_ORDERS_PRODUCTS." op2 on op2.orders_id = op1.orders_id
@@ -188,9 +170,8 @@ class product {
                         AND op2.products_id != ".$this->pID."
                         AND p.products_status = 1
                         AND trim(pd.products_name) != ''
-                        AND pd.language_id = ".(int) $_SESSION['languages_id']
-                            .$group_check
-                            .$fsk_lock."
+                        AND pd.language_id = ".(int) $_SESSION['languages_id']."
+                        " . PRODUCTS_CONDITIONS_P . "
                    GROUP BY p.products_id
                    ORDER BY o.date_purchased desc
                       LIMIT ".MAX_DISPLAY_ALSO_PURCHASED;
@@ -218,23 +199,14 @@ class product {
     $cross_sell_data = array ();
     if (xtc_db_num_rows($cs_groups, true) > 0) {
       while ($cross_sells = xtc_db_fetch_array($cs_groups, true)) {
-        $fsk_lock = '';
-        if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-          $fsk_lock = ' AND p.products_fsk18!=1';
-        }
-        $group_check = "";
-        if (GROUP_CHECK == 'true') {
-          $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-        }
         $cross_query = "SELECT ".$this->default_select.",
                                xp.sort_order
                           FROM ".TABLE_PRODUCTS_XSELL." xp,
                                ".TABLE_PRODUCTS." p,
                                ".TABLE_PRODUCTS_DESCRIPTION." pd
                          WHERE xp.products_id = ".$this->pID."
-                           AND xp.xsell_id = p.products_id "
-                               .$fsk_lock
-                               .$group_check."
+                           AND xp.xsell_id = p.products_id
+                           " . PRODUCTS_CONDITIONS_P . "
                            AND p.products_id = pd.products_id
                            AND xp.products_xsell_grp_name_id='".$cross_sells['products_xsell_grp_name_id']."'
                            AND pd.language_id = ".(int)$_SESSION['languages_id']."
@@ -263,24 +235,14 @@ class product {
   function getReverseCrossSells() {
     global $xtPrice;
 
-    $fsk_lock = '';
-    if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-      $fsk_lock = ' AND p.products_fsk18!=1';
-    }
-    $group_check = '';
-    if (GROUP_CHECK == 'true') {
-      $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
-
     $cross_query = xtDBquery("SELECT ".$this->default_select.",
                                      xp.sort_order
                                 FROM ".TABLE_PRODUCTS_XSELL." xp,
                                      ".TABLE_PRODUCTS." p,
                                      ".TABLE_PRODUCTS_DESCRIPTION." pd
                                WHERE xp.xsell_id = '".$this->pID."'
-                                 AND xp.products_id = p.products_id "
-                                     .$fsk_lock
-                                     .$group_check."
+                                 AND xp.products_id = p.products_id
+                                 " . PRODUCTS_CONDITIONS_P . "
                                  AND p.products_id = pd.products_id
                                  AND pd.language_id = ".(int)$_SESSION['languages_id']."
                                  AND trim(pd.products_name) != ''

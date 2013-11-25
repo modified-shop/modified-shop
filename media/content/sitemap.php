@@ -17,10 +17,9 @@
    ---------------------------------------------------------------------------------------*/
 
 $module_smarty = new Smarty;
-//BOF - GTB - 2010-08-03 - Security Fix - Base
-$module_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-//$module_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-//EOF - GTB - 2010-08-03 - Security Fix - Base
+
+$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
 require_once(DIR_FS_INC . 'xtc_count_products_in_category.inc.php');
 
 //to get category trees
@@ -28,65 +27,55 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
    if ($parent_id == 0){ $cPath = ''; } else { $cPath .= $parent_id . '_'; }
    if (!is_array($category_tree_array)) $category_tree_array = array();
    if ( (sizeof($category_tree_array) < 1) && ($exclude != '0') ) $category_tree_array[] = array('id' => '0', 'text' => TEXT_TOP);
-
+   $parent_id = (int)$parent_id;
    if ($include_itself) {
-     //$category_query = xtDBquery($category_query); //DokuMan - 2010-11-10 - Moved query further down
-     $category_query = "
-     select cd.categories_name
-           from " . TABLE_CATEGORIES_DESCRIPTION . " cd
-           where cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-           and c.categories_status = '1'
-           and cd.categories_id = '" . (int)$parent_id . "'
-           order by cd.categories_name";
-     $category_query = xtDBquery($category_query); //DokuMan - 2010-11-10 - Moved query further dow
-     $category = xtc_db_fetch_array($category_query,true);
+     $category_query = xtDBquery("
+         SELECT cd.categories_name
+           FROM " . TABLE_CATEGORIES . " c,
+                " . TABLE_CATEGORIES_DESCRIPTION . " cd
+          WHERE c.categories_status = 1
+            ".CATEGORIES_CONDITIONS_C."
+            AND c.categories_id = '".$parent_id."'
+            AND c.categories_id = cd.categories_id
+            AND cd.language_id = ".$_SESSION['languages_id']."
+          LIMIT 1");
+     $category = xtc_db_fetch_array($category_query, true);
      $category_tree_array[] = array('id' => $parent_id, 'text' => $category['categories_name']);
    }
 
    $categories_query = "
-   select c.categories_id,
-          cd.categories_name,
-          c.parent_id
-          from " . TABLE_CATEGORIES . " c,
-          " . TABLE_CATEGORIES_DESCRIPTION . " cd
-          where c.categories_id = cd.categories_id
-          and cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
-          and c.parent_id = '" . (int)$parent_id . "'
-          and c.categories_status = '1'
-          order by c.sort_order, cd.categories_name";
+        SELECT c.categories_id, cd.categories_name, c.parent_id
+          FROM " . TABLE_CATEGORIES . " c,
+               " . TABLE_CATEGORIES_DESCRIPTION . " cd
+         WHERE c.categories_id = cd.categories_id
+          AND cd.language_id = ".$_SESSION['languages_id']."
+          AND c.parent_id = '".$parent_id."'
+          AND c.categories_status = '1'
+          ".CATEGORIES_CONDITIONS_C."
+      ORDER BY c.sort_order, cd.categories_name";
    $categories_query = xtDBquery($categories_query);
    while ($categories = xtc_db_fetch_array($categories_query,true)) {
-     $SEF_link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'],$categories['categories_name']));
-
      if ($exclude != $categories['categories_id'])
       $category_tree_array[] = array(
-                                      'id' => $categories['categories_id'],
-                                      'text' => $spacing . $categories['categories_name'],
-                                      'link' => $SEF_link);
+          'id' => $categories['categories_id'],
+          'text' => $spacing . $categories['categories_name'],
+          'link' => xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'],$categories['categories_name']))
+        );
       $category_tree_array = get_category_tree($categories['categories_id'], $spacing . '&nbsp;&nbsp;&nbsp;', $exclude, $category_tree_array, false, $cPath);
    }
 
    return $category_tree_array;
  }
 
- if (GROUP_CHECK == 'true') {
-  $group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
- }
-
- $categories_query = "
- select c.categories_image,
-        c.categories_id,
-        cd.categories_name
-        from " . TABLE_CATEGORIES . " c
-        left join " . TABLE_CATEGORIES_DESCRIPTION ." cd on c.categories_id = cd.categories_id
-        where c.categories_status = '1'
-        and cd.language_id = ".(int)$_SESSION['languages_id'] ."
-        and c.parent_id = '0'
-        ".$group_check."
-        order by c.sort_order, cd.categories_name";
-
- // db Cache
- $categories_query = xtDBquery($categories_query);
+ $categories_query = xtDBquery("
+      SELECT c.categories_image, c.categories_id, cd.categories_name
+        FROM " . TABLE_CATEGORIES . " c
+   LEFT JOIN " . TABLE_CATEGORIES_DESCRIPTION ." cd on c.categories_id = cd.categories_id
+       WHERE c.categories_status = 1
+         AND cd.language_id = ".$_SESSION['languages_id']."
+         AND c.parent_id = '0'
+         ".CATEGORIES_CONDITIONS_C."
+    ORDER BY c.sort_order, cd.categories_name");
  $module_content = array();
  while ($categories = xtc_db_fetch_array($categories_query,true)) {
    $SEF_link = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'],$categories['categories_name']));
@@ -120,12 +109,11 @@ function get_category_tree($parent_id = '0', $spacing = '', $exclude = '', $cate
    }
    if (isset($_REQUEST['error'])) {
     $module_smarty->assign('herror',$fehler[$_REQUEST['error']]);
-   //BOF - DokuMan - 2011-03-18 - also set HTTP status code to 404 (in order to be not crawled by search engines)
+     // also set HTTP status code to 404 (in order to be not crawled by search engines)
      if ($_REQUEST['error'] == '404') {
        header('HTTP/1.1 404 Not Found');
      }
    }
-   //BOF - DokuMan - 2011-03-18 - also set HTTP status code to 404 (in order to be not crawled by search engines)
 
    // set cache ID
    if (!CacheCheck()) {

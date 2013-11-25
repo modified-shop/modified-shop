@@ -86,12 +86,6 @@ if ($errorno) {
   $cats_list    = '';
   $left_join    = '';
 
-  // fsk18 lock
-  $fsk_lock = $_SESSION['customers_status']['customers_fsk18_display'] == '0' ? " AND p.products_fsk18 != '1' " : "";
-
-  // group check
-  $group_check = GROUP_CHECK == 'true' ? " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 " : "";
-
   // manufacturers check
   $manu_check = $manufacturers_id !== false ? " AND p.manufacturers_id = '".$manufacturers_id."' " : "";
 
@@ -189,9 +183,8 @@ if ($errorno) {
   //where-string
   $where_str = " WHERE p.products_status = 1"  
   .$subcat_where
-  .$fsk_lock
   .$manu_check
-  .$group_check
+  .PRODUCTS_CONDITIONS_P
   .$tax_where
   .$pfrom_check
   .$pto_check;

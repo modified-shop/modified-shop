@@ -12,11 +12,7 @@
 
 $categorie_smarty = new Smarty;
 $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLATE.'/');
-  
-  $group_check='';
-  if (GROUP_CHECK == 'true') {
-    $group_check = "and c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-  }
+
   if (isset ($cPath) && preg_match('/_/', $cPath)) { 
     $category_links = array_reverse($cPath_array);
     $categories_query = "SELECT cd.categories_description,
@@ -30,7 +26,7 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                           WHERE c.categories_status = '1'
                             AND c.parent_id = '".$category_links[0]."'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                ".$group_check."
+                            " . CATEGORIES_CONDITIONS_C . "
                        ORDER BY sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query); 
   } else {
@@ -46,7 +42,7 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                             AND c.parent_id = '".$current_category_id."'
                             AND c.parent_id <> '0'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
-                                ".$group_check."
+                            " . CATEGORIES_CONDITIONS_C . "
                          ORDER BY sort_order, cd.categories_name";
     $categories_query = xtDBquery($categories_query);
   }

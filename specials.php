@@ -25,15 +25,6 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 $breadcrumb->add(NAVBAR_TITLE_SPECIALS, xtc_href_link(FILENAME_SPECIALS));
 
-//fsk18 lock
-$fsk_lock = '';
-if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-  $fsk_lock = ' and p.products_fsk18!=1';
-}
-if (GROUP_CHECK == 'true') {
-  $group_check = " and p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-}
-
 $specials_query_raw = "SELECT p.*,
                               pd.products_name,
                               pd.products_short_description,
@@ -45,13 +36,12 @@ $specials_query_raw = "SELECT p.*,
                               ON p.manufacturers_id = m.manufacturers_id
                          JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                               ON p.products_id = pd.products_id
-                                 AND pd.language_id = '".(int)$_SESSION['languages_id']."'
+                                 AND pd.language_id = ".$_SESSION['languages_id']."
                     LEFT JOIN ".TABLE_SPECIALS." s
                               ON p.products_id = s.products_id
                                  AND s.status = '1'
                         WHERE p.products_status = '1'
-                              ".$group_check."
-                              ".$fsk_lock."
+                              ".PRODUCTS_CONDITIONS_P."
                      ORDER BY s.specials_date_added DESC";
 
 $specials_split = new splitPageResults($specials_query_raw, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SPECIAL_PRODUCTS);

@@ -24,17 +24,6 @@
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
-//fsk18 lock
-$fsk_lock = '';
-if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-  $fsk_lock = ' AND p.products_fsk18!=1';
-}
-
-$group_check = '';
-if (GROUP_CHECK == 'true') {
-  $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-}
-
 if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) {
 
     $new_products_query = "SELECT * 
@@ -42,8 +31,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                                   ".TABLE_PRODUCTS_DESCRIPTION." pd
                             WHERE p.products_id = pd.products_id
                               AND p.products_startpage = '1'
-                                  ".$group_check."
-                                  ".$fsk_lock."
+                              ".PRODUCTS_CONDITIONS_P."
                               AND p.products_status = '1'
                               AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                          ORDER BY p.products_startpage_sort ASC
@@ -64,8 +52,7 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
                             AND p.products_id = p2c.products_id
                             AND p.products_id = pd.products_id
                             AND p2c.categories_id = c.categories_id
-                            ".$group_check."
-                            ".$fsk_lock."
+                            ".PRODUCTS_CONDITIONS_P."
                             ".$days."
                             AND c.parent_id = '".$new_products_category_id."'
                             AND p.products_status = '1'

@@ -20,16 +20,6 @@
 	function ProductRedirectionLink($ProdID=false) {
 		
 		if($ProdID) {
-		
-			$fsk_lock = ''; //DokuMan - 2010-03-12 - set undefined variable
-			if($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-				$fsk_lock = "AND p.products_fsk18!=1 ";
-			}
-			
-			$group_check = ''; //DokuMan - 2010-03-12 - set undefined variable
-			if(GROUP_CHECK == 'true') {
-				$group_check = "AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-			}
 			$dbQuery = xtDBquery("
 				SELECT 	p.products_id, 
 						pd.products_name
@@ -37,15 +27,13 @@
 						".TABLE_PRODUCTS." p
 				WHERE 	pd.products_id = '".intval($ProdID)."'
 				AND 	pd.products_id = p.products_id
-				".$fsk_lock."
-				".$group_check."
+				".PRODUCTS_CONDITIONS_P."
 				AND		p.products_status = '1'
-				AND 	pd.language_id = '".(int)$_SESSION['languages_id']."' 
+				AND 	pd.language_id = ".$_SESSION['languages_id']."
 			");
 			$dbQuery = xtc_db_fetch_array($dbQuery,true);
-			
 			if(!empty($dbQuery['products_id'])) {
-				return xtc_href_link(FILENAME_PRODUCT_INFO,xtc_product_link(intval($ProdID),$dbQuery['products_name']));
+				return xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link(intval($ProdID),$dbQuery['products_name']));
 			}
 		}
 		return false;

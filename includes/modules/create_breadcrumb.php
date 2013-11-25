@@ -22,17 +22,13 @@ if (DIR_WS_CATALOG == '/') {
 // add category names or the manufacturer name to the breadcrumb trail
 if (isset ($cPath_array)) {
   for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i ++) {
-    $group_check = '';
-    if (GROUP_CHECK == 'true') {
-      $group_check = "AND c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-    }
     $categories_query = xtDBquery("-- /includes/application_top.php
                                    SELECT cd.categories_name
                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." cd,
                                           ".TABLE_CATEGORIES." c
                                     WHERE cd.categories_id = '".$cPath_array[$i]."'
                                       AND c.categories_id=cd.categories_id
-                                          ".$group_check."
+                                      " . CATEGORIES_CONDITIONS_C . "
                                       AND cd.language_id='".(int) $_SESSION['languages_id']."'");
     if (xtc_db_num_rows($categories_query,true) > 0) {
       $categories = xtc_db_fetch_array($categories_query,true);

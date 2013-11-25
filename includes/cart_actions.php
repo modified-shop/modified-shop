@@ -115,25 +115,21 @@ if (xtc_not_null($action)) {
     // customer wants to add a quickie to the cart (called from a box)
     case 'add_a_quickie' :
       $quicky = addslashes($_POST['quickie']);
-      if (GROUP_CHECK == 'true') {
-        $group_check = "and group_permission_" . $_SESSION['customers_status']['customers_status_id'] . "=1 ";
-      }
-      $quickie_query = xtc_db_query("select products_fsk18,
+      $quickie_query = xtc_db_query("SELECT products_fsk18,
                                             products_id
-                                      from " . TABLE_PRODUCTS . "
-                                     where products_model = '" . $quicky . "' " . "
-                                       AND products_status = '1' " . $group_check
+                                      FROM " . TABLE_PRODUCTS . "
+                                     WHERE products_model = '" . $quicky . "'
+                                       AND products_status = '1' " . 
+                                       PRODUCTS_CONDITIONS
                                     );
 
       if (!xtc_db_num_rows($quickie_query)) {
-        if (GROUP_CHECK == 'true') {
-          $group_check = "and group_permission_" . $_SESSION['customers_status']['customers_status_id'] . "=1 ";
-        }
-        $quickie_query = xtc_db_query("select products_fsk18,
+        $quickie_query = xtc_db_query("SELECT products_fsk18,
                                               products_id
-                                         from " . TABLE_PRODUCTS . "
-                                        where products_model LIKE '%" . $quicky . "%' " . "
-                                          AND products_status = '1' " . $group_check
+                                         FROM " . TABLE_PRODUCTS . "
+                                        WHERE products_model LIKE '%" . $quicky . "%'
+                                          AND products_status = '1' " .
+                                          PRODUCTS_CONDITIONS
                                       );
       }
       if (xtc_db_num_rows($quickie_query) != 1) {
