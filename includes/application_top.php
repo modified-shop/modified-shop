@@ -279,7 +279,10 @@ include (DIR_WS_MODULES.'set_currency_session.php');
 // write customers status in session
 require (DIR_WS_INCLUDES.'write_customers_status.php');
 
-//Versandkosten im Warenkorb 
+// content, product, category - sql group_check/fsk_lock
+require (DIR_WS_INCLUDES.'define_conditions.php');
+
+// Versandkosten im Warenkorb 
 if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
   unset($_SESSION['country']);
 }

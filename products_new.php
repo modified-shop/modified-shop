@@ -36,14 +36,6 @@ $breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$fsk_lock = '';
-if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-	$fsk_lock = " AND p.products_fsk18 != '1' ";
-}
-$group_check = '';
-if (GROUP_CHECK == 'true') {
-	$group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."='1' ";
-}
 $days = '';
 if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
 	$date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
@@ -59,15 +51,14 @@ $products_new_query_raw = "SELECT DISTINCT p.*,
                                            ON p.manufacturers_id = m.manufacturers_id
                                  LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                            ON p.products_id = pd.products_id
-                                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                              AND pd.language_id = '".$_SESSION['languages_id']."'
                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                                            ON p.products_id = p2c.products_id
                                       JOIN ".TABLE_CATEGORIES." c
                                            ON c.categories_id = p2c.categories_id
                                               AND c.categories_status=1
                                      WHERE p.products_status = '1'
-                                           ".$group_check."
-                                           ".$fsk_lock."
+                                           ".PRODUCTS_CONDITIONS_P."
                                            ".$days."
                                   ORDER BY p.products_date_added DESC";
 
@@ -114,8 +105,7 @@ if (($products_new_split->number_of_rows > 0)) {
                                          ON c.categories_id = p2c.categories_id
                                             AND c.categories_status=1
                                    WHERE p.products_status = '1'
-                                         ".$group_check."
-                                         ".$fsk_lock."
+                                         ".PRODUCTS_CONDITIONS_P."
                                 ORDER BY p.products_date_added DESC 
                                    LIMIT ".MAX_DISPLAY_PRODUCTS_NEW;
 		

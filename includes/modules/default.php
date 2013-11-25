@@ -47,17 +47,18 @@ if (xtc_check_categories_status($current_category_id) >= 1) {
 // the following cPath references come from application_top.php
 $category_depth = 'top';
 if (isset ($cPath) && xtc_not_null($cPath)) {
-  $categories_products_query = "select p2c.products_id
-                                  from ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
-                                  left join ".TABLE_PRODUCTS." p
-                                   on p2c.products_id = p.products_id
-                                  where p2c.categories_id = ".(int)$current_category_id."
-                                  and p.products_status = 1";
+  $categories_products_query = "SELECT p2c.products_id
+                                  FROM ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                  LEFT JOIN ".TABLE_PRODUCTS." p
+                                   ON p2c.products_id = p.products_id
+                                  WHERE p2c.categories_id = ".(int)$current_category_id."
+                                  AND p.products_status = 1".
+                                  PRODUCTS_CONDITIONS_P;
   $categories_products_result = xtDBquery($categories_products_query);
   if (xtc_db_num_rows($categories_products_result, true) > 0) {
     $category_depth = 'products'; // display products
   } else {
-    $category_parent_query = "select parent_id from ".TABLE_CATEGORIES." where parent_id = ".(int)$current_category_id." AND categories_status = 1";
+    $category_parent_query = "SELECT parent_id FROM ".TABLE_CATEGORIES." WHERE parent_id = ".(int)$current_category_id." AND categories_status = 1 ".CATEGORIES_CONDITIONS;
     $category_parent_result = xtDBquery($category_parent_query);
     $category_parent = xtc_db_fetch_array($category_parent_result, true);
     if (xtc_db_num_rows($category_parent_result, true) > 0) {
@@ -74,10 +75,6 @@ if (isset ($cPath) && xtc_not_null($cPath)) {
  */
 if ($category_depth == 'nested') {
 
-  if (GROUP_CHECK == 'true') {
-    $group_check = "AND c.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-  }
-
   $category_query = "-- /includes/modules/default.php
                      SELECT c.categories_image,
                             c.categories_template,
@@ -87,7 +84,7 @@ if ($category_depth == 'nested') {
                           FROM ".TABLE_CATEGORIES." c
                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd on cd.categories_id = c.categories_id
                           WHERE c.categories_id = '".$current_category_id."'
-                            ".$group_check."
+                            " . CATEGORIES_CONDITIONS_C . "
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'";
   $category_query = xtDBquery($category_query);
   $category = xtc_db_fetch_array($category_query, true);
@@ -104,7 +101,7 @@ if ($category_depth == 'nested') {
                               FROM ".TABLE_CATEGORIES." c
                               JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd on cd.categories_id = c.categories_id
                               WHERE c.categories_status = '1'
-                                ".$group_check."
+                                " . CATEGORIES_CONDITIONS_C . "
                                 AND c.parent_id = '".$current_category_id."'
                                 AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                               ORDER BY sort_order, cd.categories_name";
@@ -255,8 +252,7 @@ if ($category_depth == 'nested') {
                       ON p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                          ".$from."
                    WHERE p.products_status = '1'
-                         ".$group_check."
-                         ".$fsk_lock."
+                         ".PRODUCTS_CONDITIONS_P."
                          ".$where."
                          ".$sorting;
 
@@ -267,12 +263,13 @@ if ($category_depth == 'nested') {
                          SELECT distinct c.categories_id as id,
                                          cd.categories_name as name
                                        FROM ".TABLE_PRODUCTS." p
-                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c on p2c.products_id = p.products_id
-                                       JOIN ".TABLE_CATEGORIES." c on c.categories_id = p2c.categories_id
-                                       JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd on cd.categories_id = p2c.categories_id
+                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c ON p2c.products_id = p.products_id
+                                       JOIN ".TABLE_CATEGORIES." c ON (c.categories_id = p2c.categories_id ".CATEGORIES_CONDITIONS_C.")
+                                       JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON cd.categories_id = p2c.categories_id
                                        WHERE p.products_status = '1'
                                          AND cd.language_id = '".(int) $_SESSION['languages_id']."'
                                          AND p.manufacturers_id = '".(int) $_GET['manufacturers_id']."'
+                                         ".PRODUCTS_CONDITIONS_P."
                                          ORDER BY cd.categories_name";
     } else {
       $filterlist_sql = "-- /includes/modules/default.php
@@ -282,6 +279,7 @@ if ($category_depth == 'nested') {
                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c on p2c.products_id = p.products_id
                                        JOIN ".TABLE_MANUFACTURERS." m on m.manufacturers_id = p.manufacturers_id
                                        WHERE p.products_status = '1'
+                                         ".PRODUCTS_CONDITIONS_P."
                                          AND p2c.categories_id = '".$current_category_id."'
                                          ORDER BY m.manufacturers_name";
     }

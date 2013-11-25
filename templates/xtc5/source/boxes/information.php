@@ -41,10 +41,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
   
   $content_array=array();
   $content_string = '';
-  $group_check = '';
-	if (GROUP_CHECK == 'true') {
-		$group_check = " AND group_ids LIKE '%c_".$_SESSION['customers_status']['customers_status_id']."_group%'";
-	}
+
 	$content_query = xtDBquery("SELECT content_id,
                                      categories_id,
                                      parent_id,
@@ -53,8 +50,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
                                 FROM ".TABLE_CONTENT_MANAGER."
                                WHERE languages_id='".(int) $_SESSION['languages_id']."'
                                  AND file_flag='0'
-                                     ".$group_check."
-                                 AND content_status='1'
+                                 ".CONTENT_CONDITIONS."
                                  AND parent_id='0'
                             ORDER BY sort_order");
 
@@ -95,8 +91,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE languages_id='".(int) $_SESSION['languages_id']."'
                                         AND file_flag='0'
-                                            ".$group_check."
-                                        AND content_status='1'
+                                        ".CONTENT_CONDITIONS."
                                         AND parent_id='".$value."'
                                    ORDER BY sort_order");
 

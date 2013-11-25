@@ -24,10 +24,9 @@
 $box_smarty = new smarty;
 $box_content = '';
 $box_smarty->assign('tpl_path', 'templates/' . CURRENT_TEMPLATE . '/');
-// BOF - GTB - 2010-09-20 - correct the Formular in dependences of the request type SSL / NONSSL
+
 $box_smarty->assign('FORM_ACTION','<form id="quick_add" method="post" action="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')) . 'action=add_a_quickie', $request_type) . '">');
-//$box_smarty->assign('FORM_ACTION','<form id="quick_add" method="post" action="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')) . 'action=add_a_quickie', 'NONSSL') . '">');
-// EOF - GTB - 2010-09-20 - correct the Formular in dependences of the request type SSL / NONSSL
+
 $box_smarty->assign('INPUT_FIELD',xtc_draw_input_field('quickie','','style="width:170px"'));
 $box_smarty->assign('SUBMIT_BUTTON', xtc_image_submit('button_add_quick.gif', BOX_HEADING_ADD_PRODUCT_ID));
 $box_smarty->assign('FORM_END', '</form>');

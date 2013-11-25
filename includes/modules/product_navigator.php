@@ -1,15 +1,15 @@
 <?php
-
 /* ----------------------------------------------------------------------------------------------
-   $Id: product_navigator.php 4215 2013-01-11 09:22:20Z gtb-modified $
+   $Id:$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
-
-   Released under the GNU General Public License
-   ----------------------------------------------------------------------------------------------
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2003 xtCommerce - www.xt-commerce.de
+   
    Third Party contributions:
    Produktsortierung nach Voreinstellung der Kategorie - (c) by Hetfield | j_hetfield@hotmail.de
    
@@ -20,19 +20,9 @@ $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
 // select products
-//fsk18 lock
-$fsk_lock = '';
-if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-	$fsk_lock = ' and p.products_fsk18!=1';
-}
-$group_check = "";
-if (GROUP_CHECK == 'true') {
-	$group_check = " and p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-}
-// Produktsortierung nach Voreinstellung der Kategorie - (c) by Hetfield | Anfang
 $sorting_query = xtDBquery("SELECT products_sorting,
                                    products_sorting2 
-							  FROM ".TABLE_CATEGORIES."
+							               FROM ".TABLE_CATEGORIES."
                             WHERE  categories_id='".$current_category_id."'");
 $sorting_data = xtc_db_fetch_array($sorting_query,true);
 
@@ -47,12 +37,13 @@ $products_query = xtDBquery("SELECT
                                    ".TABLE_PRODUCTS." p,
                                    ".TABLE_PRODUCTS_DESCRIPTION." pd
                              WHERE categories_id='".$current_category_id."'
-                               AND p.products_id=pc.products_id
+                               AND p.products_id = pc.products_id
                                AND p.products_id = pd.products_id
                                AND pd.language_id = '".(int) $_SESSION['languages_id']."'
-                               AND p.products_status=1 
-                                   ".$fsk_lock.$group_check.$sorting);
-// Produktsortierung nach Voreinstellung der Kategorie - (c) by Hetfield | Ende
+                               AND p.products_status=1".
+                               PRODUCTS_CONDITIONS_P .
+                               $sorting);
+
 $i = 0;
 while ($products_data = xtc_db_fetch_array($products_query, true)) {
 	$p_data[$i] = array ('pID' => $products_data['products_id'], 'pName' => $products_data['products_name']);
@@ -62,10 +53,7 @@ while ($products_data = xtc_db_fetch_array($products_query, true)) {
 }
 
 // first set variables
-$first_link = '';
-$prev_link = '';
-$next_link = '';
-$last_link = '';
+$first_link = $prev_link = $next_link = $last_link = '';
 
 // check if array key = first
 if ($actual_key == 0) {
@@ -94,9 +82,7 @@ $module_smarty->assign('PREVIOUS', $prev_link);
 $module_smarty->assign('OVERVIEW', $overview_link);
 $module_smarty->assign('NEXT', $next_link);
 $module_smarty->assign('LAST', $last_link);
-// BOF - Tomcraft - 2010-05-02 - Show actual product count in product_navigator
 $module_smarty->assign('ACTUAL_PRODUCT', $actual_key +1);
-// EOF - Tomcraft - 2010-05-02 - Show actual product count in product_navigator
 $module_smarty->assign('PRODUCTS_COUNT', count($p_data));
 $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->caching = 0;

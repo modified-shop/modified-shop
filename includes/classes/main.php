@@ -165,7 +165,6 @@ class main {
    * @return array
    */
   function getContentData($coID) { 
-    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'" : '';
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,
                                               content_title,
@@ -174,7 +173,7 @@ class main {
                                               content_file
                                          FROM " . TABLE_CONTENT_MANAGER . "
                                         WHERE content_group='". (int)$coID ."'
-                                              " . $group_check . "
+                                          " . CONTENT_CONDITIONS . "
                                           AND languages_id='" . (int)$_SESSION['languages_id'] . "'
                                         LIMIT 1
                                       ");
