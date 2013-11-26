@@ -159,6 +159,8 @@ define('STANDARD_GROUP',DEFAULT_CUSTOMERS_STATUS_ID);
 
 include(DIR_FS_DOCUMENT_ROOT.'admin/includes/classes/'.IMAGE_MANIPULATOR);
 
+// include needed function
+require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 
 if ((isset($_POST['user']))and(isset($_POST['password']))) {
    $user = $_POST['user'];
@@ -223,10 +225,7 @@ Aufruf des Scriptes mit <br><b><?php echo $PHP_SELF; ?>?user=<font color="red">A
       exit;
     }
 
-    if (!( ($check_customer['customers_password'] == $password) or 
-             ($check_customer['customers_password'] == md5($password)) or
-             ($check_customer['customers_password'] == md5(substr($password,2,40)))
-       )) {
+    if (!xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id'])) {
       if (!$debug_login) exit;
       SendXMLHeader ();
       print_xml_status (108, $_POST['action'], 'WRONG PASSWORD', '', '', '');	  	
