@@ -33,7 +33,7 @@
     // include needed function
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
     
-    $pass = xtc_RandomString($length);
-    return xtc_encrypt_password($pass);
+    $password = xtc_RandomString($length);
+    return xtc_encrypt_password($password);
   }
 ?>

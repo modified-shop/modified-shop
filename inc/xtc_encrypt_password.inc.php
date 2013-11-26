@@ -17,17 +17,16 @@
    ---------------------------------------------------------------------------------------*/
  
   // include needed class
-  require_once (DIR_FS_CATALOG.'includes/classes/class.password.php');
+  require_once (DIR_FS_CATALOG.'includes/classes/validpass.php');
 
   // This function makes a new password from a plaintext password. 
   function xtc_encrypt_password($plain) {
 
-    // init Password Class
-    $password = new PasswordHash(PASSWORD_ROUNDS, false);
+    // init class
+    $validpass = new validpass();
+    // encrypt password
+    $encrypted = $validpass->encrypt_password($plain);
 
-    // create Hash of Password Input
-    $hash = $password->HashPassword($plain);
-
-    return $hash;
+    return $encrypted;
   }
 ?>

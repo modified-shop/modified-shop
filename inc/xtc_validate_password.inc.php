@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include needed class
-  require_once (DIR_FS_CATALOG.'includes/classes/class.password.php');
+  require_once (DIR_FS_CATALOG.'includes/classes/validpass.php');
   
   // This funstion validates a plain text password with an encrpyted password
   function xtc_validate_password($plain, $encrypted, $customers_id) {
@@ -37,11 +37,10 @@
         }
         return true;
       } else {
-        // init Password Class
-        $password = new PasswordHash(PASSWORD_ROUNDS, false);
-
-        // check or password stored
-        return $password->CheckPassword($plain, $encrypted);
+        // init class
+        $validpass = new validpass();
+        // validate password
+        return $validpass->validate_password($plain, $encrypted);
       }
     }
   }
