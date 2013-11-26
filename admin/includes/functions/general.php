@@ -1588,11 +1588,33 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_remove_order($order_id, $restock = false) {
     if ($restock == 'on') {
-      xtc_db_query("update ".TABLE_PRODUCTS." p
-                    join ".TABLE_ORDERS_PRODUCTS." o on o.products_id = p.products_id
-                    set p.products_quantity = p.products_quantity + o.products_quantity,
-                        p.products_ordered = p.products_ordered - o.products_quantity
-                    where o.orders_id = '".xtc_db_input($order_id)."'");
+			$order_query = xtc_db_query("SELECT orders_products_id, 
+			                                    products_id, 
+			                                    products_quantity 
+			                               FROM ".TABLE_ORDERS_PRODUCTS." 
+			                              WHERE orders_id = '".xtc_db_input($order_id)."'");
+			while ($order = xtc_db_fetch_array($order_query)) {
+				xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+				                 SET products_quantity = products_quantity + ".$order['products_quantity'].", 
+				                     products_ordered = products_ordered - ".$order['products_quantity']." 
+				               WHERE products_id = '".$order['products_id']."'");
+
+				if (ATTRIBUTE_STOCK_CHECK == 'true') {
+					$orders_attributes_query = xtc_db_query("SELECT orders_products_options_id,
+                                                          orders_products_options_values_id
+                                                     FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                                    WHERE orders_id = '" . xtc_db_input($order_id) . "'
+                                                      AND orders_products_id = '" . $order['orders_products_id'] . "'");
+          if (xtc_db_num_rows($orders_attributes_query)) {
+            while ($orders_attributes = xtc_db_fetch_array($orders_attributes_query)) {
+              xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
+                               SET attributes_stock = attributes_stock + ".$order['products_quantity']." 
+                             WHERE options_id = '" . $orders_attributes['orders_products_options_id'] . "'
+                               AND options_values_id = '" . $orders_attributes['orders_products_options_values_id'] . "'");
+            }
+					}
+				}
+			}
     }
     xtc_db_query("delete from ".TABLE_ORDERS." where orders_id = '".xtc_db_input($order_id)."'");
     xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($order_id)."'");
