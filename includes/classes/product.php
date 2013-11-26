@@ -155,33 +155,47 @@ class product {
    *
    * @return array
    */
-  function getAlsoPurchased() {
-    global $xtPrice;
+	function getAlsoPurchased() {
+		global $xtPrice;
 
-    $module_content = array ();
-
-    $orders_query = "SELECT ".$this->default_select."
-                       FROM ".TABLE_ORDERS_PRODUCTS." op1
-                       JOIN ".TABLE_ORDERS_PRODUCTS." op2 on op2.orders_id = op1.orders_id
-                       JOIN ".TABLE_ORDERS." o on o.orders_id = op2.orders_id
-                       JOIN ".TABLE_PRODUCTS." p on p.products_id = op2.products_id
-                       JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd on pd.products_id = op2.products_id
-                      WHERE op1.products_id = ".$this->pID."
-                        AND op2.products_id != ".$this->pID."
-                        AND p.products_status = 1
-                        AND trim(pd.products_name) != ''
-                        AND pd.language_id = ".(int) $_SESSION['languages_id']."
-                        " . PRODUCTS_CONDITIONS_P . "
-                   GROUP BY p.products_id
-                   ORDER BY o.date_purchased desc
-                      LIMIT ".MAX_DISPLAY_ALSO_PURCHASED;
-
+		$module_content = array ();
+    $products_id_array = array();
+    		
+    $row = 0;
+    $orders_query = "SELECT orders_id 
+                       FROM ".TABLE_ORDERS_PRODUCTS." 
+                      WHERE products_id = '".(int) $this->pID."'
+                   ORDER BY orders_id DESC";
     $orders_query = xtDBquery($orders_query);
     while ($orders = xtc_db_fetch_array($orders_query, true)) {
-      $module_content[] = $this->buildDataArray($orders);
+      $products_query = "SELECT ".$this->default_select."
+                           FROM ".TABLE_ORDERS_PRODUCTS." op
+                           JOIN ".TABLE_PRODUCTS." p 
+                                ON p.products_id = op.products_id
+                                   AND p.products_status = '1'
+                                   AND p.products_id != '".$this->pID."'
+                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                ON pd.products_id = p.products_id
+                                   AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                   AND trim(pd.products_name) != ''
+                          WHERE op.orders_id = '".$orders['orders_id']."'
+                                " . PRODUCTS_CONDITIONS_P;
+      $products_query = xtDBquery($products_query);
+      while ($products = xtc_db_fetch_array($products_query, true)) {
+        if (!in_array($products['products_id'], $products_id_array)) {
+          $module_content[] = $this->buildDataArray($products);
+          $products_id_array[] = $products['products_id'];
+          $row ++;
+        }
+        if ($row >= MAX_DISPLAY_ALSO_PURCHASED) {
+          break 2;
+        }
+      }
     }
-    return $module_content;
-  }
+    unset($products_id_array);
+    
+		return $module_content;
+	}
 
   /**
    * Get Cross sells
