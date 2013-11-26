@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
  
   // include needed class
-  require_once (DIR_WS_CLASSES.'class.password.php');
+  require_once (DIR_FS_CATALOG.'includes/classes/class.password.php');
 
   // This function makes a new password from a plaintext password. 
   function xtc_encrypt_password($plain) {

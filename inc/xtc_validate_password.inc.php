@@ -17,7 +17,7 @@
    ---------------------------------------------------------------------------------------*/
 
   // include needed class
-  require_once (DIR_WS_CLASSES.'class.password.php');
+  require_once (DIR_FS_CATALOG.'includes/classes/class.password.php');
   
   // This funstion validates a plain text password with an encrpyted password
   function xtc_validate_password($plain, $encrypted, $customers_id) {
