@@ -2631,6 +2631,20 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $statuses_array;
   }
 
+  function state_required() {
+    $countries_array = array ();
+    $countries_query = xtc_db_query("
+        SELECT c.countries_id, c.countries_name
+          FROM ".TABLE_ZONES." z, ".TABLE_COUNTRIES." c
+         WHERE c.status = 1 AND c.countries_id = z.zone_country_id
+      GROUP BY countries_name
+      ORDER BY countries_name");
+    while ($countries = xtc_db_fetch_array($countries_query)) {
+      $countries_array[] = array ('id' => $countries['countries_id'], 'text' => $countries['countries_name']);
+    }
+    return $countries_array;
+  }
+
   /**
    * xtc_cfg_multi_checkbox()
    *
