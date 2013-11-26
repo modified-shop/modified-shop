@@ -101,7 +101,7 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   $check_customer = xtc_db_fetch_array($check_customer_query);
   if(!xtc_validate_password(xtc_db_input($_POST['password']),
                             $check_customer['customers_password'],
-                            $check_customer['customers_email_address'])) {
+                            $check_customer['customers_id'])) {
     die('Zugriff verweigert. E-Mail und/oder Passwort falsch!');
   } else {
     if (isset($_POST['repair']) && xtc_not_null($_POST['repair'])) {
