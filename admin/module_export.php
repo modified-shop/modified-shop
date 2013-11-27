@@ -73,7 +73,7 @@
         $get_params = isset($module->get_params) ? $module->get_params : '';
         //convert params array to params string
         $params = convert_params_array_to_string($get_params);
-        $link = xtc_href_link(FILENAME_MODULE_EXPORT, $params);
+        $modulelink = xtc_href_link(FILENAME_MODULE_EXPORT, $params);
         $recursive_call = isset($module->recursive_call) ? $module->recursive_call : '';
         $infotext = isset($module->infotext) ? $module->infotext : '';
         break;
@@ -248,7 +248,7 @@ if (xtc_not_null($action) && !$box) {
     <!-- body //-->
     <?php
     //BOF NEW MODULE PROCESSING
-    echo isset($link) ? '<form name="modul_continue" action="'.$link.'" method="POST"></form>' : '';
+    echo isset($modulelink) ? '<form name="modul_continue" action="'.$modulelink.'" method="POST"></form>' : '';
     echo isset($recursive_call) ? $recursive_call : '';
     //EOF NEW MODULE PROCESSING
     ?>
