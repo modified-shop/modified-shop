@@ -59,7 +59,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
                                             and account_type = 0");
   if (xtc_db_num_rows($check_customer_query) == 0) {
     $_GET['login'] = 'fail';
-    $info_message = TEXT_NO_EMAIL_ADDRESS_FOUND;
+    $info_message = TEXT_LOGIN_ERROR;
   } else {
     $check_customer = xtc_db_fetch_array($check_customer_query);
     // Check that password is good
