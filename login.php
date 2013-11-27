@@ -51,7 +51,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	$check_customer_query = xtc_db_query("select customers_id, customers_vat_id, customers_firstname,customers_lastname, customers_gender, customers_password, customers_email_address, customers_default_address_id from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($email_address)."' and account_type = '0'");
 	if (!xtc_db_num_rows($check_customer_query)) {
 		$_GET['login'] = 'fail';
-		$info_message = TEXT_NO_EMAIL_ADDRESS_FOUND;
+		$info_message = TEXT_LOGIN_ERROR;
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 		// Check that password is good
