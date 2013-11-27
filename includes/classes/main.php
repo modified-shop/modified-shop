@@ -164,7 +164,8 @@ class main {
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID) { 
+  function getContentData($coID, $lang_id = '') {
+    $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,
                                               content_title,
@@ -174,7 +175,7 @@ class main {
                                          FROM " . TABLE_CONTENT_MANAGER . "
                                         WHERE content_group='". (int)$coID ."'
                                           " . CONTENT_CONDITIONS . "
-                                          AND languages_id='" . (int)$_SESSION['languages_id'] . "'
+                                          AND languages_id='" . (int)$lang_id . "'
                                         LIMIT 1
                                       ");
     $content_data_array = xtc_db_fetch_array($content_data_query,true);
