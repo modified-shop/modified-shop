@@ -98,7 +98,7 @@ class newsletter {
 	
 		$this->generateCode();
 
-    if (($check == 'inp') && (($postCode == $_SESSION['vvcode'] && $_SESSION['vvcode']!='') || $this->auto==true)) {
+    if (($check == 'inp') && ((strtoupper($postCode) == $_SESSION['vvcode'] && $_SESSION['vvcode']!='') || $this->auto==true)) {
       // Check if email exists 
       $check_mail_query = xtc_db_query("SELECT customers_email_address, 
                                                mail_status from ".TABLE_NEWSLETTER_RECIPIENTS." 
@@ -177,7 +177,7 @@ class newsletter {
       $this->message_id = 10;
     }
 
-    if (($check == 'del') && ($postCode == $_SESSION['vvcode'])) {
+    if (($check == 'del') && (strtoupper($postCode) == $_SESSION['vvcode'])) {
     
       $check_mail_query = xtc_db_query("SELECT customers_email_address 
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
@@ -193,7 +193,11 @@ class newsletter {
         $this->message = TEXT_EMAIL_NOT_EXIST;
         $this->message_id = 11;
       }
+    } else {
+      $this->message = TEXT_WRONG_CODE;
+      $this->message_id = 10;
     }
+    unset($_SESSION['vvcode']);
 	}
 
 
