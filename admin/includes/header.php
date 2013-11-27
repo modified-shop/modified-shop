@@ -122,8 +122,8 @@
         if ($page_permission[strtok($f['file'], '.')] != '1') continue;
         $func = 'xtc_href_link';
       }
-      $link = $func($f['file'], $f['par'], 'NONSSL');
-      echo '    <a href="' . $link . '">'.
+      $favoriteslink = $func($f['file'], $f['par'], 'NONSSL');
+      echo '    <a href="' . $favoriteslink . '">'.
            xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
            '<br>' . $f['name'] . '</a>' . PHP_EOL;
     }
