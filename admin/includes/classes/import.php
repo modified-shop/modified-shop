@@ -198,7 +198,7 @@ class xtcImport {
 			foreach($mapping as $name => $key) {
 				$line_data[$name] = $line[$key];
 			}
-
+      
 			if ($line_data['p_model'] != '') {
 				if ($line_data['p_cat.0'] != '' || $this->FileSheme['p_cat.0'] != 'Y') {
 					if ($this->FileSheme['p_cat.0'] != 'Y') {
@@ -215,10 +215,10 @@ class xtcImport {
 						}
 					}
 				} else {
-					$this->errorLog[] = '<b>ERROR:</b> no Categorie, line: '.$i.' dataset: '.implode($this->seperator, $line_data);
+					$this->errorLog[] = '<b>ERROR:</b> no Categorie, line: '.$i.' Model: '.$line_data['p_model'];
 				}
 			} else {
-				$this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$i.' dataset: '.implode($this->seperator, $line_data);
+				$this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$i;
 			}
 		}
 		return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
