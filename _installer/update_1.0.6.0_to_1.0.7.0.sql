@@ -67,7 +67,7 @@ UPDATE configuration SET configuration_value = 'query.log' WHERE configuration_k
 CREATE TABLE module_backup (
   configuration_id int(11) NOT NULL AUTO_INCREMENT,
   configuration_key varchar(64) NOT NULL,
-  configuration_value varchar(255) NOT NULL,
+  configuration_value text NOT NULL,
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_key (configuration_key)
@@ -126,7 +126,7 @@ ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER ba
 ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
 ALTER TABLE banktransfer ADD banktransfer_email_address VARCHAR(96) DEFAULT NULL;
 
-ALTER TABLE configuration MODIFY configuration_value text;
+ALTER TABLE configuration MODIFY configuration_value text NOT NULL;
 ALTER TABLE orders MODIFY payment_method varchar(128);
 ALTER TABLE orders MODIFY shipping_method varchar(128);
 
