@@ -114,49 +114,53 @@ if (xtc_not_null($action)) {
 
     // customer wants to add a quickie to the cart (called from a box)
     case 'add_a_quickie' :
-      $quicky = addslashes($_POST['quickie']);
-      $quickie_query = xtc_db_query("SELECT products_fsk18,
-                                            products_id
-                                      FROM " . TABLE_PRODUCTS . "
-                                     WHERE products_model = '" . $quicky . "'
-                                       AND products_status = '1' " . 
-                                       PRODUCTS_CONDITIONS
-                                    );
-
-      if (!xtc_db_num_rows($quickie_query)) {
+      if (isset($_POST['quickie']) && $_POST['quickie'] != '') {
+        $quicky = addslashes($_POST['quickie']);
         $quickie_query = xtc_db_query("SELECT products_fsk18,
                                               products_id
-                                         FROM " . TABLE_PRODUCTS . "
-                                        WHERE products_model LIKE '%" . $quicky . "%'
-                                          AND products_status = '1' " .
-                                          PRODUCTS_CONDITIONS
+                                        FROM " . TABLE_PRODUCTS . "
+                                       WHERE products_model = '" . $quicky . "'
+                                         AND products_status = '1' " . 
+                                         PRODUCTS_CONDITIONS
                                       );
-      }
-      if (xtc_db_num_rows($quickie_query) != 1) {
-        xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords=' . $quicky, 'NONSSL'));
-      }
-      $quickie = xtc_db_fetch_array($quickie_query);
-      if (xtc_has_product_attributes($quickie['products_id'])) {
-        xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $quickie['products_id'], 'NONSSL'));
-      } else {
-        // check for FSK18
-        if ($quickie['products_fsk18'] == '1' && $_SESSION['customers_status']['customers_fsk18'] == '1') {
-          xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $quickie['products_id'], 'NONSSL'));
+
+        if (!xtc_db_num_rows($quickie_query)) {
+          $quickie_query = xtc_db_query("SELECT products_fsk18,
+                                                products_id
+                                           FROM " . TABLE_PRODUCTS . "
+                                          WHERE products_model LIKE '%" . $quicky . "%'
+                                            AND products_status = '1' " .
+                                            PRODUCTS_CONDITIONS
+                                        );
         }
-        if ($_SESSION['customers_status']['customers_fsk18_display'] == '0' && $quickie['products_fsk18'] == '1') {
-          xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $quickie['products_id'], 'NONSSL'));
-        }
-        if ($_POST['quickie'] != '') {
-          $cart_quantity = ($_SESSION['cart']->get_quantity(xtc_get_uprid($quickie['products_id'],''))+1);
-          if ($cart_quantity > MAX_PRODUCTS_QTY) {
-            $cart_quantity = MAX_PRODUCTS_QTY;
-            $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
-          }
-          $_SESSION['cart']->add_cart($quickie['products_id'], $cart_quantity);
-          xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
-        } else {
+        if (xtc_db_num_rows($quickie_query) != 1) {
           xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords=' . $quicky, 'NONSSL'));
         }
+        $quickie = xtc_db_fetch_array($quickie_query);
+        if (xtc_has_product_attributes($quickie['products_id'])) {
+          xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $quickie['products_id'], 'NONSSL'));
+        } else {
+          // check for FSK18
+          if ($quickie['products_fsk18'] == '1' && $_SESSION['customers_status']['customers_fsk18'] == '1') {
+            xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $quickie['products_id'], 'NONSSL'));
+          }
+          if ($_SESSION['customers_status']['customers_fsk18_display'] == '0' && $quickie['products_fsk18'] == '1') {
+            xtc_redirect(xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id=' . $quickie['products_id'], 'NONSSL'));
+          }
+          if ($_POST['quickie'] != '') {
+            $cart_quantity = ($_SESSION['cart']->get_quantity(xtc_get_uprid($quickie['products_id'],''))+1);
+            if ($cart_quantity > MAX_PRODUCTS_QTY) {
+              $cart_quantity = MAX_PRODUCTS_QTY;
+              $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
+            }
+            $_SESSION['cart']->add_cart($quickie['products_id'], $cart_quantity);
+            xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
+          } else {
+            xtc_redirect(xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, 'keywords=' . $quicky, 'NONSSL'));
+          }
+        }
+      } else {
+        xtc_redirect(xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action'))));
       }
       break;
 
