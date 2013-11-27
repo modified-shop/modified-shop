@@ -2466,7 +2466,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param string $mime_types
    * @return
    */
-  function xtc_try_upload($file = '', $destination = '', $permissions = '777', $extensions = '', $mime_types = '') {
+  function xtc_try_upload($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types = '') {
     $file_object = new upload($file, $destination, $permissions, $extensions, $mime_types);
     if ($file_object->filename != '') {
       return $file_object;
