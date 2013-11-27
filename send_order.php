@@ -145,7 +145,8 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->caching = 0;
 
   // revocation to email  
-  $shop_content_data = $main->getContentData(REVOCATION_ID);
+  $lang_id = isset($order->info['languages_id']) ? $order->info['languages_id'] : get_lang_id_by_directory($order->info['language']);
+  $shop_content_data = $main->getContentData(REVOCATION_ID,$lang_id);
   $smarty->assign('REVOCATION_HTML', $shop_content_data['content_text']);
   $smarty->assign('REVOCATION_TXT', $shop_content_data['content_text']); //replace br, strip_tags, html_entity_decode are allready execute in xtc_php_mail function
 
