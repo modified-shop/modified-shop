@@ -248,7 +248,7 @@ if (xtc_not_null($action) && !$box) {
     <!-- body //-->
     <?php
     //BOF NEW MODULE PROCESSING
-    echo isset($modulelink) ? '<form name="modul_continue" action="'.$modulelink.'" method="POST"></form>' : '';
+    echo isset($modulelink) ? xtc_draw_form('modul_continue', $modulelink, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()) : '';
     echo isset($recursive_call) ? $recursive_call : '';
     //EOF NEW MODULE PROCESSING
     ?>

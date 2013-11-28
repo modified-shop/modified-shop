@@ -59,14 +59,14 @@
      
     <div class="pageHeading pdg2"><?php echo $pageTitle; ?></div>
     <div class="main pdg2">
-      <?php echo SORT_ORDER; ?>
-      <form name="option_order_by" action="<?php echo FILENAME_NEW_ATTRIBUTES ?>">
+      <?php echo SORT_ORDER;
+      echo xtc_draw_form('option_order_by', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+      ?>
       <?php echo $options_dropdown_order; ?>
       </form>
     </div>
 
-<form action="<?php echo FILENAME_NEW_ATTRIBUTES; ?>" method="post" name="SUBMIT_ATTRIBUTES" id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data">
-
+<?php echo xtc_draw_form('SUBMIT_ATTRIBUTES', FILENAME_NEW_ATTRIBUTES, '', 'post', 'id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"'); ?>
 <input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
 <input type="hidden" name="action" value="change">
 <?php 

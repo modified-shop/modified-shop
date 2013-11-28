@@ -52,7 +52,7 @@ require (DIR_WS_INCLUDES.'head.php');
 <div class="pageHeading"><?php echo TITLE_MEMO; ?></div></p>
     <table width="100%">
       <tr>
-      <form name="customers_memo" method="POST" action="popup_memo.php?action=save&ID=<?php echo (int)$_GET['ID'];?>">
+      <?php echo xtc_draw_form('customers_memo', 'popup_memo.php', 'action=save&ID='.(int)$_GET['ID'], 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
         <td class="main" style="border-top: 1px solid; border-color: #cccccc;"><b><?php echo TEXT_TITLE ?></b>:<?php echo xtc_draw_input_field('memo_title').xtc_draw_hidden_field('ID',(int)$_GET['ID']); ?><br /><?php echo xtc_draw_textarea_field('memo_text', 'soft', '73', '5'); ?><br /><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'; ?></td>
       </tr>
     </table></form>
