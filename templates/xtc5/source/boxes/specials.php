@@ -16,33 +16,33 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-if ($random_product = xtc_random_select("select
-                                           p.products_id,
-                                           pd.products_name,
-                                           p.products_price,
-                                           p.products_tax_class_id,
-                                           p.products_image,
-                                           s.expires_date,
-                                           p.products_vpe,
-				                                  p.products_vpe_status,
-				                                  p.products_vpe_value,
-                                           s.specials_new_products_price
-                                           from ".TABLE_PRODUCTS." p,
-                                           ".TABLE_PRODUCTS_DESCRIPTION." pd,
-                                           ".TABLE_SPECIALS." s where p.products_status = '1'
-                                           and p.products_id = s.products_id
-                                           and pd.products_id = s.products_id
-                                           and pd.language_id = '".$_SESSION['languages_id']."'
-                                           and s.status = '1'
-                                           ".PRODUCTS_CONDITIONS_P."                                             
-                                           order by s.specials_date_added
-                                           desc limit ".MAX_RANDOM_SELECT_SPECIALS)) {
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_random_select.inc.php');
+
+  if ($random_product = xtc_random_select("SELECT p.products_id,
+                                                  pd.products_name,
+                                                  p.products_price,
+                                                  p.products_tax_class_id,
+                                                  p.products_image,
+                                                  s.expires_date,
+                                                  p.products_vpe,
+                                                  p.products_vpe_status,
+                                                  p.products_vpe_value,
+                                                  s.specials_new_products_price
+                                             FROM ".TABLE_PRODUCTS." p
+                                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                                  ON pd.products_id = p.products_id
+                                                     AND pd.language_id = '".$_SESSION['languages_id']."'
+                                             JOIN ".TABLE_SPECIALS." s 
+                                                  ON p.products_id = s.products_id
+                                                     AND s.status = '1'
+                                            WHERE p.products_status = '1'
+                                                  ".PRODUCTS_CONDITIONS_P."                                             
+                                         ORDER BY s.specials_date_added DSC
+                                            LIMIT ".MAX_RANDOM_SELECT_SPECIALS)) {
 
   $box_smarty = new smarty;
   $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-
-  // include needed functions
-  require_once (DIR_FS_INC.'xtc_random_select.inc.php');
 
   $box_smarty->assign('box_content',$product->buildDataArray($random_product));
   $box_smarty->assign('SPECIALS_LINK', xtc_href_link(FILENAME_SPECIALS));
