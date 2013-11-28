@@ -22,10 +22,17 @@ $state_pages = array(
   'checkout_shipping_address.php',
   'checkout_payment_address.php'
 );
-if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) { ?>
+if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
+  $query = xtc_db_query("
+      SELECT GROUP_CONCAT(countries_id) AS ids
+        FROM ".TABLE_COUNTRIES."
+       WHERE required_zones = 1
+    ");
+  if ($countries = xtc_db_fetch_array($query)) {
+?>
 <script type="text/javascript">
 /* <![CDATA[ */
-var req_states = [<?php echo ACCOUNT_STATE_REQUIRED; ?>];
+var req_states = [<?php echo $countries['ids']; ?>];
 function load_state() {
   var selection = $("select[name='country']").val();
   if ($.inArray(parseInt(selection), req_states) == -1) {
@@ -67,4 +74,7 @@ $(function() {
 });
 /*]]>*/
 </script>
-<?php } ?>
+<?php 
+  }
+} 
+?>

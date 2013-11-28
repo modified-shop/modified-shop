@@ -143,7 +143,5 @@ ALTER TABLE orders_products ADD products_weight DECIMAL(6,3) NOT NULL;
 ALTER TABLE orders_products_attributes ADD options_values_weight DECIMAL(15,4) NOT NULL;
 ALTER TABLE orders_products_attributes ADD weight_prefix CHAR(1) NOT NULL;
 
-#h-h-h - 2013-11-26 - state dropdown by country and selection
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, `sort_order`, `last_modified`, `date_added`, `use_function`, `set_function`) VALUES (NULL, 'ACCOUNT_STATE_REQUIRED', '13,14,30,38,43,47,73,81,99,105,107,129,138,153,160,162,175,193,195,203,204,215,222,223,229', 5, 70, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'state_required\', \',\',');
 
 # Keep an empty line at the end of this file for the db_updater to work properly
