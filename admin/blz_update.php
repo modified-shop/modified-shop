@@ -142,7 +142,7 @@ $blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Kernge
                 default:
                   echo BLZ_INFO_TEXT;
                   echo '<p><a href="'.$blz_file_default_link.'" target="_blank"><b>'.$blz_file_default_link.'</b></a></p>';
-                  echo '<form method="GET" action="blz_update.php">';
+                  echo xtc_draw_form('blz_update', 'blz_update.php', '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
                   echo '<input type="hidden" name="action" value="do_blz">';
                   echo '<table style="empty-cells:collapse; background:#FCFCFC; border-collapse:collapse;">';
                   //echo xtc_draw_textarea_field('blz_file','','120%','2',$blz_file_default_link);

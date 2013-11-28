@@ -40,7 +40,7 @@
 <div class="searchbar">
   <ul id="topmenu_search">
     <li>
-      <form action="<?php echo xtc_href_link('customers.php'); ?>" method="get">
+      <?php echo xtc_draw_form('search_customer', FILENAME_CUSTOMERS, '', 'get'); ?>
         <?php echo ASB_QUICK_SEARCH_CUSTOMER; ?>
         <input name="search" type="text" value="<?php echo $search_cus;?>" size="15" />
         <input name="asb" type="hidden" value="asb" />
@@ -48,14 +48,14 @@
       </form>
     </li>
     <li>
-      <form action="<?php echo xtc_href_link('customers.php'); ?>" method="get">
+      <?php echo xtc_draw_form('search_email', FILENAME_CUSTOMERS, '', 'get'); ?>
         <?php echo ASB_QUICK_SEARCH_EMAIL; ?>
         <input name="search_email" type="text" value="<?php echo $search_email;?>" size="15" />
         <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />
       </form>
     </li>
     <li>
-      <form action="<?php echo xtc_href_link('orders.php'); ?>" method="get">
+      <?php echo xtc_draw_form('search_oorder', FILENAME_ORDERS, '', 'get'); ?>
         <?php echo ASB_QUICK_SEARCH_ORDER_ID; ?>
         <input name="oID" type="text" value="<?php echo $search_ord;?>" size="7" />
         <input type="hidden" name="action" value="search" />
@@ -63,7 +63,7 @@
       </form>
     </li>
     <li>
-      <form action="<?php echo xtc_href_link('categories.php'); ?>" method="get">
+      <?php echo xtc_draw_form('search_categorie', FILENAME_CATEGORIES, '', 'get'); ?>
         <?php echo ASB_QUICK_SEARCH_ARTICLE; ?>
         <input name="search" type="text" value="<?php echo $search_cat;?>" size="15" />
         <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />

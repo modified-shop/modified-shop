@@ -222,7 +222,7 @@
              } else {
                $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
              }
-             echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
+             echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
              //add current category id in $_POST
              if (isset($_GET['cPath'])) {
                echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
@@ -659,7 +659,7 @@
             case 'copy_to':
               //close multi-action form, not needed here
               $heading[] = array('text' => '</form><b>' . TEXT_INFO_HEADING_COPY_TO . '</b>');
-              $contents   = array('form' => xtc_draw_form('copy_to', FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath) . xtc_draw_hidden_field('products_id', $pInfo->products_id));
+              $contents   = array('form' => xtc_draw_form('copy_to', FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath) . xtc_draw_hidden_field('products_id', $pInfo->products_id).xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
               $contents[] = array('text' => TEXT_INFO_COPY_TO_INTRO);
               $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENT_CATEGORIES . '<br /><b>' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</b>');
 
@@ -938,9 +938,9 @@
                   //Single Product Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
-                                      'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>
-                                                 <form action="' . FILENAME_NEW_ATTRIBUTES . '" name="edit_attributes" method="post">
-                                                 <input type="hidden" name="action" value="edit">
+                                      'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
+                                                 .xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+                                                 '<input type="hidden" name="action" value="edit">
                                                  <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                  <input type="hidden" name="cpath" value="' . $cPath . '">
                                                  <input type="hidden" name="page" value="' . (int)$_GET['page'] . '">
@@ -948,8 +948,8 @@
                                                  </form>'                                                 
                                                  );
                   $contents[] = array('align' => 'center', 
-                                      'text' => '<form action="' . FILENAME_CATEGORIES . '" name="edit_crossselling" method="GET">
-                                                 <input type="hidden" name="action" value="edit_crossselling">
+                                      'text' =>  xtc_draw_form('edit_crossselling', FILENAME_CATEGORIES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+                                                '<input type="hidden" name="action" value="edit_crossselling">
                                                  <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                  <input type="hidden" name="cpath" value="' . $cPath  . '">
                                                  <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_EDIT_CROSS_SELLING . '">
@@ -960,8 +960,8 @@
                   // BOC Included xs:booster                  
                   if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS=='True') {
                     $contents[] = array('align' => 'center', 
-                                        'text' => '<form action="' . FILENAME_XTBOOSTER . '" name="edit_xtbooster" method="POST">
-                                                   <input type="hidden" name="action" value="edit_xtbooster">
+                                        'text' =>  xtc_draw_form('edit_xtbooster', FILENAME_XTBOOSTER, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+                                                  '<input type="hidden" name="action" value="edit_xtbooster">
                                                    <input type="hidden" name="xtb_module" value="add">
                                                    <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                    <input type="hidden" name="cpath" value="' . $cPath  . '">

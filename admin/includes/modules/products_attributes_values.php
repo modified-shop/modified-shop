@@ -219,9 +219,9 @@ if (xtc_db_num_rows($products)) {
                 <table border="0" cellspacing="0" cellpadding="2" class="option-values-table">
                   <tr>
                     <td colspan="<?php echo $colspan;?>" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
-                      <form name="search" action="<?php echo FILENAME_PRODUCTS_ATTRIBUTES; ?>" method="GET">
-                        <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
-                        <input name="<?php echo xtc_session_name(); ?>" type="hidden" value="<?php echo xtc_session_id(); ?>" />
+                      <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                        <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
+                        <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
                       </form
                     </td>
                   </tr>
@@ -259,7 +259,7 @@ if (xtc_db_num_rows($products)) {
                   <tr>
                     <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
                   </tr>
-                  <form name="values" action="<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'NONSSL');?>" method="post">
+                  <?php echo xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
                   <tr style="background-color: #d4d4d4;">
                     <td class="smallText txta-c">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
                     <td align="left" class="smallText">&nbsp;<select name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
@@ -300,7 +300,7 @@ while ($values_values = xtc_db_fetch_array($values)) {
                     <tr>
                       <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
                     </tr>
-                    <form name="values" action="<?php echo xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&value_page='.$_GET['value_page'].$page_info.$option_id, 'NONSSL');?>" method="post">
+                    <?php echo xtc_draw_form('value', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&value_page='.$_GET['value_page'].$page_info.$option_id, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
                     <tr style="background-color: #d4d4d4;">
                       <td class="smallText txta-c">&nbsp;<?php echo $values_values['products_options_values_id']; ?>
                         <input type="hidden" name="value_id" value="<?php echo $values_values['products_options_values_id']; ?>">
