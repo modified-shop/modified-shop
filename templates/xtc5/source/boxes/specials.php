@@ -38,7 +38,7 @@
                                                      AND s.status = '1'
                                             WHERE p.products_status = '1'
                                                   ".PRODUCTS_CONDITIONS_P."                                             
-                                         ORDER BY s.specials_date_added DSC
+                                         ORDER BY s.specials_date_added DESC
                                             LIMIT ".MAX_RANDOM_SELECT_SPECIALS)) {
 
   $box_smarty = new smarty;
