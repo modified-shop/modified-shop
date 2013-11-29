@@ -41,19 +41,24 @@
         xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
       }
 
-      $dir_manufacturers = DIR_FS_CATALOG_IMAGES."/manufacturers/";
+      //delete manufacturers_image
       if ($_POST['delete_image'] == 'on') {
-        if (file_exists($dir_manufacturers.$_POST['manufacturers_image'])) {
-          @unlink($dir_manufacturers.$_POST['manufacturers_image']);
-          xtc_db_query("UPDATE " . TABLE_MANUFACTURERS . " SET manufacturers_image = '' WHERE manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
+        $manufacturer_query = xtc_db_query("select manufacturers_image from " . TABLE_MANUFACTURERS . " where manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
+        $manufacturer = xtc_db_fetch_array($manufacturer_query);
+        $image_location = DIR_FS_CATALOG_IMAGES . $manufacturer['manufacturers_image'];
+        if (file_exists($image_location)) {
+          @unlink($image_location);
+          $sql_data_array['manufacturers_image'] = '';
+          xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'"); 
         }
       }
+      //store manufacturers_image
       $accepted_manufacturers_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
       $accepted_manufacturers_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+      $dir_manufacturers = DIR_FS_CATALOG_IMAGES . 'manufacturers/';
       if ($manufacturers_image = xtc_try_upload('manufacturers_image', $dir_manufacturers, '', $accepted_manufacturers_image_files_extensions, $accepted_manufacturers_image_files_mime_types)) {
-          xtc_db_query("UPDATE " . TABLE_MANUFACTURERS . "
-                           SET manufacturers_image = 'manufacturers/" . $manufacturers_image->filename . "'
-                         WHERE manufacturers_id = '" . (int)$manufacturers_id . "'");
+        $sql_data_array['manufacturers_image'] = 'manufacturers/'.$manufacturers_image->filename;
+        xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
       }
 
       $languages = xtc_get_languages();
