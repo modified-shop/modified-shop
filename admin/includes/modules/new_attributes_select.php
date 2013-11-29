@@ -28,7 +28,7 @@ $adminImages = DIR_WS_CATALOG . "lang/". $_SESSION['language'] ."/admin/images/b
   <td>
     <div class="pageHeading pdg2"><?php echo $pageTitle; ?></div>
     <?php 
-      echo xtc_draw_form('SELECT_PRODUCT', $_SERVER['PHP_SELF'], '', 'post').PHP_EOL;
+      echo xtc_draw_form('SELECT_PRODUCT', FILENAME_NEW_ATTRIBUTES, '', 'post').PHP_EOL;
       echo '<input type="hidden" name="action" value="edit">'.PHP_EOL;
       echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).PHP_EOL;
       echo '<div class="main pdg2"><br /><strong>'.SELECT_PRODUCT.'</strong><br /></div>'.PHP_EOL;
