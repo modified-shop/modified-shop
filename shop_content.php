@@ -18,14 +18,14 @@
 
 require ('includes/application_top.php');
 
+// create smarty elements
+$smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
-
-// create smarty elements
-$smarty = new Smarty;
 
 $shop_content_query = xtc_db_query("
     SELECT content_id, content_title, content_heading, content_text, content_file
