@@ -1,48 +1,33 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
-   $Id: popup_content.php 1169 2005-08-22 16:07:09Z mz $   
+   $Id: popup_content.php 4484 2013-02-18 14:04:52Z Tomcraft1980 $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
-   -----------------------------------------------------------------------------------------
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+  -----------------------------------------------------------------------------------------
    based on:
-   (c) 2003	 nextcommerce (content_preview.php,v 1.2 2003/08/25); www.nextcommerce.org
-   
-   Released under the GNU General Public License 
+   (c) 2003 nextcommerce (content_preview.php,v 1.2 2003/08/25); www.nextcommerce.org
+   (c) 2006 XT-Commerce
+
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 require ('includes/application_top.php');
 
 $content_data = $main->getContentData($_GET['coID']);
+
+$popup_smarty = new Smarty;
+
+$popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$popup_smarty->assign('html_params', HTML_PARAMS);
+$popup_smarty->assign('charset', $_SESSION['language_charset']);
+$popup_smarty->assign('title', htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset'])));
+$popup_smarty->assign('base', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+
+$popup_smarty->assign('content_heading', $content_data['content_heading']);
+$popup_smarty->assign('content_text', $content_data['content_text']);
+
+$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_content.html');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" <?php echo HTML_PARAMS; ?>>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>" /> 
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="robots" content="noindex, nofollow, noodp" />
-  <title><?php echo htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset'])); ?></title>
-  <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
-  <link rel="stylesheet" type="text/css" href="<?php echo 'templates/'.CURRENT_TEMPLATE.'/stylesheet.css'; ?>" />
-</head>
-<body style="background:#fff; font-family:Arial, Helvetica, sans-serif;">
-  <table width="100%" border="0" cellspacing="5" cellpadding="5">
-    <tr>
-      <td class="contentsTopics"><?php echo $content_data['content_heading']; ?></td>
-    </tr>
-  </table>
-  <br />
-  <table border="0" width="100%" cellspacing="5" cellpadding="5">
-    <tr>
-      <td class="main" style="font-size:12px">
-        <?php
-        echo $content_data['content_text'];
-        ?>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
