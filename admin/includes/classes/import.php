@@ -25,8 +25,6 @@
 */
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-//include needed system function
-require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
 
 /*******************************************************************************
  **
@@ -45,7 +43,7 @@ class xtcImport {
         $this->seperator = CSV_SEPERATOR;
         $this->TextSign = CSV_TEXTSIGN;
         if (trim(CSV_TEXTSIGN) == '') {
-            $this->TextSign = '"';
+            $this->TextSign = '';
         }
         if (CSV_SEPERATOR == '') {
             $this->seperator = "\t";
@@ -233,13 +231,13 @@ class xtcImport {
                     if ($this->FileSheme['p_cat.0'] != 'Y') {
                         if ($this->checkModel($line_data['p_model'])) {
                           $this->insertProduct($line_data, 'update');
-                        } elseif ($this->CatDefault != '0') {
+                        } elseif ($line_data['p_cat.0'] == '' && $this->CatDefault != '0') {
                             $this->insertProduct($line_data,'insert');
                         }
                     } else {
                         if ($this->checkModel($line_data['p_model'])) {
                             $this->insertProduct($line_data, 'update',true);
-                        } elseif ($this->CatDefault != '0') {
+                        } else { //if ($this->CatDefault != '0') {
                             $this->insertProduct($line_data,'insert',true);
                         }
                     }
