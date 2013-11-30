@@ -231,21 +231,21 @@ class xtcImport {
                     if ($this->FileSheme['p_cat.0'] != 'Y') {
                         if ($this->checkModel($line_data['p_model'])) {
                           $this->insertProduct($line_data, 'update');
-                        } elseif ($line_data['p_cat.0'] == '' && $this->CatDefault != '0') {
+                        } elseif ($this->CatDefault != '0') {
                             $this->insertProduct($line_data,'insert');
                         }
                     } else {
                         if ($this->checkModel($line_data['p_model'])) {
                             $this->insertProduct($line_data, 'update',true);
-                        } else { //if ($this->CatDefault != '0') {
+                        } else {
                             $this->insertProduct($line_data,'insert',true);
                         }
                     }
                 } else {
-                    $this->errorLog[] = '<b>ERROR:</b> no Categorie, line: '.$row.' dataset: Categorie, field: p_cat.0';
+                    $this->errorLog[] = '<b>ERROR:</b> no Categorie, line: '.$row.' dataset: empty field: p_cat.0';
                 }
             } else {
-                $this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$row.' dataset: model no., field: p_model';
+                $this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$row.' dataset: empty field: p_model';
             }
         }
     return array ($this->counter, $this->errorLog, $this->calcElapsedTime($this->time_start));
