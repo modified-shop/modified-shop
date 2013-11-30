@@ -191,7 +191,17 @@
               $from_str .= "LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) ";
             }
             //where-string
-            $where_str = " WHERE pd.language_id = '".(int) $_SESSION['languages_id']."'";
+            $where_str = " WHERE p.products_id NOT IN (
+                                    SELECT xsell_id
+                                      FROM ".TABLE_PRODUCTS_XSELL."
+                                     WHERE products_id = ".(int)$_GET['current_product_id']."
+                                    )";
+            $where_str .= " AND p.products_id != ".(int)$_GET['current_product_id'];
+            $where_str .= " AND pd.language_id = '".(int) $_SESSION['languages_id']."'";
+
+            //$where_str = '';
+            //where-string
+            //$where_str = " WHERE pd.language_id = '".(int) $_SESSION['languages_id']."'";
             //go for keywords... this is the main search process
             if (isset ($_GET['search']) && xtc_not_null($_GET['search'])) {
               if (xtc_parse_search_string(stripslashes($_GET['search']), $search_keywords)) {
