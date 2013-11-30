@@ -1533,3 +1533,9 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
 .pagination li.current { 
   font-weight:bold; 
 }
+
+/* styles for popup content */
+.popup-cont {
+font-family:Arial, Helvetica, sans-serif;
+background:#fff;
+}
