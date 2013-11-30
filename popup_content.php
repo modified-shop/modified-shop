@@ -17,39 +17,17 @@
 require ('includes/application_top.php');
 
 $content_data = $main->getContentData($_GET['coID']);
+
+$popup_smarty = new Smarty;
+
+$popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$popup_smarty->assign('html_params', HTML_PARAMS);
+$popup_smarty->assign('charset', $_SESSION['language_charset']);
+$popup_smarty->assign('title', htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset'])));
+$popup_smarty->assign('base', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+
+$popup_smarty->assign('content_heading', $content_data['content_heading']);
+$popup_smarty->assign('content_text', $content_data['content_text']);
+
+$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_content.html');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html <?php echo HTML_PARAMS; ?>>
-<head>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>" />
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <meta name="robots" content="noindex, nofollow, noodp" />
-  <title><?php echo htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset'])); ?></title>
-  <?php /*
-  //BOF - GTB - 2010-08-03 - Security Fix - Base
-  <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
-  <link rel="stylesheet" type="text/css" href="<?php echo 'templates/'.CURRENT_TEMPLATE.'/stylesheet.css'; ?>" />
-  */ ?>
-  <link rel="stylesheet" type="text/css" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css'; ?>" />
-  <?php
-  //EOF - GTB - 2010-08-03 - Security Fix - Base
-  ?>
-</head>
-<body style="background:#fff; font-family:Arial, Helvetica, sans-serif;">
-  <table width="100%" border="0" cellspacing="5" cellpadding="5">
-    <tr>
-      <td class="contentsTopics"><?php echo $content_data['content_heading']; ?></td>
-    </tr>
-  </table>
-  <br />
-  <table border="0" width="100%" cellspacing="5" cellpadding="5">
-    <tr>
-      <td class="main" style="font-size:12px">
-        <?php
-        echo $content_data['content_text'];
-        ?>
-      </td>
-    </tr>
-  </table>
-</body>
-</html>
