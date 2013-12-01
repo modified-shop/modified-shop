@@ -46,6 +46,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   if (isset($send_by_admin)) {
     $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
+    !defined('CONTENT_CONDITIONS') ? define('CONTENT_CONDITIONS', '') : null;
   }
 
   $smarty->assign('address_label_customer', xtc_address_format($order->customer['format_id'], $order->customer, 1, '', '<br />'));
