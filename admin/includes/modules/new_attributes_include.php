@@ -45,25 +45,28 @@
   $colspan = 9;
 
 ?>
-  <script type="text/javascript"><!--
+  <script type="text/javascript">
+  <!--
   function go_option() {
     if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
       location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)).'&current_product_id='. $_POST['current_product_id']; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
     }
   }
-  //--></script>
+  //-->
+  </script>
   <tr>
-    <td class="pageHeading" colspan="<?php echo $colspan;?>"><?php echo $pageTitle; ?></td>
-  </tr>
-  <tr>
-    <td class="main" colspan="<?php echo $colspan;?>">
-      <?php echo SORT_ORDER; ?>
-      <form name="option_order_by" action="<?php echo FILENAME_NEW_ATTRIBUTES ?>">
+     <td>
+     
+    <div class="pageHeading pdg2"><?php echo $pageTitle; ?></div>
+    <div class="main pdg2">
+      <?php echo SORT_ORDER;
+      echo xtc_draw_form('option_order_by', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+      ?>
       <?php echo $options_dropdown_order; ?>
       </form>
-    </td>
-  </tr>
-<form action="<?php echo FILENAME_NEW_ATTRIBUTES; ?>" method="post" name="SUBMIT_ATTRIBUTES" enctype="multipart/form-data">
+    </div>
+
+<?php echo xtc_draw_form('SUBMIT_ATTRIBUTES', FILENAME_NEW_ATTRIBUTES, '', 'post', 'id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"'); ?>
 <input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
 <input type="hidden" name="action" value="change">
 <?php
@@ -82,6 +85,20 @@ if ($_POST['cpath'] != '') {
   $param = '';
 }
 //EOF - web28 - 2010-12-14 - NEW edit products attributes
+?>
+
+
+<?php // BOC new button to send only checked post values, noRiddle ?>
+<div class="main" style="margin:10px 0;">
+    <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
+    <?php
+       echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
+       echo '&emsp;'. xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+   ?>
+</div>
+<?php // EOC new button to send only checked post values, noRiddle ?>
+<table id="attributes" class="collapse">
+<?php
 
   require(DIR_WS_MODULES . 'new_attributes_functions.php');
 
@@ -101,15 +118,15 @@ if ($_POST['cpath'] != '') {
       $current_product_option_name = $line['products_options_name'];
       $current_product_option_id = $line['products_options_id'];
       // Print the Option Name
-      echo '<tr class="dataTableHeadingRow">'. PHP_EOL;
-      echo '<td class="dataTableHeadingContent" style="width:150px"><strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
+      echo '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
+      echo '<td class="dataTableHeadingContent" style="width:150px"><input style="float:left;" type="checkbox" class="select_all" name="set_'.$current_product_option_id.'" value="'.$current_product_option_id.'">&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
       echo '<td class="dataTableHeadingContent" style="width:80px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
       echo '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
       echo '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
       echo '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_STOCK.'</strong></td>'. PHP_EOL;
-      echo '<td colspan="2" class="dataTableHeadingContent"><strong>'.ATTR_WEIGHT.'</strong></td>'. PHP_EOL;
+      echo '<td colspan="2" class="dataTableHeadingContent" style="min-width:120px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
       //echo '<td class="dataTableHeadingContent"><strong>'.ATTR_PREFIXWEIGHT.'</strong></td>';
-      echo '<td colspan="2" class="dataTableHeadingContent"><strong>'.ATTR_PRICE.'</strong></td>'. PHP_EOL;
+      echo '<td colspan="2" class="dataTableHeadingContent" style="min-width:120px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
       //echo '<td class="dataTableHeadingContent"><strong>'.ATTR_PREFIXPRICE.'</strong></td>';
       echo '</tr>'. PHP_EOL;
 
@@ -125,7 +142,7 @@ if ($_POST['cpath'] != '') {
         $i = 0;
         while ($line = xtc_db_fetch_array($result2)) {
           $i++;
-          $rowClass = rowClass($i);
+          $rowClass = rowClass($i) . ' oid-'.$current_product_option_id;
           $current_value_id = $line['products_options_values_id'];
           $isSelected = checkAttribute($current_value_id, $_POST['current_product_id'], $current_product_option_id);
           $checked = ($isSelected) ? ' checked="checked"' : '';
@@ -151,7 +168,7 @@ if ($_POST['cpath'] != '') {
             // Print the Current Value Name
             echo '<tr class="' . $rowClass . '">'. PHP_EOL;
             echo '<td class="main">'. PHP_EOL;
-            echo '<input type="checkbox" name="optionValues[]" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
+            echo '<input type="checkbox" name="optionValues[]" class="cb check_'.$current_product_option_id.'" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
             echo '</td>'. PHP_EOL;
             echo '<td class="main"><input type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
             echo '<td class="main"><input type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?$attr_array['attributes_model']:'') . '" size="15"></td>'. PHP_EOL;
@@ -165,7 +182,7 @@ if ($_POST['cpath'] != '') {
             }
             echo '    </select>'. PHP_EOL;
             echo '  </td>'. PHP_EOL;
-            echo '<td width="10%" class="main"><input type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight'])?$attr_array['options_values_weight']:'') . '" size="10"></td>'. PHP_EOL;
+            echo '<td class="main"><input type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight'])?$attr_array['options_values_weight']:'') . '" size="10"></td>'. PHP_EOL;
             echo '<td style="width:35px;" class="main">'. PHP_EOL;
             echo '   <select name="' . $current_value_id . '_prefix">'. PHP_EOL;
             $prefix_array = array('+','-');
@@ -179,9 +196,9 @@ if ($_POST['cpath'] != '') {
             
             // Download function start
             if(strtoupper($current_product_option_name) == 'DOWNLOADS') {
-              echo '<tr>'. PHP_EOL;
+              echo '<tr class="downloads oid-'.$current_product_option_id.'">'. PHP_EOL;
              // echo '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
-              echo '<td class="main" colspan="'.$colspan .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), ''). PHP_EOL;
+              echo '<td class="main" colspan="'.$colspan .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), 'class="dl"'). PHP_EOL;
               echo '&nbsp;&nbsp;&nbsp;'.DL_COUNT.' <input type="text" name="' . $current_value_id . '_download_count" value="' . (isset($attr_dl_array['products_attributes_maxcount'])?$attr_dl_array['products_attributes_maxcount']:'') . '" size="6">'. PHP_EOL;
               echo '&nbsp;&nbsp;&nbsp;'.DL_EXPIRE.' <input type="text" name="' . $current_value_id . '_download_expire" value="' . (isset($attr_dl_array['products_attributes_maxdays'])?$attr_dl_array['products_attributes_maxdays']:'') . '" size="6"></td>'. PHP_EOL;
               echo '</tr>'. PHP_EOL;
@@ -198,12 +215,17 @@ if ($_POST['cpath'] != '') {
     }
   }
 ?>
-  <tr>
-    <td colspan="<?php echo $colspan;?>" class="main" style="border-top: 1px solid #a3a3a3"><br />
-      <?php
-      echo xtc_button(BUTTON_SAVE) . '&nbsp;';
-      echo xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
-      ?>
-    </td>
-  </tr>
+
+</table>
+<?php // BOC new button to send only checked post values, noRiddle ?>
+<div class="main" style="margin:10px 0;">
+    <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
+    <?php
+    echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
+    echo '&emsp;' . xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+    ?>
+</div>
+ <?php // EOC new button to send only checked post values, noRiddle ?>
 </form>
+</td>
+</tr>
