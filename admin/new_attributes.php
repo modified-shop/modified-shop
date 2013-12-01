@@ -47,6 +47,9 @@ if (isset($_GET['action']) && !isset($_POST['action'])) {
 }
 require (DIR_WS_INCLUDES.'head.php');
 ?>
+<script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
+<link rel="stylesheet" type="text/css" href="includes/css/attributes.css">
+<script type="text/javascript" src="includes/javascript/jquery.attributes.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body>
