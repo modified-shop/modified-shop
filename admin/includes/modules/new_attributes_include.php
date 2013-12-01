@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: new_attributes_include.php 5125 2013-07-18 12:37:33Z Tomcraft $
+   $Id: new_attributes_include.php 5453 2013-09-02 10:18:30Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -142,7 +142,7 @@ if ($_POST['cpath'] != '') {
         $i = 0;
         while ($line = xtc_db_fetch_array($result2)) {
           $i++;
-          $rowClass = rowClass($i);
+          $rowClass = rowClass($i) . ' oid-'.$current_product_option_id;
           $current_value_id = $line['products_options_values_id'];
           $isSelected = checkAttribute($current_value_id, $_POST['current_product_id'], $current_product_option_id);
           $checked = ($isSelected) ? ' checked="checked"' : '';
@@ -196,7 +196,7 @@ if ($_POST['cpath'] != '') {
             
             // Download function start
             if(strtoupper($current_product_option_name) == 'DOWNLOADS') {
-              echo '<tr class="downloads">'. PHP_EOL;
+              echo '<tr class="downloads oid-'.$current_product_option_id.'">'. PHP_EOL;
              // echo '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
               echo '<td class="main" colspan="'.$colspan .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), 'class="dl"'). PHP_EOL;
               echo '&nbsp;&nbsp;&nbsp;'.DL_COUNT.' <input type="text" name="' . $current_value_id . '_download_count" value="' . (isset($attr_dl_array['products_attributes_maxcount'])?$attr_dl_array['products_attributes_maxcount']:'') . '" size="6">'. PHP_EOL;
@@ -215,8 +215,7 @@ if ($_POST['cpath'] != '') {
     }
   }
 ?>
-
-      
+  
 </table>
 <?php // BOC new button to send only checked post values, noRiddle ?>
 <div class="main" style="margin:10px 0;">
