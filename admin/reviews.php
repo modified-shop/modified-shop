@@ -202,17 +202,18 @@ require (DIR_WS_INCLUDES.'head.php');
               <table class="tableBoxCenter collapse">
                 <tr class="dataTableHeadingRow">
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_PRODUCTS; ?></td>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CUSTOMER; ?></td>
                   <td class="dataTableHeadingContent txta-r" align="right"><?php echo TABLE_HEADING_RATING; ?></td>
                   <td class="dataTableHeadingContent txta-r" align="right"><?php echo TABLE_HEADING_DATE_ADDED; ?></td>
                   <td class="dataTableHeadingContent txta-r" align="right"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
                 <?php
-                $reviews_query_raw = "select reviews_id, products_id, date_added, last_modified, reviews_rating from " . TABLE_REVIEWS . " order by date_added DESC";
+                $reviews_query_raw = "select reviews_id, customers_name, products_id, date_added, last_modified, reviews_rating from " . TABLE_REVIEWS . " order by date_added DESC";
                 $reviews_split = new splitPageResults($_GET['page'], $page_max_display_results, $reviews_query_raw, $reviews_query_numrows);
                 $reviews_query = xtc_db_query($reviews_query_raw);
                 while ($reviews = xtc_db_fetch_array($reviews_query)) {
                   if ( ((!$_GET['rID']) || ($_GET['rID'] == $reviews['reviews_id'])) && (!$rInfo) ) {
-                    $reviews_text_query = xtc_db_query("select r.reviews_read, r.customers_name, length(rd.reviews_text) as reviews_text_size from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . $reviews['reviews_id'] . "' and r.reviews_id = rd.reviews_id");
+                    $reviews_text_query = xtc_db_query("select r.reviews_read, r.customers_name, rd.reviews_text,  length(rd.reviews_text) as reviews_text_size from " . TABLE_REVIEWS . " r, " . TABLE_REVIEWS_DESCRIPTION . " rd where r.reviews_id = '" . $reviews['reviews_id'] . "' and r.reviews_id = rd.reviews_id");
                     $reviews_text = xtc_db_fetch_array($reviews_text_query);
 
                     $products_image_query = xtc_db_query("select products_image from " . TABLE_PRODUCTS . " where products_id = '" . $reviews['products_id'] . "'");
@@ -236,6 +237,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   }
                 ?>
                   <td class="dataTableContent"><?php echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews['reviews_id'] . '&action=preview') . '">' . xtc_image(DIR_WS_ICONS . 'preview.gif', ICON_PREVIEW) . '</a>&nbsp;' . xtc_get_products_name($reviews['products_id']); ?></td>
+                  <td class="dataTableContent"><?php echo $reviews['customers_name']; ?></td>
                   <td class="dataTableContent txta-r" align="right"><?php echo xtc_image(HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'templates/'. CURRENT_TEMPLATE .'/img/stars_' . $reviews['reviews_rating'] . '.gif'); ?></td>
                   <td class="dataTableContent txta-r" align="right"><?php echo xtc_date_short($reviews['date_added']); ?></td>
                   <td class="dataTableContent txta-r" align="right"><?php if ( (is_object($rInfo)) && ($reviews['reviews_id'] == $rInfo->reviews_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $reviews['reviews_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
@@ -274,6 +276,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('text' => TEXT_INFO_REVIEW_READ . ' ' . $rInfo->reviews_read);
                   $contents[] = array('text' => '<br />' . TEXT_INFO_REVIEW_SIZE . ' ' . $rInfo->reviews_text_size . ' bytes');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_PRODUCTS_AVERAGE_RATING . ' ' . number_format($rInfo->average_rating, 2) . '%');
+                  $contents[] = array('text' => '<br><hr><br>' . ENTRY_REVIEW . '<br>' . strip_tags($rInfo->reviews_text) . '<br>');
                 }
                   break;
               }

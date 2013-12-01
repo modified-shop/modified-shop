@@ -18,6 +18,7 @@
 define('HEADING_TITLE', 'Artikelbewertungen');
 
 define('TABLE_HEADING_PRODUCTS', 'Artikel');
+define('TABLE_HEADING_CUSTOMER', 'Kunde');
 define('TABLE_HEADING_RATING', 'Bewertung');
 define('TABLE_HEADING_DATE_ADDED', 'hinzugef&uuml;gt am');
 define('TABLE_HEADING_ACTION', 'Aktion');
@@ -33,10 +34,7 @@ define('TEXT_INFO_DELETE_REVIEW_INTRO', 'Sind Sie sicher, dass Sie diese Bewertu
 
 define('TEXT_INFO_DATE_ADDED', 'hinzugef&uuml;gt am:');
 define('TEXT_INFO_LAST_MODIFIED', 'letzte &Auml;nderung:');
-//BOF - DokuMan - 2010-02-15 - Change wrong constant-name
-//define('TEXT_INFO_IMAGE_NONEXISTENT', 'BILD EXISTIERT NICHT');
 define('TEXT_IMAGE_NONEXISTENT', 'BILD EXISTIERT NICHT');
-//EOF - DokuMan - 2010-02-15 - Change wrong constant-name
 define('TEXT_INFO_REVIEW_AUTHOR', 'geschrieben von:');
 define('TEXT_INFO_REVIEW_RATING', 'Bewertung:');
 define('TEXT_INFO_REVIEW_READ', 'gelesen :');
