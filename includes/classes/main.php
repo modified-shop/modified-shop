@@ -164,18 +164,10 @@ class main {
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID, $lang_id = '') {
-    if (!defined('CONTENT_CONDITIONS')) {
-      $c_conditions = '';
-      if (GROUP_CHECK == 'true') {
-        $c_conditions = " AND group_ids LIKE '%c_".$_SESSION['customers_status']['customers_status']."_group%' ";
-        if (isset($GLOBALS["send_by_admin"]) && isset($GLOBALS["order"]->customer['customers_status'])) {
-          $c_conditions = " AND group_ids LIKE '%c_".$GLOBALS["order"]->customer['customers_status']."_group%' ";
-        }
-      }
-      define('CONTENT_CONDITIONS', $c_conditions);
-    }
+  function getContentData($coID, $lang_id = '', $customers_status = '') {
     $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
+    $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
+    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $customers_status . "_group%'" : '';
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,
                                               content_title,
@@ -184,7 +176,7 @@ class main {
                                               content_file
                                          FROM " . TABLE_CONTENT_MANAGER . "
                                         WHERE content_group='". (int)$coID ."'
-                                          " . CONTENT_CONDITIONS . "
+                                          " . $group_check . "
                                           AND languages_id='" . (int)$lang_id . "'
                                         LIMIT 1
                                       ");
