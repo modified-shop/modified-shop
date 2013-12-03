@@ -165,6 +165,16 @@ class main {
    * @return array
    */
   function getContentData($coID, $lang_id = '') {
+    if (!defined('CONTENT_CONDITIONS')) {
+      $c_conditions = '';
+      if (GROUP_CHECK == 'true') {
+        $c_conditions = " AND group_ids LIKE '%c_".$_SESSION['customers_status']['customers_status']."_group%' ";
+        if (isset($GLOBALS["send_by_admin"]) && isset($GLOBALS["order"]->customer['customers_status'])) {
+          $c_conditions = " AND group_ids LIKE '%c_".$GLOBALS["order"]->customer['customers_status']."_group%' ";
+        }
+      }
+      define('CONTENT_CONDITIONS', $c_conditions);
+    }
     $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,
