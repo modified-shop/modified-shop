@@ -24,14 +24,16 @@
     $field .= '>';
 
     if (empty($default) && isset($GLOBALS[$name])) $default = $GLOBALS[$name];
+    
+    if (is_array($values) && count($values) > 0) {
+      foreach ($values as $value) {
+        $field .= '<option value="' . xtc_parse_input_field_data($value['id'], array('"' => '&quot;')) . '"';
+        if ($default == $value['id']) {
+          $field .= ' selected="selected"';
+        }
 
-    for ($i=0, $n=sizeof($values); $i<$n; $i++) {
-      $field .= '<option value="' . xtc_parse_input_field_data($values[$i]['id'], array('"' => '&quot;')) . '"';
-      if ($default == $values[$i]['id']) {
-        $field .= ' selected="selected"';
+        $field .= '>' . xtc_parse_input_field_data($value['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
       }
-
-      $field .= '>' . xtc_parse_input_field_data($values[$i]['text'], array('"' => '&quot;', '\'' => '&#039;', '<' => '&lt;', '>' => '&gt;')) . '</option>';
     }
     $field .= '</select>';
 
