@@ -25,8 +25,17 @@ class campaigns {
 	function campaigns(& $get_array) {
 		global $currencies;
 
-		if (count($get_array) == 9) {
-
+    if (isset($get_array['startD'])
+        && isset($get_array['startM'])
+        && isset($get_array['startY'])
+        && isset($get_array['endD'])
+        && isset($get_array['endM'])
+        && isset($get_array['endY'])
+        && isset($get_array['status'])
+        && isset($get_array['campaign'])
+        && isset($get_array['report']))
+    {
+        
 			$this->startD = $get_array['startD'];
 			$this->startM = $get_array['startM'];
 			$this->startY = $get_array['startY'];
