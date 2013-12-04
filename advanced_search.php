@@ -30,7 +30,7 @@ $breadcrumb->add(NAVBAR_TITLE_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_S
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form(this);"').xtc_hide_session_id()); //WEB28 change NONSSL to $request_type
+$smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form_search(this);"').xtc_hide_session_id()); //WEB28 change NONSSL to $request_type
 
 $smarty->assign('INPUT_KEYWORDS', xtc_draw_input_field('keywords', '', 'style="width: 100%"'));
 $smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, 'KeepThis=true&TB_iframe=true&height=400&width=600', $request_type));

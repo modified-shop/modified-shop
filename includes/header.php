@@ -92,45 +92,13 @@ if (file_exists('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
   echo '<link rel="stylesheet" type="text/css" href="templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />';
 }
 
-?>
-<script type="text/javascript"><!--
-var selected;
-var submitter = null;
-function submitFunction() {
-    submitter = 1;
-}
-function popupWindow(url) {
-  window.open(url,'popupWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}  
-function selectRowEffect(object, buttonSelect) {
-  if (!selected) {
-    if (document.getElementById) {
-      selected = document.getElementById('defaultSelected');
-    } else {
-      selected = document.all['defaultSelected'];
-    }
-  }
-  if (selected) selected.className = 'moduleRow';
-  object.className = 'moduleRowSelected';
-  selected = object;
-  if (document.getElementById('payment'[0])) {
-    document.getElementById('payment'[buttonSelect]).checked=true;
-  }
-}
-function rowOverEffect(object) {
-  if (object.className == 'moduleRow') object.className = 'moduleRowOver';
-}
-function rowOutEffect(object) {
-  if (object.className == 'moduleRowOver') object.className = 'moduleRow';
-}
-function popupImageWindow(url) {
-  window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-}
-//--></script>
-<?php
+// include default javascript
+echo '<script type="text/javascript" src="includes/default.js"></script>';
+
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 
+// require additional javascript
 switch(basename($PHP_SELF)) {
 
   case FILENAME_CHECKOUT_PAYMENT:
@@ -145,71 +113,18 @@ switch(basename($PHP_SELF)) {
   case FILENAME_CREATE_GUEST_ACCOUNT:
   case FILENAME_ACCOUNT_PASSWORD:
   case FILENAME_ACCOUNT_EDIT:
+  case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
+  case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
+  case FILENAME_ADVANCED_SEARCH:
+  case FILENAME_PRODUCT_REVIEWS_WRITE: 
       require('includes/form_check.js.php');
     break;
 
   case FILENAME_ADDRESS_BOOK_PROCESS:
-      if (isset($_GET['delete']) == false) {
+      if (isset($_GET['delete']) === false) {
         include('includes/form_check.js.php');
       }
     break;
-
-  case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
-  case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
-      require('includes/form_check.js.php'); ?>
-<script type="text/javascript"><!--
-function check_form_optional(form_name) {
-  var form = form_name;
-  var firstname = form.elements['firstname'].value;
-  var lastname = form.elements['lastname'].value;
-  var street_address = form.elements['street_address'].value;
-  if (firstname == '' && lastname == '' && street_address == '') {
-    return true;
-  } else {
-    return check_form(form_name);
-  }
-}
-//--></script>
-<?php break;
-
-  case FILENAME_ADVANCED_SEARCH:
-      echo '<script type="text/javascript" src="includes/general.js"></script>' . PHP_EOL;
-    break;
-
-  case FILENAME_PRODUCT_REVIEWS_WRITE: ?>
-<script type="text/javascript"><!--
-function checkForm() {
-  var error = 0;
-  var error_message = unescape("<?php echo xtc_js_lang(JS_ERROR); ?>");
-  var review = document.getElementById("product_reviews_write").review.value;
-  if (review.length < <?php echo REVIEW_TEXT_MIN_LENGTH; ?>) {
-    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_TEXT); ?>");
-    error = 1;
-  }
-  if (!((document.getElementById("product_reviews_write").rating[0].checked) || (document.getElementById("product_reviews_write").rating[1].checked) || (document.getElementById("product_reviews_write").rating[2].checked) || (document.getElementById("product_reviews_write").rating[3].checked) || (document.getElementById("product_reviews_write").rating[4].checked))) {
-    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_RATING); ?>");
-    error = 1;
-  }
-  if (error == 1) {
-    alert(error_message);
-    return false;
-  } else {
-    return true;
-  }
-}
-//--></script>
-<?php break;
-
-  case FILENAME_POPUP_IMAGE: ?>
-<script type="text/javascript"><!--
-var i=0;
-function resize() {
-  if (navigator.appName == 'Netscape') i=40;
-  if (document.images[0]) window.resizeTo(document.images[0].width +30, document.images[0].height+60-i);
-  self.focus();
-}
-//--></script>
-<?php break;
 
 } // END SWITCH
 
