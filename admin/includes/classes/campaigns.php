@@ -25,16 +25,8 @@ class campaigns {
 	function campaigns(& $get_array) {
 		global $currencies;
 
-    if (isset($get_array['startD'])
-        && isset($get_array['startM'])
-        && isset($get_array['startY'])
-        && isset($get_array['endD'])
-        && isset($get_array['endM'])
-        && isset($get_array['endY'])
-        && isset($get_array['status'])
-        && isset($get_array['campaign'])
-        && isset($get_array['report']))
-    {
+    $required = array('startD', 'startM', 'startY', 'endD', 'endM', 'endY', 'status', 'campaign', 'report');
+    if (count(array_intersect_key(array_flip($required), $get_array)) === count($required)) {
         
 			$this->startD = $get_array['startD'];
 			$this->startM = $get_array['startM'];
