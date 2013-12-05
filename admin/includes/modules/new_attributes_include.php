@@ -30,15 +30,15 @@
 
   //NEW SORT SELECTION
   if (isset($_GET['option_order_by']) && $_GET['option_order_by']) {
-   $option_order_by = $_GET['option_order_by'];
-   $_POST['current_product_id'] = $_GET['current_product_id'];
+    $option_order_by = $_GET['option_order_by'];
+    $_POST['current_product_id'] = $_GET['current_product_id'];
   } else {
-   $option_order_by = 'products_options_id';
+    $option_order_by = 'products_options_sortorder,products_options_id';
   }
   $options = array();
+  $options[] = (array ('id' => 'products_options_sortorder', 'text' => TEXT_SORTORDER));
   $options[] = (array ('id' => 'products_options_id', 'text' => TEXT_OPTION_ID));
   $options[] = (array ('id' => 'products_options_name', 'text' => TEXT_OPTION_NAME));
-  $options[] = (array ('id' => 'products_options_sortorder', 'text' => TEXT_SORTORDER));
   $options_dropdown_order = xtc_draw_pull_down_menu('selected', $options, $option_order_by, 'onchange="go_option()" ') ."\n";
 
   //Anzahl Spalten
@@ -146,6 +146,7 @@ if ($_POST['cpath'] != '') {
           $current_value_id = $line['products_options_values_id'];
           $isSelected = checkAttribute($current_value_id, $_POST['current_product_id'], $current_product_option_id);
           $checked = ($isSelected) ? ' checked="checked"' : '';
+          $class_checked = ($isSelected) ? ' ischecked' : '';
 
           $query3 = "SELECT *
                        FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
@@ -166,8 +167,8 @@ if ($_POST['cpath'] != '') {
             }
     
             // Print the Current Value Name
-            echo '<tr class="' . $rowClass . '">'. PHP_EOL;
-            echo '<td class="main">'. PHP_EOL;
+            echo '<tr class="' . $rowClass . $class_checked . '">'. PHP_EOL;
+            echo '<td class="main nobr">'. PHP_EOL;
             echo '<input type="checkbox" name="optionValues[]" class="cb check_'.$current_product_option_id.'" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
             echo '</td>'. PHP_EOL;
             echo '<td class="main"><input type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;

@@ -585,3 +585,7 @@ input[type="file"]{
 font-size:12px;
 width:270px;
 } 
+#attributes .ischecked td{
+background-color: #C1FFC1;
+border-bottom: 1px solid #fff; 
+}
