@@ -1,15 +1,16 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: csv_backend.php 1030 2005-07-14 20:22:32Z novalis $
+   $Id: csv_backend.php 5750 2013-09-13 13:26:51Z Tomcraft $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommercecoding standards (a typical file) www.oscommerce.com
+   (c) 2006 xt:Commerce (csv_backend.php)
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
@@ -20,43 +21,44 @@
 
   define('FILENAME_CSV_BACKEND','csv_backend.php');
 
-  switch ($_GET['action']) {
+  $action = (isset($_GET['action']) ? $_GET['action'] : '');
+
+  switch ($action) {
 
       case 'upload':
         $upload_file=xtc_db_prepare_input($_POST['file_upload']);
-        if ($upload_file = &xtc_try_upload('file_upload',DIR_FS_CATALOG.'import/')) {
-            $$upload_file_name=$upload_file->filename;
+        $accepted_file_upload_files_extensions = array("txt","csv","tsv");
+        $accepted_file_upload_files_mime_types = array("text/plain","text/comma-separated-values","text/tab-separated-values");
+        if ($upload_file = &xtc_try_upload('file_upload',DIR_FS_CATALOG.'import/','',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
+          $$upload_file_name=$upload_file->filename;
         }
       break;
 
       case 'import':
-           $handler = new xtcImport($_POST['select_file']);
-           $mapping=$handler->map_file($handler->generate_map());
-           $import=$handler->import($mapping);
+        $handler = new xtcImport($_POST['select_file']);
+        $mapping=$handler->map_file($handler->generate_map());
+        $import=$handler->import($mapping);
       break;
 
       case 'export':
-            $handler = new xtcExport('export.csv');
-            $import=$handler->exportProdFile();
+        $handler = new xtcExport('export.csv');
+        $import=$handler->exportProdFile();
       break;
 
       case 'save':
+        $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '20' order by sort_order");
 
-          $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '20' order by sort_order");
-
-          while ($configuration = xtc_db_fetch_array($configuration_query))
-              xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".$_POST[$configuration['configuration_key']]."' where configuration_key='".$configuration['configuration_key']."'");
-
-               xtc_redirect(xtc_href_link(FILENAME_CSV_BACKEND));
-        break;
+        while ($configuration = xtc_db_fetch_array($configuration_query)) {
+          xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value='".$_POST[$configuration['configuration_key']]."' where configuration_key='".$configuration['configuration_key']."'");
+        }
+        xtc_redirect(xtc_href_link(FILENAME_CSV_BACKEND));
+      break;
   }
-
-
 
   $cfg_group_query = xtc_db_query("select configuration_group_title from " . TABLE_CONFIGURATION_GROUP . " where configuration_group_id = '20'");
   $cfg_group = xtc_db_fetch_array($cfg_group_query);
-  
-  require (DIR_WS_INCLUDES.'head.php');
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
@@ -84,7 +86,6 @@
         <div class="clear mrg5">
           <a class="button" href="#" onclick="toggleBox('config');"><?php echo CSV_SETUP; ?></a>
         </div>
-                
       <div id="config" class="longDescription">
       <?php echo xtc_draw_form('configuration', FILENAME_CSV_BACKEND, 'gID=20&action=save'); ?>
       <table class="tableConfig">
@@ -138,7 +139,7 @@
             $cfgValue = $configuration['configuration_value'];
           }
 
-          if (((!$_GET['cID']) || (@$_GET['cID'] == $configuration['configuration_id'])) && (!$cInfo) && (substr($_GET['action'], 0, 3) != 'new')) {
+          if (((!$_GET['cID']) || (@$_GET['cID'] == $configuration['configuration_id'])) && (!$cInfo) && (substr($action, 0, 3) != 'new')) {
             $cfg_extra_query = xtc_db_query("select configuration_key,configuration_value, date_added, last_modified, use_function, set_function from " . TABLE_CONFIGURATION . " where configuration_id = '" . $configuration['configuration_id'] . "'");
             $cfg_extra = xtc_db_fetch_array($cfg_extra_query);
 
@@ -170,8 +171,7 @@
       </form>
       </div>
       <?php
-
-  if ($import)
+  if (isset($import))
   {
      if ($import[0])
      {
@@ -179,7 +179,6 @@
                 <tr>
                     <td class="messageStackSuccess"><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
                     ';
-
                    if (isset($import[0]['prod_new'])) echo 'new products:'.$import[0]['prod_new'].'<br />';
                    if (isset($import[0]['cat_new'])) echo 'new categories:'.$import[0]['cat_new'].'<br />';
                    if (isset($import[0]['prod_upd'])) echo 'updated products:'.$import[0]['prod_upd'].'<br />';
@@ -187,7 +186,6 @@
                    if (isset($import[0]['cat_touched'])) echo 'touched categories:'.$import[0]['cat_touched'].'<br />';
                    if (isset($import[0]['prod_exp'])) echo 'products exported:'.$import[0]['prod_exp'].'<br />';
                    if (isset($import[2])) echo $import[2];
-
       echo '</font></td>
                 </tr>
                 </table>';
@@ -205,23 +203,17 @@
                     echo $import[1][$i].'<br />';
                    }
 
-
       echo '</font></td>
                 </tr>
                 </table>';
      }
 
   }
-
 ?>
-
     <div class="pageHeading mrg5">Import</div>
-
     <div class="dataTableHeadingContent mrg5"><?php echo TEXT_IMPORT; ?>
-      
       <div class="mrg5"><?php echo UPLOAD; ?></div>
     
-
       <?php
       echo xtc_draw_form('upload',FILENAME_CSV_BACKEND,'action=upload','POST','enctype="multipart/form-data"');
       echo '<div class="mrg5">'.xtc_draw_file_field('file_upload').'</div>';
@@ -250,14 +242,10 @@
       echo '<div class="mrg5"><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_IMPORT . '"/></div>';
 
       ?>
-      <form>
+      </form>
     </div>
-
-
       <div class="pageHeading mrg5">Export</div>
-      
       <div class="dataTableHeadingContent mrg5"><?php echo TEXT_EXPORT; ?>
-
         <?php
         echo xtc_draw_form('export',FILENAME_CSV_BACKEND,'action=export','POST','enctype="multipart/form-data"');
         $content=array();
@@ -267,7 +255,6 @@
         ?>
         </form>
       </div>
-    
     </td>
 <!-- body_text_eof //-->
   </tr>
