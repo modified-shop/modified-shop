@@ -43,7 +43,7 @@ class xtcImport {
         $this->seperator = CSV_SEPERATOR;
         $this->TextSign = CSV_TEXTSIGN;
         if (trim(CSV_TEXTSIGN) == '') {
-            $this->TextSign = '';
+            $this->TextSign = '^';
         }
         if (CSV_SEPERATOR == '') {
             $this->seperator = "\t";
@@ -53,7 +53,7 @@ class xtcImport {
         }
         $this->filename = $filename;
         $this->ImportDir = DIR_FS_CATALOG.'import/';
-        $this->catDepth = 6;
+        $this->catDepth = isset(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
         $this->languages = $this->get_lang();
         $this->counter = array ('prod_new' => 0,
                                 'cat_new' => 0,
@@ -86,24 +86,25 @@ class xtcImport {
 
         // lets define a standard fieldmapping array, with importable fields
         $file_layout = array (
-            'p_model' => '',
-            'p_stock' => '',
-            'p_tpl' => '',
-            'p_sorting' => '',
-            'p_manufacturer' => '',
-            'p_fsk18' => '',
-            'p_priceNoTax' => '',
-            'p_tax' => '',
-            'p_status' => '',
-            'p_weight' => '',
-            'p_ean' => '',
-            'p_disc' => '',
-            'p_opttpl' => '',
-            'p_image' => '',
-            'p_vpe' => '',
-            'p_vpe_status' => '',
-            'p_vpe_value' => '',
-            'p_shipping' => ''
+          'p_model' => '', // products_model
+          'p_stock' => '', // products_quantity
+          'p_tpl' => '', // products_template
+          'p_sorting' => '', // products_sorting
+          'p_manufacturer' => '', // manufacturer
+          'p_fsk18' => '', // FSK18
+          'p_priceNoTax' => '', // Nettoprice
+          'p_tax' => '', // taxrate in percent
+          'p_status' => '', // products status
+          'p_weight' => '', // products weight
+          'p_ean' => '', // products ean
+          'p_man' => '', //products_manufacturers_model
+          'p_disc' => '', // products discount
+          'p_opttpl' => '', // options template
+          'p_image' => '', // product image
+          'p_vpe' => '', // products VPE
+          'p_vpe_status' => '', // products VPE Status
+          'p_vpe_value' => '', // products VPE value
+          'p_shipping' => '' // product shipping_time
         );
         // group prices
         for ($i = 0; $i < count($this->Groups) - 1; $i ++) {
@@ -227,22 +228,28 @@ class xtcImport {
             }
 
             if ($line_data['p_model'] != '') {
-                if ($line_data['p_cat.0'] != '' || $this->FileSheme['p_cat.0'] != 'Y') {
-                    if ($this->FileSheme['p_cat.0'] != 'Y') {
-                        if ($this->checkModel($line_data['p_model'])) {
-                          $this->insertProduct($line_data, 'update');
-                        } elseif ($this->CatDefault != '0') {
+                if ($line_data['p_cat.0'] != '' || $this->FileSheme['p_cat.0'] != 'Y') { // if cat data field is empty or not existing
+                    if ($this->FileSheme['p_cat.0'] != 'Y') { // if cat data field is not existing
+                        if ($this->checkModel($line_data['p_model'])) { // if model no. already exists
+                            $this->insertProduct($line_data, 'update');
+                        } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field not exsisting and CatDefault is not TOP
                             $this->insertProduct($line_data,'insert');
                         }
-                    } else {
+                    } else { // if cat data field existing
                         if ($this->checkModel($line_data['p_model'])) {
                             $this->insertProduct($line_data, 'update',true);
                         } else {
                             $this->insertProduct($line_data,'insert',true);
                         }
                     }
-                } else {
-                    $this->errorLog[] = '<b>ERROR:</b> no Categorie, line: '.$row.' dataset: empty field: p_cat.0';
+                } else { // if cat data field existing but empty
+                    if ($this->checkModel($line_data['p_model'])) { // if model no. already exists
+                        $this->insertProduct($line_data, 'update');
+                    } elseif ($this->CatDefault != '0') { // if model no. not existing and cat data field existing but empty and CatDefault is not TOP
+                        $this->insertProduct($line_data,'insert');
+                    } else { // cat data field existing but empty and no category choosen (i.e. TOP choosen)
+                        $this->errorLog[] = '<b>ERROR:</b> no Categorie, line: '.$row.' dataset: empty field: p_cat.0' . 'and no categrory selected';
+                    }
                 }
             } else {
                 $this->errorLog[] = '<b>ERROR:</b> no Modelnumber, line: '.$row.' dataset: empty field: p_model';
@@ -310,10 +317,12 @@ class xtcImport {
     **
     ****************************************************************************/
     function RemoveTextNotes($data) {
-        if (substr($data, -1) == $this->TextSign)
-            $data = substr($data, 1, strlen($data) - 2);
+        if(!empty($this->TextSign)) {
+            if (substr($data, -1) == $this->TextSign)
+                $data = substr($data, 1, strlen($data) - 2);
 
-        return $data;
+            return $data;
+        }
     }
 
     /*****************************************************************************
@@ -380,7 +389,9 @@ class xtcImport {
         if ($this->FileSheme['p_disc'] == 'Y')
             $products_array = array_merge($products_array, array ('products_discount_allowed' => (float)$dataArray['p_disc']));
         if ($this->FileSheme['p_ean'] == 'Y')
-            $products_array = array_merge($products_array, array ('products_ean' => $dataArray['p_ean']));
+            $products_array = array_merge($products_array, array ('products_ean' => xtc_db_prepare_input($dataArray['p_ean'])));
+        if ($this->FileSheme['p_man'] == 'Y')
+            $products_array = array_merge($products_array, array ('products_manufacturers_model' => xtc_db_prepare_input($dataArray['p_man'])));
         if ($this->FileSheme['p_tax'] == 'Y')
             $products_array = array_merge($products_array, array ('products_tax_class_id' => (int)$dataArray['p_tax']));
         if ($this->FileSheme['p_opttpl'] == 'Y')
@@ -766,7 +777,7 @@ class xtcExport {
     *****************************************************************************/
 
     function xtcExport($filename) {
-        $this->catDepth = 6;
+        $this->catDepth = isset(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
         $this->languages = $this->get_lang();
         $this->filename = $filename;
         $this->CAT = array ();
@@ -878,6 +889,7 @@ class xtcExport {
                           'p_status',
                           'p_weight',
                           'p_ean',
+                          'p_man',
                           'p_disc',
                           'p_opttpl',
                           'p_vpe',
@@ -966,6 +978,7 @@ class xtcExport {
             $line .= $this->encode($export_data['products_status']);
             $line .= $this->encode($export_data['products_weight']);
             $line .= $this->encode($export_data['products_ean']);
+            $line .= $this->encode($export_data['products_manufacturers_model']);
             $line .= $this->encode($export_data['products_discount_allowed']);
             $line .= $this->encode($export_data['options_template']);
             $line .= $this->encode($export_data['products_vpe']);
