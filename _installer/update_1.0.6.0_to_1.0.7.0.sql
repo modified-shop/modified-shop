@@ -143,5 +143,7 @@ ALTER TABLE orders_products ADD products_weight DECIMAL(6,3) NOT NULL;
 ALTER TABLE orders_products_attributes ADD options_values_weight DECIMAL(15,4) NOT NULL;
 ALTER TABLE orders_products_attributes ADD weight_prefix CHAR(1) NOT NULL;
 
+#h-h-h - 2013-12-05 - change min length to 0 for state dropdown
+UPDATE configuration SET configuration_value = '0' WHERE configuration_key = 'ENTRY_STATE_MIN_LENGTH'
 
 # Keep an empty line at the end of this file for the db_updater to work properly
