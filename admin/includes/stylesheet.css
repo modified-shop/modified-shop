@@ -690,6 +690,7 @@ padding: 2px 0;
 .tableBoxCenter{
 width: 100%;
 padding: 2px;
+margin-bottom: 3px;
 }
 .w100{
 width: 100%;
@@ -856,3 +857,7 @@ input[type="file"]{
 font-size:12px;
 width:270px;
 } 
+#attributes .ischecked td{
+background-color: #C1FFC1;
+border-bottom: 1px solid #fff; 
+}
