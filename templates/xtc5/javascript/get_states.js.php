@@ -28,7 +28,8 @@ if (ACCOUNT_STATE == 'true' && in_array(basename($PHP_SELF), $state_pages)) {
         FROM ".TABLE_COUNTRIES."
        WHERE required_zones = 1
     ");
-  if ($countries = xtc_db_fetch_array($query)) {
+  $countries = xtc_db_fetch_array($query);
+  if (!empty($countries['ids'])) {
 ?>
 <script type="text/javascript">
 /* <![CDATA[ */
