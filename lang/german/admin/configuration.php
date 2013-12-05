@@ -826,3 +826,32 @@ define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile 
 
 define('USE_PAGINATION_LIST_TITLE', 'Pagination Liste'); 
 define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.');
+
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Bestellstatus welcher in der Umsatzstatistik ber&uuml;cksichtigt werden soll.');
+define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier den Bestellstatus ausw&auml;hlen f&uuml;r den die Ums&auml;tze angezeigt werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde den Status w&auml;hlen der bei abgeschlossener Bestellung verwendet wird.)');
+
+define('SAVE_IP_LOG_TITLE', 'IP Adresse speichern');
+define('SAVE_IP_LOG_DESC', 'Soll die IP Adresse in der Datenbank gespeichert werden ?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
+
+define('META_MAX_KEYWORD_LENGTH_TITLE', 'Maximum L&auml;nge Meta-Keywords');
+define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
+define('META_DESCRIPTION_LENGTH_TITLE', 'L&auml;nge Meta-Description');
+define('META_DESCRIPTION_LENGTH_DESC', 'Maximum L&auml;nge der Beschreibung (in Buchstaben)');
+define('META_STOP_WORDS_TITLE', 'Stop Words');
+define('META_STOP_WORDS_DESC', 'Bitte geben sie hier Keywords an, die nicht verwendet werden sollen.');
+define('META_GO_WORDS_TITLE', 'Go Words');
+define('META_GO_WORDS_DESC', 'Bitte geben sie Keywords ein, die explizit erlaubt sind.');
+
+//BOC added text constants for group id 20, noRiddle
+define('CSV_CATEGORY_DEFAULT_TITLE','Kategorie f&uuml;r den Import');
+define('CSV_CATEGORY_DEFAULT_DESC','Alle Artikel, die in der CSV-Importdatei <b>keine</b> Kategorie zugeordnet haben und noch nicht im Shop vorhanden sind, werden in diese Kategorie importiert.<br/><b>Wichtig:</b> Wenn Sie Artikel ohne Kategorie in der CSV-Importdatei nicht importieren m&ouml;chten, dann w&auml;hlen Sie Kategorie "Top" aus, da in diese Kategorie keine Artikel importiert werden.');
+define('CSV_TEXTSIGN_TITLE','Texterkennungszeichen');
+define('CSV_TEXTSIGN_DESC','zb. " &nbsp; | &nbsp;<span style="color:#c00;">Bei Semikolon als Trennzeichen sollte das Texterkennungszeichen auf " gesetzt werden!</span>');
+define('CSV_SEPERATOR_TITLE','Trennzeichen');
+define('CSV_SEPERATOR_DESC','zb. ; &nbsp; | &nbsp;<span style="color:#c00;">wird das Eingabefeld leer gelassen wird beim Export/Import per default \\t (= Tab) benutzt !</span>');
+define('COMPRESS_EXPORT_TITLE','Kompression');
+define('COMPRESS_EXPORT_DESC','Kompression der exportierten Daten');
+define('CSV_CAT_DEPTH_TITLE','Kategorietiefe');
+define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen ? (z.B. bei Default-Einstellung 4: Hauptkategorie und drei Unterkategorien)<br />Diese Einstellung ist wichtig um die in der CSV angelegten Kategorien auch korrekt importiert zu bekommen. Das gleiche gilt f&uuml;r den Export.<br /><span style="color:#c00;">Mehr als 4 kann zu Performance-Einbussen f&uuml;hren und ist evtl. nicht kunden-freundlich !');
+//EOC added text constants for group id 20, noRiddle
+?>
