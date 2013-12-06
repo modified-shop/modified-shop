@@ -386,6 +386,10 @@
       global $currencies,$xtPrice,$main;
       $this->content_type = $_SESSION['cart']->get_content_type();
       
+      if (!isset($_SESSION['sendto'])) {
+        return;
+      }
+    
       $default_select =
         "ab.entry_company, ab.entry_street_address, ab.entry_suburb, ab.entry_gender,
          ab.entry_postcode, ab.entry_city, ab.entry_zone_id, ab.entry_country_id, ab.entry_state,
@@ -515,7 +519,7 @@
       $this->billing = array(
           'firstname' => $billing_address['entry_firstname'],
           'lastname' => $billing_address['entry_lastname'],
-          'gender' => $billing_addres['entry_gender'],
+          'gender' => $billing_address['entry_gender'],
           'company' => $billing_address['entry_company'],
           'street_address' => $billing_address['entry_street_address'],
           'suburb' => $billing_address['entry_suburb'],

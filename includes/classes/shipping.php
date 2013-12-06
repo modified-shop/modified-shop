@@ -41,7 +41,7 @@
           }
         }
         // load unallowed modules into array - remove spaces and line breaks by web28
-        $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','.$order->customer['shipping_unallowed']);
+        $unallowed_modules = preg_replace("'[\r\n\s]+'",'',$_SESSION['customers_status']['customers_status_shipping_unallowed'].','. (isset($order->customer['shipping_unallowed']) ? $order->customer['shipping_unallowed']: ''));
         $unallowed_modules = explode(',',$unallowed_modules);
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array(str_replace('.php', '', $include_modules[$i]['file']), $unallowed_modules)) {
