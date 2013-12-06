@@ -132,8 +132,8 @@ class product {
                                    AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
                               ORDER BY reviews_id DESC
                               ");
+    $data_reviews = array ();
     if (xtc_db_num_rows($reviews_query, true)) {
-      $data_reviews = array ();
       while ($reviews = xtc_db_fetch_array($reviews_query, true)) {
         $data_reviews[] = array (
             'AUTHOR' => $reviews['customers_name'],
@@ -168,6 +168,7 @@ class product {
     global $xtPrice;
 
     $module_content = array ();
+
 
     $fsk_lock = "";
     if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
