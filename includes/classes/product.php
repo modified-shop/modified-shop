@@ -123,8 +123,8 @@ class product {
                                    AND rd.languages_id = '".(int)$_SESSION['languages_id']."'
                               ORDER BY reviews_id DESC
                               ");
+    $data_reviews = array ();
     if (xtc_db_num_rows($reviews_query, true)) {
-      $data_reviews = array ();
       while ($reviews = xtc_db_fetch_array($reviews_query, true)) {
         $data_reviews[] = array (
             'AUTHOR' => $reviews['customers_name'],
