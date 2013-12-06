@@ -57,6 +57,7 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
   $order->delivery['country']['iso_code_2'] = $delivery_zone['countries_iso_code_2'];
   $order->delivery['country']['title'] = $delivery_zone['countries_name'];
   $order->delivery['country']['id'] = $delivery_zone['countries_id'];
+  $order->delivery['zone_id'] = 0;
 }
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
@@ -125,7 +126,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         foreach ($quotes AS $quote) {
           if ($quote['id'] != 'freeamount') { 
             //BOC web28 Error Fix
-            if (trim($quote['error']) == '') {      
+            if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {      
               $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
               $total += ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
               $shipping_content[$i] = array(

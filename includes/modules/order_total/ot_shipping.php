@@ -1,18 +1,19 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_shipping.php 1002 2005-07-10 16:11:37Z mz $   
+   $Id: ot_shipping.php 5176 2013-07-19 14:26:57Z Tomcraft $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(ot_shipping.php,v 1.15 2003/02/07); www.oscommerce.com 
-   (c) 2003	 nextcommerce (ot_shipping.php,v 1.13 2003/08/24); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(ot_shipping.php,v 1.15 2003/02/07); www.oscommerce.com
+   (c) 2003 nextcommerce (ot_shipping.php,v 1.13 2003/08/24); www.nextcommerce.org
+   (c) 2006 xt:Commerce (ot_shipping.php 1002 2005-07-10); www.xt-commerce.de
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
    
   class ot_shipping {
@@ -53,19 +54,21 @@
         }
       }
 
+      if (!isset($_SESSION['shipping'])) {
+        return;
+      }
+     
       $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
 
-      if (xtc_not_null($order->info['shipping_method'])) {
+      if (xtc_not_null($order->info['shipping_method']) && isset($GLOBALS[$module]) && is_object($GLOBALS[$module])) {
 
         $tax = 0;
         $shipping_tax = 0;
         $shipping_tax_description = '';
-        if (array_key_exists($module, $GLOBALS) && is_object($GLOBALS[$module])) {
-          $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-          $tax = xtc_add_tax($order->info['shipping_cost'], $shipping_tax)-$order->info['shipping_cost'];
-		      $tax = $xtPrice->xtcFormat($tax,false,0,true);
-        }
+        $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $shipping_tax_description = xtc_get_tax_description($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $tax = xtc_add_tax($order->info['shipping_cost'], $shipping_tax)-$order->info['shipping_cost'];
+        $tax = $xtPrice->xtcFormat($tax,false,0,true);
         
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
           // price with tax

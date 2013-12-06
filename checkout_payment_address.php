@@ -26,7 +26,7 @@ require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 
 // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
-if (@is_array($_SESSION['nvpReqArray'])) {
+if (isset($_SESSION['nvpReqArray']) && is_array($_SESSION['nvpReqArray'])) {
   $link_checkout_payment = FILENAME_PAYPAL_CHECKOUT;
 } else {
   $link_checkout_payment = FILENAME_CHECKOUT_PAYMENT;
