@@ -29,6 +29,24 @@
 
 class order_total {
   var $modules;
+  
+  // class constructor
+  function order_total() {
+    if (defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
+      $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
+      $modules = $this->modules;
+      sort($modules); // cgoenner: we need to include the ot_coupon & ot_gv BEFORE ot_tax
+      reset($modules);
+      while (list (, $value) = each($modules)) {
+        include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
+        include_once(DIR_WS_MODULES.'order_total/'.$value);
+
+        $class = substr($value, 0, strrpos($value, '.'));
+        $GLOBALS[$class] = new $class ();
+      }
+      unset($modules);
+    }
+  }
 
   // GV Code Start
   // ICW ORDER TOTAL CREDIT CLASS/GV SYSTEM - START ADDITION
@@ -237,23 +255,6 @@ class order_total {
   // ICW ORDER TOTAL CREDIT CLASS/GV SYSTEM - END ADDITION
   // GV Code End
 
-  // class constructor
-  function order_total() {
-    if (defined('MODULE_ORDER_TOTAL_INSTALLED') && xtc_not_null(MODULE_ORDER_TOTAL_INSTALLED)) {
-      $this->modules = explode(';', MODULE_ORDER_TOTAL_INSTALLED);
-      $modules = $this->modules;
-      sort($modules); // cgoenner: we need to include the ot_coupon & ot_gv BEFORE ot_tax
-      reset($modules);
-      while (list (, $value) = each($modules)) {
-        include_once(DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/'.$value);
-        include_once(DIR_WS_MODULES.'order_total/'.$value);
-
-        $class = substr($value, 0, strrpos($value, '.'));
-        $GLOBALS[$class] = new $class ();
-      }
-      unset($modules);
-    }
-  }
 
   function process() {
     $order_total_array = array ();
