@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  function parse_email_language_value($text, $lang_code, $admin=false) {    
+  function parse_multi_language_value($text, $lang_code, $admin=false) {    
     
     if (xtc_not_null($text)) {
       $text_array = explode("||",$text);
