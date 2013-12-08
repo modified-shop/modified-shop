@@ -249,10 +249,6 @@ if ($_SESSION['cart']->count_contents() > 0) {
 }
 
 //check coupon minimum order
-if (isset($_GET['info_message']) && $_GET['info_message'] == 'redeemed_coupon' && !isset($_SESSION['cc_id'])) {
-  unset($_GET['info_message']);
-  $smarty->assign('info_message','');
-}
 $cc_check = isset($_SESSION['cc_amount_min_order']) && $_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->total ? true : false;
 if (isset($_SESSION['cc_post']) && !$cc_check) {
   unset($_SESSION['cc_id']); 
@@ -260,6 +256,7 @@ if (isset($_SESSION['cc_post']) && !$cc_check) {
   $_GET['info'] = 0;
   $_GET['info_message'] = sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON,$xtPrice->xtcFormat($_SESSION['cc_amount_min_order'],true)).ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD;
 }
+
 if (isset($_GET['info_message'])) {
   $smarty->assign('info_message', (defined(strtoupper($_GET['info_message'])) ? constant(strtoupper($_GET['info_message'])) : $_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
 }
