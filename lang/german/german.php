@@ -425,6 +425,8 @@ define('ERROR_INVALID_USES_COUPON','Dieser Coupon k&ouml;nnen Kunden nur ');
 define('TIMES',' mal einl&ouml;sen.');
 define('ERROR_INVALID_STARTDATE_COUPON','Ihr Coupon ist noch nicht verf&uuml;gbar.');
 define('ERROR_INVALID_FINISDATE_COUPON','Ihr Coupon ist bereits abgelaufen.');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'Dieser Coupon kann erst ab einem Mindestbestellwert von %s eingel&ouml;st werden!');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>Sie m&uuml;ssen den Couponcode beim Erreichen des Mindestbestellwertes erneut eingeben!');
 define('PERSONAL_MESSAGE', '%s schreibt:');
 
 /*

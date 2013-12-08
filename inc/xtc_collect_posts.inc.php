@@ -30,6 +30,7 @@
       global $coupon_no, $REMOTE_ADDR, $xtPrice, $cc_id;
       if (!$REMOTE_ADDR) $REMOTE_ADDR = $_SERVER['REMOTE_ADDR'];
       if ($_POST['gv_redeem_code']) {
+        unset($_SESSION['cc_id']);
         $gv_query = xtc_db_query("select coupon_id,
                                   coupon_amount,
                                   coupon_type,
@@ -134,8 +135,12 @@
         }
         $_SESSION['cc_amount_min_order'] = $xtPrice->xtcCalculateCurr($gv_result['coupon_minimum_order']);
         $_SESSION['cc_amount_info'] = $coupon_amount;
-        $_SESSION['cc_id'] = $gv_result['coupon_id'];
-        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&info_message='.strtolower('REDEEMED_COUPON'), 'NONSSL'));
+        if ($_SESSION['cc_amount_min_order'] <= $_SESSION['cart']->total) {
+          $_SESSION['cc_id'] = $gv_result['coupon_id'];
+        }
+        $_SESSION['cc_post'] = true;
+        xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+        //xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&info_message='.strtolower('REDEEMED_COUPON'), 'NONSSL'));
 
     }
 
