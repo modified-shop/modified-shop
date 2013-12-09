@@ -42,3 +42,5 @@
 
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   
+  <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>
+  

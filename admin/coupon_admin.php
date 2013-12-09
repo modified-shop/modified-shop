@@ -268,7 +268,6 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
  }
  ?>
   <script type="text/javascript" src="includes/general.js"></script>
-  <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
   <script type="text/javascript">
     $(function() {
       /* set Datepicker for coupon_startdate (1) and coupon_finishdate (2) */
