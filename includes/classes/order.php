@@ -554,7 +554,7 @@
           $products_attributes = $products[$i]['attributes']; //contains only option_id and value_id
           unset($products[$i]['attributes']); //remove from array for direct array mapping
         }
-        //direct array mapping
+        //direct products array mapping
         $this->products[$index] = $products[$i];
 
         //using short description  if order description is not defined or empty
@@ -566,9 +566,8 @@
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
         $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
         
-        //$products[$i]['price'] is single plain price including attributes_price
-        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true);        
-        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); 
+        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
+        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
         if ($products_attributes) {
           $subindex = 0;
