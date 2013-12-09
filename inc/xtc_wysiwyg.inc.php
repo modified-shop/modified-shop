@@ -23,6 +23,16 @@ function xtc_wysiwyg($type, $lang, $langID = '') {
   $image_path = '&Type=Image';
   $flash_path = '&Type=Flash';
   $media_path = '&Type=Media';
+  
+  $default_init = '
+   oFCKeditor.BasePath = "'.$path.'" ;
+   oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
+   oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
+   oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
+   oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
+   oFCKeditor.Config["AutoDetectLanguage"] = false ;
+   oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
+   oFCKeditor.ReplaceTextarea() ;';
 
   $sid = '&'.session_name() . '=' . session_id(); //web28 security fix
   switch($type) {
@@ -30,141 +40,77 @@ function xtc_wysiwyg($type, $lang, $langID = '') {
     case 'content_manager':
       $val ='<script type="text/javascript" src="'.$js_src.'"></script>
              <script type="text/javascript">
-               window.onload = function() {
+               $(document).ready(function(){
                  var oFCKeditor = new FCKeditor( \'cont\', \'100%\', \'400\'  ) ;
-                 oFCKeditor.BasePath = "'.$path.'" ;
-                 oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-                 oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-                 oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-                 oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-                 oFCKeditor.Config["AutoDetectLanguage"] = false ;
-                 oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-                 oFCKeditor.ReplaceTextarea() ;
-               }
+                 ' . $default_init . '
+               });
              </script>';
       break;
     // WYSIWYG editor content manager products content section textarea named file_comment
     case 'products_content':
       $val ='<script type="text/javascript" src="'.$js_src.'"></script>
              <script type="text/javascript">
-               window.onload = function() {
+               $(document).ready(function(){
                  var oFCKeditor = new FCKeditor( \'file_comment\', \'100%\', \'400\'  ) ;
-                 oFCKeditor.BasePath = "'.$path.'" ;
-                 oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-                 oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-                 oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-                 oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-                 oFCKeditor.Config["AutoDetectLanguage"] = false ;
-                 oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-                 oFCKeditor.ReplaceTextarea() ;
-               }
+                  ' . $default_init . '
+               });
              </script>';
       break;
     // WYSIWYG editor categories_description textarea named categories_description[langID]
     case 'categories_description':
       $val ='var oFCKeditor = new FCKeditor( \'categories_description['.$langID.']\', \'100%\', \'300\' ) ;
-             oFCKeditor.BasePath = "'.$path.'" ;
-             oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-             oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-             oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-             oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-             oFCKeditor.Config["AutoDetectLanguage"] = false ;
-             oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-             oFCKeditor.ReplaceTextarea() ;
+              ' . $default_init . '
              ';
       break;
     // WYSIWYG editor products_description textarea named products_description_langID
     case 'products_description':
       $val ='var oFCKeditor = new FCKeditor( \'products_description_'.$langID.'\', \'100%\', \'400\'  ) ;
-             oFCKeditor.BasePath = "'.$path.'" ;
-             oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-             oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-             oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-             oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-             oFCKeditor.Config["AutoDetectLanguage"] = false ;
-             oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-             oFCKeditor.ReplaceTextarea() ;
+              ' . $default_init . '
              ';
       break;
     // WYSIWYG editor products short description textarea named products_short_description_langID
     case 'products_short_description':
       $val ='var oFCKeditor = new FCKeditor( \'products_short_description_'.$langID.'\', \'100%\', \'300\'  ) ;
-             oFCKeditor.BasePath = "'.$path.'" ;
-             oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-             oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-             oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-             oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-             oFCKeditor.Config["AutoDetectLanguage"] = false ;
-             oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-             oFCKeditor.ReplaceTextarea() ;
+              ' . $default_init . '
              ';
       break;
     // WYSIWYG editor newsletter textarea named newsletter_body
     case 'newsletter':
       $val ='<script type="text/javascript" src="'.$js_src.'"></script>
              <script type="text/javascript">
-               window.onload = function() {
-                 var oFCKeditor = new FCKeditor( \'newsletter_body\', \'700\', \'400\'  ) ;
-                 oFCKeditor.BasePath = "'.$path.'" ;
-                 oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-                 oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-                 oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-                 oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-                 oFCKeditor.Config["AutoDetectLanguage"] = false ;
-                 oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-                 oFCKeditor.ReplaceTextarea() ;
-               }
+               $(document).ready(function(){
+                 ' . $default_init . '
+               });
              </script>';
       break;
     // WYSIWYG editor mail textarea named message
     case 'mail':
       $val ='<script type="text/javascript" src="'.$js_src.'"></script>
              <script type="text/javascript">
-               window.onload = function() {
+               $(document).ready(function(){
                  var oFCKeditor = new FCKeditor( \'message\', \'700\', \'400\' ) ;
-                 oFCKeditor.BasePath = "'.$path.'" ;
-                 oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-                 oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-                 oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-                 oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-                 oFCKeditor.Config["AutoDetectLanguage"] = false ;
-                 oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-                 oFCKeditor.ReplaceTextarea() ;
-               }
+                  ' . $default_init . '
+               });
              </script>';
       break;
     // WYSIWYG editor gv_mail textarea named message
     case 'gv_mail':
       $val ='<script type="text/javascript" src="'.$js_src.'"></script>
              <script type="text/javascript">
-               window.onload = function() {
+               $(document).ready(function(){
                  var oFCKeditor = new FCKeditor( \'message\', \'700\', \'400\' ) ;
-                 oFCKeditor.BasePath = "'.$path.'" ;
-                 oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-                 oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-                 oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-                 oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-                 oFCKeditor.Config["AutoDetectLanguage"] = false ;
-                 oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-                 oFCKeditor.ReplaceTextarea() ;
-               }
+                  ' . $default_init . '
+               });
              </script>';
       break;
     // WYSIWYG editor shop offline
     case 'shop_offline':
       $val ='<script type="text/javascript" src="'.$js_src.'"></script>
              <script type="text/javascript">
-               window.onload = function() {
+               $(document).ready(function(){
                  var oFCKeditor = new FCKeditor( \'offline_msg\', \'800\', \'400\' ) ;
-                 oFCKeditor.BasePath = "'.$path.'" ;
-                 oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
-                 oFCKeditor.Config["ImageBrowserURL"] = "'.$filemanager.$image_path.$sid.'" ;
-                 oFCKeditor.Config["FlashBrowserURL"] = "'.$filemanager.$flash_path.$sid.'" ;
-                 oFCKeditor.Config["MediaBrowserURL"] = "'.$filemanager.$media_path.$sid.'" ;
-                 oFCKeditor.Config["AutoDetectLanguage"] = false ;
-                 oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
-                 oFCKeditor.ReplaceTextarea() ;
-               }
+                  ' . $default_init . '
+               });
              </script>';
       break;
 
