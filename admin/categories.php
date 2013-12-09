@@ -330,7 +330,6 @@ if (is_dir(DIR_FS_CATALOG_IMAGES)) {
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-<script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
 <script type="text/javascript" src="includes/javascript/categories.js"></script>
   <script type="text/javascript"> 

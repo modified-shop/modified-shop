@@ -111,7 +111,6 @@
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
   <script type="text/javascript" src="includes/general.js"></script>
   <?php 
   if ( ($action == 'new') || ($action == 'edit') ) {
