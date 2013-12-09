@@ -10,6 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+define('RUN_MODE_ADMIN',true);
 require('includes/configure.php');
 
 $valid_signs = '/[^\w\-]/';
