@@ -164,9 +164,10 @@ class main {
    * @param integer $coID
    * @return array
    */
-  function getContentData($coID) { 
+  function getContentData($coID, $lang_id = '', $customers_status = '') {
     $lang_id = !empty($lang_id) ? $lang_id : $_SESSION['languages_id'];
-    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $_SESSION['customers_status']['customers_status_id'] . "_group%'" : '';
+    $customers_status = $customers_status != '' ? $customers_status : $_SESSION['customers_status']['customers_status_id'];
+    $group_check = (GROUP_CHECK == 'true') ? "AND group_ids LIKE '%c_" . $customers_status . "_group%'" : '';
     $content_data_query = xtDBquery("-- includes/classes/main.php
                                        SELECT content_id,
                                               content_title,
@@ -196,7 +197,6 @@ class main {
     
     return $content_data_array;    
   }
-
 
   /**
    * getVPEtext
