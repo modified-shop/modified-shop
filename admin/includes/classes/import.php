@@ -53,7 +53,7 @@ class xtcImport {
         }
         $this->filename = $filename;
         $this->ImportDir = DIR_FS_CATALOG.'import/';
-        $this->catDepth = isset(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
+        $this->catDepth = defined(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
         $this->languages = $this->get_lang();
         $this->counter = array ('prod_new' => 0,
                                 'cat_new' => 0,
@@ -777,7 +777,7 @@ class xtcExport {
     *****************************************************************************/
 
     function xtcExport($filename) {
-        $this->catDepth = isset(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
+        $this->catDepth = defined(CSV_CAT_DEPTH) ? CSV_CAT_DEPTH : 4;
         $this->languages = $this->get_lang();
         $this->filename = $filename;
         $this->CAT = array ();
