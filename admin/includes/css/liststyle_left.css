@@ -60,32 +60,6 @@ margin-top:112px;
 margin-bottom:-114px;
 }
 
-/* FAVORITEN */
-#favorites {
-min-width: 1100px;
-height:75px;
-position:relative;
-}
-#logo{
-width:190px;
-}
-table.favorites{
-min-width: 955px;
-position: absolute; 
-bottom: 5px;
-left: 190px;
-}
-td.fastmenu {
-width: 105px;
-font-size: 9px;
-text-align: center;
-font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
-letter-spacing: normal;
-}
-td.fastmenu img {
-margin: 3px 0;
-border: 0;
-}
 .columnLeft2 {
 display: block;
 }
