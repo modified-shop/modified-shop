@@ -18,8 +18,7 @@
 
   function xtc_update_whos_online() {
 
-    $crawler = 0; //DokuMan - 2011-05-13 - Added search engine crawler determination functionality
-
+    $crawler = 0; 
     if (isset($_SESSION['customer_id'])) {
       $wo_customer_id = (int)$_SESSION['customer_id'];
 
@@ -33,30 +32,23 @@
       $wo_full_name = xtc_db_prepare_input($customer['customers_firstname'] . ' ' . $customer['customers_lastname']);
     } else {
       $wo_customer_id = '';
-      //BOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
-      //$wo_full_name = TEXT_GUEST;
       $crawler = xtc_check_agent();
       if ($crawler !== 0) {
         $wo_full_name = '['.TEXT_SEARCH_ENGINE_AGENT.']';
       } else {
-        $wo_full_name = TEXT_GUEST; //DokuMan - 2011-03-18 - use language dependent constant here
+        $wo_full_name = TEXT_GUEST;
       }
-      //EOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
     }
-    //BOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
-    //$wo_session_id = xtc_session_id();
+
     if ($crawler !== 0) {
       $wo_session_id = '';
     } else {
       $wo_session_id = xtc_session_id();
     }
-    //EOF - DokuMan - 2011-05-13 - Added search engine crawler determination functionality
 
-    //BOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
     $wo_ip_address = xtc_db_prepare_input($_SESSION['tracking']['ip']);
     $wo_last_page_url = xtc_db_prepare_input(strip_tags($_SERVER['REQUEST_URI']));
     $wo_referer = xtc_db_prepare_input(isset($_SERVER['HTTP_REFERER']) ? strip_tags($_SERVER['HTTP_REFERER']) : '---');
-    //EOF - Dokuman - 2009-10-28 - Who is online doesn't show any IP addresses and URLs (added http_referer)
 
     $current_time = time();
     $time_last_click = 900;
@@ -76,7 +68,6 @@
                             'ip_address' => $wo_ip_address,
                             'time_last_click' => $current_time,
                             'last_page_url' => $wo_last_page_url,
-                            'http_referer' => $wo_referer
                             );
 
     if ($stored_customer['count'] > 0) {
@@ -84,6 +75,7 @@
     } else {
       $sql_data_array['time_entry'] = $current_time;
       $sql_data_array['session_id'] = $wo_session_id;
+      $sql_data_array['http_referer'] = $wo_referer;
       xtc_db_perform(TABLE_WHOS_ONLINE,$sql_data_array);
     }
 
