@@ -36,7 +36,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'first_opt_in') && $_POST) {
                                                customers_id 
                                           FROM ".TABLE_CUSTOMERS." 
                                          WHERE customers_email_address = '".xtc_db_input($_POST['email'])."' 
-                                           AND customers_status != ". DEFAULT_CUSTOMERS_STATUS_ID_GUEST);
+                                           AND account_type != 1");
   $check_customer = xtc_db_fetch_array($check_customer_query);
 
   $vlcode = xtc_random_charcode(32);
