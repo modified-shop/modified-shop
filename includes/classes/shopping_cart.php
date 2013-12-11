@@ -38,7 +38,7 @@ require_once (DIR_FS_INC.'xtc_image_submit.inc.php');
 require_once (DIR_FS_INC.'xtc_get_tax_description.inc.php');
 
 class shoppingCart {
-  var $contents, $total, $weight, $cartID, $content_type;
+  var $contents, $total, $weight, $cartID, $content_type, $attr_price, $attr_weight;
 
   function shoppingCart() {
     $this->reset();
@@ -133,6 +133,8 @@ class shoppingCart {
     $this->tax = 0; //Paypal Express Modul //DokuMan - 2010-12-08 - set tax to zero on reset
     $this->weight = 0;
     $this->content_type = false;
+    $this->attr_price = 0; 
+    $this->attr_weight = 0;
 
     if (isset ($_SESSION['customer_id']) && ($reset_database == true)) {
       xtc_db_query("delete from ".TABLE_CUSTOMERS_BASKET." where customers_id = '".(int)$_SESSION['customer_id']."'");
@@ -467,13 +469,17 @@ class shoppingCart {
   function attributes_price($products_id) {
     global $xtPrice;
     $attributes_price = 0;
+    $attributes_weight = 0;
     if (isset ($this->contents[$products_id]['attributes'])) {
       reset($this->contents[$products_id]['attributes']);
       while (list ($option, $value) = each($this->contents[$products_id]['attributes'])) {
         $values = $xtPrice->xtcGetOptionPrice($products_id, $option, $value);
         $attributes_price += $values['price'];
+        $attributes_weight += $values['weight'];
       }
     }
+    $this->attr_price = $attributes_price;
+    $this->attr_weight = $attributes_weight;
     return $attributes_price;
   }
 
@@ -522,19 +528,21 @@ class shoppingCart {
                                   $products['products_price']
                                 );
 
+            $this->attributes_price($products_id);
             $products_data = array();
             foreach ($products as $key => $value) {
               $products_data[str_replace('products_', '', $key)] = $value;
             }
             $products_data['id'] = $products_id;
-            $products_data['price'] = $products_price + $this->attributes_price($products_id);
+            $products_data['price'] = $products_price + $this->attr_price;
             $products_data['vpe'] = $main->getVPEtext($products, $products_price);
             $products_data['quantity'] = $products_data['qty'] = $this->contents[$products_id]['qty'];
             $products_data['shipping_time'] = (ACTIVATE_SHIPPING_STATUS == 'true') ? $main->getShippingStatusName($products['products_shippingtime']) : null;
-            $products_data['final_price'] = (($products_price + $this->attributes_price($products_id)) * $this->contents[$products_id]['qty']);
+            $products_data['final_price'] = $products_data['price'] * $this->contents[$products_id]['qty'];
+            $products_data['weight'] =  $products['products_weight'] + $this->attr_weight;
+            $products_data['final_weight'] =  $products_data['weight'] * $this->contents[$products_id]['qty'];
             $products_data['tax'] = isset($xtPrice->TAX[$products['products_tax_class_id']]) ? $xtPrice->TAX[$products['products_tax_class_id']] : 0;
             $products_data['attributes'] = isset($this->contents[$products_id]['attributes']) ? $this->contents[$products_id]['attributes'] : null;
-
             $products_array[$index++] = $products_data;
           }
         }
