@@ -583,6 +583,11 @@
                 'price' => $attributes['options_values_price'],
                 'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
               );
+            $this->products[$index]['attributes'][$subindex]['stock'] = $attributes['attributes_stock'];
+            $this->products[$index]['attributes'][$subindex]['model'] = $attributes['attributes_model'];
+            $this->products[$index]['attributes'][$subindex]['ean'] = $attributes['attributes_ean'];
+            $this->products[$index]['attributes'][$subindex]['weight_prefix'] = $attributes['weight_prefix'];
+            $this->products[$index]['attributes'][$subindex]['weight'] = $attributes['options_values_weight'];
             $subindex++;
           }
         }

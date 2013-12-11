@@ -89,6 +89,8 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
                                 'LINK_DELETE' => $del_link,                  
                                 'PRODUCTS_PRICE' => $xtPrice->xtcFormat($products[$i]['final_price'], true), // $products[$i]['final_price'] is quantity * plain price including attributes_price
                                 'PRODUCTS_SINGLE_PRICE' =>$xtPrice->xtcFormat($products[$i]['price'], true), // $products[$i]['price'] is single plain price including attributes_price
+                                'PRODUCTS_WEIGHT' => $products[$i]['final_weight'], //$products[$i]['final_weight']  is quantity * products_weight including attributes_weight
+                                'PRODUCTS_SINGLE_WEIGHT' => $products[$i]['weight'], //$products[$i]['final_weight']  single products_weight including attributes_weight
                                 'PRODUCTS_SHORT_DESCRIPTION' => xtc_get_short_description($products[$i]['id']), 
                                 'ATTRIBUTES' => '');
 
