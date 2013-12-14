@@ -171,6 +171,7 @@ require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
 require_once (DIR_FS_INC.'xtc_js_lang.php');
 require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
 require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
+require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
 
 foreach(auto_require(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require ($file);
 
@@ -198,9 +199,6 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 
 // PHPMailer
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
-
-
-
 
 // check for JS XSS
 require_once (DIR_FS_INC.'xtc_security.inc.php');

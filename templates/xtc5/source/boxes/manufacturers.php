@@ -35,11 +35,6 @@
 
     $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
     
-    // include needed funtions
-    require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
-    require_once (DIR_FS_INC.'xtc_draw_form.inc.php');
-    require_once (DIR_FS_INC.'xtc_draw_pull_down_menu.inc.php');
-
     $manufacturers_query = "select distinct m.manufacturers_id, m.manufacturers_name from ".TABLE_MANUFACTURERS." as m, ".TABLE_PRODUCTS." as p where m.manufacturers_id=p.manufacturers_id order by m.manufacturers_name";
     $manufacturers_query = xtDBquery($manufacturers_query);
     if (xtc_db_num_rows($manufacturers_query, true) <= MAX_DISPLAY_MANUFACTURERS_IN_A_LIST) {
@@ -63,10 +58,7 @@
         $manufacturers_name = ((strlen($manufacturers['manufacturers_name']) > MAX_DISPLAY_MANUFACTURER_NAME_LEN) ? substr($manufacturers['manufacturers_name'], 0, MAX_DISPLAY_MANUFACTURER_NAME_LEN).'..' : $manufacturers['manufacturers_name']);
         $manufacturers_array[] = array ('id' => xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($manufacturers['manufacturers_id'],$manufacturers['manufacturers_name'])), 'text' => $manufacturers_name);
       }
-      //BOF - h-h-h - 2011-05-16 - fix view selected manufacturers
-      //$box_content = xtc_draw_form('manufacturers', xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL', false), 'get').xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, isset($_GET['manufacturers_id']) ? $_GET['manufacturers_id'] : '', 'onchange="if (form.manufacturers_id.selectedIndex != 0) location = form.manufacturers_id.options[form.manufacturers_id.selectedIndex].value;" size="'.MAX_MANUFACTURERS_LIST.'" style="width: 100%;"').xtc_hide_session_id().'</form>';
       $box_content = xtc_draw_form('manufacturers', xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL', false), 'get').xtc_draw_pull_down_menu('manufacturers_id', $manufacturers_array, isset($_GET['manufacturers_id']) ? xtc_href_link(FILENAME_DEFAULT,xtc_manufacturer_link($_GET['manufacturers_id'], isset($_GET['manufacturers_name']) ? $_GET['manufacturers_name'] : '')) : '', 'onchange="if (form.manufacturers_id.selectedIndex != 0) location = form.manufacturers_id.options[form.manufacturers_id.selectedIndex].value;" size="'.MAX_MANUFACTURERS_LIST.'" style="width: 100%;"').xtc_hide_session_id().'</form>';
-      //EOF - h-h-h - 2011-05-16 - fix view selected manufacturers
     }
     if ($box_content != '')
       $box_smarty->assign('BOX_CONTENT', $box_content);
