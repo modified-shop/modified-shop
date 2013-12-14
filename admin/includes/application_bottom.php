@@ -34,4 +34,8 @@
       echo '</div>';
     }
   }
+
+  // close MySQL connection
+  xtc_db_close();
+ 
 ?>
