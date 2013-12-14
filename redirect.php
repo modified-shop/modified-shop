@@ -1,19 +1,18 @@
 <?php
-
-
 /* -----------------------------------------------------------------------------------------
-   $Id: redirect.php 1060 2005-07-21 18:32:58Z mz $   
+   $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(redirect.php,v 1.9 2003/02/13); www.oscommerce.com 
    (c) 2003	 nextcommerce (redirect.php,v 1.7 2003/08/17); www.nextcommerce.org
-
+   (c) 2003 XT-Commerce
+   
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
@@ -28,7 +27,7 @@ switch ($_GET['action']) {
 			$banner = xtc_db_fetch_array($banner_query);
 			xtc_update_banner_click_count($_GET['goto']);
 
-			xtc_redirect($banner['banners_url']);
+			xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $banner['banners_url']));
 		} else {
 			xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 		}
@@ -41,7 +40,7 @@ switch ($_GET['action']) {
 			if (xtc_db_num_rows($product_query)) {
 				$product = xtc_db_fetch_array($product_query);
 
-				xtc_redirect('http://'.$product['products_url']);
+				xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $product['products_url']));
 			} else {
 				xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 			}
@@ -69,7 +68,7 @@ switch ($_GET['action']) {
 				xtc_db_query("update ".TABLE_MANUFACTURERS_INFO." set url_clicked = url_clicked+1, date_last_click = now() where manufacturers_id = '".(int) $_GET['manufacturers_id']."' and languages_id = '".$_SESSION['languages_id']."'");
 			}
 
-			xtc_redirect($manufacturer['manufacturers_url']);
+			xtc_redirect('http://'.str_replace(array('http://', 'https://'), '', $manufacturer['manufacturers_url']));
 		} else {
 			xtc_redirect(xtc_href_link(FILENAME_DEFAULT));
 		}
