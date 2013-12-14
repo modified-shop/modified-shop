@@ -71,6 +71,9 @@ if (is_array($error_exceptions)) {
   }
 }
 
+// close MySQL connection
+xtc_db_close();
+
 // end of page
 echo '</body>';
 echo '</html>';
