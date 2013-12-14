@@ -72,6 +72,7 @@ if (is_array($error_exceptions)) {
 }
 
 // close MySQL connection
+session_write_close();
 xtc_db_close();
 
 // end of page
