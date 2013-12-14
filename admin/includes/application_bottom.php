@@ -36,6 +36,7 @@
   }
 
   // close MySQL connection
+  session_write_close();
   xtc_db_close();
  
 ?>
