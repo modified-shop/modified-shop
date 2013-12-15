@@ -1,30 +1,30 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
-   $Id: best_sellers.php 1292 2005-10-07 16:10:55Z mz $   
+   $Id: best_sellers.php 6176 2013-12-15 15:10:00Z hhacker $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(best_sellers.php,v 1.20 2003/02/10); www.oscommerce.com 
-   (c) 2003	 nextcommerce (best_sellers.php,v 1.10 2003/08/17); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(best_sellers.php,v 1.20 2003/02/10); www.oscommerce.com
+   (c) 2003 nextcommerce (best_sellers.php,v 1.10 2003/08/17); www.nextcommerce.org
+   (c) 2006 XT-Commerce
 
-   Released under the GNU General Public License 
-   -----------------------------------------------------------------------------------------
    Third Party contributions:
-   Enable_Disable_Categories 1.3        	Autor: Mikel Williams | mikel@ladykatcostumes.com
+   Enable_Disable_Categories 1.3 Autor: Mikel Williams | mikel@ladykatcostumes.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
 $box_smarty = new smarty;
+$box_smarty->assign('language', $_SESSION['language']);
+$box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
 $box_content = '';
 
-	$box_smarty->assign('language', $_SESSION['language']);
 	// set cache ID
 	if (!CacheCheck()) {
 	 	$cache=false;
@@ -37,8 +37,7 @@ $box_content = '';
 		$cache_id = $_SESSION['language'].$current_category_id;
 	}
 
-if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $cache_id) || !$cache) {
-	$box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $cache_id) || !$cache)) {
 	
 	// include needed functions
 	require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
@@ -47,8 +46,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $ca
   if (is_file($file)) {
       $box_content = unserialize(implode('', file($file)));
   } else {
-
-		if (isset ($current_category_id) && ($current_category_id > 0)) {
+		if (isset($current_category_id) && $current_category_id > 0) {
 			$best_sellers_query = "select distinct
 			                       p.products_id,
 			                       p.products_price,
@@ -62,11 +60,11 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $ca
 			                       ".TABLE_PRODUCTS_DESCRIPTION." pd,
 			                       ".TABLE_PRODUCTS_TO_CATEGORIES." p2c,
 			                       ".TABLE_CATEGORIES." c
-			                       where p.products_status = '1'
-			                       and c.categories_status = '1'
+			                       where p.products_status = 1
+			                       and c.categories_status = 1
 			                       and p.products_ordered > 0
 			                       and p.products_id = pd.products_id
-			                       and pd.language_id = '".(int) $_SESSION['languages_id']."'
+			                       and pd.language_id = '".$_SESSION['languages_id']."'
 			                       and p.products_id = p2c.products_id
 			                       ".PRODUCTS_CONDITIONS_P."
 			                       and p2c.categories_id = c.categories_id 
@@ -85,14 +83,15 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $ca
 			                       p.products_tax_class_id,
 			                       pd.products_name from ".TABLE_PRODUCTS." p,
 			                       ".TABLE_PRODUCTS_DESCRIPTION." pd	
-			                       where p.products_status = '1'
+			                       where p.products_status = 1
 			                       ".PRODUCTS_CONDITIONS_P."
 			                       and p.products_ordered > 0
-			                       and p.products_id = pd.products_id ".$fsk_lock."
-			                       and pd.language_id = '".(int) $_SESSION['languages_id']."'
+			                       and p.products_id = pd.products_id
+			                       and pd.language_id = '".$_SESSION['languages_id']."'
 			                       order by p.products_ordered desc
 			                       limit ".MAX_DISPLAY_BESTSELLERS;
 		}
+
 		$best_sellers_query = xtDBquery($best_sellers_query);
 		if (xtc_db_num_rows($best_sellers_query, true) >= MIN_DISPLAY_BESTSELLERS) {
 		
@@ -107,16 +106,13 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $ca
 				
 			}
 		}
-		$box_smarty->assign('box_content', $box_content);
 	}
+  $box_smarty->assign('box_content', $box_content);
 
-  if (count($box_content) > 0) {
+  if (xtc_not_null($box_content)) {
     $box_best_sellers = '';
-      // set cache ID
     if (!$cache) {
-      if ($box_content!='') {
-          $box_best_sellers = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html');
-      }
+      $box_best_sellers = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html');
     } else {
       $box_best_sellers = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_best_sellers.html', $cache_id);
     }
