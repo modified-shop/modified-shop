@@ -30,11 +30,7 @@
     require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
 
     // query restrictions
-    if ($_SESSION['customers_status']['customers_fsk18_display']=='0') { 
-      $fsk_lock=' AND p.products_fsk18!=1'; 
-    } else {
-      $fsk_lock=''; 
-    }
+    $fsk_lock = ($_SESSION['customers_status']['customers_fsk18_display'] == '0' ? ' AND p.products_fsk18 != 1' : '');
 
     $random_select = "-- templates/xtc5/source/boxes/reviews.php
                       SELECT r.reviews_id,
