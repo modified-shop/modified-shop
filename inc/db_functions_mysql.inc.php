@@ -142,13 +142,16 @@
       xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, '', '', STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, '', '', $subject, nl2br($message), $message);
     }
     
+    trigger_error($errno.' - '.$error.'<br/><br/>'.$query, E_USER_WARNING);
+    
+    /*
     // show the full sql error + full query only to logged-in admins or error_reporting() != 0
     if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0' || error_reporting() != 0) {
       die('<b style="color:#000000;">' . $errno . ' - ' . $error . '<br><br>' . $query . '<br><br><small style="color:#ff0000;">[MOD SQL Error]</small></b>');
     } else {
       die('<b style="color:#ff0000;">Es ist ein Fehler aufgetreten!<br>There was an error!<br>Il y avait une erreur!</b>');
     }
-
+    
     //and display an info message for the shop customer and redirect him
     echo '<p>'.ERROR_SQL_DB_QUERY.'</p>';    
     if ($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] != $_SERVER['HTTP_HOST']) {
@@ -160,6 +163,7 @@
       echo '</script>';
     }
     exit(); 
+    */
   }
 
 
