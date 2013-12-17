@@ -106,6 +106,7 @@ function select_product($products_id, $debug=false) {
                                 p.products_ordered,				
                                 p.products_tax_class_id,
                                 p.products_shippingtime,
+                                p.products_manufacturers_model,
                                 pd.products_name,
                                 pd.products_short_description,
                                 pd.products_description,
@@ -148,19 +149,15 @@ function select_product($products_id, $debug=false) {
     
     $max_options_values_price = 0;
     $products_options_name_query_raw = "SELECT DISTINCT
-                                               patrib.attributes_model,
-                                               patrib.attributes_ean,
+                                               popt.products_options_id,
                                                popt.products_options_name,
-                                               poptv.products_options_values_name,
-                                               MAX(patrib.options_values_price) AS max_options_values_price
-                                          FROM ".TABLE_PRODUCTS_ATTRIBUTES." patrib
-                                          JOIN ".TABLE_PRODUCTS_OPTIONS." popt
+                                               popt.products_options_sortorder
+                                          FROM ".TABLE_PRODUCTS_OPTIONS." popt
+                                          JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
                                                ON patrib.options_id = popt.products_options_id
-                                                  AND popt.language_id = '".(int) FL_LANG_ID."'
-                                          JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." poptv
-                                               ON patrib.options_values_id = poptv.products_options_values_id 
-                                                  AND poptv.language_id = '".(int) FL_LANG_ID."'
-                                         WHERE patrib.products_id='".$products_id."'";
+                                         WHERE patrib.products_id='".$products_id."'
+                                           AND popt.language_id = '".(int) FL_LANG_ID."'
+                                      ORDER BY popt.products_options_sortorder, popt.products_options_id";
 
     $result_fla = xtc_db_query($products_options_name_query_raw);
 
@@ -171,18 +168,50 @@ function select_product($products_id, $debug=false) {
           output_row($row_fla);
         }
 
-        if(!isset($attributes[$row_fla['products_options_name']]))	{
-          $attributes[$row_fla['products_options_name']] = array($row_fla['products_options_values_name']);
-        } else {
-          array_push($attributes[$row_fla['products_options_name']], $row_fla['products_options_values_name']);
-        }
+        $products_options_query_raw = "SELECT pov.products_options_values_id,
+                                              pov.products_options_values_name,
+                                              pa.*
+                                         FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                         JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                              ON pa.options_values_id = pov.products_options_values_id
+                                                 AND pov.language_id = '".(int) FL_LANG_ID."'
+                                        WHERE pa.products_id = '".$products_id."'
+                                          AND pa.options_id = '".$row_fla['products_options_id']."'
+                                     ORDER BY pa.sortorder, pa.options_values_id";
+
+        $result_flo = xtc_db_query($products_options_query_raw);
         
-        $max_options_values_price = $row_fla['max_options_values_price'];
-        $attributes_model[] = $row_fla['attributes_model'];
-        $attributes_model[] = $row_fla['attributes_ean'];
+        while ($row_flo = xtc_db_fetch_array($result_flo)) {
+
+          if ($debug) {
+            output_row($row_flo);
+          }
+
+          if(!isset($attributes[$row_fla['products_options_name']]))	{
+            $attributes[$row_fla['products_options_name']] = array($row_flo['products_options_values_name']);
+          } else {
+            array_push($attributes[$row_fla['products_options_name']], $row_flo['products_options_values_name']);
+          }
+          
+          $price = 0;
+          if ($row_flo['options_values_price'] != '0.00') {
+            $CalculateCurr = ($row['products_tax_class_id'] == 0) ? true : false;
+            $price = $xtcPrice->xtcFormat($row_flo['options_values_price'], false, $row['products_tax_class_id'], $CalculateCurr);
+          }
+          $attr_price = $price;
+          if ($row_flo['price_prefix'] == "-") {
+            $attr_price=$price*(-1);
+          }
+          
+          if ($max_options_values_price < $attr_price) {
+            $max_options_values_price = $attr_price;
+          }
+       
+          $attributes_model[] = $row_flo['attributes_model'];
+          $attributes_model[] = $row_flo['attributes_ean'];
+        }
       }			
     }
-    
     
     $attributes_enc = null;
     foreach($attributes as $key => $value) {
@@ -204,11 +233,12 @@ function select_product($products_id, $debug=false) {
     }
     
     $attributes_model[] = $row['products_model'];
+    $attributes_model[] = $row['products_manufacturers_model'];
     $attributes_model[] = $row['products_ean'];
     $attributes_model = array_filter($attributes_model, 'xtc_not_null');
 
     $product = array("id" => $row['products_id'],
-                     "ordernumber" => implode(',', $attributes_model),
+                     "ordernumber" => implode('|', $attributes_model),
                      "name" => $row['products_name'],
                      "summary" => extract_text($row['products_short_description']),
                      "description" => get_description($row['products_model'], $row['products_short_description']),
@@ -317,6 +347,7 @@ function output_row($row) {
   $fp = fopen('php://output', 'w');
   fputcsv($fp, array_map('extract_text', array_keys($row)), get_column_delimiter());
   fputcsv($fp, array_map('extract_text', array_values($row)), get_column_delimiter());
+  echo '<br/>';
   fclose($fp);
 }
 

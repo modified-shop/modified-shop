@@ -22,17 +22,8 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 define('MODULE_FINDOLOGIC_TEXT_TITLE', 'FINDOLOGIC Shopsuche - stop searching - find!');
 define('MODULE_FINDOLOGIC_TEXT_DESCRIPTION', 'FINDOLOGIC ist die ultimative Suchl&ouml;sung f&uuml;r Ihren Online-Shop. Ihre Kunden finden blitzschnell den gew&uuml;nschten Artikel und kaufen ihn!<span style="color: #ff8c00;"> Dabei sind Umsatzsteigerungen unserer Kunden im zweistelligen Prozentbereich belegt.</span><br /><br />Mit dem Partnercode <span style="color:red;font-weight:bold;">qXgXj</span> sparen Sie 50&euro; AKtivierungsgeb&uuml;hr!<br /><br /><a href="https://secure.findologic.com/bestellung?partner=qXgXj" target="_blank"><strong><u>Jetzt anmelden!</u></strong></a>');
 
-define('MODULE_FINDOLOGIC_SHOP_ID_TITLE' , '<hr noshade>Shopkey');
-define('MODULE_FINDOLOGIC_SHOP_ID_DESC' , 'Ihr Shopkey<br />Sie finden den Shopkey im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
-
-define('MODULE_FINDOLOGIC_SERVICE_URL_TITLE' , '<hr noshade>FINDOLOGIC/Service-URL');
-define('MODULE_FINDOLOGIC_SERVICE_URL_DESC' , 'Die FINDOLOGIC/Service-URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die FINDOLOGIC/Service-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
-
-define('MODULE_FINDOLOGIC_EXPORT_FILENAME_TITLE' , '<hr noshade>Dateiname');
-define('MODULE_FINDOLOGIC_EXPORT_FILENAME_DESC' , 'Geben Sie einen Dateinamen ein, falls die Exportadatei am Server gespeichert werden soll.<br/>(Verzeichnis export/)');
-
 define('MODULE_FINDOLOGIC_LANG_TITLE' , '<hr noshade>Sprache');
-define('MODULE_FINDOLOGIC_LANG_DESC' , 'Sprache der Artikel, die Sie exportieren wollen');
+define('MODULE_FINDOLOGIC_LANG_DESC' , 'Sprache der Artikel, die Sie exportieren wollen.<br/><br/><b>Wichtig:</b> Diese Auswahl ist nur notwendig, wenn sie nur 1 Service gebucht haben.');
 
 define('MODULE_FINDOLOGIC_CUSTOMER_GROUP_TITLE' , '<hr noshade>Kundengruppe:');
 define('MODULE_FINDOLOGIC_CUSTOMER_GROUP_DESC' , 'Bitte w&auml;hlen Sie die Kundengruppe, die Basis f&uuml;r den Exportierten Preis bildet. (Falls Sie keine Kundengruppenpreise haben, w&auml;hlen Sie Gast):');
@@ -76,14 +67,34 @@ class findologic {
     return $this->_check;
   }
 
+
+  function install_additional() {
+    $languages = xtc_get_languages();
+    
+    $key = array();
+    for ($i=0, $n=count($languages); $i<$n; $i++) {
+      $check_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_FINDOLOGIC_SERVICE_URL_".strtoupper($languages[$i]['code'])."'");
+      if (xtc_db_num_rows($check_query) == 0) {
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SHOP_ID_".strtoupper($languages[$i]['code'])."', '',  '6', '1', '', now())");
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SERVICE_URL_".strtoupper($languages[$i]['code'])."', '',  '6', '1', '', now())");
+      }
+      $key[] = 'MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']);
+      $key[] = 'MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']);
+
+      define('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']).'_TITLE', '<hr noshade>Shopkey - '.xtc_cfg_fl_get_language($languages[$i]['code']).'</b>');
+      define('MODULE_FINDOLOGIC_SHOP_ID_'.strtoupper($languages[$i]['code']).'_DESC', 'Ihr Shopkey<br />Sie finden den Shopkey im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
+      define('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']).'_TITLE', '<b><hr noshade>FINDOLOGIC/Service-URL - '.xtc_cfg_fl_get_language($languages[$i]['code']).'</b>');
+      define('MODULE_FINDOLOGIC_SERVICE_URL_'.strtoupper($languages[$i]['code']).'_DESC', 'Die FINDOLOGIC/Service-URL Ihres Onlineshops<br /><strong>WICHTIG:</strong> Vergessen Sie bei den URLs nicht den Slash am Ende, da es sonst zu Problemen bei der Darstellung der Ergebnisse kommt.<br />Sie finden die FINDOLOGIC/Service-URL im FINDOLOGIC Kundenaccount &rarr; Men&uuml; Account &rarr; Stammdaten.');
+    }
+    return $key;
+  }
+
+    
   function install() {
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SHOP_ID', '',  '6', '1', '', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_SERVICE_URL', '',  '6', '1', '', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_EXPORT_FILENAME', 'findologic.csv',  '6', '1', '', now())");
+    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_FINDOLOGIC_LANG', 'de',  '6', '1', 'xtc_cfg_fl_get_language', 'xtc_cfg_fl_select_language(', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_FINDOLOGIC_CUSTOMER_GROUP', '1',  '6', '1', 'xtc_get_customers_status_name', 'xtc_cfg_fl_select_status(', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_CURRENCY', 'EUR',  '6', '1', 'xtc_cfg_fl_select_currency(', now())");
-    xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_STATUS', 'True',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
     xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) values ('MODULE_FINDOLOGIC_AUTOCOMPLETE', 'False',  '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', now())");
   }
 
@@ -92,14 +103,14 @@ class findologic {
   }
 
   function keys() {
-    return array('MODULE_FINDOLOGIC_STATUS',
-                 'MODULE_FINDOLOGIC_SHOP_ID',
-                 'MODULE_FINDOLOGIC_SERVICE_URL',
-                 'MODULE_FINDOLOGIC_EXPORT_FILENAME',
-                 'MODULE_FINDOLOGIC_LANG',
+    $key = array('MODULE_FINDOLOGIC_STATUS',
                  'MODULE_FINDOLOGIC_CUSTOMER_GROUP',
                  'MODULE_FINDOLOGIC_CURRENCY',
+                 'MODULE_FINDOLOGIC_LANG',
                  'MODULE_FINDOLOGIC_AUTOCOMPLETE');
+
+    $additional = $this->install_additional();
+    return array_merge($key, $additional);
   }
 }
 

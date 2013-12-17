@@ -14,6 +14,17 @@ $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 $result = false;
 
+// fsk18 lock
+$fsk_lock = '';
+if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
+  $fsk_lock = ' AND p.products_fsk18!=1';
+}
+// group check
+$group_check = '';
+if (GROUP_CHECK == 'true') {
+  $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
+}
+
 $listing_sql = "SELECT p.*,
                        pd.products_name,
                        pd.products_description,
@@ -22,8 +33,9 @@ $listing_sql = "SELECT p.*,
                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                     ON p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                  WHERE p.products_status = '1'
-                   AND p.products_id IN ('".$products_id."')
-                   " . PRODUCTS_CONDITIONS_P;
+                   AND p.products_id IN ('".$products_id."')   
+                       ".$group_check."
+                       ".$fsk_lock;
 
 $listing_query = xtc_db_query($listing_sql);
 $module_content = array ();

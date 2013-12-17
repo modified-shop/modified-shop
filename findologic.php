@@ -27,15 +27,31 @@
     return strpos($status, 'alive');  
   }
 
+  function rawurlencode_query($string) {
+    return rawurlencode(utf8_encode(urldecode($string)));    
+  }
+
+  function array_map_recursive($callback, $array) {
+    foreach ($array as $key => $value) {
+      if (is_array($array[$key])) {
+        $array[$key] = array_map_recursive($callback, $array[$key]);
+      } else {
+        $array[$key] = call_user_func($callback, $array[$key]);
+      }
+    }
+    return $array;
+  }
+
   $do_findologic_search = is_alive();
-  if ($_SESSION['language'] == 'german' && $do_findologic_search !== false) {
+  if ($do_findologic_search !== false) {
+    $parameters = array_map_recursive('rawurlencode_query', $_GET);
     $url = FL_SERVICE_URL.'index.php?'.
           'shopkey='.FL_SHOP_ID.
           '&shopurl='.urlencode(FL_SHOP_URL).
-          '&userip='.xtc_get_ip_address().
+          '&userip='.urlencode(xtc_get_ip_address()).
           '&referer='.(isset($_SERVER['HTTP_REFERER']) ? urlencode($_SERVER['HTTP_REFERER']) : '').
-          '&revision='.FL_REVISION.
-          '&'.utf8_decode($_SERVER['QUERY_STRING']);
+          '&revision='.urlencode(FL_REVISION).
+          '&'.urldecode(http_build_query($parameters, '', '&'));
 
     $content = get_external_content($url, FL_REQUEST_TIMEOUT, false);
 
@@ -43,7 +59,7 @@
     preg_match($regex, $content, $result);
   }
 
-  if ($do_findologic_search === false) {
+  if ($do_findologic_search === false || (isset($_GET['fallback']) && $_GET['fallback'] == '1')) {
 
     $params = '';
     $action = FILENAME_DEFAULT;

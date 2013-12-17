@@ -13,6 +13,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  chdir('../../');
   require('includes/application_top.php');
   require_once (DIR_FS_EXTERNAL.'findologic/findologic_config.inc.php');
 

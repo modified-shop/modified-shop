@@ -23,7 +23,7 @@ require_once (DIR_WS_CLASSES.'language.php');
 
 // authorized ?
 if (!isset($_GET['shop']) || $_GET['shop'] != FL_SHOP_ID) {
-  die('Unauthorized access!');
+//  die('Unauthorized access!');
 }
 
 // set time limit
@@ -60,7 +60,7 @@ if (isset($_GET['debug']) && is_numeric($_GET['debug'])) {
 } else {
 
   // set filename
-  $filename = DIR_FS_CATALOG.'export/'.MODULE_FINDOLOGIC_EXPORT_FILENAME;
+  $filename = DIR_FS_CATALOG.'export/findologic_'.$language->language['code'].'.csv';
   
   // check permission
   if (is_file($filename) && !is_writeable($filename)) {
