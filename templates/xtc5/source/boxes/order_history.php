@@ -1,19 +1,20 @@
 <?php
-  /* -----------------------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------------------
    $Id$
-
+   
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(order_history.php,v 1.4 2003/02/10); www.oscommerce.com
-   (c) 2003	 nextcommerce (order_history.php,v 1.9 2003/08/17); www.nextcommerce.org
-   (c) 2006 XT-Commerce
 
-   Released under the GNU General Public License
+   -----------------------------------------------------------------------------------------
+   based on: 
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce(order_history.php,v 1.4 2003/02/10); www.oscommerce.com 
+   (c) 2003	nextcommerce (order_history.php,v 1.9 2003/08/17); www.nextcommerce.org
+   (c) 2003 xt:Commerce (order_history.php 1262 2005/09/30 mz); www.xt-commerce.com
+
+   Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
   $box_order_history = '';
@@ -60,10 +61,7 @@
 
     $box_smarty->caching = 0;
     $box_smarty->assign('language', $_SESSION['language']);
-    //BOF - GTB - 2010-08-03 - Security Fix - Base
-    $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
-    //$box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-    //EOF - GTB - 2010-08-03 - Security Fix - Base
+    $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/'); 
     $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
   }
 

@@ -30,13 +30,11 @@
                   {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
                   <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
                   <strong>{#order#}</strong> {$oID}<br />
-                  <strong>{#date#}</strong> {$DATE}<br />
-                  {* BOF - hendrik - 2011-05-14 - independent invoice number and date *}
-                  {if $INVOICE_NUMBER != '' }
-                    <strong>{#invoice_number#}</strong> {$INVOICE_NUMBER}<br>
-                    <strong>{#invoice_date#}</strong> {$INVOICE_DATE}<br>
+                  <strong>{#date#}</strong> {$DATE}
+                  {if isset($INVOICE_NUMBER) && $INVOICE_NUMBER != '' }<br />
+                    <strong>{#invoice_number#}</strong> {$INVOICE_NUMBER}<br />
+                    <strong>{#invoice_date#}</strong> {$INVOICE_DATE}<br />
                   {/if}
-                  {* EOF - hendrik - 2011-05-14 - independent invoice number and date *}
                 </p>
                 <p class="large">{#invoice#}</p>
               </td>
