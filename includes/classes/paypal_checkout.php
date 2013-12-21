@@ -1517,7 +1517,7 @@ if (defined('PAYPAL_API_VERSION')) {
   /*************************************************************/
     function state_code($string){
       // Stand: 29.04.2009
-      $zone_query = xtc_db_query("select zone_code from " . TABLE_ZONES . " where zone_name = '" . $string . "'");
+      $zone_query = xtc_db_query("select zone_code from " . TABLE_ZONES . " where zone_name = '" . xtc_db_input($string) . "'");#hs - xtc_db_input
       if(xtc_db_num_rows($zone_query)) {
         $zone = xtc_db_fetch_array($zone_query);
         return $zone['zone_code'];
