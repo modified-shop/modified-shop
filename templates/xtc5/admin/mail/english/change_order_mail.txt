@@ -10,6 +10,13 @@ The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from
 
 New status: {$ORDER_STATUS}
 
+{if $PARCEL_COUNT}
+Your shipment consists of {$PARCEL_COUNT} parcel(s).{/if}
+
+{if $PARCEL_LINK_TXT}
+You can inform yourself about the delivery status with a click on the following package number(s):
+{$PARCEL_LINK_TXT}{/if}
+
 If you have any questions, please reply to this e-mail.
 
 [SIGNATUR]

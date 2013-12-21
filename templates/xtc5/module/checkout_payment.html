@@ -10,14 +10,14 @@
 <br />
 {if $error != ''}{$error}{/if}
 {if $step2 != 'true'}
-  <h1>{#title_address#}</h1>
-  {$FORM_ACTION}
-  <p>{$ADDRESS_LABEL}</p>
-  <p>{$BUTTON_ADDRESS}</p>
+<h1>{#title_address#}</h1>
+{$FORM_ACTION}
+<p>{$ADDRESS_LABEL}</p>
+<p>{$BUTTON_ADDRESS}</p>
 {/if}
 {if $GV_COVER != 'true'}
-  <h1>{#title_payment#}</h1>
-  <p>{#text_payment#}</p>
+<h1>{#title_payment#}</h1>
+<p>{#text_payment#}</p>
   {$PAYMENT_BLOCK}{$module_gift}
 {else}
   <div class="infomessage" id="gccover"><b>{#text_gccover#}</b></div>
@@ -34,7 +34,7 @@
         <td width="100%"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
       </tr>
     </table>
-    {/if}
+  {/if}
 {/if}
 <p>{$BUTTON_CONTINUE}</p>
 {$FORM_END}

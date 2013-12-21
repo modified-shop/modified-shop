@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: $
+   $Id: order_history.php 5581 2013-09-08 21:26:38Z Tomcraft $
    
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -61,7 +61,7 @@
 
     $box_smarty->caching = 0;
     $box_smarty->assign('language', $_SESSION['language']);
-    $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/'); 
+    $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/'); 
     $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
   }
 

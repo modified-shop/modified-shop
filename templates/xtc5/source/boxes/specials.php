@@ -42,9 +42,9 @@
                                             LIMIT ".MAX_RANDOM_SELECT_SPECIALS)) {
 
   $box_smarty = new smarty;
-  $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
-  $box_smarty->assign('box_content',$product->buildDataArray($random_product));
+  $box_smarty->assign('box_content', $product->buildDataArray($random_product));
   $box_smarty->assign('SPECIALS_LINK', xtc_href_link(FILENAME_SPECIALS));
 
   $box_smarty->assign('language', $_SESSION['language']);

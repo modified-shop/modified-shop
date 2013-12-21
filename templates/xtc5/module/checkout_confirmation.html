@@ -96,6 +96,7 @@
     <tr class="headerrow">
       <td class="main_header" style="width:50px" align="left" valign="top"><b>{$smarty.const.HEADER_QTY}</b></td>
       <td class="main_header" style="padding-left:90px;" align="left" valign="top"><b>{$smarty.const.HEADER_ARTICLE}</b></td>
+      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_MODEL}</b></td>
       <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_SINGLE}</b></td>
       <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_TOTAL}</b></td>
     </tr>
@@ -103,18 +104,19 @@
     <tr>
       <td class="main_row" align="left" valign="top">{$data.qty}</td>
       <td class="main_row" align="left" valign="top">
-        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}
+        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}
         <div style="width:90px; float:left;">{$data.image}</div>
         {/if}
         <div style="width:420px; float:left;">
           {$data.link}
           {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
-          {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME}{$data.shipping_time}</span>{/if}
+          {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
           {foreach key=a_data item=attrib_data from=$data.attributes}
             {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}
           {/foreach}
         </div>
       </td>
+      <td class="main_row" align="right" valign="top">{$data.model}</td>
       <td class="main_row" align="right" valign="top">{$data.price_formated}</td>
       <td class="main_row" align="right" valign="top">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
     </tr>

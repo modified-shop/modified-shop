@@ -33,7 +33,7 @@
 
   if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_manufacturers.html', $cache_id) || !$cache) {
 
-    $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+    $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
     
     $manufacturers_query = "select distinct m.manufacturers_id, m.manufacturers_name from ".TABLE_MANUFACTURERS." as m, ".TABLE_PRODUCTS." as p where m.manufacturers_id=p.manufacturers_id order by m.manufacturers_name";
     $manufacturers_query = xtDBquery($manufacturers_query);

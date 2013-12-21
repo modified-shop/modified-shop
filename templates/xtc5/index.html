@@ -6,7 +6,7 @@
   </div>
   <div id="topmenuwrap">
     <ul id="topmenu">
-      <li><a href="{$index}">{#link_index#}</a></li>
+      <li><a href="{$index}">{if isset($LINK_INDEX)}{$LINK_INDEX}{else}{#link_index#}{/if}</a></li>
       <li><a href="{$cart}">{#link_cart#}</a></li>
       {if isset($account)}
         <li><a href="{$account}">{#link_account#}</a></li>
@@ -39,10 +39,8 @@
       </div>
     {/if}
     <div id="content{if strpos($smarty.server.PHP_SELF, 'checkout')}full{/if}">
-      {if strstr($smarty.server.PHP_SELF, 'index')}
-        {if $smarty.get.cPath == null and $smarty.get.manufacturers_id == ''}
-          {if $BANNER}{$BANNER}{/if}
-        {/if}
+      {if $home}
+        {if isset($BANNER)}{$BANNER}{/if}
       {/if}
       {if isset($main_content)}{$main_content}{/if}
     </div>

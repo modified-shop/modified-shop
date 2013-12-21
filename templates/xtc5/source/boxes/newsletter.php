@@ -34,10 +34,10 @@ if (!CacheCheck()) {
 }
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cache_id) || !$cache) {
-	$box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+	$box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 	$rebuild = true;
 
-$box_smarty->assign('FORM_ACTION', xtc_draw_form('sign_in', xtc_href_link(FILENAME_NEWSLETTER, '', 'SSL'))); // web28 - 2010-09-21 - change NONSSL -> SSL 
+$box_smarty->assign('FORM_ACTION', xtc_draw_form('sign_in', xtc_href_link(FILENAME_NEWSLETTER, '', $request_type)));
 $box_smarty->assign('FIELD_EMAIL',xtc_draw_input_field('email', '', 'maxlength="50" style="width:170px;"'));
 $box_smarty->assign('BUTTON',xtc_image_submit('button_login_newsletter.gif', IMAGE_BUTTON_LOGIN));
 $box_smarty->assign('FORM_END','</form>');

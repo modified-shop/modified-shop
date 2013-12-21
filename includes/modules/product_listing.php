@@ -1,22 +1,25 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: product_listing.php 1286 2005-10-07 10:10:18Z mz $
+   $Id: product_listing.php 5861 2013-10-01 12:50:02Z GTB $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(product_listing.php,v 1.42 2003/05/27); www.oscommerce.com
-   (c) 2003  nextcommerce (product_listing.php,v 1.19 2003/08/1); www.nextcommerce.org
+   (c) 2003 nextcommerce (product_listing.php,v 1.19 2003/08/1); www.nextcommerce.org
+   (c) 2006 xt:Commerce (product_listing.php 1286 2005-10-07); www.xt-commerce.de
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 $module_smarty = new Smarty;
-$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+$module_smarty->caching = false;
+$module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+
 $result = true;
 
 // include needed functions
@@ -24,8 +27,7 @@ require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
 $listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SEARCH_RESULTS, 'p.products_id');
 
-$module_content = array ();
-$category = array();
+$module_content = $category = array();
 $image = '';
 
 if ($listing_split->number_of_rows > 0) {
@@ -60,6 +62,7 @@ if ($listing_split->number_of_rows > 0) {
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
       if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
+      $image = DIR_WS_BASE . $image;
     }
   }
 
@@ -79,6 +82,14 @@ if ($listing_split->number_of_rows > 0) {
     $category['categories_name'] = TEXT_SEARCH_TERM . stripslashes(trim(urldecode($_GET['keywords'])));
   }
 
+  if (isset($category['categories_name'])) {
+    $list_title = $category['categories_name'];
+  } elseif (isset($category['categories_heading_title'])) {
+    $list_title = $category['categories_heading_title'];
+  } elseif (isset($_GET['keywords'])) {
+    $list_title = TEXT_SEARCH_TERM . htmlentities(str_replace("+", " ", $_GET['keywords']));
+  }
+  $module_smarty->assign('LIST_TITLE',  isset($list_title) ? $list_title : '');
   $module_smarty->assign('CATEGORIES_NAME', isset($category['categories_name']) ? $category['categories_name'] : '');
   $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
   $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
@@ -115,6 +126,13 @@ if ($result != false) {
   $module_smarty->assign('MANUFACTURER_DROPDOWN', (isset($manufacturer_dropdown) ? $manufacturer_dropdown : ''));
   $module_smarty->assign('language', $_SESSION['language']);
   $module_smarty->assign('module_content', $module_content);
+  // support for own manufacturers template
+  $template = CURRENT_TEMPLATE.'/module/product_listing/'.$category['listing_template'];
+  if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0 && strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) === false) {
+    if (is_file(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/module/manufacturers_listing.html')) {
+      $template = CURRENT_TEMPLATE.'/module/manufacturers_listing.html';
+    }
+  }
   // set cache ID
    if (!CacheCheck()) {
     $module_smarty->caching = 0;

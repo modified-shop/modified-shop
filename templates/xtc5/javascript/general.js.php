@@ -7,12 +7,12 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
   -----------------------------------------------------------
-   based on: (c) 2003 XT-Commerce (general.js.php.php)
+   based on: (c) 2003 - 2006 XT-Commerce (general.js.php)
   -----------------------------------------------------------
    Released under the GNU General Public License
    -----------------------------------------------------------
 */
-define('DIR_TMPL_JS',  'templates/'.CURRENT_TEMPLATE. '/javascript/');
+define('DIR_TMPL_JS',  DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE. '/javascript/');
 
 // this javascriptfile get includes at the BOTTOM of every template page in shop
 // you can add your template specific js scripts here

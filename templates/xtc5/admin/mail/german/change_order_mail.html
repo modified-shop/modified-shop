@@ -25,6 +25,13 @@
         Neuer Status:
         <b>{$ORDER_STATUS}</b><br />
         <br />
+        {if $PARCEL_COUNT}
+          Die Sendung besteht aus {$PARCEL_COUNT} Paket(en).<br />
+        {/if}
+        {if $PARCEL_LINK_HTML}
+          <br />Sie können sich über den Zustellstatus durch einen Klick auf die nachstende(n) Paketnummer(n) informieren:<br />
+          {$PARCEL_LINK_HTML}<br />
+        {/if}
         Bei Fragen zu Ihrer Bestellung antworten Sie bitte auf diese E-Mail.<br />
       </font>
     </td>

@@ -1,9 +1,5 @@
 {config_load file="$language/lang_$language.conf" section="index"}
-{if $CATEGORIES_HEADING_TITLE}
-  <h1>{$CATEGORIES_HEADING_TITLE}</h1>
-{else}
-  <h1>{$CATEGORIES_NAME}</h1>
-{/if}
+<h1>{$LIST_TITLE}</h1>
 {if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" class="imgLeft" /><br />{/if}
 {if $CATEGORIES_DESCRIPTION}{$CATEGORIES_DESCRIPTION}<br />{/if}
 {if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}<br />{/if}
