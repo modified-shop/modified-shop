@@ -14,10 +14,14 @@
 {$FORM_ACTION}
 <p>{$ADDRESS_LABEL}</p>
 <p>{$BUTTON_ADDRESS}</p>
+{/if}
+{if $GV_COVER != 'true'}
 <h1>{#title_payment#}</h1>
 <p>{#text_payment#}</p>
+  {$PAYMENT_BLOCK}{$module_gift}
+{else}
+  <div class="infomessage" id="gccover"><b>{#text_gccover#}</b></div>
 {/if}
-{if $GV_COVER != 'true'}{$PAYMENT_BLOCK}{$module_gift}{else}{#text_gccover#}{/if}
 {if $step2 != 'true'}
   <h2>{#title_comments#}</h2>
   <p class="checkoutcomment">{$COMMENTS}</p>

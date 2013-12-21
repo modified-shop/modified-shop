@@ -15,11 +15,11 @@ Ihre E-Mail-Adresse: {$EMAIL}
 vielen Dank für Ihre Bestellung.
 
 {$PAYMENT_INFO_TXT}
-{*BOF - web28 - 2011-02-01 - Paypal Express*}
-{if $NEW_PASSWORD}
+
+{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}{*Paypal Express*}
         Ihr Account Passwort: {$NEW_PASSWORD}
 {/if}
-{*EOF - web28 - 2011-02-01 - Paypal Express*}
+
 {if $COMMENTS}
 Ihre Anmerkungen:
 {$COMMENTS}
@@ -27,9 +27,10 @@ Ihre Anmerkungen:
 
 Ihre bestellten Produkte zur Kontrolle
 ----------------------------------------------------------------------
-{foreach name=aussen item=order_values from=$order_data}
+{foreach name=aussen item=order_values from=$order_data} 
 {$order_values.PRODUCTS_QTY} x {$order_values.PRODUCTS_NAME} {$order_values.PRODUCTS_PRICE}
-{if ACTIVATE_SHIPPING_STATUS == 'true'}{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}{/if}
+{if $order_values.PRODUCTS_ORDER_DESCRIPTION != ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
+{if $order_values.PRODUCTS_SHIPPING_TIME != ''}Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
 {if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}{/if}
 
 {/foreach}
@@ -38,6 +39,7 @@ Ihre bestellten Produkte zur Kontrolle
 {$order_total_values.TITLE}{$order_total_values.TEXT}
 {/foreach}
 
+{$downloads_content_txt}
 
 {if $address_label_payment}
 {if $address_label_payment != $address_label_shipping}Rechnungsadresse{else}Rechnungs-/Lieferadresse{/if}
@@ -45,10 +47,10 @@ Ihre bestellten Produkte zur Kontrolle
 {$address_label_payment}
 {/if}
 {if $address_label_payment != $address_label_shipping}
-Versandadresse
+Versandadresse 
 ----------------------------------------------------------------------
 {$address_label_shipping}{/if}
-{if $DELIVERY_DUTY_INFO neq ''}
+{if $DELIVERY_DUTY_INFO != ''}
 
 ----------------------------------------------------------------------
 {#text_duty_info#}

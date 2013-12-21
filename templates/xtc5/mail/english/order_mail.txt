@@ -10,16 +10,16 @@ Your e-mail-address: {$EMAIL}
 ----------------------------------------------------------------------
 
 
-Dear {if $GENDER == 'm'}Mr {elseif $GENDER == 'f'}Mrs {/if}{$LASTNAME},
+Dear {if $GENDER == 'm'}Mr {elseif $GENDER == 'f'}Mrs {/if}{$NAME},
 
 thank you for your order.
 
 {$PAYMENT_INFO_TXT}
-{*BOF - web28 - 2011-02-01 - Paypal Express*}
-{if $NEW_PASSWORD}
+
+{if isset($NEW_PASSWORD) && $NEW_PASSWORD != ''}{*Paypal Express*}
         Your Account Password: {$NEW_PASSWORD}
 {/if}
-{*EOF - web28 - 2011-02-01 - Paypal Express*}
+
 {if $COMMENTS}
 Your Comments:
 {$COMMENTS}
@@ -27,9 +27,10 @@ Your Comments:
 
 Your ordered following products
 ----------------------------------------------------------------------
-{foreach name=aussen item=order_values from=$order_data}
+{foreach name=aussen item=order_values from=$order_data} 
 {$order_values.PRODUCTS_QTY} x {$order_values.PRODUCTS_NAME} {$order_values.PRODUCTS_PRICE}
-{if ACTIVATE_SHIPPING_STATUS == 'true'}{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}{/if}
+{if $order_values.PRODUCTS_ORDER_DESCRIPTION != ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
+{if $order_values.PRODUCTS_SHIPPING_TIME != ''}Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
 {if $order_values.PRODUCTS_ATTRIBUTES != ''}{$order_values.PRODUCTS_ATTRIBUTES}{/if}
 
 {/foreach}
@@ -38,6 +39,7 @@ Your ordered following products
 {$order_total_values.TITLE}{$order_total_values.TEXT}
 {/foreach}
 
+{$downloads_content_txt}
 
 {if $address_label_payment}
 {if $address_label_payment != $address_label_shipping}Paymentadress{else}Payment-/Shippingaddress{/if}
@@ -45,10 +47,10 @@ Your ordered following products
 {$address_label_payment}
 {/if}
 {if $address_label_payment != $address_label_shipping}
-Shippingaddress
+Shippingaddress 
 ----------------------------------------------------------------------
 {$address_label_shipping}{/if}
-{if $DELIVERY_DUTY_INFO neq ''}
+{if $DELIVERY_DUTY_INFO != ''}
 
 ----------------------------------------------------------------------
 {#text_duty_info#}

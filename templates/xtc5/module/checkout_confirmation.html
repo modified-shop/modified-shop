@@ -104,11 +104,13 @@
     <tr>
       <td class="main_row" align="left" valign="top">{$data.qty}</td>
       <td class="main_row" align="left" valign="top">
+        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}
         <div style="width:90px; float:left;">{$data.image}</div>
+        {/if}
         <div style="width:420px; float:left;">
           {$data.link}
           {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
-          {if $data.shipping_time}<br /><span class="nobr small">{$data.shipping_time}</span>{/if}
+          {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
           {foreach key=a_data item=attrib_data from=$data.attributes}
             {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}
           {/foreach}
