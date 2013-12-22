@@ -326,10 +326,10 @@ class xtcPrice {
                p.weight_prefix
           FROM " . TABLE_PRODUCTS_ATTRIBUTES . " p,
                " . TABLE_PRODUCTS . " pd
-         WHERE p.products_id = '" . $pID . "'
-           AND p.options_id = '" . $option . "'
+         WHERE p.products_id = '" . (int)$pID . "'
+           AND p.options_id = '" . (int)$option . "'
            AND pd.products_id = p.products_id
-           AND p.options_values_id = '" . $value . "'";
+           AND p.options_values_id = '" . (int)$value . "'";
     $attribute_price_query = xtDBquery($attribute_price_query);
     $attribute_price_data  = xtc_db_fetch_array($attribute_price_query, true);
     if ($this->cStatus['customers_status_discount_attributes'] == 1 && $this->cStatus['customers_status_discount'] != 0.00) {
