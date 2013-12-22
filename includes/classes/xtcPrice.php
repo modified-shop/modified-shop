@@ -117,6 +117,8 @@ class xtcPrice {
       return $this->xtcShowNote($vpeStatus);
     }
     
+    $this->show_price_tax = ($tax_class == '') ? 0 : $_SESSION['customers_status']['customers_status_show_price_tax'];
+ 
     // get Tax rate
     if ($cedit_id != 0) {
       if (defined('HTTP_CATALOG_SERVER')) {
@@ -194,7 +196,7 @@ function getPprice($pID) {
   function xtcAddTax($price, $tax) {
     $price += $price / 100 * $tax;
     $price = $this->xtcCalculateCurr($price);
-    return round($price, $this->currencies[$this->actualCurr]['decimal_places']);
+    return $this->show_price_tax ? round($price, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
   }
 
   /**
@@ -540,7 +542,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return round($price, $decimal_places);
+      return $this->show_price_tax ? round($price, $decimal_places) : $price;
     }
   }
   
@@ -583,7 +585,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']);
+      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
     }
   }
   
@@ -625,7 +627,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']);
+      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
     }
   }
   
@@ -685,7 +687,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']);
+      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
     }
   }
   
