@@ -24,6 +24,8 @@ function xtc_wysiwyg($type, $lang, $langID = '') {
   $flash_path = '&Type=Flash';
   $media_path = '&Type=Media';
   
+  $sid = '&'.session_name() . '=' . session_id(); //web28 security fix
+  
   $default_init = '
    oFCKeditor.BasePath = "'.$path.'" ;
    oFCKeditor.Config["LinkBrowserURL"] = "'.$filemanager.$file_path.$sid.'" ;
@@ -34,7 +36,6 @@ function xtc_wysiwyg($type, $lang, $langID = '') {
    oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
    oFCKeditor.ReplaceTextarea() ;';
 
-  $sid = '&'.session_name() . '=' . session_id(); //web28 security fix
   switch($type) {
     // WYSIWYG editor content manager textarea named cont
     case 'content_manager':
