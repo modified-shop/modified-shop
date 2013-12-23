@@ -29,7 +29,7 @@
    ---------------------------------------------------------------------------------------*/
 
 $gift_smarty = new Smarty;
-$gift_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+$gift_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
 if (ACTIVATE_GIFT_SYSTEM == 'true') {
 	$gift_smarty->assign('ACTIVATE_GIFT', 'true');
