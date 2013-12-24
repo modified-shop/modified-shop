@@ -445,7 +445,7 @@ if (xtc_not_null($action) && !$box) {
                   default:
                     if (isset($mInfo) && is_object($mInfo)) {
                       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                      if ($mInfo->status == '1') {
+                      if ($mInfo->status != '0') {
                         $keys = '';
                         reset($mInfo->keys);
                         while (list(, $value) = each($mInfo->keys)) {
