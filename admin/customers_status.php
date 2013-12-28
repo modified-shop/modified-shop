@@ -101,41 +101,47 @@
 
           // Check if table column exists 
           if (!get_table_columns(TABLE_PRODUCTS,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD  group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
+            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
           }
 
           // Check if table column exists
           if (!get_table_columns(TABLE_CATEGORIES,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD  group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
+            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
           }
+        }
 
-          // adopt customer group permission
-          if (isset($_POST['customers_group_adopt_permission']) && $_POST['customers_group_adopt_permission'] !== '') {
-            $adopt_permission = (int)$_POST['customers_group_adopt_permission'];
-            // categories
-            $adopt_categories_permission = xtc_db_query("SELECT categories_id, group_permission_".$adopt_permission." FROM " . TABLE_CATEGORIES);
-            while($adopt_catp = xtc_db_fetch_array($adopt_categories_permission)) {
-              xtc_db_query("UPDATE ".TABLE_CATEGORIES."
-                               SET group_permission_" . $customers_status_id . "=".$adopt_catp['group_permission_'.$adopt_permission]."
-                             WHERE categories_id=".$adopt_catp['categories_id']);
-            }
-            // products
-            $adopt_products_permission = xtc_db_query("SELECT products_id, group_permission_".$adopt_permission." FROM " . TABLE_PRODUCTS);
-            while($adopt_pp = xtc_db_fetch_array($adopt_products_permission)) {
-              xtc_db_query("UPDATE ".TABLE_PRODUCTS."
-                               SET group_permission_" . $customers_status_id . "=".$adopt_pp['group_permission_'.$adopt_permission]." 
-                             WHERE products_id=".$adopt_pp['products_id']);
-            }
-            // content
-            $adopt_content_permission = xtc_db_query("SELECT content_id, group_ids FROM " . TABLE_CONTENT_MANAGER . " WHERE group_ids LIKE '%c_".$adopt_permission."_group%'");
-            while ($adopt_cp = xtc_db_fetch_array($adopt_content_permission)) {
-              xtc_db_query("UPDATE " . TABLE_CONTENT_MANAGER . "
-                               SET group_ids=CONCAT(group_ids, ',c_" . $customers_status_id . "_group')
-                             WHERE content_id=" . $adopt_cp['content_id']);
-            }
+        // adopt customer group permission
+        if (isset($_POST['customers_group_adopt_permission']) && $_POST['customers_group_adopt_permission'] !== '') {
+          $adopt_permission = (int)$_POST['customers_group_adopt_permission'];
+          // categories
+          $adopt_categories_permission = xtc_db_query("SELECT categories_id, group_permission_".$adopt_permission." FROM " . TABLE_CATEGORIES);
+          while($adopt_catp = xtc_db_fetch_array($adopt_categories_permission)) {
+            xtc_db_query("UPDATE ".TABLE_CATEGORIES."
+                             SET group_permission_" . $customers_status_id . "=".$adopt_catp['group_permission_'.$adopt_permission]."
+                           WHERE categories_id=".$adopt_catp['categories_id']);
           }
+          // products
+          $adopt_products_permission = xtc_db_query("SELECT products_id, group_permission_".$adopt_permission." FROM " . TABLE_PRODUCTS);
+          while($adopt_pp = xtc_db_fetch_array($adopt_products_permission)) {
+            xtc_db_query("UPDATE ".TABLE_PRODUCTS."
+                             SET group_permission_" . $customers_status_id . "=".$adopt_pp['group_permission_'.$adopt_permission]." 
+                           WHERE products_id=".$adopt_pp['products_id']);
+          }
+          // content
+          $adopt_content_permission = xtc_db_query("SELECT content_id, group_ids FROM " . TABLE_CONTENT_MANAGER . " WHERE group_ids LIKE '%c_".$adopt_permission."_group%'");
+          while ($adopt_cp = xtc_db_fetch_array($adopt_content_permission)) {
+            xtc_db_query("UPDATE " . TABLE_CONTENT_MANAGER . "
+                             SET group_ids=CONCAT(group_ids, ',c_" . $customers_status_id . "_group')
+                           WHERE content_id=" . $adopt_cp['content_id'] . "
+                             AND group_ids NOT LIKE 'c_" . $customers_status_id . "_group'");
+          }
+        }
 
-          // adopt customer prices
+        // adopt customer prices
+        if (isset($_POST['customers_base_status']) && !empty($_POST['customers_base_status'])) {
+          if ($action == 'save') {
+            xtc_db_query('TRUNCATE TABLE personal_offers_by_customers_status_' . $customers_status_id);
+          }
           $products_query = xtc_db_query("SELECT price_id, products_id, quantity, personal_offer FROM personal_offers_by_customers_status_".(int)$_POST['customers_base_status']."");
           while($products = xtc_db_fetch_array($products_query)){
             $product_data_array = array(
@@ -147,6 +153,7 @@
             xtc_db_perform('personal_offers_by_customers_status_' . $customers_status_id, $product_data_array);
           }
         }
+
         $accepted_customers_status_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
         $accepted_customers_status_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
         if ($customers_status_image = xtc_try_upload('customers_status_image', DIR_FS_CATALOG.DIR_WS_ICONS, '', $accepted_customers_status_image_files_extensions, $accepted_customers_status_image_files_mime_types)) {
@@ -373,7 +380,8 @@ require (DIR_WS_INCLUDES.'head.php');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_FSK18_DISPLAY_INTRO . '<br />' . ENTRY_CUSTOMERS_FSK18_DISPLAY . ' ' . xtc_draw_pull_down_menu('customers_fsk18_display', $customers_fsk18_display_array, $cInfo->customers_fsk18_display));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_WRITE_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_WRITE_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_write_reviews', $customers_status_write_reviews_array, $cInfo->customers_status_write_reviews));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_READ_REVIEWS_INTRO . '<br />' . ENTRY_CUSTOMERS_STATUS_READ_REVIEWS . ' ' . xtc_draw_pull_down_menu('customers_status_read_reviews', $customers_status_read_reviews_array, $cInfo->customers_status_read_reviews));
-
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_STATUS_BASE . '<br />' . ENTRY_CUSTOMERS_STATUS_BASE . '<br />' . xtc_draw_pull_down_menu('customers_base_status', xtc_get_customers_statuses()));
+                  $contents[] = array('text' => '<br />' . TEXT_INFO_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . ENTRY_CUSTOMERS_GROUP_ADOPT_PERMISSION . '<br />' . xtc_draw_pull_down_menu('customers_group_adopt_permission', array_merge(array(array('id' => '', 'text' => CUSTOMERS_GROUP_ADOPT_PERMISSIONS)), xtc_get_customers_statuses())));
                   if (DEFAULT_CUSTOMERS_STATUS_ID != $cInfo->customers_status_id)
                     $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                   $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $cInfo->customers_status_id) . '">' . BUTTON_CANCEL . '</a>');
