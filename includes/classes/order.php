@@ -73,7 +73,7 @@
       $totals_query = xtc_db_query("SELECT *
                                     FROM " . TABLE_ORDERS_TOTAL . "
                                     WHERE orders_id = '" . $order_id . "'
-                                    ORDER BY sort_order");
+                                    ORDER BY sort_order ASC, value DESC");
       while ($totals = xtc_db_fetch_array($totals_query)) {
         $this->totals[] = array('title' => $totals['title'],
                                 'text' => $totals['text'],
@@ -354,7 +354,7 @@
       $order_total_query = "SELECT title, text, class, value, sort_order
                               FROM ".TABLE_ORDERS_TOTAL."
                              WHERE orders_id='".(int)$oID."'
-                          ORDER BY sort_order ASC";
+                          ORDER BY sort_order ASC, value DESC";
 
       $order_total = array ();
       $order_total_query = xtc_db_query($order_total_query);
