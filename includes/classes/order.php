@@ -73,7 +73,7 @@
       $totals_query = xtc_db_query("SELECT *
                                     FROM " . TABLE_ORDERS_TOTAL . "
                                     WHERE orders_id = '" . $order_id . "'
-                                    ORDER BY sort_order");
+                                    ORDER BY sort_order ASC, value DESC");
       while ($totals = xtc_db_fetch_array($totals_query)) {
         $this->totals[] = array('title' => $totals['title'],
                                 'text' => $totals['text'],
@@ -354,7 +354,7 @@
       $order_total_query = "SELECT title, text, class, value, sort_order
                               FROM ".TABLE_ORDERS_TOTAL."
                              WHERE orders_id='".(int)$oID."'
-                          ORDER BY sort_order ASC";
+                          ORDER BY sort_order ASC, value DESC";
 
       $order_total = array ();
       $order_total_query = xtc_db_query($order_total_query);
@@ -554,7 +554,7 @@
           $products_attributes = $products[$i]['attributes']; //contains only option_id and value_id
           unset($products[$i]['attributes']); //remove from array for direct array mapping
         }
-        //direct array mapping
+        //direct products array mapping
         $this->products[$index] = $products[$i];
 
         //using short description  if order description is not defined or empty
@@ -566,9 +566,8 @@
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
         $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
         
-        //$products[$i]['price'] is single plain price including attributes_price
-        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true);        
-        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); 
+        $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
+        $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
         if ($products_attributes) {
           $subindex = 0;
@@ -584,6 +583,11 @@
                 'price' => $attributes['options_values_price'],
                 'price_formated' => $xtPrice->xtcFormat($attributes['options_values_price'], true)
               );
+            $this->products[$index]['attributes'][$subindex]['stock'] = $attributes['attributes_stock'];
+            $this->products[$index]['attributes'][$subindex]['model'] = $attributes['attributes_model'];
+            $this->products[$index]['attributes'][$subindex]['ean'] = $attributes['attributes_ean'];
+            $this->products[$index]['attributes'][$subindex]['weight_prefix'] = $attributes['weight_prefix'];
+            $this->products[$index]['attributes'][$subindex]['weight'] = $attributes['options_values_weight'];
             $subindex++;
           }
         }
