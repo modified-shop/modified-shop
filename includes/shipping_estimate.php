@@ -36,7 +36,7 @@ $total_count = $_SESSION['cart']->count_contents();
   
 $selected = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
 if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
-  if (isset($_SESSION['country']) && !isset($_SESSION['customer_country_id'])) {
+  if (isset($_SESSION['country'])) {
     $selected = $_SESSION['country'];
   } 
   $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
