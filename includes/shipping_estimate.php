@@ -19,7 +19,7 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-// 2011-10-30
+// 2013-12-31
 // http://rpa-com.de -web28- add support for //MAXIMALE VERSANDKOSTEN
 // http://neunzehn83.de/blog/2011/03/09/xtc-land-dropdown-im-warenkorb/
 // http://www.xtc-modified.org/forum/topic.php?id=9883
@@ -36,11 +36,9 @@ $total_count = $_SESSION['cart']->count_contents();
   
 $selected = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
 if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
-  if (isset($_SESSION['country'])) {
+  if (isset($_SESSION['country']) && !isset($_SESSION['customer_country_id'])) {
     $selected = $_SESSION['country'];
-  } else {
-    //$selected = STORE_COUNTRY;
-  }
+  } 
   $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
 }
 
