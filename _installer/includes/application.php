@@ -17,13 +17,13 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
+  // Set the level of error reporting
+  error_reporting(E_ALL & ~E_NOTICE);
+  
   // configuration parameters
   include('includes/config.php');
 
   include('includes/version.php');
-  
-  // Set the level of error reporting
-  error_reporting(E_ALL & ~E_NOTICE);
 
   if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
     date_default_timezone_set('Europe/Berlin');
