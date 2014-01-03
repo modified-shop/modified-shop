@@ -9,4 +9,4 @@
    --------------------------------------------------------------*/
 
 
-  define('INSTALLER_VERSION', 'Installer 106 rev11 utf8'); 
+  define('INSTALLER_VERSION', 'Installer 106 rev12 utf8'); 

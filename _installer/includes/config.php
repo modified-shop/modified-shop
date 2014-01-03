@@ -10,7 +10,9 @@
    
   /*######################################*/
   
-  define('DIR_MODIFIED_INSTALLER', '_installer');
+  if(!defined('DIR_MODIFIED_INSTALLER')) {
+      define('DIR_MODIFIED_INSTALLER', '_installer');
+  }
   define('MODIFIED_SQL', 'modified_utf8.sql');
   define('DISABLE_PATH_CHECK', false); //default false
   
