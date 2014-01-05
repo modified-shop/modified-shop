@@ -146,4 +146,6 @@ ALTER TABLE orders_products_attributes ADD weight_prefix CHAR(1) NOT NULL;
 #h-h-h - 2013-12-05 - change min length to 0 for state dropdown
 UPDATE configuration SET configuration_value = '0' WHERE configuration_key = 'ENTRY_STATE_MIN_LENGTH'
 
+#Web28 - 2014-01-05 - Added weight to orders
+ALTER TABLE orders ADD languages_id int(11) NOT NULL;
 # Keep an empty line at the end of this file for the db_updater to work properly

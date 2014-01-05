@@ -184,6 +184,8 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'language' => $_SESSION['language'],
       'comments' => $order->info['comments']
     );
+    
+  $sql_data_array['languages_id'] = $_SESSION['languages_id']; 
 
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
