@@ -44,7 +44,7 @@
 					$agb = $agb_array[0];
 					$agb_name = $agb_array[1];
 	
-					$url="https://www.hb-intern.de/www/hbm/api/live_rechtstexte.htm?APIkey=1IqJF0ap6GdDNF7HKzhFyciibdml8t4v&did=".$key."&AccessToken=".$apikey ;
+					$url="https://www.hb-intern.de/www/hbm/api/live_rechtstexte.htm?APIkey=1IqJF0ap6GdDNF7HKzhFyciibdml8t4v&did={$key}&AccessToken={$apikey}&mode=classes";
 		
 					$curl = curl_init();
 					curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
