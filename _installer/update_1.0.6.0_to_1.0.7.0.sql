@@ -144,7 +144,7 @@ ALTER TABLE orders_products_attributes ADD options_values_weight DECIMAL(15,4) N
 ALTER TABLE orders_products_attributes ADD weight_prefix CHAR(1) NOT NULL;
 
 #h-h-h - 2013-12-05 - change min length to 0 for state dropdown
-UPDATE configuration SET configuration_value = '0' WHERE configuration_key = 'ENTRY_STATE_MIN_LENGTH'
+UPDATE configuration SET configuration_value = '0' WHERE configuration_key = 'ENTRY_STATE_MIN_LENGTH';
 
 #Web28 - 2014-01-05 - Added languages_id to orders
 ALTER TABLE orders ADD languages_id int(11) NOT NULL;
