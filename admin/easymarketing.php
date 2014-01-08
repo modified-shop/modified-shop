@@ -12,10 +12,6 @@
 
 require('includes/application_top.php');
 
-// include needed function
-require_once (DIR_FS_INC.'get_external_content.inc.php');
-$iframe = get_external_content('http://api.easymarketing.de/analysis?width=1100&partner_id=modified&website_url='.HTTP_SERVER, 3, false);
-
 require (DIR_WS_INCLUDES.'head.php');
 ?>
   </head>
@@ -71,7 +67,7 @@ require (DIR_WS_INCLUDES.'head.php');
           </tr>
           <tr style="background-color: #FFFFFF;">
             <td>
-              <?php echo $iframe; ?>
+            <iframe style="background-color: transparent; border: 0px none transparent;padding: 0px; overflow: hidden;" seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" width="300px" height="250px" src="http://api.easymarketing.de/demo_chart?website_url=<?php echo urlencode(HTTP_SERVER.DIR_WS_CATALOG); ?>&partner_id=modified&version=large"></iframe>
             </td>
           </tr>
         </table>       
