@@ -1473,6 +1473,9 @@
                   'extensions' => get_loaded_extensions());
   }
 
+
+
+
   /**
    * xtc_generate_category_path()
    *
@@ -1567,11 +1570,35 @@
    */
   function xtc_remove_order($order_id, $restock = false) {
     if ($restock == 'on') {
-      xtc_db_query("update ".TABLE_PRODUCTS." p
-                    join ".TABLE_ORDERS_PRODUCTS." o on o.products_id = p.products_id
-                    set p.products_quantity = p.products_quantity + o.products_quantity,
-                        p.products_ordered = p.products_ordered - o.products_quantity
-                    where o.orders_id = '".xtc_db_input($order_id)."'");
+      $order_query = xtc_db_query("SELECT orders_products_id, 
+                                          products_id, 
+                                          products_quantity 
+                                     FROM ".TABLE_ORDERS_PRODUCTS." 
+                                    WHERE orders_id = '".xtc_db_input($order_id)."'");
+      while ($order = xtc_db_fetch_array($order_query)) {
+        xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+                         SET products_quantity = products_quantity + ".$order['products_quantity'].", 
+                             products_ordered = products_ordered - ".$order['products_quantity']." 
+                       WHERE products_id = '".$order['products_id']."'");
+
+        if (ATTRIBUTE_STOCK_CHECK == 'true') {
+          $orders_attributes_query = xtc_db_query("SELECT orders_products_options_id,
+                                                          orders_products_options_values_id
+                                                     FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                                    WHERE orders_id = '" . xtc_db_input($order_id) . "'
+                                                      AND orders_products_id = '" . $order['orders_products_id'] . "'");
+          if (xtc_db_num_rows($orders_attributes_query)) {
+            while ($orders_attributes = xtc_db_fetch_array($orders_attributes_query)) {
+              xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
+                               SET attributes_stock = attributes_stock + ".$order['products_quantity']." 
+                             WHERE options_id = '" . $orders_attributes['orders_products_options_id'] . "'
+                               AND options_values_id = '" . $orders_attributes['orders_products_options_values_id'] . "'
+                               AND products_id = '" . $order['products_id'] . "'
+                          ");
+            }
+          }
+        }
+      }
     }
     xtc_db_query("delete from ".TABLE_ORDERS." where orders_id = '".xtc_db_input($order_id)."'");
     xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($order_id)."'");
@@ -2398,16 +2425,18 @@
    * @return
    */
   function xtc_getDownloads() {
-    $files = array ();
-    $dir = DIR_FS_CATALOG.'download/';
+    $files = $sort_key = array ();
+    $dir = DIR_FS_CATALOG . 'download/';
     if ($fp = opendir($dir)) {
       while ($file = readdir($fp)) {
         if (is_file($dir.$file) && $file != '.htaccess') {
           $size = filesize($dir.$file);
           $files[] = array ('id' => $file, 'text' => $file.' | '.xtc_format_filesize($size), 'size' => $size, 'date' => date("F d Y H:i:s.", filemtime($dir.$file)));
-        } //if
-      } // while
+          $sort_key[] = $file;
+        }
+      }
       closedir($fp);
+      array_multisort($sort_key, SORT_ASC, $files);
     }
     return $files;
   }
@@ -2422,7 +2451,7 @@
    * @param string $mime_types
    * @return
    */
-  function xtc_try_upload($file = '', $destination = '', $permissions = '777', $extensions = '', $mime_types = '') {
+  function xtc_try_upload($file = '', $destination = '', $permissions = '644', $extensions = '', $mime_types = '') {
     $file_object = new upload($file, $destination, $permissions, $extensions, $mime_types);
     if ($file_object->filename != '') {
       return $file_object;
@@ -2657,7 +2686,7 @@
         }
         return $configuration_value;
       }
-      return defined($cfg_key) ? constant($cfg_key) : 20;
+      return defined($cfg_key) && (int)constant($cfg_key) > 0 ? constant($cfg_key) : 20;
   }
 
   /**
@@ -2672,7 +2701,7 @@
   function xtc_cfg_input_email_language($parameters) {
     
     // include needed function
-    require_once(DIR_FS_INC.'parse_email_language_value.inc.php');
+    require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
     
     // set languages
     $languages = xtc_get_languages();
@@ -2681,7 +2710,7 @@
     $email_fields = '';
     for ($i=0, $n=count($languages); $i<$n; $i++) {
       $email_fields .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-      $email_fields .= xtc_draw_input_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_email_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
+      $email_fields .= xtc_draw_input_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
     }
     
     return $email_fields;
