@@ -806,8 +806,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_languages() {
-
-
     $languages_query = xtc_db_query("SELECT languages_id, 
                                             name, 
                                             code, 
@@ -818,7 +816,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                    ORDER BY sort_order
                                      ");
     
-
     while ($languages = xtc_db_fetch_array($languages_query)) {
       $languages_array[] = array ('id' => $languages['languages_id'],
                                   'name' => $languages['name'],
@@ -1319,7 +1316,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
   }
 
-
   // Sets the status of a product on special
   /**
    * xtc_set_specials_status()
@@ -1613,7 +1609,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
               xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
                                SET attributes_stock = attributes_stock + ".$order['products_quantity']." 
                              WHERE options_id = '" . $orders_attributes['orders_products_options_id'] . "'
-                               AND options_values_id = '" . $orders_attributes['orders_products_options_values_id'] . "'");
+                               AND options_values_id = '" . $orders_attributes['orders_products_options_values_id'] . "'
+                               AND products_id = '" . $order['products_id'] . "'
+                          ");
             }
           }
         }
@@ -2590,7 +2588,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $response;
   }
 
-
   /**
    * xtc_cfg_checkbox_unallowed_module()
    *
@@ -2626,7 +2623,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $unallowed_module;                           
   }
 
-  
   function order_statuses() {
     $statuses_array = array ();
     $statuses_query = xtc_db_query("SELECT orders_status_id, orders_status_name FROM ".TABLE_ORDERS_STATUS." WHERE language_id = '".(int)$_SESSION['languages_id']."' ORDER BY orders_status_name");
@@ -2746,7 +2742,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */ 
   function xtc_draw_gender_pull_down($name, $value) { 
     return xtc_draw_pull_down_menu(
-
       $name,
       array(
         array('id' => '', 'text' => ''),
