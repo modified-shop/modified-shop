@@ -34,8 +34,8 @@ function log_exception(Exception $e)
 
     if (is_object($e)) {
         $backtrace = debug_backtrace();
-        $error_number = $e->getseverity();
-        $error_name = error_level($error_number);
+        $error_number = (method_exists($e, getseverity) ? $e->getseverity() : 'UNDEFINED_ERROR');
+        $error_name = (($error_number != 'UNDEFINED_ERROR') ? error_level($error_number) : 'UNDEFINED_ERROR');
         $error_line = $e->getLine();
         $error_file = $e->getFile();
         $error_message = $e->getMessage();
@@ -58,8 +58,15 @@ function log_exception(Exception $e)
                                          '<div style="height:1px; border-top:1px dotted #000; margin:10px 0px;"></div>';
 
             // write Logfile
-            if ($error_number != E_NOTICE) {
+            if ($error_number != E_NOTICE && $error_number != E_STRICT && $error_number != E_WARNING) {
                 error_log(strftime('%d/%m/%Y %H:%M:%S') . ' ' . $error_name . ' - ' . $error_message . ' in File: ' . $error_file . ' on Line: ' . $error_line . "\n", 3, DIR_FS_LOG.'error.log');
+                $err = 0;
+                for ($i=0, $n=count($backtrace); $i<$n; $i++) {
+                    if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error_file && basename($backtrace[$i]['file']) != 'error_reporting.php') {
+                        error_log(strftime('%d/%m/%Y %H:%M:%S') . 'Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'error.log');
+                        $err ++;
+                    }
+                }
             }
         }
     }
