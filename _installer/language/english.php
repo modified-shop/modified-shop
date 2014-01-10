@@ -49,7 +49,7 @@
   // BOF - web28 - 2010-02-1014 - check FILE PATH
   define('TEXT_PATH_ERROR','<h1>Invalid path</h1>');
   define('TEXT_PATH_ERROR2','Regard! You have entered an invalid file path!');
-  define('TEXT_PATH_ERROR3','Please check your settings!');
+  define('TEXT_PATH_ERROR3','Please check your settings!<br/><br/>You can continue, but it could get problems.');
   // EOF - web28 - 2010-02-1014 - check FILE PATH
   // BOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
   define('TEXT_WRONG_FILE_PERMISSION','WRONG FILE PERMISSIONS ');
@@ -59,7 +59,7 @@
   define('TEXT_ERROR','ERROR');
   define('TEXT_WARNING','WARNING');
   define('TEXT_PHPVERSION_TOO_OLD','ATTENTION! Your PHP version is too old. The shop requires at least version %s!<br /><br />Your PHP version: ');
-  define('TEXT_ERROR_PHP_MAX','ACHTUNG! Your PHP version is not supported. The shop only works up to version %s.<br /><br />Your PHP version: ');
+  define('TEXT_ERROR_PHP_MAX','ATTENTION! Your PHP version is not supported. The shop only works up to version %s.<br/><br/>You can continue, but it could get problems.<br /><br />Your PHP version: ');
   // BOF - h-h-h - 2011-04-14 - check fsockopen
   define('TEXT_FSOCKOPEN_NOT_SUPPORTED','FSOCKOPEN IS NOT SUPPORTED. Some third-pary modules require fsockopen. They will not work without fsockopen support!');
   // EOF - h-h-h - 2011-04-14 - check fsockopen

@@ -82,16 +82,16 @@
   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
   //check MySQL *server* version
+  $db_warning = '';
   if (!$db_error) {
     if (function_exists('version_compare')) {
       if(version_compare(xtc_db_get_server_info($db['DB_MYSQL_TYPE']), "5.0.0", "<=") && strpos(strtolower(xtc_db_get_server_info($db['DB_MYSQL_TYPE'])), 'native')=== false){
-        $db_error = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 5.0.0. <br /><br />' . TEXT_DB_SERVER_VERSION . xtc_db_get_server_info($db['DB_MYSQL_TYPE']) . '</strong>.';
+          $db_warning = '<br /><strong>' . TEXT_DB_SERVER_VERSION_ERROR .  ' 5.0.0. <br /><br />' . TEXT_DB_SERVER_VERSION . xtc_db_get_server_info($db['DB_MYSQL_TYPE']) . '</strong>.';
       }
     }
   }
   
   //check MySQL *client* version
-  $db_warning = '';
   if (!$db_error) {
     if (function_exists('version_compare')) {
       preg_match("/[0-9]\.[0-9]\.[0-9]/",xtc_db_get_client_info($db['DB_MYSQL_TYPE']), $client_info);
