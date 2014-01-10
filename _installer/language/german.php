@@ -49,7 +49,7 @@
   // BOF - web28 - 2010-02-1014 - check FILE PATH
   define('TEXT_PATH_ERROR','<h1>URL oder Dateipfad ung&uuml;ltig</h1>');
   define('TEXT_PATH_ERROR2','Achtung! Sie haben eine ung&uuml;ltige URL oder einen ung&uuml;ltigen Dateipfad eingegeben!');
-  define('TEXT_PATH_ERROR3','Bitte &uuml;berpr&uuml;fen Sie Ihre Einstellungen!<br/><br/>Hinweis: Sie k&onuml;nnen die Installation fortsetzen, allerdings kann es zu unerwarteten Problemen kommen.');
+  define('TEXT_PATH_ERROR3','Bitte &uuml;berpr&uuml;fen Sie Ihre Einstellungen!<br/><br/>Hinweis: Sie k&ouml;nnen die Installation fortsetzen, allerdings kann es zu unerwarteten Problemen kommen.');
   // EOF - web28 - 2010-02-1014 - check FILE PATH
   // BOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
   define('TEXT_WRONG_FILE_PERMISSION','FALSCHE DATEIRECHTE ');
@@ -59,7 +59,7 @@
   define('TEXT_ERROR','FEHLER');
   define('TEXT_WARNING','WARNUNG');
   define('TEXT_PHPVERSION_TOO_OLD','ACHTUNG! Ihre PHP-Version ist zu alt. Der Shop setzt mindestens die Version %s voraus.<br /><br />Ihre PHP-Version: ');
-  define('TEXT_ERROR_PHP_MAX','ACHTUNG! Ihre PHP-Version ist zu neu. Der Shop funktioniert nur bis Version %s.<br /><br />Hinweis: Sie k&onuml;nnen die Installation fortsetzen, allerdings kann es zu unerwarteten Problemen kommen.<br /><br />Ihre PHP-Version: ');
+  define('TEXT_ERROR_PHP_MAX','ACHTUNG! Ihre PHP-Version ist zu neu. Der Shop funktioniert nur bis Version %s.<br /><br />Hinweis: Sie k&ouml;nnen die Installation fortsetzen, allerdings kann es zu unerwarteten Problemen kommen.<br /><br />Ihre PHP-Version: ');
   // BOF - h-h-h - 2011-04-14 - check fsockopen
   define('TEXT_FSOCKOPEN_NOT_SUPPORTED','FSOCKOPEN WIRD NICHT UNTERST&Uuml;TZT. Einige Dritt-Module verwenden fsockopen. Diese werden ohne fsockopen-Unterst&uuml;tzung nicht funktionieren!');
   // EOF - h-h-h - 2011-04-14 - check fsockopen

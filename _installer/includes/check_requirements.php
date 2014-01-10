@@ -11,7 +11,7 @@
    --------------------------------------------------------------*/
 
   define('PHP_VERSION_MIN', '5.0.0');
-  define('PHP_VERSION_MAX', '5.4.99');
+  define('PHP_VERSION_MAX', '5.2.99');
 
   //BOF *************  check PHP-Version *************
   //BOF - Dokuman - 2012-11-19: remove irritating PHP-Version message
@@ -22,8 +22,9 @@
       $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
     }
     if(version_compare(phpversion(), PHP_VERSION_MAX, ">")){
-      //$error_flag = true;
+      $error_flag = true;
       $php_flag = true;
+      $continue = true;
       $message .= '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.';
     }
   } else {
