@@ -585,7 +585,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
+      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
     }
   }
   
@@ -627,7 +627,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
+      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
     }
   }
   
@@ -687,7 +687,7 @@ function xtcCheckSpecial($pID) {
         );
       }
     } else {
-      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $price;
+      return $this->show_price_tax ? round($sPrice, $this->currencies[$this->actualCurr]['decimal_places']) : $sPrice;
     }
   }
   
