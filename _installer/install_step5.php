@@ -168,7 +168,8 @@
                         </table>
                       </form>
                       <?php
-                        } else {
+                        //} else {
+                      } 
                           //create  includes/configure.php
                           include ('includes/templates/configure.php');
                           $fp = fopen(DIR_FS_CATALOG . 'includes/configure.php', 'w');
