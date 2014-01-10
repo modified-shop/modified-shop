@@ -186,7 +186,8 @@
             </tr>            
           </table>
         </div>
-
+        
+      <div style="clear:both;"><div>
       <table class="tableInput border0">
         <tr>
           <td style="width:260px"><span class="main">&nbsp;</span></td>
