@@ -74,7 +74,7 @@
         $params .= 'keywords='.$_GET['keywords'];
       }
     }
-    xtc_redirect(xtc_href_link($action, $params, 'NONSSL'));
+    xtc_redirect(xtc_href_link($action, xtc_get_all_get_params(array('keywords', 'search', 'fallback')).$params, 'NONSSL'));
 
   } else {
 
