@@ -435,7 +435,7 @@ class product {
         'PRODUCTS_SHIPPING_IMAGE'=>$shipping_status_image,
         'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
         'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
-        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', $array['products_name'].TEXT_INFO_DETAILS).'</a>'
+        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>'
       );
 
     $productData = array_merge($productData,$productDataAdds);                     
