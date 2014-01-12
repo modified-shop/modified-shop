@@ -20,7 +20,7 @@
   require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
   $xtPrice = new xtcPrice(DEFAULT_CURRENCY,$_SESSION['customers_status']['customers_status_id']);
   require_once(DIR_FS_INC .'xtc_get_tax_rate.inc.php');
-
+  
   //display per page
   $cfg_max_display_results_key = 'MAX_DISPLAY_SPECIALS_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
@@ -61,7 +61,8 @@
           $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
         }
         
-        $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
+        
+        $expires_date = isset($_POST['specials_expires']) && !empty($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
 
         $sql_data_array = array('products_id' => (int)$_POST['products_id'],
                                 'specials_quantity' => (int)$_POST['specials_quantity'],
@@ -91,7 +92,7 @@
           $_POST['specials_price'] = ($_POST['products_price'] - (($_POST['specials_price'] / 100) * $_POST['products_price']));
         }
         
-        $expires_date = isset($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
+        $expires_date = isset($_POST['specials_expires']) && !empty($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
 
 
         $sql_data_array = array('specials_quantity' => (int)$_POST['specials_quantity'],
@@ -111,7 +112,6 @@
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
   <script type="text/javascript" src="includes/general.js"></script>
   <?php 
   if ( ($action == 'new') || ($action == 'edit') ) {
@@ -194,20 +194,20 @@ require (DIR_WS_INCLUDES.'head.php');
             }
           }
 
-          $price=$sInfo->products_price;
-          $new_price=$sInfo->specials_new_products_price;
+          $price = $sInfo->products_price;
+          $new_price = $sInfo->specials_new_products_price;
           $new_price_netto = '';
           $price_netto = '';
-          if (PRICE_IS_BRUTTO=='true'){
+          if (PRICE_IS_BRUTTO == 'true'){
             $price_netto = ' ' . TEXT_NETTO.'<strong>'.xtc_round($price,PRICE_PRECISION).'</strong>  ';
             if ($price > 0) {
               $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
             }            
-            $price= ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-            $new_price= ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+            $price = ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+            $new_price = ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
           }
-          $price=xtc_round($price,PRICE_PRECISION);
-          $new_price=xtc_round($new_price,PRICE_PRECISION);              
+          $price = xtc_round($price,PRICE_PRECISION);
+          $new_price = xtc_round($new_price,PRICE_PRECISION);           
 
           ?>
                   

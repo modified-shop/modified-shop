@@ -342,7 +342,6 @@ $catfunc->set_page_parameter();
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-  <script type="text/javascript" src="includes/javascript/jquery.min.js"></script>
   <script type="text/javascript" src="includes/general.js"></script>
   <script type="text/javascript" src="includes/javascript/categories.js"></script><?php //web28 - 2010-09-21-  js-file not in folder // Dokuman - 2010-10-31 - file was missing -> functions relevant for buttons ins category_view?>
   <script type="text/javascript"> 
