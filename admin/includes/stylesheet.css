@@ -622,3 +622,26 @@ box-shadow: 0px 0px 3px #CCCCCC inset;
 margin: 3px 0;
 border: 0;
 }
+
+a.btnbox,
+a.btnbox:link,
+a.btnbox:visited,
+a.btnbox:active,
+span.btnbox{
+padding: 0;
+margin: 5px auto;
+background-color: #F1F1F1;
+width:120px;
+display: block;
+}
+a.btnbox:hover{
+background: #ccc;
+}
+
+/* IE 7 Fix */
+* + html a.btnbox:link,    
+* + html a.btnbox:visited, 
+* + html a.btnbox:active, 
+* + html a.btnbox:hover   {
+padding: 0;
+}
