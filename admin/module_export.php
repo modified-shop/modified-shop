@@ -73,7 +73,7 @@
         $get_params = isset($module->get_params) ? $module->get_params : '';
         //convert params array to params string
         $params = convert_params_array_to_string($get_params);
-        $link = xtc_href_link(FILENAME_MODULE_EXPORT, $params);
+        $modulelink = xtc_href_link(FILENAME_MODULE_EXPORT, $params);
         $recursive_call = isset($module->recursive_call) ? $module->recursive_call : '';
         $infotext = isset($module->infotext) ? $module->infotext : '';
         break;
@@ -248,7 +248,8 @@ if (xtc_not_null($action) && !$box) {
     <!-- body //-->
     <?php
     //BOF NEW MODULE PROCESSING
-    echo isset($link) ? '<form name="modul_continue" action="'.$link.'" method="POST"></form>' : '';
+    echo isset($modulelink) ? xtc_draw_form('modul_continue',FILENAME_MODULE_EXPORT, $params, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()) : '';
+    
     echo isset($recursive_call) ? $recursive_call : '';
     //EOF NEW MODULE PROCESSING
     ?>
@@ -444,7 +445,7 @@ if (xtc_not_null($action) && !$box) {
                   default:
                     if (isset($mInfo) && is_object($mInfo)) {
                       $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
-                      if ($mInfo->status == '1') {
+                      if ($mInfo->status != '0') {
                         $keys = '';
                         reset($mInfo->keys);
                         while (list(, $value) = each($mInfo->keys)) {
@@ -468,14 +469,14 @@ if (xtc_not_null($action) && !$box) {
                         }
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                         $contents[] = array('align' => 'center', 'text' => (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
-                                                                             ?
-                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=backup&box=1') . '">' . BUTTON_BACKUP . '</a>'.
-                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=restore&box=1') . '">' . BUTTON_RESTORE . '</a>'
-                                                                            : '').
-                                                                           '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove&box=1') . '">' . BUTTON_MODULE_REMOVE . '</a></br />'.
+                                                                             ? '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
+                                                                             : '').
                                                                            (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
-                                                                             ? '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
-                                                                             : '')
+                                                                             ?
+                                                                           '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=backup&box=1') . '">' . BUTTON_BACKUP . '</a>'.
+                                                                           '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=restore&box=1') . '">' . BUTTON_RESTORE . '</a>'
+                                                                            : '').
+                                                                           '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=remove&box=1') . '">' . BUTTON_MODULE_REMOVE . '</a>'
                                             );
                         $contents[] = array('text' => '<br />' . $mInfo->description);
                         $contents[] = array('text' => '<br />' . $keys);
