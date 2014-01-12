@@ -1338,7 +1338,7 @@
    */
   function xtc_set_specials_status($specials_id, $status) {
     if ($status == '1') {
-      return xtc_db_query("update ".TABLE_SPECIALS." set status = '1', expires_date = NULL, date_status_change = now() where specials_id = '".$specials_id."'");
+      return xtc_db_query("update ".TABLE_SPECIALS." set status = '1', date_status_change = now() where specials_id = '".$specials_id."'"); // remove setting: expires_date = NULL
     } elseif ($status == '0') {
       return xtc_db_query("update ".TABLE_SPECIALS." set status = '0', date_status_change = now() where specials_id = '".$specials_id."'");
     } else {
@@ -1472,6 +1472,7 @@
                   'zend_thread_safty' => (int) function_exists('zend_thread_id'),
                   'extensions' => get_loaded_extensions());
   }
+
 
 
 
