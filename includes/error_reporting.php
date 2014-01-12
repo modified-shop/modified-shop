@@ -34,7 +34,7 @@ function log_exception(Exception $e)
 
     if (is_object($e)) {
         $backtrace = debug_backtrace();
-        $error_number = (method_exists($e, getseverity) ? $e->getseverity() : 'UNDEFINED_ERROR');
+        $error_number = (method_exists($e, 'getseverity') ? $e->getseverity() : 'UNDEFINED_ERROR');
         $error_name = (($error_number != 'UNDEFINED_ERROR') ? error_level($error_number) : 'UNDEFINED_ERROR');
         $error_line = $e->getLine();
         $error_file = $e->getFile();
