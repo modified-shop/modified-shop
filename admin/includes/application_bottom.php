@@ -34,4 +34,11 @@
       echo '</div>';
     }
   }
+  
+  foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_bottom/','php') as $file) require ($file); 
+  
+  // close MySQL connection
+  session_write_close();
+  xtc_db_close();
+ 
 ?>

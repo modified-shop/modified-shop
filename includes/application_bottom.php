@@ -19,7 +19,7 @@
 // page parse time
 if (STORE_PAGE_PARSE_TIME == 'true') {
   $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
-  error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' - ' . getenv('REQUEST_URI') . ' (' . $parse_time . 's)' . "\n", 3, STORE_PAGE_PARSE_TIME_LOG);
+  error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' [' . $parse_time . 's] ' . getenv('REQUEST_URI') . "\n", 3, DIR_FS_LOG.STORE_PAGE_PARSE_TIME_LOG);
 }
 if (DISPLAY_PAGE_PARSE_TIME == 'all') {
   $parse_time = number_format((microtime(true)-PAGE_PARSE_START_TIME), 3);
@@ -53,6 +53,12 @@ if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True' &&
 }
 /******** Findologic **********/
 
+## easymarketing - conversion tracking
+if (defined('MODULE_EASYMARKETING_STATUS') && MODULE_EASYMARKETING_STATUS == 'True') {
+  include(DIR_FS_CATALOG.'api/easymarketing/conversion_tracker.php');
+}
+## easymarketing - conversion tracking
+
 /**
  * new error handling
  */
@@ -64,6 +70,12 @@ if (is_array($error_exceptions)) {
     echo '</div>';
   }
 }
+
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
+
+// close MySQL connection
+session_write_close();
+xtc_db_close();
 
 // end of page
 echo '</body>';
