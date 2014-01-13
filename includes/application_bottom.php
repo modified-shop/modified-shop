@@ -71,6 +71,8 @@ if (is_array($error_exceptions)) {
   }
 }
 
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
+
 // close MySQL connection
 session_write_close();
 xtc_db_close();
@@ -78,3 +80,4 @@ xtc_db_close();
 // end of page
 echo '</body>';
 echo '</html>';
+?>

@@ -127,6 +127,8 @@ require_once(DIR_FS_INC . 'xtc_get_top_level_domain.inc.php');
 require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 require_once(DIR_FS_INC . 'xtc_backup_restore_configuration.php');
 
+foreach(auto_require(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
+
 // design layout (wide of boxes in pixels) (default: 125)
 define('BOX_WIDTH', 125);
 
@@ -145,6 +147,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
     define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
   }
 }
+
+foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_top_begin/','php') as $file) require ($file);
 
 define('FILENAME_IMAGEMANIPULATOR',IMAGE_MANIPULATOR);
 
@@ -374,15 +378,6 @@ if (!isset($_SESSION['customer_id'])) {
 
 xtc_check_permission($pagename);
 
-// Smarty Template Engine
-require (DIR_FS_EXTERNAL . 'smarty/smarty_2/Smarty.class.php');
+foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_top_end/','php') as $file) require ($file);
 
-/* magnalister v1.0.1 */
-if (defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS == 'True') {
-  if (!defined('MAGNALISTER_PLUGIN') && file_exists(DIR_FS_DOCUMENT_ROOT.'magnaCallback.php')) {
-    ob_start();
-    require_once (DIR_FS_DOCUMENT_ROOT.'magnaCallback.php');
-    ob_end_clean();
-  }
-}
-/* END magnalister */
+?>
