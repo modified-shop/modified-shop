@@ -107,8 +107,8 @@ class validpass {
 		
 		if (@is_readable('/dev/urandom') && ($fh = @fopen('/dev/urandom', 'rb')))
 		{
-			$output = fread($fh, $count);
-			fclose($fh);
+			$output = @fread($fh, $count);
+			@fclose($fh);
 		}
 
 		if (strlen($output) < $count)
