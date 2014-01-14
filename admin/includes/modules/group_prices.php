@@ -20,7 +20,7 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-
+   
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 
@@ -63,78 +63,88 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
   </tr>
 <?php
 foreach($group_array as $group_data) {
-  if ($group_data['STATUS_NAME'] != '') {
 ?>
   <tr>
     <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo $group_data['STATUS_NAME']; ?></td>
       <?php
-          if (PRICE_IS_BRUTTO == 'true') {
-            $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id) * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
-          } else {
-            $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), PRICE_PRECISION);
-          }
+        if (PRICE_IS_BRUTTO == 'true') {
+          $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id) * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
+        } else {
+          $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), PRICE_PRECISION);
+        }
       ?>
     <td style="border-top: 1px solid; border-color: #cccccc;" class="main">
       <?php
-          echo xtc_draw_input_field('products_price_'.$group_data['STATUS_ID'], $products_price);
-          if (PRICE_IS_BRUTTO == 'true' && get_group_price($group_data['STATUS_ID'], $pInfo->products_id) != '0') {
-            echo ' '.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), false).'</strong>  ';
-          }
-          if ($_GET['pID'] != '') {
-            echo ' '.TXT_STAFFELPREIS;
-      ?> <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/arrow_down.gif" height="12" width="12" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');">
-      <?php
-          }
-      ?>
-      <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription"><br />
-      <?php
+        echo xtc_draw_input_field('products_price_'.$group_data['STATUS_ID'], $products_price);
+        if (PRICE_IS_BRUTTO == 'true' && get_group_price($group_data['STATUS_ID'], $pInfo->products_id) != '0') {
+          echo ' '.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), false).'</strong>  ';
+        }
+        echo ' '.TXT_STAFFELPREIS;
+
         // ok, lets check if there is already a staffelpreis
-        $staffel_query = xtc_db_query("SELECT products_id,
+        $staffel_query = xtc_db_query("SELECT price_id,
+                                              products_id,
                                               quantity,
                                               personal_offer
                                          FROM personal_offers_by_customers_status_".$group_data['STATUS_ID']."
-                                        WHERE products_id = '".$pInfo->products_id."' AND quantity != 1
+                                        WHERE products_id = '".$pInfo->products_id."'
+                                          AND quantity != 1
                                      ORDER BY quantity ASC");
-        echo '<table width="280" border="0" cellpadding="0" cellspacing="2">';
-        while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
-          // load data into array
-          ?>
-          <tr>
-            <td class="main" style="border: 1px solid; border-color: #cccccc; padding: 0 3px; width:30px;"><?php echo $staffel_values['quantity']; ?></td>            
-            <td class="main" style="border: 1px solid; border-color: #cccccc; padding: 0 3px; width:100px; white-space:nowrap;">
-              <?php
-              if (PRICE_IS_BRUTTO == 'true') {
-                $tax_query = xtc_db_query("select tax_rate from ".TABLE_TAX_RATES." where tax_class_id = '".$pInfo->products_tax_class_id."' ");
-                $tax = xtc_db_fetch_array($tax_query);
-                $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + $tax['tax_rate']) / 100), PRICE_PRECISION);
-              } else {
-                $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
-              }
-              echo $products_price;
-              if (PRICE_IS_BRUTTO == 'true') {
-                echo ' <br />'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong>  ';
-              }
+        ?> 
+        <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'icon_arrow_right.gif' : 'icon_arrow_grey.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');">
+        <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription">
+          <table class="tableConfig borderall" style="width:550px;">
+            <tr>
+              <td width="55px"><b><?php echo TXT_STK; ?></b></td>
+              <td><b><?php echo TXT_STAFFELPREIS; ?></b></td>
+              <td width="140px"><b>EK Preis</b></td>
+              <td width="55px"><b><?php echo BUTTON_DELETE; ?></b></td>
+            </tr>
+            <?php
+            $count = 0;
+            while ($staffel_values = xtc_db_fetch_array($staffel_query)) {
               ?>
-            </td>
-            <td align="left" style="padding-left:5px;"><a class="button" onclick="W4B_graduated_prices_edit_removerow(this);" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . '&function=delete&quantity=' . $staffel_values['quantity'] . '&statusID=' . $group_data['STATUS_ID'] . '&action=new_product&pID=' . $_GET['pID']); ?>"><?php echo BUTTON_DELETE; ?></a></td>
-          </tr>          
-          <?php
-        }
-        echo '</table>';
-        echo TXT_STK;
-        echo xtc_draw_small_input_field('products_quantity_staffel_'.$group_data['STATUS_ID'], 0);
-        echo TXT_PRICE;
-        echo xtc_draw_input_field('products_price_staffel_'.$group_data['STATUS_ID'], 0);        
-        echo '&nbsp;<input type="submit" name="graduated_prices_edit" class="button" onclick="W4B_graduated_prices_edit_addrow(this, '.$group_data['STATUS_ID'].');" value="' . BUTTON_INSERT . '"/>';
-        ?>
-        <br />
+              <tr>
+                <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][quantity]', $staffel_values['quantity'], 'style="width:50px;"'); ?></td>            
+                <td class="main">
+                  <?php
+                  if (PRICE_IS_BRUTTO == 'true') {
+                    $tax_query = xtc_db_query("select tax_rate from ".TABLE_TAX_RATES." where tax_class_id = '".$pInfo->products_tax_class_id."' ");
+                    $tax = xtc_db_fetch_array($tax_query);
+                    $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + $tax['tax_rate']) / 100), PRICE_PRECISION);
+                  } else {
+                    $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
+                  }
+                  echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price);
+                  if (PRICE_IS_BRUTTO == 'true') {
+                    echo '&nbsp;'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong>';
+                  }
+                  echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
+                  ?>
+                </td>
+                <td class="main" align="center"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
+              </tr>          
+              <?php
+              $count++;
+            }
+            $max_staffel = MIN_GROUP_PRICE_STAFFEL;
+            if ($count == $max_staffel) $max_staffel++;
+            for ($is=$count; $is<$max_staffel; $is++) {
+            ?>
+            <tr>
+              <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][quantity]', '', 'style="width:50px;"'); ?></td>            
+              <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][personal_offer]', ''); ?></td>
+              <td class="main"></td>
+            </tr>
+            <?php
+            }
+            ?>
+        </table>
       </div>
     </td>
   </tr>
 <?php
-  }
 }
-W4B_graduated_prices_edit_logic();
 ?>
   <tr>
     <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_ALLOWED; ?></td>
