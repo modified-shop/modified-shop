@@ -856,4 +856,7 @@ define('CSV_CAT_DEPTH_TITLE','Category depth');
 define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go ? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly !');
 //EOC added constants for category depth, noRiddle
 //EOC added text constants for group id 20, noRiddle
+
+define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Graduated Price');
+define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Minimum Graduated Price to show.');
 ?>
