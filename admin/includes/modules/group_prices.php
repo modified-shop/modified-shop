@@ -97,7 +97,6 @@ foreach($group_array as $group_data) {
             <tr>
               <td width="55px"><b><?php echo TXT_STK; ?></b></td>
               <td><b><?php echo TXT_STAFFELPREIS; ?></b></td>
-              <td width="140px"><b>EK Preis</b></td>
               <td width="55px"><b><?php echo BUTTON_DELETE; ?></b></td>
             </tr>
             <?php
