@@ -596,21 +596,37 @@ class categories {
           }
           $personal_price = xtc_round($personal_price, PRICE_PRECISION);
         }
-        if ($action == 'insert') {
-          xtc_db_query("DELETE FROM personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID']."
-                              WHERE products_id = '".$products_id."'
-                                AND quantity    = '1'");
+        // first delete all 
+        xtc_db_query("DELETE FROM personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID']." WHERE products_id = '".$products_id."'");
+        
+        // insert price for 1 piece
+        $insert_array = array ('personal_offer' => $personal_price,
+                               'quantity' => '1',
+                               'products_id' => $products_id
+                               );
+        xtc_db_perform("personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID'], $insert_array);
 
-          $insert_array = array ();
-          $insert_array = array ('personal_offer' => $personal_price,
-                                 'quantity' => '1',
-                                 'products_id' => $products_id);
-          xtc_db_perform("personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID'], $insert_array);
-        } else {
-          xtc_db_query("UPDATE personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID']."
-                                         SET personal_offer = '".$personal_price."'
-                                       WHERE products_id = '".$products_id."'
-                                         AND quantity    = '1'");
+        for ($is=0, $ns=sizeof($products_data['products_staffel'][$group_data[$col]['STATUS_ID']]); $is<$ns; $is++) {
+          if ($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'] > 0) {
+            $staffelpreis = $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['personal_offer'];
+            if (PRICE_IS_BRUTTO == 'true' && $staffelpreis!='') {
+              $staffelpreis = round(($staffelpreis / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100), PRICE_PRECISION);
+            }
+            $insert_array = array ('personal_offer' => $staffelpreis,
+                                   'personal_ek' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['personal_ek'],
+                                   'quantity' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'],
+                                   'price_id' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['price_id'],
+                                   'products_id' => $products_id,
+                                   );
+            xtc_db_perform("personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID'], $insert_array);
+          }
+          
+          // delete if checked
+          if (isset($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['delete'])) {
+            xtc_db_query("DELETE FROM personal_offers_by_customers_status_".$group_data[$col]['STATUS_ID']." 
+                                WHERE products_id = '".$products_id."'
+                                  AND price_id = '".$products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['price_id']."'");
+          }
         }
       }
     }
