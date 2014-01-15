@@ -613,7 +613,6 @@ class categories {
               $staffelpreis = round(($staffelpreis / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100), PRICE_PRECISION);
             }
             $insert_array = array ('personal_offer' => $staffelpreis,
-                                   'personal_ek' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['personal_ek'],
                                    'quantity' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'],
                                    'price_id' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['price_id'],
                                    'products_id' => $products_id,
