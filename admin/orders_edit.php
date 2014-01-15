@@ -884,9 +884,14 @@ if ($action == 'save_order') {
   $products = xtc_db_fetch_array($products_query);
   $subtotal_final = $products['subtotal_final'];
   $subtotal_text = $xtPrice->xtcFormat($subtotal_final, true);
-
-  xtc_db_query("update ".TABLE_ORDERS_TOTAL." set text = '".$subtotal_text."', value = '".$subtotal_final."' where orders_id = '".(int)$_POST['oID']."' and class = 'ot_subtotal' ");
-  // Errechne neue Zwischensumme für Artikel Ende
+  
+  $total_data_array = array(
+      'text' => xtc_db_prepare_input($subtotal_text),
+      'value' => xtc_db_prepare_input($subtotal_final)
+    );
+    
+  xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($_POST['oID']). "' AND class='ot_subtotal'");
+// Errechne neue Zwischensumme für Artikel Ende
 
   //BOF####### Produkte #######//
   $products_query = xtc_db_query("select final_price, products_tax, allow_tax from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".(int)$_POST['oID']."' ");
@@ -1174,7 +1179,7 @@ if ($action == 'save_order') {
       'value' => xtc_db_prepare_input($total_final)
     );
     
-  xtc_db_perform(TABLE_ORDERS, $total_data_arra, 'update', "orders_id ='". (int)($_POST['oID']). "' AND class='ot_total'");
+  xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($_POST['oID']). "' AND class='ot_total'");
   //EOF  web28 - 2010-12-04 Errechne neue Gesamtsumme für Artikel
 
   // Löschen des Zwischenspeichers Anfang
