@@ -645,3 +645,13 @@ background: #ccc;
 * + html a.btnbox:hover   {
 padding: 0;
 }
+
+.longDescription .tableConfig th{
+padding:3px; 
+border: 1px solid #aaaaaa;
+background: #ccc;
+}
+
+.longDescription .tableConfig td{
+background: #E8E8E8;
+}

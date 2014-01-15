@@ -104,9 +104,9 @@ foreach($group_array as $group_data) {
         <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription">
           <table class="tableConfig borderall">
             <tr>
-              <td width="55px"><b><?php echo TXT_STK; ?></b></td>
-              <td><b><?php echo TXT_STAFFELPREIS; ?></b></td>
-              <td width="55px"><b><?php echo BUTTON_DELETE; ?></b></td>
+              <th style="width:55px;"><b><?php echo TXT_STK; ?></b></th>
+              <th><b><?php echo TXT_STAFFELPREIS; ?></b></th>
+              <th style="width:55px;"><b><?php echo BUTTON_DELETE; ?></b></th>
             </tr>
             <?php
             $count = 0;
@@ -130,7 +130,7 @@ foreach($group_array as $group_data) {
                   echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
                   ?>
                 </td>
-                <td class="main" align="center"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
+                <td class="main txta-c"><?php echo xtc_draw_checkbox_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][delete]'); ?></td>
               </tr>          
               <?php
               $count++;
