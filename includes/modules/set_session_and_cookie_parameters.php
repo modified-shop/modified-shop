@@ -18,10 +18,10 @@ if (STORE_SESSIONS != 'mysql') {
 
 // set the session cookie parameters
 if (function_exists('session_set_cookie_params')) {
-  session_set_cookie_params(0, '/', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+  session_set_cookie_params(0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
 } elseif (function_exists('ini_set')) {
   ini_set('session.cookie_lifetime', '0');
-  ini_set('session.cookie_path', '/');
+  ini_set('session.cookie_path', DIR_WS_CATALOG);
   ini_set('session.cookie_domain', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
 }
 // set the session ID if it exists
@@ -36,7 +36,7 @@ elseif (($request_type == 'SSL') && isset ($_GET[xtc_session_name()])) {
 $session_started = false;
 $truncate_session_id = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
-  xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, '/', (xtc_not_null($current_domain) ? $current_domain : ''));
+  xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? $current_domain : ''));
   if (isset($_COOKIE['cookie_test'])) {
     xtc_session_start();
     $session_started = true;

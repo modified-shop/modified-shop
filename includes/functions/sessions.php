@@ -60,7 +60,6 @@
         $flag = 'admin';
       }
       $expiry = time() + (int)$SESS_LIFE;
-      //$value = addslashes($val);
       $value = base64_encode($val);
 
       $check_query = xtc_db_query("-- includes/functions/sessions.php
@@ -69,20 +68,17 @@
                                     WHERE sesskey = '" . xtc_db_input($key) . "'");
       $total = xtc_db_fetch_array($check_query);
 
+      $sql_data_array = array('sesskey' => $key,
+                              'expiry'  => (int)$expiry,
+                              'value'   => $value,
+                              'flag'    => $flag
+                             );
+ 
       if ($total['total'] > 0) {
-        return xtc_db_query("-- includes/functions/sessions.php
-                                   UPDATE " . TABLE_SESSIONS . "
-                                SET expiry = '". $expiry ."',
-                                     value = '". xtc_db_input($value) ."',
-                                      flag = '". xtc_db_input($flag) ."'
-                             WHERE sesskey = '". xtc_db_input($key) ."'");
+        unset($sql_data_array['sesskey']);
+        return xtc_db_perform(TABLE_SESSIONS, $sql_data_array, 'update', "sesskey='". xtc_db_input($key) ."'");
       } else {
-        $sql_data_array = array('sesskey' => $key,
-                                'expiry'  => (int)$expiry,
-                                'value'   => $value,
-                                'flag'    => $flag
-                               );
-        return xtc_db_perform(TABLE_SESSIONS,$sql_data_array);
+        return xtc_db_perform(TABLE_SESSIONS, $sql_data_array);
       }
     }
 
