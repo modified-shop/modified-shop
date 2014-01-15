@@ -91,7 +91,7 @@ foreach($group_array as $group_data) {
                                           AND quantity != 1
                                      ORDER BY quantity ASC");
         ?> 
-        <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'icon_arrow_right.gif' : 'icon_arrow_grey.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');">
+        <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'arrow_down_green.gif' : 'arrow_down.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');">
         <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription">
           <table class="tableConfig borderall" style="width:550px;">
             <tr>
