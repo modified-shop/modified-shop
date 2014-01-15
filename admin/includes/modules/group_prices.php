@@ -53,7 +53,8 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
         $products_price = xtc_round($pInfo->products_price, PRICE_PRECISION);
       }
       ?>
-    <td class="main"><?php echo xtc_draw_input_field('products_price', $products_price); ?>
+    <td class="main" style="width:160px;"><?php echo xtc_draw_input_field('products_price', $products_price); ?></td>
+    <td class="main" style="width:100px; white-space: nowrap;">
       <?php
       if (PRICE_IS_BRUTTO == 'true') {
         echo TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($pInfo->products_price, false).'</strong>  ';
@@ -76,10 +77,18 @@ foreach($group_array as $group_data) {
     <td style="border-top: 1px solid; border-color: #cccccc;" class="main">
       <?php
         echo xtc_draw_input_field('products_price_'.$group_data['STATUS_ID'], $products_price);
+      ?>
+    </td>
+    <td style="border-top: 1px solid; border-color: #cccccc; white-space: nowrap;" class="main">
+      <?php
         if (PRICE_IS_BRUTTO == 'true' && get_group_price($group_data['STATUS_ID'], $pInfo->products_id) != '0') {
-          echo ' '.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), false).'</strong>  ';
+          echo TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), false).'</strong>';
         }
-        echo ' '.TXT_STAFFELPREIS;
+      ?>
+    </td>
+    <td style="border-top: 1px solid; border-color: #cccccc;" class="main">
+      <?php
+        echo TXT_STAFFELPREIS;
 
         // ok, lets check if there is already a staffelpreis
         $staffel_query = xtc_db_query("SELECT price_id,
@@ -88,12 +97,12 @@ foreach($group_array as $group_data) {
                                               personal_offer
                                          FROM personal_offers_by_customers_status_".$group_data['STATUS_ID']."
                                         WHERE products_id = '".$pInfo->products_id."'
-                                          AND quantity != 1
+                                          AND quantity != '1'
                                      ORDER BY quantity ASC");
         ?> 
-        <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'arrow_down_green.gif' : 'arrow_down.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');">
+        <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo ((xtc_db_num_rows($staffel_query) > 0) ? 'arrow_down_green.gif' : 'arrow_down.gif'); ?>" height="16" width="16" onclick="javascript:toggleBox('staffel_<?php echo $group_data['STATUS_ID']; ?>');" style="vertical-align: middle;">
         <div id="staffel_<?php echo $group_data['STATUS_ID']; ?>" class="longDescription">
-          <table class="tableConfig borderall" style="width:550px;">
+          <table class="tableConfig borderall">
             <tr>
               <td width="55px"><b><?php echo TXT_STK; ?></b></td>
               <td><b><?php echo TXT_STAFFELPREIS; ?></b></td>
@@ -127,7 +136,7 @@ foreach($group_array as $group_data) {
               $count++;
             }
             $max_staffel = MIN_GROUP_PRICE_STAFFEL;
-            if ($count == $max_staffel) $max_staffel++;
+            if ($count >= $max_staffel) $max_staffel=$count+1;
             for ($is=$count; $is<$max_staffel; $is++) {
             ?>
             <tr>
@@ -146,11 +155,11 @@ foreach($group_array as $group_data) {
 }
 ?>
   <tr>
-    <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_ALLOWED; ?></td>
-    <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo xtc_draw_input_field('products_discount_allowed', $pInfo->products_discount_allowed); ?></td>
+    <td style="border-top: 1px solid; border-color: #cccccc;" colspan="4"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
   </tr>
   <tr>
-    <td colspan="2"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
+    <td class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_ALLOWED; ?></td>
+    <td class="main" colspan="3"><?php echo xtc_draw_input_field('products_discount_allowed', $pInfo->products_discount_allowed); ?></td>
   </tr>
   <tr>
     <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS; ?></td>
