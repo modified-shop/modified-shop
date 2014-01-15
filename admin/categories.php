@@ -32,7 +32,6 @@ require_once (DIR_FS_INC.'xtc_get_tax_rate.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_WS_CLASSES.'currencies.php');
 require_once (DIR_FS_INC.'xtc_wysiwyg.inc.php');
-require_once (DIR_WS_MODULES.'graduated-prices-edit.php');
 require_once (DIR_FS_INC.'xtc_get_order_description.inc.php');
 require_once (DIR_FS_INC.'xtc_parse_category_path.inc.php');
 
