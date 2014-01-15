@@ -122,12 +122,6 @@ if ($action == 'address_edit') {
     $sql_data_array['billing_gender'] = xtc_db_prepare_input($_POST['billing_gender']);
   }
   
-  
-  //added gender
-  $sql_data_array['customers_gender'] = xtc_db_prepare_input($_POST['customers_gender']);
-  $sql_data_array['delivery_gender'] = xtc_db_prepare_input($_POST['delivery_gender']);
-  $sql_data_array['billing_gender'] = xtc_db_prepare_input($_POST['billing_gender']);
-  
   xtc_db_perform(TABLE_ORDERS, $sql_data_array, 'update', 'orders_id = \''.(int)($_POST['oID']).'\'');
 
   xtc_redirect(xtc_href_link(FILENAME_ORDERS_EDIT, 'edit_action=address&oID='.(int)$_POST['oID']));
@@ -253,8 +247,8 @@ if ($action == 'product_edit') {
       xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
                        SET attributes_stock = attributes_stock + '".$new_qty."'
                      WHERE products_id = '".(int)$_POST['products_id']."' 
-                       AND options_id = '".$delete_products_attributes['orders_products_options_id']."'
-                       AND options_values_id = '".$delete_products_attributes['orders_products_options_values_id']."'");
+                       AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
+                       AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
     }
   }
 
@@ -461,10 +455,10 @@ if ($action == 'product_option_ins') {
   // Update Attributes Stock
   if (STOCK_LIMITED == 'true') {
     xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                     SET attributes_stock = attributes_stock - '".$products['products_quantity']."' 
-                   WHERE products_id = '".$products['products_id']."' 
-                     AND options_id = '".$products_attributes['options_id']."'
-                     AND options_values_id = '".$products_attributes['options_values_id']."'");
+                     SET attributes_stock = attributes_stock - '".(double)$products['products_quantity']."' 
+                   WHERE products_id = '".(int)$products['products_id']."' 
+                     AND options_id = '".(int)$products_attributes['options_id']."'
+                     AND options_values_id = '".(int)$products_attributes['options_values_id']."'");
   }
 
   $products_a_query = xtc_db_query("select options_values_price, price_prefix from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." where orders_products_id = '".(int)$_POST['opID']."'");
@@ -628,7 +622,7 @@ if ($action== 'ot_edit') {
     //EOC - web28 - 2011-08-25 - //FIX Formatierung negativer Wert
 
     $sql_data_array = array ('title' => xtc_db_prepare_input($_POST['title']),
-                             'text' => $text,
+                             'text' => xtc_db_prepare_input($text),
                              'value' => xtc_db_prepare_input($_POST['value']),
                              'sort_order' => xtc_db_prepare_input($_POST['sort_order']) // web28 - 2011-08-26 -Fix missing sort_order
                              );
@@ -647,7 +641,7 @@ if ($action== 'ot_edit') {
 
     $sql_data_array = array ('orders_id' => (int)($_POST['oID']),
                              'title' => xtc_db_prepare_input($_POST['title']),
-                             'text' => $text,
+                             'text' => xtc_db_prepare_input($text),
                              'value' => xtc_db_prepare_input($_POST['value']),
                              'class' => xtc_db_prepare_input($_POST['class']),
                              'sort_order' => xtc_db_prepare_input($_POST['sort_order'])
@@ -790,10 +784,10 @@ if ($action == 'product_delete') {
                                                       ");
     while ($delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query)) {
       xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                       SET attributes_stock = attributes_stock + '".$delete_products_attributes['products_quantity']."'
-                     WHERE products_id = '".$delete_products_attributes['products_id']."' 
-                       AND options_id = '".$delete_products_attributes['orders_products_options_id']."'
-                       AND options_values_id = '".$delete_products_attributes['orders_products_options_values_id']."'");
+                       SET attributes_stock = attributes_stock + '".(double)$delete_products_attributes['products_quantity']."'
+                     WHERE products_id = '".(int)$delete_products_attributes['products_id']."' 
+                       AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
+                       AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
     }
   }
 
@@ -821,10 +815,10 @@ if ($action == 'product_option_delete') {
                                                       ");
     $delete_products_attributes = xtc_db_fetch_array($delete_products_attributes_query);
     xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . " 
-                     SET attributes_stock = attributes_stock + '".$delete_products_attributes['products_quantity']."'
-                   WHERE products_id = '".$delete_products_attributes['products_id']."' 
-                     AND options_id = '".$delete_products_attributes['orders_products_options_id']."'
-                     AND options_values_id = '".$delete_products_attributes['orders_products_options_values_id']."'");
+                     SET attributes_stock = attributes_stock + '".(double)$delete_products_attributes['products_quantity']."'
+                   WHERE products_id = '".(int)$delete_products_attributes['products_id']."' 
+                     AND options_id = '".(int)$delete_products_attributes['orders_products_options_id']."'
+                     AND options_values_id = '".(int)$delete_products_attributes['orders_products_options_values_id']."'");
   }
                  
   xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." where orders_products_attributes_id = '".(int)($_POST['opAID'])."'");
@@ -890,9 +884,14 @@ if ($action == 'save_order') {
   $products = xtc_db_fetch_array($products_query);
   $subtotal_final = $products['subtotal_final'];
   $subtotal_text = $xtPrice->xtcFormat($subtotal_final, true);
-
-  xtc_db_query("update ".TABLE_ORDERS_TOTAL." set text = '".$subtotal_text."', value = '".$subtotal_final."' where orders_id = '".(int)$_POST['oID']."' and class = 'ot_subtotal' ");
-  // Errechne neue Zwischensumme für Artikel Ende
+  
+  $total_data_array = array(
+      'text' => xtc_db_prepare_input($subtotal_text),
+      'value' => xtc_db_prepare_input($subtotal_final)
+    );
+    
+  xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($_POST['oID']). "' AND class='ot_subtotal'");
+// Errechne neue Zwischensumme für Artikel Ende
 
   //BOF####### Produkte #######//
   $products_query = xtc_db_query("select final_price, products_tax, allow_tax from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".(int)$_POST['oID']."' ");
@@ -1058,10 +1057,10 @@ if ($action == 'save_order') {
     $subtotal_no_tax_text = '<b>'.$xtPrice->xtcFormat($subtotal_no_tax_final, true).'</b>';
 
     $sql_data_array = array (
-                            'title' => MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE. ':',
-                            'text'  => $subtotal_no_tax_text,
-                            'value' => $subtotal_no_tax_final,
-                            'sort_order' => MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER
+                            'title' => xtc_db_prepare_input(MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE). ':',
+                            'text'  => xtc_db_prepare_input($subtotal_no_tax_text),
+                            'value' => xtc_db_prepare_input($subtotal_no_tax_final),
+                            'sort_order' => xtc_db_prepare_input(MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER)
                             );
 
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', "orders_id = '".(int)($_POST['oID'])."' and class = 'ot_subtotal_no_tax'");
@@ -1078,11 +1077,11 @@ if ($action == 'save_order') {
 
       $sql_data_array = array (
                               'orders_id' => (int)($_POST['oID']),
-                              'title' => MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE. ':',
-                              'text' => $subtotal_no_tax_text,
+                              'title' => xtc_db_prepare_input(MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_TITLE). ':',
+                              'text' => xtc_db_prepare_input($subtotal_no_tax_text),
                               'value' => xtc_db_prepare_input($subtotal_no_tax_final),
                               'class' => 'ot_subtotal_no_tax',
-                              'sort_order' => MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER
+                              'sort_order' => xtc_db_prepare_input(MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER)
                               );
       xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array);
     }
@@ -1134,10 +1133,10 @@ if ($action == 'save_order') {
       $sql_data_array = array (
                               'orders_id' => (int)($_POST['oID']),
                               'title' => xtc_db_prepare_input($title),
-                              'text' => $text,
+                              'text' => xtc_db_prepare_input($text),
                               'value' => xtc_db_prepare_input($ust['tax_value_new']),
                               'class' => 'ot_tax',
-                              'sort_order' => MODULE_ORDER_TOTAL_TAX_SORT_ORDER
+                              'sort_order' => xtc_db_prepare_input(MODULE_ORDER_TOTAL_TAX_SORT_ORDER)
                               );
 
       //$insert_sql_data = array ('sort_order' => MODULE_ORDER_TOTAL_TAX_SORT_ORDER);
@@ -1174,12 +1173,13 @@ if ($action == 'save_order') {
   $total = xtc_db_fetch_array($total_query);
   $total_final = $total['value'] + $add_tax; //Mwst hinzurechnen
   $total_text = '<b>'.$xtPrice->xtcFormat($total_final, true).'</b>';
-
-  xtc_db_query("update ".TABLE_ORDERS_TOTAL."
-                   set text = '".$total_text."',
-                       value = '".$total_final."'
-                 where orders_id = '".(int)$_POST['oID']."'
-                   and class = 'ot_total'");
+  
+  $total_data_array = array(
+      'text' => xtc_db_prepare_input($total_text),
+      'value' => xtc_db_prepare_input($total_final)
+    );
+    
+  xtc_db_perform(TABLE_ORDERS_TOTAL, $total_data_array, 'update', "orders_id ='". (int)($_POST['oID']). "' AND class='ot_total'");
   //EOF  web28 - 2010-12-04 Errechne neue Gesamtsumme für Artikel
 
   // Löschen des Zwischenspeichers Anfang
@@ -1242,6 +1242,7 @@ function calculate_tax($amount) {
     $new_tax = $new_tax_total['value'] + $god_amount; //web29 - 2011-08-25 - Fix negative sign
 
     //Einzelne Steuersätze neu in Kalkulationstabelle speichern
+    
     xtc_db_query("UPDATE ".TABLE_ORDERS_RECALCULATE."
                      SET tax = '".xtc_db_prepare_input($new_tax)."'
                    WHERE orders_id = '".(int)$_POST['oID']."'
