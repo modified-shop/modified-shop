@@ -125,7 +125,7 @@ foreach($group_array as $group_data) {
                   }
                   echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price);
                   if (PRICE_IS_BRUTTO == 'true') {
-                    echo '&nbsp;'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong>';
+                    echo '<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
                   }
                   echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
                   ?>
