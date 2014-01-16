@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id: orders_edit_products.php 4310 2013-01-14 13:06:49Z web28 $
+   $Id: orders_edit_products.php 5338 2013-08-06 13:00:51Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -14,11 +14,15 @@
    (c) 2006 XT-Commerce (orders_edit.php)
 
    Released under the GNU General Public License
+   --------------------------------------------------------------
+   Third Party contribution:
 
    XTC-Bestellbearbeitung:
    http://www.xtc-webservice.de / Matthias Hinsche
    info@xtc-webservice.de
-   --------------------------------------------------------------*/
+
+   Released under the GNU General Public License
+  --------------------------------------------------------------*/
    
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
@@ -213,6 +217,7 @@ if ($_GET['action'] =='product_search') {
             $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
           }
           
+          $products_special_price_qty = '';
           $products_tax_rate = xtc_get_tax_rate($products['products_tax_class_id']);
           // calculate brutto price for display
           if (PRICE_IS_BRUTTO == 'true') {
