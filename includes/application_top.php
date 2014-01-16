@@ -231,9 +231,15 @@ $_REQUEST = $InputFilter->safeSQL($_REQUEST);
 
 
 // set the top level domains
-$http_domain = xtc_get_top_level_domain(HTTP_SERVER);
-$https_domain = xtc_get_top_level_domain(HTTPS_SERVER);
+$http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
+$https_domain_arr = xtc_get_top_level_domain(HTTPS_SERVER);
+$http_domain = $http_domain_arr['new'];
+$https_domain = $https_domain_arr['new'];
 $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
+// set the top level domains - old
+$http_domain_old = $http_domain_arr['old'];
+$https_domain_old = $https_domain_arr['old'];
+$current_domain_old = (($request_type == 'NONSSL') ? $http_domain_old : $https_domain_old);
 
 // include shopping cart class
 require (DIR_WS_CLASSES.'shopping_cart.php');
