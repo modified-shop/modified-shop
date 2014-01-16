@@ -46,6 +46,7 @@ define('MODULE_SITEMAPORG_YAHOO_TITLE', 'YahooID');
 define('MODULE_SITEMAPORG_YAHOO_DESC','Geben Sie hier Ihre die Yahoo ID an! Diese wird ben&ouml;tigt, um Yahoo die Sitemap mitzuteilen');
 
 require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
+require_once(DIR_FS_INC . 'xtc_get_parent_categories.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
 
   class sitemaporg {
