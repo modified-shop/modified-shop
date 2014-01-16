@@ -47,7 +47,7 @@ class xtcPrice {
     $this->SHIPPING = array();
     $this->showFrom_Attributes = true;
     
-    $this->show_price_tax = 1;
+    $this->show_price_tax = 0;
 
     if (!defined('HTTP_CATALOG_SERVER') && isset($_SESSION['cart'])) {
       if (is_object($_SESSION['cart'])) {
