@@ -627,14 +627,17 @@ a.btnbox,
 a.btnbox:link,
 a.btnbox:visited,
 a.btnbox:active,
-span.btnbox{
+span.btnbox {
 padding: 0;
 margin: 5px auto;
 background-color: #F1F1F1;
 width:120px;
 display: block;
 }
-a.btnbox:hover{
+
+a.btnbox:hover,
+a.button:hover, 
+input.button:hover {
 background: #ccc;
 }
 
