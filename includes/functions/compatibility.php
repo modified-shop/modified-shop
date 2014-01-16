@@ -19,25 +19,20 @@
    
   //PHP 5.4 compatibility - functions REMOVED as of PHP 5.4.0.
   if (!function_exists('session_register')) {
-      function session_register()
-      {
-          $args = func_get_args();
-          foreach($args as $key)
-          $_SESSION[$key] = $GLOBALS[$key];
+    function session_register() {
+      $args = func_get_args();
+      foreach($args as $key) {
+        $_SESSION[$key] = $GLOBALS[$key];
       }
-
-      function session_is_registered($key)
-      {
-          return isset($_SESSION[$key]);
-      }
-
-      function session_unregister($key)
-      {
-          unset($_SESSION[$key]);
-      }
+    }
+    function session_is_registered($key){
+      return isset($_SESSION[$key]);
+    }
+    function session_unregister($key){
+      unset($_SESSION[$key]);
+    }
   }
 
-  ////
   // Recursively handle magic_quotes_gpc turned off.
   // This is due to the possibility of have an array in
   // $HTTP_xxx_VARS
@@ -192,5 +187,24 @@
       }
       return false;
     }
+  }
+
+  // old function to get toplevel domain
+  function xtc_get_top_level_domain_old($url) {
+      if (strpos($url, '://')) {
+          $url = parse_url($url);
+          $url = $url['host'];
+      }
+      $domain_array = explode('.', $url);
+      $domain_size = sizeof($domain_array);
+      if ($domain_size > 1) {
+          if (is_numeric($domain_array[$domain_size -2]) && is_numeric($domain_array[$domain_size -1])) {
+              return false;
+          } else {
+              return $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
+          }
+      } else {
+          return false;
+      }
   }
 ?>

@@ -24,6 +24,7 @@ if (function_exists('session_set_cookie_params')) {
   ini_set('session.cookie_path', DIR_WS_CATALOG);
   ini_set('session.cookie_domain', (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
 }
+
 // set the session ID if it exists
 if (isset ($_POST[xtc_session_name()])) {
   xtc_session_id($_POST[xtc_session_name()]);
@@ -58,8 +59,16 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
 
 // check for Cookie usage
 $cookie = false;
-if (HTTP_SERVER == HTTPS_SERVER) {
-  if (isset ($_COOKIE[xtc_session_name()])) {
+if (isset($_COOKIE[xtc_session_name()])) {
+
+  // Reset the old/deprecated cookie
+  $current_domain_old = (($request_type == 'NONSSL') ? xtc_get_top_level_domain_old(HTTP_SERVER) : xtc_get_top_level_domain_old(HTTPS_SERVER));
+  xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], (time() - 3600), '/', (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
+  
+  // update lifetime new cookie
+  xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], 0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+
+  if (HTTP_SERVER == HTTPS_SERVER) {
     $cookie = true;
   }
 }
