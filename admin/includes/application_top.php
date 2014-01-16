@@ -126,6 +126,7 @@ require_once(DIR_FS_INC . 'xtc_cleanName.inc.php');
 require_once(DIR_FS_INC . 'xtc_get_top_level_domain.inc.php');
 require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 require_once(DIR_FS_INC . 'xtc_backup_restore_configuration.php');
+require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
 
 foreach(auto_require(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
 
@@ -173,12 +174,6 @@ require(DIR_WS_FUNCTIONS . 'sessions.php');
   // define our general functions used application-wide
 require(DIR_WS_FUNCTIONS . 'html_output.php');
 
-// set the session name and save path
-session_name('MODsid');
-if (STORE_SESSIONS != 'mysql') {
-  session_save_path(SESSION_WRITE_DIRECTORY);
-}
-
 // set the type of request (secure or not)
 if (file_exists(DIR_WS_INCLUDES . 'request_type.php')) {
   include (DIR_WS_INCLUDES . 'request_type.php');
@@ -187,71 +182,48 @@ if (file_exists(DIR_WS_INCLUDES . 'request_type.php')) {
 }
 
 // set the top level domains
-$http_domain = xtc_get_top_level_domain(HTTP_SERVER);
-//$https_domain = xtc_get_top_level_domain(HTTPS_SERVER);
-//$current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
-$current_domain = $http_domain; //currently no https_domain support
+$http_domain_arr = xtc_get_top_level_domain(HTTP_SERVER);
+$http_domain = $http_domain_arr['new'];
+$current_domain = $http_domain;
+// set the top level domains - old
+$current_domain_old = $http_domain_arr['old'];
 
+@ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0);
+
+// set the session name and save path
 // set the session cookie parameters
-if (function_exists('session_set_cookie_params')) {
-  session_set_cookie_params(0, '/', (xtc_not_null($current_domain) ? '.' . $current_domain : ''));
-} elseif (function_exists('ini_set')) {
-  ini_set('session.cookie_lifetime', '0');
-  ini_set('session.cookie_path', '/');
-  ini_set('session.cookie_domain', (xtc_not_null($current_domain) ? '.' . $current_domain : ''));
-}
-
 // set the session ID if it exists
-if (isset($_POST[session_name()])) {
-  session_id($_POST[session_name()]);
-} elseif (($request_type == 'SSL') && isset($_GET[session_name()])) {
-  session_id($_GET[session_name()]);
-}
-
-@ini_set('session.use_only_cookies', (SESSION_FORCE_COOKIE_USE == 'True') ? 1 : 0); //DokuMan - 2011-01-06 - set session.use_only_cookies when force cookie is enabled
-
 // start the session
-$session_started = false;
-if (SESSION_FORCE_COOKIE_USE == 'True') {
-  xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, '/', $current_domain);
-  if (isset($_COOKIE['cookie_test'])) {
-      session_start();
-      $session_started = true;
-    }
-} elseif (CHECK_CLIENT_AGENT == 'True') {
-  $user_agent = strtolower(getenv('HTTP_USER_AGENT'));
-  $spider_flag = false;
-  if ($spider_flag == false) {
-    session_start();
-    $session_started = true;
-  }
-} else {
-  session_start();
-  $session_started = true;
-}
+// Redirect search engines with session id to the same url without session id to prevent indexing session id urls
+// check for Cookie usage
+// check the Agent
+include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
 // verify the ssl_session_id if the feature is enabled
-if ( ($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true) ) {
-  $ssl_session_id = getenv('SSL_SESSION_ID');
-  if (!isset($_SESSION['SESSION_SSL_ID'])) {
+if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true)) {
+  $ssl_session_id  = $_SERVER['SSL_SESSION_ID'];
+  $ssl_session_id2 = getenv('SSL_SESSION_ID');
+  $ssl_session_id  = ($ssl_session_id == $ssl_session_id2) ? $ssl_session_id : $ssl_session_id.';'.$ssl_session_id2;
+  if (!isset($_SESSION['SSL_SESSION_ID'])) {
     $_SESSION['SESSION_SSL_ID'] = $ssl_session_id;
   }
   if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
-    session_destroy();
-    xtc_redirect(xtc_href_link(FILENAME_SSL_CHECK));
+    xtc_session_recreate();
+    xtc_session_destroy();
+    xtc_redirect(xtc_catalog_href_link('ssl_check.php'));
   }
 }
 
 // verify the browser user agent if the feature is enabled
 if (SESSION_CHECK_USER_AGENT == 'True') {
-  $http_user_agent = strtolower($_SERVER['HTTP_USER_AGENT']);
+  $http_user_agent  = strtolower($_SERVER['HTTP_USER_AGENT']);
   $http_user_agent2 = strtolower(getenv("HTTP_USER_AGENT"));
-  $http_user_agent = ($http_user_agent == $http_user_agent2) ? $http_user_agent : $http_user_agent.';'.$http_user_agent2;
-  if (!isset($_SESSION['SESSION_USER_AGENT'])) {
+  $http_user_agent  = ($http_user_agent == $http_user_agent2) ? $http_user_agent : $http_user_agent.';'.$http_user_agent2;
+  if (!isset ($_SESSION['SESSION_USER_AGENT'])) {
     $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
-  }
-  if ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
-    session_destroy();
+  } elseif ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
+    xtc_session_recreate();
+    xtc_session_destroy();
     xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 }
@@ -261,9 +233,9 @@ if (SESSION_CHECK_IP_ADDRESS == 'True') {
   $ip_address = xtc_get_ip_address();
   if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
     $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
-  }
-  if ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
-    session_destroy();
+  } elseif ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
+    xtc_session_recreate();
+    xtc_session_destroy();
     xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
   }
 }
@@ -298,10 +270,10 @@ if (file_exists($current_page) == false || $_SESSION['customers_status']['custom
 // for tracking of customers
 $_SESSION['user_info'] = array();
 if (!isset($_SESSION['user_info']['user_ip'])) {
-$_SESSION['user_info']['user_ip'] = $_SERVER['REMOTE_ADDR'];
-$_SESSION['user_info']['user_host'] = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : '';
-$_SESSION['user_info']['advertiser'] = isset($_GET['ad']) ? $_GET['ad'] : '';
-$_SESSION['user_info']['referer_url'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+  $_SESSION['user_info']['user_ip'] = $_SERVER['REMOTE_ADDR'];
+  $_SESSION['user_info']['user_host'] = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : '';
+  $_SESSION['user_info']['advertiser'] = isset($_GET['ad']) ? $_GET['ad'] : '';
+  $_SESSION['user_info']['referer_url'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
 }
 
 // define our localization functions
