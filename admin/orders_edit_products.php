@@ -217,6 +217,7 @@ if ($_GET['action'] =='product_search') {
             $products_status =  xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10);
           }
           
+          $products_special_price_qty = '';
           $products_tax_rate = xtc_get_tax_rate($products['products_tax_class_id']);
           // calculate brutto price for display
           if (PRICE_IS_BRUTTO == 'true') {
