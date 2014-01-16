@@ -481,7 +481,7 @@ if (xtc_not_null($action) && !$box) {
                         $contents[] = array('text' => '<br />' . $mInfo->description);
                         $contents[] = array('text' => '<br />' . $keys);
                       } else {
-                        $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set. '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
+                        $contents[] = array('align' => 'center', 'text' => '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set. '&module=' . $mInfo->code . '&action=install') . '">' . BUTTON_MODULE_INSTALL . '</a>');
                         $contents[] = array('text' => '<br />' . $mInfo->description);
                       }
                     }                        
