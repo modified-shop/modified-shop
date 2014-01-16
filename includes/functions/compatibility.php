@@ -189,22 +189,4 @@
     }
   }
 
-  // old function to get toplevel domain
-  function xtc_get_top_level_domain_old($url) {
-      if (strpos($url, '://')) {
-          $url = parse_url($url);
-          $url = $url['host'];
-      }
-      $domain_array = explode('.', $url);
-      $domain_size = sizeof($domain_array);
-      if ($domain_size > 1) {
-          if (is_numeric($domain_array[$domain_size -2]) && is_numeric($domain_array[$domain_size -1])) {
-              return false;
-          } else {
-              return $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
-          }
-      } else {
-          return false;
-      }
-  }
 ?>

@@ -62,11 +62,9 @@ $cookie = false;
 if (isset($_COOKIE[xtc_session_name()])) {
 
   // Reset the old/deprecated cookie
-  $current_domain_old = (($request_type == 'NONSSL') ? xtc_get_top_level_domain_old(HTTP_SERVER) : xtc_get_top_level_domain_old(HTTPS_SERVER));
-  xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], (time() - 3600), '/', (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
-  
-  // update lifetime new cookie
-  xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], 0, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? '.'.$current_domain : ''));
+  if ($current_domain != $current_domain_old) {
+    xtc_setcookie(xtc_session_name(), $_COOKIE[xtc_session_name()], (time() - 3600), '/', (xtc_not_null($current_domain_old) ? '.'.$current_domain_old : ''));
+  }
 
   if (HTTP_SERVER == HTTPS_SERVER) {
     $cookie = true;

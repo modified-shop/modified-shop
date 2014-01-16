@@ -17,6 +17,10 @@
    ---------------------------------------------------------------------------------------*/
 
 function xtc_get_top_level_domain($url) {
+  // set empty array
+  $return_array = array('old' => '', 
+                        'new' => '');
+
   if (strpos($url, '://')) {
     $url = parse_url($url);
     $url = $url['host'];
@@ -24,18 +28,22 @@ function xtc_get_top_level_domain($url) {
   $domain_array = explode('.', $url);
   $domain_size = sizeof($domain_array);
   if ($domain_size > 1) {
-    if (is_numeric($domain_array[$domain_size -2]) && is_numeric($domain_array[$domain_size -1])) {
-      return false;
-    } else {
+    if (!is_numeric($domain_array[$domain_size -2]) && !is_numeric($domain_array[$domain_size -1])) {
+
+      // old routine
+      $return_array['old'] = $domain_array[$domain_size - 2] . '.' . $domain_array[$domain_size - 1];
+      
+      // new routine
       $domain_path = $url;
       if(substr($domain_path, 0, 4) == 'www.') {
           $domain_path = substr($domain_path, 4);
       }
-      return $domain_path;
+      $return_array['new'] = $domain_path;
+    
     }
-  } else {
-    return false;
   }
+  
+  return $return_array;
 }
 
 
