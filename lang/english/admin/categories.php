@@ -223,4 +223,11 @@ define('TEXT_HOW_TO_LINK_INFO', 'Item entry screen <br/> (For multiple items to 
 define('TEXT_SET_GROUP_PERMISSIONS', 'Inherit customer group permissions to all subfolders and products?');
 
 define('HEADING_TITLE_ONLY_INACTIVE_PRODUCTS', 'Show only inactive products');
+
+// BOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+define('TEXT_CONTENT_COPY', 'Product content also copy');
+define('TEXT_CONTENT_COPY_INFO', 'Product content also copy <br/> Only single-copy (1 item) recommended');
+define('TEXT_LINKS_COPY', 'Product links also copy');
+define('TEXT_LINKS_COPY_INFO', 'Product links also copy <br/> Only single-copy (1 item) recommended');
+// EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
 ?>
