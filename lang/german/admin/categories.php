@@ -224,4 +224,11 @@ define('TEXT_HOW_TO_LINK_INFO', 'Artikeleingabemaske<br/ >(Bei mehreren Artikel 
 define('TEXT_SET_GROUP_PERMISSIONS', 'Kundengruppen Berechtigungen f&uuml;r alle Unterordner und Artikel &uuml;bernehmen?');
 
 define('HEADING_TITLE_ONLY_INACTIVE_PRODUCTS', 'Nur inaktive Artikel anzeigen');
+
+// BOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+define('TEXT_CONTENT_COPY', 'Artikel-Content mitkopieren');
+define('TEXT_CONTENT_COPY_INFO', 'Artikel-Content mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
+define('TEXT_LINKS_COPY', 'Artikel-Verlinkungen mitkopieren');
+define('TEXT_LINKS_COPY_INFO', 'Artikel-Verlinkungen mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
+// EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
 ?>
