@@ -230,4 +230,7 @@ define('TEXT_CONTENT_COPY_INFO', 'Artikel-Content mitkopieren<br/ >Nur bei Einze
 define('TEXT_LINKS_COPY', 'Artikel-Verlinkungen mitkopieren');
 define('TEXT_LINKS_COPY_INFO', 'Artikel-Verlinkungen mitkopieren<br/ >Nur bei Einzelkopie (1 Artikel) empfohlen');
 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+
+define('TEXT_GRADUATED_PRICES_INFO', 'Die Anzahl der Eingabefelder f&uuml;r die Staffelpreise kann unter "<b>Konfiguration - Adminbereich Optionen - Anzahl Staffelpreise</b>" angepasst werden.');
+?>
 ?>

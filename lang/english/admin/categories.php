@@ -230,4 +230,6 @@ define('TEXT_CONTENT_COPY_INFO', 'Product content also copy <br/> Only single-co
 define('TEXT_LINKS_COPY', 'Product links also copy');
 define('TEXT_LINKS_COPY_INFO', 'Product links also copy <br/> Only single-copy (1 item) recommended');
 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+
+define('TEXT_GRADUATED_PRICES_INFO', 'The number of input fields for the Graduated Prices may be "<b>Configuration - Admin Options area - Number Graduated Price</b>" to be adjusted.');
 ?>
