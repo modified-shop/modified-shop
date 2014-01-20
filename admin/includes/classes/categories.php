@@ -839,6 +839,40 @@ class categories {
         xtc_db_perform(TABLE_PRODUCTS_ATTRIBUTES, $sql_data_array);
       }
     }
+    
+    // BOF -  - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
+    if (isset($_POST['cnt_copy']) && $_POST['cnt_copy'] == 'cnt_copy') {
+      $content_copy_query = xtc_db_query(
+                           "SELECT * 
+                              FROM " . TABLE_PRODUCTS_CONTENT . "
+                             WHERE products_id = '".$old_products_id."'
+                             ");
+
+      while ($content_copy_data = xtc_db_fetch_array($content_copy_query)) {
+            $sql_data_array = $content_copy_data;
+            //set attributes data (overrides)
+            unset($sql_data_array['content_id']);
+            $sql_data_array['products_id'] = $dup_products_id;
+            //write attributes data to DB
+            xtc_db_perform(TABLE_PRODUCTS_CONTENT, $sql_data_array);
+      }
+    }
+    
+    if (isset($_POST['links_copy']) && $_POST['links_copy'] == 'links_copy') {
+      $links_copy_query = xtc_db_query(
+                            "SELECT * 
+                               FROM " . TABLE_PRODUCTS_TO_CATEGORIES."
+                              WHERE products_id = '".$old_products_id."'
+                                AND categories_id <> '".$dest_categories_id."'
+                            ");
+
+      while ($links_copy_data = xtc_db_fetch_array($links_copy_query)) {
+            $sql_data_array = $links_copy_data;
+            $sql_data_array['products_id'] = $dup_products_id;
+            xtc_db_perform(TABLE_PRODUCTS_TO_CATEGORIES, $sql_data_array);
+      }
+    }
+    // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
   } //duplicate_product ends
 
   // ----------------------------------------------------------------------------------------------------- //
