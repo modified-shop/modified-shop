@@ -41,7 +41,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
                            'STATUS_ID' => $group_values['customers_status_id']);
 }
 ?>
-<div class="main div_header"><?php echo HEADING_PRICES_OPTIONS; ?></div>
+<div class="main div_header"><?php echo HEADING_PRICES_OPTIONS. draw_tooltip(TEXT_GRADUATED_PRICES_INFO) ?></div>
 <table class="tableInput">
   <tr>
     <td style="width:140px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
@@ -136,7 +136,10 @@ foreach($group_array as $group_data) {
               $count++;
             }
             $max_staffel = MIN_GROUP_PRICE_STAFFEL;
-            if ($count >= $max_staffel) $max_staffel=$count+1;
+            if ($count >= $max_staffel) {
+              $max_staffel = $count;
+              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . (int)$max_staffel . "', last_modified = NOW() where configuration_key='" . 'MIN_GROUP_PRICE_STAFFEL' . "'");
+            }
             for ($is=$count; $is<$max_staffel; $is++) {
             ?>
             <tr>
