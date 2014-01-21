@@ -216,6 +216,12 @@ function xtc_mail_hack_attempt($detecting_file = "(no filename available)",
         $output    .=        "SESSION * $key : $value\n";
     }
 
+    // Smarty Template Engine 
+    if (!defined('TEMPLATE_ENGINE')) {
+      define('TEMPLATE_ENGINE','smarty_2');
+    }
+    require (DIR_FS_EXTERNAL.'smarty/'.TEMPLATE_ENGINE.'/Smarty.class.php');
+
     xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
                 EMAIL_SUPPORT_NAME,
                 EMAIL_SUPPORT_ADDRESS,
