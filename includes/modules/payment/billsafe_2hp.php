@@ -194,9 +194,9 @@ class billsafe_2hp {
   function confirmation() {
     $_SESSION['discount_value'] = $GLOBALS['ot_discount']->output[0]['value'];
     $_SESSION['discount_name'] = $GLOBALS['ot_discount']->output[0]['title'];
-    $_SESSION['voucher_value'] = $GLOBALS['ot_gv']->output[0]['value'];
+    $_SESSION['voucher_value'] = $GLOBALS['ot_gv']->output[0]['value'] * (-1);
     $_SESSION['voucher_name'] = $GLOBALS['ot_gv']->output[0]['title'];
-    $_SESSION['coupon_value'] = $GLOBALS['ot_coupon']->output[0]['value'];
+    $_SESSION['coupon_value'] = $GLOBALS['ot_coupon']->output[0]['value'] * (-1);
     $_SESSION['coupon_name'] = $GLOBALS['ot_coupon']->output[0]['title'];
     $_SESSION['lofee_value'] = $GLOBALS['ot_loworderfee']->output[0]['value'];
     $_SESSION['lofee_name'] = $GLOBALS['ot_loworderfee']->output[0]['title'];
