@@ -46,15 +46,14 @@ if (isset($_GET['coID']) && is_numeric($_GET['coID'])) {
                        WHERE content_group='".(int) $_GET['coID']."'"
                        .$group_check."
                        AND languages_id='".(int) $_SESSION['languages_id']."'");
-  $shop_content_data = xtc_db_fetch_array($shop_content_query);
 
-  // BOF - DokuMan - 2009-05-29 - added shopstat bugfix
-  //-- SHOPSTAT --//
-  //$breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT.'?coID='.(int) $_GET['coID']));
-  $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
-  //-- SHOPSTAT --//
-  // EOF - DokuMan - 2009-05-29 - added shopstat bugfix
-
+  if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
+    $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
+  } else {
+    $error = TEXT_CONTENT_NOT_FOUND;
+    $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
+  }
+  
   if ($_GET['coID'] != 7 || $_GET['coID'] == 7 && isset($_GET['action']) && $_GET['action'] == 'success') {
     require (DIR_WS_INCLUDES.'header.php');
   }

@@ -705,4 +705,6 @@ define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
 
 define('_SHIPPING_FREE','Versandkostenfrei');
+
+define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
 ?>

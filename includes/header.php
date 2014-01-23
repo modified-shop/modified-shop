@@ -34,7 +34,7 @@ if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status
   header("Status: 503 Service Temporarily Unavailable");
 }
 //SET 410 STATUS CODE
-elseif (isset($error) && ($error === CATEGORIE_NOT_FOUND || $error === TEXT_PRODUCT_NOT_FOUND)) {
+elseif (isset($error) && ($error === CATEGORIE_NOT_FOUND || $error === TEXT_PRODUCT_NOT_FOUND) || $error === TEXT_CONTENT_NOT_FOUND) {
   header("HTTP/1.0 410 Gone"); 
   header("Status: 410 Gone"); // FAST CGI
 }
