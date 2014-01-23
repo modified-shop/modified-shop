@@ -50,7 +50,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
                                 FROM ".TABLE_CONTENT_MANAGER."
                                WHERE languages_id='".(int) $_SESSION['languages_id']."'
                                  AND file_flag='0'
-                                 ".CONTENT_CONDITIONS."
+                                     ".CONTENT_CONDITIONS."
+                                 AND content_status='1'
                                  AND parent_id='0'
                             ORDER BY sort_order");
 
@@ -85,15 +86,16 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
       unset ($prev_cid);
       unset ($first_cid);
       $content_query = xtDBquery("SELECT content_id,
-                                            parent_id,
-                                            content_title,
-                                            content_group
-                                       FROM ".TABLE_CONTENT_MANAGER."
-                                      WHERE languages_id='".(int) $_SESSION['languages_id']."'
-                                        AND file_flag='0'
-                                        ".CONTENT_CONDITIONS."
-                                        AND parent_id='".$value."'
-                                   ORDER BY sort_order");
+                                         parent_id,
+                                         content_title,
+                                         content_group
+                                    FROM ".TABLE_CONTENT_MANAGER."
+                                   WHERE languages_id='".(int) $_SESSION['languages_id']."'
+                                     AND file_flag='0'
+                                         ".CONTENT_CONDITIONS."
+                                     AND content_status='1'
+                                     AND parent_id='".$value."'
+                                ORDER BY sort_order");
 
       if (xtc_db_num_rows($content_query, true) > 0) {
         $new_path .= $value;
