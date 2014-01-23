@@ -533,4 +533,6 @@ define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_M
 define('ERROR_REVIEW_RATING', 'Enter your review.');
 
 define('_SHIPPING_FREE','Free Shipping');
+
+define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
 ?>
