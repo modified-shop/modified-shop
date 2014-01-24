@@ -27,7 +27,7 @@
 
   $orders_status_validating_query = xtc_db_query("SELECT orders_status FROM ".TABLE_ORDERS ." WHERE orders_status ='0'");
   $orders_status_validating = xtc_db_num_rows($orders_status_validating_query);
-  $orders_contents .='<a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status=0').'">'.TEXT_VALIDATING.'</a> '.$orders_status_validating.'<br />';
+  $orders_contents .='<a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status=0').'">'.TEXT_VALIDATING.'</a>: '.$orders_status_validating.'<br />';
 
   $orders_status_query = xtc_db_query("SELECT orders_status_name, orders_status_id FROM ".TABLE_ORDERS_STATUS." WHERE language_id = '".$_SESSION['languages_id']."'");
   while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
