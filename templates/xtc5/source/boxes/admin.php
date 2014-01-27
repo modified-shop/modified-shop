@@ -54,7 +54,7 @@
   } elseif (isset($_GET['coID'])) {
     $content_query = xtc_db_query("SELECT content_id FROM ".TABLE_CONTENT_MANAGER." WHERE content_group='".(int)$_GET['coID']."' AND languages_id='".(int)$_SESSION['languages_id']."'");
     $content_data = xtc_db_fetch_array($content_query);
-    $admin_link = '<a href="'.xtc_href_link_admin((defined('DIR_WS_ADMIN') ? DIR_WS_ADMIN : 'admin/').'content_manager.php', 'action=edit&coID='.$content_data['content_id']).'">'.xtc_image_button('edit_content.gif', IMAGE_BUTTON_CONTENT_EDIT).'</a>';
+    $admin_link = '<a href="'.xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php', 'action=edit&coID='.$content_data['content_id']).'">'.xtc_image_button('edit_content.gif', IMAGE_BUTTON_CONTENT_EDIT).'</a>';
   }
   
   $box_content = '<strong>' . BOX_TITLE_STATISTICS . '</strong><br />' . $orders_contents . '<br />' .
