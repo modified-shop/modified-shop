@@ -20,7 +20,6 @@
 
   $box_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
 
-  $flag = '';
   $admin_link = '';
   $box_content = '';
   $orders_contents = '';
@@ -57,7 +56,8 @@
     $admin_link = '<a href="'.xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php', 'action=edit&coID='.$content_data['content_id']).'">'.xtc_image_button('edit_content.gif', IMAGE_BUTTON_CONTENT_EDIT).'</a>';
   }
   
-  $box_content = '<strong>' . BOX_TITLE_STATISTICS . '</strong><br />' . $orders_contents . '<br />' .
+  $box_content = '<strong>' . BOX_TITLE_STATISTICS . '</strong><br />' . 
+                 $orders_contents . '<br />' .
                  BOX_ENTRY_CUSTOMERS . ' ' . $customers['count'] . '<br />' .
                  BOX_ENTRY_PRODUCTS . ' ' . $products['count'] . '<br />' .
                  BOX_ENTRY_REVIEWS . ' ' . $reviews['count'] .'<br />' .
@@ -65,12 +65,10 @@
                  $admin_image . '<br />' .
                  $admin_link;
 
-    if ($flag==true) define('SEARCH_ENGINE_FRIENDLY_URLS',true);
+  $box_smarty->assign('BOX_CONTENT', $box_content);
 
-    $box_smarty->assign('BOX_CONTENT', $box_content);
-
-    $box_smarty->caching = 0;
-    $box_smarty->assign('language', $_SESSION['language']);
-    $box_admin= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_admin.html');
-    $smarty->assign('box_ADMIN',$box_admin);
+  $box_smarty->caching = 0;
+  $box_smarty->assign('language', $_SESSION['language']);
+  $box_admin= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_admin.html');
+  $smarty->assign('box_ADMIN',$box_admin);
 ?>
