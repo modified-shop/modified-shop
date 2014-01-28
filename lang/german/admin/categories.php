@@ -233,4 +233,3 @@ define('TEXT_LINKS_COPY_INFO', 'Artikel-Verlinkungen mitkopieren<br/ >Nur bei Ei
 
 define('TEXT_GRADUATED_PRICES_INFO', 'Die Anzahl der Eingabefelder f&uuml;r die Staffelpreise kann unter "<b>Konfiguration - Adminbereich Optionen - Anzahl Staffelpreise</b>" angepasst werden.');
 ?>
-?>
