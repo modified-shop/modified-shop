@@ -18,7 +18,7 @@
    Stand 04.03.2012
 */
 class paypal {
-	var $code, $title, $description, $enabled;
+	var $code, $title, $description, $extended_description, $enabled;
 /**************************************************************/
 	// BOF - Hendrik - 2010-08-11 - php5 compatible
 	//function paypal() {
@@ -29,6 +29,7 @@ class paypal {
 		$this->code = 'paypal';
 		$this->title = MODULE_PAYMENT_PAYPAL_TEXT_TITLE;
 		$this->description = MODULE_PAYMENT_PAYPAL_TEXT_DESCRIPTION;
+		$this->extended_description = MODULE_PAYMENT_PAYPAL_TEXT_EXTENDED_DESCRIPTION;
 		if(MODULE_PAYMENT_PAYPAL_SORT_ORDER!=''){
 			$this->sort_order = MODULE_PAYMENT_PAYPAL_SORT_ORDER;
 		}else{
