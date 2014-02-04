@@ -264,12 +264,13 @@
   if (USE_WYSIWYG=='true') {
     $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
-    if ($action != 'new_products_content' && $action != '')
+    if ($action =='new_products_content') {
+      echo xtc_wysiwyg('products_content',$data['code']);
+    } elseif ($action =='edit_products_content') {
+      echo xtc_wysiwyg('products_content',$data['code']);
+    } elseif ($action != '') {
       echo xtc_wysiwyg('content_manager',$data['code']);
-    if ($action =='new_products_content')
-      echo xtc_wysiwyg('products_content',$data['code']);
-    if ($action =='edit_products_content')
-      echo xtc_wysiwyg('products_content',$data['code']);
+    }
   }
 ?>
 </head>
