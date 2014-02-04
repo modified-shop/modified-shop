@@ -89,7 +89,7 @@
         die();
       }
     } else {
-      xtc_db_error('', mysql_errno($$link), mysql_error($$link));
+      xtc_db_error('', mysql_errno(), mysql_error());
       die();
     }
 
