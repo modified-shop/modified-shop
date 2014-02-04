@@ -22,10 +22,10 @@
       $logger = new logger;
     echo $logger->timer_stop(DISPLAY_PAGE_PARSE_TIME);
   }
+  
+  foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_bottom/','php') as $file) require ($file);
 
-  /**
-   * new error handling
-   */
+  // new error handling
   if (is_array($error_exceptions)) {
     if ((DISPLAY_ERROR_REPORTING == 'all') || DISPLAY_ERROR_REPORTING == 'admin') {
       echo '<div style="width:1000px; margin:20px auto;">' . PHP_EOL .
@@ -34,8 +34,6 @@
       echo '</div>';
     }
   }
-  
-  foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_bottom/','php') as $file) require ($file);
 
   // close MySQL connection
   session_write_close();
