@@ -30,18 +30,15 @@ class newsletter {
 	}
 
 
-	function RemoveFromList($key, $mail) {
-		require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-    
+	function RemoveFromList($key, $mail) {    
     $check_mail_query = xtc_db_query("SELECT customers_email_address, 
                                              mail_key 
                                         FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
-                                       WHERE customers_email_address = '".xtc_db_input($mail)."' 
-                                         AND mail_key = '".xtc_db_input($key)."'
+                                       WHERE customers_email_address = '".xtc_db_input($mail)."'
                                      ");
     if (xtc_db_num_rows($check_mail_query) > 0) {
       $check_mail = xtc_db_fetch_array($check_mail_query);
-      if (!xtc_validate_password($mail, $key)) {
+      if ($check_mail['mail_key'] != $key) {
         $this->message = TEXT_EMAIL_DEL_ERROR;
         $this->message_id = 2;
       } else {
@@ -172,12 +169,7 @@ class newsletter {
           $this->message_id = 6;
         }					
       }
-    } else {
-      $this->message = TEXT_WRONG_CODE;
-      $this->message_id = 10;
-    }
-
-    if (($check == 'del') && (strtoupper($postCode) == $_SESSION['vvcode'])) {
+    } elseif (($check == 'del') && (strtoupper($postCode) == $_SESSION['vvcode'])) {
     
       $check_mail_query = xtc_db_query("SELECT customers_email_address 
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
@@ -228,11 +220,11 @@ class newsletter {
 		               EMAIL_SUPPORT_NAME, 
 		               xtc_db_input($mail), 
 		               '', 
-		               '', 
+		               NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_ADDRESS : '', 
 		               EMAIL_SUPPORT_REPLY_ADDRESS, 
 		               EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
-		               NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_ADDRESS : '', 
-		               NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_NAME : '', 
+		               '', 
+		               '', 
 		               TEXT_EMAIL_SUBJECT, 
 		               $html_mail, 
 		               $txt_mail
@@ -253,5 +245,4 @@ class newsletter {
 	}
 		
 }
-
 ?>
