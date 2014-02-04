@@ -553,6 +553,9 @@ CREATE TABLE newsletter_recipients (
   mail_status INT(1) NOT NULL DEFAULT 0,
   mail_key VARCHAR(32) NOT NULL DEFAULT '',
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  ip_date_added varchar(32) DEFAULT NULL,
+  date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
+  ip_date_confirmed varchar(32) DEFAULT NULL,
   PRIMARY KEY (mail_id)
 ) ENGINE=MyISAM;
 
