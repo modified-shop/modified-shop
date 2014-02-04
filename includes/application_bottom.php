@@ -41,27 +41,9 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require_once (DIR_FS_EXTERNAL . 'econda/econda.php');
 }
 
-/******** Findologic **********/
-if (defined('MODULE_FINDOLOGIC_STATUS') && MODULE_FINDOLOGIC_STATUS == 'True' && MODULE_FINDOLOGIC_AUTOCOMPLETE == 'True') {
-  echo '
-  <script
-      type="text/javascript"
-      src="https://secure.findologic.com/autocomplete/require.js"
-      data-main="https://secure.findologic.com/autocomplete/' . strtoupper(md5(MODULE_FINDOLOGIC_SHOP_ID)) . '/autocomplete.js">
-  </script>
-  ';
-}
-/******** Findologic **********/
+foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
-## easymarketing - conversion tracking
-if (defined('MODULE_EASYMARKETING_STATUS') && MODULE_EASYMARKETING_STATUS == 'True') {
-  include(DIR_FS_CATALOG.'api/easymarketing/conversion_tracker.php');
-}
-## easymarketing - conversion tracking
-
-/**
- * new error handling
- */
+// new error handling
 if (is_array($error_exceptions)) {
   if ((DISPLAY_ERROR_REPORTING == 'all') || (DISPLAY_ERROR_REPORTING == 'admin' && $_SESSION['customers_status']['customers_status'] == '0')) {
     echo '<div style="width:1000px; margin:20px auto;">' . PHP_EOL .
@@ -70,8 +52,6 @@ if (is_array($error_exceptions)) {
     echo '</div>';
   }
 }
-
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
 // close MySQL connection
 session_write_close();
