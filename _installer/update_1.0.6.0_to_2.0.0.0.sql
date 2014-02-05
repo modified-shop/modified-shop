@@ -150,8 +150,8 @@ UPDATE configuration SET configuration_value = '0' WHERE configuration_key = 'EN
 ALTER TABLE orders ADD languages_id int(11) NOT NULL;
 
 #GTB - 2014-02-04 - new fields for newsletter extension
-ALTER TABLE newsletter_recipients ADD  ip_date_added varchar(32) DEFAULT NULL,
-ALTER TABLE newsletter_recipients ADD  date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
-ALTER TABLE newsletter_recipients ADD  ip_date_confirmed varchar(32) DEFAULT NULL,
+ALTER TABLE newsletter_recipients ADD  ip_date_added varchar(32) DEFAULT NULL;
+ALTER TABLE newsletter_recipients ADD  date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00';
+ALTER TABLE newsletter_recipients ADD  ip_date_confirmed varchar(32) DEFAULT NULL;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
