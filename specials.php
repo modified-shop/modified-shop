@@ -37,7 +37,7 @@ $specials_query_raw = "SELECT p.*,
                          JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                               ON p.products_id = pd.products_id
                                  AND pd.language_id = ".$_SESSION['languages_id']."
-                    LEFT JOIN ".TABLE_SPECIALS." s
+                        JOIN ".TABLE_SPECIALS." s
                               ON p.products_id = s.products_id
                                  AND s.status = '1'
                         WHERE p.products_status = '1'
