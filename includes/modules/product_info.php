@@ -32,7 +32,6 @@ if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS==
 require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_mo_images.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
-require_once (DIR_FS_INC.'get_cross_sell_name.inc.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');  // for specials
 
 if (!is_object($product) || !$product->isProduct()) {
@@ -93,7 +92,7 @@ if (!is_object($product) || !$product->isProduct()) {
                                                  AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
                                         JOIN " . TABLE_PRODUCTS . " p
                                              ON p.manufacturers_id = m.manufacturers_id
-                                       WHERE p.products_id = '" . $product->data['products_id'] . "'");
+                                                AND p.products_id = '" . $product->data['products_id'] . "'");
   if (xtc_db_num_rows($manufacturer_query)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query);
     $info_smarty->assign('MANUFACTURER_IMAGE', (!empty($manufacturer['manufacturers_image']) ? DIR_WS_IMAGES.$manufacturer['manufacturers_image'] : ''));
