@@ -56,7 +56,7 @@ define('FEMALE', 'Frau');
  */
 
 // text for gift voucher redeeming
-define('IMAGE_REDEEM_GIFT','Gutschein Einl&ouml;sen!');
+define('IMAGE_REDEEM_GIFT','Gutschein einl&ouml;sen!');
 
 define('BOX_TITLE_STATISTICS','Statistik:');
 define('BOX_ENTRY_CUSTOMERS','Kunden:');
@@ -123,7 +123,7 @@ define('ENTRY_POST_CODE_TEXT', '*');
 define('ENTRY_CITY_ERROR', 'Ort muss aus mindestens ' . ENTRY_CITY_MIN_LENGTH . ' Zeichen bestehen.');
 define('ENTRY_CITY_TEXT', '*');
 define('ENTRY_STATE_ERROR', 'Ihr Bundesland muss aus mindestens ' . ENTRY_STATE_MIN_LENGTH . ' Zeichen bestehen.');
-define('ENTRY_STATE_ERROR_SELECT', 'Bitte w&auml;hlen Sie ihr Bundesland aus der Liste aus.');
+define('ENTRY_STATE_ERROR_SELECT', 'Bitte w&auml;hlen Sie Ihr Bundesland aus der Liste aus.');
 define('ENTRY_STATE_TEXT', '*');
 define('ENTRY_COUNTRY_ERROR', 'Bitte w&auml;hlen Sie Ihr Land aus der Liste aus.');
 define('ENTRY_COUNTRY_TEXT', '*');
@@ -219,7 +219,7 @@ define('TEXT_PRINT', 'drucken');
 
 define('TEXT_GREETING_PERSONAL', 'Sch&ouml;n, dass Sie wieder da sind, <span class="greetUser">%s!</span> M&ouml;chten Sie sich unsere <a style="text-decoration:underline;" href="%s">neuen Artikel</a> ansehen?');
 define('TEXT_GREETING_PERSONAL_RELOGON', '<small>Wenn Sie nicht %s sind, melden Sie sich bitte <a style="text-decoration:underline;" href="%s">hier</a> mit Ihren Anmeldedaten an.</small>');
-define('TEXT_GREETING_GUEST', 'Herzlich Willkommen <span class="greetUser">Gast!</span> M&ouml;chten Sie sich <a style="text-decoration:underline;" href="%s">anmelden</a>? Oder wollen Sie ein <a style="text-decoration:underline;" href="%s">Kundenkonto</a> er&ouml;ffnen?');
+define('TEXT_GREETING_GUEST', 'Herzlich willkommen <span class="greetUser">Gast!</span> M&ouml;chten Sie sich <a style="text-decoration:underline;" href="%s">anmelden</a>? Oder wollen Sie ein <a style="text-decoration:underline;" href="%s">Kundenkonto</a> er&ouml;ffnen?');
 
 define('TEXT_SORT_PRODUCTS', 'Sortierung der Artikel ist ');
 define('TEXT_DESCENDINGLY', 'absteigend');
@@ -243,10 +243,10 @@ define('TEXT_UNKNOWN_TAX_RATE', 'Unbekannter Steuersatz');
 
 define('WARNING_INSTALL_DIRECTORY_EXISTS', 'Warnung: Das Installationverzeichnis ist noch vorhanden auf: %s. Bitte l&ouml;schen Sie das Verzeichnis aus Gr&uuml;nden der Sicherheit!');
 define('WARNING_CONFIG_FILE_WRITEABLE', 'Warnung: Die modified eCommerce Shopsoftware kann in die Konfigurationsdatei schreiben: %s. Das stellt ein m&ouml;gliches Sicherheitsrisiko dar - bitte korrigieren Sie die Benutzerberechtigungen zu dieser Datei!');
-define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r die Sessions existiert nicht: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren bis das Verzeichnis erstellt wurde!');
-define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warnung: Die modified eCommerce Shopsoftware kann nicht in das Sessions Verzeichnis schreiben: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren bis die richtigen Benutzerberechtigungen gesetzt wurden!');
+define('WARNING_SESSION_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r die Sessions existiert nicht: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren, bis das Verzeichnis erstellt wurde!');
+define('WARNING_SESSION_DIRECTORY_NOT_WRITEABLE', 'Warnung: Die modified eCommerce Shopsoftware kann nicht in das Sessions Verzeichnis schreiben: ' . xtc_session_save_path() . '. Die Sessions werden nicht funktionieren, bis die richtigen Benutzerberechtigungen gesetzt wurden!');
 define('WARNING_SESSION_AUTO_START', 'Warnung: session.auto_start ist aktiviert (enabled) - Bitte deaktivieren (disabled) Sie dieses PHP Feature in der php.ini und starten Sie den WEB-Server neu!');
-define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r den Artikel Download existiert nicht: ' . DIR_FS_DOWNLOAD . '. Diese Funktion wird nicht funktionieren bis das Verzeichnis erstellt wurde!');
+define('WARNING_DOWNLOAD_DIRECTORY_NON_EXISTENT', 'Warnung: Das Verzeichnis f&uuml;r den Artikel Download existiert nicht: ' . DIR_FS_DOWNLOAD . '. Diese Funktion wird nicht funktionieren, bis das Verzeichnis erstellt wurde!');
 
 define('SUCCESS_ACCOUNT_UPDATED', 'Ihr Konto wurde erfolgreich aktualisiert.');
 define('SUCCESS_PASSWORD_UPDATED', 'Ihr Passwort wurde erfolgreich ge&auml;ndert!');
@@ -269,7 +269,7 @@ define('SUB_TITLE_OT_DISCOUNT','Rabatt:');
 define('TAX_ADD_TAX','inkl. ');
 define('TAX_NO_TAX','zzgl. ');
 
-define('NOT_ALLOWED_TO_SEE_PRICES','Sie k&ouml;nnen als Gast (bzw. mit Ihrem derzeitigen Status) keine Preise sehen');
+define('NOT_ALLOWED_TO_SEE_PRICES','Sie k&ouml;nnen als Gast (bzw. mit Ihrem derzeitigen Status) keine Preise sehen.');
 define('NOT_ALLOWED_TO_SEE_PRICES_TEXT','Sie haben keine Erlaubnis, Preise zu sehen. Erstellen Sie bitte ein Kundenkonto.');
 
 define('TEXT_DOWNLOAD','Download');
@@ -325,7 +325,7 @@ define('ERROR_INVALID_PRODUCT', 'Der von Ihnen gew&auml;hlte Artikel wurde nicht
 
 define('NAVBAR_TITLE_ACCOUNT', 'Ihr Konto');
 define('NAVBAR_TITLE_1_ACCOUNT_EDIT', 'Ihr Konto');
-define('NAVBAR_TITLE_2_ACCOUNT_EDIT', 'Ihre pers&ouml;nliche Daten &auml;ndern');
+define('NAVBAR_TITLE_2_ACCOUNT_EDIT', 'Ihre pers&ouml;nlichen Daten &auml;ndern');
 define('NAVBAR_TITLE_1_ACCOUNT_HISTORY', 'Ihr Konto');
 define('NAVBAR_TITLE_2_ACCOUNT_HISTORY', 'Ihre get&auml;tigten Bestellungen');
 define('NAVBAR_TITLE_1_ACCOUNT_HISTORY_INFO', 'Ihr Konto');
@@ -416,7 +416,7 @@ define('ERROR_NO_REDEEM_CODE', 'Sie haben leider keinen Code eingegeben.');
 define('ERROR_NO_INVALID_REDEEM_GV', 'Ung&uuml;ltiger Gutscheincode');
 define('TABLE_HEADING_CREDIT', 'Guthaben');
 define('EMAIL_GV_TEXT_SUBJECT', 'Ein Geschenk von %s');
-define('MAIN_MESSAGE', 'Sie haben sich dazu entschieden, einen Gutschein im Wert von %s an %s zu versenden, dessen E-Mail-Adresse %s lautet.<br /><br />Folgender Text erscheint in Ihrer E-Mail:<br /><br />Hallo %s<br /><br />Ihnen wurde ein Gutschein im Wert von %s durch %s geschickt.');
+define('MAIN_MESSAGE', 'Sie haben sich dazu entschieden, einen Gutschein im Wert von %s an %s zu versenden, dessen E-Mail-Adresse %s lautet.<br /><br />Folgender Text erscheint in Ihrer E-Mail:<br /><br />Hallo %s,<br /><br />Ihnen wurde ein Gutschein im Wert von %s durch %s geschickt.');
 define('REDEEMED_AMOUNT','Ihr Gutschein wurde erfolgreich auf Ihr Konto verbucht. Gutscheinwert:');
 define('REDEEMED_COUPON','Ihr Coupon wurde erfolgreich eingebucht und wird bei Ihrer Bestellung automatisch eingel&ouml;st.');
 
