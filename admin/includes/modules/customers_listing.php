@@ -168,7 +168,7 @@
                                                ".$search."
                                                ".$sort;
                 // EOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
-                $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_LIST_CUSTOMERS, $customers_query_raw, $customers_query_numrows);
+                $customers_split = new splitPageResults($_GET['page'], $page_max_display_results, $customers_query_raw, $customers_query_numrows);
                 $customers_query = xtc_db_query($customers_query_raw);
                 while ($customers = xtc_db_fetch_array($customers_query)) {
                   // vr - 2012-10-27 moved info query into raw query
