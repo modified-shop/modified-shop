@@ -10,6 +10,10 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  
+  //display per page
+  $cfg_max_display_results_key = 'MAX_DISPLAY_LIST_CUSTOMERS';
+  $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
  ?>
 
           
@@ -52,6 +56,11 @@
                   if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
                   ?>
                   <td class="dataTableHeadingContent"><?php echo HEADING_TITLE_VAT; ?></td>
+                  <?php
+                  }
+                  if (ACTIVATE_GIFT_SYSTEM=='true') {
+                  ?>
+                  <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_AMOUNT; ?></td>
                   <?php
                   }
                   ?>
@@ -131,8 +140,7 @@
 
                 // BOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
                 $customers_query_raw = "-- admin/customers.php
-                                         SELECT
-                                               c.customers_id,
+                                        SELECT c.customers_id,
                                                c.customers_cid,
                                                c.customers_vat_id,
                                                c.customers_vat_id_status,
@@ -147,18 +155,20 @@
                                                ci.customers_info_date_account_created as date_account_created,
                                                ci.customers_info_date_account_last_modified as date_account_last_modified,
                                                ci.customers_info_date_of_last_logon as date_last_logon,
-                                               ci.customers_info_number_of_logons as number_of_logons
-                                          FROM
-                                               ".TABLE_CUSTOMERS." c ,
-                                               ".TABLE_ADDRESS_BOOK." a,
-                                               ".TABLE_CUSTOMERS_INFO." ci
-                                         WHERE c.customers_id = a.customers_id
-                                           AND c.customers_default_address_id = a.address_book_id
-                                           AND ci.customers_info_id = c.customers_id
+                                               ci.customers_info_number_of_logons as number_of_logons,
+                                               cgc.amount
+                                          FROM ".TABLE_CUSTOMERS." c
+                                          JOIN ".TABLE_ADDRESS_BOOK." a
+                                               ON c.customers_id = a.customers_id
+                                     LEFT JOIN ".TABLE_CUSTOMERS_INFO." ci
+                                               ON ci.customers_info_id = c.customers_id
+                                     LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
+                                               ON c.customers_id = cgc.customer_id
+                                         WHERE c.customers_default_address_id = a.address_book_id
                                                ".$search."
                                                ".$sort;
                 // EOF - vr - 2010-02-22 - removed group by part to prevent folding of customers records with the same creation timestamp
-                $customers_split = new splitPageResults($_GET['page'], MAX_DISPLAY_LIST_CUSTOMERS, $customers_query_raw, $customers_query_numrows);
+                $customers_split = new splitPageResults($_GET['page'], $page_max_display_results, $customers_query_raw, $customers_query_numrows);
                 $customers_query = xtc_db_query($customers_query_raw);
                 while ($customers = xtc_db_fetch_array($customers_query)) {
                   // vr - 2012-10-27 moved info query into raw query
@@ -245,6 +255,11 @@
                       <?php
 */
                     }
+                    if (ACTIVATE_GIFT_SYSTEM=='true') {
+                    ?>
+                      <td class="dataTableContent"><?php if ($customers['amount']>0) { echo $currencies->format($customers['amount']);} ?></td>
+                    <?php
+                    }
                   ?>
                   <td class="dataTableContent txta-r"><?php echo xtc_date_short($customers['date_account_created']); ?>&nbsp;</td>
                   <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($customers['customers_id'] == $cInfo->customers_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID')) . 'cID=' . $customers['customers_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
@@ -255,7 +270,7 @@
               </table>
               <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_LIST_CUSTOMERS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
               <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_LIST_CUSTOMERS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
-
+              <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               if (isset($_GET['search'])) {
               ?>
@@ -466,7 +481,8 @@
                 // display right box
                 if ((xtc_not_null($heading)) && (xtc_not_null($contents))) {
                   echo '            <td class="boxRight">'."\n";
-                  echo box::infoBoxSt($heading, $contents); // cYbercOsmOnauT - 2011-02-07 - Changed methods of the classes box and tableBox to static
+                  $box = new box;
+                  echo $box->infoBox($heading, $contents);
                   echo '          </td>'."\n";
                 }
               ?>              
