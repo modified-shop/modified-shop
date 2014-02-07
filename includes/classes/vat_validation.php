@@ -24,6 +24,7 @@ class vat_validation {
   var $vat_info;
 
   function vat_validation($vat_id = '', $customers_id = '', $customers_status = '', $country_id = '', $guest = false) {
+    $vat_id = str_replace(' ', '', $vat_id); //Leerzeichen entfernen
     $this->vat_info = array ();
     $this->live_check = ACCOUNT_COMPANY_VAT_LIVE_CHECK;
     if (xtc_not_null($vat_id)) {
@@ -256,12 +257,13 @@ class vat_validation {
         case 'DE':
         case 'DK':
         case 'EE':
-        case 'GR':
+        case 'EL': //Griechenland
         case 'ES':
         case 'FI':
         case 'FR':
         case 'GB':
         case 'HU':
+        case 'HR': //Kroatien
         case 'IE':
         case 'IT':
         case 'LT':
