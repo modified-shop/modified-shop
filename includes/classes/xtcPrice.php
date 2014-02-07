@@ -566,7 +566,7 @@ function xtcCheckSpecial($pID) {
       $save_percent = round(($pPrice - $sPrice) / $pPrice * 100);
       $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
       $from = $this->checkAttributes($pID);
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $from . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff;
       if ($discount != 0) {
         // customer group discount
         $price .= '<br />' . BOX_LOGINBOX_DISCOUNT . ': ' . round($discount) . ' %';
@@ -613,7 +613,7 @@ function xtcCheckSpecial($pID) {
       $save_percent = round($discount);
       $save_diff = $this->xtcFormat($pPrice - $sPrice, $format);
       $from = $this->checkAttributes($pID);
-      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br />' . ONLY . $from . $special_price . '<br /><small>' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
+      $price = '<span class="productOldPrice"><small>' . INSTEAD . '</small><del>' . $old_price . '</del></span><br /><span class="productNewPrice">' . ONLY . $from . $special_price . '</span><br /><small class="productSavePrice">' . YOU_SAVE . $save_percent . ' % /' . $save_diff . '</small>';
       if ($vpeStatus == 0) {
         return $price;
       } else {
