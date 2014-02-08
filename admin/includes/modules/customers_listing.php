@@ -268,8 +268,8 @@
                   }
                 ?>
               </table>
-              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, MAX_DISPLAY_LIST_CUSTOMERS, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, MAX_DISPLAY_LIST_CUSTOMERS, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $customers_split->display_count($customers_query_numrows, $page_max_display_results, $_GET['page'], TEXT_DISPLAY_NUMBER_OF_CUSTOMERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $customers_split->display_links($customers_query_numrows, $page_max_display_results, MAX_DISPLAY_PAGE_LINKS, $_GET['page'], xtc_get_all_get_params(array('page', 'info', 'x', 'y', 'cID'))); ?></div>
               <?php echo draw_input_per_page($PHP_SELF,$cfg_max_display_results_key,$page_max_display_results); ?>
               <?php
               if (isset($_GET['search'])) {
