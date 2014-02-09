@@ -7,11 +7,11 @@ Mit der Nachricht:
 
 {$MESSAGE}
 
-Ihr persönlicher Gutscheincode lautet {$GIFT_CODE}. Sie können diese Gutschrift während dem Bestellvorgang verbuchen.
+Ihr persönlicher Gutscheincode lautet {$GIFT_CODE}. Sie können diese Gutschrift während des Bestellvorgangs verbuchen.
 
-Um den Gutschein einzulösen klicken Sie bitte auf {$GIFT_LINK}
+Um den Gutschein einzulösen, klicken Sie bitte auf {$GIFT_LINK}
 
-Falls es mit dem obigen Link Probleme beim Einlösen kommen sollte,
+Falls es mit dem obigen Link zu Problemen beim Einlösen kommen sollte,
 können Sie den Betrag während des Bestellvorganges verbuchen.
 
 [SIGNATUR]
