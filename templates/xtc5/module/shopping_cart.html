@@ -1,5 +1,16 @@
 {config_load file="$language/lang_$language.conf" section="shopping_cart"}
 <h1>{#heading_cart#}</h1>
+{*BOC error message for exceeded product quantity, noRiddle*}
+{if $error_max_prod}
+<div class="errormessage">
+    <ul>
+        {foreach item=err_max_data from=$error_max_prod}
+        <li>{$err_max_data.E_MSG}</li>
+        {/foreach}
+    </ul>
+</div>
+{/if}
+{*EOC error message for exceeded product quantity, noRiddle*}
 {if $info_message != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$info_message}</div>{/if}
 {if $cart_empty == true}
   <p>{#text_empty#}</p>
