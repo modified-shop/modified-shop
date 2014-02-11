@@ -67,7 +67,7 @@
       } else {
         $box_smarty->assign('REVIEWS_WRITE_REVIEW',BOX_REVIEWS_NO_WRITE_REVIEW);
       }
-    } else if (!empty($random_product)) {
+    } elseif (!empty($random_product)) {
       // display random review box, but only if there's something to display
       $random = true;
       $review_query = "-- templates/xtc5/source/boxes/reviews.php
@@ -106,7 +106,7 @@
       $box_smarty->caching = 1;
       $box_smarty->cache_lifetime=CACHE_LIFETIME;
       $box_smarty->cache_modified_check=CACHE_CHECK;
-      $cache_id = $_SESSION['language'].$random_product['reviews_id'].(isset($product->data['products_id']) ? $product->data['products_id'] : 0).$_SESSION['language'];
+      $cache_id = $_SESSION['language'].(isset($random_product['reviews_id']) ? $random_product['reviews_id'] : '0').(isset($product->data['products_id']) ? $product->data['products_id'] : '0').$_SESSION['language'];
       $box_reviews= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html',$cache_id);
     }
     $smarty->assign('box_REVIEWS',$box_reviews);
