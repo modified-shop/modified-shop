@@ -550,7 +550,8 @@
       for ($i=0, $n=sizeof($products); $i<$n; $i++) {
         
         //attribute mapping
-        if ($products[$i]['attributes']) {
+        $products_attributes = array();
+        if (isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
           $products_attributes = $products[$i]['attributes']; //contains only option_id and value_id
           unset($products[$i]['attributes']); //remove from array for direct array mapping
         }
@@ -569,7 +570,7 @@
         $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
-        if ($products_attributes) {
+        if (count($products_attributes) > 0) {
           $subindex = 0;
           reset($products_attributes);
           while (list($option, $value) = each($products_attributes)) {
