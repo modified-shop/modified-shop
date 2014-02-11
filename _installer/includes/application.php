@@ -113,7 +113,7 @@
   if (isset($_POST['lg']) && $_POST['lg'] != '') {
     $lang = $_POST['lg'];
   }
-  if ($lang == '') {
+  if ($lang == '' || ($lang != 'german' && $lang != 'english')) {
     //BOF - DokuMan - 2010-08-16 - Set browser language on installer start page
     preg_match("/^([a-z]+)-?([^,;]*)/i", $_SERVER['HTTP_ACCEPT_LANGUAGE'], $browser_lang);
     switch (strtolower($browser_lang[1])) {
