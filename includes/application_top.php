@@ -28,14 +28,19 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// xss secure
+if (is_file('includes/xss_secure.php')) {
+  include ('includes/xss_secure.php');
+}
+
 // start the timer for the page parse time log
 define('PAGE_PARSE_START_TIME', microtime(true));
 
 // configuration parameters
 if (file_exists('includes/local/configure.php')) {
-  include ('includes/local/configure.php');
+  include_once ('includes/local/configure.php');
 } else {
-  include ('includes/configure.php');
+  include_once ('includes/configure.php');
 }
 
 // call Installer
@@ -44,9 +49,7 @@ if (DB_DATABASE == '' && is_dir('./_installer')) {
   exit();
 }
 
-/**
- * set the level of error reporting
- */
+// set the level of error reporting
 @ini_set('display_errors', true);
 if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
   error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
@@ -59,14 +62,12 @@ if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
   error_reporting(0);
 }
 
-/**
- * new error handling
- */
-require_once (DIR_WS_INCLUDES.'error_reporting.php');
+// new error handling
+if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_WS_INCLUDES.'error_reporting.php');
+}
 
-/*
- * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
+// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
@@ -201,9 +202,6 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 // PHPMailer
 require_once (DIR_WS_CLASSES.'class.phpmailer.php');
 
-// check for JS XSS
-require_once (DIR_FS_INC.'xtc_security.inc.php');
-
 function CacheCheck() {
   if (USE_CACHE == 'false') return false;
   if (!isset($_COOKIE['MODsid'])) return false;
@@ -237,6 +235,7 @@ $https_domain_arr = xtc_get_top_level_domain(HTTPS_SERVER);
 $http_domain = $http_domain_arr['new'];
 $https_domain = $https_domain_arr['new'];
 $current_domain = (($request_type == 'NONSSL') ? $http_domain : $https_domain);
+
 // set the top level domains - old
 $http_domain_old = $http_domain_arr['old'];
 $https_domain_old = $https_domain_arr['old'];
@@ -270,7 +269,6 @@ include (DIR_WS_INCLUDES.'tracking.php');
 // verify the browser user agent if the feature is enabled
 // verify the IP address if the feature is enabled
 include (DIR_WS_MODULES.'verify_session.php');
-
 
 // set the language
 include (DIR_WS_MODULES.'set_language_sessions.php');
@@ -339,7 +337,7 @@ xtc_expire_specials();
 // class product
 require (DIR_WS_CLASSES.'product.php');
 
-// set $actual_products_id,  $current_category_id, $ cPath, $_GET['manufacturers_id']
+// set $actual_products_id,  $current_category_id, $cPath, $_GET['manufacturers_id']
 include (DIR_WS_MODULES.'set_ids_by_url_parameters.php');
 
 // breadcrumb class and start the breadcrumb trail
