@@ -28,12 +28,10 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
-@ini_set('display_errors', true);
-error_reporting(-1); // Development value
 
 // xss secure
 if (is_file('../includes/xss_secure.php')) {
-  //include ('../includes/xss_secure.php');
+  include ('../includes/xss_secure.php');
 }
 
 // DB version, used for updates (_installer)
@@ -60,6 +58,10 @@ if (file_exists('../includes/local/configure.php')) {
   include_once('../includes/configure.php');
 }
 
+// new error handling
+if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
+}
 
 // turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
