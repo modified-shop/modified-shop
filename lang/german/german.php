@@ -531,4 +531,8 @@ define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nic
 define('_SHIPPING_FREE','Versandkostenfrei');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
+
+// error message for exceeded product quantity, noRiddle
+define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte Stückzahl i.H.v. ' .MAX_PRODUCTS_QTY. ' für <span style="font-style:italic;">"%s"</span>  wurde überschritten.<br />Die Stückzahl wurde automatisch auf die erlaubte Stückzahl reduziert.');
+
 ?>

@@ -194,10 +194,10 @@ $smarty->assign('checkout',xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'))
 $smarty->assign('store_name', encode_htmlspecialchars(TITLE));
 
 if (isset($_GET['error_message']) && xtc_not_null($_GET['error_message'])) {
-	$smarty->assign('error','<p class="errormessage">'. encode_htmlspecialchars(urldecode($_GET['error_message'])).'</p>');
+  $smarty->assign('error', get_message('error_message'));
 }
 if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-	$smarty->assign('error','<p class="errormessage">'.encode_htmlspecialchars($_GET['info_message']).'</p>');
+  $smarty->assign('error', get_message('info_message'));
 }
 
 ## header_body_extra

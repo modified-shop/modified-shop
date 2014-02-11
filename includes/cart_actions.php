@@ -81,9 +81,9 @@ if (xtc_not_null($action)) {
         if (in_array($_POST['products_id'][$i], (isset($_POST['cart_delete']) && is_array($_POST['cart_delete']) ? $_POST['cart_delete'] : array ()))) {
           $_SESSION['cart']->remove($_POST['products_id'][$i]);
         } else {
-          if ($cart_quantity > MAX_PRODUCTS_QTY) {
+          if ((int)$_POST['cart_quantity'][$i] > MAX_PRODUCTS_QTY) {
             $cart_quantity = MAX_PRODUCTS_QTY;
-            $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
+            $_SESSION['err_max_prod'][$i] = true;  // error message for exceeded product quantity, noRiddle
           }
           $attributes = isset($_POST['id'][$_POST['products_id'][$i]]) ? $_POST['id'][$_POST['products_id'][$i]] : '';
 
@@ -98,9 +98,9 @@ if (xtc_not_null($action)) {
     case 'add_product':
       if (isset ($_POST['products_id']) && is_numeric($_POST['products_id'])) {
         $cart_quantity = (xtc_remove_non_numeric($_POST['products_qty']) + $_SESSION['cart']->get_quantity(xtc_get_uprid($_POST['products_id'], isset($_POST['id'])?$_POST['id']:'')));
-        if ($cart_quantity > MAX_PRODUCTS_QTY) {
+        if ($cart_quantity > MAX_PRODUCTS_QTY) {            
           $cart_quantity = MAX_PRODUCTS_QTY;
-          $info_message = '&info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
+          $_SESSION['err_max_prod'] = true;   // error message for exceeded product quantity, noRiddle
         }
         $_SESSION['cart']->add_cart((int)$_POST['products_id'], $cart_quantity, isset($_POST['id'])?$_POST['id']:'');
       }
@@ -151,7 +151,7 @@ if (xtc_not_null($action)) {
             $cart_quantity = ($_SESSION['cart']->get_quantity(xtc_get_uprid($quickie['products_id'],''))+1);
             if ($cart_quantity > MAX_PRODUCTS_QTY) {
               $cart_quantity = MAX_PRODUCTS_QTY;
-              $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
+              $_SESSION['err_max_prod'] = true;   // error message for exceeded product quantity, noRiddle
             }
             $_SESSION['cart']->add_cart($quickie['products_id'], $cart_quantity);
             xtc_redirect(xtc_href_link($goto, xtc_get_all_get_params($parameters) . $info_message, 'NONSSL'));
@@ -195,7 +195,7 @@ if (xtc_not_null($action)) {
             $cart_quantity = ($_SESSION['cart']->get_quantity(xtc_get_uprid($_GET['BUYproducts_id'],''))+1);
             if ($cart_quantity > MAX_PRODUCTS_QTY) {
               $cart_quantity = MAX_PRODUCTS_QTY;
-              $info_message = 'info_message_3=TEXT_PRODUCTS_QTY_REDUCED';
+              $_SESSION['err_max_prod'] = true;   // error message for exceeded product quantity, noRiddle
             }
             $_SESSION['cart']->add_cart($_GET['BUYproducts_id'], $cart_quantity);
           } else {

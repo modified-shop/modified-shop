@@ -130,9 +130,7 @@ class InputFilter {
 	function decode($source='') {
 		if ($source!='') {
       // url decode
-      if (function_exists('html_entity_decode')) {
-        $source = html_entity_decode($source, ENT_QUOTES, "ISO-8859-1");
-      }
+      $source = decode_htmlentities($source, ENT_QUOTES); 
       // convert decimal
       $source = preg_replace_callback(
         '/&#(\d+);/m',

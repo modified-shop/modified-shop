@@ -135,11 +135,11 @@ if (ACTIVATE_GIFT_SYSTEM == 'true') {
 $total = $xtPrice->xtcFormat($order->info['total'], false);
 if ($total > 0 || ($credit_amount && $total > 0) || (isset($_SESSION['credit_covers']) && $_SESSION['credit_covers'] == 1 && $total > 0)) {
   if (isset($_GET['payment_error']) && is_object(${ $_GET['payment_error'] }) && ($error = ${$_GET['payment_error']}->get_error())) {
-    $smarty->assign('error', '<p class="errormessage">'. encode_htmlspecialchars($error['error']).'</p>');
+    $smarty->assign('error',  encode_htmlspecialchars($error['error']));
   }
   ### Paypal Express Modul
   if(isset($_SESSION['reshash']['FORMATED_ERRORS'])) {
-    $smarty->assign('error', '<p class="errormessage">'. $_SESSION['reshash']['FORMATED_ERRORS'].'</p>');
+    $smarty->assign('error', $_SESSION['reshash']['FORMATED_ERRORS']);
   }
   ### Paypal Express Modul
 
@@ -205,7 +205,7 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 if ((isset($_GET['billsafe_close']) && $_GET['billsafe_close'] == 'true') 
 || (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2')
 || (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2hp')) {
-  echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.stripslashes(urlencode(html_entity_decode($_GET['error_message']))), 'SSL').'"); </script>';
+  echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.stripslashes(urlencode(decode_htmlentities($_GET['error_message']))), 'SSL').'"); </script>';
 }
 ### BILLSAFE payment module
 

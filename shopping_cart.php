@@ -218,6 +218,23 @@ if ($_SESSION['cart']->count_contents() > 0) {
       $smarty->assign('min_order', $max_order);
     }
   }
+  
+  // error message for exceeded product quantity, noRiddle
+  if(isset($_SESSION['err_max_prod'])) {
+    $error_msg = array();
+    for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
+        if(isset($_SESSION['err_max_prod'][$i]) && !isset($_GET['products_id'])){
+            $emsg = sprintf(MAX_PROD_QTY_EXCEEDED, $products[$i]['name']);
+            $error_msg[] = array(E_MSG => $emsg);
+        } else if (isset($_SESSION['err_max_prod']) && (int)$_GET['products_id'] == $products[$i]['id']) {
+            $emsg = sprintf(MAX_PROD_QTY_EXCEEDED, $products[$i]['name']);
+            $error_msg[] = array(E_MSG => $emsg);
+        }
+    }
+    $smarty->assign('error_max_prod', $error_msg);
+    unset($_SESSION['err_max_prod']);
+  }
+  
   // BOF - Tomcraft - 2009-10-03 - Paypal Express Modul
   /*
   if ($_GET['info_message'])
@@ -229,7 +246,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
     $smarty->assign('info_message', $_SESSION['paypal_warten']); //Tomcraft - 2009-12-08 - fixed duplicate error messages in shopping cart
   } else {
     if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
-      $smarty->assign('info_message', (defined(strtoupper($_GET['info_message'])) ? constant(strtoupper($_GET['info_message'])) : $_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+      $smarty->assign('info_message', get_message('info_message'));
     }
     if (isset($o_paypal) && is_object($o_paypal)) {
       $smarty->assign('BUTTON_PAYPAL', $o_paypal->build_express_checkout_button());
@@ -258,10 +275,10 @@ if (isset($_SESSION['cc_post']) && !$cc_check) {
 }
 
 if (isset($_GET['info_message'])) {
-  $smarty->assign('info_message', (defined(strtoupper($_GET['info_message'])) ? constant(strtoupper($_GET['info_message'])) : $_GET['info_message']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+  $smarty->assign('info_message', get_message('info_message'));
 }
 if (isset($_GET['info_message_3'])) {
-  $smarty->assign('info_message_3', (defined(strtoupper($_GET['info_message_3'])) ? constant(strtoupper($_GET['info_message_3'])) : $_GET['info_message_3']). (isset($_GET['add_info'])? strip_tags(urldecode($_GET['add_info'])): ''));
+  $smarty->assign('info_message_3', get_message('info_message_3'));
 }
 //BOF - web28 - 2011-05-15 - new continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
