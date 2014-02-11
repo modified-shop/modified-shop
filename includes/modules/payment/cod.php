@@ -119,9 +119,10 @@ class cod {
         //COD selected, but no shipping module which offers COD
       }
 
-        if ($cod_country) {
-            $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
-            $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      if ($cod_country) {
+        $cod_tax = xtc_get_tax_rate(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        $cod_tax_description = xtc_get_tax_description(MODULE_ORDER_TOTAL_COD_FEE_TAX_CLASS, $order->delivery['country']['id'], $order->delivery['zone_id']);
+        
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
             $cod_cost_value= xtc_add_tax($cod_cost, $cod_tax);
             $cod_cost= $xtPrice->xtcFormat($cod_cost_value,true);
@@ -131,8 +132,8 @@ class cod {
             $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
         }
         if (!$cod_cost_value) {
-           $cod_cost_value=$cod_cost;
-           $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
+            $cod_cost_value=$cod_cost;
+            $cod_cost= $xtPrice->xtcFormat($cod_cost,true);
         }
         $this->cost = '+ '.$cod_cost;
       }
