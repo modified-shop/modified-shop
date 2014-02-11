@@ -55,7 +55,7 @@
   function xtc_db_affected_rows($link='db_link') {
     global $$link;
 
-    return mysqli_affected_rows($$link);
+    return mysql_affected_rows($$link);
   }
 
 
