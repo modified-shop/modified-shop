@@ -29,24 +29,21 @@ error_reporting(0);
 
 // Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
 if (file_exists('../../includes/local/configure.php')) {
-  include('../../includes/local/configure.php');
+  include_once('../../includes/local/configure.php');
 } else {
-  include('../../includes/configure.php');
+  include_once('../../includes/configure.php');
 }
 
-/*
- * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
+// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
 require_once (DIR_FS_INC . 'auto_require.inc.php');
 
-// BOF - Tomcraft - 2009-11-08 - FIX for PHP5.3 date_default_timezone_set
+// default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
 	date_default_timezone_set('Europe/Berlin');
 }
-// EOF - Tomcraft - 2009-11-08 - FIX for PHP5.3 date_default_timezone_set
   
 // define the project version
 define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
@@ -163,5 +160,7 @@ require (DIR_WS_FUNCTIONS.'sessions.php');
 if (!defined('TEMPLATE_ENGINE')) {
   define('TEMPLATE_ENGINE','smarty_2');
 }
+
 require (DIR_FS_EXTERNAL.'smarty/'.TEMPLATE_ENGINE.'/Smarty.class.php');
+
 ?>

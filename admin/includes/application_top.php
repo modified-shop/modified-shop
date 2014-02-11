@@ -29,6 +29,11 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
+// xss secure
+if (is_file('../includes/xss_secure.php')) {
+  include ('../includes/xss_secure.php');
+}
+
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_2.0.0.0');
 
@@ -48,14 +53,12 @@ if (function_exists('ini_set')) {
 
 // configuration parameters
 if (file_exists('../includes/local/configure.php')) {
-  include('../includes/local/configure.php');
+  include_once('../includes/local/configure.php');
 } else {
-  require('../includes/configure.php');
+  include_once('../includes/configure.php');
 }
 
-/**
- * set the level of error reporting
- */
+// set the level of error reporting
 @ini_set('display_errors', true);
 if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
   error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
@@ -68,18 +71,17 @@ if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
   error_reporting(0);
 }
 
-/**
- * new error handling
- */
-require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
+// new error handling
+if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
+}
 
-/*
- * turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
- */
+// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
 require_once (DIR_FS_INC . 'auto_require.inc.php');
+
 // solve compatibility issues
 require_once (DIR_WS_FUNCTIONS.'compatibility.php');
 
@@ -88,7 +90,7 @@ require_once (DIR_WS_INCLUDES.'version.php');
 
 // default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
-date_default_timezone_set('Europe/Berlin');
+  date_default_timezone_set('Europe/Berlin');
 }
 
 // Base/PHP_SELF/SSL-PROXY
@@ -127,6 +129,8 @@ require_once(DIR_FS_INC . 'xtc_get_top_level_domain.inc.php');
 require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
 require_once(DIR_FS_INC . 'xtc_backup_restore_configuration.php');
 require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
+require_once(DIR_FS_INC . 'xtc_input_validation.inc.php');
 
 foreach(auto_require(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
 
@@ -145,7 +149,7 @@ xtc_db_connect() or die('Unable to connect to database server!');
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   if ($configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS') {
-    define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
+    define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
   }
 }
 
@@ -158,6 +162,7 @@ require (DIR_FS_CATALOG.DIR_WS_CLASSES.'inputfilter.php');
 $inputfilter = new Inputfilter();
 $_GET = $inputfilter->validate($_GET);
 $_POST = $inputfilter->validate($_POST);
+$_REQUEST = $inputfilter->validate($_REQUEST);
 
 // initialize the logger class
 require(DIR_WS_CLASSES . 'logger.php');
@@ -200,87 +205,31 @@ $current_domain_old = $http_domain_arr['old'];
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_session_and_cookie_parameters.php');
 
 // verify the ssl_session_id if the feature is enabled
-if (($request_type == 'SSL') && (SESSION_CHECK_SSL_SESSION_ID == 'True') && (ENABLE_SSL == true) && ($session_started == true)) {
-  $ssl_session_id  = $_SERVER['SSL_SESSION_ID'];
-  $ssl_session_id2 = getenv('SSL_SESSION_ID');
-  $ssl_session_id  = ($ssl_session_id == $ssl_session_id2) ? $ssl_session_id : $ssl_session_id.';'.$ssl_session_id2;
-  if (!isset($_SESSION['SSL_SESSION_ID'])) {
-    $_SESSION['SESSION_SSL_ID'] = $ssl_session_id;
-  }
-  if ($_SESSION['SESSION_SSL_ID'] != $ssl_session_id) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    xtc_redirect(xtc_catalog_href_link('ssl_check.php'));
-  }
-}
-
 // verify the browser user agent if the feature is enabled
-if (SESSION_CHECK_USER_AGENT == 'True') {
-  $http_user_agent  = strtolower($_SERVER['HTTP_USER_AGENT']);
-  $http_user_agent2 = strtolower(getenv("HTTP_USER_AGENT"));
-  $http_user_agent  = ($http_user_agent == $http_user_agent2) ? $http_user_agent : $http_user_agent.';'.$http_user_agent2;
-  if (!isset ($_SESSION['SESSION_USER_AGENT'])) {
-    $_SESSION['SESSION_USER_AGENT'] = $http_user_agent;
-  } elseif ($_SESSION['SESSION_USER_AGENT'] != $http_user_agent) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
-  }
-}
-
 // verify the IP address if the feature is enabled
-if (SESSION_CHECK_IP_ADDRESS == 'True') {
-  $ip_address = xtc_get_ip_address();
-  if (!isset($_SESSION['SESSION_IP_ADDRESS'])) {
-    $_SESSION['SESSION_IP_ADDRESS'] = $ip_address;
-  } elseif ($_SESSION['SESSION_IP_ADDRESS'] != $ip_address) {
-    xtc_session_recreate();
-    xtc_session_destroy();
-    xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
-  }
-}
+include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 
 // set the language
-if (!isset($_SESSION['language']) || isset($_GET['language'])) {
-  include(DIR_WS_CLASSES . 'language.php');
-  $lng = new language($_GET['language']);
-  if (!isset($_GET['language'])) {
-    $lng->get_browser_language();
-  }
-  $_SESSION['language'] = $lng->language['directory'];
-  $_SESSION['languages_id'] = $lng->language['id'];
-  $_SESSION['language_charset'] = $lng->language['language_charset']; //web28 - 2012-04-29 - add $_SESSION['language_charset']
-  $_SESSION['language_code'] = $lng->language['code']; //web28 - 2010-09-05 - add $_SESSION['language_code']
-}
+include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
 
 // include the language translations
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
 $current_page = basename($PHP_SELF);
-if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$current_page)) {
-  include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.  $current_page);
+if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page)) {
+  require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page);
 }
 
 // write customers status in session
 require(DIR_FS_CATALOG.DIR_WS_INCLUDES.'write_customers_status.php');
-if (file_exists($current_page) == false || $_SESSION['customers_status']['customers_status_id'] !== '0') {
-  xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
-}
 
-// for tracking of customers
-$_SESSION['user_info'] = array();
-if (!isset($_SESSION['user_info']['user_ip'])) {
-  $_SESSION['user_info']['user_ip'] = $_SERVER['REMOTE_ADDR'];
-  $_SESSION['user_info']['user_host'] = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : '';
-  $_SESSION['user_info']['advertiser'] = isset($_GET['ad']) ? $_GET['ad'] : '';
-  $_SESSION['user_info']['referer_url'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : '';
+// check permission
+if (is_file(DIR_FS_ADMIN.$current_page) == false || $_SESSION['customers_status']['customers_status_id'] !== '0') {
+  xtc_redirect(xtc_catalog_href_link(FILENAME_LOGIN));
 }
 
 // define our localization functions
 require(DIR_WS_FUNCTIONS . 'localization.php');
-
-// Include validation functions (right now only email address)
-//require(DIR_WS_FUNCTIONS . 'validations.php');
 
 // setup our boxes
 require(DIR_WS_CLASSES . 'table_block.php');
@@ -302,30 +251,23 @@ require(DIR_WS_CLASSES . 'upload.php');
 // calculate category path
 $cPath = isset($_GET['cPath']) ? $_GET['cPath'] : '';
 if (strlen($cPath) > 0) {
-  $cPath_array = explode('_', $cPath);
-  $current_category_id = $cPath_array[(sizeof($cPath_array)-1)];
+  $cPath_array = xtc_parse_category_path($cPath);
+  $current_category_id = end($cPath_array);
 } else {
   $current_category_id = 0;
-}
-
-// default open navigation box
-if (!isset($_SESSION['selected_box'])) {
-  $_SESSION['selected_box'] = 'configuration';
-} else if(!empty($_GET['selected_box'])) {
-  $_SESSION['selected_box'] = $_GET['selected_box'];
 }
 
 // the following cache blocks are used in the Tools->Cache section
 // ('language' in the filename is automatically replaced by available languages)
 $cache_blocks = array (array ('title' => TEXT_CACHE_CATEGORIES,
-                             'code' => 'categories',
-                             'file' => 'categories_box-language.cache',
-                             'multiple' => true),
-                      array ('title' => TEXT_CACHE_MANUFACTURERS,
+                              'code' => 'categories',
+                              'file' => 'categories_box-language.cache',
+                              'multiple' => true),
+                       array ('title' => TEXT_CACHE_MANUFACTURERS,
                               'code' => 'manufacturers',
                               'file' => 'manufacturers_box-language.cache',
                               'multiple' => true),
-                      array ('title' => TEXT_CACHE_ALSO_PURCHASED,
+                       array ('title' => TEXT_CACHE_ALSO_PURCHASED,
                               'code' => 'also_purchased',
                               'file' => 'also_purchased-language.cache',
                               'multiple' => true));

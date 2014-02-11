@@ -29,9 +29,9 @@ error_reporting(0);
 
 // Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
 if (file_exists('../../includes/local/configure.php')) {
-  include('../../includes/local/configure.php');
+  include_once('../../includes/local/configure.php');
 } else {
-  include('../../includes/configure.php');
+  include_once('../../includes/configure.php');
 }
 
 /*
