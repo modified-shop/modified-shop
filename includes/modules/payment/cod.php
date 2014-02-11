@@ -96,7 +96,7 @@ class cod {
         $shipping_code = (isset($shipping_code) && $shipping_code == 'FREEAMOUNT') ? 'FREEAMOUNT_FREE' : 'FEE_' . $shipping_code;
         
         $cod_zones = array();
-        if (defined('MODULE_ORDER_TOTAL_COD_'. $shipping_code) {
+        if (defined('MODULE_ORDER_TOTAL_COD_'. $shipping_code)) {
           $cod_zones = preg_split("/[:,]/", constant('MODULE_ORDER_TOTAL_COD_'. $shipping_code));
         }
         // dont't show cod on checkout_payment when shipping module doesn't offer cod
