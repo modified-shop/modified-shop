@@ -12,7 +12,7 @@
 
 require_once (DIR_FS_INC.'get_external_content.inc.php');
 
-if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS || MODULE_EASYMARKETING_STATUS == 'True') {
+if (basename($PHP_SELF) == FILENAME_CHECKOUT_SUCCESS && defined('MODULE_EASYMARKETING_STATUS') && MODULE_EASYMARKETING_STATUS == 'True') {
 
   // include easymarketing configuration
   require_once(DIR_FS_CATALOG.'api/easymarketing/includes/config.php');

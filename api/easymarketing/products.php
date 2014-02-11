@@ -118,6 +118,10 @@ if ($sql_limit != '' || $sql_where != '') {
       $_SESSION['cart']->weight = $total_weight;
       $_SESSION['cart']->total = $products_price;
       
+      // clean description
+      $products['products_short_description'] = mod_convert($products['products_short_description']);
+      $products['products_description'] = mod_convert($products['products_description']);
+      
       // build products array
       $products_array[] = array('id' => $products['products_id'],
                                 'name' => mod_convert($products['products_name']),
@@ -129,7 +133,7 @@ if ($sql_limit != '' || $sql_where != '') {
                                 'url' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'], $products['products_name']), 'NONSSL', false),
                                 'image_url' => !empty($products['products_image']) ? HTTP_SERVER.DIR_WS_CATALOG.MODULE_EASYMARKETING_IMAGE_SIZE.$products['products_image'] : '',
                                 'shipping' => mod_calculate_shipping_cost($products['products_id'], $products_price),
-                                'description' => (!empty($products['products_short_description']) ? mod_convert($products['products_short_description']) : mod_convert($products['products_description'])),
+                                'description' => (!empty($products['products_short_description']) ? $products['products_short_description'] : (!empty($products['products_description']) ? $products['products_description'] : 'null')),
                                 'gtin' => ($products['products_ean'] != '') ? $products['products_ean'] : 'null',
                                 'adult' => ($products['products_fsk18'] == '1') ? true : false
                                 );                       

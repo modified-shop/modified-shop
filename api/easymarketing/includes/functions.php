@@ -19,10 +19,13 @@ function mod_convert($string) {
   // convert string
   $string = html_entity_decode($string, ENT_COMPAT, MODULE_EASYMARKETING_LANGUAGE_CHARSET);
   $string = strip_tags($string);
-  $string = str_replace(array("\r", "\n", "\t"), ' ', $string);
-  $string = trim(preg_replace("/\s+/"," ",$string)); 
+  $string = str_replace(array("\r", "\n", "\t"), " ", $string);
+  $string = trim(preg_replace("/\s+/i", " ", $string));
+  if ($string == chr(160)) {
+    $string = '';
+  }
   $string = utf8_encode($string);
-  
+    
   return $string;
 }
 
@@ -85,7 +88,7 @@ function mod_calculate_shipping_cost($products_id, $products_price) {
   
   // init shipping modules
   $quotes = $shipping->quote();
-  
+
   $free_shipping = false;
   if (defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')) {
     switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
@@ -126,23 +129,23 @@ function mod_calculate_shipping_cost($products_id, $products_price) {
   
   if ($free_shipping == true) {
     $shipping_content[] = array('country' => $order->delivery['country']['iso_code_2'],
-                                'service' => FREE_SHIPPING_TITLE,
+                                'service' => mod_convert(FREE_SHIPPING_TITLE),
                                 'price' => floatval(0)
                                 );
   } elseif ($free_shipping_freeamount) {
     $shipping_content[] = array('country' => $order->delivery['country']['iso_code_2'],
-                                'service' => $quote['module'],
+                                'service' => mod_convert($quote['module']),
                                 'price' => floatval(0)
                                 );
   } else {
     
     foreach ($quotes AS $quote) {
-      if ($quote['id'] != 'freeamount' && $quote['id'] != 'selfpickup') {
+      if ($quote['id'] != 'freeamount') {
         $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
         $value = ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
         $value = $xtPrice->xtcFormat($value, false);
         $shipping_content[] = array('country' => $order->delivery['country']['iso_code_2'],
-                                    'service' => $quote['module'] . (!empty($quote['methods'][0]['title']) ? ' - '.$quote['methods'][0]['title'] : ''), 
+                                    'service' => mod_convert($quote['module'] . (!empty($quote['methods'][0]['title']) ? ' - '.$quote['methods'][0]['title'] : '')), 
                                     'price' => floatval($value),
                                     );
       }
