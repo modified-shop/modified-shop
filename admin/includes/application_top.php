@@ -28,10 +28,12 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+@ini_set('display_errors', true);
+error_reporting(-1); // Development value
 
 // xss secure
 if (is_file('../includes/xss_secure.php')) {
-  include ('../includes/xss_secure.php');
+  //include ('../includes/xss_secure.php');
 }
 
 // DB version, used for updates (_installer)
@@ -58,23 +60,6 @@ if (file_exists('../includes/local/configure.php')) {
   include_once('../includes/configure.php');
 }
 
-// set the level of error reporting
-@ini_set('display_errors', true);
-if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
-  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
-} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
-  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
-} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
-  error_reporting(-1); // Development value
-} else {
-  @ini_set('display_errors', false);
-  error_reporting(0);
-}
-
-// new error handling
-if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
-  require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
-}
 
 // turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
@@ -256,21 +241,6 @@ if (strlen($cPath) > 0) {
 } else {
   $current_category_id = 0;
 }
-
-// the following cache blocks are used in the Tools->Cache section
-// ('language' in the filename is automatically replaced by available languages)
-$cache_blocks = array (array ('title' => TEXT_CACHE_CATEGORIES,
-                              'code' => 'categories',
-                              'file' => 'categories_box-language.cache',
-                              'multiple' => true),
-                       array ('title' => TEXT_CACHE_MANUFACTURERS,
-                              'code' => 'manufacturers',
-                              'file' => 'manufacturers_box-language.cache',
-                              'multiple' => true),
-                       array ('title' => TEXT_CACHE_ALSO_PURCHASED,
-                              'code' => 'also_purchased',
-                              'file' => 'also_purchased-language.cache',
-                              'multiple' => true));
 
 // check if a default currency is set
 if (!defined('DEFAULT_CURRENCY')) {

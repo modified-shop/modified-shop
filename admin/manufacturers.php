@@ -82,10 +82,6 @@
         }
       }
 
-      if (USE_CACHE == 'true') {
-        xtc_reset_cache_block('manufacturers');
-      }
-
       xtc_redirect(xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page'] . '&mID=' . $manufacturers_id));
       break;
 
@@ -117,10 +113,6 @@
         //BOC web28 - 2012-04-02 - BUGFIX remove products
       } else {
         xtc_db_query("update " . TABLE_PRODUCTS . " set manufacturers_id = '' where manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
-      }
-
-      if (USE_CACHE == 'true') {
-        xtc_reset_cache_block('manufacturers');
       }
 
       xtc_redirect(xtc_href_link(FILENAME_MANUFACTURERS, 'page=' . $_GET['page']));

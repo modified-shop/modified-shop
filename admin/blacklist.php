@@ -38,22 +38,12 @@
         xtc_db_perform(TABLE_BLACKLIST, $sql_data_array, 'update', "blacklist_id = '" . xtc_db_input($blacklist_id) . "'");
       }
 
-
-      if (USE_CACHE == 'true') {
-        xtc_reset_cache_block('blacklist');
-      }
-
       xtc_redirect(xtc_href_link(FILENAME_BLACKLIST, 'page=' . $_GET['page'] . '&bID=' . $blacklist_id));
       break;
     case 'deleteconfirm':
       $blacklist_id = xtc_db_prepare_input($_GET['bID']);
 
-
       xtc_db_query("delete from " . TABLE_BLACKLIST . " where blacklist_id = '" . xtc_db_input($blacklist_id) . "'");
-
-      if (USE_CACHE == 'true') {
-        xtc_reset_cache_block('manufacturers');
-      }
 
       xtc_redirect(xtc_href_link(FILENAME_BLACKLIST, 'page=' . $_GET['page']));
       break;

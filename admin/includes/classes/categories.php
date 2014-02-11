@@ -107,10 +107,6 @@ class categories {
     xtc_db_query("DELETE FROM ".TABLE_CATEGORIES_DESCRIPTION." WHERE categories_id = '".xtc_db_input($category_id)."'");
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_TO_CATEGORIES." WHERE categories_id = '".xtc_db_input($category_id)."'");
 
-    if (USE_CACHE == 'true') {
-      xtc_reset_cache_block('categories');
-      xtc_reset_cache_block('also_purchased');
-    }
   } // remove_category ends
 
   // ----------------------------------------------------------------------------------------------------- //
@@ -410,10 +406,6 @@ class categories {
     }
     xtc_db_query("delete from ".TABLE_REVIEWS." where products_id = '".xtc_db_input($product_id)."'");
 
-    if (USE_CACHE == 'true') {
-      xtc_reset_cache_block('categories');
-      xtc_reset_cache_block('also_purchased');
-    }
   } // remove_product ends
 
   // ----------------------------------------------------------------------------------------------------- //
