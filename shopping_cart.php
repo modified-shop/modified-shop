@@ -226,7 +226,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
         if(isset($_SESSION['err_max_prod'][$i]) && !isset($_GET['products_id'])){
             $emsg = sprintf(MAX_PROD_QTY_EXCEEDED, $products[$i]['name']);
             $error_msg[] = array(E_MSG => $emsg);
-        } else if (isset($_SESSION['err_max_prod']) && (int)$_GET['products_id'] == $products[$i]['id']) {
+       } else if (isset($_SESSION['err_max_prod']) && (int)$_GET['max_prod_id'] == $products[$i]['id']) {
             $emsg = sprintf(MAX_PROD_QTY_EXCEEDED, $products[$i]['name']);
             $error_msg[] = array(E_MSG => $emsg);
         }
