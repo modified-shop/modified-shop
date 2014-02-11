@@ -295,7 +295,7 @@ define('XSS_PATH', str_replace('\\', '/', dirname(dirname(__FILE__))) . '/');
 
 $ip = '';
 if (defined('XSS_BLACKLIST') && XSS_BLACKLIST) {
-  require_once (DIR_FS_INC.'xtc_get_ip_address.inc.php');
+  require_once ('inc/xtc_get_ip_address.inc.php');
   $ip = md5(xtc_get_ip_address());
 
   $blacklist_arr = xss_read_blacklist();
