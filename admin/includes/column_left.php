@@ -40,7 +40,7 @@ if (!function_exists('mainMenue')) { // erste ebene
 }
 
 // endMenue($box_title);
-if (!function_exists('endMenue')) { // men¸ schlieﬂen
+if (!function_exists('endMenue')) { // menue schliessen
   function endMenue($box_title) {    
     $html = '</ul>'.PHP_EOL;
     $html .= '</li>'.PHP_EOL;
@@ -64,7 +64,7 @@ if(file_exists(DIR_WS_INCLUDES.'extra_menu.php')) {
 echo '<div id="cssmenu" class="suckertreemenu">';
 echo '<ul id="treemenu1">';
 
-//---------------------------Ausgew‰hlte Admin Sprache als Flagge
+//---------------------------Ausgewaehlte Admin Sprache als Flagge
 echo '<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>';
 
 //---------------------------STARTSEITE
