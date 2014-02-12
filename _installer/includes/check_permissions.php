@@ -12,14 +12,17 @@
 
   function scanDirectories($rootDir, $allData=array()) {
     $invisibleFileNames = array(".", "..", ".svn");
-    $dirContent = scandir($rootDir);
-    foreach($dirContent as $key => $content) {
-      $path = $rootDir.'/'.$content;
-      if (!in_array($content, $invisibleFileNames)) {
-        if (is_file($path) && is_readable($path)) {
-          $allData[] = str_replace(DIR_FS_CATALOG, '', $path);
-        } elseif (is_dir($path) && is_readable($path)) {
-          $allData = scanDirectories($path, $allData);
+    if (file_exists($rootDir)) {
+      $dirContent = scandir($rootDir);
+      foreach($dirContent as $key => $content) {
+        $path = $rootDir.'/'.$content;
+        if (!in_array($content, $invisibleFileNames)) {
+          if (is_file($path) && is_readable($path)) {
+            $allData['files'][] = str_replace(DIR_FS_CATALOG, '', $path);
+          } elseif (is_dir($path) && is_readable($path)) {
+            $allData['dirs'][] = str_replace(DIR_FS_CATALOG, '', $path);
+            $allData = scanDirectories($path, $allData);
+          }
         }
       }
     }
@@ -67,9 +70,18 @@
                                           'log',
                                           'templates_c',
                                      ),
+                          'adirs' => array('includes/external/shopgate/shopgate_library/config',
+                                     ),
                           'rdirs' => array(DIR_ADMIN.'includes/magnalister',
                                      ),
                           );
+
+  foreach ($files_to_check['adirs'] as $dir) {
+    if (file_exists(DIR_FS_CATALOG.$dir)) {
+      $files_to_check['dirs'][] = $dir;
+    }
+  }
+  unset($files_to_check['adirs']);
   
   // login as ftp user to change permissions of every file and directory
   if (isset($_POST['action']) && $_POST['action']=='ftp' && !empty($_POST['login'])) {
@@ -87,9 +99,9 @@
     }
 
     foreach ($files_to_check['rdirs'] as $dir) {
-      $files_to_check['files'] = scanDirectories(DIR_FS_CATALOG.$dir, $files_to_check['files']);
+      $files_to_check = scanDirectories(DIR_FS_CATALOG.$dir, $files_to_check);
     }
-
+    
     foreach ($files_to_check as $type => $files) {
       if ($type != 'rdirs') {
         foreach ($files as $file) {
@@ -136,12 +148,14 @@
         foreach ($files_to_check['rdirs'] as $dir) {
           $rfiles_to_check[$dir] = scanDirectories(DIR_FS_CATALOG.$dir, array());
         }
-        foreach ($rfiles_to_check as $dir) {
-          foreach ($dir as $file) {
-            if (!is_writeable(DIR_FS_CATALOG.$file) && $rfolder_flag !== true) {
-              $error_flag = true;
-              $rfolder_flag = true;
-              $message .= '<strong>'.TEXT_WRONG_RFOLDER_PERMISSION.'</strong>'.DIR_FS_CATALOG.dirname($file).'<br />';
+        foreach ($rfiles_to_check as $key => $rdir) {
+          foreach ($rdir as $type => $files) {
+            foreach ($files as $file) {
+              if (!is_writeable(DIR_FS_CATALOG.$file) && $rfolder_flag != $key) {
+                $error_flag = true;
+                $rfolder_flag = $key;
+                $message .= '<strong>'.TEXT_WRONG_RFOLDER_PERMISSION.'</strong>'.DIR_FS_CATALOG.$key.'<br />';
+              }
             }
           }
         }

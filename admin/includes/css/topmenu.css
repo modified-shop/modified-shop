@@ -125,6 +125,20 @@ margin-top: 0px;
 margin-bottom: 5px;
 border-top: 0px solid #AF417E;
 }
+#cssmenu ul ul li {
+  position:relative;
+}  
+#cssmenu ul ul ul {
+  display:none !important;
+  width:200px;
+  display:block;
+  position:absolute;
+  left:180px;
+  top:0px;
+}  
+#cssmenu ul ul li:hover ul {
+  display:block !important;
+}
 
 /*FIXED HEADER*/
 #fixed-header{
