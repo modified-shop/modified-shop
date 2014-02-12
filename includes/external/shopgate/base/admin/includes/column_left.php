@@ -14,7 +14,7 @@ if(MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
 	if (defined('NEW_ADMIN_STYLE')) {
 		$surroundingHtml = array(
 			'start'	=>	'<li>' .
-						'<div class="dataTableHeadingContent"><a href="#"><b>'.BOX_SHOPGATE.'</b></a></div>' .
+						'<a class="'.$displayCssClass.'" href="#">-'.BOX_SHOPGATE.'<span style="float:right">&raquo;</span></a>' .
 						'<ul>',
 			'end'	=>	'</ul></li>',
 		);
