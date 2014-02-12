@@ -64,23 +64,26 @@ require (DIR_WS_INCLUDES.'head.php');
                                       p.products_model,                  
                                       pd.products_name, 
                                       pd.products_viewed,
-                                      p2c.categories_id,
                                       l.name 
                                  FROM " . TABLE_PRODUCTS . " p
                                  JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
                                       ON p.products_id = pd.products_id
                                  JOIN " . TABLE_LANGUAGES . " l 
                                       ON l.languages_id = pd.language_id
-                                 JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                      ON p2c.products_id = p.products_id 
                              ORDER BY pd.products_viewed DESC, pd.products_name ASC";
-        $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows);
+        $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows, 'p.products_id');
         $products_query = xtc_db_query($products_query_raw);
         while ($products = xtc_db_fetch_array($products_query)) {
+          $category_query = xtc_db_query("SELECT categories_id 
+                                            FROM " . TABLE_PRODUCTS_TO_CATEGORIES . "
+                                           WHERE products_id = '" . (int)$products['products_id'] . "'
+                                             AND categories_id != '0'
+                                           LIMIT 1");
+          $category = xtc_db_fetch_array($category_query);
           $rows++;
           $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
         ?>                  
-        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_VIEWED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL'); ?>'">
+        <tr class="dataTableRow" onmouseover="this.className='dataTableRowOver';this.style.cursor='pointer'" onmouseout="this.className='dataTableRow'" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_PRODUCTS_VIEWED . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($category['categories_id']), 'NONSSL'); ?>'">
           <td class="dataTableContent"><?php echo $rows; ?>.</td>
           <td class="dataTableContent"><?php echo $products['products_model']; ?></td>
           <td class="dataTableContent"><?php echo  $products['products_name'] . ' (' . $products['name'] . ')'; ?></td>
