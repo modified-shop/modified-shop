@@ -304,9 +304,8 @@ class InputFilter {
 	function decode($source = '') {
 		if ($source!='') {
 		// url decode
-		if (function_exists('html_entity_decode')) {
-		  $source = html_entity_decode($source, ENT_QUOTES, "ISO-8859-1");
-		}
+		$source = decode_htmlentities($source, ENT_QUOTES); 
+    
 		// convert decimal
 		// BOF - DokuMan - 2013-08-23 - Fix:	preg_replace(): The /e modifier is deprecated, use preg_replace_callback instead
 		//$source = preg_replace('/&#(\d+);/me', "chr(\\1)", $source); // decimal notation
