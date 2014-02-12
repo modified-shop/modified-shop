@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: ot_coupon.php 3661 2012-09-21 14:42:20Z web28 $
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -25,7 +25,8 @@
 
    Released under the GNU General Public License
 
-    BUGFIXES & MODIFIED rev1.3.8 by web28 - www.rpa-com.de
+    BUGFIXES & MODIFIED rev1.3.9 by web28 - www.rpa-com.de
+   1.3.9 fix linked products at categories restrictions// fix tax calculation at restrictions
    1.3.8 add minimum order message // change get_order_total() // remove get_product_price()
    1.3.7 remove //KORREKTUR wenn Kunde Nettopreise und Steuer in Rechnung
    1.3.6 fix $od_amount for customers with no tax and percent coupon
@@ -57,6 +58,9 @@ class ot_coupon {
     $this->credit_class = true;
     $this->output = array ();
     $this->products_price = array();
+    $this->products_tax_description = array();
+    $this->tax_groups = array();
+    $this->price_total_by_tax_groups  = array();
   }
 
 ///////////////////////////////////////////////////////////////////////
@@ -237,20 +241,20 @@ class ot_coupon {
           }
 
           //allowed categories
+          $_c_products_ids = array();
           if ($coupon_array['restrict_to_categories']) {
             $cat_ids = explode(",", $coupon_array['restrict_to_categories']);
             for ($i = 0, $n = sizeof($order->products); $i < $n; ++$i) {
-              //BOF - web28 - 2010-06-19 - test for product_id to prevent double counting
-              if ($coupon_array['restrict_to_products']  && in_array(xtc_get_prid($order->products[$i]['id']) ,$pr_ids) ) {
-                $p_flag = true;
-              } else $p_flag = false;
-              //EOF - web28 - 2010-06-19 - test for product_id to prevent double counting
-
+              // web28 - 2010-06-19 - test for product_id to prevent double counting
+              $p_flag = $coupon_array['restrict_to_products'] && in_array(xtc_get_prid($order->products[$i]['id']) ,$pr_ids) ? true : false;
+              
               //BOF - web28 - 2012-01-10 - new restrict_to_categories check
-              $cat_path = xtc_get_product_path(xtc_get_prid($order->products[$i]['id']));
-              $prod_cat_ids_array = explode("_", $cat_path);
+              //$cat_path = xtc_get_product_path(xtc_get_prid($order->products[$i]['id']));
+              //$prod_cat_ids_array = explode("_", $cat_path);
+              $prod_cat_ids_array = $this->get_cat_ids_array(xtc_get_prid($order->products[$i]['id']));
               for ($ii = 0 , $nn = count($cat_ids); $ii < $nn ; $ii ++) {
-                if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !$p_flag) {
+                if (in_array($cat_ids[$ii], $prod_cat_ids_array) && !$p_flag && !in_array(xtc_get_prid($order->products[$i]['id']),$_c_products_ids)) {
+                  $_c_products_ids[] = xtc_get_prid($order->products[$i]['id']);//prevent double counting
                   if ($coupon_array['coupon_type'] == 'P') {
                     $pr_c = $this->product_price($order->products[$i]['id']);//web28- 2010-07-29 - FIX no xtc_get_prid
                     $pod_amount = round($pr_c*10)/10*$c_deduct/100;
@@ -337,16 +341,24 @@ class ot_coupon {
     if ($this->include_tax == 'false'){
       $order_total = $order_total + $order->info['tax'];
     }
+    
+    //Einschränkungen
+    $restriction = isset($this->tax_groups) && count($this->tax_groups) ? true : false;
+    //echo '<pre>'.print_r($this->tax_groups,1).'</pre>';
+    
     //Gutscheinwert in % berechnen, vereinheitlicht die Berechnungen
     $od_amount_pro = $od_amount/$order_total * 100;
 
     reset($order->info['tax_groups']);
     $tod_amount = 0;
+    
     //Steuer für jede Steuergruppe korrigieren
     while (list ($key, $value) = each($order->info['tax_groups'])) {
-      //Steuer neu berechnen
+      // Bei Einschränkungen Gutscheinwert in % neu berechnen,  vereinheitlicht die Berechnungen
+      $od_amount_pro = $restriction ? $od_amount/$this->price_total_by_tax_groups[$key] * 100 : $od_amount_pro;
       $t_flag = true;
-      if ($t_flag) {
+      //Steuer neu berechnen
+      if ($t_flag && (!$restriction || $restriction && isset($this->tax_groups[$key]))) {
         if ($_SESSION['customers_status']['customers_status_show_price_tax'] != '1') { //NETTO Preise
             $god_amount = $order->info['tax_groups'][$key] - $order->info['tax_groups'][$key] * $od_amount_pro / 100;
             $order->info['tax_groups'][$key] = $god_amount; //bei NETTO Preisen ersetzen
@@ -374,6 +386,10 @@ class ot_coupon {
 
     $shipping_module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
     $shipping_cost = $order->info['shipping_cost'];
+    
+    //Steuergruppe feststellen und setzen
+    $shipping_tax_rate_description = xtc_get_tax_description($GLOBALS[$shipping_module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+    $tax_index = $this->set_tax_group_index($shipping_tax_rate_description);
 
     //BRUTTO PREISE - Steuer bei Versandkosten hinzufügen
     if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1') {
@@ -411,6 +427,7 @@ class ot_coupon {
 
     $order_total = $order->info['total'];
     $this->products_price = array();
+    $this->tax_description = array();
     // Check if gift voucher is in cart and adjust total
     $products = $order->products; //use order objekt
     //echo '<pre>'.print_r($products,true).'</pre>';
@@ -419,6 +436,8 @@ class ot_coupon {
       $product_id = $products[$i]['id'];
       $products_price = $products[$i]['price'] * $products[$i]['qty'];
       $this->products_price["$product_id"] = $products_price;
+      $this->products_tax_description["$product_id"] = $products[$i]['tax_description'];
+      //echo $products[$i]['tax_description'] .'<br>';
       if (preg_match('/^GIFT/', addslashes($products[$i]['model']))) {
         $order_total -= $products_price;
       }
@@ -436,10 +455,55 @@ class ot_coupon {
 ///////////////////////////////////////////////////////////////////////
 
   function product_price($product_id) {
-    $total_price = isset($this->products_price["$product_id"]) ? $this->products_price["$product_id"] : 0;
-    return $total_price;
+    $products_price = isset($this->products_price["$product_id"]) ? $this->products_price["$product_id"] : 0;
+    if (isset($this->products_tax_description["$product_id"])) {
+        $tax_index = $this->set_tax_group_index($this->products_tax_description["$product_id"]);
+    }
+    $this->price_total_by_tax_groups[$tax_index] += $products_price;
+    return $products_price;
   }
 
+///////////////////////////////////////////////////////////////////////
+
+  function set_tax_group_index($tax_description) {
+      $tax_index = ($_SESSION['customers_status']['customers_status_show_price_tax'] == '1' ? TAX_ADD_TAX : TAX_NO_TAX) . $tax_description;
+      $this->tax_groups[$tax_index] = true;
+      return $tax_index;
+      //echo $tax_index.'<br>';
+  }
+
+///////////////////////////////////////////////////////////////////////
+  
+  function get_cat_ids_array($products_id) {
+    $cat_ids_array = array();
+    $category_query = xtDBquery(
+        "SELECT p2c.categories_id 
+           FROM " . TABLE_PRODUCTS . " p, 
+                " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c,
+                " . TABLE_CATEGORIES . " c
+          WHERE p.products_id = '" . (int)$products_id . "' 
+            AND p.products_status = '1' 
+            AND p.products_id = p2c.products_id 
+            AND p2c.categories_id != 0 
+            AND c.categories_id = p2c.categories_id
+            AND c.categories_status = '1'
+        ");
+    if (xtc_db_num_rows($category_query,true)) {
+      while ($category = xtc_db_fetch_array($category_query)) {
+        xtc_get_parent_categories($categories, $category['categories_id']);
+        $categories[] = $category['categories_id'];
+        $categories = array_reverse($categories);
+        foreach($categories as $cat_id) {
+          if(!in_array($cat_id,$cat_ids_array)){
+            $cat_ids_array[] = $cat_id;
+          }
+        }
+      }
+      //echo '<pre>'.print_r($cat_ids_array,1).'</pre>';
+    }
+    return $cat_ids_array;
+  }  
+  
 ///////////////////////////////////////////////////////////////////////
 
   function check() {
