@@ -357,7 +357,7 @@ if (isset($_POST['psmgoogle'])) {
         require(DIR_FS_CATALOG.DIR_WS_CLASSES . 'xtcPrice.php');
         $xtPrice = new xtcPrice("EUR",1);
 
-        $UseGoogle ? $psmgoogle_link="utm_source=preissuchmaschine&utm_medium=cpc&utm_campaign=preissuchmaschine&" : $psmgoogle_link="";
+        $UseGoogle ? $psmgoogle_link="&utm_source=preissuchmaschine&utm_medium=cpc&utm_campaign=preissuchmaschine" : $psmgoogle_link="";
 
         
         
@@ -458,6 +458,16 @@ if (isset($_POST['psmgoogle'])) {
 	        $image_if_available = '';
 	      }
 
+        //-- SNAKELAB ----//
+            require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
+            $link = xtc_href_link_from_admin('product_info.php', 'products_id=' . $products['products_id']);
+            (preg_match("/\?/",$link)) ? $link .= '&' : $link .= '?';
+            $link .= 'referer='.$this->code;
+            (!empty($_POST['campaign']))
+                ? $link .= '&'.$_POST['campaign']
+                : false;
+            $link .= $psmgoogle_link;
+        //-- SNAKELAB ----//
         
             //create content
             $schema .= $products['products_id'] .'|'. 
@@ -471,7 +481,7 @@ if (isset($_POST['psmgoogle'])) {
                        $products_description .'|'.
                        $products_short_description .'|'.
                        xtc_get_shipping_status_name($products['products_shippingtime']). '|' .
-                       HTTP_CATALOG_SERVER . DIR_WS_CATALOG . 'product_info.php?'.$_POST['campaign']. $psmgoogle_link .xtc_product_link($products['products_id'], $products['products_name']). '|' .
+                       $link . '|' .
                        $image_if_available . '|' .
                        substr($cat,0,strlen($cat)-2) ."|";
 
@@ -701,19 +711,19 @@ if (isset($_POST['psmgoogle'])) {
 	$campaign_query = xtc_db_query("select campaigns_name, campaigns_refID from ".TABLE_CAMPAIGNS." order by campaigns_id");
   $PSMFound = false;
 	while ($campaign = xtc_db_fetch_array($campaign_query)) {
-	  $campaign_array[] = array ('id' => 'refID='.$campaign['campaigns_refID'].'&', 'text' => $campaign['campaigns_name'],);
+	  $campaign_array[] = array ('id' => 'refID='.$campaign['campaigns_refID'], 'text' => $campaign['campaigns_name'],);
     $PSMFound |= $campaign['campaigns_refID']=="psm";
 	} 
   if (!$PSMFound) {
      xtc_db_query("INSERT INTO ".TABLE_CAMPAIGNS." VALUES (NULL, 'Preissuchmaschine (automatisch)', 'psm', '0', NOW(), NOW())");
-  	 $campaign_array[] = array ('id' => 'refID=psm&', 'text' => "Preissuchmaschine (automatisch)",);
+  	 $campaign_array[] = array ('id' => 'refID=psm', 'text' => "Preissuchmaschine (automatisch)",);
   }
  
     return array('text' =>  '<br>' . HTTP_CATALOG_SERVER . DIR_WS_CATALOG . MODULE_PREISSUCHMASCHINE_EXPORT_LINK . MODULE_PREISSUCHMASCHINE_FILE . '<br><br>' . MODULE_PREISSUCHMASCHINE_EXPORT_LINK_SEND . 
                           
                             MODULE_PREISSUCHMASCHINE_CAMPAIGNS.'<br>'.
                             MODULE_PREISSUCHMASCHINE_CAMPAIGNS_DESC.
-                          	xtc_draw_pull_down_menu('campaign',$campaign_array, 'refID=psm&').'<br>'.                             
+                          	xtc_draw_pull_down_menu('campaign',$campaign_array, 'refID=psm').'<br>'.                             
                             MODULE_PREISSUCHMASCHINE_psmgoogleHeader.'<br>'.
                             MODULE_PREISSUCHMASCHINE_psmgoogle_DESC.'<br>'.
                           	xtc_draw_radio_field('psmgoogle', 'no',!$UseGoogle).MODULE_PREISSUCHMASCHINE_psmgoogle_NO.'<br>'.
