@@ -38,7 +38,6 @@ if(defined('MODULE_PAYMENT_KLARNA_PARTPAYMENT_STATUS') && MODULE_PAYMENT_KLARNA_
 
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_check_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_get_products_stock.inc.php');
 require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
 require_once (DIR_FS_INC.'xtc_get_short_description.inc.php');

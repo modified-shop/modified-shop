@@ -9,6 +9,7 @@
    --------------------------------------------------------------
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+
 $current_page = basename($PHP_SELF);
 $checkout_position = array(
   'checkout_shipping.php'     => 1,
@@ -48,7 +49,19 @@ if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
     if (xtc_check_stock($products[$i]['id'], $products[$i]['quantity'])) {
+      $_SESSION['any_out_of_stock'] = 1;
       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+    }
+    //products attributes
+    if (ATTRIBUTE_STOCK_CHECK == 'true' && isset($products[$i]['attributes']) && is_array($products[$i]['attributes'])) {
+      reset($products[$i]['attributes']);
+      while (list ($option, $value) = each($products[$i]['attributes'])) {
+        $attributes = $main->getAttributes($products[$i]['id'],$option,$value);
+        if ($attributes['attributes_stock'] - $products[$i]['quantity'] < 0) {
+          $_SESSION['any_out_of_stock'] = 1;
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+        }
+      }
     }
   }
 }
