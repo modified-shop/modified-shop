@@ -53,9 +53,11 @@ if (!isset($_SESSION['sendto'])) {
 	$_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 } else {
 	// verify the selected shipping address
-	$check_address_query = xtc_db_query("select count(*) as total from ".TABLE_ADDRESS_BOOK." where customers_id = '".(int) $_SESSION['customer_id']."' and address_book_id = '".(int) $_SESSION['sendto']."'");
+	$check_address_query = xtc_db_query("SELECT count(*) as total 
+	                                       FROM ".TABLE_ADDRESS_BOOK." 
+	                                      WHERE customers_id = '".(int) $_SESSION['customer_id']."' 
+	                                        AND address_book_id = '".(int) $_SESSION['sendto']."'");
 	$check_address = xtc_db_fetch_array($check_address_query);
-
 	if ($check_address['total'] != '1') {
 		$_SESSION['sendto'] = $_SESSION['customer_default_address_id'];
 		if (isset($_SESSION['shipping']))
