@@ -124,7 +124,7 @@ ALTER TABLE orders ADD billing_gender char(1) NOT NULL AFTER billing_lastname;
 #Web28 - 2013-10-27 - added IBAN and BIC in banktransfer payment module
 ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
 ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
-ALTER TABLE banktransfer ADD banktransfer_email_address VARCHAR(96) DEFAULT NULL;
+ALTER TABLE banktransfer ADD banktransfer_owner_email VARCHAR(96) DEFAULT NULL;
 
 ALTER TABLE configuration MODIFY configuration_value text NOT NULL;
 ALTER TABLE orders MODIFY payment_method varchar(128);

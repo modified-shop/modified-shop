@@ -229,7 +229,7 @@ CREATE TABLE banktransfer (
   banktransfer_status INT(11) DEFAULT NULL,
   banktransfer_prz CHAR(2) DEFAULT NULL,
   banktransfer_fax CHAR(2) DEFAULT NULL,
-  banktransfer_email_address VARCHAR(96) DEFAULT NULL,
+  banktransfer_owner_email VARCHAR(96) DEFAULT NULL,
   KEY orders_id (orders_id)
 ) ENGINE=MyISAM;
 
