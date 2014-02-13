@@ -32,11 +32,11 @@ if ($product->getAttributesCount() > 0) {
                                                    popt.products_options_id,
                                                    popt.products_options_name,
                                                    popt.products_options_sortorder
-                                              FROM ".TABLE_PRODUCTS_OPTIONS." popt,
-                                                   ".TABLE_PRODUCTS_ATTRIBUTES." patrib
-                                             WHERE patrib.products_id='".$product->data['products_id']."'
-                                               AND patrib.options_id = popt.products_options_id
-                                               AND popt.language_id = '".(int) $_SESSION['languages_id']."'
+                                              FROM ".TABLE_PRODUCTS_OPTIONS." popt
+                                              JOIN ".TABLE_PRODUCTS_ATTRIBUTES." patrib
+                                                   ON patrib.options_id = popt.products_options_id
+                                                      AND patrib.products_id='".$product->data['products_id']."'
+                                             WHERE popt.language_id = '".(int) $_SESSION['languages_id']."'
                                           ORDER BY popt.products_options_sortorder, popt.products_options_id"
                                           );
 
@@ -56,12 +56,12 @@ if ($product->getAttributesCount() > 0) {
     $products_options_query = xtDBquery("SELECT pov.products_options_values_id,
                                                 pov.products_options_values_name,
                                                 pa.*
-                                           FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa,
-                                                ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                           FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                           JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." pov
+                                                ON pa.options_values_id = pov.products_options_values_id
+                                                   AND pov.language_id = '".(int) $_SESSION['languages_id']."'
                                           WHERE pa.products_id = '".$product->data['products_id']."'
-                                            AND pa.options_id = '".$products_options_name['products_options_id']."'
-                                            AND pa.options_values_id = pov.products_options_values_id
-                                            AND pov.language_id = '".(int) $_SESSION['languages_id']."'
+                                            AND pa.options_id = '".$products_options_name['products_options_id']."'                                            
                                        ORDER BY pa.sortorder, pa.options_values_id
                                         ");
     $col = 0;

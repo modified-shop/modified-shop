@@ -17,7 +17,9 @@
    
   function xtc_get_products_stock($products_id) {
     $products_id = xtc_get_prid($products_id);
-    $stock_query = xtDBquery("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . $products_id . "'");
+    $stock_query = xtDBquery("SELECT products_quantity 
+                                FROM " . TABLE_PRODUCTS . " 
+                               WHERE products_id = '" . (int)$products_id . "'");
     $stock_values = xtc_db_fetch_array($stock_query,true);
 
     return $stock_values['products_quantity'];
