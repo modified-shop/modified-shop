@@ -16,7 +16,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once(DIR_FS_CATALOG . 'includes/classes/nusoap/lib/nusoap.php');
+require_once(DIR_FS_EXTERNAL . 'nusoap/nusoap.php');
 
 define ('VAT_LIVE_CHECK_URL', 'http://ec.europa.eu/taxation_customs/vies/checkVatService.wsdl');
 
