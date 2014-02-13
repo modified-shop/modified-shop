@@ -131,6 +131,41 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", MODULE_PAYMENT_COD_TEXT_INFO));
   }
   
+  // banktransfer
+  if ($order->info['payment_method'] == 'banktransfer') {
+    // add SEPA info
+    $oID = $order->info['order_id'];
+    $rec = $payment_modules->info();
+    // SEPA info required?
+    if (!empty($rec['banktransfer_iban'])) {
+      require_once (DIR_FS_INC.'xtc_date_short.inc.php');
+      $smarty->assign('PAYMENT_BANKTRANSFER_CREDITOR_ID', MODULE_PAYMENT_BANKTRANSFER_CI);
+      // set due date based on date_purchased and due_delay
+      $due_date = date('Y-m-d', strtotime($order->info['date_purchased'] . ' + ' . MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY . ' days'));
+      $smarty->assign('PAYMENT_BANKTRANSFER_DUE_DATE',  xtc_date_short($due_date));
+      $total = $xtPrice->xtcFormat($order_total['total'], true);
+      $smarty->assign('PAYMENT_BANKTRANSFER_TOTAL', $total);
+      $smarty->assign('PAYMENT_BANKTRANSFER_MANDATE_REFERENCE', MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX . $oID);
+      $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', $rec['banktransfer_iban']);
+      $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', $rec['banktransfer_bankname']);
+
+      $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_info.html');
+            
+      $smarty->assign('PAYMENT_INFO_HTML', $sepa_info);
+      $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $sepa_info));
+      
+      // separate pre-notification necessary?
+      if ($rec['banktransfer_owner_email'] != $order->customer['email_address']) {
+        $banktransfer_owner_email = $rec['banktransfer_owner_email'];
+        $sepa_html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_mail.html');
+        $sepa_txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_mail.txt');
+        
+        // no pre-notification in order mail
+        $smarty->clear_assign('PAYMENT_INFO_HTML');
+        $smarty->clear_assign('PAYMENT_INFO_TXT');
+      }
+    }
+  }
 
   //allow duty-note in email
   if(!is_object($main)) {
@@ -186,19 +221,35 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
 
   // send mail to customer
   if (SEND_EMAILS == 'true' || $send_by_admin) {
-  xtc_php_mail(EMAIL_BILLING_ADDRESS,
-               EMAIL_BILLING_NAME,
-               $order->customer['email_address'],
-               $order->customer['firstname'].' '.$order->customer['lastname'],
-               '',
-               EMAIL_BILLING_REPLY_ADDRESS,
-               EMAIL_BILLING_REPLY_ADDRESS_NAME,
-               $email_attachments,
-               '',
-               $order_subject,
-               $html_mail,
-               $txt_mail
-               );
+    xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                 EMAIL_BILLING_NAME,
+                 $order->customer['email_address'],
+                 $order->customer['firstname'].' '.$order->customer['lastname'],
+                 '',
+                 EMAIL_BILLING_REPLY_ADDRESS,
+                 EMAIL_BILLING_REPLY_ADDRESS_NAME,
+                 $email_attachments,
+                 '',
+                 $order_subject,
+                 $html_mail,
+                 $txt_mail
+                 );
+                 
+    if (isset($sepa_html_mail)) {
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME,
+                   $banktransfer_owner_email,
+                   '',
+                   '',
+                   EMAIL_BILLING_REPLY_ADDRESS,
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME,
+                   '',
+                   '',
+                   EMAIL_BILLING_SUBJECT,
+                   $sepa_html_mail,
+                   $sepa_txt_mail
+                 );
+    }
   }
 
   if (AFTERBUY_ACTIVATED == 'true') {

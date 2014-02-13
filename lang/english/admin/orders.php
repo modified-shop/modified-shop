@@ -20,9 +20,12 @@ define('TEXT_BANK_OWNER', 'Account Holder:');
 define('TEXT_BANK_NUMBER', 'Account Number:');
 define('TEXT_BANK_BLZ', 'Bank Code:');
 define('TEXT_BANK_NAME', 'Bank:');
+define('TEXT_BANK_BIC', 'BIC:');
+define('TEXT_BANK_IBAN', 'IBAN:');
 define('TEXT_BANK_FAX', 'Collect Authorization will be approved via Fax');
 define('TEXT_BANK_STATUS', 'Verify Status:');
 define('TEXT_BANK_PRZ', 'Method of Verify:');
+define('TEXT_BANK_OWNER_EMAIL', 'E-Mail-Address Account Holder:');
 
 define('TEXT_BANK_ERROR_1', 'Accountnumber and Bank Code are not compatible!<br />Please try again!');
 define('TEXT_BANK_ERROR_2', 'Sorry, we are unable to proof this account number!');

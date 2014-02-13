@@ -165,30 +165,27 @@
                                                          banktransfer_bic,
                                                          banktransfer_status,
                                                          banktransfer_prz,
-                                                         banktransfer_fax
+                                                         banktransfer_fax,
+                                                         banktransfer_owner_email
                                                     FROM ".TABLE_BANKTRANSFER."
                                                    WHERE orders_id = ".$oID);
               $banktransfer = xtc_db_fetch_array($banktransfer_query);
-                if ($banktransfer['banktransfer_bankname'] || $banktransfer['banktransfer_blz'] || $banktransfer['banktransfer_number']) {
+                if ($banktransfer['banktransfer_bankname'] || $banktransfer['banktransfer_blz'] || $banktransfer['banktransfer_number'] || $banktransfer['banktransfer_iban'] ) {
                   ?>
                   <tr>
                     <td colspan="2"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><?php echo TEXT_BANK_NAME; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_bankname']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo TEXT_BANK_BLZ; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_blz']; ?></td>
+                    <td class="main"><?php echo TEXT_BANK_OWNER; ?></td>
+                    <td class="main"><?php echo $banktransfer['banktransfer_owner']; ?></td>
                   </tr>
                   <tr>
                     <td class="main"><?php echo TEXT_BANK_NUMBER; ?></td>
                     <td class="main"><?php echo $banktransfer['banktransfer_number']; ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><?php echo TEXT_BANK_OWNER; ?></td>
-                    <td class="main"><?php echo $banktransfer['banktransfer_owner']; ?></td>
+                    <td class="main"><?php echo TEXT_BANK_BLZ; ?></td>
+                    <td class="main"><?php echo $banktransfer['banktransfer_blz']; ?></td>
                   </tr>
                   <tr>
                     <td class="main"><?php echo TEXT_BANK_IBAN; ?></td>
@@ -198,6 +195,15 @@
                     <td class="main"><?php echo TEXT_BANK_BIC; ?></td>
                     <td class="main"><?php echo $banktransfer['banktransfer_bic']; ?></td>
                   </tr>
+                  <tr>
+                    <td class="main"><?php echo TEXT_BANK_NAME; ?></td>
+                    <td class="main"><?php echo $banktransfer['banktransfer_bankname']; ?></td>
+                  </tr>
+                  <tr>
+                    <td class="main"><?php echo TEXT_BANK_OWNER_EMAIL; ?></td>
+                    <td class="main"><?php echo $banktransfer['banktransfer_owner_email']; ?></td>
+                  </tr>
+                                   
                   <?php  if ($banktransfer['banktransfer_status'] == 0) { ?>
                   <tr>
                     <td class="main"><?php echo TEXT_BANK_STATUS; ?></td>
