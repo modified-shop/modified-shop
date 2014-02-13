@@ -20,9 +20,12 @@ define('TEXT_BANK_OWNER', 'Kontoinhaber:');
 define('TEXT_BANK_NUMBER', 'Kontonummer:');
 define('TEXT_BANK_BLZ', 'BLZ:');
 define('TEXT_BANK_NAME', 'Bank:');
+define('TEXT_BANK_BIC', 'BIC:');
+define('TEXT_BANK_IBAN', 'IBAN:');
 define('TEXT_BANK_FAX', 'Einzugserm&auml;chtigung wird per Fax best&auml;tigt');
 define('TEXT_BANK_STATUS', 'Pr&uuml;fstatus:');
 define('TEXT_BANK_PRZ', 'Pr&uuml;fverfahren:');
+define('TEXT_BANK_OWNER_EMAIL', 'E-Mail-Adresse Kontoinhaber:');
 
 define('TEXT_BANK_ERROR_1', 'Kontonummer stimmt nicht mit BLZ &uuml;berein!');
 define('TEXT_BANK_ERROR_2', 'F&uuml;r diese Kontonummer ist kein Pr&uuml;fverfahren definiert!');

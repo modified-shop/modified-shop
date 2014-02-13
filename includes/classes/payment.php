@@ -319,5 +319,17 @@
       }
     }
 //EOF  - web28 - 2010-03-27 PayPal IPN Bezahl-Link
+
+// - vr - 2014-01-25 - general purpose access function for class properties
+  function info() {
+      if (is_array($this->modules)) {
+        if (is_object($GLOBALS[$this->selected_module]) && ($GLOBALS[$this->selected_module]->enabled) ) {
+          if (method_exists($GLOBALS[$this->selected_module], 'info'))
+            return $GLOBALS[$this->selected_module]->info();
+          else
+            return array();          
+        }
+      }
+    }
  }
 ?>
