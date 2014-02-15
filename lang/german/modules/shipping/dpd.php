@@ -32,7 +32,7 @@ define('MODULE_SHIPPING_DPD_TEXT_TITLE', 'Deutscher Paket Dienst');
 define('MODULE_SHIPPING_DPD_TEXT_DESCRIPTION', 'Deutscher Paket Dienst - Weltweites Versandmodul');
 define('MODULE_SHIPPING_DPD_TEXT_WAY', 'Versand nach');
 define('MODULE_SHIPPING_DPD_TEXT_UNITS', 'kg');
-define('MODULE_SHIPPING_DPD_INVALID_ZONE', 'Es ist leider kein Versand in diese Land m&ouml;glich');
+define('MODULE_SHIPPING_DPD_INVALID_ZONE', 'Es ist leider kein Versand in dieses Land m&ouml;glich');
 define('MODULE_SHIPPING_DPD_UNDEFINED_RATE', 'Die Versandkosten k&ouml;nnen im Moment nicht errechnet werden');
 define('MODULE_SHIPPING_DPD_FREE_SHIPPING', 'Wir &uuml;bernehmen die Versandkosten');
 define('MODULE_SHIPPING_DPD_SUBSIDIZED_SHIPPING', 'Einen Teil der Versandkosten &uuml;bernehmen wir.');
