@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id$
+   $Id: display_vvcodes.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -31,7 +31,7 @@
   $aFonts = array();
   if ($dir= opendir(DIR_WS_INCLUDES.'fonts/')){
     while  (($file = readdir($dir)) !==false) {
-      if (is_file(DIR_WS_INCLUDES.'fonts/'.$file) and (strstr(strtoupper($file),'.TTF'))){
+      if (is_file(DIR_WS_INCLUDES.'fonts/'.$file) && (strstr(strtoupper($file),'.TTF'))){
         $aFonts[] = DIR_FS_CATALOG.'/includes/fonts/'.$file;
       }
     }
@@ -39,8 +39,14 @@
   }
 
   // create new image
-  $oPhpCaptcha = new PhpCaptcha($aFonts, 200, 50);
-  $oPhpCaptcha->UseColour(true);
+  $oPhpCaptcha = new PhpCaptcha($aFonts, 240, 50);
+  //$oPhpCaptcha->UseColour(false); //Don't use color option!!!
+  $oPhpCaptcha->SetNumChars(6);
+  $oPhpCaptcha->SetMinFontSize(30);
+  $oPhpCaptcha->SetMaxFontSize(36);
+  $oPhpCaptcha->SetBackgroundColors(192,192,192); //RGB
+  $oPhpCaptcha->SetLinesColors(220,148,002);
+  $oPhpCaptcha->SetCharsColors(112,112,112);
   $oPhpCaptcha->Create();
   
 ?>

@@ -33,6 +33,8 @@
       Last Updated:  18th April 2006                               */
    /***************************************************************/
    
+  //Copyright (C) 2014 new vars and functions by web28 - www.rpa-com.de
+   
    /************************ Documentation ************************/
    /*
    
@@ -87,6 +89,12 @@
       var $sFileType;
       var $sCode = '';
       
+      //new vars by web28 - www.rpa-com.de
+      var $aBackgroundColors = array();
+      var $aLinesColors = array();
+      var $aCharsColors = array();
+      
+      
       function PhpCaptcha(
          $aFonts, // array of TrueType fonts to use - specify full path
          $iWidth = CAPTCHA_WIDTH, // width of image
@@ -108,6 +116,26 @@
          $this->SetWidth($iWidth);
          $this->SetHeight($iHeight);
       }
+      
+      //BOC new functions by web28 - www.rpa-com.de
+      function SetBackgroundColors($r,$g,$b) {
+        $this->aBackgroundColors['R'] = $r;
+        $this->aBackgroundColors['G'] = $g;
+        $this->aBackgroundColors['B'] = $b;
+      }
+      
+      function SetLinesColors($r,$g,$b) {
+        $this->aLinesColors['R'] = $r;
+        $this->aLinesColors['G'] = $g;
+        $this->aLinesColors['B'] = $b;
+      }
+      
+      function SetCharsColors($r,$g,$b) {
+        $this->aCharsColors['R'] = $r;
+        $this->aCharsColors['G'] = $g;
+        $this->aCharsColors['B'] = $b;
+      }
+      //EOC new functions by web28 - www.rpa-com.de
       
       function CalculateSpacing() {
          $this->iSpacing = (int)($this->iWidth / $this->iNumChars);
@@ -209,14 +237,20 @@
          for ($i = 0; $i < $this->iNumLines; $i++) {
             // allocate colour
             if ($this->bUseColour) {
-               $iLineColour = imagecolorallocate($this->oImage, rand(100, 250), rand(100, 250), rand(100, 250));
+               $iLineColour = imagecolorallocate($this->oImage,mt_rand(100, 250),mt_rand(100, 250),mt_rand(100, 250));
             } else {
-               $iRandColour = rand(100, 250);
-               $iLineColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+               //BOC new code by web28 - www.rpa-com.de
+               if(count($this->aLinesColors)) {
+                  $iLineColour = imagecolorallocate($this->oImage, $this->aLinesColors['R'], $this->aLinesColors['G'], $this->aLinesColors['B']);
+               } else {
+                  $iRandColour = mt_rand(100, 250);
+                  $iLineColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+               }
+               //EOC new code by web28 - www.rpa-com.de
             }
             
             // draw line
-            imageline($this->oImage, rand(0, $this->iWidth), rand(0, $this->iHeight), rand(0, $this->iWidth), rand(0, $this->iHeight), $iLineColour);
+            imageline($this->oImage,mt_rand(0, $this->iWidth),mt_rand(0, $this->iHeight),mt_rand(0, $this->iWidth),mt_rand(0, $this->iHeight), $iLineColour);
          }
       }
       
@@ -245,11 +279,11 @@
          // loop through and generate the code letter by letter
          for ($i = 0; $i < $this->iNumChars; $i++) {
             if (count($this->aCharSet) > 0) {
-               // select random character and add to code string
+               // selectmt_random character and add to code string
                $this->sCode .= $this->aCharSet[array_rand($this->aCharSet)];
             } else {
-               // select random character and add to code string
-               $this->sCode .= chr(rand(65, 90));
+               // selectmt_random character and add to code string
+               $this->sCode .= chr(mt_rand(65, 90));
             }
          }
          
@@ -263,34 +297,44 @@
       
       function DrawCharacters() {
          // loop through and write out selected number of characters
+         //BOC new code by web28 - www.rpa-com.de
+         $minColor = 0;
+         $maxColor = 100;
+         //EOC new code by web28 - www.rpa-com.de
          for ($i = 0; $i < strlen($this->sCode); $i++) {
-            // select random font
+            // selectmt_random font
             $sCurrentFont = $this->aFonts[array_rand($this->aFonts)];
             
-            // select random colour
+            //BOC new code by web28 - www.rpa-com.de
+            // selectmt_random colour
             if ($this->bUseColour) {
-               $iTextColour = imagecolorallocate($this->oImage, rand(0, 100), rand(0, 100), rand(0, 100));
+               $iTextColour = imagecolorallocate($this->oImage, mt_rand($minColor, $maxColor) , mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
             
                if ($this->bCharShadow) {
                   // shadow colour
-                  $iShadowColour = imagecolorallocate($this->oImage, rand(0, 100), rand(0, 100), rand(0, 100));
+                  $iShadowColour = imagecolorallocate($this->oImage, mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
                }
             } else {
-               $iRandColour = rand(0, 100);
-               $iTextColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+               if (count($this->aCharsColors)) {
+                  $iTextColour = imagecolorallocate($this->oImage, $this->aCharsColors['R'], $this->aCharsColors['G'], $this->aCharsColors['B']);
+               } else {
+                  $iRandColour = mt_rand($minColor, $maxColor);
+                  $iTextColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+               }
             
                if ($this->bCharShadow) {
                   // shadow colour
-                  $iRandColour = rand(0, 100);
+                  $iRandColour = mt_rand($minColor, $maxColor);
                   $iShadowColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
                }
             }
+            //EOC new code by web28 - www.rpa-com.de
             
-            // select random font size
-            $iFontSize = rand($this->iMinFontSize, $this->iMaxFontSize);
+            // selectmt_random font size
+            $iFontSize = mt_rand($this->iMinFontSize, $this->iMaxFontSize);
             
-            // select random angle
-            $iAngle = rand(-30, 30);
+            // selectmt_random angle
+            $iAngle = mt_rand(-30, 30);
             
             // get dimensions of character in selected font and text size
             $aCharDetails = imageftbbox($iFontSize, $iAngle, $sCurrentFont, $this->sCode[$i], array());
@@ -304,10 +348,10 @@
             imagefttext($this->oImage, $iFontSize, $iAngle, $iX, $iY, $iTextColour, $sCurrentFont, $this->sCode[$i], array());
             
             if ($this->bCharShadow) {
-               $iOffsetAngle = rand(-30, 30);
+               $iOffsetAngle = mt_rand(-30, 30);
                
-               $iRandOffsetX = rand(-5, 5);
-               $iRandOffsetY = rand(-5, 5);
+               $iRandOffsetX = mt_rand(-5, 5);
+               $iRandOffsetY = mt_rand(-5, 5);
                
                imagefttext($this->oImage, $iFontSize, $iOffsetAngle, $iX + $iRandOffsetX, $iY + $iRandOffsetY, $iShadowColour, $sCurrentFont, $this->sCode[$i], array());
             }
@@ -361,8 +405,14 @@
             $this->oImage = imagecreate($this->iWidth, $this->iHeight);
          }
          
+         //BOC new code by web28 - www.rpa-com.de
          // allocate white background colour
-         imagecolorallocate($this->oImage, 255, 255, 255);
+         if (count($this->aBackgroundColors)) {
+            imagecolorallocate($this->oImage, $this->aBackgroundColors['R'], $this->aBackgroundColors['G'], $this->aBackgroundColors['B']);
+         } else {
+            imagecolorallocate($this->oImage, 255, 255, 255);
+         }
+         //EOC new code by web28 - www.rpa-com.de
          
          // check for owner text
          if ($this->sOwnerText != '') {
