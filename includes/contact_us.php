@@ -24,6 +24,7 @@
     $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
   }
   defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+  defined('MODULE_CAPTCHA_LOGED_IN') or define('MODULE_CAPTCHA_LOGED_IN', 'True');
 
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
@@ -34,7 +35,7 @@
       $err_msg .= ERROR_EMAIL;
     }
     
-    if (in_array('contact', $use_captcha)) {
+    if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
         $err_msg .= ERROR_VVCODE;
       }
@@ -165,7 +166,7 @@
 
     $smarty->assign('CONTACT_CONTENT', $contact_content);
     $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')));
-    if (in_array('contact', $use_captcha)) {
+    if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
       $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
     }
