@@ -859,4 +859,29 @@ define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go ? (e.g. with de
 
 define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Graduated Price');
 define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Minimum Graduated Price to show.');
+
+define('MODULE_CAPTCHA_ACTIVE_TITLE', 'activate Captcha');
+define('MODULE_CAPTCHA_ACTIVE_DESC', '');
+define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Random Color');
+define('MODULE_CAPTCHA_USE_COLOR_DESC', 'show lines and signs in random color');
+define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Shadow');
+define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'additional shadow for the signs');
+define('MODULE_CAPTCHA_CODE_LENGTH_TITLE', 'Captcha Length');
+define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Number of Signs<br/>(default: 6)');
+define('MODULE_CAPTCHA_NUM_LINES_TITLE', 'Number of lines');
+define('MODULE_CAPTCHA_NUM_LINES_DESC', 'Set number of lines<br/>(default: 70)');
+define('MODULE_CAPTCHA_MIN_FONT_TITLE', 'min font size');
+define('MODULE_CAPTCHA_MIN_FONT_DESC', 'Set minimum font size in px.<br/>(default: 24)');
+define('MODULE_CAPTCHA_MAX_FONT_TITLE', 'max font size');
+define('MODULE_CAPTCHA_MAX_FONT_DESC', 'Set maximum font size in px<br/>(default: 28)');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_TITLE', 'Background color');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_DESC', 'Set background color in RGB<br/>(default: 192,192,192)');
+define('MODULE_CAPTCHA_LINES_RGB_TITLE', 'Line color');
+define('MODULE_CAPTCHA_LINES_RGB_DESC', 'Set line color in RGB<br/>(default: 220,148,002)');
+define('MODULE_CAPTCHA_CHARS_RGB_TITLE', 'Zeichenfarbe');
+define('MODULE_CAPTCHA_CHARS_RGB_DESC', 'Set line color in RGB<br/>(default: 112,112,112)');
+define('MODULE_CAPTCHA_WIDTH_TITLE', 'Width');
+define('MODULE_CAPTCHA_WIDTH_DESC', 'Set width in px');
+define('MODULE_CAPTCHA_HEIGHT_TITLE', 'Height');
+define('MODULE_CAPTCHA_HEIGHT_DESC', 'Set height in px');
 ?>

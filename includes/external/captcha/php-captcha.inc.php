@@ -118,27 +118,33 @@
       }
       
       //BOC new functions by web28 - www.rpa-com.de
-      function SetBackgroundColors($r,$g,$b) {
-        $this->aBackgroundColors['R'] = $r;
-        $this->aBackgroundColors['G'] = $g;
-        $this->aBackgroundColors['B'] = $b;
+      function SetBackgroundColors($rgb) {
+        $rgb = preg_replace("'[\r\n\s]+'",'',$rgb);
+        $rgb_arr = explode(',', $rgb);
+        $this->aBackgroundColors['R'] = $rgb_arr[0];
+        $this->aBackgroundColors['G'] = $rgb_arr[1];
+        $this->aBackgroundColors['B'] = $rgb_arr[2];
       }
       
-      function SetLinesColors($r,$g,$b) {
-        $this->aLinesColors['R'] = $r;
-        $this->aLinesColors['G'] = $g;
-        $this->aLinesColors['B'] = $b;
+      function SetLinesColors($rgb) {
+        $rgb = preg_replace("'[\r\n\s]+'",'',$rgb);
+        $rgb_arr = explode(',', $rgb);
+        $this->aLinesColors['R'] = $rgb_arr[0];
+        $this->aLinesColors['G'] = $rgb_arr[1];
+        $this->aLinesColors['B'] = $rgb_arr[2];
       }
       
-      function SetCharsColors($r,$g,$b) {
-        $this->aCharsColors['R'] = $r;
-        $this->aCharsColors['G'] = $g;
-        $this->aCharsColors['B'] = $b;
+      function SetCharsColors($rgb) {
+        $rgb = preg_replace("'[\r\n\s]+'",'',$rgb);
+        $rgb_arr = explode(',', $rgb);
+        $this->aCharsColors['R'] = $rgb_arr[0];
+        $this->aCharsColors['G'] = $rgb_arr[1];
+        $this->aCharsColors['B'] = $rgb_arr[2];
       }
       //EOC new functions by web28 - www.rpa-com.de
       
       function CalculateSpacing() {
-         $this->iSpacing = (int)($this->iWidth / $this->iNumChars);
+         $this->iSpacing = (int)($this->iWidth / $this->iNumChars) - 0.5;
       }
       
       function SetWidth($iWidth) {
@@ -232,31 +238,50 @@
             $this->sFileType = 'jpeg';
          }
       }
+
+      function iRandColour($rc1, $rc2, $rc3) {
+         $iRandColour = imagecolorexact($this->oImage, $rc1, $rc2, $rc3);
+         if ($iRandColour == -1) {
+              //color does not exist...
+              //test if we have used up palette
+              if (imagecolorstotal($this->oImage) >= 255) {
+                   //palette used up; pick closest assigned color
+                   $iRandColour = imagecolorclosest($this->oImage, $rc1, $rc2, $rc3);
+              } else {
+                   //palette NOT used up; assign new color
+                   $iRandColour = imagecolorallocate($this->oImage, $rc1, $rc2, $rc3);
+              }
+         }
+         
+         return $iRandColour;
+      }
       
       function DrawLines() {
+         $minColor = 100;
+         $maxColor = 250;
          for ($i = 0; $i < $this->iNumLines; $i++) {
             // allocate colour
             if ($this->bUseColour) {
-               $iLineColour = imagecolorallocate($this->oImage,mt_rand(100, 250),mt_rand(100, 250),mt_rand(100, 250));
+               $iLineColour = $this->iRandColour(mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
             } else {
                //BOC new code by web28 - www.rpa-com.de
                if(count($this->aLinesColors)) {
-                  $iLineColour = imagecolorallocate($this->oImage, $this->aLinesColors['R'], $this->aLinesColors['G'], $this->aLinesColors['B']);
+                  $iLineColour = $this->iRandColour($this->aLinesColors['R'], $this->aLinesColors['G'], $this->aLinesColors['B']);
                } else {
-                  $iRandColour = mt_rand(100, 250);
-                  $iLineColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+                  $iRandColour = mt_rand($minColor, $maxColor);
+                  $iLineColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
                //EOC new code by web28 - www.rpa-com.de
             }
             
             // draw line
-            imageline($this->oImage,mt_rand(0, $this->iWidth),mt_rand(0, $this->iHeight),mt_rand(0, $this->iWidth),mt_rand(0, $this->iHeight), $iLineColour);
+            imageline($this->oImage, mt_rand(0, $this->iWidth), mt_rand(0, $this->iHeight), mt_rand(0, $this->iWidth), mt_rand(0, $this->iHeight), $iLineColour);
          }
       }
       
       function DrawOwnerText() {
          // allocate owner text colour
-         $iBlack = imagecolorallocate($this->oImage, 0, 0, 0);
+         $iBlack = $this->iRandColour(0, 0, 0);
          // get height of selected font
          $iOwnerTextHeight = imagefontheight(2);
          // calculate overall height
@@ -308,24 +333,24 @@
             //BOC new code by web28 - www.rpa-com.de
             // selectmt_random colour
             if ($this->bUseColour) {
-               $iTextColour = imagecolorallocate($this->oImage, mt_rand($minColor, $maxColor) , mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
+               $iTextColour = $this->iRandColour(mt_rand($minColor, $maxColor) , mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
             
                if ($this->bCharShadow) {
                   // shadow colour
-                  $iShadowColour = imagecolorallocate($this->oImage, mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
+                  $iShadowColour = $this->iRandColour(mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor), mt_rand($minColor, $maxColor));
                }
             } else {
                if (count($this->aCharsColors)) {
-                  $iTextColour = imagecolorallocate($this->oImage, $this->aCharsColors['R'], $this->aCharsColors['G'], $this->aCharsColors['B']);
+                  $iTextColour = $this->iRandColour($this->aCharsColors['R'], $this->aCharsColors['G'], $this->aCharsColors['B']);
                } else {
                   $iRandColour = mt_rand($minColor, $maxColor);
-                  $iTextColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+                  $iTextColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
             
                if ($this->bCharShadow) {
                   // shadow colour
                   $iRandColour = mt_rand($minColor, $maxColor);
-                  $iShadowColour = imagecolorallocate($this->oImage, $iRandColour, $iRandColour, $iRandColour);
+                  $iShadowColour = $this->iRandColour($iRandColour, $iRandColour, $iRandColour);
                }
             }
             //EOC new code by web28 - www.rpa-com.de
@@ -337,7 +362,7 @@
             $iAngle = mt_rand(-30, 30);
             
             // get dimensions of character in selected font and text size
-            $aCharDetails = imageftbbox($iFontSize, $iAngle, $sCurrentFont, $this->sCode[$i], array());
+            $aCharDetails = $this->ImageDimension($iFontSize, $iAngle, $sCurrentFont, $this->sCode[$i]);
             
             // calculate character starting coordinates
             $iX = $this->iSpacing / 4 + $i * $this->iSpacing;
@@ -345,22 +370,48 @@
             $iY = $this->iHeight / 2 + $iCharHeight / 4; 
             
             // write text to image
-            imagefttext($this->oImage, $iFontSize, $iAngle, $iX, $iY, $iTextColour, $sCurrentFont, $this->sCode[$i], array());
+            $this->WriteToImage($iFontSize, $iAngle, $iX, $iY, $iTextColour, $sCurrentFont, $this->sCode[$i]);
             
             if ($this->bCharShadow) {
                $iOffsetAngle = mt_rand(-30, 30);
-               
                $iRandOffsetX = mt_rand(-5, 5);
                $iRandOffsetY = mt_rand(-5, 5);
                
-               imagefttext($this->oImage, $iFontSize, $iOffsetAngle, $iX + $iRandOffsetX, $iY + $iRandOffsetY, $iShadowColour, $sCurrentFont, $this->sCode[$i], array());
+               $this->WriteToImage($iFontSize, $iOffsetAngle, $iX + $iRandOffsetX, $iY + $iRandOffsetY, $iShadowColour, $sCurrentFont, $this->sCode[$i]);
             }
          }
+      }
+
+      function ImageDimension($iFontSize, $iAngle, $sCurrentFont, $sCode) {
+          $iDetails = array(0,0,$this->iSpacing,0,0,$this->iSpacing,0,0);
+          if (function_exists('imagettfbbox')) {
+            $iDetails = imagettfbbox($iFontSize, $iAngle, $sCurrentFont, $sCode);
+          } elseif (function_exists('imageftbbox')) {
+            $iDetails = imageftbbox($iFontSize, $iAngle, $sCurrentFont, $sCode);
+          }     
+          return $iDetails;
+      }
+      
+      function WriteToImage($iFontSize, $iOffsetAngle, $iRandOffsetX, $iRandOffsetY, $iTextColour, $sCurrentFont, $sCode) {
+          if (function_exists('imagettftext')) {
+            imagettftext($this->oImage, $iFontSize, $iOffsetAngle, $iRandOffsetX, $iRandOffsetY, $iTextColour, $sCurrentFont, $sCode);
+          } elseif (function_exists('imagefttext')) {
+            imagefttext($this->oImage, $iFontSize, $iOffsetAngle, $iRandOffsetX, $iRandOffsetY, $iTextColour, $sCurrentFont, $sCode);
+          } else {
+            $iFontSize = 5;
+            ImageString($this->oImage, $iFontSize, $iRandOffsetX, ($this->iHeight/2)-$iFontSize-mt_rand($iFontSize*(-1), $iFontSize), $sCode, $iTextColour);  
+          }
       }
       
       function WriteFile($sFilename) {
          if ($sFilename == '') {
-            // tell browser that data is jpeg
+            header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+            header("Last-Modified: " . gmdate("D, d M Y H:i:s") . "GMT");
+            header("Cache-Control: no-store, no-cache, must-revalidate");
+            header("Cache-Control: post-check=0, pre-check=0", false);
+            header("Pragma: no-cache");
+
+            // tell browser that data is image
             header("Content-type: image/$this->sFileType");
          }
          
@@ -408,9 +459,9 @@
          //BOC new code by web28 - www.rpa-com.de
          // allocate white background colour
          if (count($this->aBackgroundColors)) {
-            imagecolorallocate($this->oImage, $this->aBackgroundColors['R'], $this->aBackgroundColors['G'], $this->aBackgroundColors['B']);
+            $this->iRandColour($this->aBackgroundColors['R'], $this->aBackgroundColors['G'], $this->aBackgroundColors['B']);
          } else {
-            imagecolorallocate($this->oImage, 255, 255, 255);
+            $this->iRandColour(255, 255, 255);
          }
          //EOC new code by web28 - www.rpa-com.de
          
