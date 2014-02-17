@@ -860,6 +860,8 @@ define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Mindestanzahl der Staffelpreise die ange
 
 define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Captcha aktivieren');
 define('MODULE_CAPTCHA_ACTIVE_DESC', '');
+define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Angemeldete Kunden');
+define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Anzeige des Captcha f&uuml;r angemeldete Kunden');
 define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Zuf&auml;llige Farben');
 define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Anzeige der Linien und Zeichen in zuf&auml;lligen Farben');
 define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Schatten');

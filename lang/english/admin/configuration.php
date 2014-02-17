@@ -862,6 +862,8 @@ define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Minimum Graduated Price to show.');
 
 define('MODULE_CAPTCHA_ACTIVE_TITLE', 'activate Captcha');
 define('MODULE_CAPTCHA_ACTIVE_DESC', '');
+define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Logged in Customers');
+define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Show Captcha for logged in customers');
 define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Random Color');
 define('MODULE_CAPTCHA_USE_COLOR_DESC', 'show lines and signs in random color');
 define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Shadow');

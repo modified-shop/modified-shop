@@ -27,6 +27,7 @@ if (defined('MODULE_CAPTCHA_ACTIVE')) {
   $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
 }
 defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+defined('MODULE_CAPTCHA_LOGED_IN') or define('MODULE_CAPTCHA_LOGED_IN', 'True');
 
 // create smarty elements
 $smarty = new Smarty;
@@ -44,7 +45,7 @@ $newsletter = new newsletter();
 if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
   $email = xtc_db_prepare_input($_POST['email']);
   if (xtc_validate_email($email) != false) {
-    if (!in_array('newsletter', $use_captcha)) {
+    if (!in_array('newsletter', $use_captcha) || (isset($_SESSION['customer_id']) && MODULE_CAPTCHA_LOGGED_IN == 'False')) {
       $newsletter->auto = true;
     }
     $newsletter->AddUser($_POST['check'], strtoupper($_POST['vvcode']), $email);
@@ -70,7 +71,7 @@ $breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '',
 
 require (DIR_WS_INCLUDES.'header.php');
 
-if (in_array('newsletter', $use_captcha)) {
+if (in_array('newsletter', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
   $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
   $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
 }
