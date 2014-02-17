@@ -22,7 +22,7 @@
     $visual_verify_code = xtc_random_charcode(6);
     $_SESSION['vvcode'] = strtoupper($visual_verify_code);
     $vvimg = vvcode_render_code($visual_verify_code);
-
+  } else {
     // include captcha class
     require_once (DIR_FS_EXTERNAL.'captcha/php-captcha.inc.php');
 
@@ -36,7 +36,7 @@
       }
       closedir($dir);
     }
-  } else {
+
     // create new image 
     $oPhpCaptcha = new PhpCaptcha($aFonts, MODULE_CAPTCHA_WIDTH, MODULE_CAPTCHA_HEIGHT);
     $oPhpCaptcha->UseColour((MODULE_CAPTCHA_USE_COLOR == 'True' ? true : false));
