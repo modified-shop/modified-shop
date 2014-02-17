@@ -22,4 +22,6 @@ define('BOX_SHOP_OFFLINE', 'Shop online/offline - gilt für alle Sprachen');
 define('SETTINGS_OFFLINE', 'Shop offline <br /><font color="red">(Zugriff nur noch mit Admin-Daten über die URL <a href="'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php" target="_blank"><font color="red">'. HTTP_SERVER.DIR_WS_CATALOG.'login_admin.php</font></a>)</font>');
 define('SETTINGS_OFFLINE_MSG', 'Offline Nachricht');
 
+define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS_TXT', '<b>Erlaubte Kundengruppen: </b><br />(f&uumlr diese Kundengruppen ist der Shop weiterhin sichtbar)');
+define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Erlaubte Emailadressen (kommagetrennt):</b> <br />(f&uumlr Kunden mit diesen Emailadressen ist der Shop weiterhin sichtbar)');
 ?>
