@@ -18,6 +18,13 @@
   //use contact_us.php language file
   require_once (DIR_WS_LANGUAGES.$_SESSION['language'].'/contact_us.php');
   
+  // captcha
+  $use_captcha = array('contact');
+  if (defined('MODULE_CAPTCHA_ACTIVE')) {
+    $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
+  }
+  defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {
 
@@ -26,9 +33,13 @@
     if (!xtc_validate_email(trim($_POST['email']))) {
       $err_msg .= ERROR_EMAIL;
     }
-    if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
-      $err_msg .= ERROR_VVCODE;
+    
+    if (in_array('contact', $use_captcha)) {
+      if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
+        $err_msg .= ERROR_VVCODE;
+      }
     }
+    
     if (trim($_POST['message_body']) == '') {
       $err_msg .= ERROR_MSG_BODY;
     }
@@ -154,8 +165,10 @@
 
     $smarty->assign('CONTACT_CONTENT', $contact_content);
     $smarty->assign('FORM_ACTION', xtc_draw_form('contact_us', xtc_href_link(FILENAME_CONTENT, 'action=send&coID='.(int) $_GET['coID'], 'SSL')));
-    $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
-    $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="8" maxlength="6"', 'text', false));
+    if (in_array('contact', $use_captcha)) {
+      $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL').'" alt="Captcha" />');
+      $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'. MODULE_CAPTCHA_CODE_LENGTH .'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+    }
     $smarty->assign('INPUT_NAME', xtc_draw_input_field('name', ($error ? $_POST['name'] : $customers_name), 'size="30"'));
     $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ($error ? $_POST['email'] : $email_address), 'size="30"'));
     $smarty->assign('INPUT_PHONE', xtc_draw_input_field('phone', ($error ? $_POST['phone'] : $phone), 'size="30"'));

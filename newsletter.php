@@ -21,6 +21,13 @@
 
 require ('includes/application_top.php');
 
+// captcha
+$use_captcha = array('newsletter');
+if (defined('MODULE_CAPTCHA_ACTIVE')) {
+  $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
+}
+defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
+
 // create smarty elements
 $smarty = new Smarty;
 
@@ -28,19 +35,23 @@ $smarty = new Smarty;
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
-require_once (DIR_FS_INC.'xtc_render_vvcode.inc.php');
-require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
-require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
-require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 require_once (DIR_WS_CLASSES.'class.newsletter.php');
 
 $info_message = '';
 $newsletter = new newsletter();
 
-if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {    
-  $newsletter->AddUser($_POST['check'], strtoupper($_POST['vvcode']), $_POST['email']);
-  $info_message = $newsletter->message;
+if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
+  $email = xtc_db_prepare_input($_POST['email']);
+  if (xtc_validate_email($email) != false) {
+    if (!in_array('newsletter', $use_captcha)) {
+      $newsletter->auto = true;
+    }
+    $newsletter->AddUser($_POST['check'], strtoupper($_POST['vvcode']), $email);
+    $info_message = $newsletter->message;
+  } else {
+    $info_message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+  }
 }
 
 // Accountaktivierung per Emaillink
@@ -59,13 +70,15 @@ $breadcrumb->add(NAVBAR_TITLE_NEWSLETTER, xtc_href_link(FILENAME_NEWSLETTER, '',
 
 require (DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
+if (in_array('newsletter', $use_captcha)) {
+  $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
+  $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+}
 
 $smarty->assign('text_newsletter', TEXT_NEWSLETTER);
 $smarty->assign('info_message', $info_message);
 $smarty->assign('FORM_ACTION', xtc_draw_form('sign', xtc_href_link(FILENAME_NEWSLETTER, 'action=process', 'SSL')));
 $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', ((isset($_GET['email']) && xtc_db_input($_GET['email'])!='') ? xtc_db_input($_GET['email']):((isset($_POST['email']) && xtc_db_input($_POST['email']))?xtc_db_input($_POST['email']):''))));
-$smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="8" maxlength="6"', 'text', false));
 
 if(isset($_POST['check']) && $_POST['check'] == 'inp') {$inp = 'true'; $del = '';}
 if(isset($_POST['check']) && $_POST['check'] == 'del') {$inp = ''; $del = 'true';}	

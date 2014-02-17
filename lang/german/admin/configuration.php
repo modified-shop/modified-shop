@@ -857,4 +857,29 @@ define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen ? (z.B. bei D
 
 define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Anzahl Staffelpreise');
 define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Mindestanzahl der Staffelpreise die angezeigt werden');
+
+define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Captcha aktivieren');
+define('MODULE_CAPTCHA_ACTIVE_DESC', '');
+define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Zuf&auml;llige Farben');
+define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Anzeige der Linien und Zeichen in zuf&auml;lligen Farben');
+define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Schatten');
+define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'zus&auml;tzliche Schatten der Zeichen im Captcha.');
+define('MODULE_CAPTCHA_CODE_LENGTH_TITLE', 'Captcha L&auml;nge');
+define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Anzahl der Zeichen im Captcha<br/>(default: 6)');
+define('MODULE_CAPTCHA_NUM_LINES_TITLE', 'Anzahl an Linien');
+define('MODULE_CAPTCHA_NUM_LINES_DESC', 'Anzahl der Linien im Captcha<br/>(default: 70)');
+define('MODULE_CAPTCHA_MIN_FONT_TITLE', 'Minimale Schriftgr&ouml;sse');
+define('MODULE_CAPTCHA_MIN_FONT_DESC', 'Angabe in Pixel f&uuml;r die kleinsten Zeichen im Captcha.<br/>(default: 24)');
+define('MODULE_CAPTCHA_MAX_FONT_TITLE', 'Maximale Schriftgr&ouml;sse');
+define('MODULE_CAPTCHA_MAX_FONT_DESC', 'Angabe in Pixel f&uuml;r die gr&ouml;ssten Zeichen im Captcha.<br/>(default: 28)');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_TITLE', 'Hintergrundfarbe');
+define('MODULE_CAPTCHA_BACKGROUND_RGB_DESC', 'Angabe der Hintergrundfarbe in RGB erfolgen.<br/>(default: 192,192,192)');
+define('MODULE_CAPTCHA_LINES_RGB_TITLE', 'Linienfarbe');
+define('MODULE_CAPTCHA_LINES_RGB_DESC', 'Angabe der Linienfarbe in RGB erfolgen.<br/>(default: 220,148,002)');
+define('MODULE_CAPTCHA_CHARS_RGB_TITLE', 'Zeichenfarbe');
+define('MODULE_CAPTCHA_CHARS_RGB_DESC', 'Angabe der Zeichenfarbe in RGB erfolgen.<br/>(default: 112,112,112)');
+define('MODULE_CAPTCHA_WIDTH_TITLE', 'Breite');
+define('MODULE_CAPTCHA_WIDTH_DESC', 'Angabe in Pixel f&uuml;r die Breite des Captcha.');
+define('MODULE_CAPTCHA_HEIGHT_TITLE', 'H&ouml;he');
+define('MODULE_CAPTCHA_HEIGHT_DESC', 'Angabe in Pixel f&uuml;r die H&ouml;he des Captcha.');
 ?>
