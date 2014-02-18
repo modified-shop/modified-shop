@@ -24,7 +24,7 @@
     $use_captcha = explode(',', MODULE_CAPTCHA_ACTIVE);
   }
   defined('MODULE_CAPTCHA_CODE_LENGTH') or define('MODULE_CAPTCHA_CODE_LENGTH', 6);
-  defined('MODULE_CAPTCHA_LOGED_IN') or define('MODULE_CAPTCHA_LOGED_IN', 'True');
+  defined('MODULE_CAPTCHA_LOGGED_IN') or define('MODULE_CAPTCHA_LOGGED_IN', 'True');
 
   $error = false;
   if (isset ($_GET['action']) && ($_GET['action'] == 'send')) {

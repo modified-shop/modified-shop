@@ -171,6 +171,11 @@ function check_form_review() {
     error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_TEXT); ?>");
     error = 1;
   }
+  var author = document.getElementById("product_reviews_write").author.value;
+  if (author.length < <?php echo ENTRY_FIRST_NAME_MIN_LENGTH; ?>) {
+    error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_AUTHOR); ?>");
+    error = 1;
+  }
   if (!((document.getElementById("product_reviews_write").rating[0].checked) || (document.getElementById("product_reviews_write").rating[1].checked) || (document.getElementById("product_reviews_write").rating[2].checked) || (document.getElementById("product_reviews_write").rating[3].checked) || (document.getElementById("product_reviews_write").rating[4].checked))) {
     error_message = error_message + unescape("<?php echo xtc_js_lang(JS_REVIEW_RATING); ?>");
     error = 1;

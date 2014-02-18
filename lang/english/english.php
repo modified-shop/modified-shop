@@ -96,6 +96,7 @@ define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please choose a method of payme
 define('JS_ERROR_SUBMITTED', 'This page has already been confirmed. Please click OK and wait until the process has finished.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please choose a method of payment for your order.');
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Please choose a method of shipping for your order.\n');
+define('JS_REVIEW_AUTHOR', '* Please enter your name.\n\n');
 
 /*
  *
@@ -531,6 +532,7 @@ define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updat
 
 define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.');
 define('ERROR_REVIEW_RATING', 'Enter your review.');
+define('ERROR_REVIEW_AUTHOR', 'Enter your name.');
 
 define('_SHIPPING_FREE','Free Shipping');
 
