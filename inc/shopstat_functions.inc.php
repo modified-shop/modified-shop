@@ -7,7 +7,7 @@
     © 2004 ShopStat.com
     All Rights Reserved.
 
-   Version 1.07 rev.06(c) by web28  - www.rpa-com.de
+   Version 1.07 rev.07(c) by web28  - www.rpa-com.de
 ------------------------------------------------------------------------*/
 //#################################
 
@@ -40,10 +40,12 @@ define('PAG_DIVIDER',SEO_SEPARATOR);                             //Seitennummer 
 
 include (DIR_FS_INC . 'search_replace_utf-8.php');
 
-global $char_search, $char_replace;
+global $char_search, $char_replace, $check_iconv;
 $char_search = array(); 
 $char_replace = array(); 
 list($char_search, $char_replace) = shopstat_getRegExps();
+
+$check_iconv = iconv('UTF-8', 'ISO-8859-1//TRANSLIT', "test");
 
 if(!function_exists('language')) {
   include_once (DIR_WS_CLASSES.'language.php');
@@ -270,7 +272,7 @@ function shopstat_hrefManulink($content_name, $content_id, $pager=false) {
  * FUNCTION shopstat_hrefSmallmask
  */
 function shopstat_hrefSmallmask($string, $urlencode = false) {
-  global $char_search, $char_replace;
+  global $char_search, $char_replace, $check_iconv;
 
   $newstring = $string;
   
@@ -278,7 +280,11 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
 
   //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
   if ($charset != "UTF-8") {
-    $newstring = iconv("ISO-8859-15", "UTF-8", $newstring);
+    if (!$check_iconv) {
+      $newstring = iconv($charset, "UTF-8", $newstring);
+    } else {
+      $newstring = mb_convert_encoding($string, 'UTF-8', $charset);
+    }
   }
 
   //-- <br> neutralisieren -  DokuMan - 2010-08-13 - optimize shopstat_getRegExps
@@ -315,8 +321,12 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
   $newstring = rtrim($newstring,"-");
   
   //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
-  if (strtoupper($_SESSION['language_charset']) != "UTF-8") { 
-    $newstring = iconv("UTF-8","ISO-8859-15//TRANSLIT",$newstring);
+  if ($charset != "UTF-8") {
+    if (!$check_iconv) {
+      $newstring = mb_convert_encoding($newstring, $charset, 'UTF-8');
+    } else {
+      $newstring = iconv("UTF-8", $charset.'//TRANSLIT', $newstring);
+    }  
   }
   //if($_REQUEST['test']){print $newstring."<hr>";}
   return($newstring);
