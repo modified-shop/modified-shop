@@ -93,6 +93,7 @@ define('JS_ERROR_SUBMITTED', 'Diese Seite wurde bereits best&auml;tigt. Klicken 
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Zahlungsweise f&uuml;r Ihre Bestellung.');
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Bitte w&auml;hlen Sie eine Versandart f&uuml;r Ihre Bestellung.\n');
 define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Sofern Sie unsere Allgemeinen Gesch&auml;ftsbedingungen nicht akzeptieren,\n k&ouml;nnen wir Ihre Bestellung bedauerlicherweise nicht entgegennehmen!\n\n');
+define('JS_REVIEW_AUTHOR', '* Bitte geben sie ihren Namen ein.\n\n');
 
 /*
  * 
@@ -524,6 +525,7 @@ define('TEXT_PRODUCTS_QTY_REDUCED', 'Die maximal erlaubte St&uuml;ckzahl f&uuml;
 
 define('ERROR_REVIEW_TEXT', 'Der Bewertungstext muss aus mindestens ' . REVIEW_TEXT_MIN_LENGTH . ' Zeichen bestehen.');
 define('ERROR_REVIEW_RATING', 'Bitte Geben Sie Ihre Bewertung ab.');
+define('ERROR_REVIEW_AUTHOR', 'Bitte geben sie ihren Namen ein.');
 
 define('GV_NO_PAYMENT_INFO', '<div class="infomessage">Sie k&ouml;nnen mit Ihrem Guthaben die Bestellung komplett bezahlen. Wenn Sie Ihr Guthaben nicht einl&ouml;sen m&ouml;chten, deaktivieren Sie die Guthabenauswahl und w&auml;hlen eine Zahlungsweise!</div>');
 define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nicht aus um die Bestellung komplett zu bezahlen. Bitte w&auml;hlen Sie zus&auml;tzlich eine Zahlungsweise!</div>');
