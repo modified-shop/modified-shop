@@ -1,2 +1,2 @@
-  Options +FollowSymLinks -Indexes
-
+Options +FollowSymLinks -Indexes
+AddType application/octet-stream .zip .rar .pdf .doc .xls .txt .mov .avi .mpg .mpeg .jpg .jpeg .png .gif .bmp .psd .tif .tiff .wmf .eps .cdr .svg
