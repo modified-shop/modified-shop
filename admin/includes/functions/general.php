@@ -148,6 +148,40 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
   }
 
+  /**
+   * xtc_set_prodcat_data()
+   *
+   * @param mixed $categories_id
+   * @param mixed $data_array
+   * @param boolean $set_products, $set_categories
+   * @return
+   */
+  function xtc_set_prodcat_data($categories_id, $data_array, $set_products = true, $set_categories = true) {
+    //update products
+    if ($set_products) {
+      // get products in categorie
+      $products_query = xtc_db_query("SELECT products_id 
+                                        FROM ".TABLE_PRODUCTS_TO_CATEGORIES." 
+                                       WHERE categories_id='".$categories_id."'
+                                     ");
+      while ($products = xtc_db_fetch_array($products_query)) {
+        xtc_db_perform(TABLE_PRODUCTS, $data_array, 'update', 'products_id = \''.$products['products_id'].'\'');
+      }
+    }
+    //update categorie
+    if ($set_categories) {
+      xtc_db_perform(TABLE_CATEGORIES, $data_array, 'update', 'categories_id = \''.$categories_id.'\'');
+    }
+    // look for deeper categories and go rekursiv
+    $categories_query = xtc_db_query("SELECT categories_id 
+                                        FROM ".TABLE_CATEGORIES." 
+                                       WHERE parent_id='".$categories_id."'
+                                    ");
+    while ($categories = xtc_db_fetch_array($categories_query)) {
+      xtc_set_prodcat_data($categories['categories_id'], $data_array, $set_products, $set_categories);
+    }
+  }
+  
 // Set Admin Access Rights
   /**
    * xtc_set_admin_access()
@@ -2493,6 +2527,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
     return $number;
   }
+
+
 
   /**
    * xtc_get_geoip_data()
