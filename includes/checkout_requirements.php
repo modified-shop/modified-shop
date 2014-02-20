@@ -66,18 +66,16 @@ if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
   }
 }
 
-if ($current_page == 'checkout_shipping.php') {
-  if ($_SESSION['cart']->show_total() > 0 ) {
-    // checkout only if minimum order value is reached
-    if ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $_SESSION['customers_status']['customers_status_min_order'] ) {
-      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-    }
-    // Checkout only when maximum order value is not reached
-    if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) > $_SESSION['customers_status']['customers_status_max_order'] ) {
-      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
-    }
-  }
+// checkout only if minimum order value is reached
+if ($_SESSION['customers_status']['customers_status_min_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $_SESSION['customers_status']['customers_status_min_order'] ) {
+  xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
 }
+
+// Checkout only when maximum order value is not reached
+if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) > $_SESSION['customers_status']['customers_status_max_order'] ) {
+    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART));
+}
+
 
 // from checkout_payment
 if ($checkout_position[$current_page] >= 2) {

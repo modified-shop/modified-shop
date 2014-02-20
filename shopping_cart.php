@@ -186,7 +186,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
   // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
 
   // minimum/maximum order value
-  if ($_SESSION['cart']->show_total() > 0 ) {
+  if ($_SESSION['cart']->show_total() >= 0) {
 
     //check customers min-order by currency
     if ($xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) < $_SESSION['customers_status']['customers_status_min_order'] ) {
@@ -203,7 +203,7 @@ if ($_SESSION['cart']->count_contents() > 0) {
       $smarty->assign('min_order', $min_order);
     } 
 
-    //check customers max-order  by currency
+    //check customers max-order by currency
     if ($_SESSION['customers_status']['customers_status_max_order'] != 0 && $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) > $_SESSION['customers_status']['customers_status_max_order'] ) {
       $_SESSION['allow_checkout'] = 'false';
       $less_to_buy = $xtPrice->xtcRemoveCurr($_SESSION['cart']->show_total()) - $_SESSION['customers_status']['customers_status_max_order'];
