@@ -1334,15 +1334,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $status
    * @return
    */
-  function xtc_set_banner_status($banners_id, $status) {
-    if ($status == '1') {
-      return xtc_db_query("update ".TABLE_BANNERS." set status = '1', expires_impressions = NULL, expires_date = NULL, date_status_change = now() where banners_id = '".$banners_id."'");
-    } elseif ($status == '0') {
-      return xtc_db_query("update ".TABLE_BANNERS." set status = '0', date_status_change = now() where banners_id = '".$banners_id."'");
-    } else {
-      return -1;
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_set_banner_status.inc.php'); // Use existing function from "/inc/" folder
 
   // Sets the status of a product on special
   /**
@@ -1352,15 +1344,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $status
    * @return
    */
-  function xtc_set_specials_status($specials_id, $status) {
-    if ($status == '1') {
-      return xtc_db_query("update ".TABLE_SPECIALS." set status = '1', date_status_change = now() where specials_id = '".$specials_id."'"); // remove setting: expires_date = NULL
-    } elseif ($status == '0') {
-      return xtc_db_query("update ".TABLE_SPECIALS." set status = '0', date_status_change = now() where specials_id = '".$specials_id."'");
-    } else {
-      return -1;
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_set_specials_status.inc.php'); // Use existing function from "/inc/" folder
 
   // Sets timeout for the current script.
   // Cant be used in safe mode.
