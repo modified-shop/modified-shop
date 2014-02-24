@@ -83,8 +83,10 @@ if ( !class_exists( "image_processing_step" ) ) {
       $step = $_GET['max_datasets'];
       $count = $_GET['count'];
       $limit = $offset + $step;
-
+      
+      @ini_set('memory_limit','256M');
       @xtc_set_time_limit(0);
+      
       $files=array();
       if ($dir = opendir(DIR_FS_CATALOG_ORIGINAL_IMAGES)) {
         $max_files = 0;
@@ -139,7 +141,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       }
       //Animierte Gif-Datei und Hinweistext
       $info_wait = '<img src="images/loading.gif"> ';
-      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . $count);
+      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . $count . ' / ' .$max_files);
       $this->recursive_call = '<script language="javascript" type="text/javascript">setTimeout("document.modul_continue.submit()", 3000);</script>';
     }
 
