@@ -58,6 +58,19 @@ if (file_exists('../includes/local/configure.php')) {
   include_once('../includes/configure.php');
 }
 
+// set the level of error reporting
+@ini_set('display_errors', true);
+if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
+  error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.all')) {
+  error_reporting(E_ALL); //exlude E_STRICT on PHP 5.4
+} elseif (is_file(DIR_FS_CATALOG.'export/_error_reporting.dev')) {
+  error_reporting(-1); // Development value
+} else {
+  @ini_set('display_errors', false);
+  error_reporting(0);
+}
+
 // new error handling
 if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
   require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
