@@ -17,7 +17,7 @@
    
   function xtc_get_tax_description($class_id, $country_id= -1, $zone_id= -1) {
   	
-  	    if ( ($country_id == -1) && ($zone_id == -1) ) {
+  	if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (!isset($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
@@ -25,12 +25,25 @@
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       }
-     }else{
-        $country_id = $country_id;
-        $zone_id = $zone_id;
-     }
+    }else{
+      $country_id = $country_id;
+      $zone_id = $zone_id;
+    }
   	
-    $tax_query = xtDBquery("select tax_description from " . TABLE_TAX_RATES . " tr left join " . TABLE_ZONES_TO_GEO_ZONES . " za on (tr.tax_zone_id = za.geo_zone_id) left join " . TABLE_GEO_ZONES . " tz on (tz.geo_zone_id = tr.tax_zone_id) where (za.zone_country_id is null or za.zone_country_id = '0' or za.zone_country_id = '" . $country_id . "') and (za.zone_id is null or za.zone_id = '0' or za.zone_id = '" . $zone_id . "') and tr.tax_class_id = '" . $class_id . "' order by tr.tax_priority");
+    $tax_query = xtDBquery("SELECT tax_description 
+                              FROM " . TABLE_TAX_RATES . " tr 
+                         LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za 
+                                   ON (tr.tax_zone_id = za.geo_zone_id) 
+                         LEFT JOIN " . TABLE_GEO_ZONES . " tz 
+                                   ON (tz.geo_zone_id = tr.tax_zone_id) 
+                             WHERE (za.zone_country_id is null 
+                                    OR za.zone_country_id = '0' 
+                                    OR za.zone_country_id = '" . (int)$country_id . "') 
+                               AND (za.zone_id is null 
+                                    OR za.zone_id = '0' 
+                                    OR za.zone_id = '" . (int)$zone_id . "') 
+                               AND tr.tax_class_id = '" . (int)$class_id . "' 
+                          ORDER BY tr.tax_priority");
     if (xtc_db_num_rows($tax_query,true)) {
       $tax_description = '';
       while ($tax = xtc_db_fetch_array($tax_query,true)) {
@@ -43,4 +56,4 @@
       return TEXT_UNKNOWN_TAX_RATE;
     }
   }
- ?>
+?>

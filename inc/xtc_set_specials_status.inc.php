@@ -18,6 +18,9 @@
    
   // Sets the status of a special product
   function xtc_set_specials_status($specials_id, $status) {
+    if ($status != '1') {
+      $status = 0;
+    }
     xtc_db_query("UPDATE " . TABLE_SPECIALS . " 
                      SET status = '" .(int)$status . "', 
                          date_status_change = now() 

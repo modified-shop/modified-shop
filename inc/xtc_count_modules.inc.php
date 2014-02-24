@@ -20,19 +20,11 @@ function xtc_count_modules($modules = '') {
   $count = 0;
   if (empty($modules)) return $count;
 
-  $modules_array = explode(';', $modules); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+  $modules_array = explode(';', $modules);
 
-  //BOF - DokuMan - 2011-12-19 - precount for performance
-  //for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
-  $n=sizeof($modules_array);
-  for ($i=0; $i<$n; $i++) {
-  //EOF - DokuMan - 2011-12-19 - precount for performance
+  for ($i=0, $n=sizeof($modules_array); $i<$n; $i++) {
     $class = substr($modules_array[$i], 0, strrpos($modules_array[$i], '.'));
-
-    //BOF - DokuMan - 2010-08-24 - set undefined index
-    //if (is_object($GLOBALS[$class])) {
     if (isset($GLOBALS[$class]) && is_object($GLOBALS[$class])) {
-    //EOF - DokuMan - 2010-08-24 - set undefined index
       if ($GLOBALS[$class]->enabled) {
         $count++;
       }

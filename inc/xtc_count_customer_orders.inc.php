@@ -31,7 +31,9 @@
       }
     }
 
-    $orders_check_query = xtc_db_query("select count(*) as total from " . TABLE_ORDERS . " where customers_id = '" . (int)$id . "'");
+    $orders_check_query = xtc_db_query("SELECT count(*) as total 
+                                          FROM " . TABLE_ORDERS . " 
+                                         WHERE customers_id = '" . (int)$id . "'");
     $orders_check = xtc_db_fetch_array($orders_check_query);
     return $orders_check['total'];
   }

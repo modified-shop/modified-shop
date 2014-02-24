@@ -16,7 +16,6 @@
    ---------------------------------------------------------------------------------------*/
 
   function xtc_get_all_get_params($exclude_array = '') {
-  	global $InputFilter;
 
     if (!is_array($exclude_array)) $exclude_array = array();
     $get_url = '';

@@ -19,7 +19,10 @@
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_query = "select products_order_description from " . TABLE_PRODUCTS_DESCRIPTION . " where products_id = '" . $product_id . "' and language_id = '" . $language . "'";
+    $product_query = "SELECT products_order_description 
+                        FROM " . TABLE_PRODUCTS_DESCRIPTION . " 
+                       WHERE products_id = '" . (int)$product_id . "' 
+                         AND language_id = '" . (int)$language . "'";
     $product_query  = xtDBquery($product_query);
     $product = xtc_db_fetch_array($product_query,true);
 

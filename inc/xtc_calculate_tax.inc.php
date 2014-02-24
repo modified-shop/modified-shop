@@ -17,7 +17,7 @@
    
   function xtc_calculate_tax($price, $tax) {
     //global $currencies;
-	return $price * $tax / 100;
+	  return $price * $tax / 100;
     //return xtc_round($price * $tax / 100, $currencies->currencies[DEFAULT_CURRENCY]['decimal_places']);
   }
  ?>

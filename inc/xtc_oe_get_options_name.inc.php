@@ -28,9 +28,12 @@
 
     if (empty($language)) $language = $_SESSION['languages_id'];
 
-    $product_query = xtc_db_query("select products_options_name from " . TABLE_PRODUCTS_OPTIONS . " where products_options_id = '" . $products_options_id . "' and language_id = '" . $language . "'");
+    $product_query = xtc_db_query("SELECT products_options_name 
+                                     FROM " . TABLE_PRODUCTS_OPTIONS . " 
+                                    WHERE products_options_id = '" . (int)$products_options_id . "' 
+                                      AND language_id = '" . (int)$language . "'");
     $product = xtc_db_fetch_array($product_query);
 
     return $product['products_options_name'];
   }
- ?>
+?>

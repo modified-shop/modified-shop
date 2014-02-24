@@ -16,12 +16,16 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_zone_code($country_id, $zone_id, $default_zone) {
-    $zone_query = xtc_db_query("select zone_code from " . TABLE_ZONES . " where zone_country_id = '" . $country_id . "' and zone_id = '" . $zone_id . "'");
-    if (xtc_db_num_rows($zone_query)) {
-      $zone = xtc_db_fetch_array($zone_query);
-      return $zone['zone_code'];
+    $state_prov_query = xtc_db_query("SELECT zone_code 
+                                        FROM ".TABLE_ZONES." 
+                                       WHERE zone_country_id = '".(int)$country_id."' 
+                                         AND zone_id = '".(int)$zone_id."'");
+    if (!xtc_db_num_rows($state_prov_query)) {
+      $state_prov_code = $default_zone;
     } else {
-      return $default_zone;
+      $state_prov_values = xtc_db_fetch_array($state_prov_query);
+      $state_prov_code = $state_prov_values['zone_code'];
     }
+    return $state_prov_code;
   }
  ?>

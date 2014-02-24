@@ -15,7 +15,11 @@
 
 	if (!$language_id)
 		$language_id = $_SESSION['languages_id'];
-	$cross_sell_query = xtc_db_query("select groupname from ".TABLE_PRODUCTS_XSELL_GROUPS." where products_xsell_grp_name_id = '".$cross_sell_group."' and language_id = '".$language_id."'");
+		
+	$cross_sell_query = xtc_db_query("SELECT groupname 
+	                                    FROM ".TABLE_PRODUCTS_XSELL_GROUPS." 
+	                                   WHERE products_xsell_grp_name_id = '".(int)$cross_sell_group."' 
+	                                     AND language_id = '".(int)$language_id."'");
 	$cross_sell = xtc_db_fetch_array($cross_sell_query);
 
 	return $cross_sell['groupname'];

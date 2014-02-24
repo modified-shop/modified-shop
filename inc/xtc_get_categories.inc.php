@@ -30,7 +30,7 @@
                           WHERE parent_id = " . (int)$parent_id . "
                             AND c.categories_id = cd.categories_id
                             AND c.categories_status != 0
-                            AND cd.language_id = '" . $_SESSION['languages_id'] . "'
+                            AND cd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                             " . $cat_cond_c . "
                        ORDER BY sort_order, cd.categories_name";
 

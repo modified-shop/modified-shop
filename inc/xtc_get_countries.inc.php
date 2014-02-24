@@ -26,7 +26,7 @@
                                      FROM " . TABLE_COUNTRIES . " 
                                     WHERE countries_id = '" . $countries_id . "' 
                                       AND status = '1'
-                                      ".$no_france_fx."
+                                          ".$no_france_fx."
                                  ORDER BY countries_name
                                   ");
         $countries_values = xtc_db_fetch_array($countries);
@@ -37,7 +37,7 @@
         $countries = xtc_db_query("SELECT countries_name 
                                      FROM " . TABLE_COUNTRIES . " 
                                     WHERE countries_id = '" . $countries_id . "'
-                                      ".$no_france_fx."                                    
+                                          ".$no_france_fx."                                    
                                       AND status = '1'
                                   ");
         $countries_values = xtc_db_fetch_array($countries);
@@ -47,7 +47,7 @@
       $countries = xtc_db_query("SELECT countries_id, countries_name 
                                    FROM " . TABLE_COUNTRIES . " 
                                   WHERE status = '1'
-                                   ".$no_france_fx."                                  
+                                        ".$no_france_fx."                                  
                                ORDER BY countries_name");
       while ($countries_values = xtc_db_fetch_array($countries)) {
         $countries_array[] = array('countries_id' => $countries_values['countries_id'],

@@ -15,26 +15,27 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-// Return a customer greeting
+  // Return a customer greeting
   function xtc_customer_greeting() {
 
     if (isset($_SESSION['customer_last_name']) && isset($_SESSION['customer_id'])) {
       if (!isset($_SESSION['customer_gender'])) {
-      $check_customer_query = "select customers_gender FROM  " . TABLE_CUSTOMERS . " where customers_id = '" . $_SESSION['customer_id'] . "'";
-      $check_customer_query = xtDBquery($check_customer_query);
-      $check_customer_data  = xtc_db_fetch_array($check_customer_query,true);
-      $_SESSION['customer_gender'] = $check_customer_data['customers_gender'];
+        $check_customer_query = "SELECT customers_gender 
+                                   FROM " . TABLE_CUSTOMERS . " 
+                                  WHERE customers_id = '" . (int)$_SESSION['customer_id'] . "'";
+        $check_customer_query = xtDBquery($check_customer_query);
+        $check_customer_data  = xtc_db_fetch_array($check_customer_query,true);
+        $_SESSION['customer_gender'] = $check_customer_data['customers_gender'];
       }
-      if($_SESSION['customer_gender']=='f'){
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, FEMALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;'. $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
-      }else{
-      $greeting_string = sprintf(TEXT_GREETING_PERSONAL, MALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
+      if ($_SESSION['customer_gender'] == 'f') {
+        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, FEMALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;'. $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
+      } else {
+        $greeting_string = sprintf(TEXT_GREETING_PERSONAL, MALE . '&nbsp;'. $_SESSION['customer_first_name'] . '&nbsp;' . $_SESSION['customer_last_name'], xtc_href_link(FILENAME_PRODUCTS_NEW));
       }
-
     } else {
       $greeting_string = sprintf(TEXT_GREETING_GUEST, xtc_href_link(FILENAME_LOGIN, '', 'SSL'), xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
     }
 
     return $greeting_string;
   }
- ?>
+?>

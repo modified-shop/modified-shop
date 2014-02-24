@@ -20,7 +20,14 @@
   function xtc_get_product_path($products_id) {
     $cPath = '';
 
-    $category_query = "select p2c.categories_id from " . TABLE_PRODUCTS . " p, " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c where p.products_id = '" . (int)$products_id . "' and p.products_status = '1' and p.products_id = p2c.products_id and p2c.categories_id != 0 limit 1";
+    $category_query = "SELECT p2c.categories_id 
+                         FROM " . TABLE_PRODUCTS . " p
+                         JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c 
+                              ON p.products_id = p2c.products_id
+                                 AND p2c.categories_id != '0'
+                        WHERE p.products_id = '" . (int)$products_id . "' 
+                          AND p.products_status = '1' 
+                        LIMIT 1";
     $category_query  = xtDBquery($category_query);
     if (xtc_db_num_rows($category_query,true)) {
       $category = xtc_db_fetch_array($category_query);
@@ -34,14 +41,8 @@
 
       if (xtc_not_null($cPath)) $cPath .= '_';
       $cPath .= $category['categories_id'];
+    }
+
+    return $cPath;
   }
-//BOF - Dokuman - 2009-10-02 - removed feature, due to wrong links in category on "last viewed"  
-/*
-  if($_SESSION['lastpath']!=''){
-    $cPath = $_SESSION['lastpath'];
-  }
-*/
-//EOF - Dokuman - 2009-10-02 - removed feature, due to wrong links in category on "last viewed"  
-  return $cPath;
-}
 ?>

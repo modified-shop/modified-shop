@@ -20,7 +20,7 @@
   
   function xtc_write_user_info($customer_id) {
 
-      $sql_data_array = array('customers_id' => $customer_id,
+      $sql_data_array = array('customers_id' => (int)$customer_id,
                               'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
                               'customers_ip_date' => 'now()',
                               'customers_host' => $_SESSION['tracking']['http_referer']['host'],

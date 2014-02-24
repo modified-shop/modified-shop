@@ -15,21 +15,20 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// include needed functions
+  // include needed functions
   include_once(DIR_FS_INC . 'xtc_draw_pull_down_menu.inc.php');
   include_once(DIR_FS_INC . 'xtc_get_countries.inc.php');
   
   function xtc_get_country_list($name, $selected = '', $parameters = '') {
-//    $countries_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT));
-//    Probleme mit register_globals=off -> erstmal nur auskommentiert. Kann u.U. gelöscht werden.
     $countries = xtc_get_countriesList();
 
     for ($i=0, $n=sizeof($countries); $i<$n; $i++) {
       $countries_array[] = array('id' => $countries[$i]['countries_id'], 'text' => $countries[$i]['countries_name']);
     }
-	if (is_array($name)) return xtc_draw_pull_down_menuNote($name, $countries_array, $selected, $parameters);
+	  if (is_array($name)) {
+	    return xtc_draw_pull_down_menuNote($name, $countries_array, $selected, $parameters);
+	  }
+	  
     return xtc_draw_pull_down_menu($name, $countries_array, $selected, $parameters);
   }
-  
-  
- ?>
+?>

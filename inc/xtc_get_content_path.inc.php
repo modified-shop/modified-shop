@@ -16,7 +16,7 @@ function xtc_get_content_path($content_group, $content=array()) {
                                   content_group
                              FROM ".TABLE_CONTENT_MANAGER."
                             WHERE languages_id='".(int) $_SESSION['languages_id']."'
-                              ".CONTENT_CONDITIONS."
+                                  ".CONTENT_CONDITIONS."
                               AND content_status='1'
                               AND content_group='".(int)$content_group."'";
   $parent_content_query  = xtDBquery($parent_content_query);
@@ -34,9 +34,9 @@ function xtc_get_content_path($content_group, $content=array()) {
 
 function xtc_get_content_id($content_group) {
   $content_group_query = xtDBquery("SELECT content_id
-                                FROM ".TABLE_CONTENT_MANAGER."
-                               WHERE content_group='".(int) $content_group."'
-                                 AND languages_id='".(int) $_SESSION['languages_id']."'");
+                                      FROM ".TABLE_CONTENT_MANAGER."
+                                     WHERE content_group='".(int) $content_group."'
+                                       AND languages_id='".(int) $_SESSION['languages_id']."'");
   $content_group = xtc_db_fetch_array($content_group_query, true);
   return $content_group['content_id'];
 }

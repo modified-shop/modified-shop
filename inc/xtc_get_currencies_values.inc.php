@@ -15,7 +15,9 @@
 
 
 function xtc_get_currencies_values($code) {
-    $currency_values = xtc_db_query("select * from " . TABLE_CURRENCIES . " where code = '" . $code . "'");
+    $currency_values = xtc_db_query("SELECT * 
+                                       FROM " . TABLE_CURRENCIES . " 
+                                      WHERE code = '" . xtc_db_input($code) . "'");
     $currencie_data=xtc_db_fetch_array($currency_values);
     return $currencie_data;
   }

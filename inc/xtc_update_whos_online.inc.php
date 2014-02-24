@@ -22,11 +22,10 @@
     if (isset($_SESSION['customer_id'])) {
       $wo_customer_id = (int)$_SESSION['customer_id'];
 
-      $customer_query = xtc_db_query("select
-                                      customers_firstname,
-                                      customers_lastname
-                                      from " . TABLE_CUSTOMERS . "
-                                      where customers_id = '" . $wo_customer_id . "'");
+      $customer_query = xtc_db_query("SELECT customers_firstname,
+                                             customers_lastname
+                                        FROM " . TABLE_CUSTOMERS . "
+                                       WHERE customers_id = '" . $wo_customer_id . "'");
       $customer = xtc_db_fetch_array($customer_query);
 
       $wo_full_name = xtc_db_prepare_input($customer['customers_firstname'] . ' ' . $customer['customers_lastname']);
@@ -58,9 +57,11 @@
     $xx_mins_ago = (time() - $time_last_click);
 
     // remove entries that have expired
-    xtc_db_query("delete from " . TABLE_WHOS_ONLINE . " where time_last_click < '" . $xx_mins_ago . "'");
+    xtc_db_query("DELETE FROM " . TABLE_WHOS_ONLINE . " WHERE time_last_click < '" . $xx_mins_ago . "'");
 
-    $stored_customer_query = xtc_db_query("select count(*) as count from " . TABLE_WHOS_ONLINE . " where session_id = '" . $wo_session_id . "'");
+    $stored_customer_query = xtc_db_query("SELECT count(*) as count 
+                                             FROM " . TABLE_WHOS_ONLINE . " 
+                                            WHERE session_id = '" . $wo_session_id . "'");
     $stored_customer = xtc_db_fetch_array($stored_customer_query);
 
     $sql_data_array = array('customer_id' => $wo_customer_id,

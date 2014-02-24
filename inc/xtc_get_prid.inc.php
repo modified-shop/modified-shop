@@ -15,15 +15,14 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-// Return a product ID from a product ID with attributes
-
+  // Return a product ID from a product ID with attributes
   function xtc_get_prid($uprid) {
-  $pieces = explode('{', $uprid);
+    $pieces = explode('{', $uprid);
 
-  if (is_numeric($pieces[0])) {
-    return $pieces[0];
-  } else {
-    return false;
+    if (is_numeric($pieces[0])) {
+      return $pieces[0];
+    } else {
+      return false;
+    }
   }
-}
- ?>
+?>

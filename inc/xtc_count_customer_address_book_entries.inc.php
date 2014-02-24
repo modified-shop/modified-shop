@@ -31,7 +31,9 @@ function xtc_count_customer_address_book_entries($id = '', $check_session = true
       }
     }
 
-    $addresses_query = xtc_db_query("select count(*) as total from " . TABLE_ADDRESS_BOOK . " where customers_id = '" . (int)$id . "'");
+    $addresses_query = xtc_db_query("SELECT count(*) as total 
+                                       FROM " . TABLE_ADDRESS_BOOK . " 
+                                      WHERE customers_id = '" . (int)$id . "'");
     $addresses = xtc_db_fetch_array($addresses_query);
 
     return $addresses['total'];

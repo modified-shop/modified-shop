@@ -30,12 +30,11 @@ function browser($browser) {
 		case 'Thunderbird': $browser = 'images/icons/icons_browser/thunderbird.jpg'; break;
 		case 'Mac': $browser = 'images/icons/icons_browser/mac.jpg'; break;
 		case 'AvantGo': $browser = 'images/icons/icons_browser/avantgo.jpg'; break;
-		case 'Nautilus': $browser = 'images/icons/icons_browser/nautilus.jpg'; break; // added 7/20/04
-		case 'Avant Browser': $browser = 'images/icons/icons_browser/avant.jpg'; break; // added 7/23/04
+		case 'Nautilus': $browser = 'images/icons/icons_browser/nautilus.jpg'; break; 
+		case 'Avant Browser': $browser = 'images/icons/icons_browser/avant.jpg'; break; 
 		default: $browser = 'images/icons/icons_browser/no_icon.jpg'; break;
-		
 	}
-	//if($browser && trim($browser) != 'images/icons/') { $browser = 'images/icons/icons_browser/no_icon.jpg'; }
+
 	if(trim($browser) == 'images/icons/') { $browser = 'images/icons/icons_browser/unknown.jpg'; }
 	
 	//echo "BROWSER: $browser<br />"; // TEST

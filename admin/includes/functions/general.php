@@ -86,16 +86,24 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function check_stock($products_id) {
     unset ($stock_flag);
-    $stock_query = xtc_db_query("SELECT products_quantity FROM ".TABLE_PRODUCTS." where products_id = '".$products_id."'");
+    $stock_query = xtc_db_query("SELECT products_quantity 
+                                   FROM ".TABLE_PRODUCTS." 
+                                  WHERE products_id = '".(int)$products_id."'");
     $stock_values = xtc_db_fetch_array($stock_query);
     if ($stock_values['products_quantity'] <= '0') {
       $stock_flag = 'true';
       $stock_warn = TEXT_WARN_MAIN;
-      $attribute_stock_query = xtc_db_query("SELECT attributes_stock, options_values_id FROM ".TABLE_PRODUCTS_ATTRIBUTES." where products_id = '".$products_id."'");
+      $attribute_stock_query = xtc_db_query("SELECT attributes_stock, 
+                                                    options_values_id 
+                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." 
+                                              WHERE products_id = '".(int)$products_id."'");
       while ($attribute_stock_values = xtc_db_fetch_array($attribute_stock_query)) {
         if ($attribute_stock_values['attributes_stock'] <= '0') {
           $stock_flag = 'true';
-          $which_attribute_query = xtDBquery("SELECT products_options_values_name FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." WHERE products_options_values_id = '".$attribute_stock_values['options_values_id']."' AND language_id = '".(int)$_SESSION['languages_id']."'");
+          $which_attribute_query = xtDBquery("SELECT products_options_values_name 
+                                                FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." 
+                                               WHERE products_options_values_id = '".$attribute_stock_values['options_values_id']."' 
+                                                 AND language_id = '".(int)$_SESSION['languages_id']."'");
           $which_attribute = xtc_db_fetch_array($which_attribute_query,true);
           $stock_warn .= ', '.$which_attribute['products_options_values_name'];
         }
@@ -117,13 +125,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_set_categories_status($categories_id, $status) {
-    if ($status == '1') {
-      return xtc_db_query("update ".TABLE_CATEGORIES." set categories_status = '1' where categories_id = '".$categories_id."'");
-    } elseif ($status == '0') {
-      return xtc_db_query("update ".TABLE_CATEGORIES." set categories_status = '0' where categories_id = '".$categories_id."'");
-    } else {
-      return -1;
+    if ($status != '1') {
+      $status = '0';
     }
+    xtc_db_query("UPDATE ".TABLE_CATEGORIES." SET categories_status = '".(int)$status."' WHERE categories_id = '".(int)$categories_id."'");
   }
 
   /**
@@ -135,14 +140,18 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_set_groups($categories_id, $permission_array) {
     // get products in categorie
-    $products_query = xtc_db_query("SELECT products_id FROM ".TABLE_PRODUCTS_TO_CATEGORIES." where categories_id='".$categories_id."'");
+    $products_query = xtc_db_query("SELECT products_id 
+                                      FROM ".TABLE_PRODUCTS_TO_CATEGORIES." 
+                                     WHERE categories_id='".(int)$categories_id."'");
     while ($products = xtc_db_fetch_array($products_query)) {
-      xtc_db_perform(TABLE_PRODUCTS, $permission_array, 'update', 'products_id = \''.$products['products_id'].'\'');
+      xtc_db_perform(TABLE_PRODUCTS, $permission_array, 'update', "products_id = '".$products['products_id']."'");
     }
     // set status of categorie
-    xtc_db_perform(TABLE_CATEGORIES, $permission_array, 'update', 'categories_id = \''.$categories_id.'\'');
+    xtc_db_perform(TABLE_CATEGORIES, $permission_array, 'update', "categories_id = '".(int)$categories_id."'");
     // look for deeper categories and go rekursiv
-    $categories_query = xtc_db_query("SELECT categories_id FROM ".TABLE_CATEGORIES." where parent_id='".$categories_id."'");
+    $categories_query = xtc_db_query("SELECT categories_id 
+                                        FROM ".TABLE_CATEGORIES." 
+                                       WHERE parent_id='".(int)$categories_id."'");
     while ($categories = xtc_db_fetch_array($categories_query)) {
       xtc_set_groups($categories['categories_id'], $permission_array);
     }
@@ -162,20 +171,20 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       // get products in categorie
       $products_query = xtc_db_query("SELECT products_id 
                                         FROM ".TABLE_PRODUCTS_TO_CATEGORIES." 
-                                       WHERE categories_id='".$categories_id."'
+                                       WHERE categories_id='".(int)$categories_id."'
                                      ");
       while ($products = xtc_db_fetch_array($products_query)) {
-        xtc_db_perform(TABLE_PRODUCTS, $data_array, 'update', 'products_id = \''.$products['products_id'].'\'');
+        xtc_db_perform(TABLE_PRODUCTS, $data_array, 'update', "products_id = '".$products['products_id']."'");
       }
     }
     //update categorie
     if ($set_categories) {
-      xtc_db_perform(TABLE_CATEGORIES, $data_array, 'update', 'categories_id = \''.$categories_id.'\'');
+      xtc_db_perform(TABLE_CATEGORIES, $data_array, 'update', "categories_id = '".(int)$categories_id."'");
     }
     // look for deeper categories and go rekursiv
     $categories_query = xtc_db_query("SELECT categories_id 
                                         FROM ".TABLE_CATEGORIES." 
-                                       WHERE parent_id='".$categories_id."'
+                                       WHERE parent_id='".(int)$categories_id."'
                                     ");
     while ($categories = xtc_db_fetch_array($categories_query)) {
       xtc_set_prodcat_data($categories['categories_id'], $data_array, $set_products, $set_categories);
@@ -191,12 +200,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $cID
    * @return
    */
-  function xtc_set_admin_access($fieldname, $status, $cID) {
-    if ($status == '1') {
-      return xtc_db_query("update ".TABLE_ADMIN_ACCESS." set ".$fieldname." = '1' where customers_id = '".$cID."'");
-    } else {
-      return xtc_db_query("update ".TABLE_ADMIN_ACCESS." set ".$fieldname." = '0' where customers_id = '".$cID."'");
+  function xtc_set_admin_access($fieldname, $status, $customers_id) {
+    if ($status != '1') {
+      $status = '0';
     }
+    xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$fieldname." = '".(int)$status."' WHERE customers_id = '".(int)$customers_id."'");
   }
 
   // Check whether a referer has enough permission to open an admin page
@@ -208,7 +216,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_check_permission($pagename) {
     if ($pagename != 'index') {
-      $access_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
+      $access_permission_query = xtc_db_query("SELECT * 
+                                                 FROM ".TABLE_ADMIN_ACCESS." 
+                                                WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
       $access_permission = xtc_db_fetch_array($access_permission_query);
       if (($_SESSION['customers_status']['customers_status_id'] == '0') && isset($access_permission[$pagename]) && ($access_permission[$pagename] == '1')) {
         return true;
@@ -226,13 +236,18 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_redirect($url) {
     global $logger;
-    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
+
     if (STORE_PAGE_PARSE_TIME == 'true') {
       if (!is_object($logger))
         $logger = new logger;
       $logger->timer_stop();
     }
-    exit;
+
+    // save SESSION before redirect
+    session_write_close();
+    
+    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
+    exit();
   }
 
   /**
@@ -242,7 +257,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_customers_name($customers_id) {
-    $customers = xtc_db_query("select customers_firstname, customers_lastname from ".TABLE_CUSTOMERS." where customers_id = '".$customers_id."'");
+    $customers = xtc_db_query("SELECT customers_firstname, 
+                                      customers_lastname 
+                                 FROM ".TABLE_CUSTOMERS." 
+                                WHERE customers_id = '".(int)$customers_id."'");
     $customers_values = xtc_db_fetch_array($customers);
     return $customers_values['customers_firstname'].' '.$customers_values['customers_lastname'];
   }
@@ -262,9 +280,13 @@ function xtc_output_string($string, $translate = false, $protected = false) {
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
-        $last_category_query = xtc_db_query("select parent_id from ".TABLE_CATEGORIES." where categories_id = '".$cPath_array[(sizeof($cPath_array) - 1)]."'");
+        $last_category_query = xtc_db_query("SELECT parent_id 
+                                               FROM ".TABLE_CATEGORIES." 
+                                              WHERE categories_id = '".(int)$cPath_array[(sizeof($cPath_array) - 1)]."'");
         $last_category = xtc_db_fetch_array($last_category_query);
-        $current_category_query = xtc_db_query("select parent_id from ".TABLE_CATEGORIES." where categories_id = '".$current_category_id."'");
+        $current_category_query = xtc_db_query("SELECT parent_id 
+                                                  FROM ".TABLE_CATEGORIES." 
+                                                 WHERE categories_id = '".(int)$current_category_id."'");
         $current_category = xtc_db_fetch_array($current_category_query);
         if ($last_category['parent_id'] == $current_category['parent_id']) {
           for ($i = 0, $n = sizeof($cPath_array) - 1; $i < $n; $i ++) {
@@ -295,17 +317,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param string $exclude_array
    * @return
    */
-  function xtc_get_all_get_params($exclude_array = '') {
-    if (empty($exclude_array))
-      $exclude_array = array ();
-    $get_url = '';
-    reset($_GET);
-    while (list ($key, $value) = each($_GET)) {
-      if (($key != session_name()) && ($key != 'error') && (!in_array($key, $exclude_array)))
-        $get_url .= $key.'='.$value.'&';
-    }
-    return $get_url;
-  }
+  require_once(DIR_FS_INC . 'xtc_get_all_get_params.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_date_long()
@@ -313,17 +325,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $raw_date
    * @return
    */
-  function xtc_date_long($raw_date) {
-    if (($raw_date == '0000-00-00 00:00:00') || empty($raw_date))
-      return false;
-    $year = (int) substr($raw_date, 0, 4);
-    $month = (int) substr($raw_date, 5, 2);
-    $day = (int) substr($raw_date, 8, 2);
-    $hour = (int) substr($raw_date, 11, 2);
-    $minute = (int) substr($raw_date, 14, 2);
-    $second = (int) substr($raw_date, 17, 2);
-    return strftime(DATE_FORMAT_LONG, mktime($hour, $minute, $second, $month, $day, $year));
-  }
+  require_once(DIR_FS_INC . 'xtc_date_long.inc.php'); // Use existing function from "/inc/" folder
 
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
@@ -334,21 +336,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $raw_date
    * @return
    */
-  function xtc_date_short($raw_date) {
-    if (($raw_date == '0000-00-00 00:00:00') || empty($raw_date))
-      return false;
-    $year = substr($raw_date, 0, 4);
-    $month = (int) substr($raw_date, 5, 2);
-    $day = (int) substr($raw_date, 8, 2);
-    $hour = (int) substr($raw_date, 11, 2);
-    $minute = (int) substr($raw_date, 14, 2);
-    $second = (int) substr($raw_date, 17, 2);
-    if (@ date('Y', mktime($hour, $minute, $second, $month, $day, $year)) == $year) {
-      return date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, $year));
-    } else {
-      return preg_replace('/2037$/', $year, date(DATE_FORMAT, mktime($hour, $minute, $second, $month, $day, 2037))); // Hetfield - 2009-08-19 - replaced deprecated function ereg_replace with preg_replace to be ready for PHP >= 5.3
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_date_short.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_datetime_short()
@@ -442,11 +430,22 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     if ((sizeof($category_tree_array) < 1) && ($exclude != '0'))
       $category_tree_array[] = array ('id' => '0', 'text' => TEXT_TOP);
     if ($include_itself) {
-      $category_query = xtc_db_query("select cd.categories_name from ".TABLE_CATEGORIES_DESCRIPTION." cd where cd.language_id = '".(int)$_SESSION['languages_id']."' and cd.categories_id = '".$parent_id."'");
+      $category_query = xtc_db_query("SELECT cd.categories_name
+                                        FROM ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                       WHERE cd.language_id = '".(int)$_SESSION['languages_id']."' 
+                                         AND cd.categories_id = '".(int)$parent_id."'");
       $category = xtc_db_fetch_array($category_query);
       $category_tree_array[] = array ('id' => $parent_id, 'text' => $category['categories_name']);
     }
-    $categories_query = xtc_db_query("select c.categories_id, cd.categories_name, c.parent_id from ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd where c.categories_id = cd.categories_id and cd.language_id = '".(int)$_SESSION['languages_id']."' and c.parent_id = '".$parent_id."' order by c.sort_order, cd.categories_name");
+    $categories_query = xtc_db_query("SELECT c.categories_id, 
+                                             cd.categories_name, 
+                                             c.parent_id 
+                                        FROM ".TABLE_CATEGORIES." c
+                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                             ON c.categories_id = cd.categories_id
+                                                AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+                                       WHERE c.parent_id = '".(int)$parent_id."' 
+                                    ORDER BY c.sort_order, cd.categories_name");
     while ($categories = xtc_db_fetch_array($categories_query)) {
       if ($exclude != $categories['categories_id'])
         $category_tree_array[] = array ('id' => $categories['categories_id'], 'text' => $spacing.$categories['categories_name']);
@@ -474,16 +473,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     }
     $select_string .= '>';
 
-    $products_query = xtc_db_query("select p.products_id,
+    $products_query = xtc_db_query("SELECT p.products_id,
                                            p.products_model, 
                                            pd.products_name,
                                            p.products_tax_class_id, 
                                            p.products_price 
-                                      from ".TABLE_PRODUCTS." p, 
-                                           ".TABLE_PRODUCTS_DESCRIPTION." pd 
-                                     where p.products_id = pd.products_id 
-                                       and pd.language_id = '".(int)$_SESSION['languages_id']."' 
-                                  order by products_name"
+                                      FROM ".TABLE_PRODUCTS." p
+                                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                           ON p.products_id = pd.products_id 
+                                              AND pd.language_id = '".(int)$_SESSION['languages_id']."' 
+                                  ORDER BY pd.products_name"
                                   );
     while ($products = xtc_db_fetch_array($products_query)) {
       if (!in_array($products['products_id'], $exclude)) {
@@ -507,7 +506,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_options_name($options_id) {
-    $options = xtc_db_query("select products_options_name from ".TABLE_PRODUCTS_OPTIONS." where products_options_id = '".$options_id."' and language_id = '".(int)$_SESSION['languages_id']."'");
+    $options = xtc_db_query("SELECT products_options_name 
+                               FROM ".TABLE_PRODUCTS_OPTIONS." 
+                              WHERE products_options_id = '".(int)$options_id."' 
+                                AND language_id = '".(int)$_SESSION['languages_id']."'");
     $options_values = xtc_db_fetch_array($options);
     return $options_values['products_options_name'];
   }
@@ -519,7 +521,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_values_name($values_id) {
-    $values = xtc_db_query("select products_options_values_name from ".TABLE_PRODUCTS_OPTIONS_VALUES." where products_options_values_id = '".$values_id."' and language_id = '".(int)$_SESSION['languages_id']."'");
+    $values = xtc_db_query("SELECT products_options_values_name 
+                              FROM ".TABLE_PRODUCTS_OPTIONS_VALUES." 
+                             WHERE products_options_values_id = '".(int)$values_id."' 
+                               AND language_id = '".(int)$_SESSION['languages_id']."'");
     $values_values = xtc_db_fetch_array($values);
     return $values_values['products_options_values_name'];
   }
@@ -536,7 +541,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_info_image($image, $alt, $width = '', $height = '', $params = '') {
     if (($image) && (file_exists(DIR_FS_CATALOG_IMAGES.$image))) {
-      $image = xtc_image(DIR_WS_CATALOG_IMAGES.$image, $alt, $width, $height,$params);
+      $image = xtc_image(DIR_WS_CATALOG_IMAGES.$image, $alt, $width, $height, $params);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -555,7 +560,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_info_image_c($image, $alt, $width = '', $height = '', $params = '') {
     if (($image) && (file_exists(DIR_FS_CATALOG_IMAGES.'categories/'.$image))) {
-      $image = xtc_image(DIR_WS_CATALOG_IMAGES.'categories/'.$image, $alt, $width, $height,$params);
+      $image = xtc_image(DIR_WS_CATALOG_IMAGES.'categories/'.$image, $alt, $width, $height, $params);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -574,7 +579,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_product_thumb_image($image, $alt, $width = '', $height = '', $params = '') {
     if (($image) && (file_exists(DIR_FS_CATALOG_THUMBNAIL_IMAGES.$image))) {
-      $image = xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$image, $alt, $width, $height,$params);
+      $image = xtc_image(DIR_WS_CATALOG_THUMBNAIL_IMAGES.$image, $alt, $width, $height, $params);
     } else {
       $image = TEXT_IMAGE_NONEXISTENT;
     }
@@ -589,24 +594,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param string $break_char
    * @return
    */
-  function xtc_break_string($string, $len, $break_char = '-') {
-    $l = 0;
-    $output = '';
-    for ($i = 0, $n = strlen($string); $i < $n; $i ++) {
-      $char = substr($string, $i, 1);
-      if ($char != ' ') {
-        $l ++;
-      } else {
-        $l = 0;
-      }
-      if ($l > $len) {
-        $l = 1;
-        $output .= $break_char;
-      }
-      $output .= $char;
-    }
-    return $output;
-  }
+  require_once(DIR_FS_INC . 'xtc_break_string.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_country_name()
@@ -615,7 +603,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_country_name($country_id) {
-    $country_query = xtc_db_query("select countries_name from ".TABLE_COUNTRIES." where countries_id = '".$country_id."'");
+    $country_query = xtc_db_query("SELECT countries_name 
+                                     FROM ".TABLE_COUNTRIES." 
+                                    WHERE countries_id = '".(int)$country_id."'");
     if (!xtc_db_num_rows($country_query)) {
       return $country_id;
     } else {
@@ -632,15 +622,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $default_zone
    * @return
    */
-  function xtc_get_zone_name($country_id, $zone_id, $default_zone) {
-    $zone_query = xtc_db_query("select zone_name from ".TABLE_ZONES." where zone_country_id = '".$country_id."' and zone_id = '".$zone_id."'");
-    if (xtc_db_num_rows($zone_query)) {
-      $zone = xtc_db_fetch_array($zone_query);
-      return $zone['zone_name'];
-    } else {
-      return $default_zone;
-    }
-  }
+  require_once(DIR_FS_INC . 'xtc_get_zone_name.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_browser_detect()
@@ -648,9 +630,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $component
    * @return
    */
-  function xtc_browser_detect($component) {
-    return stristr($_SERVER['HTTP_USER_AGENT'], $component);
-  }
+  require_once(DIR_FS_INC . 'xtc_browser_detect.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_tax_classes_pull_down()
@@ -661,7 +641,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_tax_classes_pull_down($parameters, $selected = '') {
     $select_string = '<select '.$parameters.'>';
-    $classes_query = xtc_db_query("select tax_class_id, tax_class_title from ".TABLE_TAX_CLASS." order by tax_class_title");
+    $classes_query = xtc_db_query("SELECT tax_class_id, 
+                                          tax_class_title 
+                                     FROM ".TABLE_TAX_CLASS." 
+                                 ORDER BY tax_class_title");
     while ($classes = xtc_db_fetch_array($classes_query)) {
       $select_string .= '<option value="'.$classes['tax_class_id'].'"';
       if ($selected == $classes['tax_class_id'])
@@ -681,7 +664,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_geo_zones_pull_down($parameters, $selected = '') {
     $select_string = '<select '.$parameters.'>';
-    $zones_query = xtc_db_query("select geo_zone_id, geo_zone_name from ".TABLE_GEO_ZONES." order by geo_zone_name");
+    $zones_query = xtc_db_query("SELECT geo_zone_id, 
+                                        geo_zone_name 
+                                   FROM ".TABLE_GEO_ZONES." 
+                               ORDER BY geo_zone_name");
     while ($zones = xtc_db_fetch_array($zones_query)) {
       $select_string .= '<option value="'.$zones['geo_zone_id'].'"';
       if ($selected == $zones['geo_zone_id'])
@@ -699,7 +685,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_geo_zone_name($geo_zone_id) {
-    $zones_query = xtc_db_query("select geo_zone_name from ".TABLE_GEO_ZONES." where geo_zone_id = '".$geo_zone_id."'");
+    $zones_query = xtc_db_query("SELECT geo_zone_name 
+                                   FROM ".TABLE_GEO_ZONES." 
+                                  WHERE geo_zone_id = '".(int)$geo_zone_id."'");
     if (!xtc_db_num_rows($zones_query)) {
       $geo_zone_name = $geo_zone_id;
     } else {
@@ -720,8 +708,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = xtc_db_query("select address_format as format from ".TABLE_ADDRESS_FORMAT." where address_format_id = '".$address_format_id."'");
+    $address_format_query = xtc_db_query("SELECT address_format as format 
+                                            FROM ".TABLE_ADDRESS_FORMAT." 
+                                           WHERE address_format_id = '".(int)$address_format_id."'");
     $address_format = xtc_db_fetch_array($address_format_query);
+    
     $company = isset($address['company']) ? addslashes($address['company']) : '';
     $firstname = isset($address['firstname']) ? addslashes($address['firstname']) : '';
     $cid = isset($address['csID']) ? addslashes($address['csID']) : '';
@@ -774,19 +765,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return $address;
   }
 
-  ////////////////////////////////////////////////////////////////////////////////////////////////
-  //
-  // Function    : xtc_get_zone_code
-  //
-  // Arguments   : country           country code string
-  //               zone              state/province zone_id
-  //               def_state         default string if zone==0
-  //
-  // Return      : state_prov_code   state/province code
-  //
-  // Description : Function to retrieve the state/province code (as in FL for Florida etc)
-  //
-  ////////////////////////////////////////////////////////////////////////////////////////////////
   /**
    * xtc_get_zone_code()
    *
@@ -795,16 +773,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $def_state
    * @return
    */
-  function xtc_get_zone_code($country, $zone, $def_state) {
-    $state_prov_query = xtc_db_query("select zone_code from ".TABLE_ZONES." where zone_country_id = '".$country."' and zone_id = '".$zone."'");
-    if (!xtc_db_num_rows($state_prov_query)) {
-      $state_prov_code = $def_state;
-    } else {
-      $state_prov_values = xtc_db_fetch_array($state_prov_query);
-      $state_prov_code = $state_prov_values['zone_code'];
-    }
-    return $state_prov_code;
-  }
+  require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_uprid()
@@ -813,15 +782,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $params
    * @return
    */
-  function xtc_get_uprid($prid, $params) {
-    $uprid = $prid;
-    if ((is_array($params)) && (!strstr($prid, '{'))) {
-      while (list ($option, $value) = each($params)) {
-        $uprid = $uprid.'{'.$option.'}'.$value;
-      }
-    }
-    return $uprid;
-  }
+  require_once(DIR_FS_INC . 'xtc_get_uprid.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_prid()
@@ -829,10 +790,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $uprid
    * @return
    */
-  function xtc_get_prid($uprid) {
-    $pieces = explode('{', $uprid);
-    return $pieces[0];
-  }
+  require_once(DIR_FS_INC . 'xtc_get_prid.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_languages()
@@ -847,8 +805,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                             directory 
                                        FROM ".TABLE_LANGUAGES." 
                                       WHERE status_admin = '1' 
-                                   ORDER BY sort_order
-                                     ");
+                                   ORDER BY sort_order");
     
     while ($languages = xtc_db_fetch_array($languages_query)) {
       $languages_array[] = array ('id' => $languages['languages_id'],
@@ -869,7 +826,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_categories_name($category_id, $language_id) {
-    $category_query = xtc_db_query("select categories_name from ".TABLE_CATEGORIES_DESCRIPTION." where categories_id = '".$category_id."' and language_id = '".$language_id."'");
+    $category_query = xtc_db_query("SELECT categories_name 
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                     WHERE categories_id = '".(int)$category_id."' 
+                                       AND language_id = '".(int)$language_id."'");
     $category = xtc_db_fetch_array($category_query);
     return $category['categories_name'];
   }
@@ -882,7 +842,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_categories_heading_title($category_id, $language_id) {
-    $category_query = xtc_db_query("select categories_heading_title from ".TABLE_CATEGORIES_DESCRIPTION." where categories_id = '".$category_id."' and language_id = '".$language_id."'");
+    $category_query = xtc_db_query("SELECT categories_heading_title 
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                     WHERE categories_id = '".(int)$category_id."' 
+                                       AND language_id = '".(int)$language_id."'");
     $category = xtc_db_fetch_array($category_query);
     return $category['categories_heading_title'];
   }
@@ -895,7 +858,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_categories_description($category_id, $language_id) {
-    $category_query = xtc_db_query("select categories_description from ".TABLE_CATEGORIES_DESCRIPTION." where categories_id = '".$category_id."' and language_id = '".$language_id."'");
+    $category_query = xtc_db_query("SELECT categories_description 
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                     WHERE categories_id = '".(int)$category_id."' 
+                                       AND language_id = '".(int)$language_id."'");
     $category = xtc_db_fetch_array($category_query);
     return $category['categories_description'];
   }
@@ -908,7 +874,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_categories_meta_title($category_id, $language_id) {
-    $category_query = xtc_db_query("select categories_meta_title from ".TABLE_CATEGORIES_DESCRIPTION." where categories_id = '".$category_id."' and language_id = '".$language_id."'");
+    $category_query = xtc_db_query("SELECT categories_meta_title 
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                     WHERE categories_id = '".(int)$category_id."' 
+                                       AND language_id = '".(int)$language_id."'");
     $category = xtc_db_fetch_array($category_query);
     return $category['categories_meta_title'];
   }
@@ -921,7 +890,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_categories_meta_description($category_id, $language_id) {
-    $category_query = xtc_db_query("select categories_meta_description from ".TABLE_CATEGORIES_DESCRIPTION." where categories_id = '".$category_id."' and language_id = '".$language_id."'");
+    $category_query = xtc_db_query("SELECT categories_meta_description 
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                     WHERE categories_id = '".(int)$category_id."' 
+                                       AND language_id = '".(int)$language_id."'");
     $category = xtc_db_fetch_array($category_query);
     return $category['categories_meta_description'];
   }
@@ -934,7 +906,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
  */
   function xtc_get_categories_meta_keywords($category_id, $language_id) {
-    $category_query = xtc_db_query("select categories_meta_keywords from ".TABLE_CATEGORIES_DESCRIPTION." where categories_id = '".$category_id."' and language_id = '".$language_id."'");
+    $category_query = xtc_db_query("SELECT categories_meta_keywords 
+                                      FROM ".TABLE_CATEGORIES_DESCRIPTION." 
+                                     WHERE categories_id = '".(int)$category_id."' 
+                                       AND language_id = '".(int)$language_id."'");
     $category = xtc_db_fetch_array($category_query);
     return $category['categories_meta_keywords'];
   }
@@ -949,7 +924,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_get_orders_status_name($orders_status_id, $language_id = '') {
     if (!$language_id)
       $language_id = $_SESSION['languages_id'];
-    $orders_status_query = xtc_db_query("select orders_status_name from ".TABLE_ORDERS_STATUS." where orders_status_id = '".$orders_status_id."' and language_id = '".$language_id."'");
+    $orders_status_query = xtc_db_query("SELECT orders_status_name 
+                                           FROM ".TABLE_ORDERS_STATUS." 
+                                          WHERE orders_status_id = '".(int)$orders_status_id."' 
+                                            AND language_id = '".(int)$language_id."'");
     $orders_status = xtc_db_fetch_array($orders_status_query);
     return $orders_status['orders_status_name'];
   }
@@ -973,7 +951,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_get_shipping_status_name($shipping_status_id, $language_id = '') {
     if (!$language_id)
       $language_id = (int)$_SESSION['languages_id'];
-    $shipping_status_query = xtc_db_query("select shipping_status_name from ".TABLE_SHIPPING_STATUS." where shipping_status_id = '".$shipping_status_id."' and language_id = '".$language_id."'");
+    $shipping_status_query = xtc_db_query("SELECT shipping_status_name 
+                                             FROM ".TABLE_SHIPPING_STATUS." 
+                                            WHERE shipping_status_id = '".(int)$shipping_status_id."' 
+                                              AND language_id = '".(int)$language_id."'");
     $shipping_status = xtc_db_fetch_array($shipping_status_query);
     return $shipping_status['shipping_status_name'];
   }
@@ -985,7 +966,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_get_orders_status() {
     $orders_status_array = array ();
-    $orders_status_query = xtc_db_query("select orders_status_id, orders_status_name from ".TABLE_ORDERS_STATUS." where language_id = '".(int)$_SESSION['languages_id']."' order by orders_status_id");
+    $orders_status_query = xtc_db_query("SELECT orders_status_id, 
+                                                orders_status_name 
+                                           FROM ".TABLE_ORDERS_STATUS." 
+                                          WHERE language_id = '".(int)$_SESSION['languages_id']."' 
+                                       ORDER BY orders_status_id");
     while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
       $orders_status_array[] = array ('id' => $orders_status['orders_status_id'], 'text' => $orders_status['orders_status_name']);
     }
@@ -999,7 +984,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_get_cross_sell_groups() {
     $cross_sell_array = array ();
-    $cross_sell_query = xtc_db_query("select products_xsell_grp_name_id, groupname from ".TABLE_PRODUCTS_XSELL_GROUPS." where language_id = '".(int)$_SESSION['languages_id']."' order by products_xsell_grp_name_id");
+    $cross_sell_query = xtc_db_query("SELECT products_xsell_grp_name_id, 
+                                             groupname 
+                                        FROM ".TABLE_PRODUCTS_XSELL_GROUPS." 
+                                       WHERE language_id = '".(int)$_SESSION['languages_id']."' 
+                                    ORDER BY products_xsell_grp_name_id");
     while ($cross_sell = xtc_db_fetch_array($cross_sell_query)) {
       $cross_sell_array[] = array ('id' => $cross_sell['products_xsell_grp_name_id'], 'text' => $cross_sell['groupname']);
     }
@@ -1016,7 +1005,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_get_products_vpe_name($products_vpe_id, $language_id = '') {
     if (!$language_id)
       $language_id = (int)$_SESSION['languages_id'];
-    $products_vpe_query = xtc_db_query("select products_vpe_name from ".TABLE_PRODUCTS_VPE." where products_vpe_id = '".$products_vpe_id."' and language_id = '".$language_id."'");
+    $products_vpe_query = xtc_db_query("SELECT products_vpe_name 
+                                          FROM ".TABLE_PRODUCTS_VPE." 
+                                         WHERE products_vpe_id = '".(int)$products_vpe_id."' 
+                                           AND language_id = '".(int)$language_id."'");
     $products_vpe = xtc_db_fetch_array($products_vpe_query);
     return $products_vpe['products_vpe_name'];
   }
@@ -1028,7 +1020,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_get_shipping_status() {
     $shipping_status_array = array ();
-    $shipping_status_query = xtc_db_query("select shipping_status_id, shipping_status_name from ".TABLE_SHIPPING_STATUS." where language_id = '".(int)$_SESSION['languages_id']."' order by shipping_status_id");
+    $shipping_status_query = xtc_db_query("SELECT shipping_status_id, 
+                                                  shipping_status_name 
+                                             FROM ".TABLE_SHIPPING_STATUS." 
+                                            WHERE language_id = '".(int)$_SESSION['languages_id']."' 
+                                         ORDER BY shipping_status_id");
     while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
       $shipping_status_array[] = array ('id' => $shipping_status['shipping_status_id'], 'text' => $shipping_status['shipping_status_name']);
     }
@@ -1042,13 +1038,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param integer $language_id
    * @return
    */
-  function xtc_get_products_name($product_id, $language_id = 0) {
-    if ($language_id == 0)
-      $language_id = (int)$_SESSION['languages_id'];
-    $product_query = xtc_db_query("select products_name from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
-    $product = xtc_db_fetch_array($product_query);
-    return $product['products_name'];
-  }
+  require_once(DIR_FS_INC . 'xtc_get_products_name.inc.php'); // Use existing function from "/inc/" folder
 
   /**
    * xtc_get_products_description()
@@ -1058,7 +1048,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_description($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_description from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_description 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_description'];
   }
@@ -1071,7 +1064,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_short_description($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_short_description from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_short_description 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_short_description'];
   }
@@ -1084,7 +1080,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_keywords($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_keywords from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_keywords 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_keywords'];
   }
@@ -1097,7 +1096,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_meta_title($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_meta_title from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_meta_title 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_meta_title'];
   }
@@ -1110,7 +1112,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_meta_description($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_meta_description from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_meta_description 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_meta_description'];
   }
@@ -1123,7 +1128,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_meta_keywords($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_meta_keywords from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_meta_keywords 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_meta_keywords'];
   }
@@ -1136,7 +1144,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_url($product_id, $language_id) {
-    $product_query = xtc_db_query("select products_url from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product_query = xtc_db_query("SELECT products_url 
+                                     FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+                                    WHERE products_id = '".(int)$product_id."' 
+                                      AND language_id = '".(int)$language_id."'");
     $product = xtc_db_fetch_array($product_query);
     return $product['products_url'];
   }
@@ -1151,7 +1162,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_manufacturer_url($manufacturer_id, $language_id) {
-    $manufacturer_query = xtc_db_query("select manufacturers_url from ".TABLE_MANUFACTURERS_INFO." where manufacturers_id = '".$manufacturer_id."' and languages_id = '".$language_id."'");
+    $manufacturer_query = xtc_db_query("SELECT manufacturers_url 
+                                          FROM ".TABLE_MANUFACTURERS_INFO." 
+                                         WHERE manufacturers_id = '".(int)$manufacturer_id."' 
+                                           AND languages_id = '".(int)$language_id."'");
     $manufacturer = xtc_db_fetch_array($manufacturer_query);
     return $manufacturer['manufacturers_url'];
   }
@@ -1182,12 +1196,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_countries($default = '', $status = '') {
-    $status = ($status != '') ? " where status = '" . $status ."' " : '';
+    $status = ($status != '') ? " WHERE status = '" . (int)$status ."' " : '';
     $countries_array = array ();
     if ($default) {
       $countries_array[] = array ('id' => STORE_COUNTRY, 'text' => $default);
     }
-    $countries_query = xtc_db_query("select countries_id, countries_name from ".TABLE_COUNTRIES." $status order by countries_name");
+    $countries_query = xtc_db_query("SELECT countries_id, 
+                                            countries_name 
+                                       FROM ".TABLE_COUNTRIES." 
+                                            ".$status." 
+                                   ORDER BY countries_name");
     while ($countries = xtc_db_fetch_array($countries_query)) {
       $countries_array[] = array ('id' => $countries['countries_id'], 'text' => $countries['countries_name']);
     }
@@ -1203,7 +1221,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_get_country_zones($country_id) {
     $zones_array = array ();
-    $zones_query = xtc_db_query("select zone_id, zone_name from ".TABLE_ZONES." where zone_country_id = '".$country_id."' order by zone_name");
+    $zones_query = xtc_db_query("SELECT zone_id, 
+                                        zone_name 
+                                   FROM ".TABLE_ZONES." 
+                                  WHERE zone_country_id = '".(int)$country_id."' 
+                               ORDER BY zone_name");
     while ($zones = xtc_db_fetch_array($zones_query)) {
       $zones_array[] = array ('id' => $zones['zone_id'], 'text' => $zones['zone_name']);
     }
@@ -1246,7 +1268,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_address_formats() {
-    $address_format_query = xtc_db_query("select address_format_id from ".TABLE_ADDRESS_FORMAT." order by address_format_id");
+    $address_format_query = xtc_db_query("SELECT address_format_id 
+                                            FROM ".TABLE_ADDRESS_FORMAT." 
+                                        ORDER BY address_format_id");
     $address_format_array = array ();
     while ($address_format_values = xtc_db_fetch_array($address_format_query)) {
       $address_format_array[] = array ('id' => $address_format_values['address_format_id'], 'text' => $address_format_values['address_format_id']);
@@ -1285,7 +1309,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_cfg_pull_down_tax_classes($tax_class_id, $key = '') {
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
     $tax_class_array = array (array ('id' => '0', 'text' => TEXT_NONE));
-    $tax_class_query = xtc_db_query("select tax_class_id, tax_class_title from ".TABLE_TAX_CLASS." order by tax_class_title");
+    $tax_class_query = xtc_db_query("SELECT tax_class_id, 
+                                            tax_class_title 
+                                       FROM ".TABLE_TAX_CLASS." 
+                                   ORDER BY tax_class_title");
     while ($tax_class = xtc_db_fetch_array($tax_class_query)) {
       $tax_class_array[] = array ('id' => $tax_class['tax_class_id'], 'text' => $tax_class['tax_class_title']);
     }
@@ -1317,7 +1344,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_cfg_get_zone_name($zone_id) {
-    $zone_query = xtc_db_query("select zone_name from ".TABLE_ZONES." where zone_id = '".$zone_id."'");
+    $zone_query = xtc_db_query("SELECT zone_name 
+                                  FROM ".TABLE_ZONES." 
+                                 WHERE zone_id = '".(int)$zone_id."'");
     if (!xtc_db_num_rows($zone_query)) {
       return $zone_id;
     } else {
@@ -1420,7 +1449,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_system_information() {
-    $db_query = xtc_db_query("select now() as datetime");
+    $db_query = xtc_db_query("SELECT now() as datetime");
     $db = xtc_db_fetch_array($db_query);
 
     //get server uptime on Windows & Unix/Linux systems
@@ -1518,12 +1547,20 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     if (!is_array($categories_array))
       $categories_array = array ();
     if ($from == 'product') {
-      $categories_query = xtc_db_query("select categories_id from ".TABLE_PRODUCTS_TO_CATEGORIES." where products_id = '".$id."'");
+      $categories_query = xtc_db_query("SELECT categories_id 
+                                          FROM ".TABLE_PRODUCTS_TO_CATEGORIES." 
+                                         WHERE products_id = '".(int)$id."'");
       while ($categories = xtc_db_fetch_array($categories_query)) {
         if ($categories['categories_id'] == '0') {
           $categories_array[$index][] = array ('id' => '0', 'text' => TEXT_TOP);
         } else {
-          $category_query = xtc_db_query("select cd.categories_name, c.parent_id from ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd where c.categories_id = '".$categories['categories_id']."' and c.categories_id = cd.categories_id and cd.language_id = '".(int)$_SESSION['languages_id']."'");
+          $category_query = xtc_db_query("select cd.categories_name, 
+                                                 c.parent_id 
+                                            FROM ".TABLE_CATEGORIES." c
+                                            JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                                 ON c.categories_id = cd.categories_id
+                                                    AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+                                           WHERE c.categories_id = '".$categories['categories_id']."'");
           $category = xtc_db_fetch_array($category_query);
           $categories_array[$index][] = array ('id' => $categories['categories_id'], 'text' => $category['categories_name']);
           if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0'))
@@ -1533,7 +1570,13 @@ function xtc_output_string($string, $translate = false, $protected = false) {
         $index ++;
       }
     } elseif ($from == 'category') {
-      $category_query = xtc_db_query("select cd.categories_name, c.parent_id from ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd where c.categories_id = '".$id."' and c.categories_id = cd.categories_id and cd.language_id = '".(int)$_SESSION['languages_id']."'");
+      $category_query = xtc_db_query("SELECT cd.categories_name, 
+                                             c.parent_id 
+                                        FROM ".TABLE_CATEGORIES." c
+                                        JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                             ON c.categories_id = cd.categories_id
+                                                AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+                                       WHERE c.categories_id = '".(int)$id."'");
       $category = xtc_db_fetch_array($category_query);
       $categories_array[$index][] = array ('id' => $id, 'text' => $category['categories_name']);
       if ((xtc_not_null($category['parent_id'])) && ($category['parent_id'] != '0'))
@@ -1591,6 +1634,44 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   }
 
   /**
+   * xtc_restock_order()
+   *
+   * @param mixed $order_id
+   * @return
+   */
+  function xtc_restock_order($order_id) {
+    $order_query = xtc_db_query("SELECT orders_products_id, 
+                                        products_id, 
+                                        products_quantity 
+                                   FROM ".TABLE_ORDERS_PRODUCTS." 
+                                  WHERE orders_id = '".(int)$order_id."'");
+    while ($order = xtc_db_fetch_array($order_query)) {
+      xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
+                       SET products_quantity = products_quantity + ".$order['products_quantity'].", 
+                           products_ordered = products_ordered - ".$order['products_quantity']." 
+                     WHERE products_id = '".$order['products_id']."'");
+
+      if (ATTRIBUTE_STOCK_CHECK == 'true') {
+        $orders_attributes_query = xtc_db_query("SELECT orders_products_options_id,
+                                                        orders_products_options_values_id
+                                                   FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
+                                                  WHERE orders_id = '" . (int)$order_id . "'
+                                                    AND orders_products_id = '" . $order['orders_products_id'] . "'");
+        if (xtc_db_num_rows($orders_attributes_query)) {
+          while ($orders_attributes = xtc_db_fetch_array($orders_attributes_query)) {
+            xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
+                             SET attributes_stock = attributes_stock + ".$order['products_quantity']." 
+                           WHERE options_id = '" . $orders_attributes['orders_products_options_id'] . "'
+                             AND options_values_id = '" . $orders_attributes['orders_products_options_values_id'] . "'
+                             AND products_id = '" . $order['products_id'] . "'
+                        ");
+          }
+        }
+      }
+    }
+  }
+  
+  /**
    * xtc_remove_order()
    *
    * @param mixed $order_id
@@ -1599,48 +1680,20 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_remove_order($order_id, $restock = false) {
     if ($restock == 'on') {
-      $order_query = xtc_db_query("SELECT orders_products_id, 
-                                          products_id, 
-                                          products_quantity 
-                                     FROM ".TABLE_ORDERS_PRODUCTS." 
-                                    WHERE orders_id = '".xtc_db_input($order_id)."'");
-      while ($order = xtc_db_fetch_array($order_query)) {
-        xtc_db_query("UPDATE ".TABLE_PRODUCTS." 
-                         SET products_quantity = products_quantity + ".$order['products_quantity'].", 
-                             products_ordered = products_ordered - ".$order['products_quantity']." 
-                       WHERE products_id = '".$order['products_id']."'");
-
-        if (ATTRIBUTE_STOCK_CHECK == 'true') {
-          $orders_attributes_query = xtc_db_query("SELECT orders_products_options_id,
-                                                          orders_products_options_values_id
-                                                     FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES."
-                                                    WHERE orders_id = '" . xtc_db_input($order_id) . "'
-                                                      AND orders_products_id = '" . $order['orders_products_id'] . "'");
-          if (xtc_db_num_rows($orders_attributes_query)) {
-            while ($orders_attributes = xtc_db_fetch_array($orders_attributes_query)) {
-              xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
-                               SET attributes_stock = attributes_stock + ".$order['products_quantity']." 
-                             WHERE options_id = '" . $orders_attributes['orders_products_options_id'] . "'
-                               AND options_values_id = '" . $orders_attributes['orders_products_options_values_id'] . "'
-                               AND products_id = '" . $order['products_id'] . "'
-                          ");
-            }
-          }
-        }
-      }
+      xtc_restock_order($order_id);
     }
-    xtc_db_query("delete from ".TABLE_ORDERS." where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("delete from ".TABLE_ORDERS_STATUS_HISTORY." where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("delete from ".TABLE_ORDERS_TOTAL." where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("delete from ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." where orders_id = '".xtc_db_input($order_id)."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_STATUS_HISTORY." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_TOTAL." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("DELETE FROM ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." WHERE orders_id = '".(int)$order_id."'");
 
     /******** SHOPGATE **********/
     $sql_select="SHOW TABLES LIKE '".TABLE_SHOPGATE_ORDERS."'";
     $query = xtc_db_query($sql_select);
     if(xtc_db_num_rows($query) > 0) {
-      xtc_db_query("delete from ".TABLE_SHOPGATE_ORDERS. " where orders_id = '".xtc_db_input($order_id)."'");
+      xtc_db_query("DELETE FROM ".TABLE_SHOPGATE_ORDERS. " WHERE orders_id = '".(int)$order_id."'");
     }
     /******** SHOPGATE **********/
   }
@@ -1654,14 +1707,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_reverse_order($order_id, $restock = false, $order_status_id) {
     if ($restock == 'on') {
-      $order_query = xtc_db_query("select products_id, products_quantity from ".TABLE_ORDERS_PRODUCTS." where orders_id = '".xtc_db_input($order_id)."'");
-      while ($order = xtc_db_fetch_array($order_query)) {
-        xtc_db_query("update ".TABLE_PRODUCTS." set products_quantity = products_quantity + ".$order['products_quantity'].", products_ordered = products_ordered - ".$order['products_quantity']." where products_id = '".$order['products_id']."'");
-      }
+      xtc_restock_order($order_id);
     }
-    xtc_db_query("update ".TABLE_ORDERS." set orders_status = ".$order_status_id." where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("update ".TABLE_ORDERS_TOTAL." set value = '0.0000' where orders_id = '".xtc_db_input($order_id)."'");
-    xtc_db_query("update ".TABLE_ORDERS_TOTAL." set text = '' where orders_id = '".xtc_db_input($order_id)."'");
+    xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status = ".$order_status_id." WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET value = '0.0000' WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET text = '' WHERE orders_id = '".(int)$order_id."'");
   }
 
   /**
@@ -1838,7 +1888,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     if ($tax_class_id == '0') {
       return TEXT_NONE;
     } else {
-      $classes_query = xtc_db_query("select tax_class_title from ".TABLE_TAX_CLASS." where tax_class_id = '".$tax_class_id."'");
+      $classes_query = xtc_db_query("SELECT tax_class_title 
+                                       FROM ".TABLE_TAX_CLASS." 
+                                      WHERE tax_class_id = '".(int)$tax_class_id."'");
       $classes = xtc_db_fetch_array($classes_query);
       return $classes['tax_class_title'];
     }
@@ -1919,7 +1971,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     if ($zone_class_id == '0') {
       return TEXT_NONE;
     } else {
-      $classes_query = xtc_db_query("select geo_zone_name from ".TABLE_GEO_ZONES." where geo_zone_id = '".$zone_class_id."'");
+      $classes_query = xtc_db_query("SELECT geo_zone_name 
+                                       FROM ".TABLE_GEO_ZONES." 
+                                      WHERE geo_zone_id = '".(int)$zone_class_id."'");
       $classes = xtc_db_fetch_array($classes_query);
       return $classes['geo_zone_name'];
     }
@@ -1971,7 +2025,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_cfg_pull_down_order_statuses($order_status_id, $key = '') {
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
     $statuses_array = array (array ('id' => '1', 'text' => TEXT_DEFAULT));
-    $statuses_query = xtc_db_query("select orders_status_id, orders_status_name from ".TABLE_ORDERS_STATUS." where language_id = '".(int)$_SESSION['languages_id']."' order by orders_status_name");
+    $statuses_query = xtc_db_query("SELECT orders_status_id, 
+                                           orders_status_name 
+                                      FROM ".TABLE_ORDERS_STATUS." 
+                                     WHERE language_id = '".(int)$_SESSION['languages_id']."' 
+                                  ORDER BY orders_status_name");
     while ($statuses = xtc_db_fetch_array($statuses_query)) {
       $statuses_array[] = array ('id' => $statuses['orders_status_id'], 'text' => $statuses['orders_status_name']);
     }
@@ -1990,32 +2048,23 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       return TEXT_DEFAULT;
     if (!is_numeric($language_id))
       $language_id = $_SESSION['languages_id'];
-    $status_query = xtc_db_query("select orders_status_name from ".TABLE_ORDERS_STATUS." where orders_status_id = '".$order_status_id."' and language_id = '".$language_id."'");
+    $status_query = xtc_db_query("SELECT orders_status_name 
+                                    FROM ".TABLE_ORDERS_STATUS." 
+                                   WHERE orders_status_id = '".(int)$order_status_id."' 
+                                     AND language_id = '".(int)$language_id."'");
     $status = xtc_db_fetch_array($status_query);
     return $status['orders_status_name'];
   }
 
-  ////
-  // Return a random value
-  function xtc_rand($min = null, $max = null) {
-    static $seeded;
+  /**
+   * xtc_rand()
+   *
+   * @param int $min
+   * @param int $max
+   * @return
+   */
+  require_once(DIR_FS_INC . 'xtc_rand.inc.php'); // Use existing function from "/inc/" folder
 
-    if (!$seeded) {
-      mt_srand((double) microtime() * 1000000);
-      $seeded = true;
-    }
-
-    if (isset ($min) && isset ($max)) {
-      if ($min >= $max) {
-        return $min;
-      } else {
-        return mt_rand($min, $max);
-      }
-    } else {
-      return mt_rand();
-    }
-  }
-  // nl2br() prior PHP 4.2.0 did not convert linefeeds on all OSs (it only converted \n)
   /**
    * xtc_convert_linefeeds()
    *
@@ -2036,10 +2085,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_customers_statuses() {
-    //BOC - Web28 - 2011-10-29 - BUGFIX $customers_statuses_array
     $customers_statuses_array = array ();
-    //BOF - DokuMan - 2010-11-01 - Added missing fields customers_status_public and customers_status_graduated_prices
-    $customers_statuses_query = xtc_db_query("select customers_status_id,
+    $customers_statuses_query = xtc_db_query("SELECT customers_status_id,
                                                      customers_status_name,
                                                      customers_status_public,
                                                      customers_status_image,
@@ -2047,25 +2094,23 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                                      customers_status_ot_discount_flag,
                                                      customers_status_ot_discount,
                                                      customers_status_graduated_prices
-                                                from ".TABLE_CUSTOMERS_STATUS."
-                                               where language_id = '".(int)$_SESSION['languages_id']."'
-                                            order by customers_status_id");
-    //EOF - DokuMan - 2010-11-01 - Added missing fields customers_status_public and customers_status_graduated_prices
+                                                FROM ".TABLE_CUSTOMERS_STATUS."
+                                               WHERE language_id = '".(int)$_SESSION['languages_id']."'
+                                            ORDER BY customers_status_id");
 
     while ($customers_statuses = xtc_db_fetch_array($customers_statuses_query)) {
       $customers_statuses_array[] = array ('id' => $customers_statuses['customers_status_id'],
-                                             'text' => $customers_statuses['customers_status_name'],
-                                             'csa_public' => $customers_statuses['customers_status_public'],
-                                             'csa_image' => $customers_statuses['customers_status_image'],
-                                             'csa_discount' => $customers_statuses['customers_status_discount'],
-                                             'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
-                                             'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
-                                             'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices']
+                                           'text' => $customers_statuses['customers_status_name'],
+                                           'csa_public' => $customers_statuses['customers_status_public'],
+                                           'csa_image' => $customers_statuses['customers_status_image'],
+                                           'csa_discount' => $customers_statuses['customers_status_discount'],
+                                           'csa_ot_discount_flag' => $customers_statuses['customers_status_ot_discount_flag'],
+                                           'csa_ot_discount' => $customers_statuses['customers_status_ot_discount'],
+                                           'csa_graduated_prices' => $customers_statuses['customers_status_graduated_prices']
                                             );
     }
 
     return $customers_statuses_array;
-    //EOC - Web28 - 2011-10-29 - BUGFIX $customers_statuses_array
   }
 
   /**
@@ -2076,8 +2121,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_get_customer_status($customers_id) {
     $customer_status_array = array ();
-    $customer_status_query = xtc_db_query("select customers_status,
-                                                  member_flag, customers_status_name,
+    $customer_status_query = xtc_db_query("SELECT customers_status,
+                                                  member_flag, 
+                                                  customers_status_name,
                                                   customers_status_public,
                                                   customers_status_image,
                                                   customers_status_discount,
@@ -2085,9 +2131,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                                   customers_status_ot_discount,
                                                   customers_status_graduated_prices
                                              FROM ".TABLE_CUSTOMERS."
-                                        left join ".TABLE_CUSTOMERS_STATUS." on customers_status = customers_status_id
-                                            where customers_id='".$customers_id."'
-                                              and language_id = '".(int)$_SESSION['languages_id']."'");
+                                        LEFT JOIN ".TABLE_CUSTOMERS_STATUS." 
+                                                  ON customers_status = customers_status_id
+                                            WHERE customers_id='".$customers_id."'
+                                              AND language_id = '".(int)$_SESSION['languages_id']."'");
     $customer_status_array = xtc_db_fetch_array($customer_status_query);
     return $customer_status_array;
   }
@@ -2102,7 +2149,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_get_customers_status_name($customers_status_id, $language_id = '') {
     if (!$language_id)
       $language_id = $_SESSION['languages_id'];
-    $customers_status_query = xtc_db_query("select customers_status_name from ".TABLE_CUSTOMERS_STATUS." where customers_status_id = '".$customers_status_id."' and language_id = '".$language_id."'");
+    $customers_status_query = xtc_db_query("SELECT customers_status_name 
+                                              FROM ".TABLE_CUSTOMERS_STATUS." 
+                                             WHERE customers_status_id = '".(int)$customers_status_id."' 
+                                               AND language_id = '".(int)$language_id."'");
     $customers_status = xtc_db_fetch_array($customers_status_query);
     return $customers_status['customers_status_name'];
   }
@@ -2129,11 +2179,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_user_info($customer_id) {
-    $user_info_array = xtc_db_query("select customers_ip, customers_ip_date, customers_host, customers_advertiser, customers_referer_url FROM ".TABLE_CUSTOMERS_IP." where customers_id = '".$customer_id."'");
+    $user_info_array = xtc_db_query("SELECT customers_ip, 
+                                            customers_ip_date, 
+                                            customers_host, 
+                                            customers_advertiser, 
+                                            customers_referer_url 
+                                       FROM ".TABLE_CUSTOMERS_IP." 
+                                      WHERE customers_id = '".(int)$customer_id."'");
     return $user_info_array;
   }
 
-  //---------------------------------------------------------------kommt wieder raus spaeter!!
   /**
    * xtc_get_uploaded_file()
    *
@@ -2160,22 +2215,31 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function get_group_price($group_id, $product_id) {
     // well, first try to get group price from database
-    $group_price_query = xtc_db_query("SELECT personal_offer FROM ".TABLE_PERSONAL_OFFERS_BY.$group_id." WHERE products_id = '".$product_id."' and quantity=1");
+    $group_price_query = xtc_db_query("SELECT personal_offer 
+                                         FROM ".TABLE_PERSONAL_OFFERS_BY.$group_id." 
+                                        WHERE products_id = '".(int)$product_id."' 
+                                          AND quantity = '1'");
     $group_price_data = xtc_db_fetch_array($group_price_query);
     // if we found a price, everything is ok if not, we will create new entry
     // if there is no entry, create one. if there are more entries. keep one, dropp rest.
     if (!xtc_db_num_rows($group_price_query)) {
-      xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.$group_id." (price_id, products_id, quantity, personal_offer) VALUES ('', '".$product_id."', '1', '0.00')");
-      $group_price_query = xtc_db_query("SELECT personal_offer FROM ".TABLE_PERSONAL_OFFERS_BY.$group_id." WHERE products_id = '".$product_id."' ORDER BY quantity ASC");
+      xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.(int)$group_id." (price_id, products_id, quantity, personal_offer) VALUES ('', '".(int)$product_id."', '1', '0.00')");
+      $group_price_query = xtc_db_query("SELECT personal_offer 
+                                           FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$group_id." 
+                                          WHERE products_id = '".(int)$product_id."' 
+                                       ORDER BY quantity ASC");
       $group_price_data = xtc_db_fetch_array($group_price_query);
     } else {
       if (xtc_db_num_rows($group_price_query) > 1) {
         while ($data = xtc_db_fetch_array($group_price_query)) {
           $group_price_data['personal_offer'] = $data['personal_offer'];
         }
-        xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$group_id." WHERE products_id='".$product_id."' and quantity=1");
-        xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.$group_id." (price_id, products_id, quantity, personal_offer) VALUES ('', '".$product_id."', '1', '".$group_price_data['personal_offer']."')");
-        $group_price_query = xtc_db_query("SELECT personal_offer FROM ".TABLE_PERSONAL_OFFERS_BY.$group_id." WHERE products_id = '".$product_id."' ORDER BY quantity ASC");
+        xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$group_id." WHERE products_id='".(int)$product_id."' and quantity = '1'");
+        xtc_db_query("INSERT INTO ".TABLE_PERSONAL_OFFERS_BY.(int)$group_id." (price_id, products_id, quantity, personal_offer) VALUES ('', '".(int)$product_id."', '1', '".$group_price_data['personal_offer']."')");
+        $group_price_query = xtc_db_query("SELECT personal_offer 
+                                             FROM ".TABLE_PERSONAL_OFFERS_BY.(int)$group_id." 
+                                            WHERE products_id = '".(int)$product_id."' 
+                                         ORDER BY quantity ASC");
         $group_price_data = xtc_db_fetch_array($group_price_query);
       }
     }
@@ -2199,10 +2263,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                              decimal_places,
                                              value
                                         FROM ".TABLE_CURRENCIES."
-                                        WHERE code = '".$currency."'");
+                                        WHERE code = '".xtc_db_input($currency)."'");
     $currencies_value = xtc_db_fetch_array($currencies_query);
-    $currencies_data = array ();
-    $currencies_data = array ('SYMBOL_LEFT' => $currencies_value['symbol_left'], 'SYMBOL_RIGHT' => $currencies_value['symbol_right'], 'DECIMAL_PLACES' => $currencies_value['decimal_places'], 'VALUE' => $currencies_value['value']);
+    $currencies_data = array ('SYMBOL_LEFT' => $currencies_value['symbol_left'], 
+                              'SYMBOL_RIGHT' => $currencies_value['symbol_right'], 
+                              'DECIMAL_PLACES' => $currencies_value['decimal_places'], 
+                              'VALUE' => $currencies_value['value']);
     // round price
     if ($allow_tax == 1)
       $price_string = $price_string / ((100 + $tax_rate) / 100);
@@ -2261,7 +2327,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_status_users($status_id) {
-    $status_query = xtc_db_query("SELECT count(customers_status) as count FROM ".TABLE_CUSTOMERS." WHERE customers_status = '".$status_id."'");
+    $status_query = xtc_db_query("SELECT count(customers_status) as count 
+                                    FROM ".TABLE_CUSTOMERS." 
+                                   WHERE customers_status = '".(int)$status_id."'");
     $status_data = xtc_db_fetch_array($status_query);
     return $status_data['count'];
   }
@@ -2329,7 +2397,9 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $good_result = 0;
     while ($good_result == 0) {
       $id1 = substr($ccid, $random_start, $length);
-      $query = xtc_db_query("select coupon_code from ".TABLE_COUPONS." where coupon_code = '".$id1."'");
+      $query = xtc_db_query("SELECT coupon_code 
+                               FROM ".TABLE_COUPONS." 
+                              WHERE coupon_code = '".xtc_db_input($id1)."'");
       if (xtc_db_num_rows($query) == 0)
         $good_result = 1;
     }
@@ -2345,15 +2415,19 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_gv_account_update($customer_id, $gv_id) {
-    $customer_gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$customer_id."'");
-    $coupon_gv_query = xtc_db_query("select coupon_amount from ".TABLE_COUPONS." where coupon_id = '".$gv_id."'");
+    $customer_gv_query = xtc_db_query("SELECT amount 
+                                         FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                                        WHERE customer_id = '".(int)$customer_id."'");
+    $coupon_gv_query = xtc_db_query("SELECT coupon_amount 
+                                       FROM ".TABLE_COUPONS." 
+                                      WHERE coupon_id = '".(int)$gv_id."'");
     $coupon_gv = xtc_db_fetch_array($coupon_gv_query);
     if (xtc_db_num_rows($customer_gv_query) > 0) {
       $customer_gv = xtc_db_fetch_array($customer_gv_query);
       $new_gv_amount = $customer_gv['amount'] + $coupon_gv['coupon_amount'];
-      $gv_query = xtc_db_query("update ".TABLE_COUPON_GV_CUSTOMER." set amount = '".$new_gv_amount."' where customer_id = '".$customer_id."'");
+      $gv_query = xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." SET amount = '".$new_gv_amount."' WHERE customer_id = '".(int)$customer_id."'");
     } else {
-      $gv_query = xtc_db_query("insert into ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) values ('".$customer_id."', '".$coupon_gv['coupon_amount']."')");
+      $gv_query = xtc_db_query("INSERT INTO ".TABLE_COUPON_GV_CUSTOMER." (customer_id, amount) VALUES ('".(int)$customer_id."', '".$coupon_gv['coupon_amount']."')");
     }
   }
 
@@ -2475,7 +2549,6 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     return '<a href="'.$href.'" class="button" onclick="this.blur()" '.$parameter.' >'.$value.'</a>';
   }
 
-  //BOF - DokuMan - 2011-01-06 - added missing function xtc_get_products_special_price
   // Return a product's special price (returns nothing if there is no offer)
   /**
    * xtc_get_products_special_price()
@@ -2484,11 +2557,13 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_get_products_special_price($product_id){
-    $product_query = xtc_db_query("select specials_new_products_price from " . TABLE_SPECIALS . " where products_id = '" . (int)$product_id . "' and status = 1");
+    $product_query = xtc_db_query("SELECT specials_new_products_price 
+                                     FROM " . TABLE_SPECIALS . " 
+                                    WHERE products_id = '" . (int)$product_id . "' 
+                                      AND status = '1'");
     $product = xtc_db_fetch_array($product_query);
     return $product['specials_new_products_price'];
   }
-  //EOF - DokuMan - 2011-01-06 - added missing function xtc_get_products_special_price
 
   /**
    * xtc_convert_value()
@@ -2602,7 +2677,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
 
   function order_statuses() {
     $statuses_array = array ();
-    $statuses_query = xtc_db_query("SELECT orders_status_id, orders_status_name FROM ".TABLE_ORDERS_STATUS." WHERE language_id = '".(int)$_SESSION['languages_id']."' ORDER BY orders_status_name");
+    $statuses_query = xtc_db_query("SELECT orders_status_id, 
+                                           orders_status_name 
+                                      FROM ".TABLE_ORDERS_STATUS."
+                                     WHERE language_id = '".(int)$_SESSION['languages_id']."' 
+                                  ORDER BY orders_status_name");
     while ($statuses = xtc_db_fetch_array($statuses_query)) {
       $statuses_array[] = array ('id' => $statuses['orders_status_id'], 'text' => $statuses['orders_status_name']);
     }

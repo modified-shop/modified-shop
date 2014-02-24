@@ -16,22 +16,20 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_manufacturers($manufacturers_array = '') {
-    //BOF - web28 - 2011-01-20 - set manufacturers cache for better performance - thanks to DocBobo
     static $manufacturers_cache;
     
     if (isset ($manufacturers_cache) && $manufacturers_array == '') return $manufacturers_cache;
-    //BOF - web28 - 2011-01-20 - set manufacturers cache for better performance - thanks to DocBobo
     
     if (!is_array($manufacturers_array)) $manufacturers_array = array();
 
-    $manufacturers_query = xtc_db_query("select manufacturers_id, manufacturers_name from " . TABLE_MANUFACTURERS . " order by manufacturers_name");
+    $manufacturers_query = xtc_db_query("SELECT manufacturers_id, 
+                                                manufacturers_name 
+                                           FROM " . TABLE_MANUFACTURERS . " 
+                                       ORDER BY manufacturers_name");
     while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
       $manufacturers_array[$manufacturers['manufacturers_id']] = array('id' => $manufacturers['manufacturers_id'], 'text' => $manufacturers['manufacturers_name']);
     }
-    
-    //BOF - web28 - 2011-01-20 - set manufacturers cache for better performance - thanks to DocBobo
     $manufacturers_cache = $manufacturers_array;
-    //BOF - web28 - 2011-01-20 - set manufacturers cache for better performance - thanks to DocBobo
     
     return $manufacturers_array;
   }

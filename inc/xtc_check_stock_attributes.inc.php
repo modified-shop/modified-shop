@@ -19,7 +19,7 @@
 
     $stock_query=xtc_db_query("SELECT attributes_stock
                                  FROM ".TABLE_PRODUCTS_ATTRIBUTES."
-                                WHERE products_attributes_id=".(int)$attribute_id);
+                                WHERE products_attributes_id='".(int)$attribute_id."'");
 
     $stock_data=xtc_db_fetch_array($stock_query);
     $stock_left = $stock_data['attributes_stock'] - $products_quantity;

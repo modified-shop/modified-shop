@@ -24,11 +24,15 @@
         $cPath_new = $current_category_id;
       } else {
         $cPath_new = '';
-        $last_category_query = "select parent_id from " . TABLE_CATEGORIES . " where categories_id = '" . $cPath_array[($cp_size-1)] . "'";
+        $last_category_query = "SELECT parent_id 
+                                  FROM " . TABLE_CATEGORIES . " 
+                                 WHERE categories_id = '" . $cPath_array[($cp_size-1)] . "'";
         $last_category_query  = xtDBquery($last_category_query);
         $last_category = xtc_db_fetch_array($last_category_query,true);
 
-        $current_category_query = "select parent_id from " . TABLE_CATEGORIES . " where categories_id = '" . $current_category_id . "'";
+        $current_category_query = "SELECT parent_id 
+                                     FROM " . TABLE_CATEGORIES . " 
+                                    WHERE categories_id = '" . (int)$current_category_id . "'";
         $current_category_query  = xtDBquery($current_category_query);
         $current_category = xtc_db_fetch_array($current_category_query,true);
 

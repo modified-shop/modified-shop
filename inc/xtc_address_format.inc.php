@@ -2,24 +2,27 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtc_address_format.inc.php 899 2005-04-29 02:40:57Z hhgag $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(general.php,v 1.225 2003/05/29); www.oscommerce.com 
    (c) 2003	 nextcommerce (xtc_address_format.inc.php,v 1.5 2003/08/13); www.nextcommerce.org
-
+   (c) 2003 XT-Commerce
+   
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
    
-   require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php');
-   require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_zone_code.inc.php');
+  require_once(DIR_FS_INC . 'xtc_get_country_name.inc.php');
    
-function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
-    $address_format_query = xtc_db_query("select address_format as format from " . TABLE_ADDRESS_FORMAT . " where address_format_id = '" . $address_format_id . "'");
+  function xtc_address_format($address_format_id, $address, $html, $boln, $eoln) {
+    $address_format_query = xtc_db_query("SELECT address_format as format 
+                                            FROM ".TABLE_ADDRESS_FORMAT." 
+                                           WHERE address_format_id = '".(int)$address_format_id."'");
     $address_format = xtc_db_fetch_array($address_format_query);
 
     $company = addslashes($address['company']);
