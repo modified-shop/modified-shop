@@ -79,26 +79,31 @@ if ( !class_exists( "image_processing_step" ) ) {
 
       $ext_array = array('gif','jpg','jpeg','png'); //Gültige Dateiendungen
 
+      $offset = $_GET['start'];
+      $step = $_GET['max_datasets'];
+      $count = $_GET['count'];
+      $limit = $offset + $step;
+
       @xtc_set_time_limit(0);
       $files=array();
-      if ($dir= opendir(DIR_FS_CATALOG_ORIGINAL_IMAGES)){
+      if ($dir = opendir(DIR_FS_CATALOG_ORIGINAL_IMAGES)) {
+        $max_files = 0;
         while  ($file = readdir($dir)) {
           $tmp = explode('.',$file);
           if(is_array($tmp)) {
             $ext = strtolower($tmp[count($tmp)-1]);
             if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$file) && in_array($ext,$ext_array) ){
-              $files[]=array('id' => $file,
-                             'text' =>$file);
+              if ($max_files >= $offset && $max_files < $limit) {
+                $files[$max_files]=array('id' => $file,
+                                 'text' =>$file);
+              }
+              $max_files ++;
             }
           }
         }
         closedir($dir);
-      }
-      $offset = $_GET['start'];
-      $max_files = sizeof($files);
-      $step = $_GET['max_datasets'];
-      $count = $_GET['count'];
-      $limit = $offset + $step;
+      }      
+
       for ($i=$offset; $i<$limit; $i++) {
         if ($i >= $max_files) { // FERTIG
           xtc_redirect(xtc_href_link($this->module_filename, 'set=' . $this->get_params['set'] . '&action=ready&module='.$this->code.'&count='. $count.'&max_datasets='. $_GET['max_datasets'])); //FERTIG
