@@ -63,7 +63,7 @@ function log_exception(Exception $e)
                 $err = 0;
                 for ($i=0, $n=count($backtrace); $i<$n; $i++) {
                     if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error_file && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                        error_log(strftime('%d/%m/%Y %H:%M:%S') . 'Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'error.log');
+                        error_log(strftime('%d/%m/%Y %H:%M:%S') . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'error.log');
                         $err ++;
                     }
                 }
