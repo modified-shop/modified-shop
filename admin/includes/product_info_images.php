@@ -12,7 +12,7 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  $a = new image_manipulation(DIR_FS_CATALOG_ORIGINAL_IMAGES . $products_image_name,PRODUCT_IMAGE_INFO_WIDTH,PRODUCT_IMAGE_INFO_HEIGHT,DIR_FS_CATALOG_INFO_IMAGES . $products_image_name,IMAGE_QUALITY,'');
+  $a = new image_manipulation(DIR_FS_CATALOG_ORIGINAL_IMAGES . $products_image_name,PRODUCT_IMAGE_INFO_WIDTH,PRODUCT_IMAGE_INFO_HEIGHT,DIR_FS_CATALOG_INFO_IMAGES . $products_image_name_process,IMAGE_QUALITY,'');
   $array=clear_string(PRODUCT_IMAGE_INFO_BEVEL);
   if (PRODUCT_IMAGE_INFO_BEVEL != ''){
     $a->bevel($array[0],$array[1],$array[2]);

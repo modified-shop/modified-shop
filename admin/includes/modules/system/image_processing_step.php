@@ -1,6 +1,6 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: image_processing_step.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
+   $Id: image_processing_step.php 2992 2012-06-07 16:59:49Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -43,7 +43,7 @@ define('TEXT_MAX_IMAGES','max. Bilder pro Seitenreload');
 define('TEXT_ONLY_MISSING_IMAGES','Nur fehlende Bilder erstellen');
 define('MODULE_STEP_READY_STYLE_TEXT', '<div style="margin:10px; font-family:Verdana; font-size:15px; text-align:center;">%s</div>');
 define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
-
+define('TEXT_LOWER_FILE_EXT','Dateiendung in Kleinbuchstaben umwandeln Bsp.: <b> JPG -> jpg</b>');
 if ( !class_exists( "image_processing_step" ) ) {
   class image_processing_step {
     var $code, $title, $description, $enabled;
@@ -65,7 +65,7 @@ if ( !class_exists( "image_processing_step" ) ) {
                                 'action' => 'module_processing_do'
                                 );
       //define used post parameters
-      $this->post_params = array('max_datasets','only_missing_images');
+      $this->post_params = array('max_datasets','only_missing_images', 'lower_file_ext');
 
       if (isset($_GET['count'])) {
         $this->ready_text = IMAGE_STEP_INFO . $_GET['count']. IMAGE_STEP_INFO_READY;
@@ -79,31 +79,42 @@ if ( !class_exists( "image_processing_step" ) ) {
 
       $ext_array = array('gif','jpg','jpeg','png'); //Gültige Dateiendungen
 
+      $offset = $_GET['start'];
+      $step = $_GET['max_datasets'];
+      $count = $_GET['count'];
+      $limit = $offset + $step;
+      
+      @ini_set('memory_limit','256M');
       @xtc_set_time_limit(0);
+      
       $files=array();
-      if ($dir= opendir(DIR_FS_CATALOG_ORIGINAL_IMAGES)){
+      if ($dir = opendir(DIR_FS_CATALOG_ORIGINAL_IMAGES)) {
+        $max_files = 0;
         while  ($file = readdir($dir)) {
           $tmp = explode('.',$file);
           if(is_array($tmp)) {
             $ext = strtolower($tmp[count($tmp)-1]);
             if (is_file(DIR_FS_CATALOG_ORIGINAL_IMAGES.$file) && in_array($ext,$ext_array) ){
-              $files[]=array('id' => $file,
-                             'text' =>$file);
+              if ($max_files >= $offset && $max_files < $limit) {
+                $files[$max_files]=array('id' => $file,
+                                 'text' =>$file);
+              }
+              $max_files ++;
             }
           }
         }
         closedir($dir);
-      }
-      $offset = $_GET['start'];
-      $max_files = sizeof($files);
-      $step = $_GET['max_datasets'];
-      $count = $_GET['count'];
-      $limit = $offset + $step;
+      }      
+
+      $ext_search = array('.GIF','.JPG','.JPEG','.PNG');
+      $ext_replace = array('.gif','.jpg','.jpeg','.png');
+
       for ($i=$offset; $i<$limit; $i++) {
         if ($i >= $max_files) { // FERTIG
           xtc_redirect(xtc_href_link($this->module_filename, 'set=' . $this->get_params['set'] . '&action=ready&module='.$this->code.'&count='. $count.'&max_datasets='. $_GET['max_datasets'])); //FERTIG
         }
         $products_image_name = $files[$i]['text'];
+        $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
 
         if ($_GET['only_missing_images'] == 1) {
           $flag = false;
@@ -134,7 +145,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       }
       //Animierte Gif-Datei und Hinweistext
       $info_wait = '<img src="images/loading.gif"> ';
-      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . $count);
+      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . $count . ' / ' .$max_files);
       $this->recursive_call = '<script language="javascript" type="text/javascript">setTimeout("document.modul_continue.submit()", 3000);</script>';
     }
 
@@ -153,6 +164,7 @@ if ( !class_exists( "image_processing_step" ) ) {
                              IMAGE_EXPORT.'<br />'.
                              '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
                              '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false) . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
+                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false) . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
                              xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code))
                    );
