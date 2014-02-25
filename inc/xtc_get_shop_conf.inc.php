@@ -104,8 +104,9 @@
           return false;
         }
       }
+      return true;
     }
-    return true;
+    return false;
   }
   
   function get_customer_email_by_id($cID) {
