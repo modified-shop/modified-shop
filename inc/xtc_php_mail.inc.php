@@ -169,9 +169,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $mail->Subject = $email_subject;
 
   if (!$mail->Send()) {
-    echo "Message was not sent <p>";
-    echo "Mailer Error: ".$mail->ErrorInfo."</p>";
-    exit;
+    trigger_error('Mailer Error - '.$mail->ErrorInfo, E_USER_WARNING);
   }
 }
 
