@@ -489,15 +489,12 @@ define('ERROR_EMAIL','<p><b>Your e-mail address:</b> None or invalid input!</p>'
 define('ERROR_VVCODE','<p><b>Security code:</b> No match, please enter your security code again!</p>');
 define('ERROR_MSG_BODY','<p><b>Your message:</b> No input!</p>');
 
-
-
-
-
 //Table Header checkout_confirmation.php
 define('HEADER_QTY', 'Number');
 define('HEADER_ARTICLE', 'Item');    
 define('HEADER_SINGLE', 'Singleprice');
 define('HEADER_TOTAL','Total');
+define('HEADER_MODEL', 'Model');
 
 ### PayPal API Modul
 define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');

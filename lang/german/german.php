@@ -484,13 +484,12 @@ define('ERROR_EMAIL','<p><b>Ihre E-Mail-Adresse:</b> Keine oder ung&uuml;ltige E
 define('ERROR_VVCODE','<p><b>Sicherheitscode:</b> Keine &Uuml;bereinstimmung, bitte geben Sie den Sicherheitscode erneut ein!</p>');
 define('ERROR_MSG_BODY','<p><b>Ihre Nachricht:</b> Keine Eingabe!</p>');	
 
-
-
 //Table Header checkout_confirmation.php
 define('HEADER_QTY', 'Anzahl');
 define('HEADER_ARTICLE', 'Artikel');    
 define('HEADER_SINGLE', 'Einzelpreis');
 define('HEADER_TOTAL','Summe');
+define('HEADER_MODEL', 'Artikel Nr.');
 
 ### PayPal API Modul
 define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
