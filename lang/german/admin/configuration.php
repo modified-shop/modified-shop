@@ -884,4 +884,7 @@ define('MODULE_CAPTCHA_WIDTH_TITLE', 'Breite');
 define('MODULE_CAPTCHA_WIDTH_DESC', 'Angabe in Pixel f&uuml;r die Breite des Captcha.');
 define('MODULE_CAPTCHA_HEIGHT_TITLE', 'H&ouml;he');
 define('MODULE_CAPTCHA_HEIGHT_DESC', 'Angabe in Pixel f&uuml;r die H&ouml;he des Captcha.');
+
+define('SHIPPING_STATUS_INFOS_TITLE', 'Lieferzeit ID');
+define('SHIPPING_STATUS_INFOS_DESC', 'Content ID f&uuml;r Lieferzeiten Hinweis');
 ?>

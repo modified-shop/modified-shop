@@ -180,6 +180,7 @@ $values_group_update = array();
   $values_group[] = "(17,'Additional Modules','Additional Modules',17,1);";
   $values[] = "(NULL, 'GOOGLE_RSS_FEED_REFID', '', 17, 15, NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SAVE_IP_LOG', 'false', 17, 8, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\', \'xxx\'),');";
+  $values[] = "(NULL, 'SHIPPING_STATUS_INFOS', 'false', 17, 14, NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 18 --- "UST-ID"
 
