@@ -886,4 +886,7 @@ define('MODULE_CAPTCHA_WIDTH_TITLE', 'Width');
 define('MODULE_CAPTCHA_WIDTH_DESC', 'Set width in px');
 define('MODULE_CAPTCHA_HEIGHT_TITLE', 'Height');
 define('MODULE_CAPTCHA_HEIGHT_DESC', 'Set height in px');
+
+define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime ID');
+define('SHIPPING_STATUS_INFOS_DESC', 'Content ID for Shippingtime');
 ?>
