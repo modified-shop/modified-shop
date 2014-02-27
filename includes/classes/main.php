@@ -45,7 +45,7 @@ class main {
    * @return  string
    */
   function getShippingStatusName($id) {
-    if (!defined('SHIPPING_STATUS_INFOS') {
+    if (!defined('SHIPPING_STATUS_INFOS')) {
       return (isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '');
     }
     return '<a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_STATUS_INFOS.POPUP_SHIPPING_LINK_PARAMETERS, $request_type).'" title="Information" class="'.POPUP_SHIPPING_LINK_CLASS.'">'.(isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '').'</a>';
