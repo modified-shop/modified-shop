@@ -281,9 +281,9 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
   //$newstring grundsätzlich VOR html_entity_decode und preg_replace nach utf-8 konvertieren
   if ($charset != "UTF-8") {
     if (!$check_iconv) {
-      $newstring = iconv($charset, "UTF-8", $newstring);
-    } else {
       $newstring = mb_convert_encoding($string, 'UTF-8', $charset);
+    } else {
+      $newstring = iconv($charset, "UTF-8", $newstring);
     }
   }
 
