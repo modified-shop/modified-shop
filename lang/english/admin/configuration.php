@@ -889,4 +889,7 @@ define('MODULE_CAPTCHA_HEIGHT_DESC', 'Set height in px');
 
 define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime ID');
 define('SHIPPING_STATUS_INFOS_DESC', 'Content ID for Shippingtime');
+
+define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
+define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
 ?>

@@ -887,4 +887,7 @@ define('MODULE_CAPTCHA_HEIGHT_DESC', 'Angabe in Pixel f&uuml;r die H&ouml;he des
 
 define('SHIPPING_STATUS_INFOS_TITLE', 'Lieferzeit ID');
 define('SHIPPING_STATUS_INFOS_DESC', 'Content ID f&uuml;r Lieferzeiten Hinweis');
+
+define('USE_SHORT_DATE_FORMAT_TITLE', 'Datum im Kurzformat anzeigen');
+define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemem!');
 ?>
