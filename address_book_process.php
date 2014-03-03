@@ -111,6 +111,9 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 		$entry_state_has_zones = ($check['total'] > 0);
 		if ($entry_state_has_zones == true) {
 			$zone_query = xtc_db_query("select distinct zone_id from ".TABLE_ZONES." where zone_country_id = '".(int) $country."' and (zone_name like '".xtc_db_input($state)."%' or zone_code like '%".xtc_db_input($state)."%')");
+			if (xtc_db_num_rows($zone_query) > 1) {
+				$zone_query = xtc_db_query("select distinct zone_id from ".TABLE_ZONES." where zone_country_id = '".(int) $country."' and zone_name = '".xtc_db_input($state)."'");
+			}
 			if (xtc_db_num_rows($zone_query) == 1) {
 				$zone = xtc_db_fetch_array($zone_query);
 				$zone_id = $zone['zone_id'];
