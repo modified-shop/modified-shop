@@ -1,16 +1,17 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_get_product_path.inc.php 1009 2005-07-11 16:19:29Z mz $   
+   $Id$   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce 
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(general.php,v 1.225 2003/05/29); www.oscommerce.com 
    (c) 2003	 nextcommerce (xtc_get_product_path.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2006 XT-Commerce (xtc_get_product_path.inc.php 1009 2005-07-11)
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -20,15 +21,20 @@
   function xtc_get_product_path($products_id) {
     $cPath = '';
 
-    $category_query = "SELECT p2c.categories_id 
-                         FROM " . TABLE_PRODUCTS . " p
-                         JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c 
-                              ON p.products_id = p2c.products_id
-                                 AND p2c.categories_id != '0'
-                        WHERE p.products_id = '" . (int)$products_id . "' 
-                          AND p.products_status = '1' 
-                        LIMIT 1";
-    $category_query  = xtDBquery($category_query);
+    $category_query = xtDBquery(
+      "SELECT p2c.categories_id 
+         FROM " . TABLE_CATEGORIES. " c 
+         JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
+              ON p2c.products_id = '" . (int)$products_id . "'
+                 AND p2c.categories_id = c.categories_id
+                 AND p2c.categories_id != '0'
+                 AND c.categories_status = '1'
+         JOIN " . TABLE_PRODUCTS . " p
+              ON p.products_id = p2c.products_id
+                 AND p.products_status = '1' 
+        LIMIT 1"
+      );
+    
     if (xtc_db_num_rows($category_query,true)) {
       $category = xtc_db_fetch_array($category_query);
 
