@@ -19,6 +19,9 @@
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function xtc_date_long($raw_date) {
     if(defined('USE_SHORT_DATE_FORMAT') && USE_SHORT_DATE_FORMAT == 'true') {
+      if(!function_exists('xtc_date_short')) {
+        require_once(DIR_FS_INC.'xtc_date_short.inc.php');
+      }
       return xtc_date_short($raw_date);
     }
     if ( ($raw_date == '0000-00-00 00:00:00') || ($raw_date == '') ) return false;
