@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: product_info_images.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id: product_info_images.php 899 2005-04-29 02:40:57Z hhgag $
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
@@ -8,8 +8,14 @@
    Copyright (c) 2003 XT-Commerce
    --------------------------------------------------------------
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    --------------------------------------------------------------*/
+
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+if (!isset($products_image_name_process)) {
+  $products_image_name_process = $products_image_name;
+}
 
 $a = new image_manipulation(DIR_FS_CATALOG_ORIGINAL_IMAGES . $products_image_name,PRODUCT_IMAGE_INFO_WIDTH,PRODUCT_IMAGE_INFO_HEIGHT,DIR_FS_CATALOG_INFO_IMAGES . $products_image_name_process,IMAGE_QUALITY,'');
 $array=clear_string(PRODUCT_IMAGE_INFO_BEVEL);
