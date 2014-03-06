@@ -56,7 +56,7 @@
       $accepted_manufacturers_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
       $accepted_manufacturers_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
       $dir_manufacturers = DIR_FS_CATALOG_IMAGES . 'manufacturers/';
-      if ($manufacturers_image = xtc_try_upload('manufacturers_image', $dir_manufacturers, '', $accepted_manufacturers_image_files_extensions, $accepted_manufacturers_image_files_mime_types)) {
+      if ($manufacturers_image = xtc_try_upload('manufacturers_image', $dir_manufacturers, '644', $accepted_manufacturers_image_files_extensions, $accepted_manufacturers_image_files_mime_types)) {
         $sql_data_array['manufacturers_image'] = 'manufacturers/'.$manufacturers_image->filename;
         xtc_db_perform(TABLE_MANUFACTURERS, $sql_data_array, 'update', "manufacturers_id = '" . xtc_db_input($manufacturers_id) . "'");
       }
