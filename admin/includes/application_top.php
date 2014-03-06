@@ -29,11 +29,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-// xss secure
-if (is_file('../includes/xss_secure.php')) {
-  include ('../includes/xss_secure.php');
-}
-
 // DB version, used for updates (_installer)
 define('DB_VERSION', 'MOD_2.0.0.0');
 
