@@ -1,6 +1,6 @@
 <?php
   /* --------------------------------------------------------------
-   $Id$   
+   $Id$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -8,10 +8,14 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-   
+
+  if (!isset($products_image_name_process)) {
+    $products_image_name_process = $products_image_name;
+  }
+
   $a = new image_manipulation(DIR_FS_CATALOG_ORIGINAL_IMAGES . $products_image_name,PRODUCT_IMAGE_POPUP_WIDTH,PRODUCT_IMAGE_POPUP_HEIGHT,DIR_FS_CATALOG_POPUP_IMAGES . $products_image_name_process,IMAGE_QUALITY,'');
   $array=clear_string(PRODUCT_IMAGE_POPUP_BEVEL);
   if (PRODUCT_IMAGE_POPUP_BEVEL != ''){
