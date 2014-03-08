@@ -707,4 +707,6 @@ define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Ihr Guthaben reicht nic
 define('_SHIPPING_FREE','Versandkostenfrei');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
+
+define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
 ?>

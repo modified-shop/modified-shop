@@ -549,4 +549,6 @@ define('ERROR_REVIEW_RATING', 'Enter your review.');
 define('_SHIPPING_FREE','Free Shipping');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
+
+define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
 ?>
