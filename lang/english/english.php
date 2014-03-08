@@ -534,4 +534,6 @@ define('ERROR_REVIEW_AUTHOR', 'Enter your name.');
 define('_SHIPPING_FREE','Free Shipping');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
+
+define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
 ?>
