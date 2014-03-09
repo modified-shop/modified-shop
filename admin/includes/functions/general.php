@@ -126,7 +126,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    */
   function xtc_set_categories_status($categories_id, $status) {
     if ($status != '1' && $status != '0') {
-      return -1
+      return -1;
     }
     return xtc_db_query("UPDATE ".TABLE_CATEGORIES." SET categories_status = '".(int)$status."' WHERE categories_id = '".(int)$categories_id."'");
   }
