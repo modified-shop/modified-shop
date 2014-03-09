@@ -125,10 +125,10 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_set_categories_status($categories_id, $status) {
-    if ($status != '1') {
-      $status = '0';
+    if ($status != '1' && $status != '0') {
+      return -1
     }
-    xtc_db_query("UPDATE ".TABLE_CATEGORIES." SET categories_status = '".(int)$status."' WHERE categories_id = '".(int)$categories_id."'");
+    return xtc_db_query("UPDATE ".TABLE_CATEGORIES." SET categories_status = '".(int)$status."' WHERE categories_id = '".(int)$categories_id."'");
   }
 
   /**
@@ -204,7 +204,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     if ($status != '1') {
       $status = '0';
     }
-    xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$fieldname." = '".(int)$status."' WHERE customers_id = '".(int)$customers_id."'");
+    return xtc_db_query("UPDATE ".TABLE_ADMIN_ACCESS." SET ".$fieldname." = '".(int)$status."' WHERE customers_id = '".(int)$customers_id."'");
   }
 
   // Check whether a referer has enough permission to open an admin page
@@ -782,7 +782,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $params
    * @return
    */
-  require_once(DIR_FS_INC . 'xtc_get_uprid.inc.php'); // Use existing function from "/inc/" folder
+
+  function xtc_get_uprid($prid, $params) {
+    $uprid = $prid;
+    if ((is_array($params)) && (!strstr($prid, '{'))) {
+      while (list ($option, $value) = each($params)) {
+        $uprid = $uprid.'{'.$option.'}'.$value;
+      }
+    }
+    return $uprid;
+  }
 
   /**
    * xtc_get_prid()
@@ -1038,7 +1047,14 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param integer $language_id
    * @return
    */
-  require_once(DIR_FS_INC . 'xtc_get_products_name.inc.php'); // Use existing function from "/inc/" folder
+
+  function xtc_get_products_name($product_id, $language_id = 0) {
+    if ($language_id == 0)
+      $language_id = (int)$_SESSION['languages_id'];
+    $product_query = xtc_db_query("select products_name from ".TABLE_PRODUCTS_DESCRIPTION." where products_id = '".$product_id."' and language_id = '".$language_id."'");
+    $product = xtc_db_fetch_array($product_query);
+    return $product['products_name'];
+  }
 
   /**
    * xtc_get_products_description()
@@ -1373,7 +1389,13 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param mixed $status
    * @return
    */
-  require_once(DIR_FS_INC . 'xtc_set_specials_status.inc.php'); // Use existing function from "/inc/" folder
+
+  function xtc_set_specials_status($specials_id, $status) {
+    if ($status != '1' && $status != '0') {
+      return -1;
+    }
+    return xtc_db_query("UPDATE ".TABLE_SPECIALS." SET status = '". (int)$status ."', date_status_change = now() WHERE specials_id = '".(int)$specials_id."'"); // remove setting: expires_date = NULL
+  }
 
   // Sets timeout for the current script.
   // Cant be used in safe mode.
@@ -2064,6 +2086,29 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   require_once(DIR_FS_INC . 'xtc_rand.inc.php'); // Use existing function from "/inc/" folder
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   /**
    * xtc_convert_linefeeds()
@@ -2764,8 +2809,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   /**
    * xtc_cfg_input_email_language()
    *
-   * @author GTB
-   * @date 2013-10-22
+   * @author GTB / Web28
+   * @date 2014-03-08
    * @param string configuration key
    *
    * @return input fields
@@ -2781,8 +2826,14 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     // build input fileds
     $email_fields = '';
     for ($i=0, $n=count($languages); $i<$n; $i++) {
+      $email_fields .= '<div>'.PHP_EOL;
       $email_fields .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-      $email_fields .= xtc_draw_input_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
+      if (trim($parameters[1]) == 'SMTP_PASSWORD') {
+        $email_fields .= xtc_draw_password_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), false , 'style="margin-left:2px; width:200px"');
+      } else {
+        $email_fields .= xtc_draw_input_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
+      }
+      $email_fields .= '</div>'.PHP_EOL;
     }
     
     return $email_fields;

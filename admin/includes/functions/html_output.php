@@ -213,8 +213,12 @@
 
   ////
   // Output a form password field
-  function xtc_draw_password_field($name, $value = '', $required = false) {
-    $field = xtc_draw_input_field($name, $value, 'maxlength="40"', $required, 'password', false);
+  function xtc_draw_password_field($name, $value = '', $required = false, $parameters = '') {
+    $params = strpos($parameters,'maxlength') !== false ? '' : 'maxlength="40"';
+    if ($parameters != '') {
+      $params .= ' ' . $parameters;
+    }
+    $field = xtc_draw_input_field($name, $value, $params, $required, 'password', false);
     return $field;
   }
 
