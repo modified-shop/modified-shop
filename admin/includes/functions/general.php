@@ -1513,6 +1513,7 @@
 
 
 
+
   /**
    * xtc_generate_category_path()
    *
@@ -2729,8 +2730,8 @@
   /**
    * xtc_cfg_input_email_language()
    *
-   * @author GTB
-   * @date 2013-10-22
+   * @author GTB / Web28
+   * @date 2014-03-08
    * @param string configuration key
    *
    * @return input fields
@@ -2746,8 +2747,14 @@
     // build input fileds
     $email_fields = '';
     for ($i=0, $n=count($languages); $i<$n; $i++) {
+      $email_fields .= '<div>'.PHP_EOL;
       $email_fields .= xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name'], '18px');
-      $email_fields .= xtc_draw_input_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
+      if (trim($parameters[1]) == 'SMTP_PASSWORD') {
+        $email_fields .= xtc_draw_password_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), false , 'style="margin-left:2px; width:200px"');
+      } else {
+        $email_fields .= xtc_draw_input_field(trim($parameters[1]).'[' . strtoupper($languages[$i]['code']) . ']', parse_multi_language_value($parameters[0], $languages[$i]['code'], true), 'style="margin-left:2px; width:360px"');
+      }
+      $email_fields .= '</div>'.PHP_EOL;
     }
     
     return $email_fields;
