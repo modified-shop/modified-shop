@@ -31,7 +31,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'Es werden alle Bilder in d
 /images/product_images/thumbnail_images/ <br /> <br /> neu erstellt.<br /> <br />
 
 Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing-New <b>-V2.1- Produktbilder</b>');
+define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing-New <b>-V2.2- Produktbilder</b>');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
 define('IMAGE_EXPORT','Dr&uuml;cken Sie Ok um die Stapelverarbeitung zu starten, dieser Vorgang kann einige Zeit dauern, auf keinen Fall unterbrechen!.');
@@ -79,9 +79,9 @@ if ( !class_exists( "image_processing_step" ) ) {
 
       $ext_array = array('gif','jpg','jpeg','png'); //Gültige Dateiendungen
 
-      $offset = $_GET['start'];
-      $step = $_GET['max_datasets'];
-      $count = $_GET['count'];
+      $offset = (int)$_GET['start'];
+      $step = (int)$_GET['max_datasets'];
+      $count = (int)$_GET['count'];
       $limit = $offset + $step;
       
       @ini_set('memory_limit','256M');
@@ -111,7 +111,16 @@ if ( !class_exists( "image_processing_step" ) ) {
 
       for ($i=$offset; $i<$limit; $i++) {
         if ($i >= $max_files) { // FERTIG
-          xtc_redirect(xtc_href_link($this->module_filename, 'set=' . $this->get_params['set'] . '&action=ready&module='.$this->code.'&count='. $count.'&max_datasets='. $_GET['max_datasets'])); //FERTIG
+          $get_params =
+            'set='. $this->get_params['set'].
+            '&action=ready'.
+            '&module='. $this->code.
+            '&count='. $count.
+            '&max_datasets='. (int)$_GET['max_datasets'].
+            '&only_missing_images='. (int)$_GET['only_missing_images'].
+            '&lower_file_ext='. (int)$_GET['lower_file_ext'];
+            
+          xtc_redirect(xtc_href_link($this->module_filename, $get_params)); //FERTIG
         }
         $products_image_name = $files[$i]['text'];
         $products_image_name_process = ($_GET['lower_file_ext'] == 1) ? str_replace($ext_search, $ext_replace ,$files[$i]['text']) : $files[$i]['text'];
@@ -145,7 +154,7 @@ if ( !class_exists( "image_processing_step" ) ) {
       }
       //Animierte Gif-Datei und Hinweistext
       $info_wait = '<img src="images/loading.gif"> ';
-      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . $count . ' / ' .$max_files);
+      $this->infotext = sprintf(MODULE_STEP_READY_STYLE_TEXT,$info_wait . IMAGE_STEP_INFO . (int)$count . ' / ' .(int)$max_files);
       $this->recursive_call = '<script language="javascript" type="text/javascript">setTimeout("document.modul_continue.submit()", 3000);</script>';
     }
 
@@ -162,9 +171,9 @@ if ( !class_exists( "image_processing_step" ) ) {
                              xtc_draw_hidden_field('max_images1','5').
                              IMAGE_EXPORT_TYPE.'<br />'.
                              IMAGE_EXPORT.'<br />'.
-                             '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
-                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', false) . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
-                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', false) . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
+                             '<br />' . xtc_draw_pull_down_menu('max_datasets', $max_array, isset($_GET['max_datasets']) ? (int)$_GET['max_datasets'] : '5'). ' ' . TEXT_MAX_IMAGES. '<br />'.
+                             '<br />' . xtc_draw_checkbox_field('only_missing_images', '1', isset($_GET['only_missing_images']) ? (int)$_GET['only_missing_images'] : false) . ' ' . TEXT_ONLY_MISSING_IMAGES. '<br />'.
+                             '<br />' . xtc_draw_checkbox_field('lower_file_ext', '1', isset($_GET['lower_file_ext']) ? (int)$_GET['lower_file_ext'] : false) . ' ' . TEXT_LOWER_FILE_EXT. '<br />'.
                              '<br />' . xtc_button(BUTTON_START). '&nbsp;' .
                              xtc_button_link(BUTTON_CANCEL, xtc_href_link($this->module_filename, 'set=' . $_GET['set'] . '&module='.$this->code))
                    );
