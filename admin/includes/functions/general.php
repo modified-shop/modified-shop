@@ -1514,6 +1514,7 @@
 
 
 
+
   /**
    * xtc_generate_category_path()
    *
@@ -2657,8 +2658,8 @@
   /**
    * xtc_cfg_multi_checkbox()
    *
-   * @author Hacker Solutions
-   * @date 2013-09-27
+   * @author Hacker Solutions /Web28
+   * @date 2014-03-10
    * @param string|array $format
    *   the parameter can be the function name which returns an array with 
    *   the below pattern or the array with the pattern itself
@@ -2674,10 +2675,12 @@
     }
     $checkboxes = '';
     $checkedboxes = (array) explode($separator, $checked);
-    $format_array = (array) function_exists($format) ? $format() : $format;
+    $format_array =  (!is_array($format) && function_exists($format)) ? (array)$format() : (array)$format;
     foreach ($format_array as $key => $value) {
-      $key   = isset($value['id'])   ? $value['id']   : $key;
-      $value = isset($value['text']) ? $value['text'] : $value;
+      if (is_array($value)) {
+        $key   = isset($value['id'])   ? $value['id']   : $key;
+        $value = isset($value['text']) ? $value['text'] : $value;
+      }
       $checkboxes .= '<label>';
       $checkboxes .= xtc_draw_checkbox_field('configuration_value[]', $key, (bool)in_array($key, $checkedboxes));
       $checkboxes .= $value . '</label><br>';
