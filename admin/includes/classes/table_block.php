@@ -95,7 +95,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     
     private function set_styles($contents) 
     {    
-        $this->contents_param = $contents['params'];
+        $this->contents_param = isset($contents['params']) ? $contents['params'] : '';
         if (isset($contents['align']) && trim($contents['align']) != '') {  
             if (isset($contents['params']) && strpos($contents['params'],'text-align') === false) {
                 $contents['params']  = preg_replace("'\s+=\s+'",'=',$contents['params']);
