@@ -57,7 +57,9 @@
         }
       }
 
-      if ($shipping_status_image = xtc_try_upload('shipping_status_image',DIR_FS_DOCUMENT_ROOT.DIR_WS_IMAGES)) {
+      $accepted_shipping_status_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
+      $accepted_shipping_status_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+      if ($shipping_status_image = xtc_try_upload('shipping_status_image', DIR_FS_DOCUMENT_ROOT.DIR_WS_IMAGES, '644', $accepted_shipping_status_files_extensions, $accepted_shipping_status_files_mime_types)) {
         xtc_db_query("update " . TABLE_SHIPPING_STATUS . " set shipping_status_image = '" . $shipping_status_image->filename . "' where shipping_status_id = '" . xtc_db_input($shipping_status_id) . "'");
       }
 
