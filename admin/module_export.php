@@ -154,7 +154,7 @@
       $module_info = array('code' => $module->code,
                            'title' => $module->title,
                            'description' => $module->description,
-                           'extended_description' => $module->extended_description,
+                           'extended_description' => isset($module->extended_description) ? $module->extended_description : '',
                            'status' => $module->check());
       $module_info['properties'] = isset($module->properties) ? $module->properties : array();
       $module_keys = $module->keys();
