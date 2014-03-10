@@ -76,10 +76,10 @@ if(defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True' && define
  ** check folder permissions
  ******************************************************************************/
 
-// writeable dirs
+// writeable dirs - only check if dir exssts
 $check = array();
 foreach($writeableDirs as $dir) {
-  if (!is_writable($dir)) {
+  if (is_file($dir) && !is_writable($dir)) {
     $check[] = $dir;
   }
 }
