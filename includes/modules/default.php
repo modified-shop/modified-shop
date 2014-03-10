@@ -29,8 +29,6 @@ $default_smarty->assign('session', session_id());
 
 // define defaults
 $main_content = '';
-$group_check = '';
-$fsk_lock = '';
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_customer_greeting.inc.php');
@@ -173,14 +171,6 @@ if ($category_depth == 'nested') {
   $from = '';
   $where = '';
 
-  // fsk18 lock
-  if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-    $fsk_lock = ' AND p.products_fsk18!=1';
-  }
-  // group check
-  if (GROUP_CHECK == 'true') {
-    $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-  }
   // sorting query
   if (isset($_GET['manufacturers_id']) && isset($_GET['filter_id'])) {
     $categories_id = (int)$_GET['filter_id'];
