@@ -285,7 +285,10 @@ require (DIR_WS_INCLUDES.'write_customers_status.php');
 // content, product, category - sql group_check/fsk_lock
 require (DIR_WS_INCLUDES.'define_conditions.php');
 
-// Versandkosten im Warenkorb 
+// add_select
+require (DIR_WS_INCLUDES.'define_add_select.php');
+
+// shippingcost shoppingcart
 if (strpos($PHP_SELF, FILENAME_SHOPPING_CART) === false) {
   unset($_SESSION['country']);
 }

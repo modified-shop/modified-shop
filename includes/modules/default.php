@@ -226,9 +226,10 @@ if ($category_depth == 'nested') {
       // We show them all
     }
   }
-  $select .= 'p.products_manufacturers_model, ';
+    
   $listing_sql = "-- /includes/modules/default.php
                   SELECT ".$select."
+                         ".ADD_SELECT_DEFAULT."
                          p.products_id,
                          p.products_ean,
                          p.products_quantity,

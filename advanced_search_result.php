@@ -140,27 +140,25 @@ if ($errorno) {
   } else {
     $pto_check = '';
   }
-
+  
   //build query
-  $add_select = 'p.products_manufacturers_model,';
-  $select_str = "SELECT distinct
-                    ".$add_select."
-                    p.products_id,
-                    p.products_ean,
-                    p.products_quantity,
-                    p.products_shippingtime,
-                    p.products_model,
-                    p.products_image,
-                    p.products_price,
-                    p.products_weight,
-                    p.products_tax_class_id,
-                    p.products_fsk18,
-                    p.products_vpe,
-                    p.products_vpe_status,
-                    p.products_vpe_value,
-                    pd.products_name,
-                    pd.products_short_description,
-                    pd.products_description ";
+  $select_str = "SELECT distinct ".ADD_SELECT_SEARCH."
+                                 p.products_id,
+                                 p.products_ean,
+                                 p.products_quantity,
+                                 p.products_shippingtime,
+                                 p.products_model,
+                                 p.products_image,
+                                 p.products_price,
+                                 p.products_weight,
+                                 p.products_tax_class_id,
+                                 p.products_fsk18,
+                                 p.products_vpe,
+                                 p.products_vpe_status,
+                                 p.products_vpe_value,
+                                 pd.products_name,
+                                 pd.products_short_description,
+                                 pd.products_description ";
 
   $from_str  = "FROM ".TABLE_PRODUCTS." AS p 
            LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." AS pd ON (p.products_id = pd.products_id AND pd.language_id = '".$_SESSION['languages_id']."') ";

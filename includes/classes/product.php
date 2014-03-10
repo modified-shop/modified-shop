@@ -27,23 +27,27 @@ class product {
   function product($pID = 0) {
     $this->pID = (int)$pID;
     
+    // include additional select
+    include(DIR_WS_INCLUDES.'define_add_select.php');
+
     //set default select, using in function getAlsoPurchased, getCrossSells, getReverseCrossSells
-    $this->default_select ='p.products_fsk18,
-                            p.products_id,
-                            p.products_price,
-                            p.products_tax_class_id,
-                            p.products_image,
-                            p.products_quantity,
-                            p.products_vpe,
-                            p.products_vpe_status,
-                            p.products_vpe_value,
-                            p.products_model,
-                            pd.products_name,
-                            pd.products_short_description';
+    $this->default_select = ADD_SELECT_PRODUCT .
+                            'p.products_fsk18,
+                             p.products_id,
+                             p.products_price,
+                             p.products_tax_class_id,
+                             p.products_image,
+                             p.products_quantity,
+                             p.products_vpe,
+                             p.products_vpe_status,
+                             p.products_vpe_value,
+                             p.products_model,
+                             pd.products_name,
+                             pd.products_short_description';
 
     // default products image
-    $this->useStandardImage=true;
-    $this->standardImage='noimage.gif';
+    $this->useStandardImage = true;
+    $this->standardImage = 'noimage.gif';
 
     if ($pID == 0) {
       $this->isProduct = false;
