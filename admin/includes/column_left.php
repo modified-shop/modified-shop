@@ -40,7 +40,7 @@ if (!function_exists('mainMenue')) { // erste ebene
 }
 
 // endMenue($box_title);
-if (!function_exists('endMenue')) { // menü schließen
+if (!function_exists('endMenue')) { // menue schliessen
   function endMenue($box_title) {    
     $html = '</ul>'.PHP_EOL;
     $html .= '</li>'.PHP_EOL;
@@ -64,7 +64,7 @@ if(file_exists(DIR_WS_INCLUDES.'extra_menu.php')) {
 echo '<div id="cssmenu" class="suckertreemenu">';
 echo '<ul id="treemenu1">';
 
-//---------------------------Ausgewählte Admin Sprache als Flagge
+//---------------------------Ausgewaehlte Admin Sprache als Flagge
 echo '<li><div id="lang_flag">' . xtc_image('../lang/' .  $_SESSION['language'] .'/admin/images/' . 'icon.gif', $_SESSION['language']). '</div></li>';
 
 //---------------------------STARTSEITE
@@ -89,20 +89,6 @@ echo mainMenue(BOX_HEADING_PRODUCTS);
     if ($admin_access['products_expected'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PRODUCTS_EXPECTED, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PRODUCTS_EXPECTED . '</a></li>';
 echo endMenue(BOX_HEADING_PRODUCTS);
 
-/******** SHOPGATE **********/
-if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
-  include_once (DIR_FS_EXTERNAL.'shopgate/base/admin/includes/column_left.php');
-}
-/******** SHOPGATE **********/
-
-/* magnalister v1.0.0 */
-if (isset($admin_access['magnalister'])) {
-	echo mainMenue(BOX_HEADING_MAGNALISTER);
-	if ($admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> - '.BOX_MAGNALISTER.'</a></li>';
-	echo endMenue(BOX_HEADING_MAGNALISTER);
-}
-/* END magnalister */
-
 //---------------------------XSBOOSTER
 if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS =='True') {
 echo mainMenue(BOX_HEADING_XSBOOSTER);
@@ -120,19 +106,23 @@ echo mainMenue(BOX_HEADING_MODULES);
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
     if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_SYSTEM . '</a></li>';
     if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_EXPORT . '</a></li>';
-    // BOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service  
-    if ($admin_access['janolaw'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
-    // EOF - Tomcraft - 2011-06-17 - Added janolaw AGB hosting service
-    // BOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface  
-    if ($admin_access['haendlerbund'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
-    // EOF - Tomcraft - 2012-12-08 - Added haendlerbund AGB interface
-    // BOF - Tomcraft - 2013-06-21 - Added easymarketing
-    if ($admin_access['safeterms'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
-    // EOF - Tomcraft - 2013-06-21 - Added safeterms AGB interface
-    // BOF - Tomcraft - 2013-08-29 - Added easymarketing
-    if ($admin_access['easymarketing'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
-    // EOF - Tomcraft - 2013-08-29 - Added easymarketing
 echo endMenue(BOX_HEADING_MODULES);
+
+//---------------------------PARTNER
+echo mainMenue('Partner Module');
+    if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
+    if (isset($admin_access['janolaw']) && $admin_access['janolaw'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
+    if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
+    if (isset($admin_access['safeterms']) && $admin_access['safeterms'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
+    if (isset($admin_access['easymarketing']) && $admin_access['easymarketing'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
+    //if (($admin_access['econda'] == '1')) echo '<li><a href="' . xtc_href_link('econda.php') . '" class="menuBoxContentLink"> -ECONDA Shop Monitor' . '</a></li>';
+    //if (($admin_access['cleverreach'] == '1')) echo '<li><a href="' . xtc_href_link('cleverreach.php') . '" class="menuBoxContentLink"> -CleverReach Newsletter' . '</a></li>';
+    /******** SHOPGATE **********/
+    if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
+      include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');
+    }
+    /******** SHOPGATE **********/
+echo endMenue('Partner Module');
 
 //---------------------------STATISTIKEN
 echo mainMenue(BOX_HEADING_STATISTICS);
@@ -143,15 +133,6 @@ echo mainMenue(BOX_HEADING_STATISTICS);
     if ($admin_access['stats_stock_warning'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_STATS_STOCK_WARNING, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_STOCK_WARNING . '</a></li>';
     if ($admin_access['stats_campaigns'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CAMPAIGNS_REPORT, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CAMPAIGNS_REPORT . '</a></li>';
 echo endMenue(BOX_HEADING_STATISTICS);
-
-//---------------------------PARTNER
-//BOF - Dokuman - 2009-11-03 - Remove "partner" links
-/*
-echo mainMenue('Partner');
-  if (($admin_access['econda'] == '1')) echo '<li><a href="' . xtc_href_link('econda.php') . '" class="menuBoxContentLink"> -ECONDA Shop Monitor' . '</a></li>';
-  if (($admin_access['cleverreach'] == '1')) echo '<li><a href="' . xtc_href_link('cleverreach.php') . '" class="menuBoxContentLink"> -CleverReach Newsletter' . '</a></li>';
-echo endMenue();
-*/
 
 //---------------------------HILFSPROGRAMME
 echo mainMenue(BOX_HEADING_TOOLS);
@@ -228,6 +209,7 @@ echo mainMenue(BOX_HEADING_CONFIGURATION2);
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=22', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_22 . '</a></li>';
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=40', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_40 . '</a></li>';
       echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=24', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_24 . '</a></li>';
+      echo '<li><a href="' . xtc_href_link(FILENAME_CONFIGURATION, 'gID=25', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_CONFIGURATION_25 . '</a></li>';
     }
 echo endMenue(BOX_HEADING_CONFIGURATION2);
 
