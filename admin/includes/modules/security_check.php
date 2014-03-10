@@ -76,10 +76,10 @@ if(defined('MODULE_JANOLAW_STATUS') && MODULE_JANOLAW_STATUS == 'True' && define
  ** check folder permissions
  ******************************************************************************/
 
-// writeable dirs
+// writeable dirs - only check if dir exssts
 $check = array();
 foreach($writeableDirs as $dir) {
-  if (!is_writable($dir)) {
+  if (is_file($dir) && !is_writable($dir)) {
     $check[] = $dir;
   }
 }
@@ -151,6 +151,7 @@ if (!empty($check)) {
 /** ----------------------------------------------------------------------------
  ** Check for enabled FILE options on MySQL database - possible injection
  ** ------------------------------------------------------------------------- */
+/* //for further use
 $sql = '-- admin/includes/modules/security_check FILE perms
   show grants';
 $stmt = xtc_db_query($sql);
@@ -165,6 +166,7 @@ while ($row = xtc_db_fetch_array($stmt)) {
   // we are only interested in the user privileges - not for the DB
   break;
 }
+*/
 
 /*******************************************************************************
  ** register_globals = off check:
