@@ -50,13 +50,11 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 	// Check if email exists
 	$check_customer_query = xtc_db_query("select customers_id, customers_vat_id, customers_firstname,customers_lastname, customers_gender, customers_password, customers_email_address, customers_default_address_id from ".TABLE_CUSTOMERS." where customers_email_address = '".xtc_db_input($email_address)."' and account_type = '0'");
 	if (!xtc_db_num_rows($check_customer_query)) {
-		$_GET['login'] = 'fail';
 		$info_message = TEXT_LOGIN_ERROR;
 	} else {
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 		// Check that password is good
 		if (xtc_validate_password($password, $check_customer['customers_password'], $check_customer['customers_id']) !== true) {
-			$_GET['login'] = 'fail';
 			$info_message = TEXT_LOGIN_ERROR;
 		} else {
 			if (SESSION_RECREATE == 'True') {
@@ -69,6 +67,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'process')) {
 			$_SESSION['customer_gender'] = $check_customer['customers_gender'];
 			$_SESSION['customer_first_name'] = $check_customer['customers_firstname'];
 			$_SESSION['customer_last_name'] = $check_customer['customers_lastname'];
+			$_SESSION['customer_email_address'] = $check_customer['customers_email_address'];
 			$_SESSION['customer_id'] = $check_customer['customers_id'];
 			$_SESSION['customer_vat_id'] = $check_customer['customers_vat_id'];
 			$_SESSION['customer_default_address_id'] = $check_customer['customers_default_address_id'];
