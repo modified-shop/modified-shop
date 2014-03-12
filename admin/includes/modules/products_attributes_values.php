@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: products_attributes_values.php 3235 2012-07-16 14:08:23Z web28 $
+   $Id: products_attributes_values.php 5889 2013-10-04 13:55:28Z Tomcraft $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -300,7 +300,7 @@ while ($values_values = xtc_db_fetch_array($values)) {
                     <tr>
                       <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
                     </tr>
-                    <?php echo xtc_draw_form('value', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&value_page='.$_GET['value_page'].$page_info.$option_id, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                    <?php echo xtc_draw_form('value', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&'.$page_info, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
                     <tr style="background-color: #d4d4d4;">
                       <td class="smallText txta-c">&nbsp;<?php echo $values_values['products_options_values_id']; ?>
                         <input type="hidden" name="value_id" value="<?php echo $values_values['products_options_values_id']; ?>">
