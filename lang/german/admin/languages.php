@@ -42,4 +42,11 @@ define('TEXT_INFO_LANGUAGE_STATUS', 'Status:');
 define('TABLE_HEADING_LANGUAGE_STATUS', 'Status');
 define('TEXT_INFO_LANGUAGE_STATUS_ADMIN', 'Status Admin:');
 define('TABLE_HEADING_LANGUAGE_STATUS_ADMIN', 'Status Admin');
+
+define('TEXT_LANGUAGE_TRANSFER_INFO', 'Transfer folgender Sprachtabellen');
+define('TEXT_LANGUAGE_TRANSFER_BTN', 'Transfer');
+define('TEXT_LANGUAGE_TRANSFER_FROM', 'Von ');
+define('TEXT_LANGUAGE_TRANSFER_TO', ' nach ');
+define('TEXT_LANGUAGE_TRANSFER_OK', 'Transfer erfolgreich!');
+define('TEXT_LANGUAGE_TRANSFER_ERR', 'Bitte unterschiedliche Sprachen w&auml;hlen!');
 ?>
