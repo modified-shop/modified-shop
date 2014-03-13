@@ -292,10 +292,12 @@ class product {
     }
     $staffel_data = array ();
     for ($i=0, $n=sizeof($staffel); $i<$n; $i++) {
+      $to_quantity = '';
       if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')){ 
         $quantity = $staffel[$i]['stk'];
         if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1)
           $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);
+          $to_quantity = $staffel[$i +1]['stk'] - 1;
       } else {
         $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
       }
@@ -307,6 +309,8 @@ class product {
       }
       $staffel_data[$i] = array('QUANTITY' => $quantity,
                                 'PLAIN_QUANTITY' => $staffel[$i]['stk'],
+                                'FROM_QUANTITY' => GRADUATED_PRICE_MAX_VALUE,
+                                'TO_QUANTITY' => $to_quantity,
                                 'VPE' => $vpe,
                                 'PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, true, $this->data['products_tax_class_id']),
                                 'PLAIN_PRICE' => $xtPrice->xtcFormat($staffel[$i]['price'] - $staffel[$i]['price'] / 100 * $discount, false, $this->data['products_tax_class_id'])
