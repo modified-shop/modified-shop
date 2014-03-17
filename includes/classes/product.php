@@ -27,9 +27,6 @@ class product {
   function product($pID = 0) {
     $this->pID = (int)$pID;
     
-    // include additional select
-    include(DIR_WS_INCLUDES.'define_add_select.php');
-
     //set default select, using in function getAlsoPurchased, getCrossSells, getReverseCrossSells
     $this->default_select = ADD_SELECT_PRODUCT .
                             'p.products_fsk18,
