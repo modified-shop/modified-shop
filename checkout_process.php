@@ -279,7 +279,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         'products_id' => xtc_get_prid($order->products[$i]['id']),
         'products_model' => $order->products[$i]['model'],
         'products_name' => $order->products[$i]['name'],
-        'products_shipping_time'=>$order->products[$i]['shipping_time'],
+        'products_shipping_time' => strip_tags($order->products[$i]['shipping_time']),
         'products_price' => $order->products[$i]['price'],
         'final_price' => $order->products[$i]['final_price'],
         'products_tax' => $order->products[$i]['tax'],
