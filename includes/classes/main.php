@@ -45,6 +45,7 @@ class main {
    * @return  string
    */
   function getShippingStatusName($id) {
+    global $request_type;
     if (!defined('SHIPPING_STATUS_INFOS')) {
       return (isset($this->SHIPPING[$id]['name']) ? $this->SHIPPING[$id]['name'] : '');
     }
