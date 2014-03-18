@@ -1,84 +1,113 @@
 {config_load file="$language/lang_$language.conf" section="duty_info"} 
 <table width="100%" border="0">
-  <tr>
-    <td><table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr>
-          <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br />
+  <tr> 
+    <td>
+      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+        <tr> 
+          <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br />
             <br />
             {if $SHIPPING_METHOD}<strong>Versandart:</strong> {$SHIPPING_METHOD}<br />{/if}
             {if $PAYMENT_METHOD}<strong>Zahlungsmethode:</strong> {$PAYMENT_METHOD}<br />{/if}
             <strong>Bestellung Nr:</strong> {$oID}<br />
             <strong>Bestelldatum:</strong> {$DATE}<br />
-      {if $csID}<strong>Kundennummer:</strong> {$csID}<br />{/if}
+            {if $csID}<strong>Kundennummer:</strong> {$csID}<br />{/if}
             <strong>Ihre E-Mail-Adresse:</strong> {$EMAIL}<br />
-            </font></td>
-          <td width="1"><img src="{$logo_path}logo.gif"></td>
+            </font>
+          </td>
+          <td width="2"><img src="{$logo_path}logo.gif"></td>
         </tr>
       </table>
-      <br /> <table style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
-        <tr bgcolor="#f1f1f1">{if $address_label_payment}
-          <td {if $address_label_payment!=$address_label_shipping} width="50%" {else} width="100%" {/if}> <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{if $address_label_payment!=$address_label_shipping}Rechnungsadresse{else}Rechnungs-/Lieferadresse{/if} <br />
-          </strong></font></p></td>{/if}{if $address_label_payment!=$address_label_shipping}
-          <td> <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Lieferadresse <br />
-          </strong></font></p></td>{/if}
+      <br /> 
+      <table style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
+        <tr bgcolor="#f1f1f1"> 
+          <td width="50%"> 
+            <p><font size="2"><strong><font face="Verdana, Arial, Helvetica, sans-serif">Lieferadresse <br /></font></strong></font></p>
+          </td>
+          {if $address_label_payment}
+          <td> 
+            <p><font size="2"><strong><font face="Verdana, Arial, Helvetica, sans-serif">Rechnungsadresse <br /></font></strong></font></p>
+          </td>
+          {/if}
         </tr>
-        <tr>
-          {if $address_label_payment}<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font></td>{/if}
-          {if $address_label_payment!=$address_label_shipping}<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font></td>{/if}
+        <tr> 
+          <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}</font></td>
+          {if $address_label_payment}
+          <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}</font></td>
+          {/if}
         </tr>
       </table>
-      <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+      <p><font size="2" face="Verdana, Arial, Helvetica, sans-serif">
       {if $GENDER == 'm'}Sehr geehrter Herr{elseif $GENDER == 'f'}Sehr geehrte Frau{else}Hallo{/if} {$NAME},
-        <br /><br />vielen Dank f&uuml;r Ihre Bestellung.<br />
- {$PAYMENT_INFO_HTML}</font>
-        <br />{if $COMMENTS}<br />
-        <strong><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Ihre Anmerkungen:</font></strong><br />
-        <font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$COMMENTS}</font><br />
-{/if}<br />
-{*BOF - web28 - 2011-02-01 - Paypal Express*}
-{if $NEW_PASSWORD}
-        <br /><br />
-        <strong><font size="1" face="Verdana, Arial, Helvetica, sans-serif">Ihr Account Passwort:</font></strong><br />
-        <font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$NEW_PASSWORD}</font><br /><br />
-{/if}
-{*EOF - web28 - 2011-02-01 - Paypal Express*}
-      </p></td>
+      <br /><br /> vielen Dank f&uuml;r Ihre Bestellung.  
+        <br />{$PAYMENT_INFO_HTML}<br />
+        {if $COMMENTS}<br />
+        <strong>Ihre Anmerkungen:</strong><br />
+        {$COMMENTS}<br />
+        {/if}
+        <br />
+        {*BOF - web28 - 2011-02-01 - Paypal Express*}
+        {if $NEW_PASSWORD}
+          <br /><br />
+          <strong>Ihr Account Passwort:</strong><br />
+          {$NEW_PASSWORD}<br /><br />
+        {/if}
+        {*EOF - web28 - 2011-02-01 - Paypal Express*}
+        </font>
+      </p>
+    </td>
   </tr>
 </table>
 <table style="border-bottom:1px solid;" width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr>
-    <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif"> <strong>Ihre bestellten Produkte nochmals zur Kontrolle: </strong></font></td>
+  <tr> 
+    <td><font size="2" face="Verdana, Arial, Helvetica, sans-serif"> <strong>Ihre bestellten Produkte nochmals zur Kontrolle: </strong></font></td>
   </tr>
-  <tr>
-    <td> <table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="f1f1f1">
-        <tr>
-          <td colspan="2" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
-              Stk. </strong></font></div></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
-            Produkt </strong></font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
-            Artikel Nr. </strong></font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Einzelpreis</strong></font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
-              Preis</strong></font><font size="1"> </font></div></td>
+  <tr> 
+    <td> 
+      <table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="f1f1f1">
+        <tr> 
+          <td colspan="2" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Stk.</strong></font></div></td>
+          {if $smarty.const.SHOW_IMAGES_IN_EMAIL == 'true'}
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Bild</strong></font></td>
+          {/if}
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Produkt</strong></font></td>
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Artikel Nr.</strong></font></td>
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150">><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Einzelpreis</strong></font></div></td>
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>Preis</strong></font></div></td>
         </tr>
-        {foreach name=aussen item=order_values from=$order_data}
-        <tr>
+        {foreach name=aussen item=order_values from=$order_data} 
+        <tr> 
           <td width="20" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_QTY}</font></div></td>
           <td width="20" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">x</font></div></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{$order_values.PRODUCTS_NAME}</strong>{if ACTIVATE_SHIPPING_STATUS == 'true'}{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}{/if}<em><br />
-            {$order_values.PRODUCTS_ATTRIBUTES}</em></font></td>
+          {if $smarty.const.SHOW_IMAGES_IN_EMAIL == 'true'}
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;">
+            {if $order_values.PRODUCTS_IMAGE neq ''}              
+                <img src="{$img_path}{$order_values.PRODUCTS_IMAGE}" style="{$smarty.const.SHOW_IMAGES_IN_EMAIL_STYLE}">              
+            {/if}
+          </td>
+          {/if}
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;">
+            <font size="1" face="Verdana, Arial, Helvetica, sans-serif">
+            <strong>{$order_values.PRODUCTS_NAME}</strong>
+            {if $order_values.PRODUCTS_ORDER_DESCRIPTION neq ''}<br />{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
+            {if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />Lieferzeit: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
+            {if $order_values.PRODUCTS_ATTRIBUTES neq ''}<br /><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>{/if}
+            </font>
+          </td>
           <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_MODEL}<br />
             <em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_SINGLE_PRICE}</font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_PRICE}</font></div></td>
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_SINGLE_PRICE}</font></div></td>
+          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_PRICE}</font></div></td>
         </tr>
-        {/foreach} </table></td>
+        {/foreach} 
+      </table>
+    </td>
   </tr>
 </table>
 {foreach name=aussen item=order_total_values from=$order_total}
-<div align="right"><font size="1" face="Arial, Helvetica, sans-serif">{$order_total_values.TITLE}{$order_total_values.TEXT}</font></div>
+<div align="right"><font size="2" face="Arial, Helvetica, sans-serif">{$order_total_values.TITLE}{$order_total_values.TEXT}</font></div>
 {/foreach}
+
+{$downloads_content_html}
 
 {if $DELIVERY_DUTY_INFO neq ''}
 <br />
@@ -97,4 +126,3 @@
 <font size="1" face="Arial, Helvetica, sans-serif">{$REVOCATION_HTML}</font>
 <br />
 {/if}
-
