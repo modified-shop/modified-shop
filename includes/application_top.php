@@ -49,6 +49,11 @@ if (DB_DATABASE == '' && is_dir('./_installer')) {
   exit();
 }
 
+// default time zone
+if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
+  date_default_timezone_set('Europe/Berlin');
+}
+
 // set the level of error reporting
 @ini_set('display_errors', true);
 if (is_file(DIR_FS_CATALOG.'export/_error_reporting.shop')) {
@@ -75,11 +80,6 @@ require_once (DIR_FS_INC . 'auto_require.inc.php');
 
 // include the list of project filenames
 require (DIR_WS_INCLUDES.'filenames.php');
-
-// default time zone
-if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
-  date_default_timezone_set('Europe/Berlin');
-}
 
 // Debug-Log-Class - thx to franky
 include_once(DIR_WS_CLASSES.'class.debug.php');
