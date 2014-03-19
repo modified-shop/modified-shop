@@ -82,10 +82,9 @@
   $action = (isset($_GET['action']) ? xtc_db_prepare_input($_GET['action']) : '');
   $oID = isset($_GET['oID']) ? (int) $_GET['oID'] : '';
   $customer = (isset($_GET['customer']) ? xtc_db_prepare_input($_GET['customer']) : '');
-  $email_preview = isset($_POST['email_preview']) && $_POST['email_preview'] == 1 ? true : false;
-  if ($email_preview) {
-    $action ='update_order';
-  }
+  
+  // EMAIL PREVIEW
+  include('includes/modules/email_preview/email_preview_tabs.php');
 
   if (($action == 'edit' || $action == 'update_order') && $oID) {
     $orders_query = xtc_db_query("-- /admin/orders.php
@@ -218,7 +217,7 @@
       $status = (int) $_POST['status'];
       $comments = xtc_db_prepare_input($_POST['comments']);
       $order_updated = false;
-      if ($order->info['orders_status'] != $status || $comments != '' || $email_preview) {
+      if ($order->info['orders_status'] != $status || $comments != '' || $email_preview) { // EMAIL PREVIEW
         if (!$email_preview) {  
           require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_status_requests.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
           xtc_db_query("-- /admin/orders.php
@@ -227,7 +226,8 @@
                                last_modified = now()
                          WHERE orders_id = ".$oID
                       );
-        }
+        }  // EMAIL PREVIEW
+        
         $customer_notified = 0;
         if ($_POST['notify'] == 'on') {
           $notify_comments = ($_POST['notify_comments'] == 'on') ? $comments : '';        
@@ -305,16 +305,8 @@
           $order_subject_replace = array($oID, strftime(DATE_FORMAT_LONG), $order->customer['lastname'], $order->customer['firstname']);
           $order_subject = str_replace($order_subject_search, $order_subject_replace, EMAIL_BILLING_SUBJECT);
 
-          if ($email_preview) {
-            $html_signatur = '<br />' . $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/signatur.html');
-            $html_mail = str_replace('[SIGNATUR]', $html_signatur, $html_mail);
-            $txt_signatur = "\n" . $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/signatur.txt');
-            $txt_mail = str_replace('[SIGNATUR]', $txt_signatur, $txt_mail);
-            $head = '<!DOCTYPE html>'."\n".'<head><meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'"></head>'."\n";
-            $email_div = '<div>'.$html_mail.'<p>---------- PLAIN TEXT EMAIL ----------</p>'.nl2br($txt_mail).'</div>';
-            echo $head .$email_div;
-            exit;
-          }
+          //EMAIL PREVIEW
+          include ('includes/modules/email_preview/email_preview.php');
         
            xtc_php_mail(EMAIL_BILLING_ADDRESS,
                        EMAIL_BILLING_NAME,
@@ -454,23 +446,9 @@ require (DIR_WS_INCLUDES.'head.php');
   .heading{font-family: Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; padding:2px; }
   .last_row{background-color: #D9E9FF;}
 </style>
-<script type="text/javascript">
-  document.status.email_preview.value = '';
-  function email_popup () {
-    if (document.status.notify.checked) {
-      document.status.target = "emailPreview";
-      document.status.email_preview.value = 1; 
-      var w = window.open('', 'emailPreview', 'width=700,height=800,resizable=yes,scrollbars=yes,left=100,top=50');
-      document.status.onsubmit = function() {return w};
-      document.status.submit();
-      document.status.email_preview.value = ''; 
-      document.status.target = "";
-      return true;
-    }
-    alert ('Für Email Vorschau "Kunde benachrichtigen" anhaken!');
-    return false;
-  }
-</script>
+
+<script type="text/javascript" src="includes/modules/email_preview/email_preview.js"></script>
+
 </head>
 <body>
   <!-- header //-->
