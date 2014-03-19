@@ -417,9 +417,12 @@
                   <td class="main" style="width:40px;"><?php echo xtc_draw_checkbox_field('notify_comments', '', true); ?></td>
                 </tr>
               </table>
-              <input type="hidden" name="email_preview" value="">
               <div style="float:right; margin: 10px 0 0;"><input type="submit" class="button" name="update" value="<?php echo BUTTON_UPDATE; ?>"></div>
-              <div style="float:right; margin: 10px 0 0;"><a class="button" href="Javascript:void()" onclick="email_popup()"><?php echo 'EMAIL '.BUTTON_PREVIEW; ?></a></div>
+              <?php
+              //BOF EMAIL PREVIEW
+              include('includes/modules/email_preview/email_preview_btn.php');
+              //EOF EMAIL PREVIEW
+              ?>
             </td>
           </tr>
           </form>
