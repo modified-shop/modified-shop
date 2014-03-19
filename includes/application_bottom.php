@@ -44,7 +44,7 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
 foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
 // new error handling
-if (is_array($error_exceptions)) {
+if (is_array($error_exceptions) && count($error_exceptions) > 0) {
   if ((DISPLAY_ERROR_REPORTING == 'all') || (DISPLAY_ERROR_REPORTING == 'admin' && $_SESSION['customers_status']['customers_status'] == '0')) {
     echo '<div style="width:1000px; margin:20px auto;">' . PHP_EOL .
            '<h2 style="color: rgb(190, 50, 50);">Exception Occured:</h2>' . PHP_EOL;
