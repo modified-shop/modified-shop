@@ -53,6 +53,11 @@ if (file_exists('../includes/local/configure.php')) {
   include_once('../includes/configure.php');
 }
 
+// default time zone
+if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
+  date_default_timezone_set('Europe/Berlin');
+}
+
 // set the level of error reporting
 @ini_set('display_errors', true);
 if (is_file(DIR_FS_CATALOG.'export/_error_reporting.admin')) {
@@ -82,11 +87,6 @@ require_once (DIR_WS_FUNCTIONS.'compatibility.php');
 
 // project versison
 require_once (DIR_WS_INCLUDES.'version.php');
-
-// default time zone
-if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
-  date_default_timezone_set('Europe/Berlin');
-}
 
 // Base/PHP_SELF/SSL-PROXY
 require_once(DIR_FS_INC . 'set_php_self.inc.php');
