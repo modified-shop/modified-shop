@@ -86,9 +86,11 @@
     if ($$link) {
       if (!@mysql_select_db($database, $$link)) {
         xtc_db_error('', mysql_errno($$link), mysql_error($$link));
+        return false;
       }
     } else {
       xtc_db_error('', mysql_errno(), mysql_error());
+      return false;
     }
 
     // set charset defined in configure.php
