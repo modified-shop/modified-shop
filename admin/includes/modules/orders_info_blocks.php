@@ -94,6 +94,10 @@
           <tr>
             <td>
               <table border="0" cellspacing="0" cellpadding="2">
+                <?php
+                // invoice number and date
+                echo add_table_infos_ibillnr($order);
+                ?>
                 <tr>
                   <td class="main"><b><?php echo ENTRY_LANGUAGE; ?></b></td>
                   <td class="main"><?php echo $lang_img = xtc_image(DIR_WS_LANGUAGES . $order->info['language'].'/admin/images/'.$lang_array['image'], $order->info['language']) .'&nbsp;&nbsp;'. $order->info['language']; ?></td>
@@ -438,6 +442,8 @@
                 if (ACTIVATE_GIFT_SYSTEM == 'true') {
                 echo '<a class="button" href="'.xtc_href_link(FILENAME_GV_MAIL, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$order->customer['ID']).'">'.BUTTON_SEND_COUPON.'</a>';
               }
+              // invoice number and date
+              echo add_btn_ibillnr($order,$oID);
               ?>
               <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_ORDER,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_INVOICE; ?></a>
               <a class="button" href="Javascript:void()" onclick="window.open('<?php echo xtc_href_link(FILENAME_PRINT_PACKINGSLIP,'oID='.$oID); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=800, height=750')"><?php echo BUTTON_PACKINGSLIP; ?></a>

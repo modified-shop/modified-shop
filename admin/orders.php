@@ -85,6 +85,7 @@ $customer = (isset($_GET['customer']) ? xtc_db_prepare_input($_GET['customer']) 
 
 // EMAIL PREVIEW
 include('includes/modules/email_preview/email_preview_tabs.php');
+
 if (($action == 'edit' || $action == 'update_order') && $oID) {
   $orders_query = xtc_db_query("-- /admin/orders.php
                                   SELECT orders_id
@@ -117,6 +118,10 @@ $order_select_fields = 'o.orders_id,
                         o.delivery_country_iso_code_2
                         ';
 
+// invoice number and date
+include('includes/modules/invoice_number/invoice_number_functions.php');
+$order_select_fields = add_select_ibillnr($order_select_fields);
+
 //admin search bar
 if ($action == 'search' && $oID) {
   $orders_query_raw = "-- /admin/orders.php
@@ -147,6 +152,10 @@ if (($action == 'edit' || $action == 'update_order') && $order_exists) {
   require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtcPrice.php');
   $xtPrice = new xtcPrice($order->info['currency'], $order->info['status']);
 }
+
+// invoice number and date
+action_next_ibillnr($order,$oID);
+
 // Trying to get property of non-object $order->info
 if (isset($order) && is_object($order)) {
   $lang_query = xtc_db_query("-- /admin/orders.php
@@ -200,7 +209,7 @@ switch ($action) {
                        WHERE orders_id = ".$oID
                     );
       }  // EMAIL PREVIEW
-      
+
       $customer_notified = 0;
       if ($_POST['notify'] == 'on') {
         $notify_comments = ($_POST['notify_comments'] == 'on') ? $comments : '';        
