@@ -74,7 +74,9 @@
   }
   $smarty->assign('COMMENTS', $order->info['comments']);
   $smarty->assign('DATE',xtc_date_long($order->info['date_purchased']));
-
+  $smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
+  $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
+  $smarty->assign('DELIVERY_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
   // dont allow cache
   $smarty->caching = false;
   $smarty->template_dir=DIR_FS_CATALOG.'templates';
