@@ -16,7 +16,9 @@ include('includes/modules/invoice_number/'.$_SESSION['language'].'/invoice_numbe
    
 function add_select_ibillnr($sSelect)
 {
-    $sSelect .= ',o.ibn_billnr';
+    if (defined('MODULE_INVOICE_NUMBER_STATUS') && MODULE_INVOICE_NUMBER_STATUS == 'True') {
+      $sSelect .= ',o.ibn_billnr';
+    }
     return $sSelect;
 }
 
