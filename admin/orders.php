@@ -165,11 +165,13 @@ if (isset($order) && is_object($order)) {
   $lang_array = xtc_db_fetch_array($lang_query);
   $lang = $lang_array['languages_id'];
   $lang_code = $lang_array['code'];
+  $lang_charset = $lang_array['language_charset'];
 }
 
-  if (isset($order) && trim($order->info['language']) == '') $order->info['language'] = $_SESSION['language'];
+if (isset($order) && trim($order->info['language']) == '') $order->info['language'] = $_SESSION['language'];
 if (!isset($lang)) $lang = $_SESSION['languages_id'];
 if (!isset($lang_code)) $lang_code = $_SESSION['language_code'];
+if (!isset($lang_charset)) $lang_charset = $_SESSION['language_charset'];
 
 $orders_statuses = array ();
 $orders_status_array = array ();
@@ -230,7 +232,7 @@ switch ($action) {
         } else {
           $smarty->assign('GENDER', '');
         }
-        $smarty->assign('LASTNAME',$order->customer['lastname']);
+        $smarty->assign('LASTNAME',$order->customer['lastname'] != '' ? $order->customer['lastname'] : $order->customer['name']);
         
         $smarty->assign('order', $order);
         $smarty->assign('order_data', $order->getOrderData($oID));

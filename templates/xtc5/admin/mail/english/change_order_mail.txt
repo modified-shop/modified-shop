@@ -6,7 +6,8 @@ The status of your order {if $ORDER_NR}No. {$ORDER_NR}{/if} {if $ORDER_DATE}from
 {if $ORDER_LINK}Link to order:
 {$ORDER_LINK} {/if}
 
-{if $NOTIFY_COMMENTS}Notes to your order:{$NOTIFY_COMMENTS}{/if}
+{if $NOTIFY_COMMENTS}Notes to your order:
+{$NOTIFY_COMMENTS}{/if}
 
 New status: {$ORDER_STATUS}
 
