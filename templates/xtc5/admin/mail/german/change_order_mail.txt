@@ -6,7 +6,8 @@ Der Status Ihrer Bestellung {if $ORDER_NR}Nr. {$ORDER_NR}{/if} {if $ORDER_DATE}v
 {if $ORDER_LINK}Link zur Bestellung:
 {$ORDER_LINK} {/if}
 
-{if $NOTIFY_COMMENTS}Anmerkungen und Kommentare zu Ihrer Bestellung:{$NOTIFY_COMMENTS}{/if}
+{if $NOTIFY_COMMENTS}Anmerkungen und Kommentare zu Ihrer Bestellung:
+{$NOTIFY_COMMENTS}{/if}
 
 Neuer Status: {$ORDER_STATUS}
 
