@@ -174,7 +174,11 @@
           'comments' => $order['comments'],
           'language' => $order['language']
         );
-
+        
+      //invoice_number modul
+      $this->info['ibn_billnr'] = isset($order['ibn_billnr']) ? $order['ibn_billnr']: '';
+      $this->info['ibn_billdate'] = isset($order['ibn_billdate']) ? $order['ibn_billdate']: '';
+      
       $this->customer = array(
           'id' => $order['customers_id'],
           'customers_status' => $order['customers_status'],
