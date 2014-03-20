@@ -154,4 +154,7 @@ ALTER TABLE newsletter_recipients ADD  ip_date_added varchar(32) DEFAULT NULL;
 ALTER TABLE newsletter_recipients ADD  date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE newsletter_recipients ADD  ip_date_confirmed varchar(32) DEFAULT NULL;
 
+#Web28 - 2014-03-20 change password lenght
+ALTER TABLE customers MODIFY customers_password varchar(60) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
