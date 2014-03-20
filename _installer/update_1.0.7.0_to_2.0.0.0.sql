@@ -129,4 +129,7 @@ ALTER TABLE payment_moneybookers_countries
 # DokuMan - 2013-03-20 - change address format to 5 for Luxembourg
 UPDATE countries SET address_format_id = 5 WHERE countries_id = 124;
 
+#Web28 - 2014-03-20 change password lenght
+ALTER TABLE customers MODIFY customers_password varchar(60) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
