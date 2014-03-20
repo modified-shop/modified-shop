@@ -411,13 +411,13 @@ if (xtc_not_null($action) && !$box) {
                 case 'restore':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
                     $contents = array ('form' => xtc_draw_form('modules', FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class . '&action=restoreconfirm'));
-                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESET);
+                    $contents[] = array ('text' => '<br />'.TEXT_INFO_MODULE_RESTORE);
                     if (isset($mInfo->properties['restore']) && count($mInfo->properties['restore']) > 0) {
                       foreach($mInfo->properties['restore'] as $key) {
                         $contents[] = array ('text' => '<br />'.$key);
                       }
                     }
-                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RETORE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="'. BUTTON_RESTORE .'"><a class="button" onclick="this.blur();" href="'.xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $module_class).'">' . BUTTON_CANCEL . '</a>');
                     break;
                 case 'backup':
                     $heading[] = array('text' => '<b>' . $mInfo->title . '</b>');
@@ -467,9 +467,10 @@ if (xtc_not_null($action) && !$box) {
                           }
                           $keys .= '<br /><br />';
                         }
+                        $btn_edit = isset($mInfo->properties['btn_edit']) && trim($mInfo->properties['btn_edit']) != '' ? $mInfo->properties['btn_edit'] : BUTTON_START;
                         $keys = substr($keys, 0, strrpos($keys, '<br /><br />'));
                         $contents[] = array('align' => 'center', 'text' => (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
-                                                                             ? '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . BUTTON_START . '</a>'
+                                                                             ? '<a class="button btnbox" onclick="this.blur();" href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $set . '&module=' . $mInfo->code . '&action=edit') . '">' . $btn_edit . '</a>'
                                                                              : '').
                                                                            (!isset($mInfo->properties['process_key']) || (isset($mInfo->properties['process_key']) && $mInfo->properties['process_key'] == 1)
                                                                              ?
