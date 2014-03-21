@@ -12,18 +12,9 @@
 
 $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-$result = false;
 
-// fsk18 lock
-$fsk_lock = '';
-if ($_SESSION['customers_status']['customers_fsk18_display'] == '0') {
-  $fsk_lock = ' AND p.products_fsk18!=1';
-}
-// group check
-$group_check = '';
-if (GROUP_CHECK == 'true') {
-  $group_check = " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."=1 ";
-}
+$plain_content = array();
+$module_content = array();
 
 $listing_sql = "SELECT p.*,
                        pd.products_name,
@@ -31,21 +22,27 @@ $listing_sql = "SELECT p.*,
                        pd.products_short_description
                   FROM ".TABLE_PRODUCTS." p
                   JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                    ON p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                       ON p.products_id = pd.products_id 
+                          AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                  WHERE p.products_status = '1'
                    AND p.products_id IN ('".$products_id."')   
-                       ".$group_check."
-                       ".$fsk_lock;
+                       ".PRODUCTS_CONDITIONS_P;
 
 $listing_query = xtc_db_query($listing_sql);
-$module_content = array ();
-$category = array();
 
+$result = false;
 if (xtc_db_num_rows($listing_query) > 0) {
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
-    $module_content[] =  $product->buildDataArray($listing);
+    $plain_content[$listing['products_id']] =  $product->buildDataArray($listing);
   }
   $result = true;
+
+  // SORT
+  $sorting_id = explode("', '", $products_id);
+  foreach ($sorting_id as $key) {
+    $module_content[] = $plain_content[$key];
+  }
+  unset($plain_content);
 }
 
 if (($count_module = count($module_content)) != ($count_result = count($product_id_array))) {
