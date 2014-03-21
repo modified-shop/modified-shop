@@ -32,7 +32,7 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
-$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
+$breadcrumb->add(NAVBAR_TITLE_PRODUCTS_NEW, xtc_href_link(FILENAME_PRODUCTS_NEW));
 
 require (DIR_WS_INCLUDES.'header.php');
 
@@ -52,6 +52,7 @@ $products_new_query_raw = "SELECT DISTINCT p.*,
                                  LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                            ON p.products_id = pd.products_id
                                               AND pd.language_id = '".$_SESSION['languages_id']."'
+                                              AND trim(pd.products_name) != ''
                                       JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
                                            ON p.products_id = p2c.products_id
                                       JOIN ".TABLE_CATEGORIES." c
