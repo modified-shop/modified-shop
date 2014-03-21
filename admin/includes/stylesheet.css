@@ -658,3 +658,15 @@ background: #ccc;
 .longDescription .tableConfig td{
 background: #E8E8E8;
 }
+
+/*invoice number*/
+a.ibillnr-btn{
+background-color: #FA8072!important;
+}
+a.ibillnr-btn:hover{
+background-color: #ccc!important;
+}
+.not_assigned{
+padding: 1px 5px;
+background-color: #FA8072;
+}
