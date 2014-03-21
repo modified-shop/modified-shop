@@ -406,7 +406,7 @@
                define(ADMIN_SEARCH_IN_ATTR, true); // true = search in attributes
                define(ADMIN_SEARCH_IN_DESC, false); // true = search in description
                //build query
-               $add_select = 's.specials_new_products_price,specials_quantity,expires_date,'; 
+               $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,'; 
                $select_str = "SELECT DISTINCT $add_select
                                               p.products_tax_class_id,
                                               p.products_id,
@@ -499,7 +499,7 @@
                   $add_where = ' WHERE p.products_status = 0 ';
                   $add_join = '';
                 } 
-                $add_select = 's.specials_new_products_price,specials_quantity,expires_date,'; 
+                $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,';
                 $select_str = "SELECT $add_select
                                       p.products_tax_class_id,
                                       p.products_sort,
@@ -629,7 +629,7 @@
                  <td class="categories_view_data">
                    <?php
                    //show price
-                   if ($products['specials_new_products_price'] > 0) {
+                   if ($products['specials_status'] == 1) {
                      echo '<div class="oldPrice">'.$currencies->format($products['products_price']) . '</div>'. 
                      '<div class="specialPrice">'.$currencies->format($products['specials_new_products_price']) . '</div>';
                    } else {
@@ -1022,19 +1022,20 @@
                   // END IN-SOLUTION
 
                   //SPECIALS
-                  $special_price = $pInfo->specials_new_products_price;
-                  $special_price = xtc_round($special_price,PRICE_PRECISION);
-                  $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price);
-                  if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview') ){
-                    $special_price_netto = xtc_round($special_price,PRICE_PRECISION);
-                    $special_price = ($special_price*($tax['tax_rate']+100)/100);
-                    $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price) . '<br/>' . TXT_NETTO . $currencies->format($special_price_netto);
+                  if ($pInfo->specials_status == 1) {
+                    $special_price = $pInfo->specials_new_products_price;
+                    $special_price = xtc_round($special_price,PRICE_PRECISION);
+                    $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price);
+                    if (PRICE_IS_BRUTTO == 'true' && ((isset($_GET['read']) && $_GET['read'] == 'only') || $action != 'new_product_preview') ){
+                      $special_price_netto = xtc_round($special_price,PRICE_PRECISION);
+                      $special_price = ($special_price*($tax['tax_rate']+100)/100);
+                      $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price) . '<br/>' . TXT_NETTO . $currencies->format($special_price_netto);
+                    }
+                    $contents[] = array('text' => '<div style="padding-left: 30px;color:red;">' . $specials_price_string .  '</div>'.
+                                                  '<div style="padding-left: 30px;color:red;">' . TEXT_INFO_EXPIRES_DATE . '&nbsp;' . $pInfo->expires_date . '</div>'.
+                                                  ($pInfo->specials_quantity > 0 ? '<div style="padding-left: 30px;color:red;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
+                                        );
                   }
-                  $contents[] = array('text' => '<div style="padding-left: 30px;color:red;">' . $specials_price_string .  '</div>'.
-                                                '<div style="padding-left: 30px;color:red;">' . TEXT_INFO_EXPIRES_DATE . '&nbsp;' . $pInfo->expires_date . '</div>'.
-                                                ($pInfo->specials_quantity > 0 ? '<div style="padding-left: 30px;color:red;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
-                                      );
-
                   //$contents[] = array('text' => '<br />' . TEXT_PRODUCTS_PRICE_INFO . ' ' . $currencies->format($pInfo->products_price) . '<br />' . TEXT_PRODUCTS_QUANTITY_INFO . ' ' . $pInfo->products_quantity);
                   $contents[] = array('text' => '<div style="padding-left: 30px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . number_format($pInfo->average_rating, 2) . '</div>');
                   $contents[] = array('text' => '<div style="padding-left: 30px; padding-bottom: 10px;">' . TEXT_PRODUCT_LINKED_TO . '<br />' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</div>');
