@@ -38,8 +38,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cach
 	$rebuild = true;
 
 $box_smarty->assign('FORM_ACTION', xtc_draw_form('sign_in', xtc_href_link(FILENAME_NEWSLETTER, '', $request_type)));
-$box_smarty->assign('FIELD_EMAIL',xtc_draw_input_field('email', '', 'maxlength="50" style="width:170px;"'));
-$box_smarty->assign('BUTTON',xtc_image_submit('button_login_newsletter.gif', IMAGE_BUTTON_LOGIN));
+$box_smarty->assign('FIELD_EMAIL',xtc_draw_input_field('email', '', 'maxlength="50"'));
+$box_smarty->assign('BUTTON',xtc_image_submit('button_login_newsletter.png', IMAGE_BUTTON_LOGIN));
 $box_smarty->assign('FORM_END','</form>');
 
 }

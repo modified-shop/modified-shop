@@ -94,6 +94,7 @@
       $box_smarty->assign('REVIEWS',$reviews);
       $box_smarty->assign('REVIEWS_IMAGE',$review_image);
     }
+    $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
     $box_smarty->assign('PRODUCTS_LINK', $products_link);
     $box_smarty->assign('RANDOM', $random);
     $box_smarty->assign('language', $_SESSION['language']);

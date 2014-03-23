@@ -6,7 +6,11 @@
   <p class="box_sub">{#text_email#}:</p>
   {$FIELD_EMAIL}
   <p class="box_sub">{#text_pwd#}:</p>
-  {$FIELD_PWD}{$BUTTON}<br class="clearfix" />
-  <p class="box_sub"><a href="{$LINK_LOST_PASSWORD}">{#text_password_forgotten#}</a></p>
+  {$FIELD_PWD}
+  <div class="box_sub_button">
+    <a href="{$LINK_LOST_PASSWORD}">{#text_password_forgotten#}</a>
+    {$BUTTON}
+    <br class="clearfix" />
+  </div>
   {$FORM_END}
 </div>

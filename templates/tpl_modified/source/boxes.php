@@ -90,6 +90,14 @@
 // -----------------------------------------------------------------------------------------
 $smarty->assign('home', strpos($PHP_SELF, 'index')!==false && !isset($_GET['cPath']) && !isset($_GET['manufacturers_id']) ? 1 : 0);
 // -----------------------------------------------------------------------------------------
+// Smarty Zuweisung Full content
+// -----------------------------------------------------------------------------------------
+$smarty->assign('fullcontent',strpos($PHP_SELF, 'checkout') || strpos($PHP_SELF, 'shopping') ||
+                              strpos($PHP_SELF, 'newsletter') || strpos($PHP_SELF, 'account') ||
+                              strpos($PHP_SELF, 'address') || strpos($PHP_SELF, 'login') ||
+                              strpos($PHP_SELF, 'shop_content') || strpos($PHP_SELF, 'specials') ||
+                              strpos($PHP_SELF, 'password') ? 1 : 0);      
+// -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 ?>

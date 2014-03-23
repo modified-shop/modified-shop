@@ -1,4 +1,8 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
-<h2 class="boxheader">{#heading_manufacturers#}</h2>
-<div class="box1 manufacturer">{$BOX_CONTENT}</div>
-
+<div class="box1">
+  <div class="box_header">
+    <span class="show_title">{#heading_manufacturers#}</span> 
+  </div>
+  <div class="box_line"></div>
+  <div class="box_select">{$BOX_CONTENT|replace:"<br />":""}</div>
+</div>

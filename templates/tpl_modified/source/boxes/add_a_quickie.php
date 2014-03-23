@@ -26,7 +26,7 @@
 
   $box_smarty->assign('FORM_ACTION',xtc_draw_form('quick_add', xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array ('action')) . 'action=add_a_quickie', $request_type)));
 
-  $box_smarty->assign('INPUT_FIELD',xtc_draw_input_field('quickie','','style="width:170px"'));
+  $box_smarty->assign('INPUT_FIELD',xtc_draw_input_field('quickie','',''));
   $box_smarty->assign('SUBMIT_BUTTON', xtc_image_submit('button_add_quick.gif', BOX_HEADING_ADD_PRODUCT_ID));
   $box_smarty->assign('FORM_END', '</form>');
 
