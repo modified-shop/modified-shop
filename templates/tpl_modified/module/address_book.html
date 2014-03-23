@@ -2,19 +2,29 @@
 <h1>{#heading_address#}</h1>
 {$FORM_ACTION}
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-<h2>{#title_standard#}</h2>
-<p>{#text_standard#}</p>
-<div class="highlightbox">
-<h1>{#title_standard#}:</h1>
-<p>{$ADDRESS_DEFAULT}</p>
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_standard#}</h4>
+    <p>{#text_standard#}</p>
+    <div class="hr_15"></div>
+    <p>{$ADDRESS_DEFAULT}</p>
+  </div>
 </div>
-<h1>{#title_addresses#}</h1>
-{foreach name=aussen item=addresses from=$addresses_data}
-<p><strong>{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}</strong><br />
-{$addresses.ADDRESS}</p>
-<p>{$addresses.BUTTON_EDIT}&nbsp;{$addresses.BUTTON_DELETE}</p>
-<div class="hr"></div>
-{/foreach}
-<p>{$BUTTON_NEW}&nbsp;{$BUTTON_BACK}</p>
 
-<p>{$ADDRESS_COUNT}</p>
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4>{#title_addresses#}</h4>
+    <p>{$ADDRESS_COUNT}</p>
+    <br />
+    {foreach name=aussen item=addresses from=$addresses_data}
+    <p><span style="float:right">{$addresses.BUTTON_EDIT}<br />{$addresses.BUTTON_DELETE}</span>
+      <strong>{$addresses.NAME} {if $addresses.PRIMARY == '1'} ({#title_standard#}) {/if}</strong><br />
+      {$addresses.ADDRESS}
+    </p>
+    <div class="hr_1"></div>
+    {/foreach}
+  </div>
+</div>  
+<br class="clear" />
+<div class="button_left">{$BUTTON_BACK}</div>
+<div class="button_right">{$BUTTON_NEW}</div>

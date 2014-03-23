@@ -23,7 +23,7 @@
    font-weight: 700;
 
    -----------------------------------------------------------------------------------------
-   (c) 2013 modified eCommerce Shopsoftware - http://www.modified-shop.org     
+   (c) 2014 modified eCommerce Shopsoftware - http://www.modified-shop.org     
    ---------------------------------------------------------------------------------------*/
 
 
@@ -40,18 +40,60 @@ body {
   color:#555;
   line-height:18px;
 }
-.clearfix {
+.clearfix, .clear, .clearer {
   line-height:0px;
   height:0px;
   clear:both;
 }
 
-form {
-  display:inline;
-}
-
 .mini { font-size:10px;font-weight:normal;}
 .midi { font-size:11px;font-weight:normal;}
+
+a.black {
+  color:#333 !important;
+}
+
+.twoColums {
+  float:left;
+  width:49%;
+  margin: 0 2% 20px 0;
+}
+.twoColums.last {
+  margin: 0 0 20px 0;
+}
+
+.button_left {
+  float:left;
+  width: 48%;
+  margin: 10px 0px 0px 0px;
+  min-height:28px;
+  line-height:28px;
+}
+.button_right {
+  float:right;
+  width: 48%;
+  margin: 10px 0px 0px 0px;
+  text-align: right;
+  min-height:28px;
+  line-height:28px;
+}
+.text_left {
+  float:left;
+  width: 48%;
+  margin: 10px 0px 0px 0px;
+  min-height:28px;
+  font-size:10px;
+  line-height:14px;
+}
+
+.fieldtext, .fieldtext_stern {
+  font-size:11px;
+  line-height:15px;
+  font-weight:bold;
+  padding: 0px 0px 2px 0px;
+  display:block;
+}
+
 
 
 #layout_navbar {
@@ -173,13 +215,13 @@ ul.topnavigation li a:hover {
 
 /* HEADINGS */
 h1 {
-  color:#000;
-  font-weight:bold;
+  font-family: 'Oswald', sans-serif;
+  color:#555;
+  font-weight:normal;
   font-size:18px;
   margin:20px 0 15px 0;
-  padding:0 0 8px;
-  width:auto;
-  border:#ccc solid;
+  padding:0 0 5px;
+  border:#ddd solid;
   border-width:0 0 1px 0;
 }
 h2 {
@@ -201,12 +243,13 @@ h3 {
 }
 
 h4 {
+  font-family: 'Oswald', sans-serif;
 	color:#6d2551;
-	font-weight:bold;
+	font-weight:normal;
+  text-transform:uppercase;
 	font-size:14px;
 	margin:0px 0px 14px 0px;
 	padding:0px;
-	width:auto;
 	border: #999999 dotted;
 	border-width:0px 0px 1px 0px;
 	padding-bottom:5px;
@@ -325,7 +368,11 @@ textarea#message_body {
 textarea#review {
   height:80px;
 }
-
+td.checkbox {
+  vertical-align:top;
+  padding-top:6px;
+  padding-right:5px;
+}
 
 .pflicht {
   font-size:10px;
@@ -473,7 +520,9 @@ p {
 p.onlytop {
   margin:8px 0 0 0;
 }
-
+p.textright {
+  text-align:right;
+}
 
 
 #layout_content {
@@ -580,6 +629,26 @@ ul.contentnavigation li.cart a:hover {
 
 
 /* FAKE HR DIV CAUSE OF IE TROUBLES */
+div.hr_1 {
+  height:1px;
+  line-height:1px;
+  margin:0;
+  padding:0;
+  display:block;
+  border-bottom:solid 1px #eee;
+  background-color:transparent;
+}
+div.hr_15 {
+  height:1px;
+  line-height:1px;
+  margin:15px 0px;
+  padding:0;
+  display:block;
+  border-bottom:solid 1px #eee;
+  background-color:transparent;
+}
+
+
 div.hr {
   padding-top:1px;
   height:0;
@@ -609,7 +678,7 @@ div.hrproductpreview {
 }
 /* TABLE GLOBAL */
 table td {
-  padding:2px;
+  padding:4px 0px;
 }
 /* WHOLE SITE WRAPPER */
 #wrap {
@@ -624,24 +693,24 @@ table td {
 
 /* BREADCRUMB PATH AS LIST */
 #breadcrumb {
-  clear:both;
-  color:#c64934;
-  padding:1px 0 10px 15px;
+  padding:2px 0 20px 0px;
   list-style-type:none;
   outline:none;
-  height:22px;
-  background:#fff url(img/bg_breadcrumb.gif) repeat-x;
+  height:21px;
   font-size:11px;
 }
-#breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:hover, #breadcrumb a:active {
-  line-height:23px;
-  text-decoration:none;
+#breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:active {
+  line-height:21px;
   outline:none;
   font-weight:normal;
   cursor:pointer;
-  color:#333;
+  color:#555;
   margin:0;
   padding:0;
+}
+#breadcrumb a:hover {
+  text-decoration:none;
+  color:#222;
 }
 
 
@@ -1333,13 +1402,33 @@ body.popupprintorder .singleprice {
 body.popupprintorder .totalprice {
   vertical-align:top;
 }
+
 /* HIGHLIGHTBOX (BACKGROUND) */
 div.highlightbox {
   padding:15px;
-  background-color:#f8f8f8;
-  border:solid #d9d9d9 1px;
-  overflow:auto;
+  background:#fff;
+  border:solid #eee 1px;
 }
+div.highlightbox.plainleft {
+  padding:16px 16px 16px 0px;
+  background-color:transparent;
+  border:none;
+}
+div.highlightbox.plainright {
+  padding:16px 0px 16px 16px;
+  background-color:transparent;
+  border:none;
+}
+div.highlightbox.plainfull {
+  padding:16px 0px 16px 0px;
+  background-color:transparent;
+  border:none;
+}
+.margintop {
+  margin-top:38px;
+}
+
+
 div.highlightbox ul {
   margin-left:15px;
   padding:0;
@@ -1750,18 +1839,36 @@ ul#checkoutnavigation li.inactive .title {
 ul#checkoutnavigation li.inactive .description {
   font-size:11px;
 }
+
+
 /* ERROR MESSAGES */
 .errormessage {
-  border:solid red 2px;
-  padding:15px;
-  background-color:#FFD6D6;
-  margin-bottom:10px;
+  border:solid #DCA7A7 1px;
+  padding:10px;
+  font-size:13px !important;
+  line-height:17px;
+  color:#A94442;
+  background-color:#F2DEDE ;
+  margin-bottom:18px;
+}
+
+.messageStackError {
+  color:#A94442 !important;
+  font-size:13px !important;
+}
+td.messageStackError {
+  padding:2px 0px;
 }
 /* SUCCESS MESSAGE */
 .messageStackSuccess {
-  padding:4px;
-  background-color:#6f6;
+  color:#333 !important;
 }
+.inputRequirement {
+  font-size:10px;
+  line-height:20px;
+}
+
+
 /* FOOTER */
 .footer {
   clear:both;
