@@ -85,7 +85,7 @@
         $review_image = DIR_WS_THUMBNAIL_IMAGES.'noimage.gif';
       }
       $products_image = xtc_image($review_image, $random_product['products_name'], '', '', 'class="productboximage"');
-      $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $random_product['reviews_rating'] . '.gif' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $random_product['reviews_rating']),'','','itemprop="rating"');
+      $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $random_product['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $random_product['reviews_rating']),'','','itemprop="rating"');
 
       $products_link = xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $random_product['products_id'] . '&amp;reviews_id=' . $random_product['reviews_id']);
 

@@ -2,14 +2,14 @@
 <h1>{$ERROR}</h1>
 <p>{#text_search_again#}</p>
 {$FORM_ACTION}
-<div class="highlightbox">
-  <table border="0" cellpadding="4" cellspacing="0">
+<div class="highlightbox"> 
+  <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
-      <td>{#text_search#}</td>
-      <td>{$INPUT_SEARCH}</td>
-      <td>{$BUTTON_SUBMIT}</td>
+      <td style="width:130px; white-space:nowrap;"><span class="midi"><strong>{#text_search#}</strong></span></td>
+      <td style="width:300px;">{$INPUT_SEARCH}</td>
+      <td style="padding-left:10px;">{$BUTTON_SUBMIT}</td>
     </tr>
   </table>
 </div>
 {$FORM_END}
-<p>{$BUTTON}</p>
+<div class="button_left">{$BUTTON}</div>
