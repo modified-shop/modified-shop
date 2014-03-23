@@ -1569,69 +1569,106 @@ table.graduatedprice tr td.header {
   font-weight:bold;
   text-align:left;
 }
+
+
+
 /* ORDER DETAILS */
 table.orderdetails {
-  font-size:11px;
-  background-color:#f8f8f8;
-  border:#ccc solid;
-  border-width:0 1px 1px 1px;
+  font-size:13px;
 }
 table.orderdetails tr td {
-  padding:4px;
+padding:10px 4px;
 }
 table.orderdetails tr.headerrow td {
-  background-color:#ccc;
-  color:#555;
   font-weight:bold;
+  background-color:#333;
+  font-size:11px;
+  color:#fff;
+  padding:5px !important;  
 }
 table.orderdetails tr.headerrow td.left {
-  text-align:left;
+text-align:left;
 }
 table.orderdetails tr.headerrow td.center {
-  text-align:center;
+text-align:center;
 }
 table.orderdetails tr.headerrow td.right {
-  text-align:right
+text-align:right
 }
+
 /* ORDER DETAILS CONTENT ROW 1 */
 table.orderdetails tr.contentrow1 td {
-  background-color:#f8f8f8;
+  background-color:#fff;
   vertical-align:top;
+  border-bottom: 1px dotted #ccc;
+}
+table.orderdetails tr.contentrow1 td.cartimage {
+	text-align:center;
+  width:100px;
+}
+table.orderdetails tr.contentrow1 td.cartimage img  {
+  max-width:80px;
+  max-height:80px;
 }
 table.orderdetails tr.contentrow1 td.quantity {
-  text-align:center;
+	text-align:center;
+  width:80px;
 }
 table.orderdetails tr.contentrow1 td.quantity input {
-  font-size:11px;
-  padding:2px;
-  border:solid #ccc 1px;
+  width:40px;
 }
 table.orderdetails tr.contentrow1 td.productname {
+  padding-top:17px;
+  padding-bottom:6px;
   text-align:left;
+  line-height:16px;
+}
+table.orderdetails tr.contentrow1 td.productname a:hover {
+  color:#6d2551 !important;
+  text-decoration:none;
 }
 /* ORDER DETAILS CONTENT ROW 2 */
 table.orderdetails tr.contentrow2 td {
-  background-color:#f8f8f8;
+  background-color:#fafafa;
   vertical-align:top;
+  border-bottom: 1px dotted #ccc;
+}
+table.orderdetails tr.contentrow2 td.cartimage {
+	text-align:center;
+  width:100px;
+}
+table.orderdetails tr.contentrow2 td.cartimage img  {
+  max-width:80px;
+  max-height:80px;
 }
 table.orderdetails tr.contentrow2 td.quantity {
-  text-align:center;
+	text-align:center;
+  width:80px;
 }
 table.orderdetails tr.contentrow2 td.quantity input {
-  font-size:11px;
-  padding:2px;
-  border:solid #ccc 1px;
+  width:40px;
 }
 table.orderdetails tr.contentrow2 td.productname {
+  padding-top:17px;
+  padding-bottom:6px;
   text-align:left;
+  line-height:16px;
+}
+table.orderdetails tr.contentrow2 td.productname a:hover {
+  color:#6d2551 !important;
+  text-decoration:none;
 }
 /* ORDER DETAILS SINGLE PRICE */
 table.orderdetails tr td.singleprice {
+  padding-top:16px;
+  width:120px;
   text-align:right;
   white-space:nowrap;
 }
 /* ORDER DETAILS TOTAL PRICE PER ITEM */
 table.orderdetails tr td.totalprice {
+  padding-top:16px;
+  width:120px;
   text-align:right;
   white-space:nowrap;
 }
@@ -1639,16 +1676,22 @@ table.orderdetails tr td.totalprice {
 table.orderdetails tr td.delete {
   text-align:center;
   white-space:nowrap;
+  padding-top:17px;
+  width:90px;
 }
+
 /* ORDER DETAILS PRODUCT ATTRIBUTES */
 table.orderdetails tr td.productname table.productattributes {
-  margin-top:3px;
+  margin-top:6px;
 }
 table.orderdetails tr td.productname table.productattributes tr td {
-  padding:0;
+  font-size:11px;
+  line-height:15px;
+  padding:2px 0px;
+  border:none !important;
 }
 table.orderdetails tr td.productname table.productattributes tr td.attribute {
-  padding-right:4px;
+  padding-right:10px;
   white-space:nowrap;
 }
 table.orderdetails tr td.productname table.productattributes tr td.value {
@@ -1656,11 +1699,29 @@ table.orderdetails tr td.productname table.productattributes tr td.value {
 }
 /* ORDER DETAILS SUBTOTAL */
 table.orderdetails tr td.subtotal {
-  background-color:#f8f8f8;
+  background-color:transparent;
   text-align:right;
   border:#ccc solid;
-  border-width:1px 0 0 0;
+  border-width:0px 0 0 0;
+  line-height:22px;
 }
+table.orderdetails tr td.subtotal .shipping_container {
+  margin: 4px 0px;
+}
+table.orderdetails tr td.subtotal select {
+  max-width:300px;
+  margin-left:5px;
+}
+table.orderdetails tr td.subtotal .shipping_hinweis {
+  font-size:11px;
+  line-height:15px;
+  margin: 0px 0px 4px 0px;
+}
+
+
+
+
+
 /* PRODUCT NAVIGATOR */
 div.productnavigator {
   background-color:#ededed;
