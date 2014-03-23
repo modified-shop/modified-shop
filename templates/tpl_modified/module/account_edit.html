@@ -2,15 +2,8 @@
 <h1>{#heading_account#}</h1>
 {$FORM_ACTION}
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-<div class="highlightbox">
-  <h1>{#title_personal#}&nbsp;({#text_must#})</h1>
-  <table width="100%" border="0" cellspacing="2" cellpadding="4">
-  {if $csID}
-  <tr>
-    <td>{#csID#}</td>
-    <td><b>{$csID}</b></td>
-  </tr>
-  {/if}
+
+{*
   {if $gender == '1'}
   <tr>
     <td>{#text_gender#}</td>
@@ -24,43 +17,54 @@
     </table></td>
   </tr>
   {/if}
-  <tr>
-    <td>{#text_firstname#}</td>
-    <td>{$INPUT_FIRSTNAME}</td>
-  </tr>
-  <tr>
-    <td>{#text_lastname#}</td>
-    <td>{$INPUT_LASTNAME}</td>
-  </tr>
-  {if $birthdate == '1'}
-  <tr>
-    <td>{#text_birthdate#}</td>
-    <td>{$INPUT_DOB}</td>
-  </tr>
-  {/if}
-  <tr>
-    <td>{#text_email#}</td>
-    <td>{$INPUT_EMAIL}</td>
-  </tr>
-  <tr>
-    <td>{#text_confirm_email#}</td>
-    <td>{$INPUT_CONFIRM_EMAIL}</td>
-  </tr>
-  <tr>
-    <td>{#text_tel#}</td>
-    <td>{$INPUT_TEL}</td>
-  </tr>
-  <tr>
-    <td>{#text_fax#}</td>
-    <td>{$INPUT_FAX}</td>
-  </tr>
-  {if $vat == '1'}
-  <tr>
-    <td>{#text_ustid#}</td>
-    <td>{$INPUT_VAT}</td>
-  </tr>
-  {/if}
-</table>
+*}
+
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_personal#} <span class="pflicht">({#text_must#})</span></h4>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      {if $csID}
+      <tr>
+        <td><span class="fieldtext">{#csID#}</span><span class="stern">{$csID}</span></td>
+      </tr>
+      {/if}
+      {if $gender == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_gender#}</span><span class="stern">{$INPUT_GENDER}</span></td>
+      </tr>
+      {/if}
+      <tr>
+        <td><span class="fieldtext">{#text_firstname#}</span><span class="stern">{$INPUT_FIRSTNAME}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_lastname#}</span><span class="stern">{$INPUT_LASTNAME}</span></td>
+      </tr>
+      {if $birthdate == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_birthdate#}</span><span class="stern">{$INPUT_DOB}</span></td>
+      </tr>
+      {/if}
+      <tr>
+        <td><span class="fieldtext">{#text_email#}</span><span class="stern">{$INPUT_EMAIL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_confirm_email#}</span><span class="stern">{$INPUT_CONFIRM_EMAIL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_tel#}</span><span class="stern">{$INPUT_TEL}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX}</span></td>
+      </tr>
+      {if $vat == '1'}
+      <tr>
+        <td><span class="fieldtext">{#text_ustid#}</span><span class="stern">{$INPUT_VAT}</span></td>
+      </tr>
+      {/if}
+    </table>
+  </div>
 </div>
-<p>{$BUTTON_BACK}&nbsp;{$BUTTON_SUBMIT}</p>
+<br class="clear" />
+<div class="button_left">{$BUTTON_BACK}</div>
+<div class="button_right">{$BUTTON_SUBMIT}</div>
 {$FORM_END}

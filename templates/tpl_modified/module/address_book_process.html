@@ -2,12 +2,22 @@
 <h1>{#heading_address#}</h1>
 {$FORM_ACTION}
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-{$MODULE_address_book_details}
-{if $delete == '1'}
-<h1>{#title_delete#}</h1>
-<p>{#text_delete#}</p>
-<h2>{#text_address#}</h2>
-<p>{$ADDRESS}</p>
+{if $delete != '1'}
+<div class="twoColums">
+  {$MODULE_address_book_details}
+</div>
 {/if}
-<p>{$BUTTON_BACK}&nbsp;{$BUTTON_UPDATE}&nbsp;{$BUTTON_DELETE}</p>
+{if $delete == '1'}
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_delete#}</h4>
+    <p><strong>{#text_delete#}</strong></p>
+    <div class="hr_1"></div>
+    <p>{$ADDRESS}</p>
+  </div>
+</div>
+{/if}
+<br class="clear" />
+<div class="button_left">{$BUTTON_BACK}</div>
+<div class="button_right">{$BUTTON_UPDATE}{$BUTTON_DELETE}</div>
 {$FORM_END}
