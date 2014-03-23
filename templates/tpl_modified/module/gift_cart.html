@@ -12,7 +12,7 @@
     <p>{$COUPON_AMOUNT2}</p>
   {/if}
   {if $COUPON_HELP_LINK neq ''}
-    <p>{#cart_coupon#} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></p>
+    <p><div class="infomessage">{*#cart_coupon#*} {$smarty.const.REDEEMED_COUPON} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></div></p>
   {/if}
   {if $C_FLAG == 'true'}
     <p>{#text_gift#}</p>

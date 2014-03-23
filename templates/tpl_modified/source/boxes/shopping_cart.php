@@ -18,7 +18,7 @@
 
   $box_smarty = new smarty;
 
-  $box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+  $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 
   // define defaults
   $products_in_cart = array ();

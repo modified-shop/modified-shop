@@ -18,6 +18,7 @@
         {if $NOTIFY_COMMENTS}
           <br />
           Notes to your order:
+          <br />
           {$NOTIFY_COMMENTS}
           <br />
         {/if}
@@ -25,6 +26,13 @@
         New status:
         <b>{$ORDER_STATUS}</b><br />
         <br />
+        {if $PARCEL_COUNT}
+          Your shipment consists of {$PARCEL_COUNT} parcel(s).<br />
+        {/if}
+        {if $PARCEL_LINK_HTML}
+          <br />You can inform yourself about the delivery status with a click on the following package number(s):<br />
+        {$PARCEL_LINK_HTML}<br />
+        {/if}
         If you have any questions, please reply to this e-mail. <br />
       </font>
     </td>

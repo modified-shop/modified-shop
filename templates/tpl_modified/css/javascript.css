@@ -10,7 +10,7 @@
    ---------------------------------------------------------------------------------------*/
 
 /*LOADING CSS by Javascript */
-#tabbed_product_info ul{
+#tabbed_product_info ul {
 display:block;
 margin:0;
 }
@@ -23,9 +23,9 @@ display:block;
 margin-top:10px;
 }
 
-#tabbed_product_info .morepics  {
+#tabbed_product_info .morepics {
 background-color:transparent;
-width:700px;
+width:506px;
 margin-bottom:0;
 padding-bottom:0;
 border-width:0;
@@ -42,11 +42,5 @@ border-width:0;
 
 #tab_description ol,#tab_description ul,#accordion_product_info ol,#accordion_product_info ul {
 display:block;
-margin:10px 0 10px 30px;
-}
-
-.tab-container .panel-container {
-border: solid #999 1px;
-*-moz-border-radius: 0 4px 4px 4px;
-*-webkit-border-radius: 0 4px 4px 4px;
-} 
+margin:10px 0 10px 22px;
+}                       

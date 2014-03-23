@@ -6,14 +6,16 @@
 {$FORM_ACTION}
 <div class="highlightbox">
 <table border="0" cellspacing="0" cellpadding="4">
-  <tr>
-    <td width="140"><strong>{#text_sec_code#}:</strong></td>
-    <td>{$VVIMG}</td>
-  </tr>
-  <tr>
-    <td><strong>{#text_sec_code#}:</strong></td>
-    <td>{$INPUT_CODE}</td>
-  </tr>
+  {if $INPUT_CODE}
+    <tr>
+      <td width="140"><strong>{#text_sec_code#}:</strong></td>
+      <td>{$VVIMG}</td>
+    </tr>
+    <tr>
+      <td><strong>{#text_sec_code#}:</strong></td>
+      <td>{$INPUT_CODE}</td>
+    </tr>
+  {/if}
   <tr>
     <td><strong>{#text_email#}:</strong></td>
     <td>{$INPUT_EMAIL}</td>

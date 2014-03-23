@@ -30,7 +30,7 @@ if (!CacheCheck()) {
 	$box_smarty->caching = 1;
 	$box_smarty->cache_lifetime = CACHE_LIFETIME;
 	$box_smarty->cache_modified_check = CACHE_CHECK;
-	$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].$coPath;
+	$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].(isset($coPath) ? $coPath : '0');
 }
 
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cache_id) || !$cache) {
@@ -41,10 +41,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
   
   $content_array=array();
   $content_string = '';
-  $group_check = '';
-	if (GROUP_CHECK == 'true') {
-		$group_check = " AND group_ids LIKE '%c_".$_SESSION['customers_status']['customers_status_id']."_group%'";
-	}
+
 	$content_query = xtDBquery("SELECT content_id,
                                      categories_id,
                                      parent_id,
@@ -53,7 +50,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
                                 FROM ".TABLE_CONTENT_MANAGER."
                                WHERE languages_id='".(int) $_SESSION['languages_id']."'
                                  AND file_flag='0'
-                                     ".$group_check."
+                                     ".CONTENT_CONDITIONS."
                                  AND content_status='1'
                                  AND parent_id='0'
                             ORDER BY sort_order");
@@ -81,7 +78,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
 	  }
   }
 
-  if ($coPath) {
+  if (isset($coPath)) {
     $new_path = '';
     $coid = explode('_', $coPath);
     reset($coid);
@@ -89,16 +86,16 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
       unset ($prev_cid);
       unset ($first_cid);
       $content_query = xtDBquery("SELECT content_id,
-                                            parent_id,
-                                            content_title,
-                                            content_group
-                                       FROM ".TABLE_CONTENT_MANAGER."
-                                      WHERE languages_id='".(int) $_SESSION['languages_id']."'
-                                        AND file_flag='0'
-                                            ".$group_check."
-                                        AND content_status='1'
-                                        AND parent_id='".$value."'
-                                   ORDER BY sort_order");
+                                         parent_id,
+                                         content_title,
+                                         content_group
+                                    FROM ".TABLE_CONTENT_MANAGER."
+                                   WHERE languages_id='".(int) $_SESSION['languages_id']."'
+                                     AND file_flag='0'
+                                         ".CONTENT_CONDITIONS."
+                                     AND content_status='1'
+                                     AND parent_id='".$value."'
+                                ORDER BY sort_order");
 
       if (xtc_db_num_rows($content_query, true) > 0) {
         $new_path .= $value;

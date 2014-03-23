@@ -112,10 +112,8 @@
       </div>
     {/if}
     <div id="content{if strpos($smarty.server.PHP_SELF, 'checkout')}full{/if}">
-      {if strstr($smarty.server.PHP_SELF, 'index')}
-        {if $smarty.get.cPath == null and $smarty.get.manufacturers_id == ''}
-          {if $BANNER}{$BANNER}{/if}
-        {/if}
+      {if $home}
+        {if isset($BANNER)}{$BANNER}{/if}
       {/if}
       {if isset($main_content)}{$main_content}{/if}
     </div>
