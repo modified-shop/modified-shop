@@ -77,6 +77,14 @@ a.black {
   min-height:28px;
   line-height:28px;
 }
+.paypal_button {
+  position:relative;
+  margin:0px 0px 0px 10px;
+  display:inline-block;
+  bottom:-10px;
+}
+
+
 .text_left {
   float:left;
   width: 48%;
@@ -867,7 +875,7 @@ a.show_all .arrow {
   line-height:15px;
 }
 .box_reviews_image {
-  padding: 5px 0px 0px 0px;
+  padding: 10px 0px 0px 0px;
   text-align:center;
 }
 
