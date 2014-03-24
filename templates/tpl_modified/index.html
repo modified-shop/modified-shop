@@ -1,5 +1,5 @@
 {config_load file="$language/lang_$language.conf" section="index"}
-
+{if isset($box_ADMIN)}<div class="adminspacer"></div>{$box_ADMIN}{/if}
 <div id="layout_navbar">
   <div id="layout_navbar_inner">
     {if isset($box_INFOBOX)}<div id="customers_group">{$box_INFOBOX}</div>{/if}
@@ -115,11 +115,11 @@
       </div>
     {/if}
     <div id="content{if strpos($smarty.server.PHP_SELF, 'checkout')}full{/if}">
-      {if isset($main_content)}{$main_content}{/if}
+      {* if isset($main_content)}{$main_content}{/if *}
     </div>
     {if !strstr($smarty.server.PHP_SELF, 'checkout')}
       <div id="rightcol">
-        {if isset($box_ADMIN)}{$box_ADMIN}{/if}
+        
         {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
       </div>
     {/if}
