@@ -1,0 +1,1 @@
+{"orderSyncState":{"fields":{"sendmail":{"label":"E-Mail Versand","desc":"Wenn Sie diese Option aktivieren wird der K&auml;ufer durch Hood per E-Mal &uuml;ber die Status&auml;nderung informiert.","key":"_#_platform_#_.orderstatus.sendmail","type":"checkbox","values":{"val":"versenden"},"default":{"val":false}}}}}

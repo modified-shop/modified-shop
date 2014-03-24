@@ -1,0 +1,826 @@
+{
+    "hoodaccount": {
+        "headline": "hood Account",
+        "fields": {
+            "username": {
+                "label": "hood-Mitgliedsname",
+                "key": "hood.username",
+                "type": "text",
+                "verify": "notempty",
+                "desc": "Bitte hier den hood-Usernamen eintragen"
+            },
+            "Password": {
+                "label": "hood-Password",
+                "key": "hood.password",
+                "type": "password",
+                "settings": {
+                    "save": false
+                },
+                "verify": "notempty",
+                "desc": "Bitte hier das hood-Password eintragen"
+            },
+            "Password Interface": {
+                "label": "hood-Password-Interface",
+                "key": "hood.interfacepassword",
+                "type": "password",
+                "settings": {
+                    "save": false
+                },
+                "verify": "notempty",
+                "desc": "Bitte hier das hood-Password eintragen"
+            }
+        }
+    },
+    "listingdefaults": {
+        "headline": "Artikel hochladen: Voreinstellungen",
+        "fields": {
+            "Mehrwertsteuer": {
+                "label": "Mehrwertsteuer",
+                "key": "hood.mwst",
+                "type": "text",
+                "default": "19",
+                "desc": "H&ouml;he der Mehrwertsteuer, die bei hood ausgewiesen wird. Bitte nur ausf&uuml;llen wenn Sie ein gewerbliches H&auml;ndlerkonto bei hood haben",
+                "rightlabel": "&nbsp;Steuersatz f&uuml;r gewerbliche H&auml;ndler in %",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "verify": "float"
+            },
+            "Condition": {
+                "label": "Artikelzustand",
+                "key": "hood.condition",
+                "type": "selection",
+                "desc": "Voreinstellung f&uuml den Artikelzustand (f&uuml;r hood-Kategorien wo dieser angegeben werden kann oder mu&szlig;). Nicht alle Werte sind f&uuml;r jede Kategorie zul&auml;ssig, ggf. mu&szlig; nach der Wahl der Kategorie der Zustand noch mal korrigiert werden.",
+                "values": {
+                    "new": "Neu",
+                    "used": "Gebraucht"
+                }
+            },
+            "Statusfilter": {
+                "label": "Statusfilter",
+                "key": "hood.checkin.status",
+                "type": "checkbox",
+                "values": {
+                    "val": "nur aktive Artikel &uuml;bernehmen"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "mfnpartno": {
+                "label": "Hersteller-Modellnummer",
+                "desc": "Falls Sie ein Contrib zur Verwaltung von Hersteller-Modellnummern verwenden, k&ouml;nnen Sie hier die Tabelle und die Spalte ausw&auml;hlen in der die \r\n\t\t\t\t           Hersteller-Modellnummer gespeichert wird. Dadurch wird das Feld f&uuml;r die Hersteller-Modellnummern bei Vorbereitung vorausgef&uuml;llt. <br\/>\r\n\t\t\t\t           Sollte in der Tabelle die Spalte \"products_id\" anders benannt sein, geben Sie bitte bei Alias die alternative Bezeichnung f&uuml;r die Spalte mit der gleichen \r\n\t\t\t\t           Bedeutung an.<br\/><br\/>\r\n\t\t\t\t           <b>Hinweis:<\/b> Diese Daten werden nicht &uuml;berpr&uuml;ft. Sollten Sie fehlerhaft sein, wird es zu Datenbankfehlern kommen!",
+                "key": "comparisonshopping.checkin.manufacturerpartnumber.table",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`products_id`<\/span> Alias",
+                        "key": "comparisonshopping.checkin.manufacturerpartnumber.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "dispatchtimemin": {
+                "label": "Lieferzeit bis",
+                "key": "hood.DispatchTimeMin",
+                "type": "selection",
+                "values": [
+                    "am gleichen Tag",
+                    "1 Tag",
+                    "2 Tage",
+                    "3 Tage",
+                    "4 Tage",
+                    "5 Tage",
+                    "6 Tage",
+                    "7 Tage",
+                    "8 Tage",
+                    "9 Tage",
+                    "10 Tage",
+                    "11 Tage",
+                    "12 Tage",
+                    "13 Tage",
+                    "14 Tage",
+                    "15 Tage",
+                    "16 Tage",
+                    "17 Tage",
+                    "18 Tage",
+                    "19 Tage",
+                    "20 Tage",
+                    "21 Tage",
+                    "22 Tage",
+                    "23 Tage",
+                    "24 Tage",
+                    "25 Tage",
+                    "26 Tage",
+                    "27 Tage",
+                    "28 Tage",
+                    "29 Tage",
+                    "30 Tage"
+                ],
+                "default": "3",
+                "desc": "Minimale Dauer die Sie brauchen, bis Sie den Artikel versenden. Der Wert wird bei hood angezeigt. <br \/><br>\r\n\t\t\t\t\t\t<b>Hinweis:<\/b><br \/>\r\n\t\t\t\t\t\tWenn Sie Versand \"am gleichen Tag\" w&auml;hlen, legen Sie bitte in Ihrem hood Account entsprechend Ihren Gesch&auml;ftsabl&auml;ufen einen Zeitpunkt fest, bis zu dem die Zahlung des K&auml;ufers bei Ihnen eingegangen sein muss. Die voreingestellte Zeit ist 14:00 Uhr. Pr&uuml;fen Sie, ob Sie die angegebene Bearbeitungszeit einhalten k&ouml;nnen."
+            },
+            "dispatchtimemax": {
+                "label": "Lieferzeit von",
+                "key": "hood.DispatchTimeMax",
+                "type": "selection",
+                "values": [
+                    "am gleichen Tag",
+                    "1 Tag",
+                    "2 Tage",
+                    "3 Tage",
+                    "4 Tage",
+                    "5 Tage",
+                    "6 Tage",
+                    "7 Tage",
+                    "8 Tage",
+                    "9 Tage",
+                    "10 Tage",
+                    "11 Tage",
+                    "12 Tage",
+                    "13 Tage",
+                    "14 Tage",
+                    "15 Tage",
+                    "16 Tage",
+                    "17 Tage",
+                    "18 Tage",
+                    "19 Tage",
+                    "20 Tage",
+                    "21 Tage",
+                    "22 Tage",
+                    "23 Tage",
+                    "24 Tage",
+                    "25 Tage",
+                    "26 Tage",
+                    "27 Tage",
+                    "28 Tage",
+                    "29 Tage",
+                    "30 Tage"
+                ],
+                "default": "3",
+                "desc": "Maximale Dauer die Sie brauchen, bis Sie den Artikel versenden. Der Wert wird bei hood angezeigt. <br \/><br>\r\n\t\t\t\t\t\t<b>Hinweis:<\/b><br \/>\r\n\t\t\t\t\t\tWenn Sie Versand \"am gleichen Tag\" w&auml;hlen, legen Sie bitte in Ihrem hood Account entsprechend Ihren Gesch&auml;ftsabl&auml;ufen einen Zeitpunkt fest, bis zu dem die Zahlung des K&auml;ufers bei Ihnen eingegangen sein muss. Die voreingestellte Zeit ist 14:00 Uhr. Pr&uuml;fen Sie, ob Sie die angegebene Bearbeitungszeit einhalten k&ouml;nnen."
+            }
+        }
+    },
+    "payment": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Zahlungsarten<\/b>",
+        "fields": {
+            "paymentmethod": {
+                "label": "Zahlungsart",
+                "key": "hood.default.paymentmethod",
+                "type": "multiselection",
+                "desc": "Voreinstellung f&uuml;r Zahlungsarten (Mehrfach-Auswahl mit Strg+Klick). Auswahl nach Vorgabe von hood.",
+                "default": [
+                    
+                ]
+            }
+        }
+    },
+    "shipping": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Versand<\/b>",
+        "fields": {
+            "shippingcostlocal2": {
+                "label": "Versand Inland",
+                "desc": "Mindestens eine oder mehrere Versandarten ausw&auml;hlen, die standardm&auml;&szlig;ig verwendet werden soll.<br \/><br \/>Bei den Versandkosten tragen Sie bitte eine Zahl ein (ohne Angabe der W&auml;hrung).",
+                "type": "extern",
+                "key": "hood.default.shipping.local",
+                "procFunc": "hoodShippingConfig",
+                "params": [
+                    
+                ]
+            },
+            "shippingcostinternational2": {
+                "label": "Versand Ausland (optional)",
+                "desc": "Keine bis mehrere Versandarten ausw&auml;hlen, die standardm&auml;&szlig;ig verwendet werden soll(en).",
+                "type": "extern",
+                "key": "hood.default.shipping.international",
+                "procFunc": "hoodShippingConfig",
+                "params": [
+                    
+                ]
+            }
+        }
+    },
+    "images": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Bilder<\/b>",
+        "fields": {
+            "imagepath": {
+                "label": "Bilder-Verzeichnis",
+                "key": "hood.imagepath",
+                "type": "text",
+                "desc": "Verzeichnis, aus dem das Hauptbild sowie die Bilder f&uuml;r die Produktbeschreibung (Template) f&uuml;r hood genommen werden"
+            }
+        }
+    },
+    "misc": {
+        "headline": "",
+        "desc": "<b>Einstellungen Sonstiges<\/b>",
+        "fields": {
+            "useean": {
+                "label": "EAN",
+                "desc": "Funktion aktiviert: Die EAN der Produkte wird an hood &uuml;bermittelt, soweit vorhanden.<br \/><br>Die EAN dient auf hood dazu, Produkte leichter zu finden. Wenn hood die EAN nicht kennt, wird diese Angabe ignoriert.<br \/><br \/>Achtung: Wenn hood die EAN in einer anderen Kategorie findet, als der von Ihnen ausgew&auml;hlten, wird der Artikel in diese Kategorie eingestellt.",
+                "key": "hood.useean",
+                "type": "checkbox",
+                "values": {
+                    "val": "EAN &uuml;bermitteln"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "usePrefilledInfo": {
+                "label": "Produktinfos",
+                "desc": "Funktion aktiviert: Falls es im hood Katalog zu dem Produkt Detail-Informationen gibt, werden diese auf der Produktseite angezeigt. Dazu mu&szlig aber auch die EAN &uuml;bergeben werden.",
+                "key": "hood.usePrefilledInfo",
+                "type": "checkbox",
+                "expertsetting": true,
+                "values": {
+                    "val": "hood Produktinfos anzeigen"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "tecdocktype": {
+                "label": "TecDoc KType",
+                "desc": "<strong>Nur f&uuml;r KFZ-Teile<\/strong><br \/><br \/>\r\n                Falls Sie den TecDoc KType in der Shop-Datenbank mitf&uuml;hren und bei den hood Listings mit &uuml;bertragen m&ouml;chten, geben Sie hier die Datenbank-Spalte ein, wo sich die Nummer befindet.<br \/><br \/>\r\n                Diese wird dann (soweit bei dem gegebenen Artikel hinterlegt) an hood mit&uuml;bertragen und der Artikel kann anhand der dazugeh&ouml;rigen Kompatibilit&auml;tsliste leichter gefunden werden.",
+                "key": "hood.tecdoc.column",
+                "type": "dbfieldselector",
+                "expertsetting": true,
+                "morefields": {
+                    "alias": {
+                        "label": "<span class=\"tt\">`products_id`<\/span> Alias",
+                        "key": "hood.tecdoc.alias",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "hitcounter": {
+                "label": "Besucherz&auml;hler",
+                "key": "hood.hitcounter",
+                "type": "selection",
+                "desc": "Voreinstellung f&uuml den Besucherz&auml;hler f&uuml;r die Listings.",
+                "values": {
+                    "NoHitCounter": "keiner",
+                    "BasicStyle": "einfach",
+                    "RetroStyle": "Retro-Style",
+                    "HiddenStyle": "versteckt"
+                }
+            }
+        }
+    },
+    "fixedsettings": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Festpreis-Listings<\/b>",
+        "fields": {
+            "quantity.fixed": {
+                "label": "St&uuml;ckzahl",
+                "desc": "Geben Sie hier an, wie viel Lagermenge eines Artikels auf dem Marktplatz verf&uuml;gbar sein soll.<br\/>\r\n\t\t\t\t\t\t<br\/>\r\n\t\t\t\t\t\tSie k&ouml;nnen die St&uuml;ckzahl direkt unter \"Hochladen\" einzeln ab&auml;ndern - in dem Fall ist es empfehlenswert,<br\/>\r\n\t\t\t\t\t\tdie automatische Synchronisation unter \"Synchronisation des Inventars\" > \"Lagerver&auml;nderung Shop\" auszuschalten.<br\/>\r\n\t\t\t\t\t\t<br\/>\r\n\t\t\t\t\t\tUm &Uuml;berverk&auml;ufe zu vermeiden, k&ouml;nnen Sie den Wert<br\/>\r\n\t\t\t\t\t\t\"Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld\" aktivieren.<br\/>\r\n\t\t\t\t\t\t<br\/>\r\n\t\t\t\t\t\t<strong>Beispiel:<\/strong> Wert auf \"2\" setzen. Ergibt &#8594; Shoplager: 10 &#8594; _#_platformName_#_-Lager: 8<br\/>\r\n\t\t\t\t\t\t<br\/>\r\n\t\t\t\t\t\t<strong>Hinweis:<\/strong> Wenn Sie Angebote zu Artikeln, die im Shop inaktiv gesetzt werden,<br\/>\r\n\t\t\t\t\t\tunabh&auml;ngig der verwendeten Lagermengen auch auf hood beenden wollen, gehen Sie bitte wie folgt vor:<br\/>\r\n\t\t\t\t\t\t<ul>\r\n\t\t\t\t\t\t<li>Synchronisation des Inventars\" > \"Lagerver&auml;nderung Shop\" auf \"automatische Synchronisation per CronJob\" einstellen<\/li>\r\n\t\t\t\t\t\t<li>\"Globale Konfiguration\" > \"Produktstatus\" > \"Wenn Produktstatus inaktiv ist, wird der Lagerbestand wie 0 behandelt\" aktivieren<\/li>\r\n\t\t\t\t\t\t<\/ul>",
+                "key": "hood.fixed.quantity.type",
+                "type": "selection",
+                "values": {
+                    "stock": "Shop-Lagerbestand &uuml;bernehmen",
+                    "stocksub": "Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld",
+                    "lump": "Pauschal (aus rechtem Feld)"
+                },
+                "default": "lump",
+                "morefields": {
+                    "quantity": {
+                        "key": "hood.fixed.quantity.value",
+                        "type": "text",
+                        "default": 1,
+                        "verify": "int",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "maxquantity": {
+                "label": "St&uuml;ckzahl-Begrenzung",
+                "desc": "Hier k&ouml;nnen Sie die St&uuml;ckzahlen der auf hood eingestellten Artikel begrenzen.<br \/><br \/>\r\n\t\t\t\t\t\t<strong>Beispiel:<\/strong> Sie stellen bei \"St&uuml;ckzahl\" ein \"Shop-Lagerbestand &uuml;bernehmen\", und tragen hier 20 ein. Dann werden beim Hochladen so viel St&uuml;ck eingestellt wie im Shop vorhanden, aber nicht mehr als 20. Die Lagersynchronisierung (wenn aktiviert) gleicht die hood-St&uuml;ckzahl an den Shopbestand an, solange der Shopbestand unter 20 St&uuml;ck ist. Wenn im Shop mehr als 20 St&uuml;ck auf Lager sind, wird die hood-St&uuml;ckzahl auf 20 gesetzt.<br \/><br \/>\r\n\t\t\t\t\t\tLassen Sie dieses Feld leer oder tragen Sie 0 ein, wenn Sie keine Begrenzung w&uuml;nschen.<br \/><br \/>\r\n\t\t\t\t\t\t<strong>Hinweis:<\/strong> Wenn die \"St&uuml;ckzahl\"-Einstellung \"Pauschal (aus rechtem Feld)\" ist, hat die Begrenzung keine Wirkung.",
+                "key": "hood.maxquantity",
+                "type": "text",
+                "default": "",
+                "cssClasses": [
+                    "autoWidth"
+                ]
+            },
+            "price": {
+                "label": "Preis",
+                "desc": "Geben Sie einen prozentualen oder fest definierten Preis Auf- oder Abschlag an. Abschlag mit vorgesetztem Minus-Zeichen.",
+                "key": "hood.fixed.price.addkind",
+                "type": "selection",
+                "values": {
+                    "percent": "x% Shop-Preis Auf-\/Abschlag",
+                    "addition": "x  Shop-Preis Auf-\/Abschlag"
+                },
+                "default": "percent",
+                "morefields": {
+                    "cost": {
+                        "key": "hood.fixed.price.factor",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ],
+                        "formatstr": "%.2f"
+                    },
+                    "signaluse": {
+                        "label": "Nachkommastelle",
+                        "desc": "Dieses Textfeld wird beim &Uuml;bermitteln der Daten zu hood als Nachkommastelle an Ihrem Preis &uuml;bernommen.<br\/><br\/>\r\n\t\t\t\t\t\t           <strong>Beispiel:<\/strong> <br \/>\r\n\t\t\t\t\t\t\t\t   Wert im Textfeld: 99 <br \/>\r\n\t\t\t\t\t\t\t\t   Preis-Ursprung: 5.58 <br \/>\r\n\t\t\t\t\t\t\t\t   Finales Ergebnis: 5.99 <br \/><br \/>\r\n\t\t\t\t\t\t           Die Funktion hilft insbesondere bei prozentualen Preis-Auf-\/Abschl&auml;gen.<br\/>\r\n\t\t\t\t\t\t           Lassen Sie das Feld leer, wenn Sie keine Nachkommastelle &uuml;bermitteln wollen.<br\/>\r\n\t\t\t\t\t\t           Das Eingabe-Format ist eine ganzstellige Zahl mit max. 2 Ziffern.",
+                        "key": "hood.fixed.price.signal",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "whichprice": {
+                "label": "Preis berechnen aus",
+                "leftlabel": "Preis aus Kundengruppe",
+                "key": "hood.fixed.price.group",
+                "type": "selection",
+                "values": null,
+                "cssClasses": [
+                    "rightSpacer"
+                ],
+                "morefields": {
+                    "cost": {
+                        "key": "hood.fixed.price.usespecialoffer",
+                        "type": "checkbox",
+                        "values": {
+                            "val": "auch Sonderpreise verwenden"
+                        },
+                        "default": {
+                            "val": false
+                        }
+                    }
+                }
+            },
+            "specialprices": {
+                "label": "Sonderpreise",
+                "desc": "Auch Sonderpreise verwenden, falls vorhanden",
+                "key": "hood.fixed.price.usespecialoffer",
+                "type": "checkbox",
+                "values": {
+                    "val": "auch Sonderpreise verwenden"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "exchangerate": {
+                "label": "Wechselkurs",
+                "desc": "Funktion aktiviert: Wenn die Shop-W&auml;hrung von der Marketplace-W&auml;hrung abweicht, wird der Preis beim Hochladen automatisch mit dem  \r\n\t\t\t\t           aktuellen Wechselkurs aus Yahoo-Finance umgerechnet.<br \/><br \/>\r\n\t\t\t\t           <b>Haftungshinweis:<\/b> RedGecko GmbH &uuml;bernimmt keine Haftung f&uuml;r die Richtigkeit des Wechselkurses. Bitte pr&uuml;fen\r\n\t\t\t\t           Sie die &uuml;bermittelten Werte in Ihrem hood-Konto.",
+                "key": "hood.fixed.exchangerate",
+                "type": "checkbox",
+                "values": {
+                    "update": "Wechselkurs automatisch aktualisieren"
+                },
+                "default": {
+                    "update": true
+                }
+            },
+            "fixedduration": {
+                "label": "Dauer des Listings",
+                "desc": "Voreinstellung f&uuml;r die Dauer der Festpreis-Listings. Die Einstellung kann bei der Vorbereitung der Artikel ge&auml;ndert werden.",
+                "key": "hood.fixed.duration",
+                "type": "selection",
+                "values": {
+                    "1": "1",
+                    "3": "3",
+                    "5": "5",
+                    "7": "7",
+                    "10": "10",
+                    "14": "14"
+                }
+            },
+            "variations": {
+                "label": "Varianten",
+                "desc": "Funktion aktiviert: Produkte, die in mehreren Varianten (wie Gr&ouml;&szlig;e oder Farbe) im Shop vorhanden sind, werden auch so an hood &uuml;bermittelt.<br \/><br \/> Die Einstellung \"St&uuml;ckzahl\" wird dann auf jede einzelne Variante angewendet.<br \/><br \/><b>Beispiel:<\/b> Sie haben einen Artikel 8 mal in blau, 5 mal in gr&uuml;n und 2 mal in schwarz, unter St&uuml;ckzahl \"Shop-Lagerbestand &uuml;bernehmen abzgl. Wert aus rechtem Feld\", und den Wert 2 in dem Feld. Der Artikel wird dann 6 mal in blau und 3 mal in gr&uuml;n &uuml;bermittelt.<br \/><br \/><b>Hinweis:<\/b> Es kommt vor, da&szlig; etwas das Sie als Variante verwenden (z.B. Gr&ouml;&szlig;e oder Farbe) ebenfalls in der Attribut-Auswahl f&uuml;r die Kategorie erscheint. In dem Fall wird Ihre Variante verwendet, und nicht der Attributwert.",
+                "key": "hood.usevariations",
+                "type": "checkbox",
+                "values": {
+                    "val": "Varianten &uuml;bermitteln"
+                },
+                "default": {
+                    "val": true
+                }
+            },
+            "bestprice": {
+                "label": "Preisvorschlag",
+                "desc": "Funktion aktiviert: K&auml;ufer k&ouml;nnen eigene Preise f&uuml;r die Artikel vorschlagen.<br \/><br \/>\r\n                           Diese Einstellung ist nur bei 'einfachen' Artikeln (ohne Varianten) wirksam. Wenn Varianten da sind, wird sie ignoriert.",
+                "key": "hood.bestprice",
+                "type": "checkbox",
+                "values": {
+                    "val": "'Preisvorschlag' aktivieren (gilt nur f&uuml;r Artikel ohne Varianten)"
+                },
+                "default": {
+                    "val": false
+                }
+            }
+        }
+    },
+    "classicsettings": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Steigerungsauktionen<\/b>",
+        "fields": {
+            "quantity.classic": {
+                "label": "St&uuml;ckzahl",
+                "desc": "",
+                "key": "hood.classic.quantity.value",
+                "type": "text",
+                "default": 1,
+                "verify": "int",
+                "cssClasses": [
+                    "autoWidth"
+                ]
+            },
+            "startprice": {
+                "label": "Startpreis",
+                "desc": "Geben Sie einen prozentualen oder fest definierten Preis Auf- oder Abschlag an. Abschlag mit vorgesetztem Minus-Zeichen. 'Fester Wert' bedeutet, der hier eingetragene Wert wird direkt &uuml;bernommen (z.B. wenn Sie immer einen Startpreis von 1 Euro verwenden wollen).",
+                "key": "hood.classic.price.addkind",
+                "type": "selection",
+                "values": {
+                    "percent": "x% Shop-Preis Auf-\/Abschlag",
+                    "addition": "x  Shop-Preis Auf-\/Abschlag",
+                    "constant": "Fester Wert"
+                },
+                "default": "percent",
+                "morefields": {
+                    "cost": {
+                        "key": "hood.classic.price.factor",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ],
+                        "formatstr": "%.2f"
+                    },
+                    "signaluse": {
+                        "label": "Nachkommastelle",
+                        "desc": "Dieses Textfeld wird beim &Uuml;bermitteln der Daten zu hood als Nachkommastelle an Ihrem Preis &uuml;bernommen.<br\/><br\/>\r\n\t\t\t\t\t\t           <strong>Beispiel:<\/strong> <br \/>\r\n\t\t\t\t\t\t\t\t   Wert im Textfeld: 99 <br \/>\r\n\t\t\t\t\t\t\t\t   Preis-Ursprung: 5.58 <br \/>\r\n\t\t\t\t\t\t\t\t   Finales Ergebnis: 5.99 <br \/><br \/>\r\n\t\t\t\t\t\t           Die Funktion hilft insbesondere bei prozentualen Preis-Auf-\/Abschl&auml;gen.<br\/>\r\n\t\t\t\t\t\t           Lassen Sie das Feld leer, wenn Sie keine Nachkommastelle &uuml;bermitteln wollen.<br\/>\r\n\t\t\t\t\t\t           Das Eingabe-Format ist eine ganzstellige Zahl mit max. 2 Ziffern.",
+                        "key": "hood.classic.price.signal",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "buyitnowprice": {
+                "label": "Sofortkauf-Preis",
+                "desc": "Geben Sie einen prozentualen oder fest definierten Preis Auf- oder Abschlag an. Abschlag mit vorgesetztem Minus-Zeichen.<br\/>\r\n\t\t\t\t\t\tDer Sofort-Kaufen Preis muss mindestens 40&#37; h&ouml;her sein, als der Startpreis.",
+                "key": "hood.classic.buyitnow.price.addkind",
+                "type": "selection",
+                "values": {
+                    "percent": "x% Shop-Preis Auf-\/Abschlag",
+                    "addition": "x  Shop-Preis Auf-\/Abschlag"
+                },
+                "default": "percent",
+                "morefields": {
+                    "cost": {
+                        "key": "hood.classic.buyitnow.price.factor",
+                        "type": "text",
+                        "default": "0",
+                        "verify": "float",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ],
+                        "formatstr": "%.2f"
+                    },
+                    "signaluse": {
+                        "label": "Nachkommastelle",
+                        "desc": "Dieses Textfeld wird beim &Uuml;bermitteln der Daten zu hood als Nachkommastelle an Ihrem Preis &uuml;bernommen.<br\/><br\/>\r\n\t\t\t\t\t\t           <strong>Beispiel:<\/strong> <br \/>\r\n\t\t\t\t\t\t\t\t   Wert im Textfeld: 99 <br \/>\r\n\t\t\t\t\t\t\t\t   Preis-Ursprung: 5.58 <br \/>\r\n\t\t\t\t\t\t\t\t   Finales Ergebnis: 5.99 <br \/><br \/>\r\n\t\t\t\t\t\t           Die Funktion hilft insbesondere bei prozentualen Preis-Auf-\/Abschl&auml;gen.<br\/>\r\n\t\t\t\t\t\t           Lassen Sie das Feld leer, wenn Sie keine Nachkommastelle &uuml;bermitteln wollen.<br\/>\r\n\t\t\t\t\t\t           Das Eingabe-Format ist eine ganzstellige Zahl mit max. 2 Ziffern.",
+                        "key": "hood.classic.buyitnow.price.signal",
+                        "type": "text",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    },
+                    "usebuyitnow": {
+                        "key": "hood.classic.buyitnow.price.active",
+                        "type": "checkbox",
+                        "values": {
+                            "val": "Sofortkauf-Preis aktiv"
+                        },
+                        "default": {
+                            "val": false
+                        }
+                    }
+                }
+            },
+            "whichprice": {
+                "label": "Preise berechnen aus",
+                "leftlabel": "Preis aus Kundengruppe",
+                "key": "hood.classic.price.group",
+                "type": "selection",
+                "values": null,
+                "cssClasses": [
+                    "rightSpacer"
+                ],
+                "morefields": {
+                    "cost": {
+                        "key": "hood.classic.price.usespecialoffer",
+                        "type": "checkbox",
+                        "values": {
+                            "val": "auch Sonderpreise verwenden"
+                        },
+                        "default": {
+                            "val": false
+                        }
+                    }
+                }
+            },
+            "specialprices": {
+                "label": "Sonderpreise",
+                "desc": "Auch Sonderpreise verwenden, falls vorhanden",
+                "key": "hood.classic.price.usespecialoffer",
+                "type": "checkbox",
+                "values": {
+                    "val": "auch Sonderpreise verwenden"
+                },
+                "default": {
+                    "val": false
+                }
+            },
+            "exchangerate": {
+                "label": "Wechselkurs",
+                "desc": "Funktion aktiviert: Wenn die Shop-W&auml;hrung von der Marketplace-W&auml;hrung abweicht, wird der Preis beim Hochladen automatisch mit dem  \r\n\t\t\t\t           aktuellen Wechselkurs aus Yahoo-Finance umgerechnet.<br \/><br \/>\r\n\t\t\t\t           <b>Haftungshinweis:<\/b> RedGecko GmbH &uuml;bernimmt keine Haftung f&uuml;r die Richtigkeit des Wechselkurses. Bitte pr&uuml;fen\r\n\t\t\t\t           Sie die &uuml;bermittelten Werte in Ihrem hood-Konto.",
+                "key": "hood.classic.exchangerate",
+                "type": "checkbox",
+                "values": {
+                    "update": "Wechselkurs automatisch aktualisieren"
+                },
+                "default": {
+                    "update": true
+                }
+            },
+            "classicduration": {
+                "label": "Dauer der Auktion",
+                "desc": "Voreinstellung f&uuml;r die Dauer der Auktion. Die Einstellung kann bei der Vorbereitung der Artikel ge&auml;ndert werden.",
+                "key": "hood.classic.duration",
+                "type": "selection",
+                "values": {
+                    "1": "1",
+                    "3": "3",
+                    "5": "5",
+                    "7": "7",
+                    "10": "10",
+                    "14": "14"
+                }
+            }
+        }
+    },
+    "import": {
+        "headline": "Bestellimport",
+        "fields": {
+            "0": {
+                "label": "Import aktivieren",
+                "desc": "Sollen Bestellungen aus _#_platformName_#_ importiert werden? <br\/><br\/>Wenn die Funktion aktiviert ist, werden Bestellungen von hood in Ihren Web-Shop gepushed.<br>\r\n\t\t\t\t\t\t   Das hei&szlig;t, dass die hood-Bestellungen innerhalb weniger Minuten in Ihren Web-Shop-Bestellungen zu finden sind.",
+                "key": "hood.import",
+                "type": "radio",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "default": "true",
+                "submit": "Orders.Import",
+                "morefields": {
+                    "preimportsince": {
+                        "label": "erstmalig ab Zeitpunkt",
+                        "desc": "Startzeitpunkt, ab dem die Bestellungen erstmalig importiert werden sollen. Bitte beachten Sie, dass die Daten erst ab dem Zeitpunkt Ihrer Anmeldung bei magnalister vorliegen.",
+                        "key": "hood.preimport.start",
+                        "type": "date",
+                        "default": "now",
+                        "submit": "Orders.Import.Start",
+                        "cssClasses": [
+                            "autoWidth",
+                            "rightSpacer"
+                        ]
+                    }
+                }
+            },
+            "customersgroup": {
+                "label": "Kundengruppe",
+                "desc": "Kundengruppe, zu der Kunden bei neuen Bestellungen zugeordnet werden sollen.",
+                "key": "hood.CustomerGroup",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "openstatus": {
+                "label": "Bestellstatus im Shop",
+                "desc": "Der Status, den eine von hood neu eingegangene Bestellung im Shop automatisch bekommen soll. <br\/>\r\n\t\t\t\t           Sollten Sie ein angeschlossenes Mahnwesen verwenden, ist es empfehlenswert, den Bestellstatus auf \"Bezahlt\" zu setzen (Konfiguration &rarr; \r\n\t\t\t\t\t\t   Bestellstatus).",
+                "key": "hood.orderstatus.open",
+                "type": "selection",
+                "values": null,
+                "default": "2"
+            },
+            "closedstatus": {
+                "label": "Bestellzusammenfassung beenden",
+                "desc": "Wenn Sie eine Bestellung auf einen der hier ausgew&auml;hlten Stati setzen, werden neue Bestellungen des gleichen Kunden nicht mehr zu dieser hinzugef&uuml;gt. <br \/>\r\n                Falls Sie keine Bestellzusammenfassung w&uuml;nschen, markieren Sie hier alle Stati.",
+                "key": "hood.orderstatus.closed",
+                "type": "multiselection",
+                "values": null,
+                "default": [
+                    
+                ],
+                "cssClasses": [
+                    "valignmid"
+                ]
+            },
+            "defaultshipping": {
+                "label": "Versandart im Shop",
+                "desc": "Versandart, die allen hood-Bestellungen zugeordnet wird.<br \/><br \/>\r\n\t\t\t\tDa hood beim Import von Bestellungen keine Versandart &uuml;bergibt, mu&szlig; hier eine aus dem Shop gew&auml;hlt werden.",
+                "key": "hood.order.shippingmethod",
+                "type": "selection",
+                "values": {
+                    "__ml_lump": "Aus Textfeld"
+                },
+                "default": "__ml_lump",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "hood.order.shippingmethod.name",
+                        "type": "text",
+                        "default": "hood",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            },
+            "defaultpayment": {
+                "label": "Zahlart der Bestellungen",
+                "desc": "Zahlart, die allen _#_platformName_#_-Bestellungen zugeordnet wird. Standard: Automatische Zuordnung.<br \/><br \/>\r\n                 Wenn Sie \"automatische Zuordnung\" w&auml;hlen, &uuml;bernimmt magnalister die Zahlart, die der K&auml;ufer auf _#_platformName_#_ gew&auml;hlt hat.\r\n                 Wenn Sie etwas anderes w&auml;hlen, wird die gew&auml;hlte Zahlungsart allen _#_platformName_#_-Bestellungen zugeordnen.<br \/><br \/> \r\n\t\t\t\t Diese Einstellung ist wichtig f&uuml;r den Rechnungs- und Lieferscheindruck und f&uuml;r die nachtr&auml;gliche Bearbeitung der Bestellung im Shop sowie einige Warenwirtschaften.",
+                "key": "_#_platform_#_.orderimport.paymentmethod",
+                "type": "selection",
+                "values": {
+                    "textfield": "Aus Textfeld",
+                    "matching": "Automatische Zuordnung"
+                },
+                "default": "matching",
+                "expertsetting": true,
+                "morefields": {
+                    "quantity": {
+                        "key": "_#_platform_#_.orderimport.paymentmethod.name",
+                        "type": "text",
+                        "default": "hood",
+                        "cssClasses": [
+                            "autoWidth"
+                        ]
+                    }
+                }
+            }
+        }
+    },
+    "stocksync": {
+        "headline": "Synchronisation des Inventars",
+        "desc": "Legt fest, welche Produkteigenschaften des Produktes in diesem Shop ebenfalls bei hood automatisch aktualisiert werden sollen.<br \/><br \/><b>Einstellungen f&uuml;r Festpreis-Listings<\/b>",
+        "fields": [
+            {
+                "label": "Lagerver&auml;nderung Shop",
+                "desc": "<dl>\r\n\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t    den aktuellen hood-Lagerbestand an der Shop-Lagerbestand an (je nach Konfiguration ggf. mit Abzug).<br>\r\n    \t\t\t            Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t            eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t            Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t            Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t            indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t            <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t            Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\r\n    \t\t\t        <\/dd>\r\n\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten setzt hood-Lagerbestand gleich Shop-Lagerbestand<\/dt>\r\n\t\t\t\t\t\t<dd>Wenn der Lagerbestand im Shop durch eine Bestellung oder durch das Bearbeiten des Artikels ge&auml;ndert wird,\r\n\t\t\t\t\t\t\twird der dann g&uuml;ltige aktuelle Lagerbestand vom Shop zu hood &uuml;bertragen.<br>\r\n\t\t\t\t\t\t\t&Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\r\n\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten &auml;ndert hood-Lagerbestand (Differenz)<\/dt>\r\n\t\t\t\t\t\t<dd>Wenn z. B. im Shop ein Artikel 2 mal gekauft wurde, wird der Lagerbestand bei hood um 2 reduziert.<br \/>\r\n\t\t\t\t\t\t\tWenn die Artikelanzahl unter \"Artikel bearbeiten\" im Shop ge&auml;ndert wird, wird die Differenz zum vorigen Stand aufaddiert bzw. abgezogen.<br>\r\n\t\t\t\t\t\t\t&Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\r\n\t\t\t\t            <\/dl>\r\n\t\t\t\t    <b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Artikel hochladen: Voreinstellungen\" &rarr; \"St&uuml;ckzahl Lagerbestand\" werden f&uuml;r die \r\n\t\t\t\t\t\t\tersten beiden Optionen ber&uuml;cksichtigt.<\/dd>\r\n\t\t\t\t<\/dl>",
+                "key": "hood.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob (empfohlen)",
+                    "abs": "Bestellung \/ Artikel bearbeiten setzt hood-Lagerbestand gleich Shop-Lagerbestand",
+                    "rel": "Bestellung \/ Artikel bearbeiten &auml;ndert hood-Lagerbestand (Differenz)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto"
+            },
+            {
+                "label": "Lagerver&auml;nderung hood",
+                "desc": "Wenn z. B. bei hood ein Artikel 3 mal gekauft wurde, wird der Lagerbestand im Shop um 3 reduziert.",
+                "key": "hood.stocksync.frommarketplace",
+                "type": "selection",
+                "values": {
+                    "rel": "Bestellung reduziert Shop-Lagerbestand (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "rel"
+            },
+            {
+                "label": "Artikelpreis",
+                "desc": "<dl>\r\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t\t\t    <dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t\t\t        den hood-Preis an den Shop-Preis an (mit ggf. Auf- oder Absch&auml;gen, je nach Konfiguration).<br>\r\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t                        Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t                        Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t                        indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t                        <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t                        Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\t\t\t                        \r\n    \t\t\t                        <\/dd>\r\n\t\t\t\t\t\t\t<\/dl><br \/>\r\n\t\t\t\t\t\t\t<b>Hinweise:<\/b><ul><li>Beim Abgleich werden die Einstellungen unter \"Konfiguration\" &rarr; \"Preisberechnung\" ber&uuml;cksichtigt.<\/li>\r\n                                <li>Preise, die in der Vorbereitung eingefroren wurden, sind von der Synchronisierung ausgenommen.<\/li><\/ul>\r\n\t\t\t\t",
+                "key": "hood.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "no"
+            },
+            {
+                "label": "Fremdartikel synchronisieren",
+                "desc": "Sollen Artikel, die nicht &uuml;ber magnalister eingestellt wurden, mit angezeigt und synchronisiert werden? <br\/><br\/>\r\n                           Wenn die Funktion aktiviert ist, werden alle Artikel, die f&uuml;r diesen hood Account bei hood angeboten werden, jede Nacht in die magnalister Datenbank geladen und im Plugin unter 'Listings' angezeigt.<br\/><br\/>\r\n\t\t\t\t\t\t   Die Preis- und Lagersynchronisierung funktioniert f&uuml;r diese Artikel auch, soweit die SKU (Bestandseinheit) auf hood mit einer Artikelnummer im Shop &uuml;bereinstimmt.<br\/><br\/>\r\n                           Ausserdem m&uuml;ssen Sie unter \"Globaler Konfiguration\" > \"Synchronisation Nummernkreise\" > \"Artikelnummer (Shop) = SKU (Marketplace)\" eingestellt haben.<br\/>\r\nBitte achten Sie darauf, dass wenn Sie die Nummernkreise &auml;ndern, diese auf den Marktpl&auml;tzen komplett erneuert werden m&uuml;ssen, um eine korrekte Synchronisation sicher zu stellen.<br\/>\r\n                           Lassen Sie sich hier ggf. beraten.<br\/><br\/>\r\n                           Diese Funktionalit&auml;t ist momentan nicht f&uuml;r Fremdartikel mit Varianten verf&uuml;gbar.",
+                "key": "hood.inventory.import",
+                "type": "radio",
+                "values": {
+                    "true": "Ja",
+                    "false": "Nein"
+                },
+                "default": "true",
+                "submit": "Inventory.Import"
+            }
+        ]
+    },
+    "stocksync_chinese": {
+        "headline": "",
+        "desc": "<b>Einstellungen f&uuml;r Steigerungsauktionen<\/b>",
+        "fields": [
+            {
+                "label": "Lagerver&auml;nderung Shop",
+                "desc": "<dl>\r\n\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten &auml;ndert eBay-Lagerbestand (Differenz)<\/dt>\r\n\t\t\t\t\t\t<dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t    den aktuellen eBay-Lagerbestand an der Shop-Lagerbestand an (je nach Konfiguration ggf. mit Abzug).<br>\r\n    \t\t\t            Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t            eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t            Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t            Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t            indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t            <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t            Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\r\n    \t\t\t        <\/dd>\r\n\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten setzt eBay-Lagerbestand gleich Shop-Lagerbestand<\/dt>\r\n\t\t\t\t\t\t<dd>Wenn der Lagerbestand im Shop durch eine Bestellung oder durch das Bearbeiten des Artikels ge&auml;ndert wird,\r\n\t\t\t\t\t\t\twird der dann g&uuml;ltige aktuelle Lagerbestand vom Shop zu eBay &uuml;bertragen.<br>\r\n\t\t\t\t\t\t\t&Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\r\n\t\t\t\t\t<dt>Bestellung \/ Artikel bearbeiten &auml;ndert eBay-Lagerbestand (Differenz)<\/dt>\r\n\t\t\t\t\t\t<dd>Wenn z. B. im Shop ein Artikel 2 mal gekauft wurde, wird der Lagerbestand bei eBay um 2 reduziert.<br \/>\r\n\t\t\t\t\t\t\tWenn die Artikelanzahl unter \"Artikel bearbeiten\" im Shop ge&auml;ndert wird, wird die Differenz zum vorigen Stand aufaddiert bzw. abgezogen.<br>\r\n\t\t\t\t\t\t\t&Auml;nderungen nur in der Datenbank, z.B. durch eine Warenwirtschaft, werden hier <b>nicht<\/b> erfasst und &uuml;bermittelt!<\/dd>\r\n\t\t\t\t            <\/dl>\r\n\t\t\t\t    <b>Hinweis:<\/b> Die Einstellungen unter \"Konfiguration\" &rarr; \"Artikel hochladen: Voreinstellungen\" &rarr; \"St&uuml;ckzahl Lagerbestand\" werden f&uuml;r die \r\n\t\t\t\t\t\t\tersten beiden Optionen ber&uuml;cksichtigt.<\/dd>\r\n\t\t\t\t<\/dl>",
+                "key": "ebay.chinese.stocksync.tomarketplace",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisation per CronJob (empfohlen)",
+                    "abs": "Bestellung \/ Artikel bearbeiten setzt eBay-Lagerbestand gleich Shop-Lagerbestand",
+                    "rel": "Bestellung \/ Artikel bearbeiten &auml;ndert eBay-Lagerbestand (Differenz)",
+                    "onlydecr": "Bestellung \/ Lageranzahl verkleinern reduziert eBay-Lagerbestand (kein Aufstocken)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "auto"
+            },
+            {
+                "label": "Lagerver&auml;nderung eBay",
+                "desc": "Wenn z. B. bei eBay ein Artikel 3 mal gekauft wurde, wird der Lagerbestand im Shop um 3 reduziert.",
+                "key": "ebay.chinese.stocksync.frommarketplace",
+                "type": "selection",
+                "values": {
+                    "rel": "Bestellung reduziert Shop-Lagerbestand  (empfohlen)",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "rel"
+            },
+            {
+                "label": "Artikelpreis",
+                "desc": "<dl>\r\n\t\t\t\t\t\t\t\t<dt>Automatische Synchronisierung per CronJob (empfohlen)<\/dt>\r\n\t\t\t\t\t\t\t\t    <dd>Die Funktion \"Automatische Synchronisierung\" gleicht alle 4 Stunden (beginnt um 0:00 Uhr nachts)\r\n\t\t\t\t\t\t\t\t        den eBay-Preis an den Shop-Preis an (mit ggf. Auf- oder Absch&auml;gen, je nach Konfiguration).<br>\r\n    \t\t\t                        Dabei werden die Werte aus der Datenbank gepr&uuml;ft und &uuml;bernommen, auch wenn die &Auml;nderungen durch z.B. \r\n    \t\t\t                        eine Warenwirtschaft nur in der Datenbank erfolgten.<br><br>\r\n    \t\t\t                        Einen manuellen Abgleich k&ouml;nnen Sie ansto&szlig;en, indem Sie den entsprechenden Funktionsbutton in der Kopfzeile vom magnalister anklicken (links von der Ameise).<br><br>\r\n    \t\t\t                        Zus&auml;tzlich k&ouml;nnen Sie den Lagerabgleich (ab Tarif Flat - maximal viertelst&uuml;ndlich) auch durch einen eigenen CronJob ansto&szlig;en, \r\n    \t\t\t                        indem Sie folgenden Link zu Ihrem Shop aufrufen: <br>\r\n    \t\t\t                        <i>http:\/\/www.IhrShop.de\/magnaCallback.php?do=SyncInventory<\/i><br>\r\n    \t\t\t                        Eigene CronJob-Aufrufe durch Kunden, die nicht im Tarif Flat sind, oder die h&auml;ufiger als viertelst&uuml;ndlich laufen, werden geblockt.\t\t\t                        \r\n    \t\t\t                        <\/dd>\r\n\t\t\t\t\t\t\t<\/dl><br>\r\n\t\t\t\t\t\t\t<b>Hinweise:<\/b><ul><li>Beim Abgleich werden die Einstellungen unter \"Konfiguration\" &rarr; \"Preisberechnung\" ber&uuml;cksichtigt.<\/li>\r\n                                <li>Preise, die in der Vorbereitung eingefroren wurden, sind von der Synchronisierung ausgenommen.<\/li><\/ul>\r\n\t\t\t\t",
+                "key": "ebay.chinese.inventorysync.price",
+                "type": "selection",
+                "values": {
+                    "auto": "Automatische Synchronisierung per CronJob",
+                    "no": "keine Synchronisierung"
+                },
+                "default": "no"
+            }
+        ]
+    },
+    "template": {
+        "headline": "Produkt-Template",
+        "desc": "Template f&uuml;r die Produktbeschreibung auf hood. (Sie k&ouml;nnen den Editor unter \"Globale Konfiguration\" > \"Experteneinstellungen\" umschalten.)",
+        "fields": {
+            "productname": {
+                "label": "Template Produktname",
+                "key": "_#_platform_#_.template.name",
+                "type": "text",
+                "default": "#TITLE#",
+                "verify": "notempty",
+                "cssClasses": [
+                    "autoWidth"
+                ],
+                "rightlabel": "Platzhalter: #TITLE# - Produktname; #BASEPRICE# - Grundpreis",
+                "desc": "<dl>\r\n\t\t\t\t\t\t\t<dt>Name des Produkts auf hood<\/dt>\r\n\t\t\t\t\t\t\t <dd>Einstellung, wie das Produkt auf hood hei&szlig;en soll.\r\n\t\t\t\t\t\t\t     Der Platzhalter <b>#TITLE#<\/b> wird automatisch durch den Produktnamen aus dem Shop ersetzt,\r\n\t\t\t\t\t\t  \t\t <b>#BASEPRICE#<\/b> durch Preis pro Einheit, soweit f&uuml;r das betreffende Produkt im Shop hinterlegt.<\/dd>\r\n\t\t\t\t\t\t\t<dt>Bitte beachten Sie:<\/dt>\r\n\t\t\t\t\t\t\t <dd><b>#BASEPRICE#<\/b> wird erst beim Hochladen zu hood ersetzt, denn bei der Vorbereitung kann der Preis noch ge&auml;ndert werden.<\/dd>\r\n\t\t\t\t\t\t\t <dd>Da der Grundpreis  ein fester Wert in dem Titel ist und nicht aktualisiert werden kann, sollte der Preis nicht ge&auml;ndert werden, denn dies w&uuml;rde zu falschen Preisangaben f&uuml;hren.<br \/> \r\n\t\t\t\t\t\t\t\tSie k&ouml;nnen den Platzhalter auf eigenen Gefahr verwenden, wir empfehlen aber in dem Fall, <b>die Preissynchronisation auszuschalten<\/b> (Einstellung in der magnalister hood Konfiguration).<\/dd>\r\n\t\t\t\t\t\t\t<\/dl>"
+            },
+            "content": {
+                "label": "Template Produktbeschreibung",
+                "key": "_#_platform_#_.template.content",
+                "type": "textarea",
+                "default": "<p>#TITLE#<\/p>\r\n<p>#ARTNR#<\/p>\r\n<p>#SHORTDESCRIPTION#<\/p>\r\n<p>#PICTURE1#<\/p>\r\n<p>#PICTURE2#<\/p>\r\n<p>#PICTURE3#<\/p>\r\n<p>#DESCRIPTION#<\/p>",
+                "verify": "notempty",
+                "cssClasses": [
+                    "fullwidth",
+                    "tinymce"
+                ],
+                "parameters": {
+                    "rows": "40"
+                },
+                "externalDesc": "\r\n\t\t\t\t\tListe verf&uuml;gbarer Platzhalter f&uuml;r den Inhalt:\r\n\t\t\t\t\t<dl>\r\n\t\t\t\t\t\t<dt>#TITLE#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Produktname (Titel)<\/dd>\r\n\t\t\t\t\t\t<dt>#ARTNR#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Artikelnummer im Shop<\/dd>\r\n\t\t\t\t\t\t<dt>#PID#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Products ID im Shop<\/dd>\r\n\t\t\t\t\t\t<!--<dt>#PRICE#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Preis<\/dd>\r\n\t\t\t\t\t\t<dt>#VPE#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Preis pro Verpackungseinheit<\/dd>-->\r\n\t\t\t\t\t\t<dt>#SHORTDESCRIPTION#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Kurzbeschreibung aus dem Shop<\/dd>\r\n\t\t\t\t\t\t<dt>#DESCRIPTION#<\/dt>\r\n\t\t\t\t\t\t\t<dd>Beschreibung aus dem Shop<\/dd>\r\n\t\t\t\t\t\t<dt>#PICTURE1#<\/dt>\r\n\t\t\t\t\t\t\t<dd>erstes Produktbild<\/dd>\r\n\t\t\t\t\t\t<dt>#PICTURE2# usw.<\/dt>\r\n\t\t\t\t\t\t\t<dd>zweites Produktbild; mit #PICTURE3#, #PICTURE4# usw. k&ouml;nnen weitere Bilder &uuml;bermittelt werden, so viele wie im Shop vorhanden.<\/dd>\r\n\t\t\t\t\t<\/dl>\r\n\t\t\t\t",
+                "buttons": [
+                    "#restoreDefault#"
+                ]
+            }
+        }
+    }
+}
