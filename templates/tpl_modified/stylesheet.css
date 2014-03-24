@@ -78,12 +78,12 @@ a.black {
   line-height:28px;
 }
 .paypal_button {
-  position:relative;
   margin:0px 0px 0px 10px;
   display:inline-block;
-  bottom:-10px;
 }
-
+.paypal_button img {
+  height:32px;
+}
 
 .text_left {
   float:left;
