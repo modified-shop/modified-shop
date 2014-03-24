@@ -89,29 +89,56 @@
   </div>
 {$FORM_END}
 
-{*BEGIN ACCORDION*}
-<div id="accordion_product_info">
-  {if $PRODUCTS_DESCRIPTION != ''}<h3><a href="#">{#description#}</a></h3><div>{$PRODUCTS_DESCRIPTION}</div>{/if}
-  {if $more_images|@count > 0}<h3><a href="#">{#more_images#}</a></h3>
-    <div>
-      <div id="accordion_more_images">
-        {* More Pictures *}
-        <div class="morepics">
-        {foreach item=more_images_data from=$more_images}
-          <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>
-        {/foreach}
+
+<!--Horizontal Tab-->
+        <div id="horizontalAccordion">
+            <ul class="resp-tabs-list">
+                {if $PRODUCTS_DESCRIPTION != ''}<li>{#description#}</li>{/if}
+                {if $more_images|@count > 0}<li>{#more_images#}</li>{/if}
+                {if $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
+                {if $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
+                {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li>{#cross_selling#}</li>{/if}
+                {if $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
+            </ul>
+            <div class="resp-tabs-container">
+                {if $PRODUCTS_DESCRIPTION != ''}<div><p>{$PRODUCTS_DESCRIPTION}</p></div>{/if}
+
+                {if $more_images|@count > 0}
+                <div>
+                  <div class="morepics">
+                    {foreach item=more_images_data from=$more_images}
+                      <a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE|onlytext}" alt="{$PRODUCTS_NAME}" /></a>
+                    {/foreach}
+                    <div style="clear:both;"></div>
+                  </div>
+                </div>
+                {/if}
+                
+                {if $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
+                {if $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
+                {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div>{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+                {if $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
+
+            </div>
         </div>
-        <div style="clear:both;"></div>
-      </div>
-    </div>
-  {/if}
-  {if $MODULE_products_media != ''}<h3><a href="#">{#products_media#}</a></h3><div>{$MODULE_products_media}</div>{/if}
-  {if $MODULE_products_reviews != ''}<h3><a href="#">{#products_reviews#}</a></h3><div>{$MODULE_products_reviews}</div>{/if}
-  {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<h3><a href="#">{#cross_selling#}</a></h3><div>{$MODULE_cross_selling}
-  {if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
-  {if $MODULE_also_purchased != ''}<h3><a href="#">{#also_purchased#}</a></h3><div>{$MODULE_also_purchased}</div>{/if}
-</div>
-{*END ACCORDION*}
+
+        <br />
+
+        <div id="tabInfo">
+            Selected tab: <span class="tabName"></span>
+        </div>
+
+        <br />
+        <br />
+<!--Horizontal Tab-->
+
+
+
+
+
+
+
+
 
 {if $PRODUCTS_ADDED != ''}<p class="productinfoproductadded">{$PRODUCTS_ADDED}</p>{/if}
 {$PRODUCT_NAVIGATOR}
