@@ -135,6 +135,11 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   if ($order->info['payment_method'] == 'banktransfer') {
     // add SEPA info
     $oID = $order->info['order_id'];
+    if(isset($send_by_admin)) {
+      require (DIR_FS_CATALOG_MODULES.'payment/banktransfer.php');
+      include(DIR_FS_LANGUAGES.$order->info['language'].'/modules/payment/banktransfer.php');
+      $payment_modules = new banktransfer();
+    }
     $rec = $payment_modules->info();
     // SEPA info required?
     if (!empty($rec['banktransfer_iban'])) {
