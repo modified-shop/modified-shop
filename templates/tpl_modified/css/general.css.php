@@ -17,6 +17,8 @@
 ?>
 <link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald|Open+Sans:400,700" type="text/css">
 <link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/stylesheet.css" type="text/css" />
+<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/easy-responsive-tabs.css" type="text/css" media="screen" />
+
 <link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/thickbox.css" type="text/css" media="screen" />
 
 <?php // BOF - web28 - 2010-07-09 - TABS/ACCORDION in product_info
