@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: magnalister.php 3661 2014-03-23 15:24:59Z derpapst $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -38,12 +38,16 @@ define('MAGNALISTER_PLUGIN', true);
 
 $safe_mode = strtolower(ini_get('safe_mode'));
 switch ($safe_mode) {
-    case 'on':
-    case 'yes':
-    case 'true':
-        define('MAGNA_SAFE_MODE', true);
-    default:
-        define('MAGNA_SAFE_MODE', (bool)((int)$safe_mode));
+	case 'on':
+	case 'yes':
+	case 'true': {
+		define('MAGNA_SAFE_MODE', true);
+		break;
+	}
+	default: {
+		define('MAGNA_SAFE_MODE', (bool)((int)$safe_mode));
+		break;
+	}
 }
 unset($safe_mode);
 
@@ -95,6 +99,12 @@ $_backup = array (
 require_once('includes/application_top.php');
 #ob_end_clean();
 
+/*
+$constants = get_defined_constants(true);
+print_r($constants['user']);
+die();
+*/
+
 /* Kein MagicQuotes mist mitmachen... */
 $_REQUEST = $_backup['REQUEST'];
 $_GET     = $_backup['GET'];
@@ -116,9 +126,21 @@ define('MAGNA_PUBLIC_SERVER', 'http://magnalister.com/');
 define('MAGNA_PLUGIN_DIR', 'magnalister/');
 define('DIR_MAGNALISTER_ABSOLUTE', dirname(__FILE__).'/');
 define('DIR_MAGNALISTER', 'includes/'.MAGNA_PLUGIN_DIR);
+	
+if (defined('DIR_FS_EXTERNAL') && defined('DIR_WS_EXTERNAL')) {
+	define('DIR_MAGNALISTER_FS', DIR_FS_EXTERNAL.'magnalister/');
+	define('DIR_MAGNALISTER_WS', DIR_WS_EXTERNAL.'magnalister/');
+} else {
+	define('DIR_MAGNALISTER_FS', dirname(__FILE__).'/includes/magnalister/');
+	define('DIR_MAGNALISTER_WS', 'includes/magnalister/');
+}
+
 define('MAGNA_UPDATE_PATH', $_SESSION['magna_UPDATE_PATH'].'oscommerce/');
 defined('MAGNA_UPDATE_FILEURL') OR define('MAGNA_UPDATE_FILEURL', MAGNA_SERVICE_URL.MAGNA_UPDATE_PATH);
 define('MAGNA_SUPPORT_URL', '<a href="'.MAGNA_PUBLIC_SERVER.'" title="'.MAGNA_PUBLIC_SERVER.'">'.MAGNA_PUBLIC_SERVER.'</a>');
+
+#echo 'DIR_MAGNALISTER_FS: '.DIR_MAGNALISTER_FS."<br>\n";
+#echo 'DIR_MAGNALISTER_WS: '.DIR_MAGNALISTER_WS."<br>\n";
 
 if (MAGNA_SHOW_WARNINGS) {
 	error_reporting(E_ALL | E_STRICT);
@@ -147,6 +169,9 @@ function __ml_useCURL($bl = null) {
 	
 	/* read */
 	if ($bl === null) {
+		if (defined('MAGNA_USE_CURL') && is_bool(MAGNA_USE_CURL)) {
+			return MAGNA_USE_CURL;
+		}
 		if (isset($d['ForceCURL']) && ($d['ForceCURL'] === true)) {
 			// READ ForceCURL === true
 			return true;
@@ -202,7 +227,7 @@ function fileGetContentsPHP($path, &$warnings = null, $timeout = 10) {
 	return $return;
 }
 
-function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
+function fileGetContentsCURL($path, &$warnings = null, $timeout = 10, $forceSSLOff = false) {
 	$useCURL = __ml_useCURL();
 	if ($useCURL === false) {
 		$warnings = 'cURL disabled';
@@ -221,6 +246,13 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 	$warnings = '';
 	$ch = curl_init();
 	
+	$hasSSL = is_array($cURLVersion) && array_key_exists('protocols', $cURLVersion) && in_array('https', $cURLVersion['protocols']);
+	if ($hasSSL && !$forceSSLOff) {
+		$path = str_replace('http://', 'https://', $path);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	}
+	
 	curl_setopt($ch, CURLOPT_URL, $path);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -228,7 +260,7 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 	}
-	
+	//*
 	$timeout_ts = time() + $timeout;
 	$next_try = false;
 	$return = false;
@@ -239,7 +271,7 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 		$return = curl_exec($ch);
 		$next_try = true;
 	} while (curl_errno($ch) && (time() < $timeout_ts));
-	
+	//*/
 	if (curl_errno($ch) == CURLE_OPERATION_TIMEOUTED) {
 		__ml_useCURL(false);
 		$return = false;
@@ -271,26 +303,26 @@ function fileGetContents($path, &$warnings = null, $timeout = 10) {
 function echoDiePage($title, $content, $style = '', $showbacklink = true) {
 	echo '<!doctype html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>magnalister :: '.$title.'</title>
-    <style>
-    	body { font: 12px sans-serif; }
-    	h1   { font-size: 130%; }
-    	'.$style.'
-    </style>
-  </head>
-  <body>
-    <h1>'.$title.'</h1>
-    <p>'.$content.'</p>
-	'.(($showbacklink && isset($_SERVER['HTTP_REFERER']))
-		? (($_SESSION['language'] == 'german') 
-			? '<a href="'.$_SERVER['HTTP_REFERER'].'" title="Zur&uuml;ck">Zur&uuml;ck</a>'
-			: '<a href="'.$_SERVER['HTTP_REFERER'].'" title="Back">Back</a>'
-    	)
-    	: ''
-    ).'
-  </body>
+	<head>
+		<meta charset="UTF-8">
+		<title>magnalister :: '.$title.'</title>
+		<style>
+			body { font: 12px sans-serif; }
+			h1   { font-size: 130%; }
+			'.$style.'
+		</style>
+	</head>
+	<body>
+		<h1>'.$title.'</h1>
+		<p>'.$content.'</p>
+		'.(($showbacklink && isset($_SERVER['HTTP_REFERER']))
+			? (($_SESSION['language'] == 'german') 
+				? '<a href="'.$_SERVER['HTTP_REFERER'].'" title="Zur&uuml;ck">Zur&uuml;ck</a>'
+				: '<a href="'.$_SERVER['HTTP_REFERER'].'" title="Back">Back</a>'
+			)
+			: ''
+		).'
+	</body>
 </html>';
 	include_once(DIR_WS_INCLUDES . 'application_bottom.php');
 	exit();	
@@ -300,9 +332,9 @@ if (version_compare(PHP_VERSION, '5.0.0', '<')) {
 	echoDiePage(
 		(($_SESSION['language'] == 'german') ? 'PHP Version zu alt' : 'PHP version too old'),
 		(($_SESSION['language'] == 'german') ?
-	    	'Ihre PHP-Version ('.PHP_VERSION.') ist zu alt. Sie ben&ouml;tigen mindestens PHP Version 5.0 oder h&ouml;her.' :
-	    	'Your PHP version ('.PHP_VERSION.') is too old. You need at least PHP version 5.0 or higher.'
-	    )
+			'Ihre PHP-Version ('.PHP_VERSION.') ist zu alt. Sie ben&ouml;tigen mindestens PHP Version 5.0 oder h&ouml;her.' :
+			'Your PHP version ('.PHP_VERSION.') is too old. You need at least PHP version 5.0 or higher.'
+		)
 	);
 }
 
@@ -321,41 +353,41 @@ if (strpos($str, ',') !== false) {
 			(($_SESSION['language'] == 'german') ? 'Fehlerhafte Darstellung von Gleitkommazahlen' : 'Wrong representation of floats'),
 			(($_SESSION['language'] == 'german')
 				? 'Die Gleitkommazahlen wie 3.1415 werden mit einem "," statt einem "." dargestellt. Dieses Verhalten konnte nicht automatisch korrigiert werden. '.
-		    	  'Bitte kontaktieren Sie Ihren Serveradministrator um dieses Verhalten abzustellen.'
-		    	: 'Floats are represented with "," instead of ".". The behavior could not be changed. Please contact your administrator to fix this issue.'
-		    )
+				  'Bitte kontaktieren Sie Ihren Serveradministrator um dieses Verhalten abzustellen.'
+				: 'Floats are represented with "," instead of ".". The behavior could not be changed. Please contact your administrator to fix this issue.'
+			)
 		);
 	}
 }
 unset($str);
 
 /* Alles ueber diesem Kommentar muss PHP 4 kompatibel sein! */
-if (MAGNA_SAFE_MODE && !file_exists(DIR_MAGNALISTER.'ClientVersion')) {
+if (MAGNA_SAFE_MODE && !file_exists(DIR_MAGNALISTER_FS.'ClientVersion')) {
 	echoDiePage(
 		'Safe Mode '.(($_SESSION['language'] == 'german') ? 'Beschr&auml;nkung aktiv' : 'Restriction active'),
 		(($_SESSION['language'] == 'german') ?
-	    	'Die PHP Safe-Mode Beschr&auml;nkung auf Ihrem Server ist aktiv. Daher ist es nicht m&ouml;glich, automatische Updates zu machen. Um den magnalister manuell zu 
+			'Die PHP Safe-Mode Beschr&auml;nkung auf Ihrem Server ist aktiv. Daher ist es nicht m&ouml;glich, automatische Updates zu machen. Um den magnalister manuell zu 
 			 aktualisieren, laden Sie sich bitte die aktuelle Version aus dem
-	    	 <a href="'.MAGNA_PUBLIC_SERVER.'" title="magnalister Seite">magnalister Download-Bereich</a> herunter, und entpacken den Ordner "files" aus dem ZIP-Archiv in das
- 			 Wurzelverzeichnis Ihres Shops. Kontaktieren Sie alternativ Ihren Server-Administrator und bitten Sie ihn, den Safe-Mode dauerhaft abzuschalten, um das Update per 	
+			 <a href="'.MAGNA_PUBLIC_SERVER.'" title="magnalister Seite">magnalister Download-Bereich</a> herunter, und entpacken den Ordner "files" aus dem ZIP-Archiv in das
+			 Wurzelverzeichnis Ihres Shops. Kontaktieren Sie alternativ Ihren Server-Administrator und bitten Sie ihn, den Safe-Mode dauerhaft abzuschalten, um das Update per 	
 			 Knopfdruck ausf&uuml;hren zu k&ouml;nnen. <br /><br />Gerne installieren wir Ihnen das manuelle Update auch gegen eine geringe Update-Pauschale (siehe http://www.magnalister.com/frontend/installation_pricing.php).' :
-	    	'The PHP Save Mode restriction is active. That\'s why it is not possible to make automatic upgrades. To upgrade the magnalister manually, please
-	    	 download the current version from <a href="'.MAGNA_PUBLIC_SERVER.'" title="magnalister.com">magnalister.com</a> and extract the contents
-	    	 of the zip archive into the root directory of your shop or contact your server administrator and ask if the Safe Mode Restriction can be 
-	    	 switched off permanently.'
-	    )
-	);	
+			'The PHP Save Mode restriction is active. That\'s why it is not possible to make automatic upgrades. To upgrade the magnalister manually, please
+			 download the current version from <a href="'.MAGNA_PUBLIC_SERVER.'" title="magnalister.com">magnalister.com</a> and extract the contents
+			 of the zip archive into the root directory of your shop or contact your server administrator and ask if the Safe Mode Restriction can be 
+			 switched off permanently.'
+		)
+	);
 }
 
-if (!MAGNA_SAFE_MODE && !is_writable(DIR_MAGNALISTER)) {
+if (!MAGNA_SAFE_MODE && !is_writable(DIR_MAGNALISTER_FS)) {
 	echoDiePage(
-		substr(DIR_WS_ADMIN.DIR_MAGNALISTER, 1).' '.(($_SESSION['language'] == 'german') ? 'kann nicht geschrieben werden' : 'is not writable'),
+		DIR_MAGNALISTER_WS.' '.(($_SESSION['language'] == 'german') ? 'kann nicht geschrieben werden' : 'is not writable'),
 		(($_SESSION['language'] == 'german') ?
-	    	'Das Verzeichnis <tt>'.substr(DIR_WS_ADMIN.DIR_MAGNALISTER, 1).'</tt> kann nicht vom Webserver geschrieben werden.<br/>
-	    	 Dies ist allerdings zwingend notwendig um den magnalister verwenden zu k&ouml;nnen.' :
-	    	'The directory <tt>'.substr(DIR_WS_ADMIN.DIR_MAGNALISTER, 1).'</tt> is not writable by the webserver.<br/>
-	    	 This is however required to use the magnalister.'
-	    )
+			'Das Verzeichnis <tt>'.DIR_MAGNALISTER_WS.'</tt> kann nicht vom Webserver geschrieben werden.<br/>
+			 Dies ist allerdings zwingend notwendig um den magnalister verwenden zu k&ouml;nnen.' :
+			'The directory <tt>'.DIR_MAGNALISTER_WS.'</tt> is not writable by the webserver.<br/>
+			 This is however required to use the magnalister.'
+		)
 	);
 }
 
@@ -377,7 +409,7 @@ if (!MAGNA_SAFE_MODE) {
 	foreach ($requiredFiles as $file) {
 		$doDownload = (isset($_GET['update']) && ($_GET['update'] == 'true')) || ($_SESSION['MagnaPurge'] === true);
 		$scriptPath = MAGNA_UPDATE_FILEURL.'magnalister/'.$file;
-		if ($doDownload || !file_exists(DIR_MAGNALISTER.$file)) {
+		if ($doDownload || !file_exists(DIR_MAGNALISTER_FS.$file)) {
 			$scriptContent = fileGetContents($scriptPath, $foo, -1);
 			if ($scriptContent === false) {
 				echoDiePage(
@@ -387,23 +419,23 @@ if (!MAGNA_SAFE_MODE) {
 							'can\'t be loaded'
 					),
 					(($_SESSION['language'] == 'german') ?
-				    	'Die Datei <tt>'.$scriptPath.'</tt> kann nicht heruntergeladen werden.' :
-				    	'The File <tt>'.$scriptPath.'</tt> can not be downloaded.'
-				    )
+						'Die Datei <tt>'.$scriptPath.'</tt> kann nicht heruntergeladen werden.' :
+						'The File <tt>'.$scriptPath.'</tt> can not be downloaded.'
+					)
 				);
 			}
 		
-			if (@file_put_contents(DIR_MAGNALISTER.$file, $scriptContent) === false) {
+			if (@file_put_contents(DIR_MAGNALISTER_FS.$file, $scriptContent) === false) {
 				echoDiePage(
-					DIR_MAGNALISTER.$file.' '.(
+					DIR_MAGNALISTER_WS.$file.' '.(
 						($_SESSION['language'] == 'german') ? 
 							'kann nicht gespeichert werden' : 
 							'can\'t be loaded'
 					),
 					(($_SESSION['language'] == 'german') ?
-				    	'Die Datei <tt>'.DIR_MAGNALISTER.$file.'</tt> kann nicht gespeichert werden.' :
-				    	'The File <tt>'.DIR_MAGNALISTER.$file.'</tt> can not be saved.'
-				    )
+						'Die Datei <tt>'.DIR_MAGNALISTER_WS.$file.'</tt> kann nicht gespeichert werden.' :
+						'The File <tt>'.DIR_MAGNALISTER_WS.$file.'</tt> can not be saved.'
+					)
 				);
 			}
 		}
@@ -413,6 +445,6 @@ if (!MAGNA_SAFE_MODE) {
 /**
  * Magnalister Core
  */
-include_once(DIR_MAGNALISTER.'init.php');
+include_once(DIR_MAGNALISTER_FS.'init.php');
 
 include_once(DIR_WS_INCLUDES.'application_bottom.php');

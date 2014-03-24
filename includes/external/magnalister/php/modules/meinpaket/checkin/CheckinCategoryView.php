@@ -1,0 +1,127 @@
+<?php
+/**
+ * 888888ba                 dP  .88888.                    dP                
+ * 88    `8b                88 d8'   `88                   88                
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ *
+ *                          m a g n a l i s t e r
+ *                                      boost your Online-Shop
+ *
+ * -----------------------------------------------------------------------------
+ * $Id: CheckinCategoryView.php 3434 2014-01-09 11:37:41Z derpapst $
+ *
+ * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
+ *     Released under the MIT License (Expat)
+ * -----------------------------------------------------------------------------
+ */
+
+defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimpleCheckinCategoryView.php');
+
+class MeinpaketCheckinCategoryView extends SimpleCheckinCategoryView {
+	protected $preptable = TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING;
+	
+	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '') {
+		global $_MagnaSession;
+		
+		$this->preptable = (!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV)
+			? TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING
+			: TABLE_MAGNA_MEINPAKET_PROPERTIES;
+		
+		$marketplaceCategoryField = (!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV)
+			? 'mp_category_id'
+			: 'MarketplaceCategory';
+		
+		$settings = array_merge(array(
+			'selectionName'   => 'checkin',
+			'selectionValues' => array (
+				'quantity' => null
+			)
+		), $settings);
+		
+		$preparedItems = MagnaDB::gi()->fetchArray('
+			SELECT DISTINCT '.(
+				(getDBConfigValue('general.keytype', '0') == 'artNr') 
+					? 'products_model' 
+					: 'products_id'
+				).'
+			  FROM '.$this->preptable.'
+			 WHERE '.$marketplaceCategoryField.'<>""
+			       AND mpID="'.$_MagnaSession['mpID'].'"
+		', true);
+		#echo print_m($preparedItems, '$preparedItems');
+
+		if (!empty($preparedItems)) {
+			if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+				$filter = array(
+					'join' => '',
+					'where' => 'p.products_model IN ("'.implode('", "', MagnaDB::gi()->escape($preparedItems)).'")'
+				);
+			} else {
+				$filter = array(
+					'join' => '',
+					'where' => 'p2c.products_id IN ("'.implode('", "', $preparedItems).'")'
+				);
+			}
+		} else {
+			$filter = array(
+				'join' => '',
+				'where' => '0=1'
+			);
+		}
+		#echo print_m(array($filter),'array($filter)');
+
+		$this->setCat2ProdCacheQueryFilter(array($filter));
+
+		parent::__construct($cPath, $settings, $sorting, $search);
+		
+		if (!isset($_GET['kind']) || ($_GET['kind'] != 'ajax')) {
+			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
+		}
+	}
+
+	public function getAdditionalHeadlines() {
+		return '
+			<td>'.ML_MEINPAKET_LABEL_CATEGORY.'</td>';
+	}
+
+	public function getAdditionalCategoryInfo($cID, $data = false) {
+		return '
+			<td>&mdash;</td>';
+	}
+
+	public function getAdditionalProductInfo($pID, $data = false) {
+		$a = MagnaDB::gi()->fetchRow('
+			SELECT *
+			  FROM '.$this->preptable.' 
+			 WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr')
+						? 'products_model="'.MagnaDB::gi()->escape($data['products_model']).'"'
+						: 'products_id="'.$pID.'"'
+					).'
+			        AND mpID="'.$this->_magnasession['mpID'].'"
+		');
+		if (isset($a['mp_category_id'])) {
+			$a['MarketplaceCategory'] = $a['mp_category_id'];
+			$a['StoreCategory'] = $a['store_category_id'];
+		}
+		return '
+			<td>
+				<table class="nostyle"><tbody>
+					<tr><td class="label">MP:&nbsp;</td><td>'.(empty($a['MarketplaceCategory']) ? '&mdash;' : $a['MarketplaceCategory']).'</td><tr>
+					<tr><td class="label">Store:&nbsp;</td><td>'.(empty($a['StoreCategory']) ? '&mdash;' : $a['StoreCategory']).'</td><tr>
+				</tbody></table>
+			</td>';
+	}
+	
+	protected function getEmptyInfoText() {
+		if (empty($this->search)) {
+			return ML_GENERIC_TEXT_NO_PREPARED_PRODUCTS;
+		} else {
+			return parent::getEmptyInfoText();
+		}
+	}
+	
+}

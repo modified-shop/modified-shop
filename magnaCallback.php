@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 3163 2013-09-09 10:28:26Z derpapst $
+ * $Id: magnaCallback.php 3664 2014-03-23 21:16:31Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -44,17 +44,22 @@ define('MAGNA_PLUGIN_DIR', 'magnalister/');
 define('MAGNA_UPDATE_PATH', 'update/oscommerce/');
 defined('MAGNA_UPDATE_FILEURL') OR define('MAGNA_UPDATE_FILEURL', MAGNA_SERVICE_URL.MAGNA_UPDATE_PATH);
 define('MAGNA_PUBLIC_SERVER', 'http://magnalister.com/');
+define('MAGNA_SUPPORT_URL', '<a href="'.MAGNA_PUBLIC_SERVER.'" title="'.MAGNA_PUBLIC_SERVER.'">'.MAGNA_PUBLIC_SERVER.'</a>');
 
 $_magnacallbacktimer = $_executionTime = microtime(true);
 
 $safe_mode = strtolower(ini_get('safe_mode'));
 switch ($safe_mode) {
-    case 'on':
-    case 'yes':
-    case 'true':
-        define('MAGNA_SAFE_MODE', true);
-    default:
-        define('MAGNA_SAFE_MODE', (bool)((int)$safe_mode));
+	case 'on':
+	case 'yes':
+	case 'true': {
+		define('MAGNA_SAFE_MODE', true);
+		break;
+	}
+	default: {
+		define('MAGNA_SAFE_MODE', (bool)((int)$safe_mode));
+		break;
+	}
 }
 unset($safe_mode);
 
@@ -137,7 +142,7 @@ function magnaExecute($functionName, $arguments = array(), $includes = array(), 
 	}
 	if (!empty($includes)) {
 		foreach ($includes as $incl) {
-			require_once(DIR_MAGNALISTER_INCLUDES.'callback/'.$incl);
+			require_once(DIR_MAGNALISTER_FS_INCLUDES.'callback/'.$incl);
 		}
 	}
 
@@ -217,6 +222,10 @@ function magnaCompartCheck() {
 		$hasSSL = false;
 	}
 
+	if (file_exists(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaDB.php')) {
+		require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaDB.php');
+	}
+
 	return array(
 		'timeout' => array (
 			'changeable' => (($maxExecutionTime == '0') || ($maxExecutionTime != $newMaxExecutionTime)),
@@ -261,6 +270,9 @@ function __ml_useCURL($bl = null) {
 	
 	/* read */
 	if ($bl === null) {
+		if (defined('MAGNA_USE_CURL') && is_bool(MAGNA_USE_CURL)) {
+			return MAGNA_USE_CURL;
+		}
 		if (isset($d['ForceCURL']) && ($d['ForceCURL'] === true)) {
 			// READ ForceCURL === true
 			return true;
@@ -316,7 +328,7 @@ function fileGetContentsPHP($path, &$warnings = null, $timeout = 10) {
 	return $return;
 }
 
-function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
+function fileGetContentsCURL($path, &$warnings = null, $timeout = 10, $forceSSLOff = false) {
 	$useCURL = __ml_useCURL();
 	if ($useCURL === false) {
 		$warnings = 'cURL disabled';
@@ -335,6 +347,13 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 	$warnings = '';
 	$ch = curl_init();
 	
+	$hasSSL = is_array($cURLVersion) && array_key_exists('protocols', $cURLVersion) && in_array('https', $cURLVersion['protocols']);
+	if ($hasSSL && !$forceSSLOff) {
+		$path = str_replace('http://', 'https://', $path);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+	}
+	
 	curl_setopt($ch, CURLOPT_URL, $path);
 	curl_setopt($ch, CURLOPT_HEADER, 0);
 	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -342,7 +361,7 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 		curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
 		curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
 	}
-	
+	//*
 	$timeout_ts = time() + $timeout;
 	$next_try = false;
 	$return = false;
@@ -353,7 +372,7 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 		$return = curl_exec($ch);
 		$next_try = true;
 	} while (curl_errno($ch) && (time() < $timeout_ts));
-	
+	//*/
 	if (curl_errno($ch) == CURLE_OPERATION_TIMEOUTED) {
 		__ml_useCURL(false);
 		$return = false;
@@ -365,11 +384,12 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10) {
 	$return = false;
 	$warnings = 'Timeout';
 	//*/
-	curl_close($ch);
 	
 	if (!empty($return)) {
 		__ml_useCURL('ForceCURL');
 	}
+	
+	curl_close($ch);
 	
 	return $return;
 }
@@ -379,6 +399,36 @@ function fileGetContents($path, &$warnings = null, $timeout = 10) {
 		return $contents;
 	}
 	return fileGetContentsPHP($path, $warnings, $timeout);
+}
+
+function defineMagnalisterDir() {
+	// Order is important here. Do not change without a good reason!
+	
+	// modified v >= 2.0
+	if (defined('DIR_FS_EXTERNAL') && defined('DIR_WS_EXTERNAL')) {
+		define('DIR_MAGNALISTER_FS', DIR_FS_EXTERNAL.'magnalister/');
+		define('DIR_MAGNALISTER_WS', DIR_WS_EXTERNAL.'magnalister/');
+	
+	// called from admin
+	} else if ((MAGNA_IN_ADMIN == true) && file_exists('includes/magnalister/')) {
+		define('DIR_MAGNALISTER_FS', 'includes/magnalister/');
+		define('DIR_MAGNALISTER_WS', 'includes/magnalister/');
+	
+	// fallback 1 (called from frontend)
+	} else if ((MAGNA_IN_ADMIN == false) && defined('DIR_FS_ADMIN') && file_exists(DIR_FS_ADMIN.'includes/magnalister/')) {
+		define('DIR_MAGNALISTER_FS', DIR_FS_ADMIN.'includes/magnalister/');
+		define('DIR_MAGNALISTER_WS', basename(DIR_FS_ADMIN).'/includes/magnalister/');
+	
+	// fallback 2
+	} else if ((MAGNA_IN_ADMIN == false) && file_exists(dirname(__FILE__).'/admin/includes/magnalister/')) {
+		define('DIR_MAGNALISTER_FS', dirname(__FILE__).'/admin/includes/magnalister/');
+		define('DIR_MAGNALISTER_WS', 'admin/includes/magnalister/');
+	
+	// failure
+	} else {
+		define('DIR_MAGNALISTER_FS', false);
+		define('DIR_MAGNALISTER_WS', false);
+	}
 }
 
 function magnaConfigureForFrontendMode() {
@@ -399,7 +449,7 @@ function magnaConfigureForFrontendMode() {
 			<p>Bitte benutzen Sie den absoluten Pfad zum Shop Admin Verzeichnis.</p>
 		');
 	}
-	define('DIR_MAGNALISTER', DIR_FS_ADMIN . 'includes/magnalister/');
+	defineMagnalisterDir();
 }
 
 function magnaInstalled($woDBCheck = false) {
@@ -421,17 +471,21 @@ function magnaInstalled($woDBCheck = false) {
 		}
 	}
 
-	$_magnaFilesInstalled = file_exists(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php') 
-		&& file_exists(DIR_MAGNALISTER_INCLUDES.'modules.php')
-		&& file_exists(DIR_MAGNALISTER_INCLUDES.'lib/functionLib.php')
-		&& file_exists(DIR_MAGNALISTER_CALLBACK.'callbackFunctions.php')
-		&& is_dir(DIR_MAGNALISTER.'db/');
+	$_magnaFilesInstalled = file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php') 
+		&& file_exists(DIR_MAGNALISTER_FS_INCLUDES.'modules.php')
+		&& file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php')
+		&& file_exists(DIR_MAGNALISTER_FS_CALLBACK.'callbackFunctions.php')
+		&& is_dir(DIR_MAGNALISTER_FS.'db/');
 	if (!$_magnaFilesInstalled) return $_magnaFilesInstalled;
 	if ($woDBCheck) {
 		return $_magnaFilesInstalled;
 	}
-	require_once(DIR_MAGNALISTER_INCLUDES.'lib/MLTables.php');
-	require_once(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MLTables.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php');
+	//commerce:Seo v2
+	if (defined('DB_SERVER_CHARSET')) {
+		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+	}
 	$_magnaIsInstalled = MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
 	if (!$_magnaIsInstalled) return $_magnaIsInstalled;
 	
@@ -441,7 +495,7 @@ function magnaInstalled($woDBCheck = false) {
 		return $_magnaIsInstalled;
 	}
 
-	$dbDir = DIR_MAGNALISTER.'db/';
+	$dbDir = DIR_MAGNALISTER_FS.'db/';
 	if (!$dirhandle = @opendir($dbDir)) {
 		$_magnaIsInstalled = false;
 		return $_magnaIsInstalled;
@@ -589,28 +643,48 @@ function magnaCallbackRun() {
 	}
 	unset($str);
 	
-	if (!defined('DIR_MAGNALISTER')) { /* included in admin area, everything works out of the box */
-		if (is_dir('includes/magnalister/'))
-			define('DIR_MAGNALISTER', 'includes/magnalister/');
-		else if (is_dir(dirname(__FILE__) . '/admin/includes/magnalister/'))
-			define('DIR_MAGNALISTER', dirname(__FILE__) . '/admin/includes/magnalister/');
-		else define('DIR_MAGNALISTER', false);
+	if (!defined('DIR_MAGNALISTER_FS')) { /* included in admin area, everything works out of the box */
+		defineMagnalisterDir();
+		if (DIR_MAGNALISTER_FS == false) {
+			if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
+				echo 'Unable to initialize.';
+			}
+			return;
+		}
 	}
 	
 	if (!defined('DIR_FS_DOCUMENT_ROOT')) {
 		define('DIR_FS_DOCUMENT_ROOT', dirname(__FILE__).'/');
 	}
 	
-	define('DIR_MAGNALISTER_INCLUDES',   DIR_MAGNALISTER.'php/');
-	define('DIR_MAGNALISTER_MODULES',    DIR_MAGNALISTER_INCLUDES.'modules/');
-	define('DIR_MAGNALISTER_CALLBACK',   DIR_MAGNALISTER_INCLUDES.'callback/');
-	define('DIR_MAGNALISTER_CACHE',      DIR_MAGNALISTER.'cache/');
-	define('DIR_MAGNALISTER_IMAGECACHE', DIR_MAGNALISTER_CACHE.'images/');
-	define('DIR_MAGNALISTER_RESOURCE',   DIR_MAGNALISTER.'resource/');
-	define('DIR_MAGNALISTER_IMAGES',     DIR_MAGNALISTER.'images/');
-	define('DIR_MAGNALISTER_CONTRIBS',   DIR_MAGNALISTER.'contribs/');
-	define('DIR_MAGNALISTER_LOGS',       DIR_MAGNALISTER.'logs/');
-
+	// FS
+	define('DIR_MAGNALISTER_FS_INCLUDES',   DIR_MAGNALISTER_FS.'php/');
+	define('DIR_MAGNALISTER_FS_MODULES',    DIR_MAGNALISTER_FS_INCLUDES.'modules/');
+	define('DIR_MAGNALISTER_FS_CALLBACK',   DIR_MAGNALISTER_FS_INCLUDES.'callback/');
+	define('DIR_MAGNALISTER_FS_CACHE',      DIR_MAGNALISTER_FS.'cache/');
+	define('DIR_MAGNALISTER_FS_IMAGECACHE', DIR_MAGNALISTER_FS_CACHE.'images/');
+	define('DIR_MAGNALISTER_FS_RESOURCE',   DIR_MAGNALISTER_FS.'resource/');
+	define('DIR_MAGNALISTER_FS_IMAGES',     DIR_MAGNALISTER_FS.'images/');
+	define('DIR_MAGNALISTER_FS_CONTRIBS',   DIR_MAGNALISTER_FS.'contribs/');
+	define('DIR_MAGNALISTER_FS_LOGS',       DIR_MAGNALISTER_FS.'logs/');
+	
+	// @deprecated
+	define('DIR_MAGNALISTER',            DIR_MAGNALISTER_FS);
+	define('DIR_MAGNALISTER_INCLUDES',   DIR_MAGNALISTER_FS_INCLUDES);
+	define('DIR_MAGNALISTER_MODULES',    DIR_MAGNALISTER_FS_MODULES);
+	define('DIR_MAGNALISTER_CALLBACK',   DIR_MAGNALISTER_FS_CALLBACK);
+	define('DIR_MAGNALISTER_CACHE',      DIR_MAGNALISTER_FS_CACHE);
+	define('DIR_MAGNALISTER_IMAGECACHE', DIR_MAGNALISTER_FS_IMAGECACHE);
+	define('DIR_MAGNALISTER_RESOURCE',   DIR_MAGNALISTER_FS_RESOURCE);
+	define('DIR_MAGNALISTER_IMAGES',     DIR_MAGNALISTER_FS_IMAGES);
+	define('DIR_MAGNALISTER_CONTRIBS',   DIR_MAGNALISTER_FS_CONTRIBS);
+	define('DIR_MAGNALISTER_LOGS',       DIR_MAGNALISTER_FS_LOGS);
+	
+	// WS
+	define('DIR_MAGNALISTER_WS_CACHE',      DIR_MAGNALISTER_WS.'cache/');
+	define('DIR_MAGNALISTER_WS_IMAGECACHE', DIR_MAGNALISTER_WS_CACHE.'images/');
+	define('DIR_MAGNALISTER_WS_IMAGES',     DIR_MAGNALISTER_WS.'images/');
+	
 	/* Issued a compart check (eiter get or post)? */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') && array_key_exists('function', $_REQUEST) && ($_REQUEST['function'] == 'magnaCompartCheck')) {
 		echo magnaEncodeResult(magnaCompartCheck());
@@ -625,19 +699,23 @@ function magnaCallbackRun() {
 		return;
 	}
 
-	include_once(DIR_MAGNALISTER_INCLUDES . 'identifyShop.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/json_wrapper.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/functionLib.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MLTables.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaDB.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MLProduct.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/classes/MLShop.php');
+	include_once(DIR_MAGNALISTER_FS_INCLUDES . 'identifyShop.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/json_wrapper.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/functionLib.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MLTables.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaDB.php');
+	//commerce:Seo v2
+	if (defined('DB_SERVER_CHARSET')) {
+		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+	}
 	/* Language-Foo */
 	$_magnaAvailableLanguages = magnaGetAvailableLanguages();
 	$defaultLanguage = MagnaDB::gi()->fetchOne(' 
 	    SELECT directory 
 	      FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c 
-	     WHERE c.configuration_key = \'DEFAULT_LANGUAGE\' 
-	          AND c.configuration_value = l.code 
+	     WHERE c.configuration_key = "DEFAULT_LANGUAGE"
+	           AND c.configuration_value = l.code 
 	     LIMIT 1 
 	');
 	if (in_array($defaultLanguage, $_magnaAvailableLanguages)) {
@@ -646,26 +724,27 @@ function magnaCallbackRun() {
 		$_magnaLanguage = array_first($_magnaAvailableLanguages);
 	}
 	
-	include_once(DIR_MAGNALISTER.'lang/'.$_magnaLanguage.'.php');
+	include_once(DIR_MAGNALISTER_FS.'lang/'.$_magnaLanguage.'.php');
 	/* Description of Modules */
-	require_once(DIR_MAGNALISTER_INCLUDES.'modules.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES.'modules.php');
 	/* Must be loaded after loading the language definitions. */
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/magnaFunctionLib.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'config.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaException.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaError.php');
-	require_once(DIR_MAGNALISTER_INCLUDES . 'lib/MagnaConnector.php');
-
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/magnaFunctionLib.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'config.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaException.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaError.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MagnaConnector.php');
+	require_once(DIR_MAGNALISTER_FS_INCLUDES . 'lib/MLProduct.php');
+	
 	$_langISO = strtolower(magnaGetLanguageCode($_magnaLanguage));
 	MagnaConnector::gi()->setLanguage($_langISO);
 
-	require_once(DIR_MAGNALISTER_CALLBACK . 'callbackFunctions.php');
+	require_once(DIR_MAGNALISTER_FS_CALLBACK . 'callbackFunctions.php');
 	
 	if (!defined('TABLE_ADMIN_ACCESS')) {
 		define('TABLE_ADMIN_ACCESS', 'admin_access');
 	}
 	
-	if (($localClientVersion = @file_get_contents(DIR_MAGNALISTER.'ClientVersion')) !== false) {
+	if (($localClientVersion = @file_get_contents(DIR_MAGNALISTER_FS.'ClientVersion')) !== false) {
 		$localClientVersion = @json_decode($localClientVersion, true);
 	}
 	if (is_array($localClientVersion) && array_key_exists('CLIENT_VERSION', $localClientVersion)) {
@@ -740,8 +819,8 @@ function magnaCallbackRun() {
 	/* API-Artige Funktionalitaet */
 	if ((MAGNA_CALLBACK_MODE == 'STANDALONE') &&
 		array_key_exists('passphrase', $_POST) && 
-	    ($_POST['passphrase'] == getDBConfigValue('general.passphrase', 0)) &&
-	    array_key_exists('function', $_POST)
+		($_POST['passphrase'] == getDBConfigValue('general.passphrase', 0)) &&
+		array_key_exists('function', $_POST)
 	) {
 		$arguments = array_key_exists('arguments', $_POST) ? unserialize($_POST['arguments']) : array();
 		$arguments = is_array($arguments) ? $arguments : array();
@@ -758,11 +837,13 @@ function magnaCallbackRun() {
 		ob_end_clean();
 		return;
 	}
-
+	
+	ml_setMinRam('256M');
+	
 	/* Nur im Standalone-Modus zeitintensive Prozesse verarbeiten. */
 	if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 		if (!defined('MAGNA_EXECUTE_INSTEAD')) {
-			require_once(DIR_MAGNALISTER_CALLBACK.'callbackProcessor.php');
+			require_once(DIR_MAGNALISTER_FS_CALLBACK.'callbackProcessor.php');
 			magnaProcessCallbackRequest();
 		} else {
 			$magnaFunc = MAGNA_EXECUTE_INSTEAD;
@@ -809,10 +890,13 @@ if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 	header('Content-Type: text/plain; charset=utf-8');
 } else {
 	/* Where have we been called? Frontend or backend?! */
+	if (!defined('DIR_FS_DOCUMENT_ROOT')) {
+		define('DIR_FS_DOCUMENT_ROOT', dirname(__FILE__).'/');
+	}
 	if (dirname($_SERVER['SCRIPT_FILENAME']).'/' == DIR_FS_DOCUMENT_ROOT) {
 		/* Frontend */
-		magnaConfigureForFrontendMode();
 		define('MAGNA_IN_ADMIN', false);
+		magnaConfigureForFrontendMode();
 	} else {
 		define('MAGNA_IN_ADMIN', true);
 	}
@@ -820,4 +904,4 @@ if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 
 magnaCallbackRun();
 
-$_magnacallbacktimer = microtime(true)  - $_magnacallbacktimer;
+$_magnacallbacktimer = microtime(true) - $_magnacallbacktimer;

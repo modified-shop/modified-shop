@@ -1,0 +1,337 @@
+/**
+ * 888888ba                 dP  .88888.                    dP                
+ * 88    `8b                88 d8'   `88                   88                
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ *
+ *                          m a g n a l i s t e r
+ *                                      boost your Online-Shop
+ *
+ * -----------------------------------------------------------------------------
+ * $Id: ChangeLog 3657 2014-03-21 22:57:34Z derpapst $
+ *
+ * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
+ *     Released under the MIT License (Expat)
+ * -----------------------------------------------------------------------------
+ */
+
+= Change-Log =
+
+== Aktuell (bis 3656) ==
+	=== Allgemein ===
+		* Herstellerfilter in Experteneinstellungen um Hersteller aus Produktlisten zu entfernen [gesponsort von kuhnshop.de] (3656)
+		* SSL-Validierung abgeschaltet für nicht HTTPS-URLs (3507)
+		* TinyMCE auf akutelle Major-Version aktualisiert (3424)
+		* Datenbankverbindungen: Zeichensatz bei Verbindungsabbrüchen wieder korrekt setzen (3305)
+		* Standard-Bildpfad in diversen Marktplatz-Konfigurationsmasken hinterlegen (3258)
+		* Volle Unterstützung von MySQLi (3174)
+		* Neue Sprache verfügbar: Französisch (2561)
+		* Anzeigen der Kunden und Shop ID (2382)
+		* Gambio: Entfernen der [TAB:] Reiter in den Produktbeschreibungen (2367)
+		* Wechseln der Lizenz von GPLv2 nach MIT (2332)
+		* Update des Einstellvorgangs (Verwendet kein synchrones Ajax mehr und hat nun zusätzlich einen Fortschrittsbalken) (2260)
+		* Aktivieren / Deaktiveren der Aktualisierung des Bestands auf den Marktplätzen bei Bestelleingang über den Shop (1999)
+		* Einstellungsmöglichkeit für die zuletzt verwendeten Kategorien für eBay und Amazon (1992)
+		* Anzeigeprobleme der Datum-Zeit-Box wurde in einigen Browser behoben (1965)
+		* Performance-Verbesserung beim Aufruf des magnalisters (1917)
+		* Aktualisierung der Adressdaten beim Bestellimport (1835)
+		
+	=== Bugfixes ===
+		* Sicherstellung, dass die Preis- und Lagersynchronisierung durchläft, auch wenn der Aufruf abbricht (durch automatische Wiederaufnahme) (1975)
+		* Probleme mit der Anzeige der DateTimePicker Box im Google Chrome behoben (1948)
+		* Probleme mit der Suchfunktion behoben (1931)
+		* Korrekte Übergabe der Zeitpunkte (Shop-Zeit) an Shops in anderen Zeitzonen (1896)
+		* eBay: Verwende bei zusammengefassten Bestellungen die größen Versandkosten plus jeweils den Betrag "je weiteren Artikel" (1921)
+
+	=== Amazon-Modul ===
+		* Neue Einstellung um die SKU auch immer als Herstellerartikelnummer zu übertragen (3537)
+		* 2. Browsenode entfernt, da sie aus immer mehr FlatFiles verschwindet (3410)
+		* Auto-Matching Prozess stabiler gemacht sollte parallel das Inventar durch einen weiteren Mitarbeiter bearbeitet werden (3311)
+		* Time-Outs für API-Requests die nur ein paar kleinere Informationen beisteuern entschärft (3262)
+		* Auswahlmöglichkeit der Zahlungs- und Versandmethode für FBA-Bestellungen (2218)
+		* Button zum zurücksetzen von Shop spezifischen Daten die vorbereitet wurden (1997)
+		* Performanceverbesserung durch Optimierung von Datenbankaufrufen (1996)
+		* Importierung der Geschenk-Option und dessen Nachricht als Kommentar in den Bestellungen (1932)
+		* Zusätzliche Option das beim Bestellimport FBA-Bestellungen auch den Lagerbestand reduzieren (1843)
+		
+	=== eBay-Modul ===
+		* Bestellimport: Erkennung von Varianten weiter optimiert (3443)
+		* Umlautfehler in Kurz- und Langbeschreibung korrigiert (3400)
+		* Gamio Tabs werden durch H1-Tags ersetzt (3386)
+		* Varianten werden nicht mehr berechnet, wenn keine Varianten verwendet werden sollen (3289)
+		* Shop-Order-ID kann nun in der Promotion-Mail verwendet werden (3253)
+		* Optimieren der eBay-Inventarabgleiche (3220)
+		* Base-64 Codierte Bilder können nun in der Produktbeschreibung übertragen werden (3151)
+		* Entfernung der Shop-URL als Platzhalter für Promotion-Mail (3100)
+		* Rückgaberecht konfigurierbar (3036)
+		* Versandkostenrabatte (2723)
+		* Auswahl der internationalen Versandmethoden in der Vorbereitung (2404)
+		* Aktualisierung des eBay-Logos (2366)
+		* Übermittlung der SalesRecordNumber von eBay an den Shop (2323)
+		* Option zum limitieren des maximal zuübertragende Lagerbestandes (2270)
+		* Beachten der Sortierreihenfolge für Attribute(2224)
+		* Voreinstellungen Hochloaden: Setzen der Auktionslaufzeit (2204)
+		* Voreinstellungen Hochladen: Erweiterung der Bearbeitungszeit in Tagen auf 30 Tage (2000)
+		* Verwendung der bei eBay angelegten Versandprofile. Der Konfigurations-Eintrag "je weiteren Artikel" bei Versandkosten wird durch die Angabe im Profil ersetzt (1955).
+		* Optimierung der Geschwindigkeit des Anzeigefilters beim Reiter Hochladen (1945 - 1947)
+		* Übermittlung der Grundpreise (1934)
+		* Aktualisierung der Bestell-Versandkosten (1921)
+		* Button zum Neuladen der eBay-Kategorien (1880)
+		
+	=== Yatego-Modul ===
+		* Übermittlung der Grundpreise (1916)
+
+	=== Hitmeister-Modul ===
+		* Entsprechend der Anforderung von Hitmeister wird bei Bestellimporten künftig immer Hitmeister selbst als Rechnungsadresse angegeben. Die Lieferadresse des Kunden befindet sich weiterhin unter "Versandadresse".
+
+	=== Rakuten-Modul ===
+		* Promotion-Mail hinzugefügt (3495)
+		* Angabe der Rakuten spezifischen Lieferzeiten (2063)
+		* Übermittlung des Bestellstatus (2034)
+		* Konfiguration der Bildpfades (1962)
+
+	=== MeinPaket-Modul ===
+		* Übermittlung des Bestellstatus (2033)
+		* Der Tracking-Code wird beim Bestellstatusabgleich mit übertragen (3435)
+
+	=== Keelko-Modul ===
+		* Übermittlung des Shopkategorie Pfades (2179)
+
+	=== Idealo-Modul ===
+		* Übermittlung des Shopkategorie Pfades (2196)
+		
+	=== Billiger.de-Modul ===
+		* Markplatz wurde neu hinzugefügt (2316)
+	
+	=== Twenga-Modul ===
+		* Neu im Programm (3365)
+	
+	=== Hood-Modul ===
+		* Top-Ten Kategorien implementiert (3584)
+		* Ünterstützung für Kurzbeschreibung (3580)
+		* Unterstützung für FSK, USK und Galerie-Bilder hinzugefügt (3576)
+		* NoIdentifierFlag implementiert (3455)
+		* Einstellgebühren beim speichern der Vorbereitungsmaske anzeigen (3411)
+		* Inventar vollständig ersetzen implementiert (3395)
+		* Artikelgewicht übertragen (3356)
+		* Neu im Programm (3354)
+	
+	=== Hook ===
+		* SimpleCategoryView_ExtendProdCatHeadline: Kategorie/Artikel-Überschrift kann hiermit erweitert werden (3571)
+		* SimpleCategoryView_PostAllowedProductIDs: Ermöglicht die weitere Filterung von Produkten (3479)
+		* MLProduct_getProductImagesByID: Bietet alternative Möglichkeit weitere Produktbilder zu laden (3309)
+
+== 2.8.0 ==
+	=== Generelle Verbesserungen ===
+		* Neue Funktion unter Globale Konfig.: Inaktive Artikel können als Lager = 0 behandelt werden (1655)
+		* Performance-Verbesserungen für Shops mit mehr als 50.000 Artikeln (1362)
+		* Rakuten Anbindung integriert (1474)
+		* Hitmeister Anbindung integriert (1592)
+		* Anpassungen TinyMCE Editor (1601)
+		* Bestellimport: Zahlungsweise und Versandart in Experteneinstellungen konfigurierbar (1568)
+
+	=== eBay-Modul ===
+		* Filterfunktion unter "Hochladen" um z.B. nur Artikel anzuzeigen, die noch nicht auf eBay sind (1667)
+		* Versendet-Status Übergabe vom Shop zu eBay per AutoSynchronisation (1667)
+		* Bilder in Form <img src=#PICTUREx#..> mit Tag rausfiltern wenn PICTUREx leer ist (1545)
+		* Besucherzähler-Funktion implementiert (1667)
+		* Käufer/Bieterliste nicht öffentlich - Funktion implementiert (1655)
+		* Preis vorschlagen - Funktion implementiert (1667)
+		* Startzeitplanung (eBay) - Funktion implementiert (1667)
+		* Kategorie-Schnellauswahl unter Produkte vorbereiten implementiert (1655)
+		* TecDoc KType für KFZ-Teile implementiert (1573)
+		* Listings-Ansicht stark verbessert
+		* Bestehende eBay Angebote ändern - Funktion implementiert (1655)
+
+	=== Amazon-Modul ===
+		* Neue Pflichtfelder übernommen (z.B. Kategorie Schmuck)
+		* Neue Felder für diverse Datenfeeds übernommen
+		* Versand-Dauer nun pro Artikel definierbar (1636)
+
+	=== Rakuten-Modul ===
+		* Bestellimport angepasst, damit Rechnungen im Web-Shop gedruckt werden können (1564)
+		* Shop-eigene Kategorien übermitteln (1576)
+
+	=== Bugfixes ===
+		* MeinPaket: Fix für die Zuweisung der Sprache der Bestellung. (1494)
+		* eBay: Zahlungsmethode korrigiert: MoneyXferAcceptedInCheckout -> Lastschrift (1496)
+		* eBay: UpdateOrders Korrektur für OsCommerce (Tabellenspalten die es bei OsC nicht gibt, nicht updaten) (1513)
+		* eBay: Überlange Attributnamen und -Werte vor Übergabe an eBay auf 50 Zeichen kürzen (1531)
+		* Rakuten: Varianten-Preise: Bugfix (API 1663)
+		* Yatego: Kleiner Bugfix bei Bestellimport (1668)
+		* Generell: InternetExplorer JavaScript Bugs behoben (1509)
+		* Generell: Einige überflüssige Kommas entfernt um den IE glücklich zu machen (1510)
+
+
+== 2.6.0 ==
+	=== Generelle Verbesserungen ===
+		* Hook-Points für Individual-Programmierung eingeführt und erweitert (1362)
+		* Meldungen im Modul freundlicher und verständlicher gestaltet (1422)
+		* Bestellimport: Wenn dadurch Shop-Lager=0, dann Artikel optional inaktiv setzen (1410)
+
+	=== eBay-Modul ===
+		* Bestellzusammenfassung einzelner Käufe (automatisiert) (1460)
+		* Preissynchronisation (automatisiert)
+		* Zahlstatus-Übergabe bei Bestellimport (z.B. "bezahlt")
+		* Aktualisierung des Zahlstatus ("bezahlt" oder "offen" stündlich, 7 Tage lang)
+		* Aktualisierung der Versandadresse, wenn von Käufer geändert
+		* Übergabe der Zahlart bei Bestellimport (z.B. "PayPal")
+		* eBay-Meldungen ausführlicher und verständlicher gestaltet (1422)
+		* Nicht-erlaubte Varianten in rot markiert visualisiert (1454)
+		* Unterschiedliche Sprachen für Varianten nun möglich (1429)
+		* Verpackungseinheit übermittelbar (Konfiguration) (1247)
+
+	=== Amazon-Modul ===
+		* Verpackungseinheit-Übergabe bei Artikel-Upload
+		* Versendet-Status: Erfolg/Misserfolg visualisiert
+
+	=== MeinPaket.de-Modul ===
+		* Bestellimport: Firmenadresse und Paketstation besser platziert
+		* Promotion-E-Mail eingeführt
+
+	=== Laary.eu-Modul ===
+		* Neue Marktplatz-Anbindung zu Laary.eu eingeführt (1337)
+
+	=== Bugfixes ===
+		* Generell: EURO Symbol in Promotion-Mail korrekt darstellen
+		* eBay: Varianten-Lagerabgleich
+		* eBay: Preise einfrieren in Vorbereitung stabil sichern (1419)
+		* eBay: & in Bildernamen zulassen (1380)
+		* Amazon: Bugfix für AJAX-Request (1398)
+		* MeinPaket.de: Diverse Sonderzeichen für stabilen Upload gekapselt
+
+
+== 2.5.1 ==
+	=== Generelle Verbesserungen ===
+		* Shopsystem von magnalister bei Verbindungsproblemen umgehend (1 Sekunde) entkoppeln (1261)
+
+	=== eBay-Modul ===
+		* EAN übermitteln (neuer Konfigurationswert) (1255)
+
+	=== Bugfixes ===
+	    * Generell: EURO Symbol in Promotion-Mail korrekt darstellen
+		* eBay: Variantenpreise werden nun richtig übergeben ( 1266)
+		* eBay: Varianten bei Bestellimport in Bestelldetails anzeigen (1264)
+		* eBay: Varianten-Lagerabgleich bei Bestellimport (1264)
+		* eBay: Anführungszeichen im Produkt-Titel zulassen (1251)
+
+
+== 2.5.0 ==
+	=== Generelle Verbesserungen ===
+		* Fehlermeldungen eindeutiger deklariert (1175)
+		* Mehr Speicherzuweisung beim Erstellen von Vorschaubildern (1133)
+		* Anpassungen an neue xtcModified Shop-Version (1197)
+		* Aktuelle Version Cachen, um Anfragen an Server zu minimieren (1235)
+		* Diverse Synchronisierungsprozesse von Shop auf magnalister-Server verlagert (1185)
+		* Sicherheitsfunktion zur Überprüfung der Bestellimporte verbessert (1168)
+
+	=== Amazon-Modul ===
+		* Neue EU-Spielzeugrichtlinie 22009/48/EC umgesetzt
+		* Versendet- und Stornostatus per CronJob an Amazon senden (für den Einsatz von Warenwirtschaften)
+		* Amazon-Änderungen der FlatFiles übernommen
+		* Lieferzeit auch bei Produktaktualisierung automatisch übergeben (1148)
+
+	=== eBay-Modul ===
+		* Variantenübergabe (Shop-eigene Varianten) an eBay
+		* Neue Artikelmerkmal-Struktur von eBay übernommen
+		* Titel auf 80 Zeichen erweitert (1226)
+		* Käufer(Mitglieds)namen in der Bestellung anzeigen (1159)
+		* Link in der Bestellansicht im Shop zu Bestellansicht in eBay
+		* Template ergänzt nun automatisch relative Pfade aus Artikelbeschreibung (1199)
+		* CSS-Formatierungen im Template übernehmen (1085)
+		* Artikelbeschreibung in Vorbereitung separat abspeichern (1198)
+		* Vorbereitung aufheben auch einzeln anwählbar
+		* Token jederzeit änderbar (1161)
+		* Zweite eBay-Shop Kategorie anwählbar (1122)
+		* Gewichtsangaben für Versandkosten verwenden (1111)
+		* Neue Standard-Platzhalter wie z.B. Artikelnummer im Template (1108)
+		* Galerie-Bild vorkonfigurierbar übermitteln (1062)
+
+	=== MeinPaket.de-Modul ===
+		* Neue Löschen-Funktion erweitert (1174)
+		* Synchronisation von Titel und Beschreibung reaktiviert (1221)
+		* HTML-Tags in Kurzbeschreibung erhalten, durch Übernahme der Langbeschreibung (1212)
+		* Kategoriebaum-Ansicht verbessert (1152)
+		* EAN-Übermittlung auf Wunsch in Konfiguration deaktivieren (1067)
+
+	=== Bugfixes ===
+		* Generell: Kopie der Promotion-Mail an Händler optional deaktivieren ( 1167)
+		* eBay: Korrektur der Vorbereitung aufheben in Detailsansicht (1195)
+		* eBay: Richtige Währung beim Einstellen aus Shop übernehmen (1234)
+		* eBay: Aktualisierung des Preises unter "Einstellen" nach Änderung der Konfiguration  (1206)
+		* eBay: Korrektur der MwSt. bei Bestellimporten (1106)
+		* eBay: '0'-Bestände bei Einstellvorgang rausfiltern (1103)
+		* eBay: Sonderzeichen erst bei Übergabe in UTF8 formatieren
+		* eBay: MwSt Shop-fremder Artikel richtig berechnen (1061)
+		* eBay: Anführungszeichen im Artikelnamen richtig übermitteln (1055)
+		* eBay: Leerzeichen in Bildnamen richtig übermitteln (1045)
+		* MeinPaket.de: Steuerklassen korrekt aus Konfiguration übernehmen (1207)
+		* Darstellungsfehler im Internet Explorer behoben (1192)
+
+
+== 1.1.0 ==
+	=== Bestellimporte ===
+		* Bestellung enthält Kommentar, dass es sich um einen Import vom Marketplace handelt
+		* Bestellimport kann deaktiviert werden
+		* Steuern werden für gesamte Bestellung angegeben, nicht mehr nur für einzelne Artikel
+		* Steuersatz für Versandkosten kann in Config eingestellt werden.
+
+	=== Amazon ===
+		* Als SKU kann neben der ProduktID nun alternativ die Artikelnummer gewählt werden
+		* Inventaransicht beinhaltet Händler-SKU
+		* Anzahl der Ergebnisse bei Multimatching konfigurierbar
+		* Verbesserte Suche nach EAN beim Matching
+		* Bestehende Matchings können gelöscht werden
+		* Detail-Button bei Matching enthält neben der Artikelbeschreibung weitere Informationen, wie EAN, Artikelnummer, Bilder uvm.
+		* Produkte können automatisch gematcht werden
+		* Amazon-Preis aus Matching entfernt und in Zusammenfassung vor dem Einstellen verschoben
+		* MWS Zugangsdaten können hinterlegt werden
+		* "Neue Produkte": Artikel, die nicht im Amazon Katalog vorhanden sind, können als neue Produkte erstellt werden
+
+	=== Lagersystem Amazon und Yatego ===
+		* Einstellen: Neue Option "Shop-Lagerbestand übernehmen"
+		* Synchronisierung: Neue Option "Bestellung / Artikel bearbeiten setzt Amazon-Lager gleich Shop-Lager
+		* Synchronisierung: Neue Option "AutoSync per CronJob". Diese Option übermittelt alle 4 Stunden den Shop-Lagerbestand direkt aus der Datenbank zum Marketplace.
+		* Synchronisierung: Unter "Listings" neuer Button "Lageranzahl für alle aktualisieren" (erscheint nicht, wenn Konfiguration auf Differenzabgleich eingestellt wurde)
+
+	=== Bestellstatistiken ===
+		* Graphische Visualisierung der über die verschiedenen Marketplaces eingegangenen Bestellungen
+
+	=== Verbesserungen ===
+		* Einstellvorlagen verwenden: Eingefrorene Werte nun durch einen Klick auf den Button "Werte aus Konfig übernehmen" aktualisiert werden.
+		* Weitere Hilfetexte im gesamten magnalister platziert.
+
+	=== Bugfixes ===
+		* Yatego-Bestellimport verarbeitet Länderzuschlag korrekt
+		* Eindimensionale Varianten werden vom Amazon-Bestellimport korrekt erfasst
+		* Mehrwertsteuerberechnung der Versandkosten korrigiert
+
+
+== 1.0.1 ==
+	=== HTML Promotion-Mails ===
+		* HTML E-Mails die bei Bestellimport an den Käufer versendet werden
+		* Platzhalter für Namen des Käufers, der gekauften Artikel, der Shop-URL u.v.m.
+		* Versand von Testmails
+		* Editierbar durch WYSIWYG-Editor
+
+	=== Amazon ===
+		* Promotion-Mail in Konfiguration eingebunden
+		* Lagerbestand wird bei Kauf im Shop in Amazon reduziert
+		* Lagerbestand wird bei Kauf in Amazon im Shop reduziert
+		* Differenz bei Bearbeiten des Lagerbestandes erhöht / reduziert Lagerbestand bei Amazon
+		* Promotionmail Templates
+		* Auf Amazon-Preise kann prozentualer oder fixer Auf- oder Abschlag erhoben werden
+
+	=== Yatego ===
+		* Promotion-Mail in Konfiguration eingebunden
+		* Bestellimport implementiert
+
+	=== Bugfixes ===
+		* MagnaDB: Bedingung wann Sessions und Selections gespeichert werden verbessert
+		* Amazon: Bestellimport grundlegend überarbeitet
+
+	=== Verbesserungen ===
+		* Feedback beim Speichern der Konfiguration
+		* Updater lädt nur noch geänderte Dateien herunter

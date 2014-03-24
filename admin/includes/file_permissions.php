@@ -36,7 +36,7 @@ $writeableDirs = array(
   DIR_FS_ADMIN.'backups',
   DIR_FS_ADMIN.'images/graphs',
   DIR_FS_ADMIN.'images/icons',
-  DIR_FS_ADMIN.'includes/magnalister',
+  DIR_FS_EXTERNAL.'magnalister',
   DIR_FS_CATALOG.'cache',
   DIR_FS_CATALOG.'export',
   DIR_FS_CATALOG.'images',
