@@ -41,6 +41,11 @@ if (TRACKING_ECONDA_ACTIVE == 'true') {
   require_once (DIR_FS_EXTERNAL . 'econda/econda.php');
 }
 
+// require theme based javascript
+if (is_file('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php')) {
+  require('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php');
+}
+
 foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
 // new error handling
