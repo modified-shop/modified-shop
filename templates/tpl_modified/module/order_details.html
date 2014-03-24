@@ -31,7 +31,7 @@
   {/foreach}
   <tr>
     <td colspan="5" class="subtotal">
-      {if $UST_CONTENT}{$UST_CONTENT}{else}<strong>{php}printf(TAX_INFO_EXCL, ''){/php}</strong><br />{/if}
+      {if $UST_CONTENT}{$UST_CONTENT}{else}<strong>{$smarty.const.TAX_INFO_EXCL|printf:''}</strong><br />{/if}
        <strong>{$TOTAL_CONTENT}</strong>
       {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
       {foreach name=aussen item=shipping_data from=$shipping_content}
