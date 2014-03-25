@@ -27,15 +27,43 @@ $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) {
 
     $new_products_query = "SELECT * 
-                             FROM ".TABLE_PRODUCTS." p,
-                                  ".TABLE_PRODUCTS_DESCRIPTION." pd
-                            WHERE p.products_id = pd.products_id
-                              AND p.products_startpage = '1'
-                              ".PRODUCTS_CONDITIONS_P."
+                             FROM ".TABLE_PRODUCTS." p
+                        LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                  ON p.manufacturers_id = m.manufacturers_id
+                             JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                  ON p.products_id = pd.products_id
+                                     AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                            WHERE p.products_startpage = '1'
                               AND p.products_status = '1'
-                              AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                  ".PRODUCTS_CONDITIONS_P."
                          ORDER BY p.products_startpage_sort ASC
                             LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
+
+    $check_new_products_query = xtDBquery($new_products_query);
+    if (!xtc_db_num_rows($check_new_products_query, true)) {
+      $days = '';
+      if (MAX_DISPLAY_NEW_PRODUCTS_DAYS != '0') {
+        $date_new_products = date("Y.m.d", mktime(1, 1, 1, date("m"), date("d") - MAX_DISPLAY_NEW_PRODUCTS_DAYS, date("Y")));
+        $days = " AND p.products_date_added > '".$date_new_products."' ";
+      }
+      $new_products_query = "SELECT DISTINCT *
+                                        FROM ".TABLE_PRODUCTS." p 
+                                   LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                             ON p.manufacturers_id = m.manufacturers_id
+                                        JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                             ON p.products_id = pd.products_id
+                                                AND pd.language_id = '".$_SESSION['languages_id']."'
+                                        JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
+                                             ON p.products_id = p2c.products_id
+                                        JOIN ".TABLE_CATEGORIES." c
+                                             ON c.categories_id = p2c.categories_id
+                                                AND c.categories_status = '1'
+                                       WHERE p.products_status = '1'
+                                             ".PRODUCTS_CONDITIONS_P."
+                                             ".$days."
+                                    ORDER BY RAND()
+                                       LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
+    }
 } else {
   
   $days = '';
@@ -44,19 +72,21 @@ if ((!isset ($new_products_category_id)) || ($new_products_category_id == '0')) 
     $days = " AND p.products_date_added > '".$date_new_products."' ";
   }
   $new_products_query = "SELECT * 
-                           FROM ".TABLE_PRODUCTS." p,
-                                ".TABLE_PRODUCTS_DESCRIPTION." pd,
-                                ".TABLE_PRODUCTS_TO_CATEGORIES." p2c,
-                                ".TABLE_CATEGORIES." c
-                          WHERE c.categories_status='1'
-                            AND p.products_id = p2c.products_id
-                            AND p.products_id = pd.products_id
-                            AND p2c.categories_id = c.categories_id
-                            ".PRODUCTS_CONDITIONS_P."
-                            ".$days."
+                           FROM ".TABLE_PRODUCTS." p
+                      LEFT JOIN ".TABLE_MANUFACTURERS." m
+                                ON p.manufacturers_id = m.manufacturers_id
+                           JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                                ON p.products_id = pd.products_id
+                                   AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                           JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                ON p.products_id = p2c.products_id
+                           JOIN ".TABLE_CATEGORIES." c
+                                ON p2c.categories_id = c.categories_id
+                          WHERE p.products_status = '1'
+                            AND c.categories_status = '1'
                             AND c.parent_id = '".$new_products_category_id."'
-                            AND p.products_status = '1'
-                            AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                                ".PRODUCTS_CONDITIONS_P."
+                                ".$days."
                        ORDER BY p.products_date_added DESC
                           LIMIT ".MAX_DISPLAY_NEW_PRODUCTS;
 }
