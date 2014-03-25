@@ -30,7 +30,7 @@ require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_get_customers_country.inc.php');
-require_once (DIR_FS_INC.'get_gender_dropdown.inc.php');
+require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 
 if (!isset ($_SESSION['customer_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
