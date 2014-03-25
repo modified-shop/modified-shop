@@ -74,7 +74,7 @@ class ot_payment
                         ($this->discount['pro' . $i] != 0.0 ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' .
                         ($this->discount['fee' . $i] != 0 ? ($this->discount['pro' . $i] != 0.0 ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ':'') : '') .
                         ($this->discount['amount' . $i] < 0 ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT:MODULE_ORDER_TOTAL_PAYMENT_FEE) . ':',
-                        'text' => $this->discount['amount' . $i] < 0 ? '<span style="color: red;">' . $xtPrice->xtcFormat($this->discount['amount' . $i], true).'</span>':$xtPrice->xtcFormat($this->discount['amount' . $i], true),
+                        'text' => $this->discount['amount' . $i] < 0 ? '<span class="color_ot_total">' . $xtPrice->xtcFormat($this->discount['amount' . $i], true).'</span>':$xtPrice->xtcFormat($this->discount['amount' . $i], true),
                         'value' => $this->discount['amount' . $i]);
                         $order->info['subtotal'] += $this->discount['amount' . $i];
                         $order->info['total'] += $this->discount['amount' . $i];
