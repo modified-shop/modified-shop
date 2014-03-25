@@ -126,21 +126,20 @@ function check_form(form_name) {
   form = form_name;
   error_message = unescape("<?php echo xtc_js_lang(JS_ERROR); ?>");
 
-<?php 
-//BOF - Dokuman - 2009-08-19 - BUGFIX: falsche Umlaute in JS-Popup 
-//if (ACCOUNT_GENDER == 'true') echo '  check_radio("gender", "' .ENTRY_GENDER_ERROR . '");' . "\n";
-if (ACCOUNT_GENDER == 'true') echo '  check_radio("gender", "' . xtc_js_lang(ENTRY_GENDER_ERROR) . '");' . "\n";
-//EOF - Dokuman - 2009-08-19 - BUGFIX: falsche Umlaute in JS-Popup 
-?>
+<?php if (ACCOUNT_GENDER == 'true') { ?>
+  if ($('input[name=gender]').prop("type") == 'radio') {
+    <?php echo '  check_radio("gender", "' . xtc_js_lang(ENTRY_GENDER_ERROR) . '");' . "\n"; ?>
+  } else {
+    check_select("gender", '', "<?php echo xtc_js_lang(ENTRY_GENDER_ERROR); ?>");
+  }
+<?php } ?>
 
   check_input("firstname", <?php echo ENTRY_FIRST_NAME_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_FIRST_NAME_ERROR); ?>");
   check_input("lastname", <?php echo ENTRY_LAST_NAME_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_LAST_NAME_ERROR); ?>");
 
 <?php if (ACCOUNT_DOB == 'true') echo '  check_input("dob", ' . ENTRY_DOB_MIN_LENGTH . ', "' . xtc_js_lang(ENTRY_DATE_OF_BIRTH_ERROR) . '");' . "\n"; ?>
 
-  // BOF - Hetfield - 2009-08-15 - confirm e-mail at registration
   check_email("email_address", "confirm_email_address", <?php echo ENTRY_EMAIL_ADDRESS_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_EMAIL_ADDRESS_ERROR); ?>", "<?php echo xtc_js_lang(ENTRY_EMAIL_ERROR_NOT_MATCHING); ?>");
-  // EOF - Hetfield - 2009-08-15 - confirm e-mail at registration
   check_input("street_address", <?php echo ENTRY_STREET_ADDRESS_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_STREET_ADDRESS_ERROR); ?>");
   check_input("postcode", <?php echo ENTRY_POSTCODE_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_POST_CODE_ERROR); ?>");
   check_input("city", <?php echo ENTRY_CITY_MIN_LENGTH; ?>, "<?php echo xtc_js_lang(ENTRY_CITY_ERROR); ?>");
