@@ -11,9 +11,10 @@
    ---------------------------------------------------------------------------------------*/
 
 
-function get_gender_dropdown($id='') 
+function get_customers_gender($id='') 
 {
-  $gender_array = array(array('id' => 'm', 'text' => MALE),
+  $gender_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT),
+                        array('id' => 'm', 'text' => MALE),
                         array('id' => 'f', 'text' => FEMALE),
                         );
   if ($id == '') {

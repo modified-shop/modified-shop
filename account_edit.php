@@ -59,7 +59,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 
 	$error = false;
 
-	if (ACCOUNT_GENDER == 'true' && $gender != '') {
+	if (ACCOUNT_GENDER == 'true' && $gender == '') {
     $error = true;
     $messageStack->add('account_edit', ENTRY_GENDER_ERROR);
 	}

@@ -81,7 +81,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $error = false;
   
-  if (ACCOUNT_GENDER == 'true' && $gender != '') {
+  if (ACCOUNT_GENDER == 'true' && $gender == '') {
     $error = true;
     $messageStack->add('create_account', ENTRY_GENDER_ERROR);
   }

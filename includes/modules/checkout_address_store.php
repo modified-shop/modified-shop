@@ -32,75 +32,59 @@
       $state = xtc_db_prepare_input($_POST['state']);
     }
 
-    if (ACCOUNT_GENDER == 'true') {
-      if (($gender != 'm') && ($gender != 'f')) {
+    if (ACCOUNT_GENDER == 'true' && $gender == '') {
         $error = true;
-
         $messageStack->add('checkout_address', ENTRY_GENDER_ERROR);
       }
     }
 
     if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = true;
-
       $messageStack->add('checkout_address', ENTRY_FIRST_NAME_ERROR);
     }
 
     if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
       $error = true;
-
       $messageStack->add('checkout_address', ENTRY_LAST_NAME_ERROR);
     }
 
     if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
       $error = true;
-
       $messageStack->add('checkout_address', ENTRY_STREET_ADDRESS_ERROR);
     }
 
     if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
       $error = true;
-
       $messageStack->add('checkout_address', ENTRY_POST_CODE_ERROR);
     }
 
     if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
       $error = true;
-
       $messageStack->add('checkout_address', ENTRY_CITY_ERROR);
     }
 
     if (ACCOUNT_STATE == 'true') {
       $zone_id = 0;
-      $check_query = xtc_db_query("select count(*) as total from ".TABLE_ZONES." where zone_country_id = '".(int) $country."'");
+      $check_query = xtc_db_query("SELECT count(*) AS total FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . (int)$country . "'");
       $check = xtc_db_fetch_array($check_query);
       $entry_state_has_zones = ($check['total'] > 0);
       if ($entry_state_has_zones == true) {
-        //BOF - DokuMan - 2011-09-29 - change the logic of accepting state names
-        //$zone_query = xtc_db_query("select distinct zone_id from ".TABLE_ZONES." where zone_country_id = '".(int) $country."' and (zone_name like '".xtc_db_input($state)."%' or zone_code like '%".xtc_db_input($state)."%')");
-        // check for zone_id - zone_name, zone_code (submitted by input field)  - zone_id (submitted by dropdown field) 
-        $zone_query = xtc_db_query("SELECT DISTINCT zone_id 
-                                      FROM ".TABLE_ZONES." 
-                                     WHERE zone_country_id = '".(int)$country ."' 
-                                       AND (zone_name LIKE '" . xtc_db_input($state) . "%' OR zone_code = '" . xtc_db_input($state) . "' OR zone_id = '" .(int)$state ."')
-                                  ");
-        //if (xtc_db_num_rows($zone_query) > 1) {
-        //  $zone_query = xtc_db_query("select distinct zone_id from ".TABLE_ZONES." where zone_country_id = '".(int) $country."' and zone_name = '".xtc_db_input($state)."'");
-        //}
-        //if (xtc_db_num_rows($zone_query) >= 1) {
-        if (xtc_db_num_rows($zone_query) == 1) {
-        //EOF - DokuMan - 2011-09-29 - change the logic of accepting state names
+          $zone_query = xtc_db_query("SELECT DISTINCT zone_id
+                                                 FROM ".TABLE_ZONES."
+                                                WHERE zone_country_id = '".(int)$country ."'
+                                                 AND (zone_id = '" . (int)$state . "'
+                                                 OR zone_code = '" . xtc_db_input($state) . "'
+                                                 OR zone_name LIKE '" . xtc_db_input($state) . "%')");
+          if (xtc_db_num_rows($zone_query) == 1) {
           $zone = xtc_db_fetch_array($zone_query);
           $zone_id = $zone['zone_id'];
         } else {
           $error = true;
-
           $messageStack->add('checkout_address', ENTRY_STATE_ERROR_SELECT);
         }
       } else {
         if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
           $error = true;
-
           $messageStack->add('checkout_address', ENTRY_STATE_ERROR);
         }
       }
@@ -108,7 +92,6 @@
 
     if ((is_numeric($country) == false) || ($country < 1)) {
       $error = true;
-
       $messageStack->add('checkout_address', ENTRY_COUNTRY_ERROR);
     }
 
