@@ -93,25 +93,27 @@
       $error_flag = true;
       $ftp_message = LOGIN_NOT_POSSIBLE;
     }
-
-    foreach ($files_to_check['rdirs'] as $dir) {
-      if (is_dir(DIR_FS_CATALOG.$dir)) {
-        $files_to_check = scanDirectories(DIR_FS_CATALOG.$dir, $files_to_check);
-      }
-    }
     
-    foreach ($files_to_check as $type => $files) {
-      if ($type != 'rdirs') {
-        foreach ($files as $file) {
-          if (!ftp_site($ftp, 'CHMOD 0777 '.$path.$file)) {
-            if ($type == 'files') $error_flag = true;
-            if ($type == 'dirs') $folder_flag = true;
-            $ftp_message .= CHMOD_WAS_NOT_SUCCESSFUL.'<br />';
+    if ($error_flag === false) {
+      foreach ($files_to_check['rdirs'] as $dir) {
+        if (is_dir(DIR_FS_CATALOG.$dir)) {
+          $files_to_check = scanDirectories(DIR_FS_CATALOG.$dir, $files_to_check);
+        }
+      }
+    
+      foreach ($files_to_check as $type => $files) {
+        if ($type != 'rdirs') {
+          foreach ($files as $file) {
+            if (!ftp_site($ftp, 'CHMOD 0777 '.$path.$file)) {
+              if ($type == 'files') $error_flag = true;
+              if ($type == 'dirs') $folder_flag = true;
+              $ftp_message .= CHMOD_WAS_NOT_SUCCESSFUL.'<br />';
+            }
           }
         }
       }
+      ftp_close ($ftp);
     }
-    ftp_close ($ftp);
   }
   
   // try to fix without ftp login - might fail very often depending of server setup
