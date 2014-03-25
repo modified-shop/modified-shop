@@ -70,15 +70,14 @@
 </div>
 {/if}
 {if $PAYMENT_INFORMATION != ''}
-<div class="twoColums last">
+<div class="twoColums last stickyright">
   <div class="highlightbox plainright">
     <h4 class="checkout">{#text_payment_info#}</h4>
-    <table>
+    <table class="paymentinfotable">
       <tr>
         {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
-          <td class="main">{$data.title|stripslashes}</td>
-          <td>&nbsp;</td>
-          <td class="main">{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
+          <td>{$data.title|stripslashes}</td>
+          <td>{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
         {/foreach}
       </tr>
     </table>
