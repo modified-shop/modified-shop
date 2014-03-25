@@ -19,8 +19,7 @@
             type: 'accordion', //Types: default, vertical, accordion     
             closed: true,     
             activate: function(event) { // Callback function if tab is switched
-               //alert($(".resp-tab-active input:checked").val());
-               $(".resp-tab-active input").prop('checked', true);
+               $(".resp-tab-active input[type=radio]").prop('checked', true);
             }
         });
         $('#horizontalTab').easyResponsiveTabs({

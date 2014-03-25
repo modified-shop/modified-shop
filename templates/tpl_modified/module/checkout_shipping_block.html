@@ -4,15 +4,19 @@
       <li>{$FREE_SHIPPING_TITLE}</li>
     {else}    
       {foreach name=outer item=module_data from=$module_content}
-        {foreach name=inner item=method_data from=$module_data.methods} 
-          <li>{if $module_data.error == ''}{$method_data.radio_field}&nbsp;{/if}{$module_data.module}{if $module_data.error == ''}<span style="float:right; margin-right:10px;">{$method_data.price}</span>{/if}</li>
-        {/foreach}
+        {if $module_data.error != ''}
+          <li>{$module_data.module}</li>
+        {else}
+          {foreach name=inner item=method_data from=$module_data.methods} 
+            <li>{$method_data.radio_field}&nbsp;{$module_data.module}<span style="float:right; margin-right:10px;">{$method_data.price}</span></li>
+          {/foreach}
+        {/if}
       {/foreach}
     {/if}
   </ul>
   <div class="resp-tabs-container">
     {if $FREE_SHIPPING}
-      <div>{$FREE_SHIPPING_TITLE}</div>
+      <div>{$FREE_SHIPPING_DESCRIPTION}</div>
     {else}    
       {foreach name=outer item=module_data from=$module_content}
         {if $module_data.error != ''}
