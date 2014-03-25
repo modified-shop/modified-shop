@@ -1556,3 +1556,21 @@ background:#fff;
 #loginbox input[type="password"] {
     width: 80px;
 }
+
+/* Color Defination from language-Files, main.php, ot-Module  */
+.color_ot_total {
+  color:#ff0000;
+}
+.color_error_message {
+  color:#ff0000;
+}
+a.color_more {
+  color:#ff0000 !important;
+}
+a.color_more:hover {
+  color:#ff0000 !important;
+  text-decoration:underline !important;
+}
+.color_edit_info {
+  color:#009933;
+}
