@@ -88,6 +88,11 @@ $module_smarty->assign('language', $_SESSION['language']);
 $module_smarty->caching = 0;
 
 if ($send_order) {
+  if (isset($send_by_admin)) {
+    $module_smarty->template_dir = DIR_FS_CATALOG.'templates';
+    $module_smarty->compile_dir = DIR_FS_CATALOG.'templates_c';
+    $module_smarty->config_dir = DIR_FS_CATALOG.'lang';
+  }
   $module_smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
   $module_txt = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/downloads.txt');
   $module_html = $module_smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/downloads.html');
