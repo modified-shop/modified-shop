@@ -232,8 +232,12 @@ h1 {
   border:#ddd solid;
   border-width:0 0 1px 0;
 }
+h1.checkout {
+  margin:30px 0 15px 0;
+}
+
 h2 {
-	color:#444444;
+  color:#444444;
 	font-weight:bold;
 	font-size:14px;
 	margin:20px 0px 8px 0px;
@@ -646,6 +650,15 @@ div.hr_1 {
   border-bottom:solid 1px #eee;
   background-color:transparent;
 }
+div.hr_10 {
+  height:1px;
+  line-height:1px;
+  margin:10px 0px;
+  padding:0;
+  display:block;
+  border-bottom:solid 1px #eee;
+  background-color:transparent;
+}
 div.hr_15 {
   height:1px;
   line-height:1px;
@@ -656,46 +669,15 @@ div.hr_15 {
   background-color:transparent;
 }
 
-
-div.hr {
-  padding-top:1px;
-  height:0;
-  overflow:hidden;
-  margin:0;
-  line-height:0;
-  background-color:#4E4E4F;
-}
-div.hrlightgrey {
-  padding-top:1px;
-  height:0;
-  overflow:hidden;
-  margin:0;
-  line-height:0;
-  background-color:#999;
-}
-div.hrproductpreview {
-  padding-top:1px;
-  height:0;
-  overflow:hidden;
-  margin:12px 0;
-  display:inline;
-  height:0;
-  line-height:0;
-  display:block;
-  background-image:url(img/hr_productpreview.gif);
-}
 /* TABLE GLOBAL */
 table td {
   padding:4px 0px;
 }
-/* WHOLE SITE WRAPPER */
-#wrap {
-  width:980px;
-  background-color:#fff;
-  border:#fff solid;
-  border-width:0 10px 10px 10px;
-  margin:0 auto 10px;
-}
+
+
+
+
+
 
 
 
@@ -1045,6 +1027,14 @@ ul#categorymenu li.active5 a  {font-style:italic; background:#d7c9d1; }
 
 
 
+
+
+
+
+
+
+
+
 /* CATEGORY IMAGE DEFINITION */
 img.imgLeft {
   float:left;
@@ -1052,15 +1042,14 @@ img.imgLeft {
   position:relative;
 }
 
-
-
-
-
-
-
-
-
-
+/* WHOLE SITE WRAPPER */
+#wrap {
+  width:980px;
+  background-color:#fff;
+  border:#fff solid;
+  border-width:0 10px 10px 10px;
+  margin:0 auto 10px;
+}
 
 
 /* CONTENT WRAPPER */
@@ -1432,33 +1421,16 @@ div.highlightbox.plainfull {
   background-color:transparent;
   border:none;
 }
+div.highlightbox.checkoutborder {
+  background:#fafafa;
+  border:solid #6d2551 2px;
+}
 .margintop {
   margin-top:38px;
 }
 
 
-div.highlightbox ul {
-  margin-left:15px;
-  padding:0;
-  display:block;
-  list-style-type:square;
-  line-height:20px;
-}
-div.highlightbox h1 {
-  color:#893769;
-  padding:0 0 10px 0;
-  margin:0;
-  border:none;
-  font-size:16px;
-}
-div.highlightbox div.hr {
-  height:1px;
-  line-height:1px;
-  margin:0;
-  padding:0;
-  display:block;
-  border-bottom:solid 1px #eee;
-}
+
 /* PAYMENT TYPE SELECTION */
 table.paymentblock {
   background-color:#f8f8f8;
@@ -1809,10 +1781,7 @@ table.medialist tr.contentrow2 td {
 .sitemapcontent li {
   list-style-type:none;
 }
-/* COMMENTS ON CHECKOUT CONFIRMATION SITE */
-p.checkoutcomment textarea {
-  width:898px;
-}
+
 /* ORDER DETAILS ON CHECKOUT SITE */
 table.checkoutconfirmationorderdetails {
   padding:0;
@@ -1853,61 +1822,8 @@ table.checkoutconfirmationorderdetailstotal tr td.value {
   white-space:nowrap;
   text-align:right;
 }
-/* AGB ON CHECKOUT SITE */
-p.checkoutagb textarea {
-  width:100%;
-}
-/* CHECKOUT NAVIGATION */
-ul#checkoutnavigation {
-  margin:0;
-  padding:0;
-  margin-top:15px;
-}
-ul#checkoutnavigation li {
-  height:70px;
-  list-style-type:none;
-  float:left;
-  width:195px;
-  margin-right:22px;
-  border:solid 1px;
-  padding:8px;
-}
-ul#checkoutnavigation li.active {
-  background-color:#f8f8f8;
-}
-ul#checkoutnavigation li.active.last {
-  margin-right:0;
-}
-ul#checkoutnavigation li.active .number {
-  font-size:20px;
-  font-weight:bold;
-}
-ul#checkoutnavigation li.active .title {
-  font-size:14px;
-  font-weight:bold;
-}
-ul#checkoutnavigation li.active .description {
-  font-size:11px;
-}
-ul#checkoutnavigation li.inactive {
-  color:#999;
-  background-color:#ededed;
-  border-color:#999;
-}
-ul#checkoutnavigation li.inactive.last{
-  margin-right:0;
-}
-ul#checkoutnavigation li.inactive .number {
-  font-size:20px;
-  font-weight:bold;
-}
-ul#checkoutnavigation li.inactive .title {
-  font-size:14px;
-  font-weight:bold;
-}
-ul#checkoutnavigation li.inactive .description {
-  font-size:11px;
-}
+
+
 
 
 /* ERROR MESSAGES */
@@ -2034,36 +1950,8 @@ td.productPreviewContent {
 td.main_row {
   border-top:1px solid #ccc;
 }
-/* Hetfield - 2010-01-20 - Remove agb-textarea from checkout_payment */
-div.agbframe {
-  width:898px;
-  height:200px;
-  overflow:auto;
-  padding:10px;
-  background:url(img/input_bg.gif) no-repeat;
-  border:1px solid #666;
-}
-/* web28 - 2010-04-29 - fix ol and ul Tag  in checkout_payment agbframe */
-ol#address_block, div.agbframe ol, div.agbframe ul  {
-  margin-left:30px;
-}
-/* web28 - 2010-07-25 - NO JAVASCRIPT FALLBACK für TABS/ACCORDION in product_info */
-#tabbed_product_info ul,#accordion_product_info h3 a {
-  display:none;
-}
-#tabbed_product_info .morepics {
-  background-color:#ededed;
-  padding:6px;
-  border-width:1px 0 0 0;
-  width:722px;
-  margin-bottom:17px;
-}
 
-/* web28 - 2010-07-25 - FIX DER AUFZÄHLUNGEN IM CONTENT  für TABS/ACCORDION in product_info */
-#tab_description ol, #tab_description ul, #accordion_product_info ol, #accordion_product_info ul{
-  margin:10px 0 10px 30px;
-  display:block;
-}
+
 /* h-h-h - 2011-05-15 - MOUSE POINTER FOR PRODUCTOPTIONS RADIO BUTTON TEXT */
 .productoptions label {
   cursor: pointer;
@@ -2311,7 +2199,220 @@ background:#fff;
 
 
 
-#currencies > select {
-    width: 100%;
+/* Start checkout */
+
+/* CHECKOUT NAVIGATION */
+ul#checkoutnavigation {
+  margin-top:15px;
+}
+ul#checkoutnavigation li {
+  height:64px;
+  list-style-type:none;
+  float:left;
+  width:209px;
+  margin-right:20px;
+  border:solid 1px;
+  padding:12px;
+}
+ul#checkoutnavigation li.active {
+  background-color: #7B3C62;
+  border-color: #6D2551;
+  color: #FFFFFF;
+}
+ul#checkoutnavigation li.active.last {
+  margin-right:0;
+}
+ul#checkoutnavigation li.active .title {
+  font-family: 'Oswald', sans-serif;
+  font-size:18px;
+  line-height:22px;
+}
+ul#checkoutnavigation li.active .description {
+  display:block;
+  font-size:13px;
+  line-height:17px;
+  padding-top:5px;
+}
+ul#checkoutnavigation li.inactive {
+  background-color: #F4F4F4;
+  border-color: #D0D0D0;
+  color: #ADADAD;
+}
+ul#checkoutnavigation li.inactive.last{
+  margin-right:0;
+}
+ul#checkoutnavigation li.inactive .title {
+  font-family: 'Oswald', sans-serif;
+  font-size:18px;
+  line-height:22px;
+}
+ul#checkoutnavigation li.inactive .description {
+  display:block;
+  font-size:13px;
+  line-height:17px;
+  padding-top:5px;
 }
 
+.checkout_button_right {
+  float:right;
+  display:inline-block;
+  margin: 3px 0px 0px 0px;
+}
+
+ol#address_block {
+  margin: 15px 0px 0px 20px;
+}
+ol#address_block li {
+  border-top: 1px dashed #ccc;
+  margin-top:10px;
+  padding-top: 10px;
+}
+ol#address_block li label {
+  font-weight:bold;
+}
+ol#address_block li .address {
+  display:inline-block;
+  padding:5px 0px 0px 22px;
+}
+
+.checkoutcomment textarea {
+  height:160px;  
+}
+
+div.agbframe {
+  background-color:#fff;
+  border-color: #C6C6C6 #DADADA #EAEAEA;
+  color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 5px 5px 5px 5px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+  font-size:11px;
+  line-height:17px;
+  height:120px;
+  overflow:auto;
+}
+
+.checkoutagb {
+  margin-bottom:10px;
+}
+.checkoutconditions {
+  font-size:11px;
+}
+.checkoutconditions input#conditions {
+  position:relative;
+  bottom:-2px;
+}
+
+table.paymentmoduledata {
+  font-size:11px;
+  line-height:15px;
+}
+table.paymentmoduledata tr td.title {
+  vertical-align:top;
+  padding-top:8px;
+}
+table.paymentmoduledata tr td.field {
+  vertical-align:top;
+  padding-left:12px;
+}
+
+
+
+table.checkouttable tr.headerrow {
+  font-size:12px;
+}
+table.checkouttable tr.headerrow td {
+  padding:5px;
+}
+
+
+
+
+
+table.checkouttable img.image {
+  max-width: 60px;
+  max-height:60px;
+  margin: 0px auto;
+  text-align:center;
+}
+table.checkouttable tr td.main_row {
+  vertical-align:top;
+  padding:10px 5px;
+  font-size:14px;
+}
+.chk_table_left {
+  text-align:left;
+}
+.chk_table_right {
+  text-align:right;
+}
+.width40 {
+  width:40px;
+}
+.width90 {
+  width:90px;
+}
+
+.width110 {
+  width:110px;
+}
+
+
+table.checkouttable tr td.main_row .shipping {
+  font-size:12px;
+  line-height:16px;
+  color:#555;
+  padding: 3px 0px;
+}
+
+table.checkouttable tr td.main_row .small {
+  font-size:11px !important;
+  line-height:15px !important;
+  margin-bottom:8px;
+}
+table.checkouttable tr td.main_row .smallattributes {
+  font-size:11px !important;
+  line-height:15px !important;
+}
+table.checkouttable tr td.main_row .small p {
+  margin: 0px !important;
+  padding: 2px 0px !important;
+}
+
+
+.total table tr td {
+  font-size:14px;
+  padding: 2px 5px 2px 45px;
+}
+
+.dutyinfo {
+  font-size:11px; 
+  padding:5px;
+  margin-top:8px;
+}  
+
+
+/* Ende checkout */
+
+
+/* Color Defination from language-Files, main.php, ot-Module  */
+.color_ot_total {
+  color:#A94442;
+}
+.color_error_message {
+  color:#A94442;
+}
+a.color_more {
+  color:#6D2551 !important;
+}
+a.color_more:hover {
+  color:#6D2551 !important;
+  text-decoration:underline !important;
+}
+.color_edit_info {
+  color:#6D2551;
+}

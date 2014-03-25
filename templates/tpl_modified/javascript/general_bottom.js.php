@@ -1,31 +1,31 @@
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info ?>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $('#horizontalTab').easyResponsiveTabs({
             type: 'default', //Types: default, vertical, accordion           
-            activate: function(event) { // Callback function if tab is switched
-                var $tab = $(this);
-                var $info = $('#tabInfo');
-                var $name = $('span', $info);
-
-                $name.text($tab.text());
-                $info.show();
-            }
         });
         
         $('#horizontalAccordion').easyResponsiveTabs({
             type: 'accordion', //Types: default, vertical, accordion           
-            activate: function(event) { // Callback function if tab is switched
-                var $tab = $(this);
-                var $info = $('#tabInfo');
-                var $name = $('span', $info);
-                $name.text($tab.text());
-                $info.show();
-            }
         });
-        
     });
 </script>
 <?php } ?>
 
+<?php if (strstr($PHP_SELF, 'checkout')) { ?>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#horizontalAccordion').easyResponsiveTabs({
+            type: 'accordion', //Types: default, vertical, accordion     
+            closed: true,     
+            activate: function(event) { // Callback function if tab is switched
+               //alert($(".resp-tab-active input:checked").val());
+               $(".resp-tab-active input").prop('checked', true);
+            }
+        });
+        $('#horizontalTab').easyResponsiveTabs({
+            type: 'default', //Types: default, vertical, accordion           
+        });
+    });
+</script>
+<?php } ?>

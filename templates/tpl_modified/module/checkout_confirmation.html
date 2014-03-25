@@ -2,77 +2,78 @@
 {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 {config_load file="$language/lang_$language.conf" section="duty_info"}
 <ul id="checkoutnavigation">
-  <li class="inactive"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
-  <li class="inactive"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
-  <li class="active"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
-  <li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
+  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="inactive"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="active"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
 </ul>
-<div style="clear:both"></div>
+<br class="clearfix" />
+<h1 class="checkout">{#heading_confirmation#}</h1>
 
-<br />
-<h1>{#heading_confirmation#}</h1>
-
-<div class="checkout_infos">
-
-  <div class="{if $REVOCATION}checkoutInfoBoxes{else}checkoutInfoBoxesLarge{/if}" style="text-align: justify;">
+<div class="twoColums">
+  <div class="highlightbox plainleft">
     {#text_information#}
     {if $IP_LOG == 'true'}
     <p>{#text_ip#}&nbsp;<strong>{$CUSTOMERS_IP}</strong></p>
     {/if}
   </div>
-
-  {if $REVOCATION}
-  <div class="checkoutInfoBoxes red">
-    {$TEXT_AGB_CHECKOUT}
+</div>
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    {if $REVOCATION}
+      {$TEXT_AGB_CHECKOUT}
+    {/if}  
   </div>
-  {/if}
+</div>
+<br class="clearfix" />  
 
-  <div style="clear:both"><br /></div>
-
-  <div class="checkoutNavBoxes">
-    <h2>{#text_shipping_address#}</h2>
-    <div class="text">&nbsp;<a href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></div>
-    <div style="clear:both">{$DELIVERY_LABEL}<br /></div>
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4>{#text_shipping_address#} <a class="midi" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    {$DELIVERY_LABEL} 
   </div>
-
-  {if $BILLING_LABEL}
-  <div class="checkoutNavBoxes">
-    <h2>{#text_payment_address#}</h2>
-    <div class="text">&nbsp;<a href="{$BILLING_ADDRESS_EDIT}">{#text_edit#}</a></div>
-    <div style="clear:both">{$BILLING_LABEL}<br /></div>
+</div>
+{if $BILLING_LABEL}
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_address#} <a class="midi" href="{$BILLING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    {$BILLING_LABEL}
   </div>
-  {/if}
+</div>
+{/if}
+<br class="clearfix" /> 
 
-  <div style="clear:both"><br /></div>
+{if $SHIPPING_METHOD}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{#text_shipping_method#} <a class="midi" href="{$SHIPPING_EDIT}">{#text_edit#}</a></h4>
+    {$SHIPPING_METHOD}
+  </div>
+</div>
+{/if}
+{if $PAYMENT_METHOD != ''}
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_method#} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a></h4>
+    {$PAYMENT_METHOD}
+  </div>
+</div>
+{/if}
+<br class="clearfix" /> 
 
-  {if $SHIPPING_METHOD}
-    <div class="checkoutNav2Boxes">
-      <h2>{#text_shipping_method#}</h2>
-      <div class="text">&nbsp;<a href="{$SHIPPING_EDIT}">{#text_edit#}</a></div>
-      <p style="clear:both;">{$SHIPPING_METHOD}</p>
-    </div>
-  {/if}
-
-  {if $PAYMENT_METHOD != ''}
-    <div class="checkoutNav2Boxes">
-      <h2>{#text_payment_method#}</h2>
-      <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
-      <p style="clear:both;">{$PAYMENT_METHOD}</p>
-    </div>
-  {/if}
-  <div style="clear:both"></div>
-
-  {if $ORDER_COMMENTS != ''}
-    <br />
-    <h2>{#text_comments#}</h2>
-    <div class="text">&nbsp;<a href="{$PAYMENT_EDIT}">{#text_edit#}</a></div>
-    <div style="clear:both;padding: 0 5px;">{$ORDER_COMMENTS}</div>
-  {/if}
-
-  {if $PAYMENT_INFORMATION != ''}
-    <br />
-    <h2>{#text_payment_info#}</h2>
-    <table style="clear:both">
+{if $ORDER_COMMENTS != ''}
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{#text_comments#} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a></h4>
+    {$ORDER_COMMENTS}  
+  </div>
+</div>
+{/if}
+{if $PAYMENT_INFORMATION != ''}
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_info#}</h4>
+    <table>
       <tr>
         {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
           <td class="main">{$data.title|stripslashes}</td>
@@ -81,62 +82,54 @@
         {/foreach}
       </tr>
     </table>
-  {/if}
-
-  <br />
-  <h2>{#text_products#}</h2>
-  <p class="text">&nbsp;<a href="{$PRODUCTS_EDIT}">{#text_edit#}</a></p>
-  <div style="clear:both"></div>
-
+  </div>
 </div>
+{/if}
+<br class="clearfix" /> 
 
-<div class="highlightbox checkoutbox">
-  {* BOC PRODUCTS TABLE *}
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+<br />
+<div class="highlightbox checkoutborder">  
+  <h4 class="checkout">{#text_products#} <a class="midi" href="{$PRODUCTS_EDIT}">{#text_edit#}</a></h4>
+  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="checkouttable">
     <tr class="headerrow">
-      <td class="main_header" style="width:50px" align="left" valign="top"><b>{$smarty.const.HEADER_QTY}</b></td>
-      <td class="main_header" style="padding-left:90px;" align="left" valign="top"><b>{$smarty.const.HEADER_ARTICLE}</b></td>
-      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_MODEL}</b></td>
-      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_SINGLE}</b></td>
-      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_TOTAL}</b></td>
+      <td class="main_header chk_table_left"><b>{$smarty.const.HEADER_QTY}</b></td>
+      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<td class="main_header chk_table_left">&nbsp;</td>{/if}
+      <td class="main_header chk_table_left"><b>{$smarty.const.HEADER_ARTICLE}</b></td>
+      <td class="main_header chk_table_right"><b>{$smarty.const.HEADER_MODEL}</b></td>
+      <td class="main_header chk_table_right"><b>{$smarty.const.HEADER_SINGLE}</b></td>
+      <td class="main_header chk_table_right"><b>{$smarty.const.HEADER_TOTAL}</b></td>
     </tr>
     {foreach name=aussen item=data from=$PRODUCTS_ARRAY}
     <tr>
-      <td class="main_row" align="left" valign="top">{$data.qty}</td>
-      <td class="main_row" align="left" valign="top">
-        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}
-        <div style="width:90px; float:left;">{$data.image}</div>
-        {/if}
-        <div style="width:420px; float:left;">
-          {$data.link}
-          {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
-          {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
-          {foreach key=a_data item=attrib_data from=$data.attributes}
-            {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}
-          {/foreach}
-        </div>
+      <td class="main_row chk_table_left width40">{$data.qty}</td>
+      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}<td class="main_row chk_table_left width90">{$data.image}</td>{/if}
+      <td class="main_row chk_table_left">
+        {$data.link}
+        {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
+        {if $data.shipping_time}<div class="shipping">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</div>{/if}
+        {foreach key=a_data item=attrib_data from=$data.attributes}
+          {if $attrib_data.value != ''}<div class="smallattributes"><i> &bull; {$attrib_data.option}: {$attrib_data.value}</i></div>{/if}
+        {/foreach}
       </td>
-      <td class="main_row" align="right" valign="top">{$data.model}</td>
-      <td class="main_row" align="right" valign="top">{$data.price_formated}</td>
-      <td class="main_row" align="right" valign="top">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
+      <td class="main_row chk_table_right width110">{$data.model}</td>
+      <td class="main_row chk_table_right width110">{$data.price_formated}</td>
+      <td class="main_row chk_table_right width110">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
     </tr>
     {/foreach}
   </table>
-  {* EOC PRODUCTS TABLE *}
-
-  <div class="hr"></div>
+  <div class="hr_10"></div>
   {if $TOTAL_BLOCK}
     <div class="total">
-      <table align="right">
+      <table align="right" border="0">
         {$TOTAL_BLOCK}
       </table>
-      <div style="clear:both"></div>
+      <br class="clearfix" />
     </div>
   {/if}
   {if $DELIVERY_DUTY_INFO == true}
-    <div class="hr"></div>
-    <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
+    <div class="hr_10"></div>
+    <div class="dutyinfo">{#text_duty_info#}</div>
   {/if}
-  <br />
-  <div style="text-align:right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS != ''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}</div>
+  <div class="button_right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS!=''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON}</div>
+  <br class="clearfix" />
 </div>

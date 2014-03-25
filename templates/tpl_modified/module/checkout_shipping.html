@@ -1,21 +1,30 @@
 {config_load file="$language/lang_$language.conf" section="checkout_shipping"}
 {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 <ul id="checkoutnavigation">
-  <li class="active"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
-  <li class="inactive"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
-  <li class="inactive"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
-  <li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
+  <li class="active"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="inactive"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
 </ul>
-<div style="clear:both"></div>
-<br />
+<br class="clearfix" />
+<h1 class="checkout">{#heading_shipping#}</h1>
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-<h1>{#heading_shipping#}</h1>
+
 {$FORM_ACTION}
-<p><strong>{#title_address#}:</strong><br />{$ADDRESS_LABEL}</p>
-<p>{$BUTTON_ADDRESS}</p>
-<h1>{#title_shipping#}</h1>
-<p>{#text_shipping#}</p>
-<p>{$SHIPPING_BLOCK}</p>
-{* DokuMan - 2009-06-01 - do not correct the name 'BUTON_CONTINUE' to remain compatible to standard templates *}
-<p>{$BUTON_CONTINUE}</p>
+<div class="twoColums">
+  <div class="highlightbox">
+    <h4>{#title_shipping#}</h4>
+    <p>{#text_shipping#}</p>
+    <p>{$SHIPPING_BLOCK}</p>
+  </div>
+</div>
+
+<div class="twoColums last">
+  <div class="highlightbox">
+    <h4>{#title_address#}</h4>
+    <p><span class="checkout_button_right">{$BUTTON_ADDRESS}</span>{$ADDRESS_LABEL}<br class="clear" /></p>
+  </div>
+</div>
+<br class="clearfix" />
+<div class="button_right">{$BUTON_CONTINUE}</div>
 {$FORM_END}

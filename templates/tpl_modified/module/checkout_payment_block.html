@@ -1,63 +1,34 @@
-<table class="paymentblock" width="100%" border="0" cellspacing="0" cellpadding="6">
-{foreach name=outer item=gift_data from=$module_gift}
-  <tr>
-    <td class="header left" width="1%">{$gift_data.selection}</td>
-    <td class="header" width="84%"><label for="{$smarty.foreach.outer.iteration}">{$gift_data.module}</label></td>
-    <td class="header right" width="15%" align="right">{$gift_data.credit_amount}</td>
-  </tr>
-  {if $gift_data.description != ''}
-  <tr>
-    <td class="payleft">&nbsp;</td>
-    <td class="payright" colspan="2" width="100%"><strong>{$gift_data.description}</strong></td>
-  </tr>
-  {/if}
-  {if $smarty.foreach.outer.last}
-  <tr>
-    <td colspan="3" class="filler">{$credit_amount_payment_info}</td>
-  </tr>  
-  <tr>
-    <td colspan="3" class="filler">&nbsp;</td>
-  </tr>
-  {/if}
-{/foreach}
-{foreach name=outer item=module_data from=$module_content}
-  <tr>
-    <td class="header left" width="1%">{$module_data.selection}</td>
-    <td class="header" width="84%"><label for="{$smarty.foreach.outer.iteration}">{$module_data.module}</label></td>
-    <td class="header right" width="15%" align="right">{$module_data.module_cost}</td>
-  </tr>
-  {if $module_data.description != ''}
-  <tr>
-    <td class="payleft">&nbsp;</td>
-    <td class="payright" colspan="2" width="100%"><strong>{$module_data.description}</strong></td>
-  </tr>
-  {/if}
-  {if $module_data.error != ''}
-  <tr>
-    <td class="payleft">&nbsp;</td>
-    <td class="payright" colspan="2">{$module_data.error}</td>
-  </tr>
-  {elseif $module_data.fields}
-  <tr>
-    <td class="payleft">&nbsp;</td>
-    <td class="payright" colspan="2">
-    <table border="0" cellspacing="0" cellpadding="0">
-    {foreach name=inner item=method_data from=$module_data.fields}
-      <tr>
-        <td>{$method_data.title}</td>
-        <td>&nbsp;</td>
-        <td>{$method_data.field}</td>
-        <td>&nbsp;</td>
-       </tr>
+<div id="horizontalAccordion">
+  <ul class="resp-tabs-list">
+    {foreach name=outer item=gift_data from=$module_gift}
+      <li>{$gift_data.selection}&nbsp;{$gift_data.module}<span style="float:right; margin-right:10px;">{$gift_data.credit_amount}</span></li>
     {/foreach}
-    </table>
-    </td>
-  </tr>
-  {/if}
-  {if !$smarty.foreach.outer.last}  
-  <tr>
-    <td colspan="3" class="filler">&nbsp;</td>
-  </tr>
-  {/if}
-{/foreach}
-</table>
+    
+    {foreach name=outer item=module_data from=$module_content}
+      <li>{$module_data.selection}&nbsp;{$module_data.module}<span style="float:right; margin-right:10px;">{$module_data.module_cost}</span></li>
+    {/foreach}
+  </ul>
+  <div class="resp-tabs-container">
+    {foreach name=outer item=gift_data from=$module_gift}
+      <div>{if $gift_data.description != ''}{$gift_data.description}<br />{/if}{$credit_amount_payment_info}</div>
+    {/foreach}
+
+    {foreach name=outer item=module_data from=$module_content}
+      <div>
+        {if $module_data.description}{$module_data.description}<br />{/if}
+        {if $module_data.error != ''}
+          {$module_data.error}<br />
+        {elseif $module_data.fields}
+          <table border="0" cellspacing="0" cellpadding="0" class="paymentmoduledata">
+            {foreach name=inner item=method_data from=$module_data.fields}
+              <tr>
+                <td class="title">{$method_data.title}</td>
+                <td class="field">{$method_data.field}</td>
+               </tr>
+            {/foreach}
+          </table>
+        {/if}    
+      </div>
+    {/foreach}    
+  </div>
+</div>

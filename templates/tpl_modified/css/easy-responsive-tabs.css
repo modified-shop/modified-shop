@@ -135,6 +135,7 @@ h2.resp-tab-active {
 }
 .resp-easy-accordion .resp-tab-content {
     border: 1px solid #c1c1c1;
+    background:#fff;
 }
 
 .resp-easy-accordion .resp-tab-content:last-child {
@@ -153,6 +154,11 @@ h2.resp-tab-active {
 h2.resp-accordion:first-child {
     border-top: 1px solid #c1c1c1 !important;
 }
+
+    .resp-accordion-closed {
+        display:none !important;
+    }
+
 
 /*Here your can change the breakpoint to set the accordion, when screen resolution changed*/
 /*

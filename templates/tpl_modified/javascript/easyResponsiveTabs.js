@@ -63,11 +63,15 @@
                     $accItem.append($tabItem.html());
                     $accItem.data($tabItem.data());
                     $tabItemh2.attr('aria-controls', 'tab_item-' + (itemCount));
+                    
+                    
+                    
                     itemCount++;
                 });
 
                 //Assigning the 'aria-controls' to Tab items
                 var count = 0,
+                    activetab = '',
                     $tabContent;
                 $respTabs.find('.resp-tab-item').each(function () {
                     $tabItem = $(this);
@@ -79,6 +83,10 @@
                     $respTabs.find('.resp-tab-content').each(function () {
                         $tabContent = $(this);
                         $tabContent.attr('aria-labelledby', 'tab_item-' + (tabcount));
+                        // find selected radiobutton
+                        if ($respTabs.find('[aria-controls="tab_item-' + (tabcount) + '"] input:checked').length === 1) {
+                          activetab = tabcount;
+                        }
                         tabcount++;
                     });
                     count++;
@@ -106,9 +114,16 @@
                 }
                 //assign proper classes for when tabs mode is activated before making a selection in accordion mode
                 else {
-                    $($respTabs.find('.resp-tab-content')[tabNum]).addClass('resp-tab-content-active resp-accordion-closed')
+                    $($respTabs.find('.resp-tab-content')[tabNum]).addClass('resp-tab-content-active resp-accordion-closed');
                 }
-
+                
+                //set checked element;
+                if (activetab !== '') {
+                    $($respTabs.find('.resp-tab-content[aria-labelledby="tab_item-' + activetab + '"]')).removeClass('resp-tab-content-active resp-accordion-closed');
+                    $($respTabs.find('.resp-tab-content[aria-labelledby="tab_item-' + activetab + '"]')).addClass('resp-tab-content-active');
+                    $($respTabs.find('.resp-accordion[aria-controls="tab_item-' + activetab + '"]')).addClass('resp-tab-active');
+                }
+                           
                 //Tab Click action function
                 $respTabs.find("[role=tab]").each(function () {
                    
@@ -160,7 +175,6 @@
                               tmpUrl = tmpUrl.substr(0,tmpBis);
                             }
                             history.replaceState(null,null,tmpUrl+newHash);
-//                          history.replaceState(null,null,newHash);
                         }
                     });
                     
