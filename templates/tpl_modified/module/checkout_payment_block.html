@@ -1,11 +1,11 @@
 <div id="horizontalAccordion">
   <ul class="resp-tabs-list">
     {foreach name=outer item=gift_data from=$module_gift}
-      <li>{$gift_data.selection}&nbsp;{$gift_data.module}<span style="float:right; margin-right:10px;">{$gift_data.credit_amount}</span></li>
+      <li><span class="payment_radio">{$gift_data.selection}</span>{$gift_data.module}<span class="payment_costs">{$gift_data.credit_amount}</span></li>
     {/foreach}
     
     {foreach name=outer item=module_data from=$module_content}
-      <li>{$module_data.selection}&nbsp;{$module_data.module}<span style="float:right; margin-right:10px;">{$module_data.module_cost}</span></li>
+      <li><span class="payment_radio">{$module_data.selection}</span>{$module_data.module}<span class="payment_costs">{$module_data.module_cost}</span></li>
     {/foreach}
   </ul>
   <div class="resp-tabs-container">

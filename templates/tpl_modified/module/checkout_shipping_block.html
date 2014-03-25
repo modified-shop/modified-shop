@@ -1,14 +1,14 @@
 <div id="horizontalAccordion">
   <ul class="resp-tabs-list">
     {if $FREE_SHIPPING}
-      <li>{$FREE_SHIPPING_TITLE}</li>
+      <li><span class="shipping_radio"></span>{$FREE_SHIPPING_TITLE}</li>
     {else}    
       {foreach name=outer item=module_data from=$module_content}
         {if $module_data.error != ''}
-          <li>{$module_data.module}</li>
+          <li><span class="shipping_radio"></span>{$module_data.module}</li>
         {else}
           {foreach name=inner item=method_data from=$module_data.methods} 
-            <li>{$method_data.radio_field}&nbsp;{$module_data.module}<span style="float:right; margin-right:10px;">{$method_data.price}</span></li>
+            <li><span class="shipping_radio">{$method_data.radio_field}</span>{$module_data.module}<span class="shipping_costs">{$method_data.price}</span></li>
           {/foreach}
         {/if}
       {/foreach}
