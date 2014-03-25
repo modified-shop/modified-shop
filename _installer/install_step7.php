@@ -250,7 +250,7 @@
       // Status merchant
       xtc_db_query("INSERT INTO customers_status SET customers_status_id = '3',
                                                      language_id = '2',
-                                                     customers_status_name = '".(INSTALL_CHARSET == 'utf8' ? utf8_encode(html_entity_decode('H&auml;ndler')) : utf8_decode('HÃ¤ndler'))."',
+                                                     customers_status_name = '".convert_utf8('Händler')."',
                                                      customers_status_public = 1,
                                                      customers_status_min_order = NULL,
                                                      customers_status_max_order = NULL,
