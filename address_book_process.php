@@ -43,15 +43,18 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 	$process = true;
 	$error = false;
 
-	if (ACCOUNT_GENDER == 'true')
+	if (ACCOUNT_GENDER == 'true') {
 		$gender = xtc_db_prepare_input($_POST['gender']);
-	if (ACCOUNT_COMPANY == 'true')
+	}
+	if (ACCOUNT_COMPANY == 'true') {
 		$company = xtc_db_prepare_input($_POST['company']);
+	}
 	$firstname = xtc_db_prepare_input($_POST['firstname']);
 	$lastname = xtc_db_prepare_input($_POST['lastname']);
 	$street_address = xtc_db_prepare_input($_POST['street_address']);
-	if (ACCOUNT_SUBURB == 'true')
+	if (ACCOUNT_SUBURB == 'true') {
 		$suburb = xtc_db_prepare_input($_POST['suburb']);
+	}
 	$postcode = xtc_db_prepare_input($_POST['postcode']);
 	$city = xtc_db_prepare_input($_POST['city']);
 	$country = xtc_db_prepare_input($_POST['country']);
@@ -60,86 +63,87 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 		$state = xtc_db_prepare_input($_POST['state']);
 	}
 
-	if (ACCOUNT_GENDER == 'true') {
-		if (($gender != 'm') && ($gender != 'f')) {
+	if (ACCOUNT_GENDER == 'true' && $gender == '') {
 			$error = true;
-
 			$messageStack->add('addressbook', ENTRY_GENDER_ERROR);
 		}
 	}
 
 	if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
 		$error = true;
-
 		$messageStack->add('addressbook', ENTRY_FIRST_NAME_ERROR);
 	}
 
 	if (strlen($lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
 		$error = true;
-
 		$messageStack->add('addressbook', ENTRY_LAST_NAME_ERROR);
 	}
 
 	if (strlen($street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
 		$error = true;
-
 		$messageStack->add('addressbook', ENTRY_STREET_ADDRESS_ERROR);
 	}
 
 	if (strlen($postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
 		$error = true;
-
 		$messageStack->add('addressbook', ENTRY_POST_CODE_ERROR);
 	}
 
 	if (strlen($city) < ENTRY_CITY_MIN_LENGTH) {
 		$error = true;
-
 		$messageStack->add('addressbook', ENTRY_CITY_ERROR);
 	}
 
 	if (is_numeric($country) == false) {
 		$error = true;
-
 		$messageStack->add('addressbook', ENTRY_COUNTRY_ERROR);
 	}
 
-	if (ACCOUNT_STATE == 'true') {
-		$zone_id = 0;
-		$check_query = xtc_db_query("select count(*) as total from ".TABLE_ZONES." where zone_country_id = '".(int) $country."'");
-		$check = xtc_db_fetch_array($check_query);
-		$entry_state_has_zones = ($check['total'] > 0);
-		if ($entry_state_has_zones == true) {
-			$zone_query = xtc_db_query("select distinct zone_id from ".TABLE_ZONES." where zone_country_id = '".(int) $country."' and (zone_name like '".xtc_db_input($state)."%' or zone_code like '%".xtc_db_input($state)."%')");
-			if (xtc_db_num_rows($zone_query) > 1) {
-				$zone_query = xtc_db_query("select distinct zone_id from ".TABLE_ZONES." where zone_country_id = '".(int) $country."' and zone_name = '".xtc_db_input($state)."'");
-			}
-			if (xtc_db_num_rows($zone_query) == 1) {
-				$zone = xtc_db_fetch_array($zone_query);
-				$zone_id = $zone['zone_id'];
-			} else {
-				$error = true;
-
-				$messageStack->add('addressbook', ENTRY_STATE_ERROR_SELECT);
-			}
-		} else {
-			if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
-				$error = true;
-
-				$messageStack->add('addressbook', ENTRY_STATE_ERROR);
-			}
-		}
-	}
+  if (ACCOUNT_STATE == 'true') {
+    $zone_id = 0;
+    $check_query = xtc_db_query("SELECT count(*) AS total FROM " . TABLE_ZONES . " WHERE zone_country_id = '" . (int)$country . "'");
+    $check = xtc_db_fetch_array($check_query);
+    $entry_state_has_zones = ($check['total'] > 0);
+    if ($entry_state_has_zones == true) {
+        $zone_query = xtc_db_query("SELECT DISTINCT zone_id
+                                               FROM ".TABLE_ZONES."
+                                              WHERE zone_country_id = '".(int)$country ."'
+                                               AND (zone_id = '" . (int)$state . "'
+                                               OR zone_code = '" . xtc_db_input($state) . "'
+                                               OR zone_name LIKE '" . xtc_db_input($state) . "%')");
+        if (xtc_db_num_rows($zone_query) == 1) {
+        $zone = xtc_db_fetch_array($zone_query);
+        $zone_id = $zone['zone_id'];
+      } else {
+        $error = true;
+        $messageStack->add('addressbook', ENTRY_STATE_ERROR_SELECT);
+      }
+    } else {
+      if (strlen($state) < ENTRY_STATE_MIN_LENGTH) {
+        $error = true;
+        $messageStack->add('addressbook', ENTRY_STATE_ERROR);
+      }
+    }
+  }
 
 	if ($error == false) {
-		$sql_data_array = array ('entry_firstname' => $firstname, 'entry_lastname' => $lastname, 'entry_street_address' => $street_address, 'entry_postcode' => $postcode, 'entry_city' => $city, 'entry_country_id' => (int) $country,'address_last_modified' => 'now()');
+		$sql_data_array = array('entry_firstname' => $firstname, 
+		                        'entry_lastname' => $lastname, 
+		                        'entry_street_address' => $street_address, 
+		                        'entry_postcode' => $postcode, 
+		                        'entry_city' => $city, 
+		                        'entry_country_id' => (int) $country,
+		                        'address_last_modified' => 'now()');
 
-		if (ACCOUNT_GENDER == 'true')
+		if (ACCOUNT_GENDER == 'true') {
 			$sql_data_array['entry_gender'] = $gender;
-		if (ACCOUNT_COMPANY == 'true')
+		}
+		if (ACCOUNT_COMPANY == 'true') {
 			$sql_data_array['entry_company'] = $company;
-		if (ACCOUNT_SUBURB == 'true')
+		}
+		if (ACCOUNT_SUBURB == 'true') {
 			$sql_data_array['entry_suburb'] = $suburb;
+		}
 		if (ACCOUNT_STATE == 'true') {
 			if ($zone_id > 0) {
 				$sql_data_array['entry_zone_id'] = (int) $zone_id;
@@ -160,11 +164,15 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 				$_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int) $zone_id : '0');
 				$_SESSION['customer_default_address_id'] = (int) $_GET['edit'];
 
-				$sql_data_array = array ('customers_firstname' => $firstname, 'customers_lastname' => $lastname, 'customers_default_address_id' => (int) $_GET['edit'],'customers_last_modified' => 'now()');
+				$sql_data_array = array('customers_firstname' => $firstname, 
+				                        'customers_lastname' => $lastname, 
+				                        'customers_default_address_id' => (int) $_GET['edit'],
+				                        'customers_last_modified' => 'now()');
 
-				if (ACCOUNT_GENDER == 'true')
+				if (ACCOUNT_GENDER == 'true') {
 					$sql_data_array['customers_gender'] = $gender;
-
+        }
+        
 				xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $_SESSION['customer_id']."'");
 			}
 		} else {
@@ -179,20 +187,25 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 				$_SESSION['customer_first_name'] = $firstname;
 				$_SESSION['customer_country_id'] = $country_id;
 				$_SESSION['customer_zone_id'] = (($zone_id > 0) ? (int) $zone_id : '0');
-				if (isset ($_POST['primary']) && ($_POST['primary'] == 'on'))
+				if (isset ($_POST['primary']) && ($_POST['primary'] == 'on')) {
 					$_SESSION['customer_default_address_id'] = $new_address_book_id;
+        }
+        
+				$sql_data_array = array('customers_firstname' => $firstname, 
+				                        'customers_lastname' => $lastname,
+				                        'customers_last_modified' => 'now()',
+				                        'customers_date_added' => 'now()');
 
-				$sql_data_array = array ('customers_firstname' => $firstname, 'customers_lastname' => $lastname,'customers_last_modified' => 'now()','customers_date_added' => 'now()');
-
-				if (ACCOUNT_GENDER == 'true')
+				if (ACCOUNT_GENDER == 'true') {
 					$sql_data_array['customers_gender'] = $gender;
-				if (isset ($_POST['primary']) && ($_POST['primary'] == 'on'))
+				}
+				if (isset ($_POST['primary']) && ($_POST['primary'] == 'on')) {
 					$sql_data_array['customers_default_address_id'] = $new_address_book_id;
-
+        }
+        
 				xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $_SESSION['customer_id']."'");
 			}
 		}
-
 		$messageStack->add_session('addressbook', SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED, 'success');
 
 		xtc_redirect(xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
@@ -200,20 +213,10 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 }
 
 if (isset ($_GET['edit']) && is_numeric($_GET['edit'])) {
-	$entry_query = xtc_db_query("select entry_gender,
-                                      entry_company,
-                                      entry_firstname,
-                                      entry_lastname,
-                                      entry_street_address,
-                                      entry_suburb,
-                                      entry_postcode,
-                                      entry_city,
-                                      entry_state,
-                                      entry_zone_id,
-                                      entry_country_id
-                                from ".TABLE_ADDRESS_BOOK."
-                                where customers_id = '".(int) $_SESSION['customer_id']."'
-                                and address_book_id = '".(int) $_GET['edit']."'");
+	$entry_query = xtc_db_query("SELECT *
+                                 FROM ".TABLE_ADDRESS_BOOK."
+                                WHERE customers_id = '".(int) $_SESSION['customer_id']."'
+                                  AND address_book_id = '".(int) $_GET['edit']."'");
 
 	if (xtc_db_num_rows($entry_query) == false) {
 		$messageStack->add_session('addressbook', ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY);
@@ -222,8 +225,8 @@ if (isset ($_GET['edit']) && is_numeric($_GET['edit'])) {
 	}
 
 	$entry = xtc_db_fetch_array($entry_query);
-}
-elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
+
+} elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
 	if ($_GET['delete'] == $_SESSION['customer_default_address_id']) {
 		$messageStack->add_session('addressbook', WARNING_PRIMARY_ADDRESS_DELETION, 'warning');
 
@@ -263,13 +266,14 @@ elseif (isset ($_GET['delete']) && is_numeric($_GET['delete'])) {
 }
 
 require (DIR_WS_INCLUDES.'header.php');
-if (isset ($_GET['delete']) == false)
+
+if (isset($_GET['delete']) == false) {
 	$action = xtc_draw_form('addressbook', xtc_href_link(FILENAME_ADDRESS_BOOK_PROCESS, (isset ($_GET['edit']) ? 'edit='.$_GET['edit'] : ''), 'SSL'), 'post', 'onsubmit="return check_form(addressbook);"');
+}
 
 $smarty->assign('FORM_ACTION', $action);
 if ($messageStack->size('addressbook') > 0) {
 	$smarty->assign('error', $messageStack->output('addressbook'));
-
 }
 
 if (isset ($_GET['delete'])) {
@@ -285,7 +289,6 @@ if (isset ($_GET['delete'])) {
 	if (isset ($_GET['edit']) && is_numeric($_GET['edit'])) {
 		$smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 		$smarty->assign('BUTTON_UPDATE', xtc_draw_hidden_field('action', 'update').xtc_draw_hidden_field('edit', $_GET['edit']).xtc_image_submit('button_update.gif', IMAGE_BUTTON_UPDATE));
-
 	} else {
 		if (sizeof($_SESSION['navigation']->snapshot) > 0) {
 			$back_link = xtc_href_link($_SESSION['navigation']->snapshot['page'], xtc_array_to_string($_SESSION['navigation']->snapshot['get'], array (xtc_session_name())), $_SESSION['navigation']->snapshot['mode']);
@@ -294,10 +297,8 @@ if (isset ($_GET['delete'])) {
 		}
 		$smarty->assign('BUTTON_BACK', '<a href="'.$back_link.'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 		$smarty->assign('BUTTON_UPDATE', xtc_draw_hidden_field('action', 'process').xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
-
 	}
 	$smarty->assign('FORM_END', '</form>');
-
 }
 
 $smarty->assign('language', $_SESSION['language']);

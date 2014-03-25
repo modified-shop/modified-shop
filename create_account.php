@@ -37,6 +37,7 @@ if (isset($_SESSION['customer_id'])) {
 
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
@@ -46,6 +47,7 @@ require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
+require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
@@ -88,7 +90,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
   $error = false;
 
-  if (ACCOUNT_GENDER == 'true' && $gender != 'm' && $gender != 'f') {
+  if (ACCOUNT_GENDER == 'true' && $gender != '') {
     $error = true;
     $messageStack->add('create_account', ENTRY_GENDER_ERROR);
   }
@@ -120,7 +122,6 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $error = true;
     }
   }
-
 
   // xs:booster prefill (customer group)
   if(isset($_SESSION['xtb0']['DEFAULT_CUSTOMER_GROUP']) && $_SESSION['xtb0']['DEFAULT_CUSTOMER_GROUP'] != '') {
@@ -228,20 +229,19 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if ($error == false) {
-    $sql_data_array = array (
-    'customers_vat_id' => $vat,
-    'customers_vat_id_status' => $customers_vat_id_status,
-    'customers_status' => $customers_status,
-    'customers_firstname' => $firstname,
-    'customers_lastname' => $lastname,
-    'customers_email_address' => $email_address,
-    'customers_telephone' => $telephone,
-    'customers_fax' => $fax,
-    'customers_newsletter' => $newsletter,
-    'customers_password' => xtc_encrypt_password($password),
-    'customers_date_added' => 'now()',
-    'customers_last_modified' => 'now()',
-    );
+    $sql_data_array = array('customers_vat_id' => $vat,
+                            'customers_vat_id_status' => $customers_vat_id_status,
+                            'customers_status' => $customers_status,
+                            'customers_firstname' => $firstname,
+                            'customers_lastname' => $lastname,
+                            'customers_email_address' => $email_address,
+                            'customers_telephone' => $telephone,
+                            'customers_fax' => $fax,
+                            'customers_newsletter' => $newsletter,
+                            'customers_password' => xtc_encrypt_password($password),
+                            'customers_date_added' => 'now()',
+                            'customers_last_modified' => 'now()',
+                            );
 
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['customers_gender'] = $gender;
@@ -254,17 +254,16 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $_SESSION['customer_id'] = xtc_db_insert_id();
     $user_id = xtc_db_insert_id();
     xtc_write_user_info($user_id);
-    $sql_data_array = array (
-      'customers_id' => $_SESSION['customer_id'],
-      'entry_firstname' => $firstname,
-      'entry_lastname' => $lastname,
-      'entry_street_address' => $street_address,
-      'entry_postcode' => $postcode,
-      'entry_city' => $city,
-      'entry_country_id' => $country,
-      'address_date_added' => 'now()',
-      'address_last_modified' => 'now()'
-    );
+    $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
+                            'entry_firstname' => $firstname,
+                            'entry_lastname' => $lastname,
+                            'entry_street_address' => $street_address,
+                            'entry_postcode' => $postcode,
+                            'entry_city' => $city,
+                            'entry_country_id' => $country,
+                            'address_date_added' => 'now()',
+                            'address_last_modified' => 'now()'
+                            );
 
     if (ACCOUNT_GENDER == 'true') {
       $sql_data_array['entry_gender'] = $gender;
@@ -290,16 +289,14 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $address_id = xtc_db_insert_id();
 
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_default_address_id = '".(int)$address_id."' WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    
+    $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
+                            'customers_info_number_of_logons' => '0',
+                            'customers_info_date_account_created' => 'now()'
+                            );
+    xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);                       
 
-    xtc_db_query("INSERT INTO ".TABLE_CUSTOMERS_INFO." (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) VALUES ('".(int)$_SESSION['customer_id']."', '0', now())");
-
-    if ($gender =='f') {
-      $smarty->assign('GENDER', FEMALE);
-    } elseif ($gender =='m') {
-      $smarty->assign('GENDER', MALE);
-    } else {
-      $smarty->assign('GENDER', '');
-    }
+    $smarty->assign('GENDER', get_customers_gender($gender));
     $smarty->assign('LASTNAME',$lastname);
 
     if (SESSION_RECREATE == 'True') {
@@ -324,18 +321,16 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $name = $firstname.' '.$lastname;
 
     // load data into array
-    $module_content = array ();
-    $module_content = array(
-                    'MAIL_NAME' => $name,
-                    'MAIL_REPLY_ADDRESS' => EMAIL_SUPPORT_REPLY_ADDRESS,
-                    'MAIL_GENDER' => $gender);
+    $module_content = array('MAIL_NAME' => $name,
+                            'MAIL_REPLY_ADDRESS' => EMAIL_SUPPORT_REPLY_ADDRESS,
+                            'MAIL_GENDER' => $gender);
 
     // assign data to smarty
     $smarty->assign('language', $_SESSION['language']);
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('content', $module_content);
 
-	// campaign tracking
+	  // campaign tracking
     if (isset($_SESSION['tracking']['refID'])) {
       $refID = $leads = 0;
       $campaign_check = xtc_db_query("SELECT campaigns_id, campaigns_leads
@@ -344,7 +339,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if (xtc_db_num_rows($campaign_check) > 0) {
         $campaign = xtc_db_fetch_array($campaign_check);
         $refID = $campaign['campaigns_id'];
-		$leads = $campaign['campaigns_leads'];
+		    $leads = $campaign['campaigns_leads'];
       }
       $leads++;
       xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
@@ -388,9 +383,20 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.html');
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/create_account_mail.txt');
 
-    xtc_php_mail(EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_NAME, $email_address, $name, EMAIL_SUPPORT_FORWARDING_STRING, EMAIL_SUPPORT_REPLY_ADDRESS, EMAIL_SUPPORT_REPLY_ADDRESS_NAME, '', '', EMAIL_SUPPORT_SUBJECT, $html_mail, $txt_mail);
+    xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                 EMAIL_SUPPORT_NAME, 
+                 $email_address, 
+                 $name, 
+                 EMAIL_SUPPORT_FORWARDING_STRING, 
+                 EMAIL_SUPPORT_REPLY_ADDRESS, 
+                 EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
+                 '', 
+                 '', 
+                 EMAIL_SUPPORT_SUBJECT, 
+                 $html_mail, 
+                 $txt_mail);
 
-    if ($newsletter == 1) {
+    if ($newsletter == '1') {
       require_once (DIR_WS_CLASSES.'class.newsletter.php');
       $newsletter = new newsletter;
       $newsletter->AddUserAuto($email_address);
@@ -426,13 +432,15 @@ if(@isset($_SESSION['xtb0']['tx'][0])) {
 if ($messageStack->size('create_account') > 0) {
   $smarty->assign('error', $messageStack->output('create_account'));
 }
-$smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process'));
 
+$smarty->assign('FORM_ACTION', xtc_draw_form('create_account', xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'), 'post').xtc_draw_hidden_field('action', 'process'));
 
 if (ACCOUNT_GENDER == 'true') {
   $smarty->assign('gender', '1');
   $smarty->assign('INPUT_MALE', xtc_draw_radio_field(array ('name' => 'gender', 'suffix' => MALE), 'm'));
   $smarty->assign('INPUT_FEMALE', xtc_draw_radio_field(array ('name' => 'gender', 'suffix' => FEMALE, 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), 'f'));
+  // Gender Dropdown
+  $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array ('name' => 'gender', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), $gender));
 } else {
   $smarty->assign('gender', '0');
 }
