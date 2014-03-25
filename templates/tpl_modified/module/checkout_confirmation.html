@@ -76,7 +76,7 @@
     <table class="paymentinfotable">
       <tr>
         {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
-          <td>{$data.title|stripslashes}</td>
+          {if $data.title != ''}<td>{$data.title|stripslashes}</td>{/if}
           <td>{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
         {/foreach}
       </tr>

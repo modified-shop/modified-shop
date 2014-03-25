@@ -1433,6 +1433,14 @@ div.highlightbox.checkoutborder {
   margin-top:38px;
 }
 
+div.highlightbox ul {
+  margin-left:15px;
+  padding:0;
+  display:block;
+  list-style-type:square;
+  line-height:20px;
+}
+
 
 
 /* PAYMENT TYPE SELECTION */
