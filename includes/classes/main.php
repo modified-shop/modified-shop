@@ -159,7 +159,7 @@ class main {
     if (!defined('POPUP_CONTENT_LINK_CLASS')) {
       define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
     }
-    return '<a style="color:#ff0000;" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.POPUP_CONTENT_LINK_PARAMETERS, $ssl).'" title="Information" class="'.POPUP_CONTENT_LINK_CLASS.'">'.$text.'</a>';
+    return '<a target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.$coID.POPUP_CONTENT_LINK_PARAMETERS, $ssl).'" title="Information" class="color_more '.POPUP_CONTENT_LINK_CLASS.'">'.$text.'</a>';
   }
   
   /**

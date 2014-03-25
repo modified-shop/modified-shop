@@ -299,13 +299,13 @@ define('JS_PRICE_FROM_MUST_BE_NUM', '* \"Preis ab\" muss eine Zahl sein\n\n');
 define('JS_PRICE_TO_MUST_BE_NUM', '* \"Preis bis\" muss eine Zahl sein\n\n');
 define('JS_PRICE_TO_LESS_THAN_PRICE_FROM', '* Preis bis muss gr&ouml;&szlig;er oder gleich Preis ab sein.\n');
 define('JS_INVALID_KEYWORDS', '* Suchbegriff unzul&auml;ssig\n');
-define('TEXT_LOGIN_ERROR', '<b style="color:#ff0000">FEHLER:</b> Keine &Uuml;bereinstimmung der eingegebenen \'E-Mail-Adresse\' und/oder dem \'Passwort\'.');
-define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<b style="color:#ff0000">ACHTUNG:</b> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.');
+define('TEXT_LOGIN_ERROR', '<span class="color_error_message"><b>FEHLER:</b></span> Keine &Uuml;bereinstimmung der eingegebenen \'E-Mail-Adresse\' und/oder dem \'Passwort\'.');
+define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><b>ACHTUNG:</b></span> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.');
 define('TEXT_PASSWORD_SENT', 'Ein neues Passwort wurde per E-Mail verschickt.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Artikel wurde nicht gefunden!');
 define('TEXT_MORE_INFORMATION', 'F&uuml;r weitere Informationen besuchen Sie bitte die <a style="text-decoration:underline;" href="%s" onclick="window.open(this.href); return false;">Homepage</a> zu diesem Artikel.');
 define('TEXT_DATE_ADDED', 'Diesen Artikel haben wir am %s in unseren Katalog aufgenommen.');
-define('TEXT_DATE_AVAILABLE', '<span style="color:#ff0000">Dieser Artikel wird voraussichtlich ab dem %s wieder vorr&auml;tig sein.</span>');
+define('TEXT_DATE_AVAILABLE', '<span class="color_error_message">Dieser Artikel wird voraussichtlich ab dem %s wieder vorr&auml;tig sein.</span>');
 define('SUB_TITLE_SUB_TOTAL', 'Zwischensumme:');
 
 define('OUT_OF_STOCK_CANT_CHECKOUT', 'Die mit ' . STOCK_MARK_PRODUCT_OUT_OF_STOCK . ' markierten Artikel sind leider nicht in der von Ihnen gew&uuml;nschten Menge auf Lager.<br />Bitte reduzieren Sie Ihre Bestellmenge f&uuml;r die gekennzeichneten Artikel. Vielen Dank');
@@ -387,14 +387,14 @@ define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
 define('TEXT_NEWSLETTER','Sie m&ouml;chten immer auf dem Laufenden bleiben?<br />Kein Problem, tragen Sie sich in unseren Newsletter ein und Sie sind immer auf dem neuesten Stand.');
 define('TEXT_EMAIL_INPUT','Ihre E-Mail-Adresse wurde in unser System eingetragen.<br />Gleichzeitig wurde Ihnen vom System eine E-Mail mit einem Aktivierungslink geschickt. Bitte klicken Sie nach dem Erhalt der E-Mail auf den Link, um Ihre Eintragung zu best&auml;tigen. Ansonsten bekommen Sie keinen Newsletter von uns zugestellt!');
 
-define('TEXT_WRONG_CODE','<span style="color:#ff0000">Ihr eingegebener Sicherheitscode stimmte nicht mit dem angezeigten Code &uuml;berein. Bitte versuchen Sie es erneut.</span>');
-define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','<span style="color:#ff0000">Diese E-Mail-Adresse existiert bereits in unserer Datenbank, ist aber noch nicht f&uuml;r den Empfang des Newsletters freigeschaltet!</span>');
-define('TEXT_EMAIL_EXIST_NEWSLETTER','<span style="color:#ff0000">Diese E-Mail-Adresse existiert bereits in unserer Datenbank und ist f&uuml;r den Newsletterempfang bereits freigeschaltet!</span>');
-define('TEXT_EMAIL_NOT_EXIST','<span style="color:#ff0000">Diese E-Mail-Adresse existiert nicht in unserer Datenbank!</span>');
+define('TEXT_WRONG_CODE','<span class="color_error_message">Ihr eingegebener Sicherheitscode stimmte nicht mit dem angezeigten Code &uuml;berein. Bitte versuchen Sie es erneut.</span>');
+define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','<span class="color_error_message">Diese E-Mail-Adresse existiert bereits in unserer Datenbank, ist aber noch nicht f&uuml;r den Empfang des Newsletters freigeschaltet!</span>');
+define('TEXT_EMAIL_EXIST_NEWSLETTER','<span class="color_error_message">Diese E-Mail-Adresse existiert bereits in unserer Datenbank und ist f&uuml;r den Newsletterempfang bereits freigeschaltet!</span>');
+define('TEXT_EMAIL_NOT_EXIST','<span class="color_error_message">Diese E-Mail-Adresse existiert nicht in unserer Datenbank!</span>');
 define('TEXT_EMAIL_DEL','Ihre E-Mail-Adresse wurde aus unserer Newsletterdatenbank gel&ouml;scht.');
-define('TEXT_EMAIL_DEL_ERROR','<span style="color:#ff0000">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht gel&ouml;scht!</span>');
-define('TEXT_EMAIL_ACTIVE','<span style="color:#ff0000">Ihre E-Mail-Adresse wurde erfolgreich f&uuml;r den Newsletterempfang freigeschaltet!</span>');
-define('TEXT_EMAIL_ACTIVE_ERROR','<span style="color:#ff0000">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht freigeschaltet!</span>');
+define('TEXT_EMAIL_DEL_ERROR','<span class="color_error_message">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht gel&ouml;scht!</span>');
+define('TEXT_EMAIL_ACTIVE','<span class="color_error_message">Ihre E-Mail-Adresse wurde erfolgreich f&uuml;r den Newsletterempfang freigeschaltet!</span>');
+define('TEXT_EMAIL_ACTIVE_ERROR','<span class="color_error_message">Es ist ein Fehler aufgetreten, Ihre E-Mail-Adresse wurde nicht freigeschaltet!</span>');
 define('TEXT_EMAIL_SUBJECT','Ihre Newsletter-Anmeldung');
 
 define('TEXT_CUSTOMER_GUEST',' Gast');

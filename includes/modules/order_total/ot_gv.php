@@ -76,7 +76,7 @@ class ot_gv {
       if ($od_amount > 0) {
         $this->output[] = array (
             'title' => $this->title . ':', 
-            'text'  => '<b style="color:#ff0000">'.$xtPrice->xtcFormat($od_amount *(-1), true).'</b>', //2011-08-25 - web28 - fix negativ sign
+            'text'  => '<span class="color_ot_total"><b>'.$xtPrice->xtcFormat($od_amount *(-1), true).'</b></span>', //2011-08-25 - web28 - fix negativ sign
             'value' => $xtPrice->xtcFormat($od_amount *(-1), false) //2011-08-25 - web28 - fix negativ sign
           );
       }
