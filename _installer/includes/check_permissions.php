@@ -38,12 +38,8 @@
   //new permission handling and auto change system
   $file_flag = false;
   $ftp_message = '';
-  $files_to_check = array('files' => array('includes/configure.php',
-                                           //'includes/configure.org.php',
-                                           //'admin/includes/configure.php',
-                                           //'admin/includes/configure.org.php',
-                                           //'export/rss_cache.txt',  // is generated automatically
-                                           DIR_ADMIN.'/magnalister.php',
+  $files_to_check = array('files' => array(DIR_ADMIN.'/magnalister.php',
+                                           'includes/configure.php',
                                            'magnaCallback.php',
                                            'sitemap.xml',
                                           ),
@@ -64,10 +60,10 @@
                                           'images/manufacturers',
                                           'images/icons',
                                           'import',
+                                          'log',
                                           'media/content',
                                           'media/products',
                                           'media/products/backup',
-                                          'log',
                                           'templates_c',
                                      ),
                           'adirs' => array('includes/external/shopgate/shopgate_library/config',
