@@ -124,7 +124,7 @@
 
     function selection() {
       global $order;
-
+            
       $selection = array('id' => $this->code,
                          'module' => $this->title,
                          'description'=>$this->info,
@@ -133,11 +133,11 @@
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER,
                                                  'field' => isset($_GET['banktransfer_owner'])? xtc_draw_input_field('banktransfer_owner', $_GET['banktransfer_owner'], 'size="40" maxlength="64"') : xtc_draw_input_field('banktransfer_owner', $order->billing['firstname'] . ' ' . $order->billing['lastname'], 'size="40" maxlength="64"')), //DokuMan - 2012-08-29 - preset banktransfer_owner with customer only if no value was entered
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER,
-                                                 'field' => xtc_draw_input_field('banktransfer_number', (isset($_GET['banktransfer_number'])) ? $_GET['banktransfer_number'] : '', 'size="40" maxlength="40"')),
+                                                 'field' => xtc_draw_input_field('banktransfer_number', (isset($_GET['banktransfer_number'])) ? $_GET['banktransfer_number'] : ((isset($_SESSION['banktransfer']['banktransfer_number'])) ? $_SESSION['banktransfer']['banktransfer_number'] : ''), 'size="40" maxlength="40"')),
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ,
-                                                 'field' => xtc_draw_input_field('banktransfer_blz', (isset($_GET['banktransfer_blz'])) ? $_GET['banktransfer_blz'] : '', 'size="40" maxlength="11"')),
+                                                 'field' => xtc_draw_input_field('banktransfer_blz', (isset($_GET['banktransfer_blz'])) ? $_GET['banktransfer_blz'] : ((isset($_SESSION['banktransfer']['banktransfer_blz'])) ? $_SESSION['banktransfer']['banktransfer_blz'] : ''), 'size="40" maxlength="11"')),
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME,
-                                                 'field' => xtc_draw_input_field('banktransfer_bankname', (isset($_GET['banktransfer_bankname'])) ? $_GET['banktransfer_bankname'] : '', 'size="40" maxlength="64"')),
+                                                 'field' => xtc_draw_input_field('banktransfer_bankname', (isset($_GET['banktransfer_bankname'])) ? $_GET['banktransfer_bankname'] : ((isset($_SESSION['banktransfer']['banktransfer_bankname'])) ? $_SESSION['banktransfer']['banktransfer_bankname'] : ''), 'size="40" maxlength="64"')),
                                            array('title' => MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER_EMAIL,
                                                  'field' => isset($_GET['banktransfer_owner_email'])? xtc_draw_input_field('banktransfer_owner_email', $_GET['banktransfer_owner_email'], 'size="40" maxlength="96"') : xtc_draw_input_field('banktransfer_owner_email', $order->customer['email_address'], 'size="40" maxlength="96"')),
                                            array('title' => '',
@@ -295,7 +295,14 @@
 
     function confirmation() {
       global $banktransfer_val, $banktransfer_owner, $banktransfer_bankname, $banktransfer_blz, $banktransfer_number, $checkout_form_action, $checkout_form_submit;
-
+      
+      $_SESSION['banktransfer'] =  array('banktransfer_owner' => $this->banktransfer_owner,
+                                         'banktransfer_bankname' => $this->banktransfer_bankname,
+                                         'banktransfer_owner_email' => $this->banktransfer_owner_email,
+                                         'banktransfer_number' => (($this->iban_mode) ? $this->banktransfer_iban : $this->banktransfer_number),
+                                         'banktransfer_blz' => (($this->iban_mode) ? $this->banktransfer_bic : $this->banktransfer_blz),
+                                         );
+             
       if (!$_POST['banktransfer_owner'] == '') {
         if ($this->iban_mode) {
           $field = $this->banktransfer_owner.'<br>'.
