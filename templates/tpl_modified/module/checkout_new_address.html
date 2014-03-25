@@ -1,20 +1,4 @@
 {config_load file="$language/lang_$language.conf" section="checkout_new_address"}
-{*
-  {if $gender == '1'}
-  <tr>
-    <td>{#text_gender#}</td>
-    <td>
-    <table cellspacing="0" cellpadding="0">
-      <tr>
-          <td> {$INPUT_MALE}</td>
-          <td> {$INPUT_FEMALE}</td>
-        </tr>
-    </table>
-  </td>
-  </tr>
-  {/if}
-*}
-
     <h4>{#title_new_address#} <span class="pflicht">({#text_must#})</span></h4>
     <p>{#text_new_address#}</p>
     <table width="100%" border="0" cellspacing="0" cellpadding="0">

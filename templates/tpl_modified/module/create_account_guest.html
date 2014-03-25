@@ -2,20 +2,6 @@
 <h1>{#heading_create_account#}</h1>
 {$FORM_ACTION}
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
-
-{*
-  {if $gender == '1'}
-    {#text_gender#}
-    <table cellspacing="0" cellpadding="0">
-      <tr>
-        <td>{$INPUT_MALE}</td>
-        <td>{$INPUT_FEMALE}</td>
-      </tr>
-    </table>
-  {/if}
-*}
-
-
 <div class="twoColums">
   <div class="highlightbox">
     <h4>{#title_personal#} <span class="pflicht">({#text_must#})</span></h4>

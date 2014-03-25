@@ -1,20 +1,5 @@
 {config_load file="$language/lang_$language.conf" section="address_book_process"}
   <div class="highlightbox">
-{*
-  {if $gender == '1'} 
-  <tr> 
-    <td width="25%">{#text_gender#}</td>
-    <td width="75%">
-      <table cellspacing="0" cellpadding="0">
-      <tr>
-        <td>{$INPUT_MALE}</td>
-        <td>{$INPUT_FEMALE}</td>
-      </tr>
-    </table></td>
-  </tr>
-  {/if} 
-*}
-
     <h4>{#title_address#} <span class="pflicht">({#text_must#})</span></h4>
     <table width="100%" border="0" cellspacing="0" cellpadding="0">
       {if $gender == '1'}
