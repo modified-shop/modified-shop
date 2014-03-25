@@ -1,30 +1,63 @@
-<table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
-  {foreach name=aussen item=module_data from=$module_content}
-    <tr>
-      <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|strip_tags:false}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
-      <td class="productPreviewContent">
-        <h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
-        {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}{/if}
-        <p class="price">{$module_data.PRODUCTS_PRICE}</p><p class="taxandshippinginfo">( {$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK} )</p>
-        {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
-        {if $module_data.PRODUCTS_SHIPPING_NAME}
-          <p class="shippingtime">
-            {#text_shippingtime#}
-            {if $module_data.PRODUCTS_SHIPPING_IMAGE}
-              <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />
-            {/if}
-            {$module_data.PRODUCTS_SHIPPING_NAME}
-          </p>
-        {/if}
-        {*BOF NEW PRODUCTS_BUTTON_DETAILS*}
-        <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
-        {*EOF NEW PRODUCTS_BUTTON_DETAILS*}
-      </td>
-    </tr>
-    <tr>
-      <td align="center" colspan="2">
-      <div class="hrproductpreview"></div>
-      </td>
-    </tr>
-  {/foreach}
-</table>
+{if defined($smarty.const.PRODUCT_LIST_ROW) && $smarty.const.PRODUCT_LIST_ROW > 1}
+  <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+    {foreach name=aussen item=module_data from=$module_content}
+      <tr>
+        <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|strip_tags:false}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
+        <td class="productPreviewContent">
+          <h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
+          {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}{/if}
+          <p class="price">{$module_data.PRODUCTS_PRICE}</p><p class="taxandshippinginfo">( {$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK} )</p>
+          {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
+          {if $module_data.PRODUCTS_SHIPPING_NAME}
+            <p class="shippingtime">
+              {#text_shippingtime#}
+              {if $module_data.PRODUCTS_SHIPPING_IMAGE}
+                <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />
+              {/if}
+              {$module_data.PRODUCTS_SHIPPING_NAME}
+            </p>
+          {/if}
+          {*BOF NEW PRODUCTS_BUTTON_DETAILS*}
+          <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
+          {*EOF NEW PRODUCTS_BUTTON_DETAILS*}
+        </td>
+      </tr>
+      <tr>
+        <td align="center" colspan="2">
+        <div class="hrproductpreview"></div>
+        </td>
+      </tr>
+    {/foreach}
+  </table>
+{else}
+  <table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+    {foreach name=aussen item=module_data from=$module_content}
+      <tr>
+        <td align="center" class="productPreviewImage">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|strip_tags:false}" class="productImageBorder" /></a>{else}&nbsp;{/if}</td>
+        <td class="productPreviewContent">
+          <h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2>
+          {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}{/if}
+          <p class="price">{$module_data.PRODUCTS_PRICE}</p><p class="taxandshippinginfo">( {$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK} )</p>
+          {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
+          {if $module_data.PRODUCTS_SHIPPING_NAME}
+            <p class="shippingtime">
+              {#text_shippingtime#}
+              {if $module_data.PRODUCTS_SHIPPING_IMAGE}
+                <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />
+              {/if}
+              {$module_data.PRODUCTS_SHIPPING_NAME}
+            </p>
+          {/if}
+          {*BOF NEW PRODUCTS_BUTTON_DETAILS*}
+          <p>{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}&nbsp;{/if}{$module_data.PRODUCTS_BUTTON_DETAILS}</p>
+          {*EOF NEW PRODUCTS_BUTTON_DETAILS*}
+        </td>
+      </tr>
+      <tr>
+        <td align="center" colspan="2">
+        <div class="hrproductpreview"></div>
+        </td>
+      </tr>
+    {/foreach}
+  </table>
+{/if}

@@ -892,4 +892,7 @@ define('SHIPPING_STATUS_INFOS_DESC', 'Content ID for Shippingtime');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
+
+define('PRODUCT_LIST_ROW_TITLE', 'Qty Products in a row');
+define('PRODUCT_LIST_ROW_DESC', 'Qty Products in a row for product listings.<br/><b>ATTENTION</b> this only works with template tpl_modified or based on that.');
 ?>

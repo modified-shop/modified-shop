@@ -45,6 +45,7 @@ $values_group_update = array();
 //configuration_group_id 8 --- "Artikel Listen Optionen"
   $values[] = "(NULL, 'SHOW_BUTTON_BUY_NOW', 'false', '8', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_PAGINATION_LIST', 'false', '8', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'PRODUCT_LIST_ROW', '1', '8', '22', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'true', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
