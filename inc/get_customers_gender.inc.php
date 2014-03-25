@@ -11,13 +11,13 @@
    ---------------------------------------------------------------------------------------*/
 
 
-function get_customers_gender($id='') 
+function get_customers_gender($id=false) 
 {
   $gender_array = array(array('id' => '', 'text' => PULL_DOWN_DEFAULT),
                         array('id' => 'm', 'text' => MALE),
                         array('id' => 'f', 'text' => FEMALE),
                         );
-  if ($id == '') {
+  if ($id === false) {
     return $gender_array;
   } else {
     for ($i=0, $n=count($gender_array); $i<$n; $i++) {
