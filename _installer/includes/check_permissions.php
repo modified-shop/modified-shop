@@ -112,8 +112,8 @@
           }
         }
       }
-      ftp_close ($ftp);
     }
+    ftp_close ($ftp);
   }
   
   // try to fix without ftp login - might fail very often depending of server setup
