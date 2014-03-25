@@ -64,10 +64,9 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
 	}
 
 	if (ACCOUNT_GENDER == 'true' && $gender == '') {
-			$error = true;
-			$messageStack->add('addressbook', ENTRY_GENDER_ERROR);
-		}
-	}
+		$error = true;
+		$messageStack->add('addressbook', ENTRY_GENDER_ERROR);
+  }
 
 	if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
 		$error = true;
