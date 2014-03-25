@@ -18,9 +18,12 @@
   // include needed functions
   $module_smarty=new Smarty;
   $module_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-  include_once('inc/xtc_get_zone_name.inc.php');
-  include_once('inc/xtc_get_country_list.inc.php');
- 
+  
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_get_zone_name.inc.php');
+  require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
+  require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+
   if (!isset($process)) $process = false;
 
   if (ACCOUNT_GENDER == 'true') {
@@ -29,6 +32,8 @@
     $module_smarty->assign('gender','1');
     $module_smarty->assign('INPUT_MALE',xtc_draw_radio_field(array('name'=>'gender','suffix'=>MALE.'&nbsp;'), 'm',$male));
     $module_smarty->assign('INPUT_FEMALE',xtc_draw_radio_field(array('name'=>'gender','suffix'=>FEMALE.'&nbsp;','text'=>(xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">&nbsp;' . ENTRY_GENDER_TEXT . '</span>': '')), 'f',$female));
+    // Gender Dropdown
+    $module_smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array ('name' => 'gender', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), $entry['entry_gender']));
   }
 
   $module_smarty->assign('INPUT_FIRSTNAME',xtc_draw_input_fieldNote(array('name'=>'firstname','text'=>'&nbsp;' . (xtc_not_null(ENTRY_FIRST_NAME_TEXT) ? '<span class="inputRequirement">' . ENTRY_FIRST_NAME_TEXT . '</span>': '')),$entry['entry_firstname']));

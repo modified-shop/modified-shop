@@ -31,15 +31,16 @@ if (isset($_SESSION['customer_id'])) {
 
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/boxes.php');
 
 // include needed functions
 require_once (DIR_FS_INC . 'xtc_get_country_list.inc.php');
 require_once (DIR_FS_INC . 'xtc_validate_email.inc.php');
-//require_once (DIR_FS_INC . 'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 require_once (DIR_FS_INC . 'xtc_get_geo_zone_code.inc.php');
+require_once (DIR_FS_INC . 'get_customers_gender.inc.php');
 
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
@@ -76,13 +77,11 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
   $telephone = xtc_db_prepare_input($_POST['telephone']);
   $fax = xtc_db_prepare_input($_POST['fax']);
-  $newsletter = ''; //no newsletter for guest accounts ???
-  //$password = xtc_db_prepare_input($_POST['password']);
-  //$confirmation = xtc_db_prepare_input($_POST['confirmation']);
+  $newsletter = isset($_POST['newsletter']) ? (int)$_POST['newsletter'] : '';
 
   $error = false;
-
-  if (ACCOUNT_GENDER == 'true' && $gender != 'm' && $gender != 'f') {
+  
+  if (ACCOUNT_GENDER == 'true' && $gender != '') {
     $error = true;
     $messageStack->add('create_account', ENTRY_GENDER_ERROR);
   }
@@ -289,7 +288,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     // restore cart contents
     $_SESSION['cart']->restore_contents();
 
-	// campaign tracking
+	  // campaign tracking
     if (isset($_SESSION['tracking']['refID'])) {
       $refID = $leads = 0;
       $campaign_check = xtc_db_query("SELECT campaigns_id, campaigns_leads
@@ -298,7 +297,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       if (xtc_db_num_rows($campaign_check) > 0) {
         $campaign = xtc_db_fetch_array($campaign_check);
         $refID = $campaign['campaigns_id'];
-		$leads = $campaign['campaigns_leads'];
+		    $leads = $campaign['campaigns_leads'];
       }
       $leads++;
       xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
@@ -309,10 +308,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                      WHERE campaigns_id = '".$refID."'");
     }
 
-
-
-    if ($newsletter == 1) {
-      require_once (DIR_WS_CLASSES . 'class.newsletter.php');
+    if ($newsletter == '1') {
+      require_once (DIR_WS_CLASSES.'class.newsletter.php');
       $newsletter = new newsletter;
       $newsletter->AddUserAuto($email_address);
     }
@@ -348,6 +345,8 @@ if (ACCOUNT_GENDER == 'true') {
   $smarty->assign('gender', '1');
   $smarty->assign('INPUT_MALE', xtc_draw_radio_field(array('name' => 'gender','suffix' => MALE), 'm'));
   $smarty->assign('INPUT_FEMALE', xtc_draw_radio_field(array('name' => 'gender','suffix' => FEMALE, 'text' => (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">' . ENTRY_GENDER_TEXT . '</span>' : '')), 'f'));
+  // Gender Dropdown
+  $smarty->assign('INPUT_GENDER', xtc_draw_pull_down_menuNote(array ('name' => 'gender', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_GENDER_TEXT) ? '<span class="inputRequirement">'.ENTRY_GENDER_TEXT.'</span>' : '')), get_customers_gender(), $gender));
 } else {
   $smarty->assign('gender', '0');
 }
