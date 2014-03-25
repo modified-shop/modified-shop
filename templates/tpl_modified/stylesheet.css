@@ -82,7 +82,7 @@ a.black {
   line-height:28px;
 }
 .paypal_button {
-  margin:0px 0px 0px 10px;
+  margin:0px 10px 0px 0px;
   display:inline-block;
 }
 .paypal_button img {
