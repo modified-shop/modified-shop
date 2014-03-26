@@ -127,8 +127,8 @@ define('MIN_DISPLAY_ALSO_PURCHASED_DESC' , 'Minimum number of products to displa
 
 define('MAX_ADDRESS_BOOK_ENTRIES_TITLE' , 'Address Book Entries');
 define('MAX_ADDRESS_BOOK_ENTRIES_DESC' , 'Maximum address book entries a customer is allowed to have');
-define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Search Results');
-define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Amount of products to list');
+define('MAX_DISPLAY_SEARCH_RESULTS_TITLE' , 'Amount Products');
+define('MAX_DISPLAY_SEARCH_RESULTS_DESC' , 'Amount of products in product listing');
 define('MAX_DISPLAY_PAGE_LINKS_TITLE' , 'Page Links');
 define('MAX_DISPLAY_PAGE_LINKS_DESC' , 'Number of "number" links use for page-sets');
 define('MAX_DISPLAY_SPECIAL_PRODUCTS_TITLE' , 'Specials');
@@ -900,4 +900,6 @@ define('PRODUCT_INFO_ROW_DESC', 'Qty Products in a row for product info.<br/><b>
 
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Search Search Results');
+define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search result');
 ?>
