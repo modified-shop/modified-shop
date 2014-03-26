@@ -185,13 +185,13 @@ ul.topnavigation li a:hover {
 }
 #logo {
   float:left;
-  width:300px;
+  width:235px;
   height:75px;
-  background: transparent url(img/logo_head.jpg) no-repeat;
+  background: transparent url(img/logo_head.png) no-repeat;
 }
 #logo a {
   display:block;
-  width:300px;
+  width:235px;
   height:75px;
   outline:none;
   text-decoration:none;
@@ -548,11 +548,13 @@ p.textright {
 }
 #col_left {
   float:left;
-  width:246px;
+  width:235px;
+/*  width:246px; */
 }
 #col_right {
   float:right;
-  width:734px;
+  width:745px;
+/*  width:734px; */
 }
 #col_full {
   width:1000px;
