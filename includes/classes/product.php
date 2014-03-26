@@ -376,6 +376,7 @@ class product {
     if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
       $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
       $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);
+      $shipping_status_link = $main->getShippingStatusName($array['products_shippingtime'], true);      
     }
     
     //get products image, imageinfo array
@@ -405,8 +406,9 @@ class product {
         'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
         'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
         'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
-        'PRODUCTS_SHIPPING_NAME'=>$shipping_status_name,
-        'PRODUCTS_SHIPPING_IMAGE'=>$shipping_status_image,
+        'PRODUCTS_SHIPPING_NAME' => $shipping_status_name,
+        'PRODUCTS_SHIPPING_IMAGE' => $shipping_status_image,
+        'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
         'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
         'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
         'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>'

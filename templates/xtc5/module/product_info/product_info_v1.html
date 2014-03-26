@@ -16,8 +16,8 @@
             {if $SHIPPING_NAME}
               <p class="shippingtime">
                 <strong>{#text_shippingtime#}</strong>
-                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if}
-                {$SHIPPING_NAME}
+                {if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME|onlytext}" />{/if}
+                {$SHIPPING_NAME_LINK}
               </p>
             {/if}
             {if $PRODUCTS_VPE}
@@ -49,10 +49,10 @@
               <strong>{#manufacturer#}</strong> {$MANUFACTURER}<br />
             {/if}
             {if $MANUFACTURER_IMAGE != ''}
-              <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /></a><br />
+              <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER|onlytext}" /></a><br />
             {/if}
             {if $MANUFACTURER_LINK != ''}
-              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
+              <strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER|onlytext}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a><br />
             {/if}
             {if $PRODUCTS_URL != ''}
               <div class="hrlightgrey"></div>
