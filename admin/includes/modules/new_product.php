@@ -25,10 +25,9 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  $confirm_save_entry = 'onclick="return confirm(\''. SAVE_ENTRY .'\')"';
-  if (defined('CONFIRM_SAVE_ENTRY')) {
-    $confirm_save_entry = CONFIRM_SAVE_ENTRY == 'true' ? $confirm_save_entry : '';
-  }
+  //$confirm_save_entry = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onclick="return confirm(\''. SAVE_ENTRY .'\')"' : '';
+  $confirm_save_entry = '';
+  $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
   
   $text_new_or_edit = TEXT_EDIT_PRODUCT;
   
@@ -99,7 +98,7 @@
 
   <?php
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
-  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"');
+  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); 
   ?>
   
 <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>
@@ -183,10 +182,11 @@
             <tr>
               <td><span class="main">&nbsp;</span></td>
               <td><span class="main">&nbsp;</span></td>
-            </tr>
+            </tr>            
           </table>
         </div>
-
+        
+      <div style="clear:both;"><div>
       <table class="tableInput border0">
         <tr>
           <td style="width:260px"><span class="main">&nbsp;</span></td>
@@ -337,7 +337,7 @@
         <?php
         //Customers group block
         if (GROUP_CHECK == 'true') {
-          ?>
+          ?>          
           <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
           <div class="div_box">
             <div class="main flt-l" style="width:130px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
@@ -354,7 +354,7 @@
         //Price options
         include(DIR_WS_MODULES.'group_prices.php');
         ?>
-
+        
         <!-- BOF Save //-->
         <div style="text-align:right; margin-top:10px;">
           <?php
