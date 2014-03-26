@@ -1141,7 +1141,7 @@ class categories {
     if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
-      $products_image_name = $products_id.'_0.'.$nsuffix;      
+      $products_image_name = $products_image_name_process = $products_id.'_0.'.$nsuffix;      
       $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                 FROM ".TABLE_PRODUCTS."
                                                WHERE products_image = '".$products_data['products_previous_image_0']."'");
@@ -1197,7 +1197,7 @@ class categories {
       if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
-        $products_image_name = $products_id.'_'. ($img +1).'.'.$nsuffix;
+        $products_image_name = $products_image_name_process = $products_id.'_'. ($img +1).'.'.$nsuffix;
         $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                       FROM ".TABLE_PRODUCTS_IMAGES."
                                                      WHERE image_name = '".$products_data['products_previous_image_'. ($img +1)]."'");
