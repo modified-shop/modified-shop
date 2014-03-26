@@ -1,6 +1,6 @@
 #js_popup_container {
 	font-family: Arial, sans-serif;
-	font-size: 12px;
+	font-size: 14px;
 	min-width: 300px; /* Dialog will be no smaller than this */
 	max-width: 600px; /* Dialog will wrap after this width */
 	background: #FFF;
@@ -12,7 +12,7 @@
 }
 
 #js_popup_title {
-	font-size: 14px;
+	font-size: 16px;
 	font-weight: bold;
 	text-align: center;
 	line-height: 1.75em;
@@ -35,7 +35,7 @@
 	background-image: url(images/jquery_alerts/info.gif);
 }
 
-#popup_content.alert_error {
+#js_popup_content.alert_error {
 	background-image: url(images/jquery_alerts/important.gif);
 }
 
