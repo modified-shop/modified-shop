@@ -372,7 +372,7 @@ class product {
     }
 
     //get $shipping_status_name, $shipping_status_image
-    $shipping_status_name = $shipping_status_image = '';
+    $shipping_status_name = $shipping_status_image = $shipping_status_link = '';
     if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
       $shipping_status_name = $main->getShippingStatusName($array['products_shippingtime']);
       $shipping_status_image = $main->getShippingStatusImage($array['products_shippingtime']);

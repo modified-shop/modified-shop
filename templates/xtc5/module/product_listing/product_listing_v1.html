@@ -15,13 +15,13 @@
         {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}{/if}
         <p class="price">{$module_data.PRODUCTS_PRICE}</p><p class="taxandshippinginfo">( {$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK} )</p>
         {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
-        {if $module_data.PRODUCTS_SHIPPING_NAME_LINK}
+        {if $module_data.PRODUCTS_SHIPPING_NAME}
           <p class="shippingtime">
             {#text_shippingtime#}
             {if $module_data.PRODUCTS_SHIPPING_IMAGE}
-              <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME}" />
+              <img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" />
             {/if}
-            {$module_data.PRODUCTS_SHIPPING_NAME}
+            {$module_data.PRODUCTS_SHIPPING_NAME_LINK}
           </p>
         {/if}
         {*BOF NEW PRODUCTS_BUTTON_DETAILS*}
