@@ -56,4 +56,6 @@ if (PRODUCT_IMAGE_THUMBNAIL_MOTION_BLUR != ''){
 $a->motion_blur($array[0],$array[1]);}
 
 $a->create();
+
+unset($products_image_name_process);
 ?>
