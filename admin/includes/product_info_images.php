@@ -53,5 +53,8 @@ $a->drop_shadow($array[0],$array[1],$array[2]);}
 $array=clear_string(PRODUCT_IMAGE_INFO_MOTION_BLUR);
 if (PRODUCT_IMAGE_INFO_MOTION_BLUR != ''){
 $a->motion_blur($array[0],$array[1]);}
-	  $a->create();
+
+$a->create();
+
+unset($products_image_name_process);
 ?>
