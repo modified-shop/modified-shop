@@ -138,8 +138,8 @@ if (!is_object($product) || !$product->isProduct()) {
   //get shippingstatus image and name
   if (ACTIVATE_SHIPPING_STATUS == 'true') {
     $info_smarty->assign('SHIPPING_NAME', $main->getShippingStatusName($product->data['products_shippingtime']));
+    $info_smarty->assign('SHIPPING_NAME_LINK', $main->getShippingStatusName($product->data['products_shippingtime'], true));
     $info_smarty->assign('SHIPPING_IMAGE', $main->getShippingStatusImage($product->data['products_shippingtime']));
-    $info_smarty->assign('SHIPPING_IMAGE_LINK', $main->getShippingStatusName($product->data['products_shippingtime'], true));
   }
   
   // price incl tax and shipping link
