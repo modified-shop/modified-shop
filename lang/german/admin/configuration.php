@@ -893,4 +893,9 @@ define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.
 
 define('PRODUCT_LIST_ROW_TITLE', 'Anzahl Artikel nebeneinander');
 define('PRODUCT_LIST_ROW_DESC', 'Anzahl der Artikel nebeneinander in den Produktauflistungen.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
+define('PRODUCT_INFO_ROW_TITLE', 'Anzahl Artikel nebeneinander');
+define('PRODUCT_INFO_ROW_DESC', 'Anzahl der Artikel nebeneinander in den Produktdetails.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
+
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie');
 ?>

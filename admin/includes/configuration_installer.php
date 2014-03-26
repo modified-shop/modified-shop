@@ -30,7 +30,7 @@ $values_group_update = array();
 //configuration_group_id 2 --- "Minimum Werte"
 
 //configuration_group_id 3 --- "Maximalwerte"
-  $values[] = "(NULL, 'ORDER_STATUSES_FOR_SALES_STATISTICS', '3', 1000, 100, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');";
+  $values[] = "(NULL, 'MAX_DISPLAY_PRODUCTS_CATEGORY', '10', '3', '23', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 4 --- "Bild Optionen"
   $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
@@ -46,6 +46,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SHOW_BUTTON_BUY_NOW', 'false', '8', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_PAGINATION_LIST', 'false', '8', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'PRODUCT_LIST_ROW', '1', '8', '22', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'PRODUCT_INFO_ROW', '1', '8', '23', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'true', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
@@ -264,6 +265,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'MAX_DISPLAY_STATS_RESULTS', '30', '1000', '55', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'MAX_DISPLAY_COUPON_RESULTS', '30', '1000', '56', NULL , NOW(), NULL , NULL);";
   $values[] = "(NULL, 'MIN_GROUP_PRICE_STAFFEL', '2', '1000', '34', NULL , NOW(), NULL , NULL);";
+  $values[] = "(NULL, 'ORDER_STATUSES_FOR_SALES_STATISTICS', '3', 1000, 100, NULL, NOW(), NULL, 'xtc_cfg_multi_checkbox(\'order_statuses\', \',\',');";
 
   $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '30'",

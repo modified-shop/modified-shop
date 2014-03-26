@@ -202,6 +202,7 @@ if (!is_object($product) || !$product->isProduct()) {
   }
   include (DIR_WS_MODULES.'product_attributes.php');
   include (DIR_WS_MODULES.'product_reviews.php');
+  include (DIR_WS_MODULES.'products_category.php');
   include (DIR_WS_MODULES.FILENAME_PRODUCTS_MEDIA);
   include (DIR_WS_MODULES.FILENAME_ALSO_PURCHASED_PRODUCTS);
   include (DIR_WS_MODULES.FILENAME_CROSS_SELLING);

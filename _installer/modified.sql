@@ -1327,6 +1327,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'PRODUCT_REVIEWS_VIEW', '5', 3, 19, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_PRODUCTS_QTY', '1000', 3, 21, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_NEW_PRODUCTS_DAYS', '30', 3, 22, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_PRODUCTS_CATEGORY', '10', 3, 23, NULL, NOW(), NULL, NULL);
 
 # configuration_group_id 4, Images Options
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CONFIG_CALCULATE_IMAGE_SIZE', 'true', 4, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
@@ -1414,6 +1415,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHOW_BUTTON_BUY_NOW', 'false', 8, 20, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'USE_PAGINATION_LIST', 'false', 8, 21, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'PRODUCT_LIST_ROW', '1', 8, 22, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'PRODUCT_INFO_ROW', '1', 8, 23, NULL, NOW(), NULL, NULL);
 
 # configuration_group_id 9, Stock
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'STOCK_CHECK', 'true', 9, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');

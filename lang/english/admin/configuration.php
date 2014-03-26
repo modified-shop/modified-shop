@@ -895,4 +895,9 @@ define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/0
 
 define('PRODUCT_LIST_ROW_TITLE', 'Qty Products in a row');
 define('PRODUCT_LIST_ROW_DESC', 'Qty Products in a row for product listings.<br/><b>ATTENTION</b> this only works with template tpl_modified or based on that.');
+define('PRODUCT_INFO_ROW_TITLE', 'Qty Products in a row');
+define('PRODUCT_INFO_ROW_DESC', 'Qty Products in a row for product info.<br/><b>ATTENTION</b> this only works with template tpl_modified or based on that.');
+
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
+define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
 ?>

@@ -99,6 +99,7 @@
                 {if $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
                 {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li>{#cross_selling#}</li>{/if}
                 {if $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
+                {if $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
             </ul>
             <div class="resp-tabs-container">
                 {if $PRODUCTS_DESCRIPTION != ''}<div><p>{$PRODUCTS_DESCRIPTION}</p></div>{/if}
@@ -118,6 +119,7 @@
                 {if $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
                 {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div>{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
                 {if $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
+                {if $MODULE_products_category != ''}<div>{$MODULE_products_category}</div>{/if}
 
             </div>
         </div>
