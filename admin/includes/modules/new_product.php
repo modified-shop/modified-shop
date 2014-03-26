@@ -23,12 +23,11 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
- defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  $confirm_save_entry = 'onclick="return confirm(\''. SAVE_ENTRY .'\')"';
-  if (defined('CONFIRM_SAVE_ENTRY')) {
-    $confirm_save_entry = CONFIRM_SAVE_ENTRY == 'true' ? $confirm_save_entry : '';
-  }
+  //$confirm_save_entry = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onclick="return confirm(\''. SAVE_ENTRY .'\')"' : '';
+  $confirm_save_entry = '';
+  $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
   
   $text_new_or_edit = TEXT_EDIT_PRODUCT;
   
@@ -99,7 +98,7 @@
 
   <?php
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
-  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"');
+  echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); 
   ?>
   
 <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>

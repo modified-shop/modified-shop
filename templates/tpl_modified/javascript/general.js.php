@@ -22,11 +22,24 @@ define('DIR_TMPL_JS', 'templates/'.CURRENT_TEMPLATE. '/javascript/');
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>easyResponsiveTabs.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.colorbox-min.js" type="text/javascript"></script>
+<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.alerts.min.js" type="text/javascript"></script>
 <script type="text/javascript">
   $(document).ready(function(PRODUCTS_ID){
     $("a[rel='colorbox']").colorbox({scalePhotos:true, maxWidth: "90%", maxHeight: "90%"});
     $(".iframe").colorbox({iframe:true, width:"750", height:"560", maxWidth: "90%", maxHeight: "90%"});
   });
+  /*BOC jQuery Alerts*/
+  $.alerts.overlayOpacity = .2;
+  $.alerts.overlayColor = '#000';
+  function alert(message, title) {
+    title = title || 'Information';
+    jAlert(message, title);
+  }
+  function confirm(message, title) {
+    title = title || 'Information';
+    jConfirm(message, title);
+  }
+  /*EOC jQuery Alerts*/
 </script>
 
 <?php require DIR_FS_CATALOG . DIR_TMPL_JS . 'get_states.js.php'; // Ajax State/District/Bundesland Updater - h-h-h ?>

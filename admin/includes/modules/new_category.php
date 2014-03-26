@@ -25,10 +25,9 @@
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
-  $confirm_save_entry = 'onclick="return confirm(\''. SAVE_ENTRY .'\')"';
-  if (defined('CONFIRM_SAVE_ENTRY')) {
-    $confirm_save_entry = CONFIRM_SAVE_ENTRY == 'true' ? $confirm_save_entry : '';
-  }
+  //$confirm_save_entry = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onclick="return confirm(\''. SAVE_ENTRY .'\')"' : '';
+  $confirm_save_entry = '';
+  $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 
   if (isset($_GET['cID']) && (!$_POST) ) {
     $category_query = xtc_db_query("select * from " .
@@ -85,7 +84,7 @@
   
     <?php
     $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
-    echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"'); ?>
+    echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); ?>
 
       <!-- BOF - Tomcraft - 2009-11-02 - Block1 //-->
       <div style="padding:5px;">
