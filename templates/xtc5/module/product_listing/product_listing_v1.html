@@ -15,7 +15,7 @@
         {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<br />{$module_data.PRODUCTS_SHORT_DESCRIPTION}{/if}
         <p class="price">{$module_data.PRODUCTS_PRICE}</p><p class="taxandshippinginfo">( {$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK} )</p>
         {if $module_data.PRODUCTS_VPE}<p class="vpe">{$module_data.PRODUCTS_VPE}</p>{/if}
-        {if $module_data.PRODUCTS_SHIPPING_NAME}
+        {if $module_data.PRODUCTS_SHIPPING_NAME_LINK}
           <p class="shippingtime">
             {#text_shippingtime#}
             {if $module_data.PRODUCTS_SHIPPING_IMAGE}
