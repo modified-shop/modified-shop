@@ -28,6 +28,7 @@
   <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">  
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
+  <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
   
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -44,3 +45,35 @@
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>
   
+  <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
+  <script type="text/javascript">
+  /* <![CDATA[ */
+    var js_button_yes = '<?php echo YES;?>';
+    var js_button_no = '<?php echo NO;?>';
+    var js_button_cancel = '<?php echo BUTTON_CANCEL;?>';
+    var js_button_ok = '<?php echo BUTTON_REVIEW_APPROVE;?>';
+    
+    $.alerts.okButton = js_button_ok;
+    $.alerts.overlayOpacity = .2;
+    $.alerts.overlayColor = '#000';
+    
+    function alert(message, title) {
+      title = title || 'Information';
+      jAlert(message, title);
+    }
+    function confirm(message, title) {
+      title = title || 'Information';
+      jConfirm(message, title);
+    }
+    //confirmSubmit
+    function confirmSubmit(message, title, form) { 
+        title = title || 'Information';    
+        jConfirm(message, title, function(r) {
+          if (r) {      
+            form.submit();      
+          }   
+        }, js_button_yes, js_button_no);            
+        return false;
+    }    
+  /*]]>*/
+  </script>
