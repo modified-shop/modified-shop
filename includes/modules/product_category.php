@@ -14,7 +14,7 @@ $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
 $module_content = array ();
-if (isset($current_category_id) && ) {
+if (isset($current_category_id)) {
 
   $products_category_query = "SELECT * 
                                 FROM ".TABLE_PRODUCTS." p
