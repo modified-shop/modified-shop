@@ -25,7 +25,13 @@ $result = true;
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_vpe_name.inc.php');
 
-$listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), MAX_DISPLAY_SEARCH_RESULTS, 'p.products_id');
+$max_display_results = MAX_DISPLAY_SEARCH_RESULTS;
+if (strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) !== false && defined('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS') && MAX_DISPLAY_ADVANCED_SEARCH_RESULTS != '') {
+  $max_display_results = MAX_DISPLAY_ADVANCED_SEARCH_RESULTS;
+  $module_smarty->assign('SEARCH_RESULT', true);
+}
+
+$listing_split = new splitPageResults($listing_sql, (isset($_GET['page']) ? (int)$_GET['page'] : 1), $max_display_results, 'p.products_id');
 
 $module_content = $category = array();
 $image = '';

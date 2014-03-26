@@ -1328,6 +1328,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_PRODUCTS_QTY', '1000', 3, 21, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_NEW_PRODUCTS_DAYS', '30', 3, 22, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_PRODUCTS_CATEGORY', '10', 3, 23, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MAX_DISPLAY_ADVANCED_SEARCH_RESULTS', '10', 3, 24, NULL, NOW(), NULL, NULL);
 
 # configuration_group_id 4, Images Options
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CONFIG_CALCULATE_IMAGE_SIZE', 'true', 4, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
