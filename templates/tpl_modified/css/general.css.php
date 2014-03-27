@@ -15,7 +15,6 @@
 
    // Put CSS-Definitions here, these CSS-files will be loaded at the TOP of every page
 ?>
-<link rel="stylesheet" href="//fonts.googleapis.com/css?family=Oswald|Open+Sans:400,700" type="text/css">
 <link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/stylesheet.css" type="text/css" />
 <link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/easy-responsive-tabs.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/css/toggle.css" type="text/css" media="screen" />

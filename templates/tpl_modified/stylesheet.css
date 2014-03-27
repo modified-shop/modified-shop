@@ -16,16 +16,33 @@
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
 
-   FONTS
-   font-family: 'Oswald', sans-serif;
-   font-family: 'Open Sans', sans-serif;
-   font-weight: 400;
-   font-weight: 700;
-
    -----------------------------------------------------------------------------------------
    (c) 2014 modified eCommerce Shopsoftware - http://www.modified-shop.org     
    ---------------------------------------------------------------------------------------*/
 
+
+@font-face {
+    font-family: 'oswaldregular';
+    src: url('css/fonts/oswald-regular-webfont.eot');
+    src: url('css/fonts/oswald-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/oswald-regular-webfont.woff') format('woff'),
+         url('css/fonts/oswald-regular-webfont.ttf') format('truetype'),
+         url('css/fonts/oswald-regular-webfont.svg#oswaldregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'open_sansregular';
+    src: url('css/fonts/opensans-regular-webfont.eot');
+    src: url('css/fonts/opensans-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/opensans-regular-webfont.woff') format('woff'),
+         url('css/fonts/opensans-regular-webfont.ttf') format('truetype'),
+         url('css/fonts/opensans-regular-webfont.svg#open_sansregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+
+}
 
 /* THE BIG GUYS */
 * {
@@ -33,7 +50,7 @@
   padding:0;
 }
 body {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'open_sansregular', sans-serif;
   font-weight: 400;
   font-size:13px;
   background-color:#fff;
@@ -227,7 +244,7 @@ ul.topnavigation li a:hover {
 
 /* HEADINGS */
 h1 {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   color:#555;
   font-weight:normal;
   font-size:18px;
@@ -259,7 +276,7 @@ h3 {
 }
 
 h4 {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
 	color:#6d2551;
 	font-weight:normal;
   text-transform:uppercase;
@@ -302,11 +319,11 @@ a img {
 
 /* INPUT ELEMENTS GLOBAL (CSS 1 compatible) */
 input {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'open_sansregular', sans-serif;
   font-size:13px;
 }
 textarea {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'open_sansregular', sans-serif;
   font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -324,7 +341,7 @@ textarea {
   width:100%;
 }
 select {
-  font-family: 'Open Sans', sans-serif;
+  font-family: 'open_sansregular', sans-serif;
   font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -432,7 +449,7 @@ td.checkbox {
 }
 
 .box3_header {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   color:#ffffff;
   font-size:16px;
   height:40px;
@@ -736,7 +753,7 @@ table td {
   padding:0px 10px 10px 10px;
 }
 .box_header {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   font-size:16px;
   color:#434343;
   font-size:16px;
@@ -804,6 +821,13 @@ a.show_all .arrow {
   line-height:15px;
   text-decoration:none;
 }
+.box_title a {
+  color:#6D2551;
+}
+.box_title a:hover {
+  color:#444;
+  text-decoration:none;
+}
 .box_image {
   text-align:center;
   margin: 0px 0px 10px 0px;
@@ -816,7 +840,7 @@ a.show_all .arrow {
   border: 1px solid #a0a0a0;
 }
 .box_price {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   text-align:right;
   padding: 0px 10px 0 0;
   font-size: 16px;
@@ -832,7 +856,7 @@ a.show_all .arrow {
   font-weight:normal;
 }
 .box_vpe {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   text-align:right;
   padding: 0px 10px 0 0;
   font-size:10px;
@@ -885,7 +909,7 @@ a.show_all .arrow {
 }
 
 .box_category_header {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   color:#fefefe;
   font-size:16px;
   height:40px;
@@ -913,7 +937,7 @@ ul#categorymenu li.level1 a {
   text-decoration:none;
   outline:none;
   color:#fff;
-  font-weight:400;
+  font-weight:normal;
   font-size:14px;
   display:block;
   padding:8px 10px 8px 10px;
@@ -2232,7 +2256,7 @@ ul#checkoutnavigation li.active.last {
   margin-right:0;
 }
 ul#checkoutnavigation li.active .title {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   font-size:18px;
   line-height:22px;
 }
@@ -2251,7 +2275,7 @@ ul#checkoutnavigation li.inactive.last{
   margin-right:0;
 }
 ul#checkoutnavigation li.inactive .title {
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   font-size:18px;
   line-height:22px;
 }
@@ -2503,7 +2527,7 @@ a.color_more:hover {
 }
 .lb_price {
   position:relative;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   text-align:right;
   padding: 10px 0 0 0;
   font-size: 16px;
@@ -2525,7 +2549,7 @@ a.color_more:hover {
   position:absolute;
   bottom:1px;
   left:0px;
-  font-family: 'Oswald', sans-serif;
+  font-family: 'oswaldregular', sans-serif;
   text-align:right;
   padding: 0px 0px 0 0;
   font-size:10px;
