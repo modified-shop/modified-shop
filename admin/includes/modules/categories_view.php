@@ -493,12 +493,12 @@
                   $add_where = '';
                   $add_join = "JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c ON p.products_id = p2c.products_id AND p2c.categories_id = '" . $current_category_id . "'";
                 }
-                $add_join .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1'";
                 //display only inactive products
                 if ($search_inactive) {
                   $add_where = ' WHERE p.products_status = 0 ';
                   $add_join = '';
                 } 
+                $add_join .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1'";
                 $add_select = 's.specials_new_products_price,specials_quantity,expires_date,s.status as specials_status,';
                 $select_str = "SELECT $add_select
                                       p.products_tax_class_id,
