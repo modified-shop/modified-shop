@@ -6,5 +6,8 @@
 {if $MANUFACTURER_DROPDOWN}{$MANUFACTURER_DROPDOWN}<br />{/if}
 {$PAGINATION}
 <div class="hrproductpreview"></div>
-{include file="`$smarty.const.CURRENT_TEMPLATE`/module/product_listing_include/product_listing_include.html"}
+
+<div class="listingcontainer">
+  {include file="`$smarty.const.CURRENT_TEMPLATE`/module/product_listing_include/product_listing_include.html"}
+</div>
 {$PAGINATION}
