@@ -29,6 +29,7 @@
 				AND 	pd.products_id = p.products_id
 				".PRODUCTS_CONDITIONS_P."
 				AND		p.products_status = '1'
+        AND trim(pd.products_name) != ''
 				AND 	pd.language_id = ".$_SESSION['languages_id']."
 			");
 			$dbQuery = xtc_db_fetch_array($dbQuery,true);

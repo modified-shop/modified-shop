@@ -51,6 +51,7 @@ $reviews_query_raw = "SELECT r.reviews_id,
                              ON p.products_id = r.products_id
                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                              ON p.products_id = pd.products_id
+                                AND trim(pd.products_name) != ''
                                 AND pd.language_id = '".$_SESSION['languages_id']."'
                        WHERE p.products_status = 1
                              ".PRODUCTS_CONDITIONS_P."

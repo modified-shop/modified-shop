@@ -240,7 +240,7 @@ if ($category_depth == 'nested') {
                          pd.products_short_description
                     FROM ".TABLE_PRODUCTS." p
                     JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                      ON p.products_id = pd.products_id AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                      ON p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                          ".$from."
                    WHERE p.products_status = '1'
                          ".PRODUCTS_CONDITIONS_P."

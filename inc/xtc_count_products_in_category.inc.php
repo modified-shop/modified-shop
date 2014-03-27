@@ -32,7 +32,8 @@
     $products_query = xtDBquery("SELECT count(*) as total 
                                    FROM " . TABLE_PRODUCTS . " p                               
                                    JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c 
-                                        ON (p.products_id = p2c.products_id                                  
+                                        ON (p.products_id = p2c.products_id
+                                            AND trim(pd.products_name) != ''                                       
                                             AND p2c.categories_id = '" . (int)$category_id . "')
                                         ". $products_status ."
                                         ". $fsk_lock . "

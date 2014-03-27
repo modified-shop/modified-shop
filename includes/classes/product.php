@@ -57,6 +57,7 @@ class product {
                                        ON p.products_status = '1'
                                           AND p.products_id = '".$this->pID."'
                                           AND pd.products_id = p.products_id
+                                          AND trim(pd.products_name) != ''
                                           " . PRODUCTS_CONDITIONS_P . "
                                           AND pd.language_id = '".(int)$_SESSION['languages_id']."'");
     if (!xtc_db_num_rows($product_query, true)) {

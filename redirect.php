@@ -35,7 +35,13 @@ switch ($_GET['action']) {
 
 	case 'product' :
 		if (isset ($_GET['id'])) {
-			$product_query = xtc_db_query("SELECT products_url FROM ".TABLE_PRODUCTS_DESCRIPTION." WHERE products_id='".(int) $_GET['id']."' and language_id='".(int) $_SESSION['languages_id']."'");
+			$product_query = xtc_db_query(
+         "SELECT products_url 
+            FROM ".TABLE_PRODUCTS_DESCRIPTION." 
+           WHERE products_id='".(int) $_GET['id']."'
+             AND trim(pd.products_name) != ''           
+             AND language_id='".(int) $_SESSION['languages_id']."'
+         ");
 
 			if (xtc_db_num_rows($product_query)) {
 				$product = xtc_db_fetch_array($product_query);
