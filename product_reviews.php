@@ -28,8 +28,9 @@ require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 $product_info_query = xtc_db_query("select pd.products_name
                                     from ".TABLE_PRODUCTS_DESCRIPTION." pd
                                     left join ".TABLE_PRODUCTS." p 
-                                    on pd.products_id = p.products_id
+                                    on pd.products_id = p.products_id                                    
                                     where pd.language_id = '".(int) $_SESSION['languages_id']."' 
+                                    AND trim(pd.products_name) != ''
                                     and p.products_status = '1' 
                                     and pd.products_id = '".(int) $_GET['products_id']."'");
 if (!xtc_db_num_rows($product_info_query))

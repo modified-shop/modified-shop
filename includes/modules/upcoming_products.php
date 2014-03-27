@@ -24,11 +24,15 @@ if (MAX_DISPLAY_UPCOMING_PRODUCTS != '0') {
   // include needed functions
   require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
-  $expected_query = xtDBquery("SELECT p.products_id, pd.products_name, products_date_available as date_expected
-                                 FROM ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd
+  $expected_query = xtDBquery("SELECT p.products_id, 
+                                      pd.products_name, 
+                                      products_date_available as date_expected
+                                 FROM ".TABLE_PRODUCTS." p, 
+                                      ".TABLE_PRODUCTS_DESCRIPTION." pd
                                 WHERE to_days(products_date_available) >= to_days(now())
                                   AND p.products_id = pd.products_id
                                   ".PRODUCTS_CONDITIONS_P."
+                                  AND trim(pd.products_name) != ''
                                   AND pd.language_id = ".$_SESSION['languages_id']."
                              ORDER BY ".EXPECTED_PRODUCTS_FIELD." ".EXPECTED_PRODUCTS_SORT."
                                 LIMIT ".MAX_DISPLAY_UPCOMING_PRODUCTS);

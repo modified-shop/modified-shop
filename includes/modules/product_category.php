@@ -22,6 +22,7 @@ if (isset($current_category_id)) {
                                      ON p.manufacturers_id = m.manufacturers_id
                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                                      ON p.products_id = pd.products_id
+                                        AND trim(pd.products_name) != ''
                                         AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                 JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                      ON p.products_id = p2c.products_id

@@ -39,6 +39,7 @@ $products_query = xtDBquery("SELECT
                              WHERE categories_id='".$current_category_id."'
                                AND p.products_id = pc.products_id
                                AND p.products_id = pd.products_id
+                               AND trim(pd.products_name) != ''
                                AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                AND p.products_status=1".
                                PRODUCTS_CONDITIONS_P .

@@ -36,6 +36,7 @@ $specials_query_raw = "SELECT p.*,
                               ON p.manufacturers_id = m.manufacturers_id
                          JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
                               ON p.products_id = pd.products_id
+                                 AND trim(pd.products_name) != ''
                                  AND pd.language_id = ".$_SESSION['languages_id']."
                         JOIN ".TABLE_SPECIALS." s
                               ON p.products_id = s.products_id

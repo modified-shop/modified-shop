@@ -45,6 +45,7 @@ if (isset ($_SESSION['tracking']['products_history'][0])) {
                                            and p.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
                                            and pd.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
                                            and p2c.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
+                                           AND trim(pd.products_name) != ''
                                            and pd.language_id = ".$_SESSION['languages_id']."
                                            and cd.categories_id = p2c.categories_id
                                            ".PRODUCTS_CONDITIONS_P."

@@ -48,6 +48,7 @@
                          AND r.reviews_id = rd.reviews_id
                          AND rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'
                          AND p.products_id = pd.products_id
+                         AND trim(pd.products_name) != ''
                          AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
 
     if ($product->isProduct()) {

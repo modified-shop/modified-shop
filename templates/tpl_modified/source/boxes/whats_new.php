@@ -49,7 +49,7 @@ if ($random_product = xtc_random_select("-- templates/xtc5/source/boxes/whats_ne
                                     LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                            ON p.products_id = pd.products_id 
                                              AND pd.language_id = ".$_SESSION['languages_id']."
-                                             AND pd.products_name != ''
+                                             AND trim(pd.products_name) != ''
                                     LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                            ON p.products_id = p2c.products_id
                                     LEFT JOIN ".TABLE_CATEGORIES." c

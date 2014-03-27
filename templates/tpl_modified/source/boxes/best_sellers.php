@@ -64,6 +64,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
 			                       and c.categories_status = 1
 			                       and p.products_ordered > 0
 			                       and p.products_id = pd.products_id
+                             AND trim(pd.products_name) != ''
 			                       and pd.language_id = '".$_SESSION['languages_id']."'
 			                       and p.products_id = p2c.products_id
 			                       ".PRODUCTS_CONDITIONS_P."
