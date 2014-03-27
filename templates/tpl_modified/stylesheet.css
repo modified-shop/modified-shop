@@ -2436,6 +2436,10 @@ a.color_more:hover {
 }
 
 
+.listingcontainer {
+  margin: 0px -10px 0px -10px;
+}
+
 
 
 /* Start Produktlisten Boxen */
@@ -2443,10 +2447,7 @@ a.color_more:hover {
   float:left;
   width:235px;
   height:auto;
-  margin: 0px 20px 20px 0px;
-}
-.listingbox.last {
-  margin: 0px 0px 20px 0px;
+  margin: 0px 10px 20px 10px;
 }
 .listingbox .lb_inner:hover {
   border: 1px solid #ccc;
@@ -2484,10 +2485,10 @@ a.color_more:hover {
   color:#444;
 }
 .lb_title h2 a {
-  color:#444;
+  color:#6D2551;
 }
 .lb_title h2 a:hover {
-  color:#6D2551;
+  color:#444;
   text-decoration:none;
 }
 .lb_shipping {
@@ -2500,7 +2501,6 @@ a.color_more:hover {
   display:inline-block;
   padding: 0 5px 0 0;
 }
-
 .lb_price {
   position:relative;
   font-family: 'Oswald', sans-serif;
@@ -2547,14 +2547,66 @@ a.color_more:hover {
   color:#999;
   text-decoration:underline;
 }
-
-
-
 /* Ende Produktlisten Boxen */
 
 
 
 
+/* Start Produktlisten Row */
+.listingrow {
+  height:auto;
+  margin: 0px 10px 0px 10px;  
+}
+.lr_inner {
+  padding: 10px 0px 10px 0px;
+  border-bottom: 1px solid #ddd;
+}
 
-
-
+.lr_image {
+  float:left;
+  text-align: center;
+  width: 160px;
+  height:160px;  
+  overflow:hidden;
+}
+.lb_image img {
+  background-color: #FFFFFF;
+  margin: 0 auto;
+  max-height:160px;
+  max-width:160px;
+}
+.lr_content {
+  float:right;
+  width:565px;
+}
+.lr_title {
+  border-bottom: 1px dotted #ddd;
+  padding: 0px 0px 5px 0px;
+}
+.lr_title h2 {
+  margin: 0px;  
+  padding:0px;
+  border:none !important;
+  line-height:15px;
+  font-size:13px;
+  color:#444;
+}
+.lr_title h2 a {
+  color:#6D2551;
+}
+.lr_title h2 a:hover {
+  color:#444;
+  text-decoration:none;
+}
+.lr_desc_box {
+  float:left;
+  width:385px;
+}
+.lr_price_box {
+  float:right;
+  width:160px;
+}
+.lr_desc {
+  font-size:13px;
+  line-height:17px;
+}
