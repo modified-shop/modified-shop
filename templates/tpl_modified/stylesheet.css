@@ -2580,10 +2580,13 @@ a.color_more:hover {
 .listingrow {
   height:auto;
   margin: 0px 10px 0px 10px;  
+  width:100%;
 }
 .lr_inner {
   padding: 10px 0px 10px 0px;
   border-bottom: 1px solid #ddd;
+  min-height:160px;
+  position:relative;
 }
 
 .lr_image {
@@ -2624,13 +2627,95 @@ a.color_more:hover {
 }
 .lr_desc_box {
   float:left;
-  width:385px;
+  width:365px;
 }
 .lr_price_box {
   float:right;
-  width:160px;
+  width:180px;
 }
 .lr_desc {
   font-size:13px;
   line-height:17px;
+  border-bottom: 1px dotted #ddd;
 }
+.lr_shipping {
+  padding: 5px 0px;
+  font-size:12px;
+  text-align:left;
+  border-bottom: 1px dotted #ddd;
+}
+.lr_shipping .lr_shipping_image {
+  display:inline-block;
+  padding: 0 5px 0 0;
+}
+.lr_vpe {
+  font-family: 'oswaldregular', sans-serif;
+  text-align:right;
+  padding: 5px 0px 0 0;
+  font-size:10px;
+  line-height:12px;
+  color:#666;
+}
+.lr_price {
+  font-family: 'oswaldregular', sans-serif;
+  text-align:right;
+  padding: 10px 0 0 0;
+  font-size: 16px;
+  line-height:20px;
+  color:#434343;
+}
+.lr_price .new_price {
+  display:block;
+  font-size:16px;
+  line-height:22px;
+  font-weight:normal;
+  color:#bc0000;
+}
+.lr_price .small_price {
+  font-size:9px;
+  font-weight:normal;
+  line-height:11px;
+}
+.lr_price .old_price {
+  display:block;
+  font-size:12px;
+  line-height:18px;
+  font-weight:normal;
+  color:#777;
+}
+.lr_price .save_price {
+  font-size:9px;
+  font-weight:normal;
+  line-height:15px;
+}
+.lr_price .item_price {
+  display:block;
+  font-size:12px;
+  line-height:18px;
+  font-weight:normal;
+  color:#777;
+}
+.lr_tax {
+  text-align:right;
+  padding: 0 0 0 0;
+  font-size:10px;
+  color:#999;
+  line-height:18px;
+}
+.lr_tax a {
+  color:#999;
+  text-decoration:underline;
+}
+.lr_tax a:hover {
+  color:#999;
+  text-decoration:underline;
+}
+.lr_buttons {
+  position:absolute;
+  display:inline_block;
+  right:0px;
+  bottom:10px;
+}
+/* Ende Produktlisten Row */
+
+
