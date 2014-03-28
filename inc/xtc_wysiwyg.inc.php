@@ -14,7 +14,7 @@
    Released under the GNU General Public License
 ---------------------------------------------------------------------------------------*/
 
-function xtc_wysiwyg($type, $lang, $langID = '') {
+function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') {
 
   $js_src = DIR_WS_MODULES .'fckeditor/fckeditor.js';
   $path = DIR_WS_MODULES .'fckeditor/';
@@ -113,6 +113,10 @@ function xtc_wysiwyg($type, $lang, $langID = '') {
                   ' . $default_init . '
                });
              </script>';
+      break;
+    case 'addon':
+      require_once(DIR_FS_INC.'auto_require.inc.php');
+      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/wysiwyg/','php') as $file) require ($file);
       break;
 
   }
