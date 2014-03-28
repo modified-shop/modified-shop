@@ -31,10 +31,6 @@ define('DIR_TMPL_JS', 'templates/'.CURRENT_TEMPLATE. '/javascript/');
     title = title || 'Information';
     jAlert(message, title);
   }
-  function confirm(message, title) {
-    title = title || 'Information';
-    jConfirm(message, title);
-  }
   /*EOC jQuery Alerts*/
 </script>
 
