@@ -96,10 +96,6 @@ function getParam(url, name) {
     type = type || 'Information';
     jAlert(message, type);
   }
-  function confirm(message, type) {
-    type = type || 'Information';
-    jConfirm(message, type);
-  }
 /*]]>*/
 </script>
 
