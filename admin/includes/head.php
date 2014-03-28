@@ -61,10 +61,6 @@
       title = title || 'Information';
       jAlert(message, title);
     }
-    function confirm(message, title) {
-      title = title || 'Information';
-      jConfirm(message, title);
-    }
     //confirmSubmit
     function confirmSubmit(message, title, form) { 
         title = title || 'Information';    
