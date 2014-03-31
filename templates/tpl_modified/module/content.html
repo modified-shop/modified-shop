@@ -1,3 +1,6 @@
 {if isset($CONTENT_HEADING)}<h1>{$CONTENT_HEADING}</h1>{/if}
-{if isset($file)}{$file}{else}{$CONTENT_BODY}{/if}
-<p>{$BUTTON_CONTINUE}</p>
+<div class="content_site">
+  {if isset($file)}{$file}{else}{$CONTENT_BODY}{/if}
+  <br class="clear" />
+</div>
+<div class="button_left">{$BUTTON_CONTINUE}</div>

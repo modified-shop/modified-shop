@@ -89,46 +89,58 @@
 <br />
 <div class="highlightbox checkoutborder">  
   <h4 class="checkout">{#text_products#} <a class="midi" href="{$PRODUCTS_EDIT}">{#text_edit#}</a></h4>
-  <table width="100%" border="0" cellspacing="0" cellpadding="0" class="checkouttable">
+  <table cellspacing="0" class="order_table">
     <tr class="headerrow">
-      <td class="main_header chk_table_left"><b>{$smarty.const.HEADER_QTY}</b></td>
-      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<td class="main_header chk_table_left">&nbsp;</td>{/if}
-      <td class="main_header chk_table_left"><b>{$smarty.const.HEADER_ARTICLE}</b></td>
-      <td class="main_header chk_table_right"><b>{$smarty.const.HEADER_MODEL}</b></td>
-      <td class="main_header chk_table_right"><b>{$smarty.const.HEADER_SINGLE}</b></td>
-      <td class="main_header chk_table_right"><b>{$smarty.const.HEADER_TOTAL}</b></td>
+      <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
+      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<td class="ord_table_center">&nbsp;</td>{/if}
+      <td class="ord_table_left">{$smarty.const.HEADER_ARTICLE}</td>
+      <td class="ord_table_right">{$smarty.const.HEADER_MODEL}</td>
+      <td class="ord_table_right">{$smarty.const.HEADER_SINGLE}</td>
+      <td class="ord_table_right">{$smarty.const.HEADER_TOTAL}</td>
     </tr>
     {foreach name=aussen item=data from=$PRODUCTS_ARRAY}
-    <tr>
-      <td class="main_row chk_table_left width40">{$data.qty}</td>
-      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}<td class="main_row chk_table_left width90">{$data.image}</td>{/if}
-      <td class="main_row chk_table_left">
+    <tr class="mainrow {cycle values="m_row2,m_row1"}">
+      <td class="ord_table_left ord_width40">{$data.qty}</td>
+      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}<td class="ord_table_left ord_width90">{$data.image}</td>{/if}
+      <td class="ord_table_left">
         {$data.link}
-        {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
+        {if $data.order_description}<div class="description">{$data.order_description}</div>{/if}
+        {if $data.attributes != ''}
+          <ul class="attributes_list">
+            {foreach key=a_data item=attrib_data from=$data.attributes}
+            <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
+            {/foreach} 
+          </ul>
+        {/if}
         {if $data.shipping_time}<div class="shipping">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</div>{/if}
-        {foreach key=a_data item=attrib_data from=$data.attributes}
-          {if $attrib_data.value != ''}<div class="smallattributes"><i> &bull; {$attrib_data.option}: {$attrib_data.value}</i></div>{/if}
-        {/foreach}
       </td>
-      <td class="main_row chk_table_right width110">{$data.model}</td>
-      <td class="main_row chk_table_right width110">{$data.price_formated}</td>
-      <td class="main_row chk_table_right width110">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
+      <td class="ord_table_right ord_width120">{$data.model}</td>
+      <td class="ord_table_right ord_width110">{$data.price_formated}</td>
+      <td class="ord_table_right ord_width120">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
     </tr>
     {/foreach}
   </table>
-  <div class="hr_10"></div>
-  {if $TOTAL_BLOCK}
-    <div class="total">
-      <table align="right" border="0">
-        {$TOTAL_BLOCK}
-      </table>
-      <br class="clearfix" />
-    </div>
+  <div class="hr_5"></div>
+  
+  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+  <div class="total_table_right">
+    <table cellspacing="0" class="total_table">
+      {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+      <tr>
+        <td class="ord_table_right">{$order_total_values.title}</td>
+        <td class="ord_table_right ord_width120">{$order_total_values.text}</td>
+      </tr>
+      {/foreach}
+    </table>
+  </div>
+  <br class="clearfix" /> 
   {/if}
+
   {if $DELIVERY_DUTY_INFO == true}
     <div class="hr_10"></div>
     <div class="dutyinfo">{#text_duty_info#}</div>
   {/if}
+  
   <div class="button_right">{$CHECKOUT_FORM}{if $MODULE_BUTTONS!=''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON}</div>
   <br class="clearfix" />
 </div>

@@ -4,41 +4,32 @@
 {else}
   <h1>{$CATEGORIES_NAME}</h1>
 {/if}
-{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME}" />{/if}
-{if $CATEGORIES_DESCRIPTION}<div>{$CATEGORIES_DESCRIPTION}</div>{/if}
-{if $module_content != '' && $TR_COLS > 0} <strong>{#heading_more_categories#}</strong>
-  <br />
-  <table style="border-top: 2px solid; border-color: #d4d4d4;" width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-    {assign var="anzahl_spalten" value="$TR_COLS"}
-    {foreach name=aussen item=module_data from=$module_content key=spalten}
-      <td class="categorie_listing" width="{$TD_WIDTH}">
-        <table width="100%" border="0" cellpadding="0" cellspacing="4">
-          <tr>
-            <td align="center">{if $module_data.CATEGORIES_IMAGE}<a href="{$module_data.CATEGORIES_LINK}"><img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME}" /></a>{/if}</td>
-          </tr>
-          <tr>
-            <td align="center"><strong><a href="{$module_data.CATEGORIES_LINK}">{$module_data.CATEGORIES_NAME}</a></strong></td>
-          </tr>
-          <tr>
-            <td align="center">{$module_data.CATEGORIES_DESCRIPTION}</td>
-          </tr>
-        </table>
-      </td>
-      {if (($spalten+1) % $anzahl_spalten == 0 && ($spalten+1) < $module_content|@count)}
-        </tr>
-        <tr>
-      {/if}
-    {/foreach}
-    {*BOF RESTZELLEN AUFFÜLLEN*}
-    {assign var="content_count" value=$module_content|@count}
-    {if $content_count%$anzahl_spalten != 0}
-      {section name=zelle start=0 loop=$anzahl_spalten-$content_count%$anzahl_spalten step=1}
-      <td>&nbsp;</td>
-      {/section}
-    {/if}
-    {*EOF RESTZELLEN AUFFÜLLEN*}
-    </tr>
-  </table>
-{/if}<br />
+
+<div class="cat_description">
+{if $CATEGORIES_DESCRIPTION || $CATEGORIES_IMAGE}
+  {if $CATEGORIES_IMAGE}<img class="cat_image" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
+  {$CATEGORIES_DESCRIPTION}
+  <br class="clearfix" />
+{/if}
+</div>
+
+{if $module_content != '' && $TR_COLS > 0}
+<h4>{#heading_more_categories#}</h4>
+<div class="subcats">
+  {assign var="anzahl_spalten" value="$TR_COLS"}
+  {foreach name=aussen item=module_data from=$module_content key=spalten}
+  <div class="subcatlist{if $smarty.foreach.aussen.iteration is div by $TR_COLS} last{/if}">
+    <a href="{$module_data.CATEGORIES_LINK}">
+      <span class="subcat_image">{if $module_data.CATEGORIES_IMAGE}<img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" />{/if}</span>
+      <span class="subcat_title">{$module_data.CATEGORIES_NAME}</span>
+    </a>
+    {* <span class="subcat_desc">{$module_data.CATEGORIES_DESCRIPTION}</span> *}
+  </div>
+  {if $smarty.foreach.aussen.iteration is div by $TR_COLS}<br class="clearfix" />{/if}
+  {/foreach}
+  <br class="clearfix" />
+</div>
+{/if}
+<br />
+<br />
 {$MODULE_new_products}

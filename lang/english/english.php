@@ -176,8 +176,8 @@ define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'Next %d pages');
  *
  */
 
-define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;previous]');
-define('PREVNEXT_BUTTON_NEXT', '[next&nbsp;&gt;&gt;]');
+define('PREVNEXT_BUTTON_PREV', '&laquo;');
+define('PREVNEXT_BUTTON_NEXT', '&raquo;');
 
 /*
  *
