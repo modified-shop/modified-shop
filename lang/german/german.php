@@ -173,8 +173,8 @@ define('PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE', 'N&auml;chste %d Seiten');
  * 
  */
 
-define('PREVNEXT_BUTTON_PREV', '[&lt;&lt;&nbsp;vorherige]');
-define('PREVNEXT_BUTTON_NEXT', '[n&auml;chste&nbsp;&gt;&gt;]');
+define('PREVNEXT_BUTTON_PREV', '&laquo;');
+define('PREVNEXT_BUTTON_NEXT', '&raquo;');
 
 /*
  * 

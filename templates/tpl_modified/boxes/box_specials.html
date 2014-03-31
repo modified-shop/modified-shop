@@ -10,11 +10,9 @@
   <div class="box_title"><a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a></div>
   {if $box_content.PRODUCTS_IMAGE!=''}<div class="box_image"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME}" /></a></div>{/if}
   <div class="box_price">
-    {if $box_content.PRODUCTS_PRICE_FLAG == 'Special'}
-      <span class="new_price"><span class="smallprice">{#special_price#}</span> {$box_content.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
-    {else}
-      {$box_content.PRODUCTS_PRICE}
-    {/if}  
+    {foreach name=inner item=price_data from=$box_content.PRODUCTS_PRICE_ARRAY}
+      {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/price_box.html"}
+    {/foreach}
   </div>
   {if $box_content.PRODUCTS_VPE}<div class="box_vpe">{$box_content.PRODUCTS_VPE}</div>{/if}
   <div class="box_tax">{$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}</div>

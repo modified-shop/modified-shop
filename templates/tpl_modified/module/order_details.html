@@ -1,46 +1,42 @@
 {config_load file="$language/lang_$language.conf" section="shopping_cart"}
-<table class="orderdetails" width="100%" border="0" cellspacing="0" cellpadding="0">
+<table cellspacing="0" class="order_table">
   <tr class="headerrow">
-    <td class="left">&nbsp;</td>
-    <td class="center">{#text_qty#}</td>
-    <td class="left">{#text_article#}</td>
-    <td class="right">{#text_single#}</td>
-    <td class="right">{#text_total#}</td>
-    <td class="center">{#text_remove#}</td>
+    <td class="ord_table_left">&nbsp;</td>
+    <td class="ord_table_center">{#text_qty#}</td>
+    <td class="ord_table_left">{#text_article#}</td>
+    <td class="ord_table_right">{#text_single#}</td>
+    <td class="ord_table_right">{#text_total#}</td>
+    <td class="ord_table_center">{#text_remove#}</td>
   </tr>
   {foreach name=aussen item=module_data from=$module_content} 
-  <tr class="{cycle values="contentrow1,contentrow2"}">
-    <td class="cartimage"><img src="{$module_data.PRODUCTS_IMAGE}" alt="" /></td>
-    <td class="quantity">{$module_data.PRODUCTS_QTY}</td>
-    <td class="productname"><a class="black" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a>
-      {if $module_data.ATTRIBUTES!=''} 
-      <table class="productattributes" width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr class="mainrow {cycle values="m_row1,m_row2"}">
+    <td class="ord_table_left ord_width90"><img class="cartimage" src="{$module_data.PRODUCTS_IMAGE}" alt="" /></td>
+    <td class="ord_table_center ord_width60 ord_quantity">{$module_data.PRODUCTS_QTY}</td>
+    <td class="ord_table_left toppad">
+      <a class="ord_prdoducts_name" href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a>
+      {if $module_data.ATTRIBUTES != ''} 
+      <ul class="attributes_list">
         {foreach key=key_data item=item_data from=$module_data.ATTRIBUTES} 
-        <tr> 
-          <td class="attribute"><strong>{$item_data.NAME}:</strong></td>
-          <td class="value">{$item_data.VALUE_NAME}</td>
-        </tr>
+        <li><strong>{$item_data.NAME}:</strong> {$item_data.VALUE_NAME}</li>
         {/foreach} 
-      </table>
+      </ul>
       {/if}
     </td>
-    <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
-    <td class="totalprice">{$module_data.PRODUCTS_PRICE}</td>
-    <td class="delete">{$module_data.BUTTON_DELETE}</td>
+    <td class="ord_table_right ord_width110 toppad">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
+    <td class="ord_table_right ord_width110 toppad">{$module_data.PRODUCTS_PRICE}</td>
+    <td class="ord_table_center ord_width90 delete toppad">{$module_data.BUTTON_DELETE}</td>
   </tr>
   {/foreach}
-  <tr>
-    <td colspan="5" class="subtotal">
-      {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
-       <strong>{$TOTAL_CONTENT}</strong>
-      {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
-      {foreach name=aussen item=shipping_data from=$shipping_content}
-        <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
-      {/foreach}
-      {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
-      {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
-      {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
-    </td>
-    <td class="subtotal">&nbsp;</td>
-  </tr>
 </table>
+<div class="hr_10"></div>
+<div class="ord_subtotal">
+  {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+  <strong>{$TOTAL_CONTENT}</strong>
+  {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
+  {foreach name=aussen item=shipping_data from=$shipping_content}
+    <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+  {/foreach}
+  {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
+  {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
+  {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
+</div>

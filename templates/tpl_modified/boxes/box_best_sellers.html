@@ -7,7 +7,10 @@
       <dd>
         <h3>{$box_data.COUNT}. <a href="{$box_data.PRODUCTS_LINK}">{textformat wrap=18 wrap_cut=true}{$box_data.PRODUCTS_NAME}{/textformat}</a></h3>
         <p>
-          {$box_data.PRODUCTS_PRICE}<br />
+          {foreach name=inner item=price_data from=$box_data.PRODUCTS_PRICE_ARRAY}
+            {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/price_box.html"}
+          {/foreach}
+          <br />
           {if $box_data.PRODUCTS_VPE}{$box_data.PRODUCTS_VPE}<br />{/if}
           {$box_data.PRODUCTS_TAX_INFO}{$box_data.PRODUCTS_SHIPPING_LINK}
         </p>

@@ -1,5 +1,10 @@
 {config_load file="$language/lang_$language.conf" section="new_products"}
+{config_load file="$language/lang_$language.conf" section="index"}
 <h1>{#heading_text#}</h1>
 {if $NO_NEW_PRODUCTS}<p>{$NO_NEW_PRODUCTS}</p>{/if}
-{include file="`$smarty.const.CURRENT_TEMPLATE`/module/product_listing_include/product_listing_include.html"}
+{$PAGINATION}
+<div class="listingcontainer">
+  {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/product_listing_include.html"}
+  <br class="clearfix" />
+</div>
 {$PAGINATION}

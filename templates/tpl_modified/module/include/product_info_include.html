@@ -1,0 +1,57 @@
+{if $smarty.const.PRODUCT_INFO_ROW == 'true'}
+  {* BOXANSICHT *}
+  <div class="listingbox">
+    <div class="lb_inner">
+      <div class="lb_image">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>{else}&nbsp;{/if}</div>
+      <div class="lb_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
+      <div class="lb_shipping">{if $module_data.PRODUCTS_SHIPPING_NAME}{#text_shippingtime#} {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lb_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}{$module_data.PRODUCTS_SHIPPING_NAME_LINK}{else}&nbsp;{/if}</div>
+      <div class="lb_price">
+        {foreach name=inner item=price_data from=$module_data.PRODUCTS_PRICE_ARRAY}
+          {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/price_box.html"}
+        {/foreach}
+        {if $module_data.PRODUCTS_VPE}<div class="lb_vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
+      </div>
+      <div class="lb_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
+    </div>
+  </div>
+
+{else}
+  {* ROWANSICHT *}
+  <div class="listingrow">
+    <div class="lr_inner">
+      <div class="lr_image">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>{else}&nbsp;{/if}</div>
+      <div class="lr_content">
+        <div class="lr_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
+        <div class="lr_desc_box">
+          {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<div class="lr_desc">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>{/if}
+          <div class="lr_shipping">{if $module_data.PRODUCTS_SHIPPING_NAME}{#text_shippingtime#} {if $module_data.PRODUCTS_SHIPPING_IMAGE}<span class="lr_shipping_image"><img src="{$module_data.PRODUCTS_SHIPPING_IMAGE}" alt="{$module_data.PRODUCTS_SHIPPING_NAME|onlytext}" /></span>{/if}{$module_data.PRODUCTS_SHIPPING_NAME_LINK}{else}&nbsp;{/if}</div>
+
+
+          <p style="color:green">{$module_data.PRODUCTS_PRICE}</p>
+
+<p>          'formated' => {$module_data.PRODUCTS_PRICE_FORMATED}</p>
+<p>          'plain' => {$module_data.PRODUCTS_PRICE_PLAIN}</p>
+<p>          'special_price' =>  {$module_data.PRODUCTS_PRICE_SPECIAL_PRICE}</p>
+<p>          'old_price' =>  {$module_data.PRODUCTS_PRICE_OLD_PRICE}</p>
+<p>          'from' =>  {$module_data.PRODUCTS_PRICE_FROM}</p>
+<p>          'flag' => {$module_data.PRODUCTS_PRICE_FLAG}</p> 
+<p>          'uvp' => {$module_data.PRODUCTS_PRICE_UVP}</p>
+
+
+        </div>
+        <div class="lr_price_box">
+          <div class="lr_price">
+              {foreach name=inner item=price_data from=$module_data.PRODUCTS_PRICE_ARRAY}
+                {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/price_listing.html"}
+              {/foreach}
+          </div>
+          {if $module_data.PRODUCTS_VPE}<div class="lr_vpe">{$module_data.PRODUCTS_VPE}</div>{/if}
+          <div class="lr_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
+          <div class="lr_buttons">{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}{/if}</div>
+        </div>
+        <br class="clearfix" />      
+      </div>
+      <br class="clearfix" />
+    </div>
+  </div>
+{/if}

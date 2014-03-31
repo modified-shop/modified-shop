@@ -1,13 +1,26 @@
 {config_load file="$language/lang_$language.conf" section="index"}
 <h1>{$LIST_TITLE}</h1>
-{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" class="imgLeft" /><br />{/if}
-{if $CATEGORIES_DESCRIPTION}{$CATEGORIES_DESCRIPTION}<br />{/if}
-{if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}<br />{/if}
-{if $MANUFACTURER_DROPDOWN}{$MANUFACTURER_DROPDOWN}<br />{/if}
-{$PAGINATION}
-<div class="hrproductpreview"></div>
 
+{if $CATEGORIES_DESCRIPTION || $CATEGORIES_IMAGE}
+<div class="cat_description">
+  {if $CATEGORIES_IMAGE}<img class="cat_image" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
+  {$CATEGORIES_DESCRIPTION}
+  <br class="clearfix" />
+</div>
+{/if}
+
+{if $CATEGORIES_LISTING}{$CATEGORIES_LISTING}{/if}
+
+{if $MANUFACTURER_DROPDOWN}
+<div class="filter_bar">
+  <div class="manufacturer_filter">{$MANUFACTURER_DROPDOWN}</div>
+  <br class="clearfix" />
+</div>
+{/if}
+
+{$PAGINATION}
 <div class="listingcontainer">
-  {include file="`$smarty.const.CURRENT_TEMPLATE`/module/product_listing_include/product_listing_include.html"}
+  {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/product_listing_include.html"}
+  <br class="clearfix" />
 </div>
 {$PAGINATION}

@@ -3,13 +3,12 @@
 {foreach name=aussen item=order_data from=$order_content}
 <div class="highlightbox">
   <h4>{#text_oid#}{$order_data.ORDER_ID}</h4>
-  <p><span style="float:right">{$order_data.ORDER_BUTTON}</span>{#text_date#}{$order_data.ORDER_DATE},
+  <span style="float:right">{$order_data.ORDER_BUTTON}</span>{#text_date#}{$order_data.ORDER_DATE},
   {#text_articles#}{$order_data.ORDER_PRODUCTS} <br />
   <strong>{#text_total#}</strong>{$order_data.ORDER_TOTAL}&nbsp;&nbsp;<strong>{#text_status#}</strong>{$order_data.ORDER_STATUS} 
-  </p>
 </div>
 <br />
 {/foreach}
 {$PAGINATION}
-<br class="clear" />
+<br class="clearfix" />
 <div class="button_left">{$BUTTON_BACK}</div>
