@@ -1641,6 +1641,10 @@ table.medialist tr.contentrow2 td {
   background-color:#F2DEDE ;
   margin-bottom:18px;
 }
+.errormessage.shopsystem {
+  margin-top:50px;
+  margin-bottom:-22px;
+}
 
 .messageStackError {
   color:#A94442 !important;
@@ -2670,7 +2674,7 @@ table.total_table tr td {
 .ord_subtotal {
   text-align:right;
   line-height:22px;
-  padding-right:105px;
+  padding-right:5px;
 }
 .ord_subtotal .shipping_container {
   margin: 4px 0px;
