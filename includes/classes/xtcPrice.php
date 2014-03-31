@@ -661,6 +661,7 @@ function xtcCheckSpecial($pID) {
       $old_price = '';
       $special_price = '';
       $from = '';
+      $uvp = '';
       if (($this->cStatus['customers_status_graduated_prices'] == '1') && ($sQuery['qty'] > 1)) {
         $bestPrice = $this->xtcGetGraduatedPrice($pID, $sQuery['qty']);
         if ($discount) {
@@ -673,7 +674,8 @@ function xtcCheckSpecial($pID) {
         $old_price = $this->xtcFormat($pPrice, $format);
         $special_price = $this->xtcFormat($sPrice, $format);
         $from = $this->checkAttributes($pID);
-        $price = '<span class="productOldPrice">' . MSRP . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $from . $special_price;
+        $uvp = MSRP;
+        $price = '<span class="productOldPrice">' . $uvp . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $from . $special_price;
       } else {
         return $this->xtcFormat($sPrice, $format, $tax_class, false, $vpeStatus, $pID);
         //$price = $this->xtcFormat($sPrice, $format);
@@ -688,7 +690,7 @@ function xtcCheckSpecial($pID) {
           'special_price' =>  $special_price,
           'old_price' =>  $old_price,
           'from' =>  $from,
-          'uvp' =>  MSRP,
+          'uvp' =>  $uvp,
           'flag' => 'SpecialGraduated' 
         );
       }
