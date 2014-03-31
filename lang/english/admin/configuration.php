@@ -904,7 +904,7 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Search Search Results');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search result');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Show noimage.gif');
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image assigned');
 
 define('TEMPLATE_HTML_ENGINE_TITLE', 'HTML Version');
 define('TEMPLATE_HTML_ENGINE_DESC', 'HTML Version to use<br/><b>ATTENTION</b> this only works with template tpl_modified or compatible HTML5 Templates.');

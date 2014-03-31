@@ -902,7 +902,7 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Suchergebnissen');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Anzeige noimage.gif');
-define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild vorhanden ist');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild angegeben wurde');
 
 define('TEMPLATE_HTML_ENGINE_TITLE', 'HTML Version');
 define('TEMPLATE_HTML_ENGINE_DESC', 'Welche HTML soll verwendet werden<br/><b>WICHTIG</b> das funktioniert nur mit dem tpl_modified oder HTML5 kompatible Templates.');
