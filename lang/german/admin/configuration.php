@@ -891,10 +891,10 @@ define('SHIPPING_STATUS_INFOS_DESC', 'Content ID f&uuml;r Lieferzeiten Hinweis')
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Datum im Kurzformat anzeigen');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemem!');
 
-define('PRODUCT_LIST_ROW_TITLE', 'Anzahl Artikel nebeneinander');
-define('PRODUCT_LIST_ROW_DESC', 'Anzahl der Artikel nebeneinander in den Produktauflistungen.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
-define('PRODUCT_INFO_ROW_TITLE', 'Anzahl Artikel nebeneinander');
-define('PRODUCT_INFO_ROW_DESC', 'Anzahl der Artikel nebeneinander in den Produktdetails.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
+define('PRODUCT_LIST_ROW_TITLE', 'Ansicht Artikellisting');
+define('PRODUCT_LIST_ROW_DESC', 'Anzeige der Artikel als Box in den Produktauflistungen.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
+define('PRODUCT_INFO_ROW_TITLE', 'Ansicht Artikelinfo');
+define('PRODUCT_INFO_ROW_DESC', 'Anzeige der zus&auml;tzlichen Artikel als Box in den Produktdetails.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
 
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie');
