@@ -43,7 +43,7 @@ class product {
                              pd.products_short_description';
 
     // default products image
-    $this->useStandardImage = true;
+    $this->useStandardImage = PRODUCT_IMAGE_SHOW_NO_IMAGE;
     $this->standardImage = 'noimage.gif';
 
     if ($pID == 0) {
@@ -446,17 +446,13 @@ class product {
         break;
     }
 
-    if (empty($name)) {
-      //if ($this->useStandardImage == 'true' && $this->standardImage != '') // comment in when "noimage.gif" should be displayed when there is no image defined in the database
-      //  return $path.$this->standardImage; // comment in when "noimage.gif" should be displayed when there is no image defined in the database
-      return $name; // comment out when "noimage.gif" should be displayed when there is no image defined in the database
-    } else {
-      // check if image exists
-      if (!file_exists($path.$name)) {
-        if ($this->useStandardImage == 'true' && $this->standardImage != '') {
-          $name = $this->standardImage;
-        }
+    if ($name == '' || !is_file($path.$name)) {
+      if ($this->useStandardImage == 'true' && $this->standardImage != '') {
+        return $path.$this->standardImage;
+      } else {
+        return;
       }
+    } else {
       return $path.$name;
     }
   }

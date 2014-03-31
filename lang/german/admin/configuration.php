@@ -900,4 +900,7 @@ define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Suchergebnissen');
+
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Anzeige noimage.gif');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild vorhanden ist');
 ?>
