@@ -47,17 +47,11 @@ if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS==
 }
 /******** SHOPGATE **********/
 
+defined('TEMPLATE_HTML_ENGINE') or define('TEMPLATE_HTML_ENGINE', 'xhtml');
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html <?php echo HTML_PARAMS; ?>>
+<!DOCTYPE html<?php echo ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''); ?>>
+<html<?php echo ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ''); ?>>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>" /> 
-<meta http-equiv="Content-Style-Type" content="text/css" />
-<?php
-/******** SHOPGATE **********/
-if(isset($shopgateJsHeader)) echo $shopgateJsHeader;
-/******** SHOPGATE **********/
-?>
 <?php include(DIR_WS_MODULES.FILENAME_METATAGS); ?>
 <link rel="shortcut icon" href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/favicon.ico';?>" type="image/x-icon" />
 <?php
@@ -88,14 +82,11 @@ Please visit our website: www.modified-shop.org
 <meta name="generator" content="(c) by <?php echo PROJECT_VERSION; ?> ------ http://www.modified-shop.org" />
 <base href="<?php echo (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG; ?>" />
 <?php
-if (file_exists('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
+if (is_file('templates/'.CURRENT_TEMPLATE.'/css/general.css.php')) {
   require('templates/'.CURRENT_TEMPLATE.'/css/general.css.php');
 } else { //Maintain backwards compatibility for older templates 
   echo '<link rel="stylesheet" type="text/css" href="templates/'.CURRENT_TEMPLATE.'/stylesheet.css" />';
 }
-
-// include default javascript
-echo '<script type="text/javascript" src="includes/default.js"></script>';
 
 // require theme based javascript
 require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
@@ -115,6 +106,7 @@ switch(basename($PHP_SELF)) {
   case FILENAME_CREATE_GUEST_ACCOUNT:
   case FILENAME_ACCOUNT_PASSWORD:
   case FILENAME_ACCOUNT_EDIT:
+  case FILENAME_CHECKOUT_PAYMENT:
   case FILENAME_CHECKOUT_SHIPPING_ADDRESS:
   case FILENAME_CHECKOUT_PAYMENT_ADDRESS:
   case FILENAME_ADVANCED_SEARCH:
@@ -141,17 +133,17 @@ require_once('inc/xtc_parse_input_field_data.inc.php');
 
 // check if the 'install' directory exists, and warn of its existence
 if (WARN_INSTALL_EXISTENCE == 'true') {
-  if (file_exists(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
+  if (is_dir(DIR_FS_CATALOG . '/' . DIR_MODIFIED_INSTALLER)) {
     xtc_output_warning(sprintf(WARNING_INSTALL_DIRECTORY_EXISTS, DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER));
   }
 }
 
 // check if the configure.php file is writeable
 if (WARN_CONFIG_WRITEABLE == 'true') {
-  if ((file_exists(DIR_WS_INCLUDES . 'configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'configure.php'))) {
+  if ((is_file(DIR_WS_INCLUDES . 'configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'configure.php'))) {
     xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'configure.php'));
   }
-  if ((file_exists(DIR_WS_INCLUDES . 'local/configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'local/configure.php'))) {
+  if ((is_file(DIR_WS_INCLUDES . 'local/configure.php')) && (is_writeable(DIR_WS_INCLUDES . 'local/configure.php'))) {
     xtc_output_warning(sprintf(WARNING_CONFIG_FILE_WRITEABLE, DIR_WS_INCLUDES . 'local/configure.php'));
   }
 }

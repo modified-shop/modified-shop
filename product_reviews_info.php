@@ -65,7 +65,7 @@ $smarty->assign('RATING', xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.
 $smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($reviews['products_id'], $reviews['products_name'])));
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_PRODUCT_REVIEWS, $get_params).'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_BUY_NOW', '<a href="'.xtc_href_link(FILENAME_DEFAULT, 'action=buy_now&BUYproducts_id='.$reviews['products_id']).'">'.xtc_image_button('button_in_cart.gif', IMAGE_BUTTON_IN_CART).'</a>');
-$smarty->assign('IMAGE', '<a href="javascript:popupImageWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$reviews['products_id']).'\')">'.xtc_image(DIR_WS_THUMBNAIL_IMAGES.$reviews['products_image'], $reviews['products_name'], '', '', 'align="center" hspace="5" vspace="5"').'<br /></a>');
+$smarty->assign('IMAGE', '<a href="javascript:window.open(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$reviews['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')">'.xtc_image(DIR_WS_THUMBNAIL_IMAGES.$reviews['products_image'], $reviews['products_name'], '', '', 'align="center" hspace="5" vspace="5"').'<br /></a>');
 
 $smarty->assign('language', $_SESSION['language']);
 

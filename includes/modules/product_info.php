@@ -154,7 +154,7 @@ if (!is_object($product) || !$product->isProduct()) {
   $info_smarty->assign('PRODUCTS_PRINT', xtc_image_button('print.gif', $product->data['products_name'], 'onclick="javascript:window.open(\''.xtc_href_link(FILENAME_PRINT_PRODUCT_INFO, 'products_id='.$product->data['products_id']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, '.POPUP_PRODUCT_PRINT_SIZE.'\')"'));
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
   $info_smarty->assign('PRODUCTS_SHORT_DESCRIPTION', stripslashes($product->data['products_short_description']));
-  $info_smarty->assign('PRODUCTS_POPUP_LINK', 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID=0').'\')');
+  $info_smarty->assign('PRODUCTS_POPUP_LINK', 'javascript:window.open(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID=0').'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')');
   $info_smarty->assign('PRODUCTS_URL', !empty($product->data['products_url']) ? sprintf(TEXT_MORE_INFORMATION, xtc_href_link(FILENAME_REDIRECT, 'action=product&id='.$product->data['products_id'], 'NONSSL', true, false)) : '');
 
   // more images
@@ -164,12 +164,11 @@ if (!is_object($product) || !$product->isProduct()) {
     foreach ($mo_images as $img) {
       $mo_img = $product->productImage($img['image_name'], 'info');
       $more_images_data[] = array ('PRODUCTS_IMAGE' => $mo_img, 
-                                   'PRODUCTS_POPUP_LINK' => 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 
-                                   'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\')'
+                                   'PRODUCTS_POPUP_LINK' => 'javascript:window.open(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')'
                                    );
       //next 2 lines only needed for non modified templates
       $info_smarty->assign('PRODUCTS_IMAGE_'.$img['image_nr'], $mo_img);
-      $info_smarty->assign('PRODUCTS_POPUP_LINK_'.$img['image_nr'], 'javascript:popupWindow(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\')');
+      $info_smarty->assign('PRODUCTS_POPUP_LINK_'.$img['image_nr'], 'javascript:window.open(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')');
     }
     $info_smarty->assign('more_images', $more_images_data);
   }
