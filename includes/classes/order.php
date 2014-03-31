@@ -266,9 +266,6 @@
         }
         $index++;
       }
-      
-      echo '<pre>';
-      print_r($this);
     }
 
     function getOrderData($oID) {
