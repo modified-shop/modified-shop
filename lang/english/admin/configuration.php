@@ -902,4 +902,7 @@ define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Search Search Results');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search result');
+
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Show noimage.gif');
+define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image');
 ?>

@@ -35,6 +35,7 @@ $values_group_update = array();
 
 //configuration_group_id 4 --- "Bild Optionen"
   $values[] = "(NULL, 'PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT', 'false', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
+  $values[] = "(NULL, 'PRODUCT_IMAGE_SHOW_NO_IMAGE', 'false', '4', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'), ');";
 
 //configuration_group_id 5 --- "Kundendetails"
 
