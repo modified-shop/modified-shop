@@ -158,10 +158,12 @@
     }
 
     $products_info = '';
-    if (!empty($_GET['products_name'])) {$products_info = trim($_GET['products_name']);}
-    if (!empty($_GET['products_model'])) {$products_info = trim($products_info . ' - ' . trim($_GET['products_model']));}
-    if (!empty($_GET['question'])) {$products_question = trim($_GET['question'])."\n";}
-    if ($products_info != '') {$products_info = $products_question . $products_info . "\n"; }
+    if (isset($_GET['products_id']) && $_GET['products_id']  && isset($_GET['inq']) && $_GET['inq']) {
+      $product->product((int)$_GET['products_id']);
+      $products_info = defined('PRODUCT_INQUIRY') ? PRODUCT_INQUIRY . "\n" : '';
+      $products_info .= HEADER_ARTICLE . ': '. $product->data['products_name'] . "\n";  
+      $products_info .= ($product->data['products_model'] ? HEADER_MODEL . ': ' .$product->data['products_model'] : '') . "\n";
+    }
     if (!$error) $message_body = $products_info . "\n";
 
     $smarty->assign('CONTACT_CONTENT', $contact_content);
