@@ -533,14 +533,16 @@ function xtcCheckSpecial($pID) {
     $from = $this->checkAttributes($pID);
     if ($format) {
       $Pprice = number_format(floatval($price), $decimal_places, $this->currencies[$this->actualCurr]['decimal_point'], $this->currencies[$this->actualCurr]['thousands_point']);
-      $Pprice = $this->checkAttributes($pID) . $this->currencies[$this->actualCurr]['symbol_left'] . ' ' . $Pprice . ' ' . $this->currencies[$this->actualCurr]['symbol_right'];
+      $Pprice = $this->currencies[$this->actualCurr]['symbol_left'] . ' ' . $Pprice . ' ' . $this->currencies[$this->actualCurr]['symbol_right'];
       if ($vpeStatus == 0) {
-        return $Pprice;
+        return $from.$Pprice;
       } else {
         return array(
-          'formated' => $Pprice,
+          'formated' => $from.$Pprice,
+          'standard_price' => $Pprice,
           'plain' => $price,
-          'from' =>  $from
+          'from' =>  $from,
+          'flag' => 'standard'
         );
       }
     } else {
@@ -673,7 +675,8 @@ function xtcCheckSpecial($pID) {
         $from = $this->checkAttributes($pID);
         $price = '<span class="productOldPrice">' . MSRP . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $from . $special_price;
       } else {
-        $price = $this->xtcFormat($sPrice, $format);
+        return $this->xtcFormat($sPrice, $format, $tax_class, false, $vpeStatus, $pID);
+        //$price = $this->xtcFormat($sPrice, $format);
       }
       
       if ($vpeStatus == 0) {
@@ -685,6 +688,7 @@ function xtcCheckSpecial($pID) {
           'special_price' =>  $special_price,
           'old_price' =>  $old_price,
           'from' =>  $from,
+          'uvp' =>  MSRP,
           'flag' => 'SpecialGraduated' 
         );
       }

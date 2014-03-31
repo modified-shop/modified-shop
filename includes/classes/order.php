@@ -65,15 +65,16 @@
 
     function query($order_id) {
       $order_id = (int)$order_id;
-      $order_query = xtc_db_query("SELECT *
-                                   FROM " . TABLE_ORDERS . "
-                                   WHERE orders_id = '" . $order_id . "'");
+      $order_query = xtc_db_query("SELECT *,
+                                          orders_id as order_id
+                                     FROM " . TABLE_ORDERS . "
+                                    WHERE orders_id = '" . $order_id . "'");
       $order = xtc_db_fetch_array($order_query);
 
       $totals_query = xtc_db_query("SELECT *
-                                    FROM " . TABLE_ORDERS_TOTAL . "
-                                    WHERE orders_id = '" . $order_id . "'
-                                    ORDER BY sort_order ASC, value DESC");
+                                      FROM " . TABLE_ORDERS_TOTAL . "
+                                     WHERE orders_id = '" . $order_id . "'
+                                  ORDER BY sort_order ASC, value DESC");
       while ($totals = xtc_db_fetch_array($totals_query)) {
         $this->totals[] = array('title' => $totals['title'],
                                 'text' => $totals['text'],
@@ -82,63 +83,40 @@
                                );
       }
 
-      // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-      //$order_total_query = xtc_db_query("SELECT text FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_total'");
-      $order_total_query = xtc_db_query("SELECT text, value FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_total'");
-      // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
+      $order_total_query = xtc_db_query("SELECT SUM(IF(class = 'ot_tax', value, 0)) as ot_tax,
+                                                SUM(IF(class = 'ot_discount', value, 0)) as ot_discount,
+                                                SUM(IF(class IN ('ot_cod_fee',
+                                                                 'ot_ps_fee',
+                                                                 'ot_loworderfee'
+                                                                 ), value, 0)) as ot_fee,
+                                                SUM(IF(class IN ('ot_coupon',
+                                                                 'ot_gv',
+                                                                 'ot_bonus_fee'
+                                                                 ), value, 0)) as ot_gv,
+                                                SUM(IF(class = 'ot_payment', value, 0)) as ot_payment,
+                                                SUM(IF(class = 'ot_shipping', value, 0)) as ot_shipping_value,
+                                                SUM(IF(class = 'ot_total', value, 0)) as ot_total_value,
+                                                (SELECT text 
+                                                   FROM " . TABLE_ORDERS_TOTAL . " 
+                                                  WHERE orders_id = '" . $order_id . "' 
+                                                    AND class = 'ot_total') as ot_total_text,
+                                                (SELECT title 
+                                                   FROM " . TABLE_ORDERS_TOTAL . " 
+                                                  WHERE orders_id = '" . $order_id . "' 
+                                                    AND class = 'ot_shipping') as ot_shipping_title
+                                            FROM " . TABLE_ORDERS_TOTAL . "
+                                          WHERE orders_id = '" . $order_id . "'");
       $order_total = xtc_db_fetch_array($order_total_query);
-
-      // BOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-      $order_tax_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_tax'");
-      $order_tax = xtc_db_fetch_array($order_tax_query);
-      $pp_order_tax=$order_tax['SUM(value)'];
-      $pp_order_disc=0;
-      //ot_discount
-      $order_disc_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_discount'");
-      $order_disc = xtc_db_fetch_array($order_disc_query);
-      $pp_order_disc+=$order_disc['SUM(value)'];
-      $pp_order_gs=0;
-      //ot_coupon
-      $order_gs_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_coupon'");
-      $order_gs = xtc_db_fetch_array($order_gs_query);
-      $pp_order_gs+= ($order_gs['SUM(value)'] < 0) ? $order_gs['SUM(value)'] : $order_gs['SUM(value)']*(-1) ;
-      //ot_gv
-      $order_gs_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_gv'");
-      $order_gs = xtc_db_fetch_array($order_gs_query);
-      $pp_order_gs+= ($order_gs['SUM(value)'] < 0) ? $order_gs['SUM(value)'] : $order_gs['SUM(value)']*(-1) ;
-      //  customers bonus
-      $order_gs_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_bonus_fee'");
-      $order_gs = xtc_db_fetch_array($order_gs_query);
-      $pp_order_gs-=$order_gs['SUM(value)'];
-      $pp_order_fee=0;
-      $order_fee_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_payment'");
-      $order_fee = xtc_db_fetch_array($order_fee_query);
-      // Rabatt aus Fremd Modul
-      if($order_fee['SUM(value)'] < 0) {
-        $pp_order_disc+=$order_fee['SUM(value)'];
+      
+      if($order_total['ot_payment'] < 0) {
+        $order_total['ot_discount'] += $order_total['ot_payment'];
       } else {
-        $pp_order_fee+=$order_fee['SUM(value)'];
+        $order_total['ot_fee'] += $order_total['ot_payment'];
       }
-      $order_fee_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_cod_fee'");
-      $order_fee = xtc_db_fetch_array($order_fee_query);
-      $pp_order_fee+=$order_fee['SUM(value)'];
-      $order_fee_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_ps_fee'");
-      $order_fee = xtc_db_fetch_array($order_fee_query);
-      $pp_order_fee+=$order_fee['SUM(value)'];
-      $order_fee_query = xtc_db_query("SELECT SUM(value) FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_loworderfee'");
-      $order_fee = xtc_db_fetch_array($order_fee_query);
-      $pp_order_fee+=$order_fee['SUM(value)'];
-
-      //$shipping_method_query = xtc_db_query("SELECT title FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_shipping'");
-      $shipping_method_query = xtc_db_query("SELECT title, value FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . $order_id . "' AND class = 'ot_shipping'");
-      // EOF - web28 - 2010-05-06 - PayPal API Modul  / Paypal Express Modul
-      $shipping_method = xtc_db_fetch_array($shipping_method_query);
 
       $order_status_query = xtc_db_query("SELECT orders_status_name FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_id = '" . $order['orders_status'] . "' AND language_id = '" . $_SESSION['languages_id'] . "'");
       $order_status_array = xtc_db_fetch_array($order_status_query);
       $order_status = (!defined('RUN_MODE_ADMIN')) ? $order_status_array['orders_status_name'] : $order['orders_status'];
-
-      $order['order_id'] = $order_id;
 
       $this->info = array(
           'order_id' => $order['order_id'],
@@ -161,16 +139,16 @@
           'date_purchased' => $order['date_purchased'],
           'orders_status' => $order_status,
           'last_modified' => $order['last_modified'],
-          'total' => strip_tags($order_total['text']),
+          'total' => strip_tags($order_total['ot_total_text']),
           #PayPal API Modul / Paypal Express Modul
-          'pp_total' => $order_total['value'],
-          'pp_shipping' => $shipping_method['value'],
-          'pp_tax' => $pp_order_tax,
-          'pp_disc' => $pp_order_disc,
-          'pp_gs' => $pp_order_gs,
-          'pp_fee' => $pp_order_fee,
+          'pp_total' => $order_total['ot_total_value'],
+          'pp_shipping' => $order_total['ot_shipping_value'],
+          'pp_tax' => $order_total['ot_tax'],
+          'pp_disc' => $order_total['ot_discount'],
+          'pp_gs' => $order_total['ot_gv'],
+          'pp_fee' => $order_total['ot_fee'],
           #Paypal Express Modul
-          'shipping_method' => ((substr($shipping_method['title'], -1) == ':') ? substr(strip_tags($shipping_method['title']), 0, -1) : strip_tags($shipping_method['title'])),
+          'shipping_method' => ((substr($order_total['ot_shipping_title'], -1) == ':') ? substr(strip_tags($order_total['ot_shipping_title']), 0, -1) : strip_tags($order_total['ot_shipping_title'])),
           'comments' => $order['comments'],
           'language' => $order['language']
         );
@@ -288,6 +266,9 @@
         }
         $index++;
       }
+      
+      echo '<pre>';
+      print_r($this);
     }
 
     function getOrderData($oID) {
@@ -315,8 +296,12 @@
                            ORDER BY orders_products_attributes_id";
         $attributes_data = '';
         $attributes_model = '';
+        $attributes_array = array();
         $attributes_query = xtc_db_query($attributes_query);
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
+          $attributes_array[] = array('option' => $attributes_data_values['products_options'],
+                                      'value' => $attributes_data_values['products_options_values']
+                                      );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].':'.$attributes_data_values['products_options_values'];
           $attributes_model .= '<br />'.xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
         }
@@ -337,6 +322,7 @@
             'PRODUCTS_SHORT_DESCRIPTION' => $short_description,
             'PRODUCTS_SHIPPING_TIME' => $order_data_values['products_shipping_time'],
             'PRODUCTS_ATTRIBUTES' => $attributes_data,
+            'PRODUCTS_ATTRIBUTES_ARRAY' => $attributes_array,
             'PRODUCTS_ATTRIBUTES_MODEL' => $attributes_model,
             'PRODUCTS_PRICE' => $xtPrice->xtcFormat($order_data_values['final_price'], true),
             'PRODUCTS_SINGLE_PRICE' => $xtPrice->xtcFormat($order_data_values['final_price']/$order_data_values['products_quantity'], true),
@@ -641,17 +627,10 @@
         $this->info['tax']+=round($value, $xtPrice->get_decimal_places('')); //web28: parameter in get_decimal_places isn't used
       }
       // EOF - web28 - 2010-05-06 - PayPal API Modul / Paypal Express Modul
-      //$this->info['shipping_cost']=0;
-      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == '0') {
-        $this->info['total'] = $this->info['subtotal']  + $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
-        if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
-          $this->info['total'] -= ($this->info['subtotal'] /100 * $_SESSION['customers_status']['customers_status_ot_discount']);
-        }
-      } else {
-        $this->info['total'] = $this->info['subtotal']  + $xtPrice->xtcFormat($this->info['shipping_cost'],false,0,true);
-        if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
-          $this->info['total'] -= ($this->info['subtotal'] /100 * $_SESSION['customers_status']['customers_status_ot_discount']);
-        }
+
+      $this->info['total'] = $this->info['subtotal'] + $xtPrice->xtcFormat($this->info['shipping_cost'], false,0,true);
+      if ($_SESSION['customers_status']['customers_status_ot_discount_flag'] == '1') {
+        $this->info['total'] -= ($this->info['subtotal'] /100 * $_SESSION['customers_status']['customers_status_ot_discount']);
       }
     }
   }
