@@ -2380,7 +2380,7 @@ a.color_more:hover {
 
 /* Start Kategorielisting */
 .cat_description {
-  margin: 0px 0px 25px 0px; 
+  padding: 0px 0px 25px 0px; 
 }
 .cat_image {
   float:left;
@@ -2393,7 +2393,7 @@ a.color_more:hover {
 
 /* Start Unterkategorien */
 .subcats {
-
+  margin: 0 0 25px 0;
 }
 .subcatlist {
   float:left;
