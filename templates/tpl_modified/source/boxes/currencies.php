@@ -40,7 +40,7 @@
 
     $box_content = 
        xtc_draw_form('currencies', xtc_href_link(basename($PHP_SELF), '', $request_type, false), 'get', 'class="box-currencies"')
-     . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onChange="this.form.submit();"')
+     . xtc_draw_pull_down_menu('currency', $currencies_array, $_SESSION['currency'], 'onchange="this.form.submit();"')
      . $hidden_get_variables . xtc_hide_session_id()
      . '</form>';
 
