@@ -25,7 +25,7 @@
 define('TITLE', STORE_NAME);
 define('HEADER_TITLE_TOP', 'Main page');
 define('HEADER_TITLE_CATALOG', 'Catalogue');
-define('HTML_PARAMS','dir="ltr" xml:lang="en"');
+define('HTML_PARAMS','dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"');
 @setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
 //BOF - Dokuman - 2009-06-03 - correct english date format
