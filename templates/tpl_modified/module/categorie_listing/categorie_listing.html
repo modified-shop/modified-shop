@@ -5,13 +5,13 @@
   <h1>{$CATEGORIES_NAME}</h1>
 {/if}
 
-<div class="cat_description">
 {if $CATEGORIES_DESCRIPTION || $CATEGORIES_IMAGE}
+<div class="cat_description">
   {if $CATEGORIES_IMAGE}<img class="cat_image" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
   {$CATEGORIES_DESCRIPTION}
   <br class="clearfix" />
-{/if}
 </div>
+{/if}
 
 {if $module_content != '' && $TR_COLS > 0}
 <h4>{#heading_more_categories#}</h4>
@@ -30,6 +30,4 @@
   <br class="clearfix" />
 </div>
 {/if}
-<br />
-<br />
 {$MODULE_new_products}
