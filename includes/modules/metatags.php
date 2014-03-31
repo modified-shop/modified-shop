@@ -564,13 +564,22 @@ switch(basename($PHP_SELF)) {
 <meta name="distribution" content="global" />
 <meta name="revisit-after" content="<?php echo META_REVISIT_AFTER; ?>" />
 */
+if (TEMPLATE_HTML_ENGINE == 'xhtml') {
+  echo '<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'" />'."\n";;
+  echo '<meta http-equiv="Content-Style-Type" content="text/css" />'."\n";;
+  echo '<meta http-equiv="cache-control" content="no-cache" />'."\n";
+} else {
+  echo '<meta charset="'.$_SESSION['language_charset'].'" />'."\n";;
+}
+/******** SHOPGATE **********/
+if(isset($shopgateJsHeader)) echo $shopgateJsHeader;
+/******** SHOPGATE **********/ 
 if (metaClean($meta_title) != '') {
   echo '<title>'. metaClean($meta_title) .'</title>'."\n";
 }
-if ($_SESSION['language_code'] != '') {
+if ($_SESSION['language_code'] != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta http-equiv="content-language" content="'. $_SESSION['language_code'] .'" />'."\n";
 }
-echo '<meta http-equiv="cache-control" content="no-cache" />'."\n";
 
 if (metaClean($meta_keyw) != '') {
   echo '<meta name="keywords" content="'. metaClean($meta_keyw) .'" />'."\n";
@@ -578,7 +587,7 @@ if (metaClean($meta_keyw) != '') {
 if (metaClean($meta_descr,$metaDesLength) != '') {
   echo '<meta name="description" content="'. metaClean($meta_descr,$metaDesLength) .'" />'."\n";
 }
-if ($_SESSION['language_code'] != '') {
+if ($_SESSION['language_code'] != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="language" content="'. $_SESSION['language_code'] .'" />'."\n";
 }
 if ($meta_robots != '') {
@@ -593,7 +602,7 @@ if (metaClean(META_PUBLISHER) != '') {
 if (metaClean(META_COMPANY) != '') {
   echo '<meta name="company" content="'. metaClean(META_COMPANY) .'" />'."\n";
 }
-if (metaClean(META_TOPIC) != '') {
+if (metaClean(META_TOPIC) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="page-topic" content="'. metaClean(META_TOPIC) .'" />'."\n";
 }
 if (META_REPLY_TO != 'xx@xx.com') {
