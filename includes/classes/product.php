@@ -446,13 +446,20 @@ class product {
         break;
     }
 
-    if ($name == '' || !is_file($path.$name)) {
-      if ($this->useStandardImage == 'true' && $this->standardImage != '') {
+    if ($name == '') {
+      if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
         return $path.$this->standardImage;
       } else {
         return;
       }
     } else {
+      if (!is_file($path.$name)) {
+        if ($this->standardImage != '' && is_file($path.$this->standardImage)) {
+          return $path.$this->standardImage;
+        } else {
+          return;
+        }
+      }
       return $path.$name;
     }
   }
