@@ -419,6 +419,7 @@ class product {
 
     foreach((array)$products_price as $key => $entry) {                  
       $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
+      $productData['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
     }
 
     //echo '<pre>'.print_r($productData,true).'</pre>';
