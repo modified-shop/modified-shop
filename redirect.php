@@ -39,7 +39,7 @@ switch ($_GET['action']) {
          "SELECT products_url 
             FROM ".TABLE_PRODUCTS_DESCRIPTION." 
            WHERE products_id='".(int) $_GET['id']."'
-             AND trim(pd.products_name) != ''           
+             AND trim(products_name) != ''           
              AND language_id='".(int) $_SESSION['languages_id']."'
          ");
 
