@@ -224,9 +224,9 @@ define('TEXT_PRINT', 'print'); //DokuMan - 2009-05-26 - Added description for 'a
  *
  */
 
-define('TEXT_GREETING_PERSONAL', 'Nice to see you again <span class="greetUser">%s!</span> Would you like to view our <a style="text-decoration:underline;" href="%s">new products</a> ?');
-define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s , please  <a style="text-decoration:underline;" href="%s">login</a>  with your account.</small>');
-define('TEXT_GREETING_GUEST', 'Welcome  <span class="greetUser">visitor!</span> Would you like to <a style="text-decoration:underline;" href="%s">login</a>? Or would you like to create a new <a style="text-decoration:underline;" href="%s">account</a> ?');
+define('TEXT_GREETING_PERSONAL', 'Nice to see you again <span class="greetUser">%s!</span> Would you like to view our <a href="%s">new products</a> ?');
+define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s , please  <a href="%s">login</a>  with your account.</small>');
+define('TEXT_GREETING_GUEST', 'Welcome  <span class="greetUser">visitor!</span> Would you like to <a href="%s">login</a>? Or would you like to create a new <a href="%s">account</a> ?');
 
 define('TEXT_SORT_PRODUCTS', 'Sorting of the items is ');
 define('TEXT_DESCENDINGLY', 'descending');
@@ -309,7 +309,7 @@ define('TEXT_LOGIN_ERROR', '<span class="color_error_message"><strong>ERROR:</st
 define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><strong>WARNING:</strong></span> The e-mail address entered is not registered. Please try again.');
 define('TEXT_PASSWORD_SENT', 'A new password was sent by e-mail.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Product not found!');
-define('TEXT_MORE_INFORMATION', 'For further information, please visit the <a style="text-decoration:underline;" href="%s" onclick="window.open(this.href); return false;">homepage</a> of this product.');
+define('TEXT_MORE_INFORMATION', 'For further information, please visit the <a href="%s" onclick="window.open(this.href); return false;">homepage</a> of this product.');
 define('TEXT_DATE_ADDED', 'This Product was added to our catalogue on %s.');
 define('TEXT_DATE_AVAILABLE', '<span class="color_error_message">This Product is expected to be on stock again on %s </span>');
 define('SUB_TITLE_SUB_TOTAL', 'Sub-total:');
