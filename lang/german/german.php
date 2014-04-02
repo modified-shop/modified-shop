@@ -218,9 +218,9 @@ define('TEXT_PRINT', 'drucken');
  * 
  */
 
-define('TEXT_GREETING_PERSONAL', 'Sch&ouml;n, dass Sie wieder da sind, <span class="greetUser">%s!</span> M&ouml;chten Sie sich unsere <a style="text-decoration:underline;" href="%s">neuen Artikel</a> ansehen?');
-define('TEXT_GREETING_PERSONAL_RELOGON', '<small>Wenn Sie nicht %s sind, melden Sie sich bitte <a style="text-decoration:underline;" href="%s">hier</a> mit Ihren Anmeldedaten an.</small>');
-define('TEXT_GREETING_GUEST', 'Herzlich willkommen <span class="greetUser">Gast!</span> M&ouml;chten Sie sich <a style="text-decoration:underline;" href="%s">anmelden</a>? Oder wollen Sie ein <a style="text-decoration:underline;" href="%s">Kundenkonto</a> er&ouml;ffnen?');
+define('TEXT_GREETING_PERSONAL', 'Sch&ouml;n, dass Sie wieder da sind, <span class="greetUser">%s!</span> M&ouml;chten Sie sich unsere <a href="%s">neuen Artikel</a> ansehen?');
+define('TEXT_GREETING_PERSONAL_RELOGON', '<small>Wenn Sie nicht %s sind, melden Sie sich bitte <a href="%s">hier</a> mit Ihren Anmeldedaten an.</small>');
+define('TEXT_GREETING_GUEST', 'Herzlich willkommen <span class="greetUser">Gast!</span> M&ouml;chten Sie sich <a href="%s">anmelden</a>? Oder wollen Sie ein <a href="%s">Kundenkonto</a> er&ouml;ffnen?');
 
 define('TEXT_SORT_PRODUCTS', 'Sortierung der Artikel ist ');
 define('TEXT_DESCENDINGLY', 'absteigend');
@@ -303,7 +303,7 @@ define('TEXT_LOGIN_ERROR', '<span class="color_error_message"><b>FEHLER:</b></sp
 define('TEXT_NO_EMAIL_ADDRESS_FOUND', '<span class="color_error_message"><b>ACHTUNG:</b></span> Die eingegebene E-Mail-Adresse ist nicht registriert. Bitte versuchen Sie es noch einmal.');
 define('TEXT_PASSWORD_SENT', 'Ein neues Passwort wurde per E-Mail verschickt.');
 define('TEXT_PRODUCT_NOT_FOUND', 'Artikel wurde nicht gefunden!');
-define('TEXT_MORE_INFORMATION', 'F&uuml;r weitere Informationen besuchen Sie bitte die <a style="text-decoration:underline;" href="%s" onclick="window.open(this.href); return false;">Homepage</a> zu diesem Artikel.');
+define('TEXT_MORE_INFORMATION', 'F&uuml;r weitere Informationen besuchen Sie bitte die <a href="%s" onclick="window.open(this.href); return false;">Homepage</a> zu diesem Artikel.');
 define('TEXT_DATE_ADDED', 'Diesen Artikel haben wir am %s in unseren Katalog aufgenommen.');
 define('TEXT_DATE_AVAILABLE', '<span class="color_error_message">Dieser Artikel wird voraussichtlich ab dem %s wieder vorr&auml;tig sein.</span>');
 define('SUB_TITLE_SUB_TOTAL', 'Zwischensumme:');
