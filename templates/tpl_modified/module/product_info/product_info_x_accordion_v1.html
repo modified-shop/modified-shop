@@ -7,12 +7,6 @@
       {if $PRODUCTS_IMAGE != ''}<a rel="colorbox" title="{$PRODUCTS_NAME|onlytext}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a>{/if}
     </div>
     <div class="zoomtext">F&uuml;r eine gr&ouml;&szlig;ere Ansicht klicken Sie auf das Vorschaubild</div>
-    {if $more_images|@count > 0}
-      {foreach item=more_images_data from=$more_images} 
-      <div class="pd_small_image"><span></span><a rel="colorbox" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME|onlytext}" /></a></div>                          
-      {/foreach}
-      <br class="clearfix" />
-    {/if}
   </div>
 
   <div class="pd_content">
@@ -49,7 +43,9 @@
       <div class="pd_tax">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</div>
 
       {if $MODULE_graduated_price != ''}{$MODULE_graduated_price}{/if}
-      {if $MODULE_product_options != ''}{$MODULE_product_options}{/if}
+      {if $MODULE_product_options != ''}{if $MODULE_product_options_template == 'multi_options_1.html' || $MODULE_product_options_template == 'product_options_dropdown.html'}
+        {$MODULE_product_options}
+      {/if}{/if}
       
       {if $ADD_CART_BUTTON != ''}
       <div class="addtobasket">
@@ -67,62 +63,48 @@
     {if $XTB_REDIRECT_USER_TO == 'product'}
       <div class="xtb_booster_redirect_message"><strong>Sie haben die eBay Auktion gewonnen!</strong><br />Bitte w&auml;hlen Sie nun noch die gew&uuml;nschten Produkteigenschaften und legen Sie den Artikel danach in den Warenkorb, um mit der Zahlung fortzufahren und das Produkt versandfertig zu machen!</div>
     {/if}
-
-{$MODULE_product_options_template}
-
+    {if $MODULE_product_options != ''}{if $MODULE_product_options_template == 'product_options_selection.html' || $MODULE_product_options_template == 'table_listing.html'}
+      {$MODULE_product_options}
+    {/if}{/if}      
   </div>  
   <br class="clearfix" />
   {if $MANUFACTURER_IMAGE != ''}<div class="pd_manu_image"><a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}"><img src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER}" /></a></div>{/if}
-</div><!-- ENDE product_details -->
+</div>
 {$FORM_END}
 
-
-<!--Horizontal Tab-->
-        <div id="horizontalAccordion" class="pd_accordion">
-            <ul class="resp-tabs-list">
-                {if $PRODUCTS_DESCRIPTION != ''}<li>{#description#}</li>{/if}
-                {if $more_images|@count > 0}<li>{#more_images#}</li>{/if}
-                {if $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
-                {if $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
-                {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li>{#cross_selling#}</li>{/if}
-                {if $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
-                {if $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
-            </ul>
-            <div class="resp-tabs-container">
-                {if $PRODUCTS_DESCRIPTION != ''}<div><h4 class="detailbox">Produktbeschreibung</h4>{$PRODUCTS_DESCRIPTION}</div>{/if}
-
-                {if $more_images|@count > 0}
-                <div>
-                  <div class="morepics">
-                    {foreach item=more_images_data from=$more_images}
-                      <a rel="colorbox" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE|onlytext}" alt="{$PRODUCTS_NAME}" /></a>
-                    {/foreach}
-                    <div style="clear:both;"></div>
-                  </div>
-                </div>
-                {/if}
-                
-                {if $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
-                {if $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
-                {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div>{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
-                {if $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
-                {if $MODULE_products_category != ''}<div>{$MODULE_products_category}</div>{/if}
-
-            </div>
-        </div>
+<div id="horizontalAccordion" class="pd_accordion">
+  <ul class="resp-tabs-list">
+    {if $PRODUCTS_DESCRIPTION != ''}<li>{#description#}</li>{/if}
+    {if $more_images|@count > 0}<li>{#more_images#}</li>{/if}
+    {if $MODULE_products_media != ''}<li>{#products_media#}</li>{/if}
+    {if $MODULE_products_reviews != ''}<li>{#products_reviews#}</li>{/if}
+    {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li>{#cross_selling#}</li>{/if}
+    {if $MODULE_also_purchased != ''}<li>{#also_purchased#}</li>{/if}
+    {if $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
+  </ul>
+  <div class="resp-tabs-container">
+    {if $PRODUCTS_DESCRIPTION != ''}<div><h4 class="detailbox">Produktbeschreibung</h4>{$PRODUCTS_DESCRIPTION}</div>{/if}
+    {if $more_images|@count > 0}
+    <div>
+      {foreach item=more_images_data from=$more_images} 
+        <div class="pd_small_image_tab">
+          <a rel="colorbox" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
+          <noscript><a href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
+        </div>                          
+      {/foreach}
+      <br class="clearfix" />
+    </div>
+    {/if}
+    {if $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
+    {if $MODULE_products_reviews != ''}<div>{$MODULE_products_reviews}</div>{/if}
+    {if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div>{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+    {if $MODULE_also_purchased != ''}<div>{$MODULE_also_purchased}</div>{/if}
+    {if $MODULE_products_category != ''}<div>{$MODULE_products_category}</div>{/if}
+  </div>
+</div>
+{if $PRODUCTS_ADDED != ''}<p class="dateadded">{$PRODUCTS_ADDED}</p>{/if}
 
 
-        <br />
-        <br />
-<!--Horizontal Tab-->
+<br /><br />
 
-
-
-
-
-
-
-
-
-{if $PRODUCTS_ADDED != ''}<p class="productinfoproductadded">{$PRODUCTS_ADDED}</p>{/if}
 {$PRODUCT_NAVIGATOR}
