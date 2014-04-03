@@ -40,15 +40,16 @@
 	$rr_data['total'] =  $billpay->_currencyToSmallerUnit($billpayTotals['orderTotalGross']);
 	$rr_data['termsUrl'] = $billpay->_buildTcTermsUrl();
 
-	echo '<form method="POST">';
+	echo '<html><head>';
+	echo '</head><body style="margin:0; padding:0">';
+	
+	echo '<form name="billpay_rates_form" method="POST">';
 	$country = $rr_data['country'];
 	$currency =  $rr_data['currency'];
 	$billpayLanguage = $billpay->_getLanguage();
 
 	$defaultRateNumber = 12;
 	
-	echo '<p style="font: 12px Arial, Helvetica, sans-serif; font-weight: bold;">'
-		. MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_ENTER_NUMBER_RATES . ':</p>';
 	if (isset($_SESSION['billpay_module_config'][$country][$currency])) {
 		$config = $_SESSION['billpay_module_config'][$country][$currency];
 		if ($config == false) {
@@ -56,7 +57,12 @@
 		}
 		$terms = $config['terms'];
 		$defaultRateNumber = in_array(12, $terms) ? 12 : $terms[0];
-		echo '<select name="numberRates">';
+		
+		echo '<div style="overflow:hidden; border:1px solid silver; padding: 10px">';
+		echo '<div style="float:left; font: 12px Arial, Helvetica, sans-serif;">'
+			. MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_ENTER_NUMBER_RATES . ':</div>';
+			
+		echo '<select name="numberRates" onchange="document.billpay_rates_form.submit();" style="float:right;">';
 		foreach ($terms as $term) {
 			if (isset($_POST['numberRates'])) {
 				if ($term == $_POST['numberRates']) {
@@ -77,18 +83,32 @@
 			}
 		}
 		echo '</select>';
+		echo '</div>';
 	} else {
 		echo 'no module config';
 	}
-	echo '<input type="submit" value="' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CALCULATE_RATES . '" style="margin-left:2px"/>';
 	
 	$numberOfRates = $_POST['numberRates'];
+
+	// check session
+	if (!isset($numberOfRates)) {
+		$numberOfRates = $_SESSION['bp_rate_result']['numberRates'];
+	}
+	
+	// check preload status
 	if (!isset($numberOfRates) && $_GET['preload'] == '1') {
 		$numberOfRates = $defaultRateNumber;
 	}
 	
+	// store in session
+	if (isset($numberOfRates)) {
+		$_SESSION['bp_rate_result']['numberRates'] = $numberOfRates;
+	}
+	
+	
 	if (isset($numberOfRates)) {
 		$rateResult = $_SESSION['bp_rate_result'];
+		
 		if (!isset($rateResult) || $rateResult['base'] != $rr_data['base'] || $rateResult['total'] != $rr_data['total']) {
 			require_once(DIR_WS_INCLUDES . 'external/billpay/api/ipl_xml_api.php');
 			require_once(DIR_WS_INCLUDES . 'external/billpay/api/php4/ipl_calculate_rates_request.php');
@@ -118,22 +138,26 @@
 			$rateResult['base'] = $rr_data['base'];
 			$rateResult['total'] = $rr_data['total'];
 			$_SESSION['bp_rate_result'] = $rateResult;
-		} else {
-			$_SESSION['bp_rate_result']['numberRates'] = $numberOfRates;
-		}
+		} //else {
+		//	$_SESSION['bp_rate_result']['numberRates'] = $numberOfRates;
+		//}
 
-		displayRateplan($rateResult['rateplan'], $numberOfRates);
+		displayRateplan($rateResult['rateplan'], $numberOfRates, $order->info['currency']);
 	} else if (isset($_SESSION['bp_rate_result'])) {
-		displayRateplan($_SESSION['bp_rate_result']['rateplan'], $_SESSION['bp_rate_result']['numberRates']);
+		displayRateplan($_SESSION['bp_rate_result']['rateplan'], $_SESSION['bp_rate_result']['numberRates'], $order->info['currency']);
+	}
+	else {
+		echo '<div style="overflow:hidden; border:1px solid silver; padding: 10px; margin-top:10px; height:35px; text-align:center">';
+		echo '<input type="submit" value="' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CALCULATE_RATES . '" style="margin-left:2px; "/>';
+		echo '</div>';
 	}
 	echo '</form>';	
+	echo '</body></html>';
 
-	function displayRateplan($ratePlanArray, $numberRates) {
+	function displayRateplan($ratePlanArray, $numberRates, $currency) {
 		$billpay = new billpaytransactioncredit();
 		
 		$selectedRatePlan = $ratePlanArray[$numberRates];
-		$caption = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CAPTION_TEXT1 . ' ' . $numberRates . ' '
-				 . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CAPTION_TEXT2;
 		$cart = (float)$selectedRatePlan['calculation']['cart'] / 100;
 		$base = (float)$selectedRatePlan['calculation']['base'] / 100;
 		$additional = $cart - $base; 
@@ -145,73 +169,62 @@
 		$first = (float)$selectedRatePlan['dues'][0][value] / 100;
 		$following = (float)$selectedRatePlan['dues'][1][value] / 100;
 		
-		echo '<h2 style="font: 12px Arial, Helvetica, sans-serif; font-weight: bold;">' . $caption . '</h2>';
-
-		echo '<table border="0" style="table-layout: fixed">';
-		echo '<tr><td style="width: 75%">';
-			echo '<table border="0" style="font: 12px Arial, Helvetica, sans-serif; border-collapse:collapse">';
+		echo '<div style="overflow:hidden; border:1px solid silver; padding: 10px; margin-top:10px; height:35px">';
+			echo '<table border="0" style="width:100%; font: 12px Arial, Helvetica, sans-serif; border-collapse:collapse;">';
+			
+			if ($first != $following) {
 				echo '<tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CART_AMOUNT_TEXT . '</td>';
-					echo '<td>&nbsp;&nbsp;=&nbsp;</td>';
-					echo '<td style="text-align: right;">' . formatCurrency($base, $currency) . $currency . '</td>';
+					echo '<td style="padding-bottom:6px">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FIRST_RATE . '</td>';
+					echo '<td style="padding-bottom:6px">&nbsp;</td>';
+					echo '<td style="padding-bottom:6px; font-weight: bold;text-align: right;">'
+						. formatCurrency($first, $currency) . '</td>';
 				echo '</tr><tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTC_SURCHARGE_TEXT . '</td>';
-					echo '<td>&nbsp;&nbsp;+&nbsp;</td>';
-					echo '<td style="text-align: right;"></td>';
-				echo '</tr><tr>';
-					echo '<td>(' . formatCurrency($base, $currency) . '&nbsp;' . $currency . ' x ' . $interest . ' x '
-						. $numberRates . ') / 100</td>';
-					echo '<td>&nbsp;&nbsp;=&nbsp;</td>';
-					echo '<td style="text-align: right;">' . formatCurrency($surcharge, $currency) . $currency . '</td>';
-				echo '</tr><tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TEXT . '</td>';
-					echo '<td>&nbsp;&nbsp;+&nbsp;</td>';
-					echo '<td style="text-align: right;">' . formatCurrency($fee, $currency) . $currency . '</td>';
-				echo '</tr><tr style="border-bottom-style: solid; border-bottom-width: 1px">';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_OTHER_COSTS_TEXT . '</td>';
-					echo '<td>&nbsp;&nbsp;+&nbsp;</td>';
-					echo '<td style="text-align: right;">' . formatCurrency($additional, $currency) . $currency . '</td>';
-				echo '</tr><tr style="font-weight: bold">';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TOTAL_AMOUNT_TEXT . '</td>';
-					echo '<td>&nbsp;&nbsp;=&nbsp;</td>';
-					echo '<td style="text-align: right;">' . formatCurrency($total, $currency) . $currency . '</td>';
-				echo '</tr><tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_DIVIDED_BY_RATES . '</td>';
-					echo '<td>&nbsp;</td>';
-					echo '<td style="text-align: right;">' . $numberRates . ' '
-						. MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_RATES . '</td>';
-				echo '</tr><tr>';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FIRST_RATE . '</td>';
-					echo '<td>&nbsp;</td>';
-					echo '<td style="font-weight: bold;text-align: right;">'
-						. formatCurrency($first, $currency) . $currency . '</td>';
-				echo '</tr><tr style="border-bottom-style: solid; border-bottom-width: 1px">';
 					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FOLLOWING_RATES . '</td>';
 					echo '<td>&nbsp;</td>';
 					echo '<td style="font-weight: bold;text-align: right;">'
-					 	. formatCurrency($following, $currency) . $currency . '</td>';
-				echo '</tr><tr style="font-weight:bold">';
-					echo '<td>' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_ANUAL_RATE_TEXT . '</td>';
-					echo '<td>&nbsp;&nbsp;=&nbsp;</td>';
-					echo '<td style="text-align: right;">' . $annual . '%</td>';
+					 	. formatCurrency($following, $currency) . '</td>';
 				echo '</tr>';
-			echo '</table>';
-		echo '</td><td valign="top">';
-			echo '<table style="font: 12px Arial, Helvetica, sans-serif;">';
+				echo '<tr><td colspan="3">';
+				
+				echo '</td></tr>';
+			}
+			else {
 				echo '<tr>';
-					echo '<td><a href="' . $billpay->_buildTcTermsUrl() . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK1 . '</a></td>';
-				echo '</tr><tr>';
-					echo '<td><a href="' . $billpay->_buildTcPrivacyUrl() . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK2 . '</a></td>';
-				echo '</tr><tr>';
-					echo '<td><a href="' . $billpay->_buildTcConditionsUrl() . '" target="_BLANK">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK3 . '</a></td>';;
+					echo '<td style="padding-bottom:6px; padding-top:10px">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_UNIQUE_RATE . '</td>';
+					echo '<td style="padding-bottom:6px; padding-top:10px">&nbsp;</td>';
+					echo '<td style="padding-bottom:6px; font-weight: bold;text-align: right; padding-top:10px">'
+						. formatCurrency($first, $currency) . '</td>';
 				echo '</tr>';
+			}
 			echo '</table>';
-		echo '</td></tr></table>';
+		
+		echo '</div>';
+		
+		echo '<div style="font: 12px Arial, Helvetica, sans-serif;">';
+		echo '<a href="' . buildRateplanUrl($numberRates, $selectedRatePlan, $currency) . '" target="_blank">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FINANCE_DETAILS_LINK_TEXT . '</a>';
+		echo '</div>';
 	}
 
 	function formatCurrency($value, $currency) {
 		// return (float)value / 100;
 		$xtPrice = new xtcPrice($_SESSION['currency'], $_SESSION['customers_status']['customers_status_id']);
 		return $xtPrice->xtcFormat($value, true);
+	}
+	
+	function buildRateplanUrl($numberRates, $selectedRatePlan, $currency) {
+		return 'https://www.billpay.de/api/ratenkauf/ratenplan?rateCount=' . $numberRates
+			. '&interest=' . $selectedRatePlan['calculation']['interest']
+			. '&firstRate=' . $selectedRatePlan['dues'][0][value]
+			. '&followingRate=' . $selectedRatePlan['dues'][1][value]
+			. '&currency=' . $currency
+			. '&base=' . $selectedRatePlan['calculation']['base']
+			. '&cart=' . $selectedRatePlan['calculation']['cart']
+			. '&term=' . $numberRates
+			. '&rateCount=' . $numberRates
+			. '&prepayment=0' 
+			. '&surcharge=' . $selectedRatePlan['calculation']['surcharge']
+			. '&fee=' . $selectedRatePlan['calculation']['fee']
+			. '&total=' . $selectedRatePlan['calculation']['total']
+			. '&apr=' . $selectedRatePlan['calculation']['anual'];
 	}
 ?>

@@ -69,9 +69,14 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_LOGPATH_DESC', '');
 define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
 define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
 
+if (defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE') === false) {
+    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE', 'SEPA Zahlungsverkehr aktivieren');
+    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_DESC', 'Diese Option muss ab 1.2.2014 auf "True" gestellt sein');
+}
+
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BIRTHDATE', 'Geburtsdatum');
-define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_EULA_CHECK', 'Hiermit best&auml;tige ich die <a href="%s" target="_blank">AGB</a> und <a href="%s" target="_blank">Datenschutzbestimmungen</a> f&uuml;r den Ratenkauf');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_EULA_CHECK', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Ratenkaufs und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an Billpay bin ich einverstanden. Es gelten die <a href="%s" target="_blank">AGB</a>, <a href="%s" target="_blank">Zahlungsbedinungen</a> und <a href="%s" target="_blank">Datenschutzbestimmungen</a>');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_EULA_CHECK_DE', '<label for="billpay_eula">Hiermit best&auml;tige ich die <a href="https://www.billpay.de/kunden/agb-ch" target="_blank">AGB</a> und die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> der Billpay GmbH </label> <br />');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ENTER_GENDER', 'Bitte geben Sie Ihr Geschlecht ein');
@@ -86,6 +91,12 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK1', 'AGB Ratenkauf');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK2', 'Datenschutz-<br/>bestimmungen');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_LINK3', 'Zahlungs-<br>bedingungen');
 
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_EULA_CHECK_SEPA',    "Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der Zahlung und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden' target='_blank'>Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href='%s' target='_blank'>AGB</a>, <a href='%s' target='_blank'>Zahlungsbedingungen</a> und <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von Billpay.<br/><br/>Ich erteile Billpay und der <a href='https://www.privatbank1891.com' target='_blank'>net-m privatbank 1891 AG</a> ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Einzelheiten</a>) zur Einziehung f&auml;lliger Zahlungen und weise mein Geldinstitut an, die Lastschriften einzul&ouml;sen.");
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_EULA_CHECK_SEPA_AT', "Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der Zahlung und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden' target='_blank'>Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href='%s' target='_blank'>AGB</a>, <a href='%s' target='_blank'>Zahlungsbedingungen</a> und <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von Billpay.<br/><br/>Ich erteile Billpay und der <a href='https://www.privatbank1891.com' target='_blank'>net-m privatbank 1891 AG</a> ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Einzelheiten</a>) zur Einziehung f&auml;lliger Zahlungen und weise mein Geldinstitut an, die Lastschriften einzul&ouml;sen.");
+
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_SEPA_INFORMATION',    "Die Gl&auml;ubiger-Identifikationsnummer von Billpay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an Billpay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. Weitere Informationen finden Sie auf <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_SEPA_INFORMATION_AT', "Die Gl&auml;ubiger-Identifikationsnummer von Billpay ist DE19ZZZ00000237180, die Gl&auml;ubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem sp&auml;teren Zeitpunkt per Email zusammen mit einer Vorlage f&uuml;r ein schriftliches Mandat mitgeteilt. Ich werde zus&auml;tzlich dieses schriftliche Mandat unterschreiben und an Billpay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die f&auml;llige Forderung auch bei einer R&uuml;cklastschrift bestehen bleibt. Weitere Informationen finden Sie auf <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
+
 define('JS_BILLPAYTRANSACTIONCREDIT_EULA', '* Bitte best%E4tigen Sie die Billpay AGB!\n\n');
 define('JS_BILLPAYTRANSACTIONCREDIT_DOBDAY', '* Bitte geben Sie Ihr Geburtstag ein.\n\n');
 define('JS_BILLPAYTRANSACTIONCREDIT_DOBMONTH', '* Bitte geben Sie Ihr Geburtsmonat.\n\n');
@@ -96,9 +107,9 @@ define('JS_BILLPAYTRANSACTIONCREDIT_NUMBER', '* Bitte geben Sie die Kontonummer 
 define('JS_BILLPAYTRANSACTIONCREDIT_NAME', '* Bitte geben Sie den Namen des Kontoinhabers ein.\n\n');
 define('JS_BILLPAYTRANSACTIONCREDIT_PHONE', '* Bitte geben Sie Ihre Telefonnummer ein.\n\n');
 
-define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_EULA', '* Bitte bestÃƒÂ¤tigen Sie die Billpay AGB!');
-define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_BOD' ,'You have entered an incorrect date of birth!');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_EULA', '* Bitte best&auml;tigen Sie die Billpay AGB!');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_BOD' ,'You have entered an incorrect date of birth!');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei Billpay gestartet');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_CANCEL_COMMENT', 'Die Bestellung wurde erfolgreich bei Billpay storniert');
@@ -115,8 +126,10 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_CANCEL_ORDER', 'Billpay Bes
 
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ACCOUNT_HOLDER', 'Kontoinhaber');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ACCOUNT_NUMBER', 'Kontonummer');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_IBAN', 'IBAN');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BANK_CODE', 'Bankleitzahl');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BANK_NAME', 'Bank');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BIC', 'BIC');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_INVOICE_REFERENCE', 'Rechnungsnummer');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_PHONE', 'Telefonnummer');
 
@@ -153,6 +166,7 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_RATE', 'Rate');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_RATEDUE_TEXT', 'f&auml;llig am');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TOTAL_PRICE_CALC_TEXT', 'Gesamtpreisberechnung');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CART_AMOUNT_TEXT', 'Warenkorbwert');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CART_AMOUNT_AFTER_PREPAYMENT_TEXT', 'Warenkorbwert nach Anzahlung');
 define('MODULE_PAYMENT_BILLPAYTC_SURCHARGE_TEXT', 'Zinsaufschlag');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TEXT', 'Bearbeitungsgeb&uuml;hr');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_OTHER_COSTS_TEXT', 'weitere Geb&uuml;hren (z.B. Versandgeb&uuml;hr)');
@@ -163,15 +177,17 @@ define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_EXAMPLE_TEXT', '* Erste Rate zah
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_DIVIDED_BY_RATES', 'Geteilt durch die Anzahl der Raten');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FIRST_RATE', 'Die erste Rate inkl. Geb&uuml;hren betr&auml;gt');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FOLLOWING_RATES', 'Jede folgende Rate betr&auml;gt');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_UNIQUE_RATE', 'Jede Rate betr&auml;gt');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CAPTION_TEXT1', 'Ihre Teilzahlung in');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CAPTION_TEXT2', 'Monatsraten');
-define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_ENTER_NUMBER_RATES', 'Bitte geben Sie die gew&uuml;nschte Anzahl Monatsraten ein');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_ENTER_NUMBER_RATES', 'Bitte geben Sie die gew&uuml;nschte Laufzeit in Monaten ein');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_RATES', 'Raten');
 define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_CALCULATE_RATES', 'Ratenplan berechnen');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_FINANCE_DETAILS_LINK_TEXT', 'Finanzierungsdetails');
+define('MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_PREPAYMENT_TEXT', 'Anzahlung');
 
 define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE', 'Bearbeitungsgeb&uuml;hr');
 define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX1', 'inkl.');
 define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX2', 'MwSt.');
 define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE', 'Zinsaufschlag');
 define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TOTAL', 'Gesamtsumme Ratenkauf');
-?>
