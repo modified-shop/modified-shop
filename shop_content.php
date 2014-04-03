@@ -31,7 +31,8 @@ $shop_content_query = xtc_db_query("
     SELECT content_id, content_title, content_heading, content_text, content_file
       FROM ".TABLE_CONTENT_MANAGER."
      WHERE content_group='".(int) $_GET['coID']."'
-       ".CONTENT_CONDITIONS."
+           ".CONTENT_CONDITIONS."
+       AND content_active = '1'
        AND languages_id=".$_SESSION['languages_id']);
 
 if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {

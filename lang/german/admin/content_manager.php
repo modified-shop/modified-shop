@@ -16,7 +16,7 @@
  define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Seiten Content');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
- define('TABLE_HEADING_CONTENT_ID','Link ID');
+ define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Titel');
  define('TABLE_HEADING_CONTENT_FILE','Datei');
  define('TABLE_HEADING_CONTENT_STATUS','In Box sichtbar');
@@ -28,7 +28,7 @@
  define('TABLE_HEADING_CONTENT_NAME','Name/Dateiname');
  define('TABLE_HEADING_CONTENT_LINK','Link');
  define('TABLE_HEADING_CONTENT_HITS','Hits');
- define('TABLE_HEADING_CONTENT_GROUP','Gruppe');
+ define('TABLE_HEADING_CONTENT_GROUP','Sprachgruppe<br />coID');
  define('TABLE_HEADING_CONTENT_SORT','Reihenfolge');
  define('TEXT_YES','Ja');
  define('TEXT_NO','Nein');
@@ -78,5 +78,9 @@
  define('TEXT_CONTENT_NOFOLLOW','nofollow');
  define('TEXT_CONTENT_NOODP','noodp');
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
+ 
+ define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
+ define('TEXT_STATUS_ACTIVE', 'Status aktiv'); 	 
+ define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Content aktivieren/deaktivieren');
  
  ?>

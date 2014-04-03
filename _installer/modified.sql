@@ -1052,6 +1052,7 @@ CREATE TABLE content_manager (
   content_meta_description TEXT,
   content_meta_keywords TEXT,
   content_meta_robots VARCHAR(32) NOT NULL,
+  content_active INT(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (content_id),
   FULLTEXT (content_meta_title,content_meta_description,content_meta_keywords)
 ) ENGINE=MyISAM;

@@ -78,5 +78,9 @@
  define('TEXT_CONTENT_NOFOLLOW','nofollow');
  define('TEXT_CONTENT_NOODP','noodp');
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
+ 
+ define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
+ define('TEXT_STATUS_ACTIVE', 'Status active'); 	 
+ define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable / disable content');
 
  ?>
