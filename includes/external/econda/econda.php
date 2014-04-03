@@ -81,7 +81,7 @@ $emos->prettyPrint();
 $emos->addContent($breadcrumb->econda());
 
 // login erfolgreich
-if ($_SESSION['login_success']) {
+if (isset($_SESSION['login_success']) && $_SESSION['login_success']) {
 	$emos->addLogin($_SESSION['customer_id'],'0');
 	unset($_SESSION['login_success']);
 }
