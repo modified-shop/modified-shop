@@ -242,7 +242,7 @@ ul.topnavigation li a:hover {
 /* HEADINGS */
 h1 {
   font-family: 'oswaldregular', sans-serif;
-  color:#555;
+  color:#444;
   font-weight:normal;
   font-size:18px;
   margin:20px 0 15px 0;
@@ -267,7 +267,7 @@ h2 {
 }
 
 h3 {
-  color:#555;
+  color:#444;
   font-weight:bold;
   font-size:12px;
 }
@@ -284,6 +284,13 @@ h4 {
 	border-width:0px 0px 1px 0px;
 	padding-bottom:5px;
 }
+h4.detailbox {
+	color:#444;
+	font-size:13px;
+	margin:15px 0px 10px 0px;
+}
+
+
 
 /* LINKS GLOBAL */
 a, a:link, a:visited, a:active, a:hover {
@@ -1424,54 +1431,13 @@ h2.boxcartheader a {
 p.productinfoproductadded {
   font-size:11px;
 }
-.productoptions {
-  background-color:#f8f8f8;
-  padding:6px;
-  border:solid #ccc;
-  border-width:1px 0 0 0;
-}
-.addtobasket {
-  background-color:#ededed;
-  padding:6px;
-  text-align:right;
-  border:#999 solid;
-  border-width:1px 0 0 0;
-}
+
+
 /* POPUPS PRODUCTINFO */
 body.popupproductinfo {
   padding:15px;
   background:#fff none;
 }
-/* POPUP print_order.html */
-body.popupprintorder {
-  font-family:Arial, Sans-serif;
-  font-size:13px;
-  padding:15px;
-  background:#fff none;
-}
-body.popupprintorder .products tr.header td {
-  font-weight:bold;
-  background-color:#ededed;
-}
-body.popupprintorder .products .total {
-  text-align:right;
-}
-body.popupprintorder .products .quantity {
-  vertical-align:top;
-}
-body.popupprintorder .productname {
-  vertical-align:top;
-}
-body.popupprintorder .model {
-  vertical-align:top;
-}
-body.popupprintorder .singleprice {
-  vertical-align:top;
-}
-body.popupprintorder .totalprice {
-  vertical-align:top;
-}
-
 
 
 /* HIGHLIGHTBOX (BACKGROUND) */
@@ -1528,17 +1494,6 @@ table.downloadbox tr td.icon {
 }
 table.downloadbox tr td.downloadlink {
   width:100%;
-}
-/* TABLE WICH SHOWS GRADUATED PRICES */
-table.graduatedprice {
-  font-size:11px;
-  text-align:left;
-  margin-top:5px;
-}
-table.graduatedprice tr td.header {
-  font-size:12px;
-  font-weight:bold;
-  text-align:left;
 }
 
 
@@ -1774,10 +1729,6 @@ td.productPreviewContent {
 
 
 
-/* h-h-h - 2011-05-15 - MOUSE POINTER FOR PRODUCTOPTIONS RADIO BUTTON TEXT */
-.productoptions label {
-  cursor: pointer;
-}
 /* h-h-h - 2011-08-28 - DEFINE GLOBAL CENTER */
 .centered {
   margin: 0 auto;
@@ -2062,14 +2013,35 @@ a.color_more:hover {
 
 
 
-
+.unveil {
+  display: none;
+}
 
 .listingcontainer {
   margin: 0px -10px 0px -10px;
 }
-.unveil {
-  display: none;
+
+.pd_tabs .listingcontainer_details {
+  margin: 0px -6px 0px -6px;
 }
+.pd_tabs .listingbox {
+  margin: 0px 5px 10px 5px;
+}
+.pd_tabs .listingrow {
+  margin: 0px 6px 0px 6px;
+}
+
+
+.pd_accordion .listingcontainer_details {
+  margin: 0px -6px 0px -6px;
+}
+.pd_accordion .listingbox {
+  margin: 0px 5px 10px 5px;
+}
+.pd_accordion .listingrow {
+  margin: 0px 6px 0px 6px;
+}
+
 
 
 /* Start Produktlisten Boxen */
@@ -2303,6 +2275,10 @@ a.color_more:hover {
   font-family: 'oswaldregular', sans-serif;
   text-align:right;
   padding: 10px 0 0 0;
+  color:#434343;
+}
+.lr_price .standard_price {
+  display:block;
   font-size: 16px;
   line-height:20px;
   color:#434343;
@@ -2334,6 +2310,7 @@ a.color_more:hover {
   color:#777;
 }
 .lr_price .save_price {
+  display:block;
   font-size:9px;
   font-weight:normal;
   line-height:15px;
@@ -2347,9 +2324,15 @@ a.color_more:hover {
 }
 .lr_price .uvp_price {
   display:block;
+  font-size: 16px;
+  line-height:20px;
+  color:#434343;  
 }
 .lr_price .graduated_price {
   display:block;
+  font-size: 16px;
+  line-height:20px;
+  color:#434343;
 }
 .lr_tax {
   text-align:right;
@@ -2669,8 +2652,6 @@ table.total_table tr td {
   width:120px;
   white-space:nowrap;
 }
-
-
 .ord_subtotal {
   text-align:right;
   line-height:22px;
@@ -2689,4 +2670,392 @@ table.total_table tr td {
   margin: 0px 0px 4px 0px;
 }
 /* ENDE products_table für order_details, account_history_info, checkout_confirmation */
+
+/* START popup print_order.html */
+body.popupprintorder {
+  background:#fff none;
+}
+.printwrap {
+  width:700px;
+  margin: 0px auto;
+}
+.printlogo {
+  padding:10px 0px;
+  text-align:center;
+  border-bottom: 1px solid #ccc;
+  margin-bottom:10px;
+}
+.printColumsLeft {
+  float:left;
+  width:48%;
+}
+.printColumsRight {
+  float:right;
+  width:48%;
+}
+/* ENDE popup print_order.html */
+
+
+
+/* START Staffelpreise */
+.graduated_prices {
+  margin: 15px 0px 0px 0px;
+}
+.gp_headline {
+  font-size:12px;
+  font-weight:bold;
+  padding: 0 0 2px 0;
+}
+.gp_box {
+  float:left;
+  width:78px;
+  margin: 0px 0px 5px 0px;
+  border: solid #ddd;
+  border-width: 1px 0px 1px 1px;
+}
+.gp_box.last {
+  border-right: 1px solid #ddd;
+}
+.gp_title {
+  display:block;
+  background:#fafafa;
+  font-size:10px;
+  font-weight:bold;
+  text-align:left;    
+  padding:1px 3px;
+  white-space:nowrap;
+  border-bottom: 1px solid #ddd;
+}
+.gp_price {
+  display:block;
+  background:#fff;
+  font-size:10px;
+  font-weight:normal;
+  text-align:left;    
+  padding:1px 3px;
+}
+/* ENDE Staffelpreise */
+
+/* START addtobasket */
+.addtobasket {
+  margin: 20px 0px 0px 0px;
+  padding: 20px 0px 10px 0px;
+  border-top: 1px dotted #999;
+}
+.addtobasket_input {
+  float:left;
+  display:inline:block;
+  width: 60px;
+}
+.addtobasket_button {
+  float:right;
+  text-align:right;
+  max-width:175px;
+  display:inline:block;
+}
+/* ENDE addtobasket */
+
+/* START product_details reviews */
+.reviewrow { 
+  border-bottom: 1px dotted #ddd;
+  padding:10px 0px 4px 0px;
+}
+.reviewrow_title {
+  line-height:18px;
+}
+.reviewrow_title .stars {
+  padding-left:5px;      
+  line-height:18px;
+}
+.reviewrow_title .stars img {
+  width:91px;
+  height:18px;    
+  vertical-align:-4px;
+}
+/* ENDE product_details reviews */
+
+
+
+/* START Product Details */
+#product_details {
+  position:relative;
+}
+.pd_manu_image {
+  position:absolute;
+  display:inline-block;
+  height:30px;
+  top:-50px;
+  right:5px;
+}
+.pd_manu_image img {
+  max-height:30px; 
+  width:auto;
+}
+
+.pd_imagebox {
+  float:left;
+  width:262px;
+}
+.pd_content {
+  float:right;
+  width:483px;
+}
+.pd_infobox {
+  float:left;
+  width:211px;
+  margin-bottom:20px;
+}
+
+.pd_summarybox {
+  float:right;
+  background-color: #F2F2F2;
+  border: 1px solid #E6E6E6;
+  padding:5px;
+  width:240px;  
+  margin-bottom:20px;
+}
+
+
+.pd_big_image {
+  position:relative;
+  width:240px;
+  height:240px;
+  margin: 0px 0px 0px 0px;
+  border:1px solid #eee;
+}
+.pd_big_image img {
+  max-width:240px;
+  height:auto;
+}  
+.pd_fsk18 {
+  position:absolute;
+  top: 10px;
+  left: 10px;
+  width:100px;
+  height:100px;
+  background: transparent url(img/fsk18.png) no-repeat top center;
+}
+.zoomtext {
+  line-height:15px;
+  font-size:9px;
+  white-space:nowrap;
+  padding:8px 0px;
+}
+.pd_small_image {
+  float:left;
+  position:relative;
+  width:72px;
+  height:72px;
+  border:1px solid #eee;
+  text-align: center;
+  margin: 0px 10px 10px 0px;
+  overflow:hidden;
+}
+
+.pd_small_image img {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width:72px;
+  height:auto;
+}
+
+
+
+
+
+.pd_inforow_first {
+  margin: 0px;
+  border-bottom: 1px dotted #ddd;
+}
+.pd_inforow {
+  padding: 5px 0px;
+  font-size:12px;
+  line-height:16px;
+  text-align:left;
+  border-bottom: 1px dotted #ddd;
+}
+.pd_inforow.red { 
+  color:#A94442;
+}
+.pd_inforow .pd_shipping_image {
+  display:inline-block;
+  padding: 0 5px 0 0;
+}
+
+.pd_price {
+  font-family: 'oswaldregular', sans-serif;
+  text-align:right;
+  padding: 0px 0 0 0;
+}
+.pd_price .standard_price {
+  display:block;
+  font-size: 24px;
+  line-height:30px;
+  color:#434343;
+}
+.pd_price .new_price {
+  display:block;
+  font-size:24px;
+  line-height:30px;
+  font-weight:normal;
+  color:#bc0000;
+}
+.pd_price .special_price {
+  display:block;
+  font-size:24px;
+  line-height:30px;
+  font-weight:normal;
+  color:#bc0000;
+}
+.pd_price .small_price {
+  font-size:9px;
+  font-weight:normal;
+  line-height:11px;
+}
+.pd_price .old_price {
+  display:block;
+  font-size:12px;
+  line-height:18px;
+  font-weight:normal;
+  color:#777;
+}
+.pd_price .save_price {
+  display:block;
+  font-size:9px;
+  font-weight:normal;
+  line-height:15px;
+}
+.pd_price .item_price {
+  display:block;
+  font-size:12px;
+  line-height:18px;
+  font-weight:normal;
+  color:#777;
+}
+.pd_price .uvp_price {
+  display:block;
+  font-size: 24px;
+  line-height:30px;
+  color:#434343;
+}
+.pd_price .graduated_price {
+  display:block;
+  font-size:24px;
+  line-height:30px;
+  font-weight:normal;
+  color:#bc0000;  
+}
+.pd_tax {
+  text-align:right;
+  padding: 0 0 0 0;
+  font-size:10px;
+  color:#999;
+  line-height:18px;
+}
+.pd_tax a {
+  color:#999;
+  text-decoration:underline;
+}
+.pd_tax a:hover {
+  color:#999;
+  text-decoration:underline;
+}
+.pd_vpe {
+  font-family: 'oswaldregular', sans-serif;
+  text-align:right;
+  padding: 5px 0px 0 0;
+  font-size:9px;
+  line-height:12px;
+  color:#666;
+}
+
+.xtb_booster_redirect_message {
+  padding:10px;
+  color:#ffffff;
+  font-size:12px;
+  line-height:16px;
+  background-color:#329005;
+  margin-bottom:20px;
+}  
+
+
+
+
+
+
+ul.pd_iconlist {
+  margin: 20px 0 0px 0px !important;
+  list-style-type:none;
+  border: solid #eee;
+  border-width: 1px 1px 0px 1px;
+  background:#fafafa;
+}
+ul.pd_iconlist li {
+  font-size:11px;
+  line-height:15px;
+}
+ul.pd_iconlist li a {
+  display:block;
+  color:#555;
+  border-bottom:1px solid #eee;
+  padding: 6px 0px 6px 30px;
+}
+ul.pd_iconlist li a:hover {
+  color:#6D2551;
+  text-decoration:none;
+}
+ul.pd_iconlist li.print {
+  background: transparent url(img/icon_pd_iconlist_print.png) no-repeat 8px 6px;
+}  
+ul.pd_iconlist li.vote {
+  background: transparent url(img/icon_pd_iconlist_vote.png) no-repeat 8px 6px;
+}
+
+
+
+
+
+
+
+
+
+
+.productoptions {
+  margin: 15px 0px 0px 0px;
+}
+
+.multi_options_row {
+  margin: 0 0 10px 0;  
+}
+.multi_options_row .options_name {
+  font-size:12px;
+  font-weight:bold;
+  line-height:14px;
+  padding: 0 0 4px 0;
+}
+.multi_options_row .options_select {
+
+}
+
+
+
+
+/* h-h-h - 2011-05-15 - MOUSE POINTER FOR PRODUCTOPTIONS RADIO BUTTON TEXT */
+.productoptions label {
+  cursor: pointer;
+}
+
+
+
+
+
+
+
+
+
+
 

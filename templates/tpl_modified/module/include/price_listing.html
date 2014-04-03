@@ -21,8 +21,8 @@
                 <!-- START Produkt UVP Preis mit Ausgabe Ihr Preis, UVP  -->
                 <span class="uvp_price">  
                   <span class="small_price">{$smarty.const.YOUR_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}
-                  <span class="item_price"><span class="small_price">{$smarty.const.MSRP}</span>{$price_data.PRODUCTS_PRICE_OLD_PRICE}</span>                
                 </span>
+                <span class="item_price"><span class="small_price">{$smarty.const.MSRP}</span>{$price_data.PRODUCTS_PRICE_OLD_PRICE}</span>                
                 <!-- ENDE Produkt UVP Preis mit Ausgabe Ihr Preis, UVP  -->
 
               {else}
@@ -30,8 +30,8 @@
                 <!-- START Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis  -->
                 <span class="graduated_price">
                   <span class="small_price">{$smarty.const.FROM}</span> {$price_data.PRODUCTS_PRICE_OLD_PRICE}
-                  <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
                 </span>
+                <span class="item_price"><span class="small_price">{$smarty.const.UNIT_PRICE}</span> {$price_data.PRODUCTS_PRICE_SPECIAL_PRICE}</span>
                 <!-- ENDE Produkt Staffelpreis mit Ausgabe ab Preis, Stückpreis  -->
 
               {/if}

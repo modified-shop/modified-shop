@@ -27,7 +27,7 @@ define('DIR_TMPL_JS', 'templates/'.CURRENT_TEMPLATE. '/javascript/');
 <script type="text/javascript">
   $(document).ready(function(PRODUCTS_ID){
     $("a[rel='colorbox']").colorbox({scalePhotos:true, maxWidth: "90%", maxHeight: "90%"});
-    $(".iframe").colorbox({iframe:true, width:"750", height:"560", maxWidth: "90%", maxHeight: "90%"});
+    $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%"});
   });
   /*BOC jQuery Alerts*/
   $.alerts.overlayOpacity = .2;

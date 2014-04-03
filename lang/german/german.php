@@ -537,4 +537,6 @@ define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
 define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte Stückzahl i.H.v. ' .MAX_PRODUCTS_QTY. ' für <span style="font-style:italic;">"%s"</span>  wurde überschritten.<br />Die Stückzahl wurde automatisch auf die erlaubte Stückzahl reduziert.');
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
+define('PRINTVIEW_INFO', 'Artikeldatenblatt drucken');
+define('PRODUCTS_REVIEW_LINK', 'Bewertung schreiben');
 ?>
