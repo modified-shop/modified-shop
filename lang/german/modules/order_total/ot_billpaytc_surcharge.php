@@ -26,13 +26,13 @@
   define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE_TAX_CLASS_DESC','W&auml;hlen Sie eine Steuerklasse.');
 
   // new
-  //define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE', 'Bearbeitungsgeb&uuml;hr'); //DokuMan - 2011-12-29 - constant defined twice
-  //define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE', 'Zinsaufschlag'); //DokuMan - 2011-12-29 - constant defined twice
-  //define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TOTAL', 'Gesamtsumme Ratenkauf'); //DokuMan - 2011-12-29 - constant defined twice
+  define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE', 'Bearbeitungsgeb&uuml;hr');
+  define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE', 'Zinsaufschlag');
+  define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TOTAL', 'Gesamtsumme Ratenkauf');
   
   define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE', 'Bearbeitungsgeb&uuml;hr');
   define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX1', 'inkl.');
   define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX2', 'MwSt.');
-  define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE', 'Zinsaufschlag'); 
+  define('MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE', 'Zinsaufschlag');
   define('MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TOTAL', 'Gesamtsumme Ratenkauf');
 ?>

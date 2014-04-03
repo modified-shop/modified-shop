@@ -43,8 +43,8 @@
 			
 			/** BEGIN invoice created request */
 			if($status == MODULE_PAYMENT_BILLPAY_STATUS_ACTIVATED) {
-        require_once(DIR_FS_EXTERNAL . 'billpay/api/ipl_xml_api.php');// DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
-        require_once(DIR_FS_EXTERNAL . 'billpay/api/php4/ipl_invoice_created_request.php');// DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+				require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
+				require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_invoice_created_request.php');
 				
 				$query = 'SELECT api_reference_id FROM billpay_bankdata WHERE orders_id = ' . $orderId;
 				
@@ -127,8 +127,8 @@
 
 			/** BEGIN cancel request */
 			if($status == MODULE_PAYMENT_BILLPAY_STATUS_CANCELLED) {
-        require_once(DIR_FS_EXTERNAL . 'billpay/api/ipl_xml_api.php');// DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
-        require_once(DIR_FS_EXTERNAL . 'billpay/api/php4/ipl_cancel_request.php');// DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+				require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/ipl_xml_api.php');
+				require_once(DIR_FS_CATALOG . 'includes/external/billpay/api/php4/ipl_cancel_request.php');
 				
 				$query = 'SELECT api_reference_id FROM billpay_bankdata WHERE orders_id = ' . $orderId;
 				

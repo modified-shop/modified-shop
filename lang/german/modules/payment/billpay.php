@@ -25,17 +25,17 @@ define('MODULE_PAYMENT_BILLPAY_ALLOWED_DESC' , 'Geben Sie einzeln die Zonen an, 
 define('MODULE_PAYMENT_BILLPAY_LOGGING_TITLE' , 'Absoluter Pfad zur Logdatei');
 define('MODULE_PAYMENT_BILLPAY_LOGGING_DESC' , 'Wenn kein Wert eingestellt ist, wird standardm&auml;ssig in das Verzeichnis includes/external/billpay/log geschrieben (Schreibrechte m&uuml;ssen verf&uuml;gbar sein).');
 
-define('MODULE_PAYMENT_BILLPAY_MERCHANT_ID_TITLE' , 'Verk&auml;ufer ID');
-define('MODULE_PAYMENT_BILLPAY_MERCHANT_ID_DESC' , 'Diese Daten erhalten Sie von Billpay');
+define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_TITLE' , 'Verk&auml;ufer ID');
+define('MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID_DESC' , 'Diese Daten erhalten Sie von Billpay');
 
 define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_TITLE' , 'Bestellstatus festlegen');
 define('MODULE_PAYMENT_BILLPAY_ORDER_STATUS_DESC' , 'Bestellungen, welche mit diesem Modul gemacht werden, auf diesen Status setzen');
 
-define('MODULE_PAYMENT_BILLPAY_PORTAL_ID_TITLE' , 'Portal ID');
-define('MODULE_PAYMENT_BILLPAY_PORTAL_ID_DESC' , 'Diese Daten erhalten Sie von Billpay');
+define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_TITLE' , 'Portal ID');
+define('MODULE_PAYMENT_BILLPAY_GS_PORTAL_ID_DESC' , 'Diese Daten erhalten Sie von Billpay');
 
-define('MODULE_PAYMENT_BILLPAY_SECURE_TITLE' , 'Security Key');
-define('MODULE_PAYMENT_BILLPAY_SECURE_DESC' , 'Diese Daten erhalten Sie von Billpay');
+define('MODULE_PAYMENT_BILLPAY_GS_SECURE_TITLE' , 'Security Key');
+define('MODULE_PAYMENT_BILLPAY_GS_SECURE_DESC' , 'Diese Daten erhalten Sie von Billpay');
 
 define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_TITLE' , 'Anzeigereihenfolge');
 define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige. Kleinste Ziffer wird zuerst angezeigt.');
@@ -43,17 +43,17 @@ define('MODULE_PAYMENT_BILLPAY_SORT_ORDER_DESC' , 'Reihenfolge der Anzeige. Klei
 define('MODULE_PAYMENT_BILLPAY_STATUS_TITLE' , 'Aktiviert');
 define('MODULE_PAYMENT_BILLPAY_STATUS_DESC' , 'M&ouml;chten Sie den Rechnungskauf mit Billpay erlauben?');
 
-define('MODULE_PAYMENT_BILLPAY_TESTMODE_TITLE' , 'Transaktionsmodus');
-define('MODULE_PAYMENT_BILLPAY_TESTMODE_DESC' , 'Im Testmodus werden detailierte Fehlermeldungen angezeigt. F&uuml;r den Produktivbetrieb muss der Livemodus aktiviert werden.');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTMODE_TITLE' , 'Transaktionsmodus');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTMODE_DESC' , 'Im Testmodus werden detailierte Fehlermeldungen angezeigt. F&uuml;r den Produktivbetrieb muss der Livemodus aktiviert werden.');
 
 define('MODULE_PAYMENT_BILLPAY_ZONE_TITLE' , 'Steuerzone');
 define('MODULE_PAYMENT_BILLPAY_ZONE_DESC' , '');
 
-define('MODULE_PAYMENT_BILLPAY_API_URL_BASE_TITLE' , 'API url base');
-define('MODULE_PAYMENT_BILLPAY_API_URL_BASE_DESC' , 'Diese Daten erhalten Sie von Billpay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
+define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_TITLE' , 'API url base');
+define('MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE_DESC' , 'Diese Daten erhalten Sie von Billpay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
 
-define('MODULE_PAYMENT_BILLPAY_TESTAPI_URL_BASE_TITLE' , 'Test-API url base');
-define('MODULE_PAYMENT_BILLPAY_TESTAPI_URL_BASE_DESC' , 'Diese Daten erhalten Sie von Billpay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_TITLE' , 'Test-API url base');
+define('MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE_DESC' , 'Diese Daten erhalten Sie von Billpay (Achtung! Die URLs f&uuml; das Test- bzw. das Livesystem unterscheiden sich!)');
 
 define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_TITLE' , 'Logging aktiviert');
 define('MODULE_PAYMENT_BILLPAY_LOGGING_ENABLE_DESC' , 'Sollen Anfragen an die Billpay-Zahlungsschnittstelle in die Logdatei geschrieben werden?');
@@ -64,8 +64,13 @@ define('MODULE_PAYMENT_BILLPAY_MIN_AMOUNT_DESC', 'Ab diesem Bestellwert wird die
 define('MODULE_PAYMENT_BILLPAY_LOGPATH_TITLE', 'Logging Pfad');
 define('MODULE_PAYMENT_BILLPAY_LOGPATH_DESC', '');
 
-define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
-define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
+define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
+define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
+
+if (defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE') === false) {
+    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE', 'SEPA Zahlungsverkehr aktivieren');
+    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_DESC', 'Diese Option muss ab 1.2.2014 auf "True" gestellt sein');
+}
 
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
@@ -91,7 +96,7 @@ define('JS_BILLPAY_DOBYEAR', '* Bitte geben Sie Ihr Geburtsjahr ein.\n\n');
 define('JS_BILLPAY_GENDER', '* Bitte geben Sie Ihr Geschlecht ein.\n\n');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die Billpay AGB!');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte wÃƒÂ¤hlen Sie eine andere Zahlart');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei Billpay gestartet.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_COMMENT', 'Die Bestellung wurde erfolgreich bei Billpay storniert');
@@ -102,8 +107,10 @@ define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_ORDER', 'Billpay Bestellung jetzt sto
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER', 'Kontoinhaber');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_NUMBER', 'Kontonummer');
+define('MODULE_PAYMENT_BILLPAY_TEXT_IBAN', 'IBAN');
 define('MODULE_PAYMENT_BILLPAY_TEXT_BANK_CODE', 'Bankleitzahl');
 define('MODULE_PAYMENT_BILLPAY_TEXT_BANK_NAME', 'Bank');
+define('MODULE_PAYMENT_BILLPAY_TEXT_BIC', 'BIC');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_REFERENCE', 'Rechnungsnummer');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_INFO', 'Bitte &uuml;berweisen Sie den Gesamtbetrag unter Angabe der Billpay-Transaktionsnummer im Verwendungszweck (%1$s) innerhalb der Zahlungsfrist bis zum %2$02s.%3$02s.%4$04s auf das folgende Konto:');
@@ -187,8 +194,4 @@ define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_TITLE' , 'Billpay Fehler!');
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', 'Herr');
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', 'Frau');
 
-// BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
-define('MODULE_PAYMENT_BILLPAY_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-define('MODULE_PAYMENT_BILLPAY_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
-// EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
 ?>
