@@ -67,13 +67,15 @@ define('MODULE_PAYMENT_BILLPAY_LOGPATH_DESC', '');
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
 define('MODULE_PAYMENT_BILLPAY_GS_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
 
-define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE', 'SEPA Zahlungsverkehr aktivieren');
-define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_DESC', 'Diese Option muss ab 1.2.2014 auf "True" gestellt sein');
+if (defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE') === false) {
+    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_TITLE', 'SEPA Zahlungsverkehr aktivieren');
+    define('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT_DESC', 'Diese Option muss ab 1.2.2014 auf "True" gestellt sein');
+}
 
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAY_TEXT_BIRTHDATE', 'Geburtsdatum');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK', 'Hiermit best&auml;tige ich die <a href="https://www.billpay.de/kunden/agb" target="_blank">AGB</a> und die <a href="https://www.billpay.de/kunden/agb#datenschutz" target="_blank">Datenschutzbestimmungen</a> der Billpay GmbH');
-define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', '<label for="billpay_eula">Hiermit best&auml;tige ich die <a href="https://www.billpay.de/kunden/agb-ch" target="_blank">AGB</a> und die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> der Billpay GmbH </label> <br />');
+define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK', 'Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden" target="blank">Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href="%s" target="_blank">Datenschutzbestimmungen</a> von Billpay.');
+define('MODULE_PAYMENT_BILLPAY_TEXT_EULA_CHECK_CH', '<label style="line-height:1.8em" for="billpay_eula">Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufs und einer Identit&auml;ts und Bonit&auml;tspr&uuml;fung erforderlichen Daten an die <a href="https://www.billpay.de/endkunden" target="blank">Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> von Billpay.</label> <br />');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_GENDER', 'Bitte geben Sie Ihr Geschlecht ein');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ENTER_TITLE', 'Bitte geben Sie Ihre Anrede ein');
@@ -94,7 +96,7 @@ define('JS_BILLPAY_DOBYEAR', '* Bitte geben Sie Ihr Geburtsjahr ein.\n\n');
 define('JS_BILLPAY_GENDER', '* Bitte geben Sie Ihr Geschlecht ein.\n\n');
 
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_EULA', '* Bitte akzeptieren Sie die Billpay AGB!');
-define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte wählen Sie eine andere Zahlart');
+define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_DEFAULT', 'Es ist ein interner Fehler aufgetreten. Bitte w&auml;len Sie eine andere Zahlart');
 define('MODULE_PAYMENT_BILLPAY_TEXT_ERROR_SHORT', 'Es ist ein interner Fehler aufgetreten!');
 define('MODULE_PAYMENT_BILLPAY_TEXT_INVOICE_CREATED_COMMENT', 'Das Zahlungsziel der Bestellung wurde erfolgreich bei Billpay gestartet.');
 define('MODULE_PAYMENT_BILLPAY_TEXT_CANCEL_COMMENT', 'Die Bestellung wurde erfolgreich bei Billpay storniert');
@@ -135,6 +137,12 @@ define('MODULE_PAYMENT_BILLPAY_B2BCONFIG_DESC', 'Wollen Sie die Zahlart f&uuml;r
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_NAME_TEXT', 'Firmenname');
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_TEXT', 'Rechtsform');
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_LEGAL_FORM_SELECT_HTML', "");
+define('MODULE_PAYMENT_BILLPAY_B2B_LEGALFORM_VALUES', 'ag:AG (Aktiengesellschaft)|eg:eG (eingetragene Genossenschaft)|ek:EK (eingetragener Kaufmann)|ev:e.V. (eingetragener Verein)|freelancer:Freiberufler/Kleingewerbetreibender/Handelsvertreter|gbr:GbR/BGB (Gesellschaft b&uuml;rgerlichen Rechts)|gmbh:GmbH (Gesellschaft mit beschr&auml;nkter Haftung)|gmbh_ig:GmbH in Gr&uuml;ndung|gmbh_co_kg:GmbH & Co. KG|kg:KG (Kommanditgesellschaft)|ltd:Limited|ltd_co_kg:Limited & Co. KG|ohg:OHG (offene Handelsgesellschaft)|public_inst:&Ouml;ffentliche Einrichtung|misc_capital:Sonstige Kapitalgesellschaft|misc:Sonstige Personengesellschaft|foundation:Stiftung|ug:UG (Unternehmensgesellschaft haftungsbeschr&auml;nkt)');
+define('MODULE_PAYMENT_BILLPAY_B2B_REGISTER_NUMBER_TEXT', 'Handelsregisternummer');
+define('MODULE_PAYMENT_BILLPAY_B2B_TAX_NUMBER_TEXT', 'Umsatzsteuer-ID');
+define('MODULE_PAYMENT_BILLPAY_B2B_HOLDER_NAME_TEXT', 'Name des Inhabers');
+define('MODULE_PAYMENT_BILLPAY_B2B_CONTACT_PERSON_TEXT', 'Kontaktperson');
+
 define('MODULE_PAYMENT_BILLPAY_B2B_PRIVATE_CLIENT_TEXT', 'Privatkunde');
 define('MODULE_PAYMENT_BILLPAY_B2B_BUSINESS_CLIENT_TEXT', 'Gesch&auml;ftskunde');
 define('MODULE_PAYMENT_BILLPAY_B2B_COMPANY_FIELD_EMPTY', 'Bitte geben Sie den Firmenname ein');
@@ -186,4 +194,8 @@ define('MODULE_PAYMENT_BILLPAY_STATUS_ERROR_TITLE' , 'Billpay Fehler!');
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_MALE', 'Herr');
 define('MODULE_PAYMENT_BILLPAY_SALUTATION_FEMALE', 'Frau');
 
+// BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
+define('MODULE_PAYMENT_BILLPAY_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
+define('MODULE_PAYMENT_BILLPAY_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren wenn Versandmodul gew&auml;hlt (Komma separierte Liste)');
+// EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
 ?>
