@@ -145,6 +145,18 @@ if(!class_exists('billpayBase')) {
          */
         function update_status() {
 			global $order;
+			// BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
+			if( 'MODULE_PAYMENT_'.$this->_paymentIdentifier.'_NEG_SHIPPING' != '' ) {
+				$neg_shpmod_arr = explode(',','MODULE_PAYMENT_'.$this->_paymentIdentifier.'_NEG_SHIPPING');
+				foreach( $neg_shpmod_arr as $neg_shpmod ) {
+					$nd=$neg_shpmod.'_'.$neg_shpmod;
+					if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
+						$this->enabled = false;
+						break;
+					}
+				}
+			}
+			// EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
 
 			if ( ($this->enabled == true) && ((int)constant('MODULE_PAYMENT_'.$this->_paymentIdentifier.'_ZONE') > 0) ) {
 				$check_flag = false;
@@ -658,11 +670,11 @@ if(!class_exists('billpayBase')) {
             $b2bselection = '';
 			if ($this->_is_b2b_allowed($config)) {
 
-				if ($_SESSION['billpay_preselect'] == 'b2c') {
+				if(isset($_SESSION['billpay_preselect']) && $_SESSION['billpay_preselect'] == 'b2c') {
 					$preselect_b2b = 'none';
 					$preselect_b2c = 'block';
 
-				} elseif ($_SESSION['billpay_preselect'] == 'b2b'
+				} else if(isset($_SESSION['billpay_preselect']) && $_SESSION['billpay_preselect'] == 'b2b' ||
                           || (isset($_SESSION['customer_vat_id']) === true && $_SESSION['customer_vat_id'] != '')
                           || (isset($order->customer['company']) === true && $order->customer['company'] != '')
                 ) {
@@ -2580,6 +2592,10 @@ if(!class_exists('billpayBase')) {
             xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".$this->_paymentIdentifier."_MIN_AMOUNT', '', '6', '0', now())");
             xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_".$this->_paymentIdentifier."_UTF8_ENCODE', 'True', '6', '0', 'xtc_cfg_select_option(array(\'False\', \'True\'), ', now())");
 
+            // BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
+            xtc_db_query("insert into ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_".$this->_paymentIdentifier."_NEG_SHIPPING', '', '6', '99', now())");
+            // EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
+
             //check if login data is already set globally = GS
             $check_status = xtc_db_query('SELECT count(*) AS number FROM ' . TABLE_CONFIGURATION . ' where configuration_key LIKE "MODULE_PAYMENT_BILLPAY_GS_MERCHANT_ID"');
             $rs_check_status = xtc_db_fetch_array($check_status);
@@ -2826,6 +2842,7 @@ if(!class_exists('billpayBase')) {
                 'MODULE_PAYMENT_BILLPAY_GS_API_URL_BASE',
                 'MODULE_PAYMENT_BILLPAY_GS_TESTAPI_URL_BASE',
                 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_UTF8_ENCODE',
+				'MODULE_PAYMENT_'.$this->_paymentIdentifier.'_NEG_SHIPPING', // Hendrik - 2010-08-09 - exlusion config for shipping modules
                 'MODULE_PAYMENT_BILLPAY_GS_HTTP_X',
                 'MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT',
             );
