@@ -47,25 +47,34 @@ if(!class_exists('ot_billpaytc_surcharge')) {
 			$total          = round($_SESSION['bp_rate_result']['rateplan'][$_SESSION['bp_rate_result']['numberRates']]['calculation']['total'] / 100, PRICE_PRECISION);
 			 
 			if ($surcharge > 0) {
-				$this->output[] = array('title' => '<strong>' . MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE . ':</strong>',
-                                    'text' => '<strong>'.$xtPrice->xtcFormat($surcharge,true).'</strong>',
-                                    'value' => 0);
+				$this->output[] = array(
+                    'title'      => '<strong>' . MODULE_ORDER_TOTAL_BILLPAYTC_SURCHARGE . ':</strong>',
+                    'text'       => '<strong>' . $xtPrice->xtcFormat($surcharge, true) . '</strong>',
+                    'value'      => 0,
+                    'sort_order' => $this->sort_order + 10,
+                );
 			}
 				
 			if ($transactionFee > 0) {
-				$this->output[] = array('title' => '<strong>' . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE
-									. ' (' . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX1
-									. ' ' . $xtPrice->xtcFormat($feeTax,true) . ' '
-									. MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX2 . ')'
-									. ':</strong>',
-                                    'text' => '<strong>'.$xtPrice->xtcFormat($transactionFee,true).'</strong>',
-                                    'value' => 0);
+				$this->output[] = array(
+                    'title'      => '<strong>' . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE
+                        . ' (' . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX1
+                        . ' ' . $xtPrice->xtcFormat($feeTax, true) . ' '
+                        . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TRANSACTION_FEE_TAX2 . ')'
+                        . ':</strong>',
+                    'text'       => '<strong>' . $xtPrice->xtcFormat($transactionFee, true) . '</strong>',
+                    'value'      => 0,
+                    'sort_order' => $this->sort_order + 20,
+                );
 			}
 			
 			if ($total > 0) {
-				$this->output[] = array('title' => '<strong>' . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TOTAL . ':</strong>',
-                                    'text' => '<strong>'.$xtPrice->xtcFormat($total,true).'</strong>',
-                                    'value' => 0);
+				$this->output[] = array(
+                    'title'      => '<strong>' . MODULE_ORDER_TOTAL_BILLPAYTRANSACTIONCREDIT_TOTAL . ':</strong>',
+                    'text'       => '<strong>' . $xtPrice->xtcFormat($total, true) . '</strong>',
+                    'value'      => 0,
+                    'sort_order' => $this->sort_order + 30,
+                );
 			}
 		}
 	

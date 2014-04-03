@@ -13,7 +13,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-require_once (DIR_FS_EXTERNAL . 'billpay/base/billpayBase.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+require_once DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php';
 
 class billpay extends billpayBase {
 	var $_paymentIdentifier = 'BILLPAY';

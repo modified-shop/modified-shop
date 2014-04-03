@@ -69,10 +69,21 @@ define('MODULE_PAYMENT_BILLPAYDEBIT_LOGPATH_DESC', '');
 define('MODULE_PAYMENT_BILLPAY_HTTP_X_TITLE', 'X_FORWARDED_FOR erlauben');
 define('MODULE_PAYMENT_BILLPAY_HTTP_X_DESC', 'Aktivieren Sie dieses Funktion wenn Ihr Shop in einem Cloud System l&auml;uft.');
 
+define('MODULE_PAYMENT_BILLPAYDEBIT_GS_SEPA_SUPPORT_TITLE', 'SEPA Zahlungsverkehr aktivieren');
+define('MODULE_PAYMENT_BILLPAYDEBIT_GS_SEPA_SUPPORT_DESC', 'Diese Option muss ab 1.2.2014 auf "True" gestellt sein');
+
 // Payment selection texts
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BIRTHDATE', 'Geburtsdatum');
+
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK', '<label for="billpay_eula">Hiermit best&auml;tige ich die <a href="https://www.billpay.de/kunden/agb" target="_blank">AGB</a> und die <a href="https://www.billpay.de/kunden/agb#datenschutz" target="_blank">Datenschutzbestimmungen</a> der Billpay GmbH </label> <br />');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK_DE', '<label for="billpay_eula">Hiermit best&auml;tige ich die <a href="https://www.billpay.de/kunden/agb-ch" target="_blank">AGB</a> und die <a href="https://www.billpay.de/kunden/agb-ch#datenschutz" target="_blank">Datenschutzbestimmungen</a> der Billpay GmbH </label> <br />');
+
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK_SEPA',    "Mit der Übermittlung der für die Abwicklung der Zahlung und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden' target='_blank'>Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von Billpay.<br/><br/>Ich erteile Billpay ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Einzelheiten</a>) zur Einziehung fälliger Zahlungen und weise mein Geldinstitut an, die Lastschriften einzulösen.");
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_EULA_CHECK_SEPA_AT', "Mit der Übermittlung der für die Abwicklung der Zahlung und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an die <a href='https://www.billpay.de/endkunden' target='_blank'>Billpay GmbH</a> bin ich einverstanden. Es gelten die <a href='%s' target='_blank'>Datenschutzbestimmungen</a> von Billpay.<br/><br/>Ich erteile Billpay und der <a href='https://www.privatbank1891.com/' target='_blank'>net-m privatbank 1891 AG</a> ein SEPA-Lastschriftmandat (<a href='#' class='bpy-btn-details'>Einzelheiten</a>) zur Einziehung fälliger Zahlungen und weise mein Geldinstitut an, die Lastschriften einzulösen.");
+
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_SEPA_INFORMATION',    "Die Gläubiger-Identifikationsnummer von Billpay ist DE19ZZZ00000237180. Die Mandatsreferenznummer wird mir zu einem späteren Zeitpunkt per Email zusammen mit einer Vorlage für ein schriftliches Mandat mitgeteilt. Ich werde zusätzlich dieses schriftliche Mandat unterschreiben und an Billpay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die fällige Forderung auch bei einer Rücklastschrift bestehen bleibt. Weitere Informationen finden Sie auf <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_SEPA_INFORMATION_AT', "Die Gläubiger-Identifikationsnummer von Billpay ist DE19ZZZ00000237180, die Gläubiger-Identifikationsnummer der net-m privatbank AG ist DE62ZZZ00000009232. Die Mandatsreferenznummer wird mir zu einem späteren Zeitpunkt per Email zusammen mit einer Vorlage für ein schriftliches Mandat mitgeteilt. Ich werde zusätzlich dieses schriftliche Mandat unterschreiben und an Billpay senden.<br/><br/>Hinweis: Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung des belasteten Betrages verlangen. Es gelten dabei die mit meinem Geldinstitut vereinbarten Bedingungen. Bitte beachten Sie, dass die fällige Forderung auch bei einer Rücklastschrift bestehen bleibt. Weitere Informationen finden Sie auf <a href='https://www.billpay.de/sepa' target='_blank'>https://www.billpay.de/sepa</a>.");
+
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ENTER_BIRTHDATE', 'Bitte geben Sie Ihr Geburtsdatum ein');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ENTER_GENDER', 'Bitte geben Sie Ihr Geschlecht ein');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ENTER_BIRTHDATE_AND_GENDER', 'Bitte geben Sie Ihr Geburtsdatum und Ihr Geschlecht ein');
@@ -108,8 +119,10 @@ define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_CANCEL_ORDER', 'Billpay Bestellung jetz
 
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ACCOUNT_HOLDER', 'Kontoinhaber');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ACCOUNT_NUMBER', 'Kontonummer');
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_IBAN', 'IBAN');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BANK_CODE', 'Bankleitzahl');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BANK_NAME', 'Bank');
+define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BIC', 'BIC');
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_REFERENCE', 'Rechnungsnummer');
 
 define('MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BANKDATA', 'Bitte geben Sie Ihre Bankverbindung ein.');
@@ -139,8 +152,4 @@ define('MODULE_PAYMENT_BILLPAYDEBIT_ACTIVATE_ORDER_WARNING', "<strong style='col
 define('MODULE_PAYMENT_BILLPAYDEBIT_SALUTATION_MALE', 'Herr');
 define('MODULE_PAYMENT_BILLPAYDEBIT_SALUTATION_FEMALE', 'Frau');
 
-// BOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
-define('MODULE_PAYMENT_BILLPAYDEBIT_NEG_SHIPPING_TITLE', 'Exclusion in case of shipping');
-define('MODULE_PAYMENT_BILLPAYDEBIT_NEG_SHIPPING_DESC', 'deactivate this payment if one of these shippingtypes are selected (list separated by comma)');
-// EOF - Hendrik - 2010-08-09 - exlusion config for shipping modules
 ?>
