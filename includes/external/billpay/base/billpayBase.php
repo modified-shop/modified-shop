@@ -674,7 +674,7 @@ if(!class_exists('billpayBase')) {
 					$preselect_b2b = 'none';
 					$preselect_b2c = 'block';
 
-				} else if(isset($_SESSION['billpay_preselect']) && $_SESSION['billpay_preselect'] == 'b2b' ||
+				} elseif (isset($_SESSION['billpay_preselect']) && $_SESSION['billpay_preselect'] == 'b2b'
                           || (isset($_SESSION['customer_vat_id']) === true && $_SESSION['customer_vat_id'] != '')
                           || (isset($order->customer['company']) === true && $order->customer['company'] != '')
                 ) {
