@@ -26,50 +26,19 @@ if (!$action) {
   // Display Content
   for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
     $content=array();
-    $content_query=xtc_db_query("SELECT
-                                        content_id,
-                                        categories_id,
-                                        parent_id,
-                                        group_ids,
-                                        languages_id,
-                                        content_title,
-                                        content_heading,
-                                        content_text,
-                                        sort_order,
-                                        file_flag,
-                                        content_file,
-                                        content_status,
-                                        content_group,
-                                        content_delete,
-                                        content_meta_title,
-                                        content_meta_description,
-                                        content_meta_keywords,
-                                        content_meta_robots
+    $content_query=xtc_db_query("SELECT *
                                    FROM ".TABLE_CONTENT_MANAGER."
                                   WHERE languages_id='".$languages[$i]['id']."'
                                     AND parent_id='0'
                                ORDER BY content_group,sort_order
                                  ");
+    $index = 0;
     while ($content_data=xtc_db_fetch_array($content_query)) {
-      $content[]=array(
-                       'CONTENT_ID' =>$content_data['content_id'] ,
-                       'PARENT_ID' => $content_data['parent_id'],
-                       'GROUP_IDS' => $content_data['group_ids'],
-                       'LANGUAGES_ID' => $content_data['languages_id'],
-                       'CONTENT_TITLE' => $content_data['content_title'],
-                       'CONTENT_HEADING' => $content_data['content_heading'],
-                       'CONTENT_TEXT' => $content_data['content_text'],
-                       'SORT_ORDER' => $content_data['sort_order'],
-                       'FILE_FLAG' => $content_data['file_flag'],
-                       'CONTENT_FILE' => $content_data['content_file'],
-                       'CONTENT_DELETE' => $content_data['content_delete'],
-                       'CONTENT_GROUP' => $content_data['content_group'],
-                       'CONTENT_STATUS' => $content_data['content_status'],
-                       'CONTENT_META_TITLE' => $content_data['content_meta_title'],
-                       'CONTENT_META_DESCRIPTION' => $content_data['content_meta_description'],
-                       'CONTENT_META_KEYWORDS' => $content_data['content_meta_keywords'],
-                       'TEXT_CONTENT_META_ROBOTS' => $content_data['content_meta_robots']
-                       );
+      foreach($content_data as $key => $entry) {                  
+        $content[$index][strtoupper($key)] = $entry;
+      }
+      $content[$index]['CONTENT_ACTIVE'] = $content[$index]['CONTENT_ACTIVE'] ?  xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', BUTTON_STATUS_ON) : xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', BUTTON_STATUS_OFF);
+      $index++;
     } // while content_data
     ?>
     <br />
@@ -85,6 +54,7 @@ if (!$action) {
         <td class="dataTableHeadingContent nobr" style="width:5%"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_META_ROBOTS ?></td>
+        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS_ACTIVE ?></td>
         <td class="dataTableHeadingContent txta-c nobr" style="width:30%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
       </tr>
       <?php
@@ -109,6 +79,7 @@ if (!$action) {
             <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
             <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
             <td class="dataTableContent txta-c"><?php echo $content[$ii]['TEXT_CONTENT_META_ROBOTS']; ?>&nbsp;</td>
+            <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_ACTIVE']; ?>&nbsp;</td>
             <td class="dataTableContent txta-r">
               <a href="">
                 <?php
@@ -131,51 +102,19 @@ if (!$action) {
           </tr>
             <?php
             $content_1= array();
-            $content_1_query = xtc_db_query("SELECT
-                                                    content_id,
-                                                    categories_id,
-                                                    parent_id,
-                                                    group_ids,
-                                                    languages_id,
-                                                    content_title,
-                                                    content_heading,
-                                                    content_text,
-                                                    sort_order,
-                                                    file_flag,
-                                                    content_file,
-                                                    content_status,
-                                                    content_group,
-                                                    content_delete,
-                                                    content_meta_title,
-                                                    content_meta_description,
-                                                    content_meta_keywords,
-                                                    content_meta_robots
+            $content_1_query = xtc_db_query("SELECT *
                                                FROM ".TABLE_CONTENT_MANAGER."
                                               WHERE languages_id='".$languages[$i]['id']."'
                                                 AND parent_id='".$content[$ii]['CONTENT_ID']."'
                                            ORDER BY content_group,sort_order
                                              ");
-
-            while ($content_1_data = xtc_db_fetch_array($content_1_query)) {                                     
-              $content_1[]=array(
-                                 'CONTENT_ID' =>$content_1_data['content_id'] ,
-                                 'PARENT_ID' => $content_1_data['parent_id'],
-                                 'GROUP_IDS' => $content_1_data['group_ids'],
-                                 'LANGUAGES_ID' => $content_1_data['languages_id'],
-                                 'CONTENT_TITLE' => $content_1_data['content_title'],
-                                 'CONTENT_HEADING' => $content_1_data['content_heading'],
-                                 'CONTENT_TEXT' => $content_1_data['content_text'],
-                                 'SORT_ORDER' => $content_1_data['sort_order'],
-                                 'FILE_FLAG' => $content_1_data['file_flag'],
-                                 'CONTENT_FILE' => $content_1_data['content_file'],
-                                 'CONTENT_DELETE' => $content_1_data['content_delete'],
-                                 'CONTENT_GROUP' => $content_1_data['content_group'],
-                                 'CONTENT_STATUS' => $content_1_data['content_status'],
-                                 'CONTENT_META_TITLE' => $content_1_data['content_meta_title'],
-                                 'CONTENT_META_DESCRIPTION' => $content_1_data['content_meta_description'],
-                                 'CONTENT_META_KEYWORDS' => $content_1_data['content_meta_keywords'],
-                                 'TEXT_CONTENT_META_ROBOTS' => $content_1_data['content_meta_robots']
-                                 );
+            $index = 0;
+            while ($content_1_data = xtc_db_fetch_array($content_1_query)) { 
+              foreach($content_1_data as $key => $entry) {                  
+                $content_1[$index][strtoupper($key)] = $entry;
+              }
+              $content_1[$index]['CONTENT_ACTIVE'] = $content_1[$index]['CONTENT_ACTIVE'] ?  xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', BUTTON_STATUS_ON) : xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', BUTTON_STATUS_OFF);
+              $index++;              
             }
             for ($a = 0, $x = sizeof($content_1); $a < $x; $a++) {
               if ($content_1[$a]!='') {
@@ -194,6 +133,7 @@ if (!$action) {
                     <td class="dataTableContent txta-c"><?php if ($content_1[$a]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
                     <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
                     <td class="dataTableContent txta-c"><?php echo $content_1[$a]['TEXT_CONTENT_META_ROBOTS']; ?>&nbsp;</td>
+                    <td class="dataTableContent txta-c"><?php echo $content_1[$a]['CONTENT_ACTIVE']; ?>&nbsp;</td>
                     <td class="dataTableContent txta-r">
                       <a href="">
                         <?php
@@ -231,25 +171,7 @@ if (!$action) {
     case 'new':
     case 'edit':
       if ($action != 'new') {
-        $content_query=xtc_db_query("SELECT
-                                            content_id,
-                                            categories_id,
-                                            parent_id,
-                                            group_ids,
-                                            languages_id,
-                                            content_title,
-                                            content_heading,
-                                            content_text,
-                                            sort_order,
-                                            file_flag,
-                                            content_file,
-                                            content_status,
-                                            content_group,
-                                            content_delete,
-                                            content_meta_title,
-                                            content_meta_description,
-                                            content_meta_keywords,
-                                            content_meta_robots
+        $content_query=xtc_db_query("SELECT *
                                        FROM ".TABLE_CONTENT_MANAGER."
                                       WHERE content_id='".$g_coID."'");
         $content = xtc_db_fetch_array($content_query);
@@ -293,6 +215,10 @@ if (!$action) {
           }
         ?>
         <table class="tableConfig borderall">
+          <tr>
+            <td class="dataTableConfig col-left"><?php echo TEXT_STATUS_ACTIVE; ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_checkbox_field('active','yes', (isset($content['content_active']) && $content['content_active'] == '1' ? true : false)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
+          </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>

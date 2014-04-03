@@ -154,7 +154,7 @@ ALTER TABLE newsletter_recipients ADD  ip_date_added varchar(32) DEFAULT NULL;
 ALTER TABLE newsletter_recipients ADD  date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00';
 ALTER TABLE newsletter_recipients ADD  ip_date_confirmed varchar(32) DEFAULT NULL;
 
-#Web28 - 2014-03-20 change password lenght
+#Web28 - 2014-03-20 change password length
 ALTER TABLE customers MODIFY customers_password varchar(60) NOT NULL;
 
 # Tomcraft - 2014-03-27 - Added delivery time
@@ -164,5 +164,8 @@ UPDATE content_manager SET content_id = 120 WHERE content_id = 20;
 UPDATE content_manager SET content_group = 999 WHERE content_id = 120;
 INSERT INTO content_manager VALUES (19, 0, 0, '', 1, 'Delivery time', 'Delivery time', 'The deadline for delivery begins when paying in advance on the day after the payment order to the remitting bank or for other payments on the day to run after the conclusion and ends with the expiry of the last day of the period. Falls on a Saturday, Sunday or a public holiday delivery nationally recognized, the last day of the period, as occurs, the next business day at the place of such a day.', 0, 1, '', 1, 10, 0, '', '', '', '');
 INSERT INTO content_manager VALUES (20, 0, 0, '', 2, 'Lieferzeit', 'Lieferzeit', 'Die Frist f&uuml;r die Lieferung beginnt bei Zahlung per Vorkasse am Tag nach Erteilung des Zahlungsauftrags an das &uuml;berweisende Kreditinstitut bzw. bei anderen Zahlungsarten am Tag nach Vertragsschluss zu laufen und endet mit dem Ablauf des letzten Tages der Frist. F&auml;llt der letzte Tag der Frist auf einen Samstag, Sonntag oder einen am Lieferort staatlich anerkannten allgemeinen Feiertag, so tritt an die Stelle eines solchen Tages der n&auml;chste Werktag.', 0, 1, '', 1, 10, 0, '', '', '', '');
+
+#Web28 - 2014-03-20 add content_active
+ALTER TABLE content_manager ADD content_active int(1) NOT NULL DEFAULT '1';
 
 # Keep an empty line at the end of this file for the db_updater to work properly

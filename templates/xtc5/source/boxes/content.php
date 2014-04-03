@@ -52,6 +52,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
                                  AND file_flag='1'
                                  ".CONTENT_CONDITIONS."
                                  AND content_status='1'
+                                 AND content_active='1'
                                  AND parent_id='0'
                             ORDER BY sort_order");
 
@@ -91,6 +92,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
                                         AND file_flag='1'
                                         ".CONTENT_CONDITIONS."
                                         AND content_status='1'
+                                        AND content_active='1'
                                         AND parent_id='".$value."'
                                    ORDER BY sort_order");
 
