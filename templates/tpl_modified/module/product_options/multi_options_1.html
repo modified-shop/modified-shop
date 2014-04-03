@@ -1,7 +1,7 @@
 {if $options != ''}
 <div class="productoptions">
   {foreach name=outer item=options_data from=$options}
-  <div class="multi_options_row">
+  <div class="options_row_multi">
     <div class="options_name">{$options_data.NAME}</div>
     <div class="options_select">
       <select name="id[{$options_data.ID}]">

@@ -1428,9 +1428,7 @@ h2.boxcartheader a {
   font-weight:normal;
   color:#999;
 }
-p.productinfoproductadded {
-  font-size:11px;
-}
+
 
 
 /* POPUPS PRODUCTINFO */
@@ -1440,7 +1438,7 @@ body.popupproductinfo {
 }
 
 
-/* HIGHLIGHTBOX (BACKGROUND) */
+/* START Highlightbox */
 div.highlightbox {
   padding:15px;
   background:#fff;
@@ -1477,7 +1475,7 @@ div.highlightbox ul {
   line-height:20px;
 }
 
-
+/* ENDE highlightbox */
 
 
 
@@ -1532,21 +1530,7 @@ table.reviewlist tr.contentrow2 td {
 textarea#review {
   width:95%;
 }
-/* MEDIA LIST */
-table.medialist {
-  background-color:#f8f8f8;
-  border:#ccc 1px solid;
-}
-table.medialist tr td {
-  padding:6px;
-  vertical-align:top;
-}
-table.medialist tr.contentrow1 td {
-  background-color:#f8f8f8;
-}
-table.medialist tr.contentrow2 td {
-  background-color:#f8f8f8;
-}
+
 /* SITEMAP */
 .sitemapwrap .sitemapleft {
   background-color:#f8f8f8;
@@ -2776,9 +2760,75 @@ body.popupprintorder {
 
 
 
+
+/* START product_options */
+.productoptions {
+  margin: 15px 0px 0px 0px;
+}
+
+/* multi & dropdown */
+.options_row_multi {
+  margin: 0 0 10px 0;  
+}
+.options_row_multi .options_name {
+  font-size:12px;
+  font-weight:bold;
+  line-height:14px;
+  padding: 0 0 4px 0;
+}
+.options_row_multi .options_select {
+}
+
+/* selection & table */
+.options_row_selection {
+  margin: 0 0 15px 0;  
+}
+.options_row_selection .options_name {
+  font-size:12px;
+  font-weight:bold;
+  line-height:14px;
+  padding: 0 0 4px 0;
+  border-bottom: 1px solid #ddd;
+}
+.options_row_selection .options_selection  {
+  padding:3px 0px;
+  font-size:12px;
+  line-height:20px;  
+  border-bottom: 1px solid #ddd;
+}
+.option_bg1 {
+  background:#fafafa;
+  padding:3px 5px !important;
+}
+.option_bg2 {
+  background:#ffffff;
+  padding:3px 5px !important;
+}
+.options_row_selection .options_selection label {
+  cursor: pointer;
+  display:block;
+  width:100%;
+}
+.options_row_selection .options_selection label input[type=radio] {
+  vertical-align: -1px;
+}
+.options_row_selection .options_selection label .options_selection_price {
+  float:right;
+  padding-right:2px;
+}
+.options_row_selection .options_selection label .label_row2 {
+  display:inline-block;
+  padding-left:22px;
+  font-style:italic;
+}
+/* ENDE product_options */
+
+
+
 /* START Product Details */
 #product_details {
   position:relative;
+  padding: 0 0 20px 0;
 }
 .pd_manu_image {
   position:absolute;
@@ -2860,11 +2910,26 @@ body.popupprintorder {
   max-width:72px;
   height:auto;
 }
-
-
-
-
-
+.pd_small_image_tab {
+  float:left;
+  position:relative;
+  width:130px;
+  height:130px;
+  border:1px solid #eee;
+  text-align: center;
+  margin: 5px 10px 5px 0px;
+  overflow:hidden;
+}
+.pd_small_image_tab img {
+  margin: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  max-width:130px;
+  height:auto;
+}
 .pd_inforow_first {
   margin: 0px;
   border-bottom: 1px dotted #ddd;
@@ -3025,40 +3090,54 @@ ul.pd_iconlist li.vote {
   background: transparent url(img/icon_pd_iconlist_vote.png) no-repeat 8px 6px;
 }
 
-
-
-
-
-
-
-
-
-
-.productoptions {
-  margin: 15px 0px 0px 0px;
+.dateadded {
+  font-size:10px;
+}
+.dateadded_border {
+  margin-top:15px;
+  font-size:10px;
+  border-top: 1px solid #ddd;
 }
 
-.multi_options_row {
-  margin: 0 0 10px 0;  
+
+/* START product_details media */
+.mediarow { 
+  border-bottom: 1px dotted #ddd;
+  padding:10px 5px 10px 5px;
 }
-.multi_options_row .options_name {
-  font-size:12px;
+.media_bg1 {
+  background:#fafafa;
+}
+.media_bg2 {
+  background:#ffffff;
+}
+.mediarow_headline {
+  line-height:32px;
+}
+
+.mediarow_title {
   font-weight:bold;
-  line-height:14px;
-  padding: 0 0 4px 0;
+  display:inline-block;
 }
-.multi_options_row .options_select {
-
+.mediarow_button {
+  float:right;
+  text-align:right;
+  display:inline-block;
+  height:32px;
+  min-width:120px;
+}
+.mediarow_filesize {
+  float:right;
+  text-align:right;
+  display:inline-block;
+  padding: 0px 30px 0px 0px;
+  font-style:italic;
+}
+.mediarow_desc {
+  padding: 0 130px 0 0;
 }
 
-
-
-
-/* h-h-h - 2011-05-15 - MOUSE POINTER FOR PRODUCTOPTIONS RADIO BUTTON TEXT */
-.productoptions label {
-  cursor: pointer;
-}
-
+/* ENDE product_details media */
 
 
 
