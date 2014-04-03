@@ -1,12 +1,11 @@
 {config_load file="$language/lang_$language.conf" section="graduated_price"} 
-<table cellpadding="2" cellspacing="0" border="0" class="graduatedprice">
-  <tr> 
-    <td colspan="2" class="header">{#heading_text#}:</td>
-  </tr>
-{foreach name=aussen item=module_data from=$module_content} 
-  <tr> 
-      <td>{if $module_data.TO_QUANTITY == ''}{$module_data.FROM_QUANTITY} {/if}{$module_data.PLAIN_QUANTITY}{if $module_data.TO_QUANTITY != ''} - {$module_data.TO_QUANTITY}{/if} {#unit#}</td>
-    <td>{#pieces#} {$module_data.PRICE}{if $module_data.VPE}<br />{$module_data.VPE}{/if}</td>
-  </tr>
-{/foreach}
-</table>
+<div class="graduated_prices">
+  <div class="gp_headline">{#heading_text#}</div>
+  {foreach name=aussen item=module_data from=$module_content}
+    <div class="gp_box{if $smarty.foreach.aussen.iteration is div by 3} last{/if}{if $smarty.foreach.aussen.last} last{/if}">
+      <span class="gp_title">{$module_data.FROM_QUANTITY} {$module_data.PLAIN_QUANTITY} {#unit#}</span>
+      <span class="gp_price">{#pieces#} {$module_data.PRICE}</span>
+    </div>
+  {/foreach}
+  <br class="clearfix" />
+</div>

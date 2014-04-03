@@ -1,19 +1,13 @@
 {config_load file="$language/lang_$language.conf" section="cross_selling"}
-<h2>{#heading_text#}</h2>
-<table class="productPreview" width="100%" border="0" cellspacing="0" cellpadding="0">
+{config_load file="$language/lang_$language.conf" section="index"}
+<h4 class="detailbox">{#heading_text#}</h4>
 {foreach name=aussen item=products_data from=$module_content}
-  <tr>
-    <td align="center" colspan="2">
-    <h3>{$products_data.GROUP}</h3>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" colspan="2">
-    <div class="hrproductpreview"></div>
-    </td>
-  </tr>
+{if $products_data.GROUP != ''}<h2>{$products_data.GROUP}</h2>{/if}
+  <div class="listingcontainer_details">
   {foreach item=module_data from=$products_data.PRODUCTS}
-    {include file="`$smarty.const.CURRENT_TEMPLATE`/module/product_info_include/product_info_include.html"}
+    {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/product_info_include.html"}
   {/foreach}
+  <br class="clearfix" />
+  </div>  
 {/foreach}
-</table>
+

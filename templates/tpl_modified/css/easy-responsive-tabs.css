@@ -1,13 +1,13 @@
 
 ul.resp-tabs-list {
-    margin: 0px;
+    margin: 0px !important;
     padding: 0px;
 }
 .resp-tabs-list li {
-    font-weight: 600;
+    font-weight: bold;
     font-size: 13px;
     display: inline-block;
-    padding: 13px 15px;
+    padding: 13px 10px;
     margin: 0;
     list-style: none;
     cursor: pointer;
@@ -15,7 +15,7 @@ ul.resp-tabs-list {
 }
 .resp-tabs-container {
     padding: 0px;
-    background-color: #fafafa;
+    background-color: #fff;
     clear: left;
 }
 h2.resp-accordion {
@@ -25,19 +25,20 @@ h2.resp-accordion {
 }
 .resp-tab-content {
     display: none;
-    padding: 15px;
+    padding: 10px;
 }
 
 .resp-tab-active {
-    border: 1px solid #c1c1c1;
+    border: 1px solid #dddddd;
     border-bottom: none;
     margin-bottom: -1px !important;
-    padding: 12px 14px 14px 14px !important;
+    padding: 12px 9px 14px 9px !important;
 }
 
 .resp-tab-active {
-    border-bottom: none;
-    background-color: #fff;
+  border-bottom: none;
+  background-color: #fafafa;
+  color:#6D2551;
 }
 
 .resp-content-active, .resp-accordion-active {
@@ -45,25 +46,26 @@ h2.resp-accordion {
 }
 
 .resp-tab-content {
-    border: 1px solid #c1c1c1;
+    border: 1px solid #ddd;
 }
 
 h2.resp-accordion {
     font-size: 13px;
-    border: 1px solid #c1c1c1;
-    border-top: 0px solid #c1c1c1;
+  background:#fafafa;
+    border: 1px solid #ddd;
+    border-top: 0px solid #ddd;
     margin: 0px;
-    padding: 10px 15px;
+    padding: 10px 10px;
 }
 
 h2.resp-tab-active {
-    border-bottom: 0px solid #c1c1c1 !important;
+    border-bottom: 0px solid #ddd !important;
     margin-bottom: 0px !important;
-    padding: 10px 15px !important;
+    padding: 10px 10px !important;
 }
 
 h2.resp-tab-title:last-child {
-    border-bottom: 12px solid #c1c1c1 !important;
+    border-bottom: 12px solid #ddd !important;
     background: blue;
 }
 /*-----------Vertical tabs-----------*/
@@ -83,7 +85,7 @@ h2.resp-tab-title:last-child {
 .resp-vtabs .resp-tabs-container {
     padding: 0px;
     background-color: #fff;
-    border: 1px solid #c1c1c1;
+    border: 1px solid #ddd;
     float: left;
     width: 68%;
     min-height: 250px;
@@ -96,7 +98,7 @@ h2.resp-tab-title:last-child {
 }
 
 .resp-vtabs li.resp-tab-active {
-    border: 1px solid #c1c1c1;
+    border: 1px solid #ddd;
     border-right: none;
     background-color: #fff;
     position: relative;
@@ -112,7 +114,7 @@ h2.resp-tab-title:last-child {
     margin-top: 3px;
     border-left: 6px solid transparent;
     border-right: 6px solid transparent;
-    border-top: 12px solid #c1c1c1;
+    border-top: 12px solid #ddd;
 }
 
 h2.resp-tab-active span.resp-arrow {
@@ -130,12 +132,12 @@ h2.resp-tab-active {
         display: block;
 }
 .resp-easy-accordion .resp-tab-content {
-    border: 1px solid #c1c1c1;
+    border: 1px solid #ddd;
     background:#fff;
 }
 
 .resp-easy-accordion .resp-tab-content:last-child {
-    border-bottom: 1px solid #c1c1c1 !important;
+    border-bottom: 1px solid #ddd !important;
 }
 
 .resp-jfit {
@@ -148,7 +150,7 @@ h2.resp-tab-active {
 }
 
 h2.resp-accordion:first-child {
-    border-top: 1px solid #c1c1c1 !important;
+    border-top: 1px solid #ddd !important;
 }
 
     .resp-accordion-closed {
