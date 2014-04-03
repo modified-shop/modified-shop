@@ -2828,12 +2828,10 @@ body.popupprintorder {
   height:auto;
 }  
 .pd_fsk18 {
-  position:absolute;
-  top: 10px;
-  left: 10px;
-  width:100px;
-  height:100px;
   background: transparent url(img/fsk18.png) no-repeat top center;
+  height: 44px;
+  position: absolute;
+  width: 44px;
 }
 .zoomtext {
   line-height:15px;
@@ -2881,6 +2879,18 @@ body.popupprintorder {
 .pd_inforow.red { 
   color:#A94442;
 }
+
+.pd_inforow_message {
+  margin: 10px 0 0 0;
+  color:#A94442;
+  padding: 5px 0px;
+  font-size:12px;
+  line-height:16px;
+  text-align:left;
+  border-top: 1px dotted #ddd;
+}
+
+
 .pd_inforow .pd_shipping_image {
   display:inline-block;
   padding: 0 5px 0 0;

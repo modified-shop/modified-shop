@@ -148,8 +148,7 @@ if ($product->getAttributesCount() > 0) {
   $module_smarty->caching = 0;
   $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/product_options/'.$product->data['options_template']);
 
+  $info_smarty->assign('MODULE_product_options_template', $product->data['options_template']);
   $info_smarty->assign('MODULE_product_options', $module);
-
 }
-
 ?>
