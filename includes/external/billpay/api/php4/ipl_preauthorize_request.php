@@ -19,8 +19,10 @@ class ipl_preauthorize_request extends ipl_xml_request {
 	var $_company_details		= array();
 	
 	var $_fraud_detection		= array();
-	
 	var $_payment_type;
+	
+	var $_preauth_params         = array();
+	var $_async_capture_params   = array();
 	
 	var $status;
 	var $bptid;
@@ -48,6 +50,13 @@ class ipl_preauthorize_request extends ipl_xml_request {
 	
 	var $payment_info_html;
 	var $payment_info_plain;
+
+    var $async_amount;
+    var $rate_plan_url;
+    var $external_redirect_url;
+	
+	// parameters needed for prescore
+	var $is_prescored = 0;
 	
 	// ctr
 	function ipl_preauthorize_request($ipl_request_url, $payment_type) {
@@ -126,9 +135,28 @@ class ipl_preauthorize_request extends ipl_xml_request {
 	function get_payment_info_html() {
 		return $this->payment_info_html;
 	}
-	function get_payment_info_plain() {
-		return $this->payment_info_plain;
+	function get_async_amount() {
+		return $this->async_amount;
 	}
+    function get_prepayment_amount() {
+        return $this->async_amount;
+    }
+	function get_external_redirect_url() {
+		return $this->external_redirect_url;
+	}
+	function get_rate_plan_url() {
+		return $this->rate_plan_url;
+	}
+	function get_campaign_type() {
+		return $this->campaign_type;
+	}
+	function get_campaign_dispay_text() {
+		return $this->campaign_dispay_text;
+	}
+	function get_campaign_dispay_image_url() {
+		return $this->campaign_dispay_image_url;
+	}
+
 	
 	function set_customer_details($customer_id, $customer_type, $salutation, $title, 
 		$first_name, $last_name, $street, $street_no, $address_addition, $zip,
@@ -242,7 +270,27 @@ class ipl_preauthorize_request extends ipl_xml_request {
 	function set_fraud_detection($session_id) {
 		$this->_fraud_detection['session_id'] = $session_id;
 	}
-
+	
+	function set_prescore_enable($is_prescored, $bptid) {
+		if($is_prescored == true)
+		{
+			$this->is_prescored = 1;
+			$this->bptid = $bptid;
+			$this->_preauth_params['is_prescored'] = 1;
+			$this->_preauth_params['bptid'] = $bptid;
+		}
+		else
+		{
+			$this->is_prescored = 0;
+			$this->_preauth_params['is_prescored'] = 0;
+		}
+	}
+	
+	function set_async_capture($redirect_url,$notify_url){
+		$this->_async_capture_params['redirect_url']= $redirect_url;
+		$this->_async_capture_params['notify_url'] 	= $notify_url;
+	}
+	
 	function _send() {
 		$attributes = array();
 		$attributes['tcaccepted'] 					= $this->_terms_accepted;
@@ -254,6 +302,7 @@ class ipl_preauthorize_request extends ipl_xml_request {
 			$this->_ipl_request_url, 
 			$attributes, 
 			$this->_default_params, 
+			$this->_preauth_params,
 			$this->_customer_details, 
 			$this->_shippping_details, 
 			$this->_bank_account, 
@@ -263,7 +312,8 @@ class ipl_preauthorize_request extends ipl_xml_request {
 			$this->_rate_request_data,
 			$this->_company_details,
 			$this->_payment_info_params,
-			$this->_fraud_detection
+			$this->_fraud_detection,
+			$this->_async_capture_params
 		);
 	}
 	

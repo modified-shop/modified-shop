@@ -71,6 +71,7 @@
 		$smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $billpay_infotext));
 	}
 	else if ($paymentMethod == 'billpaytransactioncredit') {
+        require_once DIR_FS_CATALOG . 'includes/modules/payment/billpaytransactioncredit.php';
 		$x = new billpaytransactioncredit();
 		$rateDetailsHTML = $x->buildTCPaymentInfo($x->_getTransactionId(), $order, true, true);
 		$rateDetailsText = $x->buildTCPaymentInfo($x->_getTransactionId(), $order, false, true);

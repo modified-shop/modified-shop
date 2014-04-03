@@ -15,8 +15,9 @@
 
 require_once DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php';
 
-class billpaytransactioncredit extends billpayBase {
-	var $_paymentIdentifier = 'BILLPAYTRANSACTIONCREDIT';
+class billpaytransactioncredit extends billpayBase
+{
+    var $_paymentIdentifier = self::PAYMENT_METHOD_TRANSACTION_CREDIT;
 
 	function _getPaymentType() {
 		return IPL_CORE_PAYMENT_TYPE_RATE_PAYMENT;
@@ -36,19 +37,94 @@ class billpaytransactioncredit extends billpayBase {
 	function _displayBankData() {
 		global $order;
 		
-		$bankdata = '<div style="margin-top:10px; margin-left:3px; margin-bottom:3px">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BANKDATA . '</div>';
+		$bankdata = '<div style="border:1px solid silver; padding:5px; width:' . ($this->_getPaymentBlockWidth() - 12) . 'px; margin-bottom:10px">';
+		$bankdata .= '<div style="margin-top:10px; margin-left:3px; margin-bottom:3px; border">' . MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BANKDATA . '</div>';
 		$bankdata .= '<table style="margin-bottom:5px"><tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER;
 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaytransactioncredit_owner', isset($_SESSION['billpaytransactioncredit_owner']) ? 
  											$_SESSION['billpaytransactioncredit_owner'] : $order->billing['firstname'] . 
- 											' ' . $order->billing['lastname']);
+ 											' ' . $order->billing['lastname'], 'style="width:250px"');
   		$bankdata .= '<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr><tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_NUMBER;
- 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaytransactioncredit_number');
+ 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaytransactioncredit_number', '', 'style="width:250px"');
  		$bankdata .= '<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr><tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_BANK_CODE;
- 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaytransactioncredit_code').'<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr></table>';
-
+ 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaytransactioncredit_code', '', 'style="width:250px"').'<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr></table>';
+		$bankdata .= '</div>';
+		
  		return $bankdata;
 	}
 
+    function _displaySepaBankData()
+    {
+        global $smarty, $order;
+
+        $accountPreselect = isset($_SESSION['billpaydebit_owner'])
+                                ? $_SESSION['billpaydebit_owner']
+                                : $order->billing['firstname'] . ' ' . $order->billing['lastname'];
+        $accountHolderInput = xtc_draw_input_field(
+            strtolower($this->_paymentIdentifier) . '_owner',
+            $accountPreselect,
+            'style="width:250px"'
+        );
+
+        $accountNumberInput = xtc_draw_input_field(
+            strtolower($this->_paymentIdentifier) . '_number',
+            '',
+            'style="width:250px"'
+        );
+
+        $bankCodeInput = xtc_draw_input_field(
+            strtolower($this->_paymentIdentifier) . '_code',
+            '',
+            'style="width:250px"'
+        );
+
+        $smarty->assign(array(
+            'headline'             => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BANKDATA,
+            'account_holder_text'  => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ACCOUNT_HOLDER,
+            'account_holder_input' => $accountHolderInput,
+            'account_number_text'  => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_IBAN,
+            'account_number_input' => $accountNumberInput,
+            'bank_code_text'       => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BIC,
+            'bank_code_input'      => $bankCodeInput,
+        ));
+
+        return $smarty->fetch('../includes/external/billpay/templates/bankdata_sepa_form.tpl');
+    }
+	
+	function _wrapB2CInputFieldsHTML($margin, $genderSelectHTML, $birthdaySelectHTML) {
+		if ($margin > 0) {
+			return '<div style="border:1px solid silver;padding:5px;margin-bottom:10px; width:488px"><table>'.$genderSelectHTML.$birthdaySelectHTML.'</table></div>';
+		}
+		else {
+			return '<table>'.$genderSelectHTML.$birthdaySelectHTML.'</table>';
+		}
+	}
+
+    function _getSepaEulaText()
+    {
+        $baseIdentifier = 'MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_EULA_CHECK_SEPA';
+        $eulaIdentifier = $this->_getCountrySpecificIdentifier($baseIdentifier);
+
+        // fallback
+        if (defined($eulaIdentifier) === false) {
+            return $this->_getEulaText();
+        }
+
+        $eulaText = constant($eulaIdentifier);
+        // Es gelten die <a href='%1$s'>AGB</a>, <a href='%2$s'>Zahlungsbedingungen</a> und <a href='%3$s'>Datenschutzbestimmungen</a>"
+        $eulaText = sprintf($eulaText, $this->_buildTcTermsUrl(), $this->_buildPaymentConditionUrl(), $this->_buildTcPrivacyUrl());
+
+        return $this->_buildEulaHTML($eulaText);
+    }
+
+    function _getEulaText()
+    {
+        $eulaText = constant('MODULE_PAYMENT_' . $this->_paymentIdentifier . '_TEXT_EULA_CHECK');
+        $eulaText = sprintf($eulaText, $this->_buildTcTermsUrl(),$this->_buildPaymentConditionUrl(), $this->_buildTcPrivacyUrl());
+
+        return $this->_buildEulaHTML($eulaText);
+    }
+
+			
 	//set bankdata if selected payment method is billpay transaction credit
 	function _addBankData($req, $vars) {
 		/** ajax one page checkout  */
@@ -72,64 +148,111 @@ class billpaytransactioncredit extends billpayBase {
 		return $req;
 	}
 
-	function _checkBankValues($data_arr) {
-		$_SESSION['billpaytransactioncredit_owner'] = (isset($data_arr['billpaytransactioncredit_owner'])) ? $data_arr['billpaytransactioncredit_owner'] : NULL;
-		//check transaction credit specific values
-		$error = false;
-		if(isset($data_arr[strtolower($this->_paymentIdentifier).'_number']) && 
-				$data_arr[strtolower($this->_paymentIdentifier).'_number'] == '')
-		{
-			$error = true;
-			$error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_NUMBER;
-		}
-		else if(isset($data_arr[strtolower($this->_paymentIdentifier).'_code']) && 
-				$data_arr[strtolower($this->_paymentIdentifier).'_code'] == '')
-		{
-						$error = true;
-			$error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_CODE;
-		}
-		else if(isset($data_arr[strtolower($this->_paymentIdentifier).'_owner']) && 
-				$data_arr[strtolower($this->_paymentIdentifier).'_owner'] == '')
-		{
-			$error = true;
-			$error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_NAME;
-		} else if(!isset($_SESSION['bp_rate_result'])) {
-			$error = true;
-			$error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_NO_RATEPLAN;
-		}
-		if($error == true)
-		{
-			if($_SESSION['billpay_is_ajax'] == true)
-			{
-				$_SESSION['checkout_payment_error'] = 'payment_error=' . $this->code . '&error=' . urlencode($error_message);
-			}
-			else
-			{
-				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 
-					'error_message='.urlencode($error_message), 'SSL'));	
-			}
-		}
-		//EOF check transaction credit specific values
-	}
+    function _checkBankValues($data_arr)
+    {
+        $_SESSION['billpaytransactioncredit_owner'] = (isset($data_arr['billpaytransactioncredit_owner'])) ? $data_arr['billpaytransactioncredit_owner'] : NULL;
 
-	function addJsBankValidation() {
-	    // check the transaction credit specific input fields
-        $js .= '	if (document.getElementById("checkout_payment").elements["billpaytransactioncredit_owner"].value == "") {' . "\n" .
-    	  	   '	error_message = error_message + unescape("' . JS_BILLPAYTRANSACTIONCREDIT_NAME . '");' . "\n" .
-	    	   '   error = 1;'."\n".'    }' . "\n" .  
-      		   '	if (document.getElementById("checkout_payment").elements["billpaytransactioncredit_number"].value == "") {' . "\n" .
-    		   '	error_message = error_message + unescape("' . JS_BILLPAYTRANSACTIONCREDIT_NUMBER . '");' . "\n" .
-      		   '   error = 1;'."\n".'    }' . "\n" .  
-     		   '	if (document.getElementById("checkout_payment").elements["billpaytransactioncredit_code"].value == "") {' . "\n" .
-    		   '	error_message = error_message + unescape("' . JS_BILLPAYTRANSACTIONCREDIT_CODE . '");' . "\n" .
-      		   '   error = 1;'."\n".'    }' . "\n";
-		return $js;
-	}
+        //check transaction credit specific values
+        $error = false;
+        $error_message = '';
+
+        if (isset($data_arr[strtolower($this->_paymentIdentifier).'_number'])
+            && $data_arr[strtolower($this->_paymentIdentifier).'_number'] == ''
+        ) {
+            $error = true;
+            $error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_NUMBER;
+
+        } elseif ((defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT') === false
+                || MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT != 'True')
+            && isset($data_arr[strtolower($this->_paymentIdentifier).'_code'])
+            && $data_arr[strtolower($this->_paymentIdentifier).'_code'] == ''
+        ) {
+            $error = true;
+            $error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_CODE;
+
+        } elseif (isset($data_arr[strtolower($this->_paymentIdentifier).'_owner'])
+            && $data_arr[strtolower($this->_paymentIdentifier).'_owner'] == ''
+        ) {
+            $error = true;
+            $error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_NAME;
+
+        } elseif(isset($_SESSION['bp_rate_result']) === false) {
+            $error = true;
+            $error_message = MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ERROR_NO_RATEPLAN;
+        }
+
+        if($error == true) {
+            if($_SESSION['billpay_is_ajax'] == true) {
+                $_SESSION['checkout_payment_error'] = 'payment_error=' . $this->code . '&error=' . urlencode($error_message);
+            } else {
+                xtc_redirect(xtc_href_link(
+                        FILENAME_CHECKOUT_PAYMENT,
+                        'error_message='.urlencode($error_message), 'SSL'
+                    ));
+            }
+        }
+    }
+
+    function addJsBankValidation() {
+
+        $js = ' if (document.getElementById("checkout_payment").elements["billpaytransactioncredit_owner"].value == "") {
+                error_message = error_message + unescape("' . JS_BILLPAYTRANSACTIONCREDIT_NAME . '");
+                error = 1;
+            }
+            if (document.getElementById("checkout_payment").elements["billpaytransactioncredit_number"].value == "") {
+                error_message = error_message + unescape("' . JS_BILLPAYTRANSACTIONCREDIT_NUMBER . '");
+                error = 1;
+            }';
+
+        if (defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT') === false
+            || MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT != 'True'
+        ) {
+            $js .= '
+            if (document.getElementById("checkout_payment").elements["billpaytransactioncredit_code"].value == "") {
+                error_message = error_message + unescape("' . JS_BILLPAYTRANSACTIONCREDIT_CODE . '");
+                error = 1;
+            }';
+        }
+
+        return $js;
+    }
 	
 	function showFeeInTitle() {
 		return true;
 	}
-	
-}
 
-?>
+    /**
+     * step for temporary order to execute the redirect to our giropay landing page
+     * @return void
+     */
+    function payment_action()
+    {
+        if(isset($_SESSION['billpay_state']) && $_SESSION['billpay_state'] == "YELOW") {
+            // the after process is not called for temporary orders but we need it for the order update request
+            $this->after_process();
+            xtc_redirect(xtc_href_link("checkout_billpay_giropay.php", null, 'SSL'));
+        }
+    }
+
+    /**
+     * installs the transaction credit payment module
+     *
+     * @return void
+     */
+    function install()
+    {
+        parent::install();
+
+        // install totals for transaction credit
+        $otBillpayTcSurcharge = new ot_billpaytc_surcharge();
+        $otBillpayTcSurcharge->install();
+    }
+
+    function remove($state = null)
+    {
+        parent::remove($state);
+
+        $otBillpayTcSurcharge = new ot_billpaytc_surcharge();
+        $otBillpayTcSurcharge->remove();
+    }
+}
