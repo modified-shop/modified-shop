@@ -4,38 +4,33 @@
 {if $error}<div class="errormessage">{$error}</div>{/if}
 {if !isset($no_product)}
   {$FORM_ACTION}
-  <p>
-    <strong>{#text_product#}</strong> {$PRODUCTS_NAME}<br />
-  </p>
-  <div class="highlightbox">
-    <table width="100%" cellspacing="0" cellpadding="4">
+
+  <div class="highlightbox">  
+    <h4>{#text_product#} {$PRODUCTS_NAME}</h4>  
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
       <tr>
-        <td width="120"><strong>{#text_rating#}</strong></td>
-        <td>{#text_bad#}&nbsp;{$INPUT_RATING}{#text_good#}</td>
+        <td><span class="fieldtext">{#text_rating#}</span><span class="stern">{#text_bad#}&nbsp;{$INPUT_RATING}&nbsp;{#text_good#}</span></td>
       </tr>
       <tr>
-        <td><strong>{#text_author#}</strong></td>
-        <td>{$INPUT_AUTHOR}</td>
+        <td><span class="fieldtext">{#text_author#}</span><span class="stern">{$INPUT_AUTHOR}</span></td>
       </tr>
       {if $INPUT_CODE}
-        <tr>
-          <td width="140"><strong>{#text_sec_code#}:</strong></td>
-          <td>{$VVIMG}</td>
-        </tr>
-        <tr>
-          <td><strong>{#text_sec_code#}:</strong></td>
-          <td>{$INPUT_CODE}</td>
-        </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_sec_code#}:</span><span class="stern">{$VVIMG}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#text_sec_code#}:</span><span class="stern">{$INPUT_CODE}<span class="inputRequirement"> *</span></span></td>
+      </tr>
       {/if}
       <tr>
-        <td colspan="2">
-          <strong>{#text_input#}</strong>
-          <p>{$INPUT_TEXT}</p>
-          <p>{#text_note#}</p>
-        </td>
+        <td><span class="fieldtext">{#text_input#}</span><span class="stern">{$INPUT_TEXT}<span class="inputRequirement_textarea"> *</span></span></td>
       </tr>
     </table>
+    <p>{#text_note#}</p>
   </div>
-  <p>{$BUTTON_BACK}&nbsp;{$BUTTON_SUBMIT}</p>
+
+  <div class="button_left">{$BUTTON_BACK}</div>
+  <div class="button_right">{$BUTTON_SUBMIT}</div>
+  <br class="clearfix">  
   {$FORM_END}
 {/if}

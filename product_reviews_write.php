@@ -121,7 +121,7 @@ if (!$product->isProduct()) {
   }
   if (in_array('reviews', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
     $smarty->assign('VVIMG', '<img src="'.xtc_href_link(FILENAME_DISPLAY_VVCODES, '', 'SSL') .'" alt="Captcha" />');
-    $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
+    $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'style="width:240px;" size="'.MODULE_CAPTCHA_CODE_LENGTH.'" maxlength="'.MODULE_CAPTCHA_CODE_LENGTH.'"', 'text', false));
   }
   $smarty->assign('PRODUCTS_NAME', $product->data['products_name']);
   $smarty->assign('INPUT_AUTHOR', xtc_draw_input_field('author', $author, 'style="width:235px;"'));
