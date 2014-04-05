@@ -254,6 +254,8 @@ h1.checkout {
   margin:30px 0 15px 0;
 }
 
+
+
 h2 {
   color:#444444;
 	font-weight:bold;
@@ -557,6 +559,9 @@ p {
 }
 p.onlytop {
   margin:8px 0 0 0;
+}
+p.nomargin {
+  margin:0 0 0 0;
 }
 p.textright {
   text-align:right;
@@ -1600,6 +1605,12 @@ td.messageStackError {
   font-size:10px;
   line-height:20px;
 }
+.inputRequirement_textarea {
+  font-size:10px;
+  vertical-align:top; 
+  line-height:30px;
+}
+
 
 /* INFO MESSAGES */
 .infomessage {
@@ -2655,29 +2666,7 @@ table.total_table tr td {
 }
 /* ENDE products_table für order_details, account_history_info, checkout_confirmation */
 
-/* START popup print_order.html */
-body.popupprintorder {
-  background:#fff none;
-}
-.printwrap {
-  width:700px;
-  margin: 0px auto;
-}
-.printlogo {
-  padding:10px 0px;
-  text-align:center;
-  border-bottom: 1px solid #ccc;
-  margin-bottom:10px;
-}
-.printColumsLeft {
-  float:left;
-  width:48%;
-}
-.printColumsRight {
-  float:right;
-  width:48%;
-}
-/* ENDE popup print_order.html */
+
 
 
 
@@ -3146,5 +3135,52 @@ ul.pd_iconlist li.vote {
 
 
 
+/* START popup print_product_info, popup print_order.html */
 
+body.popupprint {
+  background:#fff none;
+}
+.printwrap {
+  width:700px;
+  margin: 0px auto;
+}
+.printlogo {
+  padding:10px 0px;
+  text-align:center;
+  border-bottom: 1px solid #ccc;
+  margin-bottom:10px;
+}
+
+/* print order */
+.printColumsLeft {
+  float:left;
+  width:48%;
+}
+.printColumsRight {
+  float:right;
+  width:48%;
+}
+
+/* print info */
+.printColumsInfoLeft {
+  float:left;
+  width:500px;
+  padding: 0px;
+}
+.printColumsInfoRight {
+  float:right;
+  width:164px;
+  text-align:center;
+}
+.printColumsInfoRight img {
+  max-width:160px;
+  height:auto;
+  margin: 10px auto 0px auto;
+  border: 1px solid #ddd;
+  padding:1px;
+}
+ul.printinfolist {
+  margin-left:15px;
+}
+/* ENDE popup print_product_info, popup print_order.html */
 

@@ -1,48 +1,63 @@
 {config_load file="$language/lang_$language.conf" section="print_product_info"}
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+{config_load file="$language/lang_$language.conf" section="product_info"}
+<!DOCTYPE html>
+<html>
 <head>
-  <title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
-  <meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
-  <meta name="robots" content="noindex, nofollow, noodp" />
-  {if $CanonicalLink}
-    <link href="{$CanonicalLink}" rel="canonical" />
-  {/if}
-  <meta http-equiv="Content-Style-Type" content="text/css" />
-  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
-  <style type="text/css">
-  {literal}
-    body {background: none;}
-  {/literal}
-  </style>
+<meta charset="{$charset}" />
+<title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
+<meta name="robots" content="noindex, nofollow, noodp" />
+{if $CanonicalLink}
+  <link href="{$CanonicalLink}" rel="canonical" />
+{/if}
+<base href="{$base_href}" />
+<link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+
 </head>
-<body class="popupproductinfo" {if !$noprint} onload="window.print()"{/if}>
-  <h1 style="margin-top:0px;">{$PRODUCTS_NAME}</h1>
-  <div id="productinfowrap">
-    {if $PRODUCTS_IMAGE != ''}
-      <div id="productinfoimages" style="width:{$smarty.const.PRODUCT_IMAGE_THUMBNAIL_WIDTH}px;"><img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME}" border="0" />
-      {foreach item=more_images_data from=$more_images}
-        <div class="hrlightgrey"></div><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME}" border="0" class="productimage"/>
-      {/foreach}
-    </div>
-    {/if}
-    <div id="productinfodescription">
-      {if $PRODUCTS_MODEL != ''}<p>{$PRODUCTS_MODEL}</p>{/if}
-      <p>{$PRODUCTS_DESCRIPTION}</p>
-      {if $module_content != ''}
-        <h2>{#options#}</h2>    
-        <ul>{foreach name=aussen item=module_data from=$module_content}
-        <li>{$module_data.GROUP}: {$module_data.NAME}</li>
-        {/foreach}
-        </ul>    
-      {/if}
-      <h2>{#price#}</h2>
-      <p><strong>{$PRODUCTS_PRICE}</strong>, {$PRODUCTS_TAX_INFO}{$PRODUCTS_SHIPPING_LINK}</p>
-      {if $MODULE_graduated_price != ''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}
-      {if $PRODUCTS_DISCOUNT != ''}<div class="hrlightgrey"></div>{$PRODUCTS_DISCOUNT}{/if}
-      {if $PRODUCTS_VPE} <p>{$PRODUCTS_VPE}</p>{/if}
-    </div>
-    <div style="clear:left; height:15px;"></div>
+<body class="popupprint" {if !$noprint} onload="window.print()"{/if}">
+
+<div class="printwrap">
+  <div class="printlogo"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
+  <h1>{$PRODUCTS_NAME}</h1>
+
+  <div class="printColumsInfoLeft">
+  {if $PRODUCTS_MODEL != ''}<p><strong>{#model#}</strong> {$PRODUCTS_MODEL}</p>{/if}
+  <p>{$PRODUCTS_DESCRIPTION}</p>
+
+  {if $module_content != ''}
+  <h2>{#options#}</h2>    
+  <ul class="printinfolist">
+    {foreach name=aussen item=module_data from=$module_content}
+      <li>{$module_data.GROUP}: {$module_data.NAME}</li>
+    {/foreach}
+  </ul>    
+  {/if}
+
+  <h2>{#price#}</h2>
+  <p class="onlytop">{$PRODUCTS_PRICE}</p>
+  <p class="mini nomargin">{$PRODUCTS_TAX_INFO}{$PRODUCTS_SHIPPING_LINK}</p>
+
+  {if $PRODUCTS_DISCOUNT != ''}
+    <p>{#text_discount#} {$PRODUCTS_DISCOUNT}</p>
+  {/if}
+  {if $PRODUCTS_VPE}
+    <p>{$PRODUCTS_VPE}</p>
+  {/if}
+
+  {if $MODULE_graduated_price != ''}
+    {$MODULE_graduated_price}
+  {/if}
   </div>
+  <div class="printColumsInfoRight">
+    {if $PRODUCTS_IMAGE != ''}
+      <img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
+      {foreach item=more_images_data from=$more_images}
+        {if $more_images_data.PRODUCTS_IMAGE != 'images/product_images/thumbnail_images/noimage.gif'}         
+        <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
+        {/if}
+      {/foreach}
+    {/if}
+  </div>
+  <br class="clearfix">
+</div>
 </body>
 </html>
