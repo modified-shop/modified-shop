@@ -401,9 +401,15 @@ input[type=text]:focus, input[type=password]:focus, select:focus, textarea:focus
     color: #333333;
     outline: 0 none;
 }
+/* gv_send */
+textarea#message {
+  height:120px;
+}
+/* contact */
 textarea#message_body {
   height:120px;
 }
+/* write_review */
 textarea#review {
   height:80px;
 }
@@ -1611,16 +1617,24 @@ td.messageStackError {
   line-height:30px;
 }
 
-
 /* INFO MESSAGES */
 .infomessage {
-  border: 2px solid green;
+  border: 1px solid #b2dba1;
   padding: 15px;
-  background-color: #e5ffe8;
+  background-color: #d4ebcb;
   margin-bottom: 10px;
   line-height: 16px;
+  color:#3C763D;
 }
 
+.infomessage a {
+  color:#333;
+  text-decoration:none;
+}
+.infomessage a:hover {
+  color:#3C763D;
+  text-decoration:none;
+}
 
 
 
@@ -1831,11 +1845,6 @@ ul.contentmenu li.activeparent2 a  { font-style:italic; background:#e1e1e1; }
 ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
 
 
-/* styles for popup content */
-.popup-cont {
-font-family:Arial, Helvetica, sans-serif;
-background:#fff;
-}
 
 
 
@@ -1965,6 +1974,10 @@ table.paymentinfotable tr td   {
 
 
 /* Accordion in checkout */
+.checkout_accordion .errormessage {
+  margin: 10px 0 0 0;
+}
+
 .shipping_radio, .payment_radio {
   display:inline-block; 
   width:30px;
@@ -1974,7 +1987,6 @@ table.paymentinfotable tr td   {
   float:right; 
   margin-right:10px;
 }  
-
 .dutyinfo {
   font-size:11px; 
   padding:5px;
@@ -2830,7 +2842,6 @@ table.total_table tr td {
   max-height:30px; 
   width:auto;
 }
-
 .pd_imagebox {
   float:left;
   width:262px;
@@ -2844,7 +2855,6 @@ table.total_table tr td {
   width:211px;
   margin-bottom:20px;
 }
-
 .pd_summarybox {
   float:right;
   background-color: #F2F2F2;
@@ -2853,8 +2863,6 @@ table.total_table tr td {
   width:240px;  
   margin-bottom:20px;
 }
-
-
 .pd_big_image {
   position:relative;
   width:240px;
@@ -2888,7 +2896,6 @@ table.total_table tr td {
   margin: 0px 10px 10px 0px;
   overflow:hidden;
 }
-
 .pd_small_image img {
   margin: auto;
   position: absolute;
@@ -2933,7 +2940,6 @@ table.total_table tr td {
 .pd_inforow.red { 
   color:#A94442;
 }
-
 .pd_inforow_message {
   margin: 10px 0 0 0;
   color:#A94442;
@@ -2943,13 +2949,10 @@ table.total_table tr td {
   text-align:left;
   border-top: 1px dotted #ddd;
 }
-
-
 .pd_inforow .pd_shipping_image {
   display:inline-block;
   padding: 0 5px 0 0;
 }
-
 .pd_price {
   font-family: 'oswaldregular', sans-serif;
   text-align:right;
@@ -3036,7 +3039,6 @@ table.total_table tr td {
   line-height:12px;
   color:#666;
 }
-
 .xtb_booster_redirect_message {
   padding:10px;
   color:#ffffff;
@@ -3045,12 +3047,6 @@ table.total_table tr td {
   background-color:#329005;
   margin-bottom:20px;
 }  
-
-
-
-
-
-
 ul.pd_iconlist {
   margin: 20px 0 0px 0px !important;
   list-style-type:none;
@@ -3078,7 +3074,6 @@ ul.pd_iconlist li.print {
 ul.pd_iconlist li.vote {
   background: transparent url(img/icon_pd_iconlist_vote.png) no-repeat 8px 6px;
 }
-
 .dateadded {
   font-size:10px;
 }
@@ -3087,6 +3082,9 @@ ul.pd_iconlist li.vote {
   font-size:10px;
   border-top: 1px solid #ddd;
 }
+/* ENDE Product Details */
+
+
 
 
 /* START product_details media */
@@ -3103,7 +3101,6 @@ ul.pd_iconlist li.vote {
 .mediarow_headline {
   line-height:32px;
 }
-
 .mediarow_title {
   font-weight:bold;
   display:inline-block;
@@ -3125,18 +3122,20 @@ ul.pd_iconlist li.vote {
 .mediarow_desc {
   padding: 0 130px 0 0;
 }
-
 /* ENDE product_details media */
 
 
 
-
+/* START popup content */
+body.popupcontent {
+  background:#fff none;
+}
+/* ENDE popup content */
 
 
 
 
 /* START popup print_product_info, popup print_order.html */
-
 body.popupprint {
   background:#fff none;
 }
@@ -3235,7 +3234,6 @@ ul.printinfolist {
 .rb_rating img {
   vertical-align:-2px;
 }
-
 .rb_image {
   float:left;
   width:84px;
@@ -3257,10 +3255,52 @@ ul.printinfolist {
   max-width:80px;
   max-height:80px;
 }
-
 .rb_rezension {
   float:right;
   width:360px;
 }
+/* ENDE reviews */
+  
+
+/* START upcoming_products */  
+ul.upcoming_list {
+  margin: 0px;
+}
+ul.upcoming_list li {
+  list-style-type:none;
+  border-bottom: 1px solid #eee;
+  padding: 5px 0px;
+}  
+/* ENDE upcoming_products */  
+  
+  
+  
+/* START coupon box - shopping cart */  
+.gift_box_text {
+  float:left;
+  display:inline-block;
+  line-height:30px;
+  font-size:12px;
+  height:32px;
+  padding: 0 30px 0 0;
+  font-weight:bold;
+}  
+.gift_box_input {
+  float:left;
+  display:block;
+  width: 320px;
+  height:32px;
+}   
+.gift_box_button {
+  float:left;
+  display:inline-block;
+  height:32px;
+  padding: 0 0 0 20px;  
+}  
+  
+  
+  
+  
+  
 
   

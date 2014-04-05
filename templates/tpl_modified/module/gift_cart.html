@@ -15,19 +15,17 @@
 {/if}
 
 {if $COUPON_HELP_LINK neq ''}
-  <p><div class="infomessage">{*#cart_coupon#*} {$smarty.const.REDEEMED_COUPON} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></div></p>
+  <br />
+  <div class="infomessage">{*#cart_coupon#*} {$smarty.const.REDEEMED_COUPON} {$COUPON_HELP_LINK} {#cart_coupon_info#}</a></div>
 {/if}
 
 {if $C_FLAG == 'true'}
   <p>{#text_gift#}</p>
   <div class="highlightbox">
-    <table border="0" cellspacing="0" cellpadding="0">
-      <tr>
-    		<td width="200"><span class="midi"><strong>{#text_code#}</strong></span></td>
-    		<td width="340">{$INPUT_CODE}</td>
-    		<td style="padding-left:10px;">{$BUTTON_SUBMIT}</td>
-  		</tr>
-    </table>
+    <span class="gift_box_text">{#text_code#}</span>    
+    <span class="gift_box_input">{$INPUT_CODE}</span>    
+    <span class="gift_box_button">{$BUTTON_SUBMIT}</span>    
+    <br class="clearfix" />    
   </div>
 {else}
   <p>{#create_account#}<br />

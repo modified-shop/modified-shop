@@ -1,7 +1,9 @@
 {config_load file="$language/lang_$language.conf" section="gv_send"}
 <h1>{#heading_gvsend#}</h1>
 {if $action == 'process'}
-  <p>{$LINK_DEFAULT}</p>
+  <br />
+  <div class="button_right">{$LINK_DEFAULT}</div>
+  <br class="clearfix" />  
 {elseif $action == 'send'}
   {$FORM_ACTION}
   <p>{$MAIN_MESSAGE}</p>
@@ -10,28 +12,32 @@
     <p>{$POST_MESSAGE}</p>
   {/if}
   {$HIDDEN_FIELDS}
-  <p>{$LINK_BACK}&nbsp;{$LINK_SUBMIT}</p>
+  <div class="button_left">{$LINK_BACK}</div>
+  <div class="button_right">{$LINK_SUBMIT}</div>
+  <br class="clearfix" />
   {$FORM_END}
 {elseif $action == ''}
   <p>{#heading_text#}&nbsp;{$GV_FAQ_LINK}</p>
+  <br />
   {$FORM_ACTION}
   {if $error != ''}<div class="errormessage">{$error}</div>{/if}
   <div class="highlightbox">
-  <table border="0" width="100%" cellspacing="0" cellpadding="4">
-    <tr>
-      <td>{#entry_name#}<br />{$INPUT_TO_NAME}</td>
-    </tr>
-    <tr>
-      <td>{#entry_email#}<br />{$INPUT_EMAIL} {if $ERROR_EMAIL neq ''}{$ERROR_EMAIL}{/if}</td>
-    </tr>
-    <tr>
-      <td>{#entry_amount#}<br />{$INPUT_AMOUNT} {if $ERROR_AMOUNT neq ''}{$ERROR_AMOUNT}{/if}</td>
-    </tr>
-    <tr>
-      <td>{#entry_message#}<br />{$TEXTAREA_MESSAGE}</td>
-    </tr>
-  </table>
+    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td><span class="fieldtext">{#entry_name#}</span><span class="stern">{$INPUT_TO_NAME}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#entry_email#}</span><span class="stern">{$INPUT_EMAIL} {if $ERROR_EMAIL neq ''}{$ERROR_EMAIL}{/if}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#entry_amount#}</span><span class="stern">{$INPUT_AMOUNT} {if $ERROR_AMOUNT neq ''}{$ERROR_AMOUNT}{/if}</span></td>
+      </tr>
+      <tr>
+        <td><span class="fieldtext">{#entry_message#}</span><span class="stern">{$TEXTAREA_MESSAGE}</span></td>
+      </tr>
+    </table>
   </div>
-  <p>{$LINK_SUBMIT}</p>
+  <div class="button_right">{$LINK_SUBMIT}</div>
+  <br class="clearfix" />
   {$FORM_END}
 {/if}
