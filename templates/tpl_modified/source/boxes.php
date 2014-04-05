@@ -96,7 +96,8 @@ $smarty->assign('fullcontent',strpos($PHP_SELF, 'checkout') || strpos($PHP_SELF,
                               strpos($PHP_SELF, 'newsletter') || strpos($PHP_SELF, 'account') ||
                               strpos($PHP_SELF, 'address') || strpos($PHP_SELF, 'login') ||
                               strpos($PHP_SELF, 'shop_content') || strpos($PHP_SELF, 'specials') ||
-                              strpos($PHP_SELF, 'advanced_search_result') || strpos($PHP_SELF, 'password') ? 1 : 0); 
+                              strpos($PHP_SELF, 'advanced_search_result') || strpos($PHP_SELF, 'password') ||
+                              strpos($PHP_SELF, FILENAME_REVIEWS) ? 1 : 0); 
 // -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');

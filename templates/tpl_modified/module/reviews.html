@@ -1,14 +1,21 @@
 {config_load file="$language/lang_$language.conf" section="reviews"}
 <h1>{#heading_reviews#}</h1>
+
 {foreach name=aussen item=module_data from=$module_content}
-  <p>
-    <strong>{#text_product#}</strong> <a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a><br />
-    <strong>{#text_author#}</strong> {$module_data.AUTHOR}<br />
-    <strong>{#text_rating#}</strong> {$module_data.RATING}
-  </p>
-  <div class="highlightbox">
-    <h1>{#text_text#}</h1>
-    <p>{$module_data.TEXT}</p>
+<div class="reviewsbox {cycle values="rb_left,rb_right"}">
+  <div class="reviewsbox_inner">
+    <div class="rb_headline"><strong>{#text_product#}</strong> <a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></div>  
+    <div class="rb_autor"><strong>{#text_author#}</strong> {$module_data.AUTHOR}</div>
+    <div class="rb_rating"><strong>{#text_rating#}</strong> {$module_data.RATING|replace:".gif":".png"}</div>
+    <br class="clearfix" />
+    <div class="rb_image">{if $module_data.PRODUCTS_IMAGE != ''}<a href="{$module_data.PRODUCTS_LINK}"><img src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}"></a>{/if}</div>
+    <div class="rb_rezension">
+      <p><strong>{#text_text#}</strong></p>
+      <p>{$module_data.TEXT|onlytext}</p>
+    </div>
+    <br class="clearfix" />
   </div>
+</div>
 {/foreach}
-<p>{$PAGINATION}</p>
+<br class="clearfix" />
+{$PAGINATION}

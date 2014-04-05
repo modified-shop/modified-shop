@@ -3184,3 +3184,83 @@ ul.printinfolist {
 }
 /* ENDE popup print_product_info, popup print_order.html */
 
+
+
+/* START reviews */
+.reviewsbox {
+  background:#fff;
+  border:solid #ddd 1px;
+  width:49%;
+  height:185px;
+  overflow:hidden;
+  margin: 0 0 20px 0;
+}
+.rb_left {
+  float:left;
+}
+.rb_right {
+  float:right;
+}
+.reviewsbox_inner {
+  padding:15px;
+}
+.rb_headline {
+  font-size:13px;
+  color:#555;
+  line-height:15px;
+  border-bottom: 1px solid #ccc;
+  padding: 0 0 5px 0;
+  margin: 0px 0px 6px 0px;
+} 
+.rb_headline a {
+  text-decoration:none; 
+} 
+.rb_headline a:hover {
+  text-decoration:none; 
+} 
+.rb_autor {
+  float:left;
+  display:inline-block;
+  font-size:12px;
+  height:18px;
+  line-height:18px; 
+}  
+.rb_rating {
+  float:right;
+  display:inline-block;
+  font-size:12px;
+  height:18px;
+  line-height:18px; 
+}
+.rb_rating img {
+  vertical-align:-2px;
+}
+
+.rb_image {
+  float:left;
+  width:84px;
+  height:84px;
+  overflow:hidden;
+  text-align:center;
+  position:relative;
+  margin:10px 0 0 0;
+}
+.rb_image img {
+  position:absolute;
+  margin: auto;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  padding: 1px;
+  border: 1px solid #eee;
+  max-width:80px;
+  max-height:80px;
+}
+
+.rb_rezension {
+  float:right;
+  width:360px;
+}
+
+  
