@@ -719,8 +719,17 @@ div.hr_15 {
 }
 
 /* TABLE GLOBAL */
+table {
+  width:100%;
+  border-spacing: 0;
+  border-collapse:collapse;
+}
+
 table td {
   padding:4px 0px;
+}
+.td_full {
+  width:100%;
 }
 
 
@@ -3275,8 +3284,8 @@ ul.upcoming_list li {
   
   
   
-/* START coupon box - shopping cart */  
-.gift_box_text {
+/* START coupon box - error message */  
+.hb_box_text {
   float:left;
   display:inline-block;
   line-height:30px;
@@ -3285,18 +3294,19 @@ ul.upcoming_list li {
   padding: 0 30px 0 0;
   font-weight:bold;
 }  
-.gift_box_input {
+.hb_box_input {
   float:left;
   display:block;
   width: 320px;
   height:32px;
 }   
-.gift_box_button {
+.hb_box_button {
   float:left;
   display:inline-block;
   height:32px;
   padding: 0 0 0 20px;  
 }  
+/* ENDE coupon box - error message */  
   
   
   

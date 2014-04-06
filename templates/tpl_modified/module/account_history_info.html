@@ -80,7 +80,7 @@
   <br class="clearfix" />
 
   <h4>{#text_products#}</h4>
-  <table cellspacing="0" class="order_table">
+  <table class="order_table">
     <tr class="headerrow">
       <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
       <td class="ord_table_left">{$smarty.const.HEADER_ARTICLE}</td>
@@ -112,7 +112,7 @@
   
   {if sizeof($order_total) > 0}
   <div class="total_table_right">
-    <table cellspacing="0" class="total_table">
+    <table class="total_table">
       {foreach name=aussen item=order_total_values from=$order_total}
       <tr>
         <td class="ord_table_right">{$order_total_values.TITLE}</td>

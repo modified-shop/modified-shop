@@ -36,7 +36,7 @@
   <br />
   <p><strong>{#heading_products#}</strong></p>
   <div class="hr_1"></div>
-  <table cellspacing="0" class="order_table">
+  <table class="order_table">
     <tr class="headerrow">
       <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
       <td class="ord_table_left">{$smarty.const.HEADER_ARTICLE}</td>
@@ -67,7 +67,7 @@
   <div class="hr_5"></div>
   {if sizeof($order_total) > 0}
   <div class="total_table_right">
-    <table cellspacing="0" class="total_table">
+    <table class="total_table">
       {foreach name=aussen item=order_total_values from=$order_total}
       <tr>
         <td class="ord_table_right">{$order_total_values.TITLE}</td>

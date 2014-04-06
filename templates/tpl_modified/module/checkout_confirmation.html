@@ -89,7 +89,7 @@
 <br />
 <div class="highlightbox checkoutborder">  
   <h4 class="checkout">{#text_products#} <a class="midi" href="{$PRODUCTS_EDIT}">{#text_edit#}</a></h4>
-  <table cellspacing="0" class="order_table">
+  <table class="order_table">
     <tr class="headerrow">
       <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
       {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<td class="ord_table_center">&nbsp;</td>{/if}
@@ -124,7 +124,7 @@
   
   {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
   <div class="total_table_right">
-    <table cellspacing="0" class="total_table">
+    <table class="total_table">
       {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
       <tr>
         <td class="ord_table_right">{$order_total_values.title}</td>

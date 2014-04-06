@@ -3,13 +3,10 @@
 <p>{#text_search_again#}</p>
 {$FORM_ACTION}
 <div class="highlightbox"> 
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-      <td style="width:130px; white-space:nowrap;"><span class="midi"><strong>{#text_search#}</strong></span></td>
-      <td style="width:300px;">{$INPUT_SEARCH}</td>
-      <td style="padding-left:10px;">{$BUTTON_SUBMIT}</td>
-    </tr>
-  </table>
+  <span class="hb_box_text">{#text_search#}</span>    
+  <span class="hb_box_input">{$INPUT_SEARCH}</span>    
+  <span class="hb_box_button">{$BUTTON_SUBMIT}</span>    
+  <br class="clearfix" />    
 </div>
 {$FORM_END}
 <div class="button_left">{$BUTTON}</div>
