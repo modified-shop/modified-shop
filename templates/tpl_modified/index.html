@@ -54,6 +54,7 @@
       {if isset($box_MANUFACTURERS)}{$box_MANUFACTURERS}{/if}
       {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
       {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
+      {if isset($box_HISTORY)}{$box_HISTORY}{/if}
     </div><!-- ENDE col_left -->
     <div id="col_right">
       <div id="content_navbar">
@@ -92,40 +93,8 @@
 
 
 
-
-
-
-
-
-
-<br /><br /><br />
-
-
-
-
-
-
-<p style="margin-top:200px;">OLD VERSION</p>
-<div id="wrap">
-
-  <div id="contentwrap">
-    {if !strstr($smarty.server.PHP_SELF, 'checkout')}
-      <div id="leftcol">
-        {if isset($box_HISTORY)}{$box_HISTORY}{/if}
-      </div>
-    {/if}
-    <div id="content{if strpos($smarty.server.PHP_SELF, 'checkout')}full{/if}">
-      {* if isset($main_content)}{$main_content}{/if *}
-    </div>
-    {if !strstr($smarty.server.PHP_SELF, 'checkout')}
-      <div id="rightcol">
-        
-        {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
-      </div>
-    {/if}
-  </div>
-  <p class="footer"></p>
-</div>
+<br /><br />      
+{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
 
 
 

@@ -17,7 +17,6 @@
       {if $PRODUCTS_EAN != ''}<div class="pd_inforow"><strong>{#ean#}</strong> {$PRODUCTS_EAN}</div>{/if}  
       {if $PRODUCTS_DISCOUNT != ''}<div class="pd_inforow"><strong>{#text_discount#}</strong> {$PRODUCTS_DISCOUNT}</div>{/if}  
       {if $PRODUCTS_EXPIRES}<div class="pd_inforow red">{#text_expires_date#} {$PRODUCTS_EXPIRES}</div>{/if}
-
       {if $PRODUCTS_MANUFACTURERS_MODEL != ''}<div class="pd_inforow"><strong>{*#manufacturer_model#*}HAN:</strong> {$PRODUCTS_MANUFACTURERS_MODEL}</div>{/if}
       {if $MANUFACTURER != ''}<div class="pd_inforow"><strong>{#manufacturer#}</strong> {$MANUFACTURER}</div>{/if}
       {if $MANUFACTURER_LINK != ''}<div class="pd_inforow"><strong>{#manufacturer_more_of#}</strong> <a title="{$MANUFACTURER}" href="{$MANUFACTURER_LINK}">{$MANUFACTURER}</a></div>{/if}
@@ -27,7 +26,6 @@
         <li class="print">{$PRODUCTS_PRINT_LAYER}</li>
         <li class="vote">{$PRODUCTS_WRITE_REVIEW}</li>
       </ul>
-
       {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
 
     </div>
@@ -103,8 +101,4 @@
   </div>
 </div>
 {if $PRODUCTS_ADDED != ''}<p class="dateadded">{$PRODUCTS_ADDED}</p>{/if}
-
-
-<br /><br />
-
 {$PRODUCT_NAVIGATOR}
