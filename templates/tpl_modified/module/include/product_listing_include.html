@@ -28,7 +28,7 @@
   {* ROWANSICHT *}
   {foreach name=aussen item=module_data from=$module_content}
   <div class="listingrow">
-    <div class="lr_inner">
+    <div class="lr_inner cf">
       <div class="lr_image">
       {if $module_data.PRODUCTS_IMAGE != ''}
         <a href="{$module_data.PRODUCTS_LINK}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$module_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
@@ -37,7 +37,7 @@
         &nbsp;
       {/if}      
       </div>
-      <div class="lr_content">
+      <div class="lr_content cf">
         <div class="lr_title"><h2><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></h2></div>
         <div class="lr_desc_box">
           {if $module_data.PRODUCTS_SHORT_DESCRIPTION}<div class="lr_desc">{$module_data.PRODUCTS_SHORT_DESCRIPTION}</div>{/if}
@@ -53,9 +53,7 @@
           <div class="lr_tax">{$module_data.PRODUCTS_TAX_INFO}{$module_data.PRODUCTS_SHIPPING_LINK}</div>
           <div class="lr_buttons">{$module_data.PRODUCTS_BUTTON_DETAILS}{if $module_data.PRODUCTS_BUTTON_BUY_NOW}{$module_data.PRODUCTS_BUTTON_BUY_NOW}{/if}</div>
         </div>
-        <br class="clearfix" />      
       </div>
-      <br class="clearfix" />
     </div>
   </div>
   {/foreach}

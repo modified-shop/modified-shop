@@ -51,7 +51,7 @@
 }
 body {
   font-family: 'open_sansregular', sans-serif;
-  font-weight: 400;
+  font-weight: normal;
   font-size:13px;
   background-color:#fff;
   color:#555;
@@ -60,9 +60,15 @@ body {
 .clearfix, .clear, .clearer {
   line-height:0px;
   height:0px;
-  clear:both;
+  clear:both;   
 }
+         
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
 
+
+         
 .mini { font-size:10px;font-weight:normal;}
 .midi { font-size:11px;font-weight:normal;}
 
@@ -2348,6 +2354,7 @@ a.color_more:hover {
 .subcatlist {
   float:left;
   width:139px;
+  min-height:136px;
   height:auto;
   margin: 0px 10px 10px 0px;
   border: 1px solid #ccc;

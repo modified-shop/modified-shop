@@ -28,7 +28,7 @@
   </div>
 </div><!-- ENDE layout_logo -->
 
-<div id="layout_content">
+<div id="layout_content" class="cf">
   {if $fullcontent}
     <div id="col_full">
       <div id="content_navbar">
@@ -74,16 +74,14 @@
     </div><!-- ENDE col_right -->
 
   {/if}        
-  <br class="clearfix" />
 </div><!-- ENDE layout_content -->
 
 <div id="layout_footer">
-  <div id="layout_footer_inner">
+  <div id="layout_footer_inner" class="cf">
     <div class="footer_box first">{if isset($box_CONTENT)}{$box_CONTENT}{/if}</div>
     <div class="footer_box">{if isset($box_INFORMATION)}{$box_INFORMATION}{/if}</div>
     <div class="footer_box"></div>
     <div class="footer_box">{if isset($box_NEWSLETTER)}{$box_NEWSLETTER}{/if}</div>
-    <br class="clearfix" />
   </div>
 
 
