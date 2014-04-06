@@ -20,7 +20,6 @@
    (c) 2014 modified eCommerce Shopsoftware - http://www.modified-shop.org     
    ---------------------------------------------------------------------------------------*/
 
-
 @font-face {
     font-family: 'oswaldregular';
     src: url('css/fonts/oswald-regular-webfont.eot');
@@ -41,8 +40,9 @@
          url('css/fonts/opensans-regular-webfont.svg#open_sansregular') format('svg');
     font-weight: normal;
     font-style: normal;
-
 }
+
+
 
 /* THE BIG GUYS */
 * {
@@ -2746,8 +2746,8 @@ table.total_table tr td {
 }
 .options_row_multi .options_select {
 }
-
 /* selection & table */
+
 .options_row_selection {
   margin: 0 0 15px 0;  
 }
@@ -2784,9 +2784,22 @@ table.total_table tr td {
   float:right;
   padding-right:2px;
 }
+.options_row_selection .options_selection label .label_row1 {
+  display:block;
+}
+.options_row_selection .options_selection label .label_row1 .options_selection_input {
+  float:left;
+  display:block;
+  width:25px;
+  text-align:left;
+}
+.options_row_selection .options_selection label .label_row1 .options_selection_text {
+  float:left;
+  display:inline-block;
+}
 .options_row_selection .options_selection label .label_row2 {
   display:inline-block;
-  padding-left:22px;
+  padding-left:25px;
   font-style:italic;
 }
 /* ENDE product_options */
@@ -2846,6 +2859,8 @@ table.total_table tr td {
   height: 44px;
   position: absolute;
   width: 44px;
+  top:0px;
+  left:0px;
 }
 .zoomtext {
   line-height:15px;
@@ -2921,6 +2936,7 @@ table.total_table tr td {
   padding: 0 5px 0 0;
 }
 .pd_price {
+  position:relative;
   font-family: 'oswaldregular', sans-serif;
   text-align:right;
   padding: 0px 0 0 0;
