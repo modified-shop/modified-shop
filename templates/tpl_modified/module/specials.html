@@ -2,8 +2,7 @@
 {config_load file="$language/lang_$language.conf" section="index"}
 <h1>{#heading_text#}</h1>
 {$PAGINATION}
-<div class="listingcontainer">
+<div class="listingcontainer cf">
   {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/product_listing_include.html"}
-  <br class="clearfix" />
 </div>
 {$PAGINATION}

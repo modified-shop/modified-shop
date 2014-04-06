@@ -6,16 +6,15 @@
 {/if}
 
 {if $CATEGORIES_DESCRIPTION || $CATEGORIES_IMAGE}
-<div class="cat_description">
+<div class="cat_description cf">
   {if $CATEGORIES_IMAGE}<img class="cat_image" src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME|onlytext}" />{/if}
   {$CATEGORIES_DESCRIPTION}
-  <br class="clearfix" />
 </div>
 {/if}
 
 {if $module_content != '' && $TR_COLS > 0}
 <h4>{#heading_more_categories#}</h4>
-<div class="subcats">
+<div class="subcats cf">
   {assign var="anzahl_spalten" value="$TR_COLS"}
   {foreach name=aussen item=module_data from=$module_content key=spalten}
   <div class="subcatlist{if $smarty.foreach.aussen.iteration is div by $TR_COLS} last{/if}">
@@ -27,7 +26,6 @@
   </div>
   {if $smarty.foreach.aussen.iteration is div by $TR_COLS}<br class="clearfix" />{/if}
   {/foreach}
-  <br class="clearfix" />
 </div>
 {/if}
 {$MODULE_new_products}
