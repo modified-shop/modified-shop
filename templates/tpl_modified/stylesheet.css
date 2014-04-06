@@ -1500,19 +1500,7 @@ div.highlightbox ul {
 
 
 
-/* DOWNLOAD BOX FOR USER DOWNLOADS */
-table.downloadbox {
-  padding:5px;
-  background-color:#f8f8f8;
-  border:solid #d9d9d9 1px;
-  margin-bottom:8px;
-}
-table.downloadbox tr td.icon {
-  padding-right:15px;
-}
-table.downloadbox tr td.downloadlink {
-  width:100%;
-}
+
 
 
 
@@ -3308,9 +3296,35 @@ ul.upcoming_list li {
 }  
 /* ENDE coupon box - error message */  
   
-  
-  
-  
-  
-
+ 
+ 
+/* START downloads */
+.downloadrow { 
+  border: 1px dotted #ddd;
+  background:#fafafa;
+  padding:5px;
+  margin-bottom:10px;
+}
+.dl_icon {
+  float:left;
+  width:61px;
+  height:50px;
+}
+.dl_icon a {
+  display:block;
+  width:61px;
+  height:50px;
+}
+.dl_icon a:hover {
+  text-decoration:none;
+}
+.dl_content {
+  float:left;
+  display:inline-block;
+  margin: 0 0 0 30px;
+  line-height:21px;
+  font-size:13px;
+  padding: 3px 0 0 0;
+}
+/* ENDE downloads */
   

@@ -42,6 +42,7 @@
 
 
 {if $downloads_content neq ''}
+  <br />
   {if $title_downloadfiles != ''}
   <h1>{#title_downloadfiles#}</h1>
   {/if}
@@ -49,6 +50,6 @@
 {/if}
 
 {if $google_tracking eq 'true'}
-<p>{$tracking_code}</p>
+{$tracking_code}
 {/if}
 
