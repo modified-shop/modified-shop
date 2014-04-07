@@ -56,7 +56,8 @@
   $smarty->assign('logo_path',HTTP_SERVER . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
-    include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
+    //include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
+    include(DIR_FS_CATALOG.'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php'); // Tomcraft - 2014-04-07 - changed to order language
     $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
     // BOF - DokuMan -2012-06-06 - BILLPAY payment module (in external directory)
     require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_bankdata.php');
