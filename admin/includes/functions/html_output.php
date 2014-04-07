@@ -80,9 +80,9 @@
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
     }
     if ($parameters == '') {
-      $link .= $page;
+      $link .= $page . '?' . SID;
     } else {
-      $link .= $page . '?' . $parameters;
+      $link .= $page . '?' . $parameters . '&' . SID;
     }
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
