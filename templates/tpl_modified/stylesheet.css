@@ -30,17 +30,29 @@
     font-weight: normal;
     font-style: normal;
 }
-
 @font-face {
-    font-family: 'open_sansregular';
-    src: url('css/fonts/opensans-regular-webfont.eot');
-    src: url('css/fonts/opensans-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/opensans-regular-webfont.woff') format('woff'),
-         url('css/fonts/opensans-regular-webfont.ttf') format('truetype'),
-         url('css/fonts/opensans-regular-webfont.svg#open_sansregular') format('svg');
+    font-family: 'istokregular';
+    src: url('css/fonts/istokweb-regular-webfont.eot');
+    src: url('css/fonts/istokweb-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/istokweb-regular-webfont.woff') format('woff'),
+         url('css/fonts/istokweb-regular-webfont.ttf') format('truetype'),
+         url('css/fonts/istokweb-regular-webfont.svg#istok_webregular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
+@font-face {
+    font-family: 'istokregular';
+    src: url('css/fonts/istokweb-bold-webfont.eot');
+    src: url('css/fonts/istokweb-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/istokweb-bold-webfont.woff') format('woff'),
+         url('css/fonts/istokweb-bold-webfont.ttf') format('truetype'),
+         url('css/fonts/istokweb-bold-webfont.svg#istok_webbold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+
+
+
 
 
 
@@ -50,7 +62,7 @@
   padding:0;
 }
 body {
-  font-family: 'open_sansregular', sans-serif;
+  font-family: 'istokregular', sans-serif;
   font-weight: normal;
   font-size:13px;
   background-color:#fff;
@@ -260,11 +272,9 @@ h1.checkout {
   margin:30px 0 15px 0;
 }
 
-
-
 h2 {
-  color:#444444;
 	font-weight:bold;
+  color:#444444;
 	font-size:14px;
 	margin:20px 0px 8px 0px;
 	padding:0px;
@@ -273,13 +283,11 @@ h2 {
 	border-width:0px 0px 1px 0px;
 	padding-bottom:5px;
 }
-
 h3 {
   color:#444;
   font-weight:bold;
   font-size:12px;
 }
-
 h4 {
   font-family: 'oswaldregular', sans-serif;
 	color:#6d2551;
@@ -331,11 +339,11 @@ a img {
 
 /* INPUT ELEMENTS GLOBAL (CSS 1 compatible) */
 input {
-  font-family: 'open_sansregular', sans-serif;
+  font-family: 'istokregular', sans-serif;
   font-size:13px;
 }
 textarea {
-  font-family: 'open_sansregular', sans-serif;
+  font-family: 'istokregular', sans-serif;
   font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -353,7 +361,7 @@ textarea {
   width:100%;
 }
 select {
-  font-family: 'open_sansregular', sans-serif;
+  font-family: 'istokregular', sans-serif;
   font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
