@@ -154,6 +154,7 @@ $order_total[] = array('TITLE' => '<b>'.MODULE_PAYMENT_BILLSAFE_2_TOTAL.':</b>',
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+$smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
 $smarty->assign('oID',$_GET['oID']);
 if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
   include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');

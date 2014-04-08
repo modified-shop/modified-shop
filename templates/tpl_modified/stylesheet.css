@@ -985,6 +985,8 @@ a.show_all .arrow {
   top:0px;
 }
 
+
+
 ul.orderhistory_list {
   margin:4px 0 0 0;
   list-style-type:none;
@@ -1005,7 +1007,9 @@ ul.orderhistory_list li .cart_icon {
   display:block;
   overflow:hidden;
 }
-
+ul.orderhistory_list li a:hover {
+  text-decoration:none;
+}
 /* Ende Neue Boxen */
 
 
@@ -3143,6 +3147,40 @@ body.popupprint {
 ul.printinfolist {
   margin-left:15px;
 }
+
+
+/* admin print-order */
+.printwrap_admin {
+  padding-top:40px;
+  width:700px;
+  margin: 0px auto;
+}
+p.underline {
+  margin:3px 0px;
+  font-size:10px;
+  text-decoration:underline;
+}
+.printlogo_admin {
+  padding:0px 0px;
+  text-align:right;
+  margin:10px 0 20px 0;
+}
+.printlogo_admin img {
+  max-width:336px;
+}
+.print_small {
+  font-size:12px;
+  line-height:18px;
+}
+
+.print_big {
+  font-size:26px;
+  font-weight:bold;
+  text-transform:uppercase;
+  padding:30px 0 0 0;
+}
+
+
 /* ENDE popup print_product_info, popup print_order.html */
 
 
@@ -3293,6 +3331,78 @@ ul.upcoming_list li {
 }
 /* ENDE downloads */
   
+
+/* START offline & admin-login */
+#layout_offline {
+  width:700px;
+  margin:40px auto;
+  padding:30px;
+  border: 1px solid #ddd;
+}
+
+#layout_adminlogin {
+  position:relative;
+  margin: 50px auto;
+  padding:15px;
+  background:#fff;
+  border:solid #eee 1px;
+  -webkit-box-shadow: 0px 0px 15px #3d3d3d; 
+  -moz-box-shadow: 0px 0px 15px #3d3d3d; 
+  box-shadow: 0px 0px 15px #3d3d3d;
+  width:400px;
+}
+#layout_adminlogin a.help_adminlogin {
+  position:absolute;
+  width:32px;
+  height:32px;
+  outline:none;
+  top:10px;
+  right:10px;  
+  display:block;
+}
+
+#layout_adminlogin .login {
+  float:right;
+  margin: 10px 0 0 0;
+  font-family: 'oswaldregular', sans-serif;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 2px 20px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  color: #fff;
+  border: solid 1px #101010;
+  background: #3a3a3a;
+  background: -webkit-gradient(linear, left top, left bottom, from(#494949), to(#242424));
+  background: -moz-linear-gradient(top,  #494949,  #242424);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#242424');
+}
+#layout_adminlogin .login:hover {
+  text-decoration: none;
+  background: #3a3a3a;
+  background: -webkit-gradient(linear, left top, left bottom, from(#242424), to(#494949));
+  background: -moz-linear-gradient(top,  #242424,  #494949);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#242424', endColorstr='#494949');
+}
+/* ENDE offline & admin-login */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
