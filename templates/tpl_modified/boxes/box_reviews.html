@@ -10,7 +10,7 @@
     <div class="box_title"><a href="{$PRODUCTS_LINK}"><strong>{$PRODUCTS_NAME}</strong></a></div>
     {if $PRODUCTS_IMAGE!=''}<div class="box_image"><a href="{$PRODUCTS_LINK}">{$PRODUCTS_IMAGE}</a></div>{/if}
     <div class="box_line abstand"></div>
-    <div class="box_text">{$REVIEWS}</div>
+    <div class="box_text">{$REVIEWS|onlytext}</div>
     <div class="box_reviews_image">{$REVIEWS_IMAGE}</div>
   {else}
     <p class="onlytop"><a href="{$PRODUCTS_LINK}">{$REVIEWS_WRITE_REVIEW}</a></p>
