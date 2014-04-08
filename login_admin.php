@@ -205,124 +205,29 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
   }
 }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" lang="de" dir="ltr">
+
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<meta charset="utf-8" />
 <title>Administator-Login</title>
-<meta http-equiv="content-language" content="de" />
-<meta http-equiv="cache-control" content="no-cache" />
-<meta name="robots" content="noindex, nofollow" />
-<style type="text/css">
-html {
-  height: 100%;
-  background: #fff;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#ffffff));
-  background: -moz-linear-gradient(top,  #ededed,  #ffffff);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
-}
-form {
-  background:#f0f0f0;
-  border:1px #fff solid;
-  width:300px;
-  height:190px;
-  margin:60px auto 0;
-  padding: 0 15px;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,1.2);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,1.2);
-  box-shadow: 0 1px 2px rgba(0,0,0,1.2);
-}
-form h1 {
-  font-size: 16px;
-  width: 300px;
-  margin: 12px auto 0;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-weight:500;
-  letter-spacing: 3px;
-  border-bottom: 2px dotted #AF417E;
-  text-indent: 10px;
-}
-form p {
-  width: 280px;
-  margin: 10px auto;
-}
-form i {
-  width: 80px;
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  text-shadow: 0 1px 1px rgba(0,0,0,.3);
-  font-size: 13px;
-  letter-spacing: 3px;
-  display:block;
-}
-form a {
-  float:right;
-  margin: 10px;
-}
-form img {
-  border: none;
-}
-input[type=text], input[type=password] {
-  width: 220px;
-  background: #dfdfdf;
-  letter-spacing:1px;
-  padding:2px 5px;
-}
-input[type=text]:focus, input[type=password]:focus {
-  background: #f5f5f5;
-}
-.login {
-  outline: none;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  float:right;
-  font: 14px/100% Arial, Helvetica, sans-serif;
-  padding: .1em 2em .15em;
-  text-shadow: 0 1px 1px rgba(0,0,0,.3);
-  -webkit-border-radius: .2em;
-  -moz-border-radius: .2em;
-  border-radius: .2em;
-  -webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  -moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  box-shadow: 0 1px 2px rgba(0,0,0,.2);
-  color: #606060;
-  border: solid 1px #b7b7b7;
-  background: #fff;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#ededed));
-  background: -moz-linear-gradient(top,  #fff,  #ededed);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#ededed');
-}
-.login:hover {
-  text-decoration: none;
-  background: #ededed;
-  background: -webkit-gradient(linear, left top, left bottom, from(#fff), to(#dcdcdc));
-  background: -moz-linear-gradient(top,  #fff,  #dcdcdc);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffff', endColorstr='#dcdcdc');
-}
-.login:active {
-  position: relative;
-  top: 1px;
-  color: #999;
-  background: -webkit-gradient(linear, left top, left bottom, from(#ededed), to(#fff));
-  background: -moz-linear-gradient(top,  #ededed,  #fff);
-  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#ffffff');
-}
-</style>
+<meta name="robots" content="noindex, nofollow, noodp" />
+<link rel="stylesheet" href="templates/tpl_modified/stylesheet.css" type="text/css" />
 </head>
+
 <body>
-<form name="login" method="post" action="<?php echo $action; ?>">
-  <h1>Administrator-Login</h1>
-  <a href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Repataturoptionen" /></a>
-  <p><i>E-Mail</i>
-    <input type="text" name="email_address" maxlength="50" />
-  </p>
-  <p><i>Passwort</i>
-    <input type="password" name="password" maxlength="30" />
-  </p>
-  <p>
+<div id="layout_adminlogin" class="cf">
+  <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Repataturoptionen" /></a>
+  <form name="login" method="post" action="<?php echo $action; ?>">
+    <h1>Administrator-Login</h1>
+    <table>
+      <tr>
+        <td><span class="fieldtext">E-Mail</span><input type="text" name="email_address" maxlength="50" /></td>
+      </tr>  
+      <tr>
+        <td><span class="fieldtext">Passwort</span><input type="password" name="password" maxlength="30" /></td>
+      </tr>  
+    </table>  
     <input type="submit" class="login" name="Submit" value="Anmelden" />
     <?php
     if (isset($_GET['repair']) && $_GET['repair']!='') {
@@ -331,7 +236,7 @@ input[type=text]:focus, input[type=password]:focus {
       echo '<input type="hidden" name="show_error" value="'. $_GET['show_error'] .'" />';
     }
     ?>
-  </p>
-</form>
+  </form>
+</div>
 </body>
 </html>

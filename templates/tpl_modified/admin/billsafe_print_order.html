@@ -1,135 +1,142 @@
-{config_load file="$language/lang_$language.conf" section="print_order"} 
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+{config_load file="$language/lang_$language.conf" section="print_order"}
+<!DOCTYPE html>
 <html>
 <head>
+<meta charset="{$charset}" />
 <title>{#title#} {$oID}</title>
-<meta http-equiv="Content-Type" content="text/html; charset={$charset}">
+<meta name="robots" content="noindex, nofollow, noodp" />
+<base href="{$base_href}" />
+<link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+
 </head>
-<body onload="window.print()">
-<table width="100%" border="0">
-  <tr> 
-    <td><table width="100%" border="0" cellpadding="0" cellspacing="0">
-        <tr> 
-          <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_customer}<br>
-            <br>
-            {if $csID}<strong>{#csID#}</strong>{$csID}<br>{/if}
-            <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br>
-            <strong>{#order#}</strong> {$oID}<br>
-            <strong>{#date#}</strong> {$DATE}<br>
-            </font></td>
-          <td width="1"><img src="{$logo_path}logo.gif"></td>
-        </tr>
-      </table>
-      <br>
-      <table style="border-top:1px solid; border-bottom:1px solid;" width="100%" border="0">
-        <tr bgcolor="#f1f1f1"> 
-          <td width="50%"> 
-            <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
-              {#shipping_address#}
-            </strong><br>
-          </font></p></td>
-          <td> 
-            <p><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>
-              {if $address_label_payment}{#payment_address#}{/if}
-            </strong><br>
-          </font> </p></td>
-        </tr>
-        <tr>
-          <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_shipping}
-          </font></td>
-          <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$address_label_payment}
-          </font></td>
-        </tr>
-      </table>
-      <p>&nbsp;</p></td>
-  </tr>
-</table>
-<table style="border-bottom:1px solid;" width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr> 
-    <td><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{#heading_products#}</strong></font></td>
-  </tr>
-  <tr>
-    <td>
-      <table width="100%" border="0" cellpadding="3" cellspacing="0" bgcolor="f1f1f1">
-        <tr> 
-          <td colspan="2" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><strong><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{#head_units#}</font></strong></div></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><strong><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{#head_products#}</font></strong></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><strong><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{#head_artnr#}</font></strong></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><div align="right"><strong><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{#head_price#}</font></strong></div></td>
-        </tr>
-        {foreach name=aussen item=order_values from=$order_data} 
-        <tr> 
-          <td width="20" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_QTY}</font></div></td>
-          <td width="20" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="center"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">x</font></div></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif"><strong>{$order_values.PRODUCTS_NAME}</strong><em>{$order_values.PRODUCTS_ATTRIBUTES}</em></font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></font></td>
-          <td style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;" width="150"><div align="right"><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$order_values.PRODUCTS_PRICE}</font></div></td>
-        </tr>
-        {/foreach} </table>
-    </td>
-  </tr>
-</table>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-  <tr> 
-    <td nowrap> <table width="100%" border="0" cellpadding="3" cellspacing="0">
-        {foreach name=aussen item=order_total_values from=$order_total} 
-        <tr> 
-          <td nowrap width="100%" style="border-right: 2px solid; border-bottom: 2px solid; border-color: #ffffff;"><div align="right"><font size="1" face="Arial, Helvetica, sans-serif">{$order_total_values.TITLE} 
-              {$order_total_values.TEXT}</font></div></td>
-        </tr>
-        {/foreach} </table></td>
-  </tr>
-</table>
+
+<body class="popupprint" onload="window.print()">
+<div class="printwrap_admin cf">
+
+  <div class="printColumsLeft">
+    <p class="underline">{$store_name}</p>
+    {$address_label_customer}
+  </div>
+
+  <div class="printColumsRight">
+    <div class="printlogo_admin"><img src="{$tpl_path}img/logo.gif" alt="{$smarty.const.STORE_NAME}" /></div>
+    <div class="print_small">
+      {if $csID}<strong>{#csID#}</strong> {$csID}<br />{/if}
+      <strong>{#payment#}</strong> {$PAYMENT_METHOD}<br />
+      <strong>{#order#}</strong> {$oID}<br />
+      <strong>{#date#}</strong> {$DATE}
+    </div>
+    <div class="print_big">{#invoice#}</div>
+  </div>
+
+  <br class="clearfix">
+  <div class="hr_15"></div>
+  <div class="printColumsLeft">
+    <strong>{#shipping_address#}</strong><br />{$address_label_shipping}
+  </div>
+  <div class="printColumsRight">
+    {if $address_label_payment}<strong>{#payment_address#}</strong>{/if}<br />{$address_label_payment}
+  </div>
+  <br class="clearfix">
+  <br />
+  <div class="hr_5"></div>
+
+  <table class="order_table">
+    <tr class="headerrow">
+      <td class="ord_table_left">{#head_units#}</td>
+      <td class="ord_table_left">{#head_products#}</td>
+      <td class="ord_table_right">{#head_artnr#}</td>
+      <td class="ord_table_right">{#head_single_price#}</td>
+      <td class="ord_table_right">{#head_price#}</td>
+    </tr>
+    {foreach name=aussen item=order_values from=$order_data}
+    <tr class="mainrow">
+      <td class="ord_table_left ord_width40">{$order_values.PRODUCTS_QTY}&nbsp;x</td>
+      <td class="ord_table_left">
+        <strong>{$order_values.PRODUCTS_NAME}</strong>
+        {if sizeof($order_values.PRODUCTS_ATTRIBUTES_ARRAY) > 0}
+          <ul class="attributes_list">
+            {foreach key=a_data item=attrib_data from=$order_values.PRODUCTS_ATTRIBUTES_ARRAY}
+            <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
+            {/foreach} 
+          </ul>
+        {/if}
+      </td>
+      <td class="ord_table_right ord_width120">{$order_values.PRODUCTS_MODEL}</td>
+      <td class="ord_table_right ord_width110">{$order_values.PRODUCTS_SINGLE_PRICE}</td>
+      <td class="ord_table_right ord_width120">{$order_values.PRODUCTS_PRICE}</td>
+    </tr>
+    {/foreach}    
+  </table>
+  <div class="hr_5"></div>
+  {if sizeof($order_total) > 0}
+  <div class="total_table_right">
+    <table class="total_table">
+      {foreach name=aussen item=order_total_values from=$order_total}
+      <tr>
+        <td class="ord_table_right">{$order_total_values.TITLE}</td>
+        <td class="ord_table_right ord_width120">{$order_total_values.TEXT}</td>
+      </tr>
+      {/foreach}
+    </table>
+  </div>
+  <br class="clearfix" />
+  {/if}
 
 <br />
-<font size="1" face="Verdana, Arial, Helvetica, sans-serif">
 {if $BillsafeType == 'invoice'}
-{$BillsafeText}<br /> 
-{$BillsafeText2}<br /> 
-<br />
-</font>
-<table width="100%" border="0" cellpadding="0" cellspacing="0">
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$recipient}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$recipientValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$account}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$accountValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$bankcode}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$bankcodeValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$bank}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$bankValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$bic}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$bicValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$iban}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$ibanValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$amount}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$amountValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$reference}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$referenceValue}</font></td>
-</tr>
-<tr>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$referenceUrl}</font></td>
-<td><font size="1" face="Verdana, Arial, Helvetica, sans-serif">{$referenceUrlValue}</font></td>
-</tr>
-</table>
+<div class="print_small">
+  {$BillsafeText}<br /> 
+  {$BillsafeText2}<br /> 
+  <br />
+
+  <table>
+    <tr>
+      <td>{$recipient}</td>
+      <td>{$recipientValue}</td>
+    </tr>
+    <tr>
+      <td>{$account}</td>
+      <td>{$accountValue}</td>
+    </tr>
+    <tr>
+      <td>{$bankcode}</td>
+      <td>{$bankcodeValue}</td>
+    </tr>
+    <tr>
+      <td>{$bank}</td>
+      <td>{$bankValue}</td>
+    </tr>
+    <tr>
+      <td>{$bic}</td>
+      <td>{$bicValue}</td>
+    </tr>
+    <tr>
+      <td>{$iban}</td>
+      <td>{$ibanValue}</td>
+    </tr>
+    <tr>
+      <td>{$amount}</td>
+      <td>{$amountValue}</td>
+    </tr>
+    <tr>
+      <td>{$reference}</td>
+      <td>{$referenceValue}</td>
+    </tr>
+    <tr>
+      <td>{$referenceUrl}</td>
+      <td>{$referenceUrlValue}</td>
+    </tr>
+  </table>
+</div>
 {elseif $BillsafeType == 'installment'}
-{$BillsafeText2}<br /> 
-<br />
+<div class="print_small">
+  {$BillsafeText2}<br /> 
+</div>
 {/if}
-</font>
+
+
+
+</div>
 </body>
 </html>
