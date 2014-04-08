@@ -23,8 +23,6 @@ define('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB_TITLE', 'Auswahl Widerruf PDF Rechts
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB_DESC', 'Angabe ob der Widerrufstext als PDF verf&uuml;gbar sein soll.');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE_TITLE', '<hr noshade>Speicherort PDF');
 define('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE_DESC', 'Angabe des Speicherorts der PDF Rechtstexte.');
-define('MODULE_API_IT_RECHT_KANZLEI_TEST_TITLE', 'Testmode');
-define('MODULE_API_IT_RECHT_KANZLEI_TEST_DESC', 'Schaltet den Testmode ein oder aus (lokale XML Testdatei).');
 
 
 class it_recht_kanzlei {
@@ -74,7 +72,6 @@ class it_recht_kanzlei {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', '/media/content/',  '6', '1', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TEST', 'false',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
   // remove
@@ -94,7 +91,7 @@ class it_recht_kanzlei {
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_DSE', 
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_WRB', 
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', 
-                 'MODULE_API_IT_RECHT_KANZLEI_TEST');
+                 );
   }
 }
 
