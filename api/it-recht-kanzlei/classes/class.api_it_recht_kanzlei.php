@@ -28,99 +28,19 @@ class it_recht_kanzlei {
   
   function __construct($post_xml) {
     // Catch errors - no data sent
-    if (MODULE_API_IT_RECHT_KANZLEI_TEST == 'true') {
-      // Test XML
-      $xml_example =  '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
-      $xml_example .= '<api>'."\n";
-      $xml_example .= '  <api_version>1.0</api_version>'."\n";
-      $xml_example .= '  <api_username>helloapiname</api_username>'."\n";
-      $xml_example .= '  <api_password>helloapipassword</api_password>'."\n";
-      $xml_example .= '  <user_username>myshoploginname</user_username>'."\n";
-      $xml_example .= '  <user_password>topsecret</user_password>'."\n";
-      $xml_example .= '  <user_auth_token>123456</user_auth_token>'."\n";
-      $xml_example .= '  <rechtstext_type>agb</rechtstext_type>'."\n";
-      $xml_example .= '  <rechtstext_text><![CDATA[TEST TEST TEST - Allgemeine Geschäftsbedingungen '."\n";
-      $xml_example .= '--------------------------------------------------------'."\n";
-      $xml_example .= ''."\n";
-      $xml_example .= ''."\n";
-      $xml_example .= 'Inhaltsverzeichnis'."\n";
-      $xml_example .= '------------------'."\n";
-      $xml_example .= ''."\n";
-      $xml_example .= 'A. Allgemeine Geschäftsbedingungen '."\n";
-      $xml_example .= '-----------------------------------'."\n";
-      $xml_example .= '1. Geltungsbereich'."\n";
-      $xml_example .= '2. Vertragsschluss'."\n";
-      $xml_example .= '3. Rücksendekosten bei Ausübung des Widerrufsrechts'."\n";
-      $xml_example .= '4. Preise und Zahlungsbedingungen'."\n";
-      $xml_example .= '5. Liefer- und Versandbedingungen'."\n";
-      $xml_example .= '6. Eigentumsvorbehalt'."\n";
-      $xml_example .= '7. Mängelhaftung'."\n";
-      $xml_example .= '8. Haftung'."\n";
-      $xml_example .= '9. Anwendbares Recht, Gerichtsstand, Vertragssprache'."\n";
-      $xml_example .= ''."\n";
-      $xml_example .= 'B. Kundeninformationen'."\n";
-      $xml_example .= '----------------------'."\n";
-      $xml_example .= '1. Informationen zur Identität des Verkäufers'."\n";
-      $xml_example .= '2. Informationen zu den wesentlichen Merkmalen der Ware oder Dienstleistung'."\n";
-      $xml_example .= ']]></rechtstext_text>'."\n";
-      $xml_example .= '  <rechtstext_html><![CDATA[<h1>TEST TEST TEST - Allgemeine Gesch&auml;ftsbedingungen und Kundeninformationen</h1>'."\n";
-      $xml_example .= 'Inhaltsverzeichnis'."\n";
-      $xml_example .= 'A. Allgemeine Gesch&auml;ftsbedingungen'."\n";
-      $xml_example .= '<ul>'."\n";
-      $xml_example .= '<li>1. Geltungsbereich</li>'."\n";
-      $xml_example .= '<li>2. Vertragsschluss</li>'."\n";
-      $xml_example .= '<li>3. R&uuml;cksendekosten bei Aus&uuml;bung des Widerrufsrechts</li>'."\n";
-      $xml_example .= '<li>4. Preise und Zahlungsbedingungen</li>'."\n";
-      $xml_example .= '<li>5. Liefer- und Versandbedingungen</li>'."\n";
-      $xml_example .= '<li>6. Eigentumsvorbehalt</li>'."\n";
-      $xml_example .= '<li>7. M&auml;ngelhaftung</li>'."\n";
-      $xml_example .= '<li>8. Haftung</li>'."\n";
-      $xml_example .= '<li>9. Anwendbares Recht, Gerichtsstand, Vertragssprache</li>'."\n";
-      $xml_example .= '</ul>'."\n";
-      $xml_example .= 'B. Kundeninformationen'."\n";
-      $xml_example .= '<ul>'."\n";
-      $xml_example .= '<li>1. Informationen zur Identit&auml;t des Verk&auml;ufers</li>'."\n";
-      $xml_example .= '<li>2. Informationen zu den wesentlichen Merkmalen der Ware oder Dienstleistung</li>'."\n";
-      $xml_example .= '<li>3. Informationen zum Zustandekommen des Vertrages</li>'."\n";
-      $xml_example .= '<li>4. Informationen zu Zahlung und Lieferung</li>'."\n";
-      $xml_example .= '<li>5. Informationen &uuml;ber die technischen Schritte, die zum Vertragsschluss f&uuml;hren</li>'."\n";
-      $xml_example .= '<li>6. Informationen zur Speicherung des Vertragstextes</li>'."\n";
-      $xml_example .= '<li>7. Informationen &uuml;ber die technischen Mittel um Eingabefehler zu erkennen und zu berichtigen</li>'."\n";
-      $xml_example .= '<li>8. Informationen &uuml;ber die f&uuml;r den Vertragsschluss zur Verf&uuml;gung stehenden Sprachen</li>'."\n";
-      $xml_example .= '</ul>'."\n";
-      $xml_example .= '<h1>A. Allgemeine Gesch&auml;ftsbedingungen </h1>'."\n";
-      $xml_example .= '<h2>'."\n";
-      $xml_example .= '<b>1)</b> Geltungsbereich </h2>'."\n";
-      $xml_example .= '<p>'."\n";
-      $xml_example .= '<b>1.1</b> Diese Gesch&auml;ftsbedingungen der/des Nadia Lebensmittel und Spirituosen Import und Export GmbH & Co. KG (nachfolgend "Verk&auml;ufer"), gelten f&uuml;r alle Vertr&auml;ge, die ein Verbraucher oder Unternehmer (nachfolgend "Kunde") mit dem Verk&auml;ufer hinsichtlich der vom Verk&auml;ufer in seinem Online-Shop dargestellten Waren und/oder Leistungen abschlie&szlig;t. Hiermit wird der Einbeziehung von eigenen Bedingungen des Kunden widersprochen, es sei denn, es ist etwas anderes vereinbart.'."\n";
-      $xml_example .= '</p>'."\n";
-      $xml_example .= '<p>'."\n";
-      $xml_example .= '<b>1.2</b> Ein Verbraucher im Sinne dieser Allgemeinen Gesch&auml;ftsbedingungen ist jede nat&uuml;rliche Person, die ein Rechtsgesch&auml;ft zu einem Zweck abschlie&szlig;t, der weder ihrer gewerblichen noch ihrer selbstst&auml;ndigen beruflichen T&auml;tigkeit zugerechnet werden kann. Ein Unternehmer im Sinne dieser Allgemeinen Gesch&auml;ftsbedingungen ist jede nat&uuml;rliche oder juristische Person oder eine rechtsf&auml;hige Personengesellschaft, die bei Abschluss eines Rechtsgesch&auml;fts in Aus&uuml;bung ihrer selbstst&auml;ndigen beruflichen oder gewerblichen T&auml;tigkeit handelt.'."\n";
-      $xml_example .= '</p>'."\n";
-      $xml_example .= ']]></rechtstext_html>'."\n";
-      $xml_example .= '  <rechtstext_pdf_url>http://www.jaromedia.de/itrecht/d98fd2lkjfds988dj47si5lb6a3h8d41.pdf</rechtstext_pdf_url>'."\n";
-      $xml_example .= '  <rechtstext_pdf_md5hash>6cc97378e8336e668401d485ab132032</rechtstext_pdf_md5hash>'."\n";
-      $xml_example .= '  <rechtstext_language>de</rechtstext_language>'."\n";
-      $xml_example .= '  <action>push</action>'."\n";
-      $xml_example .= '</api>'."\n";
-      // read LOCAL-XML and remove form slashes
-      if(get_magic_quotes_gpc()){
-        $xml_example = stripslashes($xml_example);
-      }
-      $xml = simplexml_load_string($xml_example, null, LIBXML_NOCDATA);
-    } else {
-      (string)$post_xml = $post_xml;
-      // read POST-XML and remove form slashes
-      if(get_magic_quotes_gpc()){
-        $post_xml = stripslashes($post_xml);
-      }
-      // Post XML from other system
-      if(trim($post_xml) == ''){
-        $this->return_error('12');
-      }
-      // create xml object
-      $xml = simplexml_load_string($post_xml, null, LIBXML_NOCDATA);
+    (string)$post_xml = $post_xml;
+    
+    // read POST-XML and remove form slashes
+    if(get_magic_quotes_gpc()){
+      $post_xml = stripslashes($post_xml);
     }
+    // Post XML from other system
+    if(trim($post_xml) == ''){
+      $this->return_error('12');
+    }
+    // create xml object
+    $xml = simplexml_load_string($post_xml, null, LIBXML_NOCDATA);
+    
     // Catch errors - error creating xml object
     if(!is_object($xml)){
       $this->return_error('12');
@@ -286,7 +206,7 @@ class it_recht_kanzlei {
         xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
       }
       
-      if ($content_group == '' || mysql_affected_rows() < 1) {
+      if ($content_group == '' || xtc_db_affected_rows() < 1) {
         $this->return_error('99');
       }
       
