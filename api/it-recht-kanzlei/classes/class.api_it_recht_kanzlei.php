@@ -1,0 +1,357 @@
+<?php
+/* -----------------------------------------------------------------------------------------
+   $Id:$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   based on:
+     Example-Interface-Software for the transmission of legal texts
+     Script version: Draft V0.2 - 26. April 2012
+     Contact: Max-Lion Keller LL.M. m.keller@it-recht-kanzlei.de
+   -----------------------------------------------------------------------------------------
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+
+class it_recht_kanzlei {
+  
+  var $api_action_flag, 
+      $api_version_flag, 
+      $api_username_flag, 
+      $user_password_flag, 
+      $user_auth_token_flag, 
+      $action, 
+      $post_xml;
+  
+  function __construct($post_xml) {
+    // Catch errors - no data sent
+    if (MODULE_API_IT_RECHT_KANZLEI_TEST == 'true') {
+      // Test XML
+      $xml_example =  '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
+      $xml_example .= '<api>'."\n";
+      $xml_example .= '  <api_version>1.0</api_version>'."\n";
+      $xml_example .= '  <api_username>helloapiname</api_username>'."\n";
+      $xml_example .= '  <api_password>helloapipassword</api_password>'."\n";
+      $xml_example .= '  <user_username>myshoploginname</user_username>'."\n";
+      $xml_example .= '  <user_password>topsecret</user_password>'."\n";
+      $xml_example .= '  <user_auth_token>123456</user_auth_token>'."\n";
+      $xml_example .= '  <rechtstext_type>agb</rechtstext_type>'."\n";
+      $xml_example .= '  <rechtstext_text><![CDATA[TEST TEST TEST - Allgemeine Geschäftsbedingungen '."\n";
+      $xml_example .= '--------------------------------------------------------'."\n";
+      $xml_example .= ''."\n";
+      $xml_example .= ''."\n";
+      $xml_example .= 'Inhaltsverzeichnis'."\n";
+      $xml_example .= '------------------'."\n";
+      $xml_example .= ''."\n";
+      $xml_example .= 'A. Allgemeine Geschäftsbedingungen '."\n";
+      $xml_example .= '-----------------------------------'."\n";
+      $xml_example .= '1. Geltungsbereich'."\n";
+      $xml_example .= '2. Vertragsschluss'."\n";
+      $xml_example .= '3. Rücksendekosten bei Ausübung des Widerrufsrechts'."\n";
+      $xml_example .= '4. Preise und Zahlungsbedingungen'."\n";
+      $xml_example .= '5. Liefer- und Versandbedingungen'."\n";
+      $xml_example .= '6. Eigentumsvorbehalt'."\n";
+      $xml_example .= '7. Mängelhaftung'."\n";
+      $xml_example .= '8. Haftung'."\n";
+      $xml_example .= '9. Anwendbares Recht, Gerichtsstand, Vertragssprache'."\n";
+      $xml_example .= ''."\n";
+      $xml_example .= 'B. Kundeninformationen'."\n";
+      $xml_example .= '----------------------'."\n";
+      $xml_example .= '1. Informationen zur Identität des Verkäufers'."\n";
+      $xml_example .= '2. Informationen zu den wesentlichen Merkmalen der Ware oder Dienstleistung'."\n";
+      $xml_example .= ']]></rechtstext_text>'."\n";
+      $xml_example .= '  <rechtstext_html><![CDATA[<h1>TEST TEST TEST - Allgemeine Gesch&auml;ftsbedingungen und Kundeninformationen</h1>'."\n";
+      $xml_example .= 'Inhaltsverzeichnis'."\n";
+      $xml_example .= 'A. Allgemeine Gesch&auml;ftsbedingungen'."\n";
+      $xml_example .= '<ul>'."\n";
+      $xml_example .= '<li>1. Geltungsbereich</li>'."\n";
+      $xml_example .= '<li>2. Vertragsschluss</li>'."\n";
+      $xml_example .= '<li>3. R&uuml;cksendekosten bei Aus&uuml;bung des Widerrufsrechts</li>'."\n";
+      $xml_example .= '<li>4. Preise und Zahlungsbedingungen</li>'."\n";
+      $xml_example .= '<li>5. Liefer- und Versandbedingungen</li>'."\n";
+      $xml_example .= '<li>6. Eigentumsvorbehalt</li>'."\n";
+      $xml_example .= '<li>7. M&auml;ngelhaftung</li>'."\n";
+      $xml_example .= '<li>8. Haftung</li>'."\n";
+      $xml_example .= '<li>9. Anwendbares Recht, Gerichtsstand, Vertragssprache</li>'."\n";
+      $xml_example .= '</ul>'."\n";
+      $xml_example .= 'B. Kundeninformationen'."\n";
+      $xml_example .= '<ul>'."\n";
+      $xml_example .= '<li>1. Informationen zur Identit&auml;t des Verk&auml;ufers</li>'."\n";
+      $xml_example .= '<li>2. Informationen zu den wesentlichen Merkmalen der Ware oder Dienstleistung</li>'."\n";
+      $xml_example .= '<li>3. Informationen zum Zustandekommen des Vertrages</li>'."\n";
+      $xml_example .= '<li>4. Informationen zu Zahlung und Lieferung</li>'."\n";
+      $xml_example .= '<li>5. Informationen &uuml;ber die technischen Schritte, die zum Vertragsschluss f&uuml;hren</li>'."\n";
+      $xml_example .= '<li>6. Informationen zur Speicherung des Vertragstextes</li>'."\n";
+      $xml_example .= '<li>7. Informationen &uuml;ber die technischen Mittel um Eingabefehler zu erkennen und zu berichtigen</li>'."\n";
+      $xml_example .= '<li>8. Informationen &uuml;ber die f&uuml;r den Vertragsschluss zur Verf&uuml;gung stehenden Sprachen</li>'."\n";
+      $xml_example .= '</ul>'."\n";
+      $xml_example .= '<h1>A. Allgemeine Gesch&auml;ftsbedingungen </h1>'."\n";
+      $xml_example .= '<h2>'."\n";
+      $xml_example .= '<b>1)</b> Geltungsbereich </h2>'."\n";
+      $xml_example .= '<p>'."\n";
+      $xml_example .= '<b>1.1</b> Diese Gesch&auml;ftsbedingungen der/des Nadia Lebensmittel und Spirituosen Import und Export GmbH & Co. KG (nachfolgend "Verk&auml;ufer"), gelten f&uuml;r alle Vertr&auml;ge, die ein Verbraucher oder Unternehmer (nachfolgend "Kunde") mit dem Verk&auml;ufer hinsichtlich der vom Verk&auml;ufer in seinem Online-Shop dargestellten Waren und/oder Leistungen abschlie&szlig;t. Hiermit wird der Einbeziehung von eigenen Bedingungen des Kunden widersprochen, es sei denn, es ist etwas anderes vereinbart.'."\n";
+      $xml_example .= '</p>'."\n";
+      $xml_example .= '<p>'."\n";
+      $xml_example .= '<b>1.2</b> Ein Verbraucher im Sinne dieser Allgemeinen Gesch&auml;ftsbedingungen ist jede nat&uuml;rliche Person, die ein Rechtsgesch&auml;ft zu einem Zweck abschlie&szlig;t, der weder ihrer gewerblichen noch ihrer selbstst&auml;ndigen beruflichen T&auml;tigkeit zugerechnet werden kann. Ein Unternehmer im Sinne dieser Allgemeinen Gesch&auml;ftsbedingungen ist jede nat&uuml;rliche oder juristische Person oder eine rechtsf&auml;hige Personengesellschaft, die bei Abschluss eines Rechtsgesch&auml;fts in Aus&uuml;bung ihrer selbstst&auml;ndigen beruflichen oder gewerblichen T&auml;tigkeit handelt.'."\n";
+      $xml_example .= '</p>'."\n";
+      $xml_example .= ']]></rechtstext_html>'."\n";
+      $xml_example .= '  <rechtstext_pdf_url>http://www.jaromedia.de/itrecht/d98fd2lkjfds988dj47si5lb6a3h8d41.pdf</rechtstext_pdf_url>'."\n";
+      $xml_example .= '  <rechtstext_pdf_md5hash>6cc97378e8336e668401d485ab132032</rechtstext_pdf_md5hash>'."\n";
+      $xml_example .= '  <rechtstext_language>de</rechtstext_language>'."\n";
+      $xml_example .= '  <action>push</action>'."\n";
+      $xml_example .= '</api>'."\n";
+      // read LOCAL-XML and remove form slashes
+      if(get_magic_quotes_gpc()){
+        $xml_example = stripslashes($xml_example);
+      }
+      $xml = simplexml_load_string($xml_example, null, LIBXML_NOCDATA);
+    } else {
+      (string)$post_xml = $post_xml;
+      // read POST-XML and remove form slashes
+      if(get_magic_quotes_gpc()){
+        $post_xml = stripslashes($post_xml);
+      }
+      // Post XML from other system
+      if(trim($post_xml) == ''){
+        $this->return_error('12');
+      }
+      // create xml object
+      $xml = simplexml_load_string($post_xml, null, LIBXML_NOCDATA);
+    }
+    // Catch errors - error creating xml object
+    if(!is_object($xml)){
+      $this->return_error('12');
+    }
+    
+    $api_action_flag = $this->check_api_action($xml->action);
+    $api_version_flag = $this->check_api_version($xml->api_version);
+    $user_auth_token_flag = $this->check_token($xml->user_auth_token);
+    $action = $this->action('push', $xml);
+    
+    // return general error
+    $this->return_error('99');
+    exit();
+  }
+  
+  function check_api_action($api_action) {
+    if ($api_action == '') {
+      $this->return_error('10');
+    }
+    $local_supported_actions = explode(',', MODULE_API_IT_RECHT_KANZLEI_CONNECTION_TYPE);
+    // Catch errors - action not supported
+    if (!in_array($api_action, $local_supported_actions)) {
+      $this->return_error('10');
+    }
+  }
+  
+  function check_api_version($api_version) {
+    // Check api-version
+    if($api_version != MODULE_API_IT_RECHT_KANZLEI_VERSION){
+      $this->return_error('1');
+    }
+  }
+  
+  function check_token($user_auth_token) {
+    // Check token
+    if($user_auth_token != MODULE_API_IT_RECHT_KANZLEI_TOKEN){
+      $this->return_error('3');
+    } 
+  }
+  
+  function action($action, $xml) {
+    // action 'push'
+    if ($action == 'push') {
+          
+      // Catch errors - rechtstext_text
+      if (strlen($xml->rechtstext_text) < 50) {
+        $this->return_error('5');
+      }
+      // Catch errors - rechtstext_html
+      if (strlen($xml->rechtstext_html) < 50) {
+        $this->return_error('6');
+      }
+      // Catch errors - rechtstext_language
+      if ($xml->rechtstext_language == '') {
+        $this->return_error('9');
+      } else {
+        $lng = new language($xml->rechtstext_language);
+        $languages_id = $lng->language['id'];
+        if ($lng->language['code'] != $xml->rechtstext_language) {
+          $this->return_error('9');
+        }
+      }
+      
+      $local_dir_for_pdf_storage = 'media/content/';
+      if (MODULE_API_IT_RECHT_KANZLEI_PDF_FILE != '') {
+        $local_dir_for_pdf_storage = trim(MODULE_API_IT_RECHT_KANZLEI_PDF_FILE, '/').'/';
+      }
+      
+      // Check PDF files required
+      $local_rechtstext_pdf_type = array();
+      if (MODULE_API_IT_RECHT_KANZLEI_PDF_AGB == 'true') {
+        $local_rechtstext_pdf_type[] = 'agb';
+      }
+      if (MODULE_API_IT_RECHT_KANZLEI_PDF_DSE == 'true') {
+        $local_rechtstext_pdf_type[] = 'datenschutz';
+      }
+      if (MODULE_API_IT_RECHT_KANZLEI_PDF_WRB == 'true') {
+        $local_rechtstext_pdf_type[] = 'widerruf';
+      }
+
+      // Catch errors - rechtstext_type
+      $allowed_rechtstext_type = array('agb', 'datenschutz', 'widerruf', 'impressum');
+      if (!in_array($xml->rechtstext_type, $allowed_rechtstext_type)) {
+        $this->return_error('4');
+      }
+      
+      $pdf_file_stored = false;
+      if (count($local_rechtstext_pdf_type) > 0 && in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {        
+        if (in_array($xml->rechtstext_type, $local_rechtstext_pdf_type)) {
+          // Catch errors - element 'rechtstext_pdf_url' empty or URL invalid
+          if ($xml->rechtstext_pdf_url == '' || $this->url_valid($xml->rechtstext_pdf_url) !== true) {
+            $this->return_error('7');
+          }
+          // Download pdf file
+          $file_pdf_targetfilename = $xml->rechtstext_type .'.pdf';
+          $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
+          $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_type).'.pdf';
+          
+          $file_pdf = fopen($file_pdf_target_temp, 'w+');
+          if ($file_pdf === false) { // catch errors
+            $this->return_error('7');
+          }
+          $retval = fwrite($file_pdf, file_get_contents($xml->rechtstext_pdf_url)); 
+          if ($retval === false) { // catch errors
+            $this->return_error('7');
+          }
+          $retval = fclose($file_pdf);
+          if ($retval === false) { // catch errors
+            $this->return_error('7');
+          }
+          // Catch errors - downloaded file was not properly saved
+          if (!is_file($file_pdf_target_temp)) {
+            $this->return_error('7');
+          }
+          // verify that file is a pdf
+          if ($this->check_if_pdf_file($file_pdf_target_temp) !== true) {
+            @unlink($file_pdf_target);
+            $this->return_error('7');
+          }
+          // verify md5-hash, delete file if hash is not equal
+          if (md5_file($file_pdf_target_temp) != $xml->rechtstext_pdf_md5hash) {
+            @unlink($file_pdf_target_temp);
+            $this->return_error('8');
+          } else {
+            @unlink($file_pdf_target);
+            @copy($file_pdf_target_temp, $file_pdf_target);
+            if (!is_file($file_pdf_target)) {
+              $this->return_error('7');
+            }
+          }
+          $pdf_file_stored = true;
+        }
+      } else {
+        if (is_file(DIR_FS_CATALOG.$local_dir_for_pdf_storage.$xml->rechtstext_type .'.pdf')) {
+          @unlink(DIR_FS_CATALOG.$local_dir_for_pdf_storage.$xml->rechtstext_type .'.pdf');
+        }
+      }
+      
+      // text type
+      $pdf_file_text = '';
+      $content_group = '';
+      if ($xml->rechtstext_type == 'agb') {
+        $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB;
+        if ($pdf_file_stored === true) {
+          $pdf_file_text = '<br /><br /><a href="'.DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">AGB - PDF download!</a>';
+        }
+      } elseif ($xml->rechtstext_type == 'datenschutz') {
+        $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE;
+        if ($pdf_file_stored === true) {
+          $pdf_file_text = '<br /><br /><a href="'.DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Datenschutz - PDF download!</a>';
+        }
+      } elseif ($xml->rechtstext_type == 'widerruf') {
+        $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB;
+        if ($pdf_file_stored === true) {
+          $pdf_file_text = '<br /><br /><a href="'.DIR_WS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename.'" target="_blank">Widerruf - PDF download!</a>';
+        }
+      } elseif ($xml->rechtstext_type == 'impressum') {
+        $content_group = MODULE_API_IT_RECHT_KANZLEI_TYPE_IMP;
+      }
+      
+      if ($content_group != '') {
+        $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
+        xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
+      }
+      
+      if ($content_group == '' || mysql_affected_rows() < 1) {
+        $this->return_error('99');
+      }
+      
+      $this->return_success();
+    } else {
+      $this->return_error('99');
+    }
+  }
+  
+  function url_valid($url) {
+    $urlregex  = "((https?|ftp)\:\/\/)?"; // SCHEME
+    $urlregex .= "([a-z0-9+!*(),;?&=\$_.-]+(\:[a-z0-9+!*(),;?&=\$_.-]+)?@)?"; // User and Pass
+    $urlregex .= "([a-z0-9-.]*)\.([a-z]{2,3})"; // Host or IP
+    $urlregex .= "(\:[0-9]{2,5})?"; // Port
+    $urlregex .= "(\/([a-z0-9+\$_-]\.?)+)*\/?"; // Path
+    $urlregex .= "(\?[a-z+&\$_.-][a-z0-9;:@&%=+\/\$_.-]*)?"; // GET Query
+    $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?"; // Anchor
+    
+    $array_url = parse_url($url);
+    $limit_to_host = array('it-recht-kanzlei.de', 'itrelaunch.blickreif.com');
+    if (!in_array(strtolower($array_url['host']), $limit_to_host)) {
+      return false;
+    }
+  
+    // check
+    if (preg_match("/^$urlregex$/", $url)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  // check if a file is a pdf
+  function check_if_pdf_file($filename) {
+    $handle = fopen($filename, "r");
+    $contents = fread($handle, 4);
+    fclose($handle);
+    if ($contents == '%PDF') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  // return error and end script
+  function return_error($errorcode) {
+    // output error
+    header('Content-type: application/xml; charset=utf-8');
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    echo "<response>\n";
+    echo "  <status>error</status>\n";
+    echo "  <error>".$errorcode."</error>\n";
+    echo "</response>";
+    exit();
+  }
+  
+  // return success and end script
+  function return_success() {
+    // output success
+    header('Content-type: application/xml; charset=utf-8');
+    echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
+    echo "<response>\n";
+    echo "  <status>success</status>\n";
+    echo "</response>";
+    exit();
+  }
+}
+?>
