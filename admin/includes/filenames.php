@@ -100,6 +100,7 @@ define('FILENAME_XTBOOSTER', 'xtbooster.php'); // xs:booster
 define('FILENAME_SAFETERMS','safeterms.php'); // Tomcraft - 2013-06-21 - Safeterms AGB interface
 define('FILENAME_EASYMARKETING','easymarketing.php'); // Tomcraft - 2013-08-29 - Added easymarketing
 define('FILENAME_GV_CUSTOMERS','gv_customers.php');
+define('FILENAME_IT_RECHT_KANZLEI','it_recht_kanzlei.php');
 
 require_once(DIR_FS_INC.'auto_require.inc.php');
 foreach(auto_require(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);

@@ -137,4 +137,10 @@ UPDATE content_manager SET content_group = 999 WHERE content_id = 120;
 INSERT INTO content_manager VALUES (19, 0, 0, '', 1, 'Delivery time', 'Delivery time', 'The deadline for delivery begins when paying in advance on the day after the payment order to the remitting bank or for other payments on the day to run after the conclusion and ends with the expiry of the last day of the period. Falls on a Saturday, Sunday or a public holiday delivery nationally recognized, the last day of the period, as occurs, the next business day at the place of such a day.', 0, 1, '', 1, 10, 0, '', '', '', '');
 INSERT INTO content_manager VALUES (20, 0, 0, '', 2, 'Lieferzeit', 'Lieferzeit', 'Die Frist f&uuml;r die Lieferung beginnt bei Zahlung per Vorkasse am Tag nach Erteilung des Zahlungsauftrags an das &uuml;berweisende Kreditinstitut bzw. bei anderen Zahlungsarten am Tag nach Vertragsschluss zu laufen und endet mit dem Ablauf des letzten Tages der Frist. F&auml;llt der letzte Tag der Frist auf einen Samstag, Sonntag oder einen am Lieferort staatlich anerkannten allgemeinen Feiertag, so tritt an die Stelle eines solchen Tages der n&auml;chste Werktag.', 0, 1, '', 1, 10, 0, '', '', '', '');
 
+#Tomcraft - 2014-04-08 - Added it_recht_kanzlei
+ALTER TABLE admin_access
+  ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
