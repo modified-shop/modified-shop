@@ -261,9 +261,8 @@ class main {
                                        JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz ON c.countries_id = gz.zone_country_id
                                       WHERE gz.geo_zone_id = 5
                                     ");
-
+    $eu_countries = array();
     if (xtc_db_num_rows($eu_countries_query, true)) {
-      $eu_countries = array ();
       while ($eu_countries_values = xtc_db_fetch_array($eu_countries_query, true)) {
         $eu_countries[] = $eu_countries_values['countries_iso_code_2'];
       }
