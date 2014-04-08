@@ -69,7 +69,7 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
-        <div class="pageHeading pdg2">janolaw</div>
+        <div class="pageHeading pdg2">IT-Recht Kanzlei</div>
         <div class="main">Modules</div>         
         <table class="tableCenter">
           <tr>
