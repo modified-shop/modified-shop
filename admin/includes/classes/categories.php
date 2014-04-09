@@ -1141,8 +1141,8 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
 
   function get_categories_desc_fields ($category_id, $language_id) {
     if (!empty($category_id)) {
-      if (empty($language)) {
-        $language = $_SESSION['languages_id'];
+      if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
       }
       $category_query = xtc_db_query("SELECT *
                                         FROM ".TABLE_CATEGORIES_DESCRIPTION."
@@ -1157,8 +1157,8 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
 
   function get_products_desc_fields ($product_id, $language_id) {
     if (!empty($product_id)) {
-      if (empty($language)) {
-        $language = $_SESSION['languages_id'];
+      if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
       }
       $product_query = xtc_db_query("SELECT *
                                        FROM " . TABLE_PRODUCTS_DESCRIPTION . "
@@ -1183,7 +1183,7 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
     if ($products_image = xtc_try_upload('products_image', DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_products_image_files_extensions, $accepted_products_image_files_mime_types)) {
       $pname_arr = explode('.', $products_image->filename);
       $nsuffix = array_pop($pname_arr);
-      $products_image_name = $products_id.'_0.'.$nsuffix;      
+      $products_image_name = $products_image_name_process = $products_id.'_0.'.$nsuffix;
       $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                 FROM ".TABLE_PRODUCTS."
                                                WHERE products_image = '".$products_data['products_previous_image_0']."'");
@@ -1239,7 +1239,7 @@ define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
       if ($pIMG = xtc_try_upload('mo_pics_'.$img, DIR_FS_CATALOG_ORIGINAL_IMAGES, '777', $accepted_mo_pics_image_files_extensions, $accepted_mo_pics_image_files_mime_types)) {
         $pname_arr = explode('.', $pIMG->filename);
         $nsuffix = array_pop($pname_arr);
-        $products_image_name = $products_id.'_'. ($img +1).'.'.$nsuffix;
+        $products_image_name = $products_image_name_process = $products_id.'_'. ($img +1).'.'.$nsuffix;
         $dup_check_query = xtc_db_query("SELECT COUNT(*) AS total
                                                       FROM ".TABLE_PRODUCTS_IMAGES."
                                                      WHERE image_name = '".$products_data['products_previous_image_'. ($img +1)]."'");
