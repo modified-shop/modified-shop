@@ -67,31 +67,16 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 } else {
     require (DIR_WS_CLASSES.'shipping.php');
     $shipping = new shipping;
+    
+    $free_shipping = $free_shipping_freeamount = $has_freeamount = false;
+    require (DIR_WS_MODULES.'order_total/ot_shipping.php');
+    include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+    $ot_shipping = new ot_shipping;
+    $ot_shipping->process();
+
+    // load all enabled shipping modules
     $quotes = $shipping->quote();
 
-    $free_shipping = $free_shipping_freeamount = false;
-    if (defined('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING') && (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true')) {
-      switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
-        case 'national' :
-          if ($order->delivery['country']['id'] == STORE_COUNTRY)
-            $pass = true;
-          break;
-        case 'international' :
-          if ($order->delivery['country']['id'] != STORE_COUNTRY)
-            $pass = true;
-          break;
-        case 'both' :
-          $pass = true;
-          break;
-        default :
-          $pass = false;
-          break;
-      }
-      if (($pass == true) && ($order->info['total'] >= $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, false, 0, true))) {
-        $free_shipping = true;
-      }
-    }
-    $has_freeamount = false;
     foreach ($quotes as $quote) {
       if ($quote['id'] == 'freeamount') {
         $has_freeamount = true;
@@ -101,9 +86,6 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
         }
       }
     }
-    include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-
-    //$total = $_SESSION['cart']->show_total();
 
     $shipping_content = array ();
     if ($free_shipping == true) {
