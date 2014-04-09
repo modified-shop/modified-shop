@@ -43,14 +43,18 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
       break;
       
     case 'unlink':
-      foreach ($unlink_file as $unlink) {
-        if (is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
-          @unlink(DIR_FS_DOCUMENT_ROOT.$unlink) ? $success.=$unlink.'<br/>' : $error.=$unlink.'<br/>';
+      if (count($unlink_file) > 0) {
+        foreach ($unlink_file as $unlink) {
+          if (is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
+            @unlink(DIR_FS_DOCUMENT_ROOT.$unlink) ? $success.=$unlink.'<br/>' : $error.=$unlink.'<br/>';
+          }
         }
       }
-      foreach ($unlink_dir as $unlink) {
-        if (is_dir(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
-          rrmdir(DIR_FS_DOCUMENT_ROOT.$unlink);
+      if (count($unlink_dir) > 0) {
+        foreach ($unlink_dir as $unlink) {
+          if (is_dir(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
+            rrmdir(DIR_FS_DOCUMENT_ROOT.$unlink);
+          }
         }
       }
       break;  
