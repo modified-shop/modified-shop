@@ -392,6 +392,20 @@
     }
     
     function info() {
+      global $order, $send_by_admin;
+      
+      if ($send_by_admin) {
+        $banktransfer_query = xtc_db_query("SELECT banktransfer_iban,
+                                                   banktransfer_bankname,
+                                                   banktransfer_owner_email
+                                              FROM ".TABLE_BANKTRANSFER."
+                                             WHERE orders_id = '".$order->info['order_id']."'");
+        if (xtc_db_num_rows($banktransfer_query) > 0) {
+          $banktransfer = xtc_db_fetch_array($banktransfer_query);
+          return $banktransfer;
+        }
+      }
+      
       return array('banktransfer_iban' => $this->banktransfer_iban, 
                    'banktransfer_bankname' => $this->banktransfer_bankname,
                    'banktransfer_owner_email' => $this->banktransfer_owner_email);
