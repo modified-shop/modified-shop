@@ -33,9 +33,8 @@
     }
 
     if (ACCOUNT_GENDER == 'true' && $gender == '') {
-        $error = true;
-        $messageStack->add('checkout_address', ENTRY_GENDER_ERROR);
-      }
+      $error = true;
+      $messageStack->add('checkout_address', ENTRY_GENDER_ERROR);
     }
 
     if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
