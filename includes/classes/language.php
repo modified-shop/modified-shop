@@ -72,7 +72,7 @@ if ( !class_exists( "language" ) ) {
                                'zh' => array('zh|chinese simplified', 'chinese_gb', 'zh'));
 
       $this->catalog_languages = array();
-      $where = !defined('RUN_MODE_ADMIN') ? (($_SESSION['customers_status']['customers_status'] == '0') ? "WHERE status_admin = '1'" : "WHERE status = '1'") : '';
+      $where = !defined('RUN_MODE_ADMIN') ? ((isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0') ? "WHERE status_admin = '1'" : "WHERE status = '1'") : '';
       $languages_query = xtc_db_query("SELECT * 
                                          FROM " . TABLE_LANGUAGES . " 
                                          ".$where." 
