@@ -1099,8 +1099,8 @@ class categories {
 
   function get_categories_desc_fields ($category_id, $language_id) {
     if (!empty($category_id)) {
-      if (empty($language)) {
-        $language = $_SESSION['languages_id'];
+      if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
       }
       $category_query = xtc_db_query("SELECT *
                                         FROM ".TABLE_CATEGORIES_DESCRIPTION."
@@ -1115,8 +1115,8 @@ class categories {
 
   function get_products_desc_fields ($product_id, $language_id) {
     if (!empty($product_id)) {
-      if (empty($language)) {
-        $language = $_SESSION['languages_id'];
+      if (empty($language_id)) {
+        $language_id = $_SESSION['languages_id'];
       }
       $product_query = xtc_db_query("SELECT *
                                        FROM " . TABLE_PRODUCTS_DESCRIPTION . "
