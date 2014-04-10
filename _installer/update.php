@@ -13,17 +13,16 @@ chdir('../');
 include ('includes/application_top.php');
 
 // set all files to be deleted
+$unlink_file = array();
 if (is_file(DIR_FS_DOCUMENT_ROOT.'_installer/delete_files.php')) {
   include(DIR_FS_DOCUMENT_ROOT.'_installer/delete_files.php');
 }
 
-// set all directories to be deleted                     
+// set all directories to be deleted
+$unlink_dir = array();                
 if (is_file(DIR_FS_DOCUMENT_ROOT.'_installer/delete_dir.php')) {
   include(DIR_FS_DOCUMENT_ROOT.'_installer/delete_dir.php');
 }
-
-// set all update sql files to be executed and deleted afterwards
-//$sql_update = array('update_1.0.6.0_to_1.0.7.0.sql');
 
 $error='';
 $success='';
@@ -45,14 +44,14 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
     case 'unlink':
       if (count($unlink_file) > 0) {
         foreach ($unlink_file as $unlink) {
-          if (is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
+          if (trim($unlink) != '' && is_file(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
             @unlink(DIR_FS_DOCUMENT_ROOT.$unlink) ? $success.=$unlink.'<br/>' : $error.=$unlink.'<br/>';
           }
         }
       }
       if (count($unlink_dir) > 0) {
         foreach ($unlink_dir as $unlink) {
-          if (is_dir(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
+          if (trim($unlink) != '' && is_dir(DIR_FS_DOCUMENT_ROOT.$unlink)) {  
             rrmdir(DIR_FS_DOCUMENT_ROOT.$unlink);
           }
         }
@@ -221,9 +220,7 @@ a {text-decoration: none;}
 <?php
 function rrmdir($dir) {
   global $error, $success;
-  
-  print_r($dir);
-  
+    
   foreach(glob($dir . '/*') as $file) {
     if(is_dir($file)) {
       rrmdir($file);
