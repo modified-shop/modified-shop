@@ -60,7 +60,7 @@ class it_recht_kanzlei {
     if ($api_action == '') {
       $this->return_error('10');
     }
-    $local_supported_actions = explode(',', MODULE_API_IT_RECHT_KANZLEI_CONNECTION_TYPE);
+    $local_supported_actions = array('push');
     // Catch errors - action not supported
     if (!in_array($api_action, $local_supported_actions)) {
       $this->return_error('10');
