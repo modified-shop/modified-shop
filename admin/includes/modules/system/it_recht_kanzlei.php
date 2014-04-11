@@ -7,6 +7,8 @@ define('MODULE_API_IT_RECHT_KANZLEI_STATUS_TITLE', 'Status');
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_DESC', 'Modulstatus');
 define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_TITLE', 'Authentifizierungs-Token');
 define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_DESC', 'Authentifizierungs-Token den Sie der IT-Recht Kanzlei mitteilen.');
+define('MODULE_API_IT_RECHT_KANZLEI_VERSION_FILE_TITLE', 'API Version');
+define('MODULE_API_IT_RECHT_KANZLEI_VERSION_DESC', 'Diese ist nur zu &auml;ndern, wenn sie von der IT-Recht Kanzlei dazu aufgefordert werden. (Standard: 1.0)');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB_TITLE', '<hr noshade>Rechtstext AGB');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB_DESC', 'Bitte geben Sie an, in welcher Seite dieser Rechtstext automatisch eingef&uuml;gt werden soll.');
 define('MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE_TITLE', 'Rechtstext Datenschutz');
@@ -64,6 +66,7 @@ class it_recht_kanzlei {
   function install() {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_STATUS', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TOKEN', '".md5(time() . rand(0,99999))."',  '6', '1', '', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_VERSION', '1.0',  '6', '1', '', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB', '3',  '6', '1', 'xtc_cfg_select_content(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE', '2',  '6', '1', 'xtc_cfg_select_content(', 'xtc_cfg_display_content', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB', '9',  '6', '1', 'xtc_cfg_select_content(', 'xtc_cfg_display_content', now())");
@@ -72,7 +75,6 @@ class it_recht_kanzlei {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_DSE', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_WRB', 'true',  '6', '1', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', '/media/content/',  '6', '1', '', now())");
-    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_API_IT_RECHT_KANZLEI_VERSION', '1.0',  '6', '1', '', now())");
   }
 
   // remove
@@ -84,6 +86,7 @@ class it_recht_kanzlei {
   function keys() {
     return array('MODULE_API_IT_RECHT_KANZLEI_STATUS', 
                  'MODULE_API_IT_RECHT_KANZLEI_TOKEN', 
+                 'MODULE_API_IT_RECHT_KANZLEI_VERSION',
                  'MODULE_API_IT_RECHT_KANZLEI_TYPE_AGB', 
                  'MODULE_API_IT_RECHT_KANZLEI_TYPE_DSE', 
                  'MODULE_API_IT_RECHT_KANZLEI_TYPE_WRB', 
@@ -92,7 +95,6 @@ class it_recht_kanzlei {
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_DSE', 
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_WRB', 
                  'MODULE_API_IT_RECHT_KANZLEI_PDF_FILE', 
-                 'MODULE_API_IT_RECHT_KANZLEI_VERSION',
                  );
   }
 }
