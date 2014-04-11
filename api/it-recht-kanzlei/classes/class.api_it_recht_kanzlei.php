@@ -204,12 +204,13 @@ class it_recht_kanzlei {
       if ($content_group != '') {
         $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
         xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
-      }
-      
-      if ($content_group == '' || xtc_db_affected_rows() < 1) {
+        if (xtc_db_affected_rows() < 1) {
+          $this->return_error('99');
+        }
+      } else {
         $this->return_error('99');
-      }
-      
+      }  
+          
       $this->return_success();
     } else {
       $this->return_error('99');
