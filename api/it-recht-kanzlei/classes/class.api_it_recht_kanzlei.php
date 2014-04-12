@@ -60,7 +60,7 @@ class it_recht_kanzlei {
     if ($api_action == '') {
       $this->return_error('10');
     }
-    $local_supported_actions = explode(',', MODULE_API_IT_RECHT_KANZLEI_CONNECTION_TYPE);
+    $local_supported_actions = array('push');
     // Catch errors - action not supported
     if (!in_array($api_action, $local_supported_actions)) {
       $this->return_error('10');
@@ -204,9 +204,10 @@ class it_recht_kanzlei {
       if ($content_group != '') {
         $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
         xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
-      }
-      
-      if ($content_group == '' || xtc_db_affected_rows() < 1) {
+        if (xtc_db_affected_rows() < 1) {
+          $this->return_error('99');
+        }
+      } else {
         $this->return_error('99');
       }
       
