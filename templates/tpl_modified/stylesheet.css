@@ -30,29 +30,30 @@
     font-weight: normal;
     font-style: normal;
 }
+
 @font-face {
-    font-family: 'istokregular';
-    src: url('css/fonts/istokweb-regular-webfont.eot');
-    src: url('css/fonts/istokweb-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/istokweb-regular-webfont.woff') format('woff'),
-         url('css/fonts/istokweb-regular-webfont.ttf') format('truetype'),
-         url('css/fonts/istokweb-regular-webfont.svg#istok_webregular') format('svg');
+    font-family: 'robotoregular';
+    src: url('css/fonts/roboto-regular-webfont.eot');
+    src: url('css/fonts/roboto-regular-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/roboto-regular-webfont.woff') format('woff'),
+         url('css/fonts/roboto-regular-webfont.ttf') format('truetype'),
+         url('css/fonts/roboto-regular-webfont.svg#robotoregular') format('svg');
     font-weight: normal;
     font-style: normal;
+
 }
+
 @font-face {
-    font-family: 'istokregular';
-    src: url('css/fonts/istokweb-bold-webfont.eot');
-    src: url('css/fonts/istokweb-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/istokweb-bold-webfont.woff') format('woff'),
-         url('css/fonts/istokweb-bold-webfont.ttf') format('truetype'),
-         url('css/fonts/istokweb-bold-webfont.svg#istok_webbold') format('svg');
+    font-family: 'robotoregular';
+    src: url('css/fonts/roboto-bold-webfont.eot');
+    src: url('css/fonts/roboto-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/roboto-bold-webfont.woff') format('woff'),
+         url('css/fonts/roboto-bold-webfont.ttf') format('truetype'),
+         url('css/fonts/roboto-bold-webfont.svg#robotobold') format('svg');
     font-weight: bold;
     font-style: normal;
+
 }
-
-
-
 
 
 
@@ -62,12 +63,12 @@
   padding:0;
 }
 body {
-  font-family: 'istokregular', sans-serif;
+  font-family: 'robotoregular', sans-serif;
   font-weight: normal;
-  font-size:14px;
+  font-size:13px;
   background-color:#fff;
   color:#555;
-  line-height:20px;
+  line-height:19px;
 }
 .clearfix, .clear, .clearer {
   line-height:0px;
@@ -137,8 +138,8 @@ a.black {
 }
 
 .fieldtext, .fieldtext_stern {
-  font-size:12px;
-  line-height:16px;
+  font-size:11px;
+  line-height:15px;
   font-weight:bold;
   padding: 0px 0px 2px 0px;
   display:block;
@@ -175,9 +176,9 @@ a.black {
   max-width:580px;
   float:left;
   color: #707070;
-  font-size: 12px;
-  height: 12px;
-  line-height: 12px;
+  font-size: 11px;
+  height: 13px;
+  line-height: 13px;
   margin: 13px 0;
 }
 
@@ -189,12 +190,12 @@ ul.topnavigation {
 ul.topnavigation li {
   float:left;
   padding: 0px 20px 0px 20px;
-  height:12px;  
-  line-height:12px;
+  height:13px;  
+  line-height:13px;
   margin: 13px 0px;
   border-left: 1px solid #707070;
   color:#707070;
-  font-size:12px;
+  font-size:11px;
 }
 ul.topnavigation li.first {
   border:none;
@@ -342,11 +343,12 @@ a img {
 
 /* INPUT ELEMENTS GLOBAL (CSS 1 compatible) */
 input {
-  font-family: 'istokregular', sans-serif;
+/*  font-family: 'istokregular', sans-serif; */
+  font-family: 'robotoregular', sans-serif;
   font-size:14px;
 }
 textarea {
-  font-family: 'istokregular', sans-serif;
+  font-family: Verdana, sans-serif;
   font-size:14px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -364,7 +366,8 @@ textarea {
   width:100%;
 }
 select {
-  font-family: 'istokregular', sans-serif;
+/*  font-family: 'istokregular', sans-serif; */
+  font-family: Verdana, sans-serif;
   font-size:14px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -372,7 +375,7 @@ select {
   border-style: solid;
   border-width: 1px;
   vertical-align: middle;
-	padding: 7px 4px 6px 2px;
+	padding: 5px 4px 5px 2px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
@@ -390,7 +393,7 @@ input[type=text], input[type=password] {
   border-style: solid;
   border-width: 1px;
   vertical-align: middle;
-	padding: 8px 5px 7px 5px;
+	padding: 5px 5px 5px 5px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
@@ -398,6 +401,7 @@ input[type=text], input[type=password] {
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
   width:100%;
+  height:32px;
 }
 input[type=radio], input[type=checkbox] {
   margin: 0 3px;
@@ -761,11 +765,11 @@ table td {
   padding:2px 0 20px 0px;
   list-style-type:none;
   outline:none;
-  height:22px;
-  font-size:12px;
+  height:21px;
+  font-size:11px;
 }
 #breadcrumb a, #breadcrumb a:link, #breadcrumb a:visited, #breadcrumb a:active {
-  line-height:22px;
+  line-height:21px;
   outline:none;
   font-weight:normal;
   cursor:pointer;
@@ -822,7 +826,7 @@ table td {
 }
 .box_sub {
   margin: 6px 0px 0px 0px;
-  font-size:12px;
+  font-size:11px;
   color:#767676;
 }
 .box_sub a {
@@ -1054,7 +1058,7 @@ ul#categorymenu li a:hover {
 /* 1st TIER */
 ul#categorymenu li.level1 a {
   color:#fff;
-  font-size:16px;
+  font-size:15px;
   padding:8px 10px 8px 10px;
   background:#434343;
   border-bottom: 1px dotted #656565;
@@ -1073,7 +1077,7 @@ ul#categorymenu li.level2 a {
   background:url(img/dotted1.gif) no-repeat 10px 12px #d7d7d7;
   padding:6px 0 6px 20px;
   border-bottom: 1px dotted #767676;
-  font-size:14px;
+  font-size:13px;
 }
 ul#categorymenu li.level2 a:hover {
   color:#fff;
@@ -1088,7 +1092,7 @@ ul#categorymenu li.level3 a {
   background:url(img/dotted1.gif) no-repeat 22px 11px #c7c7c7;
   padding:4px 0 4px 32px;
   border-bottom: 1px dotted #767676;
-  font-size:14px;
+  font-size:13px;
 }
 ul#categorymenu li.level3 a:hover {
   color:#fff;
@@ -1103,7 +1107,7 @@ ul#categorymenu li.level4 a {
   background:url(img/dotted1.gif) no-repeat 34px 11px #c7c7c7;
   padding:4px 0 4px 46px;
   border-bottom: 1px dotted #767676;
-  font-size:14px;
+  font-size:13px;
 }
 ul#categorymenu li.level4 a:hover {
   color:#333;
@@ -1118,7 +1122,7 @@ ul#categorymenu li.level5 a {
   background:url(img/dotted1.gif) no-repeat 46px 11px #c7c7c7;
   padding:4px 0 4px 58px;
   border-bottom: 1px dotted #767676;
-  font-size:14px;
+  font-size:13px;
 }
 ul#categorymenu li.level5 a:hover {
   color:#333;

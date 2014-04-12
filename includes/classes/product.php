@@ -35,6 +35,7 @@ class product {
                              p.products_tax_class_id,
                              p.products_image,
                              p.products_quantity,
+                             p.products_shippingtime,
                              p.products_vpe,
                              p.products_vpe_status,
                              p.products_vpe_value,
@@ -126,7 +127,8 @@ class product {
         $data_reviews[] = array (
             'AUTHOR' => $reviews['customers_name'],
             'DATE' => xtc_date_short($reviews['date_added']),
-            'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+            'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
+            'RATING_MICROTAG' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
             'TEXT' => nl2br($reviews['reviews_text'])
           );
         if (count($data_reviews) == PRODUCT_REVIEWS_VIEW) break;
