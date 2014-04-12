@@ -1,41 +1,39 @@
-<table  width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
-  <tr>
-    <td style="border-bottom: 1px solid; border-color: #cccccc;">
-      <div align="right"><img src="{$logo_path}logo.gif"></div>
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <font size="1" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; </font>
-      <font size="2" face="Verdana, Arial, Helvetica, sans-serif">&nbsp; </font>
-      <p>
-        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-          {$MESSAGE}
+<div style="width:700px;margin: 0px auto;">
+<table  width="700" border="0" align="center" cellpadding="5" cellspacing="0">
+	<tr> 
+    	<td align="center" style="padding: 10px 0px;"><img src="{$logo_path}logo.gif"></td>
+	</tr>
+	<tr> 
+    	<td style="font-size:14px;text-transform:uppercase;padding:10px 5px;border-top: 1px dotted #999;border-bottom: 1px dotted #999;">
+        <font face="Tahoma, Verdana, sans-serif">Ihr Gutschein</font>
+      </td>
+	</tr>
+	<tr> 
+		<td>
+        <br />
+        <font size="2" face="Tahoma, Verdana, sans-serif">
+        {$MESSAGE}
+        <br />
+        <br />
         </font>
-      </p>
-      <p>
-        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-          Gutscheinwert: {$AMMOUNT}
+        <table width="100%"  border="0" bgcolor="f1f1f1" cellpadding="5">
+				  <tr>
+            <td><font size="2" face="Tahoma, Verdana, sans-serif"><b>Gutscheinwert:</b> {$AMMOUNT}</font></td>
+          </tr>
+				  <tr>
+            <td><font size="2" face="Tahoma, Verdana, sans-serif"><b>Ihr Gutscheincode lautet:</b> {$GIFT_ID}</font></td>
+          </tr>
+        </table>
+        <br />
+        <font size="2" face="Tahoma, Verdana, sans-serif">
+        Um Ihren Gutschein zu verbuchen, klicken Sie auf den nachfolgenden Link - <a href="{$GIFT_LINK}">{$GIFT_LINK}</a>.
+        <br /><br />
+        Falls es wider Erwarten zu Problemen beim verbuchen kommen sollte, besuchen Sie unsere 
+        Webseite <a href="{$WEBSITE}">{$WEBSITE}</a> und geben den Gutschein-Code bitte manuell ein.
         </font>
-      </p>
-      <p>
-        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-          Ihr Gutscheincode lautet: {$GIFT_ID}
-        </font>
-      </p>
-      <p>
-        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-          Um Ihren Gutschein zu verbuchen, klicken Sie auf den nachfolgenden Link - <a href="{$GIFT_LINK}">{$GIFT_LINK}</a>.
-        </font>
-      </p>
-      <p>
-        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">
-          Falls es wider Erwarten zu Problemen beim verbuchen kommen sollte, besuchen Sie unsere Webseite <a href="{$WEBSITE}">{$WEBSITE}</a> und geben den Gutschein-Code bitte manuell ein.
-        </font>
-      </p>
-    </td>
-  </tr>
+		</td>
+	</tr>
 </table>
-<p>&nbsp;</p>
 
 [SIGNATUR]
+</div>
