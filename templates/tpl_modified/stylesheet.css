@@ -69,6 +69,7 @@ body {
   background-color:#fff;
   color:#555;
   line-height:19px;
+  min-width:1000px;
 }
 .clearfix, .clear, .clearer {
   line-height:0px;
@@ -216,12 +217,10 @@ ul.topnavigation li a:hover {
   height:75px;
   overflow:hidden;
   padding:10px 0px;
-}
-#layout_logo_inner {
   width:1000px;
   margin: 0px auto;
-  height:75px;
 }
+
 #logo {
   float:left;
   width:235px;
@@ -3432,3 +3431,11 @@ ul.upcoming_list li {
   font-size:11px;
   padding:0 0 10px 0;
 }
+
+
+
+
+
+
+
+
