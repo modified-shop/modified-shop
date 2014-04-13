@@ -89,9 +89,6 @@ h2.resp-tab-title:last-child {
     float: left;
     width: 68%;
     min-height: 250px;
-	  -moz-border-radius: 4px;
-	  -webkit-border-radius: 4px;
-	  border-radius: 4px;
     clear: none;
 }
 
