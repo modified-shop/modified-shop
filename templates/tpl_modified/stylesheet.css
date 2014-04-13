@@ -344,11 +344,11 @@ a img {
 input {
 /*  font-family: 'istokregular', sans-serif; */
   font-family: 'robotoregular', sans-serif;
-  font-size:14px;
+  font-size:13px;
 }
 textarea {
   font-family: Verdana, sans-serif;
-  font-size:14px;
+  font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
   color: #999999;
@@ -367,7 +367,7 @@ textarea {
 select {
 /*  font-family: 'istokregular', sans-serif; */
   font-family: Verdana, sans-serif;
-  font-size:14px;
+  font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
   color: #999999;
@@ -392,7 +392,7 @@ input[type=text], input[type=password] {
   border-style: solid;
   border-width: 1px;
   vertical-align: middle;
-	padding: 5px 5px 5px 5px;
+	padding: 6px 5px 6px 5px;
 	-webkit-border-radius: 2px;
 	-moz-border-radius: 2px;
 	border-radius: 2px;
