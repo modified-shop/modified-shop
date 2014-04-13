@@ -1467,6 +1467,7 @@ h2.boxcartheader a {
 
 /* POPUPS PRODUCTINFO */
 body.popupproductinfo {
+  min-width:100%;
   padding:15px;
   background:#fff none;
 }
@@ -3097,6 +3098,7 @@ ul.pd_iconlist li.vote {
 
 /* START popup content */
 body.popupcontent {
+  min-width:100%;
   background:#fff none;
 }
 /* ENDE popup content */
@@ -3106,6 +3108,7 @@ body.popupcontent {
 
 /* START popup print_product_info, popup print_order.html */
 body.popupprint {
+  min-width:100%;
   background:#fff none;
 }
 .printwrap {
