@@ -1977,7 +1977,7 @@ a.color_more:hover {
   display: none;
 }
 
-.listingcontainer_details {
+.listingcontainer, .listingcontainer_details {
   margin: 0px -10px 0px -10px;
 }
 
