@@ -205,9 +205,9 @@ class categories {
       }
     }
 
-      $accepted_categories_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
-      $accepted_categories_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
-      if ($categories_image = xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
+    $accepted_categories_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
+    $accepted_categories_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
+    if ($categories_image = xtc_try_upload('categories_image', DIR_FS_CATALOG_IMAGES.'categories/', '777', $accepted_categories_image_files_extensions, $accepted_categories_image_files_mime_types)) {
       $cname_arr = explode('.', $categories_image->filename);
       $cnsuffix = array_pop($cname_arr);
       $categories_image_name = $categories_id.'.'.$cnsuffix;
@@ -537,7 +537,7 @@ class categories {
     }
 
     //MO_PICS
-    $this->uploadMoImages($products_id,$products_data);
+    $this->uploadMoImages($products_id,$products_data,$action);
 
     if (isset ($products_data['products_image']) && xtc_not_null($products_data['products_image']) && ($products_data['products_image'] != 'none')) {
       $sql_data_array['products_image'] = xtc_db_prepare_input($products_data['products_image']);
@@ -1173,7 +1173,7 @@ class categories {
   
   // ----------------------------------------------------------------------------------------------------- //
   
-  function uploadMoImages($products_id,$products_data) 
+  function uploadMoImages($products_id,$products_data,$action)  
   {
     $accepted_mo_pics_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp");
     $accepted_mo_pics_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp");
@@ -1212,20 +1212,11 @@ class categories {
                          'image_nr' => xtc_db_prepare_input($img +1), 
                          'image_name' => xtc_db_prepare_input($products_image_name)
                         );
-        if ($action == 'insert') {
+        if ($action == 'insert' || !$dup_check['total']) {
           xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img);
-        } elseif ($action == 'update' && $products_data['products_previous_image_'. ($img +1)]) {
-          if ($products_data['del_mo_pic']) {
-            foreach ($products_data['del_mo_pic'] as $dummy => $val) {
-              if ($val == $products_data['products_previous_image_'. ($img +1)])
-                xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img);
-              break;
-            }
-          }
+        } elseif ($action == 'update' && $dup_check['total']) {
           xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img, 'update', 'image_name = \''.xtc_db_input($products_data['products_previous_image_'. ($img +1)]).'\'');
-        } elseif (!$products_data['products_previous_image_'. ($img +1)]) {
-          xtc_db_perform(TABLE_PRODUCTS_IMAGES, $mo_img);
-        }
+        } 
         //image processing
         require (DIR_WS_INCLUDES.'product_thumbnail_images.php');
         require (DIR_WS_INCLUDES.'product_info_images.php');
