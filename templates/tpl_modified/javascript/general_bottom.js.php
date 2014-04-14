@@ -16,6 +16,8 @@
 // you can add your template specific js scripts here
 ?>
 
+<script type="text/javascript">var DIR_WS_BASE="<?php echo DIR_WS_BASE ?>"</script>
+
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.easyTabs.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.colorbox.min.js" type="text/javascript"></script>
@@ -26,18 +28,20 @@
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%"});
     $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%"});
 
-    /*BOC jQuery Alerts*/
-    $.alerts.overlayOpacity = .2;
-    $.alerts.overlayColor = '#000';
-    function alert(message, title) {
-      title = title || 'Information';
-      jAlert(message, title);
-    }
-    /*EOC jQuery Alerts*/
-
     $(".unveil").show();
     $(".unveil").unveil();
   });
+</script>
+
+<script type="text/javascript">
+  /*BOC jQuery Alerts*/
+  $.alerts.overlayOpacity = .2;
+  $.alerts.overlayColor = '#000';
+  function alert(message, title) {
+    title = title || 'Information';
+    jAlert(message, title);
+  }
+  /*EOC jQuery Alerts*/
 </script>
 
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info ?>
