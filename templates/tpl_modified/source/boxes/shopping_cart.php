@@ -105,6 +105,7 @@
   }
 
   $box_smarty->assign('LINK_CART', xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
+  $box_smarty->assign('LINK_CHECKOUT', xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
   $box_smarty->caching = 0;
   $box_smarty->assign('language', $_SESSION['language']);
   $box_shopping_cart = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_cart.html');

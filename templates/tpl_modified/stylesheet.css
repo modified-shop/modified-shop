@@ -641,7 +641,6 @@ ul.contentnavigation {
 ul.contentnavigation li {
   float:left;
   padding: 0px 20px 0px 20px;
-  height:13px;  
   line-height:13px;
   margin: 13px 0px;
   border-right: 1px solid #fff;
@@ -678,7 +677,7 @@ ul.contentnavigation li.cart a {
   background: transparent url(img/img_cart_sprite.png) no-repeat 0px 9px;
   padding-left:34px;
   display:block;
-  height:40px;
+/*  height:40px; */
   line-height:40px;
 }
 ul.contentnavigation li.cart a:hover {
@@ -3437,8 +3436,67 @@ ul.upcoming_list li {
 
 
 
-
-
-
-
-
+/* START toggle shopping cart box */
+.toggle_cart {
+  position:absolute;
+  right:0px;
+  top:41px;
+  display:none;
+  width:300px;
+  padding:10px;
+  background:#D7D7D7;
+  color:#333;
+  z-index:100;
+}
+.toggle_cart a {
+  background:none !important; 
+  padding-left: 0px !important; 
+}
+.giftmessage {
+  border: 1px solid #b2dba1;
+  padding: 5px;
+  background-color: #d4ebcb;
+  line-height: 16px;
+  color:#3C763D;
+}
+ul.tc_list {
+  list-style-type:none;
+  margin: 0px 0px 0px 0px;
+ }
+ul.tc_list li {
+  float:none;
+  padding:0px;
+  border:none !important;
+  margin: 0px !important;
+}
+ul.tc_list li a {
+  display:block;
+  border-bottom: 1px dotted #999;
+  font-size:13px;
+  line-height:33px !important;
+  color:#333;
+}
+ul.tc_list li:first-child {
+  border-top: 1px dotted #999 !important;
+}
+ul.tc_list li a:hover {
+  color:#333;
+  background:#ddd !important;
+  text-decoration:none;
+}
+.toogle_cart_links {
+  text-align:right;
+} 
+.toogle_cart_links a {
+  display:inline-block !important;
+  font-size:13px;
+  line-height:33px !important;
+  color:#555 !important;
+  padding: 0px 0px 0px 0px !important;
+  margin-left:20px !important;
+}
+.toogle_cart_links a:hover {
+  color:#6D2551 !important;
+  text-decoration:none;
+}
+/* END toggle shopping cart box */

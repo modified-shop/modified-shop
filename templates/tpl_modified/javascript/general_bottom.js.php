@@ -42,6 +42,16 @@
     jAlert(message, title);
   }
   /*EOC jQuery Alerts*/
+	
+	/* BOC jQuery Shopping Cart */
+  $(function() {
+    $('#toggle_cart').click(function() {
+      $('.toggle_cart').slideToggle('slow');
+      return false;
+    });
+  });
+	/* EOC jQuery Shopping Cart */
+
 </script>
 
 <?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info ?>
