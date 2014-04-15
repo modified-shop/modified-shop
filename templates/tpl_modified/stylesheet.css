@@ -275,6 +275,17 @@ h1.checkout {
   margin:30px 0 15px 0;
 }
 
+.headline_big {
+  font-family: 'oswaldregular', sans-serif;
+  color:#444;
+  font-weight:normal;
+  font-size:18px;
+  margin:20px 0 15px 0;
+  padding:0 0 5px;
+  border:#ddd solid;
+  border-width:0 0 1px 0;
+}
+
 h2 {
 	font-weight:bold;
   color:#444444;
@@ -457,6 +468,7 @@ td.checkbox {
   background: #434343 url(img/bg_layout_footer.jpg) repeat-x;
   min-height:280px;
   margin: 40px 0 0 0;  
+  padding: 0 0 20px 0;
 }
 #layout_footer_inner {
   width:1000px;
@@ -544,6 +556,28 @@ span.cop_magenta {
 }
 span.cop_grey {
   color:#6D6D6D;
+}
+
+/* COPYRIGHT */
+.copyright {
+  margin:0 auto;
+  text-align:center;
+  color:#666;
+  font-size:11px;
+  padding:0 0 10px 0;
+  margin: -40px 0 0 0;
+}
+.copyright a {
+  text-decoration:none;
+}
+/* ParseTime */
+.parseTime {
+  margin:0 auto;
+  text-align:center;
+  color:#ccc;
+  font-size:10px;
+  padding:0 0 0px 0;
+  margin: -10px 0 0 0;
 }
 
 
@@ -3412,27 +3446,6 @@ ul.upcoming_list li {
 
 
 
-/* COPYRIGHT */
-.copyright {
-  margin:0 auto;
-  width:970px;
-  text-align:center;
-  color:#666;
-  font-size:11px;
-  padding:0 0 10px 0;
-}
-.copyright a {
-  text-decoration:none;
-}
-/* ParseTime */
-.parseTime {
-  margin:0 auto;
-  width:970px;
-  text-align:center;
-  color:#666;
-  font-size:11px;
-  padding:0 0 10px 0;
-}
 
 
 
@@ -3441,7 +3454,7 @@ ul.upcoming_list li {
   position:absolute;
   right:0px;
   top:41px;
-  display:none;
+  display:none;  
   width:300px;
   padding:10px;
   background:#D7D7D7;
@@ -3500,3 +3513,52 @@ ul.tc_list li a:hover {
   text-decoration:none;
 }
 /* END toggle shopping cart box */
+
+
+/* START carousel Bestseller box */
+.bxcarousel_box_bestseller {
+  width:100%; 
+  margin: 0px auto;
+}
+ul.bxcarousel_bestseller li {
+  float:left;
+  width:139px;
+  background:#fff;
+  border: 1px solid #ddd;
+  display:block;
+}
+ul.bxcarousel_bestseller li .carousel_box {
+  padding:5px;
+}  
+ul.bxcarousel_bestseller li .carousel_box .cb_image {
+  display:block;
+  height:129px;
+  overflow:hidden;
+}
+ul.bxcarousel_bestseller li .carousel_box .cb_title {
+  display:block;
+  border-top: 1px dotted #ddd;
+  margin: 7px 0 0 0;
+  padding:5px 0 2px 0;
+  font-size:12px;
+  text-align:center;
+  line-height:16px;
+  height:32px;
+}
+ul.bxcarousel_bestseller li .carousel_box a:hover {
+  text-decoration:none;
+}
+/* END carousel Bestseller box */
+
+
+
+
+
+
+
+
+
+
+
+
+

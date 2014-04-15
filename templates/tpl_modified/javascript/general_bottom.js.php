@@ -23,6 +23,8 @@
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.colorbox.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.unveil.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.alerts.min.js" type="text/javascript"></script>
+<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.bxslider.min.js" type="text/javascript"></script>
+
 <script type="text/javascript">
   $(document).ready(function(){
     $(".cbimages").colorbox({rel:'cbimages', scalePhotos:true, maxWidth: "90%", maxHeight: "90%"});
@@ -30,8 +32,19 @@
 
     $(".unveil").show();
     $(".unveil").unveil();
+
+    $('.bxcarousel_bestseller').bxSlider({
+      minSlides: 5,
+      maxSlides: 5,
+      pager: true,
+      slideWidth: 141,
+      slideMargin: 10
+    });
+      
   });
 </script>
+
+
 
 <script type="text/javascript">
   /*BOC jQuery Alerts*/
@@ -51,10 +64,8 @@
     });
 
     $("html").not('.toggle_cart').bind('click',function(e) {
-      e.stopPropagation();
       $('.toggle_cart').slideUp('slow');
     });
-
   });     
 	/* EOC jQuery Shopping Cart */
 
