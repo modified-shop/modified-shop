@@ -758,7 +758,7 @@
               // --------------------
               if (xtc_not_null($_POST['multi_delete'])) {
                 $heading[]  = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_ELEMENTS . '</b>');
-                $contents[] = array('text' => '<a class="button" href="javascript:SwitchCheck()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>');
+                $contents[] = array('text' => '<a class="button" href="javascript:SwitchCheckDeleteConfirm()" onclick="this.blur()">' . BUTTON_REVERSE_SELECTION . '</a>');
                 $contents[] = array('text' => '<table width="100%" border="0">');
 
                 if (is_array($_POST['multi_categories'])) {
