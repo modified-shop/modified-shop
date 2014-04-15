@@ -49,7 +49,13 @@
       $('.toggle_cart').slideToggle('slow');
       return false;
     });
-  });
+
+    $("html").not('.toggle_cart').bind('click',function(e) {
+      e.stopPropagation();
+      $('.toggle_cart').slideUp('slow');
+    });
+
+  });     
 	/* EOC jQuery Shopping Cart */
 
 </script>

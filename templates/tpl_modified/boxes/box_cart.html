@@ -2,9 +2,9 @@
 {config_load file="lang_`$language`.custom"}
 <div id="cart_short"{if $empty == 'false'} style="cursor:pointer"{/if}>
   {if $empty == 'false'}
-  <a id="toggle_cart" href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>{$PRODUCTS}</strong> {#text_article#} &nbsp;&bull;&nbsp; {#text_total#}:<strong>{$TOTAL}</strong></span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>{$PRODUCTS}</strong> {#text_article#} &nbsp;&bull;&nbsp; {#text_total#}:<strong>{$TOTAL}</strong></span></a>
   {else}
-  <a id="toggle_cart" href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>0</strong> {#text_article#} &nbsp;&bull;&nbsp; {#text_total#}: <strong>0,00 &euro;</strong></span></a>
+  <a {if $deny_cart neq 'true'}id="toggle_cart"{/if} href="{$LINK_CART}">{#heading_cart#} &raquo;<span class="cart_content"><strong>0</strong> {#text_article#} &nbsp;&bull;&nbsp; {#text_total#}: <strong>0,00 &euro;</strong></span></a>
   {/if}
 </div>
 
@@ -15,7 +15,6 @@
       <div class="giftmessage"><strong>{#voucher_balance#}</strong>&nbsp;{$GV_AMOUNT}</div>
     {/if}
   {/if}
-    
   {if $empty == 'false'}
     <div class="mini"><strong>{#text_full_cart#}</strong></div>
     <ul class="tc_list">
@@ -23,7 +22,6 @@
       <li><a href="{$products_data.LINK}">{$products_data.QTY}&nbsp;x&nbsp;{$products_data.NAME|truncate:40:"...":true}</a></li>
     {/foreach}
     </ul>
-
     <div class="toogle_cart_links">
       <a href="{$LINK_CHECKOUT}"><strong>{#heading_checkout#}&nbsp;&raquo;</strong></a>
       <a href="{$LINK_CART}"><strong>{#heading_cart#}&nbsp;&raquo;</strong></a>
@@ -31,6 +29,5 @@
   {else}
     <div class="mini"><strong>{#text_empty_cart#}</strong></div>
   {/if}
-
 {/if}
 </div>
