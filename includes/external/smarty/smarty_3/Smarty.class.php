@@ -632,6 +632,7 @@ class Smarty extends Smarty_Compatibility {
             ->setPluginsDir(SMARTY_PLUGINS_DIR)
             ->setCacheDir('.' . DS . 'cache' . DS)
             ->setConfigDir('.' . DS . 'lang' . DS)
+            ->addConfigDir('.' . DS . 'templates' . DS . CURRENT_TEMPLATE . DS . 'lang' . DS)
             ->addPluginsDir(MY_TEMPLATE_PLUGINS);
             
         $this->debug_tpl = 'file:' . dirname(__FILE__) . '/debug.tpl';

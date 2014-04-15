@@ -1,4 +1,6 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
+{config_load file="lang_`$language`.custom"}
+{if $BOX_CONTENT != ''}
 <div class="box1">
   <div class="box_header">
     <span class="show_title">{#heading_manufacturers#}</span> 
@@ -6,3 +8,4 @@
   <div class="box_line"></div>
   <div class="box_select">{$BOX_CONTENT|replace:"<br />":""}</div>
 </div>
+{/if}
