@@ -17,55 +17,54 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  $box_order_history = '';
+// include smarty
+include(DIR_FS_BOXES_INC . 'smarty_default.php');
+
+// set cache id
+$cache_id = $_SESSION['language'].((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : '0');
+
+if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_newsletter.html', $cache_id) || !$cache) {
 
   if (isset($_SESSION['customer_id'])) {
 
-    $box_smarty = new smarty;
-    $customer_orders_string = '';
-
     // retreive the last x products purchased
-    $orders_query = xtc_db_query("
-        SELECT DISTINCT op.products_id
-                   FROM " . TABLE_ORDERS . " o, " . TABLE_ORDERS_PRODUCTS . " op, " . TABLE_PRODUCTS . " p
-                  WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
-                    AND o.orders_id = op.orders_id 
-                    AND op.products_id = p.products_id
-                    AND p.products_status = '1' 
-               GROUP BY products_id 
-               ORDER BY o.date_purchased DESC 
-                  LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
-    if (xtc_db_num_rows($orders_query)) {
-      $product_ids = '';
-      while ($orders = xtc_db_fetch_array($orders_query)) {
-        $product_ids .= $orders['products_id'] . ',';
-      }
-      $product_ids = substr($product_ids, 0, -1);
-      $customer_orders_string = '<ul class="orderhistory_list">';
-      $products_query = xtc_db_query("
-          SELECT products_id, products_name 
-            FROM " . TABLE_PRODUCTS_DESCRIPTION . "
-           WHERE products_id IN (" . $product_ids . ")
-             AND language_id = '" . (int)$_SESSION['languages_id'] . "'
-        ORDER BY products_name");
-      while ($products = xtc_db_fetch_array($products_query)) {
+    $orders_query = xtc_db_query("SELECT DISTINCT p.products_id,
+                                                  pd.products_name
+                                             FROM " . TABLE_ORDERS . " o
+                                             JOIN " . TABLE_ORDERS_PRODUCTS . " op
+                                                  ON o.orders_id = op.orders_id
+                                             JOIN " . TABLE_PRODUCTS . " p
+                                                  ON op.products_id = p.products_id
+                                             JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                                  ON p.products_id = pd.products_id
+                                                     AND language_id = '" . (int)$_SESSION['languages_id'] . "'
+                                            WHERE o.customers_id = '" . (int)$_SESSION['customer_id'] . "'
+                                              AND p.products_status = '1' 
+                                         GROUP BY p.products_id 
+                                         ORDER BY o.date_purchased DESC 
+                                            LIMIT " . MAX_DISPLAY_PRODUCTS_IN_ORDER_HISTORY_BOX);
 
+    $customer_orders_string = '';
+    if (xtc_db_num_rows($orders_query) > 0) {
+      $customer_orders_string = '<ul class="orderhistory_list">';
+      while ($orders = xtc_db_fetch_array($orders_query)) {
         $customer_orders_string .= '<li>' .
-                                   '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products['products_id'],$products['products_name'])) . '">' . $products['products_name'] . '</a>' .
-                                   '<span class="cart_icon"><a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $products['products_id']) . '">' . xtc_image('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART,'','','') . '</a></span>' .
+                                     '<a href="' . xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($orders['products_id'],$orders['products_name'])) . '">' . $orders['products_name'] . '</a>' .
+                                     '<span class="cart_icon"><a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action')) . 'action=cust_order&pid=' . $orders['products_id']) . '">' . xtc_image('templates/' . CURRENT_TEMPLATE . '/img/icon_cart.png' , ICON_CART,'','','') . '</a></span>' .
                                    '</li>';
       }
       $customer_orders_string .= '</ul>';
     }
 
     $box_smarty->assign('BOX_CONTENT', $customer_orders_string);
-
-    $box_smarty->caching = 0;
-    $box_smarty->assign('language', $_SESSION['language']);
-    $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/'); 
-    $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
   }
+}
 
-  $smarty->assign('box_HISTORY', $box_order_history);
+if (!$cache) {
+  $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html');
+} else {
+  $box_order_history = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_order_history.html', $cache_id);
+}
 
+$smarty->assign('box_HISTORY', $box_order_history);
 ?>

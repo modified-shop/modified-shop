@@ -15,102 +15,95 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-  if ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
-    // Show if customer read reviews
-    
-    $box_smarty = new smarty;
 
-    $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+// include smarty
+include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
-    $random = true;
-    $products_link = '';
+// reset cache id
+$cache_id = '';
 
-    // include needed functions
-    require_once(DIR_FS_INC . 'xtc_random_select.inc.php');
-    require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
-
-    // query restrictions
-    $fsk_lock = ($_SESSION['customers_status']['customers_fsk18_display'] == '0' ? ' AND p.products_fsk18 != 1' : '');
-
-    $random_select = "-- templates/xtc5/source/boxes/reviews.php
-                      SELECT r.reviews_id,
-                             r.reviews_rating,
-                             p.products_id,
-                             p.products_image,
-                             pd.products_name
-                        FROM ".TABLE_REVIEWS." r,
-                             ".TABLE_REVIEWS_DESCRIPTION." rd,
-                             ".TABLE_PRODUCTS." p,
-                             ".TABLE_PRODUCTS_DESCRIPTION." pd
-                       WHERE p.products_status = '1'
-                         AND p.products_id = r.products_id
-                         " . $fsk_lock . "
-                         AND r.reviews_id = rd.reviews_id
-                         AND rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'
-                         AND p.products_id = pd.products_id
-                         AND trim(pd.products_name) != ''
-                         AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'";
-
-    if ($product->isProduct()) {
-      $random_select .= " AND p.products_id = '" . $product->data['products_id'] . "'";
-    }
-    $random_select .= " ORDER BY r.reviews_id DESC LIMIT " . MAX_RANDOM_SELECT_REVIEWS;
-    $random_product = xtc_random_select($random_select);
-
-    if ($product->isProduct()) {
-      // display product review box
-      $random = false;
-      // no write permission if in customer group set to off
-      if ($_SESSION['customers_status']['customers_status_write_reviews'] == 1) {
-        // display 'write a review' box
-        $products_link = xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_product_link($product->data['products_id'],$product->data['products_name']));
-        $box_smarty->assign('REVIEWS_WRITE_REVIEW',BOX_REVIEWS_WRITE_REVIEW);
-      } else {
-        $box_smarty->assign('REVIEWS_WRITE_REVIEW',BOX_REVIEWS_NO_WRITE_REVIEW);
-      }
-    } elseif (!empty($random_product)) {
-      // display random review box, but only if there's something to display
-      $random = true;
-      $review_query = "-- templates/xtc5/source/boxes/reviews.php
-                       SELECT substring(reviews_text, 1, 60) as reviews_text
-                         FROM " . TABLE_REVIEWS_DESCRIPTION . "
-                        WHERE reviews_id = '" . $random_product['reviews_id'] . "'
-                          AND languages_id = '" . (int)$_SESSION['languages_id'] . "'";
-      $review_query = xtDBquery($review_query);
-      $reviews = xtc_db_fetch_array($review_query,true);
-      $reviews = htmlspecialchars($reviews['reviews_text']);
-      $reviews = xtc_break_string($reviews, 15, '-<br />');
-
-      $review_image = DIR_WS_THUMBNAIL_IMAGES . $random_product['products_image'];
-      if(!file_exists($review_image)) {
-        $review_image = DIR_WS_THUMBNAIL_IMAGES.'noimage.gif';
-      }
-      $products_image = xtc_image($review_image, $random_product['products_name'], '', '', 'class="productboximage"');
-      $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $random_product['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $random_product['reviews_rating']),'','','itemprop="rating"');
-
-      $products_link = xtc_href_link(FILENAME_PRODUCT_REVIEWS_INFO, 'products_id=' . $random_product['products_id'] . '&amp;reviews_id=' . $random_product['reviews_id']);
-
-      $box_smarty->assign('PRODUCTS_IMAGE', $products_image);
-      $box_smarty->assign('PRODUCTS_NAME',$random_product['products_name']);
-      $box_smarty->assign('REVIEWS',$reviews);
-      $box_smarty->assign('REVIEWS_IMAGE',$review_image);
-    }
+if ($product->isProduct() && $_SESSION['customers_status']['customers_status_write_reviews'] == '1') {
+  
+  // set cache id
+  $cache_id = $_SESSION['language'];
+  
+  if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
+    // display 'write a review' box
+    $box_smarty->assign('REVIEWS_WRITE_REVIEW',BOX_REVIEWS_WRITE_REVIEW);
     $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
-    $box_smarty->assign('PRODUCTS_LINK', $products_link);
-    $box_smarty->assign('RANDOM', $random);
-    $box_smarty->assign('language', $_SESSION['language']);
-
-    // set cache ID
-    if (!CacheCheck()) {
-      $box_smarty->caching = 0;
-      $box_reviews= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html');
-    } else {
-      $box_smarty->caching = 1;
-      $box_smarty->cache_lifetime=CACHE_LIFETIME;
-      $box_smarty->cache_modified_check=CACHE_CHECK;
-      $cache_id = $_SESSION['language'].(isset($random_product['reviews_id']) ? $random_product['reviews_id'] : '0').(isset($product->data['products_id']) ? $product->data['products_id'] : '0').$_SESSION['language'];
-      $box_reviews= $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html',$cache_id);
-    }
-    $smarty->assign('box_REVIEWS',$box_reviews);
+    $box_smarty->assign('PRODUCTS_LINK', xtc_href_link(FILENAME_PRODUCT_REVIEWS_WRITE, xtc_product_link($product->data['products_id'],$product->data['products_name'])));
   }
+} elseif ($_SESSION['customers_status']['customers_status_read_reviews'] == 1) {
+
+  $product_select = '';
+  if ($product->isProduct()) {
+    $product_select = "AND p.products_id = '" . $product->data['products_id'] . "'";
+  }
+
+  $reviews_query = "SELECT r.reviews_id,
+                           r.reviews_rating,
+                           substring(rd.reviews_text, 1, 60) as reviews_text,
+                           p.products_id,
+                           p.products_image,
+                           pd.products_name
+                      FROM ".TABLE_REVIEWS." r
+                      JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
+                           ON r.reviews_id = rd.reviews_id
+                              AND rd.languages_id = '" . (int)$_SESSION['languages_id'] . "'
+                              AND trim(rd.reviews_text) != ''
+                      JOIN ".TABLE_PRODUCTS." p
+                           ON p.products_id = r.products_id
+                              ".$product_select."
+                      JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
+                           ON p.products_id = pd.products_id
+                              AND trim(pd.products_name) != ''
+                              AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
+                     WHERE p.products_status = '1'
+                           ".PRODUCTS_CONDITIONS_P."
+                  ORDER BY RAND() 
+                     LIMIT 1";
+  $reviews_query = xtc_db_query($reviews_query);
+  
+  if (xtc_db_num_rows($reviews_query) > 0) {                  
+    $reviews = xtc_db_fetch_array($reviews_query);
+    
+    // set cache id
+    $cache_id = $_SESSION['language'].$reviews['reviews_id'];
+    
+    if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id) || !$cache) {
+    
+      $products_image = '';
+      if ($reviews['products_image'] != '') {
+        $products_image = DIR_WS_THUMBNAIL_IMAGES . $reviews['products_image'];
+        if (!file_exists($products_image)) {
+          $products_image = '';
+          if (PRODUCT_IMAGE_SHOW_NO_IMAGE == 'true') {
+            $products_image = DIR_WS_THUMBNAIL_IMAGES . 'noimage.gif';
+          }
+        }
+      }
+      
+      $review_image = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']));
+      $review_image_microtag = xtc_image('templates/' . CURRENT_TEMPLATE . '/img/stars_' . $reviews['reviews_rating'] . '.png' , sprintf(BOX_REVIEWS_TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"');
+
+      // include needed functions
+      require_once(DIR_FS_INC . 'xtc_break_string.inc.php');
+      $box_smarty->assign('REVIEWS_LINK', xtc_href_link(FILENAME_REVIEWS));
+      $box_smarty->assign('PRODUCTS_IMAGE', xtc_image($products_image, $reviews['products_name'], '', '', 'class="productboximage"'));
+      $box_smarty->assign('PRODUCTS_NAME', $reviews['products_name']);
+      $box_smarty->assign('REVIEWS', xtc_break_string(encode_htmlspecialchars($reviews['reviews_text']), 15, '-<br />'));
+      $box_smarty->assign('REVIEWS_IMAGE', $review_image);
+      $box_smarty->assign('REVIEWS_IMAGE_MICROTAG', $review_image_microtag);
+      $box_smarty->assign('RANDOM', 1);
+    }
+  }
+}
+
+if (!$cache) {
+  $box_reviews = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html');
+} else {
+  $box_reviews = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_reviews.html', $cache_id);
+}
+
+$smarty->assign('box_REVIEWS', $box_reviews);
 ?>

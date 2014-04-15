@@ -1,5 +1,5 @@
 <?php
-  /* -----------------------------------------------------------------------------------------
+/* -----------------------------------------------------------------------------------------
    $Id: categories.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
    modified eCommerce Shopsoftware
@@ -21,47 +21,37 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  $box_smarty = new smarty;
+// include smarty
+include(DIR_FS_BOXES_INC . 'smarty_default.php');
 
-  $box_smarty->assign('language', $_SESSION['language']);
-  // set cache ID
-  if (!CacheCheck()) {
-    $cache=false;
-    $box_smarty->caching = 0;
-    $cache_id = null;
-  } else {
-    $cache=true;
-    $box_smarty->caching = 1;
-    $box_smarty->cache_lifetime = CACHE_LIFETIME;
-    $box_smarty->cache_modified_check = CACHE_CHECK;
-    $cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].'-'.$cPath;
-  }
+// set cache id
+$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status'].'-'.$cPath;
 
-  if(!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id) || !$cache){
+if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id) || !$cache) {
 
-    $box_smarty->assign('tpl_path',DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
- 
-    // include needed functions
-    require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_category.inc.php');
-    require_once (DIR_FS_INC.'xtc_has_category_subcategories.inc.php');
-    require_once (DIR_FS_INC.'xtc_count_products_in_category.inc.php');
-
-    $categories_string = '';
-
-    $categories_query = xtDBquery("SELECT c.categories_id,
-                                          cd.categories_name,
-                                          c.parent_id
-                                     FROM ".TABLE_CATEGORIES." c,
-                                          ".TABLE_CATEGORIES_DESCRIPTION." cd
-                                    WHERE c.categories_status = '1'
-                                      AND c.parent_id = '0'
-                                      ".CATEGORIES_CONDITIONS_C."
-                                      AND c.categories_id = cd.categories_id
-                                      AND cd.language_id='".$_SESSION['languages_id']."'
-                                      AND trim(cd.categories_name) != ''
-                                    ORDER BY sort_order, cd.categories_name
-                                    ");
-
+  // include needed functions
+  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_category.inc.php');
+  require_once (DIR_FS_INC.'xtc_has_category_subcategories.inc.php');
+  require_once (DIR_FS_INC.'xtc_count_products_in_category.inc.php');
+  
+  $foo = array();
+  $categories_string = '';
+  unset($prev_id);
+  
+  $categories_query = xtDBquery("SELECT c.categories_id,
+                                        cd.categories_name,
+                                        c.parent_id
+                                   FROM ".TABLE_CATEGORIES." c,
+                                        ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                  WHERE c.categories_status = '1'
+                                    AND c.parent_id = '0'
+                                        ".CATEGORIES_CONDITIONS_C."
+                                    AND c.categories_id = cd.categories_id
+                                    AND cd.language_id='".$_SESSION['languages_id']."'
+                                    AND trim(cd.categories_name) != ''
+                               ORDER BY sort_order, cd.categories_name
+                                  ");
+  if (xtc_db_num_rows($categories_query, true) > 0) {
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
       $categories['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'],$categories['categories_name']));
       $foo[$categories['categories_id']] = array (
@@ -73,7 +63,7 @@
           'next_id' => false
         );
 
-      if (isset ($prev_id)) {
+      if (isset($prev_id)) {
         $foo[$prev_id]['next_id'] = $categories['categories_id'];
       }
 
@@ -83,7 +73,7 @@
         $first_element = $categories['categories_id'];
       }
     }
-    //------------------------
+
     if ($cPath) {
       $new_path = '';
       $id = explode('_', $cPath);
@@ -104,7 +94,7 @@
                                           AND trim(cd.categories_name) != ''
                                         ORDER BY sort_order, cd.categories_name
                                         ");
-                                        
+                                      
         $category_check = xtc_db_num_rows($categories_query, true);
         if ($category_check > 0) {
           $new_path .= $value;
@@ -135,17 +125,20 @@
         }
       }
     }
-    if(!empty($first_element)) {
+    
+    if (!empty($first_element)) {
       xtc_show_category($first_element);
     }
+    
     $box_smarty->assign('BOX_CONTENT', $categories_string);
   }
+}
 
-  // set cache ID
-  if (!$cache) {
-    $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html');
-  } else {
-    $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id);
-  }
-  $smarty->assign('box_CATEGORIES', $box_categories);
+if (!$cache) {
+  $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html');
+} else {
+  $box_categories = $box_smarty->fetch(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cache_id);
+}
+
+$smarty->assign('box_CATEGORIES', $box_categories);
 ?>
