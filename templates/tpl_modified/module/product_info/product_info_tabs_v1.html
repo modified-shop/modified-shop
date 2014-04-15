@@ -37,7 +37,7 @@
       <div class="pd_price">
       {if $PRODUCTS_FSK18 == 'true'}<div class="pd_fsk18"></div>{/if}
       {foreach name=inner item=price_data from=$PRODUCTS_PRICE_ARRAY}
-        {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_info.html"}
+        {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/price_info.html"}
       {/foreach}
       </div>
       {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
