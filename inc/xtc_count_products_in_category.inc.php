@@ -20,7 +20,7 @@
     $products_count = 0;
 
     // products status
-    $products_status = $include_inactive ? " AND p.products_status = '1' " : '';
+    $products_status = $include_inactive ? '' : " AND p.products_status = '1' ";
 
     $products_query = xtDBquery("SELECT count(*) as total 
                                    FROM ".TABLE_PRODUCTS." p
