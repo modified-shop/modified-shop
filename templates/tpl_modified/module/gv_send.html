@@ -25,16 +25,16 @@
   <div class="highlightbox">
     <table>
       <tr>
-        <td><span class="fieldtext">{#entry_name#}</span><span class="stern">{$INPUT_TO_NAME}</span></td>
+        <td><span class="fieldtext">{#entry_name#}</span>{$INPUT_TO_NAME}</td>
       </tr>
       <tr>
-        <td><span class="fieldtext">{#entry_email#}</span><span class="stern">{$INPUT_EMAIL} {if $ERROR_EMAIL neq ''}{$ERROR_EMAIL}{/if}</span></td>
+        <td><span class="fieldtext">{#entry_email#}</span>{$INPUT_EMAIL} {if $ERROR_EMAIL neq ''}{$ERROR_EMAIL}{/if}</td>
       </tr>
       <tr>
-        <td><span class="fieldtext">{#entry_amount#}</span><span class="stern">{$INPUT_AMOUNT} {if $ERROR_AMOUNT neq ''}{$ERROR_AMOUNT}{/if}</span></td>
+        <td><span class="fieldtext">{#entry_amount#}</span>{$INPUT_AMOUNT} {if $ERROR_AMOUNT neq ''}{$ERROR_AMOUNT}{/if}</td>
       </tr>
       <tr>
-        <td><span class="fieldtext">{#entry_message#}</span><span class="stern">{$TEXTAREA_MESSAGE}</span></td>
+        <td><span class="fieldtext">{#entry_message#}</span>{$TEXTAREA_MESSAGE}</td>
       </tr>
     </table>
   </div>
