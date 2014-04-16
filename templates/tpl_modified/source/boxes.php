@@ -101,15 +101,23 @@ $smarty->assign('home', ((basename($PHP_SELF) == FILENAME_DEFAULT && !isset($_GE
 // Smarty Zuweisung Full content
 // -----------------------------------------------------------------------------------------
 $smarty->assign('fullcontent', strpos($PHP_SELF, 'checkout') 
-                            || strpos($PHP_SELF, 'shopping') 
-                            || strpos($PHP_SELF, 'newsletter') 
                             || strpos($PHP_SELF, 'account') 
                             || strpos($PHP_SELF, 'address') 
-                            || strpos($PHP_SELF, 'login') 
-                            || strpos($PHP_SELF, 'shop_content') 
-                            || strpos($PHP_SELF, 'advanced_search_result') 
                             || strpos($PHP_SELF, 'password') 
-                            || strpos($PHP_SELF, FILENAME_REVIEWS) ? 1 : 0); 
+                            || strpos($PHP_SELF, FILENAME_ADVANCED_SEARCH_RESULT) 
+                            || strpos($PHP_SELF, FILENAME_SHOPPING_CART) 
+                            || strpos($PHP_SELF, FILENAME_NEWSLETTER) 
+                            || strpos($PHP_SELF, FILENAME_LOGIN) 
+                            || strpos($PHP_SELF, FILENAME_CONTENT) 
+                            || strpos($PHP_SELF, FILENAME_REVIEWS)); 
+
+// -----------------------------------------------------------------------------------------
+// Smarty Zuweisung bestseller
+// -----------------------------------------------------------------------------------------
+$smarty->assign('bestseller', strpos($PHP_SELF, FILENAME_LOGOFF) 
+                           || strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) 
+                           || strpos($PHP_SELF, FILENAME_SHOPPING_CART)
+                           || strpos($PHP_SELF, FILENAME_NEWSLETTER));
 // -----------------------------------------------------------------------------------------
 
 $smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
