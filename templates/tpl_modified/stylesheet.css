@@ -2065,10 +2065,16 @@ a.color_more:hover {
   text-align: center;
   width: 100%;
   height:160px;  
+  position:relative;
 }
 .lb_image img {
+  position:absolute;
+  margin: auto;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;  
   background-color: #FFFFFF;
-  margin: 0 auto;
   max-height:160px;
   max-width:200px;
 }
@@ -2208,7 +2214,7 @@ a.color_more:hover {
   height:160px;  
   overflow:hidden;
 }
-.lb_image img {
+.lr_image img {
   background-color: #FFFFFF;
   margin: 0 auto;
   max-height:160px;
@@ -3530,7 +3536,7 @@ ul.tc_list li a:hover {
 }
 ul.bxcarousel_bestseller li {
   float:left;
-  width:139px;
+  width:107px;
   background:#fff;
   border: 1px solid #ddd;
   display:block;
@@ -3539,19 +3545,21 @@ ul.bxcarousel_bestseller li .carousel_box {
   padding:5px;
 }  
 ul.bxcarousel_bestseller li .carousel_box .cb_image {
+  position:relative;
   display:block;
-  height:129px;
+  height:97px;
   overflow:hidden;
 }
+
 ul.bxcarousel_bestseller li .carousel_box .cb_title {
   display:block;
   border-top: 1px dotted #ddd;
   margin: 7px 0 0 0;
   padding:5px 0 2px 0;
-  font-size:12px;
+  font-size:10px;
   text-align:center;
-  line-height:16px;
-  height:32px;
+  line-height:14px;
+  height:30px;
 }
 ul.bxcarousel_bestseller li .carousel_box a:hover {
   text-decoration:none;
