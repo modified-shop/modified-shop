@@ -2880,11 +2880,17 @@ table.total_table tr td {
 .pd_big_image {
   position:relative;
   width:240px;
-  height:240px;
+  min-height:240px;
   margin: 0px 0px 0px 0px;
   border:1px solid #eee;
 }
 .pd_big_image img {
+  position:absolute;
+  margin: auto;
+  left:0px;
+  right:0px;
+  bottom:0px;
+  top:0px;
   max-width:240px;
   height:auto;
 }  
