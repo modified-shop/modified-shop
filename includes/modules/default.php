@@ -80,7 +80,9 @@ if ($category_depth == 'nested') {
                             cd.categories_heading_title,
                             cd.categories_description
                           FROM ".TABLE_CATEGORIES." c
-                          JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd on cd.categories_id = c.categories_id
+                          JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                            ON cd.categories_id = c.categories_id
+                               AND trim(cd.categories_name) != ''
                           WHERE c.categories_id = '".$current_category_id."'
                             " . CATEGORIES_CONDITIONS_C . "
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'";
@@ -97,7 +99,9 @@ if ($category_depth == 'nested') {
                                 cd.categories_heading_title,
                                 cd.categories_description
                               FROM ".TABLE_CATEGORIES." c
-                              JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd on cd.categories_id = c.categories_id
+                              JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                ON cd.categories_id = c.categories_id
+                                   AND trim(cd.categories_name) != ''
                               WHERE c.categories_status = '1'
                                 " . CATEGORIES_CONDITIONS_C . "
                                 AND c.parent_id = '".$current_category_id."'
@@ -240,7 +244,9 @@ if ($category_depth == 'nested') {
                          pd.products_short_description
                     FROM ".TABLE_PRODUCTS." p
                     JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd
-                      ON p.products_id = pd.products_id AND trim(pd.products_name) != '' AND pd.language_id = '".(int) $_SESSION['languages_id']."'
+                      ON p.products_id = pd.products_id 
+                         AND trim(pd.products_name) != '' 
+                         AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                          ".$from."
                    WHERE p.products_status = '1'
                          ".PRODUCTS_CONDITIONS_P."
