@@ -30,6 +30,7 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
 	// include needed functions
 	require_once (DIR_FS_INC.'xtc_row_number_format.inc.php');
 	
+	$check_num = 0;
   if (isset($current_category_id) && $current_category_id > 0) {
     $best_sellers_query = "SELECT DISTINCT p.products_id,
                                            p.products_price,
@@ -56,7 +57,11 @@ if (MIN_DISPLAY_BESTSELLERS > 0 && (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/b
                                            ".PRODUCTS_CONDITIONS_P."
                                   ORDER BY p.products_ordered desc
                                      LIMIT ".MAX_DISPLAY_BESTSELLERS;
-  } else {
+    $check_result = xtDBquery($best_sellers_query);
+    $check_num = xtc_db_num_rows($check_result, true);
+  }
+  
+  if ($check_num < 1) {
     $best_sellers_query = "SELECT DISTINCT p.products_id,
                                            p.products_image,
                                            p.products_price,
