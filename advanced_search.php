@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: advanced_search.php 988 2005-06-18 16:42:42Z mz $   
 
@@ -17,10 +16,13 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_get_categories.inc.php');
 require_once (DIR_FS_INC.'xtc_get_manufacturers.inc.php');
@@ -28,21 +30,18 @@ require_once (DIR_FS_INC.'xtc_checkdate.inc.php');
 
 $breadcrumb->add(NAVBAR_TITLE_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
 
-require (DIR_WS_INCLUDES.'header.php');
+require(DIR_WS_INCLUDES.'header.php');
 
-$smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form_search(this);"').xtc_hide_session_id()); //WEB28 change NONSSL to $request_type
-
+$smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form_search(this);"').xtc_hide_session_id());
 $smarty->assign('INPUT_KEYWORDS', xtc_draw_input_field('keywords', '', 'style="width: 100%"'));
 $smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, POPUP_CONTENT_LINK_PARAMETERS, $request_type));
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_search.gif', IMAGE_BUTTON_SEARCH));
-
 
 $smarty->assign('SELECT_CATEGORIES',xtc_draw_pull_down_menu('categories_id', xtc_get_categories(array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES)))));
 $smarty->assign('ENTRY_SUBCAT',xtc_draw_checkbox_field('inc_subcat', '1', true));
 $smarty->assign('SELECT_MANUFACTURERS',xtc_draw_pull_down_menu('manufacturers_id', xtc_get_manufacturers(array (array ('id' => '', 'text' => TEXT_ALL_MANUFACTURERS)))));
 $smarty->assign('SELECT_PFROM',xtc_draw_input_field('pfrom'));
 $smarty->assign('SELECT_PTO',xtc_draw_input_field('pto'));
-
 
 $error = '';
 if (isset ($_GET['errorno'])) {
