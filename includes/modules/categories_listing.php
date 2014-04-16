@@ -22,7 +22,9 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                                 c.categories_image,
                                 c.parent_id 
                            FROM ".TABLE_CATEGORIES." c
-                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id = cd.categories_id
+                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                ON c.categories_id = cd.categories_id
+                                   AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
                             AND c.parent_id = '".$category_links[0]."'
                             AND cd.language_id = '".(int) $_SESSION['languages_id']."'
@@ -37,7 +39,9 @@ $categorie_smarty->assign('tpl_path', DIR_WS_BASE . 'templates/'.CURRENT_TEMPLAT
                                 c.categories_image,
                                 c.parent_id
                            FROM ".TABLE_CATEGORIES." c
-                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id = cd.categories_id
+                           JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd 
+                                ON c.categories_id = cd.categories_id
+                                   AND trim(cd.categories_name) != ''
                           WHERE c.categories_status = '1'
                             AND c.parent_id = '".$current_category_id."'
                             AND c.parent_id <> '0'
