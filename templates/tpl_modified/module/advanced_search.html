@@ -4,33 +4,27 @@
 {$FORM_ACTION}
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
 <div class="highlightbox">
-<table width="100%" border="0" cellpadding="4">
-  <tr>
-    <td width="45%"><strong>{#title_keywords#}</strong></td>
-    <td width="55%">{$INPUT_KEYWORDS}</td>
-  </tr>
-  <tr>
-    <td>&nbsp;</td>
-    <td><a href="{$HELP_LINK}" title="Information" class="{$smarty.const.POPUP_CONTENT_LINK_CLASS}">{#text_help#}</a></td>
-  </tr>
-  <tr>
-    <td width="45%" valign="top"><strong>{#text_categories#}</strong></td>
-    <td width="55%">{$SELECT_CATEGORIES}<br />
-      {$ENTRY_SUBCAT}{#text_subkategories#}</td>
-  </tr>
-  <tr>
-    <td width="45%" valign="top"><strong>{#text_manufacturer#}</strong></td>
-    <td width="55%">{$SELECT_MANUFACTURERS}</td>
-  </tr>
-  <tr>
-    <td width="45%" valign="top"><strong>{#text_min#}</strong></td>
-    <td width="55%">{$SELECT_PFROM}</td>
-  </tr>
-  <tr>
-    <td width="45%" valign="top"><strong>{#text_max#}</strong></td>
-    <td width="55%">{$SELECT_PTO}</td>
-  </tr>
-</table>
+  <table>
+    <tr>
+      <td colspan="3"><span class="fieldtext">{#title_keywords#}</span>{$INPUT_KEYWORDS}<br /><span class="mini"><a href="{$HELP_LINK}" title="Information" class="{$smarty.const.POPUP_CONTENT_LINK_CLASS}">{#text_help#}</a></span></td>
+    </tr>
+    <tr>
+      <td colspan="3"><span class="fieldtext">{#text_categories#}</span>{$SELECT_CATEGORIES}</td>
+    </tr>
+    <tr>
+      <td colspan="3">{$ENTRY_SUBCAT}{#text_subkategories#}</td>
+    </tr>
+    <tr>
+      <td><span class="fieldtext">{#text_manufacturer#}</span>{$SELECT_MANUFACTURERS}</td>
+      <td><span class="fieldtext">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+      <td><span class="fieldtext">{#text_min#}</span>{$SELECT_PFROM}</td>
+    </tr>
+    <tr>
+      <td><span class="fieldtext">&nbsp;</td>
+      <td><span class="fieldtext">&nbsp;</td>
+      <td><span class="fieldtext">{#text_max#}</span>{$SELECT_PTO}</td>
+    </tr>
+  </table>
 </div>
-<p>{$BUTTON_SUBMIT}</p>
+<div class="button_right">{$BUTTON_SUBMIT}</div>
 {$FORM_END}
