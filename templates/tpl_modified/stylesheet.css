@@ -55,7 +55,7 @@
 
 }
 
-
+ 
 
 /* THE BIG GUYS */
 * {
@@ -247,7 +247,8 @@ ul.topnavigation li a:hover {
   margin-top:22px;
 }
 .search_field {
-  width:80% !important;
+  padding-right:90px;
+/*   width:80% !important; */
 }
 .search_button {
   position:absolute;
@@ -412,6 +413,7 @@ input[type=text], input[type=password] {
   box-sizing: border-box;
   width:100%;
   height:32px;
+  *behavior: url(templates/tpl_modified/css/boxsizing.htc);`  
 }
 input[type=radio], input[type=checkbox] {
   margin: 0 3px;
@@ -875,6 +877,11 @@ table td {
   color:#767676;
   line-height:32px;
 }
+.box_sub_button a {
+  float:left;
+  display:inline-block;
+}
+
 .box_sub_button input[type=image] {
   float:right;
   width:76px;
@@ -1013,7 +1020,8 @@ a.show_all .arrow {
   position:relative;
 }
 .quickie_form input[type=text] {
-  width:80% !important;
+  padding-right:60px;
+/*  width:80% !important; */
 }
 .quickie_form input[type=image] {
   position:absolute;
