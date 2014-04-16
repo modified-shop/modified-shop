@@ -34,11 +34,11 @@
     $(".unveil").unveil();
 
     $('.bxcarousel_bestseller').bxSlider({
-      minSlides: 5,
-      maxSlides: 5,
+      minSlides: 6,
+      maxSlides: 8,
       pager: true,
-      slideWidth: 141,
-      slideMargin: 10
+      slideWidth: 109,
+      slideMargin: 18
     });
       
   });
@@ -71,8 +71,11 @@
 
 </script>
 
-<?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { // TABS/ACCORDION in product_info ?>
+<?php if (strstr($PHP_SELF, FILENAME_PRODUCT_INFO )) { ?>
 <script type="text/javascript">
+    $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
+      $("head").append("<style type='text/css'>"+css+"<\/style>");
+    });
     $(document).ready(function () {
         $('#horizontalTab').easyResponsiveTabs({
             type: 'default', //Types: default, vertical, accordion           
@@ -87,6 +90,9 @@
 
 <?php if (strstr($PHP_SELF, 'checkout')) { ?>
 <script type="text/javascript">
+    $.get("<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>"+"/css/jquery.easyTabs.css", function(css) {
+      $("head").append("<style type='text/css'>"+css+"<\/style>");
+    });
     $(document).ready(function () {
         $('#horizontalAccordion').easyResponsiveTabs({
             type: 'accordion', //Types: default, vertical, accordion     
