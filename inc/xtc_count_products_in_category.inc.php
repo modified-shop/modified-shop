@@ -27,7 +27,7 @@
     $p_group_check = GROUP_CHECK == 'true' ? " AND p.group_permission_".$_SESSION['customers_status']['customers_status_id']."= 1 " : '';    
     
     // products status
-    $products_status = $include_inactive ? " AND p.products_status = 1 " : '';
+    $products_status = $include_inactive ? '' : " AND p.products_status = '1' ";
 
     $products_query = xtDBquery("SELECT count(*) as total 
                                    FROM " . TABLE_PRODUCTS . " p                               
