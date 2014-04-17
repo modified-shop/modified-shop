@@ -78,11 +78,10 @@
     });
     $(document).ready(function () {
         $('#horizontalTab').easyResponsiveTabs({
-            type: 'default', //Types: default, vertical, accordion           
+            type: 'default' //Types: default, vertical, accordion           
         });
-        
         $('#horizontalAccordion').easyResponsiveTabs({
-            type: 'accordion', //Types: default, vertical, accordion           
+            type: 'accordion' //Types: default, vertical, accordion           
         });
     });
 </script>
@@ -95,14 +94,14 @@
     });
     $(document).ready(function () {
         $('#horizontalAccordion').easyResponsiveTabs({
-            type: 'accordion', //Types: default, vertical, accordion     
+            type: 'accordion' //Types: default, vertical, accordion     
             closed: true,     
             activate: function(event) { // Callback function if tab is switched
                $(".resp-tab-active input[type=radio]").prop('checked', true);
             }
         });
         $('#horizontalTab').easyResponsiveTabs({
-            type: 'default', //Types: default, vertical, accordion           
+            type: 'default' //Types: default, vertical, accordion           
         });
     });
 </script>
