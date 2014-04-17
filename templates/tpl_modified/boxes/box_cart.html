@@ -19,7 +19,7 @@
     <div class="mini"><strong>{#text_full_cart#}</strong></div>
     <ul class="tc_list">
     {foreach name=aussen item=products_data from=$products}
-      <li><a href="{$products_data.LINK}">{$products_data.QTY}&nbsp;x&nbsp;{$products_data.NAME|truncate:40:"...":true}</a></li>
+      <li><a href="{$products_data.LINK}">{$products_data.QTY}&nbsp;x&nbsp;{$products_data.NAME|truncate:40:"...":true}</a><span class="tc_delete">{$products_data.BUTTON_DELETE}</span></li>
     {/foreach}
     </ul>
     <div class="toogle_cart_links">

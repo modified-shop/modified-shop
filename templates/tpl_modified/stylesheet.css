@@ -3420,6 +3420,7 @@ ul.tc_list {
   margin: 0px 0px 0px 0px;
  }
 ul.tc_list li {
+  position:relative;
   float:none;
   padding:0px;
   border:none !important;
@@ -3432,8 +3433,17 @@ ul.tc_list li a {
   line-height:33px !important;
   color:#333;
 }
-ul.tc_list li:first-child {
-
+ul.tc_list li .tc_delete {
+  position:absolute;
+  width:16px;
+  height:16px;
+  right:3px;
+  top:9px;  
+}
+ul.tc_list li .tc_delete a {
+  border:none !important;
+  padding:0px !important;
+  line-height:16px !important;
 }
 ul.tc_list li a:hover {
   color:#333;
