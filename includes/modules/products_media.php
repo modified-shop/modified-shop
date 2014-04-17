@@ -14,38 +14,39 @@
    Released under the GNU General Public License
  ---------------------------------------------------------------------------------------*/
 
-// check if allowed to see
-$check_query = xtDBquery("SELECT count(*) AS pcc
-                            FROM ".TABLE_PRODUCTS_CONTENT."
-                                   WHERE languages_id='".(int) $_SESSION['languages_id']."'
-                             AND products_id = '".$product->data['products_id']."'
-                           ".CONTENT_CONDITIONS);
+//get downloads
+$content_query = xtDBquery("SELECT content_id, 
+                                   content_name, 
+                                   content_link, 
+                                   content_file, 
+                                   content_read, 
+                                   file_comment
+                              FROM ".TABLE_PRODUCTS_CONTENT."
+                             WHERE products_id = '".$product->data['products_id']."'
+                                   ".CONTENT_CONDITIONS."
+                               AND languages_id = '".(int) $_SESSION['languages_id']."'");
 
-$content_data = xtc_db_fetch_array($check_query, true);
-if ($content_data['pcc'] > 0) {
+if (xtc_db_num_rows($content_query, true) > 0) {
+
+  // include needed functions
+  require_once (DIR_FS_INC.'xtc_filesize.inc.php');
+
   $module_smarty = new Smarty;
   $module_content = array ();
 
-  require_once (DIR_FS_INC.'xtc_filesize.inc.php');
-
-  //get downloads
-  $content_query = xtDBquery("SELECT content_id, content_name, content_link, content_file, content_read, file_comment
-                                FROM ".TABLE_PRODUCTS_CONTENT."
-                               WHERE products_id='".$product->data['products_id']."'
-                                 ".CONTENT_CONDITIONS."
-                                 AND languages_id='".(int) $_SESSION['languages_id']."'");
-  while ($content_data = xtc_db_fetch_array($content_query,true)) {
-
+  while ($content_data = xtc_db_fetch_array($content_query, true)) {
+    
     $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_link.gif');
-    if ($content_data['content_link'] == '') {
-    }
-    $filename = ($content_data['content_link'] != '') ? '<a href="'.$content_data['content_link'].'" target="_blank">'.$filename.'</a>' : $content_data['content_name'];
-
+    $filename = ($content_data['content_link'] != '') ? '<a href="'.$content_data['content_link'].'" target="_blank">'.$content_data['content_name'].'</a>' : $content_data['content_name'];
+    
     $button = '';
     if ($content_data['content_link'] == '') {
       $allowed_content_types = array('html','htm','txt','bmp','jpg','jpeg','gif','png','tif');
-      $content_file_parts = explode($content_data['content_file']);
+      $content_file_parts = explode('.', $content_data['content_file']);
       $content_file_type = end($content_file_parts);
+      if (!is_file(DIR_WS_ICONS.'filetype/icon_'.$content_file_type.'.gif')) {
+        $content_file_type = 'link';
+      }
       $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_'.$content_file_type.'.gif');
       if (in_array($content_file_type,$allowed_content_types)) {
         $button = '<a target="_blank"'.
