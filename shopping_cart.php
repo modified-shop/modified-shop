@@ -116,6 +116,10 @@ if (isset($_GET['info_message']) && xtc_not_null($_GET['info_message'])) {
 if (isset($_GET['info_message_3'])) {
   $smarty->assign('info_message_3', get_message('info_message_3'));
 }
+// compatibility for old template
+if (isset($_GET['coupon_message']) && xtc_not_null($_GET['coupon_message'])) {
+  $smarty->assign('coupon_message', get_message('coupon_message'));
+}
 
 // continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
