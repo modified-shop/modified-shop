@@ -35,7 +35,7 @@
       <div class="pd_price">
       {if $PRODUCTS_FSK18 == 'true'}<div class="pd_fsk18"></div>{/if}
       {foreach name=inner item=price_data from=$PRODUCTS_PRICE_ARRAY}
-        {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/price_info.html"}
+        {include file="`$smarty.const.CURRENT_TEMPLATE`/module/include/price_info.html"}
       {/foreach}
       </div>
       {if $PRODUCTS_VPE}<div class="pd_vpe">{$PRODUCTS_VPE}</div>{/if}
@@ -84,14 +84,13 @@
   <div class="resp-tabs-container">
     {if $PRODUCTS_DESCRIPTION != ''}<div><h4 class="detailbox">Produktbeschreibung</h4>{$PRODUCTS_DESCRIPTION}</div>{/if}
     {if $more_images|@count > 0}
-    <div>
+    <div class="cf">
       {foreach item=more_images_data from=$more_images} 
         <div class="pd_small_image_tab">
           <a class="cbimages" title="{$PRODUCTS_NAME|onlytext}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img class="unveil" src="{$tpl_path}css/images/loading.gif" data-src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a>
           <noscript><a href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.PRODUCTS_NAME|onlytext}" /></a></noscript>
         </div>                          
       {/foreach}
-      <br class="clearfix" />
     </div>
     {/if}
     {if $MODULE_products_media != ''}<div>{$MODULE_products_media}</div>{/if}
