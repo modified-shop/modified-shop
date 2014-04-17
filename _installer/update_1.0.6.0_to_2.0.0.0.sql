@@ -182,5 +182,6 @@ DELETE FROM `configuration` WHERE configuration_key = 'POPUP_COUPON_HELP_LINK_PA
 DELETE FROM `configuration` WHERE configuration_key = 'POPUP_COUPON_HELP_LINK_CLASS';
 DELETE FROM `configuration` WHERE configuration_key = 'POPUP_PRODUCT_PRINT_SIZE';
 DELETE FROM `configuration` WHERE configuration_key = 'POPUP_PRINT_ORDER_SIZE';
+DELETE FROM `configuration_group` WHERE configuration_group_id = 40;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
