@@ -818,9 +818,6 @@ define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte
 define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb Navigation');
 define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In der Breadcrumb Navigation wird der komplette Artikelname angezeigt angezeigt.<br /><strong>model:</strong> In der Breadcrumb Navigation wird die Artikelnummer angezeigt, sofern sie vorhanden ist. Ansonsten Fallback auf auf Artikelname.');
 
-define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
-define('TEMPLATE_ENGINE_DESC', 'Welche Smarty Version soll verwendet werden?<br/><br/><b>Hinweis:</b> Bei &auml;lteren oder modifizierten Templates kann es zu Problemen mit Smarty 3 kommen, da sich zum Teil die Syntax ver&auml;ndert hat.');
-
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text E-Mails');
 define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');
 
@@ -891,11 +888,6 @@ define('SHIPPING_STATUS_INFOS_DESC', 'Content ID f&uuml;r Lieferzeiten Hinweis')
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Datum im Kurzformat anzeigen');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemem!');
 
-define('PRODUCT_LIST_ROW_TITLE', 'Ansicht Artikellisting');
-define('PRODUCT_LIST_ROW_DESC', 'Anzeige der Artikel als Box in den Produktauflistungen.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
-define('PRODUCT_INFO_ROW_TITLE', 'Ansicht Artikelinfo');
-define('PRODUCT_INFO_ROW_DESC', 'Anzeige der zus&auml;tzlichen Artikel als Box in den Produktdetails.<br/><b>WICHTIG</b> Diese Einstellung funktioniert nur mit dem Template tpl_modified oder welche die darauf basieren.');
-
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
@@ -903,7 +895,4 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Su
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Anzeige noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild angegeben wurde');
-
-define('TEMPLATE_HTML_ENGINE_TITLE', 'HTML Version');
-define('TEMPLATE_HTML_ENGINE_DESC', 'Welche HTML soll verwendet werden<br/><b>WICHTIG</b> das funktioniert nur mit dem tpl_modified oder HTML5 kompatible Templates.');
 ?>
