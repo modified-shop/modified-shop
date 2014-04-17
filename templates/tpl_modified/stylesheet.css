@@ -458,12 +458,6 @@ td.checkbox {
 }
 
 
-
-
-
-
-
-
 /* START Neuer Footer */
 
 #layout_footer {
@@ -581,18 +575,7 @@ span.cop_grey {
   padding:0 0 0px 0;
   margin: -10px 0 0 0;
 }
-
-
 /* ENDE Neuer Footer */
-
-
-
-
-
-
-
-
-
 
 
 .boxfield_lang {
@@ -734,7 +717,6 @@ ul.contentnavigation li.cart a:hover {
 }
 
 
-
 /* FAKE HR DIV CAUSE OF IE TROUBLES */
 div.hr_1 {
   height:1px;
@@ -786,12 +768,6 @@ table td {
 .td_full {
   width:100%;
 }
-
-
-
-
-
-
 
 
 /* BREADCRUMB PATH AS LIST */
@@ -1030,7 +1006,6 @@ a.show_all .arrow {
 }
 
 
-
 ul.orderhistory_list {
   margin:4px 0 0 0;
   list-style-type:none;
@@ -1055,7 +1030,6 @@ ul.orderhistory_list li a:hover {
   text-decoration:none;
 }
 /* Ende Neue Boxen */
-
 
 
 /* CATEGORY MENU */
@@ -1170,19 +1144,6 @@ ul#categorymenu li.level5 a:hover {
 }
 ul#categorymenu li.activeparent5 a  { color:#7b3c62; background:url(img/dotted1.gif) no-repeat 46px 11px #d7c9d1; }
 ul#categorymenu li.active5 a  {color:#7b3c62; background:url(img/dotted1.gif) no-repeat 46px 11px #d7c9d1; }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 /*
@@ -1554,11 +1515,6 @@ div.highlightbox ul {
 /* ENDE highlightbox */
 
 
-
-
-
-
-
 /* START product_navigator */
 .productnavigator {
   margin:20px 0px 0px 0px;
@@ -1690,14 +1646,6 @@ td.messageStackError {
 }
 
 
-
-
-
-
-
-
-
-
 /* BESTELLER BOX mit Bildern in DL DT Liste */
 dt {
   float:left;
@@ -1731,12 +1679,10 @@ td.productPreviewContent {
 }
 
 
-
 /* h-h-h - 2011-08-28 - DEFINE GLOBAL CENTER */
 .centered {
   margin: 0 auto;
 }
-
 
 
 /************************************************
@@ -1837,12 +1783,6 @@ ul.contentmenu li.level2 a:hover {
 }
 ul.contentmenu li.activeparent2 a  { font-style:italic; background:#e1e1e1; }
 ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
-
-
-
-
-
-
 
 
 /* Start checkout */
@@ -3335,9 +3275,8 @@ ul.upcoming_list li {
   padding: 5px 0px;
 }  
 /* ENDE upcoming_products */  
-  
-  
-  
+
+
 /* START coupon box - error message */  
 .hb_box_text {
   float:left;
@@ -3453,26 +3392,6 @@ ul.upcoming_list li {
 }
 /* ENDE offline & admin-login */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 /* START toggle shopping cart box */
 .toggle_cart {
   position:absolute;
@@ -3575,6 +3494,12 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
   text-decoration:none;
 }
 /* END carousel Bestseller box */
+
+/* START NO JAVASCRIPT STYLES */
+ul.resp-tabs-list{
+  display:none;
+}
+/* END NO JAVASCRIPT STYLES */
 
 
 
