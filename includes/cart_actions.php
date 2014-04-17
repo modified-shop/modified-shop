@@ -50,6 +50,14 @@ if (xtc_not_null($action)) {
     }
   }
 
+  // do not redirect to shopping cart if delete from box cart
+  if (isset($_GET['box']) && $_GET['box'] == 'cart' && isset($_GET['prd_id'])) {
+    $goto = basename($PHP_SELF);
+    for ($i=0, $n=count($parameters); $i<$n; $i++) {
+      if (in_array($parameters[$i], array('products_id', 'cPath'))) unset($parameters[$i]);
+    }
+  }
+
   if (!is_object($_SESSION['cart'])) {
     $_SESSION['cart'] = new shoppingCart();
   }
