@@ -13,14 +13,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// some defines
-define('DIR_FS_BOXES', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
-define('DIR_FS_BOXES_INC', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/inc/');
-
-// some confiurations
-define('SPECIALS_CATEGORIES', true);
-define('WHATSNEW_CATEGORIES', true);
-
 // redirect
 require_once(DIR_FS_BOXES_INC . 'gunnart_productRedirect.inc.php');
 

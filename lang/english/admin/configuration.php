@@ -818,9 +818,6 @@ define('DISPLAY_ERROR_REPORTING_DESC', 'Display formatted error reporting in foo
 define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb navigation');
 define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In the breadcrumb navigation, the article name is displayed.<br /><strong>model:</strong> In the breadcrumb navigation, the item number is displayed if it is available. Otherwise fallback to the article name.');
 
-define('TEMPLATE_ENGINE_TITLE', 'Template Engine');
-define('TEMPLATE_ENGINE_DESC', 'Choose the Smarty version.<br/><br/><b>Attention:</b> In Smarty 3 there is a new syntax and older templates may not work properly.');
-
 define('EMAIL_WORD_WRAP_TITLE', 'WordWrap for text e-mails');
 define('EMAIL_WORD_WRAP_DESC', 'Indicate number of characters for one line in text e-mails before text will be wrapped (only whole numbers).<br /><strong>Attention:</strong> A character count greater than 76 may cause the shop mails to be categorized as SPAM by SpamAssassin.<br />More infos <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">here</a>.');
 
@@ -893,11 +890,6 @@ define('SHIPPING_STATUS_INFOS_DESC', 'Content ID for Shippingtime');
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
 
-define('PRODUCT_LIST_ROW_TITLE', 'Display Products in Listing');
-define('PRODUCT_LIST_ROW_DESC', 'Display Products as box for product listings.<br/><b>ATTENTION</b> this only works with template tpl_modified or based on that.');
-define('PRODUCT_INFO_ROW_TITLE', 'Display Products in Info');
-define('PRODUCT_INFO_ROW_DESC', 'Display Products as box for product info.<br/><b>ATTENTION</b> this only works with template tpl_modified or based on that.');
-
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximum Products');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximum products of same category');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Search Search Results');
@@ -905,7 +897,4 @@ define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Amount of products in search
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Show noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image assigned');
-
-define('TEMPLATE_HTML_ENGINE_TITLE', 'HTML Version');
-define('TEMPLATE_HTML_ENGINE_DESC', 'HTML Version to use<br/><b>ATTENTION</b> this only works with template tpl_modified or compatible HTML5 Templates.');
 ?>

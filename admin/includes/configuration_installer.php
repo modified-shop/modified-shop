@@ -21,8 +21,6 @@ $values_group_update = array();
 //configuration_group_id 1 --- "Mein Shop"
   $values[] = "(NULL, 'CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION', 'false', '1', '40', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'CHECKOUT_SHOW_PRODUCTS_IMAGES', 'true', '1', '41', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'TEMPLATE_ENGINE', 'smarty_2', '1', '27', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'smarty_2\', \'smarty_3\'),');";
-  $values[] = "(NULL, 'TEMPLATE_HTML_ENGINE', 'xhtml', '1', '27', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'xhtml\', \'html5\'),');";
   $values[] = "(NULL, 'USE_SHORT_DATE_FORMAT', 'false', '1', '50', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   //$values[] = "(NULL, 'CHECKOUT_SHOW_PRODUCTS_IMAGES_STYLE', 'max-width:90px;', '1', '42', NULL, NOW(), NULL, NULL);";
   //$values[] = "(NULL, 'IBN_BILLNR', '1', '1', '99', NULL, NOW(), NULL, NULL);"; //modified 1.07
@@ -48,8 +46,6 @@ $values_group_update = array();
 //configuration_group_id 8 --- "Artikel Listen Optionen"
   $values[] = "(NULL, 'SHOW_BUTTON_BUY_NOW', 'false', '8', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'USE_PAGINATION_LIST', 'false', '8', '21', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'PRODUCT_LIST_ROW', 'true', '8', '22', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'PRODUCT_INFO_ROW', 'true', '8', '23', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 9 --- "Lagerverwaltungs Optionen"
   $values[] = "(NULL, 'STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS', 'true', '9', '20', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
