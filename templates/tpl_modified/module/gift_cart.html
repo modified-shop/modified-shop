@@ -4,6 +4,8 @@
 {$FORM_ACTION}
 <h1>{#title#}</h1>
 
+{if $coupon_message != ''}<div class="{if $smarty.get.info && $smarty.get.info == '1'}infomessage{else}errormessage{/if}">{$coupon_message}</div>{/if}
+
 {if $GV_AMOUNT neq ''}
   <p>{#text_info#}</p>
   <p>{#voucher_balance#} <strong>{$GV_AMOUNT}</strong></p>
@@ -23,10 +25,14 @@
 {if $C_FLAG == 'true'}
   <p>{#text_gift#}</p>
   <div class="highlightbox cf">
-    <span class="hb_box_text">{#text_code#}</span>    
-    <span class="hb_box_input">{$INPUT_CODE}</span>    
-    <span class="hb_box_button">{$BUTTON_SUBMIT}</span>    
+    <table>
+      <tr>
+        <td><span class="fieldtext">{#text_code#}</span>{$INPUT_CODE}</td>
+      </tr>
+    </table>
+    <div class="button_left">{$BUTTON_SUBMIT}</div>
   </div>
+
 {else}
   <p>{#create_account#}<br />
   <a href="{$LINK_ACCOUNT}"><strong>{#text_create_account#}</strong></a></p>

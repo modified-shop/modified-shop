@@ -165,7 +165,7 @@ a.black {
   float:right;
   text-align:right;
   height:12px;
-  padding:11px 0;
+  padding:10px 0;
 }
 #languages img {
   margin: 0 0 0 10px;
@@ -177,10 +177,10 @@ a.black {
   max-width:580px;
   float:left;
   color: #707070;
-  font-size: 11px;
+  font-size: 13px;
   height: 13px;
   line-height: 13px;
-  margin: 13px 0;
+  margin: 12px 0;
 }
 
 ul.topnavigation {
@@ -193,10 +193,10 @@ ul.topnavigation li {
   padding: 0px 20px 0px 20px;
   height:13px;  
   line-height:13px;
-  margin: 13px 0px;
+  margin: 12px 0px;
   border-left: 1px solid #707070;
   color:#707070;
-  font-size:11px;
+  font-size:13px;
 }
 ul.topnavigation li.first {
   border:none;
@@ -2613,7 +2613,7 @@ table.total_table tr td {
   margin: 4px 0px;
 }
 .ord_subtotal select {
-  max-width:300px;
+  width:300px;
   margin-left:5px;
 }
 .ord_subtotal .shipping_hinweis {
