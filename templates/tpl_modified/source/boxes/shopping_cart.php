@@ -38,10 +38,15 @@
       $products = $_SESSION['cart']->get_products();
       $sizeof_products = sizeof($products);
       for ($i = 0, $n = $sizeof_products; $i < $n; $i++) {
+        $del_button = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&box=cart&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . xtc_image_button('cart_del.gif', IMAGE_BUTTON_DELETE) . '</a>';
+        $del_link = '<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('action', 'box', 'prd_id')).'action=remove_product&box=cart&prd_id=' . $products[$i]['id'], 'NONSSL') . '">' . IMAGE_BUTTON_DELETE . '</a>';
+      
         $qty += $products[$i]['quantity'];
         $products_in_cart[] = array ('QTY' => $products[$i]['quantity'],
                                      'LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($products[$i]['id'], $products[$i]['name'])),
-                                     'NAME' => $products[$i]['name']);
+                                     'NAME' => $products[$i]['name'],
+                                     'BUTTON_DELETE' => $del_button,
+                                     'LINK_DELETE' => $del_link);
       }
     }
 
