@@ -25,7 +25,7 @@ include('includes/application_top.php');
 
 // pre-selection the cheapest shipping option
 if (!defined('CHECK_CHEAPEST_SHIPPING_MODUL')) {
-  define ('CHECK_CHEAPEST_SHIPPING_MODUL', false); // default: false
+  define ('CHECK_CHEAPEST_SHIPPING_MODUL', true); // default: false
 }
 
 // pre-selection the first payment option
@@ -270,6 +270,7 @@ if (xtc_count_shipping_modules() > 0) {
             }
 						$quotes[$i]['methods'][$j]['price'] = $xtPrice->xtcFormat(xtc_add_tax($quotes[$i]['methods'][$j]['cost'], $quotes[$i]['tax']), true, 0, true);						
             $quotes[$i]['methods'][$j]['radio_field'] = xtc_draw_radio_field('shipping', $quotes[$i]['id'].'_'.$quotes[$i]['methods'][$j]['id'], $checked, 'id="rd-'.($i+1).'" onclick="this.form.submit();"');
+            $quotes[$i]['methods'][$j]['id'] = 'rd-'.($i+1);
 					} else {
 						if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0) {
 							$quotes[$i]['tax'] = 0;
