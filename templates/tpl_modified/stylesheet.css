@@ -1970,6 +1970,10 @@ table.paymentinfotable tr td   {
 /* Accordion in checkout */
 .checkout_accordion .errormessage {
   margin: 10px 0 0 0;
+
+}
+.checkout_accordion .infomessage {
+  margin: 10px 0 0 0;
 }
 
 .shipping_radio, .payment_radio {
@@ -3504,13 +3508,13 @@ ul.tc_list li {
 }
 ul.tc_list li a {
   display:block;
-  border-bottom: 1px dotted #999;
+  border-top: 1px dotted #999;
   font-size:13px;
   line-height:33px !important;
   color:#333;
 }
 ul.tc_list li:first-child {
-  border-top: 1px dotted #999 !important;
+
 }
 ul.tc_list li a:hover {
   color:#333;
@@ -3518,6 +3522,7 @@ ul.tc_list li a:hover {
   text-decoration:none;
 }
 .toogle_cart_links {
+  border-top: 1px dotted #999 !important;
   text-align:right;
 } 
 .toogle_cart_links a {
@@ -3556,7 +3561,6 @@ ul.bxcarousel_bestseller li .carousel_box .cb_image {
   height:97px;
   overflow:hidden;
 }
-
 ul.bxcarousel_bestseller li .carousel_box .cb_title {
   display:block;
   border-top: 1px dotted #ddd;
