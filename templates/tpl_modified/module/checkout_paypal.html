@@ -2,146 +2,178 @@
 {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 {config_load file="$language/lang_$language.conf" section="duty_info"}
 {config_load file="$language/lang_$language.conf" section="checkout_paypal"}
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
 {config_load file="lang_`$language`.custom"}
 
-<ul id="checkoutnavigation">
-  <li class="inactive"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
-  <li class="inactive"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
-  <li class="active"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
-  <li class="inactive last"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
+<ul id="checkoutnavigation" class="cf">
+  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
+  <li class="inactive"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
+  <li class="active"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
+  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
 </ul>
-<div style="clear:both"></div>
 
-<br />
-<h1>{#heading_confirmation#}</h1>
+<h1 class="checkout">{#heading_confirmation#}</h1>
 {if $error != ''}<div class="errormessage">{$error}</div>{/if}
 
-<div class="checkout_infos">
-
-  <div class="{if $REVOCATION}checkoutInfoBoxes{else}checkoutInfoBoxesLarge{/if}" style="text-align: justify;">
+<div class="twoColums">
+  <div class="highlightbox plainleft">
     {#text_information#}
     {if $IP_LOG == 'true'}
     <p>{#text_ip#}&nbsp;<strong>{$CUSTOMERS_IP}</strong></p>
     {/if}
   </div>
-
-  {if $REVOCATION}
-  <div class="checkoutInfoBoxes red">
-    {$TEXT_AGB_CHECKOUT}
-  </div>
-  {/if}
-
-  <div style="clear:both"><br /></div>
-
-  <div class="checkoutNavBoxes">
-    <h2>{#text_shipping_address#}</h2>
-    {if $SHIPPING_ADDRESS_EDIT}<div class="text">&nbsp;<a href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></div>{/if}
-    <div style="clear:both">{$DELIVERY_LABEL}<br /></div>
-  </div>
-
-  {if $BILLING_LABEL}
-  <div class="checkoutNavBoxes">
-    <h2>{#text_payment_address#}</h2>
-    {if $BILLING_ADDRESS_EDIT}<div class="text">&nbsp;<a href="{$BILLING_ADDRESS_EDIT}">{#text_edit#}</a></div>{/if}
-    <div style="clear:both">{$BILLING_LABEL}<br /></div>
-  </div>
-  {/if}
-
-  <div style="clear:both"><br /></div>
-    
-  {if $PAYMENT_INFORMATION != ''}
-    <br />
-    <h2>{#text_payment_info#}</h2>
-    <table style="clear:both">
-      <tr>
-        {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
-          <td class="main">{$data.title|stripslashes}</td>
-          <td>&nbsp;</td>
-          <td class="main">{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
-        {/foreach}
-      </tr>
-    </table>
-  {/if}
-  <div style="clear:both"></div>
 </div>
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    {if $REVOCATION}
+      {$TEXT_AGB_CHECKOUT}
+    {/if}  
+  </div>
+</div>
+<br class="clearfix" />  
+
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4>{#text_shipping_address#} <a class="midi" href="{$SHIPPING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    {$DELIVERY_LABEL} 
+  </div>
+</div>
+{if $BILLING_LABEL}
+<div class="twoColums last">
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_address#} <a class="midi" href="{$BILLING_ADDRESS_EDIT}">{#text_edit#}</a></h4>
+    {$BILLING_LABEL}
+  </div>
+</div>
+{/if}
+<br class="clearfix" /> 
 
 {if $SHIPPING_BLOCK}
-  <h2>{#title_shipping#}</h2>
-  <div class="checkoutInfoBoxesLarge">
+<div class="twoColums">
+  <div class="highlightbox plainleft">
+    <h4 class="checkout">{#title_shipping#}</h4>
     {$FORM_SHIPPING_ACTION}
-      <p>{#text_shipping#}</p>
-      <p>{$SHIPPING_BLOCK}</p>
-      {$PAYMENT_HIDDEN}
+    <p>{#text_shipping#}</p>
+    {$SHIPPING_BLOCK}
+    {$PAYMENT_HIDDEN}
     {$FORM_END}
   </div>
+</div>
 {/if}
 
 {$CHECKOUT_FORM}
-<h2>{#title_comments#}</h2>
-<p class="checkoutcomment">{$COMMENTS}</p>
-{if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
-  <h2>{#title_agb#}</h2>
-  <div class="checkoutagb">{$AGB}</div>
-{/if}
+<div class="twoColums last">
+  {if $PAYMENT_METHOD != ''}
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_method#} <a class="midi" href="{$PAYMENT_EDIT}">{#text_edit#}</a></h4>
+    {$PAYMENT_METHOD}
+  </div>
+  {/if}
+  {if $PAYMENT_INFORMATION != ''}
+  <br />
+  <div class="highlightbox plainright">
+    <h4 class="checkout">{#text_payment_info#}</h4>
+    <table class="paymentinfotable">
+      <tr>
+        {foreach name=aussen item=data from=$PAYMENT_INFORMATION}
+          {if $data.title != ''}<td>{$data.title|stripslashes}</td>{/if}
+          <td>{if $data.field}{$data.field|stripslashes}{else}&nbsp;{/if}</td>
+        {/foreach}
+      </tr>
+    </table>
+  </div>
+  {/if}
+  <br />
+  <div class="highlightbox plainright">
+    <div id="horizontalTab">
+      <ul class="resp-tabs-list">
+        {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+          <li>{#title_agb#}</li>
+        {/if}
+        <li>{#title_comments_short#}</li>
+      </ul>
+      <div class="resp-tabs-container">
+        {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
+        <div>
+          <div class="checkoutagb">{$AGB}</div>
+        </div>
+        {/if}
+        <div class="checkoutcomment">{$COMMENTS}</div>
+      </div>
+    </div>
+  </div>
+</div>
+<br class="clearfix" /> 
 
-<h2>{#text_products#}</h2>
-<div class="highlightbox checkoutbox">
-  {* BOC PRODUCTS TABLE *}
-  <table width="100%" border="0" cellspacing="0" cellpadding="0">
+<br />
+
+<div class="highlightbox checkoutborder cf">
+  <h4 class="checkout">{#text_products#} <a class="midi" href="{$PRODUCTS_EDIT}">{#text_edit#}</a></h4>
+  <table class="order_table">
     <tr class="headerrow">
-      <td class="main_header" style="width:50px" align="left" valign="top"><b>{$smarty.const.HEADER_QTY}</b></td>
-      <td class="main_header" style="padding-left:90px;" align="left" valign="top"><b>{$smarty.const.HEADER_ARTICLE}</b></td>
-      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_MODEL}</b></td>
-      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_SINGLE}</b></td>
-      <td class="main_header" style="width:100px;" align="right" valign="top"><b>{$smarty.const.HEADER_TOTAL}</b></td>
+      <td class="ord_table_left">{$smarty.const.HEADER_QTY}</td>
+      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true'}<td class="ord_table_center">&nbsp;</td>{/if}
+      <td class="ord_table_left">{$smarty.const.HEADER_ARTICLE}</td>
+      <td class="ord_table_right">{$smarty.const.HEADER_MODEL}</td>
+      <td class="ord_table_right">{$smarty.const.HEADER_SINGLE}</td>
+      <td class="ord_table_right">{$smarty.const.HEADER_TOTAL}</td>
     </tr>
     {foreach name=aussen item=data from=$PRODUCTS_ARRAY}
-    <tr>
-      <td class="main_row" align="left" valign="top">{$data.qty}</td>
-      <td class="main_row" align="left" valign="top">
-        {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}
-        <div style="width:90px; float:left;">{$data.image}</div>
+    <tr class="mainrow {cycle values="m_row2,m_row1"}">
+      <td class="ord_table_left ord_width40">{$data.qty}</td>
+      {if $smarty.const.CHECKOUT_SHOW_PRODUCTS_IMAGES == 'true' && $data.image != ''}<td class="ord_table_left ord_width90">{$data.image}</td>{/if}
+      <td class="ord_table_left">
+        {$data.link}
+        {if $data.order_description}<div class="description">{$data.order_description}</div>{/if}
+        {if $data.attributes != ''}
+          <ul class="attributes_list">
+            {foreach key=a_data item=attrib_data from=$data.attributes}
+            <li><strong>{$attrib_data.option}:</strong> {$attrib_data.value}</li>
+            {/foreach} 
+          </ul>
         {/if}
-        <div style="width:420px; float:left;">
-          {$data.link}
-          {if $data.order_description}<div class="small">{$data.order_description}</div>{/if}
-          {if $data.shipping_time}<br /><span class="nobr small">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</span>{/if}
-          {foreach key=a_data item=attrib_data from=$data.attributes}
-            {if $attrib_data.value != ''}<br /><span class="nobr small">&nbsp;<i> - {$attrib_data.option} : {$attrib_data.value}</i></span>{/if}
-          {/foreach}
-        </div>
+        {if $data.shipping_time}<div class="shipping">{$smarty.const.SHIPPING_TIME} {$data.shipping_time}</div>{/if}
       </td>
-      <td class="main_row" align="right" valign="top">{$data.model}</td>
-      <td class="main_row" align="right" valign="top">{$data.price_formated}</td>
-      <td class="main_row" align="right" valign="top">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
+      <td class="ord_table_right ord_width120">{$data.model}</td>
+      <td class="ord_table_right ord_width110">{$data.price_formated}</td>
+      <td class="ord_table_right ord_width120">{$data.final_price_formated}{if $ORDER_TAX_GROUPS > 1}<br />{$data.tax} %{/if}</td>
     </tr>
     {/foreach}
   </table>
-  {* EOC PRODUCTS TABLE *}
+  <div class="hr_5"></div>
+  
+  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+  <div class="total_table_right">
+    <table class="total_table">
+      {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+      <tr>
+        <td class="ord_table_right">{$order_total_values.title}</td>
+        <td class="ord_table_right ord_width120">{$order_total_values.text}</td>
+      </tr>
+      {/foreach}
+    </table>
+  </div>
+  <br class="clearfix" /> 
+  {/if}
 
-  <div class="hr"></div>
-  {if $TOTAL_BLOCK}
-    <div class="total">
-      <table align="right">
-        {$TOTAL_BLOCK}
-      </table>
-      <div style="clear:both"></div>
-    </div>
-  {/if}
+
   {if $DELIVERY_DUTY_INFO == true}
-    <div class="hr"></div>
-    <div style="font-size:11px; border:0px solid red;padding:5px;margin-top:8px;">{#text_duty_info#}</div>
+    <div class="hr_10"></div>
+    <div class="dutyinfo">{#text_duty_info#}</div>
   {/if}
-  <table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <br />  
+  <table>
     <tr>
-      <td>{$ADR_checkbox}</td>
-      <td width="100%"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
+      <td class="checkbox">{$ADR_checkbox}</td>
+      <td class="midi td_full"><strong><label for="address">{#text_accept_adr#}</label></strong></td>
     </tr>
     <tr>
-      <td>{$AGB_checkbox}</td>
-      <td width="100%"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
+      <td class="checkbox">{$AGB_checkbox}</td>
+      <td class="midi td_full"><strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}</td>
     </tr>
-  </table>
-  <br />
-  <div style="text-align:right">{if $MODULE_BUTTONS != ''}&nbsp;{$MODULE_BUTTONS}{/if}&nbsp;{$CHECKOUT_BUTTON}</div>
+  </table>  
+  
+  <div class="button_right">{if $MODULE_BUTTONS!=''}{$MODULE_BUTTONS}{/if}{$CHECKOUT_BUTTON}</div>
+
 </div>
+</form>
