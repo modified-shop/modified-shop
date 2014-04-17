@@ -49,10 +49,10 @@
                                           FROM " . TABLE_COUPON_REDEEM_TRACK . " 
                                          WHERE coupon_id = '" . $gv_result['coupon_id'] . "'");
           if ( (xtc_db_num_rows($redeem_query) != 0) && ($gv_result['coupon_type'] == 'G') ) {
-            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_NO_INVALID_REDEEM_GV'), 'NONSSL'));
+            xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_NO_INVALID_REDEEM_GV'), 'NONSSL'));
           }
         } else {
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_NO_INVALID_REDEEM_GV'), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_NO_INVALID_REDEEM_GV'), 'NONSSL'));
         }
 
         // GIFT CODE G START
@@ -82,12 +82,12 @@
             // no gv_amount so insert
             $gv_insert = xtc_db_query("INSERT INTO " . TABLE_COUPON_GV_CUSTOMER . " (customer_id, amount) values ('" . (int)$_SESSION['customer_id'] . "', '" . $total_gv_amount . "')");
           }
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&info_message='.strtolower('REDEEMED_AMOUNT').'&add_info='.urlencode($xtPrice->xtcFormat($gv_amount,true,0,true)), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&coupon_message='.strtolower('REDEEMED_AMOUNT').'&add_info='.urlencode($xtPrice->xtcFormat($gv_amount,true,0,true)), 'NONSSL'));
 
       } else {
 
         if (xtc_db_num_rows($gv_query)==0) {
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_NO_INVALID_REDEEM_COUPON'), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_NO_INVALID_REDEEM_COUPON'), 'NONSSL'));
         }
 
         $date_query=xtc_db_query("SELECT coupon_start_date
@@ -97,7 +97,7 @@
                                      AND coupon_active = 'Y'
                                  ");
         if (xtc_db_num_rows($date_query)==0) {
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_INVALID_STARTDATE_COUPON'), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_INVALID_STARTDATE_COUPON'), 'NONSSL'));
         }
 
         $date_query=xtc_db_query("SELECT coupon_expire_date
@@ -107,7 +107,7 @@
                                      AND coupon_active = 'Y'
                                  ");
         if (xtc_db_num_rows($date_query)==0) {
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_INVALID_FINISDATE_COUPON'), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_INVALID_FINISDATE_COUPON'), 'NONSSL'));
         }
 
         $coupon_count = xtc_db_query("SELECT coupon_id 
@@ -118,10 +118,10 @@
                                                 WHERE coupon_id = '" . $gv_result['coupon_id']."' 
                                                   AND customer_id = '" . (int)$_SESSION['customer_id'] . "'");
         if (xtc_db_num_rows($coupon_count)>=$gv_result['uses_per_coupon'] && $gv_result['uses_per_coupon'] > 0) {
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_INVALID_USES_COUPON').'&add_info='.urlencode($gv_result['uses_per_coupon'] . TIMES ), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_INVALID_USES_COUPON').'&add_info='.urlencode($gv_result['uses_per_coupon'] . TIMES ), 'NONSSL'));
         }
         if (xtc_db_num_rows($coupon_count_customer)>=$gv_result['uses_per_user'] && $gv_result['uses_per_user'] > 0) {
-          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_INVALID_USES_USER_COUPON').'&add_info='. urlencode($gv_result['uses_per_user'] . TIMES ), 'NONSSL'));
+          xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_INVALID_USES_USER_COUPON').'&add_info='. urlencode($gv_result['uses_per_user'] . TIMES ), 'NONSSL'));
         }
         if ($gv_result['coupon_type']=='S') {
           $coupon_amount = TEXT_COUPON_HELP_FIXED; //$order->info['shipping_cost'];
@@ -147,12 +147,12 @@
         }
         $_SESSION['cc_post'] = true;
         xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'NONSSL'));
-        //xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&info_message='.strtolower('REDEEMED_COUPON'), 'NONSSL'));
+        //xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info=1&coupon_message='.strtolower('REDEEMED_COUPON'), 'NONSSL'));
     }
 
      }
      if ($_POST['submit_redeem_x'] && $gv_result['coupon_type'] == 'G') {
-       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'info_message='.strtolower('ERROR_NO_REDEEM_CODE'), 'NONSSL'));
+       xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, 'coupon_message='.strtolower('ERROR_NO_REDEEM_CODE'), 'NONSSL'));
      } 
    }
 ?>
