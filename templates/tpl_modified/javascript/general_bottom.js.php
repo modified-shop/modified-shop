@@ -31,7 +31,7 @@
     $(".iframe").colorbox({iframe:true, width:"780", height:"560", maxWidth: "90%", maxHeight: "90%"});
 
     $(".unveil").show();
-    $(".unveil").unveil();
+    $(".unveil").unveil(200);
 
     $('.bxcarousel_bestseller').bxSlider({
       minSlides: 6,
@@ -94,7 +94,7 @@
     });
     $(document).ready(function () {
         $('#horizontalAccordion').easyResponsiveTabs({
-            type: 'accordion' //Types: default, vertical, accordion     
+            type: 'accordion', //Types: default, vertical, accordion     
             closed: true,     
             activate: function(event) { // Callback function if tab is switched
                $(".resp-tab-active input[type=radio]").prop('checked', true);
