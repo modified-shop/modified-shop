@@ -20,6 +20,10 @@
    (c) 2014 modified eCommerce Shopsoftware - http://www.modified-shop.org     
    ---------------------------------------------------------------------------------------*/
 
+
+
+
+
 @font-face {
     font-family: 'oswaldregular';
     src: url('css/fonts/oswald-regular-webfont.eot');
@@ -55,6 +59,27 @@
 
 }
 
+/* START IE7 fix for font-weight:bold */
+@font-face {
+    font-family: 'robotobold';
+    src: url('css/fonts/roboto-bold-webfont.eot');
+    src: url('css/fonts/roboto-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/roboto-bold-webfont.woff') format('woff'),
+         url('css/fonts/roboto-bold-webfont.ttf') format('truetype'),
+         url('css/fonts/roboto-bold-webfont.svg#robotobold') format('svg');
+}
+
+.fieldtext, .fieldtext_stern, ul.topnavigation li a, h2, h3, a.show_all .arrow, .box_title, 
+.janolaw-paragraph, #janolaw-paragraph, ul.contentmenu li.level1 a, ul.contentmenu li.level2 a, 
+ol#address_block li label, .subcat_title, .pagination_list ul li.current, table.order_table tr.headerrow, 
+.gp_headline, .gp_title, .options_row_multi .options_name, .options_row_selection .options_name, .mediarow_title, 
+.print_big, .hb_box_text {
+   *font-family: 'robotobold', sans-serif;
+}
+strong, b {
+   *font-family: 'robotobold', sans-serif;
+} 
+/* ENDE IE7 fix for font-weight:bold */ 
  
 
 /* THE BIG GUYS */
@@ -1756,7 +1781,6 @@ ul.contentmenu li.level1 a:hover {
   text-decoration:none;
   color:#333;
   background-color:#e1e1e1;
-  font-weight:bold;
 }
 ul.contentmenu li.activeparent1 a  { font-style:italic; background:#eee; }
 ul.contentmenu li.active1 a  {  font-style: italic; background: #d7c9d1;}
@@ -1779,7 +1803,6 @@ ul.contentmenu li.level2 a:hover {
   text-decoration:none;
   color:#333;
   background-color:#c7c7c7;
-  font-weight:bold;
 }
 ul.contentmenu li.activeparent2 a  { font-style:italic; background:#e1e1e1; }
 ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
