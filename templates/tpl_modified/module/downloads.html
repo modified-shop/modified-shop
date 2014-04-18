@@ -15,7 +15,6 @@
       </table>
     </div>
     <div class="button_right">{$BUTTON_LOGIN}</div>
-    <br class="clear" />
     {$FORM_END}
   {else}
     {if $dl_prevented eq 'true'}
@@ -29,7 +28,7 @@
     {/if}
     {if $dl|@sizeof > 0}
       {foreach name=aussen item=dl_data from=$dl}
-      <div class="downloadrow">
+      <div class="downloadrow cf">
         <div class="dl_icon">
           {if $dl_data.allowed}
             <a href="{$dl_data.pic_link}"><img src="{$tpl_path}img/img_download.png" alt="" border="0" /></a>
@@ -41,7 +40,6 @@
           <strong>{$dl_data.download_link}</strong><br />
           {#table_heading_download_date#}&nbsp;{$dl_data.date} &bull; <strong>{$dl_data.count}</strong>&nbsp;{#table_heading_download_count#}
         </div>
-        <br class="clearfix" />
       </div>
       {/foreach}
     {/if}
@@ -49,5 +47,4 @@
 {/if}
 {if $BUTTON_BACK && !$FORM_ACTION}
   <div class="button_right">{$BUTTON_BACK}</div>
-  <br class="clear" />
 {/if}

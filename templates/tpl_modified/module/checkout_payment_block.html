@@ -19,7 +19,7 @@
         {if $module_data.error != ''}
           {$module_data.error}<br />
         {elseif $module_data.fields}
-          <table border="0" cellspacing="0" cellpadding="0" class="paymentmoduledata">
+          <table class="paymentmoduledata">
             {foreach name=inner item=method_data from=$module_data.fields}
               <tr>
                 <td class="title">{$method_data.title}</td>

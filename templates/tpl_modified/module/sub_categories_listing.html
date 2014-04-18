@@ -2,7 +2,7 @@
 {config_load file="lang_`$language`.custom"}
 {if $categories_content != '' && $TR_COLS > 0}
 <h4>{#heading_more_categories#}</h4>
-<div class="subcats">
+<div class="subcats cf">
   {foreach name=aussen item=categories_data from=$categories_content key=spalten}
   <div class="subcatlist{if $smarty.foreach.aussen.iteration is div by $TR_COLS} last{/if}">
     <a href="{$categories_data.CATEGORIES_LINK}">
@@ -13,6 +13,5 @@
   </div>
   {if $smarty.foreach.aussen.iteration is div by $TR_COLS}<br class="clearfix" />{/if}
   {/foreach}
-  <br class="clearfix" />
 </div>
 {/if}

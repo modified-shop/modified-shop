@@ -5,7 +5,7 @@
 {if $error_message != ''}<div class="errormessage">{$error_message}</div>{/if}
 
 {if $success != '1'}
-  <div class="twoColums">
+  <div class="twoColums cf">
     {$FORM_ACTION}
     <div class="highlightbox">
       <h4>Ihre Daten <span class="pflicht">({#text_hint#})</span></h4>
@@ -19,6 +19,7 @@
         <tr>
           <td><span class="fieldtext">{#text_phone#}</span><span class="stern">{$INPUT_PHONE}</span></td>
         </tr>
+{*
         <tr>
           <td><span class="fieldtext">{#text_fax#}</span><span class="stern">{$INPUT_FAX}</span></td>
         </tr>
@@ -34,6 +35,7 @@
         <tr>
           <td><span class="fieldtext">{#text_company#}</span><span class="stern">{$INPUT_COMPANY}</span></td>
         </tr>
+*}
         {if $INPUT_CODE}
         <tr>
           <td><span class="fieldtext">{#text_sec_code#}</span><span class="stern">{$VVIMG}</span></td>
@@ -48,7 +50,6 @@
       </table>    
     </div>
     <div class="button_right">{$BUTTON_SUBMIT}</div>
-    <br class="clearfix" />
     {$FORM_END}
   </div>
 
@@ -60,11 +61,10 @@
   </div>
 {else}
   <div class="twoColums last">
-    <div class="highlightbox plainleft">
+    <div class="highlightbox plainleft cf">
       <h4>Vielen Dank <span class="pflicht">&nbsp;</span></h4>
       <p>{#text_success#}</p>
       <div class="button_right">{$BUTTON_CONTINUE}</div>
-      <br class="clearfix" />
     </div>
   </div>
 {/if}

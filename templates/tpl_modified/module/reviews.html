@@ -4,7 +4,7 @@
 
 {foreach name=aussen item=module_data from=$module_content}
 <div class="reviewsbox {cycle values="rb_left,rb_right"}">
-  <div class="reviewsbox_inner">
+  <div class="reviewsbox_inner cf">
     <div class="rb_headline"><strong>{#text_product#}</strong> <a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></div>  
     <div class="rb_autor"><strong>{#text_author#}</strong> {$module_data.AUTHOR}</div>
     <div class="rb_rating"><strong>{#text_rating#}</strong> {$module_data.RATING|replace:".gif":".png"}</div>
@@ -14,7 +14,6 @@
       <p><strong>{#text_text#}</strong></p>
       <p>{$module_data.TEXT|onlytext}</p>
     </div>
-    <br class="clearfix" />
   </div>
 </div>
 {/foreach}
