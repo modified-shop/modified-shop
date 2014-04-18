@@ -2028,22 +2028,20 @@ a.color_more:hover {
   min-height:300px;
 }
 .lb_image {
-  margin: 0 0 10px 0;
+margin: 0 auto;
+  width: 200px;
+  padding: 0;
+  height: 160px;
   text-align: center;
-  width: 100%;
-  height:160px;  
-  position:relative;
+  line-height:160px;
 }
 .lb_image img {
-  position:absolute;
-  margin: auto;
-	top:0px;
-	bottom:0px;
-	left:0px;
-	right:0px;  
-  background-color: #FFFFFF;
-  max-height:160px;
-  max-width:200px;
+  border: 1px solid #a3a3a3;
+  padding: 0;
+  vertical-align: middle;
+  background-color: #fff;
+  max-height: 160px;
+  max-width: 200px;
 }
 .lb_title {
   border-bottom: 1px dotted #ddd;
@@ -2845,21 +2843,15 @@ table.total_table tr td {
   margin-bottom:20px;
 }
 .pd_big_image {
-  position:relative;
+  text-align: center;
   width:240px;
-  min-height:240px;
-  margin: 0px 0px 0px 0px;
+  margin: 0;
+  padding: 5px 0 2px;
   border:1px solid #eee;
 }
 .pd_big_image img {
-  position:absolute;
-  margin: auto;
-  left:0px;
-  right:0px;
-  bottom:0px;
-  top:0px;
   max-width:240px;
-  height:auto;
+  max-height:240px;
 }  
 .pd_fsk18 {
   background: transparent url(img/fsk18.png) no-repeat top center;
