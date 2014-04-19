@@ -1235,10 +1235,10 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
   border:solid #ccc;
   border-width:0 1px 1px 1px;
   padding:8px;
-  margin-bottom:15px
+  margin-bottom:15px;
 }
 .boxbody h3, .boxbody h3 a {
-  font-size:11px
+  font-size:11px;
 }
 .boxbody h3.center, .boxbody h3.center a {
   font-size:11px;
@@ -1263,7 +1263,7 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
 }
 .boxbody .productOldPrice {
   font-size:11px;
-  color:red
+  color:red;
 }
 .boxbody div.hr {
   margin:5px 0;
@@ -1684,7 +1684,7 @@ dt img {
 }
 dd {
   float:right;
-  width:125px
+  width:125px;
 }
 td.productPreviewContent {
   width:400px;
