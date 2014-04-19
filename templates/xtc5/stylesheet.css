@@ -162,14 +162,14 @@ table td {
   border-bottom:1px solid #fff;
 }
 #header #logo {
-  float:left
+  float:left;
 }
 #header #search {
   width:230px;
   height:75px;
   float:right;
   color:#fff;
-  padding:30px 0 0 60px
+  padding:30px 0 0 60px;
 }
 #header #search a {
   color:#fff;
@@ -441,10 +441,10 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
   border:solid #ccc;
   border-width:0 1px 1px 1px;
   padding:8px;
-  margin-bottom:15px
+  margin-bottom:15px;
 }
 .boxbody h3, .boxbody h3 a {
-  font-size:11px
+  font-size:11px;
 }
 .boxbody h3.center, .boxbody h3.center a {
   font-size:11px;
@@ -469,7 +469,7 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
 }
 .boxbody .productOldPrice {
   font-size:11px;
-  color:red
+  color:red;
 }
 .boxbody div.hr {
   margin:5px 0;
@@ -905,7 +905,7 @@ table.orderdetails tr.headerrow td.center {
   text-align:center;
 }
 table.orderdetails tr.headerrow td.right {
-  text-align:right
+  text-align:right;
 }
 /* ORDER DETAILS CONTENT ROW 1 */
 table.orderdetails tr.contentrow1 td {
@@ -1245,7 +1245,7 @@ dt img {
 }
 dd {
   float:right;
-  width:125px
+  width:125px;
 }
 td.productPreviewContent {
   width:400px;
@@ -1520,18 +1520,18 @@ ul.contentmenu li.active2 a  {font-style:italic; background:#d7c9d1; }
   margin-bottom: 10px;
 }
 
-/* PAGINATION */ 
-.pagination ul { 
-  list-style-type:none; 
- 	float:right; 
- 	margin:0 !important; 
-} 
-.pagination li { 
-  float:left; 
- 	padding: 0 0 0 3px; 
- 	} 
-.pagination li.current { 
-  font-weight:bold; 
+/* PAGINATION */
+.pagination ul {
+  list-style-type:none;
+  float:right;
+  margin:0 !important;
+}
+.pagination li {
+  float:left;
+  padding: 0 0 0 3px;
+}
+.pagination li.current {
+  font-weight:bold;
 }
 
 /* styles for popup content */
