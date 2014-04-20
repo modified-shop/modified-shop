@@ -107,8 +107,8 @@
       
       // previous button - not displayed on first page
       if ($this->current_page_number > 1) {
-        $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>&nbsp;&nbsp;';
         $display_links_array['previous'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number - 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_PREVIOUS_PAGE . '">' . PREVNEXT_BUTTON_PREV . '</a>';
+        $display_links_string .= $display_links_array['previous'].'&nbsp;&nbsp;';
       }
       
       // check if number_of_pages > $max_page_links
@@ -120,31 +120,31 @@
 
       // previous window of pages
       if ($cur_window_num > 1) {
-        $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
         $display_links_array['previouspages'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num - 1) * $max_page_links), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PREV_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
+        $display_links_string .= $display_links_array['previouspages'];
       }
       
       // page nn button
       for ($jump_to_page = 1 + (($cur_window_num - 1) * $max_page_links); ($jump_to_page <= ($cur_window_num * $max_page_links)) && ($jump_to_page <= $this->number_of_pages); $jump_to_page++) {
         if ($jump_to_page == $this->current_page_number) {
-          $display_links_string .= '&nbsp;<strong>' . $jump_to_page . '</strong>&nbsp;';
           $display_links_array['pages']['current'] = $jump_to_page;
+          $display_links_string .= '&nbsp;<strong>' . $jump_to_page . '</strong>&nbsp;';
         } else {
-          $display_links_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . $jump_to_page, $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '">' . $jump_to_page . '</a>&nbsp;';
           $display_links_array['pages'][$jump_to_page] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . $jump_to_page, $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_PAGE_NO, $jump_to_page) . '">' . $jump_to_page . '</a>';
+          $display_links_string .= '&nbsp;'.$display_links_array['pages'][$jump_to_page].'&nbsp;';
         }
       }
 
       // next window of pages
       if ($cur_window_num < $max_window_num) {
-        $display_links_string .= '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '">...</a>&nbsp;';
         $display_links_array['nextpages'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . (($cur_window_num) * $max_page_links + 1), $request_type) . '" '.$class.' title="' . sprintf(PREVNEXT_TITLE_NEXT_SET_OF_NO_PAGE, $max_page_links) . '">...</a>';
+        $display_links_string .= $display_links_array['nextpages'].'&nbsp;';
       }
       
        // next button
       if (($this->current_page_number < $this->number_of_pages) && ($this->number_of_pages != 1)) {
-        $display_links_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>&nbsp;';
         $display_links_array['next'] = '<a href="' . xtc_href_link(basename($PHP_SELF), $parameters . 'page=' . ($this->current_page_number + 1), $request_type) . '" '.$class.' title="' . PREVNEXT_TITLE_NEXT_PAGE . '">' . PREVNEXT_BUTTON_NEXT . '</a>';
+        $display_links_string .= '&nbsp;'.$display_links_array['next'].'&nbsp;';
       }
       
       if (USE_PAGINATION_LIST == 'true') {
