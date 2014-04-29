@@ -76,7 +76,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
               <font color="#FF7A00"><strong>Vollautomatisiert und optimiert werben auf Google uvm.</strong></font>
-              <a href="http://easymarketing.de/?partner=modified" target="_blank"><img src="images/easymarketing/logo-easymarketing.jpg" align="right" /></a>
+              <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><img src="images/easymarketing/logo-easymarketing.jpg" align="right" /></a>
               <br />
               <br />
               <font color="#FF7A00"><strong>In drei Schritten durchstarten:</strong></font>
@@ -97,7 +97,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li style="list-style-type: circle !important;">Hohe Zeitersparnis, da Kampagnen automatisch erstellt und gepflegt werden</li>
               </ul>
               <br />
-              <a href="http://easymarketing.de/?partner=modified" target="_blank"><span style="font-size:12px; color:#FF7A00;"><u><strong>Weitere Infos zu Easymarketing finden Sie unter www.easymarketing.de</strong></u></span></a>
+              <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><span style="font-size:12px; color:#FF7A00;"><u><strong>Weitere Infos zu Easymarketing finden Sie unter www.easymarketing.de</strong></u></span></a>
               <br /><br /><br />
               <center><iframe width="300" height="169" src="//www.youtube.com/embed/4L_SY9T7vks" frameborder="0" allowfullscreen></iframe></center>
               <br /><br />
