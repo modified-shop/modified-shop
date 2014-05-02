@@ -100,7 +100,9 @@
       $box_smarty->assign('COUPON_AMOUNT2', $xtPrice->xtcFormat($coupon['coupon_amount'], true, 0, true));
     }
     if (isset($_SESSION['cc_id'])) {
-      $box_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="thickbox" title="Information" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id']. '&KeepThis=true&TB_iframe=true&height=400&width=600', $request_type).'">Information</a>');
+      $clink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
+      $clink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
+      $box_smarty->assign('COUPON_HELP_LINK', '<a target="_blank" class="'.$clink_class.'" title="Information" href="'.xtc_href_link(FILENAME_POPUP_COUPON_HELP, 'cID='.$_SESSION['cc_id']. $clink_parameters, $request_type).'">Information</a>');
     }
   }
 
