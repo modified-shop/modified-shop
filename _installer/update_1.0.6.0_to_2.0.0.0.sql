@@ -171,17 +171,4 @@ ALTER TABLE admin_access
 UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
 
-#GTB remove old entries
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_SHIPPING_LINK_PARAMETERS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_SHIPPING_LINK_CLASS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_CONTENT_LINK_PARAMETERS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_CONTENT_LINK_CLASS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_PRODUCT_LINK_PARAMETERS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_PRODUCT_LINK_CLASS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_COUPON_HELP_LINK_PARAMETERS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_COUPON_HELP_LINK_CLASS';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_PRODUCT_PRINT_SIZE';
-DELETE FROM `configuration` WHERE configuration_key = 'POPUP_PRINT_ORDER_SIZE';
-DELETE FROM `configuration_group` WHERE configuration_group_id = 40;
-
 # Keep an empty line at the end of this file for the db_updater to work properly

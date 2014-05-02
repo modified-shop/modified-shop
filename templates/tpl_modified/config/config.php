@@ -19,16 +19,16 @@
   define('DIR_FS_BOXES_INC', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/inc/');
 
   // popup
-  define('POPUP_SHIPPING_LINK_PARAMETERS', '');
-  define('POPUP_SHIPPING_LINK_CLASS', 'iframe');
-  define('POPUP_CONTENT_LINK_PARAMETERS', '');
-  define('POPUP_CONTENT_LINK_CLASS', 'iframe');
-  define('POPUP_PRODUCT_LINK_PARAMETERS', '');
-  define('POPUP_PRODUCT_LINK_CLASS', 'iframe');
-  define('POPUP_COUPON_HELP_LINK_PARAMETERS', '');
-  define('POPUP_COUPON_HELP_LINK_CLASS', 'iframe');
-  define('POPUP_PRODUCT_PRINT_SIZE', '');
-  define('POPUP_PRINT_ORDER_SIZE', '');
+  define('TPL_POPUP_SHIPPING_LINK_PARAMETERS', '');
+  define('TPL_POPUP_SHIPPING_LINK_CLASS', 'iframe');
+  define('TPL_POPUP_CONTENT_LINK_PARAMETERS', '');
+  define('TPL_POPUP_CONTENT_LINK_CLASS', 'iframe');
+  define('TPL_POPUP_PRODUCT_LINK_PARAMETERS', '');
+  define('TPL_POPUP_PRODUCT_LINK_CLASS', 'iframe');
+  define('TPL_POPUP_COUPON_HELP_LINK_PARAMETERS', '');
+  define('TPL_POPUP_COUPON_HELP_LINK_CLASS', 'iframe');
+  define('TPL_POPUP_PRODUCT_PRINT_SIZE', '');
+  define('TPL_POPUP_PRINT_ORDER_SIZE', '');
   
   // listing
   define('PRODUCT_LIST_ROW', 'true'); // 'true' or 'false'

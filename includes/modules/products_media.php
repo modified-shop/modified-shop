@@ -49,9 +49,11 @@ if (xtc_db_num_rows($content_query, true) > 0) {
       }
       $icon = xtc_image(DIR_WS_ICONS.'filetype/icon_'.$content_file_type.'.gif');
       if (in_array($content_file_type,$allowed_content_types)) {
+        $btnlink_parameters = defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS;
+        $btnlink_class = defined('TPL_POPUP_CONTENT_LINK_CLASS') ? TPL_POPUP_CONTENT_LINK_CLASS : POPUP_CONTENT_LINK_CLASS;
         $button = '<a target="_blank"'.
-                  ' href="'.xtc_href_link(FILENAME_MEDIA_CONTENT, 'coID='.$content_data['content_id'].POPUP_CONTENT_LINK_PARAMETERS).'"'.
-                  ' class="'.POPUP_CONTENT_LINK_CLASS.'">'.
+                  ' href="'.xtc_href_link(FILENAME_MEDIA_CONTENT, 'coID='.$content_data['content_id'].$btnlink_parameters).'"'.
+                  ' class="'.$btnlink_class.'">'.
                   xtc_image_button('button_view.gif', TEXT_VIEW).
                   '</a>';
       } else {

@@ -34,7 +34,7 @@ require(DIR_WS_INCLUDES.'header.php');
 
 $smarty->assign('FORM_ACTION', xtc_draw_form('advanced_search', xtc_href_link(FILENAME_ADVANCED_SEARCH_RESULT, '', $request_type, false), 'get', 'onsubmit="return check_form_search(this);"').xtc_hide_session_id());
 $smarty->assign('INPUT_KEYWORDS', xtc_draw_input_field('keywords', '', 'style="width: 100%"'));
-$smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, POPUP_CONTENT_LINK_PARAMETERS, $request_type));
+$smarty->assign('HELP_LINK', xtc_href_link(FILENAME_POPUP_SEARCH_HELP, (defined('TPL_POPUP_CONTENT_LINK_PARAMETERS') ? TPL_POPUP_CONTENT_LINK_PARAMETERS : POPUP_CONTENT_LINK_PARAMETERS) , $request_type));
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_search.gif', IMAGE_BUTTON_SEARCH));
 
 $smarty->assign('SELECT_CATEGORIES',xtc_draw_pull_down_menu('categories_id', xtc_get_categories(array (array ('id' => '', 'text' => TEXT_ALL_CATEGORIES)))));
