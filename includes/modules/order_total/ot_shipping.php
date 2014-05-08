@@ -32,23 +32,23 @@
     }
 
     function process() {
-      global $order, $xtPrice, $free_shipping;
+      global $order, $xtPrice, $free_shipping, $free_shipping_value_over;
 
       if (MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING == 'true') {
         switch (MODULE_ORDER_TOTAL_SHIPPING_DESTINATION) {
           case 'national':
             if ($order->delivery['country_id'] == STORE_COUNTRY) $pass = true;
-            $maxval = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER;
+            $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER;
             break;
           case 'international':
             if ($order->delivery['country_id'] != STORE_COUNTRY) $pass = true; 
-            $maxval = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL;
+            $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL;
             break;
           case 'both':
             if ($order->delivery['country_id'] == STORE_COUNTRY) {
-              $maxval = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER;
+              $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER;
             } else {
-              $maxval = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL;
+              $free_shipping_value_over = MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL;
             }
             $pass = true; 
             break;
@@ -57,7 +57,7 @@
             break;
         }
         
-        if (($pass == true) && (($order->info['total'] - $order->info['shipping_cost']) >= $xtPrice->xtcFormat($maxval,false,0,true))) {
+        if (($pass == true) && (($order->info['total'] - $order->info['shipping_cost']) >= $xtPrice->xtcFormat($free_shipping_value_over,false,0,true))) {
           $order->info['shipping_method'] = $this->title;
           $order->info['total'] -= $order->info['shipping_cost'];
           $order->info['shipping_cost'] = 0;
