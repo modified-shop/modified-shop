@@ -30,8 +30,11 @@
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_TITLE','Allow Free Shipping');
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_DESC','Do you want to allow free shipping ?');
 
-  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_TITLE','Free Shipping For Orders Over');
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_TITLE','Free Shipping For national Orders Over');
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_DESC','Provide free shipping for orders over the set amount.');
+
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL_TITLE','Free Shipping For international Orders Over');
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_INTERNATIONAL_DESC','Provide free shipping for orders over the set amount.');
 
   define('MODULE_ORDER_TOTAL_SHIPPING_DESTINATION_TITLE','Provide Free Shipping For Orders Made');
   define('MODULE_ORDER_TOTAL_SHIPPING_DESTINATION_DESC','Provide free shipping for orders sent to the set destination.');
