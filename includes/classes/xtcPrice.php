@@ -119,7 +119,7 @@ class xtcPrice {
       return $this->xtcShowNote($vpeStatus);
     }
     
-    $this->show_price_tax = ($tax_class == '') ? 0 : $_SESSION['customers_status']['customers_status_show_price_tax'];
+    $this->show_price_tax = ($tax_class == '') ? 0 : $this->cStatus['customers_status_show_price_tax'];
  
     // get Tax rate
     if ($cedit_id != 0) {
@@ -677,7 +677,7 @@ function xtcCheckSpecial($pID) {
         $uvp = MSRP;
         $price = '<span class="productOldPrice">' . $uvp . ' ' . $old_price . '</span><br />' . YOUR_PRICE . $from . $special_price;
       } else {
-        return $this->xtcFormat($sPrice, $format, $tax_class, false, $vpeStatus, $pID);
+        return $this->xtcFormat($sPrice, $format, 0, false, $vpeStatus, $pID);
         //$price = $this->xtcFormat($sPrice, $format);
       }
       

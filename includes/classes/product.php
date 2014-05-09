@@ -398,6 +398,7 @@ class product {
 
     $productDataAdds = array (
         'PRODUCTS_PRICE' => $products_price['formated'],
+        'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
         'COUNT' => isset($array['ID']) ? $array['ID'] : 0,
         'PRODUCTS_VPE' => $main->getVPEtext($array, $products_price['plain']),
         'PRODUCTS_VPE_VALUE' => $array['products_vpe_value'],
@@ -423,6 +424,7 @@ class product {
       $productData['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
       $productData['PRODUCTS_PRICE_ARRAY'][0]['PRODUCTS_PRICE_'.strtoupper($key)] = $entry;
     }
+    $productData['PRODUCTS_PRICE_ARRAY'][0]['PRICE_ALLOWED'] = $productData['PRICE_ALLOWED'];
 
     //echo '<pre>'.print_r($productData,true).'</pre>';
     return $productData;
