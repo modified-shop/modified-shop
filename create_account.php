@@ -48,6 +48,7 @@ require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
+require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
 
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
@@ -322,7 +323,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     // load data into array
     $module_content = array('MAIL_NAME' => $name,
-                            'MAIL_REPLY_ADDRESS' => EMAIL_SUPPORT_REPLY_ADDRESS,
+                            'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS),
                             'MAIL_GENDER' => $gender);
 
     // assign data to smarty
