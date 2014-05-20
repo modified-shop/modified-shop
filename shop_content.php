@@ -38,7 +38,7 @@ $shop_content_query = xtc_db_query("
 if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
   $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
 } else {
-  $error = TEXT_CONTENT_NOT_FOUND;
+  $site_error = TEXT_CONTENT_NOT_FOUND;
   $shop_content_data['content_heading'] = TEXT_CONTENT_NOT_FOUND;
 }
 

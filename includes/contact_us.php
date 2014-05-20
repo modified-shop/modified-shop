@@ -33,22 +33,23 @@
     $err_msg = '';
     if (!xtc_validate_email(trim($_POST['email']))) {
       $err_msg .= ERROR_EMAIL;
+      $error = true;
     }
     
     if (in_array('contact', $use_captcha) && (!isset($_SESSION['customer_id']) || MODULE_CAPTCHA_LOGGED_IN == 'True')) {
       if ((strtoupper($_POST['vvcode']) != $_SESSION['vvcode']) || $_SESSION['vvcode']=='') {
         $err_msg .= ERROR_VVCODE;
+        $error = true;
       }
     }
     
     if (trim($_POST['message_body']) == '') {
       $err_msg .= ERROR_MSG_BODY;
+      $error = true;
     }
 
     $smarty->assign('error_message', ERROR_MAIL . $err_msg);
     unset($_SESSION['vvcode']);
-
-    if ($err_msg != '') $error = true;
 
     //Wenn kein Fehler Email formatieren und absenden
     if (!$error) {

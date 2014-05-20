@@ -36,7 +36,7 @@ if ($shop_is_offline) {
   header("Status: 503 Service Temporarily Unavailable");
 }
 //SET 410 STATUS CODE
-elseif (isset($error) && ($error === CATEGORIE_NOT_FOUND || $error === TEXT_PRODUCT_NOT_FOUND || $error === TEXT_CONTENT_NOT_FOUND)) {
+elseif (isset($site_error) && ($site_error === CATEGORIE_NOT_FOUND || $site_error === TEXT_PRODUCT_NOT_FOUND || $site_error === TEXT_CONTENT_NOT_FOUND)) {
   header("HTTP/1.0 410 Gone"); 
   header("Status: 410 Gone"); // FAST CGI
 }

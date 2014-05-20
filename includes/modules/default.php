@@ -37,7 +37,7 @@ require_once (DIR_FS_INC.'xtc_check_categories_status.inc.php');
 
 // check categorie exist
 if (xtc_check_categories_status($current_category_id) >= 1) {
-  $error = CATEGORIE_NOT_FOUND;
+  $site_error = CATEGORIE_NOT_FOUND;
   include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
   return;
 }
