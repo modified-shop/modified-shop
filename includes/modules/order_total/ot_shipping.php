@@ -57,7 +57,7 @@
             break;
         }
         
-        if (($pass == true) && (($order->info['total'] - $order->info['shipping_cost']) >= $xtPrice->xtcFormat($free_shipping_value_over,false,0,true))) {
+        if (($pass == true) && ($xtPrice->xtcRemoveCurr($order->info['total'] - $order->info['shipping_cost']) >= $free_shipping_value_over)) {
           $order->info['shipping_method'] = $this->title;
           $order->info['total'] -= $order->info['shipping_cost'];
           $order->info['shipping_cost'] = 0;
