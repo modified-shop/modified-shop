@@ -21,52 +21,54 @@
    ---------------------------------------------------------------------------------------*/
 
 
-
-
+@font-face {
+    font-family: 'fjallaoneregular';
+    src: url('css/fonts/fjallaone.eot');
+    src: url('css/fonts/fjallaone.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/fjallaone.woff') format('woff'),
+         url('css/fonts/fjallaone.ttf') format('truetype'),
+         url('css/fonts/fjallaone.svg#fjalla_oneregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}    
 
 @font-face {
-    font-family: 'oswaldregular';
-    src: url('css/fonts/oswald-regular-webfont.eot');
-    src: url('css/fonts/oswald-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/oswald-regular-webfont.woff') format('woff'),
-         url('css/fonts/oswald-regular-webfont.ttf') format('truetype'),
-         url('css/fonts/oswald-regular-webfont.svg#oswaldregular') format('svg');
+    font-family: 'arimoregular';
+    src: url('css/fonts/arimo.eot');
+    src: url('css/fonts/arimo.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/arimo.woff') format('woff'),
+         url('css/fonts/arimo.ttf') format('truetype'),
+         url('css/fonts/arimo.svg#arimoregular') format('svg');
     font-weight: normal;
     font-style: normal;
 }
-
 @font-face {
-    font-family: 'robotoregular';
-    src: url('css/fonts/roboto-regular-webfont.eot');
-    src: url('css/fonts/roboto-regular-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/roboto-regular-webfont.woff') format('woff'),
-         url('css/fonts/roboto-regular-webfont.ttf') format('truetype'),
-         url('css/fonts/roboto-regular-webfont.svg#robotoregular') format('svg');
-    font-weight: normal;
-    font-style: normal;
-
-}
-
-@font-face {
-    font-family: 'robotoregular';
-    src: url('css/fonts/roboto-bold-webfont.eot');
-    src: url('css/fonts/roboto-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/roboto-bold-webfont.woff') format('woff'),
-         url('css/fonts/roboto-bold-webfont.ttf') format('truetype'),
-         url('css/fonts/roboto-bold-webfont.svg#robotobold') format('svg');
+    font-family: 'arimoregular';
+    src: url('css/fonts/arimo_bold.eot');
+    src: url('css/fonts/arimo_bold.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/arimo_bold.woff') format('woff'),
+         url('css/fonts/arimo_bold.ttf') format('truetype'),
+         url('css/fonts/arimo_bold.svg#arimobold') format('svg');
     font-weight: bold;
     font-style: normal;
-
 }
+
+
+
+
+
 
 /* START IE7 fix for font-weight:bold */
 @font-face {
-    font-family: 'robotobold';
-    src: url('css/fonts/roboto-bold-webfont.eot');
-    src: url('css/fonts/roboto-bold-webfont.eot?#iefix') format('embedded-opentype'),
-         url('css/fonts/roboto-bold-webfont.woff') format('woff'),
-         url('css/fonts/roboto-bold-webfont.ttf') format('truetype'),
-         url('css/fonts/roboto-bold-webfont.svg#robotobold') format('svg');
+    font-family: 'arimobold';
+    src: url('css/fonts/arimo-bold-webfont.eot');
+    src: url('css/fonts/arimo-bold-webfont.eot?#iefix') format('embedded-opentype'),
+         url('css/fonts/arimo-bold-webfont.woff') format('woff'),
+         url('css/fonts/arimo-bold-webfont.ttf') format('truetype'),
+         url('css/fonts/arimo-bold-webfont.svg#arimobold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+
 }
 
 .fieldtext, .fieldtext_stern, ul.topnavigation li a, h2, h3, a.show_all .arrow, .box_title, 
@@ -74,10 +76,10 @@
 ol#address_block li label, .subcat_title, .pagination_list ul li.current, table.order_table tr.headerrow, 
 .gp_headline, .gp_title, .options_row_multi .options_name, .options_row_selection .options_name, .mediarow_title, 
 .print_big, .hb_box_text {
-   *font-family: 'robotobold', sans-serif;
+   *font-family: 'arimobold', sans-serif;
 }
 strong, b {
-   *font-family: 'robotobold', sans-serif;
+   *font-family: 'arimobold', sans-serif;
 } 
 /* ENDE IE7 fix for font-weight:bold */ 
  
@@ -88,7 +90,7 @@ strong, b {
   padding:0;
 }
 body {
-  font-family: 'robotoregular', sans-serif;
+  font-family: 'arimoregular', sans-serif;
   font-weight: normal;
   font-size:13px;
   background-color:#fff;
@@ -288,7 +290,7 @@ ul.topnavigation li a:hover {
 
 /* HEADINGS */
 h1 {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   color:#444;
   font-weight:normal;
   font-size:18px;
@@ -302,7 +304,7 @@ h1.checkout {
 }
 
 .headline_big {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   color:#444;
   font-weight:normal;
   font-size:18px;
@@ -329,7 +331,7 @@ h3 {
   font-size:12px;
 }
 h4 {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
 	color:#6d2551;
 	font-weight:normal;
   text-transform:uppercase;
@@ -380,11 +382,11 @@ a img {
 /* INPUT ELEMENTS GLOBAL (CSS 1 compatible) */
 input {
 /*  font-family: 'istokregular', sans-serif; */
-  font-family: 'robotoregular', sans-serif;
+  font-family: 'arimoregular', sans-serif;
   font-size:13px;
 }
 textarea {
-  font-family: Verdana, sans-serif;
+  font-family: 'arimoregular', sans-serif;
   font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -403,7 +405,7 @@ textarea {
 }
 select {
 /*  font-family: 'istokregular', sans-serif; */
-  font-family: Verdana, sans-serif;
+  font-family: 'arimoregular', sans-serif;
   font-size:13px;
   background-color:#fafafa;
   border-color: #C6C6C6 #DADADA #EAEAEA;
@@ -513,7 +515,7 @@ td.checkbox {
 }
 
 .box3_header {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   color:#ffffff;
   font-size:16px;
   height:40px;
@@ -844,7 +846,7 @@ table td {
   padding:0px 10px 10px 10px;
 }
 .box_header {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   font-size:16px;
   color:#434343;
   font-size:16px;
@@ -936,7 +938,7 @@ a.show_all .arrow {
   border: 1px solid #a0a0a0;
 }
 .box_price {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 0px 10px 0 0;
   font-size: 16px;
@@ -987,7 +989,7 @@ a.show_all .arrow {
   display:block;
 }
 .box_vpe {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 0px 10px 0 0;
   font-size:9px;
@@ -1065,7 +1067,7 @@ ul.orderhistory_list li a:hover {
 }
 
 .box_category_header {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   color:#fefefe;
   font-size:16px;
   height:40px;
@@ -1235,10 +1237,10 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
   border:solid #ccc;
   border-width:0 1px 1px 1px;
   padding:8px;
-  margin-bottom:15px;
+  margin-bottom:15px
 }
 .boxbody h3, .boxbody h3 a {
-  font-size:11px;
+  font-size:11px
 }
 .boxbody h3.center, .boxbody h3.center a {
   font-size:11px;
@@ -1263,7 +1265,7 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
 }
 .boxbody .productOldPrice {
   font-size:11px;
-  color:red;
+  color:red
 }
 .boxbody div.hr {
   margin:5px 0;
@@ -1684,7 +1686,7 @@ dt img {
 }
 dd {
   float:right;
-  width:125px;
+  width:125px
 }
 td.productPreviewContent {
   width:400px;
@@ -1832,7 +1834,7 @@ ul#checkoutnavigation li.active.last {
   margin-right:0;
 }
 ul#checkoutnavigation li.active .title {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   font-size:18px;
   line-height:22px;
 }
@@ -1851,7 +1853,7 @@ ul#checkoutnavigation li.inactive.last{
   margin-right:0;
 }
 ul#checkoutnavigation li.inactive .title {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   font-size:18px;
   line-height:22px;
 }
@@ -2028,20 +2030,22 @@ a.color_more:hover {
   min-height:300px;
 }
 .lb_image {
-margin: 0 auto;
-  width: 200px;
-  padding: 0;
-  height: 160px;
+  margin: 0 0 10px 0;
   text-align: center;
-  line-height:160px;
+  width: 100%;
+  height:160px;  
+  position:relative;
 }
 .lb_image img {
-  border: 1px solid #a3a3a3;
-  padding: 0;
-  vertical-align: middle;
-  background-color: #fff;
-  max-height: 160px;
-  max-width: 200px;
+  position:absolute;
+  margin: auto;
+	top:0px;
+	bottom:0px;
+	left:0px;
+	right:0px;  
+  background-color: #FFFFFF;
+  max-height:160px;
+  max-width:200px;
 }
 .lb_title {
   border-bottom: 1px dotted #ddd;
@@ -2076,7 +2080,8 @@ margin: 0 auto;
   padding: 0 5px 0 0;
 }
 .lb_price {
-  font-family: 'oswaldregular', sans-serif;
+  position:relative;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 10px 0 0 0;
   font-size: 16px;
@@ -2131,7 +2136,7 @@ margin: 0 auto;
   position:absolute;
   bottom:2px;
   left:0px;
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 0px 0px 0 0;
   font-size:9px;
@@ -2235,7 +2240,7 @@ margin: 0 auto;
   padding: 0 5px 0 0;
 }
 .lr_vpe {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 5px 0px 0 0;
   font-size:9px;
@@ -2243,7 +2248,7 @@ margin: 0 auto;
   color:#666;
 }
 .lr_price {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 10px 0 0 0;
   color:#434343;
@@ -2842,15 +2847,21 @@ table.total_table tr td {
   margin-bottom:20px;
 }
 .pd_big_image {
-  text-align: center;
+  position:relative;
   width:240px;
-  margin: 0;
-  padding: 5px 0 2px;
+  min-height:240px;
+  margin: 0px 0px 0px 0px;
   border:1px solid #eee;
 }
 .pd_big_image img {
+  position:absolute;
+  margin: auto;
+  left:0px;
+  right:0px;
+  bottom:0px;
+  top:0px;
   max-width:240px;
-  max-height:240px;
+  height:auto;
 }  
 .pd_fsk18 {
   background: transparent url(img/fsk18.png) no-repeat top center;
@@ -2935,7 +2946,7 @@ table.total_table tr td {
 }
 .pd_price {
   position:relative;
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 0px 0 0 0;
 }
@@ -3013,7 +3024,7 @@ table.total_table tr td {
   text-decoration:underline;
 }
 .pd_vpe {
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   text-align:right;
   padding: 5px 0px 0 0;
   font-size:9px;
@@ -3380,7 +3391,7 @@ ul.upcoming_list li {
 #layout_adminlogin .login {
   float:right;
   margin: 10px 0 0 0;
-  font-family: 'oswaldregular', sans-serif;
+  font-family: 'fjallaoneregular', sans-serif;
   outline: none;
   cursor: pointer;
   text-align: center;
