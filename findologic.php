@@ -53,10 +53,10 @@
           '&revision='.urlencode(FL_REVISION).
           '&'.urldecode(http_build_query($parameters, '', '&'));
 
-    $content = get_external_content($url, FL_REQUEST_TIMEOUT, false);
+    $content_findologic = get_external_content($url, FL_REQUEST_TIMEOUT, false);
 
     $regex = "/<div[\s]+id=\"flResults\">[\z\s]+(.*?)<\/div>/si";
-    preg_match($regex, $content, $result);
+    preg_match($regex, $content_findologic, $result);
   }
 
   if ($do_findologic_search === false || (isset($_GET['fallback']) && $_GET['fallback'] == '1')) {
@@ -80,6 +80,9 @@
 
     // create smarty element
     $smarty = new Smarty;
+    
+    // include boxes
+    require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
     // build breadcrumb
     $breadcrumb->add(NAVBAR_TITLE1_ADVANCED_SEARCH, xtc_href_link(FILENAME_ADVANCED_SEARCH));
@@ -98,13 +101,12 @@
       include (DIR_WS_MODULES.FILENAME_ERROR_HANDLER);
     }
 
-    $content = preg_replace($regex, $module, $content);
+    $content_findologic = preg_replace($regex, $module, $content_findologic);
 
-    // include boxes & header
-    require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+    // include header
     require (DIR_WS_INCLUDES.'header.php');
 
-    $smarty->assign('main_content', $content);
+    $smarty->assign('main_content', $content_findologic);
     $smarty->assign('language', $_SESSION['language']);
     $smarty->caching = 0;
     if (!defined('RM')) {
