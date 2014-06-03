@@ -276,15 +276,17 @@ function xss_read_blacklist()
 {
   $blacklist_arr = array();
   $blacklist_file = XSS_PATH. 'log/xss_blacklist.log';
-  if (($fp = @fopen($blacklist_file, 'r')) !== false) {
-    while (($blacklist_val = @fgetcsv($fp, 4096, ';')) !== false) {
-      if (is_array($blacklist_val) && count($blacklist_val) == 2) {
-        if (($blacklist_val[1]+XSS_BLACKLIST_TIME) > time()) {
-          $blacklist_arr[$blacklist_val[0]] = $blacklist_val[1];
+  if (is_file($blacklist_file)) {
+    if (($fp = fopen($blacklist_file, 'r')) !== false) {
+      while (($blacklist_val = @fgetcsv($fp, 4096, ';')) !== false) {
+        if (is_array($blacklist_val) && count($blacklist_val) == 2) {
+          if (($blacklist_val[1]+XSS_BLACKLIST_TIME) > time()) {
+            $blacklist_arr[$blacklist_val[0]] = $blacklist_val[1];
+          }
         }
       }
+      fclose($fp);
     }
-    fclose($fp);
   }
   return $blacklist_arr;
 }
