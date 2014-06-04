@@ -7,7 +7,7 @@ define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 <div style="margin:10px;">
 <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
 Ihre Vorteile:<br />
-- T&Uuml;V-gepr&uuml;fter Zahlungsanbieter<br />
+- PCI-DSS gepr&uuml;fter Zahlungsverkehr<br />
 - Sichere Daten&uuml;bertragung ( 128-Bit SSL)<br />
 - keine Registrierung notwendig<br /><br />
 </div>
