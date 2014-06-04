@@ -9,7 +9,7 @@ class micropayment_method
     var $sort_order;
     var $enabled = true;
     var $info;
-    var $version = '1.0';
+    var $version = '1.1';
     // var $form_action_url=null;
     var $_check;
     var $rslcode = 'r120';
@@ -55,7 +55,6 @@ class micropayment_method
             if ($result = xtc_db_fetch_array($check_query)) {
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
                     $this->mcp_remove_order((int)$_GET['orderid'], true);
-
                     unset($_SESSION['tmp_oID']);
                 }
             }
@@ -87,7 +86,6 @@ class micropayment_method
 
     function after_process()
     {
-        $_SESSION['cart']->reset(true);
         return false;
     }
 
@@ -97,6 +95,7 @@ class micropayment_method
 
         $order = new order($insert_id);
         $params = array(
+            'shop_version' => 'modified-shop:'.$this->version,
             'project' => MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE,
             'amount' => $order->info['pp_total'] * 100,
             'orderid' => $insert_id,
@@ -110,8 +109,7 @@ class micropayment_method
             'mp_user_surname' => $order->customer['lastname'],
             'mp_user_address' => $order->customer['street_address'],
             'mp_user_zip' => $order->customer['postcode'],
-            'mp_user_city' => $order->customer['city'],
-            'mp_user_country' => $order->customer['country']['iso_code_2']
+            'mp_user_city' => $order->customer['city']
         );
 
         if (defined('MODULE_PAYMENT_MCP_SERVICE_GFX') && MODULE_PAYMENT_MCP_SERVICE_GFX != null) {
