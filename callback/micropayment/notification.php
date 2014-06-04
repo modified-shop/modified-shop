@@ -33,7 +33,7 @@ if($ok && (empty($data['orderid']))) {
     }
 }
 // Secret Field Check
-//TODO: Amount Check
+
 if($ok && ((empty($data[MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD]) || $data[MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD] != MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE))) {
     $ok = false;
     $error = MODULE_PAYMENT_MCP_SERVICE_ERROR_SECRET_FIELD_MISSMATCH;
@@ -217,3 +217,5 @@ if(!$ok) {
     echo 'status=ERROR'.PHP_EOL.
          'errorMsg='.urlencode($error).PHP_EOL;
 }
+
+?>
