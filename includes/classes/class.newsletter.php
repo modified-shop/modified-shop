@@ -33,7 +33,7 @@ class newsletter {
 	function RemoveFromList($key, $mail) {
 		require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 
-	  if (xtc_not_null($key)) {
+	  if (!xtc_not_null($key)) {
 	    $this->message = TEXT_EMAIL_ACTIVE_ERROR;
 	    $this->message_id = 5;
 	  } else {
@@ -65,7 +65,7 @@ class newsletter {
 
 
 	function ActivateAddress($key, $email) {
-	  if (xtc_not_null($key)) {
+	  if (!xtc_not_null($key)) {
 	    $this->message = TEXT_EMAIL_ACTIVE_ERROR;
 	    $this->message_id = 5;
 	  } else {
