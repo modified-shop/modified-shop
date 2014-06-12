@@ -181,7 +181,7 @@ if (xtc_count_shipping_modules() > 0) {
 	# free shipping or not...
 	if ($free_shipping == true) {
 		$module_smarty->assign('FREE_SHIPPING_TITLE', FREE_SHIPPING_TITLE);
-		$module_smarty->assign('FREE_SHIPPING_DESCRIPTION', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)).xtc_draw_hidden_field('shipping', 'free_free'));
+		$module_smarty->assign('FREE_SHIPPING_DESCRIPTION', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat($free_shipping_value_over, true, 0, true)).xtc_draw_hidden_field('shipping', 'free_free'));
 		$module_smarty->assign('FREE_SHIPPING_ICON', $quotes[$i]['icon']);
 	} else {
 		$radio_buttons = 0;
