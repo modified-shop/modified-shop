@@ -2378,7 +2378,7 @@ function OrderUpdate ()
           $smarty->assign('logo_path',HTTP_SERVER  . DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
           $smarty->assign('NAME',$check_status['customers_name']);
           $smarty->assign('ORDER_NR',$oID);
-          $smarty->assign('ORDER_LINK',xtc_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL'));
+          $smarty->assign('ORDER_LINK',xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, 'order_id=' . $oID, 'SSL'));
           $smarty->assign('ORDER_DATE',xtc_date_long($check_status['date_purchased']));
           $smarty->assign('NOTIFY_COMMENTS',$comments);
           $smarty->assign('ORDER_STATUS',$o_status);
