@@ -55,7 +55,12 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
   $order->delivery['country']['iso_code_2'] = $delivery_zone['countries_iso_code_2'];
   $order->delivery['country']['title'] = $delivery_zone['countries_name'];
   $order->delivery['country']['id'] = $delivery_zone['countries_id'];
+  $order->delivery['country_id'] = $delivery_zone['countries_id'];
   $order->delivery['zone_id'] = 0;
+}
+
+if (!isset($order->info['total'])) {
+  $order->info['total'] = $_SESSION['cart']->show_total();
 }
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
