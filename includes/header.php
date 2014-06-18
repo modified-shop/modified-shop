@@ -95,10 +95,12 @@ require('templates/'.CURRENT_TEMPLATE.'/javascript/general.js.php');
 switch(basename($PHP_SELF)) {
 
   case FILENAME_CHECKOUT_PAYMENT:
+      require('includes/form_check.js.php');
       echo $payment_modules->javascript_validation();
     break;
 
   case FILENAME_CHECKOUT_SHIPPING:
+      require('includes/form_check.js.php');
       echo $shipping_modules->javascript_validation();
     break;
 
