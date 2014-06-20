@@ -112,11 +112,6 @@ if (is_array($payment_modules->modules)) {
 require (DIR_WS_CLASSES . 'shipping.php');
 $shipping_modules = new shipping($_SESSION['shipping']);
 
-$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
-$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
-
-require (DIR_WS_INCLUDES . 'header.php');
-
 if (SHOW_IP_LOG == 'true') {
   $smarty->assign('IP_LOG', 'true');
   $smarty->assign('CUSTOMERS_IP', $_SESSION['tracking']['ip']);
@@ -192,6 +187,11 @@ if (DISPLAY_REVOCATION_ON_CHECKOUT == 'true') {
   $smarty->assign('AGB_LINK', $main->getContentLink(3, MORE_INFO,'SSL'));
   $smarty->assign('TEXT_AGB_CHECKOUT', sprintf(TEXT_AGB_CHECKOUT,$main->getContentLink(3, MORE_INFO,'SSL') , $main->getContentLink(REVOCATION_ID, MORE_INFO,'SSL')));
 }
+
+$breadcrumb->add(NAVBAR_TITLE_1_CHECKOUT_CONFIRMATION, xtc_href_link(FILENAME_CHECKOUT_SHIPPING, '', 'SSL'));
+$breadcrumb->add(NAVBAR_TITLE_2_CHECKOUT_CONFIRMATION);
+
+require (DIR_WS_INCLUDES . 'header.php');
 
 $smarty->assign('language', $_SESSION['language']);
 $main_content = $smarty->fetch(CURRENT_TEMPLATE . '/module/checkout_confirmation.html');
