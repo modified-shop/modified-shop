@@ -770,7 +770,7 @@ if (defined('PAYPAL_API_VERSION')) {
           $coupon_query = xtc_db_query("select * from " . TABLE_COUPONS . " where coupon_code = '" . $coupon_code . "'");
           $coupon = xtc_db_fetch_array($coupon_query);
           $coupon_id = $coupon['coupon_id'];
-          $coupon_desc_query = xtc_db_query("select * from " . TABLE_COUPONS_DESCRIPTION . " where coupon_id = '" . $coupon_id . "' and language_id = '" . (int) $_SESSION['language_id'] . "'");
+          $coupon_desc_query = xtc_db_query("select * from " . TABLE_COUPONS_DESCRIPTION . " where coupon_id = '" . $coupon_id . "' and language_id = '" . (int) $_SESSION['languages_id'] . "'");
           $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
           $insert_query = xtc_db_query("insert into " . TABLE_COUPON_EMAIL_TRACK . " (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent) values ('" . $coupon_id . "', '0', 'Admin', '" . $email_address . "', now() )");
           $_SESSION['reshash']['SEND_COUPON'] = 'true';
