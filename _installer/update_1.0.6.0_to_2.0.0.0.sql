@@ -166,9 +166,19 @@ INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading
 ALTER TABLE content_manager ADD content_active int(1) NOT NULL DEFAULT '1';
 
 #Tomcraft - 2014-04-08 - Added it_recht_kanzlei
-ALTER TABLE admin_access
-  ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#GTB - 2014-07-01 - added payone
+ALTER TABLE admin_access ADD payone_config INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET payone_config = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET payone_config = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#GTB - 2014-07-01 - added payone
+ALTER TABLE admin_access ADD payone_log INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET payone_log = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET payone_log = 1 WHERE customers_id = 'groups' LIMIT 1;
+
 
 # Keep an empty line at the end of this file for the db_updater to work properly

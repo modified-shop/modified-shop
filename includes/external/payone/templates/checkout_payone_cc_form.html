@@ -1,0 +1,45 @@
+<link rel="stylesheet" href="{$payonecss}" type="text/css" media="screen" />
+<div class="payone_cc_container">
+{if $error}<div class="errormessage">{$error}</div>{/if}
+<table width="100%" class="payone_cc_table">
+	<tr>
+		<td class="label">{$smarty.const.TEXT_CARDOWNER}</td>
+		<td><input id="p1_cc_cardholder" name="p1_cardholder" type="text" class="clear_before_submit" value="{$smarty.session.customer_first_name} {$smarty.session.customer_last_name}"></td>
+	</tr>
+	{*
+	<tr>
+		<td class="label">{$smarty.const.TEXT_CARDTYPE}</td>
+		<td>
+			<select name="cardtype">
+			  {foreach name=outer item=data from=$cctypes}
+					<option value="{$data.shorttype}">{$data.typename}</option>
+			  {/foreach}
+			</select>
+		</td>
+	</tr>
+	*}
+	<tr>
+		<td class="label">{$smarty.const.TEXT_CARDNO}</td>
+		<td><input name="cardpan" type="text" value="" autocomplete="off"></td>
+	</tr>
+	<tr>
+		<td class="label">{$smarty.const.TEXT_CARDEXPIRES}</td>
+		<td>
+			<select name="cardexpiredate">
+			  {foreach name=outer item=year from=$ccexpires_years}
+          {foreach name=outer item=month from=$ccexpires_months}
+            <option value="{$year}{$month}">{$month} / {$year}</option>
+          {/foreach}
+			  {/foreach}
+			</select>
+		</td>
+	</tr>
+	{if $genre_specific.check_cav == 'true'}
+		<tr>
+			<td class="label">{$smarty.const.TEXT_CARDCHECKNUM}</td>
+			<td><input name="cardcvc2" type="text" value="" autocomplete="off"></td>
+		</tr>
+  {/if}
+</table>
+{$hidden}
+</div>

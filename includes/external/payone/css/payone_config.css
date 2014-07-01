@@ -1,0 +1,177 @@
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
+p.message {
+	margin: .5ex auto;
+	background: rgb(240, 230, 140);
+	border: 1px solid rgb(255, 0, 0);
+	padding: 1em;
+}
+
+dl.adminform {
+	position: relative;
+	overflow: auto;
+}
+
+dl.adminform dd, dl.adminform dt {
+	float: left;
+	margin: 1px 0;
+}
+
+
+.dlrow {
+  padding:3px 0px;
+  border-bottom: 1px dotted #ccc;
+}  
+
+
+dl.adminform dt {
+	clear: left;
+	width: 17%;
+  line-height:26px;
+  vertical-align:middle;
+  font-size:10px;
+  font-weight:bold;
+}
+dl.adminform dt label {
+  line-height:14px;
+  display:inline-flex;
+  padding-bottom:6px;
+}
+
+dl.adminform dd {
+	padding-left: 2%;
+	width: 80%;
+  line-height:26px;
+  vertical-align:middle;
+  font-size:12px;
+}
+
+
+.payone_config select {
+  font-size:11px;
+  padding:3px;
+  min-width:200px;
+}
+.payone_config input[type=text] {
+  font-size:11px;
+  padding:3px;
+  min-width:200px;
+}
+
+.payone_config input[type="submit"].btn_wide {
+	width: auto;
+}
+
+dl.adminform input[type="checkbox"] {
+	vertical-align: -1px ;
+/*  vertical-align: middle; */
+}
+
+dl.adminform input[type="radio"] {
+	vertical-align: -1px ;
+/*	vertical-align: bottom ; */
+}
+
+
+.payone_config h3 {
+  margin:1px 0px 1px 0px;
+  background: #ddd;
+	padding: 7px;
+	cursor: pointer;
+  font-size:14px;
+  color:#555;
+  line-height:20px;
+}
+.payone_config h3:hover {
+  background:#eee;
+  color:#333;
+}
+.payone_config h3.active {
+  background: #ddd;
+  color: #6D2551;
+}
+
+
+
+.payone_config h4 {
+  margin:1px 0px 1px 0px;
+	background: #eaeaea;
+	padding: 7px;
+	cursor: pointer;
+  font-size:12px;
+  color:#555;
+  line-height:18px;
+}
+
+.payone_config h4:hover {
+  background:#f1f1f1;
+  color:#333;
+}
+.payone_config h4.active {
+  background: #eaeaea;
+  color: #6D2551;
+}
+
+.payone_config dd.countries_list {
+	min-width: 30em;
+/*
+	overflow: auto;
+	max-height: 15em;
+*/
+  margin-bottom:5px;
+}
+
+.payone_config dd.countries_list input[type="checkbox"] {
+	margin: 0;
+}
+
+h3 + .subblock, h4 + .subblock {
+	display: none;
+	padding-left:20px;
+}
+
+fieldset.paymentgenre {
+	border: none;
+	background: #eee;
+}
+
+fieldset.paymentgenre legend {
+	display: none;
+}
+
+div.paymentgenres {
+	margin-left: 30px;
+}
+
+div.rbuttons {
+	display: inline-block;
+	vertical-align: top;
+}
+
+div.note {
+	font-size: 0.9em;
+	display: inline-block;
+	max-width: 80%;
+	padding-left:40px;
+  line-height:14px;
+}
+
+
+ul.countrylist {
+  background:#fafafa;
+  list-style-type:none;
+  width:100%;
+  padding: 10px 0px;
+  margin: 10px 0px 10px 0px;  
+  height:200px;
+  overflow:auto;
+}
+ul.countrylist li {
+  background:#fafafa;
+  font-size:11px;
+  list-style-type:none;
+  float:left;
+  width:300px; 
+}
