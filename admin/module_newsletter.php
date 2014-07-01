@@ -20,9 +20,11 @@
 
   require('includes/application_top.php');
 
-  require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
-  require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
-  require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
+  // PHPMailer
+  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
+  require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+
+  require_once (DIR_FS_INC . 'xtc_wysiwyg.inc.php');
 
   switch ($_GET['action']) {  // actions for datahandling
 

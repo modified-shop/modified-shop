@@ -107,9 +107,9 @@ function xtc_php_mail($from_email_address, $from_email_name,
   }
 
   $mail = new PHPMailer();
-  $mail->PluginDir = DIR_FS_DOCUMENT_ROOT.'includes/classes/';
+  $mail->PluginDir = DIR_FS_EXTERNAL.'phpmailer/';
   $mail->CharSet = $lang_data['language_charset'];
-  $mail->SetLanguage($lang_data['code'], DIR_FS_DOCUMENT_ROOT.'includes/classes/');
+  $mail->SetLanguage($lang_data['code'], DIR_FS_EXTERNAL.'phpmailer/language/');
 
   if (EMAIL_TRANSPORT == 'smtp') {
     $mail->IsSMTP();
@@ -126,6 +126,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $mail->IsSendmail();
     $mail->Sendmail = SENDMAIL_PATH;
   }
+  
   if (EMAIL_TRANSPORT == 'mail') {
     $mail->IsMail();
   }
@@ -134,6 +135,7 @@ function xtc_php_mail($from_email_address, $from_email_name,
   $html_array = array('<br />', '<br/>', '<br>');
   $txt_array = array(" \n", " \n", " \n");
   $message_body_plain = str_replace($html_array, $txt_array, $message_body_plain.$txt_signatur);//DPW Signatur ergänzt.
+  
   // remove html tags
   $message_body_plain = strip_tags($message_body_plain);
   $message_body_plain = html_entity_decode($message_body_plain, ENT_NOQUOTES, $lang_data['language_charset']);

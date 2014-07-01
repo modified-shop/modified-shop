@@ -11,19 +11,17 @@
    ---------------------------------------------------------------------------------------*/
  
  
- class moneybookers_callback {
+class moneybookers_callback {
  	
  	
- 		function moneybookers_callback() {
- 			
+  function moneybookers_callback() {
  		$this->repost = false;
 		$this->Error = '';
 		$this->oID = 0;
 		$this->debug = true;
-	
- 		}
+ 	}
  	
- 		function callback_process($data) {
+ 	function callback_process($data) {
 
 		$this->data = $data;
 
@@ -48,11 +46,9 @@
 		if (!$err)
 			return false;
 
-
 		// transaction ID is correct, 
 		$this->_setStatus();
 		
-
 	}
 	
 		
@@ -79,7 +75,6 @@
 		$this->Error = '1005';
 		$this->repost = true;
 		return false;
-
 	}
 
 	function _check_TRID() {
@@ -94,13 +89,11 @@
 		$query = "UPDATE payment_moneybookers SET mb_MBTID ='" . $this->data['mb_transaction_id'] . "'  WHERE mb_TRID = '" . $this->data['transaction_id'] . "'";
 		$query = xtc_db_query($query);
 		return true;
-
 	}
 
 	function _setStatus() {
 
 		switch ($this->data['status']) {
-
 			// processed
 			case 2 :
 				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '200', mb_ERRTXT = 'OK', mb_MBTID = '" . $this->data['mb_transaction_id'] . "', mb_STATUS = '" . $this->data['status'] . "' WHERE mb_TRID = '" . $this->data['transaction_id'] . "'");
@@ -121,7 +114,6 @@
 				$status = $this->statusPending;
 				$text = 'WAIT, Transaction Pending';
 				break;
-
 		}
 
 		$order_query = "SELECT mb_ORDERID as oid FROM payment_moneybookers WHERE mb_TRID = '" . $this->data['transaction_id'] . "'";
@@ -214,34 +206,37 @@
 
 		$line = 'MB TRANS|' . date("d.m.Y H:i", time()) . '|' . xtc_get_ip_address() . '|' . $error . '|';
 
-		foreach ($_POST as $key => $val)
+		foreach ($_POST as $key => $val) {
 			$line .= $key . ':' . $val . '|';
-
+    }
+    
 		error_log($line . "\n", 3, $this->logFileMoneybookers);
 
 	}
 	
 	function _notifyTransaction($oID,$text) {
-
 		
-	$email_body = "Order ID: ".$oID."\n" . 'Message: '.$text . "\n\n";
+	  $email_body = "Order ID: ".$oID."\n" . 'Message: '.$text . "\n\n";
 	
-	require_once (DIR_WS_CLASSES . 'class.phpmailer.php');
-			if (EMAIL_TRANSPORT == 'smtp')
-				require_once (DIR_WS_CLASSES . 'class.smtp.php');
-			require_once (DIR_FS_INC . 'xtc_Security.inc.php');
-	
-	
-	xtc_php_mail(EMAIL_BILLING_ADDRESS, 
-					EMAIL_BILLING_NAME, 
-					EMAIL_BILLING_ADDRESS, 
-					STORE_NAME, 
-					EMAIL_BILLING_FORWARDING_STRING, 
-					EMAIL_BILLING_ADDRESS, 
-					STORE_NAME, '', '', 'Moneybookers Payment Notification', $email_body, $email_body);
-	
+    // PHPMailer
+    require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
 
+		require_once (DIR_FS_INC . 'xtc_Security.inc.php');
+	
+	
+    xtc_php_mail(EMAIL_BILLING_ADDRESS, 
+                 EMAIL_BILLING_NAME, 
+                 EMAIL_BILLING_ADDRESS, 
+                 STORE_NAME, 
+                 EMAIL_BILLING_FORWARDING_STRING, 
+                 EMAIL_BILLING_ADDRESS, 
+                 STORE_NAME, 
+                 '', 
+                 '', 
+                 'Moneybookers Payment Notification', 
+                 $email_body, 
+                 $email_body);
 	}
 	
- }
+}
 ?>
