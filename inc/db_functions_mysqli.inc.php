@@ -135,7 +135,8 @@
     // Send an email to the shop owner if a sql error occurs
     if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {
       if (defined('RUN_MODE_ADMIN')) {
-        require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
+        // PHPMailer
+        require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
         require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
       }
       $subject = 'DATA BASE ERROR AT - ' . STORE_NAME;
@@ -144,27 +145,6 @@
     }
     
     trigger_error($errno.' - '.$error.'<br/><br/>'.$query, E_USER_WARNING);
-    
-    /*
-    // show the full sql error + full query only to logged-in admins or error_reporting() != 0
-    if (isset($_SESSION['customers_status']['customers_status']) && $_SESSION['customers_status']['customers_status'] == '0' || error_reporting() != 0) {
-      die('<b style="color:#000000;">' . $errno . ' - ' . $error . '<br><br>' . $query . '<br><br><small style="color:#ff0000;">[MOD SQL Error]</small></b>');
-    } else {
-      die('<b style="color:#ff0000;">Es ist ein Fehler aufgetreten!<br>There was an error!<br>Il y avait une erreur!</b>');
-    }
-
-    //and display an info message for the shop customer and redirect him
-    echo '<p>'.ERROR_SQL_DB_QUERY.'</p>';    
-    if ($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] != $_SERVER['HTTP_HOST']) {
-      $redirect_time = 5; // in seconds
-      echo '<p>'.sprintf(ERROR_SQL_DB_QUERY_REDIRECT, $redirect_time).'</p>';      
-      echo '<script language="javascript">';
-      $redirect_time = $redirect_time * 1000; // convert to milliseconds for javascript redirect
-      echo 'setTimeout(\'location.href="http://' . $_SERVER['HTTP_HOST'] . '"\','.$redirect_time.');';
-      echo '</script>';
-    }
-    exit(); 
-    */
   }
 
 
