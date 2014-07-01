@@ -112,7 +112,7 @@ define('paymenttype_billsafe', 'BillSAFE');
 define('paymenttype_klarna', 'Klarna');
 define('paymenttype_commerzfinanz', 'CommerzFinanz');
 define('paymenttype_lastschrift', 'Lastschrift');
-define('paymenttype_openinvoice', 'Rechnung');
+define('paymenttype_invoice', 'Rechnung');
 define('paymenttype_prepay', 'Vorkasse');
 define('paymenttype_cod', 'Nachnahme');
 define('paymenttype_paypal', 'PayPal');
