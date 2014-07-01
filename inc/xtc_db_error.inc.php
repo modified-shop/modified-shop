@@ -28,7 +28,8 @@
     // Send an email to the shop owner if a sql error occurs
     if (defined('EMAIL_SQL_ERRORS') && EMAIL_SQL_ERRORS == 'true') {
       if (defined('RUN_MODE_ADMIN')) {
-        require_once (DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
+        // PHPMailer
+        require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
         require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
       }
       $subject = 'DATA BASE ERROR AT - ' . STORE_NAME;
