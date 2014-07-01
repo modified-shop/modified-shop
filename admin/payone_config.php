@@ -93,14 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 $messages = $_SESSION[$messages_ns];
 $_SESSION[$messages_ns] = array();
 
-$genres_config = $payone->getGenresConfig();
-$config = $payone->getConfig();
-
-/*
-echo '<pre>';
-print_r($config);
-exit();
-*/
 
 function formpartGlobalConfig($identifier, $config, $parent_identifier = '') {
 	$id_prefix = $identifier;
@@ -537,19 +529,24 @@ require (DIR_WS_INCLUDES.'head.php');
                 
                 <?php if ($payone->checkConfig() === false) { ?>
                 
-								<?php echo xtc_draw_form('payone_install', basename($PHP_SELF), xtc_get_all_get_params()); ?>
-									<input type="hidden" name="cmd" value="install_config">
-                  <h3><?php echo INSTALL_CONFIG; ?></h3>
-                  <dl class="adminform subblock">
-                    <dd>
-                      <input class="button btn_wide" type="submit" name="installconfig" value="<?php echo INSTALL_CONFIG; ?>">
-                    </dd>
-									</dl>
-								</form>
+                  <?php echo xtc_draw_form('payone_install', basename($PHP_SELF), xtc_get_all_get_params()); ?>
+                    <input type="hidden" name="cmd" value="install_config">
+                    <h3><?php echo INSTALL_CONFIG; ?></h3>
+                    <dl class="adminform subblock">
+                      <dd>
+                        <input class="button btn_wide" type="submit" name="installconfig" value="<?php echo INSTALL_CONFIG; ?>">
+                      </dd>
+                    </dl>
+                  </form>
                 
                 <?php } else { ?>
                 
-								<?php echo xtc_draw_form('payone_config', basename($PHP_SELF), xtc_get_all_get_params()); ?>
+                  <?php 
+                  $genres_config = $payone->getGenresConfig();
+                  $config = $payone->getConfig();
+                  ?>
+                
+                  <?php echo xtc_draw_form('payone_config', basename($PHP_SELF), xtc_get_all_get_params()); ?>
 									<input type="hidden" name="cmd" value="save_config">
 
 									<h3><?php echo ORDERS_STATUS_CONFIGURATION; ?></h3>
