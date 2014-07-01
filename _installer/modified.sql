@@ -205,7 +205,7 @@ CREATE TABLE admin_access (
   easymarketing INT(1) NOT NULL DEFAULT 0,
   it_recht_kanzlei INT(1) NOT NULL DEFAULT 0,
   payone_config INT(1) NOT NULL DEFAULT 0,
-  payone_log INT(1) NOT NULL DEFAULT 0,
+  payone_logs INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (customers_id)
 ) ENGINE=MyISAM;
 
