@@ -118,6 +118,10 @@ echo mainMenue('Partner Module');
     if (isset($admin_access['easymarketing']) && $admin_access['easymarketing'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
     //if (($admin_access['econda'] == '1')) echo '<li><a href="' . xtc_href_link('econda.php') . '" class="menuBoxContentLink"> -ECONDA Shop Monitor' . '</a></li>';
     //if (($admin_access['cleverreach'] == '1')) echo '<li><a href="' . xtc_href_link('cleverreach.php') . '" class="menuBoxContentLink"> -CleverReach Newsletter' . '</a></li>';
+    
+    ## Payone
+    include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');
+    
     /******** SHOPGATE **********/
     if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
       include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');

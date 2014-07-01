@@ -123,7 +123,6 @@ CREATE TABLE database_version (
   version VARCHAR(32) NOT NULL
 ) ENGINE=MyISAM;
 
-# set global customers-group-permissions (customers_group)
 DROP TABLE IF EXISTS admin_access;
 CREATE TABLE admin_access (
   customers_id VARCHAR(32) NOT NULL DEFAULT 0,
@@ -145,7 +144,6 @@ CREATE TABLE admin_access (
   orders_status INT(1) NOT NULL DEFAULT 0,
   shipping_status INT(1) NOT NULL DEFAULT 0,
   module_export INT(1) NOT NULL DEFAULT 0,
-
   customers INT(1) NOT NULL DEFAULT 0,
   create_account INT(1) NOT NULL DEFAULT 0,
   customers_status INT(1) NOT NULL DEFAULT 0,
@@ -165,7 +163,6 @@ CREATE TABLE admin_access (
   validproducts INT(1) NOT NULL DEFAULT 0,
   validcategories INT(1) NOT NULL DEFAULT 0,
   mail INT(1) NOT NULL DEFAULT 0,
-
   categories INT(1) NOT NULL DEFAULT 0,
   new_attributes INT(1) NOT NULL DEFAULT 0,
   products_attributes INT(1) NOT NULL DEFAULT 0,
@@ -173,7 +170,6 @@ CREATE TABLE admin_access (
   reviews INT(1) NOT NULL DEFAULT 0,
   specials INT(1) NOT NULL DEFAULT 0,
   products_expected INT(1) NOT NULL DEFAULT 0,
-
   stats_products_expected INT(1) NOT NULL DEFAULT 0,
   stats_products_viewed INT(1) NOT NULL DEFAULT 0,
   stats_products_purchased INT(1) NOT NULL DEFAULT 0,
@@ -181,24 +177,19 @@ CREATE TABLE admin_access (
   stats_sales_report INT(1) NOT NULL DEFAULT 0,
   stats_stock_warning INT(1) NOT NULL DEFAULT 0,
   stats_campaigns INT(1) NOT NULL DEFAULT 0,
-
   banner_manager INT(1) NOT NULL DEFAULT 0,
   banner_statistics INT(1) NOT NULL DEFAULT 0,
-
   module_newsletter INT(1) NOT NULL DEFAULT 0,
   start INT(1) NOT NULL DEFAULT 0,
-
   content_manager INT(1) NOT NULL DEFAULT 0,
   content_preview INT(1) NOT NULL DEFAULT 0,
   credits INT(1) NOT NULL DEFAULT 0,
   blacklist INT(1) NOT NULL DEFAULT 0,
-
   orders_edit INT(1) NOT NULL DEFAULT 0,
   popup_image INT(1) NOT NULL DEFAULT 0,
   csv_backend INT(1) NOT NULL DEFAULT 0,
   products_vpe INT(1) NOT NULL DEFAULT 0,
   cross_sell_groups INT(1) NOT NULL DEFAULT 0,
-
   fck_wrapper INT(1) NOT NULL DEFAULT 0,
   econda INT(1) NOT NULL DEFAULT 0,
   cleverreach INT(1) NOT NULL DEFAULT 0,
@@ -213,7 +204,8 @@ CREATE TABLE admin_access (
   check_update INT(1) NOT NULL DEFAULT 0,
   easymarketing INT(1) NOT NULL DEFAULT 0,
   it_recht_kanzlei INT(1) NOT NULL DEFAULT 0,
-
+  payone_config INT(1) NOT NULL DEFAULT 0,
+  payone_log INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (customers_id)
 ) ENGINE=MyISAM;
 
@@ -480,7 +472,6 @@ CREATE TABLE customers_status_history (
   PRIMARY KEY (customers_status_history_id)
 ) ENGINE=MyISAM;
 
-# Added option to deactivate languages (status)
 DROP TABLE IF EXISTS languages;
 CREATE TABLE languages (
   languages_id INT NOT NULL AUTO_INCREMENT,
@@ -568,7 +559,6 @@ CREATE TABLE newsletters_history (
   PRIMARY KEY (news_hist_id)
 ) ENGINE=MyISAM;
 
-# add index idx_customers_id
 DROP TABLE IF EXISTS orders;
 CREATE TABLE orders (
   orders_id INT NOT NULL AUTO_INCREMENT,
@@ -653,7 +643,6 @@ CREATE TABLE orders (
   KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
-# add indices idx_orders_id, idx_products_id
 DROP TABLE IF EXISTS orders_products;
 CREATE TABLE orders_products (
   orders_products_id INT NOT NULL AUTO_INCREMENT,
@@ -860,7 +849,6 @@ CREATE TABLE products_notifications (
   PRIMARY KEY (products_id, customers_id)
 ) ENGINE=MyISAM;
 
-# sortorder to products_options
 DROP TABLE IF EXISTS products_options;
 CREATE TABLE products_options (
   products_options_id INT NOT NULL DEFAULT 0,
@@ -894,7 +882,6 @@ CREATE TABLE products_graduated_prices (
   KEY products_id (products_id)
 ) ENGINE=MyISAM;
 
-# add index idx_categories_id
 DROP TABLE IF EXISTS products_to_categories;
 CREATE TABLE products_to_categories (
   products_id INT NOT NULL,
@@ -941,7 +928,6 @@ CREATE TABLE sessions (
   KEY idx_expiry (expiry)
 ) ENGINE=MyISAM;
 
-# set shop offline
 DROP TABLE IF EXISTS shop_configuration;
 CREATE TABLE shop_configuration (
   configuration_id INT(11) NOT NULL AUTO_INCREMENT,
@@ -1255,8 +1241,8 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr
 INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
 
 # add entry for admin_access
-INSERT INTO admin_access VALUES ( 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO admin_access VALUES ( 'groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 # configuration_group_id 1, My Shop
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'STORE_NAME', 'modified eCommerce Shopsoftware', 1, 1, NULL, NOW(), NULL, NULL);
@@ -1643,6 +1629,7 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POPUP_COUPON_HELP_LINK_CLASS', 'thickbox', '40', '41', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POPUP_PRODUCT_PRINT_SIZE', 'width=640, height=600', '40', '60', NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'POPUP_PRINT_ORDER_SIZE', 'width=640, height=600', '40', '70', NULL, NOW(), NULL, NULL);
+
 # configuration_group_id 1000, Adminarea Options
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'PRICE_IS_BRUTTO', 'false', 1000, 10, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'USE_ADMIN_TOP_MENU', 'true', 1000, 20, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');

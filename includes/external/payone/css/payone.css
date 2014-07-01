@@ -1,0 +1,255 @@
+
+/* Start Globale Definitionen */
+
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
+ul#checkoutnavigation li.active .description {
+  display:block;
+}
+ul#checkoutnavigation li.inactive .description {
+  display:block;
+}
+
+table.paymentmoduledata tr td.field {
+  padding-left: 0px;
+}
+
+/* Ende Globale Definitionen */
+
+
+
+/* Start Bonitätsprüfung */
+
+input.nobutton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #6b6b6b;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #6b6b6b;
+	box-shadow:inset 0px 1px 0px 0px #6b6b6b;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #494949), color-stop(1, #242424) );
+	background:-moz-linear-gradient( center top, #494949 5%, #242424 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#242424');
+	background-color:#494949;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:0px;
+	-moz-border-radius-topright:0px;
+	border-top-right-radius:0px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0px;
+	border:1px solid #101010;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:12px;
+	font-weight:normal;
+	font-style:normal;
+	height:32px;
+	line-height:32px;
+	width:260px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:-1px -1px 0px #000000;
+}
+input.nobutton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #242424), color-stop(1, #494949) );
+	background:-moz-linear-gradient( center top, #242424 5%, #494949 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#242424', endColorstr='#494949');
+	background-color:#242424;
+}
+
+input.yesbutton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #8f5477;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #8f5477;
+	box-shadow:inset 0px 1px 0px 0px #8f5477;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #742b58), color-stop(1, #4c1436) );
+	background:-moz-linear-gradient( center top, #742b58 5%, #4c1436 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#742b58', endColorstr='#4c1436');
+	background-color:#742b58;
+	-webkit-border-top-left-radius:0px;
+	-moz-border-radius-topleft:0px;
+	border-top-left-radius:0px;
+	-webkit-border-top-right-radius:0px;
+	-moz-border-radius-topright:0px;
+	border-top-right-radius:0px;
+	-webkit-border-bottom-right-radius:0px;
+	-moz-border-radius-bottomright:0px;
+	border-bottom-right-radius:0px;
+	-webkit-border-bottom-left-radius:0px;
+	-moz-border-radius-bottomleft:0px;
+	border-bottom-left-radius:0px;
+	text-indent:0px;
+	border:1px solid #420e2e;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Verdana;
+	font-size:12px;
+	font-weight:normal;
+	font-style:normal;
+	height:32px;
+	line-height:32px;
+	width:200px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:-1px -1px 0px #444;
+}
+input.yesbutton:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #4c1436), color-stop(1, #742b58) );
+	background:-moz-linear-gradient( center top, #4c1436 5%, #742b58 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#4c1436', endColorstr='#742b58');
+	background-color:#4c1436;
+}
+
+/* Ende Bonitätsprüfung */
+
+
+/* Start 
+   Kreditkartenformular checkout_confirmation 
+   Sepa Modul checkout_confirmation  
+*/
+
+.payone_cc_container {
+  margin: 20px 0px;
+  max-width:470px;
+}
+
+.payone_cc_container .payone_cc_table  {  
+  border-top: 1px dotted #bbb;
+  background: #eee;
+}
+
+.payone_cc_container .payone_cc_table tr td {
+  padding: 6px 8px 6px 8px;
+  border-bottom: 1px dotted #bbb;
+}
+.payone_cc_container .payone_cc_table tr td.label {
+  font-size:11px;
+  font-weight:bold;
+}
+
+.payone_cc_container .errormessage {
+  border:solid #DCA7A7 1px;
+  padding:10px;
+  font-size:13px !important;
+  line-height:17px;
+  color:#A94442;
+  background-color:#F2DEDE ;
+  margin-bottom:8px !important;
+  text-align:left;
+}
+
+/* Ende Kreditkartenformular checkout_confirmation */
+
+
+/* Start Lastschrift Formular */
+
+table.payone_elv_form_table tr td  { 
+  padding: 4px 0px;
+  width:60%;
+}
+table.payone_elv_form_table tr td.label  { 
+  font-size:11px;
+  font-weight:bold;
+  width:40%;
+}
+/* Ende Lastschrift Formular */
+
+
+/* Start Selection Formular */
+table.payone_type_selection_table  {
+  margin-top:8px;
+  border-top: 1px dotted #bbb;
+}
+
+table.payone_type_selection_table tr td  { 
+  padding: 15px 0px 0px 0px;
+  width:60%;
+}
+table.payone_type_selection_table tr td.label  { 
+  width:40%;
+  font-size:11px;
+  font-weight:bold;
+}
+/* Ende Selection Formular */
+
+
+/* Start Adress-Check */
+table.p1address {
+  margin:10px 0 15px 0px;
+  border-top: 1px dotted #bbb;  
+  background:#fafafa;
+}
+
+table.p1address tr td  { 
+  padding: 6px 6px;
+  width:50%;
+  border-bottom: 1px dotted #bbb;
+  height:30px;
+}
+table.p1address tr.correction {
+  background-color:#F2DEDE ;  
+}
+table.p1address tr.correction td.label {
+  color:#A94442;
+}
+
+h4.payone {
+  margin-top:10px;
+}
+/* Ende Adress-Check */
+
+
+/* Start elv mandante */
+.payone_elv_mandante_container {
+  position:relative;
+  right:300px;
+  width:740px;
+  padding:10px;
+  border: 1px dotted #bbb;
+  background: #eee;  
+  margin-bottom: 20px;
+}
+
+.payone_elv_mandate_text {
+  padding:10px;
+  background:#fafafa;
+  border: 1px dotted #bbb;
+  text-align:left;
+  line-height:20px;
+}
+
+.payone_elv_mandate_text dl {
+  width:100%;
+  display:block;
+  margin-top:20px;
+  margin-bottom:20px;
+}
+.payone_elv_mandate_text dl:before, .payone_elv_mandate_text dl:after { content: ""; display: table; }
+.payone_elv_mandate_text dl:after { clear: both; }
+.payone_elv_mandate_text dl { zoom: 1; }
+
+.payone_elv_mandate_text dt,
+.payone_elv_mandate_text dd {
+	background: none;
+	margin: 0;
+	padding: 0;
+	float: left;
+  border-bottom: 1px dotted #ccc;
+}
+.payone_elv_mandate_text dd {
+  width:60%;
+}
+.payone_elv_mandate_text dt {
+	clear: left;
+	width: 40%;
+}
+.payone_elv_mandate_checkbox {
+  margin: 10px 0 0 0;
+  cursor:pointer;
+}
