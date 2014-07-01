@@ -249,7 +249,7 @@ define('PG_PAYMENTTYPE_DISCOVER', 'Discover');
 define('PG_PAYMENTTYPE_JCB', 'JCB');
 define('PG_PAYMENTTYPE_MAESTRO', 'Maestro');
 define('PG_PAYMENTTYPE_LASTSCHRIFT', 'Lastschrift');
-define('PG_PAYMENTTYPE_OPENINVOICE', 'Rechnung');
+define('PG_PAYMENTTYPE_INVOICE', 'Rechnung');
 define('PG_PAYMENTTYPE_PREPAY', 'Vorkasse');
 define('PG_PAYMENTTYPE_COD', 'Nachnahme');
 define('PG_PAYMENTTYPE_PAYPAL', 'PayPal');
