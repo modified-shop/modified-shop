@@ -22,7 +22,7 @@
   
   if ($order->info['payment_method'] == 'payone_elv' && empty($_SESSION['payone_elv']['sepa_mandate_id']) == false) {
     if (isset($_SESSION['payone_elv']['sepa_download_pdf']) && $_SESSION['payone_elv']['sepa_download_pdf'] == 'true') {
-      $mandate_file = $payone->retrieveSepaMandate('XX-T0000000'/* $_SESSION['payone_elv']['sepa_mandate_id'] */);
+      $mandate_file = $payone->retrieveSepaMandate($_SESSION['payone_elv']['sepa_mandate_id']);
       if ($mandate_file !== false) {
         if ($email_attachments != '') {
           $email_attachments .= ',';
