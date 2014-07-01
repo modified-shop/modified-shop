@@ -200,7 +200,7 @@ if(!defined('SECURITY_CODE_LENGTH')) {
 }
 
 // PHPMailer
-require_once (DIR_WS_CLASSES.'class.phpmailer.php');
+require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
 
 function CacheCheck() {
   if (USE_CACHE == 'false') return false;

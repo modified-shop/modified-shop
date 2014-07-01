@@ -33,9 +33,9 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_GV_QUEUE_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
    
-  
-  require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'class.phpmailer.php');
-  require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
+  // PHPMailer
+  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
+  require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
     // initiate template engine for mail
   $smarty = new Smarty;

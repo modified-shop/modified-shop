@@ -2356,14 +2356,17 @@ function OrderUpdate ()
           }
 
           // require functionblock for mails
-          require_once(DIR_WS_CLASSES.'class.phpmailer.php');
-          require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
           require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
           require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
           require_once(DIR_FS_INC . 'changedataout.inc.php');
           require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
           require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
           require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+
+          // PHPMailer
+          require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
+          require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+
           $smarty = new Smarty;
 
           $smarty->assign('language', $check_status['language']);
@@ -2554,14 +2557,16 @@ function CustomersUpdate ()
   if (SEND_ACCOUNT_MAIL==true && $mode=='APPEND' && $sql_customers_data_array['customers_email_address']!='')
   {
     // generate mail for customer if customer=new
-    require_once(DIR_WS_CLASSES.'class.phpmailer.php');
-    require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
     require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
     require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
     require_once(DIR_FS_INC . 'changedataout.inc.php');
     require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
     require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
+
+    // PHPMailer
+    require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
+    require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
     require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');  //JP 20080102
 
