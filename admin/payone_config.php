@@ -933,7 +933,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												}
 											} else {
 												?>
-													<p><?php echo TEXT_NO; ?>_paymentgenre_configured</p>
+													<p><?php echo NO_PAYMENTGENRE_CONFIGURED; ?></p>
 												<?php
 											}
 										?>
