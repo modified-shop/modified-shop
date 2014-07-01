@@ -480,10 +480,11 @@ class PayonePayment {
     $this->personal_data->setCity($order->billing['city']);
     if (isset($order->billing['country_iso_2'])) {
       $this->personal_data->setCountry($order->billing['country_iso_2']);
+      $order->billing['country']['iso_code_2'] = $order->billing['country_iso_2'];
     } else {
       $this->personal_data->setCountry($order->billing['country']['iso_code_2']);
     }
-    if (method_exists($this->personal_data, setState)) {
+    if (method_exists($this->personal_data, setState) && in_array($order->billing['country']['iso_code_2'], array('US', 'CA'))) {
       $this->personal_data->setState($order->billing['state']);
     }
     if (method_exists($this->personal_data, setVatid)) {
@@ -517,10 +518,13 @@ class PayonePayment {
 		$this->delivery_data->setShippingCity($order->delivery['city']);
     if (isset($order->billing['country_iso_2'])) {
       $this->delivery_data->setShippingCountry($order->billing['country_iso_2']);
+      $order->billing['country']['iso_code_2'] = $order->billing['country_iso_2'];
     } else {
       $this->delivery_data->setShippingCountry($order->billing['country']['iso_code_2']);
     }
-    $this->delivery_data->setShippingState($order->billing['state']);
+    if (in_array($order->billing['country']['iso_code_2'], array('US', 'CA'))) {
+      $this->delivery_data->setShippingState($order->billing['state']);
+    }
 	}
 	
 	function _standard_parameters($request='') {
