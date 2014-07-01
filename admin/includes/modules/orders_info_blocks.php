@@ -252,6 +252,10 @@
                     $payment->admin_order($oID);
                   }
                 }
+
+                ## Payone
+                include (DIR_FS_EXTERNAL.'payone/modules/orders_payone.php'); 
+
                 ?>
               </table>
             </td>
