@@ -228,10 +228,15 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($country). "' WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($postcode). "' WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'STORE_OWNER'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'EMAIL_BILLING_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'CONTACT_US_EMAIL_ADDRESS'");
-      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_from). "' WHERE configuration_key = 'EMAIL_SUPPORT_ADDRESS'");
+      
+      $multilanguage_email = 'DE::'.$email_from.'||EN::'.$email_from;
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_EMAIL_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_SUPPORT_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_SUPPORT_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_REPLY_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'EMAIL_BILLING_FORWARDING_STRING'");
 
       if ($zone_setup == 'yes') {
         // Steuersätze des jeweiligen Landes einstellen!
