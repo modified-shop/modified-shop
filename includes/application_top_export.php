@@ -28,10 +28,15 @@ define('PAGE_PARSE_START_TIME', microtime());
 error_reporting(0);
 
 // Set the local configuration parameters - mainly for developers - if exists else the mainconfigure
-if (file_exists('../../includes/local/configure.php')) {
-  include_once('../../includes/local/configure.php');
+if (file_exists(dirname(__FILE__).'/local/configure.php')) {
+  include_once(dirname(__FILE__).'/local/configure.php');
 } else {
-  include_once('../../includes/configure.php');
+  include_once(dirname(__FILE__).'/configure.php');
+}
+
+// new error handling
+if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
 }
 
 /*
