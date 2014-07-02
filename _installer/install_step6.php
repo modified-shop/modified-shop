@@ -367,7 +367,7 @@
         // Steuersätze
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (6, 'Steuerzone EU-Ausland', '', '', now())");
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (5, 'Steuerzone EU', '" . convert_utf8('Steuerzone für die EU') . "', '', now())");
-        xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (7, 'Steuerzone B2B', '', NULL, now())");
+        xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (7, 'Steuerzone B2B', '', '', now())");
 
         // EU-Steuerzonen Stand 01.01.2007
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (14, 14, 0, 5, NULL, now())");
