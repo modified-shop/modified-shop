@@ -1374,7 +1374,8 @@ function ProductsImageUpload ()
   global $_GET, $_POST;
   if ($products_image = &xtc_try_upload('products_image',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES,'777', '', true))
   {
-    $products_image_name = $products_image->filename;
+    $products_image_name = $products_image_name_process = $products_image->filename;
+    
     // rewrite values to use resample classes
     define('DIR_FS_CATALOG_ORIGINAL_IMAGES',DIR_FS_CATALOG.DIR_WS_ORIGINAL_IMAGES);
     define('DIR_FS_CATALOG_INFO_IMAGES',DIR_FS_CATALOG.DIR_WS_INFO_IMAGES);
