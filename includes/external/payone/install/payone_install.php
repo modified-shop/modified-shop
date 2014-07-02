@@ -17,6 +17,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
 $sql = array();
 $sql[] = "CREATE TABLE IF NOT EXISTS `payone_config` (
   `path` varchar(255) NOT NULL,

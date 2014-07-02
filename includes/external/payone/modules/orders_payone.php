@@ -17,6 +17,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
 function payone_get_order_details() {
   global $order;
 
