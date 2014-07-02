@@ -367,7 +367,7 @@
 
         // Steuerklassen
         xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (1, 'Standardsatz', '', '', now())");
-        xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (2, '" . convert_utf8('erm‰ﬂigter Steuersatz') . "', '', NULL, now())");
+        xtc_db_query("INSERT INTO tax_class (tax_class_id, tax_class_title, tax_class_description, last_modified, date_added) VALUES (2, '" . convert_utf8('erm‰ﬂigter Steuersatz') . "', '', '', now())");
 
         // Steuers‰tze
         xtc_db_query("INSERT INTO geo_zones (geo_zone_id, geo_zone_name, geo_zone_description, last_modified, date_added) VALUES (6, 'Steuerzone EU-Ausland', '', '', now())");
