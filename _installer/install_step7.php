@@ -291,11 +291,57 @@
                                                      customers_fsk18_display = 1,
                                                      customers_status_write_reviews = 1,
                                                      customers_status_read_reviews = 1");
+
+      // Status merchant EU
+      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '4',
+                                                     language_id = '2',
+                                                     customers_status_name = '".convert_utf8('Händler EU')."',
+                                                     customers_status_public = 1,
+                                                     customers_status_min_order = NULL,
+                                                     customers_status_max_order = NULL,
+                                                     customers_status_image = 'merchant_status.gif',
+                                                     customers_status_discount = '0.00',
+                                                     customers_status_ot_discount_flag = '0',
+                                                     customers_status_ot_discount = '0.00',
+                                                     customers_status_graduated_prices = '1',
+                                                     customers_status_show_price = 1,
+                                                     customers_status_show_price_tax = 0,
+                                                     customers_status_add_tax_ot = 0,
+                                                     customers_status_payment_unallowed = '',
+                                                     customers_status_shipping_unallowed = '',
+                                                     customers_status_discount_attributes = 0,
+                                                     customers_fsk18 = 1,
+                                                     customers_fsk18_display = 1,
+                                                     customers_status_write_reviews = 1,
+                                                     customers_status_read_reviews = 1");
+
+      xtc_db_query("INSERT INTO customers_status SET customers_status_id = '4',
+                                                     language_id = '1',
+                                                     customers_status_name = 'Merchant EU',
+                                                     customers_status_public = 1,
+                                                     customers_status_min_order = NULL,
+                                                     customers_status_max_order = NULL,
+                                                     customers_status_image = 'merchant_status.gif',
+                                                     customers_status_discount = '0.00',
+                                                     customers_status_ot_discount_flag = '0',
+                                                     customers_status_ot_discount = '0.00',
+                                                     customers_status_graduated_prices = '1',
+                                                     customers_status_show_price = 1,
+                                                     customers_status_show_price_tax = 0,
+                                                     customers_status_add_tax_ot = 0,
+                                                     customers_status_payment_unallowed = '',
+                                                     customers_status_shipping_unallowed = '',
+                                                     customers_status_discount_attributes = 0,
+                                                     customers_fsk18 = 1,
+                                                     customers_fsk18_display = 1,
+                                                     customers_status_write_reviews = 1,
+                                                     customers_status_read_reviews = 1");
       // create Group prices (Admin wont get own status!)
       xtc_db_query("create table personal_offers_by_customers_status_0 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
       xtc_db_query("create table personal_offers_by_customers_status_1 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
       xtc_db_query("create table personal_offers_by_customers_status_2 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
       xtc_db_query("create table personal_offers_by_customers_status_3 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
+      xtc_db_query("create table personal_offers_by_customers_status_4 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
       
       if (INSTALL_CHARSET == 'utf8') {
         xtc_db_query("update languages set language_charset='utf-8'");
