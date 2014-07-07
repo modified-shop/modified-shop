@@ -180,5 +180,7 @@ ALTER TABLE admin_access ADD payone_logs INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#GTB - 2014-07-01 - delete configuration
+DELETE FROM configuration WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
 
 # Keep an empty line at the end of this file for the db_updater to work properly

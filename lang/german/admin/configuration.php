@@ -339,19 +339,17 @@ define('STOCK_REORDER_LEVEL_TITLE' , 'Meldung an den Admin dass ein Artikel nach
 define('STOCK_REORDER_LEVEL_DESC' , 'Ab welcher St&uuml;ckzahl soll diese Meldung erscheinen? (GEPLANTE FUNKTION)');
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Speichern der Berechnungszeit des Shop-Seitenaufbaus');
 define('STORE_PAGE_PARSE_TIME_DESC' , 'Speicher der Zeit die ben&ouml;tigt wird, um Skripte bis zum Output der Seite zu berechnen');
-define('STORE_PAGE_PARSE_TIME_LOG_TITLE' , 'Speicherort der Logdatei');
-define('STORE_PAGE_PARSE_TIME_LOG_DESC' , 'Hier den Dateiname eintragen, in dem die Berechnungszeit f&uuml;r den Seitenaufbau, sowie die Datenbank Abfragen gespeichert werden.<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Datumsformat in der Log-Datei');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'Das Datumsformat f&uuml;r Logging (Standard: %d/%m/%Y %H:%M:%S)');
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
-define('STORE_DB_SLOW_QUERY_DESC' , 'Sollen nur SQL Queries gespeichert werden die eine l&auml;ngere Zeit ben&ouml;tigen.<br/><strong>Achtung: Es muss das Speichern der Datenbank Abfragen aktiviert sein!</strong>.');
+define('STORE_DB_SLOW_QUERY_DESC' , 'Sollen nur SQL Queries gespeichert werden die eine l&auml;ngere Zeit ben&ouml;tigen.<br/><strong>Achtung: Es muss das Speichern der Datenbank Abfragen aktiviert sein!</strong>.<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Zeit');
 define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Bitte die Zeit eintragen, ab welcher die SQL Queries in das Logfile geschrieben werden.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Berechnungszeiten der Seiten anzeigen');
 define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Wenn das Speichern der Berechnungszeiten f&uuml;r Seiten eingeschaltet ist, k&ouml;nnen diese im Footer angezeigt werden.<br /><strong>none</strong>: deaktiviert<br /><strong>admin</strong>: Nur der Admin sieht die Berechnungszeiten<br /><strong>all</strong>: Jeder sieht die Berechnungszeiten');
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Speichern der Datenbank Abfragen');
-define('STORE_DB_TRANSACTIONS_DESC' , 'Speichern der einzelnen Datenbank Abfragen im Logfile f&uuml;r Berechnungszeiten');
+define('STORE_DB_TRANSACTIONS_DESC' , 'Speichern der einzelnen Datenbank Abfragen im Logfile f&uuml;r Berechnungszeiten<br/><strong>Achtung: Datei kann bei l&auml;ngerer Laufzeit sehr gro&szlig; werden!</strong>.<br/><br/>Die Logdatei wird im Ordner /log im Hauptverzeichnis gespeichert.');
 
 define('USE_CACHE_TITLE' , 'Cache benutzen');
 define('USE_CACHE_DESC' , 'Die Cache Features verwenden');
@@ -684,6 +682,7 @@ define('USE_CONTACT_EMAIL_ADDRESS_DESC' , '"Kontakt E-Mail" Adresse des Shops zu
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('DELETE_CACHE_SUCCESSFUL', 'Cache erfolgreich geleert.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache erfolgreich geleert.');
+define('DELETE_LOGS_SUCCESSFUL', 'Logfiles erfolgreich gel&ouml;scht.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
 // BOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section

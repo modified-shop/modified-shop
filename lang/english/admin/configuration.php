@@ -340,19 +340,17 @@ define('STOCK_REORDER_LEVEL_TITLE' , 'Stock re-order level');
 define('STOCK_REORDER_LEVEL_DESC' , 'Define when stock needs to be re-ordered (planned function)');
 define('STORE_PAGE_PARSE_TIME_TITLE' , 'Store page parse time');
 define('STORE_PAGE_PARSE_TIME_DESC' , 'Store the time it takes to parse a page');
-define('STORE_PAGE_PARSE_TIME_LOG_TITLE' , 'Log file destination');
-define('STORE_PAGE_PARSE_TIME_LOG_DESC' , 'Enter storage filename, where the page parse time as well as the database queries will be stored.<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Log file date format');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: %d/%m/%Y %H:%M:%S)');
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
-define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queriesbe saved ?.<br/><strong>Caution: Store Database Queries must be enabled!</strong>.');
+define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queriesbe saved ?.<br/><strong>Caution: Store Database Queries must be enabled!</strong>.<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Time');
 define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Time for the slow querys wich should be logged.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Display The Page Parse Time');
 define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time<br /><strong>none</strong>: deactivated<br /><strong>admin</strong>: Only the admin sees the page parse time<br /><strong>all</strong>: Everybody sees the page parse time');
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Store Database Queries');
-define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file');
+define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 
 define('USE_CACHE_TITLE' , 'Use Cache');
 define('USE_CACHE_DESC' , 'Use caching features');
@@ -684,6 +682,7 @@ define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Use "Contact Us" e-mail address for s
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('DELETE_CACHE_SUCCESSFUL', 'Cache deleted successfully.');
 define('DELETE_TEMP_CACHE_SUCCESSFUL', 'Templatecache deleted successfully.');
+define('DELETE_LOGS_SUCCESSFUL', 'Logfiles deleted successfully.');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
 // BOF - DokuMan - 2010-08-13 - set Google RSS Feed in admin section
