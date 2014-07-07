@@ -59,11 +59,11 @@ function log_exception(Exception $e)
 
             // write Logfile
             if ($error_number != E_NOTICE && $error_number != E_STRICT && $error_number != E_WARNING) {
-                error_log(strftime('%d/%m/%Y %H:%M:%S') . ' ' . $error_name . ' - ' . $error_message . ' in File: ' . $error_file . ' on Line: ' . $error_line . "\n", 3, DIR_FS_LOG.'error.log');
+                error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' ' . $error_name . ' - ' . $error_message . ' in File: ' . $error_file . ' on Line: ' . $error_line . "\n", 3, DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log');
                 $err = 0;
                 for ($i=0, $n=count($backtrace); $i<$n; $i++) {
                     if (isset($backtrace[$i]['file']) && $backtrace[$i]['file'] != $error_file && basename($backtrace[$i]['file']) != 'error_reporting.php') {
-                        error_log(strftime('%d/%m/%Y %H:%M:%S') . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'error.log');
+                        error_log(strftime(STORE_PARSE_DATE_TIME_FORMAT) . ' Backtrace #'.$err.' - '.$backtrace[$i]['file'].' called at Line '.$backtrace[$i]['line'] . "\n", 3, DIR_FS_LOG.'mod_error_' .date('Y-m-d') .'.log');
                         $err ++;
                     }
                 }

@@ -146,6 +146,20 @@
         $messageStack->add_session(DELETE_TEMP_CACHE_SUCCESSFUL, 'success');
         xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
         break;
+
+      case 'dellog':
+        $path = DIR_FS_CATALOG.'log/';
+        if ($dir = opendir($path)) {
+          while (($file = readdir($dir)) !== false) {
+            if (is_file($path.$file) && $file != "index.html" && $file != ".htaccess") {
+              unlink($path.$file);
+            }
+          }
+          closedir($dir);
+        }
+        $messageStack->add_session(DELETE_LOGS_SUCCESSFUL, 'success');
+        xtc_redirect(xtc_href_link(FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID']));
+        break;
     }
   }
 
@@ -191,6 +205,8 @@
                 echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_CACHE . '"/></form> ';
                 echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=deltempcache');
                 echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_TEMP_CACHE . '"/></form>';
+                echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=dellog');
+                echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_LOGS . '"/></form>';
               }
             ?>
           </div>

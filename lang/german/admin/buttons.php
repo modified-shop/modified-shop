@@ -84,6 +84,7 @@ define('BUTTON_XTBOOSTER_MULTI', 'eBay-Multi-Artikel');
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
 define('BUTTON_DELETE_CACHE', 'Cache leeren');
 define('BUTTON_DELETE_TEMP_CACHE', 'Templatecache leeren');
+define('BUTTON_DELETE_LOGS', 'Logfiles l&ouml;schen');
 // EOF - Dokuman - 2010-02-04 - delete cache files in admin section
 
 // BOF - web28 - 2011-07-13 - New Button
