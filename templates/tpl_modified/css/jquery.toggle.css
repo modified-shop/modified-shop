@@ -131,3 +131,7 @@
 #admin ul ul li.finish a:hover em{
 	background: #0c0;
 }
+
+#admin ul li.logoff {
+  float:right;
+}
