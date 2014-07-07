@@ -14,9 +14,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-// include needed function
-require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-
 // include the mail classes
 function xtc_php_mail($from_email_address, $from_email_name,
                       $to_email_address, $to_name, $forwarding_to,
@@ -109,6 +106,8 @@ function xtc_php_mail($from_email_address, $from_email_name,
     $message_body_plain = str_replace('[SIGNATUR]', $txt_signatur, $message_body_plain);
     $txt_signatur = '';
   }
+
+  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
 
   $mail = new PHPMailer();
   $mail->PluginDir = DIR_FS_EXTERNAL.'phpmailer/';
