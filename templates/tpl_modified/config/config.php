@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
   /*
-   * define template specific defines
+   *  template specific defines
    */
   
   // paths
@@ -34,12 +34,24 @@
   define('PRODUCT_LIST_ROW', 'true'); // 'true' or 'false'
   define('PRODUCT_INFO_ROW', 'false'); // 'true' or 'false'
   
+  // template output
+  define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2
+  define('TEMPLATE_HTML_ENGINE', 'html5'); // html5 or xhtml
+
   // categories
   define('SPECIALS_CATEGORIES', true);
   define('WHATSNEW_CATEGORIES', true);
 
-  // template output
-  define('TEMPLATE_ENGINE', 'smarty_3'); // smarty_3 or smarty_2
-  define('TEMPLATE_HTML_ENGINE', 'html5'); // html5 or xhtml
+  // check specials
+  if (SPECIALS_CATEGORIES === true) {
+    require_once (DIR_FS_INC.'check_specials.inc.php');
+    define('SPECIALS_EXISTS', check_specials());
+  }
+  
+  // check whats new
+  if (WHATSNEW_CATEGORIES === true) {
+    require_once (DIR_FS_INC.'check_whatsnew.inc.php');
+    define('WHATSNEW_EXISTS', check_whatsnew());
+  }
 
 ?>
