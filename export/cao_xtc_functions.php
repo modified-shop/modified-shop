@@ -2363,10 +2363,7 @@ function OrderUpdate ()
           require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
           require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
           require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
-
-          // PHPMailer
-          require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-          require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+          require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
 
           $smarty = new Smarty;
 
@@ -2564,10 +2561,7 @@ function CustomersUpdate ()
     require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
     require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
-
-    // PHPMailer
-    require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-    require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+    require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
 
     require_once(DIR_FS_LANGUAGES . $Lang_folder . '/admin/' . $Lang_folder . '.php');  //JP 20080102
 
@@ -2598,19 +2592,18 @@ function CustomersUpdate ()
     $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$Lang_folder.'/create_account_mail.txt');
 
     // send mail with html/txt template
-    xtc_php_mail(
-      EMAIL_SUPPORT_ADDRESS,
-      EMAIL_SUPPORT_NAME ,
-      $sql_customers_data_array['customers_email_address'],
-      $sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname'],
-      '',
-      EMAIL_SUPPORT_REPLY_ADDRESS,
-      EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-      '',
-      '',
-      EMAIL_SUPPORT_SUBJECT,
-      $html_mail ,
-      $txt_mail);
+    xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                 EMAIL_SUPPORT_NAME ,
+                 $sql_customers_data_array['customers_email_address'],
+                 $sql_customers_data_array['customers_lastname'] . ' ' . $sql_customers_data_array['customers_firstname'],
+                 '',
+                 EMAIL_SUPPORT_REPLY_ADDRESS,
+                 EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                 '',
+                 '',
+                 EMAIL_SUPPORT_SUBJECT,
+                 $html_mail ,
+                 $txt_mail);
   }
   print_xml_status (0, $_POST['action'], 'OK', $mode, 'CUSTOMERS_ID', $customers_id);
 }

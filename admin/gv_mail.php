@@ -32,13 +32,10 @@
   require('includes/application_top.php');
   
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
+  require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
   require(DIR_WS_CLASSES . 'currencies.php');
   $currencies = new currencies();
-
-  // PHPMailer
-  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-  require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
   // initiate template engine for mail
   $smarty = new Smarty;
@@ -95,7 +92,18 @@
       $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_gift.txt');
 
       if ($subject=='') $subject=EMAIL_BILLING_SUBJECT;
-      xtc_php_mail(EMAIL_BILLING_ADDRESS,EMAIL_BILLING_NAME, $mail['customers_email_address'] , $mail['customers_firstname'] . ' ' . $mail['customers_lastname'] , '', EMAIL_BILLING_REPLY_ADDRESS, EMAIL_BILLING_REPLY_ADDRESS_NAME, '', '', $subject, $html_mail , $txt_mail);
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME, 
+                   $mail['customers_email_address'], 
+                   $mail['customers_firstname'] . ' ' . $mail['customers_lastname'], 
+                   '', 
+                   EMAIL_BILLING_REPLY_ADDRESS, 
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME, 
+                   '', 
+                   '', 
+                   $subject, 
+                   $html_mail, 
+                   $txt_mail);
 
 	    // Now create the coupon main and email entry
       $insert_query = xtc_db_query("insert into " . TABLE_COUPONS . " (coupon_code, coupon_type, coupon_amount, date_created) values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
@@ -128,7 +136,18 @@
       $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_gift.txt');
 
       if ($subject == '') $subject = EMAIL_BILLING_SUBJECT; //web28 - 2011-07-07 - Fix email subject
-      xtc_php_mail(EMAIL_BILLING_ADDRESS,EMAIL_BILLING_NAME, $_POST['email_to'] , '' , '', EMAIL_BILLING_REPLY_ADDRESS, EMAIL_BILLING_REPLY_ADDRESS_NAME, '', '', $subject, $html_mail , $txt_mail); //web28 - 2011-07-07 - Fix email subject
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME, 
+                   $_POST['email_to'], 
+                   '', 
+                   '', 
+                   EMAIL_BILLING_REPLY_ADDRESS, 
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME, 
+                   '', 
+                   '', 
+                   $subject, 
+                   $html_mail, 
+                   $txt_mail); //web28 - 2011-07-07 - Fix email subject
       // Now create the coupon email entry
       $insert_query = xtc_db_query("insert into " . TABLE_COUPONS . " (coupon_code, coupon_type, coupon_amount, date_created) values ('" . $id1 . "', 'G', '" . $_POST['amount'] . "', now())");
       $insert_id = xtc_db_insert_id();

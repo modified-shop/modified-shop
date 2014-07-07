@@ -1187,10 +1187,7 @@ if (defined('PAYPAL_API_VERSION')) {
       global $_GET;
       $this->data = $data;
       //$this->_logTrans($data);
-      
-      // PHPMailer
-      require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-      
+            
       require_once(DIR_FS_INC . 'xtc_Security.inc.php');
       $xtc_order_id=(int)substr($this->data['invoice'],strlen(PAYPAL_INVOICE));
       if(isset($xtc_order_id) && is_numeric($xtc_order_id) && ($xtc_order_id > 0)) {
@@ -1402,7 +1399,18 @@ if (defined('PAYPAL_API_VERSION')) {
         foreach($_GET as $key => $value) {
           $email_body .= $key . '=' . $value . "\n".'<br>';
         }
-        xtc_php_mail(EMAIL_BILLING_ADDRESS, EMAIL_BILLING_NAME, EMAIL_SUPPORT_ADDRESS, EMAIL_SUPPORT_ADDRESS, '', EMAIL_BILLING_ADDRESS, EMAIL_BILLING_NAME, false, false, 'PayPal IPN Invalid Process', $email_body, $email_body);
+        xtc_php_mail(EMAIL_BILLING_ADDRESS, 
+                     EMAIL_BILLING_NAME, 
+                     EMAIL_SUPPORT_ADDRESS, 
+                     EMAIL_SUPPORT_ADDRESS, 
+                     '', 
+                     EMAIL_BILLING_ADDRESS, 
+                     EMAIL_BILLING_NAME, 
+                     '', 
+                     '', 
+                     'PayPal IPN Invalid Process', 
+                     $email_body, 
+                     $email_body);
       }
     }
   /*************************************************************/

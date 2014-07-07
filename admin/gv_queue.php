@@ -33,11 +33,9 @@
   $cfg_max_display_results_key = 'MAX_DISPLAY_GV_QUEUE_RESULTS';
   $page_max_display_results = xtc_cfg_save_max_display_results($cfg_max_display_results_key);
    
-  // PHPMailer
-  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
-    // initiate template engine for mail
+  // initiate template engine for mail
   $smarty = new Smarty;
 
   require(DIR_WS_CLASSES . 'currencies.php');
@@ -72,8 +70,18 @@
       $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.html');
       $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/gift_accepted.txt');
 
-
-      xtc_php_mail(EMAIL_BILLING_ADDRESS,EMAIL_BILLING_NAME,$mail['customers_email_address'] , $mail['customers_firstname'] . ' ' . $mail['customers_lastname'] , '', EMAIL_BILLING_REPLY_ADDRESS, EMAIL_BILLING_REPLY_ADDRESS_NAME, '', '', EMAIL_BILLING_SUBJECT, $html_mail , $txt_mail);
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME,
+                   $mail['customers_email_address'], 
+                   $mail['customers_firstname'] . ' ' . $mail['customers_lastname'], 
+                   '', 
+                   EMAIL_BILLING_REPLY_ADDRESS, 
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME, 
+                   '', 
+                   '', 
+                   EMAIL_BILLING_SUBJECT, 
+                   $html_mail, 
+                   $txt_mail);
 
 
       $gv_amount=$gv_resulta['amount'];

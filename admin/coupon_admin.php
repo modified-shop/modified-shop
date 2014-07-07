@@ -30,17 +30,15 @@
    ---------------------------------------------------------------------------------------*/
 
   require_once('includes/application_top.php');
+
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php'); //web28- 2011-07-07 - Fix html email
   require_once(DIR_WS_CLASSES . 'currencies.php');
-  
+  require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
+
   if(!defined('MAX_DISPLAY_COUPON_RESULTS')) {
     define('MAX_DISPLAY_COUPON_RESULTS', MAX_DISPLAY_SEARCH_RESULTS);
   }
   $currencies = new currencies();
-
-  // PHPMailer
-  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-  require_once(DIR_FS_INC . 'xtc_php_mail.inc.php');
 
   // initiate template engine for mail
   $smarty = new Smarty;
@@ -123,7 +121,18 @@
       $html_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_coupon.html');
       $txt_mail=$smarty->fetch(CURRENT_TEMPLATE . '/admin/mail/'.$_SESSION['language'].'/send_coupon.txt');
 
-      xtc_php_mail(EMAIL_BILLING_ADDRESS,EMAIL_BILLING_NAME, $mail['customers_email_address'] , $mail['customers_firstname'] . ' ' . $mail['customers_lastname'] , '', EMAIL_BILLING_REPLY_ADDRESS, EMAIL_BILLING_REPLY_ADDRESS_NAME, '', '', $subject, $html_mail , $txt_mail);
+      xtc_php_mail(EMAIL_BILLING_ADDRESS,
+                   EMAIL_BILLING_NAME, 
+                   $mail['customers_email_address'], 
+                   $mail['customers_firstname'] . ' ' . $mail['customers_lastname'], 
+                   '', 
+                   EMAIL_BILLING_REPLY_ADDRESS, 
+                   EMAIL_BILLING_REPLY_ADDRESS_NAME, 
+                   '', 
+                   '', 
+                   $subject, 
+                   $html_mail , 
+                   $txt_mail);
     }
 
     xtc_redirect(xtc_href_link(FILENAME_COUPON_ADMIN, 'mail_sent_to=' . urlencode($mail_sent_to)));

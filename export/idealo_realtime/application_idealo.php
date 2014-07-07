@@ -187,9 +187,6 @@ if(!defined('SECURITY_CODE_LENGTH')) {
   define('SECURITY_CODE_LENGTH', '10');
 }
 
-// PHPMailer
-require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-
 function CacheCheck() {
   if (USE_CACHE == 'false') return false;
   if (!isset($_COOKIE['MODsid'])) return false;

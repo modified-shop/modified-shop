@@ -30,9 +30,6 @@ require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'changedataout.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
-
-// PHPMailer
-require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
 require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
 
 /* magnalister v1.0.1 */

@@ -322,7 +322,18 @@ class HelperFunctions {
 		
 		$message .= "\r\n\r\nMail is sent by function ".__METHOD__." in file ".__FILE__;
 		
-		xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, STORE_OWNER_EMAIL_ADDRESS, '', '', STORE_OWNER_EMAIL_ADDRESS, STORE_OWNER, '', '', $subject, nl2br($message), $message);
+		xtc_php_mail(STORE_OWNER_EMAIL_ADDRESS, 
+		             STORE_OWNER, 
+		             STORE_OWNER_EMAIL_ADDRESS, 
+		             '', 
+		             '', 
+		             STORE_OWNER_EMAIL_ADDRESS, 
+		             STORE_OWNER, 
+		             '', 
+		             '', 
+		             $subject, 
+		             nl2br($message), 
+		             $message);
 	}
 	
 	

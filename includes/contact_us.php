@@ -68,7 +68,7 @@
       $use_contact_email_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'USE_CONTACT_EMAIL_ADDRESS'");
       $use_contact_email = xtc_db_fetch_array($use_contact_email_query);
       if ($use_contact_email['configuration_value'] == 'true') {
-          $email = trim(CONTACT_US_EMAIL_ADDRESS);
+        $email = trim(CONTACT_US_EMAIL_ADDRESS);
         $name = CONTACT_US_NAME;
         $notify =  EMAIL_NOTIFY . "\n\n";
       } else {
@@ -84,25 +84,21 @@
               $additional_fields .
               "\n".EMAIL_MESSAGE."\n ". $_POST['message_body'] . "\n";
 
-      xtc_php_mail($email,
-             $name,
-             CONTACT_US_EMAIL_ADDRESS,
-             CONTACT_US_NAME,
-             CONTACT_US_FORWARDING_STRING,
-             $email,
-             $name,
-             '',
-             '',
-             CONTACT_US_EMAIL_SUBJECT,
-             nl2br($email_layout),
-             $email_layout
-             );
+      xtc_php_mail(CONTACT_US_EMAIL_ADDRESS,
+                   CONTACT_US_NAME,
+                   CONTACT_US_EMAIL_ADDRESS,
+                   CONTACT_US_NAME,
+                   CONTACT_US_FORWARDING_STRING,
+                   $email,
+                   $name,
+                   '',
+                   '',
+                   CONTACT_US_EMAIL_SUBJECT,
+                   nl2br($email_layout),
+                   $email_layout
+                   );
 
-      if (!isset ($mail_error)) {
-        xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'action=success&coID='.(int) $_GET['coID']));
-      } else {
-        $smarty->assign('error_message', $mail_error);
-      }
+      xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'action=success&coID='.(int) $_GET['coID']));
     }
   }
 

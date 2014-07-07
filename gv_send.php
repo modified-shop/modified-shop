@@ -116,7 +116,18 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/send_gift_to_friend.txt');
 
     // send mail
-    xtc_php_mail(EMAIL_BILLING_ADDRESS, EMAIL_BILLING_NAME, $_POST['email'], $_POST['to_name'], '', EMAIL_BILLING_REPLY_ADDRESS, EMAIL_BILLING_REPLY_ADDRESS_NAME, '', '', $gv_email_subject, $html_mail, $txt_mail);
+    xtc_php_mail(EMAIL_BILLING_ADDRESS, 
+                 EMAIL_BILLING_NAME, 
+                 $_POST['email'], 
+                 $_POST['to_name'], 
+                 '', 
+                 EMAIL_BILLING_REPLY_ADDRESS, 
+                 EMAIL_BILLING_REPLY_ADDRESS_NAME, 
+                 '', 
+                 '', 
+                 $gv_email_subject, 
+                 $html_mail, 
+                 $txt_mail);
 
   }
 }

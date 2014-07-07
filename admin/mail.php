@@ -22,10 +22,7 @@
 
   require('includes/application_top.php');
 
-  // PHPMailer
-  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
-
   require_once (DIR_FS_INC . 'xtc_wysiwyg.inc.php'); 
 
   if ( ($_GET['action'] == 'send_email_to_user') && ($_POST['customers_email_address']) && (!$_POST['back']) ) {
@@ -62,17 +59,17 @@
     while ($mail = xtc_db_fetch_array($mail_query)) {
 
       xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
-               EMAIL_SUPPORT_NAME,
-               $mail['customers_email_address'] ,
-               $mail['customers_firstname'] . ' ' . $mail['customers_lastname'] ,
-               '',
-               EMAIL_SUPPORT_REPLY_ADDRESS,
-               EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-                '',
-                '',
-                $subject,
-                $message,
-                $message);
+                   EMAIL_SUPPORT_NAME,
+                   $mail['customers_email_address'] ,
+                   $mail['customers_firstname'] . ' ' . $mail['customers_lastname'] ,
+                   '',
+                   EMAIL_SUPPORT_REPLY_ADDRESS,
+                   EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                   '',
+                   '',
+                   $subject,
+                   $message,
+                   $message);
     }
 
 

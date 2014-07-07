@@ -20,10 +20,7 @@
 
   require('includes/application_top.php');
 
-  // PHPMailer
-  require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
-
   require_once (DIR_FS_INC . 'xtc_wysiwyg.inc.php');
 
   switch ($_GET['action']) {  // actions for datahandling
@@ -202,8 +199,8 @@
 
         xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
                      EMAIL_SUPPORT_NAME,
-                     $email_data[$i-1]['email'] ,
-                     $email_data[$i-1]['lastname'] . ' ' . $email_data[$i-1]['firstname'] ,
+                     $email_data[$i-1]['email'],
+                     $email_data[$i-1]['lastname'] . ' ' . $email_data[$i-1]['firstname'],
                      '',
                      EMAIL_SUPPORT_REPLY_ADDRESS,
                      EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
@@ -212,6 +209,7 @@
                      $newsletters_data['title'],
                      $newsletters_data['body'].$link2,
                      $newsletters_data['body'].$link1);
+                     
         xtc_db_query("UPDATE module_newsletter_temp_".(int)$_GET['ID']." SET comment='send' WHERE id='".$email_data[$i-1]['id']."'");
       }
     }

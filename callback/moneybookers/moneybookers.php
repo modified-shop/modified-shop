@@ -218,11 +218,7 @@ class moneybookers_callback {
 		
 	  $email_body = "Order ID: ".$oID."\n" . 'Message: '.$text . "\n\n";
 	
-    // PHPMailer
-    require_once (DIR_FS_EXTERNAL.'phpmailer/class.phpmailer.php');
-
 		require_once (DIR_FS_INC . 'xtc_Security.inc.php');
-	
 	
     xtc_php_mail(EMAIL_BILLING_ADDRESS, 
                  EMAIL_BILLING_NAME, 
