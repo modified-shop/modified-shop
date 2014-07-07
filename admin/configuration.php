@@ -200,11 +200,13 @@
                    
           <div class="main pdg2 flt-l" style="padding-left:30px;">
             <?php
-              if ($_GET['gID']==11) { // delete cache files in admin section
+              if ($_GET['gID'] == '11') { // delete cache files in admin section
                 echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=delcache');
                 echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_CACHE . '"/></form> ';
                 echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=deltempcache');
                 echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_TEMP_CACHE . '"/></form>';
+              }
+              if ($_GET['gID'] == '10') {
                 echo xtc_draw_form('configuration', FILENAME_CONFIGURATION, 'gID=' . (int)$_GET['gID'] . '&action=dellog');
                 echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE_LOGS . '"/></form>';
               }
@@ -214,10 +216,10 @@
        
             <?php
               switch ($_GET['gID']) {
-                case 21: //Afterbuy                 
-                case 19: // Google Conversion-Tracking
-                case 111125: // Paypal Express Modul
-                case 31: // moneybookers payment module version 2.4 & paypal payment module                        
+                case '21': //Afterbuy                 
+                case '19': // Google Conversion-Tracking
+                case '111125': // Paypal Express Modul
+                case '31': // moneybookers payment module version 2.4 & paypal payment module                        
                   echo '<div class="infoBoxHeading pdg2" style="height:22px">
                           <div class="configPartner">
                             <a class="button" href="'.xtc_href_link(FILENAME_CONFIGURATION, 'gID=21', 'NONSSL').'">Afterbuy</a>
@@ -233,9 +235,9 @@
                             </div>
                         </div>                        
                         ';
-                  if ($_GET['gID']=='21')
+                  if ($_GET['gID'] == '21')
                     echo '<div class="main pdg2">'.AFTERBUY_URL.'</div>';
-                  if ($_GET['gID']=='31')
+                  if ($_GET['gID'] == '31')
                     echo '<div class="main pdg2">'. MB_INFO.'</div>';
                     
                   break;
