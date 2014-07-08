@@ -65,20 +65,8 @@
       if (isset($_POST['phone']))    $additional_fields .= EMAIL_PHONE . $_POST['phone'] . "\n" ;
       if (isset($_POST['fax']))      $additional_fields .= EMAIL_FAX . $_POST['fax'] . "\n" ;
 
-      $use_contact_email_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'USE_CONTACT_EMAIL_ADDRESS'");
-      $use_contact_email = xtc_db_fetch_array($use_contact_email_query);
-      if ($use_contact_email['configuration_value'] == 'true') {
-        $email = trim(CONTACT_US_EMAIL_ADDRESS);
-        $name = CONTACT_US_NAME;
-        $notify =  EMAIL_NOTIFY . "\n\n";
-      } else {
-        $email = trim($_POST['email']);
-        $name = $_POST['name'];
-        $notify =  '';
-      }
-
       $email_layout = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
-              "--------------------------------------------------------------" . "\n" . $notify .
+              "--------------------------------------------------------------" . "\n" .
               EMAIL_NAME. $_POST['name'] . "\n" .
               EMAIL_EMAIL. trim($_POST['email']) . "\n" .
               $additional_fields .
@@ -89,8 +77,8 @@
                    CONTACT_US_EMAIL_ADDRESS,
                    CONTACT_US_NAME,
                    CONTACT_US_FORWARDING_STRING,
-                   $email,
-                   $name,
+                   trim($_POST['email']),
+                   $_POST['name'],
                    '',
                    '',
                    CONTACT_US_EMAIL_SUBJECT,
