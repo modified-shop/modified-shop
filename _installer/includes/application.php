@@ -31,13 +31,16 @@
   }
     
   // Set FileSystem Directories
-  if (!defined('DIR_FS_DOCUMENT_ROOT')) {   
-    if (strpos($_SERVER['DOCUMENT_ROOT'],'strato') !== false) {
-      define('DIR_FS_DOCUMENT_ROOT', rtrim(strato_document_root(),'/') . '/');
-    } else {
-      define('DIR_FS_DOCUMENT_ROOT', rtrim(detectDocumentRoot(),'/') .'/');
-    }    
-    define('DIR_FS_CATALOG', DIR_FS_DOCUMENT_ROOT);
+  $dir_fs_document_root_array = array($_SERVER['DOCUMENT_ROOT'],
+                                      rtrim(strato_document_root(),'/') . '/',
+                                      rtrim(detectDocumentRoot(),'/') .'/'
+                                      );
+  foreach ($dir_fs_document_root_array as $dir_fs_document_root) {
+    if (file_exists($dir_fs_document_root.'inc/set_admin_directory.inc.php')) {
+      define('DIR_FS_DOCUMENT_ROOT', $dir_fs_document_root);
+      define('DIR_FS_CATALOG', $dir_fs_document_root);
+      break;
+    }
   }
   if (!defined('DIR_FS_INC')) {
     define('DIR_FS_INC', DIR_FS_CATALOG.'inc/');

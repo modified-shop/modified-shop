@@ -47,7 +47,7 @@ class validpass {
 	{
 		$random = '';
 
-		if (CRYPT_BLOWFISH === 1 && !$this->portable_hashes)
+		if (CRYPT_BLOWFISH === 1 && !$this->portable_hashes && function_exists('version_compare') && version_compare(phpversion(), '5.3.7', '>='))
 		{
 			$random = $this->getRandomBytes(16);
 			$hash = crypt($plain, $this->gensalt_blowfish($random));
@@ -57,7 +57,7 @@ class validpass {
 			}
 		}
 
-		if (CRYPT_EXT_DES === 1 && !$this->portable_hashes)
+		if (CRYPT_EXT_DES === 1 && !$this->portable_hashes && function_exists('version_compare') && version_compare(phpversion(), '5.3.0', '>='))
 		{
 			if (strlen($random) < 3)
 			{
