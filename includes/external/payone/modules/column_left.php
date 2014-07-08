@@ -20,9 +20,9 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   if ((isset($admin_access['payone_config']) && $admin_access['payone_config'] == '1') || (isset($admin_access['payone_log']) && $admin_access['payone_log'] == '1')) {
-    echo '<li><a href="#" class="menuBoxContentLink"> -Payone</a><ul>';
-      if (isset($admin_access['payone_config']) && $admin_access['payone_config'] == '1') echo '<li><a href="' . xtc_href_link('payone_config.php', '') . '" class="menuBoxContentLink"> -Payone Config</a></li>';
-      if (isset($admin_access['payone_logs']) && $admin_access['payone_logs'] == '1') echo '<li><a href="' . xtc_href_link('payone_logs.php', '') . '" class="menuBoxContentLink"> -Payone Log</a></li>';
+    echo '<li><a href="#" class="menuBoxContentLink"> -PAYONE</a><ul>';
+      if (isset($admin_access['payone_config']) && $admin_access['payone_config'] == '1') echo '<li><a href="' . xtc_href_link('payone_config.php', '') . '" class="menuBoxContentLink"> -PAYONE Config</a></li>';
+      if (isset($admin_access['payone_logs']) && $admin_access['payone_logs'] == '1') echo '<li><a href="' . xtc_href_link('payone_logs.php', '') . '" class="menuBoxContentLink"> -PAYONE Log</a></li>';
     echo '  </ul></li>';
   }
 ?>

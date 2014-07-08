@@ -39,10 +39,11 @@ class Payone_Protocol_Logger_ModifiedLog implements Payone_Protocol_Logger_Inter
 		$table = $this->_mode == 'api' ? 'payone_api_log' : 'payone_transactions_log';
 		$sql_data_array = array(
 			'event_id' => (int)$this->_event_id,
+			'date_created' => 'now()',
 			'log_count' => (int)$this->_logcount,
 			'log_level' => (int)$level,
 			'message' => $message,
-			'customers_id' => isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : 0,
+			'customers_id' => ((isset($_SESSION['customer_id'])) ? $_SESSION['customer_id'] : '0'),
 		);
 		xtc_db_perform($table, $sql_data_array);
 	}

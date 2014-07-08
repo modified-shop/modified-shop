@@ -760,9 +760,14 @@ class PayoneModified {
 		}
 		$message = implode('|', $message_parts);
 		list($msec, $sec) = explode(' ', microtime());
-		$log_query = "INSERT INTO `payone_transactions_log` SET event_id = '".(int)(($sec + $msec) * 1000)."', date_created = NOW(), log_count = 0, log_level = 0, message = '".$message."', customers_id = 0";
-		$this->log($log_query);
-		xtc_db_query($log_query);
+		$sql_data_array = array('event_id' => (int)(($sec + $msec) * 1000),
+		                        'date_created' => 'now()',
+		                        'log_count' => '0',
+		                        'log_level' => '0',
+		                        'message' => $message,
+		                        'customers_id' => '0');
+		$this->log(print_r($sql_data_array, true));
+		xtc_db_perform('payone_transactions_log', $sql_data_array);
 	}
 
 	public function getTransactionStatus($orders_id) {

@@ -79,7 +79,7 @@ define('AC_ERROR_MODE_REENTER', 'Neueingabe');
 define('AC_ERROR_MODE_CHECK', 'Anschlieﬂende Bonit&auml;tspr&uuml;fung durchf&uuml;hren');
 define('AC_ERROR_MODE_CONTINUE', 'fortfahren');
 define('DAYS', 'Tage');
-define('ERROR_MESSAGE_INFO', 'Verwenden Sie {payone_error} als Platzhalter f&uuml;r die R&uuml;ckmeldung der PayOne-Plattform');
+define('ERROR_MESSAGE_INFO', 'Verwenden Sie {payone_error} als Platzhalter f&uuml;r die R&uuml;ckmeldung der PAYONE-Plattform');
 define('AC_PSTATUS_NOPCHECK', 'keine Personenpr&uuml;fung durchgef&uuml;hrt');
 define('AC_PSTATUS_FULLNAMEKNOWN', 'Vor- und Nachname bekannt');
 define('AC_PSTATUS_LASTNAMEKNOWN', 'Nachname bekannt');
@@ -90,7 +90,7 @@ define('AC_PSTATUS_DEAD', 'Person verstorben');
 define('AC_PSTATUS_POSTALERROR', 'Adresse postalisch falsch');
 
 // api
-define('STATUS_UPDATED_BY_PAYONE', 'Status aktualisiert durch PayOne');
+define('STATUS_UPDATED_BY_PAYONE', 'Status aktualisiert durch PAYONE');
 define('COMMENT_ERROR', 'comment_error');
 define('COMMENT_REDIRECTION_INITIATED', 'comment_redirection_initiated');
 define('COMMENT_AUTH_APPROVED', 'Zahlung bewilligt');
@@ -167,7 +167,7 @@ define('SEPA_DISPLAY_KTOBLZ_NOTE', 'Bei SEPA-Lastschrift zus&auml;tzlich Felder 
 define('SEPA_USE_MANAGEMANDATE', 'Mandatserteilung aktivieren');
 define('SEPA_USE_MANAGEMANDATE_NOTE', 'Die Mandatserteilung erfolgt mit dem kostenpflichtigen Request "managemandate". Der Request beinhaltet einen bankaccountcheck. Allerdings ist hier keine Abfrage der POS-Sperrliste m&ouml;glich.');
 define('SEPA_DOWNLOAD_PDF', 'Download Mandat als PDF');
-define('SEPA_DOWNLOAD_PDF_NOTE', 'Download des SEPA-Lastschriftmandats als PDF-Datei anbieten (nur, wenn bei PayOne das Produkt "SEPA-Mandate als PDF" gebucht wurde)');
+define('SEPA_DOWNLOAD_PDF_NOTE', 'Download des SEPA-Lastschriftmandats als PDF-Datei anbieten (nur, wenn bei PAYONE das Produkt "SEPA-Mandate als PDF" gebucht wurde)');
 define('DOWNLOAD_MANDATE_HERE', 'Das im Zuge der SEPA-Lastschriftzahlung erteilte Mandat k&ouml;nnen Sie jetzt herunterladen: ');
 define('MANDATE_PDF', 'PDF-Datei');
 define('CHECK_BANKDATA', 'Kontodaten pr&uuml;fen');
@@ -205,9 +205,9 @@ define('ORDERS_STATUS_INVOICE', 'Zahlung Rechnung');
 define('TEXT_YES', 'Ja');
 define('TEXT_NO', 'Nein');
 define('ERROR_OCCURED', 'Fehler aufgetreten');
-define('BOX_PAYONE_CONFIG', 'Payone Konfiguration');
-define('BOX_PAYONE_LOGS', 'Payone API Log');
-define('PAYONE_CONFIG_TITLE', 'Payone Konfiguration');
+define('BOX_PAYONE_CONFIG', 'PAYONE Konfiguration');
+define('BOX_PAYONE_LOGS', 'PAYONE API Log');
+define('PAYONE_CONFIG_TITLE', 'PAYONE Konfiguration');
 define('PAYMENT_CONFIGURATION', 'Zahlungskonfiguration');
 define('GLOBAL_CONFIGURATION', 'Globale Parameter');
 define('MERCHANT_ID', 'Merchant-ID');
@@ -282,7 +282,7 @@ define('REMOVE_PAYMENT_GENRE', 'Zahlart entfernen');
 define('REMOVE_THIS_GENRE', 'Diese Zahlart beim Speichern der Konfiguration entfernen');
 define('CONFIGURATION_SAVED', 'Konfiguration gespeichert');
 define('PAYMENTGENRE_ADDED', 'Zahlart hinzugef&uuml;gt');
-define('PAYONE_ORDERS_HEADING', 'PayOne-Zahlung');
+define('PAYONE_ORDERS_HEADING', 'PAYONE-Zahlung');
 define('TRANSACTIONS', 'Transaktionen');
 define('TXID', 'Transaktions-ID');
 define('USERID', 'Benutzer-ID');
@@ -297,7 +297,7 @@ define('TABLE_HEADING_CHECK', 'Ausw&auml;hlen');
 define('DUMP_CONFIG', 'Konfiguration exportieren');
 define('CONFIGURATION_DUMPED_TO', 'Konfiguration gespeichert in Datei');
 define('ERROR_DUMPING_CONFIGURATION', 'Beim Exportieren der Konfiguration ist ein Fehler aufgetreten.');
-define('INSTALL_CONFIG', 'Payone Installieren');
+define('INSTALL_CONFIG', 'PAYONE Installieren');
 
 // Capture
 define('CAPTURE_TRANSACTION', 'Zahlung einfordern');
@@ -336,7 +336,7 @@ define('REFUND_BIC', 'BIC');
 define('AMOUNT_REFUNDED', 'Betrag gutgeschrieben');
 
 // Log
-define('PAYONE_LOGS_TITLE', 'PayOne API Log');
+define('PAYONE_LOGS_TITLE', 'PAYONE API Log');
 define('EVENT_ID', 'Ereignis-ID');
 define('DATETIME', 'Zeitpunkt');
 define('CUSTOMER', 'Kunde (sofern erfasst)');
