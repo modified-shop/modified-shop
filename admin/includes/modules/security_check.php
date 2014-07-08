@@ -130,6 +130,9 @@ while ($check = xtc_db_fetch_array($query)) {
 /*******************************************************************************
  ** Email adress check:
  ******************************************************************************/
+require_once(DIR_FS_INC.'parse_multi_language_value.inc.php');
+$lang_check = xtc_get_languages();
+
 $check = array();
 $emails = array('STORE_OWNER_EMAIL_ADDRESS',
                 'EMAIL_BILLING_ADDRESS',
@@ -139,13 +142,16 @@ $emails = array('STORE_OWNER_EMAIL_ADDRESS',
 );
 foreach($emails as $name) {
   $email = constant($name);
-  if (empty($email) or !xtc_validate_email($email)){
-    include(DIR_FS_LANGUAGES .$_SESSION['language'] . '/admin/configuration.php');
-    $checks[] = sprintf(ERROR_EMAIL_CHECK_INFO,constant($name.'_TITLE'), $email);
+  for ($i=0, $n=count($lang_check); $i<$n; $i++) {
+    $email = parse_multi_language_value($email, $lang_check[$i]['code']);
+    if (empty($email) or !xtc_validate_email($email)){
+      include_once(DIR_FS_LANGUAGES .$_SESSION['language'] . '/admin/configuration.php');
+      $checks[] = sprintf(ERROR_EMAIL_CHECK_INFO,constant($name.'_TITLE'), $email);
+    }
   }
 }
-if (!empty($check)) {
-  $warnings[] = ERROR_EMAIL_CHECK.'<ul><li>'.implode('</li><li>', $check).'</li></ul>';
+if (!empty($checks)) {
+  $warnings[] = ERROR_EMAIL_CHECK.'<ul><li>'.implode('</li><li>', $checks).'</li></ul>';
 }
 
 /** ----------------------------------------------------------------------------
@@ -183,8 +189,8 @@ if (($registerGlobals == '1') || (strtolower($registerGlobals) == 'on')) {
 if (!empty($warnings)) {
 ?>
 <div id="security_info">
-  <div style="float: left; margin-right: 10px;"><?php echo xtc_image(DIR_WS_ICONS.'big_warning.gif', 'Warning', 106, 93); ?></div>
-  <div style="float: left;"><?php echo implode('', $warnings) ?></div>
+  <div style="float: left; width: 120px;"><?php echo xtc_image(DIR_WS_ICONS.'big_warning.gif', 'Warning', 106, 93); ?></div>
+  <div style="float: left; width: 85%;"><?php echo implode('', $warnings) ?></div>
   <div style="clear: both"></div>
 </div>
 <?php
