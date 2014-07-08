@@ -346,7 +346,7 @@ define('WARNING_NO_FILE_UPLOADED', 'Warnung: Es wurde keine Datei hochgeladen.')
 define('DELETE_ENTRY','Eintrag l&ouml;schen?');
 define('TEXT_PAYMENT_ERROR','<b>WARNUNG:</b> Bitte Aktivieren Sie ein Zahlungsmodul!');
 define('TEXT_SHIPPING_ERROR','<b>WARNUNG:</b> Bitte Aktivieren Sie ein Versandmodul!');
-define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Bitte konfigurieren Sie die PayPal-Zahlungseinstellungen f&uuml;r den "Live Modus" unter: <a href="%s"><strong>Partner -> PayPal<strong></a>'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
+define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Bitte konfigurieren Sie die PayPal-Zahlungseinstellungen f&uuml;r den "Live Modus" unter: <a href="%s"><strong>Partner -> PayPal</strong></a>'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 define('TEXT_NETTO','Netto: ');
 
 define('ENTRY_CID','Kundennummer:');
