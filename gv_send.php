@@ -95,7 +95,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
     $gv_customer = xtc_db_fetch_array($gv_query);
     $gv_query = xtc_db_query("insert into ".TABLE_COUPONS." (coupon_type, coupon_code, date_created, coupon_amount) values ('G', '".$id1."', NOW(), '".str_replace(",", ".", xtc_db_input($_POST['amount']))."')");
     $insert_id = xtc_db_insert_id($gv_query);
-    $gv_query = xtc_db_query("insert into ".TABLE_COUPON_EMAIL_TRACK." (coupon_id, customer_id_sent, sent_firstname, sent_lastname, emailed_to, date_sent) values ('".$insert_id."' ,'".$_SESSION['customer_id']."', '".addslashes($gv_customer['customers_firstname'])."', '".addslashes($gv_customer['customers_lastname'])."', '".xtc_db_input($_POST['email'])."', now())");
+    $gv_query = xtc_db_query("insert into ".TABLE_COUPON_EMAIL_TRACK." (coupon_id, customer_id_sent, sent_firstname, sent_lastname, emailed_to, date_sent) values ('".$insert_id."' ,'".$_SESSION['customer_id']."', '".xtc_db_input($gv_customer['customers_firstname'])."', '".xtc_db_input($gv_customer['customers_lastname'])."', '".xtc_db_input($_POST['email'])."', now())");
 
     $gv_email_subject = sprintf(EMAIL_GV_TEXT_SUBJECT, stripslashes($_POST['send_name']));
 

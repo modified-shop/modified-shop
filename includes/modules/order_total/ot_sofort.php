@@ -212,7 +212,7 @@ class ot_sofort
             $gv_result = xtc_db_fetch_array($gv_query);
             $qty = $_SESSION['cart']->get_quantity($products[$i]['id']);
             $products_tax = xtc_get_tax_rate($gv_result['products_tax_class_id']);
-            if (ereg('^GIFT', addslashes($gv_result['products_model']))) {
+            if (preg_match('/^GIFT/', addslashes($gv_result['products_model']))) {
                 if ($this->include_tax =='false') {
                     $gv_amount = $gv_result['products_price'] * $qty;
                 } else {

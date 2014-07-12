@@ -450,8 +450,8 @@
                          break;
                        default :
                          $ent_keyword = encode_htmlentities($search_keywords[$i]);
-                         $ent_keyword = ($ent_keyword != $search_keywords[$i]) ? addslashes($ent_keyword) : false;
-                         $keyword = addslashes($search_keywords[$i]);
+                         $ent_keyword = ($ent_keyword != $search_keywords[$i]) ? xtc_db_input($ent_keyword) : false;
+                         $keyword = xtc_db_input($search_keywords[$i]);
                          $where_str .= " ( ";
                          $where_str .= "pd.products_keywords LIKE ('%".$keyword."%') ";
                          $where_str .= ($ent_keyword) ? "OR pd.products_keywords LIKE ('%".$ent_keyword."%') " : '';

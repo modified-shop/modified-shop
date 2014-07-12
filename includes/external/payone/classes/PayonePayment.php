@@ -396,7 +396,7 @@ class PayonePayment {
 		$sort_order = 0;
 		foreach($config as $key => $data) {
 			$install_query = "insert into ".TABLE_CONFIGURATION." ( configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) ".
-					"values ('MODULE_PAYMENT_".strtoupper($this->code)."_".$key."', '".$data['configuration_value']."', '6', '".$sort_order."', '".addslashes($data['set_function'])."', '".addslashes($data['use_function'])."', now())";
+					"values ('MODULE_PAYMENT_".strtoupper($this->code)."_".$key."', '".$data['configuration_value']."', '6', '".$sort_order."', '".xtc_db_input($data['set_function'])."', '".xtc_db_input($data['use_function'])."', now())";
 			xtc_db_query($install_query);
 			$sort_order++;
 		}

@@ -595,7 +595,7 @@ class xtcImport {
                                                  JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
                                                       ON cd.categories_id=c.categories_id
                                                          AND cd.language_id='".$this->languages[0]['id']."'
-                                                         AND cd.categories_name='".addslashes($cat[$i])."'
+                                                         AND cd.categories_name='".xtc_db_input($cat[$i])."'
                                                 WHERE c.parent_id='".$parent."'");
                     if (!xtc_db_num_rows($cat_query)) { // insert categorie
                         $categorie_data = array (

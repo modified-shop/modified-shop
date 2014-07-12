@@ -313,7 +313,7 @@ if ($paymentMethod == 'sr') { // Rechnung by Sofort
 				'orders_status_id'	=> $orderStatus,
 				'date_added'		=> 'sqlcommand:now()',
 				'customer_notified' => 0,
-				'comments'			=> addslashes($comment),
+				'comments'			=> xtc_db_input($comment),
 			);
 			xtc_db_query(HelperFunctions::getEscapedInsertInto(TABLE_ORDERS_STATUS_HISTORY, $sqlDataArray));
 			xtc_db_query("UPDATE ".HelperFunctions::escapeSql(TABLE_ORDERS)." SET orders_status = '".HelperFunctions::escapeSql($orderStatus)."', last_modified = NOW() WHERE orders_id = '".(int)$xOrderId."'");
@@ -323,7 +323,7 @@ if ($paymentMethod == 'sr') { // Rechnung by Sofort
 				'orders_status_id'	=> $orderStatus,
 				'date_added'		=> 'sqlcommand:now()',
 				'customer_notified' => 0,
-				'comments'			=> addslashes($comment),
+				'comments'			=> xtc_db_input($comment),
 			);
 			xtc_db_query(HelperFunctions::getEscapedInsertInto(TABLE_ORDERS_STATUS_HISTORY, $sqlDataArray));
 			xtc_db_query("UPDATE ".HelperFunctions::escapeSql(TABLE_ORDERS)." SET orders_status = '".HelperFunctions::escapeSql($orderStatus)."', last_modified = NOW() WHERE orders_id = '".(int)$xOrderId."'");
@@ -332,7 +332,7 @@ if ($paymentMethod == 'sr') { // Rechnung by Sofort
 		$query = xtc_db_query( 'SELECT id FROM sofort_orders WHERE orders_id = '.HelperFunctions::escapeSql($xOrderId));
 		$result = xtc_db_fetch_array($query);
 		$sofortOrdersId = $result['id'];
-		HelperFunctions::updateTimeline($sofortOrdersId,$sofortNotificationStatus,addslashes($comment));
+		HelperFunctions::updateTimeline($sofortOrdersId,$sofortNotificationStatus,xtc_db_input($comment));
 	}
 }
 
