@@ -22,18 +22,30 @@
 
   function xtc_db_prepare_input($string) {
     if (is_string($string)) {
-      return trim(stripslashes($string));
+      if ((function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc())
+          || (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase')) != 'off')))
+      {
+        return trim(stripslashes($string));
+      } else {
+        return trim($string);
+      }
     } elseif (is_array($string)) {
-      reset($string);
-      while (list($key, $value) = each($string)) {
-        $string[$key] = xtc_db_prepare_input($value);
+      if ((function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc())
+          || (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase')) != 'off')))
+      {
+        reset($string);
+        while (list($key, $value) = each($string)) {
+          $string[$key] = xtc_db_prepare_input($value);
+        }
+      } else {
+        $string[$key] = $value;
       }
       return $string;
     } else {
       return $string;
     }
   }
-
+  
 
   function xtc_db_perform($table, $data, $action='insert', $parameters='', $link='db_link') {
     global $$link;
