@@ -27,8 +27,8 @@ class Inputfilter {
 
     public function removeTags($value)
     {
-        return strip_tags ($value) == $value ? $value : '';
-        //return preg_replace ('/<[^>]*>/', ' ', $value) == $value ? $value : ''; //alternative zu stip_tags
+        return strip_tags($value) == $value ? $value : '';
+        //return preg_replace('/<[^>]*>/', ' ', $value) == $value ? $value : ''; //alternative zu stip_tags
     }
 
     public function validateCPath($value)
