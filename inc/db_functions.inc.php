@@ -30,15 +30,9 @@
         return trim($string);
       }
     } elseif (is_array($string)) {
-      if ((function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc())
-          || (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase')) != 'off')))
-      {
-        reset($string);
-        while (list($key, $value) = each($string)) {
-          $string[$key] = xtc_db_prepare_input($value);
-        }
-      } else {
-        $string[$key] = $value;
+      reset($string);
+      while (list($key, $value) = each($string)) {
+        $string[$key] = xtc_db_prepare_input($value);
       }
       return $string;
     } else {
