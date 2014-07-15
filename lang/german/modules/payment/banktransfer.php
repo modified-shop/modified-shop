@@ -30,8 +30,10 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EMAIL_FOOTER', 'Hinweis: Sie k&ouml;nne
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_INFO', 'Bitte beachten Sie, dass das Lastschriftverfahren ohne Angabe von IBAN/BIC <b>nur</b> von einem <b>deutschen Girokonto</b> aus m&ouml;glich ist. Durch Angabe von IBAN/BIC k&ouml;nnen Sie das Lastschriftverfahren <b>EU-weit</b> nutzen.<br/>Felder mit (*) sind Pflichtangaben. Bei einer deutschen IBAN ist der BIC optional.<br/><br/>');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER', 'Kontoinhaber:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER_EMAIL', 'E-Mail Kontoinhaber:*');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER', 'KtoNr / IBAN:*');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ', 'BLZ / BIC:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER', 'KtoNr:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN', 'IBAN:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ', 'BLZ:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC', 'BIC:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME', 'Bank:');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX', 'Einzugserm&auml;chtigung wird per Fax best&auml;tigt');
 
@@ -81,6 +83,8 @@ define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE', 'Notwendige Bestellungen')
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC', 'Die Mindestanzahl an Bestellungen, die ein Kunde haben muss, damit die Option zur Verf&uuml;gung steht.');
 define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
 define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren, wenn Versandmodul gew&auml;hlt (Kommagetrennte Liste)');
+define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
+define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'M&ouml;chten Sie nur IBAN Zahlungen erlauben?');
 
 // SEPA
 define('MODULE_PAYMENT_BANKTRANSFER_CI_TITLE', 'Gl&auml;ubiger-Identifikationsnummer (CI)');

@@ -30,8 +30,10 @@ define('MODULE_PAYMENT_BANKTRANSFER_TEXT_EMAIL_FOOTER', 'Note: You can download 
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_INFO', 'Please note that direct debit without IBAN/BIC is <b>only available</b> from a <b>german bank account</b>. By specifying IBAN/BIC, you can use the direct debit system <b>across the EU</b>.<br/>Fields marked with (*) are mandatory. For a german IBAN specifying a BIC is optional.<br/><br/>');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER', 'Account Owner:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_OWNER_EMAIL', 'E-Mail Account Owner:*');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER', 'Account Number / IBAN:*');
-define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ', 'Bank Code / BIC:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NUMBER', 'Account Number:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_IBAN', 'IBAN:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BLZ', 'Bank Code:*');
+define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_BIC', 'BIC:*');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_NAME', 'Bank Name:');
 define('MODULE_PAYMENT_BANKTRANSFER_TEXT_BANK_FAX', 'Banktransfer Payment will be confirmed by fax');
 
@@ -81,6 +83,8 @@ define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE' , 'Minimum Orders');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC' , 'Minimum orders for a Customer to view this Option.');
 define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_TITLE', 'Exclude Shipping Modules');
 define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_DESC', 'Deactivate Banktransfer if shipping Module is selected (Comma separated List)');
+define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
+define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'Do you want to accept IBAN banktransfer payments only?');
 
 // SEPA
 define('MODULE_PAYMENT_BANKTRANSFER_CI_TITLE', 'Identifikationnumber (CI)');
