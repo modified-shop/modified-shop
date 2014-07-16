@@ -261,7 +261,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                   } 
                   ?>
                   <br />
-                  <input type="submit" class="button" name="capture" value="<?php echo CAPTURE_SUBMIT; ?>">
+                  <input type="submit" class="button" name="capture_submit" value="<?php echo CAPTURE_SUBMIT; ?>">
                 </form>
               </div>
               <?php 
