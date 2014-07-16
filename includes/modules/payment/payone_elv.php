@@ -72,7 +72,7 @@ class payone_elv extends PayonePayment {
     $payment_smarty->assign('sepa_countries', $sepa_countries);
 
 		$sendto_iso2 = $this->_getAddressBookIso2($_SESSION['sendto']);
-    $payment_smarty->assign('sendto_iso2', ((isset($_SESSION[$this->code]['country']) && $_SESSION[$this->code]['country'] != '') ? $_SESSION[$this->code]['country'] : $sendto_iso2));
+    $payment_smarty->assign('sendto_iso2', ((isset($_SESSION[$this->code]['bankcountry']) && $_SESSION[$this->code]['bankcountry'] != '') ? $_SESSION[$this->code]['bankcountry'] : $sendto_iso2));
 
     $payment_smarty->assign('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
     $payment_smarty->caching = 0;
@@ -96,21 +96,34 @@ class payone_elv extends PayonePayment {
 				'bic' => ((isset($_POST['p1_elv_bic'])) ? $_POST['p1_elv_bic'] : ''),
 			);
 		}
-    
-    $t_has_accbank = false;
-		if (empty($_SESSION[$this->code]['accountnumber']) !== true && empty($_SESSION[$this->code]['bankcode']) !== true) {
-			$t_has_accbank = true;
-		}
-    
-    $t_has_sepa = false;
-		if (empty($_SESSION[$this->code]['iban']) !== true && empty($_SESSION[$this->code]['bic']) !== true) {
-			$t_has_sepa = true;
-		}
 
-		if (($t_has_accbank === true || $t_has_sepa === true) !== true || empty($_SESSION[$this->code]['country']) === true) {
-			$_SESSION['payone_error'] = PAYDATA_INCOMPLETE;
-			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL', true));
-		}
+		$this->payone->log("verfication $this->code payment data");
+		$standard_parameters = parent::_standard_parameters();    
+		unset($standard_parameters['request']);
+		
+    $request_parameters = array(
+      'aid' => $this->global_config['subaccount_id'],
+      'key' => $this->global_config['key'],
+    );
+
+		$params = array_merge($standard_parameters, $request_parameters, $_SESSION[$this->code]);
+		
+		$builder = new Payone_Builder($this->payone->getPayoneConfig());
+    $service = $builder->buildServiceVerificationBankAccountCheck();
+    
+    $request = new Payone_Api_Request_BankAccountCheck($params);
+    $this->payone->log("elv BankAccountCheck request:\n".print_r($request, true));
+    
+    $response = $service->check($request);
+    $this->payone->log("elv BankAccountCheck response:\n".print_r($response, true));
+
+    if ($response instanceof Payone_Api_Response_Error
+        || $response instanceof Payone_Api_Response_BankAccountCheck_Blocked
+        || $response instanceof Payone_Api_Response_BankAccountCheck_Invalid) {
+      $this->payone->log("ERROR verification bankaccount: ".$response->getErrorcode().' - '.$response->getErrormessage());
+      $_SESSION['payone_error'] = $response->getCustomermessage();
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
+    }
 	}
 
 	function confirmation() {
@@ -136,10 +149,10 @@ class payone_elv extends PayonePayment {
         $this->payment_method->setIban($_SESSION[$this->code]['iban']);
         $this->payment_method->setBic($_SESSION[$this->code]['bic']);
       } else {
-        $this->payment_method->setBankaccount($_SESSION[$this->code]['accountnumber']);
+        $this->payment_method->setBankaccount($_SESSION[$this->code]['bankaccount']);
         $this->payment_method->setBankcode($_SESSION[$this->code]['bankcode']);
       }
-			$this->payment_method->setBankcountry($_SESSION[$this->code]['country']);
+			$this->payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
 
 			$request_parameters = array(
 					'aid' => $this->global_config['subaccount_id'],
@@ -165,6 +178,9 @@ class payone_elv extends PayonePayment {
 			if ($manage_mandate_result instanceof Payone_Api_Response_Error) {
 				$this->payone->log("ERROR retrieving SEPA mandate: ".$manage_mandate_result->getErrorcode().' - '.$manage_mandate_result->getErrormessage());
 				$_SESSION['payone_error'] = $manage_mandate_result->getCustomermessage();
+				if ($_SESSION['payone_error'] == '') {
+				  $_SESSION['payone_error'] = PAYMENT_ERROR;
+				}
 				xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));
 			}
 			else if ($manage_mandate_result instanceof Payone_Api_Response_Management_ManageMandate_Approved) {
@@ -244,14 +260,14 @@ class payone_elv extends PayonePayment {
 		parent::_set_customers_shipping_params();
     
 		$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_DebitPayment();
-    $this->payment_method->setBankcountry($_SESSION[$this->code]['country']);
+    $this->payment_method->setBankcountry($_SESSION[$this->code]['bankcountry']);
 		//$payment_method->setBankaccountholder($_SESSION[$this->code]['accountholder']);
 		
 		if (isset($_SESSION[$this->code]['iban']) && $_SESSION[$this->code]['iban'] != '' && isset($_SESSION[$this->code]['bic']) && $_SESSION[$this->code]['bic'] != '') {
       $this->payment_method->setIban($_SESSION[$this->code]['iban']);
       $this->payment_method->setBic($_SESSION[$this->code]['bic']);
     } else {
-      $this->payment_method->setBankaccount($_SESSION[$this->code]['accountnumber']);
+      $this->payment_method->setBankaccount($_SESSION[$this->code]['bankaccount']);
   		$this->payment_method->setBankcode($_SESSION[$this->code]['bankcode']);
 		}
 		
