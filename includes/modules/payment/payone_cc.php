@@ -157,32 +157,34 @@ class payone_cc extends PayonePayment {
 		  $insert_id = $_SESSION['tmp_oID'];
 		}
 		
-		$this->payone->log("(pre-)authorizing $this->code payment");
-		$standard_parameters = parent::_standard_parameters();
+		if (!isset($_SESSION['tmp_payone_oID'])) {
+      $this->payone->log("(pre-)authorizing $this->code payment");
+      $standard_parameters = parent::_standard_parameters();
 
-		$this->personal_data = new Payone_Api_Request_Parameter_Authorization_PersonalData();
-		parent::_set_customers_standard_params();
+      $this->personal_data = new Payone_Api_Request_Parameter_Authorization_PersonalData();
+      parent::_set_customers_standard_params();
 
-		$this->delivery_data = new Payone_Api_Request_Parameter_Authorization_DeliveryData();
-		parent::_set_customers_shipping_params();
+      $this->delivery_data = new Payone_Api_Request_Parameter_Authorization_DeliveryData();
+      parent::_set_customers_shipping_params();
 
-		$this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_CreditCard();
-		$this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
-		$this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
-		$this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
-		$this->payment_method->setPseudocardpan($_SESSION[$this->code]['pseudocardpan']);
+      $this->payment_method = new Payone_Api_Request_Parameter_Authorization_PaymentMethod_CreditCard();
+      $this->payment_method->setSuccessurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id());
+      $this->payment_method->setBackurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id());
+      $this->payment_method->setErrorurl(((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PAYMENT.'?'.xtc_session_name().'='.xtc_session_id().'&payment_error='.$this->code);
+      $this->payment_method->setPseudocardpan($_SESSION[$this->code]['pseudocardpan']);
 
-    // set order_id for deleting canceld order
-    $_SESSION['tmp_payone_oID'] = $_SESSION['tmp_oID'];
+      // set order_id for deleting canceld order
+      $_SESSION['tmp_payone_oID'] = $_SESSION['tmp_oID'];
 
-    $request_parameters = parent::_request_parameters('cc');
+      $request_parameters = parent::_request_parameters('cc');
     
-		$this->params = array_merge($standard_parameters, $request_parameters);
-		$this->builder = new Payone_Builder($this->payone->getPayoneConfig());
+      $this->params = array_merge($standard_parameters, $request_parameters);
+      $this->builder = new Payone_Builder($this->payone->getPayoneConfig());
     
-    parent::_build_service_authentification('cc');
-    parent::_parse_response_payone_api();
-        
+      parent::_build_service_authentification('cc');
+      parent::_parse_response_payone_api();
+    }
+     
 		parent::after_process();
 		unset($_SESSION[$this->code]);
 	}
