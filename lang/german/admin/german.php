@@ -70,6 +70,7 @@ define('DOB_FORMAT_STRING', 'tt.mm.jjjj');
 
 define('BOX_HEADING_CONFIGURATION','Konfiguration');
 define('BOX_HEADING_MODULES','Module');
+define('BOX_HEADING_PARTNER_MODULES','Partner Module');
 define('BOX_HEADING_ZONE','Land / Steuer');
 define('BOX_HEADING_CUSTOMERS','Kunden');
 define('BOX_HEADING_PRODUCTS','Artikelkatalog');

@@ -109,7 +109,7 @@ echo mainMenue(BOX_HEADING_MODULES);
 echo endMenue(BOX_HEADING_MODULES);
 
 //---------------------------PARTNER
-echo mainMenue('Partner Module');
+echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
     if (isset($admin_access['janolaw']) && $admin_access['janolaw'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
     if (isset($admin_access['it_recht_kanzlei']) && $admin_access['it_recht_kanzlei'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_IT_RECHT_KANZLEI, '') . '" class="menuBoxContentLink"> -' . BOX_IT_RECHT_KANZLEI . '</a></li>';
@@ -123,7 +123,7 @@ echo mainMenue('Partner Module');
       include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');
     }
     /******** SHOPGATE **********/
-echo endMenue('Partner Module');
+echo endMenue(BOX_HEADING_PARTNER_MODULES);
 
 //---------------------------STATISTIKEN
 echo mainMenue(BOX_HEADING_STATISTICS);

@@ -69,6 +69,7 @@ define('DOB_FORMAT_STRING', 'dd/mm/yyyy');
 
 define('BOX_HEADING_CONFIGURATION','Configuration');
 define('BOX_HEADING_MODULES','Modules');
+define('BOX_HEADING_PARTNER_MODULES','Partner modules');
 define('BOX_HEADING_ZONE','Zone / Tax');
 define('BOX_HEADING_CUSTOMERS','Customers');
 define('BOX_HEADING_PRODUCTS','Catalog');
