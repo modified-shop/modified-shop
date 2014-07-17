@@ -125,6 +125,8 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     /******** SHOPGATE **********/
     if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True') {
       include_once (DIR_FS_CATALOG.'includes/external/shopgate/base/admin/includes/column_left.php');
+    } else {
+      if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=payment&module=shopgate', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHOPGATE . '</a></li>';
     }
     /******** SHOPGATE **********/
 echo endMenue(BOX_HEADING_PARTNER_MODULES);
