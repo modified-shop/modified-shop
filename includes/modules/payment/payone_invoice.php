@@ -29,7 +29,7 @@ class payone_invoice extends PayonePayment {
 	}
 
 	function selection() {
-		if ($this->pg_config['types']['openinvoice']['active'] == 'true') {
+		if ($this->pg_config['types']['invoice']['active'] == 'true') {
 			$selection = parent::selection();
 		} else {
 			$selection = false;
