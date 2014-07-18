@@ -1030,8 +1030,8 @@ class PayoneModified {
 		return $response;
 	}
 
-	public function refundAmount($parameters) {
-		$this->log("refunding amount\n".print_r($parameters, true));
+	public function refundAmount($data) {
+		$this->log("refunding amount\n".print_r($data, true));
 		
 		$config = $this->getConfig();
 		$global_config = $config['global'];
@@ -1052,18 +1052,24 @@ class PayoneModified {
 		$service = $builder->buildServicePaymentDebit();
 		
 		$request = new Payone_Api_Request_Debit($params);
-		$request->setAmount(-1 * (double)$parameters['amount']);
-		$request->setCurrency($parameters['currency']);
-		$request->setSequencenumber($this->_getNextSequencenumber($parameters['txid']));
-		$request->setTxid($parameters['txid']);
+		$request->setCurrency($data['currency']);
+		$request->setSequencenumber($this->_getNextSequencenumber($data['txid']));
+		$request->setTxid($data['txid']);
+
+    if (isset($data['positions'])) {
+		  $request->setInvoicing($this->_getInvoicingTransaction($data));
+		  $request->setAmount((round($this->amount, 2) * (-1)));
+		} else {
+		  $request->setAmount((round($data['amount'], 2) * (-1)));
+		}
 		
-		if (false && !empty($parameters['bankaccount'])) {
+		if (false && !empty($data['bankaccount'])) {
 			$payment = new Payone_Api_Request_Parameter_Refund_PaymentMethod_BankAccount();
-			$payment->setBankaccount($parameters['bankaccount']);
-			$payment->setBankbranchcode($parameters['bankbranchcode']);
-			$payment->setBankcheckdigit($parameters['bankcheckdigit']);
-			$payment->setBankcode($parameters['bankcode']);
-			$payment->setBankcountry($parameters['bankcountry']);
+			$payment->setBankaccount($data['bankaccount']);
+			$payment->setBankbranchcode($data['bankbranchcode']);
+			$payment->setBankcheckdigit($data['bankcheckdigit']);
+			$payment->setBankcode($data['bankcode']);
+			$payment->setBankcountry($data['bankcountry']);
 			$request->setPayment($payment);
 		}
 		
@@ -1334,13 +1340,28 @@ class PayoneModified {
 		xtc_db_perform('payone_cr_cache', $sql_data_array);
 	}
 
-	public function getLogsCount($mode, $date_start = null, $date_end = null) {
+	public function getLogsCount($mode, $date_start = null, $date_end = null, $search = null) {
 		$table = (($mode == 'api') ? 'payone_api_log' : 'payone_transactions_log');
-		$query = "SELECT COUNT(*) AS logs_count FROM ".$table;
+		$query = "SELECT COUNT(*) AS logs_count
+		            FROM ".$table." l
+		       LEFT JOIN ".TABLE_ORDERS." o
+		                 ON o.customers_id = l.customers_id";
+		
 		if ($date_start !== null && $date_end !== null) {
-			$query .= " WHERE date_created BETWEEN '".date('Y-m-d 00:00:00', ($date_start))."' AND '".date('Y-m-d 23:59:59', ($date_end))."'";
+			$query .= " WHERE l.date_created BETWEEN '".date('Y-m-d 00:00:00', ($date_start))."' AND '".date('Y-m-d 23:59:59', ($date_end))."'";
 		}
+		
+		if ($search != null) {
+		  if (stripos($query, 'WHERE') === false) {
+		    $query .= " WHERE ";
+		  } else {
+		    $query .= " AND ";
+		  }
+		  $query .= " (l.event_id LIKE '%".xtc_db_input($search)."%' OR o.customers_name LIKE '%".xtc_db_input($search)."%')";
+		}
+		
 		$query .= " GROUP BY event_id";
+		
 		$result = xtc_db_query($query);
 		
 		$count = 0;
@@ -1351,21 +1372,33 @@ class PayoneModified {
 		return $count;
 	}
 
-	public function getLogs($mode, $limit, $offset, $date_start = null, $date_end = null) {
+	public function getLogs($mode, $limit, $offset, $date_start = null, $date_end = null, $search = null) {
 		$table = (($mode == 'api') ? 'payone_api_log' : 'payone_transactions_log');
 		$query = "SELECT l.event_id, 
 		                 l.date_created, 
 		                 l.customers_id, 
-		                 c.customers_firstname, 
-		                 c.customers_lastname 
+		                 o.customers_name
 		            FROM ".$table." l
-			LEFT OUTER JOIN customers c ON c.customers_id = l.customers_id ";
+			     LEFT JOIN ".TABLE_ORDERS." o 
+			               ON o.customers_id = l.customers_id ";
+
 		if ($date_start !== null && $date_end !== null) {
-			$query .= "WHERE date_created BETWEEN '".date('Y-m-d 00:00:00', ($date_start))."' AND '".date('Y-m-d 23:59:59', ($date_end))."' ";
+			$query .= "WHERE l.date_created BETWEEN '".date('Y-m-d 00:00:00', ($date_start))."' AND '".date('Y-m-d 23:59:59', ($date_end))."' ";
 		}
+
+		if ($search != null) {
+		  if (stripos($query, 'WHERE') === false) {
+		    $query .= " WHERE ";
+		  } else {
+		    $query .= " AND ";
+		  }
+		  $query .= " (l.event_id LIKE '%".xtc_db_input($search)."%' OR o.customers_name LIKE '%".xtc_db_input($search)."%')";
+		}
+
 		$query .= "GROUP BY l.event_id 
 		           ORDER BY l.date_created ASC 
 		           LIMIT ".$limit." OFFSET ".$offset;
+		
 		$result = xtc_db_query($query);
 		$logs = array();
 		while($row = xtc_db_fetch_array($result)) {
