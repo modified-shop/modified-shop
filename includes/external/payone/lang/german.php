@@ -343,6 +343,7 @@ define('CUSTOMER', 'Kunde (sofern erfasst)');
 define('START_DATE', 'Anfang');
 define('END_DATE', 'Ende');
 define('PAGE', 'Seite');
+define('SEARCH', 'Suche');
 define('SHOW', 'anzeigen');
 define('EVENT_LOG_COUNT', 'Unterereignis-Nr.');
 define('NO_LOGS', 'F&uuml;r den gew&auml;hlten Zeitraum liegen keine Eintr&auml;ge dieser Art vor.');

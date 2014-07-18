@@ -321,7 +321,13 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                   
                   if ($order->info['payment_method'] == 'payone_installment') {
                     payone_get_order_details();
-                  } 
+                  } else { 
+                    echo '<div class="refund_row">';
+                    echo '<label for="amount">'.CAPTURE_AMOUNT.'</label>';
+                    echo xtc_draw_input_field('refund[amount]', $capture_data['price'], 'id="amount" style="width: 135px"');
+                    echo ' ' . $capture_data['currency'];              
+                    echo '</div>';
+                  }
                   ?>
                   
                   <br />

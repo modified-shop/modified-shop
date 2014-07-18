@@ -91,17 +91,19 @@ $messages = $_SESSION[$messages_ns];
 $_SESSION[$messages_ns] = array();
 
 $entries_per_page = 50;
-$total_logs = $payone->getLogsCount($mode, $startDate, $endDate);
+$search = xtc_db_prepare_input($_GET['search']);
+$total_logs = $payone->getLogsCount($mode, $startDate, $endDate, $search);
 $total_pages = max(1, ceil($total_logs / $entries_per_page));
 $limit = $entries_per_page;
 $offset = ($page - 1) * $entries_per_page;
-$logs = $payone->getLogs($mode, $limit, $offset, $startDate, $endDate);
+$logs = $payone->getLogs($mode, $limit, $offset, $startDate, $endDate, $search);
 
 $event_id = '';
 if(isset($_GET['event_id'])) {
   $event_id = (int)$_GET['event_id'];
 	$event_data = $payone->getLogData($mode, $event_id);
 }
+
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
@@ -207,7 +209,7 @@ require (DIR_WS_INCLUDES.'head.php');
 								<p class="message"><?php echo $msg; ?></p>
 								<?php } ?>
 
-                <?php echo xtc_draw_form('sales_report', basename($PHP_SELF), '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                <?php echo xtc_draw_form('log', basename($PHP_SELF), '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
                   <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
                     <tr>
                       <td class="menuBoxHeading">
@@ -309,6 +311,12 @@ require (DIR_WS_INCLUDES.'head.php');
                         </select>
                       </td>
                       <td class="menuBoxHeading">
+                      <?php
+                        echo SEARCH;
+                        echo xtc_draw_input_field('search', $search, 'style="width: 135px"'); 
+                      ?>
+                      </td>
+                      <td class="menuBoxHeading">
                         <?php echo PAGE; ?>
                         <select name="page" id="pageselect">
                           <?php for($pageno = 1; $pageno <= $total_pages; $pageno++) { ?>
@@ -337,7 +345,7 @@ require (DIR_WS_INCLUDES.'head.php');
 											<tr <?php echo (($log['event_id'] == $event_id) ? 'class="dataTableRowSelected"' : 'class="dataTableRow"'); ?> onmouseover="this.style.cursor='pointer'" onclick="document.location.href='<?php echo xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('event_id')).'event_id='.$log['event_id']); ?>'">
 												<td class="dataTableContent"><?php echo $log['event_id']; ?></td>
 												<td class="dataTableContent"><?php echo $log['date_created']; ?></td>
-												<td class="dataTableContent"><?php echo ((!empty($log['customers_lastname'])) ? $log['customers_lastname'].", ".$log['customers_firstname'] : ''); ?></td>
+												<td class="dataTableContent"><?php echo $log['customers_name']; ?>&nbsp;</td>
 											</tr>
                       <?php if (isset($_GET['event_id']) && !empty($event_data) && $log['event_id'] == $event_id) { ?>
                       <tr>

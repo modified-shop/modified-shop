@@ -472,6 +472,8 @@ class PayonePayment {
   function _set_customers_standard_params() {
     global $order;
 
+    $this->payone->log("orders:\n".print_r($order, true));
+
     $this->personal_data->setCustomerid($_SESSION['customer_id']);
     $this->personal_data->setFirstname($order->billing['firstname']);
     $this->personal_data->setLastname($order->billing['lastname']);
@@ -500,8 +502,8 @@ class PayonePayment {
     if (method_exists($this->personal_data, setTelephonenumber)) {
       $this->personal_data->setTelephonenumber($order->customer['telephone']);
     }
-    if (method_exists($this->personal_data, setTelephonenumber)) {
-      $this->personal_data->setTelephonenumber($order->customer['gender']);
+    if (method_exists($this->personal_data, setGender)) {
+      $this->personal_data->setGender($order->customer['gender']);
     }
     if (method_exists($this->personal_data, setBirthday)) {
       $this->personal_data->setBirthday($this->_get_customers_dob($_SESSION['customer_id']));
