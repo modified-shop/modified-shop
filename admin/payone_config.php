@@ -800,9 +800,9 @@ require (DIR_WS_INCLUDES.'head.php');
 										</dt>
 										<dd>
 											<input type="radio" name="config[credit_risk][timeofcheck]" value="before" id="credit_risk_timeofcheck_before" <?php echo $config['credit_risk']['timeofcheck'] == 'before' ? 'checked="checked"' : '' ?>>
-											<label for="credit_risk_timeofcheck_before"><?php echo CR_TIMEOFCHECK; ?>_before</label><br>
+											<label for="credit_risk_timeofcheck_before"><?php echo CR_TIMEOFCHECK_BEFORE; ?></label><br>
 											<input type="radio" name="config[credit_risk][timeofcheck]" value="after" id="credit_risk_timeofcheck_after" <?php echo $config['credit_risk']['timeofcheck'] == 'after' ? 'checked="checked"' : '' ?>>
-											<label for="credit_risk_timeofcheck_after"><?php echo CR_TIMEOFCHECK; ?>_after</label><br>
+											<label for="credit_risk_timeofcheck_after"><?php echo CR_TIMEOFCHECK_AFTER; ?></label><br>
 										</dd>
                     </div>
                     <div class="dlrow cf">

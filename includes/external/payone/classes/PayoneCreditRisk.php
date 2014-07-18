@@ -55,53 +55,50 @@ class PayoneCreditRisk {
 	function credit_risk_check() {
 		$config = $this->_payone->getConfig();
 
-		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['noconfirm'])) {
+      if ($config['credit_risk']['timeofcheck'] == 'before') {
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'p1crskip=1', 'SSL'));
+      } else {
+        $_SESSION['payone_error'] = CREDIT_RISK_FAILED;
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));				
+      }
+    }
 
-			if (isset($_POST['confirm'])) {
-				// A/B testing: only perform scoring every n-th time
-				$do_score = true;
-				if ($config['credit_risk']['abtest']['active'] == 'true') {
-					$ab_value = max(1, (int)$config['credit_risk']['abtest']['value']);
-					$score_count = (int)MODULE_PAYMENT_PAYONE_AB_TESTING;
-					$do_score = ($score_count % $ab_value) == 0;
-          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . ($score_count + 1) . "', last_modified = NOW() where configuration_key='MODULE_PAYMENT_PAYONE_AB_TESTING'");
-				}
+    // A/B testing: only perform scoring every n-th time
+    $do_score = true;
+    if ($config['credit_risk']['abtest']['active'] == 'true') {
+      $ab_value = max(1, (int)$config['credit_risk']['abtest']['value']);
+      $score_count = (int)MODULE_PAYMENT_PAYONE_AB_TESTING;
+      $do_score = ($score_count % $ab_value) == 0;
+      xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . ($score_count + 1) . "', last_modified = NOW() where configuration_key='MODULE_PAYMENT_PAYONE_AB_TESTING'");
+    }
 
-				if ($do_score) {
-					$score = $this->_payone->scoreCustomer($_SESSION['billto']);
-				} else {
-					$score = false;
-				}
-								
-				if ($score instanceof Payone_Api_Response_Consumerscore_Valid) {
-					switch((string)$score->getScore()) {
-						case 'G':
-							$_SESSION['payone_cr_result'] = 'green';
-							break;
-						case 'Y':
-							$_SESSION['payone_cr_result'] = 'yellow';
-							break;
-						case 'R':
-							$_SESSION['payone_cr_result'] = 'red';
-							break;
-						default:
-							$_SESSION['payone_cr_result'] = $config['credit_risk']['newclientdefault'];
-					}
-					$_SESSION['payone_cr_hash']  = $this->_payone->getAddressHash($_SESSION['billto']);
-				} else {
-					// could not get a score value
-					$_SESSION['payone_cr_result'] = $config['credit_risk']['newclientdefault'];
-					$_SESSION['payone_cr_hash']  = $this->_payone->getAddressHash($_SESSION['billto']);
-				}
-			} elseif (isset($_POST['noconfirm'])) {
-				if ($config['credit_risk']['timeofcheck'] == 'before') {
-					xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'p1crskip=1', 'SSL'));
-				} else {
-          $_SESSION['payone_error'] = CREDIT_RISK_FAILED;
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));				
-				}
-			}
-		}
-  }	
+    if ($do_score) {
+      $score = $this->_payone->scoreCustomer($_SESSION['billto']);
+    } else {
+      $score = false;
+    }
+            
+    if ($score instanceof Payone_Api_Response_Consumerscore_Valid) {
+      switch((string)$score->getScore()) {
+        case 'G':
+          $_SESSION['payone_cr_result'] = 'green';
+          break;
+        case 'Y':
+          $_SESSION['payone_cr_result'] = 'yellow';
+          break;
+        case 'R':
+          $_SESSION['payone_cr_result'] = 'red';
+          break;
+        default:
+          $_SESSION['payone_cr_result'] = $config['credit_risk']['newclientdefault'];
+      }
+      $_SESSION['payone_cr_hash']  = $this->_payone->getAddressHash($_SESSION['billto']);
+    } else {
+      // could not get a score value
+      $_SESSION['payone_cr_result'] = $config['credit_risk']['newclientdefault'];
+      $_SESSION['payone_cr_hash']  = $this->_payone->getAddressHash($_SESSION['billto']);
+    }    
+  }
 }
 ?>
