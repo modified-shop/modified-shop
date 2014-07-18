@@ -150,7 +150,7 @@ class PayonePayment {
     $payone_cr = new PayoneCreditRisk($this->code);
   
     // do check
-    if (isset($_POST['p1crcheck']) || $this->config['credit_risk']['confirmation']['active'] == 'false') {
+    if (isset($_POST['p1crcheck']) || $this->config['credit_risk']['confirmation']['active'] == 'false') {    
       $payone_cr->credit_risk_check();
       
       if ($this->config['credit_risk']['timeofcheck'] == 'after') {
@@ -255,7 +255,7 @@ class PayonePayment {
 			unset($_SESSION['payone_cr_result']);
 			unset($_SESSION['payone_cr_hash']);
 		}
-				
+		
 		$_SESSION['payone_cr_result'] = ((isset($_SESSION['payone_cr_result'])) ? $_SESSION['payone_cr_result'] : $this->config['credit_risk']['newclientdefault']);
 		if ($this->config['credit_risk']['active'] == 'true' && $this->config['credit_risk']['timeofcheck'] == 'before') {
 			$_SESSION['payone_cr_hash'] = ((isset($_SESSION['payone_cr_hash'])) ? $_SESSION['payone_cr_hash'] : '');
@@ -300,6 +300,10 @@ class PayonePayment {
     $credit_risk_checked = ($_SESSION['payone_cr_hash'] == $this->payone->getAddressHash($_SESSION['billto']));
 		if (!$credit_risk_checked && in_array($active_genre, $this->config['credit_risk']['checkforgenre']) && $this->config['credit_risk']['active'] == 'true' && $this->config['credit_risk']['timeofcheck'] == 'after') {
       $this->_credit_risk_check();
+      if ($this->config[$active_genre]['allow_'.$_SESSION['payone_cr_result']] != 'true') {
+        $_SESSION['payone_error'] = CREDIT_RISK_FAILED;
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code, 'SSL'));				
+      }
 		}
 		return false;
 	}
