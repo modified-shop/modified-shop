@@ -11,12 +11,8 @@
 
 <h1>{$smarty.const.TEXT_ADDRESS_CHECK_HEADING}</h1>
 
-{if $content_data.billto_errorcode}
-<p>{$content_data.billto_errorcode} {$content_data.billto_errormessage}</p>
-{/if}
-
 {if $content_data.note_address_changed}
-<p class="p1_note">{$content_data.note_address_changed}</p>
+  <p class="p1_note">{$content_data.note_address_changed}</p>
 {/if}
 
 <form action="{$content_data.form_action}" method="POST">
@@ -26,38 +22,38 @@
 	{if $content_data.billto_customermessage}
 		<div class="customermessage">{$content_data.billto_customermessage}</div>
 	{/if}
-<div class="highlightbox">
-	<table class="p1address">
-		<tr>
-			<td class="label">{#text_lastname#|replace:":":""}, {#text_firstname#}</td>
-			<td>{$content_data.billto_address.entry_lastname}, {$content_data.billto_address.entry_firstname}</td>
-		</tr>
-		<tr>
-			<td class="label">{#text_street#}</td>
-			<td>{$content_data.billto_address.entry_street_address}</td>
-		</tr>
-		<tr class="correction">
-			<td class="label">{#text_street#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
-			<td><input type="text" name="billto[street_address]" value="{$content_data.billto_corrected_street}"></td>
-		</tr>
-		<tr>
-			<td class="label">{#text_code#}</td>
-			<td>{$content_data.billto_address.entry_postcode}</td>
-		</tr>
-		<tr class="correction">
-			<td class="label">{#text_code#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
-			<td><input type="text" name="billto[postcode]" value="{$content_data.billto_corrected_zip}"></td>
-		</tr>
-		<tr>
-			<td class="label">{#text_city#}</td>
-			<td>{$content_data.billto_address.entry_city}</td>
-		</tr>
-		<tr class="correction">
-			<td class="label">{#text_city#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
-			<td><input type="text" name="billto[city]" value="{$content_data.billto_corrected_city}"></td>
-		</tr>
-	</table>
-</div>
+  <div class="highlightbox">
+    <table class="p1address">
+      <tr>
+        <td class="label">{#text_lastname#|replace:":":""}, {#text_firstname#}</td>
+        <td>{$content_data.billto_address.entry_lastname}, {$content_data.billto_address.entry_firstname}</td>
+      </tr>
+      <tr>
+        <td class="label">{#text_street#}</td>
+        <td>{$content_data.billto_address.entry_street_address}</td>
+      </tr>
+      <tr class="correction">
+        <td class="label">{#text_street#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
+        <td><input type="text" name="billto[street_address]" value="{$content_data.billto_corrected_street}"></td>
+      </tr>
+      <tr>
+        <td class="label">{#text_code#}</td>
+        <td>{$content_data.billto_address.entry_postcode}</td>
+      </tr>
+      <tr class="correction">
+        <td class="label">{#text_code#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
+        <td><input type="text" name="billto[postcode]" value="{$content_data.billto_corrected_zip}"></td>
+      </tr>
+      <tr>
+        <td class="label">{#text_city#}</td>
+        <td>{$content_data.billto_address.entry_city}</td>
+      </tr>
+      <tr class="correction">
+        <td class="label">{#text_city#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
+        <td><input type="text" name="billto[city]" value="{$content_data.billto_corrected_city}"></td>
+      </tr>
+    </table>
+  </div>
 	<br />
 	{/if}
 
@@ -65,41 +61,41 @@
 	<h4 class="payone">{$smarty.const.AC_DELIVERY_ADDRESS}</h4>
 
 	{if $content_data.sendto_customermessage}
-    <div class="customermessage">{$content_data.sendto_customermessage}</div>
+    <div class="errormessage">{$content_data.sendto_customermessage}</div>
   {/if}
 
-<div class="highlightbox">
-	<table class="p1address">
-		<tr>
-			<td class="label">{#text_lastname#|replace:":":""}, {#text_firstname#}</td>
-			<td>{$content_data.sendto_address.entry_lastname}, {$content_data.sendto_address.entry_firstname}</td>
-		</tr>
-		<tr>
-			<td class="label">{#text_street#}</td>
-			<td>{$content_data.sendto_address.entry_street_address}</td>
-		</tr>
-		<tr class="correction">
-			<td class="label">{#text_street#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
-			<td><input type="text" name="sendto[street_address]" value="{$content_data.sendto_corrected_street}"></td>
-		</tr>
-		<tr>
-			<td class="label">{#text_code#}</td>
-			<td>{$content_data.sendto_address.entry_postcode}</td>
-		</tr>
-		<tr class="correction">
-			<td class="label">{#text_code#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
-			<td><input type="text" name="sendto[postcode]" value="{$content_data.sendto_corrected_zip}"></td>
-		</tr>
-		<tr>
-			<td class="label">{#text_city#}</td>
-			<td>{$content_data.sendto_address.entry_city}</td>
-		</tr>
-		<tr class="correction">
-			<td class="label">{#text_city#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
-			<td><input type="text" name="sendto[city]" value="{$content_data.sendto_corrected_city}"></td>
-		</tr>
-	</table>
-</div>	
+  <div class="highlightbox">
+    <table class="p1address">
+      <tr>
+        <td class="label">{#text_lastname#|replace:":":""}, {#text_firstname#}</td>
+        <td>{$content_data.sendto_address.entry_lastname}, {$content_data.sendto_address.entry_firstname}</td>
+      </tr>
+      <tr>
+        <td class="label">{#text_street#}</td>
+        <td>{$content_data.sendto_address.entry_street_address}</td>
+      </tr>
+      <tr class="correction">
+        <td class="label">{#text_street#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
+        <td><input type="text" name="sendto[street_address]" value="{$content_data.sendto_corrected_street}"></td>
+      </tr>
+      <tr>
+        <td class="label">{#text_code#}</td>
+        <td>{$content_data.sendto_address.entry_postcode}</td>
+      </tr>
+      <tr class="correction">
+        <td class="label">{#text_code#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
+        <td><input type="text" name="sendto[postcode]" value="{$content_data.sendto_corrected_zip}"></td>
+      </tr>
+      <tr>
+        <td class="label">{#text_city#}</td>
+        <td>{$content_data.sendto_address.entry_city}</td>
+      </tr>
+      <tr class="correction">
+        <td class="label">{#text_city#|replace:":":""}, {$smarty.const.TEXT_ADDRESS_CHECK_CHANGED}:</td>
+        <td><input type="text" name="sendto[city]" value="{$content_data.sendto_corrected_city}"></td>
+      </tr>
+    </table>
+  </div>	
   <br />
 	{/if}
 
