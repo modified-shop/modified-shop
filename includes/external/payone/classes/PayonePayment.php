@@ -130,7 +130,7 @@ class PayonePayment {
 	}
 
 	function _addressesAreValidated() {
-		if ($this->config['address_check']['active'] == true) {
+		if ($this->config['address_check']['active'] == 'true') {
 		  $addresses_are_validated = ($this->payone->getAddressHash($_SESSION['billto']) == $_SESSION['payone_ac_billing_hash'] 
 		                              && $this->payone->getAddressHash($_SESSION['sendto']) == $_SESSION['payone_ac_delivery_hash']);
 		}

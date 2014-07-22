@@ -1152,17 +1152,14 @@ class PayoneModified {
 			$this->log("addressCheck request:\n".print_r($request, true));
 			$response = $service->check($request);
 			$this->log("addressCheck response:\n".print_r($response, true));
-		}
-		else {
+		} else {
 			$this->log("addressCheck cache hit");
 		}
 		if ($response instanceof Payone_Api_Response_AddressCheck_Valid || $response instanceof Payone_Api_Response_AddressCheck_Invalid) {
 			$this->_storeAddressCheckResponse($response, $ab_id, $address_hash);
-			return $response;
 		}
-		else {
-			return false;
-		}
+		
+    return $response;
 	}
 
 	protected function _retrieveCachedAddressCheckResponse($address_hash) {
