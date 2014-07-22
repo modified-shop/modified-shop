@@ -81,14 +81,10 @@ class PayonePayment {
 	function update_status() {
 		global $order;
     
-    $payment_forbidden_array = array('payone_cod');
-    $shippment_forbidden_array = array('selfpickup_selfpickup');
-    
-    if (in_array($this->code, $payment_forbidden_array)) {
-      if (in_array($_SESSION['shipping']['id'], $shippment_forbidden_array)) {
-			  $this->enabled = false;
-			}
-		}
+    $forbidden_array = array('selfpickup_selfpickup' => 'payone_cod');
+    if (isset($forbidden_array[$_SESSION['shipping']['id']]) &&  $forbidden_array[$_SESSION['shipping']['id']] == $this->code) {
+      $this->enabled = false;
+    }
 		
 		if (($this->enabled == true) && ((int) @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_ZONE') > 0)) {
 			$check_flag = false;
