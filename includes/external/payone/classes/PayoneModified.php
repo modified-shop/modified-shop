@@ -698,6 +698,40 @@ class PayoneModified {
 		return $data;
 	}
 
+  protected function sendTransactionStatus($url, $params, $timeout) {
+    if ($timeout == '' || $timeout < 1) {
+      $timeout = 30;
+    }
+    $urlArray = parse_url($url);
+
+    $urlHost = $urlArray['host'];
+    $urlPath = ((isset($urlArray['path'])) ? $urlArray['path'] : '');
+    $urlScheme = ((isset($urlArray['scheme'])) ? $urlArray['scheme'] : 'http');
+    $urlQuery = ((isset($urlArray['query'])) ? '?' . $urlArray['query'] : '');
+
+    $curl = curl_init($urlScheme . "://" . $urlHost . $urlPath . $urlQuery);
+
+    curl_setopt($curl, CURLOPT_POST, 1);
+    curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($params, null, '&'));
+    curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, FALSE);
+    curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, 2);
+    curl_setopt($curl, CURLOPT_RETURNTRANSFER, TRUE);
+    curl_setopt($curl, CURLOPT_TIMEOUT, (int)$timeout);
+
+    $result = curl_exec($curl);
+
+    if (curl_getinfo($curl, CURLINFO_HTTP_CODE) != 200) {
+      $this->log("sendTransactionStatus invalid:\n".print_r($result, true));
+    }
+    elseif (curl_error($curl)) {
+      $this->log("sendTransactionStatus error ".curl_errno($curl) . ": " . curl_error($curl));
+    }
+    else {
+      $this->log("sendTransactionStatus success:\n".print_r($result, true));
+    }
+    curl_close($curl);
+  }
+
 	public function saveTransactionStatus($txstatus) {
 		if (empty($txstatus['reference'])) {
 			$this->log("received TxStatus w/o reference!");
@@ -747,6 +781,11 @@ class PayoneModified {
                                 'comments_sent' => '0'
                                 );
         xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
+
+        // send Transaction Status
+        if ($config['orders_status_redirect']['url'][$txstatus['txaction']] != '') {
+          $this->sendTransactionStatus($config['orders_status_redirect']['url'][$txstatus['txaction']], $txstatus, $config['orders_status_redirect']['timeout'][$txstatus['txaction']]);
+        }
 			}
 		}
 		else {

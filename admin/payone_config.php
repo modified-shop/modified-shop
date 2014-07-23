@@ -44,16 +44,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 				$config['credit_risk']['checkforgenre'] = $new_config['credit_risk']['checkforgenre'];
 			}
 
-			if (false) {
-			  echo '<pre>';
-				echo "POST['config']\n"; print_r($new_config[credit_risk]);
-				echo "\n\nold config:\n"; print_r($old_config[credit_risk]);
-				echo "\n\nmerged config:\n"; print_r($config[credit_risk]);
-				//$cs = new ConfigurationStorage();
-				//$flat = $cs->_flatten_array($config);
-				//echo "\n\nflat config:\n"; print_r($flat);
-				die();
-			}
+      foreach ($config['orders_status_redirect']['timeout'] as $key => $value) {
+        if ($value != '') {
+          $config['orders_status_redirect']['timeout'][$key] = (int) $value;
+        }
+      }
 
 			if (!empty($_POST['remove_pg'])) {
 				foreach($_POST['remove_pg'] as $topkey) {
@@ -100,312 +95,307 @@ function formpartGlobalConfig($identifier, $config, $parent_identifier = '') {
 	if (!empty($parent_identifier)) {
 		$id_prefix = $parent_identifier.'_'.$id_prefix;
 		$name_prefix = '['.$parent_identifier.']';
-
 	}
 	?> 
-
 	<dl class="adminform">
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_merchant_id"><?php echo MERCHANT_ID; ?></label></dt>
-		<dd>
-			<input type="text" id="<?php echo $id_prefix ?>_merchant_id" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][merchant_id]" value="<?php echo $config['merchant_id'] ?>">
-		</dd>
-</div>
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_portal_id"><?php echo PORTAL_ID; ?></label></dt>
-		<dd>
-			<input type="text" id="<?php echo $id_prefix ?>_portal_id" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][portal_id]" value="<?php echo $config['portal_id'] ?>">
-		</dd>
-</div>
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_subaccount_id"><?php echo SUBACCOUNT_ID; ?></label></dt>
-		<dd>
-			<input type="text" id="<?php echo $id_prefix ?>_subaccount_id" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][subaccount_id]" value="<?php echo $config['subaccount_id'] ?>">
-		</dd>
-</div>
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_key"><?php echo KEY; ?></label></dt>
-		<dd>
-			<input type="text" id="<?php echo $id_prefix ?>_key" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][key]" value="<?php echo $config['key'] ?>">
-		</dd>
-</div>
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_operating_mode"><?php echo OPERATING_MODE; ?></label></dt>
-		<dd>
-			<input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][operating_mode]" value="test" id="<?php echo $id_prefix ?>_opmode_test" <?php echo $config['operating_mode'] == 'test' ? 'checked="checked"' : '' ?>>
-			<label for="<?php echo $id_prefix ?>_opmode_test"><?php echo OPMODE_TEST; ?></label>
-			<input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][operating_mode]" value="live" id="<?php echo $id_prefix ?>_opmode_live" <?php echo $config['operating_mode'] == 'live' ? 'checked="checked"' : '' ?>>
-			<label for="<?php echo $id_prefix ?>_opmode_live"><?php echo OPMODE_LIVE; ?></label>
-		</dd>
-</div>
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_authorization_method"><?php echo AUTHORIZATION_METHOD; ?></label></dt>
-		<dd>
-			<input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][authorization_method]" value="auth" id="<?php echo $id_prefix ?>_authmethod_auth" <?php echo $config['authorization_method'] == 'auth' ? 'checked="checked"' : '' ?>>
-			<label for="<?php echo $id_prefix ?>_authmethod_auth"><?php echo AUTHMETHOD_AUTH; ?></label>
-			<input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][authorization_method]" value="preauth" id="<?php echo $id_prefix ?>_authmethod_preauth" <?php echo $config['authorization_method'] == 'preauth' ? 'checked="checked"' : '' ?>>
-			<label for="<?php echo $id_prefix ?>_authmethod_preauth"><?php echo AUTHMETHOD_PREAUTH; ?></label>
-		</dd>
-</div>
-<div class="dlrow cf">  
-		<dt><label for="<?php echo $id_prefix ?>_send_cart"><?php echo SEND_CART; ?></label></dt>
-		<dd>
-			<input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][send_cart]" value="true" id="<?php echo $id_prefix ?>_sendcart_true" <?php echo $config['send_cart'] == 'true' ? 'checked="checked"' : '' ?>>
-			<label for="<?php echo $id_prefix ?>_sendcart_true"><?php echo SENDCART_TRUE; ?></label>
-			<input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][send_cart]" value="false" id="<?php echo $id_prefix ?>_sendcart_false" <?php echo $config['send_cart'] == 'false' ? 'checked="checked"' : '' ?>>
-			<label for="<?php echo $id_prefix ?>_sendcart_false"><?php echo SENDCART_FALSE; ?></label>
-		</dd>
-</div>
-	</dl>
-	<?php
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_merchant_id"><?php echo MERCHANT_ID; ?></label></dt>
+      <dd>
+        <input type="text" id="<?php echo $id_prefix ?>_merchant_id" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][merchant_id]" value="<?php echo $config['merchant_id'] ?>">
+      </dd>
+    </div>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_portal_id"><?php echo PORTAL_ID; ?></label></dt>
+      <dd>
+        <input type="text" id="<?php echo $id_prefix ?>_portal_id" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][portal_id]" value="<?php echo $config['portal_id'] ?>">
+      </dd>
+    </div>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_subaccount_id"><?php echo SUBACCOUNT_ID; ?></label></dt>
+      <dd>
+        <input type="text" id="<?php echo $id_prefix ?>_subaccount_id" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][subaccount_id]" value="<?php echo $config['subaccount_id'] ?>">
+      </dd>
+    </div>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_key"><?php echo KEY; ?></label></dt>
+      <dd>
+        <input type="text" id="<?php echo $id_prefix ?>_key" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][key]" value="<?php echo $config['key'] ?>">
+      </dd>
+    </div>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_operating_mode"><?php echo OPERATING_MODE; ?></label></dt>
+      <dd>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][operating_mode]" value="test" id="<?php echo $id_prefix ?>_opmode_test" <?php echo $config['operating_mode'] == 'test' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_opmode_test"><?php echo OPMODE_TEST; ?></label>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][operating_mode]" value="live" id="<?php echo $id_prefix ?>_opmode_live" <?php echo $config['operating_mode'] == 'live' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_opmode_live"><?php echo OPMODE_LIVE; ?></label>
+      </dd>
+    </div>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_authorization_method"><?php echo AUTHORIZATION_METHOD; ?></label></dt>
+      <dd>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][authorization_method]" value="auth" id="<?php echo $id_prefix ?>_authmethod_auth" <?php echo $config['authorization_method'] == 'auth' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_authmethod_auth"><?php echo AUTHMETHOD_AUTH; ?></label>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][authorization_method]" value="preauth" id="<?php echo $id_prefix ?>_authmethod_preauth" <?php echo $config['authorization_method'] == 'preauth' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_authmethod_preauth"><?php echo AUTHMETHOD_PREAUTH; ?></label>
+      </dd>
+    </div>
+    <div class="dlrow cf">  
+      <dt><label for="<?php echo $id_prefix ?>_send_cart"><?php echo SEND_CART; ?></label></dt>
+      <dd>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][send_cart]" value="true" id="<?php echo $id_prefix ?>_sendcart_true" <?php echo $config['send_cart'] == 'true' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_sendcart_true"><?php echo SENDCART_TRUE; ?></label>
+        <input type="radio" name="config<?php echo $name_prefix ?>[<?php echo $identifier ?>][send_cart]" value="false" id="<?php echo $id_prefix ?>_sendcart_false" <?php echo $config['send_cart'] == 'false' ? 'checked="checked"' : '' ?>>
+        <label for="<?php echo $id_prefix ?>_sendcart_false"><?php echo SENDCART_FALSE; ?></label>
+      </dd>
+    </div>
+  </dl>
+<?php
 }
 
 function formpartPaymentGenreConfig($topkey, $config) {
   global $payone;
 	?>
 	<h4><?php echo PAYMENT_GENRE . ' - ' . $config['name'] ?></h4>
-	<fieldset class="paymentgenre subblock">
+  <fieldset class="paymentgenre subblock">
 		<legend>##payment_genre <?php echo $config['name'] ?></legend>
 		<dl class="adminform">
-<div class="dlrow cf"> 
-			<dt><label for="pg_active_<?php echo $topkey ?>"><?php echo PG_ACTIVE; ?></label></dt>
-			<dd>
-				<input id="pg_active_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][active]" type="radio" value="true" <?php echo ($config['active'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="pg_active_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
-				<input id="pg_active_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][active]" type="radio" value="false" <?php echo ($config['active'] == 'false' ? 'checked="checked"' : '') ?>>
-				<label for="pg_active_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><?php echo REMOVE_PAYMENT_GENRE; ?></dt>
-			<dd>
-				<input type="checkbox" name="remove_pg[]" value="<?php echo $topkey ?>" id="remove_<?php echo $topkey ?>">
-				<label for="remove_<?php echo $topkey ?>"><strong><?php echo REMOVE_THIS_GENRE; ?></strong></label>
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><label for="pg_order_<?php echo $topkey ?>"><?php echo PG_ORDER; ?></label></dt>
-			<dd>
-				<input id="pg_order_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][order]" type="text" value="<?php echo $config['order'] ?>">
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><label for="pg_name_<?php echo $topkey ?>"><?php echo PG_NAME; ?></label></dt>
-			<dd>
-				<input id="pg_name_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][name]" type="text" value="<?php echo $config['name'] ?>">
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><label for="pg_min_cart_value_<?php echo $topkey ?>"><?php echo PG_MIN_CART_VALUE; ?></label></dt>
-			<dd>
-				<input id="pg_min_cart_value_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][min_cart_value]" type="text" value="<?php echo $config['min_cart_value'] ?>">
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><label for="pg_max_cart_value_<?php echo $topkey ?>"><?php echo PG_MAX_CART_VALUE; ?></label></dt>
-			<dd>
-				<input id="pg_max_cart_value_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][max_cart_value]" type="text" value="<?php echo $config['max_cart_value'] ?>">
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><label for="pg_operating_mode_<?php echo $topkey ?>"><?php echo PG_OPERATING_MODE; ?></label></dt>
-			<dd>
-				<input id="pg_operating_mode_<?php echo $topkey ?>_test" name="config[<?php echo $topkey ?>][operating_mode]" type="radio" value="test" <?php echo ($config['operating_mode'] == 'test' ? 'checked="checked"' : '') ?>>
-				<label for="pg_operating_mode_<?php echo $topkey ?>_test"><?php echo OPMODE_TEST; ?></label>
-				<input id="pg_operating_mode_<?php echo $topkey ?>_live" name="config[<?php echo $topkey ?>][operating_mode]" type="radio" value="live" <?php echo ($config['operating_mode'] == 'live' ? 'checked="checked"' : '') ?>>
-				<label for="pg_operating_mode_<?php echo $topkey ?>_live"><?php echo OPMODE_LIVE; ?></label>
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><label for="pg_global_override_<?php echo $topkey ?>"><?php echo PG_GLOBAL_OVERRIDE; ?></label></dt>
-			<dd>
-				<input class="go_trigger" id="pg_global_override_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][global_override]" type="radio" value="true" <?php echo ($config['global_override'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="pg_global_override_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
-				<input class="go_trigger" id="pg_global_override_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][global_override]" type="radio" value="false" <?php echo ($config['global_override'] == 'false' ? 'checked="checked"' : '') ?>>
-				<label for="pg_global_override_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
-			</dd>
-</div>
-<div class="dlrow cf override"> 
-			<dt class="global_override">
-				<?php echo OVERRIDE_DATA; ?>
-			</dt>
-			<dd class="global_override">
-			  <?php
-			    //$config = $payone->mergeConfigs($config['global'], $payone->getConfig('global')); ?>
-				<?php echo formpartGlobalConfig('global', $config['global'], $topkey); ?>
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><?php echo PG_COUNTRIES; ?></dt>
-			<dd class="countries_list">
-				<button class="select_all"><?php echo SELECT_ALL_COUNTRIES; ?></button>
-				<button class="select_none"><?php echo SELECT_NO_COUNTRY; ?></button><br>
-
-<ul class="countrylist">
-				<?php $config['countries'] = is_array($config['countries']) ? $config['countries'] : array(); ?>
-				<?php foreach(getActiveCountries() as $country) { ?>
-					<li>
-          <input id="pg_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>" name="config[<?php echo $topkey ?>][countries][]" type="checkbox"
-						value="<?php echo $country['countries_iso_code_2']?>" <?php echo (in_array($country['countries_iso_code_2'], $config['countries']) ? 'checked="checked"' : ''); ?>>
-					<label for="pg_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>"><?php echo $country['countries_name'] ?></label>
-          </li>
-				<?php } ?>
-</ul>
-
-			</dd>
-</div>
-<div class="dlrow cf"> 
-			<dt><?php echo PG_SCORING_ALLOWED; ?></dt>
-			<dd>
-				<input id="pg_scoring_allowed_red_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][allow_red]" type="checkbox"
-					value="true" <?php echo ($config['allow_red'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="pg_scoring_allowed_red_<?php echo $topkey ?>"><?php echo PG_RED; ?></label>
-				<input id="pg_scoring_allowed_yellow_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][allow_yellow]" type="checkbox"
-					value="true" <?php echo ($config['allow_yellow'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="pg_scoring_allowed_yellow_<?php echo $topkey ?>"><?php echo PG_YELLOW; ?></label>
-				<input id="pg_scoring_allowed_green_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][allow_green]" type="checkbox"
-					value="true" <?php echo ($config['allow_green'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="pg_scoring_allowed_green_<?php echo $topkey ?>"><?php echo PG_GREEN; ?></label>
-			</dd>
-</div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_active_<?php echo $topkey ?>"><?php echo PG_ACTIVE; ?></label></dt>
+        <dd>
+          <input id="pg_active_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][active]" type="radio" value="true" <?php echo ($config['active'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="pg_active_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
+          <input id="pg_active_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][active]" type="radio" value="false" <?php echo ($config['active'] == 'false' ? 'checked="checked"' : '') ?>>
+          <label for="pg_active_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><?php echo REMOVE_PAYMENT_GENRE; ?></dt>
+        <dd>
+          <input type="checkbox" name="remove_pg[]" value="<?php echo $topkey ?>" id="remove_<?php echo $topkey ?>">
+          <label for="remove_<?php echo $topkey ?>"><strong><?php echo REMOVE_THIS_GENRE; ?></strong></label>
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_order_<?php echo $topkey ?>"><?php echo PG_ORDER; ?></label></dt>
+        <dd>
+          <input id="pg_order_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][order]" type="text" value="<?php echo $config['order'] ?>">
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_name_<?php echo $topkey ?>"><?php echo PG_NAME; ?></label></dt>
+        <dd>
+          <input id="pg_name_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][name]" type="text" value="<?php echo $config['name'] ?>">
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_min_cart_value_<?php echo $topkey ?>"><?php echo PG_MIN_CART_VALUE; ?></label></dt>
+        <dd>
+          <input id="pg_min_cart_value_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][min_cart_value]" type="text" value="<?php echo $config['min_cart_value'] ?>">
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_max_cart_value_<?php echo $topkey ?>"><?php echo PG_MAX_CART_VALUE; ?></label></dt>
+        <dd>
+          <input id="pg_max_cart_value_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][max_cart_value]" type="text" value="<?php echo $config['max_cart_value'] ?>">
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_operating_mode_<?php echo $topkey ?>"><?php echo PG_OPERATING_MODE; ?></label></dt>
+        <dd>
+          <input id="pg_operating_mode_<?php echo $topkey ?>_test" name="config[<?php echo $topkey ?>][operating_mode]" type="radio" value="test" <?php echo ($config['operating_mode'] == 'test' ? 'checked="checked"' : '') ?>>
+          <label for="pg_operating_mode_<?php echo $topkey ?>_test"><?php echo OPMODE_TEST; ?></label>
+          <input id="pg_operating_mode_<?php echo $topkey ?>_live" name="config[<?php echo $topkey ?>][operating_mode]" type="radio" value="live" <?php echo ($config['operating_mode'] == 'live' ? 'checked="checked"' : '') ?>>
+          <label for="pg_operating_mode_<?php echo $topkey ?>_live"><?php echo OPMODE_LIVE; ?></label>
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><label for="pg_global_override_<?php echo $topkey ?>"><?php echo PG_GLOBAL_OVERRIDE; ?></label></dt>
+        <dd>
+          <input class="go_trigger" id="pg_global_override_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][global_override]" type="radio" value="true" <?php echo ($config['global_override'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="pg_global_override_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
+          <input class="go_trigger" id="pg_global_override_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][global_override]" type="radio" value="false" <?php echo ($config['global_override'] == 'false' ? 'checked="checked"' : '') ?>>
+          <label for="pg_global_override_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
+        </dd>
+      </div>
+      <div class="dlrow cf override"> 
+        <dt class="global_override">
+          <?php echo OVERRIDE_DATA; ?>
+        </dt>
+        <dd class="global_override">
+          <?php
+            //$config = $payone->mergeConfigs($config['global'], $payone->getConfig('global')); ?>
+          <?php echo formpartGlobalConfig('global', $config['global'], $topkey); ?>
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><?php echo PG_COUNTRIES; ?></dt>
+        <dd class="countries_list">
+          <button class="select_all"><?php echo SELECT_ALL_COUNTRIES; ?></button>
+          <button class="select_none"><?php echo SELECT_NO_COUNTRY; ?></button><br>
+          <ul class="countrylist">
+            <?php $config['countries'] = is_array($config['countries']) ? $config['countries'] : array(); ?>
+            <?php foreach(getActiveCountries() as $country) { ?>
+              <li>
+              <input id="pg_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>" name="config[<?php echo $topkey ?>][countries][]" type="checkbox"
+                value="<?php echo $country['countries_iso_code_2']?>" <?php echo (in_array($country['countries_iso_code_2'], $config['countries']) ? 'checked="checked"' : ''); ?>>
+              <label for="pg_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>"><?php echo $country['countries_name'] ?></label>
+              </li>
+            <?php } ?>
+          </ul>
+        </dd>
+      </div>
+      <div class="dlrow cf"> 
+        <dt><?php echo PG_SCORING_ALLOWED; ?></dt>
+        <dd>
+          <input id="pg_scoring_allowed_red_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][allow_red]" type="checkbox"
+            value="true" <?php echo ($config['allow_red'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="pg_scoring_allowed_red_<?php echo $topkey ?>"><?php echo PG_RED; ?></label>
+          <input id="pg_scoring_allowed_yellow_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][allow_yellow]" type="checkbox"
+            value="true" <?php echo ($config['allow_yellow'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="pg_scoring_allowed_yellow_<?php echo $topkey ?>"><?php echo PG_YELLOW; ?></label>
+          <input id="pg_scoring_allowed_green_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][allow_green]" type="checkbox"
+            value="true" <?php echo ($config['allow_green'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="pg_scoring_allowed_green_<?php echo $topkey ?>"><?php echo PG_GREEN; ?></label>
+        </dd>
+      </div>
   
-  		<?php echo formpartPaymentGenreSpecific($topkey, $config); ?>
+      <?php echo formpartPaymentGenreSpecific($topkey, $config); ?>
 
-<div class="dlrow cf"> 
-			<dt><?php echo PG_PAYMENT_TYPES; ?></dt>
-			<dd>
-				<dl class="paymenttypes">
-					<?php foreach($config['types'] as $type => $typedata) { ?>
-					<dt><?php echo constant('paymenttype_'.$type); ?></dt>
-					<dd>
-						<input id="pg_paymenttype_active_<?php echo $type.'_'.$topkey ?>" name="config[<?php echo $topkey ?>][types][<?php echo $type ?>][active]"
-							type="checkbox" value="true" <?php echo ($config['types'][$type]['active'] == 'true' ? 'checked="checked"' : '') ?>>
-						<label for="pg_paymenttype_active_<?php echo $type.'_'.$topkey ?>"><?php echo PG_TYPE_ACTIVE; ?></label>
-					</dd>
-					<?php } ?>
-				</dl>
-			</dd>
-</div>
-		</dl>
-	</fieldset>
-	<?php
+      <div class="dlrow cf"> 
+        <dt><?php echo PG_PAYMENT_TYPES; ?></dt>
+        <dd>
+          <dl class="paymenttypes">
+            <?php foreach($config['types'] as $type => $typedata) { ?>
+            <dt><?php echo constant('paymenttype_'.$type); ?></dt>
+            <dd>
+              <input id="pg_paymenttype_active_<?php echo $type.'_'.$topkey ?>" name="config[<?php echo $topkey ?>][types][<?php echo $type ?>][active]"
+                type="checkbox" value="true" <?php echo ($config['types'][$type]['active'] == 'true' ? 'checked="checked"' : '') ?>>
+              <label for="pg_paymenttype_active_<?php echo $type.'_'.$topkey ?>"><?php echo PG_TYPE_ACTIVE; ?></label>
+            </dd>
+            <?php } ?>
+          </dl>
+        </dd>
+      </div>
+    </dl>
+  </fieldset>
+<?php
 }
 
 function formpartPaymentGenreSpecific($topkey, $config) {
 	if ($config['genre'] == 'creditcard') {
-		?>
-<div class="dlrow cf">
-		<dt><?php echo PG_CHECK_CAV; ?></dt>
-		<dd>
-			<input id="pg_genre_specific_check_cav_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][check_cav]" type="radio" value="true" <?php echo ($config['genre_specific']['check_cav'] == 'true' ? 'checked="checked"' : '') ?>>
-			<label for="pg_genre_specific_check_cav_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
-			<input id="pg_genre_specific_check_cav_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][check_cav]" type="radio" value="false" <?php echo ($config['genre_specific']['check_cav'] == 'false' ? 'checked="checked"' : '') ?>>
-			<label for="pg_genre_specific_check_cav_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
-		</dd>
-</div>
-		<?php
+	?>
+    <div class="dlrow cf">
+      <dt><?php echo PG_CHECK_CAV; ?></dt>
+      <dd>
+        <input id="pg_genre_specific_check_cav_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][check_cav]" type="radio" value="true" <?php echo ($config['genre_specific']['check_cav'] == 'true' ? 'checked="checked"' : '') ?>>
+        <label for="pg_genre_specific_check_cav_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
+        <input id="pg_genre_specific_check_cav_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][check_cav]" type="radio" value="false" <?php echo ($config['genre_specific']['check_cav'] == 'false' ? 'checked="checked"' : '') ?>>
+        <label for="pg_genre_specific_check_cav_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
+      </dd>
+    </div>
+	<?php
 	}
 	
 	if ($config['genre'] == 'installment') {
-		?>
-<div class="dlrow cf">
-		<dt><?php echo KLARNA_STOREID; ?></dt>
-		<dd>
-			<input id="klarna_storeid_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][genre_specific][klarna][storeid]" type="text" value="<?php echo $config['genre_specific']['klarna']['storeid'] ?>">
-		</dd>
-</div>
-<div class="dlrow cf">
-		<dt><?php echo KLARNA_COUNTRIES; ?></dt>
-		<dd class="countries_list">
-			<button class="select_all"><?php echo SELECT_ALL_COUNTRIES; ?></button>
-			<button class="select_none"><?php echo SELECT_NO_COUNTRY; ?></button><br>
-      <ul class="countrylist">
-      <?php 
-      $countries = getActiveCountries();
-      $config['genre_specific']['klarna']['countries'] = ((is_array($config['genre_specific']['klarna']['countries'])) ? $config['genre_specific']['klarna']['countries'] : array());
-      foreach($GLOBALS['payone']->_getKlarnaCountries() as $country) { 
-      ?>
-				<li>
-          <input id="klarna_countries_<?php echo $topkey.'_'.$country; ?>" name="config[<?php echo $topkey ?>][genre_specific][klarna][countries][]" type="checkbox" value="<?php echo $country; ?>" <?php echo (in_array($country, $config['genre_specific']['klarna']['countries']) ? 'checked="checked"' : ''); ?>>
-  				<label for="klarna_countries_<?php echo $topkey.'_'.$country; ?>"><?php echo $countries[$country]['countries_name']; ?></label>
-        </li>
-			<?php } ?>
-      </ul>
-		</dd>
-</div>
-		<?php
+	?>
+    <div class="dlrow cf">
+      <dt><?php echo KLARNA_STOREID; ?></dt>
+      <dd>
+        <input id="klarna_storeid_<?php echo $topkey ?>" name="config[<?php echo $topkey ?>][genre_specific][klarna][storeid]" type="text" value="<?php echo $config['genre_specific']['klarna']['storeid'] ?>">
+      </dd>
+    </div>
+    <div class="dlrow cf">
+      <dt><?php echo KLARNA_COUNTRIES; ?></dt>
+      <dd class="countries_list">
+        <button class="select_all"><?php echo SELECT_ALL_COUNTRIES; ?></button>
+        <button class="select_none"><?php echo SELECT_NO_COUNTRY; ?></button><br>
+        <ul class="countrylist">
+        <?php 
+        $countries = getActiveCountries();
+        $config['genre_specific']['klarna']['countries'] = ((is_array($config['genre_specific']['klarna']['countries'])) ? $config['genre_specific']['klarna']['countries'] : array());
+        foreach($GLOBALS['payone']->_getKlarnaCountries() as $country) { 
+        ?>
+          <li>
+            <input id="klarna_countries_<?php echo $topkey.'_'.$country; ?>" name="config[<?php echo $topkey ?>][genre_specific][klarna][countries][]" type="checkbox" value="<?php echo $country; ?>" <?php echo (in_array($country, $config['genre_specific']['klarna']['countries']) ? 'checked="checked"' : ''); ?>>
+            <label for="klarna_countries_<?php echo $topkey.'_'.$country; ?>"><?php echo $countries[$country]['countries_name']; ?></label>
+          </li>
+        <?php } ?>
+        </ul>
+      </dd>
+    </div>
+	<?php
 	}
 	
-	if ($config['genre'] == 'accountbased')
-	{
-		?>
-<div class="dlrow cf">
-		<dt><label for="check_bankdata_<?php echo $topkey ?>"><?php echo CHECK_BANKDATA; ?></label></dt>
-		<dd>
-			<div class="rbuttons">
-				<input class="" id="check_bankdata_<?php echo $topkey ?>_none" name="config[<?php echo $topkey ?>][genre_specific][check_bankdata]" type="radio" value="none" <?php echo ($config['genre_specific']['check_bankdata'] == 'none' ? 'checked="checked"' : '') ?>>
-				<label for="check_bankdata_<?php echo $topkey ?>_none"><?php echo DONT_CHECK; ?></label>
-				<input class="" id="check_bankdata_<?php echo $topkey ?>_basic" name="config[<?php echo $topkey ?>][genre_specific][check_bankdata]" type="radio" value="basic" <?php echo ($config['genre_specific']['check_bankdata'] == 'basic' ? 'checked="checked"' : '') ?>>
-				<label for="check_bankdata_<?php echo $topkey ?>_basic"><?php echo CHECK_BASIC; ?></label>
-				<input class="" id="check_bankdata_<?php echo $topkey ?>_pos" name="config[<?php echo $topkey ?>][genre_specific][check_bankdata]" type="radio" value="pos" <?php echo ($config['genre_specific']['check_bankdata'] == 'pos' ? 'checked="checked"' : '') ?>>
-				<label for="check_bankdata_<?php echo $topkey ?>_pos"><?php echo CHECK_POS; ?></label>
-			</div>
-		</dd>
-</div>
-<div class="dlrow cf">
-		<dt><?php echo SEPA_COUNTRIES; ?></dt>
-		<dd class="countries_list">
-			<button class="select_all"><?php echo SELECT_ALL_COUNTRIES; ?></button>
-			<button class="select_none"><?php echo SELECT_NO_COUNTRY; ?></button><br>
-      <ul class="countrylist">
-        <?php $config['genre_specific']['sepa_account_countries'] = is_array($config['genre_specific']['sepa_account_countries']) ? $config['genre_specific']['sepa_account_countries'] : array(); ?>
-        <?php foreach($GLOBALS['payone']->getSepaCountries() as $country) { ?>
-				<li>
-          <input id="sepa_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>" name="config[<?php echo $topkey ?>][genre_specific][sepa_account_countries][]" type="checkbox"
-  					value="<?php echo $country['countries_iso_code_2']?>" <?php echo (in_array($country['countries_iso_code_2'], $config['genre_specific']['sepa_account_countries']) ? 'checked="checked"' : ''); ?>>
-  				<label for="sepa_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>"><?php echo $country['countries_name'] ?></label>
-        </li>
-			<?php } ?>
-      </ul>
-		</dd>
-</div>
-<div class="dlrow cf">
-		<dt><label for="sepa_display_ktoblz_<?php echo $topkey ?>"><?php echo SEPA_DISPLAY_KTOBLZ; ?></label></dt>
-		<dd>
-			<div class="rbuttons">
-				<input class="" id="sepa_display_ktoblz_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][sepa_display_ktoblz]" type="radio" value="true" <?php echo ($config['genre_specific']['sepa_display_ktoblz'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="sepa_display_ktoblz_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
-				<input class="" id="sepa_display_ktoblz_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][sepa_display_ktoblz]" type="radio" value="false" <?php echo ($config['genre_specific']['sepa_display_ktoblz'] == 'false' ? 'checked="checked"' : '') ?>>
-				<label for="sepa_display_ktoblz_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
-			</div>
-			<div class="note"><?php echo SEPA_DISPLAY_KTOBLZ_NOTE; ?>_note</div>
-		</dd>
-</div>
-<div class="dlrow cf">
-		<dt><label for="sepa_use_managemandate_<?php echo $topkey ?>"><?php echo SEPA_USE_MANAGEMANDATE; ?></label></dt>
-		<dd>
-			<div class="rbuttons">
-				<input class="" id="sepa_use_managemandate_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][sepa_use_managemandate]" type="radio" value="true" <?php echo ($config['genre_specific']['sepa_use_managemandate'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="sepa_use_managemandate_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
-				<input class="" id="sepa_use_managemandate_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][sepa_use_managemandate]" type="radio" value="false" <?php echo ($config['genre_specific']['sepa_use_managemandate'] == 'false' ? 'checked="checked"' : '') ?>>
-				<label for="sepa_use_managemandate_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
-			</div>
-			<div class="note"><?php echo SEPA_USE_MANAGEMANDATE_NOTE; ?></div>
-		</dd>
-</div>
-<div class="dlrow cf">
-		<dt><label for="sepa_download_pdf_<?php echo $topkey ?>"><?php echo SEPA_DOWNLOAD_PDF; ?></label></dt>
-		<dd>
-			<div class="rbuttons">
-				<input class="" id="sepa_download_pdf_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][sepa_download_pdf]" type="radio" value="true" <?php echo ($config['genre_specific']['sepa_download_pdf'] == 'true' ? 'checked="checked"' : '') ?>>
-				<label for="sepa_download_pdf_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
-				<input class="" id="sepa_download_pdf_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][sepa_download_pdf]" type="radio" value="false" <?php echo ($config['genre_specific']['sepa_download_pdf'] == 'false' ? 'checked="checked"' : '') ?>>
-				<label for="sepa_download_pdf_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
-			</div>
-			<div class="note"><?php echo SEPA_DOWNLOAD_PDF_NOTE; ?></div>
-		</dd>
-</div>
-		<?php
+	if ($config['genre'] == 'accountbased'){
+	?>
+    <div class="dlrow cf">
+      <dt><label for="check_bankdata_<?php echo $topkey ?>"><?php echo CHECK_BANKDATA; ?></label></dt>
+      <dd>
+        <div class="rbuttons">
+          <input class="" id="check_bankdata_<?php echo $topkey ?>_none" name="config[<?php echo $topkey ?>][genre_specific][check_bankdata]" type="radio" value="none" <?php echo ($config['genre_specific']['check_bankdata'] == 'none' ? 'checked="checked"' : '') ?>>
+          <label for="check_bankdata_<?php echo $topkey ?>_none"><?php echo DONT_CHECK; ?></label>
+          <input class="" id="check_bankdata_<?php echo $topkey ?>_basic" name="config[<?php echo $topkey ?>][genre_specific][check_bankdata]" type="radio" value="basic" <?php echo ($config['genre_specific']['check_bankdata'] == 'basic' ? 'checked="checked"' : '') ?>>
+          <label for="check_bankdata_<?php echo $topkey ?>_basic"><?php echo CHECK_BASIC; ?></label>
+          <input class="" id="check_bankdata_<?php echo $topkey ?>_pos" name="config[<?php echo $topkey ?>][genre_specific][check_bankdata]" type="radio" value="pos" <?php echo ($config['genre_specific']['check_bankdata'] == 'pos' ? 'checked="checked"' : '') ?>>
+          <label for="check_bankdata_<?php echo $topkey ?>_pos"><?php echo CHECK_POS; ?></label>
+        </div>
+      </dd>
+    </div>
+    <div class="dlrow cf">
+      <dt><?php echo SEPA_COUNTRIES; ?></dt>
+      <dd class="countries_list">
+        <button class="select_all"><?php echo SELECT_ALL_COUNTRIES; ?></button>
+        <button class="select_none"><?php echo SELECT_NO_COUNTRY; ?></button><br>
+        <ul class="countrylist">
+          <?php $config['genre_specific']['sepa_account_countries'] = is_array($config['genre_specific']['sepa_account_countries']) ? $config['genre_specific']['sepa_account_countries'] : array(); ?>
+          <?php foreach($GLOBALS['payone']->getSepaCountries() as $country) { ?>
+          <li>
+            <input id="sepa_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>" name="config[<?php echo $topkey ?>][genre_specific][sepa_account_countries][]" type="checkbox"
+              value="<?php echo $country['countries_iso_code_2']?>" <?php echo (in_array($country['countries_iso_code_2'], $config['genre_specific']['sepa_account_countries']) ? 'checked="checked"' : ''); ?>>
+            <label for="sepa_countries_<?php echo $topkey.'_'.$country['countries_iso_code_2'] ?>"><?php echo $country['countries_name'] ?></label>
+          </li>
+        <?php } ?>
+        </ul>
+      </dd>
+    </div>
+    <div class="dlrow cf">
+      <dt><label for="sepa_display_ktoblz_<?php echo $topkey ?>"><?php echo SEPA_DISPLAY_KTOBLZ; ?></label></dt>
+      <dd>
+        <div class="rbuttons">
+          <input class="" id="sepa_display_ktoblz_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][sepa_display_ktoblz]" type="radio" value="true" <?php echo ($config['genre_specific']['sepa_display_ktoblz'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="sepa_display_ktoblz_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
+          <input class="" id="sepa_display_ktoblz_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][sepa_display_ktoblz]" type="radio" value="false" <?php echo ($config['genre_specific']['sepa_display_ktoblz'] == 'false' ? 'checked="checked"' : '') ?>>
+          <label for="sepa_display_ktoblz_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
+        </div>
+        <div class="note"><?php echo SEPA_DISPLAY_KTOBLZ_NOTE; ?>_note</div>
+      </dd>
+    </div>
+    <div class="dlrow cf">
+      <dt><label for="sepa_use_managemandate_<?php echo $topkey ?>"><?php echo SEPA_USE_MANAGEMANDATE; ?></label></dt>
+      <dd>
+        <div class="rbuttons">
+          <input class="" id="sepa_use_managemandate_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][sepa_use_managemandate]" type="radio" value="true" <?php echo ($config['genre_specific']['sepa_use_managemandate'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="sepa_use_managemandate_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
+          <input class="" id="sepa_use_managemandate_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][sepa_use_managemandate]" type="radio" value="false" <?php echo ($config['genre_specific']['sepa_use_managemandate'] == 'false' ? 'checked="checked"' : '') ?>>
+          <label for="sepa_use_managemandate_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
+        </div>
+        <div class="note"><?php echo SEPA_USE_MANAGEMANDATE_NOTE; ?></div>
+      </dd>
+    </div>
+    <div class="dlrow cf">
+      <dt><label for="sepa_download_pdf_<?php echo $topkey ?>"><?php echo SEPA_DOWNLOAD_PDF; ?></label></dt>
+      <dd>
+        <div class="rbuttons">
+          <input class="" id="sepa_download_pdf_<?php echo $topkey ?>_true" name="config[<?php echo $topkey ?>][genre_specific][sepa_download_pdf]" type="radio" value="true" <?php echo ($config['genre_specific']['sepa_download_pdf'] == 'true' ? 'checked="checked"' : '') ?>>
+          <label for="sepa_download_pdf_<?php echo $topkey ?>_true"><?php echo TEXT_YES; ?></label>
+          <input class="" id="sepa_download_pdf_<?php echo $topkey ?>_false" name="config[<?php echo $topkey ?>][genre_specific][sepa_download_pdf]" type="radio" value="false" <?php echo ($config['genre_specific']['sepa_download_pdf'] == 'false' ? 'checked="checked"' : '') ?>>
+          <label for="sepa_download_pdf_<?php echo $topkey ?>_false"><?php echo TEXT_NO; ?></label>
+        </div>
+        <div class="note"><?php echo SEPA_DOWNLOAD_PDF_NOTE; ?></div>
+      </dd>
+    </div>
+	<?php
 	}
 }
 
@@ -556,18 +546,30 @@ require (DIR_WS_INCLUDES.'head.php');
 									?>
 									<dl class="adminform subblock">
                     <div class="dlrow cf">
-										<dt>
-											<label for="orders_status_tmp"><?php echo ORDERS_STATUS_TMP; ?></label>
-										</dt>
-										<dd>
-											<select name="config[orders_status][tmp]">
-												<?php foreach($orders_status_hidden as $orders_status_id => $orders_status_name) { ?>
-													<option value="<?php echo $orders_status_id ?>" <?php echo $config['orders_status']['tmp'] == $orders_status_id ? 'selected="selected"' : '' ?>>
-														<?php echo $orders_status_name ?>
-													</option>
-												<?php } ?>
-											</select>
-										</dd>
+                      <dt>
+                        <label for="orders_status_tmp"><?php echo ORDERS_STATUS_TMP; ?></label>
+                      </dt>
+                      <dd>
+                        <select name="config[orders_status][tmp]">
+                          <?php foreach($orders_status_hidden as $orders_status_id => $orders_status_name) { ?>
+                            <option value="<?php echo $orders_status_id ?>" <?php echo $config['orders_status']['tmp'] == $orders_status_id ? 'selected="selected"' : '' ?>>
+                              <?php echo $orders_status_name ?>
+                            </option>
+                          <?php } ?>
+                        </select>
+                      </dd>
+                      <dt>
+                        <label for="orders_status_redirect_url[tmp]"><?php echo TEXT_EXTERN_CALLBACK_URL; ?></label>
+                      </dt>
+                      <dd>
+                        <input id="orders_status_redirect_url[tmp]" name="config[orders_status_redirect][url][tmp]" value="<?php echo $config['orders_status_redirect']['url']['tmp']; ?>" type="text">
+                      </dd>
+                      <dt>
+                        <label for="orders_status_redirect_timeout[tmp]"><?php echo TEXT_EXTERN_CALLBACK_TIMEOUT; ?></label>
+                      </dt>
+                      <dd>
+                        <input id="orders_status_redirect_timeout[tmp]" name="config[orders_status_redirect][timeout][tmp]" value="<?php echo $config['orders_status_redirect']['timeout']['tmp']; ?>" type="text">
+                      </dd>
                     </div>
 										<?php foreach($payone->getStatusNames() as $p1_status) { ?>
                     <div class="dlrow cf">
@@ -582,6 +584,18 @@ require (DIR_WS_INCLUDES.'head.php');
 														</option>
 													<?php } ?>
 												</select>
+											</dd>
+											<dt>
+                        <label for="orders_status_redirect_url[<?php echo $p1_status ?>]"><?php echo TEXT_EXTERN_CALLBACK_URL; ?></label>
+											</dt>
+											<dd>
+                        <input id="orders_status_redirect_url[<?php echo $p1_status ?>]" name="config[orders_status_redirect][url][<?php echo $p1_status ?>]" value="<?php echo $config['orders_status_redirect']['url'][$p1_status]; ?>" type="text">
+                      </dd>
+											<dt>
+											  <label for="orders_status_redirect_timeout[<?php echo $p1_status ?>]"><?php echo TEXT_EXTERN_CALLBACK_TIMEOUT; ?></label>
+											</dt>
+											<dd>
+                        <input id="orders_status_redirect_timeout[<?php echo $p1_status ?>]" name="config[orders_status_redirect][timeout][<?php echo $p1_status ?>]" value="<?php echo $config['orders_status_redirect']['timeout'][$p1_status]; ?>" type="text">
 											</dd>
 										</div>
                     <?php } ?>
