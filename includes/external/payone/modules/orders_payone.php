@@ -115,6 +115,9 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		if ($_POST['cmd'] == 'capture') {
+		  if (isset($_POST['positions'])) {
+		    $_POST['capture']['positions'] = $_POST['positions'];
+		  }
 			$response = $payone->captureAmount($_POST['capture']);
 			if ($response->getStatus() == 'ERROR') {
 				$_SESSION['orders_payone_messages'][] = ERROR_OCCURED.": ".$response->getErrorcode().' '.$response->getErrormessage();
@@ -123,6 +126,9 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
 			}
 		}
 		if ($_POST['cmd'] == 'refund') {
+		  if (isset($_POST['positions'])) {
+		    $_POST['refund']['positions'] = $_POST['positions'];
+		  }
 			$response = $payone->refundAmount($_POST['refund']);
 			if ($response->getStatus() == 'ERROR') {
 				$_SESSION['orders_payone_messages'][] = ERROR_OCCURED.": ".$response->getErrorcode().' '.$response->getErrormessage();
@@ -225,7 +231,6 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                               echo '<dt>'.$key.'</dt>';
                               echo '<dd>'.$value.'</dd>';
                               echo '</dl>';
-
                             }
                           } 
                           ?>
@@ -280,12 +285,11 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                        xtc_draw_hidden_field('refund[txid]', $capture_data['txid']).
                        xtc_draw_hidden_field('refund[portalid]', $capture_data['portalid']).
                        xtc_draw_hidden_field('refund[currency]', $capture_data['currency']);
-                       
                   if (in_array($order->info['payment_method'], array('payone_invoice', 'payone_prepay', 'payone_cod'))) { 
                   ?>
                     <div class="refund_row">
                       <label for="p1_refund_amount"><?php echo REFUND_AMOUNT; ?></label>
-                      <?php echo xtc_draw_input_field('refund[amount]', '', 'id="amount" style="width: 135px"'); ?>
+                      <?php echo xtc_draw_input_field('refund[amount]', $capture_data['price'], 'id="amount" style="width: 135px"'); ?>
                       <?php echo $capture_data['currency'] ?>
                     </div>
                     <div class="refund_row">
@@ -317,9 +321,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                       <?php echo xtc_draw_input_field('refund[bic]', '', 'id="bic" style="width: 135px"'); ?>
                     </div>
                   <?php 
-                  }
-                  
-                  if ($order->info['payment_method'] == 'payone_installment') {
+                  } elseif ($order->info['payment_method'] == 'payone_installment') {
                     payone_get_order_details();
                   } else { 
                     echo '<div class="refund_row">';
@@ -329,7 +331,6 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
                     echo '</div>';
                   }
                   ?>
-                  
                   <br />
                   <input type="submit" class="button" name="refund_submit" value="<?php echo REFUND_SUBMIT; ?>">
                 </form>
