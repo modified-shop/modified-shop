@@ -50,7 +50,7 @@
           'countries_iso_code_3' => xtc_db_prepare_input($_POST['countries_iso_code_3']), 
           'address_format_id' => xtc_db_prepare_input($_POST['address_format_id'])
         );
-        xtc_db_perfom(TABLE_COUNTRIES,$sql_data_array);
+        xtc_db_perform(TABLE_COUNTRIES,$sql_data_array);
         xtc_redirect(xtc_href_link(FILENAME_COUNTRIES));
         break;
       case 'save':       
