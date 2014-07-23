@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimpleCategoryView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: SimpleCategoryView.php 3951 2014-06-11 15:37:34Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -22,8 +22,28 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 
 class SimpleCategoryView {
-	protected $sFilterBy=null;
+	const QUERY_DEBUG = false;
+	
+	/**
+	 * Bei mehr als dieser Anzahl an Produkten werden Komfort-Funktionen abgeschaltet um eine bessere Perfomance
+	 * zu gewaehrleisten
+	 */
+	const DISABLE_COMFORT_BORDER = 10000;
+	
+	/**
+	 * Wenn bei Filtern der Artikel weniger als diese Menge an Produkt-Ids übrig geblieben ist, werden wieder die
+	 * Komfort-Funktionen verwendet.
+	 */
+	const ENABLE_COMFORT_FILTERED_BORDER = 1000;
+	
+	/**
+	 * array of AbstractProductIdFilter
+	 * @var array $aIdFilters
+	 */
+	protected $aProductIdFilters = array();
+	
 	protected $cPath = 0;
+	protected $cPathArray = array();
 	protected $search = '';
 	protected $productsQuery = '';
 
@@ -40,11 +60,14 @@ class SimpleCategoryView {
 
 	protected $action = array();
 
-	protected $selection;
-	protected $newSelection;
+	protected $selection = array();
+	protected $newSelection = array();
 	
 	protected $isAjax = false;
 	protected $ajaxReply = array();
+	
+	protected $productsCount = 0;
+	protected $productsFilteredCount = 0;
 	
 	protected $categoryCheckboxStateCache = array();
 
@@ -89,15 +112,46 @@ class SimpleCategoryView {
 		
 		$this->isAjax = isset($_GET['kind']) && ($_GET['kind'] == 'ajax');
 		
-		$this->cPath = isset($_GET['cPath']) ? $_GET['cPath'] : '0';
-		$this->cPath = explode('_', $this->cPath);
-		$this->cPath = array_pop($this->cPath);
+		$this->cPathArray = isset($_GET['cPath']) ? $_GET['cPath'] : '0';
+		$this->cPathArray = explode('_', $this->cPathArray);
+		$this->cPath = is_array($this->cPathArray) && !empty($this->cPathArray)
+			? $this->cPathArray[count($this->cPathArray) - 1]
+			: '0';
 		
 		if (!ctype_digit($this->cPath)) {
 			$this->cPath = '0';
 		}
-		//echo var_dump_pre($this->cPath, '$this->cPath');
+		
+		#echo var_dump_pre($this->cPathArray, '$this->cPathArray');
+		#echo var_dump_pre($this->cPath, '$this->cPath');
 
+		if (!$this->isAjax) {
+			$this->sorting = $sorting;
+			$this->search = $search;
+			$this->simplePrice = new SimplePrice();
+			$this->simplePrice->setCurrency(DEFAULT_CURRENCY);
+			$this->url = &$_url;
+			if (empty($this->url['cPath'])) {
+				unset($this->url['cPath']);
+			}
+
+			if (($this->search == '') && isset($_POST['tfSearch']) && !empty($_POST['tfSearch'])) {
+				$this->search = $_POST['tfSearch'];
+			}
+			if (empty($this->sorting) && isset($_GET['sorting']) && !empty($_GET['sorting'])) {
+				$this->sorting = $_GET['sorting'];
+			}
+		} else {
+			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
+			header("Expires: Thu, 01 Jan 1970 00:00:00 GMT"); // Datum in der Vergangenheit
+			header('Content-Type: text/plain');
+		}
+		
+		$this->productsCount = (int)MagnaDB::gi()->fetchOne('
+			SELECT COUNT(*) FROM '.TABLE_PRODUCTS.' '.($this->showOnlyActiveProducts ? 'WHERE products_status <> 0' : '').'
+		');
+		
+		
 		/*if (!$this->isAjax) {
 			echo print_m($this->_magnasession['currentPlatform'].'.'.$this->settings['selectionName'].'.status');
 			echo var_dump_pre($this->showOnlyActiveProducts, '$this->showOnlyActiveProducts');
@@ -115,76 +169,38 @@ class SimpleCategoryView {
 		));*/
 		
 		$this->init();
+		$this->initSelection();
+		$this->executeProductIdFilters($allowedProductIDs);
 		
-		$newSelectionResult = MagnaDB::gi()->query('
-			SELECT pID, data
-			  FROM '.TABLE_MAGNA_SELECTION.'
-			 WHERE mpID="'.$this->_magnasession['mpID'].'" AND
-			       selectionname="'.$this->settings['selectionName'].'" AND
-			       session_id="'.session_id().'"
-		');
-		$this->selection = array();
-		while ($row = MagnaDB::gi()->fetchNext($newSelectionResult)) {
-			$this->selection[$row['pID']] = unserialize($row['data']);
-		}
-
-		if (empty($allowedProductIDs)) {
-			$this->allowedProductIDs = $this->getProductIDsByCategoryID($this->cPath);
-		} else {
-			$this->allowedProductIDs = $allowedProductIDs;
-		}
-
-		/* {Hook} "SimpleCategoryView_PostAllowedProductIDs": Enables you to filter the IDs of the products
-		   that are going to be displayed by the view.<br>
-		   Variables that can be used: <ul>
-		       <li>$this->allowedProductIDs (array): The list of all allowed product ids that will be shown by the view.</li>
-		       <li>$this->mpID: The current marketplace id.</li>
-		       <li>$this->marketplace: The name of the marketplace.</li>
-		   </ul>
-		 */
-		if (($hp = magnaContribVerify('SimpleCategoryView_PostAllowedProductIDs', 1)) !== false) {
-			require($hp);
-		}
-
-		// echo print_m($this->allowedProductIDs, '$this->allowedProductIDs');
-		if ($this->isAjax) {
-			if (preg_match('/^(.*)\[(.*)\]$/', $_POST['action'], $match)) {
-				$_POST[$match[1]][$match[2]] = 0;
+		$this->productsFilteredCount = count($this->allowedProductIDs);
+		
+		if ($this->isComfortDisabled()) {
+			// Filter the product_ids further. Only display the products in the currently selected category.
+			// Do this without a filter because we have to make sure the categories won't be filtered.
+			$pIds = MagnaDB::gi()->fetchArray('
+				SELECT DISTINCT products_id FROM '.TABLE_PRODUCTS_TO_CATEGORIES.' WHERE categories_id = "'.$this->cPath.'"
+			', true);
+			
+			$this->allowedProductIDs = array_intersect($this->allowedProductIDs, is_array($pIds) ? $pIds : array());
+			
+			if (!$this->isAjax && (MAGNA_DEBUG === true)) {
+				echo 'ComfortFilter => '.count($this->allowedProductIDs)."<br>\n";
 			}
-			$_timer = microtime(true);
+		} else if (!$this->isAjax && (MAGNA_DEBUG === true)) {
+			echo "ComfortFilter =>  <span style=\"color:gray\">inactive</span><br>\n";
 		}
-
-		// echo print_m($this->allowedProductIDs, '$this->allowedProductIDs');
-
+		
+		#var_dump($this->isComfortDisabled());
+		
+		$_timer = microtime(true);
+		
 		$this->selectProducts();
-
+		
 		if (!empty($this->ajaxReply)) {
 			$this->ajaxReply['timer'] = microtime2human(microtime(true) -  $_timer);
 		}
+		
 
-		if (!$this->isAjax) {
-			$this->sorting = $sorting;
-			$this->search = $search;
-			$this->simplePrice = new SimplePrice();
-			$this->simplePrice->setCurrency(DEFAULT_CURRENCY);
-			$this->url = $_url;
-			if (empty($this->url['cPath'])) {
-				unset($this->url['cPath']);
-			}
-
-			if (($this->search == '') && isset($_POST['tfSearch']) && !empty($_POST['tfSearch'])) {
-				$this->search = $_POST['tfSearch'];
-			}
-			if (empty($this->sorting) && isset($_GET['sorting']) && !empty($_GET['sorting'])) {
-				$this->sorting = $_GET['sorting'];
-			}
-
-			//echo print_m(array_diff($this->selection, $this->newSelection), 'diff($selection, $newSelection)');
-		} else {
-			header("Cache-Control: no-cache, must-revalidate"); // HTTP/1.1
-			header("Expires: Thu, 01 Jan 1970 00:00:00 GMT"); // Datum in der Vergangenheit
-			header('Content-Type: text/plain');
-		}
 	}
 	
 	public function __destruct() {
@@ -209,13 +225,138 @@ class SimpleCategoryView {
 			unset($batch);
 		}
 	}
-
+	
 	protected function init() {
-
+		
+	}
+	
+	protected function initSelection() {
+		$newSelectionResult = MagnaDB::gi()->query('
+			SELECT pID, data
+			  FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID="'.$this->_magnasession['mpID'].'" AND
+			       selectionname="'.$this->settings['selectionName'].'" AND
+			       session_id="'.session_id().'"
+		');
+		$this->selection = array();
+		while ($row = MagnaDB::gi()->fetchNext($newSelectionResult)) {
+			$this->selection[$row['pID']] = unserialize($row['data']);
+		}
+	}
+	
+	protected function isComfortDisabled() {
+		// No comfort functions for very large inventories
+		
+		return ($this->productsCount > self::DISABLE_COMFORT_BORDER) 
+			// Enable comfort behavior if the filtered list is very small
+			&& ($this->productsFilteredCount > self::ENABLE_COMFORT_FILTERED_BORDER)
+			// Confort functions always have to be enabled for ajax calls.
+			&& !$this->isAjax
+			// And searches.
+			&& empty($this->search);
+	}
+	
+	protected function executeProductIdFilters($allowedProductIDs) {
+		// echo print_m($allowedProductIDs, '$allowedProductIDs');
+		
+		$this->allowedProductIDs = $this->productIdFilterGetIds(
+			empty($allowedProductIDs)
+				? $this->getProductIDsByCategoryID($this->cPath)
+				: $allowedProductIDs
+		);
+		
+		/* {Hook} "SimpleCategoryView_PostAllowedProductIDs": Enables you to filter the IDs of the products
+		   that are going to be displayed by the view.<br>
+		   Variables that can be used: <ul>
+		       <li>$this->allowedProductIDs (array): The list of all allowed product ids that will be shown by the view.</li>
+		       <li>$this->mpID: The current marketplace id.</li>
+		       <li>$this->marketplace: The name of the marketplace.</li>
+		   </ul>
+		 */
+		if (($hp = magnaContribVerify('SimpleCategoryView_PostAllowedProductIDs', 1)) !== false) {
+			require($hp);
+		}
+		
+		// echo print_m($this->allowedProductIDs, '$this->allowedProductIDs');
+	}
+	
+	protected function productIdFilterGetIds($aProductIds) {
+		if ($this->showOnlyActiveProducts) {
+			foreach ($this->productIdFilterGetRegistered() as $oFilter) {
+				/* @var $oFilter AbstractProductIdFilter */
+				if ($oFilter->isActive()) {
+					// add ProductStatusFilter, actual its only necessary if any filter is active. otherwise old behaviour
+					$this->productIdFilterRegister('ProductStatusFilter', array());
+					break;
+				}
+			}
+		}
+		foreach ($this->productIdFilterGetRegistered() as $oFilter) {
+			/* @var $oFilter AbstractProductIdFilter */
+			if ($oFilter->isActive()) {
+				if (count($aProductIds) != 0) { // it is already 0, nothing to filter
+					$oFilter->setCurrentIds($aProductIds);
+					$aFilterIds = $oFilter->getProductIds();
+					$aProductIds = array_intersect($aProductIds, (empty($aFilterIds) ? array() : $aFilterIds));
+				}
+				foreach ($oFilter->getUrlParams() as $sKey => $sValue) {
+					$this->url[$sKey] = $sValue;
+				}
+				if (!$this->isAjax && (MAGNA_DEBUG === true)) {
+					echo get_class($oFilter).' => '.count($aProductIds).'<br />';
+				}
+			} elseif (!$this->isAjax && (MAGNA_DEBUG === true)) {
+				echo get_class($oFilter).' => <span style="color:gray">inactive</span><br />';
+			}
+		}
+		return $aProductIds;
+	}
+	
+	protected function productIdFilterRegister($sFilterName, $aInit = array()) {
+		$sSearchFile = DIR_MAGNALISTER_INCLUDES.'%s/classes/productIdFilter/'.$sFilterName.'.php';
+		if (file_exists(sprintf($sSearchFile, 'modules/'.$this->marketplace))) {
+			$sFile = sprintf($sSearchFile, 'modules/'.$this->marketplace);
+		} elseif (file_exists(sprintf($sSearchFile, 'lib'))) {
+			$sFile = sprintf($sSearchFile, 'lib');
+		}
+		if (isset($sFile)) {
+			require_once($sFile);
+			$oFilter = new $sFilterName();
+			/* @var $oFilter AbstractProductIdFilter */
+			$this->aProductIdFilters[] = $oFilter;
+			$oFilter->init(array_merge($aInit, array (
+				'MpId' => $this->mpID,
+				'Marketplace' => $this->marketplace,
+			)));
+		}
+		return $oFilter;
+	}
+	
+	protected function productIdFilterGetRegistered() {
+		return $this->aProductIdFilters;
+	}
+	
+	protected function productIdFilterRender() {
+		$sHtml = '';
+		foreach ($this->productIdFilterGetRegistered() as $oFilter) {
+			/* @var $oFilter AbstractProductIdFilter */
+			$sCurrentHtml = $oFilter->getHtml();
+			if ($sCurrentHtml != '') {
+				$sHtml .= '<div class="right" style="margin-top:.6em;margin-right:.6em">'.$sCurrentHtml.'</div>';
+			}
+		}
+		return $sHtml;
 	}
 
 	private function selectProducts() {
 		#echo print_m($_POST, true);
+		
+		if ($this->isAjax) {
+			if (preg_match('/^(.*)\[(.*)\]$/', $_POST['action'], $match)) {
+				$_POST[$match[1]][$match[2]] = 0;
+			}
+		}
+		
 		$sPIDs = array();
 		if (array_key_exists('selectableProducts', $_POST) &&
 			($_POST['selectableProducts'] = trim($_POST['selectableProducts'])) &&
@@ -257,7 +398,7 @@ class SimpleCategoryView {
 				if (!empty($sPIDs) || !empty($sCIDs)) {
 					if (!empty($sCIDs)) {
 						foreach ($sCIDs as $sCID) {
-							$this->addProductsToSelection($this->getProductIDsByCategoryID($sCID));
+							$this->addProductsToSelection($this->getProductIDsByCategoryIDFiltered($sCID));
 						}
 					}
 					if (!empty($sPIDs)) {
@@ -273,7 +414,7 @@ class SimpleCategoryView {
 				);
 			} else {
 				#echo print_m($this->getProductIDsByCategoryID($cID[0]), true);
-				$this->addProductsToSelection($this->getProductIDsByCategoryID($cID[0]));
+				$this->addProductsToSelection($this->getProductIDsByCategoryIDFiltered($cID[0]));
 				$this->ajaxReply = array (
 					'type' => 'c',
 					'checked' => true,
@@ -289,7 +430,7 @@ class SimpleCategoryView {
 				if (!empty($sPIDs) || !empty($sCIDs)) {
 					if (!empty($sCIDs)) {
 						foreach ($sCIDs as $sCID) {
-							$this->removeProductsFromSelection($this->getProductIDsByCategoryID($sCID));
+							$this->removeProductsFromSelection($this->getProductIDsByCategoryIDFiltered($sCID));
 						}
 					}
 					if (!empty($sPIDs)) {
@@ -304,7 +445,7 @@ class SimpleCategoryView {
 					'newname' => 'cAdd[0]'
 				);
 			} else {
-				$this->removeProductsFromSelection($this->getProductIDsByCategoryID($cID[0]));
+				$this->removeProductsFromSelection($this->getProductIDsByCategoryIDFiltered($cID[0]));
 				$this->ajaxReply = array (
 					'type' => 'c',
 					'checked' => false,
@@ -375,26 +516,31 @@ class SimpleCategoryView {
 		$this->cat2ProdCacheQuery .= $join.(!empty($where) ? '
 		     WHERE '.substr($where, strlen(' AND')) : '');
 		#echo var_dump_pre($this->showOnlyActiveProducts, '$this->showOnlyActiveProducts', true);
-		#echo print_m($this->cat2ProdCacheQuery)."\n";
+		
+		if (self::QUERY_DEBUG) echo print_m($this->cat2ProdCacheQuery, '$this->cat2ProdCacheQuery['.get_class($this).']');
 		//die();
 	}
 
 	public function getCat2ProdCache() {
-		if (empty($this->__cat2prodCache)) {
-			if (empty($this->cat2ProdCacheQuery)) $this->setupCat2ProdCacheQuery();
-			$prod2catQuery = MagnaDB::gi()->query($this->cat2ProdCacheQuery);
-			$this->__cat2prodCache = array();
-			while ($tmp = MagnaDB::gi()->fetchNext($prod2catQuery)) {
-				if ($tmp['products_id'] == '0') continue;
-				$this->__cat2prodCache[(int)$tmp['categories_id']][] = (int)$tmp['products_id'];
-			}
-			#echo print_m($this->__cat2prodCache, '__cat2prodCache', true);
-			unset($prod2catQuery);
-			unset($tmp);
+		if (!empty($this->__cat2prodCache)) {
+			return;
 		}
+		if (empty($this->cat2ProdCacheQuery)) {
+			$this->setupCat2ProdCacheQuery();
+		}
+		$prod2catQuery = MagnaDB::gi()->query($this->cat2ProdCacheQuery);
+		$this->__cat2prodCache = array();
+		while ($tmp = MagnaDB::gi()->fetchNext($prod2catQuery)) {
+			if ($tmp['products_id'] == '0') continue;
+			$this->__cat2prodCache[(int)$tmp['categories_id']][] = (int)$tmp['products_id'];
+		}
+		#echo print_m($this->__cat2prodCache, '__cat2prodCache', true);
+		unset($prod2catQuery);
+		unset($tmp);
 	}
 
 	public function getProductIDsByCategoryID($cID) {
+		#echo print_m($cID, __METHOD__);
 		$this->getCat2ProdCache();
 
 		$subCategories = array($cID);
@@ -414,9 +560,16 @@ class SimpleCategoryView {
 		}
 		return array_unique($productIDs);
 	}
-
+	
+	public function getProductIDsByCategoryIDFiltered($cID) {
+		#echo print_m($cID, __METHOD__);
+		return array_intersect($this->getProductIDsByCategoryID($cID), $this->allowedProductIDs);
+	}
+	
 	protected function getChildProductsOfThisLevel($cID) {
-		if (empty($this->cat2ProdCacheQuery)) $this->setupCat2ProdCacheQuery();
+		if (empty($this->cat2ProdCacheQuery)) {
+			$this->setupCat2ProdCacheQuery();
+		}
 		$extQuery = $this->cat2ProdCacheQuery.' '.(
 			(strpos($this->cat2ProdCacheQuery, 'WHERE') !== false)
 				? 'AND'
@@ -534,90 +687,89 @@ class SimpleCategoryView {
 		return array_keys($categories);
 	}
 
-	protected function retriveList() {
-		$sort = $this->getSorting();
-		if ($this->sFilterBy===null) { // no categories
-			// echo print_m($this->allowedProductIDs);
-			if (!empty($this->allowedProductIDs)) {
-				$allowedCategories = MagnaDB::gi()->fetchArray('
-					SELECT DISTINCT p2c.categories_id 
-					  FROM '.TABLE_PRODUCTS_TO_CATEGORIES.' p2c
-					 WHERE p2c.products_id IN ('.implode(', ', $this->allowedProductIDs).')
-				', true);
-				
-				/* Get all involved parent categories */
-				if (!empty($allowedCategories)) {
-					// echo print_m($allowedCategories, '$allowedCategories');
-					//$_t = microtime(true);
-					$allowedCategories = $this->getAllParentCategories($allowedCategories);
-					//echo microtime2human(microtime(true) - $_t);
-				}
-				//echo print_m($allowedCategories, '$allowedCategories');
-	
-				$allowedCategoriesWhere = 'c.categories_id IN ('.implode(', ', $allowedCategories).') AND ';
-			} else {
-				$allowedCategoriesWhere = '(0 = 1) AND '; // false... obviously
-			}
-	
-			$queryStr = '
-				  SELECT c.categories_id, cd.categories_name, c.categories_image, c.parent_id
-				    FROM '.TABLE_CATEGORIES.' c, '.TABLE_CATEGORIES_DESCRIPTION.' cd 
-				   WHERE c.categories_id = cd.categories_id
-				         AND cd.language_id = "'.(int)$_SESSION['languages_id'].'"
-				         AND '.(((SHOPSYSTEM != 'oscommerce') && $this->showOnlyActiveProducts)
-				         	? 'categories_status<>0 AND' 
-				         	: ''
-				         ).' '.$allowedCategoriesWhere;
-	
-			if ($this->search != '') {
-				$queryStr .= "cd.categories_name like '%" . $this->search . "%' ";
-			} else {
-				$queryStr .= "c.parent_id = '" . $this->cPath . "' ";
-			}
-	
-			$queryStr .= "ORDER BY " . $sort['cat'];
-			//echo print_m($queryStr, 'CategoryQuery');
-			
-			$categories = MagnaDB::gi()->fetchArray($queryStr);
-			//echo var_dump_pre($categories, '$categories');
-			$this->list['categories'] = array();
-			if (!empty($categories)) {
-				foreach ($categories as $category) {
-					$category['allproductsids'] = $this->getProductIDsByCategoryID($category['categories_id']);
-					$this->list['categories'][$category['categories_id']] = $category;
-				}
-			}
-			unset($categories);
-		}
-		if ($this->productsQuery == '') {
-			$this->setupProductsQuery();
+	protected function filterCategoriesList() {
+		// echo print_m($this->allowedProductIDs);
+		
+		if ($this->isComfortDisabled()) {
+			// Don't filter the categories and show them all if the inventory is too large.
+			return '';
 		}
 		
-		//echo print_m($this->productsQuery, '$this->productsQuery');
-		$sProductsQuery=$this->productsQuery;
-		$this->list['products'] = array();
-		if($this->sFilterBy!==null){
-			$iCurrentPage=isset($_GET['page'])?$_GET['page']:$_POST['page'];
-			$iCurrentPage=$iCurrentPage==0?1:$iCurrentPage;
-			$sProductsIdQuery=preg_replace('/(SELECT).*(FROM)(.*)/Uis', '$1 p.products_id $2', $sProductsQuery);
-			foreach(MagnaDB::gi()->fetchArray($sProductsIdQuery) as $product ){
-				$this->list['products'][$product['products_id']] = $product;
+		if (!empty($this->allowedProductIDs)) {
+			if (empty($this->cat2ProdCacheQuery)) {
+				$this->setupCat2ProdCacheQuery();
 			}
-			$sLimit=' limit '.(($iCurrentPage-1)*20).',20';
-		}else{
-			$sLimit='';
-		}
-		$products = MagnaDB::gi()->fetchArray($sProductsQuery.$sLimit);
-		if (!empty($products)) {
-			foreach ($products as $product) {
-				$this->list['products'][$product['products_id']] = $product;
+			
+			$allowedCategoriesQuery = str_replace('DISTINCT p2c.products_id, ', 'DISTINCT ', $this->cat2ProdCacheQuery);
+			$allowedCategoriesQuery .= ' AND p2c.products_id IN ('.implode(', ', $this->allowedProductIDs).')';
+			/*
+			$allowedCategoriesQuery = '
+				SELECT DISTINCT p2c.categories_id 
+				  FROM '.TABLE_PRODUCTS_TO_CATEGORIES.' p2c
+				 WHERE p2c.products_id IN ('.implode(', ', $this->allowedProductIDs).')
+			';
+			//*/
+			
+			if (self::QUERY_DEBUG) echo print_m($allowedCategoriesQuery, '$allowedCategoriesQuery');
+			$allowedCategories = MagnaDB::gi()->fetchArray($allowedCategoriesQuery, true);
+			
+			/* Get all involved parent categories */
+			if (!empty($allowedCategories)) {
+				// echo print_m($allowedCategories, '$allowedCategories');
+				//$_t = microtime(true);
+				$allowedCategories = $this->getAllParentCategories($allowedCategories);
+				//echo microtime2human(microtime(true) - $_t);
 			}
+			//echo print_m($allowedCategories, '$allowedCategories');
+			
+			$allowedCategoriesWhere = 'c.categories_id IN ('.implode(', ', $allowedCategories).') AND ';
+		} else {
+			$allowedCategoriesWhere = '(0 = 1) AND '; // false... obviously
 		}
-		unset($products);
-
-		//echo print_m($this->allowedProductIDs, '$this->allowedProductIDs');
+		return $allowedCategoriesWhere;
 	}
-
+	
+	protected function retriveCategoriesListAddCategory($category) {
+		$category['allproductsids'] = $this->getProductIDsByCategoryIDFiltered($category['categories_id']);
+		$this->list['categories'][$category['categories_id']] = $category;
+	}
+	
+	protected function retriveCategoriesList() {
+		if (self::QUERY_DEBUG) echo print_m(__LINE__, __METHOD__);
+		
+		$allowedCategoriesWhere = $this->filterCategoriesList();
+		
+		$queryStr = '
+			  SELECT c.categories_id, cd.categories_name, c.categories_image, c.parent_id
+			    FROM '.TABLE_CATEGORIES.' c, '.TABLE_CATEGORIES_DESCRIPTION.' cd 
+			   WHERE c.categories_id = cd.categories_id
+			         AND cd.language_id = "'.(int)$_SESSION['languages_id'].'"
+			         AND '.(((SHOPSYSTEM != 'oscommerce') && $this->showOnlyActiveProducts)
+			         	? 'categories_status<>0 AND' 
+			         	: ''
+			         ).' '.$allowedCategoriesWhere;
+		
+		if ($this->search != '') {
+			$queryStr .= "cd.categories_name like '%" . MagnaDB::gi()->escape($this->search) . "%' ";
+		} else {
+			$queryStr .= "c.parent_id = '" . $this->cPath . "' ";
+		}
+		$sort = $this->getSorting();
+		
+		$queryStr .= "ORDER BY " . $sort['cat'];
+		if (self::QUERY_DEBUG) echo print_m($queryStr, 'CategoryQuery');
+		
+		$categories = MagnaDB::gi()->fetchArray($queryStr);
+		//echo var_dump_pre($categories, '$categories');
+		$this->list['categories'] = array();
+		if (!empty($categories)) {
+			foreach ($categories as $category) {
+				$this->retriveCategoriesListAddCategory($category);
+			}
+		}
+		unset($categories);
+	}
+	
 	protected function setupProductsQuery($fields = '', $from = '', $where = '') {
 		$sort = $this->getSorting();
 		
@@ -633,10 +785,12 @@ class SimpleCategoryView {
 			       p2c.categories_id'.(($fields != '') ? (', '.$fields) : '').'
 			  FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd, '.TABLE_PRODUCTS_TO_CATEGORIES.' p2c 
 			       '.(($from != '') ? (', '.$from) : '').'
-			 WHERE p.products_id = pd.products_id AND pd.language_id = "'.(int)$_SESSION['languages_id'].'" AND
-			       p.products_id = p2c.products_id AND
-			       '.(($this->showOnlyActiveProducts) ? 'p.products_status<>0 AND' : '').'
-			       '.$whereProducs.' '.(($where != '') ? ('AND '.$where) : '').' ';
+			 WHERE p.products_id = pd.products_id
+			       AND pd.language_id = "'.(int)$_SESSION['languages_id'].'"
+			       AND p.products_id = p2c.products_id
+			       '.(($this->showOnlyActiveProducts) ? 'AND p.products_status<>0' : '').'
+			       AND '.$whereProducs.'
+			       '.(($where != '') ? ('AND '.$where) : '').' ';
 
 		$this->addFilterToProductsQuery();
 		
@@ -667,13 +821,36 @@ class SimpleCategoryView {
 			$this->productsQuery .= 'AND p2c.categories_id = "'.$this->cPath.'" ';
 		}
 		$this->productsQuery .= 'ORDER BY '.$sort['prod'];
-		#echo print_m($this->productsQuery, 'ProductsQuery');
+		
+		if (self::QUERY_DEBUG) echo print_m($this->productsQuery, 'ProductsQuery');
+	}
+	
+	protected function retriveProductsList() {
+		if ($this->productsQuery == '') {
+			$this->setupProductsQuery();
+		}
+
+		//echo print_m($this->productsQuery, '$this->productsQuery');
+		$this->list['products'] = array();
+		
+		$products = MagnaDB::gi()->fetchArray($this->productsQuery);
+		if (!empty($products)) {
+			foreach ($products as $product) {
+				$this->list['products'][$product['products_id']] = $product;
+			}
+		}
+		
+		unset($products);
+	}
+	
+	protected function retriveList() {
+		$this->retriveCategoriesList();
+		$this->retriveProductsList();
 	}
 
 	private function buildCPath($newCID) {
-		global $cPath_array; /* xt:commerce */
 		if ($this->cPath != 0) {
-			return implode('_', array_merge($cPath_array, array($newCID)));
+			return implode('_', array_merge($this->cPathArray, array($newCID)));
 		}
 		return $newCID;
 	}
@@ -684,7 +861,7 @@ class SimpleCategoryView {
 				$iTotal = 1; //something
 				$iSelected = 0;
 			}else{
-				$aTotal=$this->getProductIDsByCategoryID($id, true);
+				$aTotal = $this->getProductIDsByCategoryID($id, true);
 				$iTotal = count($aTotal);
 				$iSelected = found_in_array($aTotal, $this->selection);
 			}
@@ -765,11 +942,7 @@ class SimpleCategoryView {
 		}		
 		
 		$addFields = '';
-		if (   !empty($this->search)
-		    || (
-					$this->sFilterBy!==null
-		    )
-		) {
+		if ( !empty($this->search) ) {
 			if (!empty($this->list['categories'])) {
 				$addFields .= '
 					<input type="hidden" id="selectableCategories" name="selectableCategories" value="'.implode(':', array_keys($this->list['categories'])).'"/>';
@@ -817,8 +990,7 @@ class SimpleCategoryView {
 	}
 	
 	public function printForm() {
-		global $cPath_array; /* xt:commerce */
-
+		$this->appendTopHTML($this->productIdFilterRender());
 		if (array_key_exists('cPath', $_GET) && ($_GET['cPath'] != '')) {
 			$this->url['cPath'] = $_GET['cPath'];
 		}
@@ -923,21 +1095,6 @@ class SimpleCategoryView {
 		$html .= '
 			</tbody></table>
 		</form>';
-		if($this->sFilterBy!==null){
-			$iCurrentPage=isset($_GET['page'])?$_GET['page']:$_POST['page'];
-			$iCurrentPage=$iCurrentPage==0?1:$iCurrentPage;
-			$iTotalPages=count($this->list['products'])/20;
-			$iTotalPages=$iTotalPages==(int)$iTotalPages?$iTotalPages:(int)$iTotalPages+1;
-			$sFilterBy=$this->sFilterBy;
-			$html.='<table class="listingInfo"><tbody><tr>
-						<td class="pagination">
-							<span class="bold">'.ML_LABEL_CURRENT_PAGE.' &nbsp;&nbsp; '.$iCurrentPage.'</span>
-						</td>
-						<td class="textright">
-							'.renderPagination($iCurrentPage, $iTotalPages, array_merge($this->url,array('FilterBy'=>$sFilterBy))).'
-						</td>
-					</tr></tbody></table>';
-		}
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 function toggleCheckboxClasses(elem, state) {
@@ -1044,13 +1201,13 @@ $(document).ready(function() {
 
 		$leftButtons = $this->getLeftButtons();
 		if (empty($leftButtons)) {
-			if (count($cPath_array) > 1) {
-				$leftButtons = $cPath_array;
+			if (count($this->cPathArray) > 1) {
+				$leftButtons = $this->cPathArray;
 				array_pop($leftButtons);
 				$leftButtons = '<a class="button" href="'.toURL($this->url, array('cPath' => implode('_', $leftButtons))).'">'.
 					$this->imageHTML(DIR_MAGNALISTER_WS_IMAGES.'folder_back.png', ML_BUTTON_LABEL_BACK).' '. ML_BUTTON_LABEL_BACK . 
 				'</a>';
-			} else if (((count($cPath_array) == 1) && ($cPath_array[0] != '0')) || !empty($this->search)) {
+			} else if (((count($this->cPathArray) == 1) && ($this->cPathArray[0] != '0')) || !empty($this->search)) {
 				unset($this->url['cPath']);
 				$leftButtons = '<a class="button" href="'.toURL($this->url).'">'.
 					$this->imageHTML(DIR_MAGNALISTER_WS_IMAGES.'folder_back.png', ML_BUTTON_LABEL_BACK).' '. ML_BUTTON_LABEL_BACK . 

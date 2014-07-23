@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ErrorView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: ErrorView.php 4042 2014-06-29 17:12:42Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -47,7 +47,8 @@ class ErrorView {
 
 		/* Download new Error Messages */
 		$begin = MagnaDB::gi()->fetchOne('
-			SELECT dateadded FROM '.TABLE_MAGNA_AMAZON_ERRORLOG.' 
+		    SELECT dateadded FROM '.TABLE_MAGNA_AMAZON_ERRORLOG.'
+		     WHERE mpID = '.$this->mpID.'
 		  ORDER BY dateadded DESC 
 		     LIMIT 1
 		');

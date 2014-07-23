@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: generictests.php 3574 2014-03-05 23:51:18Z derpapst $
+ * $Id: generictests.php 4042 2014-06-29 17:12:42Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -156,15 +156,25 @@ function testMLProduct() {
 	$cfg = array (
 		'lang' => isset($_GET['lang']) ? $_GET['lang'] : '2',
 		'single' => isset($_GET['single']),
-		'pid' => (isset($_GET['pid']) ? $_GET['pid'] : 24),
+		'pid' => (isset($_GET['pid']) ? $_GET['pid'] : 4641),
 		'onlyoffer' => isset($_GET['onlyoffer']),
-		'purge' => isset($_GET['purge']),
+		'optionsTmp' => array (
+			'purgeVariations' => isset($_GET['optionsTmp']['purgeVariations']) && ($_GET['optionsTmp']['purgeVariations'] == 'true'),
+			'useGambioProperties' => isset($_GET['optionsTmp']['useGambioProperties'])
+				? ($_GET['optionsTmp']['useGambioProperties'] == 'true')
+				: (MAGNA_GAMBIO_VARIATIONS && (getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true'))
+		),
 		'blacklist' => array(),
 		'useold' => isset($_GET['useold']) && ($_GET['useold'] == 'true'),
 	);
+	if (preg_match('/^([a-zA-Z0-9]+,)+[a-zA-Z0-9]+$/', $cfg['lang'])) {
+		$cfg['lang'] = explode(',', $cfg['lang']);
+	}
 	if (isset($_GET['blacklist']) && preg_match('/^([0-9]+,)*[0-9]+$/', $_GET['blacklist'])) {
 		$cfg['blacklist'] = explode(',', $_GET['blacklist']);
 	}
+	
+	echo print_m($cfg, '$cfg');
 	
 	if ($cfg['useold']) {
 		$product = MLProduct::gi()->getProductByIdOld($cfg['pid'], $cfg['lang']);
@@ -182,22 +192,100 @@ function testMLProduct() {
 			MLProduct::gi()->setVariationDimensionBlacklist($cfg['blacklist']);
 		}
 		if ($cfg['onlyoffer']) {
-			$product = MLProduct::gi()->getProductOfferById($cfg['pid'], $cfg['purge']);
+			$product = MLProduct::gi()->getProductOfferById($cfg['pid'], $cfg['optionsTmp']);
 		} else {
-			$product = MLProduct::gi()->getProductById($cfg['pid'], $cfg['purge']);
+			$product = MLProduct::gi()->getProductById($cfg['pid'], $cfg['optionsTmp']);
 		}
 	}
 	
-	echo print_m($cfg, '$cfg');
 	arrayEntitiesToUTF8($product);
 	echo print_m($product, '$product');
 }
 
 testMLProduct();
+
+
+function blargh() {
+	if (!MagnaDB::gi()->tableExists('products_properties_index')) {
+		return;
+	}
+	echo '== Erkennen =='."\n";
+	
+	$sku = 'ABC123_m-gold';
+	echo '=== ProductsModel (SKU: '.$sku.') ==='."\n";
+	
+	$productsPropertiesCombisId = MagnaDB::gi()->fetchArray(eecho('
+		    SELECT CONCAT(p.products_model, "_", ppc.combi_model) AS SKU, ppc.*
+		      FROM products_properties_combis ppc
+		INNER JOIN products p ON p.products_id = ppc.products_id
+		    HAVING SKU = "'.MagnaDB::gi()->escape($sku).'"
+	', true));
+	
+	echo "\n".print_m($productsPropertiesCombisId, '$productsPropertiesCombisId');
+	
+	$sku = 'ML1_1.2_2.4';
+	echo "\n".'=== ProductsId (SKU: '.$sku.') ==='."\n";
+	$data = explode('_', $sku);
+	$pId = substr(array_shift($data), 2);
+	
+	$productsPropertiesCombisId = false;
+	foreach ($data as $propSet) {
+		$propSet = explode('.', $propSet);
+		
+		$productsPropertiesCombisId = MagnaDB::gi()->fetchArray(eecho('
+			SELECT DISTINCT products_properties_combis_id
+			  FROM '.'products_properties_index'.'
+			 WHERE products_id = "'.$pId.'"
+			       AND properties_id = "'.$propSet[0].'"
+			       AND properties_values_id = "'.$propSet[1].'"
+			       '.(($productsPropertiesCombisId !== false) 
+			            ? 'AND products_properties_combis_id IN ('.implode(', ', $productsPropertiesCombisId).')'
+			            : ''
+			       ).'
+		', true), true);
+	}
+	echo "\n".print_m($productsPropertiesCombisId, '$productsPropertiesCombisId');
+}
+
+blargh();
+
+
 /*
 echo print_m(MLProduct::gi()->getAllImagesByProductsId(4817), 'new');
 echo print_m(MLProduct::gi()->getProductImagesByID(4817), 'old');
 */
+
+/*
+require_once(DIR_MAGNALISTER_INCLUDES.'modules/ebay/classes/ebayTopTen.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'modules/ebay/ebayFunctions.php');
+
+$eBayMpId = 395;
+$eBayCategoryType = 'PrimaryCategory';
+$_MagnaSession['mpID'] = $eBayMpId;
+$_MagnaSession['currentPlatform'] = magnaGetMarketplaceByID($_MagnaSession['mpID']);
+
+$oTopTen = new ebayTopTen();
+$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
+$oTopTen->configCopy();
+$aTopTenCatIds = $oTopTen->getTopTenCategories($eBayCategoryType);
+echo print_m($aTopTenCatIds, '$aTopTenCatIds');
+//*/
+/*
+require_once(DIR_MAGNALISTER_INCLUDES.'modules/hood/classes/HoodTopTenCategories.php');
+$hoodMpId = 12192;
+$hoodCategoryType = 'PrimaryCategory';
+$_MagnaSession['mpID'] = $hoodMpId;
+$_MagnaSession['currentPlatform'] = magnaGetMarketplaceByID($_MagnaSession['mpID']);
+HoodApiConfigValues::gi()->init($_MagnaSession);
+var_dump(HoodHelper::hasStore());
+
+$oTopTen = new HoodTopTenCategories();
+$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
+$oTopTen->configCopy();
+$aTopTenCatIds = $oTopTen->getTopTenCategories($hoodCategoryType);
+echo print_m($aTopTenCatIds, '$aTopTenCatIds');
+//*/
+
 
 echo '
 ----------------------------------------------------

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: modules.php 3365 2013-12-06 14:25:32Z tim.neumann $
+ * $Id: modules.php 4045 2014-06-29 17:28:18Z derpapst $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -94,7 +94,7 @@ $_modules = array(
 				'views' => array (
 					'inventory' => ML_GENERIC_INVENTORY,
 					'deleted' => ML_GENERIC_DELETED,
-					'failed' => ML_GENERIC_FAILED
+	#				'failed' => ML_GENERIC_FAILED
 				)
 			),
 			'conf' => ML_GENERIC_CONFIGURATION,
@@ -185,7 +185,6 @@ $_modules = array(
 					'varmatch' => ML_MEINPAKET_VARIANT_MATCHING,
 				),
 			),
-			'catmatch' => ML_MEINPAKET_CATEGORY_MATCHING,
 			'checkin' => ML_GENERIC_CHECKIN,
 			'listings' => array (
 				'title' => ML_GENERIC_LISTINGS,
@@ -619,6 +618,36 @@ $_modules = array(
 		),
 		'type' => 'marketplace',
 	),
+	'dawanda' => array (
+		'title' => ML_MODULE_DAWANDA,
+		'logo' => 'dawanda',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'dawanda.mpusername',
+			'dawanda.mppassword',
+			'dawanda.apikey',
+		),
+		'pages' => array (
+			'prepare' => ML_GENERIC_PREPARE,
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED
+				)
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'checkin',
+			'subsystem' => 'DaWanda',
+			'currency' => 'EUR',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
 	'more' => array (
 		'title' => '&hellip;',
 		'displayAlways' => true,
@@ -638,7 +667,3 @@ $_modules = array(
 		'type' => 'system',
 	),
 );
-
-if (!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV) {
-	unset($_modules['meinpaket']['pages']['prepare']);
-}

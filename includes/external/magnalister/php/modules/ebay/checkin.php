@@ -21,14 +21,20 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
-require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/CheckinCategoryView.php');
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+	require_once(DIR_MAGNALISTER_MODULES.'ebay/checkin/EbayCheckinProductList.php');
+	$sView = 'EbayCheckinProductList';
+} else {
+	require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/CheckinCategoryView.php');
+	$sView = 'eBayCheckinCategoryView';
+}
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBaySummaryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayCheckinSubmit.php');
 
 
 $cm = new CheckinManager(array(
         'summaryView'   => 'eBaySummaryView',
-	'checkinView'   => 'eBayCheckinCategoryView',
+	'checkinView'   => $sView,
 	'checkinSubmit' => 'eBayCheckinSubmit'),
 	array(
 	'marketplace' => 'ebay')

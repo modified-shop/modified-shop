@@ -19,23 +19,23 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FilterCategoryView.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimpleCategoryView.php');
 
-class HitmeisterPrepareCategoryView extends FilterCategoryView {
+class HitmeisterPrepareCategoryView extends SimpleCategoryView {
 	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '', $productIDs = array()) {
 		parent::__construct($cPath, $settings, $sorting, $search, $productIDs);
-		
-		# take only products with EAN set
-		$this->allowedProductIDs = MagnaDB::gi()->fetchArray('
-			  SELECT DISTINCT products_id
-			    FROM '.TABLE_PRODUCTS.'
-			   WHERE products_ean IS NOT NULL
-			         AND products_ean <> ""
-		', true);
 
 		if (!$this->isAjax) {
 			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		}
+	}
+
+	protected function init() {
+		parent::init();
+		
+		# take only products with EAN set
+		$this->productIdFIlterRegister('EANMasterFilter', array());
+		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 
 	public function getAdditionalHeadlines() {
@@ -123,12 +123,12 @@ class HitmeisterPrepareCategoryView extends FilterCategoryView {
 			</tbody></table>';
 	}
 
-	public function getAdditionalProductInfo($pID, $product) {
+	public function getAdditionalProductInfo($pID, $data = false) {
 		$a = MagnaDB::gi()->fetchRow(eecho('
 			SELECT *
 			  FROM '.TABLE_MAGNA_HITMEISTER_PREPARE.' 
-			 WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr')
-						? 'products_model=\''.MagnaDB::gi()->escape($product['products_model']).'\''
+			 WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr') && is_array($data) && isset($data['products_model'])
+						? 'products_model=\''.MagnaDB::gi()->escape($data['products_model']).'\''
 						: 'products_id=\''.$pID.'\''
 					).'
 				   AND mpID=\''.$this->_magnasession['mpID'].'\'
@@ -138,11 +138,11 @@ class HitmeisterPrepareCategoryView extends FilterCategoryView {
 			if ($a['mp_category_id'] != '') {
 				return '
 					<td>'.$this->renderCatBlock($a).'</td>
-					<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_COMPLETE, 12, 12).'</td>';				
+					<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_COMPLETE, 12, 12).'</td>';
 			} else {
 				return '
 					<td>'.$this->renderCatBlock($a).'</td>
-					<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 12, 12).'</td>';				
+					<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 12, 12).'</td>';
 			}
 		}
 		return '

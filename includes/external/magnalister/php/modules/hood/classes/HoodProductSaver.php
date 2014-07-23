@@ -44,6 +44,9 @@ class HoodProductSaver {
 		$this->config['hasShortDesc'] = MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION);
 		
 		$this->config['imagepath'] = rtrim(getDBConfigValue($this->marketplace.'.imagepath', $this->mpId), '/').'/';
+		if ($this->config['imagepath'] == '/') {
+			$this->config['imagepath'] = '';
+		}
 		$this->config['templateContent'] = getDBConfigValue($this->marketplace.'.template.content', $this->mpId);
 		$this->config['templateTitle']   = getDBConfigValue($this->marketplace.'.template.name', $this->mpId, '#TITLE#');
 	}
@@ -150,7 +153,7 @@ class HoodProductSaver {
 		foreach ($itemDetails['hood_default_shipping_local'] as $key => $localService) {
 			$shippingDetails[$key] = array(
 				'Service' => $localService['Service'],
-				'Cost' => priceToFloat($localService['Cost']),
+				'Cost' => mlFloatalize($localService['Cost']),
 			);
 		}
 		if (isset($itemDetails['conf'])
@@ -205,7 +208,12 @@ class HoodProductSaver {
 		if (!empty($itemDetails['startTime'])) {
 			$row['StartTime'] = $itemDetails['startTime'];
 		}
-		$row['StartPrice'] = priceToFloat($itemDetails['StartPrice']);
+		
+		if (isset($itemDetails['StartPrice'])) {
+			$row['StartPrice'] = mlFloatalize($itemDetails['StartPrice']);
+		} else {
+			$row['StartPrice'] = 0.0;
+		}
 		
 		$row['ShortDescription'] = trim($itemDetails['ShortDescription']);
 		$row['Description'] = trim($itemDetails['Description']);

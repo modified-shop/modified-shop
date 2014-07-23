@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinCategoryView.php 3434 2014-01-09 11:37:41Z derpapst $
+ * $Id: CheckinCategoryView.php 3809 2014-04-24 13:58:24Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -27,14 +27,6 @@ class MeinpaketCheckinCategoryView extends SimpleCheckinCategoryView {
 	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '') {
 		global $_MagnaSession;
 		
-		$this->preptable = (!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV)
-			? TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING
-			: TABLE_MAGNA_MEINPAKET_PROPERTIES;
-		
-		$marketplaceCategoryField = (!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV)
-			? 'mp_category_id'
-			: 'MarketplaceCategory';
-		
 		$settings = array_merge(array(
 			'selectionName'   => 'checkin',
 			'selectionValues' => array (
@@ -48,8 +40,8 @@ class MeinpaketCheckinCategoryView extends SimpleCheckinCategoryView {
 					? 'products_model' 
 					: 'products_id'
 				).'
-			  FROM '.$this->preptable.'
-			 WHERE '.$marketplaceCategoryField.'<>""
+			  FROM '.TABLE_MAGNA_MEINPAKET_PROPERTIES.'
+			 WHERE MarketplaceCategory <> ""
 			       AND mpID="'.$_MagnaSession['mpID'].'"
 		', true);
 		#echo print_m($preparedItems, '$preparedItems');
@@ -82,7 +74,7 @@ class MeinpaketCheckinCategoryView extends SimpleCheckinCategoryView {
 			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		}
 	}
-
+	
 	public function getAdditionalHeadlines() {
 		return '
 			<td>'.ML_MEINPAKET_LABEL_CATEGORY.'</td>';
@@ -96,17 +88,13 @@ class MeinpaketCheckinCategoryView extends SimpleCheckinCategoryView {
 	public function getAdditionalProductInfo($pID, $data = false) {
 		$a = MagnaDB::gi()->fetchRow('
 			SELECT *
-			  FROM '.$this->preptable.' 
+			  FROM '.TABLE_MAGNA_MEINPAKET_PROPERTIES.' 
 			 WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr')
 						? 'products_model="'.MagnaDB::gi()->escape($data['products_model']).'"'
 						: 'products_id="'.$pID.'"'
 					).'
 			        AND mpID="'.$this->_magnasession['mpID'].'"
 		');
-		if (isset($a['mp_category_id'])) {
-			$a['MarketplaceCategory'] = $a['mp_category_id'];
-			$a['StoreCategory'] = $a['store_category_id'];
-		}
 		return '
 			<td>
 				<table class="nostyle"><tbody>

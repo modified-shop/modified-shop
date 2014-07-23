@@ -27,6 +27,8 @@ class MagnaCompatibleCategoryMatching extends MarketplaceCategoryMatching {
 	protected $marketplace = '';
 	protected $mpID = 0;
 
+	protected $prepareSettings = array();
+
 	public function __construct(&$params) {
 		foreach ($params as $attr => &$v) {
 			if (isset($this->$attr)) {
@@ -41,6 +43,56 @@ class MagnaCompatibleCategoryMatching extends MarketplaceCategoryMatching {
 	}
 
 	protected function getMatchingBoxHTML() {
+		$data = MagnaDB::gi()->fetchArray('
+		    SELECT DISTINCT
+		           cm.mp_category_id AS MarketplaceCategory,
+		           cm.store_category_id AS StoreCategory
+		      FROM '.TABLE_MAGNA_SELECTION.' ms
+		INNER JOIN '.TABLE_PRODUCTS.' p ON ms.pID = p.products_id
+		INNER JOIN '.TABLE_MAGNA_COMPAT_CATEGORYMATCHING.' cm
+		           ON '.((getDBConfigValue('general.keytype', '0') == 'artNr')
+		               ? 'cm.products_model = p.products_model'
+		               : 'cm.products_id = p.products_id'
+		           ).'
+		     WHERE ms.mpID=\''.$this->mpID.'\'
+		           AND cm.mpID=\''.$this->mpID.'\'
+		           AND ms.selectionname=\''.$this->prepareSettings['selectionName'].'\'
+		           AND ms.session_id=\''.session_id().'\'
+		');
+		#echo print_m($data, '$data');
+		
+		$preSelected = array (
+			'MarketplaceCategory' => array(),
+			'StoreCategory' => array(),
+		);
+		
+		foreach ($data as $row) {
+			foreach ($preSelected as $field => $collection) {
+				$preSelected[$field][] = isset($row[$field]) ? $row[$field] : array();
+			}
+		}
+		foreach ($preSelected as $field => $collection) {
+			$collection = array_unique($collection);
+			if (count($collection) == 1) {
+				$preSelected[$field] = array_shift($collection);
+			} else {
+				$preSelected[$field] = null;
+			}
+		}
+		
+		if (!empty($preSelected['MarketplaceCategory'])) {
+			$preSelected['MarketplaceCategoryName'] = $this->getMPCategoryPath($preSelected['MarketplaceCategory']);
+		} else {
+			$preSelected['MarketplaceCategoryName'] = '';
+		}
+		if (!empty($preSelected['StoreCategory'])) {
+			$preSelected['StoreCategoryName'] = $this->getShopCategoryPath($preSelected['StoreCategory']);
+		} else {
+			$preSelected['StoreCategoryName'] = '';
+		}
+		
+		#echo print_m($preSelected, 'preSelected');
+		
 		$html = '
 			<style>
 table.actions table.matchingTable {
@@ -65,24 +117,24 @@ div.catVisual {
 	color: #000;
 	border: 1px solid #999;
 }
-
 			</style>
 			<table class="matchingTable"><tbody>
 				<tr><td colspan="2">'.ML_MAGNACOMPAT_CATEGORYMATCHING_ASSIGN_MP_CAT.'</td></tr>
 				<tr>
-					<td><div class="catVisual" id="mpCategoryVisual">'.$primaryCategoryName.'</div></td>
+					<td><div class="catVisual" id="mpCategoryVisual">'.$preSelected['MarketplaceCategoryName'].'</div></td>
 					<td class="buttons">
-						<input type="hidden" id="mpCategory" name="mpCategory" value="'.$primaryCategory.'"/>
-						<input type="hidden" id="mpCategoryName" name="mpCategoryName" value="'.$primaryCategoryName.'"/>
+						<input type="hidden" id="mpCategory" name="mpCategory" value="'.$preSelected['MarketplaceCategory'].'"/>
+						<input type="hidden" id="mpCategoryName" name="mpCategoryName" value="'.strip_tags($preSelected['MarketplaceCategoryName']).'"/>
 						<input class="fullWidth button smallmargin" type="button" value="'.ML_LABEL_CHOOSE.'" id="selectMPCategory"/>
 					</td>
 				</tr>
 				<tr><td colspan="2">&nbsp;</td></tr>'.(!getDBConfigValue(array($this->marketplace.'.catmatch.mpshopcats', 'val'), $this->mpID, false) ? ('
 				<tr><td colspan="2">'.ML_MAGNACOMPAT_CATEGORYMATCHING_ASSIGN_SHOP_CAT.'</td></tr>
 				<tr>
-					<td><div class="catVisual" id="storeCategoryVisual">'.$primaryCategoryName.'</div></td>
+					<td><div class="catVisual" id="storeCategoryVisual">'.$preSelected['StoreCategoryName'].'</div></td>
 					<td class="buttons">
-						<input type="hidden" id="storeCategory" name="storeCategory" value="'.$primaryCategory.'"/>
+						<input type="hidden" id="storeCategory" name="storeCategory" value="'.$preSelected['StoreCategory'].'"/>
+						<input type="hidden" id="storeCategoryName" name="storeCategoryName" value="'.strip_tags($preSelected['StoreCategoryName']).'"/>
 						<input class="fullWidth button smallmargin" type="button" value="'.ML_LABEL_CHOOSE.'" id="selectStoreCategory"/>
 					</td>
 				</tr>') : '').'
@@ -126,7 +178,4 @@ $(document).ready(function() {
 				</td></tr>
 			</tbody></table>';
 	}
-
-
-
 }

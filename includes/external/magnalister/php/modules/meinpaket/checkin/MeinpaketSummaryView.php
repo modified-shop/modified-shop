@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketSummaryView.php 3261 2013-11-01 18:08:09Z derpapst $
+ * $Id: MeinpaketSummaryView.php 3856 2014-05-12 15:56:27Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -23,6 +23,8 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimpleSummaryView.php');
 
 class MeinpaketSummaryView extends SimpleSummaryView {
 	private $inventoryData = array();
+	
+	
 	public function __construct($settings = array()) {
 		global $_MagnaSession;
 		$settings = array_merge(array(
@@ -34,6 +36,11 @@ class MeinpaketSummaryView extends SimpleSummaryView {
 	}
 	
 	protected function additionalInitialisation() {
+		$this->settings['SyncInventory'] = array (
+			'Price' => getDBConfigValue('meinpaket.inventorysync.price', $this->_magnasession['mpID'], '') == 'auto',
+			'Quantity' => getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->_magnasession['mpID'], '') == 'auto',
+		);
+		
 		$pIDs = array();
 		foreach ($this->selection as $pID => $item) {
 			$pIDs[] = $pID;
@@ -162,40 +169,42 @@ class MeinpaketSummaryView extends SimpleSummaryView {
 
 	protected function getAdditionalItemCells($key, $dbRow) {
 		$this->extendProductAttributes($dbRow['products_id'], $this->selection[$dbRow['products_id']]);
-
+		
 		return '
 				<td><table class="nostyle"><tbody>
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
 							<input type="text" id="price_'.$dbRow['products_id'].'"
-						           name="price['.$dbRow['products_id'].']"
-						           value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"/>
+							       name="price['.$dbRow['products_id'].']"
+							       value="'.$this->simplePrice->setPrice($this->selection[$dbRow['products_id']]['price'])->getPrice().'"
+							       '.($this->settings['SyncInventory']['Price'] ? 'disabled="disabled"' : '').' />
 							<input type="hidden" id="backup_price_'.$dbRow['products_id'].'"
-						           value="'.$this->simplePrice->getPrice().'"/>
+							       value="'.$this->simplePrice->getPrice().'"/>
 						</td></tr>
-				    	<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
+						<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
 							array_key_exists($dbRow['products_id'], $this->inventoryData) ?
 								/* Waehrung von Preis nicht umrechnen, da bereits in Zielwaehrung. */
 								$this->simplePrice->setPrice($this->inventoryData[$dbRow['products_id']]['Price'])->formatWOCurrency() :
 								'&mdash;'
 						).'</td></tr>
-				    </tbody></table>
+					</tbody></table>
 				</td>
 				<td>'.(int)$dbRow['products_quantity'].'</td>
 				
 				<td><table class="nostyle"><tbody>
 						<tr><td>'.ML_LABEL_NEW.':&nbsp;</td><td>
 							<input type="hidden" id="old_quantity_'.$dbRow['products_id'].'"
-						           value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
-						    <input type="text" id="quantity_'.$dbRow['products_id'].'"
-						           name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
-						           value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
+							       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"/>
+							<input type="text" id="quantity_'.$dbRow['products_id'].'"
+							       name="quantity['.$dbRow['products_id'].']" size="4" maxlength="4" 
+							       value="'.$this->selection[$dbRow['products_id']]['quantity'].'"
+							       '.($this->settings['SyncInventory']['Quantity'] ? 'disabled="disabled"' : '').'/>
 						</td></tr>
-				    	<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
+						<tr><td>'.ML_LABEL_OLD.':&nbsp;</td><td>&nbsp;'.(
 							array_key_exists($dbRow['products_id'], $this->inventoryData) ?
 								$this->inventoryData[$dbRow['products_id']]['Quantity'] :
 								'&mdash;'
 						).'</td></tr>
-				    </tbody></table>
+					</tbody></table>
 				</td>';
 	}
 	

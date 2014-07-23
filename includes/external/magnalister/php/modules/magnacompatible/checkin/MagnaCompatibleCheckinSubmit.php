@@ -138,7 +138,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 		}
 		return $c;
 	}
-
+	
 	protected function generateShopCategoryPath($id, $from = 'category', $langID, $categoriesArray = array(), $index = 0) {
 		$descCol = '';
 		if (MagnaDB::gi()->columnExistsInTable('categories_description', TABLE_CATEGORIES_DESCRIPTION)) {
@@ -201,7 +201,6 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 			TABLE_MAGNA_COMPAT_ERRORLOG,
 			array (
 				'mpID' => $this->mpID,
-				'batchid' => '-',
 				'errormessage' => ML_GENERIC_ERROR_UNABLE_TO_LOAD_PREPARE_DATA,
 				'dateadded' => gmdate('Y-m-d H:i:s'),
 				'additionaldata' => serialize(array(
@@ -209,8 +208,9 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 				))
 			)
 		);
-		$this->badItems[] = $pID;
-		unset($this->selection[$pID]);
+		$iPID = magnaSKU2pID($sku);
+		$this->badItems[] = $iPID;
+		unset($this->selection[$iPID]);
 	}
 	
 	protected function prepareOwnShopCategories($pID, $product, &$data) {
@@ -414,7 +414,7 @@ class MagnaCompatibleCheckinSubmit extends CheckinSubmit {
 	}
 
 	protected function processSubmitResult($result) {
-		$method = array(ucfirst('tradoria').'Helper', 'processCheckinErrors');
+		$method = array(ucfirst($this->marketplace).'Helper', 'processCheckinErrors');
 		
 		if (is_callable($method)) {
 			call_user_func($method, $result, $this->mpID);

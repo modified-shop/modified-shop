@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimpleSummaryView.php 3536 2014-02-18 01:33:35Z derpapst $
+ * $Id: SimpleSummaryView.php 3857 2014-05-12 16:02:21Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -743,8 +743,9 @@ $(document).ready(function() {
 			SELECT * FROM `'.TABLE_MAGNA_SELECTION_TEMPLATES.'`
 			 WHERE mpID=\''.$this->mpID.'\'
 		');
+		$tplSelect = '';
 		if (!empty($templates)) {
-			$tplSelect = '<tr>
+			$tplSelect .= '<tr>
 				<td><label>'.ML_LABEL_OVERWRITE_OLD_TEMPLATE.'</label></td>
 				<td><select name="saveTemplate[selectTemplate]">';
 				
@@ -821,7 +822,6 @@ $(document).ready(function() {
 			ob_start();
 ?>
 <script type="text/javascript">/*<![CDATA[*/
-var templateNames = <?php echo json_encode($templateNames); ?>;
 //var runningRequests = 0;
 $(document).ready(function() {
 	$('form#summaryForm').submit(function() {

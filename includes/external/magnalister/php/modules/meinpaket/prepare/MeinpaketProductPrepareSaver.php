@@ -143,19 +143,18 @@ class MeinpaketProductPrepareSaver {
 		if ('artNr' == getDBConfigValue('general.keytype', '0')) {
 			$sType = 'products_model';
 			$aIds = array();
-			foreach ($this->loadProductsModel($pIds)as $aId) {
+			foreach ($this->loadProductsModel($pIds) as $aId) {
 				$aIds[] = $aId['products_model'];
 			}
 		} else {
 			$sType = 'products_id';
 			$aIds = $pIds;
 		}
-		MagnaDB::gi()->query("
-			DELETE FROM ".TABLE_MAGNA_MEINPAKET_PROPERTIES."
-			WHERE 
-				mpID = '".$this->mpId."' 
-				AND ".$sType ." in('".implode("',",$aIds)."')
-		");
+		MagnaDB::gi()->query('
+			DELETE FROM '.TABLE_MAGNA_MEINPAKET_PROPERTIES.'
+			 WHERE mpID = "'.$this->mpId.'"
+			       AND '.$sType .' IN ("'.implode('", "', $aIds).'")
+		');
 		return true;
 	}
 	

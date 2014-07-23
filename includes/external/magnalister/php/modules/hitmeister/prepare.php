@@ -171,7 +171,7 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 	protected function processSelection() {
 		if (($class = $this->loadResource('prepare', 'PrepareCategoryView')) === false) {
 			if ($this->isAjax) {
-				echo '{error: \'This is not supported\'}';
+				echo '{"error": "This is not supported"}';
 			} else {
 				echo 'This is not supported';
 			}
@@ -185,13 +185,30 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 		}
 	}
 
+	protected function processProductList() {
+		if (($sClass = $this->loadResource('prepare', 'PrepareProductList')) === false) {
+			if ($this->isAjax) {
+				echo '{"error": "This is not supported"}';
+			} else {
+				echo 'This is not supported';
+			}
+			return;
+		}
+		$o = new $sClass();
+		echo $o;
+	}
+
 	public function process() {
 		$this->saveMatching();
 		$this->deleteMatching();
 		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
 			$this->processMatching();
 		} else {
-			$this->processSelection();
+                                    if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+				$this->processProductList();
+			} else {
+                                                $this->processSelection();
+                                    }
 		}
 	}
 

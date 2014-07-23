@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Shipping.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: Shipping.php 3910 2014-05-27 00:58:20Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -118,7 +118,9 @@ class Shipping {
 						$this->includeOB($langPath . $include_modules[$i]['file']);
 						$this->includeOB($modulePath . $include_modules[$i]['file']);
 					}
-					$this->instances[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+					if (class_exists($include_modules[$i]['class'])) {
+						$this->instances[$include_modules[$i]['class']] = new $include_modules[$i]['class'];
+					}
 				}
 			}
 		}
@@ -127,11 +129,11 @@ class Shipping {
 			foreach ($this->instances as $module) {
 				$this->modules_info[] = array(
 					'code' => $module->code,
-                    'title' => $module->title,
-                    'description' => $module->description,
-                    'status' => $module->check(),
-                    'signature' => (isset($module->signature) ? $module->signature : null)
-                );
+					'title' => $module->title,
+					'description' => $module->description,
+					'status' => $module->check(),
+					'signature' => (isset($module->signature) ? $module->signature : null)
+				);
 			}
 		}
 	}

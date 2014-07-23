@@ -51,7 +51,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * value is the index of the order in the list of all orders.
 	 * @var array
 	 */
-	protected $aMorderId2OrderIndex = array();
+	protected $aMOrderID2Order = array();
 	
 	/**
 	 * List of all orders where shipping will be confirmed.
@@ -195,7 +195,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	
 	/**
 	 * Builds an element for the ConfirmShipment request.
-	 * @return void
+	 * @return array
 	 */
 	protected function confirmShipment($date) {
 		$cfirm = array (
@@ -217,10 +217,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		$this->oOrder['__dirty'] = true;
 		return $cfirm;
 	}
-	
+
 	/**
 	 * Builds an element for the CancelShipment request
-	 * @return void
+	 * @return array
 	 */
 	protected function cancelOrder($date) {
 		$cncl = array (
@@ -290,7 +290,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 * @return void
 	 */
 	protected function addToLookupTable() {
-		$this->aMorderId2Order[$this->oOrder['special']] = $this->iOrderIndex;
+		$this->aMOrderID2Order[$this->oOrder['special']] = $this->iOrderIndex;
 	}
 	
 	/**
@@ -301,10 +301,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 *   Reference to the order item or null if not found.
 	 */
 	protected function &getFromLookupTable($mOrderId) {
-		if (isset($this->aMorderId2Order[$mOrderId])
-			&& isset($this->aOrders[$this->aMorderId2Order[$mOrderId]])
+		if (isset($this->aMOrderID2Order[$mOrderId])
+			&& isset($this->aOrders[$this->aMOrderID2Order[$mOrderId]])
 		) {
-			return $this->aOrders[$this->aMorderId2Order[$mOrderId]];
+			return $this->aOrders[$this->aMOrderID2Order[$mOrderId]];
 		}
 		return null;
 	}
@@ -456,7 +456,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	/**
 	 * Gets a list of all orders for this marketplace where the
 	 * magnalister_orders.orders_status differs from the one of the shop.
-	 * @return void
+	 * @return array
 	 */
 	protected function getOrdersToSync() {
 		if ($this->_debugDryRun && ($this->_debugLevel >= self::DBGLV_HIGH)

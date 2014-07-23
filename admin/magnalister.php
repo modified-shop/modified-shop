@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: magnalister.php 4238 2014-07-18 13:14:55Z MaW $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -96,7 +96,7 @@ $_backup = array (
 );
 
 #ob_start(); # avoid output from broken files, so that our ajax requests don't fail.
-require_once('includes/application_top.php');
+require_once(dirname(__FILE__).'/includes/application_top.php');
 #ob_end_clean();
 
 /*
@@ -393,7 +393,6 @@ if (!MAGNA_SAFE_MODE && !is_writable(DIR_MAGNALISTER_FS)) {
 
 $requiredFiles = array (
 	'init.php',
-	'ftp.php',
 	'MagnaUpdater.php'
 );
 

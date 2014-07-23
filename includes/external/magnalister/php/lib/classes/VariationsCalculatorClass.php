@@ -25,10 +25,12 @@ defined('TABLE_PRODUCTS_VARIATIONS') OR define('TABLE_PRODUCTS_VARIATIONS', TABL
 
 
 class VariationsCalculator {
+	const MAX_PERMUTATIONS = 500;
+	
 	var $settings = array();
 	var $optionsWhitelist = array();
 	
-	function __construct($settings = array()) {
+	public function __construct($settings = array()) {
 		$this->settings = array_merge(
 			array (
 				'stockmerge' => 'min', // [min, max, add]
@@ -42,11 +44,11 @@ class VariationsCalculator {
 		}
 	}
 	
-	function nullToEmptyString(&$val) {
+	public function nullToEmptyString(&$val) {
 		return ($val === null) ? '' : $val;
 	}
 	
-	function setOptionsWhitelist($list) {
+	public function setOptionsWhitelist($list) {
 		if (is_array($list)) {
 			$this->optionsWhitelist = $list;
 		} else {
@@ -70,10 +72,17 @@ class VariationsCalculator {
 			return false;
 		}
 
-		$dimension = 1;
+		$permutationsCount = 1;
 		foreach ($attrByOptionsID as $vID => $vector) {
-			$dimension *= count($vector);
+			$permutationsCount *= count($vector);
 		}
+		
+		if ($permutationsCount > self::MAX_PERMUTATIONS) {
+			return false;
+		}
+		
+		#echo print_m($permutationsCount, '$permutationsCount');
+		
 		$std = array_merge(array (
 			'products_id' => '',
 			'products_sku' => '',
@@ -90,14 +99,14 @@ class VariationsCalculator {
 			'variation_volume' => 0,
 			'variation_unit_of_measure' => '',
 		), $base);
-		$permutations = array_fill(0, $dimension, $std);
-		//echo mp_print_r($attrByOptionsID, '$attrByOptionsID['.$dimension.']');
+		$permutations = array_fill(0, $permutationsCount, $std);
+		//echo mp_print_r($attrByOptionsID, '$attrByOptionsID['.$permutationsCount.']');
 
 		// To avoid database errors since the variations table does not support NULL
 		array_walk($base, array($this, 'nullToEmptyString')); 
 		array_walk($attrByOptionsID, array($this, 'nullToEmptyString')); 
 
-		$shift = $dimension;
+		$shift = $permutationsCount;
 		foreach ($attrByOptionsID as $oID => $vec) {
 			$vecCount = count($vec);
 			$offset = 0;
@@ -107,9 +116,9 @@ class VariationsCalculator {
 			$attrC = 0;
 			foreach ($vec as $vID => $attr) {
 				$i = 0;
-				for ($j = 0, $js = $dimension / $vecCount; $j < $js; ++$j) {
+				for ($j = 0, $js = $permutationsCount / $vecCount; $j < $js; ++$j) {
 					if (($j % $shift) == 0) {
-						$offset = ($subdim * $i) + ($shift * $attrC) % $dimension;
+						$offset = ($subdim * $i) + ($shift * $attrC) % $permutationsCount;
 						++$i;
 					}
 					$permutations[$offset]['variation_attributes'] .= $oID.','.$vID.'|';
@@ -142,6 +151,8 @@ class VariationsCalculator {
 			}
 		}
 		
+		#echo print_m($permutations, '$permutations');
+		
 		return $permutations;
 	}
 	
@@ -172,7 +183,7 @@ class VariationsCalculator {
 		);
 		if (!empty($product[0]['products_vpe'])) {
 			$ret['variation_volume'] = $product[0]['products_vpe_value'];
-			$ret['variation_unit_of_measure'] = $product[0]['^'];
+			$ret['variation_unit_of_measure'] = $product[0]['products_vpe'];
 		}
 		return $ret;
 	}
@@ -222,19 +233,19 @@ class VariationsCalculator {
 
 	function purgeProductVariations($pID) {
 		$permutations = $this->getVariationsByPID($pID);
-		if (empty($permutations)) {
-			return false;
-		}
 		$GLOBALS['SDB']->delete(TABLE_PRODUCTS_VARIATIONS, array (
 			'products_id' => $pID
 		));
+		if (empty($permutations)) {
+			return false;
+		}
 		if ($GLOBALS['SDB']->batchinsert(TABLE_PRODUCTS_VARIATIONS, $permutations, true)) {
 			return true;
 		}
 		return false;
 	}
 
-	function getVariationsByPIDFromDB($pID, $purge = false, $language = false) {
+	public function getVariationsByPIDFromDB($pID, $purge = false, $language = false) {
 		$q = '
 			SELECT * FROM '.TABLE_PRODUCTS_VARIATIONS.'
 			 WHERE products_id='.(int)$pID.'
@@ -285,7 +296,7 @@ class VariationsCalculator {
 		return $p;
 	}
 
-	function getProductVariationsTotalQuantity($pID, $minus = 0) {
+	public function getProductVariationsTotalQuantity($pID, $minus = 0) {
 		$quantity = 0;
 		$permutations = $this->getVariationsByPID($pID);
 		if (empty($permutations)) {
@@ -297,7 +308,7 @@ class VariationsCalculator {
 		return $quantity;
 	}
 
-	function purgeVariationsTable() {
+	public function purgeVariationsTable() {
 		$pIDs = MagnaDB::gi()->fetchArray('
 			SELECT products_id
 			  FROM '.TABLE_PRODUCTS.'
@@ -361,26 +372,27 @@ class VariationsCalculator {
 		return $vpeNames;
 	}
 
-	public static function generateVariationsAttributesText($attr, $language_id, $groupSeparator = '|', $singleSeparator = ',') {
-		if (empty($attr)) return '';
-		$attrArr = explode('|', trim($attr, '|'));
-		$attrArr2 = array();
-		$opts = '';
-		$optVals = '';
-		$i = 0;
-		foreach ($attrArr as $att) {
-			$attrArr2[$i] = explode(',', $att);
-			$opts    .= ','.$attrArr2[$i][0];
-			$optVals .= ','.$attrArr2[$i][1];
-			$i++;
+	public static function generateVariationsAttributesText($attrArr, $language_id, $groupSeparator = '|', $singleSeparator = ',') {
+		if (empty($attrArr)) {
+			return '';
 		}
-		$opts = ltrim($opts, ',');
-		$optVals = ltrim($optVals, ',');
+		
+		$attrArr = explode('|', trim($attrArr, '|'));
+		
+		$opts = array();
+		$optVals = array();
+		
+		foreach ($attrArr as $i => $att) {
+			$attrArr[$i] = explode(',', $att);
+			$opts[] = $attrArr[$i][0];
+			$optVals[] = $attrArr[$i][1];
+		}
+
 		$optNames =  MagnaDB::gi()->fetchArray('
-		    SELECT DISTINCT products_options_id, products_options_name 
+		    SELECT DISTINCT products_options_id, products_options_name
 		      FROM '.TABLE_PRODUCTS_OPTIONS.'
 		     WHERE language_id = "'.$language_id.'"
-		      AND products_options_id IN ('.$opts.')
+		      AND products_options_id IN ("'.implode('", "', $opts).'")
 		');
 		$optN = array();
 		foreach ($optNames as $optName) {
@@ -388,22 +400,23 @@ class VariationsCalculator {
 		}
 		
 		$optValNames =  MagnaDB::gi()->fetchArray('
-		    SELECT DISTINCT products_options_id, products_options_name 
-		      FROM '.TABLE_PRODUCTS_OPTIONS.'
+		    SELECT DISTINCT products_options_values_id, products_options_values_name
+		      FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.'
 		     WHERE language_id = "'.$language_id.'"
-		      AND products_options_id IN ('.$opts.')
+		      AND products_options_values_id IN ("'.implode('", "', $optVals).'")
 		');
 		$optVN = array();
 		foreach ($optValNames as $optValName) {
-			$optVN[$optValName['products_options_id']] = $optValName['products_options_name'];
+			$optVN[$optValName['products_options_values_id']] = $optValName['products_options_values_name'];
 		}
+		
 		$variationAttributesText = '';
-		foreach ($attrArr2 as $att) {
-			$variationAttributesText .=
-			  $optN[$att[0]]  . $singleSeparator
-			. $optVN[$att[1]] . $groupSeparator;
+		foreach ($attrArr as $att) {
+			$variationAttributesText .= $optN[$att[0]]  . $singleSeparator . $optVN[$att[1]] . $groupSeparator;
 		}
+		
 		$variationAttributesText = rtrim($variationAttributesText, $groupSeparator);
+		
 		return $variationAttributesText;
 	}
 	

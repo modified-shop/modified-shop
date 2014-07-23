@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCategoryView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: AmazonCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -19,9 +19,9 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FilterQuickCategoryView.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/QuickCategoryView.php');
 
-class AmazonCategoryView extends FilterQuickCategoryView {
+class AmazonCategoryView extends QuickCategoryView {
 	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '', $productIDs = array()) {
 		global $_MagnaSession;
 		$filter = array();
@@ -48,14 +48,21 @@ class AmazonCategoryView extends FilterQuickCategoryView {
 		}
 		$this->setCat2ProdCacheQueryFilter($filter);
 		if ($search != '') {
-			$this->blUseParent=true;
+			$this->blUseParent  = true;
 		}
+		
 		parent::__construct($cPath, $settings, $sorting, $search, $productIDs);
 		//$this->action = array('action' => 'matching');
 
 		if (!isset($_GET['kind']) || ($_GET['kind'] != 'ajax')) {
 			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		}
+	}
+	
+	protected function init() {
+		parent::init();
+		
+		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 	
 	protected function getProductsCountOfCategoryInfo($iId){

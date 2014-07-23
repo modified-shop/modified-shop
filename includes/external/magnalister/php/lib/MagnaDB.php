@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 3515 2014-02-13 00:18:50Z derpapst $
+ * $Id: MagnaDB.php 3999 2014-06-20 17:48:59Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -144,6 +144,7 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 	}
 	
 	public function connect() {
+		ob_start();
 		switch ($this->access['type']) {
 			case 'socket':
 			case 'pipe': {
@@ -162,6 +163,26 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 				);
 				break;
 			}
+		}
+		$warn = ob_get_clean();
+		
+		if (!$this->isConnected()) {
+			if (($this->access['type'] == 'tcpip') && ($this->access['host'] == 'localhost')) {
+				// Fix for broken estugo php config.
+				//
+				// From: http://stackoverflow.com/questions/13870362/php-mysql-test-database-server
+				//
+				// This seems to be a common issue, as googling for it yields quite a few results.
+				// I experienced this on my two linux boxes as well (never under Windows though) and
+				// at some point I resolved to just use 127.0.0.1 on all dev servers. Basically,
+				// localhost makes the connection to the MySQL server use a socket, but your
+				// configuration doesn't point to the socket file correctly.
+				
+				$this->access['host'] = '127.0.0.1';
+				return $this->connect();
+			}
+			echo $warn;
+			return;
 		}
 		
 		if (!empty($this->charset)) {
@@ -292,14 +313,14 @@ class MagnaDBDriverMysql extends MagnaDBDriver {
 	
 	
 	public function getLastErrorMessage() {
-		if ($this->isConnected()) {
+		if (is_resource($this->rLink)) {
 			return mysql_error($this->rLink);
 		}
 		return '';
 	}
 	
 	public function getLastErrorNumber() {
-		if ($this->isConnected()) {
+		if (is_resource($this->rLink)) {
 			return mysql_errno($this->rLink);
 		}
 		return 0;
@@ -407,6 +428,7 @@ class MagnaDB {
 	protected $showDebugOutput = MAGNA_DEBUG;
 	
 	/* Caches */
+	protected $tableColumnsCache = array();
 	protected $columnExistsInTableCache = array();
 
 	/**
@@ -422,7 +444,7 @@ class MagnaDB {
 		$this->access['host'] = DB_SERVER;
 		$this->access['user'] = DB_SERVER_USERNAME;
 		$this->access['pass'] = DB_SERVER_PASSWORD;
-		$this->access['persistent'] = strtolower(USE_PCONNECT) == 'true';
+		$this->access['persistent'] = (defined('USE_PCONNECT') && (strtolower(USE_PCONNECT) == 'true'));
 		
 		$driverClass = $this->selectDriver();
 		$this->driver = new $driverClass($this->access);
@@ -435,8 +457,6 @@ class MagnaDB {
 		);
 		
 		$this->selfConnect(false, true);
-		
-		$this->availabeTables = $this->fetchArray('SHOW TABLES', true);
 		
 		if (MAGNADB_ENABLE_LOGGING) {
 			$dbt = @debug_backtrace();
@@ -454,6 +474,8 @@ class MagnaDB {
 			}
 			unset($dbt);
 		}
+		
+		$this->reloadTables();
 		
 		$this->initSession();
 	}
@@ -594,7 +616,7 @@ class MagnaDB {
 		foreach ($a as $k => $value) {
 			$toString = '';
 			// echo var_dump_pre($value, 'value');
-			if (!is_object($value)) {
+			if (!is_object($value) && !is_array($value)) {
 				$toString = $value.'';
 			}
 			if (is_object($value)) {
@@ -941,7 +963,14 @@ class MagnaDB {
 		return $array;
 	}
 
-	public function tableExists($table) {
+	protected function reloadTables() {
+		$this->availabeTables = $this->fetchArray('SHOW TABLES', true);
+	}
+
+	public function tableExists($table, $purge = false) {
+		if ($purge) {
+			$this->reloadTables();
+		}
 		/* {Hook} "MagnaDB_TableExists": Enables you to modify the $table variable before the check for existance is performed in
 		   case your shop uses a contrib, that messes with the table prefixes.
 		 */
@@ -951,8 +980,13 @@ class MagnaDB {
 		return in_array($table, $this->availabeTables);
 	}
 
-	public function getAvailableTables($pattern = '') {
-		if (empty($pattern)) return $this->availabeTables;
+	public function getAvailableTables($pattern = '', $purge = false) {
+		if ($purge) {
+			$this->reloadTables();
+		}
+		if (empty($pattern)) {
+			return $this->availabeTables;
+		}
 		$tbls = array();
 		foreach ($this->availabeTables as $t) {
 			if (preg_match($pattern, $t)) {
@@ -995,6 +1029,21 @@ class MagnaDB {
 	}
 
 
+	public function	getTableColumns($table) {
+		if (isset($this->tableColumnsCache[$table])) {
+			return $this->tableColumnsCache[$table];
+		}
+		$columns = $this->fetchArray('DESC  '.$table);
+		if (!is_array($columns) || empty($columns)) {
+			return false;
+		}
+		$this->tableColumnsCache[$table] = array();
+		foreach ($columns as $column_description) {
+			$this->tableColumnsCache[$table][] = $column_description['Field'];
+		}
+		return $this->tableColumnsCache[$table];
+	}
+
 	public function	columnExistsInTable($column, $table) {
 		if (isset($this->columnExistsInTableCache[$table][$column])) {
 			return $this->columnExistsInTableCache[$table][$column];
@@ -1030,13 +1079,14 @@ class MagnaDB {
 		foreach ($conditions as $f => $v) {
 			$values[] = '`'.$f."` = '".$this->escape($v)."'";
 		}
-		$q = 'SELECT * FROM `'.$table.'` WHERE '.implode(' AND ', $values);
 		if ($getQuery) {
+			$q = 'SELECT * FROM `'.$table.'` WHERE '.implode(' AND ', $values);
 			return $q;	
+		}else{
+			$q = 'SELECT 1 FROM `'.$table.'` WHERE '.implode(' AND ', $values).' LIMIT 1';
 		}
-		$result = $this->query($q);
-
-		if ($result && ($this->numRows($result) > 0)) {
+		$result = $this->fetchOne($q);
+		if ($result !== false) {
 			return true;
 		}
 		return false;
@@ -1151,16 +1201,16 @@ class MagnaDB {
 
 		if (!empty($wherea)) {
 			foreach ($wherea as $key => $value) {
-				$where .= "`" . $key . "` = ";
+				$where .= "`" . $key . "` ";
 	
 				if ($value === null) {
-					$values .= 'NULL AND ';
+					$where .= 'IS NULL AND ';
 				} else if (is_int($value) || is_float($value) || is_double($value)) {
-					$where .= $value . " AND ";
+					$where .= '= '.$value . " AND ";
 				} else if (strtoupper($value) == 'NOW()') {
-					$where .= "NOW() AND ";
+					$where .= "= NOW() AND ";
 				} else {
-					$where .= "'" . $this->escape($value) . "' AND ";
+					$where .= "= '" . $this->escape($value) . "' AND ";
 				}
 			}
 			$where = rtrim($where, "AND ");
@@ -1182,14 +1232,14 @@ class MagnaDB {
 		$where = "";
 
 		foreach ($wherea as $key => $value) {
-			$where .= "`" . $key . "` = ";
+			$where .= "`" . $key . "` ";
 
 			if ($value === null) {
-				$values .= 'NULL AND ';
+				$where .= 'IS NULL AND ';
 			} else if (is_int($value) || is_float($value) || is_double($value)) {
-				$where .= $value . " AND ";
+				$where .= '= '.$value . " AND ";
 			} else {
-				$where .= "'" . $this->escape($value) . "' AND ";
+				$where .= "= '" . $this->escape($value) . "' AND ";
 			}
 		}
 

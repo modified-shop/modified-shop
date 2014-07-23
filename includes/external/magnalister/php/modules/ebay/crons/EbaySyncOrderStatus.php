@@ -27,7 +27,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 		parent::__construct($mpID, $marketplace);
 		
 		$this->confirmationResponseField = 'DATA';
-		$this->sizeOfBatch = 8;
+		$this->sizeOfBatch = 256;
 	}
 	
 	/**
@@ -38,7 +38,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	protected function addToLookupTable() {
 		$mOrderIds = explode("\n", $this->oOrder['special']);
 		foreach ($mOrderIds as $mOrderId) {
-			$this->aMorderId2Order[$mOrderId] = $this->iOrderIndex;
+			$this->aMOrderID2Order[$mOrderId] = $this->iOrderIndex;
 		}
 	}
 	
@@ -91,6 +91,54 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 				// save the confirmation and update the status.
 				$oOrder['__dirty'] = true;
 			}
+		}
+	}
+
+	/* Only for a hook: Allows to replace the parent function
+	 * @param int $orderId
+	 * @return string
+	 */
+	protected function getTrackingCode($orderId) {
+		/* {Hook} "EbaySyncOrderStatus_replaceGetTrackingCode": Allows to overwrite getTrackingCode.
+			Variables that can be used:
+			<ul><li>$orderId</li>
+			    <li>$TrackingCode (must be calculated in the contrib file)</li>
+			</ul>
+			Please use MagnaDB methods to acces the database.
+		*/
+		if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('EbaySyncOrderStatus_replaceGetTrackingCode', 1)) !== false)) {
+			require($hp);
+			if (isset($TrackingCode)) {
+				return $TrackingCode;
+			} else {
+				return '';
+			}
+		} else {
+			return parent::getTrackingCode($orderId);
+		}
+	}
+
+	/* Only for a hook: Allows to replace the parent function 
+	 * @param int $orderId
+	 * @return string
+	 */
+	protected function getCarrier($orderId) {
+		/* {Hook} "EbaySyncOrderStatus_replaceGetCarrier": Allows to overwrite getCarrier.
+			Variables that can be used:
+			<ul><li>$orderId</li>
+			    <li>$Carrier (must be calculated in the contrib file)</li>
+			</ul>
+			Please use MagnaDB methods to acces the database.
+		*/
+		if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('EbaySyncOrderStatus_replaceGetCarrier', 1)) !== false)) {
+			require($hp);
+			if (isset($Carrier)) {
+				return $Carrier;
+			} else {
+				return '';
+			}
+		} else {
+			return parent::getCarrier($orderId);
 		}
 	}
 }

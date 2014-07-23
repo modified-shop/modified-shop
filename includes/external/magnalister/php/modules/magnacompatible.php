@@ -27,7 +27,7 @@ class MagnaCompatMarketplace {
 	protected $mpID = 0;
 	protected $moduleConf = array();
 	
-	protected $mangaSession = array();
+	protected $magnaSession = array();
 	protected $magnaQuery = array();
 	
 	protected $authConfigKeys = array();

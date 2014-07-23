@@ -1,11 +1,11 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
@@ -31,7 +31,7 @@ class eBayShippingDetailsProcessor {
 
 	public function __construct($args, $mainKey, $url, &$value = '') {
 		global $_MagnaSession, $_url;
-		
+
 		$this->args = $args;
 		if (isset($this->args['content'])) {
 			foreach($this->args['content'] as $service) {
@@ -48,12 +48,12 @@ class eBayShippingDetailsProcessor {
 			$this->args['international'] = true;
 		}
 		$this->savedvalue = &$value;
-		
+
 		$this->magnasession = $_MagnaSession;
 		$this->mpID = $_MagnaSession['mpID'];
-		
+
 		$this->mainKey = $mainKey;
-		
+
 		$this->url = $url;
 	}
 
@@ -86,14 +86,17 @@ class eBayShippingDetailsProcessor {
 		}
 
 		$uniqueKey = (string)mt_rand(0, mt_getrandmax());
-		
-		$nameKey = empty($this->mainKey) 
-			? $this->args['key']
-			: 'conf['.$this->args['key'].']';
 
-		if (isset($this->args['content']) && isset($this->mainKey))
+		if (empty($this->mainKey)) {
+			$nameKey = $this->args['key'];
+		} else {
+			$nameKey = 'conf['.$this->args['key'].']';
+		}
+
+		if (isset($this->args['content']) && isset($this->mainKey)) {
 			$nameKey = $this->mainKey;
-		
+		}
+
 		$serviceSelect = '<select name="'.$nameKey.'['.$uniqueKey.'][service]">'."\n";
 		foreach ($services as $key => $service) {
 			$serviceSelect .= '<option value="'.$key.'"'.(
@@ -129,9 +132,9 @@ class eBayShippingDetailsProcessor {
 					<td class="paddingRight">'.$shippingCost.'</td>
 					<td rowspan="2">
 						<input id="" type="button" value="(+)" class="button plus" />
-						'.(array_key_exists('func', $this->args)
+						'.((array_key_exists('func', $this->args) && ($this->args['func'] == '' || $this->args['func'] == 'addRow'))
 							? '<input type="button" value="(-)" class="button minus" />'
-							: ''
+							: '<input type="button" value="(-)" class="button minus" style="display: none" />'
 						).'
 					</td>
 				</tr>
@@ -143,8 +146,12 @@ class eBayShippingDetailsProcessor {
 	        <script type="text/javascript">/*<![CDATA[*/
 				$(document).ready(function() {
 					$('#<?php echo $idkey; ?> input.button.plus').click(function () {
+						var $tableBox = $('#<?php echo $idkey; ?>');
+						if ($tableBox.parent('td').find('table').length == 1) {
+							$tableBox.find('input.button.minus').fadeIn(0);
+						}
 						myConsole.log();
-						jQuery.blockUI(blockUILoading); 
+						jQuery.blockUI(blockUILoading);
 						jQuery.ajax({
 							type: 'POST',
 							url: '<?php echo toURL($this->url, array('kind' => 'ajax'), true); ?>',
@@ -159,7 +166,7 @@ class eBayShippingDetailsProcessor {
 							)); ?>,
 							success: function(data) {
 								jQuery.unblockUI();
-								$('#<?php echo $idkey; ?>').after(data);
+								$tableBox.after(data);
 							},
 							error: function (xhr, status, error) {
 								jQuery.unblockUI();
@@ -168,7 +175,12 @@ class eBayShippingDetailsProcessor {
 						});
 					});
 					$('#<?php echo $idkey; ?> input.button.minus').click(function () {
-						$('#<?php echo $idkey; ?>').detach();
+						var $tableBox = $('#<?php echo $idkey; ?>'),
+							tables = $tableBox.parent('td').find('table');
+						$tableBox.detach();
+						if (tables.length == 2) {
+							tables.find('input.button.minus').fadeOut(0);
+						}
 					});
 				});
 			/*]]>*/</script><?php
@@ -179,7 +191,7 @@ class eBayShippingDetailsProcessor {
 			ob_end_clean();
 		return $html;
 	}
-	
+
 	private function verifyAndFix() {
 		$data = $_POST;
 		if (!empty($this->mainKey) && array_key_exists($this->mainKey, $data)) {
@@ -240,7 +252,7 @@ class eBayShippingDetailsProcessor {
 				}
 				$html = '';
 				foreach ($setting as $key => $item) {
-					if ($key > 0) {
+					if (count($setting) > 1) {
 						$this->args['func'] = '';
 					}
 					$html .= $this->renderView($item);
@@ -249,7 +261,6 @@ class eBayShippingDetailsProcessor {
 				break;
 			}
 		}
-		return false;
 	}
 
 	# Aus dem Eintrag in der properties-Tabelle (Wording fuer die eBay-API)
@@ -259,18 +270,21 @@ class eBayShippingDetailsProcessor {
         require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
         $sp = new SimplePrice(null, getDBConfigValue('ebay.currency', $this->mpID));
 		foreach ($prefilled as &$service) {
+			if (empty($service['ShippingService'])) {
+				continue;
+			}
 			if (isset($service['FreeShipping'])) {
 				unset($service['FreeShipping']);
 			}
 			$service['service'] = $service['ShippingService'];
 			unset($service['ShippingService']);
-            
-            $service['cost'] = $sp->setPrice($service['ShippingServiceCost'])->getPrice(); 
-           	unset($service['ShippingServiceCost']);
-            
-            #$service['addcost'] = $sp->setPrice($service['ShippingServiceAdditionalCost'])->getPrice();
-            unset($service['ShippingServiceAdditionalCost']);
-			
+
+			$service['cost'] = $sp->setPrice($service['ShippingServiceCost'])->getPrice();
+			unset($service['ShippingServiceCost']);
+
+			#$service['addcost'] = $sp->setPrice($service['ShippingServiceAdditionalCost'])->getPrice();
+			unset($service['ShippingServiceAdditionalCost']);
+
 			if (isset($service['ShipToLocation'])) {
 				$service['location'] = $service['ShipToLocation'];
 				unset($service['ShipToLocation']);

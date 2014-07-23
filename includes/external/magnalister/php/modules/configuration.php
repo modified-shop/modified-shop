@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configuration.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: configuration.php 3925 2014-06-03 12:54:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -50,7 +50,7 @@ if (($hp = magnaContribVerify('GenericConfiguration', 1)) !== false) {
 	require($hp);
 }
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_general');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_general');
 $cG->processPOST($keysToSubmit);
 
 /* Passphrase is in DB now. Try to authenticate us */

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: init.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: init.php 4106 2014-07-04 10:27:59Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -28,6 +28,8 @@ $_SERVER['REQUEST_TIME'] = isset($_SERVER['REQUEST_TIME']) ? $_SERVER['REQUEST_T
 // Do not enable unless you know what you are doing!
 // Might break things.
 define('MAGNA_SECRET_DEV', MAGNA_DEBUG && (strpos($_SERVER['HTTP_HOST'], 'magnalister.') !== false));
+
+defined('MAGNA_DEV_PRODUCTLIST') OR define('MAGNA_DEV_PRODUCTLIST', true);
 
 // backwards compat
 defined('DIR_MAGNALISTER_FS') OR define('DIR_MAGNALISTER_FS', DIR_MAGNALISTER);
@@ -95,6 +97,308 @@ function magnaExecute($functionName, $arguments = array(), $includes = array(), 
 	return false;
 }
 
+function updateErrorDiePage($errorText, $updaterErrors) {
+	#print_r(func_get_args());
+	$errorText = $errorText[($_SESSION['language'] == 'german') ? 'german' : 'other'];
+	$errorContent = '
+		<p>'.$errorText['introduction'].'</p>
+		<table class="updateError"><thead><tr><td>'.$errorText['label_file'].'</td><td>'.$errorText['label_error'].'</td></tr><tbody>
+	';
+	foreach ($updaterErrors as $error) {
+		$errorContent .= '
+			<tr><td>'.$error['file'].'</td>
+				<td>'.$errorText[$error['error']].'</td></tr>
+		';
+	}
+	$errorContent .= '
+		</tbody></table>
+		<p>'.$errorText['suggestions'].' '.$errorText['persists'].'</p>
+	';
+
+	$style = '
+table.updateError td {
+	padding: 1px 3px;
+}
+table.updateError thead td {
+	border: 1px solid #999;
+	background: #ccc;
+	font-weight: bold;
+	text-align: center
+}
+table.updateError tbody td {
+	border: 1px solid #bbb;
+	background: #eee;
+}
+';
+	echoDiePage($errorText['headline'], $errorContent, $style);
+}
+
+function mlGetLocalClientVersion() {
+	$version = false;
+	if (file_exists(DIR_MAGNALISTER_FS.'ClientVersion') 
+		&& (($version = file_get_contents(DIR_MAGNALISTER_FS.'ClientVersion')) !== false)
+	) {
+		if (function_exists('json_decode')) {
+			$version = json_decode($version, true);
+		} else {
+			$version = decodeClientVersion($version);
+		}
+	}
+	if (!is_array($version) || !array_key_exists('CLIENT_VERSION', $version)) {
+		$version = array(
+			'CLIENT_VERSION' => 0,
+		);
+	}
+	return $version;
+}
+
+function mlGetCurrentClientVersion($localVersion = 'unknown') {
+	$version = false;
+	/* 10s timeout. If the ClientVersion can't be fetched in under 10s, the server is probably to busy right now. */
+	if (($version = fileGetContents(
+			MAGNA_UPDATE_FILEURL.'ClientVersion/'.$localVersion.'/', $warnings, 10
+		)) === false
+	) {
+		echoDiePage(
+			(($_SESSION['language'] == 'german')
+				? 'Keine Verbindung zum magnalister Server'
+				: 'Cannot connect to magnalister server'
+			),
+			(($_SESSION['language'] == 'german')
+				? 'Derzeit kann keine Verbindung zum Server aufgebaut werden - versuchen Sie es bitte in wenigen Momenten erneut. F&uuml;r Fragen wenden Sie sich bitte an unseren Support: <a href="mailto:support@magnalister.com">support@magnalister.com</a>'.(
+					($warnings != '') ? ('<br />PHP verursachte folgenden Fehler:<br />'.$warnings) : ''
+				)
+				: 'A connection to the magnalister server could not be established. Please try again in a minute. For further questions, contact our support: <a href="mailto:support@magnalister.com">support@magnalister.com</a>'.(
+					($warnings != '') ? ('<br />PHP encountered the following error:<br />'.$warnings) : ''
+				)
+			)
+		);
+	}
+	
+	if (function_exists('json_decode')) {
+		$version = json_decode($version, true);
+	} else {
+		$version = decodeClientVersion($version);
+	}
+	if (!is_array($version)) {
+		$version = array();
+	}
+	return $version;
+}
+
+function mlPrintLastUpdateError() {
+	if (file_exists(DIR_MAGNALISTER_FS.'UpdaterError')) {
+		$magnaUpdateErrorText['other']['headline'] = 'Error during last automatic update process';
+		$magnaUpdateErrorText['other']['introduction'] = 'Some errors occured during the last automatic update procces of your mgnalister plugins:';
+		$magnaUpdateErrorText['other']['suggestions'] = 'Click <a href="'.FILENAME_MAGNALISTER.'?update=true" title="restart the update process">here</a> to restart '.
+							 							'the update process.';
+	
+		$magnaUpdateErrorText['german']['headline'] = 'Fehler bei letztmaliger automatischer Aktualisierung';
+		$magnaUpdateErrorText['german']['introduction'] = 'Bei der letzten automatischen Aktualisierung ihres magnalister Plugins sind folgende Fehler aufgetreten:';
+		$magnaUpdateErrorText['german']['suggestions'] = 'Klicken sie <a href="'.FILENAME_MAGNALISTER.'?update=true" title="Update-Vorang erneut starten">hier</a> '.
+														'um den Update-Vorgang erneut zu starten.';
+	
+		$updaterErrors = unserialize(file_get_contents(DIR_MAGNALISTER_FS.'UpdaterError'));
+		updateErrorDiePage($magnaUpdateErrorText, $updaterErrors);
+	}
+}
+
+function mlUpdatePlugin($mUpdater, $currentVersion, $localVersion) {
+	$magnaUpdateErrorText = array();
+	$magnaUpdateErrorText['german'] = array(
+		'headline' => 'Fehler bei automatischer Aktualisierung',
+		'introduction' => 'Bei der automatischen Aktualisierung ihres magnalister Plugins sind folgende Fehler aufgetreten:',
+		'label_file' => 'Datei',
+		'label_error' => 'Fehler',
+		'suggestions' => 'Versuchen Sie die Seite neu zu laden.',
+		'persists' => 'Sollte das Problem weiterhin bestehen, wenden Sie sich an den Support von '.MAGNA_SUPPORT_URL.'.',
+		MagnaUpdaterFailedOnLoadingFileList => 'Die Datei-Liste konnte nicht vom Update-Server geladen werden.',
+		MagnaUpdaterFailedOnLoadingFile     => 'Die Datei konnte nicht vom Update-Server geladen werden.',
+		MagnaUpdaterFailedOnWritingFile     => 'Die geladene Datei konnte nicht auf diesem Server gespeichert werden.',
+		MagnaUpdaterSpecialFileListInvalid  => 'Die Datei-Liste ist fehlerhaft. Bitte wenden Sie sich an den Support von '.MAGNA_SUPPORT_URL.'.',
+		MagnaUpdaterSafeMode                => 'Ein Update ist durch die Safe Mode Beschr&auml;nkung nicht m&ouml;glich.',
+		MagnaUpdaterDirectoryNotWritable    => 'In das Verzeichnis kann nicht geschrieben werden.',
+		MagnaUpdaterFileNotWritable         => 'Die Datei ist nicht schreibbar.',
+	);
+	$magnaUpdateErrorText['other'] = array(
+		'headline' => 'Error during automatic update process',
+		'introduction' => 'Some errors occured during the automatic update procces of your mgnalister plugins:',
+		'label_file' => 'File',
+		'label_error' => 'Error',
+		'suggestions' => 'Try to reload the page.',
+		'persists' => 'If the error persists please contact the support of '.MAGNA_SUPPORT_URL.'.',
+		MagnaUpdaterFailedOnLoadingFileList => 'The File-List couldn\'t be downloaded from the Update-Server.',
+		MagnaUpdaterFailedOnLoadingFile     => 'The file couldn\'t be downloaded from the Update-Server.',
+		MagnaUpdaterFailedOnWritingFile     => 'The downloaded File couldn\'t be saved on this server.',
+		MagnaUpdaterSpecialFileListInvalid  => 'The File-List is invalid. Please contact contact the support of '.MAGNA_SUPPORT_URL.'.',
+		MagnaUpdaterSafeMode                => 'An update is not possible due to the safe mode restriction.',
+		MagnaUpdaterDirectoryNotWritable    => 'The directory is not writable.',
+		MagnaUpdaterFileNotWritable         => 'The file is not writable.',
+	);
+	$magnaFilePermissionErrors['german'] = array(
+		'headline' => 'Fehler bei den Dateiberechtigungen',
+		'introduction' => 'Bei der &Uuml;berpr&uuml;fung der Dateiberechtigungen wurde festgestellt, dass folgende Berechtigungen fehlerhaft gesetzt sind:',
+		'label_file' => 'Datei',
+		'label_error' => 'Fehler',
+		'suggestions' => '',
+		'persists' => 'Bitte setzen Sie die Rechte dieser Dateien und Verzeichnisse auf 777. <br />
+			Hilfestellung zum richtigen Setzen von Dateiberechtigungen finden Sie auf der Support-Seite von '.MAGNA_SUPPORT_URL.'faq.',
+		MagnaUpdaterDirectoryNotWritable    => 'In das Verzeichnis kann nicht geschrieben werden.',
+		MagnaUpdaterFileNotWritable         => 'Die Datei ist nicht schreibbar.',
+	);
+	$magnaFilePermissionErrors['other'] = array(
+		'headline' => 'Wrong File Permissions',
+		'introduction' => 'The file permissions of the following files are set incorrectly:',
+		'label_file' => 'File',
+		'label_error' => 'Error',
+		'suggestions' => '',
+		'persists' => 'Please set the file permissions of these files to 777.<br />
+			Additional information on how to set file permissions is given on the support page of '.MAGNA_SUPPORT_URL.'.',
+		MagnaUpdaterDirectoryNotWritable    => 'The directory is not writable.',
+		MagnaUpdaterFileNotWritable         => 'The file is not writable.',
+	);
+	
+	$status = array(
+		'UpdatedSuccessfully' => false,
+		'RequiresInstallationUpdate' => false,
+	);
+	
+	// If you want to disable automatic updates uncomment the following line:
+	// return $status;
+	
+	if (MAGNA_SAFE_MODE) {
+		if (!$mUpdater->checkMinimalFilePermissions()) {
+			updateErrorDiePage($magnaFilePermissionErrors, $mUpdater->getUpdaterAllErrors());
+		}
+	} else if (!MAGNA_SAFE_MODE && !file_exists(DIR_MAGNALISTER_FS.'FilePermissionsOK')) {
+		/* check EVERYTHING */
+		if (!$mUpdater->checkFilePermissions()) {
+			/* Drop dead instantly */
+			updateErrorDiePage($magnaFilePermissionErrors, $mUpdater->getUpdaterAllErrors());
+		} else {
+			file_put_contents(DIR_MAGNALISTER_FS.'FilePermissionsOK', 'OK');
+		}
+	}
+	
+	if (!MAGNA_SAFE_MODE
+		&& (!file_exists(DIR_MAGNALISTER_FS.'ClientVersion')
+			|| ((isset($_GET['update']) && ($_GET['update'] == 'true')) || $_SESSION['MagnaPurge'])
+		)
+	) {
+		$mangaUpdateState = $mUpdater->update();
+		if ($mangaUpdateState == MagnaUpdaterFailedOnUpdatingFiles) {
+			/* hmmm... maybe file permissions? */
+			@unlink(DIR_MAGNALISTER_FS.'FilePermissionsOK');
+			updateErrorDiePage($magnaUpdateErrorText, $mUpdater->getUpdaterAllErrors());
+		} else if ($mangaUpdateState == MagnaUpdaterSafeMode) { 
+			updateErrorDiePage($magnaUpdateErrorText, $mUpdater->getUpdaterAllErrors());
+		} else {
+			$status['UpdatedSuccessfully'] = true;
+			$shopMod = trim(fileGetContents(
+				MAGNA_UPDATE_FILEURL.'ShopChanges/from:'.$localVersion['CLIENT_VERSION'].'/to:'.$currentVersion['CLIENT_VERSION'].'/'
+			));
+			if ($shopMod == 'true') {
+				$status['RequiresInstallationUpdate'] = true;
+			}
+			/* It updated. So everything was writable */
+			file_put_contents(DIR_MAGNALISTER_FS.'FilePermissionsOK', 'OK');
+		}
+	}
+	
+	mlPrintLastUpdateError();
+	
+	return $status;
+}
+
+function mlIsCacheDirWritable() {
+	if (!MAGNA_SAFE_MODE && !file_exists(DIR_MAGNALISTER_CACHE)) {
+		@mkdir(DIR_MAGNALISTER_CACHE, 0777, true);
+	} else if (!MAGNA_SAFE_MODE && !is_writable(DIR_MAGNALISTER_CACHE)) {
+		@chmod(DIR_MAGNALISTER_CACHE, 0777);
+	}
+	if (!is_writable(DIR_MAGNALISTER_CACHE)) {
+		echoDiePage(
+			(($_SESSION['language'] == 'german') 
+				? 'Cache Verzeichnis fehlt oder ist nicht schreibbar'
+				: 'Cache directory is missing or not writeable'
+			),
+			(($_SESSION['language'] == 'german') 
+				? (MAGNA_SAFE_MODE 
+				    ? 'Aufgrund der Safe Mode Beschr&auml;nkung kann das Cache Verzeichnis 
+				       (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) nicht
+				       erstellt und/oder schreibbar gemacht werden. 
+				       Bitte erstellen Sie das Verzeichnis und stellen Sie sicher, dass es vom Webserver geschrieben werden kann.'
+				    : 'Das Cache Verzeichnis (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) konnte nicht
+				       erstellt und/oder schreibbar gemacht werden. Bitte &uuml;berpr&uuml;fen Sie die Dateirechte des
+				       magnalister Verzeichnisses und legen Sie gegebenenfalls das Cache Verzeichnis selbst an. Es muss
+				       vom Webserver geschrieben werden k&ouml;nnen.'
+				  )
+				: (MAGNA_SAFE_MODE 
+				    ? 'The cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
+				       cannot be created and/or made writable 
+				       because of the Safe Mode restriction. 
+				       Please create this directory and make sure it is writable by the webserver.'
+				    : 'The  cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
+				       cannot be created and/or made writable. Please check the file permissions of the 
+				       magnalister directory and create the cache directory if necessary. Make sure it is
+				       writable by the webserver.'
+				  )
+			)
+		);
+	}
+}
+
+function mlFixFilePermissions() {
+	if (isset($_GET['FIX_FILE_PERMISSIONS']) && ($_GET['FIX_FILE_PERMISSIONS'] == 'true')) {
+		// fix file permissions for files added through auto update
+		$fileList = file(DIR_MAGNALISTER_FS.'files.list');
+		foreach ($fileList as $flne) {
+			$flne = explode("\t", $flne);
+			echo $flne[0].'<br>';
+			chmod(DIR_MAGNALISTER_FS.$flne[0], 0777);
+		}
+	}
+}
+
+function mlDetectShopFeatures() {
+	// Detect products_ean-like field if it exists.
+	$productsFields = array_flip((array)MagnaDB::gi()->getTableCols(TABLE_PRODUCTS));
+	if (is_array($productsFields)) {
+		$eanTypes = array (
+			'products_ean',
+			'products_barcode',
+		);
+		foreach ($eanTypes as $eanType) {
+			if (array_key_exists($eanType, $productsFields)) {
+				define('MAGNA_FIELD_PRODUCTS_EAN', $eanType);
+				break;
+			}
+		}
+	}
+	
+	// Detect attributes_ean-like field if it exists.
+	$attributesFields = array_flip((array)MagnaDB::gi()->getTableCols(TABLE_PRODUCTS_ATTRIBUTES));
+	if (is_array($attributesFields)) {
+		$eanTypes = array (
+			'attributes_ean',
+			'gm_ean',
+		);
+		foreach ($eanTypes as $eanType) {
+			if (array_key_exists($eanType, $attributesFields)) {
+				define('MAGNA_FIELD_ATTRIBUTES_EAN', $eanType);
+				break;
+			}
+		}
+	}
+	
+	// Detect Gambio GX2.1 property tables.
+	define('MAGNA_GAMBIO_VARIATIONS',
+		MAGNA_SECRET_DEV && // Remove before release!
+		MagnaDB::gi()->tableExists('products_properties_combis')
+		&& MagnaDB::gi()->columnExistsInTable('combi_ean', 'products_properties_combis')
+	);
+}
+
 date_default_timezone_set(@date_default_timezone_get());
 
 $_executionTime = microtime(true);
@@ -128,6 +432,7 @@ define('DIR_MAGNALISTER_LOGS',       DIR_MAGNALISTER_FS_LOGS);
 // WS
 define('DIR_MAGNALISTER_WS_CACHE',      DIR_MAGNALISTER_WS.'cache/');
 define('DIR_MAGNALISTER_WS_IMAGECACHE', DIR_MAGNALISTER_WS_CACHE.'images/');
+define('DIR_MAGNALISTER_WS_RESOURCE',   DIR_MAGNALISTER_WS.'resource/');
 define('DIR_MAGNALISTER_WS_IMAGES',     DIR_MAGNALISTER_WS.'images/');
 
 if (isset($_GET['API'])) {
@@ -153,6 +458,7 @@ define('ML_THUMBS_MATCHING', 80);
 
 /* RAM, mit Einheit K, M oder G */
 define('ML_DEFAULT_RAM', '256M');
+define('ML_DEFAULT_EXECUTIONTIME', 240);
 
 if (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
 	function ml_debug_out($m) {
@@ -161,19 +467,13 @@ if (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true')) {
 	}
 }
 
-if (isset($_GET['FIX_FILE_PERMISSIONS']) && ($_GET['FIX_FILE_PERMISSIONS'] == 'true')) {
-	// fix file permissions for files added through auto update
-	$fileList = file(DIR_MAGNALISTER_FS.'files.list');
-	foreach ($fileList as $flne) {
-		$flne = explode("\t", $flne);
-		echo $flne[0].'<br>';
-		chmod(DIR_MAGNALISTER_FS.$flne[0], 0777);
-	}
-}
+mlFixFilePermissions();
 
 if (MAGNA_DEBUG && isset($_GET['MagnaRAW'])) {
 	$_SESSION['MagnaRAW'] = $_GET['MagnaRAW'];
 }
+
+define('ML_RETINA_DISPLY', isset($_COOKIE['device_pixel_ratio']) && ((float)$_COOKIE['device_pixel_ratio'] > 1));
 
 if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['request']) && ($_GET['request'] == 'keepAlive')) {
 	if (file_exists(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php')) {
@@ -210,250 +510,42 @@ $_updaterTime = microtime(true);
 
 require_once(DIR_MAGNALISTER_FS.'MagnaUpdater.php');
 
-$magnaUpdateErrorText = array();
-$magnaUpdateErrorText['german'] = array(
-	'headline' => 'Fehler bei automatischer Aktualisierung',
-	'introduction' => 'Bei der automatischen Aktualisierung ihres magnalister Plugins sind folgende Fehler aufgetreten:',
-	'label_file' => 'Datei',
-	'label_error' => 'Fehler',
-	'suggestions' => 'Versuchen Sie die Seite neu zu laden.',
-	'persists' => 'Sollte das Problem weiterhin bestehen, wenden Sie sich an den Support von '.MAGNA_SUPPORT_URL.'.',
-	MagnaUpdaterFailedOnLoadingFileList => 'Die Datei-Liste konnte nicht vom Update-Server geladen werden.',
-	MagnaUpdaterFailedOnLoadingFile     => 'Die Datei konnte nicht vom Update-Server geladen werden.',
-	MagnaUpdaterFailedOnWritingFile     => 'Die geladene Datei konnte nicht auf diesem Server gespeichert werden.',
-	MagnaUpdaterSpecialFileListInvalid  => 'Die Datei-Liste ist fehlerhaft. Bitte wenden Sie sich an den Support von '.MAGNA_SUPPORT_URL.'.',
-	MagnaUpdaterSafeMode                => 'Ein Update ist durch die Safe Mode Beschr&auml;nkung nicht m&ouml;glich.',
-);
-$magnaUpdateErrorText['other'] = array(
-	'headline' => 'Error during automatic update process',
-	'introduction' => 'Some errors occured during the automatic update procces of your mgnalister plugins:',
-	'label_file' => 'File',
-	'label_error' => 'Error',
-	'suggestions' => 'Try to reload the page.',
-	'persists' => 'If the error persists please contact the support of '.MAGNA_SUPPORT_URL.'.',
-	MagnaUpdaterFailedOnLoadingFileList => 'The File-List couldn\'t be downloaded from the Update-Server.',
-	MagnaUpdaterFailedOnLoadingFile     => 'The file couldn\'t be downloaded from the Update-Server.',
-	MagnaUpdaterFailedOnWritingFile     => 'The downloaded File couldn\'t be saved on this server.',
-	MagnaUpdaterSpecialFileListInvalid  => 'The File-List is invalid. Please contact contact the support of '.MAGNA_SUPPORT_URL.'.',
-	MagnaUpdaterSafeMode                => 'An update is not possible due to the safe mode restriction.',
-);
-$magnaFilePermissionErrors['german'] = array(
-	'headline' => 'Fehler bei den Dateiberechtigungen',
-	'introduction' => 'Bei der &Uuml;berpr&uuml;fung der Dateiberechtigungen wurde festgestellt, dass folgende Berechtigungen fehlerhaft gesetzt sind:',
-	'label_file' => 'Datei',
-	'label_error' => 'Fehler',
-	'suggestions' => '',
-	'persists' => 'Bitte setzen Sie die Rechte dieser Dateien und Verzeichnisse auf 777. <br />
-		Hilfestellung zum richtigen Setzen von Dateiberechtigungen finden Sie auf der Support-Seite von '.MAGNA_SUPPORT_URL.'faq.',
-	MagnaUpdaterDirectoryNotWritable    => 'In das Verzeichnis kann nicht geschrieben werden.',
-	MagnaUpdaterNormalFileNotWritable   => 'Die Datei ist nicht schreibbar.',
-	MagnaUpdaterSpecialFileNotWritable  => 'Die Datei ist nicht schreibbar.',
-);
-$magnaFilePermissionErrors['other'] = array(
-	'headline' => 'Wrong File Permissions',
-	'introduction' => 'The file permissions of the following files are set incorrectly:',
-	'label_file' => 'File',
-	'label_error' => 'Error',
-	'suggestions' => '',
-	'persists' => 'Please set the file permissions of these files to 777.<br />
-		Additional information on how to set file permissions is given on the support page of '.MAGNA_SUPPORT_URL.'.',
-	MagnaUpdaterDirectoryNotWritable    => 'The directory is not writable.',
-	MagnaUpdaterNormalFileNotWritable   => 'The file is not writable.',
-	MagnaUpdaterSpecialFileNotWritable  => 'The file is not writable.',
-);
+$mlLocalClientVersion = mlGetLocalClientVersion();
+$mlCurrentClientVersion = mlGetCurrentClientVersion();
 
-function updateErrorDiePage($errorText, $updaterErrors) {
-	$errorText = $errorText[($_SESSION['language'] == 'german') ? 'german' : 'other'];
-	$errorContent = '
-		<p>'.$errorText['introduction'].'</p>
-		<table class="updateError"><thead><tr><td>'.$errorText['label_file'].'</td><td>'.$errorText['label_error'].'</td></tr><tbody>
-	';
-	foreach ($updaterErrors as $error) {
-		$errorContent .= '
-			<tr><td>'.$error['file'].'</td>
-				<td>'.$errorText[$error['error']].'</td></tr>
-		';
-	}
-	$errorContent .= '
-		</tbody></table>
-		<p>'.$errorText['suggestions'].' '.$errorText['persists'].'</p>
-	';
+$mlUpdater = new MagnaUpdater($mlCurrentClientVersion, $mlLocalClientVersion);
 
-	$style = '
-table.updateError td {
-	padding: 1px 3px;
-}
-table.updateError thead td {
-	border: 1px solid #999;
-	background: #ccc;
-	font-weight: bold;
-	text-align: center
-}
-table.updateError tbody td {
-	border: 1px solid #bbb;
-	background: #eee;
-}
-';
-	echoDiePage($errorText['headline'], $errorContent, $style);
+$mlUpdateStatus = mlUpdatePlugin($mlUpdater, $mlCurrentClientVersion, $mlLocalClientVersion);
+
+$_updatedSuccessfully = $mlUpdateStatus['UpdatedSuccessfully'];
+if ($mlUpdateStatus['UpdatedSuccessfully']) {
+	$mlLocalClientVersion = $mlCurrentClientVersion;
 }
 
-$localClientVersion = false;
-if (file_exists(DIR_MAGNALISTER_FS.'ClientVersion') 
-	&& (($localClientVersion = file_get_contents(DIR_MAGNALISTER_FS.'ClientVersion')) !== false)
-) {
-	if (function_exists('json_decode')) {
-		$localClientVersion = json_decode($localClientVersion, true);
-	} else {
-		$localClientVersion = decodeClientVersion($localClientVersion);
-	}
-}
-if (!is_array($localClientVersion) || !array_key_exists('CLIENT_VERSION', $localClientVersion)) {
-	$localClientVersion = array(
-		'CLIENT_VERSION' => 0,
-	);
-}
-/* 10s timeout. If the ClientVersion can't be fetched in under 10s, the server is probably to busy right now. */
-if (($currentClientVersion = fileGetContents(
-		MAGNA_UPDATE_FILEURL.'ClientVersion/'.$localClientVersion['CLIENT_VERSION'].'/', $warnings, 10
-	)) === false
-) {
-	echoDiePage(
-		(($_SESSION['language'] == 'german') ?
-			'Keine Verbindung zum magnalister Server' :
-			'Cannot connect to magnalister server'
-		),
-		(($_SESSION['language'] == 'german') ? 
-			'Derzeit kann keine Verbindung zum Server aufgebaut werden - versuchen Sie es bitte in wenigen Momenten erneut. F&uuml;r Fragen wenden Sie sich bitte an unseren Support: <a href="mailto:support@magnalister.com">support@magnalister.com</a>'.(($warnings != '') ?
-				('<br />PHP verursachte folgenden Fehler:<br />'.$warnings) : '') :
-			'A connection to the magnalister server could not be established. Please try again in a minute. For further questions, contact our support: <a href="mailto:support@magnalister.com">support@magnalister.com</a>'.(($warnings != '') ?
-				('<br />PHP encountered the following error:<br />'.$warnings) : '')
-		)
-	);
-}
+define('MAGNA_SHOP_CHANGES', $mlUpdateStatus['RequiresInstallationUpdate']);
 
-if (function_exists('json_decode')) {
-	$currentClientVersion = json_decode($currentClientVersion, true);
-} else {
-	$currentClientVersion = decodeClientVersion($currentClientVersion);
-}
-if (!is_array($currentClientVersion)) {
-	$currentClientVersion = array();
-}
-
-$_updatedSuccessfully = false;
-$_mUpdater = new MagnaUpdater($currentClientVersion, $localClientVersion);
-
-if (MAGNA_SAFE_MODE) {
-	if (!$_mUpdater->checkMinimalFilePermissions()) {
-		updateErrorDiePage($magnaFilePermissionErrors, $_mUpdater->getUpdaterAllErrors());
-	}
-} else if (!MAGNA_SAFE_MODE && !file_exists(DIR_MAGNALISTER_FS.'FilePermissionsOK')) {
-	/* check EVERYTHING */
-	if (!$_mUpdater->checkFilePermissions()) {
-		/* Drop dead instantly */
-		updateErrorDiePage($magnaFilePermissionErrors, $_mUpdater->getUpdaterAllErrors());
-	} else {
-		file_put_contents(DIR_MAGNALISTER_FS.'FilePermissionsOK', 'OK');
-	}
-}
-
-if (!MAGNA_SAFE_MODE
-	&& (!file_exists(DIR_MAGNALISTER_FS.'ClientVersion')
-		|| ((isset($_GET['update']) && ($_GET['update'] == 'true')) || $_SESSION['MagnaPurge'])
-	)
-) {
-	$mangaUpdateState = $_mUpdater->update();
-	if ($mangaUpdateState == MagnaUpdaterFailedOnUpdatingFiles) {
-		/* hmmm... maybe file permissions? */
-		@unlink(DIR_MAGNALISTER_FS.'FilePermissionsOK');
-		updateErrorDiePage($magnaUpdateErrorText, $_mUpdater->getUpdaterAllErrors());
-	} else if ($mangaUpdateState == MagnaUpdaterSafeMode) { 
-		updateErrorDiePage($magnaUpdateErrorText, $_mUpdater->getUpdaterAllErrors());
-	} else {
-		$_updatedSuccessfully = true;
-		$shopMod = trim(fileGetContents(
-			MAGNA_UPDATE_FILEURL.'ShopChanges/from:'.$localClientVersion['CLIENT_VERSION'].'/to:'.$currentClientVersion['CLIENT_VERSION'].'/'
-		));
-		if ($shopMod == 'true') {
-			define('MAGNA_SHOP_CHANGES', true);
-		} else {
-			define('MAGNA_SHOP_CHANGES', false);
-		}
-		$localClientVersion = $currentClientVersion;
-		/* It updated. So everything was writable */
-		file_put_contents(DIR_MAGNALISTER_FS.'FilePermissionsOK', 'OK');
-	}
-}
-if (!defined('MAGNA_SHOP_CHANGES')) {
-	define('MAGNA_SHOP_CHANGES', false);	
-}
-
-define('LOCAL_CLIENT_VERSION', $localClientVersion['CLIENT_VERSION']);
-if (array_key_exists('CLIENT_BUILD_VERSION', $localClientVersion) && ((int)$localClientVersion['CLIENT_BUILD_VERSION'] > 0)) {
-	define('CLIENT_BUILD_VERSION', $localClientVersion['CLIENT_BUILD_VERSION']);
+define('LOCAL_CLIENT_VERSION', $mlLocalClientVersion['CLIENT_VERSION']);
+if (array_key_exists('CLIENT_BUILD_VERSION', $mlLocalClientVersion) && ((int)$mlLocalClientVersion['CLIENT_BUILD_VERSION'] > 0)) {
+	define('CLIENT_BUILD_VERSION', $mlLocalClientVersion['CLIENT_BUILD_VERSION']);
 } else {
 	define('CLIENT_BUILD_VERSION', false);
 }
 
-define('CURRENT_CLIENT_VERSION', $currentClientVersion['CLIENT_VERSION']);
-define('MINIMUM_CLIENT_VERSION', $currentClientVersion['MIN_CLIENT_VERSION']);
-if (array_key_exists('CLIENT_BUILD_VERSION', $currentClientVersion) && ((int)$currentClientVersion['CLIENT_BUILD_VERSION'] > 0)) {
-	define('CURRENT_BUILD_VERSION', $currentClientVersion['CLIENT_BUILD_VERSION']);
+define('CURRENT_CLIENT_VERSION', $mlCurrentClientVersion['CLIENT_VERSION']);
+define('MINIMUM_CLIENT_VERSION', $mlCurrentClientVersion['MIN_CLIENT_VERSION']);
+if (array_key_exists('CLIENT_BUILD_VERSION', $mlCurrentClientVersion) && ((int)$mlCurrentClientVersion['CLIENT_BUILD_VERSION'] > 0)) {
+	define('CURRENT_BUILD_VERSION', $mlCurrentClientVersion['CLIENT_BUILD_VERSION']);
 } else {
 	define('CURRENT_BUILD_VERSION', false);
 }
 
-if (file_exists(DIR_MAGNALISTER_FS.'UpdaterError')) {
-	$magnaUpdateErrorText['other']['headline'] = 'Error during last automatic update process';
-	$magnaUpdateErrorText['other']['introduction'] = 'Some errors occured during the last automatic update procces of your mgnalister plugins:';
-	$magnaUpdateErrorText['other']['suggestions'] = 'Click <a href="'.FILENAME_MAGNALISTER.'?update=true" title="restart the update process">here</a> to restart '.
-						 							'the update process.';
+unset($mlUpdateStatus);
+unset($mlLocalClientVersion);
+unset($mlCurrentClientVersion);
 
-	$magnaUpdateErrorText['german']['headline'] = 'Fehler bei letztmaliger automatischer Aktualisierung';
-	$magnaUpdateErrorText['german']['introduction'] = 'Bei der letzten automatischen Aktualisierung ihres magnalister Plugins sind folgende Fehler aufgetreten:';
-	$magnaUpdateErrorText['german']['suggestions'] = 'Klicken sie <a href="'.FILENAME_MAGNALISTER.'?update=true" title="Update-Vorang erneut starten">hier</a> '.
-													'um den Update-Vorgang erneut zu starten.';
-
-	$updaterErrors = unserialize(file_get_contents(DIR_MAGNALISTER_FS.'UpdaterError'));
-	updateErrorDiePage($magnaUpdateErrorText, $updaterErrors);
-}
-
-if (!MAGNA_SAFE_MODE && !file_exists(DIR_MAGNALISTER_CACHE)) {
-	@mkdir(DIR_MAGNALISTER_CACHE, 0777, true);
-} else if (!MAGNA_SAFE_MODE && !is_writable(DIR_MAGNALISTER_CACHE)) {
-	@chmod(DIR_MAGNALISTER_CACHE, 0777);
-}
-if (!is_writable(DIR_MAGNALISTER_CACHE)) {
-	echoDiePage(
-		(($_SESSION['language'] == 'german') 
-			? 'Cache Verzeichnis fehlt oder ist nicht schreibbar'
-			: 'Cache directory is missing or not writeable'
-		),
-		(($_SESSION['language'] == 'german') 
-			? (MAGNA_SAFE_MODE 
-			    ? 'Aufgrund der Safe Mode Beschr&auml;nkung kann das Cache Verzeichnis 
-			       (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) nicht
-			       erstellt und/oder schreibbar gemacht werden. 
-			       Bitte erstellen Sie das Verzeichnis und stellen Sie sicher, dass es vom Webserver geschrieben werden kann.'
-			    : 'Das Cache Verzeichnis (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) konnte nicht
-			       erstellt und/oder schreibbar gemacht werden. Bitte &uuml;berpr&uuml;fen Sie die Dateirechte des
-			       magnalister Verzeichnisses und legen Sie gegebenenfalls das Cache Verzeichnis selbst an. Es muss
-			       vom Webserver geschrieben werden k&ouml;nnen.'
-			  )
-			: (MAGNA_SAFE_MODE 
-			    ? 'The cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
-			       cannot be created and/or made writable 
-			       because of the Safe Mode restriction. 
-			       Please create this directory and make sure it is writable by the webserver.'
-			    : 'The  cache directory (<tt>'.substr(DIR_WS_CATALOG.DIR_MAGNALISTER_CACHE, 1).'</tt>) 
-			       cannot be created and/or made writable. Please check the file permissions of the 
-			       magnalister directory and create the cache directory if necessary. Make sure it is
-			       writable by the webserver.'
-			  )
-		)
-	);
-}
 $_updaterTime = microtime(true) - $_updaterTime;
+
+mlIsCacheDirWritable();
 
 /**
  * Global includes and initialisation
@@ -487,42 +579,16 @@ if (defined('DB_SERVER_CHARSET')) {
 	MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
 }
 
-/* Detect products_ean-like field if it exists. */
-$productsFields = array_flip((array)MagnaDB::gi()->getTableCols(TABLE_PRODUCTS));
-if (is_array($productsFields)) {
-	$eanTypes = array (
-		'products_ean',
-		'products_barcode',
-	);
-	foreach ($eanTypes as $eanType) {
-		if (array_key_exists($eanType, $productsFields)) {
-			define('MAGNA_FIELD_PRODUCTS_EAN', $eanType);
-			break;
-		}
-	}
-}
-/* Detect attributes_ean-like field if it exists. */
-$attributesFields = array_flip((array)MagnaDB::gi()->getTableCols(TABLE_PRODUCTS_ATTRIBUTES));
-if (is_array($attributesFields)) {
-	$eanTypes = array (
-		'attributes_ean',
-		'gm_ean',
-	);
-	foreach ($eanTypes as $eanType) {
-		if (array_key_exists($eanType, $attributesFields)) {
-			define('MAGNA_FIELD_ATTRIBUTES_EAN', $eanType);
-			break;
-		}
-	}
-}
+mlDetectShopFeatures();
 
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php');
 
 /* Update the database */
 $_dbUpdateErrors = null;
 if (MAGNA_SAFE_MODE || $_updatedSuccessfully || isset($_GET['dbupdate']) || !MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG)) {
-	$_dbUpdateErrors = $_mUpdater->updateDatabase();
+	$_dbUpdateErrors = $mlUpdater->updateDatabase();
 }
+unset($mlUpdater);
 #echo __FILE__.'{L'.__LINE__.'}';
 #die();
 
@@ -600,11 +666,14 @@ if (   MLBrowserDetect::gi()->is(array ('Browser' => 'firefox', 'BVersion' => '<
  * die Produktbider zu gross sind. */
 magnaFixRamSize();
 
+magnaFixExecutionTime();
+
 /* Kein Error-Handling da DB Fehler immer Fatal */
 //echo print_m($_dbUpdateErrors, 'updateDatabase');
 
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'config.php');
-loadDBConfig();				/* Load configuration from database */
+/* Load configuration from database */
+loadDBConfig();
 
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaException.php');
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaError.php');
@@ -664,7 +733,6 @@ $globalStatSize = array('h' => 200, 'w' => 400);
 if (isset($_GET['module']) && ($_GET['module'] == 'stats')) {
 	include_once(DIR_MAGNALISTER_MODULES.'stats/main.php');
 }
-
 
 
 if (isset($_GET['fixProductsModel']) && ($_GET['fixProductsModel'] == 'true')) {
@@ -738,8 +806,14 @@ if (isset($_GET['module']) && array_key_exists($_GET['module'], $_modules)
 loadJSONConfig();
 loadJSONConfig($_lang);
 
+// Setup MLProduct
+MLProduct::gi()->setOptions(array (
+	// todo: Set default to 'false'
+	'useGambioProperties' => MAGNA_GAMBIO_VARIATIONS && (getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true')
+));
+
 /* Testpages */
-if (isset($_GET['module']) && in_array($_GET['module'], array('apitest', 'generictests', 'SimpleCategoryView'))) {
+if (isset($_GET['module']) && in_array($_GET['module'], array('apitest', 'generictests', 'dev'))) {
 	$_url['module'] = $_GET['module'];
 	include_once(DIR_MAGNALISTER_MODULES.$_GET['module'].'.php');
 }

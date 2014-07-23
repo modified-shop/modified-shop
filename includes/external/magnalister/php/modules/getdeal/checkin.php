@@ -23,6 +23,8 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/Comparison
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCategoryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'getdeal/classes/GetdealCheckinSubmit.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/MLProductListComparisonShoppingAbstract.php');
 
 class GetdealSummaryView extends ComparisonShoppingSummaryView {
 	protected function getAdditionalProductNameStuff($prod) {
@@ -33,10 +35,18 @@ class GetdealSummaryView extends ComparisonShoppingSummaryView {
 	}
 }
 
+$sCheckinView = '';
+
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
+            $sCheckinView = 'ComparisonShoppingCheckinProductList';
+} else {
+            $sCheckinView = 'ComparisonShoppingCategoryView';
+}
+
 $cm = new CheckinManager(
 	array(
 		'summaryView'   => 'GetdealSummaryView',
-		'checkinView'   => 'ComparisonShoppingCategoryView',
+		'checkinView'   => $sCheckinView,
 		'checkinSubmit' => 'GetdealCheckinSubmit'
 	), array(
 		'marketplace' => $_Marketplace

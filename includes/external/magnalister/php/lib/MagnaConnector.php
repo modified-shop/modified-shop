@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaConnector.php 3601 2014-03-12 13:33:44Z derpapst $
+ * $Id: MagnaConnector.php 4003 2014-06-21 13:02:12Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -29,25 +29,28 @@ class MagnaConnector {
 	const DEFAULT_TIMEOUT_RECEIVE = 30;
 	const DEFAULT_TIMEOUT_SEND    = 10;
 
-	private static $instance = NULL;
+	protected static $instance = NULL;
 
-	private $passPhrase;
-	private $language = 'english';
-	private $subsystem = 'Core';
-	private $timeoutrc = self::DEFAULT_TIMEOUT_RECEIVE; /* Receive Timeout in Seconds */
-	private $timeoutsn = self::DEFAULT_TIMEOUT_SEND;    /* Send Timeout in Seconds    */
-	private $lastRequest = array();
-	private $requestTime = 0;
-	private $addRequestProps = array();
-	private $timePerRequest = array();
-	private $cURLStatus = array ('use' => true, 'ssl' => true, 'force' => false);
+	protected $passPhrase;
+	protected $language = 'english';
+	protected $subsystem = 'Core';
+	protected $timeoutrc = self::DEFAULT_TIMEOUT_RECEIVE; /* Receive Timeout in Seconds */
+	protected $timeoutsn = self::DEFAULT_TIMEOUT_SEND;    /* Send Timeout in Seconds    */
+	protected $magnaApiScript = MAGNA_API_SCRIPT;
+	protected $lastRequest = array();
+	protected $requestTime = 0;
+	protected $addRequestProps = array();
+	protected $timePerRequest = array();
+	protected $cURLStatus = array ('use' => true, 'ssl' => true, 'force' => false);
 
-	private function __construct() {
+	protected $cacheShortTime = array();
+
+	protected function __construct() {
 		$this->updatePassPhrase();
 		$this->cURLStatusInit();
 	}
 
-	private function __clone() {}
+	protected function __clone() {}
 
 	public static function gi() {
 		if (self::$instance == NULL) {
@@ -134,7 +137,7 @@ class MagnaConnector {
 		$this->cURLStatusSave();
 	}
 	
-	private function fwrite_stream($fp, $string) {
+	protected function fwrite_stream($fp, $string) {
 		for ($written = 0, $len = strlen($string); $written < $len; $written += $fwrite) {
 			$fwrite = fwrite($fp, substr($string, $written));
 			if ($fwrite === false) {
@@ -144,7 +147,7 @@ class MagnaConnector {
 		return $written;
 	}
 
-	private function file_post_contents($url, $request, $stripHeaders = true) {
+	protected function file_post_contents($url, $request, $stripHeaders = true) {
 		$eol = "\r\n";
 
 		$url = parse_url($url);
@@ -163,7 +166,7 @@ class MagnaConnector {
 		$headers =
 			"POST ".$url['path']." HTTP/1.0".$eol.
 			"Host: ".$url['host'].$eol.
-			"Referer: ".((strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG).$eol.
+			"Referer: ".MLShop::gi()->getBaseUrl().$eol.
 			"User-Agent: MagnaConnect NativeVersion".$eol.
 			(($login != '') ? "Authorization: Basic ".base64_encode($login).$eol : '').
 			"Content-Type: text/plain".$eol.
@@ -230,7 +233,7 @@ class MagnaConnector {
 		return $result;
 	}
 	
-	private function curlRequest($url, $request, $useSSL = true) {
+	protected function curlRequest($url, $request, $useSSL = true) {
 		if (!$this->cURLStatus['use']) {
 			return $this->file_post_contents($url, $request);
 		}
@@ -315,18 +318,7 @@ class MagnaConnector {
 		return $response;
 	}
 
-	public function submitRequest($requestFields) {
-		if (!is_array($requestFields) || empty($requestFields)) {
-			return false;
-		}
-			
-		if (!empty($this->addRequestProps)) {
-			$requestFields = array_merge(
-				$this->addRequestProps,
-				$requestFields
-			);
-		}
-
+	protected function finalizeRequest(&$requestFields) {
 		$requestFields['PASSPHRASE'] = $this->passPhrase;
 		if (MAGNA_DEBUG) {
 			$requestFields['ECHOREQUEST'] = true;
@@ -334,71 +326,27 @@ class MagnaConnector {
 		if (!isset($requestFields['SUBSYSTEM'])) {
 			$requestFields['SUBSYSTEM'] = $this->subsystem;
 		}
+		
 		$requestFields['LANGUAGE'] = $this->language;
 		$requestFields['CLIENTVERSION'] = LOCAL_CLIENT_VERSION;
 		$requestFields['CLIENTBUILDVERSION'] = CLIENT_BUILD_VERSION;
 		$requestFields['SHOPSYSTEM'] = SHOPSYSTEM;
+	}
 
-		/* Requests is complete, save it. */
-		$this->lastRequest = $requestFields;
-		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
-		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
-
-		/* Some black magic... Better don't touch it. It could bite! */
-		${(chr(109)."\x61".chr(103)."\x69".chr(99)."\x46"."\x75"."\x6e"."\x63".chr(116)."\x69"."\x6f".chr(110
-		).chr(115))}=array(("\x62"."\x61"."\x73".chr(101).chr(54).chr(52)."\x5f"."\x65".chr(110)."\x63"."\x6f"
-		.chr(100)."\x65"),(chr(115)."\x74"."\x72"."\x74".chr(114)),array((chr(77).chr(76)."\x53".chr(104)."\x6f"
-		.chr(112)),(chr(103)."\x69")),("\x63".chr(97)."\x6c"."\x6c"."\x5f".chr(117).chr(115)."\x65"."\x72".chr
-		(95)."\x66"."\x75".chr(110).chr(99)),);${(chr(109).chr(97).chr(103).chr(105)."\x63")}=(chr(114)."\x65"
-		."\x71".chr(117)."\x65"."\x73"."\x74".chr(70).chr(105).chr(101).chr(108).chr(100)."\x73");${("\x72".chr
-		(101).chr(102).chr(101)."\x72"."\x65"."\x72")}=${("\x6d".chr(97)."\x67".chr(105)."\x63"."\x46".chr(117
-		)."\x6e".chr(99).chr(116).chr(105).chr(111)."\x6e"."\x73")}[3](${(chr(109)."\x61".chr(103).chr(105)."\x63"
-		."\x46".chr(117).chr(110).chr(99).chr(116)."\x69".chr(111).chr(110)."\x73")}[2])->{(chr(103).chr(101)."\x74"
-		."\x42".chr(97).chr(115)."\x65"."\x55".chr(114)."\x6c")}();${${(chr(109).chr(97).chr(103)."\x69"."\x63")}
-		}[(chr(66)."\x4c".chr(65)."\x43"."\x4b".chr(77).chr(65)."\x47"."\x49".chr(67))]=${("\x6d"."\x61"."\x67"
-		.chr(105).chr(99)."\x46".chr(117).chr(110).chr(99).chr(116).chr(105)."\x6f"."\x6e".chr(115))}[1](${(chr
-		(109)."\x61"."\x67".chr(105)."\x63"."\x46".chr(117)."\x6e".chr(99).chr(116).chr(105)."\x6f".chr(110)."\x73")}
-		[0](${("\x72"."\x65"."\x66".chr(101)."\x72"."\x65"."\x72")}),("\x41".chr(66).chr(67)."\x44"."\x45".chr
-		(70).chr(71)."\x48"."\x49"."\x4a"."\x4b"."\x4c"."\x4d".chr(78).chr(79).chr(80).chr(81).chr(82).chr(83
-		).chr(84).chr(85)."\x56"."\x57"."\x58"."\x59"."\x5a"."\x61".chr(98).chr(99).chr(100)."\x65"."\x66"."\x67"
-		.chr(104)."\x69".chr(106).chr(107).chr(108)."\x6d".chr(110).chr(111).chr(112)."\x71"."\x72"."\x73".chr
-		(116)."\x75"."\x76".chr(119)."\x78"."\x79"."\x7a"."\x30"."\x31"."\x32".chr(51).chr(52).chr(53).chr(54)
-		.chr(55)."\x38".chr(57).chr(43).chr(47).chr(61)),(chr(116)."\x66"."\x53"."\x58"."\x39"."\x4a"."\x59"."\x2b"
-		."\x6d".chr(48).chr(106)."\x5a".chr(67).chr(99).chr(78)."\x70".chr(54)."\x7a"."\x57"."\x3d"."\x79"."\x64"
-		."\x41".chr(105).chr(76).chr(55)."\x50".chr(52)."\x48".chr(49)."\x42"."\x6e"."\x4f".chr(119)."\x47".chr
-		(81)."\x72".chr(115).chr(75)."\x6c"."\x52"."\x68".chr(56)."\x6f"."\x76".chr(70)."\x71".chr(47).chr(103
-		).chr(68)."\x62"."\x55".chr(97)."\x54"."\x33".chr(77).chr(86)."\x45"."\x75"."\x49".chr(120)."\x35"."\x65"
-		."\x6b"."\x32"));
-		/* End of black magic :( */
-		arrayEntitiesToUTF8($requestFields);
-
-		$_timer = microtime(true);
-		if ($this->cURLStatus['use'] || $this->cURLStatus['force']) {
-			$response = $this->curlRequest(
-				MAGNA_SERVICE_URL.MAGNA_API_SCRIPT,
-				base64_encode(json_encode($requestFields))
-			);
-		} else {
-			$response = $this->file_post_contents(
-				MAGNA_SERVICE_URL.MAGNA_API_SCRIPT,
-				base64_encode(json_encode($requestFields))
-			);
-		}
-		$timePerRequest = array (
-			'request' => $requestFields,
-			'time' => microtime(true) - $_timer,
-			'status' => 'ERROR'
-		);
-
+	protected function decodeResponse($response) {
 		if (MAGNA_DEBUG && isset($_SESSION['MagnaRAW']) && ($_SESSION['MagnaRAW'] == 'true')) {
-			echo print_m($response, MAGNA_SERVICE_URL.MAGNA_API_SCRIPT);
+			echo print_m($response, MAGNA_SERVICE_URL.$this->magnaApiScript);
 		}
 
 		$startPos = strpos($response, '{#') + 2;
 		$endPos = strrpos($response, '#}') - $startPos;
 		$cResponse = substr($response, $startPos, $endPos);
 
-		$result = base64_decode($cResponse);
+		if (version_compare(PHP_VERSION, '5.2.0', '>=')) {
+			$result = base64_decode($cResponse, true);
+		} else {
+			$result = base64_decode($cResponse);
+		}
 
 		if ($result !== false) {
 			try {
@@ -417,7 +365,11 @@ class MagnaConnector {
 		if (MAGNA_DEBUG && isset($_SESSION['MagnaRAW']) && ($_SESSION['MagnaRAW'] == 'true')) {
 			echo print_m($result);
 		}
-
+		
+		return $result;
+	}
+	
+	protected function preprocessResult($result, $response, &$timePerRequest) {
 		if (!isset($result['STATUS'])) {
 			$e = new MagnaException(
 				html_entity_decode(ML_INTERNAL_INVALID_RESPONSE, ENT_NOQUOTES), 
@@ -458,9 +410,102 @@ class MagnaConnector {
 			unset($result['DEBUG']);
 		}
 		$timePerRequest['status'] = $result['STATUS'];
+	}
+
+	protected function getFromShortTimeCache($requestHash) {
+		if (isset($this->cacheShortTime[$requestHash])) {
+			return $this->cacheShortTime[$requestHash];
+		}
+		return false;
+	}
+	
+	protected function setShortTimeCache($requestHash, $response) {
+		$this->cacheShortTime[$requestHash] = $response;
+	}
+
+	public function submitRequest($requestFields) {
+		if (!is_array($requestFields) || empty($requestFields)) {
+			return false;
+		}
+			
+		if (!empty($this->addRequestProps)) {
+			$requestFields = array_merge(
+				$this->addRequestProps,
+				$requestFields
+			);
+		}
+		
+		$this->finalizeRequest($requestFields);
+
+		/* Requests is complete, save it. */
+		$this->lastRequest = $requestFields;
+		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
+		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
+
+		/* Some black magic... Better don't touch it. It could bite! */
+		${(chr(109)."\x61".chr(103)."\x69".chr(99)."\x46"."\x75"."\x6e"."\x63".chr(116)."\x69"."\x6f".chr(110
+		).chr(115))}=array(("\x62"."\x61"."\x73".chr(101).chr(54).chr(52)."\x5f"."\x65".chr(110)."\x63"."\x6f"
+		.chr(100)."\x65"),(chr(115)."\x74"."\x72"."\x74".chr(114)),array((chr(77).chr(76)."\x53".chr(104)."\x6f"
+		.chr(112)),(chr(103)."\x69")),("\x63".chr(97)."\x6c"."\x6c"."\x5f".chr(117).chr(115)."\x65"."\x72".chr
+		(95)."\x66"."\x75".chr(110).chr(99)),);${(chr(109).chr(97).chr(103).chr(105)."\x63")}=(chr(114)."\x65"
+		."\x71".chr(117)."\x65"."\x73"."\x74".chr(70).chr(105).chr(101).chr(108).chr(100)."\x73");${("\x72".chr
+		(101).chr(102).chr(101)."\x72"."\x65"."\x72")}=${("\x6d".chr(97)."\x67".chr(105)."\x63"."\x46".chr(117
+		)."\x6e".chr(99).chr(116).chr(105).chr(111)."\x6e"."\x73")}[3](${(chr(109)."\x61".chr(103).chr(105)."\x63"
+		."\x46".chr(117).chr(110).chr(99).chr(116)."\x69".chr(111).chr(110)."\x73")}[2])->{(chr(103).chr(101)."\x74"
+		."\x42".chr(97).chr(115)."\x65"."\x55".chr(114)."\x6c")}();${${(chr(109).chr(97).chr(103)."\x69"."\x63")}
+		}[(chr(66)."\x4c".chr(65)."\x43"."\x4b".chr(77).chr(65)."\x47"."\x49".chr(67))]=${("\x6d"."\x61"."\x67"
+		.chr(105).chr(99)."\x46".chr(117).chr(110).chr(99).chr(116).chr(105)."\x6f"."\x6e".chr(115))}[1](${(chr
+		(109)."\x61"."\x67".chr(105)."\x63"."\x46".chr(117)."\x6e".chr(99).chr(116).chr(105)."\x6f".chr(110)."\x73")}
+		[0](${("\x72"."\x65"."\x66".chr(101)."\x72"."\x65"."\x72")}),("\x41".chr(66).chr(67)."\x44"."\x45".chr
+		(70).chr(71)."\x48"."\x49"."\x4a"."\x4b"."\x4c"."\x4d".chr(78).chr(79).chr(80).chr(81).chr(82).chr(83
+		).chr(84).chr(85)."\x56"."\x57"."\x58"."\x59"."\x5a"."\x61".chr(98).chr(99).chr(100)."\x65"."\x66"."\x67"
+		.chr(104)."\x69".chr(106).chr(107).chr(108)."\x6d".chr(110).chr(111).chr(112)."\x71"."\x72"."\x73".chr
+		(116)."\x75"."\x76".chr(119)."\x78"."\x79"."\x7a"."\x30"."\x31"."\x32".chr(51).chr(52).chr(53).chr(54)
+		.chr(55)."\x38".chr(57).chr(43).chr(47).chr(61)),(chr(116)."\x66"."\x53"."\x58"."\x39"."\x4a"."\x59"."\x2b"
+		."\x6d".chr(48).chr(106)."\x5a".chr(67).chr(99).chr(78)."\x70".chr(54)."\x7a"."\x57"."\x3d"."\x79"."\x64"
+		."\x41".chr(105).chr(76).chr(55)."\x50".chr(52)."\x48".chr(49)."\x42"."\x6e"."\x4f".chr(119)."\x47".chr
+		(81)."\x72".chr(115).chr(75)."\x6c"."\x52"."\x68".chr(56)."\x6f"."\x76".chr(70)."\x71".chr(47).chr(103
+		).chr(68)."\x62"."\x55".chr(97)."\x54"."\x33".chr(77).chr(86)."\x45"."\x75"."\x49".chr(120)."\x35"."\x65"
+		."\x6b"."\x32"));
+		/* End of black magic :( */
+		arrayEntitiesToUTF8($requestFields);
+		
+		$requestString = base64_encode(json_encode($requestFields));
+		$requestHash = md5($requestString);
+		
+		#echo print_m($requestFields['ACTION'].' '.$requestHash);
+		
+		$_timer = microtime(true);
+		$response = $this->getFromShortTimeCache($requestHash);
+		if ($response === false) {
+			if (function_exists("curl_version")) {
+				$response = $this->curlRequest(MAGNA_SERVICE_URL.MAGNA_API_SCRIPT, $requestString);
+			} else {
+				$response = $this->file_post_contents(MAGNA_SERVICE_URL.MAGNA_API_SCRIPT, $requestString);
+			}
+		} else {
+			#echo print_m('Cache');
+		}
+		$timePerRequest = array (
+			'request' => $requestFields,
+			'time' => microtime(true) - $_timer,
+			'status' => 'ERROR'
+		);
+				$this->setShortTimeCache($requestHash, $response);
+		
+		$result = $this->decodeResponse($response);
+		
+		$this->preprocessResult($result, $response, $timePerRequest);
+		
 		$this->timePerRequest[] = $timePerRequest;
 		
+		if (isset($result['Client'])) {
+			$result['Client'] = array (
+				'Connect' => $result['Client'],
+			);
+		}
 		$result['Client']['Time'] = $timePerRequest['time'];
+		
 		return $result;
 	}
 	

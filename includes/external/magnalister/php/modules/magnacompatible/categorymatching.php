@@ -38,7 +38,7 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 			REPLACE INTO '.TABLE_MAGNA_COMPAT_CATEGORYMATCHING.'
 				SELECT DISTINCT ms.mpID, p.products_id, p.products_model, 
 				       \''.MagnaDB::gi()->escape($_POST['mpCategory']).'\' AS mp_category_id,
-				       \''.MagnaDB::gi()->escape($_POST['storeCategory']).'\' AS store_category_id
+				       \''.MagnaDB::gi()->escape(isset($_POST['storeCategory']) ? $_POST['storeCategory'] : '').'\' AS store_category_id
 				  FROM '.TABLE_MAGNA_SELECTION.' ms, '.TABLE_PRODUCTS.' p
 				 WHERE ms.mpID=\''.$this->mpID.'\' AND
 				       ms.selectionname=\''.$this->prepareSettings['selectionName'].'\' AND
@@ -80,8 +80,8 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 				'pID' => $pID,
 				'mpID' => $this->mpID,
-			    'selectionname' => $this->prepareSettings['selectionName'],
-			    'session_id' => session_id()
+				'selectionname' => $this->prepareSettings['selectionName'],
+				'session_id' => session_id()
 			));
 		}
 		unset($_POST['unprepare']);
@@ -103,7 +103,7 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 				$params[$attr] = &$this->$attr;
 			}
 		}
-
+		$params['prepareSettings'] = $this->prepareSettings;
 		$cMDiag = new $class($params);
 
 		if ($this->isAjax) {
@@ -117,6 +117,7 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 				       ms.session_id=\''.session_id().'\' AND
 				       ms.pID=p2c.products_id
 			', true);
+			
 			//echo print_m($categories, '$categories');
 			$html = $cMDiag->renderView() . '
 				<table class="datagrid autoOddEven hover">
@@ -140,7 +141,7 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 	protected function processSelection() {
 		if (($class = $this->loadResource('catmatch', 'PrepareCategoryView')) === false) {
 			if ($this->isAjax) {
-				echo '{error: \'This is not supported\'}';
+				echo '{"error": "This is not supported"}';
 			} else {
 				echo 'This is not supported';
 			}
@@ -154,14 +155,32 @@ class MagnaCompatCatMatch extends MagnaCompatibleBase {
 		}
 	}
 
-	public function process() {
-		$this->saveMatching();
-		$this->deleteMatching();
-		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
-			$this->processMatching();
-		} else {
-			$this->processSelection();
+        
+	protected function processProductList() {
+		if (($sClass = $this->loadResource('catmatch', 'CategoryMatchingProductList')) === false) {
+			if ($this->isAjax) {
+				echo '{"error": "This is not supported"}';
+			} else {
+				echo 'This is not supported';
+			}
+			return;
 		}
+		$o = new $sClass();
+		echo $o;
 	}
-	
+        
+	public function process() {
+                        $this->saveMatching();
+                        $this->deleteMatching();
+                        if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
+                                    $this->processMatching();
+                        } else {
+                                    if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
+                                                $this->processProductList();
+                                    } else {
+                                                $this->processSelection();
+                                    }
+                        }
+            }
+
 }

@@ -21,7 +21,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 class MagnaCompatibleErrorView {
-	private $errorLog;
+	private $errorLog = array();
 	
 	private $settings = array();
 	private $sort = array();
@@ -31,18 +31,21 @@ class MagnaCompatibleErrorView {
 	private $url = array();
 	
 	protected $mpID = 0;
+	protected $marketplace = '';
 	
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_url;
 		
 		$this->settings = array_merge(array(
-			'maxTitleChars'	=> 90,
-			'itemLimit'		=> 50,
+			'maxTitleChars' => 90,
+			'itemLimit'     => 50,
+			'hasImport' => false,
 		), $settings);
 
 		$this->url = $_url;
 
 		$this->mpID = $_MagnaSession['mpID'];
+		$this->marketplace = $_MagnaSession['currentPlatform'];
 
 		/* Delete selected Error Messages*/
 		if (isset($_POST['errIDs']) && isset($_POST['action']) && ($_POST['action'] == 'delete')) {
@@ -57,7 +60,9 @@ class MagnaCompatibleErrorView {
 				}
 			}
 		}
-
+		
+		$this->importErrorLog();
+		
 		if (isset($_GET['sorting'])) {
 			$sorting = $_GET['sorting'];
 		} else {
@@ -65,24 +70,24 @@ class MagnaCompatibleErrorView {
 		}
 
 		switch ($sorting) {
-	        case 'errormessage':
-	            $this->sort['order'] = 'errormessage';
-	            $this->sort['type']  = 'ASC';
-	            break;
-	        case 'errormessage-desc':
-	            $this->sort['order'] = 'errormessage';
-	            $this->sort['type']  = 'DESC';
-	            break;
+			case 'errormessage':
+				$this->sort['order'] = 'errormessage';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'errormessage-desc':
+				$this->sort['order'] = 'errormessage';
+				$this->sort['type']  = 'DESC';
+				break;
 			case 'dateadded':
-	            $this->sort['order'] = 'dateadded';
-	            $this->sort['type']  = 'ASC';
-	            break;
-	        case 'dateadded-desc':
-	        default:
-	            $this->sort['order'] = 'dateadded';
-	            $this->sort['type']  = 'DESC';
-	            break;
-	    }
+				$this->sort['order'] = 'dateadded';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'dateadded-desc':
+			default:
+				$this->sort['order'] = 'dateadded';
+				$this->sort['type']  = 'DESC';
+				break;
+		}
 
 		$this->numberofitems = (int)MagnaDB::gi()->fetchOne('
 			SELECT DISTINCT count(id) FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' WHERE mpID='.$this->mpID.'
@@ -98,19 +103,96 @@ class MagnaCompatibleErrorView {
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
 		    SELECT al.id, al.dateadded, al.errormessage, al.additionaldata
-			  FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' al
-			 WHERE al.mpID=\''.$this->mpID.'\'
+		      FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' al
+		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
 		  ORDER BY `'.$this->sort['order'].'` '.$this->sort['type'].' 
 		     LIMIT '.$this->offset.','.$this->settings['itemLimit'].'
 		');
 		if (!empty($this->errorLog)) {
 			foreach ($this->errorLog as &$item) {
+				$item['errormessage'] = fixHTMLUTF8Entities($item['errormessage']);
 				$item['additionaldata'] = @unserialize($item['additionaldata']);
 			}
 		}
 	}
-
+	
+	private function processErrorAdditonalData($data) {
+		if (isset($data['MOrderID'])) {
+			$o = MagnaDB::gi()->fetchOne('
+				SELECT data FROM '.TABLE_MAGNA_ORDERS.'
+				 WHERE special=\''.MagnaDB::gi()->escape($data['MOrderID']).'\'
+			');
+			if ($o === false) return;
+			$o = @unserialize($o);
+			if (!is_array($o)) {
+				$o = array();
+			}
+			$o['ML_ERROR_LABEL'] = 'ML_GENERIC_ERROR_ORDERSYNC_FAILED';
+			#echo print_m($o);
+			$o = serialize($o);
+			MagnaDB::gi()->update(TABLE_MAGNA_ORDERS, array('data' => $o), array('special' => $data['MOrderID']));
+		}
+	}
+	
+	protected function importErrorLog() {
+		if (!$this->settings['hasImport']) {
+			return;
+		}
+		$begin = MagnaDB::gi()->fetchOne('
+		    SELECT dateadded FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.'
+		     WHERE mpID = '.$this->mpID.'
+		  ORDER BY dateadded DESC
+		     LIMIT 1
+		');
+		$begin = getDBConfigValue($this->marketplace.'.errorlog.lastdate', $this->mpID, $begin);
+		if ($begin === false) {
+			$begin = time() - 60 * 60 * 24 * 12;
+		} else {
+			$begin = strtotime($begin.' +0000') + 1;
+		}
+		$begin = gmdate('Y-m-d H:i:s', max($begin, time() - 60 * 60 * 24 * 12));
+		
+		$request = array(
+			'ACTION' => 'GetErrorLogForDateRange',
+			'BEGIN' => $begin,
+			'OFFSET' => array (
+				'COUNT' => 1000,
+				'START' => 0
+			),
+		);
+		#echo print_m($request, '$request');
+		try {
+			$result = MagnaConnector::gi()->submitRequest($request);
+		} catch (MagnaException $e) {
+			$result['DATA'] = array();
+		}
+		#echo print_m($result, '$result');
+		#return;
+		$newbegin = '';
+		if (array_key_exists('DATA', $result) && !empty($result['DATA'])) {
+			foreach ($result['DATA'] as $item) {
+				$this->processErrorAdditonalData($item['ErrorData']);
+				$data = array (
+					'mpID' => $item['MpId'],
+					'dateadded' => $item['DateAdded'],
+					'errormessage' => $item['ErrorMessage'],
+					'additionaldata' => serialize($item['ErrorData']),
+				);
+				if ($begin < $item['DateAdded']) {
+					$begin = $item['DateAdded'];
+				}
+				if (!MagnaDB::gi()->recordExists(TABLE_MAGNA_COMPAT_ERRORLOG, $data)) {
+					MagnaDB::gi()->insert(TABLE_MAGNA_COMPAT_ERRORLOG, $data);
+				}
+			}
+			$newbegin = $item['DateAdded'];
+		}
+		if (!empty($newbegin)) {
+			setDBConfigValue($this->marketplace.'.errorlog.lastdate', $this->mpID, $begin, true);
+		}
+	}
+	
 	private function sortByType($type) {
 		return '
 			<span class="nowrap">

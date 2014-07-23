@@ -39,7 +39,8 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		global $_MagnaSession;
 		$settings = array_merge(array(
 			'language' => getDBConfigValue($settings['marketplace'] . '.lang', $_MagnaSession['mpID']),
-			'currency' => 'EUR'
+			'currency' => 'EUR',
+			'itemsPerBatch' => 5
 		), $settings);
 		
 		parent::__construct($settings);
@@ -87,7 +88,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		parent::initSelection($offset, $limit);
 	}
 	
-	protected function calcVariationPrice($price, $addition) {
+	protected function calcVariationPrice($price, $offset, $tax) {
 		return $price;
 	}
 	
@@ -285,9 +286,12 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		
 		$data['submit']['Images'] = array();
 		if (is_array($propertiesRow['GalleryPictures'])
-			&& isset($propertiesRow['GalleryPictures']['BaseUrl']) && is_string($propertiesRow['GalleryPictures']['BaseUrl']) && !empty($propertiesRow['GalleryPictures']['BaseUrl'])
+			&& isset($propertiesRow['GalleryPictures']['BaseUrl'])
 			&& isset($propertiesRow['GalleryPictures']['Images'])  && is_array($propertiesRow['GalleryPictures']['Images'])   && !empty($propertiesRow['GalleryPictures']['Images'])
 		) {
+			if ($propertiesRow['GalleryPictures']['BaseUrl'] == '/') {
+				$propertiesRow['GalleryPictures']['BaseUrl'] = '';
+			}
 			foreach ($propertiesRow['GalleryPictures']['Images'] as $img => $imgSubmit) {
 				if (!$imgSubmit) {
 					continue;
@@ -347,8 +351,17 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			'Unit' => $product['products_vpe_name'],
 			'Value' => $product['products_vpe_value'],
 		);
-		$data['submit']['DeliveryDaysOnStockFrom'] = getDBConfigValue('hood.DispatchTimeMin', $this->_magnasession['mpID']);
-		$data['submit']['ShippingTime'] = getDBConfigValue('hood.DispatchTimeMin', $this->_magnasession['mpID']);
+		
+		$data['submit']['ShippingTime'] = array();
+		$shippingMin = getDBConfigValue('hood.ShippingTime.Min', $this->_magnasession['mpID'], '');
+		if (strlen($shippingMin) > 0) {
+			$data['submit']['ShippingTime']['Min'] = (int)$shippingMin;
+		}
+		$shippingMax = getDBConfigValue('hood.ShippingTime.Max', $this->_magnasession['mpID'], '');
+		if (strlen($shippingMax) > 0) {
+			$data['submit']['ShippingTime']['Max'] = (strlen($shippingMin) > 0) ? max((int)$shippingMin, (int)$shippingMax) : (int)$shippingMax;
+		}
+		
 		$data['submit']['ShippingServices'] = $propertiesRow['ShippingServiceOptions'];
 		
 		if (($data['submit']['ListingType'] == 'classic') && ((float)$propertiesRow['StartPrice'] > 0)) {
@@ -548,10 +561,11 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		$this->initSelection(0, 1);
 		//echo print_m($this->selection, '$this->selection[1]');
 		foreach ($this->selection as $pID => &$data) {
-			if ($data['quantity'] == 0) {
+			if (!isset($data['quantity']) || ($data['quantity'] == 0)) {
 				$data['quantity'] = 1; // hack to get verification of zero quantity items working
 			}
 		}
+		
 		$this->populateSelectionWithData();
 		//echo print_m($this->selection, '$this->selection[2]');
 		

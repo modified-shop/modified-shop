@@ -312,7 +312,7 @@ class HoodDeletedView {
 				$item['ShopQuantity'] = $shopDataForItemsBySKU[$item['SKU']]['ShopQuantity'];
 				$item['ShopPrice']	= $shopDataForItemsBySKU[$item['SKU']]['ShopPrice'];
 				$item['ShopTitle']	= $shopDataForItemsBySKU[$item['SKU']]['ShopTitle'];
-				$item['ShopVarText']  = $shopDataForItemsBySKU[$item['SKU']]['ShopVarText'];
+				$item['ShopVarText']  = isset($shopDataForItemsBySKU[$item['SKU']]['ShopVarText']) ? $shopDataForItemsBySKU[$item['SKU']]['ShopVarText'] : '&mdash;';
 			} else {
 				$item['ShopQuantity'] = $item['ShopPrice'] = $item['ShopTitle'] = '&mdash;';
 				$item['ShopVarText']  = '&nbsp;';

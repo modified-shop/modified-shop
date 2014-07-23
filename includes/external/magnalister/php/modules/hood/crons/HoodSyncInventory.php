@@ -293,7 +293,6 @@ class HoodSyncInventory extends MagnaCompatibleSyncInventory {
 	}
 
 	protected function updateItem() {
-		@set_time_limit(180);
 		$this->identifySKU();
 		
 		$articleIdent = 'SKU: '.$this->cItem['SKU'].' ('.$this->cItem['Title'].'); '.

@@ -10,7 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ChangeLog 3657 2014-03-21 22:57:34Z derpapst $
+ * $Id: ChangeLog 4109 2014-07-04 11:53:28Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -19,8 +19,14 @@
 
 = Change-Log =
 
-== Aktuell (bis 3656) ==
+== Aktuell (bis 4109) ==
 	=== Allgemein ===
+		* Neue Marketplace Anbindung: DaWanda (4107)
+		* Neue Produktlisten (4106)
+		* Statistiken können nun 13 Monate angezeigt werden (4017)
+		* Überarbeitung des Filters Zeige auf Marktplatz vorhanden (3860)
+		* Optimierung der Produkttabllen des Shopsystems (3756)
+		* Überarbeitung des magnalister Updaters aufgrund von FastCGI (3694)
 		* Herstellerfilter in Experteneinstellungen um Hersteller aus Produktlisten zu entfernen [gesponsort von kuhnshop.de] (3656)
 		* SSL-Validierung abgeschaltet für nicht HTTPS-URLs (3507)
 		* TinyMCE auf akutelle Major-Version aktualisiert (3424)
@@ -39,6 +45,7 @@
 		* Aktualisierung der Adressdaten beim Bestellimport (1835)
 		
 	=== Bugfixes ===
+		* Maximale Anzahl der Variantenpermutationen auf 500 begrenzt (4109)
 		* Sicherstellung, dass die Preis- und Lagersynchronisierung durchläft, auch wenn der Aufruf abbricht (durch automatische Wiederaufnahme) (1975)
 		* Probleme mit der Anzeige der DateTimePicker Box im Google Chrome behoben (1948)
 		* Probleme mit der Suchfunktion behoben (1931)
@@ -57,6 +64,10 @@
 		* Zusätzliche Option das beim Bestellimport FBA-Bestellungen auch den Lagerbestand reduzieren (1843)
 		
 	=== eBay-Modul ===
+		* Anezeige der eBay Einstellgebühren nach der Vorbereitung (3942)
+		* Übermittlungs der Sendungsnummer an eBay (3926)
+		* Gelöschte-Artikel Reiter kann nun aufsteigend nach Datum sortiert werden (3742)
+		* Zeige auf Hood vorhandene Artikel Filter gibt es nun auch für die Vorbereitungs-Maske (3699)
 		* Bestellimport: Erkennung von Varianten weiter optimiert (3443)
 		* Umlautfehler in Kurz- und Langbeschreibung korrigiert (3400)
 		* Gamio Tabs werden durch H1-Tags ersetzt (3386)
@@ -81,18 +92,22 @@
 		* Button zum Neuladen der eBay-Kategorien (1880)
 		
 	=== Yatego-Modul ===
+		* Neues Logo (3922)
 		* Übermittlung der Grundpreise (1916)
 
 	=== Hitmeister-Modul ===
 		* Entsprechend der Anforderung von Hitmeister wird bei Bestellimporten künftig immer Hitmeister selbst als Rechnungsadresse angegeben. Die Lieferadresse des Kunden befindet sich weiterhin unter "Versandadresse".
 
 	=== Rakuten-Modul ===
+		* Nun sind bis zu 20 Versandgruppen möglich (3965)
+		* Option hinzugefügt um die Übermittlung von Varianten an-/abzuschalten (3794)
 		* Promotion-Mail hinzugefügt (3495)
 		* Angabe der Rakuten spezifischen Lieferzeiten (2063)
 		* Übermittlung des Bestellstatus (2034)
 		* Konfiguration der Bildpfades (1962)
 
 	=== MeinPaket-Modul ===
+		* Variantenübermittlung veröffentlicht (3810)
 		* Übermittlung des Bestellstatus (2033)
 		* Der Tracking-Code wird beim Bestellstatusabgleich mit übertragen (3435)
 
@@ -109,6 +124,7 @@
 		* Neu im Programm (3365)
 	
 	=== Hood-Modul ===
+		* Zeige auf Hood vorhandene Artikel Filter gibt es nun auch für die Vorbereitungs-Maske (3699)
 		* Top-Ten Kategorien implementiert (3584)
 		* Ünterstützung für Kurzbeschreibung (3580)
 		* Unterstützung für FSK, USK und Galerie-Bilder hinzugefügt (3576)
@@ -122,6 +138,9 @@
 		* SimpleCategoryView_ExtendProdCatHeadline: Kategorie/Artikel-Überschrift kann hiermit erweitert werden (3571)
 		* SimpleCategoryView_PostAllowedProductIDs: Ermöglicht die weitere Filterung von Produkten (3479)
 		* MLProduct_getProductImagesByID: Bietet alternative Möglichkeit weitere Produktbilder zu laden (3309)
+
+	=== Gambio ===
+		* Hinzufügen des Gambio Paypal Modules zum Zahlarten matching (3834)
 
 == 2.8.0 ==
 	=== Generelle Verbesserungen ===

@@ -54,8 +54,8 @@ class MeinpaketProductPrepare {
 				   selectionname="' . $this->prepareSettings['selectionName'] . '" AND
 				   session_id="' . session_id() . '"
 		', true);
-		if(isset($_POST['prepare']['ShippingDetails']['ShippingCost'])){
-			$_POST['prepare']['ShippingDetails']['ShippingCost']=mlFloatalize($_POST['prepare']['ShippingDetails']['ShippingCost']);
+		if (isset($_POST['prepare']['ShippingDetails']['ShippingCost'])) {
+			$_POST['prepare']['ShippingDetails']['ShippingCost'] = mlFloatalize($_POST['prepare']['ShippingDetails']['ShippingCost']);
 		}
 		$this->saver->saveProperties($pIds, $_POST['prepare']);
 		
@@ -66,6 +66,8 @@ class MeinpaketProductPrepare {
 			'session_id' => session_id()
 		));
 		//*/
+		
+		echo '<p class="successBox">'.ML_LABEL_SAVED_SUCCESSFULLY.'</p>';
 	}
 	
 	protected function deletePreparation() {
@@ -105,31 +107,62 @@ class MeinpaketProductPrepare {
 	}
 	
 	protected function execSelectionView() {
-		require_once(DIR_MAGNALISTER_MODULES.$this->marketplace.'/prepare/MeinpaketPrepareCategoryView.php');
-		$pV = new MeinpaketPrepareCategoryView(
-			null,
-			$this->prepareSettings,
-			isset($_GET['sorting'])   ? $_GET['sorting']   : false,
-			isset($_POST['tfSearch']) ? $_POST['tfSearch'] : ''
-		);
-		if ($this->isAjax) {
-			echo $pV->renderAjaxReply();
-		} else {
-			echo $pV->printForm();
-		}
+                        require_once(DIR_MAGNALISTER_MODULES.$this->marketplace.'/prepare/MeinpaketPrepareCategoryView.php');
+                        $pV = new MeinpaketPrepareCategoryView(
+                                null,
+                                $this->prepareSettings,
+                                isset($_GET['sorting'])   ? $_GET['sorting']   : false,
+                                isset($_POST['tfSearch']) ? $_POST['tfSearch'] : ''
+                        );
+                        if ($this->isAjax) {
+                                echo $pV->renderAjaxReply();
+                        } else {
+                                echo $pV->printForm();
+                        }
+            }
+	
+	protected function getSelectedProductsCount() {
+		return (int)MagnaDB::gi()->fetchOne('
+			SELECT COUNT(*)
+			  FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID = '.$this->mpId.'
+			       AND selectionname = "'.$this->prepareSettings['selectionName'].'"
+			       AND session_id = "'.session_id().'"
+		');
 	}
-
+	        	
+            protected function processProductList() {
+                        require_once(DIR_MAGNALISTER_MODULES.'meinpaket/prepare/MeinpaketPrepareProductList.php');
+		$o = new MeinpaketPrepareProductList();
+                        echo  $o;
+	}
 	public function process() {
 		$this->savePreparation();
 		$this->deletePreparation();
 		$this->resetPreparation();
-		if (isset($_POST['prepare']) || (isset($_GET['where']) && (
-			($_GET['where'] == 'prepareView')
-			|| ($_GET['where'] == 'catMatchView')
-		))) {
+		
+		#echo print_m($_GET, 'GET');
+		#echo print_m($_POST, 'POST');
+		
+		if ((
+				isset($_POST['prepare'])
+				|| (
+					isset($_GET['where'])
+					&& (
+						($_GET['where'] == 'prepareView')
+						|| ($_GET['where'] == 'catMatchView')
+					)
+				)
+			)
+			&& ($this->getSelectedProductsCount() > 0)
+		) {
 			$this->execPreparationView();
 		} else {
-			$this->execSelectionView();
+                                  if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {  
+                                                $this->processProductList();
+                                  }else{
+                                                $this->execSelectionView();
+                                  }
 		}
 	}
 	

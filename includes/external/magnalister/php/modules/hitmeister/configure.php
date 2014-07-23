@@ -109,14 +109,14 @@ class HitmeisterConfigure extends MagnaCompatibleConfigure {
 	protected function loadChoiseValues() {
 		parent::loadChoiseValues();
 		
-		getCountriesWithIso2Keys($this->form['prepare']['fields']['location']);
+		mlGetCountriesWithIso2Keys($this->form['prepare']['fields']['location']);
 		HitmeisterHelper::GetConditionTypesConfig($this->form['prepare']['fields']['condition']);
 		HitmeisterHelper::GetShippingTimesConfig($this->form['prepare']['fields']['shippingtime']);
 		
 		$this->form['prepare']['fields']['shippingtimeMatching']['procFunc'] = array($this, 'confShippingtimeMatching');
 		/*
 		if (isset($this->form['orders']['fields']['unpaidsatus'])) {
-			getOrderStatus($this->form['orders']['fields']['unpaidsatus']);
+			mlGetOrderStatus($this->form['orders']['fields']['unpaidsatus']);
 		}
 		*/
 	}

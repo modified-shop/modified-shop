@@ -125,6 +125,7 @@ class MagnaCompatibleInventoryView {
 		} else {
 			$sorting = 'blabla'; // fallback for default
 		}
+		//ToDo
 		$sortFlags = array (
 			'sku' => 'SKU',
 			'meinpaketid' => 'MeinpaketID',
@@ -240,7 +241,7 @@ class MagnaCompatibleInventoryView {
 				$item['TitleShort'] = (strlen($item['Title']) > $this->settings['maxTitleChars'] + 2)
 						? (fixHTMLUTF8Entities(substr($item['Title'], 0, $this->settings['maxTitleChars'])).'&hellip;')
 						: fixHTMLUTF8Entities($item['Title']);
-				$item['DateAdded'] = strtotime($item['DateAdded']);
+				$item['DateAdded'] = ((isset($item['DateAdded'])) ? strtotime($item['DateAdded']) : '');
 			}
 			unset($result);
 		}

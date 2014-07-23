@@ -311,7 +311,6 @@ function clickEBayCategory(elem) {
     // hier Kategorien zuordnen, zu allen ausgewaehlten Items
 	tmpNewID = $(elem).parent().attr('id');
 
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -322,10 +321,8 @@ function clickEBayCategory(elem) {
 		},
 		success: function(data) {
 			selectEBayCategory(tmpNewID, data);
-			jQuery.unblockUI();
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});
@@ -340,7 +337,6 @@ function addeBayCategoriesEventListener(elem) {
 				tmpElem.removeClass('plus').addClass('minus');
 				
 				if (tmpElem.parent().children('div.catname').children('div.catelem').length == 0) {
-					jQuery.blockUI(blockUILoading);
 					jQuery.ajax({
 						type: 'POST',
 						url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -354,10 +350,8 @@ function addeBayCategoriesEventListener(elem) {
 							appendTo.append(data);
 							addeBayCategoriesEventListener(appendTo);
 							appendTo.children('div.catelem').css({display: 'block'});
-							jQuery.unblockUI();
 						},
 						error: function() {
-							jQuery.unblockUI();
 						},
 						dataType: 'html'
 					});
@@ -405,7 +399,6 @@ function generateEbayCategoryPath(cID, viewElem) {
     if(viewElem.find('[value='+cID+']').length>0){
         viewElem.find('[value='+cID+']').attr('selected','selected');
     }else{
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -415,12 +408,10 @@ function generateEbayCategoryPath(cID, viewElem) {
 			'isStoreCategory': isStoreCategory
 		},
 		success: function(data) {
-			jQuery.unblockUI();
 //			viewElem.html(data);
 			viewElem.find('select').append('<option selected="selected" value="'+cID+'">'+data+'</option>');
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});
@@ -428,7 +419,6 @@ function generateEbayCategoryPath(cID, viewElem) {
 }
 
 function VariationsEnabled(cID, viewElem) {
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -437,14 +427,12 @@ function VariationsEnabled(cID, viewElem) {
 			'id': cID
 		},
 		success: function(data) {
-			jQuery.unblockUI();
 			var msg;
 			if(data == 'true') msg='<?php echo ML_EBAY_NOTE_VARIATIONS_ENABLED ?>';
 			else msg='<?php echo ML_EBAY_NOTE_VARIATIONS_DISABLED ?>';
 			viewElem.html(msg);
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});
@@ -453,7 +441,6 @@ function VariationsEnabled(cID, viewElem) {
 function initEBayCategories(purge) {
 	purge = purge || false;
 	myConsole.log('isStoreCategory', isStoreCategory);
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -466,10 +453,8 @@ function initEBayCategories(purge) {
 		success: function(data) {
 			$('#ebayCats > div.catView').html(data);
 			addeBayCategoriesEventListener($('#ebayCats'));
-			jQuery.unblockUI();
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});

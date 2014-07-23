@@ -114,6 +114,8 @@ function getPaymentClassForEbayPaymentMethod($paymentMethod) {
         # PayPal
         if (in_array('paypal.php', $PaymentModules))
             $class = 'paypal';
+        else if (in_array('paypalng.php', $PaymentModules))
+            $class = 'paypalng';
         
     } else if (stripos($paymentMethod, 'Rechnung') !== false) {
         # Auf Rechnung
@@ -383,13 +385,16 @@ function magnaUpdateEbayOrders($mpID) {
 				if (isset($ordersTotal)) unset($ordersTotal);
 			}
 
-            # Werte aus der Tabelle holen fuer die Info-mail was sich geaendert hat
+			
+            ## Werte aus der Tabelle holen fuer die Info-mail was sich geaendert hat
+			## Mail noch zu bauen
+			$order = array_filter_keys($order, MagnaDB::gi()->getTableColumns(TABLE_ORDERS));
             $keys = implode(', ',array_keys($order));
             $oldValues = MagnaDB::gi()->fetchRow(eecho('
             	SELECT '.$keys.' FROM '.TABLE_ORDERS.' 
             	 WHERE orders_id = '.$currentOrderID.'
-           	', false));
-           	#echo print_m($oldValues);
+           	', $verbose));
+           	if ($verbose) echo print_m($oldValues, '$oldValues');
             $updatedValues = array_diff_assoc($order, $oldValues);
             $MagnaDB->update(TABLE_ORDERS, $order, array('orders_id' => $currentOrderID));
             $processedOrderIDs[] = $currentOrderID;

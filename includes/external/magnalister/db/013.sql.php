@@ -45,7 +45,7 @@ $queries[] = '
 	);
 ';	
 $queries[] = '
-	CREATE TABLE IF NOT EXISTS '.magnalister_magnacompat_deletedlog.' (
+	CREATE TABLE IF NOT EXISTS '.TABLE_MAGNA_COMPAT_DELETEDLOG.' (
 		id int(10) unsigned NOT NULL auto_increment,
 		products_id int(11) unsigned NOT NULL,
 		products_model varchar(64) default NULL,

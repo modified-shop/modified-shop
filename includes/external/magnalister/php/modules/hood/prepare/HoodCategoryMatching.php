@@ -353,7 +353,6 @@ function clickHoodCategory(elem) {
 	// hier Kategorien zuordnen, zu allen ausgewaehlten Items
 	tmpNewID = $(elem).parent().attr('id');
 
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -364,10 +363,8 @@ function clickHoodCategory(elem) {
 		},
 		success: function(data) {
 			selectHoodCategory(tmpNewID, data);
-			jQuery.unblockUI();
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});
@@ -382,7 +379,6 @@ function addHoodCategoriesEventListener(elem) {
 				tmpElem.removeClass('plus').addClass('minus');
 				
 				if (tmpElem.parent().children('div.catname').children('div.catelem').length == 0) {
-					jQuery.blockUI(blockUILoading);
 					jQuery.ajax({
 						type: 'POST',
 						url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -396,10 +392,8 @@ function addHoodCategoriesEventListener(elem) {
 							appendTo.append(data);
 							addHoodCategoriesEventListener(appendTo);
 							appendTo.children('div.catelem').css({display: 'block'});
-							jQuery.unblockUI();
 						},
 						error: function() {
-							jQuery.unblockUI();
 						},
 						dataType: 'html'
 					});
@@ -447,7 +441,6 @@ function generateHoodCategoryPath(cID, viewElem) {
 	if(viewElem.find('[value='+cID+']').length>0){
 		viewElem.find('[value='+cID+']').attr('selected','selected');
 	}else{
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -457,12 +450,10 @@ function generateHoodCategoryPath(cID, viewElem) {
 			'isStoreCategory': isStoreCategory
 		},
 		success: function(data) {
-			jQuery.unblockUI();
 //			viewElem.html(data);
 			viewElem.find('select').append('<option selected="selected" value="'+cID+'">'+data+'</option>');
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});
@@ -472,7 +463,6 @@ function generateHoodCategoryPath(cID, viewElem) {
 function initHoodCategories(purge) {
 	purge = purge || false;
 	myConsole.log('isStoreCategory', isStoreCategory);
-	jQuery.blockUI(blockUILoading);
 	jQuery.ajax({
 		type: 'POST',
 		url: '<?php echo toURL($this->url, array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
@@ -485,10 +475,8 @@ function initHoodCategories(purge) {
 		success: function(data) {
 			$('#hoodCats > div.catView').html(data);
 			addHoodCategoriesEventListener($('#hoodCats'));
-			jQuery.unblockUI();
 		},
 		error: function() {
-			jQuery.unblockUI();
 		},
 		dataType: 'html'
 	});

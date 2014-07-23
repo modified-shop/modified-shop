@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: checkin.php 3977 2014-06-17 10:37:56Z masoud.khodaparast $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -22,7 +22,9 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingSummaryView.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCategoryView.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinSubmit.php');
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php'); 
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/MLProductListComparisonShoppingAbstract.php');
 
 class DapartoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 	protected function appendAdditionalData($pID, $product, &$data) {
@@ -38,10 +40,16 @@ class DapartoCheckinSubmit extends ComparisonShoppingCheckinSubmit {
 	}	
 }
 
+$sCheckinView = '';
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
+$sCheckinView = 'ComparisonShoppingCheckinProductList';
+} else {
+$sCheckinView = 'ComparisonShoppingCategoryView';
+}
 $cm = new CheckinManager(
 	array(
 		'summaryView'   => 'ComparisonShoppingSummaryView',
-		'checkinView'   => 'ComparisonShoppingCategoryView',
+		'checkinView'   => $sCheckinView,
 		'checkinSubmit' => 'DapartoCheckinSubmit'
 	), array(
 		'marketplace' => $_Marketplace

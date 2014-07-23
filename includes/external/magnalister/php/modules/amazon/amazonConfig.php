@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonConfig.php 3647 2014-03-21 11:21:07Z derpapst $
+ * $Id: amazonConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -248,16 +248,16 @@ if (!$auth['state']) {
 	$form['matchingvalues']['fields']['shipping']['values'] = amazonGetPossibleOptions('ShippingLocations');
 	$form['orderSyncState']['fields']['carrier']['values'] = loadCarrierCodes();
 
-	getManufacturers($form['prepare']['fields']['manufacturerfilter']);
-	getLanguages($form['prepare']['fields']['lang']);
+	mlGetManufacturers($form['prepare']['fields']['manufacturerfilter']);
+	mlGetLanguages($form['prepare']['fields']['lang']);
 
-	getOrderStatus($form['import']['fields']['openstatus']);
-	getOrderStatus($form['import']['fields']['orderStatusFba']);
-	getOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
-	getOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
+	mlGetOrderStatus($form['import']['fields']['openstatus']);
+	mlGetOrderStatus($form['import']['fields']['orderStatusFba']);
+	mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
+	mlGetOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
 
-	getCustomersStatus($form['import']['fields']['customersgroup']);
-	getCustomersStatus($form['price']['fields']['whichprice'], false);
+	mlGetCustomersStatus($form['import']['fields']['customersgroup']);
+	mlGetCustomersStatus($form['price']['fields']['whichprice'], false);
 	if (!empty($form['price']['fields']['whichprice'])) {
 		$form['price']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 		ksort($form['price']['fields']['whichprice']['values']);
@@ -267,10 +267,10 @@ if (!$auth['state']) {
 	}
 	$form['apply']['fields']['imagepath']['default'] = SHOP_URL_POPUP_IMAGES;
 
-	getShippingModules($form['import']['fields']['defaultshipping']);
-	getPaymentModules($form['import']['fields']['defaultpayment']);
-	getShippingModules($form['import']['fields']['defaultshippingfba']);
-	getPaymentModules($form['import']['fields']['defaultpaymentfba']);
+	mlGetShippingModules($form['import']['fields']['defaultshipping']);
+	mlGetPaymentModules($form['import']['fields']['defaultpayment']);
+	mlGetShippingModules($form['import']['fields']['defaultshippingfba']);
+	mlGetPaymentModules($form['import']['fields']['defaultpaymentfba']);
 	
 	
 	if ((getDBConfigValue('amazon.checkin.SkuAsMfrPartNo', $_MagnaSession['mpID']) == null) // setting doesn't exist yet
@@ -282,7 +282,7 @@ if (!$auth['state']) {
 	}
 }
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_amazon');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_amazon');
 $cG->setRenderTabIdent(true);
 $allCorrect = $cG->processPOST();
 

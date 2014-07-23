@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: DeletedView.php 3753 2014-04-07 12:19:48Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -23,7 +23,7 @@ require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/VariationsCalculator.php');
 
 class DeletedView {
-	protected $marketplace;
+	protected $marketplaceID;
 
 	protected $settings = array();
 	protected $sort = array();
@@ -40,10 +40,10 @@ class DeletedView {
 
 	protected $search = '';
 
-	public function __construct($marketplace, $settings = array()) {
+	public function __construct($settings = array()) {
 		global $_MagnaShopSession, $_MagnaSession, $_url, $_modules;
 		
-		$this->marketplace = $marketplace;
+		$this->marketplaceID = $_MagnaSession['mpID'];
 		
 		$this->settings = array_merge(array(
 			'maxTitleChars'	=> 80,
@@ -51,7 +51,7 @@ class DeletedView {
 		), $settings);
 
 		$this->simplePrice = new SimplePrice();
-		$this->simplePrice->setCurrency(getCurrencyFromMarketplace($_MagnaSession['mpID']));
+		$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->marketplaceID));
 		$this->url = $_url;
 		$this->url['view'] = 'deleted';
 		$this->magnasession = &$_MagnaSession;
@@ -137,11 +137,14 @@ class DeletedView {
 	            $this->sort['order'] = 'Price';
 	            $this->sort['type']  = 'DESC';
 	            break;
-	        case 'dateadded-desc':
-	            $this->sort['order'] = 'DateAdded';
-	            $this->sort['type']  = 'DESC';
-	            break;
 			case 'dateadded':
+				$this->sort['order'] = 'DateAdded';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'dateadded-desc':
+				$this->sort['order'] = 'DateAdded';
+				$this->sort['type']  = 'DESC';
+				break;
 	        default:
 	            $this->sort['order'] = 'DateAdded';
 	            $this->sort['type']  = 'DESC';
@@ -237,7 +240,7 @@ class DeletedView {
 				$item['ItemTitleShort'] = (strlen($item['ItemTitle']) > $this->settings['maxTitleChars'] + 2)
 						? (fixHTMLUTF8Entities(substr($item['ItemTitle'], 0, $this->settings['maxTitleChars'])).'&hellip;')
 						: fixHTMLUTF8Entities($item['ItemTitle']);
-                $item['VariationAttributesText'] = fixHTMLUTF8Entities($item['VariationAttributesText']);
+				$item['VariationAttributesText'] = fixHTMLUTF8Entities($item['VariationAttributesText']);
 				$item['DateAdded'] = strtotime($item['DateAdded']);
 				$item['DateEnd'] = ('1'==$item['GTC']?'&mdash;':strtotime($item['End']));
 				$item['LastSync'] = strtotime($item['LastSync']);
@@ -290,14 +293,14 @@ class DeletedView {
         foreach ($ShopDataForVariationItems as $ShopDataForVariationItem) {
             $ShopDataForItemsBySKU[$ShopDataForVariationItem['SKU']] = $ShopDataForVariationItem;
             unset ($ShopDataForItemsBySKU[$ShopDataForVariationItem['SKU']]['SKU']);
-			$ShopDataForVariationItem['ShopVarText'] = VariationsCalculator::generateVariationsAttributesText($ShopDataForVariationItem['variation_attributes'], $language, ', ', ':');
+            $ShopDataForVariationItem['ShopVarText'] = VariationsCalculator::generateVariationsAttributesText($ShopDataForVariationItem['variation_attributes'], $language, ', ', ':');
         }
         foreach ($this->renderableData as &$item) {
             if (isset ($ShopDataForItemsBySKU[$item['SKU']])) {
                 $item['ShopQuantity'] = $ShopDataForItemsBySKU[$item['SKU']]['ShopQuantity'];
                 $item['ShopPrice']    = $ShopDataForItemsBySKU[$item['SKU']]['ShopPrice'];
                 $item['ShopTitle']    = $ShopDataForItemsBySKU[$item['SKU']]['ShopTitle'];
-                $item['ShopVarText']  = $ShopDataForItemsBySKU[$item['SKU']]['ShopVarText'];
+                $item['ShopVarText']  = isset($ShopDataForItemsBySKU[$item['SKU']]['ShopVarText']) ? $ShopDataForItemsBySKU[$item['SKU']]['ShopVarText'] : '&nbsp;';
             } else {
                 $item['ShopQuantity'] = $item['ShopPrice'] = $item['ShopTitle'] = '&mdash;';
                 $item['ShopVarText']  = '&nbsp;';

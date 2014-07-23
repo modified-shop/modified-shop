@@ -24,6 +24,22 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleSyncI
 require_once(DIR_MAGNALISTER_MODULES.'meinpaket/meinpaketFunctions.php');
 
 class MeinpaketSyncInventory extends MagnaCompatibleSyncInventory {
+
+	private $processedProductIds = array(); /* to decide if a variation matrix has to be calculated anew */
+
+	public function __construct($mpID, $marketplace, $limit = 100) {
+		parent::__construct($mpID, $marketplace, $limit);
+		
+		$this->setupMlProduct();
+	}
+	
+	protected function setupMlProduct() {
+		MLProduct::gi()->setLanguage(getDBConfigValue('meinpaket.lang', $this->mpID, 1))
+			->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID))
+			->setQuantityConfig(MeinpaketHelper::loadQuantitySettings($this->mpID))
+		;
+	}
+	
 	protected function processUpdateItemsErrors($result) {
 		magnaMeinpaketProcessCheckinResult($result, $this->mpID);
 	}
@@ -32,4 +48,179 @@ class MeinpaketSyncInventory extends MagnaCompatibleSyncInventory {
 	protected function uploadItems() {
 		return true;
 	}
+	
+	/**
+	 * Checks the quantity only for master or stand alone items
+	 *
+	 * @return bool
+	 *    true if there was a change, false otherwise.
+	 */
+	protected function checkQuantity(&$batchItem) {
+		if (!$this->syncStock) {
+			return false;
+		}
+		
+		$curQty = (int)$this->productData['Quantity'];
+		
+		if (!$this->productData['Status'] && ($this->config['StatusMode'] === 'true')) {
+			// Product status is false and the config wants us to ignore the quantity and submit 0.
+			$curQty = 0;
+		}
+		
+		if (!isset($this->cItem['Quantity'])) {
+			$this->cItem['Quantity'] = 0;
+		}
+		
+		if ((int)$this->cItem['Quantity'] != (int)$curQty) {
+			$this->log("\n\t".
+				'Quantity changed (old: '.$this->cItem['Quantity'].'; new: '.$curQty.')'
+			);
+			$batchItem['Quantity'] = $curQty;
+			return true;
+		} else {
+			$this->log("\n\t".
+				'Quantity not changed ('.$curQty.')'
+			);
+		}
+		
+		return false;
+	}
+	
+	/**
+	 * Checks the price only for master or stand alone items
+	 *
+	 * @return bool
+	 *    true if there was a change, false otherwise.
+	 */
+	protected function checkPrice(&$batchItem) {
+		if (!$this->syncPrice) {
+			return false;
+		}
+
+		$curPrice = ((array_key_exists('PriceReduced', $this->productData) && (float)$this->productData['PriceReduced'] > 0) ? (float)$this->productData['PriceReduced'] : (float)$this->productData['Price']);
+		
+		if (!isset($this->cItem['Price'])) {
+			$this->cItem['Price'] = 0;
+		}
+		
+		if ((float)$this->cItem['Price'] != $curPrice) {
+			$this->log("\n\t".
+				'Price changed (old: '.$this->cItem['Price'].'; new: '.$curPrice.')'
+			);
+			$batchItem['Price'] = $curPrice;
+			return true;
+		} else {
+			$this->log("\n\t".
+				'Price not changed ('.$curPrice.')'
+			);
+		}
+		
+		return false;
+	}
+
+	/**
+	 * Checks the price and quantity only for master or stand alone items
+	 *
+	 * @return bool
+	 *    true if there was a change, false otherwise.
+	 */
+	protected function checkQuantityPriceUpdate(&$batchItem) {
+		/*
+		echo "\n";
+		echo print_m($this->cItem, '$this->cItem');
+		echo print_m($this->productData, '$this->productData');
+		//*/
+		
+		$cQ = $this->checkQuantity($batchItem);
+		$cP = $this->checkPrice($batchItem);
+
+		//Returns true if at least one option is true
+		return (($cQ !== false) || ($cP !== false));
+	}
+	
+	protected function fetchProductData() {
+		// check if pID already processed & variations already updated
+		$calculateVariations = false;
+		if (!in_array($this->cItem['pID'], $this->processedProductIds)) {
+			$calculateVariations = true;
+			$this->processedProductIds[] = $this->cItem['pID'];
+		}
+		
+		$this->productData = MLProduct::gi()->getProductOfferById(
+			$this->cItem['pID'], array('purgeVariations' => $calculateVariations)
+		);
+		#echo print_m($this->productData);
+		
+		if (empty($this->productData)) {
+			return false;
+		}
+		
+		// save us some queries and don't use magnaPID2SKU().
+		$masterSku = ($this->config['KeyType'] == 'artNr')
+			? $this->productData['ProductsModel']
+			: 'ML'.$this->productData['ProductId'];
+		
+		// Master item
+		if ($masterSku == $this->cItem['SKU']) {
+			return true;
+		}
+		
+		if (isset($this->productData['Variations'])) {
+			$varSku = ($this->config['KeyType'] == 'artNr')
+				? 'MarketplaceSku'
+				: 'MarketplaceId';
+			
+			$vItemFound = false;
+			foreach ($this->productData['Variations'] as $vItem) {
+				if ($vItem[$varSku] != $this->cItem['SKU']) {
+					continue;
+				}
+				$vItemFound = true;
+				break;
+			}
+			
+			if (!$vItemFound) {
+				// This variation item does not exist anymore.
+				return false;
+			}
+			$this->productData = array_replace($this->productData, $vItem);
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * updateItem amazon like, each variation single
+	 */
+	protected function updateItem() {
+		$this->identifySKU();
+		
+		$articleIdent = 'SKU: '.$this->cItem['SKU'].' ('.
+			'Title: '.(!empty($this->cItem['ItemTitle']) ? $this->cItem['ItemTitle'] : '-').'; '.
+			'MeinpaketID: '.$this->cItem['MeinpaketID'].
+			')';
+		
+		if ((int)$this->cItem['pID'] <= 0) {
+			$this->log("\n".$articleIdent.' not found');
+			return;
+		}
+		
+		$this->log("\n".$articleIdent.' found (pId: '.$this->cItem['pID'].')');
+		
+		if (!$this->fetchProductData()) {
+			// unknown product
+			return;
+		}
+		
+		$batchItem = array();
+		if (!$this->checkQuantityPriceUpdate($batchItem)) {
+			// nothing to update
+			return;
+		}
+		#echo print_m($batchItem, '$batchItem');
+		$this->addToBatch($batchItem);
+		
+		return;
+	}
+	
 }
