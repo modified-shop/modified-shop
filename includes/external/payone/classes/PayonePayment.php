@@ -468,8 +468,10 @@ class PayonePayment {
   function _get_customers_dob($customers_id) {
     $customers_query = xtc_db_query("SELECT customers_dob FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".$customers_id."'");
     $customers = xtc_db_fetch_array($customers_query);
-    
-    return date('Ymd', strtotime($customers['customers_dob']));
+        
+    if ($customers['customers_dob'] != '0000-00-00 00:00:00') {
+      return date('Ymd', strtotime($customers['customers_dob']));
+    }
   }
   
   function _set_customers_standard_params() {
