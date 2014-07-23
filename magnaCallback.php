@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 3664 2014-03-23 21:16:31Z derpapst $
+ * $Id: magnaCallback.php 3882 2014-05-20 19:32:06Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -245,9 +245,9 @@ function magnaCompartCheck() {
 			'connects' => ($localClientVersionCURL != 0)
 		),
 		'file_get_contents' => (@file_get_contents($currentClientURL) !== false),
+		'sapi_name' => php_sapi_name(),
 		'ml_installed' => magnaInstalled(),
 		'ml_activated' => magnaActivated(),
-		'ml_authed' => magnaAuthed(),
 	);
 }
 
@@ -405,7 +405,7 @@ function defineMagnalisterDir() {
 	// Order is important here. Do not change without a good reason!
 	
 	// modified v >= 2.0
-	if (defined('DIR_FS_EXTERNAL') && defined('DIR_WS_EXTERNAL')) {
+	if (defined('DIR_FS_EXTERNAL') && is_dir(DIR_FS_EXTERNAL.'magnalister/') && defined('DIR_WS_EXTERNAL')) {
 		define('DIR_MAGNALISTER_FS', DIR_FS_EXTERNAL.'magnalister/');
 		define('DIR_MAGNALISTER_WS', DIR_WS_EXTERNAL.'magnalister/');
 	
@@ -434,7 +434,7 @@ function defineMagnalisterDir() {
 function magnaConfigureForFrontendMode() {
 	/* Let's hope there is a admin dir :) */
 	if (!defined('DIR_FS_ADMIN') && is_dir(dirname(__FILE__) . '/admin/') && is_dir(dirname(__FILE__) . '/admin/includes/')) {
-		define('DIR_FS_ADMIN', dirname(__FILE__) . '/admin/');
+		define('DIR_FS_ADMIN', str_replace('\\', '/', dirname(__FILE__)) . '/admin/');
 	} else if (!defined('DIR_FS_ADMIN')) {
 		magnaEchoDiePage(
 			'Shop Admin directory not found / Shop Admin Verzeichnis nicht gefunden.', 
@@ -891,9 +891,11 @@ if (MAGNA_CALLBACK_MODE == 'STANDALONE') {
 } else {
 	/* Where have we been called? Frontend or backend?! */
 	if (!defined('DIR_FS_DOCUMENT_ROOT')) {
-		define('DIR_FS_DOCUMENT_ROOT', dirname(__FILE__).'/');
+		define('DIR_FS_DOCUMENT_ROOT', str_replace('\\', '/', dirname(__FILE__)).'/');
 	}
-	if (dirname($_SERVER['SCRIPT_FILENAME']).'/' == DIR_FS_DOCUMENT_ROOT) {
+	if ((dirname($_SERVER['SCRIPT_FILENAME']).'/' == DIR_FS_DOCUMENT_ROOT) #browser
+		|| (!isset($_SERVER['HTTP_USER_AGENT']) && isset($_SERVER['argv']) && !empty($_SERVER['argv']) && file_exists(getcwd().'/'.basename(__FILE__))) #cli
+	) {
 		/* Frontend */
 		define('MAGNA_IN_ADMIN', false);
 		magnaConfigureForFrontendMode();

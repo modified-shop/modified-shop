@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: meinpaketConfig.php 3655 2014-03-21 22:01:56Z derpapst $
+ * $Id: meinpaketConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -27,7 +27,9 @@ function renderAuthError($authError) {
 	$errors = array();
 	if (isset($authError['ERRORS']) && !empty($authError['ERRORS'])) {
 		foreach ($authError['ERRORS'] as $err) {
-			$errors[] = $err['ERRORMESSAGE'];
+			if (isset($err['ERRORMESSAGE'])) {
+				$errors[] = $err['ERRORMESSAGE'];
+			}
 			if (isset($err['ERRORCODE']) && ($err['ERRORCODE'] == 'MARKETPLACE_TIMEOUT')) {
 				$mpTimeOut = true;
 			}
@@ -144,31 +146,31 @@ $form = loadConfigForm($_lang,
 	)
 );
 
-getLanguages($form['prepare']['fields']['lang']);
-getCustomersStatus($form['price']['fields']['whichprice'], false);
+mlGetLanguages($form['prepare']['fields']['lang']);
+mlGetCustomersStatus($form['price']['fields']['whichprice'], false);
 if (!empty($form['price']['fields']['whichprice'])) {
 	$form['price']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 	ksort($form['price']['fields']['whichprice']['values']);
 } else {
 	unset($form['price']['fields']['whichprice']);
 }
-getManufacturers($form['prepare']['fields']['manufacturerfilter']);
+mlGetManufacturers($form['prepare']['fields']['manufacturerfilter']);
 
-getOrderStatus($form['import']['fields']['openstatus']);
-getOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
-getOrderStatus($form['orderSyncState']['fields']['cancelstatuscustomerrequest']);
-getOrderStatus($form['orderSyncState']['fields']['cancelstatusoutofstock']);
-getOrderStatus($form['orderSyncState']['fields']['cancelstatusdamagedgoods']);
-getOrderStatus($form['orderSyncState']['fields']['cancelstatusdealerrequest']);
+mlGetOrderStatus($form['import']['fields']['openstatus']);
+mlGetOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
+mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatuscustomerrequest']);
+mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatusoutofstock']);
+mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatusdamagedgoods']);
+mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatusdealerrequest']);
 
-getCustomersStatus($form['import']['fields']['customersgroup']);
+mlGetCustomersStatus($form['import']['fields']['customersgroup']);
 
-getShippingModules($form['import']['fields']['defaultshipping']);
-getPaymentModules($form['import']['fields']['defaultpayment']);
+mlGetShippingModules($form['import']['fields']['defaultshipping']);
+mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 
 $form['checkin']['fields']['imagepath']['default'] = SHOP_URL_POPUP_IMAGES;
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_meinpaket');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_meinpaket');
 $cG->setRenderTabIdent(true);
 
 $boxes = '';

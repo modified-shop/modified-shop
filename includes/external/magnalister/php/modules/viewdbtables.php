@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: viewdbtables.php 3336 2013-11-28 15:32:20Z derpapst $
+ * $Id: viewdbtables.php 4042 2014-06-29 17:12:42Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -55,7 +55,7 @@ function dumpTable($table) {
 	$result = MagnaDB::gi()->fetchArray($result);
 	
 	echo '
-		<table class="datagrid autoOddEven hover autoWidth">
+		<table class="datagrid autoOddEven hover autoWidth valigntop">
 			<thead>
 				<tr>';
 	foreach ($fields as $field) {
@@ -145,8 +145,15 @@ if ($_url['view'] == 'list') {
 			}
 		} else {
 			$r = MagnaDB::gi()->fetchArray($r);
+			if (!is_array($r)) {
+				$r = array(array ('Type' => var_dump_pre($r, true)));
+			} else if (empty($r)) {
+				$r = array(array ('No' => 'Data'));
+			}
 		}
-		renderDataGrid($r);
+		renderDataGrid($r, array (
+			'CSS.TableClass' => 'valigntop'
+		));
 		echo '</div>
 			<script>
 			$(window).load(function() {

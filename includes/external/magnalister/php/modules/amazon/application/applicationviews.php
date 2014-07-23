@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 3591 2014-03-10 01:14:28Z derpapst $
+ * $Id: applicationviews.php 4071 2014-07-01 16:12:40Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -45,7 +45,7 @@ function renderAmazonTopTen($sField, $aConfig = array()){
 	}
 	$sOut ='<optgroup label="'.ML_TOPTEN_TEXT.'">';
 	foreach ($aTopTen as $sKey => $sValue) {
-		$sOut .= '<option value="'.$sKey.'">'.$sValue.'</option>';
+		$sOut .= '<option value="'.$sKey.'">'.fixHTMLUTF8Entities($sValue).'</option>';
 	}
 	$sOut .='</optgroup>';
 	return $sOut;
@@ -66,6 +66,7 @@ function getProductTypesAndAttributes($category) {
 	}
 
 	if ($result['ProductTypes'] !== false) {
+		$html = '';
 		foreach ($result['ProductTypes'] as $key => $value) {
 			$html .= '
 				<option value="'.$key.'">'.$value.'</option>';
@@ -118,7 +119,7 @@ function convertAttrArrayToHTML($data, $usrData = array()) {
 				break;
 			}
 			case 'select': {
-				$html = '<select name="Attributes['.$key.']">'."\n";
+				$html = '<select name="Attributes['.$key.']" class="fullWidth">'."\n";
 				foreach ($def['values'] as $vk => $vv) {
 					$vv = fixHTMLUTF8Entities($vv);
 					$vk = fixHTMLUTF8Entities($vk);
@@ -204,7 +205,7 @@ function renderMultiApplication($data) {
 			1 => $browseNodes,
 		);
 		for ($i = 0; $i < 2; ++$i) {
-			if ($data['BrowseNodes'][$i] != '') {
+			if (isset($data['BrowseNodes'][$i]) && $data['BrowseNodes'][$i] != '') {
 				$browseNodes[$i] = str_replace(
 					'<option value="'.$data['BrowseNodes'][$i].'">',
 					'<option value="'.$data['BrowseNodes'][$i].'" selected="selected">',
@@ -230,7 +231,7 @@ function renderMultiApplication($data) {
 			<tr class="odd">
 				<th>'.ML_LABEL_MAINCATEGORY.' <span>&bull;</span></th>
 				<td class="input">
-					<select name="MainCategory" id="maincat">
+					<select name="MainCategory" id="maincat" class="fullWidth">
 						'.$htmlCategories.'
 					</select>
 				</td>
@@ -239,14 +240,14 @@ function renderMultiApplication($data) {
 			<tr id="subCategory" class="even" '.(empty($htmlSubCategories) ? 'style="display:none;"' : '').'>
 				<th>'.ML_LABEL_SUBCATEGORY.' <span>&bull;</span></th>
 				<td class="input">
-					<select name="ProductType" id="subcat">
+					<select name="ProductType" id="subcat" class="fullWidth">
 						'.$htmlSubCategories.'
 					</select>
 				</td>
 				<td class="info">&nbsp;</td>
 			</tr>
 			<tr id="additionalAttributes" class="even" '.(empty($htmlAdditionalAttributes) ? 'style="display:none;"' : '').'>
-				<th>'.ML_AMAZON_LABEL_APPLY_REQUIRED_ATTRIBUTES.' <span>&bull;</span></th>
+				<th>'.ML_AMAZON_LABEL_APPLY_ATTRIBUTES.'</th>
 				<td class="input" colspan="2">
 					'.$htmlAdditionalAttributes.'
 				</td>
@@ -254,7 +255,7 @@ function renderMultiApplication($data) {
 			<tr class="odd">
 				<th>'.ML_AMAZON_LABEL_APPLY_BROWSENODES.' <span>&bull;</span></th>
 				<td class="input" id="browsenodes">
-					<select name="BrowseNodes[]" id="browsenode">
+					<select name="BrowseNodes[]" id="browsenode" class="fullWidth">
 						'.$browseNodes[0].'
 					</select>
 				</td>

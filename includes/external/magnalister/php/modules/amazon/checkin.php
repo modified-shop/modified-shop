@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: checkin.php 3854 2014-05-12 12:55:03Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -21,7 +21,13 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
-require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/CheckinCategoryView.php');
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+	require_once(DIR_MAGNALISTER_MODULES.'amazon/checkin/AmazonCheckinProductList.php');
+	$sView = 'AmazonCheckinProductList';
+} else {
+	require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/CheckinCategoryView.php');
+	$sView = 'AmazonCheckinCategoryView';
+}
 require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/AmazonSummaryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/AmazonCheckinSubmit.php');
 
@@ -29,7 +35,7 @@ require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/AmazonCheckinSubmit.php');
 $cm = new CheckinManager(
 	array (
 		'summaryView' => 'AmazonSummaryView',
-		'checkinView' => 'AmazonCheckinCategoryView',
+		'checkinView' => $sView,
 		'checkinSubmit' => 'AmazonCheckinSubmit'
 	), array (
 		'marketplace' => $_Marketplace

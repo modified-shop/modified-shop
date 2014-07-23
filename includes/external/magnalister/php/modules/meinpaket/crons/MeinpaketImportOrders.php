@@ -24,6 +24,8 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/crons/MagnaCompatibleImpor
 
 class MeinpaketImportOrders extends MagnaCompatibleImportOrders {
 
+	protected $multivariationsEnabled = true;
+
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
 	}
@@ -52,7 +54,7 @@ class MeinpaketImportOrders extends MagnaCompatibleImportOrders {
 		return $this->config['OrderStatusOpen'];
 	}
 	
-	protected function getCountryByISOCode($code, $fallbackName) {
+	protected function getCountryByISOCode($code, $fallbackName = '') {
 		$country = parent::getCountryByISOCode($code, $fallbackName);
 		if ($country['ID'] == 0) {
 			$country['ID'] = $this->config['FallbackCountryID'];

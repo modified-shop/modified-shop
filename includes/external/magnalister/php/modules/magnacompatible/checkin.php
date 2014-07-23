@@ -27,7 +27,15 @@ class MagnaCompatibleCheckin extends MagnaCompatibleBase {
 	protected $chechinSubmit = null;
 
 	protected function loadCheckinView() {
-		$this->checkinView = $this->loadResource('checkin', 'CheckinCategoryView');
+		if (
+			defined('MAGNA_DEV_PRODUCTLIST') 
+			&& MAGNA_DEV_PRODUCTLIST === true 
+			&& ($sResource = $this->loadResource('checkin', 'CheckinProductList'))
+		) {
+			$this->checkinView = $sResource;
+		}else{
+			$this->checkinView = $this->loadResource('checkin', 'CheckinCategoryView');
+		}
 	}
 	
 	protected function loadSummaryView() {
@@ -47,7 +55,7 @@ class MagnaCompatibleCheckin extends MagnaCompatibleBase {
 		
 		if (($this->checkinView === false) || ($this->summaryView === false) || ($this->chechinSubmit === false)) {
 			if ($this->isAjax) {
-				echo '{error: \'This is not supported\'}';
+				echo '{"error": "This is not supported"}';
 			} else {
 				echo 'This is not supported';
 			}

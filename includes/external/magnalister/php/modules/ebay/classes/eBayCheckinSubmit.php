@@ -121,6 +121,10 @@ class eBayCheckinSubmit extends CheckinSubmit {
 		if (!empty($propertiesRow['HitCounter'])) {
 			$data['submit']['HitCounter'] = $propertiesRow['HitCounter'];
 		}
+		# RestrictedToBusiness, wenn in der Config aktiviert (default false)
+		if (getDBConfigValue(array($this->_magnasession['currentPlatform'].'.restrictToBusiness', 'val'), $this->_magnasession['mpID'], false)) {
+			$data['submit']['RestrictedToBusiness'] = 'true';
+		}
 		# Wenn nicht in der Maske gefuellt
 		if (empty($data['submit']['Description'])) {
 			if (!empty($propertiesRow['Description'])) {
@@ -298,10 +302,10 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				?$data['submit']['ShippingDetails']['ShippingDiscountProfileID']:0;
 			$internationalProfileID = isset($data['submit']['ShippingDetails']['InternationalShippingDiscountProfileID'])
 				?$data['submit']['ShippingDetails']['InternationalShippingDiscountProfileID']:0;
-			if(isset($localProfileID)) {
+			if(!empty($localProfileID)) {
 				$localAddCost = $shippingProfiles['Profiles']["$localProfileID"]['EachAdditionalAmount'];
 			}
-			if(isset($internationalProfileID)) {	
+			if(!empty($internationalProfileID)) {	
 				$internationalAddCost = $shippingProfiles['Profiles']["$internationalProfileID"]['EachAdditionalAmount'];
 			}
 			foreach ( $data['submit']['ShippingDetails']['ShippingServiceOptions'] as &$options) {
@@ -363,7 +367,8 @@ class eBayCheckinSubmit extends CheckinSubmit {
 	}
 
 	protected function processSubmitResult($result) {
-		foreach($result as $i => $itemResult) {
+		$responsedata = $result['RESPONSEDATA'];
+		foreach($responsedata as $i => $itemResult) {
 			if(!is_numeric($i)) continue; # lass Header-Daten weg 
 			$listing_data[$i] = array(
 				'mpID'           => $itemResult['MARKETPLACEID'],
@@ -374,9 +379,9 @@ class eBayCheckinSubmit extends CheckinSubmit {
 					  FROM '.TABLE_PRODUCTS.'
 					 WHERE products_id = '.magnaSKU2pID($itemResult['DATA']['SKU'])
 				),
-				'Title'          => $itemResult['DATA']['Title'],
-				'Price'     => $itemResult['DATA']['Price'],
-				'currencyID'     => $itemResult['DATA']['currencyID'],
+				'Title'          => $itemResult['DATA']['ItemTitle'],
+				'Price'          => $itemResult['DATA']['Price'],
+				'currencyID'     => $itemResult['DATA']['Currency'],
 				'CategoryID'     => $itemResult['DATA']['CategoryID'],
 				'ListingType'    => $itemResult['DATA']['ListingType'],
 				'Quantity'       => $itemResult['DATA']['Quantity']
@@ -386,7 +391,7 @@ class eBayCheckinSubmit extends CheckinSubmit {
 				$listing_data[$i]['ItemID']    = $itemResult['DATA']['ItemID'];
 				$listing_data[$i]['StartTime'] = eBayTimeToTs($itemResult['DATA']['StartTime']);
 				$listing_data[$i]['EndTime']   = eBayTimeToTs($itemResult['DATA']['EndTime']);
-				$listing_data[$i]['Fees']      = serialize($itemResult['DATA']['Fees']);
+				#$listing_data[$i]['Fees']     = serialize($itemResult['DATA']['Fees']);
 			}
 			if(!empty($itemResult['ERRORS'])) {
 				$listing_data[$i]['Errors'] = serialize($itemResult['ERRORS']);

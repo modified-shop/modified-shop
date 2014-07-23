@@ -1,17 +1,17 @@
 <?php
 /**
- * 888888ba                 dP  .88888.                    dP                
- * 88    `8b                88 d8'   `88                   88                
- * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b. 
- * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88 
- * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88 
- * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P' 
+ * 888888ba                 dP  .88888.                    dP
+ * 88    `8b                88 d8'   `88                   88
+ * 88aaaa8P' .d8888b. .d888b88 88        .d8888b. .d8888b. 88  .dP  .d8888b.
+ * 88   `8b. 88ooood8 88'  `88 88   YP88 88ooood8 88'  `"" 88888"   88'  `88
+ * 88     88 88.  ... 88.  .88 Y8.   .88 88.  ... 88.  ... 88  `8b. 88.  .88
+ * dP     dP `88888P' `88888P8  `88888'  `88888P' `88888P' dP   `YP `88888P'
  *
  *                          m a g n a l i s t e r
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: guenstigerConfig.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: guenstigerConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -33,11 +33,11 @@ $form = loadConfigForm($_lang,
 	)
 );
 
-getCountries($form['shipping']['fields']['country']);
-getLanguages($form['lang']['fields']['lang']);
-getShippingMethods($form['shipping']['fields']['method']);
+mlGetCountries($form['shipping']['fields']['country']);
+mlGetLanguages($form['lang']['fields']['lang']);
+mlGetShippingMethods($form['shipping']['fields']['method']);
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_guenstiger');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_guenstiger');
 $cG->setRenderTabIdent(true);
 
 try {
@@ -49,27 +49,20 @@ try {
 		$cG->setTopHTML('
 			<h3>'.ML_COMPARISON_SHOPPING_LABEL_PATH_TO_CSV_TABLE.'</h3>
 			<input type="text" class="fullwidth" value="'.(
-				!empty($result['DATA']['CSVPath']) 
-					? $result['DATA']['CSVPath'] 
-					: ML_COMPARISON_SHOPPING_TEXT_NO_CSV_TABLE_YET
+			!empty($result['DATA']['CSVPath'])
+				? $result['DATA']['CSVPath']
+				: ML_COMPARISON_SHOPPING_TEXT_NO_CSV_TABLE_YET
 			).'" /><br/><br/>
 		');
 	}
 } catch (MagnaException $e) {
 }
 
-$allCorrect = $cG->processPOST($keysToSubmit);
-if (!empty($keysToSubmit)) {
-	$request = array(
-		'ACTION' => 'SetConfigValues',
-		'DATA' => array(),
-	);
-	foreach ($keysToSubmit as $key) {
-		$request['DATA'][$key] = getDBConfigValue($key);
-	}
-	try {
-		MagnaConnector::gi()->submitRequest($request);
-	} catch (MagnaException $me) { }
+/*
+ * processPOST: Handles to save the data and send them to API
+ */
+if (!$cG->processPOST()) {
+	//Here you can display an error message
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {

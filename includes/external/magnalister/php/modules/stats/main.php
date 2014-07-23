@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: main.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: main.php 4017 2014-06-24 18:39:57Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -58,8 +58,8 @@ function renderTextImage($width, $height, $string, $fontSize = 12, $font = '') {
 }
 
 $phPlotSettings = array(
-	'width' => 400,
-	'height' => 200,
+	'width' =>  $globalStatSize['w'],
+	'height' => $globalStatSize['h'],
 	'filetype' => 'png',
 	'fonts' => array (
 		'title' => array (
@@ -98,6 +98,7 @@ $phPlotSettings = array(
 		'data' => array (
 			'colors' => array (
 				'shop_green'        => array(203, 227, 107),
+				'trueblack'         => array(  0,   0,   0),
 				'amazon_yellow'     => array(228, 163,  20),
 				'yatego_blue'       => array(100, 140, 219),
 				'guenstiger_blue'   => array( 21,  26, 123),
@@ -109,7 +110,7 @@ $phPlotSettings = array(
 				'kelkoo_orange'     => array(219, 103,  82),
 				'daparto_blue'      => array( 66, 149, 203),
 				'laary_brown'       => array(220, 170, 240), //array(170,  90,  50),
-				'black'             => array(232, 148,  80),							
+				'black'             => array(232, 148,  80),
 			),
 			'saturation' => 100,   /* in Prozent. 100 entspricht der aktuellen Farbe */
 			'lightness'  => 100,   /* in Prozent. 100 entspricht der aktuellen Farbe */
@@ -134,6 +135,21 @@ $phPlotSettings = array(
 	)
 );
 
+function retinarize(&$phPlotSettings) {
+	$factor = (ML_RETINA_DISPLY ? 2 : 1);
+	
+	$phPlotSettings['width'] *= $factor;
+	$phPlotSettings['height'] *= $factor;
+	
+	foreach ($phPlotSettings['fonts'] as &$font) {
+		$font['size'] *= $factor;
+		$font['spacing'] = is_null($font['spacing']) ? $font['spacing'] : $font['spacing'] * $factor;
+	}
+	
+}
+
+retinarize($phPlotSettings);
+
 /* Berechnet Farben anhand der Einstellungen neu. */
 foreach ($phPlotSettings['colorMap']['data']['colors'] as $key => &$color) {
 	$hsv = rgb2hsv($color);
@@ -148,14 +164,8 @@ foreach ($phPlotSettings['colorMap']['data']['colors'] as $key => &$color) {
 }
 //die(print_m($phPlotSettings['colorMap']));
 
-$curMonth = date('n');
 $dateBack = (int)getDBConfigValue('general.stats.backwards', '0', 6);
-$dateBack = date('Y-m-d H:i:s', mktime(
-	0, 0, 0, 
-	mod(($curMonth - $dateBack), 12),
-	1,
-	(date('Y') - (int)($curMonth < mod(($curMonth - $dateBack), 12)))
-));
+$dateBack = date('Y-m-01 00:00:00', mktime(0, 0, 0, date('n') - $dateBack, 1, date("Y")));
 
 if (isset($_GET['view'])) {
 	if (!function_exists('imagecreatetruecolor')) {
@@ -164,14 +174,10 @@ if (isset($_GET['view'])) {
 	}
 	switch ($_GET['view']) {
 		case 'orders': {
-			$phPlotSettings['width'] = $globalStatSize['w'];
-			$phPlotSettings['height'] = $globalStatSize['h'];
 			require_once(DIR_MAGNALISTER_MODULES.'stats/orders.php');
 			die();
 		}
 		case 'ordersPercent': {
-			$phPlotSettings['width'] = $globalStatSize['w'];
-			$phPlotSettings['height'] = $globalStatSize['h'];
 			require_once(DIR_MAGNALISTER_MODULES.'stats/ordersPercent.php');
 			die();
 		}
@@ -193,8 +199,6 @@ if (isset($_GET['view'])) {
 	}
 }
 
-$phPlotSettings['width'] = $globalStatSize['w'];
-$phPlotSettings['height'] = $globalStatSize['h'];
 renderTextImage(
 	$phPlotSettings['width'], $phPlotSettings['height'], ML_LABEL_NO_DATA, 
 	$phPlotSettings['fonts']['title']['size'], $phPlotSettings['fonts']['title']['font']

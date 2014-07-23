@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configFunctions.php 3660 2014-03-22 22:58:23Z derpapst $
+ * $Id: configFunctions.php 4116 2014-07-05 13:36:22Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -20,7 +20,7 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-function getLanguages(&$form) {
+function mlGetLanguages(&$form) {
 	$langs = MagnaDB::gi()->fetchArray('SELECT * FROM '.TABLE_LANGUAGES);
 	$form['values'] = array();
 	foreach ($langs as $lang) {
@@ -31,7 +31,7 @@ function getLanguages(&$form) {
 	}
 }
 
-function getCountries(&$form) {
+function mlGetCountries(&$form) {
 	$countries = MagnaDB::gi()->fetchArray('SELECT * FROM '.TABLE_COUNTRIES);
 	$form['values'] = array();
 	foreach ($countries as $country) {
@@ -42,7 +42,7 @@ function getCountries(&$form) {
 	}
 }
 
-function getCountriesWithIso2Keys(&$form) {
+function mlGetCountriesWithIso2Keys(&$form) {
 	$countries = MagnaDB::gi()->fetchArray('SELECT UPPER(countries_iso_code_2) as iso2, countries_name FROM '.TABLE_COUNTRIES);
 	$form['values'] = array();
 	foreach ($countries as $country) {
@@ -53,7 +53,7 @@ function getCountriesWithIso2Keys(&$form) {
 	}
 }
 
-function getShippingMethods(&$form) {
+function mlGetShippingMethods(&$form) {
 	if (!class_exists('Shipping')) {
 		require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/Shipping.php');
 	}
@@ -74,7 +74,7 @@ function getShippingMethods(&$form) {
 	unset($shippingClass);
 }
 
-function getOrderStatus(&$form) {
+function mlGetOrderStatus(&$form) {
 	if (!isset($_SESSION['languages_id'])) {
 		$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne(
 		'SELECT languages_id '.
@@ -93,7 +93,7 @@ function getOrderStatus(&$form) {
 	}
 }
 
-function getCustomersStatus(&$form, $inclAdmin = true) {
+function mlGetCustomersStatus(&$form, $inclAdmin = true) {
 	if (MagnaDB::gi()->tableExists(TABLE_CUSTOMERS_STATUS)) {
 		$customers_status_array = MagnaDB::gi()->fetchArray(
 			'SELECT customers_status_id, customers_status_name '.
@@ -112,7 +112,7 @@ function getCustomersStatus(&$form, $inclAdmin = true) {
 	}
 }
 
-function getPaymentModules(&$form) {
+function mlGetPaymentModules(&$form) {
 	$payments = explode(';', MODULE_PAYMENT_INSTALLED);
 	$lang = (isset($_SESSION['language']) && !empty($_SESSION['language'])) ? $_SESSION['language'] : 'english';
 	
@@ -134,7 +134,7 @@ function getPaymentModules(&$form) {
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE);
 }
 
-function getShippingModules(&$form) {
+function mlGetShippingModules(&$form) {
 	$shippings = explode(';', MODULE_SHIPPING_INSTALLED);
 	$lang = (isset($_SESSION['language']) && !empty($_SESSION['language'])) ? $_SESSION['language'] : 'english';
 	
@@ -156,7 +156,7 @@ function getShippingModules(&$form) {
 	if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE);
 }
 
-function getProductOptions(&$form) {
+function mlGetProductOptions(&$form) {
 	if (!isset($_SESSION['languages_id'])) {
 		$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne(
 		'SELECT languages_id '.
@@ -175,7 +175,7 @@ function getProductOptions(&$form) {
 	}
 }
 
-function getManufacturers(&$form){
+function mlGetManufacturers(&$form){
 	$manufacturers = MagnaDB::gi()->fetchArray('
 	    SELECT manufacturers_id, manufacturers_name 
 	      FROM '.TABLE_MANUFACTURERS.'
@@ -189,5 +189,20 @@ function getManufacturers(&$form){
 		foreach ($manufacturers as $manufacturer) {
 			$form['values'][$manufacturer['manufacturers_id']] = fixHTMLUTF8Entities($manufacturer['manufacturers_name']);
 		}
+	}
+}
+
+function mlGetShippingStatus(&$form) {
+	$data = MagnaDB::gi()->fetchArray('
+	    SELECT shipping_status_id as id, shipping_status_name as name
+	      FROM '.TABLE_SHIPPING_STATUS.'
+	     WHERE language_id = '.$_SESSION['languages_id'].'
+	  ORDER BY shipping_status_id ASC
+	');
+	
+	$form['values'] = array();
+	
+	foreach ($data as $elem) {
+		$form['values'][$elem['id']] =  fixHTMLUTF8Entities($elem['name']); 
 	}
 }

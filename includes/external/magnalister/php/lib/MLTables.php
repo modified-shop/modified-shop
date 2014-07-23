@@ -54,3 +54,4 @@ define('TABLE_MAGNA_HOOD_CATEGORIES', 'magnalister_hood_categories');
 define('TABLE_MAGNA_HOOD_PROPERTIES', 'magnalister_hood_properties');
 define('TABLE_MAGNA_HOOD_ERRORLOG', 'magnalister_hood_errorlog');
 define('TABLE_MAGNA_HOOD_DELETEDLOG', 'magnalister_hood_deletedlog');
+define('TABLE_MAGNA_DAWANDA_PROPERTIES', 'magnalister_dawanda_properties');

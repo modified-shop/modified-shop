@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: matching.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: matching.php 3854 2014-05-12 12:55:03Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -59,39 +59,39 @@ if (array_key_exists('action', $_POST) && ($_POST['action'] == 'singlematching')
 		'session_id' => session_id()
 	));
 }
+if (!defined('MAGNA_DEV_PRODUCTLIST') || MAGNA_DEV_PRODUCTLIST !== true ) {// will be done in MLProductListDependencyAmazonMatchingFormAction
+	/**
+	 * Daten loeschen
+	 */
+	if (array_key_exists('unmatching', $_POST)) {
+		$pIDs = MagnaDB::gi()->fetchArray('
+			SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
+				   selectionname=\''.$matchingSetting['selectionName'].'\' AND
+				   session_id=\''.session_id().'\'
+		', true);
+		if (!empty($pIDs)) {
+			foreach ($pIDs as $pID) {
+				$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
+					? array ('products_model' => MagnaDB::gi()->fetchOne('
+								SELECT products_model
+								  FROM '.TABLE_PRODUCTS.'
+								 WHERE products_id='.$pID
+							))
+					: array ('products_id'    => $pID);
+				$where['mpID'] = $_MagnaSession['mpID'];
 
-/**
- * Daten loeschen
- */
-if (array_key_exists('unmatching', $_POST)) {
- 	$pIDs = MagnaDB::gi()->fetchArray('
-		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
-		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$matchingSetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
-	', true);
-	if (!empty($pIDs)) {
-		foreach ($pIDs as $pID) {
-			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? array ('products_model' => MagnaDB::gi()->fetchOne('
-							SELECT products_model
-							  FROM '.TABLE_PRODUCTS.'
-							 WHERE products_id='.$pID
-						))
-				: array ('products_id'    => $pID);
-			$where['mpID'] = $_MagnaSession['mpID'];
-
-			MagnaDB::gi()->delete(TABLE_MAGNA_AMAZON_PROPERTIES, $where);
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'pID' => $pID,
-				'mpID' => $_MagnaSession['mpID'],
-			    'selectionname' => $matchingSetting['selectionName'],
-			    'session_id' => session_id()
-			));
+				MagnaDB::gi()->delete(TABLE_MAGNA_AMAZON_PROPERTIES, $where);
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'pID' => $pID,
+					'mpID' => $_MagnaSession['mpID'],
+					'selectionname' => $matchingSetting['selectionName'],
+					'session_id' => session_id()
+				));
+			}
 		}
 	}
 }
-
 /**
  * Matching Vorbereitung
  */
@@ -140,15 +140,24 @@ if ($matchAction == 'singlematching') {
 		')));
 	}
 } else {
-	require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/AmazonCategoryView.php');
-	
-	$aCV = new AmazonCategoryView($current_category_id, $matchingSetting, $_GET['sorting'], $_POST['tfSearch']); /* $current_category_id is a global variable from xt:Commerce */
-	if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
-		echo $aCV->renderAjaxReply();
+	if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+		require_once(DIR_MAGNALISTER_MODULES.'amazon/prepare/AmazonMatchingProductList.php');
+		$o = new AmazonMatchingProductList();
+		echo $o;
 	} else {
-		echo $aCV->printForm();
+		require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/AmazonCategoryView.php');
+
+		$aCV = new AmazonCategoryView(
+			$current_category_id, $matchingSetting,  /* $current_category_id is a global variable from xt:Commerce */
+			(isset($_GET['sorting']) ? $_GET['sorting'] : ''),
+			(isset($_POST['tfSearch']) ? $_POST['tfSearch'] : '')
+		);
+		if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
+			echo $aCV->renderAjaxReply();
+		} else {
+			echo $aCV->printForm();
+		}
 	}
-	
 }
 /*
 echo print_m($_MagnaSession, '$_MagnaSession');

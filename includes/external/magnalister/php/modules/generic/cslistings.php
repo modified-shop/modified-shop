@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: cslistings.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: cslistings.php 3911 2014-05-27 00:59:11Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -22,4 +22,4 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingListings.php');
 
 $csl = new ComparisonShoppingListings();
-echo $csl->renderView((isset($_shitHappend) && $_shitHappend), $_checkinState);
+echo $csl->renderView((isset($_shitHappend) && $_shitHappend), isset($_checkinState) ? $_checkinState : null);

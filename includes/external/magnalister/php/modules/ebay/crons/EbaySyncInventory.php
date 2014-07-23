@@ -332,8 +332,10 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		if ($currVarQty !== false) {
 			$currPrice = $this->calcPrice(true);
 			$mainPrice = $this->calcPrice(false);
+			$currTotalVariationSKUs = getTotalVariationSKUs($this->cItem['pID']);
 		} else {
 			$currPrice = $mainPrice = $this->calcPrice(false);
+			$currTotalVariationSKUs = 0;
 		}
 
 		$this->log(
@@ -421,6 +423,8 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 						((false !== $currVarQty) && ($this->cItem['Quantity'] != $currVarQty))
 						/* Quantity changed (Article w/o Variation) */
 					 || ((false === $currVarQty) && ($this->cItem['Quantity'] != $currMainQty))
+						/* Number of Variations in Shop is different than on eBay */
+					 || (array_key_exists('TotalVariations', $this->cItem) && ($this->cItem['TotalVariations'] != $currTotalVariationSKUs))
 						/* Product has been ordered after the last Sync */
 					 || ($this->cItem['LastOrdered'] > $this->cItem['LastSync'])
 				)

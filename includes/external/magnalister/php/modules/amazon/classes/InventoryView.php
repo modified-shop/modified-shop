@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: InventoryView.php 4219 2014-07-17 11:25:15Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -275,6 +275,8 @@ class InventoryView {
 				
 				$aID = magnaSKU2aID($item['SKU']);
 				$item['pID'] = magnaAmazonSKU2pID($item['SKU'], $item['ASIN']);
+				$item['aID'] = $aID;
+				
 				$variationTheme = false;
 				if ($aID !== false) {
 					$variationTheme = MagnaDB::gi()->fetchRow('
@@ -346,12 +348,17 @@ class InventoryView {
 		';
 		$oddEven = false;
 		#echo print_m($this->renderableData);
+		$sFuncNameSubStr = 'substr';
+		if (function_exists('mb_substr')) {
+			mb_internal_encoding("UTF-8");
+			$sFuncNameSubStr = 'mb_substr';
+		}
 		foreach ($this->renderableData as $item) {
 			if (!empty($item['ShopItemName'])) {
 				$item['ShopItemNameShort'] = (
 					(strlen($item['ShopItemName']) > $this->settings['maxTitleChars'] + 2) 
 						? 
-							(fixHTMLUTF8Entities(substr($item['ShopItemName'], 0, $this->settings['maxTitleChars']), ENT_COMPAT).'&hellip;')
+							(fixHTMLUTF8Entities($sFuncNameSubStr($item['ShopItemName'], 0, $this->settings['maxTitleChars']), ENT_COMPAT).'&hellip;')
 						: 
 							fixHTMLUTF8Entities($item['ShopItemName'], ENT_COMPAT)
 				);
@@ -364,7 +371,7 @@ class InventoryView {
 				$item['ItemTitleShort'] = (
 					(strlen($item['ItemTitle']) > $this->settings['maxTitleChars'] + 2) 
 						? 
-							(fixHTMLUTF8Entities(substr($item['ItemTitle'], 0, $this->settings['maxTitleChars']), ENT_COMPAT).'&hellip;')
+							(fixHTMLUTF8Entities($sFuncNameSubStr($item['ItemTitle'], 0, $this->settings['maxTitleChars']), ENT_COMPAT).'&hellip;')
 						: 
 							fixHTMLUTF8Entities($item['ItemTitle'], ENT_COMPAT)
 				);
@@ -374,7 +381,7 @@ class InventoryView {
 				$item['ItemTitle'] = ML_LABEL_IN_QUEUE;
 			}
 			
-			$item['SKU_Rendered'] = $item['SKU'];
+			$item['SKU_Rendered'] = fixHTMLUTF8Entities($item['SKU'], ENT_COMPAT);
 			if ($item['Type'] == 'inventory') {
 				$item['SKU_Rendered'] = '<a href="categories.php?pID='.$item['pID'].'&action=new_product" target="_blank" title="'.ML_LABEL_EDIT.'">'.$item['SKU'].'</a>';
 			}
@@ -516,7 +523,7 @@ class InventoryView {
 						'.renderPagination($currentPage, $pages, $tmpURL).'
 					</td>
 				</tr></tbody></table>';
-
+		
 		if (!empty($this->renderableData)) {
 			$html .= $this->renderDataGrid('inventory');
 		} else {

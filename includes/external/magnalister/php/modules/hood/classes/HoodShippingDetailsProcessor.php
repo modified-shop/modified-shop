@@ -125,9 +125,9 @@ class HoodShippingDetailsProcessor {
 					<td class="paddingRight">'.$shippingCost.'</td>
 					<td rowspan="2">
 						<input id="" type="button" value="(+)" class="button plus" />
-						'.(array_key_exists('func', $this->args)
+						'.((array_key_exists('func', $this->args) && ($this->args['func'] == '' || $this->args['func'] == 'addRow'))
 							? '<input type="button" value="(-)" class="button minus" />'
-							: ''
+							: '<input type="button" value="(-)" class="button minus" style="display: none" />'
 						).'
 					</td>
 				</tr>
@@ -139,6 +139,10 @@ class HoodShippingDetailsProcessor {
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
 				$('#<?php echo $idkey; ?> input.button.plus').click(function () {
+					var $tableBox = $('#<?php echo $idkey; ?>');
+					if ($tableBox.parent('td').find('table').length == 1) {
+						$tableBox.find('input.button.minus').fadeIn(0);
+					}
 					myConsole.log();
 					jQuery.blockUI(blockUILoading); 
 					jQuery.ajax({
@@ -155,7 +159,7 @@ class HoodShippingDetailsProcessor {
 						)); ?>,
 						success: function(data) {
 							jQuery.unblockUI();
-							$('#<?php echo $idkey; ?>').after(data);
+							$tableBox.after(data);
 						},
 						error: function (xhr, status, error) {
 							jQuery.unblockUI();
@@ -164,7 +168,12 @@ class HoodShippingDetailsProcessor {
 					});
 				});
 				$('#<?php echo $idkey; ?> input.button.minus').click(function () {
-					$('#<?php echo $idkey; ?>').detach();
+					var $tableBox = $('#<?php echo $idkey; ?>'),
+						tables = $tableBox.parent('td').find('table');
+					$tableBox.detach();
+					if (tables.length == 2) {
+						tables.find('input.button.minus').fadeOut(0);
+					}
 				});
 			});
 		/*]]>*/</script><?php
@@ -192,7 +201,7 @@ class HoodShippingDetailsProcessor {
 				if (empty($item['Service'])) {
 					unset($data[$key]);
 				}
-				$item['Cost'] = (float)str_replace(',', '.', trim($item['Cost']));
+				$item['Cost'] = mlFloatalize($item['Cost']);
 			}
 		}
 		$data = array_values($data);
@@ -228,7 +237,7 @@ class HoodShippingDetailsProcessor {
 				}
 				$html = '';
 				foreach ($setting as $key => $item) {
-					if ($key > 0) {
+					if (count($setting) > 1) {
 						$this->args['func'] = '';
 					}
 					$html .= $this->renderView($item);
@@ -247,7 +256,11 @@ class HoodShippingDetailsProcessor {
 	private function changeShippingArrayKeys($prefilled) {
 		require_once(DIR_MAGNALISTER_INCLUDES . 'lib/classes/SimplePrice.php');
 		$sp = new SimplePrice(null, getCurrencyFromMarketplace($this->mpID));
-		foreach ($prefilled as &$service) {
+		foreach ($prefilled as $key => &$service) {
+			if (!isset($service['Cost'])) {
+				unset($prefilled[$key]);
+				continue;
+			}
 			$service['Cost'] = $sp->setPrice($service['Cost'])->getPrice();
 		}
 		return $prefilled;

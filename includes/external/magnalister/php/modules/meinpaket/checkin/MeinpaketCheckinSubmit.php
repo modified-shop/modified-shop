@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCheckinSubmit.php 3561 2014-03-02 03:03:48Z derpapst $
+ * $Id: MeinpaketCheckinSubmit.php 3856 2014-05-12 15:56:27Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -36,10 +36,25 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		$settings = array_merge(array(
 			'language' => getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID']),
 			'itemsPerBatch' => 100,
-			'mlProductsUseLegacy' => (!defined('MAGNA_SECRET_DEV') || !MAGNA_SECRET_DEV),
+			'mlProductsUseLegacy' => false,
 		), $settings);
 		
 		parent::__construct($settings);
+		
+		$this->settings['SyncInventory'] = array (
+			'Price' => getDBConfigValue('meinpaket.inventorysync.price', $this->mpID, '') == 'auto',
+			'Quantity' => getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->mpID, '') == 'auto',
+		);
+	}
+	
+	protected function strreplace($str, array $repl) {
+		$replace = array();
+		if (!empty($repl)) {
+			foreach ($repl as $key => $val) {
+				$replace['{#'.$key.'#}'] = $val;
+			}
+		}
+		return str_replace(array_keys($replace), array_values($replace), $str);
 	}
 	
 	private function generateMPCategoryPath($id, $from = 'category', $langID, $categories_array = array(), $index = 0, $callCount = 0) {
@@ -133,7 +148,7 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		);
 	}
 	
-	protected function markAsFailed($sku, $error = '') {
+	protected function addToErrorLog($sku, $error = '') {
 		if (empty($error)) {
 			$error = ML_GENERIC_ERROR_UNABLE_TO_LOAD_PREPARE_DATA;
 		}
@@ -148,8 +163,11 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 				))
 			)
 		);
-		$this->badItems[] = $pID;
-		unset($this->selection[$pID]);
+	}
+	
+	protected function markAsFailed($pId) {
+		$this->badItems[] = $pId;
+		unset($this->selection[$pId]);
 	}
 	
 	protected function setUpMLProduct() {
@@ -245,7 +263,8 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		
 		$varConfig = $this->loadVariationMatching($propertiesRow['VariationConfiguration']);
 		if (empty($varConfig)) {
-			$this->markAsFailed($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY);
+			$this->addToErrorLog($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_EMPTY);
+			$this->markAsFailed($propertiesRow['products_id']);
 			return false;
 		}
 		
@@ -319,17 +338,16 @@ $varConfig :: Array
 		foreach ($data['submit']['Variations'] as $key => &$vItem) {
 			foreach ($vItem['Variation'] as &$vSet) {
 				if (!isset($varConfig[$vSet['NameId']])) {
-					$this->markAsFailed(
-						$data['submit']['SKU'], 
-						sprintf(
-							ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID,
-							$vSet['Name'],
-							((getDBConfigValue('general.keytype', '0') == 'artNr')
-								? $vItem['MarketplaceSku']
-								: $vItem['MarketplaceId']
-							)
-						)
-					);
+					$msg = $this->strreplace(ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_MISSING_NAMEID, array (
+						'Attribute' => $vSet['Name'],
+						'SKU' => ((getDBConfigValue('general.keytype', '0') == 'artNr')
+							? $vItem['MarketplaceSku']
+							: $vItem['MarketplaceId']
+						),
+						'MpIdentifier' => fixHTMLUTF8Entities($propertiesRow['VariationConfiguration']['MpIdentifier']),
+					));
+					$this->addToErrorLog($data['submit']['SKU'], $msg);
+					$this->markAsFailed($propertiesRow['products_id']);
 					return false;
 				}
 				$matching = $varConfig[$vSet['NameId']];
@@ -349,6 +367,11 @@ $varConfig :: Array
 			
 			$vItem['ShippingTime'] = getDBConfigValue('meinpaket.checkin.leadtimetoship', $this->mpID, 3);
 			
+			// if the reduced price is available here it has been enabled in the module configuration and should be used.
+			if (isset($vItem['PriceReduced'])) {
+				$vItem['Price'] = $vItem['PriceReduced'];
+			}
+			
 			// remove stuff we do not want.
 			foreach (array('ShippingTimeId') as $key) {
 				unset($vItem[$key]);
@@ -356,7 +379,8 @@ $varConfig :: Array
 		}
 		
 		if (empty($data['submit']['Variations'])) {
-			$this->markAsFailed($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS);
+			$this->addToErrorLog($data['submit']['SKU'], ML_MEINPAKET_ERROR_CHECKIN_VARIATION_CONFIG_CANNOT_CALC_VARIATIONS);
+			$this->markAsFailed($propertiesRow['products_id']);
 			return false;
 		}
 		
@@ -366,7 +390,7 @@ $varConfig :: Array
 		return true;
 	}
 	
-	protected function appendAdditionalDataNew($pID, $product, &$data) {
+	protected function appendAdditionalData($pID, $product, &$data) {
 		$propertiesRow = MagnaDB::gi()->fetchRow(eecho('
 			SELECT *
 			  FROM ' . TABLE_MAGNA_MEINPAKET_PROPERTIES . '
@@ -381,7 +405,8 @@ $varConfig :: Array
 		// Will not happen in sumbit cycle but can happen in loadProductByPId.
 		if (empty($propertiesRow)) {
 			$data['submit'] = array();
-			$this->markAsFailed(magnaPID2SKU($pID));
+			$this->addToErrorLog(magnaPID2SKU($pID));
+			$this->markAsFailed($pID);
 			return;
 		}
 		$propertiesRow['VariationConfiguration'] = @json_decode($propertiesRow['VariationConfiguration'], true);
@@ -396,16 +421,27 @@ $varConfig :: Array
 			unset($product[$key]);
 		}
 		
+		// if the reduced price is available here it has been enabled in the module configuration and should be used.
+		if (isset($product['PriceReduced'])) {
+			$product['Price'] = $product['PriceReduced'];
+		}
+		
 		$data['submit'] = $product;
 		
 		$data['submit']['SKU'] = magnaPID2SKU($pID);
 		
 		$data['submit']['ItemTitle'] = $product['Title'];
-		$data['submit']['Price'] = $data['price'];
-		$data['submit']['Quantity'] = $data['quantity'];
+		unset($data['submit']['Title']);
+		if (!$this->settings['SyncInventory']['Price']) {
+			$data['submit']['Price'] = $data['price'];
+		}
+		if (!$this->settings['SyncInventory']['Quantity']) {
+			$data['submit']['Quantity'] = (int)$data['quantity'];
+		}
 		
-		if (!empty($data['submit']['EAN'])
-			|| !getDBConfigValue(array('meinpaket.checkin.ean', 'submit'), $this->mpID, true)
+		if (
+			(!empty($data['submit']['EAN']) && !getDBConfigValue(array('meinpaket.checkin.ean', 'submit'), $this->mpID, true))
+			|| empty($data['submit']['EAN'])
 		) {
 			unset($data['submit']['EAN']);
 		}
@@ -424,7 +460,7 @@ $varConfig :: Array
 			unset($data['submit']['Description']);
 		}
 		/* Short-Desc ist leer, vielleicht ist die Lang-Desc ja nicht leer. */
-		$longDesc = $product['products_description'];
+		$longDesc = $product['Description'];
 		if (empty($data['submit']['ShortDescription']) && !empty($longDesc)) {
 			$data['submit']['ShortDescription'] = $longDesc;
 		}
@@ -473,7 +509,8 @@ $varConfig :: Array
 		
 		if (!$this->processVariations($propertiesRow, $data)) {
 			$data['submit'] = array();
-			//$this->markAsFailed(magnaPID2SKU($pID));
+			//$this->addToErrorLog(magnaPID2SKU($pID));
+			//$this->markAsFailed($pID);
 			return;
 		}
 		
@@ -481,247 +518,6 @@ $varConfig :: Array
 		//echo print_m($propertiesRow, '$propertiesRow');
 		
 		return;
-	}
-	
-	protected function appendAdditionalDataOld($pID, $product, &$data) {
-		if ($data['quantity'] < 0) {
-			$data['quantity'] = 0;
-		}
-		
-		$data['submit']['SKU'] = magnaPID2SKU($pID);
-		$data['submit']['ItemTitle'] = $product['products_name'];
-		$data['submit']['Price'] = $data['price'];
-		$data['submit']['Quantity'] = $data['quantity'];
-		
-		if (defined('MAGNA_FIELD_PRODUCTS_EAN')
-			&& !empty($product[MAGNA_FIELD_PRODUCTS_EAN])
-			&& getDBConfigValue(array('meinpaket.checkin.ean', 'submit'), $this->mpID, true)
-		) {
-			$data['submit']['EAN'] = $product[MAGNA_FIELD_PRODUCTS_EAN];
-		}
-
-		$shortdescField = getDBConfigValue('meinpaket.checkin.shortdesc.field', $this->mpID, '');
-		if (!empty($shortdescField) && array_key_exists($shortdescField, $product)) {
-			$data['submit']['ShortDescription']	= $product[$shortdescField];
-		} else {
-			$data['submit']['ShortDescription']	= $product['products_description'];
-		}
-
-		$longdescField = getDBConfigValue('meinpaket.checkin.longdesc.field', $this->mpID, '');
-		if (!empty($longdescField) && array_key_exists($longdescField, $product)) {
-			$data['submit']['Description'] = $product[$longdescField];
-		}
-		/* Short-Desc ist leer, vielleicht ist die Lang-Desc ja nicht leer. */
-		$longDesc = $product['products_description'];
-		if (empty($data['submit']['ShortDescription']) && !empty($longDesc)) {
-			$data['submit']['ShortDescription'] = $longDesc;
-		}
-		
-		/* Falls Langbeschreibung leer, Kurzbeschreibung ebenfalls fuer Langbeschreibung verwenden. Ansonsten entfernt Meinpaket
-		   zu viele HTML-Tags */
-		if (!isset($data['submit']['Description']) || empty($data['submit']['Description'])) {
-			$data['submit']['Description'] = $data['submit']['ShortDescription'];
-		}
-
-		#VPE
-		$showvpe = getDBConfigValue('meinpaket.checkin.showvpe', $this->mpID, false);
-		if ((isset($product['products_vpe_name'])) && (0 <> $product['products_vpe_value'])) {
-			$formatted_vpe = floatval($product['products_vpe_value']);
-			$data['submit']['BasePrice'] = array (	   
-				'Unit' => htmlspecialchars(trim($product['products_vpe_name'])),         // $product['products_vpe_name']
-				'Value' => $formatted_vpe,                                               // $product['products_vpe_value']
-				'showVPE' => $showvpe
-			);
-		} else {
-			$data['submit']['BasePrice'] = array (               # falls in Zukunft meinpaket.de eigene Felder dafür definiert, base price = Grundpreis
-				'Unit' => '',                                   // $product['products_vpe_name']
-				'Value' => '',                                  // $product['products_vpe_value']
-				'showVPE' => $showvpe
-			);
-		}
-		# Ende VPE
-		
-		# Titel-Template 
-		$title_template = getDBConfigValue('meinpaket.checkin.title_template', $this->mpID, '');
-		$data['submit']['TitleTemplate'] = strip_tags($title_template);
-		# Ende Titel-Template
-
-		$manufacturerName = '';
-		if ($product['manufacturers_id'] > 0) {
-			$manufacturerName = (string)MagnaDB::gi()->fetchOne(
-				'SELECT manufacturers_name FROM '.TABLE_MANUFACTURERS.' WHERE manufacturers_id="'.$product['manufacturers_id'].'"'
-			);
-		}
-		if (empty($manufacturerName)) {
-			$manufacturerName = getDBConfigValue(
-				'meinpaket.checkin.manufacturerfallback',
-				$this->mpID,
-				''
-			);
-		}
-		$mfrmd = getDBConfigValue('meinpaket.checkin.manufacturerpartnumber.table', $this->mpID, false);
-		if (is_array($mfrmd) && !empty($mfrmd['column']) && !empty($mfrmd['table'])) {
-			$pIDAlias = getDBConfigValue('meinpaket.checkin.manufacturerpartnumber.alias', $this->mpID);
-			if (empty($pIDAlias)) {
-				$pIDAlias = 'products_id';
-			}
-			$data['submit']['Manufacturer'] = $manufacturerName;
-			$data['submit']['ManufacturerPartNumber'] = MagnaDB::gi()->fetchOne('
-				SELECT `'.$mfrmd['column'].'` 
-				  FROM `'.$mfrmd['table'].'` 
-				 WHERE `'.$pIDAlias.'`="'.MagnaDB::gi()->escape($pID).'"
-				 LIMIT 1
-			');
-		}
-		
-		$taxMatch = getDBConfigValue('meinpaket.checkin.taxmatching', $this->mpID, array());
-		if (is_array($taxMatch) && array_key_exists($product['products_tax_class_id'], $taxMatch)) {
-			$data['submit']['ItemTax'] = $taxMatch[$product['products_tax_class_id']];
-		} else {
-			$data['submit']['ItemTax'] = 'Standard';
-		}
-
-		$data['submit']['ShippingTime'] = getDBConfigValue('meinpaket.checkin.leadtimetoship', $this->mpID, 3);
-
-
-		$imageWSPath = getDBConfigValue('meinpaket.checkin.imagepath', $this->mpID, SHOP_URL_POPUP_IMAGES);
-		$images = array();
-		
-		if (!empty($product['products_allimages'])) {
-			foreach($product['products_allimages'] as $img) {
-				$images[] = array('URL' => $imageWSPath.$img);
-			}
-		}
-		$data['submit']['Images'] = $images;
-		
-		if (($catMatching = MagnaDB::gi()->fetchRow('
-			SELECT mp_category_id, store_category_id 
-			  FROM `'.TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING.'`
-			 WHERE '.((getDBConfigValue('general.keytype', '0') == 'artNr')
-			            ? 'products_model="'.MagnaDB::gi()->escape($product['products_model']).'"'
-			            : 'products_id="'.$pID.'"'
-			        ).' AND
-			       mpID="'.$this->mpID.'"
-			 LIMIT 1
-		')) === false) {
-			$this->markAsFailed(magnaPID2SKU($pID));
-			return;
-		}
-		$data['submit']['MarketplaceCategory'] = $catMatching['mp_category_id'];
-
-		if (getDBConfigValue(array('meinpaket.catmatch.mpshopcats', 'val'), $this->mpID, false)) {
-			$cPath = $this->generateMPCategoryPath($pID, 'product', $this->settings['language']);
-			$cPath = array_shift($cPath);
-			$data['submit']['MarketplaceShopCategory'] = $cPath[count($cPath)-1]['code'];
-			$data['submit']['MarketplaceShopCategoryStructure'] = $cPath;
-		} else if (!empty($catMatching['store_category_id'])) {
-			$data['submit']['MarketplaceShopCategory'] = $catMatching['store_category_id'];
-		}
-
-		$variationTheme = array();
-		if (defined('MAGNA_FIELD_ATTRIBUTES_EAN') 
-			&& MagnaDB::gi()->columnExistsInTable('attributes_stock', TABLE_PRODUCTS_ATTRIBUTES)
-		) {
-			$variationTheme = MagnaDB::gi()->fetchArray('
-			    SELECT po.products_options_name AS VariationTitle,
-			           pov.products_options_values_name AS VariationValue,
-			           pa.products_attributes_id AS aID,
-			           pa.options_values_price AS aPrice,
-			           pa.price_prefix AS aPricePrefix,
-			           pa.attributes_stock AS Quantity
-			      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa,
-			           '.TABLE_PRODUCTS_OPTIONS.' po, 
-			           '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov, 
-			           '.TABLE_LANGUAGES.' l
-			     WHERE pa.products_id = "'.$pID.'"
-			           AND po.language_id = l.languages_id
-			           AND po.products_options_id = pa.options_id
-			           AND po.products_options_name<>""
-			           AND pov.language_id = l.languages_id
-			           AND pov.products_options_values_id = pa.options_values_id
-			           AND pov.products_options_values_name<>""
-			           AND pa.attributes_stock IS NOT NULL
-			           AND l.directory = "'.$_SESSION['language'].'"
-			');
-			arrayEntitiesToUTF8($variationTheme);
-			#print_r($variationTheme);
-			$quantityType = getDBConfigValue(
-				$this->_magnasession['currentPlatform'].'.quantity.type',
-				$this->mpID
-			);
-			$quantityValue = getDBConfigValue(
-				$this->_magnasession['currentPlatform'].'.quantity.value',
-				$this->mpID,
-				0
-			);
-		
-			if (!empty($variationTheme)) {
-				foreach ($variationTheme as &$item) {
-					$item['SKU'] = magnaAID2SKU($item['aID']);
-					unset($item['aID']);
-					switch ($quantityType) {
-						case 'stock': {
-							# Already set.
-							break;
-						}
-						case 'stocksub': {
-							$item['Quantity'] = (int)$item['Quantity'] - $quantityValue;
-							break;
-						}
-						default: {
-							$item['Quantity'] = $quantityValue;
-						}
-					}
-					if ($item['Quantity'] < 0) {
-						$item['Quantity'] = 0;
-					}
-					$this->simpleprice->setPrice($data['price'])->removeTax($tax);
-	
-					if ($item['aPricePrefix'] == '+') {
-						$this->simpleprice->addLump($item['aPrice']);
-					} else {
-						$this->simpleprice->subLump($item['aPrice']);
-					}
-	
-					$this->simpleprice->addTax($tax);
-					if (getDBConfigValue(
-							$this->_magnasession['currentPlatform'].'.price.addkind', 
-							$this->mpID
-						) == 'percent'
-					) {
-						$this->simpleprice->addTax((float)getDBConfigValue(
-							$this->_magnasession['currentPlatform'].'.price.factor',
-							$this->mpID
-						));
-					} else if (getDBConfigValue(
-							$this->_magnasession['currentPlatform'].'.price.addkind',
-							$this->mpID
-						) == 'addition'
-					) {
-						$this->simpleprice->addLump((float)getDBConfigValue(
-							$this->_magnasession['currentPlatform'].'.price.factor',
-							$this->mpID
-						));
-					}
-	
-					$item['Price'] = $this->simpleprice->roundPrice()->makeSignalPrice(
-							getDBConfigValue($this->_magnasession['currentPlatform'].'.price.signal', $this->mpID, '')
-					    )->getPrice();
-					unset($item['aPrice']);
-					unset($item['aPricePrefix']);
-				}
-			}
-			$data['submit']['Variations'] = $variationTheme;
-			#echo print_m($variationTheme);
-		}
-	}
-	
-	protected function appendAdditionalData($pID, $product, &$data) {
-		if ($this->settings['mlProductsUseLegacy']) {
-			$this->appendAdditionalDataOld($pID, $product, $data);
-		} else {
-			$this->appendAdditionalDataNew($pID, $product, $data);
-		}
 	}
 	
 	protected function processSubmitResult($result) {

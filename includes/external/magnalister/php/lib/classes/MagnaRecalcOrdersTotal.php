@@ -357,6 +357,7 @@ class MagnaRecalcOrdersTotal {
 	}
 	
 	private function saveOrder() {
+		$aProcessedOrderIDs = array();
 		foreach ($this->ordersTotalSet as $otSet) {
 			if (!in_array($otSet['class'], $this->toDelete)
 				&& MagnaDB::gi()->recordExists(TABLE_ORDERS_TOTAL, array (
@@ -370,6 +371,25 @@ class MagnaRecalcOrdersTotal {
 				));
 			} else {
 				$this->magnaDB->insert(TABLE_ORDERS_TOTAL, $otSet);
+			}
+			$aProcessedOrderIDs[$otSet['orders_id']] = true;
+		}
+
+		foreach($aProcessedOrderIDs as $sOrderId => $bValue) {
+			// Gambio specific "Kleinunternehmer Regelung"
+			if (
+				    MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS
+				&& !MagnaDB::gi()->recordExists(TABLE_ORDERS_TOTAL, array (
+						'orders_id' => $sOrderId,
+						'class' => 'ot_gm_tax_free'
+					))
+			) {
+				$this->magnaDB->insert(TABLE_ORDERS_TOTAL, array(
+					'orders_id' => $sOrderId,
+					'title' => MODULE_ORDER_TOTAL_GM_TAX_FREE_TITLE,
+					'class' => 'ot_gm_tax_free',
+					'sort_order' => MODULE_ORDER_TOTAL_GM_TAX_FREE_SORT_ORDER
+				));
 			}
 		}
 	}

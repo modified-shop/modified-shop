@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: checkin.php 3977 2014-06-17 10:37:56Z masoud.khodaparast $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -23,6 +23,8 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/Comparison
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCategoryView.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinSubmit.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/MLProductListComparisonShoppingAbstract.php');
 
 class GuenstigerSummaryView extends ComparisonShoppingSummaryView {
 	protected function getAdditionalProductNameStuff($prod) {
@@ -33,10 +35,18 @@ class GuenstigerSummaryView extends ComparisonShoppingSummaryView {
 	}
 }
 
+$sCheckinView = '';
+
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
+            $sCheckinView = 'ComparisonShoppingCheckinProductList';
+} else {
+            $sCheckinView = 'ComparisonShoppingCategoryView';
+}
+
 $cm = new CheckinManager(
 	array(
 		'summaryView'   => 'GuenstigerSummaryView',
-		'checkinView'   => 'ComparisonShoppingCategoryView',
+		'checkinView'   => $sCheckinView,
 		'checkinSubmit' => 'ComparisonShoppingCheckinSubmit'
 	), array(
 		'marketplace' => $_Marketplace

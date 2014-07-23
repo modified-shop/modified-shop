@@ -25,7 +25,7 @@ class HitmeisterCheckinCategoryView extends SimpleCheckinCategoryView {
 
 	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '') {
 		global $_MagnaSession;
-		$this->_magnasession = $_MagnaSession;
+		$this->_magnasession = &$_MagnaSession;
 		$allPreparedItems = (array)MagnaDB::gi()->fetchArray('
 			SELECT DISTINCT '.((getDBConfigValue('general.keytype', '0') == 'artNr')
 					? 'products_model'
@@ -70,6 +70,14 @@ class HitmeisterCheckinCategoryView extends SimpleCheckinCategoryView {
 		if (!$this->isAjax) {
 			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		}
+	}
+
+	protected function init() {
+		parent::init();
+		
+		# take only products with EAN set
+		$this->productIdFIlterRegister('EANMasterFilter', array());
+		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 
 	public function getAdditionalHeadlines() {

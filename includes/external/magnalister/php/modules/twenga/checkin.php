@@ -23,6 +23,8 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/Comparison
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCategoryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'twenga/classes/TwengaCheckinSubmit.php');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinManager.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/MLProductListComparisonShoppingAbstract.php');
 
 class TwengaSummaryView extends ComparisonShoppingSummaryView {
 	protected function getAdditionalProductNameStuff($prod) {
@@ -33,10 +35,18 @@ class TwengaSummaryView extends ComparisonShoppingSummaryView {
 	}
 }
 
+$sCheckinView = '';
+
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true) {
+            $sCheckinView = 'ComparisonShoppingCheckinProductList';
+} else {
+            $sCheckinView = 'ComparisonShoppingCategoryView';
+}
+
 $cm = new CheckinManager(
 	array(
 		'summaryView'   => 'TwengaSummaryView',
-		'checkinView'   => 'ComparisonShoppingCategoryView',
+		'checkinView'   => $sCheckinView,
 		'checkinSubmit' => 'TwengaCheckinSubmit'
 	), array(
 		'marketplace' => $_Marketplace

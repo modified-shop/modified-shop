@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinSubmit.php 3663 2014-03-23 15:40:17Z derpapst $
+ * $Id: CheckinSubmit.php 4042 2014-06-29 17:12:42Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -77,7 +77,7 @@ abstract class CheckinSubmit {
 		$this->realUrl = array (
 			'mp' => $this->mpID,
 			'mode' => $_magnaQuery['mode'],
-			'view' => (isset($_magnaQuery['view'])?$_magnaQuery['view']:'')
+			'view' => (isset($_magnaQuery['view']) ? $_magnaQuery['view'] : '')
 		);
 		
 		$this->simpleprice = new SimplePrice();
@@ -199,7 +199,7 @@ abstract class CheckinSubmit {
 				$product = MLProduct::gi()->getProductByIdOld($pID, $this->settings['language']);
 			} else {
 				// @todo: Do not always purge the variations.
-				$product = MLProduct::gi()->getProductById($pID, true);
+				$product = MLProduct::gi()->getProductById($pID, array('purgeVariations' => true));
 			}
 
 			if (!$this->checkSingleItem($pID, $product, $data) || !is_array($product)) {
@@ -340,10 +340,13 @@ abstract class CheckinSubmit {
 	}
 
 	public function submit($abort = false) {
-		unset($_SESSION['magna_deletedFilter']); // Reset ebay inventory infos. @see CheckinCategoryView
+		if (isset($_SESSION['magna_deletedFilter'])) {
+			// Reset inventory infos. @see CheckinCategoryView
+			unset($_SESSION['magna_deletedFilter'][$this->mpID]);
+		}
 		$this->initSelection(0, $this->settings['itemsPerBatch']);
 		$this->ajaxReply['itemsPerBatch'] = $this->settings['itemsPerBatch'];
-
+		
 		/* Spaetestens beim 2. Durchgang muessen die Artukel hinzugefuegt werden,
 		   da sie sonst die Artikel des 1. Durchganges zuvor loeschen wuerden. */
 		if ($this->submitSession['state']['submitted'] > 0) {

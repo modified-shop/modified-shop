@@ -160,7 +160,7 @@ class HoodSummaryView extends SimpleSummaryView {
 			).'</p>';
 		}
 		
-		return $topHTML.parent::renderSelection().$html;
+		return $topHTML.parent::renderSelection();
 	}
 	
 	protected function getTopInfoBox() { 

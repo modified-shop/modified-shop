@@ -33,23 +33,26 @@ function eBayTimeToTs($eBayTime) {
 }
 
 function getDebugDataForUpdateRequests($products_id) {
-	$products_query = "SELECT products_id, products_model,
-				products_quantity, products_price, products_status
-				FROM ".TABLE_PRODUCTS . " WHERE products_id = ".$products_id;
+	$products_query = "
+		SELECT products_id, products_model, products_quantity, products_price, products_status
+		  FROM ".TABLE_PRODUCTS . " WHERE products_id = ".$products_id;
 	$product = MagnaDB::gi()->fetchRow($products_query);
 
 	$attributes_query = 'SELECT products_attributes_id, options_id, options_values_id';
-	if(MagnaDB::gi()->columnExistsInTable('attributes_model', TABLE_PRODUCTS_ATTRIBUTES))
+	if (MagnaDB::gi()->columnExistsInTable('attributes_model', TABLE_PRODUCTS_ATTRIBUTES)) {
 		$attributes_query .= ', attributes_model';
-	if(MagnaDB::gi()->columnExistsInTable('attributes_stock', TABLE_PRODUCTS_ATTRIBUTES))
+	}
+	if (MagnaDB::gi()->columnExistsInTable('attributes_stock', TABLE_PRODUCTS_ATTRIBUTES)) {
 		$attributes_query .= ', attributes_stock';
+	}
 	$attributes_query .=', options_values_price, price_prefix
 				FROM '.TABLE_PRODUCTS_ATTRIBUTES.' WHERE products_id = '.$products_id;
 	$attributes = MagnaDB::gi()->fetchArray($attributes_query);
 
-	$magna_variations_query = 'SELECT '.mlGetVariationSkuField().' AS variation_products_model, variation_attributes,
-				variation_quantity, variation_price, variation_status
-				FROM '.TABLE_MAGNA_VARIATIONS.' WHERE products_id = '.$products_id;
+	$magna_variations_query = '
+		SELECT '.mlGetVariationSkuField().' AS variation_products_model, variation_attributes,
+		        variation_quantity, variation_price, variation_status
+		  FROM '.TABLE_MAGNA_VARIATIONS.' WHERE products_id = '.$products_id;
 	$variations = MagnaDB::gi()->fetchArray($magna_variations_query);
 	$debugData = array(
 		'product' => $product,
@@ -60,7 +63,6 @@ function getDebugDataForUpdateRequests($products_id) {
 }
 
 function updateEbayInventoryByEdit($mpID, $updateData) {
-
 	# genericInventoryUpdateByEdit uses this without 'fixed'
 	setDBConfigValue('ebay.quantity.type', $mpID, getDBConfigValue('ebay.fixed.quantity.type', $mpID, 'stock'), true);
 	setDBConfigValue('ebay.quantity.value', $mpID, getDBConfigValue('ebay.fixed.quantity.value', $mpID, '1'), true);
@@ -112,7 +114,7 @@ function updateEbayInventoryByOrder($mpID, $boughtItems, $subRelQuant = true) {
 	global $_MagnaSession;
     if (!isset($_MagnaSession) || !is_array($_MagnaSession)) {
         $_MagnaSession = array('mpID' => $mpID);
-    } else if (!isset($_MagnaSession['mpID'])) {
+    } else {
         $_MagnaSession['mpID'] = $mpID;
     }
 	$ess = getDBConfigValue('ebay.stocksync.tomarketplace', $mpID, 'no');
@@ -138,6 +140,7 @@ function updateEbayInventoryByOrder($mpID, $boughtItems, $subRelQuant = true) {
 			'fixed.stocksync' => $ess,
 			'chinese.stocksync' => $ecss,
 		);
+
         $pID = magnaSKU2pID($updateItem['SKU'], true);
         # schauen ob Preis eingefroren
         $priceFrozenQuery = '
@@ -153,8 +156,7 @@ function updateEbayInventoryByOrder($mpID, $boughtItems, $subRelQuant = true) {
         if(0.0 == $priceFrozen) $priceFrozen = false;
         $variationMatrix = getVariations($pID, null, true, $syncPrice && !$priceFrozen);
         $totalQuantity = makeQuantity($pID);
-        #echo var_dump_pre($variationMatrix, 'variationMatrix');
-        #echo var_dump_pre($totalQuantity, 'totalQuantity');
+
         if (false != $variationMatrix) {
             # mode ist immer SUB (kommt so aus magnaInventoryUpdateByOrder)
             setVariationQuantity($variationMatrix, $pID, $updateItem['Attributes'], $boughtItems[$i]['NewQuantity']['Value'], 'SUB');
@@ -748,6 +750,15 @@ function getVariations($pID, $otherMainPrice = null, $set = true, $withPrices = 
 		);
 	}
 	return $variations;
+}
+
+# Hilfsfunktion: Anzahl unterschiedlicher Varianten
+function getTotalVariationSKUs($pID) {
+	return MagnaDB::gi()->fetchOne('
+		SELECT COUNT(*)
+		  FROM '.TABLE_MAGNA_VARIATIONS.'
+		 WHERE products_id ='.$pID.'
+	');
 }
 
 # Hilfsfunktion: Varianten-Anzahl nach Kauf aendern (Matrix zum Upload zu eBay)

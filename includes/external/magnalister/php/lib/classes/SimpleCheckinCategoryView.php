@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimpleCheckinCategoryView.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: SimpleCheckinCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -34,6 +34,12 @@ class SimpleCheckinCategoryView extends SimpleCategoryView {
 		), $settings);
 		
 		parent::__construct($cPath, $settings, $sorting, $search, $allowedProductIDs);
+	}
+	
+	protected function init() {
+		parent::init();
+		
+		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 	
 	public function getFunctionButtons() {

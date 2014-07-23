@@ -39,10 +39,12 @@
 		},
 		variationValues: {},
 		self: null,
+		
 		_create: function() {
 			myConsole.log('_create()');
 			myConsole.log({'options': this.options});
 		},
+		
 		_init: function() {
 			self = this;
 			myConsole.log('_init()');
@@ -71,16 +73,18 @@
 			self._initMainSelectElement();
 			self._initFormSubmit();
 		},
+		
 		_initCustomVariationContainer: function() {
 			self.elements.customVariationHeaderSelect =
 				self.elements.customVariationHeaderSelect === null
-				? self.elements.customVariationHeaderContainer.find('select')
-				: self.elements.customVariationHeaderSelect
-            ;
+					? self.elements.customVariationHeaderContainer.find('select')
+					: self.elements.customVariationHeaderSelect
+			;
 			self.elements.customVariationHeaderSelect.change(function() {
 				self._loadMPVariation($(this).val());
 			}).val('null');
 		},
+		
 		_initFormSubmit: function() {
 			self.element.find('input[type="submit"]').click(function(e) {
 				if (!self._matchingIsValid()) {
@@ -90,6 +94,7 @@
 				return true;
 			});
 		},
+		
 		_initNewCustomGroupElement: function() {
 			self.elements.newCustomGroupButton =
 				self.elements.newCustomGroupButton === null
@@ -160,6 +165,7 @@
 				}
 			});
 		},
+		
 		_initMainSelectElement: function() {
 			self.elements.mainSelectElement.change(function() {
 				self.elements.customVariationHeaderSelect.val('null');
@@ -205,6 +211,7 @@
 				}
 			}).trigger('change');
 		},
+		
 		_render: function(template, data) {
 			var out = '';
 			var current = '';
@@ -223,6 +230,7 @@
 			}
 			return out;
 		},
+		
 		_getShopVariationsDropDownElement: function() {
 			if (self.html.shopVariationsDropDown === '') {
 				self.html.shopVariationsDropDown = 
@@ -239,6 +247,7 @@
 			}
 			return $(self.html.shopVariationsDropDown);
 		},
+		
 		_buildFreetextInfoTable: function(attributeCode, values) {
 			myConsole.log('attributeCode', attributeCode);
 			var data = [];
@@ -268,6 +277,7 @@
 			out += '</table>';
 			return $(out);
 		},
+		
 		_load: function(data, success) {
 			$.blockUI(blockUILoading);
 			$.ajax({
@@ -287,9 +297,11 @@
 				}
 			});
 		},
+		
 		_resetMPVariation: function() {
 			self.variationValues = {};
 		},
+		
 		_buildMPShopMatching: function(elem, selector) {
 			myConsole.log('_buildMPShopMatching', selector, values);
 			var values = self.options.shopVariations[elem.val()];
@@ -353,6 +365,7 @@
 				.append(tbody)
 			);
 		},
+		
 		_buildShopVariationSelectors: function(data) {
 			self.elements.matchingInput.html('');
 			var colTemplate = '	<tr id="selRow_{id}">'
@@ -396,6 +409,7 @@
 				}
 			}
 		},
+		
 		_loadMPVariation: function(val) {
 			self._resetMPVariation();
 			if (val === 'null') {
@@ -411,12 +425,17 @@
 				self._buildShopVariationSelectors(data);
 			});
 		},
+		
 		_matchingIsValid: function() {
 			var isValid = true,
 				mpActionSelectValue = self.elements.mainSelectElement.val()
 			;
 			if (mpActionSelectValue === 't:null') {
 				alert(self.i18n.selectVariantGroup);
+				return false;
+			}
+			if ($('.shopAttrSelector').length == 0) {
+				isValid = false;
 				return false;
 			}
 			$('.shopAttrSelector').each(function() {

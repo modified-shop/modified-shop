@@ -82,21 +82,21 @@ class MeinpaketVariationMatching {
 				$(document).ready(function(){
 					jQuery('#matchingForm').meinpaketvariationmatching({
 						urlPostfix : '&kind=ajax',
-						i18n: {
-							defineName : 'Bitte geben Sie einen Bezeichner ein.',
-							ajaxError : 'Ein Fehler ist aufgetreten.',
-							selectVariantGroup : 'Bitte w&auml;hlen Sie eine Variantengruppe aus.',
-							allAttributsMustDefined : 'Bitte weisen Sie allen Meinpaket Attributen ein Shop-Attribut zu.',
-							pleaseSelect : 'Bitte w&auml;hlen...',
-							shopValue : 'Shop-Wert',
-							mpValue : 'Meinpaket-Wert',
-							dontTransmit : 'Nicht &uuml;bertragen',
-							webShopAttribute : 'Web-Shop Attribut',
-							deleteCustomGroupButtonTitle : 'Varianten-Matching-Gruppe l&ouml;schen',
-							deleteCustomGroupButtonContent : 'Wollen Sie die eigene Gruppe wirklich l&ouml;schen?<br />Alle zugeh&ouml;rigen Variantenmatchings werden dann ebenfalls gel&ouml;scht.',
-							deleteCustomGroupButtonOk: 'Ok',
-							deleteCustomGroupButtonCancel: 'Cancel'
-						},
+						i18n: <?php echo json_encode(array (
+							'defineName' => ML_MEINPAKET_VARMATCH_DEFINE_NAME,
+							'ajaxError' => ML_MEINPAKET_VARMATCH_AJAX_ERROR,
+							'selectVariantGroup' => ML_MEINPAKET_VARMATCH_SELECT_VARIANT_GROUP,
+							'allAttributsMustDefined' => ML_MEINPAKET_VARMATCH_ALL_ATTRIBS_MUST_BE_DEFINED,
+							'pleaseSelect' => ML_MEINPAKET_VARMATCH_PLEASE_SELECT,
+							'shopValue' => ML_MEINPAKET_VARMATCH_PLEASE_SELECT,
+							'mpValue' => ML_MEINPAKET_VARMATCH_MP_VALUE,
+							'dontTransmit' => ML_MEINPAKET_VARMATCH_DONT_TRANSMIT,
+							'webShopAttribute' => ML_MEINPAKET_VARMATCH_WEBSHOP_ATTRIB,
+							'deleteCustomGroupButtonTitle' => ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_TITLE,
+							'deleteCustomGroupButtonContent' => ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_CONTENT,
+							'deleteCustomGroupButtonOk' => ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_OK,
+							'deleteCustomGroupButtonCancel' => ML_MEINPAKET_VARMATCH_DELETE_CUSTOM_BTN_CANCEL
+						));?>,
 						elements: {
 							newGroupIdentifier: '#newGroupIdentifier',
 							customVariationHeaderContainer: '#tbodyVariationConfigurationSelector',
@@ -370,15 +370,13 @@ body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
 					'CustomIdentifier' => $this->umlautkeyProtect($matching['CustomIdentifier'])
 				));
 				if (isset($matching['delete'])) {
-					MagnaDB::gi()->delete(
-							TABLE_MAGNA_MEINPAKET_PROPERTIES, array(
-								'mpID' => $this->mpId,
-								'VariationConfiguration' => json_encode(array(
-									'MpIdentifier'=>$matching['MpIdentifier'],
-									'CustomIdentifier'=>$this->umlautkeyProtect($matching['CustomIdentifier'])
-								))
-							)
-					);
+					MagnaDB::gi()->delete(TABLE_MAGNA_MEINPAKET_PROPERTIES, array (
+						'mpID' => $this->mpId,
+						'VariationConfiguration' => json_encode(array(
+							'MpIdentifier' => $matching['MpIdentifier'],
+							'CustomIdentifier' => $this->umlautkeyProtect($matching['CustomIdentifier'])
+						))
+					));
 					return;
 				}
 				$this->mpActionSelectRequest = 'ct:'.$this->umlautkeyProtect($matching['CustomIdentifier']).':'.$matching['MpIdentifier'];
@@ -394,6 +392,8 @@ body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
 				'ShopVariation' => json_encode($matching['ShopVariation']),
 			), true);
 			//echo print_m($matching, '$matching');
+			
+			echo '<p class="successBox">'.ML_LABEL_SAVED_SUCCESSFULLY.'</p>';
 		}
 		
 	}

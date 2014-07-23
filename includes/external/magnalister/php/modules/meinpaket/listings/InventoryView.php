@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: InventoryView.php 3796 2014-04-16 10:15:31Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -126,11 +126,11 @@ class InventoryView {
 			$sorting = str_replace('-desc', '', $sorting);
 		}
 		if (array_key_exists($sorting, $sortFlags)) {
-            $this->sort['order'] = $sortFlags[$sorting];
-            $this->sort['type']  = $order;
+			$this->sort['order'] = $sortFlags[$sorting];
+			$this->sort['type']  = $order;
 		} else {
-            $this->sort['order'] = 'DateAdded';
-            $this->sort['type']  = 'DESC';			
+			$this->sort['order'] = 'DateAdded';
+			$this->sort['type']  = 'DESC';			
 		}
 	}
 	
@@ -222,6 +222,8 @@ class InventoryView {
 						? (fixHTMLUTF8Entities(substr($item['ItemTitle'], 0, $this->settings['maxTitleChars'])).'&hellip;')
 						: fixHTMLUTF8Entities($item['ItemTitle']);
 				$item['DateAdded'] = strtotime($item['DateAdded']);
+				
+				
 			}
 			unset($result);
 		}
@@ -256,9 +258,8 @@ class InventoryView {
 		$oddEven = false;
 		foreach ($this->renderableData as $item) {
 			$details = htmlspecialchars(str_replace('"', '\\"', serialize(array(
-			 	'SKU' => $item['SKU'],
-			 	'Price' => $item['Price'],
-			 	'Currency' => $item['Currency'],
+				'SKU' => $item['SKU'],
+				'Price' => $item['Price'],
 			))));
 			$html .= '
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
@@ -267,7 +268,7 @@ class InventoryView {
 					<td>'.$item['SKU'].'</td>
 					<td>'.$item['MeinpaketID'].'</td>
 					<td title="'.fixHTMLUTF8Entities($item['ItemTitle'], ENT_COMPAT).'">'.$item['ItemTitleShort'].'</td>
-					<td>'.$this->simplePrice->setPriceAndCurrency($item['Price'], $item['Currency'])->format().'</td>
+					<td>'.$this->simplePrice->setPrice($item['Price'])->format().'</td>
 					<td>'.$item['Quantity'].'</td>
 					'.($this->additionalValues($item)).'
 					<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>'.'</td>';

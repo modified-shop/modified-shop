@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: functionLib.php 3665 2014-03-23 21:17:00Z derpapst $
+ * $Id: functionLib.php 3998 2014-06-20 13:37:53Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -297,6 +297,18 @@ function array_first($array) {
 	return array_shift($array);
 }
 
+function array_filter_keys($arr, $keys) {
+	/* filtern sodass nur vorgegebene keys uebrig bleiben. */
+	if (!is_array($arr)) return false;
+	if (!isset($keys)) return $arr;
+	if (!is_array($keys) && isset($keys)) $keys = array($keys);
+	$ret = array();
+	foreach ($keys as $key) {
+		if (array_key_exists($key, $arr)) $ret[$key] = $arr[$key];
+	}
+	return $ret;
+}
+
 /* For alert and confirm boxes. Works in combination with unescape() */
 function html2url($str) {
 	return str_replace('+', ' ', urlencode(html_entity_decode($str)));
@@ -306,14 +318,15 @@ function resizeImage($resource_file, $max_width, $max_height, $destination_file,
 	$src = array();
 	$dst = array();
 	$dimensions = getimagesize($resource_file);
+	
 	if (is_array($dimensions)) {
 		$src['w'] = $dimensions[0];
 		$src['h'] = $dimensions[1];
 		$src['type'] = $dimensions[2];
 
-        if ($max_width == '0') {
-           $max_width = ($src['w'] / ($src['h'] / $max_height));
-        }
+		if ($max_width == '0') {
+			$max_width = ($src['w'] / ($src['h'] / $max_height));
+		}
 
 		$thiso = ($src['w'] / $max_width);
 		$thisp = ($src['h'] / $max_height);
@@ -927,6 +940,26 @@ if (!function_exists('array_replace_recursive')) {
 	}
 }
 
+if (!function_exists('array_replace')) {
+	function array_replace(array &$array, array &$array1) {
+		$args = func_get_args();
+		$count = func_num_args();
+		
+		for ($i = 0; $i < $count; ++$i) {
+			if (is_array($args[$i])) {
+				foreach ($args[$i] as $key => $val) {
+					$array[$key] = $val;
+				}
+			} else {
+				trigger_error(__FUNCTION__.'(): Argument #'.($i+1).' is not an array', E_USER_WARNING);
+				return null;
+			}
+		}
+		
+		return $array;
+	}
+}
+
 function unix_timestamp($datetime = null) {
 	if (null == $datetime) return time();
 	else if(!is_datetime($datetime)) return 0;
@@ -991,10 +1024,16 @@ function json_indent($json) {
     return $result;
 }
 
-function renderDataGrid($data) {
-	if (empty($data) || !array_key_exists(0, $data)) return false;
+function renderDataGrid($data, $opts = array()) {
+	if (empty($data) || !array_key_exists(0, $data)) {
+		return false;
+	}
+	$opts = array_merge(array(
+		'CSS.TableClass' => '',
+	), $opts);
+	
 	echo '
-		<table class="datagrid autoOddEven hover">
+		<table class="datagrid autoOddEven hover '.$opts['CSS.TableClass'].'">
 			<thead><tr><th>'.implode('</th><th>', array_keys($data[0])).'</th></tr></thead>
 			<tbody>';
 	foreach ($data as $row) {

@@ -32,6 +32,10 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	}
 	
 	protected function getVariations($pID, $product, &$data) {
+		if (!getDBConfigValue(array($this->marketplace.'.checkin.usevariations', 'val'), $this->mpID, true)) {
+			return false;
+		}
+		
 		/* This is limited to one VariationTheme. 
 		   Start with guessing the "right" one, aka using the one that has the most variations. */
 		$pVID = MagnaDB::gi()->fetchRow('

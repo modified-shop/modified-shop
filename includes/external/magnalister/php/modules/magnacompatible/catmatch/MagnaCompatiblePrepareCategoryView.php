@@ -19,9 +19,9 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FilterCategoryView.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimpleCategoryView.php');
 
-class MagnaCompatiblePrepareCategoryView extends FilterCategoryView {
+class MagnaCompatiblePrepareCategoryView extends SimpleCategoryView {
 	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '', $productIDs = array()) {
 		parent::__construct($cPath, $settings, $sorting, $search, $productIDs);
 
@@ -29,7 +29,13 @@ class MagnaCompatiblePrepareCategoryView extends FilterCategoryView {
 			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		}
 	}
-
+	
+	protected function init() {
+		parent::init();
+		
+		$this->productIdFilterRegister('ManufacturerFilter', array());
+	}
+	
 	public function getAdditionalHeadlines() {
 		return '
 			<td class="lowestprice">'.ML_MAGNACOMPAT_LABEL_CATEGORY.'</td>
@@ -115,7 +121,7 @@ class MagnaCompatiblePrepareCategoryView extends FilterCategoryView {
 			</tbody></table>';
 	}
 
-	public function getAdditionalProductInfo($pID, $product) {
+	public function getAdditionalProductInfo($pID, $product=false) {
 		$a = MagnaDB::gi()->fetchRow(eecho('
 			SELECT products_id, mp_category_id, store_category_id
 			  FROM '.TABLE_MAGNA_COMPAT_CATEGORYMATCHING.' 

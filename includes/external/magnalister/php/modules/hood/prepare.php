@@ -215,15 +215,32 @@ class HoodPrepare extends MagnaCompatibleBase {
 			echo $pV->printForm();
 		}
 	}
+	
+	protected function processProductList() {
+		if (($sClass = $this->loadResource('prepare', 'PrepareProductList')) === false) {
+			if ($this->isAjax) {
+				echo '{"error": "This is not supported"}';
+			} else {
+				echo 'This is not supported';
+			}
+			return;
+		}
+		$o = new $sClass();
+		echo $o;
+	}
 
 	public function process() {
 		$this->saveMatching();
-		$this->deleteMatching();
-		$this->resetShopData();
 		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'prepareView'))) {
 			$this->processMatching();
 		} else {
-			$this->processSelection();
+			if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+				$this->processProductList();
+			} else {
+				$this->deleteMatching();
+				$this->resetShopData();
+				$this->processSelection();
+			}
 		}
 	}
 

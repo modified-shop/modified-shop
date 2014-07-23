@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: config.php 3665 2014-03-23 21:17:00Z derpapst $
+ * $Id: config.php 3895 2014-05-22 13:06:44Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -100,7 +100,8 @@ function loadMaranonCacheConfig($purge = false) {
 	try {
 		$result = MagnaConnector::gi()->submitRequest(array(
 			'SUBSYSTEM' => 'Core',
-			'ACTION' => 'GetShopInfo'
+			'ACTION' => 'GetShopInfo',
+			'CALLBACKURL' => '',
 		));
 		#echo print_m($result, 'GetShopInfo');
 		$magnaConfig['maranon'] = $result['DATA'];

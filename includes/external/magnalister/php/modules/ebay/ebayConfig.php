@@ -191,7 +191,7 @@ $form = loadConfigForm($_lang,
 	)
 );
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_ebay');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_ebay');
 
 $boxes = '';
 $auth = getDBConfigValue('ebay.authed', $_MagnaSession['mpID'], false);
@@ -309,9 +309,9 @@ if ($auth['state']) {
 		$form['payment']['fields']['paymentmethod']['values'] = geteBayPaymentOptions();
 	}
 	
-	getLanguages($form['listingdefaults']['fields']['language']);
+	mlGetLanguages($form['listingdefaults']['fields']['language']);
 	$form['location']['fields']['country']['values'] = $magnaConfig['ebay']['countries'];
-	getCustomersStatus($form['fixedsettings']['fields']['whichprice'], true);
+	mlGetCustomersStatus($form['fixedsettings']['fields']['whichprice'], true);
 	if (!empty($form['fixedsettings']['fields']['whichprice'])) {
 		$form['fixedsettings']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 		ksort($form['fixedsettings']['fields']['whichprice']['values']);
@@ -320,7 +320,7 @@ if ($auth['state']) {
 		unset($form['fixedsettings']['fields']['whichprice']);
 	}	
 	
-	getCustomersStatus($form['chinesesettings']['fields']['whichprice'], true);
+	mlGetCustomersStatus($form['chinesesettings']['fields']['whichprice'], true);
 	if (!empty($form['chinesesettings']['fields']['whichprice'])) {
 		$form['chinesesettings']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 		ksort($form['chinesesettings']['fields']['whichprice']['values']);
@@ -329,7 +329,7 @@ if ($auth['state']) {
 		unset($form['chinesesettings']['fields']['whichprice']);
 	}	
 
-	getManufacturers($form['listingdefaults']['fields']['manufacturerfilter']);
+	mlGetManufacturers($form['listingdefaults']['fields']['manufacturerfilter']);
 
 	# Voreinstellung Dauer Festpreis-Listings
 	try {
@@ -384,30 +384,30 @@ if ($auth['state']) {
 	$form['chinesesettings']['fields']['chineseduration']['default'] = getDBConfigValue('ebay.chinese.duration', $_MagnaSession['mpID'], $firstChineseDuration);
 
 	# Bestellimporte
-	getCustomersStatus($form['import']['fields']['customersgroup']);
-	getOrderStatus($form['import']['fields']['openstatus']);
+	mlGetCustomersStatus($form['import']['fields']['customersgroup']);
+	mlGetOrderStatus($form['import']['fields']['openstatus']);
 	# Build 1735: allow multiple 'closed states'
 	if (!is_array($closedstatus = getDBConfigValue('ebay.orderstatus.closed', $_MagnaSession['mpID'], '3'))) {
 		setDBConfigValue('ebay.orderstatus.closed', $_MagnaSession['mpID'], array($closedstatus));
 	}
-	getOrderStatus($form['import']['fields']['closedstatus']);
+	mlGetOrderStatus($form['import']['fields']['closedstatus']);
 	if (false === getDBConfigValue('ebay.orderstatus.paid', $_MagnaSession['mpID'], false)) {
 		$paidStatus = (int)MagnaDB::gi()->fetchOne('SELECT orders_status_id FROM '.TABLE_ORDERS_STATUS.'
 		    WHERE orders_status_name IN (\'Bezahlt\',\'Payment received\') ORDER BY language_id LIMIT 1');
 		setDBConfigValue('ebay.orderstatus.paid', $_MagnaSession['mpID'], $paidStatus);
 	}
-	getOrderStatus($form['ordersync']['fields']['paidstatus']);
+	mlGetOrderStatus($form['ordersync']['fields']['paidstatus']);
 	if (false === getDBConfigValue('ebay.updateable.orderstatus', $_MagnaSession['mpID'], false)) {
 		setDBConfigValue('ebay.updateable.orderstatus', $_MagnaSession['mpID'], array($form['import']['fields']['openstatus']['default']));
 	}
-	getOrderStatus($form['ordersync']['fields']['updateablestatus']);
+	mlGetOrderStatus($form['ordersync']['fields']['updateablestatus']);
 	
 	# Bestellstatus-Sync
-	getOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
-	getOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
+	mlGetOrderStatus($form['orderSyncState']['fields']['shippedstatus']);
+	mlGetOrderStatus($form['orderSyncState']['fields']['cancelstatus']);
 	
-	getShippingModules($form['import']['fields']['defaultshipping']);
-	getPaymentModules($form['import']['fields']['defaultpayment']);
+	mlGetShippingModules($form['import']['fields']['defaultshipping']);
+	mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 
 	if (false === getDBConfigValue('ebay.imagepath', $_MagnaSession['mpID'], false)) {
 		#$form['listingdefaults']['fields']['imagepath']['default'] =

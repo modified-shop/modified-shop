@@ -33,11 +33,11 @@ $form = loadConfigForm($_lang,
 	)
 );
 
-getCountries($form['shipping']['fields']['country']);
-getLanguages($form['lang']['fields']['lang']);
-getShippingMethods($form['shipping']['fields']['method']);
+mlGetCountries($form['shipping']['fields']['country']);
+mlGetLanguages($form['lang']['fields']['lang']);
+mlGetShippingMethods($form['shipping']['fields']['method']);
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_getdeal');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_getdeal');
 $cG->setRenderTabIdent(true);
 
 try {
@@ -58,18 +58,11 @@ try {
 } catch (MagnaException $e) {
 }
 
-$allCorrect = $cG->processPOST($keysToSubmit);
-if (!empty($keysToSubmit)) {
-	$request = array(
-		'ACTION' => 'SetConfigValues',
-		'DATA' => array(),
-	);
-	foreach ($keysToSubmit as $key) {
-		$request['DATA'][$key] = getDBConfigValue($key);
-	}
-	try {
-		MagnaConnector::gi()->submitRequest($request);
-	} catch (MagnaException $me) { }
+/*
+ * processPOST: Handles to save the data and send them to API
+ */
+if (!$cG->processPOST()) {
+	//Here you can display an error message
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {

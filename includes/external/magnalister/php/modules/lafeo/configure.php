@@ -53,7 +53,7 @@ class LafeoConfigure extends MagnaCompatibleConfigure {
 		parent::loadChoiseValues();
 		/*
 		if (isset($this->form['orders']['fields']['unpaidsatus'])) {
-			getOrderStatus($this->form['orders']['fields']['unpaidsatus']);
+			mlGetOrderStatus($this->form['orders']['fields']['unpaidsatus']);
 		}
 		*/
 	}

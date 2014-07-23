@@ -26,7 +26,7 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 
 class ErrorView {
-	protected $marketplace;
+	protected $marketplaceID;
 
 	protected $settings = array();
 	protected $sort = array();
@@ -43,10 +43,10 @@ class ErrorView {
 
 	protected $search = '';
 
-	public function __construct($marketplace, $settings = array()) {
+	public function __construct($settings = array()) {
 		global $_MagnaShopSession, $_MagnaSession, $_url, $_modules;
 		
-		$this->marketplace = $marketplace;
+		$this->marketplaceID = $_MagnaSession['mpID'];
 		
 		$this->settings = array_merge(array(
 			'maxTitleChars'	=> 80,
@@ -54,7 +54,7 @@ class ErrorView {
 		), $settings);
 
 		$this->simplePrice = new SimplePrice();
-		$this->simplePrice->setCurrency(getCurrencyFromMarketplace($_MagnaSession['mpID']));
+		$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->marketplaceID));
 		$this->url = $_url;
 		$this->url['view'] = 'inventory';
 		$this->magnasession = &$_MagnaSession;

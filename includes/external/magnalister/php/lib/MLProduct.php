@@ -24,12 +24,24 @@ require_once (DIR_MAGNALISTER_INCLUDES.'lib/classes/VariationsCalculator.php');
 class MLProduct {
 	private static $instance = null;
 	
-	protected $languageId = ''; // osC languages.languages_id
-	protected $priceConfig = array();
+	protected $languagesAvailable = array();
+	protected $languagesSelected = array(
+		'type' => 'single',
+		'values' => array(), // array of languages.languages_id
+	);
+	
+	/**
+	 * type can be `single` or `multiple`
+	 * @var array $priceConfig
+	 */
+	protected $priceConfig = array('type' => 'single', 'values' => array());
 	protected $quantityConfig = array();
 	protected $blUseMultiDimensionalVariations = true;
 	
 	protected $allowedVariationDimensions = array();
+	protected $options = array();
+	// Same as $options but specific to the current call.
+	protected $optionsTmp = array();
 	
 	protected $simpleprice = null;
 	protected $variationCalculator = null;
@@ -41,22 +53,33 @@ class MLProduct {
 	protected $productMainSelectFields = '';
 	protected $productOfferSelectFields = '';
 	protected $attributesMainSelectFields = '';
+	protected $productDescriptionSelectFields = '';
 	protected $attributesOfferSelectFields = '';
 	protected $attributesHasSortorder = false;
 	
-	protected $shippingTimesCache = array();
-	protected $manufacturersCache = array();
-	protected $taxCache = array();
-	protected $vpeUnitCache = array();
-	protected $productsOptionsCache = array();
+	protected $existingTables = array();
+	
+	protected $cache = array();
 	
 	private function __construct() {
 		$this->simpleprice = new SimplePrice();
 		$this->variationCalculator = new VariationsCalculator();
 		
+		$this->loadLanguagesAvailable();
 		$this->buildSelectFields();
-		
 		$this->reset();
+		
+		$this->options = array (
+			'purgeVariations' => false,
+			'useGambioProperties' => false,
+			'includeVariations' => true,
+		);
+		
+		foreach (array(
+			'ShippingStatus' => 'TABLE_SHIPPING_STATUS'
+		) as $key => $tableDefine) {
+			$this->existingTables[$key] = defined($tableDefine) && MagnaDB::gi()->tableExists(constant($tableDefine));
+		}
 	}
 	
 	/**
@@ -67,6 +90,92 @@ class MLProduct {
 			self::$instance = new self();
 		}
 		return self::$instance;
+	}
+	
+	/**
+	 * Sets the internal options. The options affect the behavior of the
+	 * class. These options are very shop specific and might not do
+	 * anything for certain conditions/shopsystems.
+	 *
+	 * @param array $options
+	 *    Currently implemented options:
+	 *      * purgeVariations (default: false)
+	 *        If set to true multi-dimensional variations will be purged and re-calculated
+	 *      * useGambioProperties (default: false)
+	 *        If set to true gambio properties will be used to fetch all variations.
+	 *        This disables the option 'purgeVariations'.
+	 *        Additionally self::$blUseMultiDimensionalVariations will be ignored
+	 *        as well as self::$allowedVariationDimensions.
+	 *      * includeVariations (default: true)
+	 *        If set to false no variations will be loaded for the main product.
+	 *
+	 * @return $this
+	 */
+	public function setOptions(array $options) {
+		$this->options = array_replace($this->options, $options);
+		return $this;
+	}
+	
+	/**
+	 * Sets the temporary options that will be resetted after the product has been fetched.
+	 *
+	 * @param array $optionsTmp
+	 *    @see self::setOptions() for defails
+	 *
+	 * @return void
+	 */
+	protected function setOptionsTmp(array $optionsTmp) {
+		$this->optionsTmp = array_replace($this->options, $optionsTmp);
+	}
+	
+	/**
+	 * Resets the temporarily setted options back to the default.
+	 */
+	protected function resetOptionsTmp() {
+		$this->optionsTmp = $this->options;
+	}
+	
+	/**
+	 * Loads the available languages from the languages table and stores them in
+	 * self::languagesAvailable where the key is the language id and the value
+	 * is the language code.
+	 *
+	 * @return void
+	 */
+	protected function loadLanguagesAvailable() {
+		$languages = MagnaDB::gi()->fetchArray('SELECT languages_id, code FROM '.TABLE_LANGUAGES);
+		$this->languagesAvailable = array();
+		foreach ($languages as $lang) {
+			$this->languagesAvailable[$lang['languages_id']] = strtolower($lang['code']);
+		}
+	}
+	
+	/**
+	 * Returns the language code of a language id if it exists.
+	 *
+	 * @param int $id
+	 *    The language id
+	 *
+	 * @return string|boolean
+	 *    The language code or false if the id is not a valid language.
+	 */
+	public function languageIdToCode($id) {
+		return isset($this->languagesAvailable[$id])
+			? $this->languagesAvailable[$id]
+			: false;
+	}
+	
+	/**
+	 * Returns the language id of a language code if it exists.
+	 *
+	 * @param string $code
+	 *    The language code
+	 *
+	 * @return int|boolean
+	 *    The language id or false if the code is not a valid language.
+	 */
+	protected function languageCodeToId($code) {
+		return array_search(strtolower($code), $this->languagesAvailable);
 	}
 	
 	/**
@@ -101,20 +210,146 @@ class MLProduct {
 	 *    The language as languages_id, ISO Code or the full name of the language.
 	 * @return $this
 	 */
-	public function setLanguage($language) {
-		$newLangId = $language;
-		if (!is_numeric($newLangId)) {
-			$newLangId = $this->convertLanguageIso($newLangId);
+	public function setLanguage($languages) {
+		if (!is_array($languages)) {
+			$this->languagesSelected['type'] = 'single';
+			$languages = array($languages);
+		} else {
+			$this->languagesSelected['type'] = 'multiple';
 		}
 		
-		if ($newLangId != $this->languageId) {
-			// reset any caches that depend on the language
-			$this->productsOptionsCache = array();
+		$this->languagesSelected['values'] = array();
+		foreach ($languages as $language) {
+			if (!is_numeric($language)) {
+				$language = $this->convertLanguageIso($language);
+			}
+			
+			$this->languagesSelected['values'][$language] = $this->languageIdToCode($language);
 		}
-		
-		$this->languageId = $newLangId;
 		
 		return $this;
+	}
+	
+	/**
+	 * Converts a multi-language property to a single language property if requested.
+	 *
+	 * @param array $item
+	 *    The property as array
+	 * @return string
+	 *    The property as string
+	 */
+	protected function processLanguageSpecificsSingle($item) {
+		if (($this->languagesSelected['type'] != 'single') || !is_array($item)) {
+			return $item;
+		}
+		return array_pop($item);
+	}
+	
+	/**
+	 * Converts a multiple multi-language properties to a single language properties if requested.
+	 *
+	 * @param array $items
+	 *    The items with multi-language properties as arrays
+	 * @return array
+	 *    The items with a single language property as string
+	 */
+	protected function processLanguageSpecificsMulti($items) {
+		if ($this->languagesSelected['type'] != 'single') {
+			return $items;
+		}
+		foreach ($items as &$item) {
+			if (!is_array($item)) {
+				continue;
+			}
+			$item = array_pop($item);
+		}
+		return $items;
+	}
+	
+	/**
+	 * Populates the internal cache using a SQL query.
+	 *
+	 * @param string $cacheName
+	 *    The name of the cache
+	 * @param string $query
+	 *    A database query that selects the columns `Key`, `Value` and `LanguageId` (optional).
+	 *    If the table does not have these exact fiels use an alias for the columns.
+	 *
+	 * @return void
+	 */
+	protected function cachePopulate($cacheName, $query) {
+		if (!isset($this->cache[$cacheName])) {
+			$this->cache[$cacheName] = array();
+		}
+		$data = MagnaDB::gi()->fetchArray($query);
+		if (empty($data)) {
+			return;
+		}
+		$multiLang = isset($data[0]['LanguageId']);
+		
+		foreach ($data as $row) {
+			if ($multiLang) {
+				$this->cache[$cacheName][$row['Key']][$row['LanguageId']] = $row['Value'];
+			} else {
+				$this->cache[$cacheName][$row['Key']] = $row['Value'];
+			}
+		}
+	}
+	
+	/**
+	 * Checks if a cache block or a cached value exists.
+	 *
+	 * @param string $cacheName
+	 *    The name of the cache
+	 * @param string|bool $key
+	 *    If set to false this method returns true if the cache block exists.
+	 *    otherwise it checks for the key in the block.
+	 *
+	 * @return bool
+	 */
+	 protected function cacheKeyExists($cacheName, $key = false) {
+		return $key === false
+			? isset($this->cache[$cacheName])
+			: isset($this->cache[$cacheName][$key]);
+	}
+	
+	/**
+	 * Returns the cached value for a cache block and key.
+	 *
+	 * @param string $cacheName
+	 *    The name of the cache
+	 * @param string $key
+	 * @param mixed $default
+	 *    A default in case the cache entry doesn't exist.
+	 *
+	 * @return mixed
+	 */
+	protected function cacheGetValue($cacheName, $key, $default = false) {
+		return $this->cacheKeyExists($cacheName, $key)
+			? $this->cache[$cacheName][$key]
+			: $default;
+	}
+	
+	/**
+	 * Filters what ever has been returned from self::cacheGetValue() based
+	 * on the requested language.
+	 *
+	 * @param array $data
+	 *    The data that will be filtered. Keys are the language ids, values are their translations.
+	 *
+	 * @return array
+	 *    The same as the parameter, except that the keys are now language codes and only those are
+	 *    included that have been requested.
+	 */
+	protected function cacheFilterLanguage($data) {
+		$r = array();
+		foreach ($this->languagesSelected['values'] as $langId => $langCode) {
+			$r[$langCode] = is_array($data) && isset($data[$langId])
+				? $data[$langId]
+				: '';
+		}
+		$r = $this->processLanguageSpecificsSingle($r);
+		return $r;
 	}
 	
 	/**
@@ -151,20 +386,24 @@ class MLProduct {
 	}
 	
 	/**
-	 * Sets the currency in the SimplePrice instance and updates
+	 * Itereates $this->priceconfig[values] and updates
 	 * the currency conversion rate if requested.
 	 */
 	protected function currencySetup() {
-		$this->simpleprice->setCurrency($this->priceConfig['Currency']);
-		if ($this->priceConfig['ConvertCurrency']
-			// no update if this is the shop currency
-			&& ($this->priceConfig['Currency'] != DEFAULT_CURRENCY)
-			// no update if the old used currency is identical with the new one.
-			&& ($this->simpleprice->getCurrency() != $this->priceConfig['Currency'])
-		) {
-			$success = false;
-			$this->simpleprice->updateCurrencyByService($success);
-			// @todo: handle case $success == false
+		$updated = array();
+		foreach ($this->priceConfig['values'] as $name => $config) {
+			$this->simpleprice->setCurrency($config['Currency']);
+			if ($config['ConvertCurrency']
+				// no update if this is the shop currency
+				&& ($config['Currency'] != DEFAULT_CURRENCY)
+				// already updated
+				&& !in_array($config['Currency'], $updated)
+			) {
+				$updated[] = $config['Currency'];
+				$success = false;
+				$this->simpleprice->updateCurrencyByService($success);
+				// @todo: handle case $success == false
+			}
 		}
 	}
 	
@@ -177,20 +416,32 @@ class MLProduct {
 	 * @return $this
 	 */
 	public function setPriceConfig($priceConfig) {
-		if (!self::isValidPriceConfig($priceConfig)) {
-			$priceConfig = $this->getDefaultPriceConfig();
+		$defaultConfig = $this->getDefaultPriceConfig();
+		if (
+			is_array($priceConfig)
+			&& !self::isValidPriceConfig($priceConfig)
+			&& is_array(current($priceConfig))
+			&& self::isValidPriceConfig(current($priceConfig))
+		) {
+			$this->priceConfig['type'] = 'multiple';
+			foreach ($priceConfig as $name => $config) {
+				if (!self::isValidPriceConfig($config)) {
+					unset($priceConfig[$name]);
+				}
+			}
+		} else {
+			if (!self::isValidPriceConfig($priceConfig)) {
+				$priceConfig = $defaultConfig;
+			}
+			$this->priceConfig['type'] = 'single';
+			$priceConfig = array('single' => $priceConfig);
 		}
-		// set optional values
-		if (!isset($priceConfig['Currency'])) {
-			$priceConfig['Currency'] = DEFAULT_CURRENCY;
-		}
-		if (!isset($priceConfig['ConvertCurrency'])) {
-			$priceConfig['ConvertCurrency'] = false;
+		foreach ($priceConfig as $name => $config) {
+			$priceConfig[$name] = array_merge($defaultConfig, $config);
 		}
 		
-		$this->priceConfig = $priceConfig;
+		$this->priceConfig['values'] = $priceConfig;
 		$this->currencySetup();
-		
 		return $this;
 	}
 	
@@ -363,33 +614,70 @@ class MLProduct {
 	 *    The netto price
 	 * @param float $tax
 	 *    The tax as percent value
+	 * @param array $config
+	 *    The config that will be used to calculate a price.
 	 *
 	 * @return float
 	 *    The final price
 	 */
-	protected function calcPrice($basePrice, $tax) {
-		$this->simpleprice->setPrice($basePrice); // add the variation price
+	protected function calcPrice($basePrice, $tax, $config) {
+		$this->simpleprice->setPrice($basePrice)->setCurrency($config['Currency']); // add the variation price
 		
 		$this->simpleprice->addTax($tax)->calculateCurr();
-		
-		switch ($this->priceConfig['AddKind']) {
+
+		switch ($config['AddKind']) {
 			case 'percent': {
-				$this->simpleprice->addTax((float)$this->priceConfig['Factor']);
+				$this->simpleprice->addTax((float)$config['Factor']);
 				break;
 			}
 			case 'addition': {
-				$this->simpleprice->addLump((float)$this->priceConfig['Factor']);
+				$this->simpleprice->addLump((float)$config['Factor']);
 				break;
 			}
 			case 'constant': {
-				$this->simpleprice->setPrice((float)$this->priceConfig['Factor']);
+				$this->simpleprice->setPrice((float)$config['Factor']);
 				break;
 			}
 		}
-		
 		return $this->simpleprice->roundPrice()
-			->makeSignalPrice($this->priceConfig['Signal'])
-			->getPrice();
+			->makeSignalPrice($config['Signal'])
+			->getPrice()
+		;
+	}
+	
+	/**
+	 * Calculates the price for a variation item.
+	 *
+	 * @param array $variation
+	 *    The entire variation item as reference.
+	 * @param float $surcharge
+	 *    The surcharge.
+	 * @param array $parentPrices
+	 *    An array containing all the parent prices.
+	 * @param float $tax
+	 *    The tax for the price.
+	 *
+	 * @return void
+	 */
+	protected function calcPriceVariation(&$variation, $surcharge, $parentPrices, $tax) {
+		$variation['Price'] = array();
+		$variation['PriceReduced'] = array();
+		foreach ($this->priceConfig['values'] as $name => $config) {
+			$variation['Price'][$name] = $this->calcPrice($parentPrices[$name]['Price'] + $surcharge, $tax, $config);
+			if ($parentPrices[$name]['Reduced'] > 0) {
+				$variation['PriceReduced'][$name] = $this->calcPrice($parentPrices[$name]['Reduced'] + $surcharge, $tax, $config);
+				if (($variation['PriceReduced'][$name] > $variation['Price'][$name]) || ($variation['PriceReduced'][$name] <= 0)) {
+					unset($variation['PriceReduced'][$name]);
+				}
+			}
+		}
+		if ($this->priceConfig['type'] == 'single') {
+			$variation['Price'] = current($variation['Price']);
+			$variation['PriceReduced'] = current($variation['PriceReduced']);
+		}
+		if (empty($variation['PriceReduced'])) {
+			unset($variation['PriceReduced']);
+		}
 	}
 	
 	/**
@@ -401,6 +689,7 @@ class MLProduct {
 	 *    The final Quantity
 	 */
 	protected function calcQuantity($dbQuantity) {
+		$dbQuantity = (int)$dbQuantity;
 		switch ($this->quantityConfig['Type']) {
 			case 'stocksub': {
 				$dbQuantity -= $this->quantityConfig['Value'];
@@ -433,69 +722,48 @@ class MLProduct {
 		if (empty($productOptions)) {
 			return array();
 		}
-		if (!isset($this->productsOptionsCache['Groups'])) {
-			// Init cache if it is empty.
-			$this->productsOptionsCache['Groups'] = array();
-			$this->productsOptionsCache['Values'] = array();
-		}
 		
 		// Check if the cache covers the ids.
 		$groupsToLoad = array();
 		$valuesToLoad = array();
 		foreach ($productOptions as $set) {
-			if (!isset($this->productsOptionsCache['Groups'][$set['Group']])) {
+			if (!$this->cacheKeyExists('ProductOptionGroups', $set['Group'])) {
 				$groupsToLoad[] = $set['Group'];
 			}
-			if (!isset($this->productsOptionsCache['Values'][$set['Value']])) {
+			if (!$this->cacheKeyExists('ProductOptionValues', $set['Value'])) {
 				$valuesToLoad[] = $set['Value'];
 			}
 		}
 		
 		// Populate the cache
 		if (!empty($groupsToLoad)) {
-			$newGroups = MagnaDB::gi()->fetchArray('
-				SELECT products_options_id AS Id, products_options_name AS Value
+			$this->cachePopulate('ProductOptionGroups', '
+				SELECT products_options_id AS `Key`, language_id AS LanguageId, products_options_name AS Value
 				  FROM '.TABLE_PRODUCTS_OPTIONS.'
-				 WHERE language_id = "'.$this->languageId.'"
-				       AND products_options_id IN ("'.implode('", "', $groupsToLoad).'")
+				 WHERE products_options_id IN ("'.implode('", "', $groupsToLoad).'")
 			');
-			if (!empty($newGroups)) {
-				foreach ($newGroups as $row) {
-					$this->productsOptionsCache['Groups'][$row['Id']] = $row['Value'];
-				}
-			}
 		}
 		if (!empty($valuesToLoad)) {
-			$newValues = MagnaDB::gi()->fetchArray('
-				SELECT products_options_values_id AS Id, products_options_values_name AS Value
+			$this->cachePopulate('ProductOptionValues', '
+				SELECT products_options_values_id AS `Key`, language_id AS LanguageId, products_options_values_name AS Value
 				  FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.'
-				 WHERE language_id = "'.$this->languageId.'"
-				       AND products_options_values_id IN ("'.implode('", "', $valuesToLoad).'")
+				 WHERE products_options_values_id IN ("'.implode('", "', $valuesToLoad).'")
 			');
-			if (!empty($newValues)) {
-				foreach ($newValues as $row) {
-					$this->productsOptionsCache['Values'][$row['Id']] = $row['Value'];
-				}
-			}
 		}
 		
 		// Translate using the cache.
 		$new = array();
 		foreach ($productOptions as $set) {
-			$v = array();
-			$v['NameId'] = $set['Group'];
-			if (isset($this->productsOptionsCache['Groups'][$set['Group']])) {
-				$v['Name'] = $this->productsOptionsCache['Groups'][$set['Group']];
-			} else {
-				$v['Name'] = $set['Group'];
-			}
-			$v['ValueId'] = $set['Value'];
-			if (isset($this->productsOptionsCache['Values'][$set['Value']])) {
-				$v['Value'] = $this->productsOptionsCache['Values'][$set['Value']];
-			} else {
-				$v['Value'] = $set['Value'];
-			}
-			$new[] = $v;
+			$new[] = array(
+				'NameId' => $set['Group'],
+				'Name' => $this->cacheFilterLanguage(
+					$this->cacheGetValue('ProductOptionGroups', $set['Group'], $set['Group'])
+				),
+				'ValueId' => $set['Value'],
+				'Value' => $this->cacheFilterLanguage(
+					$this->cacheGetValue('ProductOptionValues', $set['Value'], $set['Value'])
+				),
+			);
 		}
 		return $new;
 	}
@@ -541,14 +809,7 @@ class MLProduct {
 				'ShippingTime' => $this->getShippingTimeStringById($vi['variation_shipping_time']),
 			);
 			
-			$vPriceSurcharge = $v['Price'];
-			$v['Price'] = $this->calcPrice($parent['Prices']['Price'] + $vPriceSurcharge, $parent['TaxPercent']);
-			if ($product['Prices']['Reduced'] > 0) {
-				$v['PriceReduced'] = $this->calcPrice($parent['Prices']['Reduced'] + $vPriceSurcharge, $parent['TaxPercent']);
-				if (($v['PriceReduced'] > $v['Price']) || ($v['PriceReduced'] <= 0)) {
-					unset($v['PriceReduced']);
-				}
-			}
+			$this->calcPriceVariation($v, $v['Price'], $parent['Prices'], $parent['TaxPercent']);
 			
 			$v['Quantity'] = $this->calcQuantity($v['Quantity']);
 			$quantity += $v['Quantity'];
@@ -613,17 +874,9 @@ class MLProduct {
 		}
 		$variations = MagnaDB::gi()->fetchArray(eecho('
 		    SELECT '.($onlyOffer ? $this->attributesOfferSelectFields : $this->attributesMainSelectFields).'
-		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa,
-		           '.TABLE_PRODUCTS_OPTIONS.' po, 
-		           '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov
+		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa
 		     WHERE pa.products_id = '.$parent['ProductId'].'
-		           AND po.language_id = "'.$this->languageId.'"
 		           AND pa.options_id = '.$pVID['options_id'].'
-		           AND po.products_options_id = pa.options_id
-		           AND po.products_options_name <> ""
-		           AND pov.language_id = po.language_id
-		           AND pov.products_options_values_id = pa.options_values_id
-		           AND pov.products_options_values_name <> ""
 		           AND pa.attributes_stock IS NOT NULL
 		  '.($this->attributesHasSortorder ? 'ORDER BY pa.sortorder' : '').'
 		', false));
@@ -635,26 +888,35 @@ class MLProduct {
 		$quantity = 0;
 		
 		foreach ($variations as &$v) {
+			if (!$this->cacheKeyExists('ProductOptionGroups', $v['VariationNameId'])) {
+				$this->cachePopulate('ProductOptionGroups', '
+					SELECT products_options_id AS `Key`, language_id AS LanguageId, products_options_name AS Value
+					  FROM '.TABLE_PRODUCTS_OPTIONS.'
+					 WHERE products_options_id = "'.$v['VariationNameId'].'"
+				');
+			}
+			if (!$this->cacheKeyExists('ProductOptionValues', $v['VariationValueId'])) {
+				$this->cachePopulate('ProductOptionValues', '
+					SELECT products_options_values_id AS `Key`, language_id AS LanguageId, products_options_values_name AS Value
+					  FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.'
+					 WHERE products_options_values_id = "'.$v['VariationValueId'].'"
+				');
+			}
 			$v['Variation'] = array (array (
 				'NameId' => $v['VariationNameId'],
-				'Name' => $v['VariationName'],
+				'Name' => $this->cacheFilterLanguage(
+					$this->cacheGetValue('ProductOptionGroups', $v['VariationNameId'], $v['VariationNameId'])
+				),
 				'ValueId' => $v['VariationValueId'],
-				'Value' => $v['VariationValue']
+				'Value' => $this->cacheFilterLanguage(
+					$this->cacheGetValue('ProductOptionValues', $v['VariationValueId'], $v['VariationValueId'])
+				)
 			));
 			unset($v['VariationNameId']);
-			unset($v['VariationName']);
 			unset($v['VariationValueId']);
-			unset($v['VariationValue']);
 			
 			$vPriceSurcharge = $v['Price'] * (($v['PricePrefix'] == '+') ? 1 : -1);
-			unset($v['PricePrefix']);
-			$v['Price'] = $this->calcPrice($parent['Prices']['Price'] + $vPriceSurcharge, $parent['TaxPercent']);
-			if ($product['Prices']['Reduced'] > 0) {
-				$v['PriceReduced'] = $this->calcPrice($parent['Prices']['Reduced'] + $vPriceSurcharge, $parent['TaxPercent']);
-				if (($v['PriceReduced'] > $v['Price']) || ($v['PriceReduced'] <= 0)) {
-					unset($v['PriceReduced']);
-				}
-			}
+			$this->calcPriceVariation($v, $vPriceSurcharge, $parent['Prices'], $parent['TaxPercent']);
 			
 			$v['Quantity'] = $this->calcQuantity($v['Quantity']);
 			$quantity += $v['Quantity'];
@@ -677,6 +939,145 @@ class MLProduct {
 	}
 	
 	/**
+	 * {Gambio GX >= 2.1 only}
+	 * Gets the variation information for a property combination.
+	 * 
+	 * @param int $productsPropertiesCombisId
+	 *    The id of the property combination
+	 *
+	 * @return array
+	 *    Vector<array> of variation properties. Each element has the keys
+	 *    NameId, Name, ValueId, Value.
+	 */
+	protected function translateProductsProperties($productsPropertiesCombisId) {
+		$index = MagnaDB::gi()->fetchArray('
+			SELECT DISTINCT properties_id, properties_values_id
+			  FROM '.'products_properties_index'.'
+			 WHERE products_properties_combis_id = '.$productsPropertiesCombisId.'
+		');
+		
+		// Check if the cache covers the ids.
+		$groupsToLoad = array();
+		$valuesToLoad = array();
+		
+		$variation = array();
+		foreach ($index as $set) {
+			$variation[] = array (
+				'NameId' => $set['properties_id'],
+				'Name' => '',
+				'ValueId' => $set['properties_values_id'],
+				'Value' => '',
+			);
+			
+			if (!$this->cacheKeyExists('ProductOptionGroups', $set['properties_id'])) {
+				$groupsToLoad[] = $set['properties_id'];
+			}
+			if (!$this->cacheKeyExists('ProductOptionValues', $set['properties_values_id'])) {
+				$valuesToLoad[] = $set['properties_values_id'];
+			}
+		}
+		
+		// Populate the cache
+		if (!empty($groupsToLoad)) {
+			$this->cachePopulate('ProductOptionGroups', '
+				SELECT properties_id AS `Key`, language_id AS LanguageId, properties_name AS Value
+				  FROM '.'properties_description'.'
+				 WHERE properties_id IN ("'.implode('", "', $groupsToLoad).'")
+			');
+		}
+		if (!empty($valuesToLoad)) {
+			$this->cachePopulate('ProductOptionValues', '
+				SELECT properties_values_id AS `Key`, language_id AS LanguageId, values_name AS Value
+				  FROM '.'properties_values_description'.'
+				 WHERE properties_values_id IN ("'.implode('", "', $valuesToLoad).'")
+			');
+		}
+		
+		// Translate using the cache.
+		foreach ($variation as &$set) {
+			$set['Name'] = $this->cacheFilterLanguage(
+				$this->cacheGetValue('ProductOptionGroups', $set['NameId'], $set['NameId'])
+			);
+			$set['Value'] = $this->cacheFilterLanguage(
+				$this->cacheGetValue('ProductOptionValues', $set['ValueId'], $set['ValueId'])
+			);
+		}
+		
+		return $variation;
+	}
+	
+	/**
+	 * {Gambio GX >= 2.1 only}
+	 * Uses gambios multi-dimensional variation management tables to load
+	 * the multi-dimensional variations for the specified master product.
+	 *
+	 * @param array $parent
+	 *    The parent product
+	 * @param bool $onlyOffer
+	 *    If this is set to true only the offer data will be included
+	 *    along with everything needed to "identify" the variation.
+	 *
+	 * @return array
+	 *    Vector<array> of variations or empty if no variations exist.
+	 */
+	protected function fetchMultiVariationProperties(&$parent, $onlyOffer) {
+		$combis = MagnaDB::gi()->fetchArray('
+			  SELECT *
+			    FROM '.'products_properties_combis'.'
+			   WHERE products_id = "'.$parent['ProductId'].'"
+			ORDER BY sort_order ASC
+		');
+		if (empty($combis)) {
+			return array();
+		}
+		
+		$attrs = array();
+		foreach ($combis as $combi) {
+			$v = array (
+				'VariationId' => $combi['products_properties_combis_id'],
+				'MarketplaceId' => 'ML'.$parent['ProductId'],
+				'MarketplaceSku' => $parent['ProductsModel'].'_'.$combi['combi_model'],
+				'Variation' => $this->translateProductsProperties($combi['products_properties_combis_id']),
+				'Price' => $combi['combi_price'],
+				'PriceReduced' => 0,
+				'Quantity' => $combi['combi_quantity'],
+				'Status' => true, // I can't find a status flag.
+				'ShippingTimeId' => $combi['combi_shipping_status_id'],
+				'ShippingTime' => $this->getShippingTimeStringById($combi['combi_shipping_status_id']),
+			);
+			
+			foreach ($v['Variation'] as $varDef) {
+				$v['MarketplaceId'] .= '_'.$varDef['NameId'].'.'.$varDef['ValueId'];
+			}
+			
+			$this->calcPriceVariation($v, $v['Price'], $parent['Prices'], $parent['TaxPercent']);
+			
+			if (!$onlyOffer) {
+				$v['EAN'] = $combi['combi_ean'];
+				
+				if ((float)$combi['combi_weight'] > 0) {
+					$weight = (float)$combi['combi_weight'];
+					$bweight = isset($parent['Weight']['Value']) ? $parent['Weight']['Value'] : 0.0;
+					$v['Weight'] = array();
+					if (($bweight + $weight) > 0) {
+						$v['Weight']['Unit'] = isset($parent['Weight']['Unit']) ? $parent['Weight']['Unit'] : 'kg';
+						$v['Weight']['Value'] = ($bweight + $weight);
+					}
+				}
+				if (!empty($combi['products_vpe_id']) && ((float)$combi['vpe_value'] > 0)) {
+					$v['BasePrice'] = array (
+						'Unit' => $this->getVpeUnitById($combi['products_vpe_id']),
+						'Value' => $combi['vpe_value']
+					);
+				}
+			}
+			$attrs[] = $v;
+		}
+		
+		return $attrs;
+	}
+	
+	/**
 	 * Loads the variations to a product.
 	 *
 	 * @param array $parent
@@ -684,153 +1085,23 @@ class MLProduct {
 	 * @param bool $onlyOffer
 	 *    If this is set to true only the offer data will be included
 	 *    along with everything needed to "identify" the variation.
-	 * @param bool $purgeVariations
-	 *    If this is set to true the multi-dimensional variations will be recalculated
 	 *
 	 * @return array
 	 *    List of variations or empty if no variations exist.
 	 */
-	protected function fetchVariations(&$parent, $onlyOffer, $purgeVariations) {
+	protected function fetchVariations(&$parent, $onlyOffer) {
+		if (!$this->optionsTmp['includeVariations']) {
+			return array();
+		}
+		if ($this->optionsTmp['useGambioProperties']) {
+			return $this->fetchMultiVariationProperties($parent, $onlyOffer);
+		}
+		
 		if ($this->blUseMultiDimensionalVariations) {
-			return $this->fetchMultiVariations($parent, $onlyOffer, $purgeVariations);
+			return $this->fetchMultiVariations($parent, $onlyOffer, $this->optionsTmp['purgeVariations']);
 		} else {
 			return $this->fetchSingleVariations($parent, $onlyOffer);
 		}
-	}
-	
-	/**
-	 * Builds the SELECT string for the product and offer query and stores them in class attributes.
-	 */
-	protected function buildSelectFields() {
-		$productsOffer = array ( // These fields are order specific and they exsist in every osC fork
-			'ProductId' => 'products_id',
-			'ProductsModel' => 'products_model',
-			'Quantity' => 'products_quantity',
-			'Price' => 'products_price',
-			'PriceReduced' => '',
-			'Currency' => '',
-			'Status' => 'products_status',
-			'TaxClass' => 'products_tax_class_id',
-			'TaxPercent' => '',
-		);
-		$productFields = array ( // Some of these fiels don't exist in every osC fork.
-			'EAN' => 'products_ean',
-			'ShippingTimeId' => 'products_shippingtime',
-			'ShippingTime' => '',
-			'Images' => 'products_image',
-			'DateAdded' => 'products_date_added',
-			'LastModified' => 'products_last_modified',
-			'DateAvailable' => 'products_date_available',
-			'Weight' => 'products_weight',
-			'ManufacturerId' => 'manufacturers_id',
-			'Manufacturer' => '',
-			'ManufacturerPartNumber' => '',
-			'IsFSK18' => 'products_fsk18',
-			'BasePrice' => '',
-			'VpeUnit' => 'products_vpe',
-			'VpeValue' => 'products_vpe_value',
-			'VpeStatus' => 'products_vpe_status',
-		);
-		$descriptionFields = array ( // Some of these fiels don't exist in every osC fork.
-			'Title' => 'products_name',
-			'Description' => 'products_description',
-			'ShortDescription' => 'products_short_description',
-			'Keywords' => array('products_meta_keywords', 'products_head_keywords_tag'),
-			'BulletPoints' => array('products_meta_description', 'products_head_desc_tag'),
-		);
-		
-		$prod = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS.' LIMIT 1');
-		$desc = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS_DESCRIPTION.' LIMIT 1');
-		
-		if (!empty($prod)) {
-			foreach ($productFields as $ml => $db) {
-				if (!empty($db) && !array_key_exists($db, $prod)) {
-					$productFields[$ml] = '';
-				}
-			}
-		}
-		if (!empty($desc)) {
-			foreach ($descriptionFields as $ml => $dbs) {
-				if (!is_array($dbs)) {
-					$dbs = array($dbs);
-				}
-				$found = false;
-				foreach ($dbs as $db) {
-					if (!empty($db) && array_key_exists($db, $desc)) {
-						$descriptionFields[$ml] = $db;
-						$found = true;
-						break;
-					}
-				}
-				if (!$found) {
-					$descriptionFields[$ml] = '';
-				}
-			}
-		}
-		
-		// build select statements
-		$productSelectFields = array();
-		foreach ($productsOffer as $ml => $db) {
-			$productSelectFields[] = (empty($db) ? '""' : 'p.'.$db).' AS '.$ml;
-		}
-		$this->productOfferSelectFields = implode(', ', $productSelectFields);
-		
-		foreach ($productFields as $ml => $db) {
-			$productSelectFields[] = (empty($db) ? '""' : 'p.'.$db).' AS '.$ml;
-		}
-		foreach ($descriptionFields as $ml => $db) {
-			$productSelectFields[] = (empty($db) ? '""' : 'pd.'.$db).' AS '.$ml;
-		}
-		$this->productMainSelectFields = implode(', ', $productSelectFields);
-		
-		// attributes (flat)
-		$addAttributesFields = array (
-			'EAN' => array('attributes_ean', 'gm_ean'),
-			'Weight' => 'options_values_weight',
-			'WeightPrefix' => 'weight_prefix',
-		);
-		$attr = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS_ATTRIBUTES.' LIMIT 1');
-		if (empty($attr)) {
-			$attr = array();
-		}
-		foreach ($addAttributesFields as $ml => $dbs) {
-			if (!is_array($dbs)) {
-				$dbs = array($dbs);
-			}
-			$found = false;
-			foreach ($dbs as $db) {
-				if (!empty($db) && array_key_exists($db, $attr)) {
-					$addAttributesFields[$ml] = $db;
-					$found = true;
-					break;
-				}
-			}
-			if (!$found) {
-				$addAttributesFields[$ml] = '';
-			}
-		}
-		if (array_key_exists('sortorder', $attr)) {
-			$this->attributesHasSortorder = true;
-		}
-		$attributesSelectFields = array (
-			'pa.products_attributes_id AS VariationId',
-			'pa.attributes_model AS VariationModel',
-			'"" AS Variation',
-			'po.products_options_id AS VariationNameId',
-			'po.products_options_name AS VariationName',
-			'pov.products_options_values_id AS VariationValueId',
-			'pov.products_options_values_name AS VariationValue',
-			'pa.options_values_price AS Price',
-			'pa.price_prefix AS PricePrefix',
-			'pa.attributes_stock AS Quantity',
-			'"1" AS Status',
-		);
-		$this->attributesOfferSelectFields = implode(', ', $attributesSelectFields);
-		
-		foreach ($addAttributesFields as $ml => $db) {
-			$attributesSelectFields[] = (empty($db) ? '""' : 'pa.'.$db).' AS '.$ml;
-		}
-		$this->attributesMainSelectFields = implode(', ', $attributesSelectFields);
 	}
 	
 	/**
@@ -981,23 +1252,6 @@ $images = array (
 	}
 	
 	/**
-	 * Loads the available shipping time into a cache variable.
-	 * First key is the languages_id, second key is the shippingtime id.
-	 * @return void
-	 */
-	protected function loadShippingTimesCache() {
-		$set = MagnaDB::gi()->fetchArray('
-			SELECT *
-			  FROM '.TABLE_SHIPPING_STATUS.'
-		');
-		if (!empty($set)) {
-			foreach ($set as $row) {
-				$this->shippingTimesCache[$row['language_id']][$row['shipping_status_id']] = $row['shipping_status_name'];
-			}
-		}
-	}
-	
-	/**
 	 * Loads the shippingtime cache if it is empty and converts the
 	 * shipping time id to a string if it exists.
 	 *
@@ -1005,31 +1259,19 @@ $images = array (
 	 *    The shipping time string in human readable format or an empty string in case of a failure.
 	 */
 	protected function getShippingTimeStringById($id) {
+		if (empty($id)) {
+			return '';
+		}
 		// use lazy loading
-		if (empty($this->shippingTimesCache)) {
-			$this->loadShippingTimesCache();
+		if ($this->existingTables['ShippingStatus'] && !$this->cacheKeyExists('ShippingTime')) {
+			$this->cachePopulate('ShippingTime', '
+				SELECT shipping_status_id AS `Key`, language_id AS LanguageId, shipping_status_name AS Value
+				  FROM '.TABLE_SHIPPING_STATUS.'
+			');
 		}
-		if (!empty($id) && isset($this->shippingTimesCache[$this->languageId][$id])) {
-			return $this->shippingTimesCache[$this->languageId][$id];
-		}
-		return '';
-	}
-	
-	/**
-	 * Loads the available shipping time into a cache variable.
-	 * First key is the languages_id, second key is the shippingtime id.
-	 * @return void
-	 */
-	protected function loadManufactureresCache() {
-		$set = MagnaDB::gi()->fetchArray('
-			SELECT *
-			  FROM '.TABLE_MANUFACTURERS.'
-		');
-		if (!empty($set)) {
-			foreach ($set as $row) {
-				$this->manufacturersCache[$row['manufacturers_id']] = $row['manufacturers_name'];
-			}
-		}
+		return $this->cacheFilterLanguage(
+			$this->cacheGetValue('ShippingTime', $id, '')
+		);
 	}
 	
 	/**
@@ -1041,32 +1283,13 @@ $images = array (
 	 */
 	protected function getManufacturerNameById($id) {
 		// use lazy loading
-		if (empty($this->manufacturersCache)) {
-			$this->loadManufactureresCache();
-		}
-		if (!empty($id) && isset($this->manufacturersCache[$id])) {
-			return $this->manufacturersCache[$id];
-		}
-		return '';
-	}
-	
-	/**
-	 * Loads the available vpe units into a cache variable.
-	 * First key is the languages_id, second key is the vpe id.
-	 * @return void
-	 */
-	protected function loadVpeUnitCache() {
-		if (MagnaDB::gi()->tableExists(TABLE_PRODUCTS_VPE)) {
-			$set = MagnaDB::gi()->fetchArray('
-				SELECT *
-				  FROM '.TABLE_PRODUCTS_VPE.'
+		if (!$this->cacheKeyExists('ManufacturerName')) {
+			$this->cachePopulate('ManufacturerName', '
+				SELECT manufacturers_id AS `Key`, manufacturers_name AS Value
+				  FROM '.TABLE_MANUFACTURERS.'
 			');
-			if (!empty($set)) {
-				foreach ($set as $row) {
-					$this->vpeUnitCache[$row['language_id']][$row['products_vpe_id']] = $row['products_vpe_name'];
-				}
-			}
 		}
+		return $this->cacheGetValue('ManufacturerName', $id, '');
 	}
 	
 	/**
@@ -1077,13 +1300,16 @@ $images = array (
 	 *    The manufactuerer string or an empty string in case of a failure.
 	 */
 	protected function getVpeUnitById($id) {
-		if (empty($this->vpeUnitCache)) {
-			$this->loadVpeUnitCache();
+		// use lazy loading
+		if (!$this->cacheKeyExists('BasePriceUnit') && MagnaDB::gi()->tableExists(TABLE_PRODUCTS_VPE)) {
+			$this->cachePopulate('BasePriceUnit', '
+				SELECT products_vpe_id AS `Key`, language_id AS LanguageId, products_vpe_name AS Value
+				  FROM '.TABLE_PRODUCTS_VPE.'
+			');
 		}
-		if (!empty($id) && isset($this->vpeUnitCache[$this->languageId][$id])) {
-			return $this->vpeUnitCache[$this->languageId][$id];
-		}
-		return $id;
+		return $this->cacheFilterLanguage(
+			$this->cacheGetValue('BasePriceUnit', $id, '')
+		);
 	}
 	
 	/**
@@ -1120,10 +1346,13 @@ $images = array (
 			$product['TaxPercent'] = 0.0;
 			return;
 		}
-		if (!isset($this->taxCache[$product['TaxClass']])) {
-			$this->taxCache[$product['TaxClass']] = SimplePrice::getTaxByClassID($product['TaxClass']);
+		if (!isset($this->cache['Tax'][$product['TaxClass']])) {
+			if (!isset($this->cache['Tax'])) {
+				$this->cache['Tax'] = array();
+			}
+			$this->cache['Tax'][$product['TaxClass']] = SimplePrice::getTaxByClassID($product['TaxClass']);
 		}
-		$product['TaxPercent'] = (float)$this->taxCache[$product['TaxClass']];
+		$product['TaxPercent'] = (float)$this->cache['Tax'][$product['TaxClass']];
 	}
 	
 	/**
@@ -1135,24 +1364,26 @@ $images = array (
 	 * @return void
 	 */
 	protected function prepareParentPrices(&$product) {
-		$product['Currency'] = $this->priceConfig['Currency'];
-		$product['Prices'] = array (
-			'Price' => $this->priceConfig['Group'] > 0
-				? $this->simpleprice->getGroupPrice($this->priceConfig['Group'], $product['ProductId'])
-				: $product['Price'],
-			'Reduced' => $this->priceConfig['UseSpecialOffer']
-				? $this->simpleprice->getSpecialOffer($product['ProductId'])
-				: 0.0
-		);
-		
-		// Make sure the group price is > 0
-		if (!((float)$product['Prices']['Price'] > 0)) {
-			$product['Prices']['Price'] = $product['Price'];
-		}
-		
-		// Make sure the reduced price is not greater than the normal price.
-		if ($product['Prices']['Reduced'] > $product['Prices']['Price']) {
-			$product['Prices']['Reduced'] = 0;
+		foreach ($this->priceConfig['values'] as $name => $config) {
+			$price = is_array($product['Price']) ? $product['Price'][$name] : $product['Price'];
+			$product['Currency'][$name] = $config['Currency'];
+			$product['Prices'][$name] = array (
+				'Price' => $config['Group'] > 0
+					? $this->simpleprice->setCurrency($config['Currency'])->getGroupPrice($config['Group'], $product['ProductId'])
+					: $price,
+				'Reduced' => $config['UseSpecialOffer']
+					? $this->simpleprice->setCurrency($config['Currency'])->getSpecialOffer($product['ProductId'], $config['Group'])
+					: 0.0
+			);
+			// Make sure the group price is > 0
+			if (!((float)$product['Prices'][$name]['Price'] > 0)) {
+				$product['Prices'][$name]['Price'] = $price;
+			}
+
+			// Make sure the reduced price is not greater than the normal price.
+			if ($product['Prices'][$name]['Reduced'] > $product['Prices'][$name]['Price']) {
+				$product['Prices'][$name]['Reduced'] = 0;
+			}
 		}
 	}
 	
@@ -1165,17 +1396,199 @@ $images = array (
 	 * @return void
 	 */
 	protected function completeParentOffer(&$product) {
-		// Price foo
-		$product['Price'] = $this->calcPrice($product['Prices']['Price'], $product['TaxPercent']);
-		if ((float)$product['Prices']['Reduced'] > 0) {
-			$product['PriceReduced'] = $this->calcPrice($product['Prices']['Reduced'], $product['TaxPercent']);
-		} else {
+		$product['Price'] = array();
+		foreach ($this->priceConfig['values'] as $name => $config) {
+			// Price foo
+			$product['Price'][$name] = $this->calcPrice($product['Prices'][$name]['Price'], $product['TaxPercent'], $config);
+			if ((float)$product['Prices'][$name]['Reduced'] > 0) {
+				$product['PriceReduced'][$name] = $this->calcPrice($product['Prices'][$name]['Reduced'], $product['TaxPercent'], $config);
+			} else if (isset($product['PriceReduced'][$name])){
+				unset($product['PriceReduced'][$name]);
+			}
+			unset($product['Prices'][$name]);
+		}
+		if (empty($product['PriceReduced'])) {
 			unset($product['PriceReduced']);
 		}
 		unset($product['Prices']);
 		
+		if ($this->priceConfig['type'] == 'single') {
+			$product['Price'] = current($product['Price']);
+			if (isset($product['PriceReduced'])) {
+				$product['PriceReduced'] = current($product['PriceReduced']);
+			}
+			$product['Currency'] = current($product['Currency']);
+		}
+		
 		// Quantity
 		$product['Quantity'] = $this->calcQuantity($product['Quantity']);
+	}
+	
+	/**
+	 * Builds the SELECT string for the product and offer query and stores them in class attributes.
+	 */
+	protected function buildSelectFields() {
+		$productsOffer = array ( // These fields are order specific and they exsist in every osC fork
+			'ProductId' => 'products_id',
+			'ProductsModel' => 'products_model',
+			'Quantity' => 'products_quantity',
+			'Price' => 'products_price',
+			'PriceReduced' => '',
+			'Currency' => '',
+			'Status' => 'products_status',
+			'TaxClass' => 'products_tax_class_id',
+			'TaxPercent' => '',
+		);
+		$productFields = array ( // Some of these fiels don't exist in every osC fork.
+			'EAN' => 'products_ean',
+			'ShippingTimeId' => 'products_shippingtime',
+			'ShippingTime' => '',
+			'Images' => 'products_image',
+			'DateAdded' => 'products_date_added',
+			'LastModified' => 'products_last_modified',
+			'DateAvailable' => 'products_date_available',
+			'Weight' => 'products_weight',
+			'ManufacturerId' => 'manufacturers_id',
+			'Manufacturer' => '',
+			'ManufacturerPartNumber' => '',
+			'IsFSK18' => 'products_fsk18',
+			'BasePrice' => '',
+			'VpeUnit' => 'products_vpe',
+			'VpeValue' => 'products_vpe_value',
+			'VpeStatus' => 'products_vpe_status',
+		);
+		$descriptionFields = array ( // Some of these fiels don't exist in every osC fork.
+			'Title' => 'products_name',
+			'Description' => 'products_description',
+			'ShortDescription' => 'products_short_description',
+			'Keywords' => array('products_meta_keywords', 'products_head_keywords_tag'),
+			'BulletPoints' => array('products_meta_description', 'products_head_desc_tag'),
+		);
+		
+		$prod = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS.' LIMIT 1');
+		$desc = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS_DESCRIPTION.' LIMIT 1');
+		
+		if (!empty($prod)) {
+			foreach ($productFields as $ml => $db) {
+				if (!empty($db) && !array_key_exists($db, $prod)) {
+					$productFields[$ml] = '';
+				}
+			}
+		}
+		if (!empty($desc)) {
+			foreach ($descriptionFields as $ml => $dbs) {
+				if (!is_array($dbs)) {
+					$dbs = array($dbs);
+				}
+				$found = false;
+				foreach ($dbs as $db) {
+					if (!empty($db) && array_key_exists($db, $desc)) {
+						$descriptionFields[$ml] = $db;
+						$found = true;
+						break;
+					}
+				}
+				if (!$found) {
+					$descriptionFields[$ml] = '';
+				}
+			}
+		}
+		
+		// build select statements
+		$productSelectFields = array();
+		foreach ($productsOffer as $ml => $db) {
+			$productSelectFields[] = (empty($db) ? '""' : 'p.'.$db).' AS '.$ml;
+		}
+		$this->productOfferSelectFields = implode(', ', $productSelectFields);
+		
+		foreach ($productFields as $ml => $db) {
+			$productSelectFields[] = (empty($db) ? '""' : 'p.'.$db).' AS '.$ml;
+		}
+		$this->productMainSelectFields = implode(', ', $productSelectFields);
+		
+		$productSelectFields = array();
+		foreach ($descriptionFields as $ml => $db) {
+			$productSelectFields[] = (empty($db) ? '""' : 'pd.'.$db).' AS '.$ml;
+		}
+		$this->productDescriptionSelectFields = implode(', ', $productSelectFields);
+		
+		// attributes (flat)
+		$addAttributesFields = array (
+			'EAN' => array('attributes_ean', 'gm_ean'),
+			'Weight' => 'options_values_weight',
+			'WeightPrefix' => 'weight_prefix',
+		);
+		$attr = MagnaDB::gi()->fetchRow('SELECT * FROM '.TABLE_PRODUCTS_ATTRIBUTES.' LIMIT 1');
+		if (empty($attr)) {
+			$attr = array();
+		}
+		foreach ($addAttributesFields as $ml => $dbs) {
+			if (!is_array($dbs)) {
+				$dbs = array($dbs);
+			}
+			$found = false;
+			foreach ($dbs as $db) {
+				if (!empty($db) && array_key_exists($db, $attr)) {
+					$addAttributesFields[$ml] = $db;
+					$found = true;
+					break;
+				}
+			}
+			if (!$found) {
+				$addAttributesFields[$ml] = '';
+			}
+		}
+		if (array_key_exists('sortorder', $attr)) {
+			$this->attributesHasSortorder = true;
+		}
+		$attributesSelectFields = array (
+			'pa.products_attributes_id AS VariationId',
+			'pa.attributes_model AS VariationModel',
+			'"" AS Variation',
+			'pa.options_id AS VariationNameId',
+			'pa.options_values_id AS VariationValueId',
+			'pa.options_values_price AS Price',
+			'pa.price_prefix AS PricePrefix',
+			'pa.attributes_stock AS Quantity',
+			'"1" AS Status',
+		);
+		$this->attributesOfferSelectFields = implode(', ', $attributesSelectFields);
+		
+		foreach ($addAttributesFields as $ml => $db) {
+			$attributesSelectFields[] = (empty($db) ? '""' : 'pa.'.$db).' AS '.$ml;
+		}
+		$this->attributesMainSelectFields = implode(', ', $attributesSelectFields);
+	}
+	
+	/**
+	 * Returns the products description for a product in the requested language.
+	 *
+	 * @param int $pId
+	 *    The products id of the product
+	 * @param int $language
+	 *    The language id
+	 *
+	 * @return array|bool
+	 *    The products description or false if the description does not exist for the
+	 *    requested language.
+	 */
+	protected function loadProductsDescription($pId, $language) {
+		$desc = MagnaDB::gi()->fetchRow('
+			SELECT '.$this->productDescriptionSelectFields.'
+			  FROM '.TABLE_PRODUCTS_DESCRIPTION.' pd
+			 WHERE pd.products_id = '.$pId.'
+			       AND pd.language_id = "'.$language.'"
+			 LIMIT 1
+		');
+		if (empty($desc)) {
+			return false;
+		}
+		
+		if (SHOPSYSTEM == 'gambio') {
+			$desc['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $desc['Description']);
+		}
+		
+		return $desc;
 	}
 	
 	/**
@@ -1183,25 +1596,51 @@ $images = array (
 	 *
 	 * @param int $pId
 	 *    The id of the product
+	 * @param array $optionsTmp
+	 *    Affects the options only for this one call. They will be reseted to their
+	 *    previous state. For the available options @see self::setOptions().
 	 *
 	 * @return array
 	 *    The loaded product
 	 */
-	public function getProductById($pId, $purgeVariations = false) {
-		if (empty($this->languageId)) {
+	public function getProductById($pId, array $optionsTmp = array()) {
+		if (empty($this->languagesSelected['values'])) {
 			throw new Exception('Please set a language first.');
 		}
+		
+		$this->setOptionsTmp($optionsTmp);
 		
 		$product = MagnaDB::gi()->fetchRow(eecho('
 		    SELECT '.$this->productMainSelectFields.'
 		      FROM '.TABLE_PRODUCTS.' p
-		INNER JOIN '.TABLE_PRODUCTS_DESCRIPTION.' pd ON p.products_id = pd.products_id AND pd.language_id = "'.$this->languageId.'"
 		     WHERE p.products_id = '.(int)$pId.'
 		', false));
 		
 		if (empty($product)) {
-			return $product;
+			$this->resetOptionsTmp();
+			return false;
 		}
+		
+		$desc = array();
+		foreach ($this->languagesSelected['values'] as $langId => $langCode) {
+			$descTmp = $this->loadProductsDescription($pId, $langId);
+			if (!empty($descTmp)) {
+				foreach ($descTmp as $descKey => $descVal) {
+					if (!isset($desc[$descKey])) {
+						$desc[$descKey] = array();
+					}
+					$desc[$descKey][$langCode] = $descVal;
+				}
+			}
+		}
+		unset($descTmp);
+		
+		if (empty($desc)) {
+			$this->resetOptionsTmp();
+			return false;
+		}
+		$desc = $this->processLanguageSpecificsMulti($desc);
+		$product = array_merge($product, $desc);
 		
 		$product['VpeStatus'] = (bool)$product['VpeStatus'];
 		$product['IsFSK18']   = (bool)$product['IsFSK18'];
@@ -1214,9 +1653,6 @@ $images = array (
 		$this->completeBasePrice($product);
 		$this->completeImages($product);
 		
-		if (SHOPSYSTEM == 'gambio') {
-			$product['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $product['Description']);
-		}
 		if (empty($product['DateAvailable'])) {
 			$product['DateAvailable'] = '0000-00-00 00:00:00';
 		}
@@ -1231,13 +1667,14 @@ $images = array (
 		} else {
 			$product['Weight'] = array ();
 		}
-		
+
 		$this->prepareParentPrices($product);
 		
-		$product['Variations'] = $this->fetchVariations($product, false, $purgeVariations);
+		$product['Variations'] = $this->fetchVariations($product, false);
 		
 		$this->completeParentOffer($product);
 		
+		$this->resetOptionsTmp();
 		return $product;
 	}
 	
@@ -1246,11 +1683,20 @@ $images = array (
 	 *
 	 * @param int $pId
 	 *    The id of the product
+	 * @param array $optionsTmp
+	 *    Affects the options only for this one call. They will be reseted to their
+	 *    previous state. For the available options @see self::setOptions().
 	 *
 	 * @return array
 	 *    The loaded product
 	 */
-	public function getProductOfferById($pId, $purgeVariations = false) {
+	public function getProductOfferById($pId, array $optionsTmp = array()) {
+		if (empty($this->languagesSelected['values'])) {
+			throw new Exception('Please set a language first.');
+		}
+		
+		$this->setOptionsTmp($optionsTmp);
+		
 		$product = MagnaDB::gi()->fetchRow(eecho('
 		    SELECT '.$this->productOfferSelectFields.'
 		      FROM '.TABLE_PRODUCTS.' p
@@ -1258,16 +1704,18 @@ $images = array (
 		', false));
 		
 		if (empty($product)) {
+			$this->resetOptionsTmp();
 			return $product;
 		}
 		
 		$this->completeTax($product);
 		$this->prepareParentPrices($product);
 		
-		$product['Variations'] = $this->fetchVariations($product, true, $purgeVariations);
+		$product['Variations'] = $this->fetchVariations($product, true);
 		
 		$this->completeParentOffer($product);
 		
+		$this->resetOptionsTmp();
 		return $product;
 	}
 	

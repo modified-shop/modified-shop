@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: apply.php 3347 2013-12-02 15:42:17Z tim.neumann $
+ * $Id: apply.php 3854 2014-05-12 12:55:03Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -289,7 +289,7 @@ if (array_key_exists('saveApplyData', $_POST)) {
 				'topMainCategory' => $c['MainCategory'] == null ? '' : $c['MainCategory'],
 				'topProductType'  => $c['ProductType'] == null ? '' : $c['ProductType'],
 				'topBrowseNode1'  => $c['BrowseNodes'][0] == null ? '' : $c['BrowseNodes'][0],
-				'topBrowseNode2'  => $c['BrowseNodes'][1] == null ? '' : $c['BrowseNodes'][1]
+				'topBrowseNode2'  => (!isset($c['BrowseNodes'][1]) || ($c['BrowseNodes'][1] == null)) ? '' : $c['BrowseNodes'][1],
 			);
 			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
 				? array ('products_model' => MagnaDB::gi()->escape($data['products_model']))
@@ -359,101 +359,103 @@ if (array_key_exists('saveApplyData', $_POST)) {
 	}
 }
 
-/**
- * Daten loeschen
- */
-if (array_key_exists('removeapply', $_POST)) {
- 	$pIDs = MagnaDB::gi()->fetchArray('
-		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
-		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$applySetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
-	', true);
-	if (!empty($pIDs)) {
-		foreach ($pIDs as $pID) {
-			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? array ('products_model' => MagnaDB::gi()->fetchOne('
-							SELECT products_model
-							  FROM '.TABLE_PRODUCTS.'
-							 WHERE products_id='.$pID
-						))
-				: array ('products_id'    => $pID);
-			$where['mpID'] = $_MagnaSession['mpID'];
+if (!defined('MAGNA_DEV_PRODUCTLIST') || MAGNA_DEV_PRODUCTLIST !== true ) {// will be done in MLProductListDependencyAmazonApplyFormAction
+	/**
+	 * Daten loeschen
+	 */
+	if (array_key_exists('removeapply', $_POST)) {
+		$pIDs = MagnaDB::gi()->fetchArray('
+			SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
+				   selectionname=\''.$applySetting['selectionName'].'\' AND
+				   session_id=\''.session_id().'\'
+		', true);
+		if (!empty($pIDs)) {
+			foreach ($pIDs as $pID) {
+				$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
+					? array ('products_model' => MagnaDB::gi()->fetchOne('
+								SELECT products_model
+								  FROM '.TABLE_PRODUCTS.'
+								 WHERE products_id='.$pID
+							))
+					: array ('products_id'    => $pID);
+				$where['mpID'] = $_MagnaSession['mpID'];
 
-			MagnaDB::gi()->delete(TABLE_MAGNA_AMAZON_APPLY, $where);
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'pID' => $pID,
-				'mpID' => $_MagnaSession['mpID'],
-				'selectionname' => $applySetting['selectionName'],
-				'session_id' => session_id()
-			));
+				MagnaDB::gi()->delete(TABLE_MAGNA_AMAZON_APPLY, $where);
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'pID' => $pID,
+					'mpID' => $_MagnaSession['mpID'],
+					'selectionname' => $applySetting['selectionName'],
+					'session_id' => session_id()
+				));
+			}
 		}
 	}
-}
 
-/**
- * Daten zuruecksetzen
- */
-if (array_key_exists('resetapply', $_POST)) {
- 	$pIDs = MagnaDB::gi()->fetchArray('
-		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
-		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$applySetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
-	', true);
-	if (!empty($pIDs)) {
-		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
-			$aProducts = MagnaDB::gi()->fetchArray('
-			    SELECT aa.products_id AS PID, aa.products_model AS PModel, aa.* 
-			      FROM '.TABLE_MAGNA_AMAZON_APPLY.' aa
-			     WHERE aa.products_id IN (\''.implode('\', \'', $pIDs).'\')
-			');
-		} else {
-			$aProducts = MagnaDB::gi()->fetchArray('
-			    SELECT p.products_id AS PID, p.products_model AS PModel, aa.*
-			      FROM '.TABLE_MAGNA_AMAZON_APPLY.' aa
-			INNER JOIN '.TABLE_PRODUCTS.' p ON p.products_model=aa.products_model
-			     WHERE p.products_id IN (\''.implode('\', \'', $pIDs).'\')
-			');
-		}
-		foreach ($aProducts as $aRow) {
-			$aRow['category'] = unserialize(base64_decode($aRow['category']));
-			$aRow['data'] = unserialize(base64_decode($aRow['data']));
-			if (!is_array($aRow['data']) || empty($aRow['data'])) {
-				continue;
+	/**
+	 * Daten zuruecksetzen
+	 */
+	if (array_key_exists('resetapply', $_POST)) {
+		$pIDs = MagnaDB::gi()->fetchArray('
+			SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
+				   selectionname=\''.$applySetting['selectionName'].'\' AND
+				   session_id=\''.session_id().'\'
+		', true);
+		if (!empty($pIDs)) {
+			if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+				$aProducts = MagnaDB::gi()->fetchArray('
+					SELECT aa.products_id AS PID, aa.products_model AS PModel, aa.* 
+					  FROM '.TABLE_MAGNA_AMAZON_APPLY.' aa
+					 WHERE aa.products_id IN (\''.implode('\', \'', $pIDs).'\')
+				');
+			} else {
+				$aProducts = MagnaDB::gi()->fetchArray('
+					SELECT p.products_id AS PID, p.products_model AS PModel, aa.*
+					  FROM '.TABLE_MAGNA_AMAZON_APPLY.' aa
+				INNER JOIN '.TABLE_PRODUCTS.' p ON p.products_model=aa.products_model
+					 WHERE p.products_id IN (\''.implode('\', \'', $pIDs).'\')
+				');
 			}
-			#echo print_m($aRow);
-			
-			$aNewRow = populateGenericData($aRow['PID']);
-			#echo print_m($aNewRow);
-			
-			unset($aNewRow['MainCategory']);
-			unset($aNewRow['ProductType']);
-			unset($aNewRow['BrowseNodes']);
-			
-			$aNewRow['Attributes'] = $aRow['data']['Attributes'];
-			if ($aRow['leadtimeToShipFrozen'] > 0) {
-				$aNewRow['LeadtimeToShip'] = $aRow['leadtimeToShip'];
+			foreach ($aProducts as $aRow) {
+				$aRow['category'] = unserialize(base64_decode($aRow['category']));
+				$aRow['data'] = unserialize(base64_decode($aRow['data']));
+				if (!is_array($aRow['data']) || empty($aRow['data'])) {
+					continue;
+				}
+				#echo print_m($aRow);
+
+				$aNewRow = populateGenericData($aRow['PID']);
+				#echo print_m($aNewRow);
+
+				unset($aNewRow['MainCategory']);
+				unset($aNewRow['ProductType']);
+				unset($aNewRow['BrowseNodes']);
+
+				$aNewRow['Attributes'] = $aRow['data']['Attributes'];
+				if ($aRow['leadtimeToShipFrozen'] > 0) {
+					$aNewRow['LeadtimeToShip'] = $aRow['leadtimeToShip'];
+				}
+
+				$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
+					? array ('products_model' => $aRow['PModel'])
+					: array ('products_id'    => $aRow['PID']);
+				$where['mpID'] = $_MagnaSession['mpID'];
+
+				MagnaDB::gi()->update(TABLE_MAGNA_AMAZON_APPLY, array (
+					'products_id' => $aRow['PID'],
+					'products_model' => $aRow['PModel'],
+					'data' => base64_encode(serialize($aNewRow)),
+					'leadtimeToShip' => $aNewRow['LeadtimeToShip']
+				), $where);
+
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'pID' => $aRow['PID'],
+					'mpID' => $_MagnaSession['mpID'],
+					'selectionname' => $applySetting['selectionName'],
+					'session_id' => session_id()
+				));
 			}
-			
-			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? array ('products_model' => $aRow['PModel'])
-				: array ('products_id'    => $aRow['PID']);
-			$where['mpID'] = $_MagnaSession['mpID'];
-			
-			MagnaDB::gi()->update(TABLE_MAGNA_AMAZON_APPLY, array (
-				'products_id' => $aRow['PID'],
-				'products_model' => $aRow['PModel'],
-				'data' => base64_encode(serialize($aNewRow)),
-				'leadtimeToShip' => $aNewRow['LeadtimeToShip']
-			), $where);
-			
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'pID' => $aRow['PID'],
-				'mpID' => $_MagnaSession['mpID'],
-				'selectionname' => $applySetting['selectionName'],
-				'session_id' => session_id()
-			));
 		}
 	}
 }
@@ -501,16 +503,22 @@ if (($applyAction == 'singleapplication') || ($applyAction == 'multiapplication'
 	include_once(DIR_MAGNALISTER_MODULES.'amazon/application/applicationviews.php');
 
 } else {
-	require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/ApplyCategoryView.php');
-
-	$aCV = new ApplyCategoryView(
-		$current_category_id, $applySetting,  /* $current_category_id is a global variable from xt:Commerce */
-		(isset($_GET['sorting']) ? $_GET['sorting'] : ''),
-		(isset($_POST['tfSearch']) ? $_POST['tfSearch'] : '')
-	);
-	if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
-		echo $aCV->renderAjaxReply();
+	if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+		require_once(DIR_MAGNALISTER_MODULES.'amazon/prepare/AmazonApplyProductList.php');
+		$o = new AmazonApplyProductList();
+		echo $o;
 	} else {
-		echo $aCV->printForm();
+		require_once(DIR_MAGNALISTER_MODULES.'amazon/classes/ApplyCategoryView.php');
+
+		$aCV = new ApplyCategoryView(
+			$current_category_id, $applySetting,  /* $current_category_id is a global variable from xt:Commerce */
+			(isset($_GET['sorting']) ? $_GET['sorting'] : ''),
+			(isset($_POST['tfSearch']) ? $_POST['tfSearch'] : '')
+		);
+		if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
+			echo $aCV->renderAjaxReply();
+		} else {
+			echo $aCV->printForm();
+		}
 	}
 }

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: orders.php 3667 2014-03-23 21:24:07Z derpapst $
+ * $Id: orders.php 3691 2014-03-27 14:23:22Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -119,7 +119,7 @@ $maretplaceColors = array(
 );
 
 foreach ($labels as $label) {
-	$col = $phPlotSettings['colorMap']['marketplace'][$label];
+	$col = isset($phPlotSettings['colorMap']['marketplace'][$label]) ? $phPlotSettings['colorMap']['marketplace'][$label] : 'trueblack';
 	$maretplaceColors['colors'][] = $col;
 	$maretplaceColors['borders'][$label] = $phPlotSettings['colorMap']['data']['borders'][$col];
 }

@@ -52,6 +52,7 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 		$forms[] = 'checkinTaxMatching';
 		$forms[] = 'checkinLeadtimeToShip';
 		$forms[] = 'checkinShippingGroup';
+		$forms[] = 'checkinSubmitVariations';
 		$forms[] = 'orderStatus';
 		$forms[] = 'prepare/catMatch';
 		$forms[] = 'prepare/useShopCatsAsOwn';
@@ -65,10 +66,10 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 		parent::loadChoiseValues();
 		unset($this->form['checkin']['fields']['leadtimetoship']['values']['__calc__']);
 		if (isset($this->form['orderSyncState']['fields']['shippedstatus'])) {
-			getOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
+			mlGetOrderStatus($this->form['orderSyncState']['fields']['shippedstatus']);
 		}
 		if (isset($this->form['orderSyncState']['fields']['cancelstatus'])) {
-			getOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
+			mlGetOrderStatus($this->form['orderSyncState']['fields']['cancelstatus']);
 		}
 	}
 	

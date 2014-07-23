@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: checkin.php 3975 2014-06-16 16:02:59Z masoud.khodaparast $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -24,10 +24,17 @@ require_once(DIR_MAGNALISTER_MODULES.'meinpaket/checkin/CheckinCategoryView.php'
 require_once(DIR_MAGNALISTER_MODULES.'meinpaket/checkin/MeinpaketSummaryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'meinpaket/checkin/MeinpaketCheckinSubmit.php');
 
+$sCheckinView = '';
+if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {  
+            require_once(DIR_MAGNALISTER_MODULES.'meinpaket/checkin/MeinpaketCheckinProductList.php');
+            $sCheckinView = 'MeinpaketCheckinProductList';            
+}else{
+            $sCheckinView = 'MeinpaketCheckinCategoryView';
+}
 $cm = new CheckinManager(
 	array(
 		'summaryView'   => 'MeinpaketSummaryView',
-		'checkinView'   => 'MeinpaketCheckinCategoryView',
+		'checkinView'   => $sCheckinView,
 		'checkinSubmit' => 'MeinpaketCheckinSubmit'
 	), array(
 		'marketplace' => $_Marketplace,

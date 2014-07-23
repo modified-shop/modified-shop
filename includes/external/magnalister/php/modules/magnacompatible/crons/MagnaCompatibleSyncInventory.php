@@ -65,6 +65,10 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 	
 	protected function getConfigKeys() {
 		return array (
+			'KeyType' => array (
+				'key' => 'general.keytype',
+				'default' => 'artNr',
+			),
 			'StockSync' => array (
 				'key' => 'stocksync.tomarketplace',
 			),
@@ -350,7 +354,6 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 	}
 	
 	protected function updateItem() {
-		@set_time_limit(180);
 		$this->identifySKU();
 		$this->fixIdentification();
 		
@@ -422,6 +425,7 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 			
 				foreach ($result['DATA'] as $item) {
 					$this->cItem = $item;
+					@set_time_limit(180);
 					$this->updateItem();
 					//return;
 				}
@@ -471,8 +475,12 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 			$this->log('--> Continue from offset: '.$this->offset."\n");
 		}
 		// Only sync X steps. Execution will then be aborted and later continued though another request.
-		if (isset($_GET['steps']) && ctype_digit($_GET['steps'])) {
+		if (isset($_GET['steps']) && ((int)$_GET['steps'] >= 1)) {
 			$this->steps = (int)$_GET['steps'];
+		}
+		// Define the size of the response of the GetInventory call
+		if (isset($_GET['maxitems']) && ((int)$_GET['maxitems'] >= 1)) {
+			$this->limit = (int)$_GET['maxitems'];
 		}
 		
 		$this->syncInventory();

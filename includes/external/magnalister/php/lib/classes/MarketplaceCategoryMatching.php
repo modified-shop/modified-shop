@@ -18,6 +18,7 @@
  * -----------------------------------------------------------------------------
  */
 
+// osC
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 abstract class MarketplaceCategoryMatching {
@@ -223,19 +224,19 @@ abstract class MarketplaceCategoryMatching {
 	}
 	
 	public function getMPCategory($categoryID, $secondCall = false) {
-		$mpID = ($this->isStoreCategory) ? $this->mpID: '0';
+		$mpID = ($this->isStoreCategory) ? $this->mpID : '0';
 		
 		# Ermittle Namen, CategoryID und ParentID,
 		# dann das gleiche fuer die ParentCategory usw.
 		# bis bei Top angelangt (CategoryID = ParentID)
-		$yCP = MagnaDB::gi()->fetchRow('
+		$yCP = MagnaDB::gi()->fetchRow(eecho('
 			SELECT CategoryID, CategoryName, ParentID
 			  FROM '.$this->getTableName().'
 			 WHERE CategoryID="'.$categoryID.'"
 			       AND mpID="'.$mpID.'"
 			       '.($this->hasPlatformCol ? 'AND platform="'.$this->marketplace.'"' : '').'
 			 LIMIT 1
-		');
+		', false));
 		if ($yCP === false) {
 			if ($this->isStoreCategory) {
 				$this->importMPStoreCategories();
@@ -328,7 +329,7 @@ var mpCategorySelector = (function() {
 		selectedCategory = '';
 	}
 	
-	function selectCategory (elem) {
+	function selectCategory(elem) {
 		elem = $(elem).parent();
 		var tmpNewID = $(elem).attr('id');
 		selectedCategory = tmpNewID;
@@ -339,7 +340,7 @@ var mpCategorySelector = (function() {
 		generateCategoryPath(tmpSelectedCat);
 	}
 	
-	function addCategoriesEventListener (elem) {
+	function addCategoriesEventListener(elem) {
 		$('div.catelem span.toggle:not(.leaf)', $(elem)).each(function() {
 			$(this).click(function () {
 				myConsole.log($(this).attr('id'));
@@ -387,7 +388,7 @@ var mpCategorySelector = (function() {
 		});
 	}
 
-	function returnCategoryID () {
+	function returnCategoryID() {
 		if (selectedCategory == '') {
 			$('#messageDialog').html(
 				'Bitte w&auml;hlen Sie eine Kategorie aus.'
@@ -402,7 +403,7 @@ var mpCategorySelector = (function() {
 		return cID;
 	}
 
-	function generateCategoryPath (viewElem) {
+	function generateCategoryPath(viewElem) {
 		jQuery.blockUI(blockUILoading);
 		jQuery.ajax({
 			type: 'POST',
@@ -424,7 +425,7 @@ var mpCategorySelector = (function() {
 		});
 	}
 	
-	function initMPCategories (purge) {
+	function initMPCategories(purge) {
 		purge = purge || false;
 		myConsole.log('isStoreCategory', isStoreCategory);
 		jQuery.blockUI(blockUILoading);
@@ -449,7 +450,7 @@ var mpCategorySelector = (function() {
 		});
 	}
 	
-	function startCategorySelector (callback, kind) {
+	function startCategorySelector(callback, kind) {
 		var newStoreState = (kind == 'store');
 		if (newStoreState != isStoreCategory) {
 			isStoreCategory = newStoreState;
@@ -467,13 +468,15 @@ var mpCategorySelector = (function() {
 				'<?php echo ML_BUTTON_LABEL_OK; ?>': function() {
 					cID = returnCategoryID();
 					if (cID != false) {
-						callback(cID);
+						callback(cID, tmpSelectedCat.html());
 						$(this).dialog('close');
 					}
 				}
 			},
 			open: function(event, ui) {
-				if (isStoreCategory) return;
+				if (isStoreCategory) {
+					return;
+				}
 				var tbar = $('#mpCategorySelector').parent().find('.ui-dialog-titlebar');
 				if (tbar.find('.ui-icon-arrowrefresh-1-n').length == 0) {
 					var rlBtn = $('<a class="ui-dialog-titlebar-close ui-corner-all ui-state-focus" '+
@@ -578,7 +581,11 @@ $(document).ready(function() {
 				return $this->renderMPCategoryItem($id);
 			}
 			case 'getMPCategoryPath': {
-				return $this->getMPCategoryPath($id);
+				if ($this->isStoreCategory) {
+					return $this->getShopCategoryPath($id);
+				} else {
+					return $this->getMPCategoryPath($id);
+				}
 			}
 			default: {
 				return json_encode(array(

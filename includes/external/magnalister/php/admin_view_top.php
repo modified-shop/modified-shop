@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: admin_view_top.php 4116 2014-07-05 13:36:22Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -94,7 +94,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 <html '.HTML_PARAMS.'>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'">
-		<title>'.TITLE.' :: Magnalister'.$_mainTitle.'</title>
+		<title>'.(defined('TITLE') ? TITLE.' :: ' : '').'magnalister'.$_mainTitle.'</title>
 		<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />'."\n";
 }
 /* Force IE into Standards Mode */
@@ -222,6 +222,7 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery-ui-1.9.1.custom.js"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery-ui-i18n.js"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.ba-throttle-debounce.js"></script>
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/jquery.cookie.js"></script>
 
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/magnalister_general.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/classes/JSClass.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
@@ -313,6 +314,13 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 					});
 				});*/
 			});
+			try {
+				$.cookie('device_pixel_ratio', window.devicePixelRatio, { expires: 7, path: '/' });
+			} catch (e) {
+				myConsole.log(e);
+			}
+			console.log('$_COOKIE[device_pixel_ratio]:', <?php echo json_encode(isset($_COOKIE['device_pixel_ratio']) ? $_COOKIE['device_pixel_ratio'] : null); ?>);
+			console.log('retina enabled:', <?php echo json_encode(ML_RETINA_DISPLY); ?>);
 		/*]]>*/</script>
 		<!--[if lt IE 9]><script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
@@ -328,10 +336,10 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 		/* Wenn es ein gambio oder xtcModified shop ist, sollten wir die alte Version von jquery und jqueryui loswerden. */
 		$hasHeadNav = (strpos(file_get_contents(DIR_WS_INCLUDES . 'header.php'), 'magnalister') !== false) || defined('MERCARI_INSTALLED');
 		ob_start();
-		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
+		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) & ~E_NOTICE & ~E_STRICT);
 		$current_page = basename($_SERVER["PHP_SELF"]);
 		require(DIR_WS_INCLUDES . 'header.php'); 
-		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE);
+		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE | E_STRICT);
 		$out = ob_get_contents();
 		ob_clean();
 		echo preg_replace('/(<script (type="text\/javascript")*.*jquery.[^tooltip].*(type="text\/javascript")* *><\/script>)/', '', $out);
@@ -349,9 +357,9 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 				}
 			}
 			ob_start();
-			if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) ^ E_NOTICE);
+			if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL)  & ~E_NOTICE & ~E_STRICT);
 			require(DIR_WS_INCLUDES . 'column_left.php');
-			if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE);
+			if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE | E_STRICT);
 			$nav = ob_get_contents();
 			ob_clean();
 			unset($tnav);
@@ -506,7 +514,9 @@ if (array_key_exists($_MagnaSession['currentPlatform'], $_modules)) {
 	if (isset($_GET['mode']) && array_key_exists($_GET['mode'], $module['pages'])) {
 		$tmpMagnaQuery['mode'] = $_GET['mode'];
 	}
-
+	if (!isset($tmpMagnaQuery['mode'])) {
+		$tmpMagnaQuery['mode'] = '';
+	}
 	if (array_key_exists('pages', $module)) {
 		echo renderTabs(
 			$module['pages'],
@@ -518,7 +528,7 @@ if (array_key_exists($_MagnaSession['currentPlatform'], $_modules)) {
 	echo '<div class="magnamain">';
 	++$_additionalDivs;
 	
-	if (is_array($module['pages'][$tmpMagnaQuery['mode']])) {
+	if (isset($module['pages'][$tmpMagnaQuery['mode']]) && is_array($module['pages'][$tmpMagnaQuery['mode']])) {
 		echo renderTabs(
 			$module['pages'][$tmpMagnaQuery['mode']]['views'],
 			'view',

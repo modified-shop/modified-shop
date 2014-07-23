@@ -24,7 +24,9 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 function eBayGetSelection() {
 	global $_MagnaSession;
 	# Daten aus magnalister_ebay_properties (bereits frueher vorbereitet)
-	if ('artNr' == getDBConfigValue('general.keytype', '0')) { 
+	$keytypeIsArtNr = (getDBConfigValue('general.keytype', '0') == 'artNr');
+	
+	if ($keytypeIsArtNr) { 
 	    $dbOldSelectionQuery = 'SELECT '
 		.' ep.products_id products_id, ep.products_model products_model, '
 		.' Price, IF(0.0=Price, 0, 1) as priceFrozen, '
@@ -64,9 +66,14 @@ function eBayGetSelection() {
 		$dbOldSelection = array();
 	}
 	$oldProducts = array();
-	foreach($dbOldSelection as $row) $oldProducts[] = $row['products_id'];
-	$oldProductsList = trim(implode(', ',$oldProducts), ', ');
-	if (empty($oldProductsList)) $oldProductsList = "''";
+	foreach ($dbOldSelection as $row) {
+		$oldProducts[] = MagnaDB::gi()->escape($keytypeIsArtNr ? $row['products_model'] : $row['products_id']);
+	}
+	if (empty($oldProducts)) {
+		$oldProductsList = "''";
+	} else {
+		$oldProductsList = '"'.implode('", "', $oldProducts).'"';
+	}
 	# Daten fuer magnalister_ebay_properties
 	# die Namen schon fuer diese Tabelle
 	# products_short_description nicht bei OsC, nur bei xtC, Gambio und Klonen
@@ -86,7 +93,7 @@ function eBayGetSelection() {
 		.' p.products_weight products_weight '
 		.' FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd, '.TABLE_MAGNA_SELECTION.' ms '
 		.' WHERE pd.products_id = p.products_id AND ms.pID = p.products_id '
-		.' AND p.products_id NOT IN ('.$oldProductsList.') '
+		.' AND '.($keytypeIsArtNr ? 'p.products_model' : 'p.products_id').' NOT IN ('.$oldProductsList.') '
 		.' AND pd.language_id = \''.getDBConfigValue('ebay.lang', $_MagnaSession['mpID']).'\' '
 		.' AND ms.mpID = \''.$_MagnaSession['mpID'].'\' '
 		.' AND selectionname=\'prepare\' '
@@ -168,6 +175,7 @@ $prepareSetting = array(
  * Daten speichern
  */
 if (array_key_exists('savePrepareData', $_POST)) {
+	@set_time_limit(300);
 	$itemDetails = $_POST;
 	unset($itemDetails['savePrepareData']);
 	#echo print_m($itemDetails, '$itemDetails');
@@ -175,8 +183,8 @@ if (array_key_exists('savePrepareData', $_POST)) {
 	$pIDs = MagnaDB::gi()->fetchArray('
 		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
 		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$prepareSetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
+			   selectionname=\''.$prepareSetting['selectionName'].'\' AND
+			   session_id=\''.session_id().'\'
 	', true);
 	if (1 == count($pIDs)) {
 		SaveEBaySingleProductProperties($pIDs[0], $itemDetails);
@@ -191,17 +199,20 @@ if (array_key_exists('savePrepareData', $_POST)) {
 	));
 	$verified = $ecs->verifyOneItem();
 	#echo print_m($verified, '$ecs->verifyOneItem()');
-	
+
 	if('SUCCESS' == $verified['STATUS']) {
-	    MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array (
-		    'mpID' => $_MagnaSession['mpID'],
-	        'selectionname' => $prepareSetting['selectionName'],
-	        'session_id' => session_id()
-	    ));
+		MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array (
+			'mpID' => $_MagnaSession['mpID'],
+			'selectionname' => $prepareSetting['selectionName'],
+			'session_id' => session_id()
+		));
+		if (isset($verified['RESPONSEDATA'][0]['DATA']['Fees']['ListingFee'])) {
+			echo '<p class="successBox">'.sprintf(ML_EBAY_LABEL_ADDITEM_COSTS, $verified['RESPONSEDATA'][0]['DATA']['Fees']['ListingFee']).'</p>';
+		}
 	} else if('ERROR' == $verified['STATUS']) {
 		# noch mal in der Maske bleiben
 		$_POST['prepare'] = 'prepare';
-		
+
 		/* Letzte Exception holen */
 		$ex = $ecs->getLastException();
 		/* Wenns eine Exception war und es sich nicht um einen Fehler in der API handelt... */
@@ -225,87 +236,88 @@ if (array_key_exists('savePrepareData', $_POST)) {
 	echo "\n\n<!--\n".str_replace(array('<!--', '-->'), array('<!- -', '- ->'), json_indent($ecs->getLastRequest()))."-->\n\n";
 }
 
-/**
- * Daten loeschen
- */
-if ((array_key_exists('unprepare', $_POST)) && (!empty($_POST['unprepare']))) {
- 	$pIDs = MagnaDB::gi()->fetchArray('
-		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
-		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$prepareSetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
-	', true);
-	if (!empty($pIDs)) {
-		foreach ($pIDs as $pID) {
-			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? array ('products_model' => MagnaDB::gi()->fetchOne('
-							SELECT products_model
-							  FROM '.TABLE_PRODUCTS.'
-							 WHERE products_id='.$pID
-						))
-				: array ('products_id'    => $pID);
-			$where['mpID'] = $_MagnaSession['mpID'];
+if (!defined('MAGNA_DEV_PRODUCTLIST') || MAGNA_DEV_PRODUCTLIST === false) {// will be done in MLProductListDependencyEbayPrepareFormAction
+	/**
+	 * Daten loeschen
+	 */
+	if ((array_key_exists('unprepare', $_POST)) && (!empty($_POST['unprepare']))) {
+		$pIDs = MagnaDB::gi()->fetchArray('
+			SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
+				   selectionname=\''.$prepareSetting['selectionName'].'\' AND
+				   session_id=\''.session_id().'\'
+		', true);
+		if (!empty($pIDs)) {
+			foreach ($pIDs as $pID) {
+				$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
+					? array ('products_model' => MagnaDB::gi()->fetchOne('
+								SELECT products_model
+								  FROM '.TABLE_PRODUCTS.'
+								 WHERE products_id='.$pID
+							))
+					: array ('products_id'    => $pID);
+				$where['mpID'] = $_MagnaSession['mpID'];
 
-			MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_PROPERTIES, $where);
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'pID' => $pID,
-				'mpID' => $_MagnaSession['mpID'],
-			    'selectionname' => $prepareSetting['selectionName'],
-			    'session_id' => session_id()
-			));
+				MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_PROPERTIES, $where);
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'pID' => $pID,
+					'mpID' => $_MagnaSession['mpID'],
+					'selectionname' => $prepareSetting['selectionName'],
+					'session_id' => session_id()
+				));
+			}
 		}
+		unset($_POST['unprepare']);
 	}
-	unset($_POST['unprepare']);
-}
 
-/**
- * Nur Artikelbeschreibung loeschen
- */
-if ((array_key_exists('reset_description', $_POST)) && (!empty($_POST['reset_description']))) {
- 	$pIDs = MagnaDB::gi()->fetchArray('
-		SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
-		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$prepareSetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
-	', true);
-	if (!empty($pIDs)) {
-		foreach ($pIDs as $pID) {
-			$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
-				? array ('products_model' => MagnaDB::gi()->fetchOne('
-							SELECT products_model
-							  FROM '.TABLE_PRODUCTS.'
-							 WHERE products_id='.$pID
-						))
-				: array ('products_id'    => $pID);
-			$where['mpID'] = $_MagnaSession['mpID'];
+	/**
+	 * Nur Artikelbeschreibung loeschen
+	 */
+	if ((array_key_exists('reset_description', $_POST)) && (!empty($_POST['reset_description']))) {
+		$pIDs = MagnaDB::gi()->fetchArray('
+			SELECT pID FROM '.TABLE_MAGNA_SELECTION.'
+			 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
+				   selectionname=\''.$prepareSetting['selectionName'].'\' AND
+				   session_id=\''.session_id().'\'
+		', true);
+		if (!empty($pIDs)) {
+			foreach ($pIDs as $pID) {
+				$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
+					? array ('products_model' => MagnaDB::gi()->fetchOne('
+								SELECT products_model
+								  FROM '.TABLE_PRODUCTS.'
+								 WHERE products_id='.$pID
+							))
+					: array ('products_id'    => $pID);
+				$where['mpID'] = $_MagnaSession['mpID'];
 
-			MagnaDB::gi()->update(TABLE_MAGNA_EBAY_PROPERTIES, array('Description' => ''), $where);
-			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
-				'pID' => $pID,
-				'mpID' => $_MagnaSession['mpID'],
-			    'selectionname' => $prepareSetting['selectionName'],
-			    'session_id' => session_id()
-			));
+				MagnaDB::gi()->update(TABLE_MAGNA_EBAY_PROPERTIES, array('Description' => ''), $where);
+				MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
+					'pID' => $pID,
+					'mpID' => $_MagnaSession['mpID'],
+					'selectionname' => $prepareSetting['selectionName'],
+					'session_id' => session_id()
+				));
+			}
 		}
+		unset($_POST['reset_description']);
 	}
-	unset($_POST['reset_description']);
 }
-
 /**
  * Matching Vorbereitung
  */
 if (array_key_exists('prepare', $_POST) && (!empty($_POST['prepare']))) {
 
-/**
- * Fall 'nur nicht vorbereitete': Fertige aus der selection entfernen
- */
+	/**
+	 * Fall 'nur nicht vorbereitete': Fertige aus der selection entfernen
+	 */
 	if (isset($_POST['match']) && ($_POST['match'] == 'notmatched')) {
 		MagnaDB::gi()->query('
 			DELETE FROM '.TABLE_MAGNA_SELECTION.'
 			 WHERE mpID=\''.$_MagnaSession['mpID'].'\'
-		           AND selectionname=\''.$prepareSetting['selectionName'].'\'
-		           AND session_id=\''.session_id().'\' 
-		           AND pID IN ( SELECT products_id
+				   AND selectionname=\''.$prepareSetting['selectionName'].'\'
+				   AND session_id=\''.session_id().'\' 
+				   AND pID IN ( SELECT products_id
 						FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
 						 WHERE mpID=\''.$_MagnaSession['mpID'].'\'
 						 AND Verified = \'OK\' )
@@ -317,9 +329,9 @@ if (array_key_exists('prepare', $_POST) && (!empty($_POST['prepare']))) {
 		SELECT count(*) 
 		  FROM '.TABLE_MAGNA_SELECTION.'
 		 WHERE mpID=\''.$_MagnaSession['mpID'].'\' AND
-		       selectionname=\''.$prepareSetting['selectionName'].'\' AND
-		       session_id=\''.session_id().'\'
-	  GROUP BY selectionname
+			   selectionname=\''.$prepareSetting['selectionName'].'\' AND
+			   session_id=\''.session_id().'\'
+		GROUP BY selectionname
 	');
 
 	if ($itemCount == 1) {
@@ -329,9 +341,10 @@ if (array_key_exists('prepare', $_POST) && (!empty($_POST['prepare']))) {
 	}
 }
 
-if (isset($prepareAction) || (
-		isset($_GET['kind']) && ($_GET['kind'] == 'ajax') && 
-		isset($_GET['where']) && ($_GET['where'] == 'prepareView')
+if (isset($prepareAction)
+	|| (
+		isset($_GET['kind']) && ($_GET['kind'] == 'ajax')
+		&& isset($_GET['where']) && ($_GET['where'] == 'prepareView')
 	)
 ) {
 	require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/eBayCategoryMatching.php');
@@ -340,11 +353,11 @@ if (isset($prepareAction) || (
 	$ycm = new eBayCategoryMatching($kind);
 	if ($kind == 'view') {
 		require_once(DIR_MAGNALISTER_MODULES.'ebay/prepare/prepareView.php');
-		echo $ycm->render();
 		echo renderPrepareView(eBayGetSelection());
+		echo $ycm->render();
 	} else if (array_key_exists('action', $_POST)) {
 		switch ($_POST['action']) {
-			case ('getListingDurations'): {
+			case 'getListingDurations': {
 				try {
 					$result = MagnaConnector::gi()->submitRequest(array(
 						'ACTION' => 'GetListingDurations',
@@ -384,10 +397,11 @@ if (isset($prepareAction) || (
 				unset($args['action']);
 				$tmpURL = $_url;
 				$tmpURL['where'] = 'prepareView';
-				if ('true' == $args['international']) 
+				if ('true' == $args['international']) {
 					$shipProc = new eBayShippingDetailsProcessor($args, 'ebay.default.shipping.international', $tmpURL);
-				else
+				} else {
 					$shipProc = new eBayShippingDetailsProcessor($args, 'ebay.default.shipping.local', $tmpURL);
+				}
 				echo $shipProc->process();
 				break;
 			}
@@ -400,7 +414,6 @@ if (isset($prepareAction) || (
 				echo makePrice($_POST['pID'], $_POST['ListingType']);
 				break;
 			}
-
 			default: {
 				echo $ycm->render();
 				break;
@@ -408,14 +421,20 @@ if (isset($prepareAction) || (
 		}
 	}
 } else {
-	require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/PrepareCategoryView.php');
-	if (!isset($_GET['sorting'])) $_GET['sorting'] = false;
-	if (!isset($_POST['tfSearch'])) $_POST['tfSearch'] = '';
-	$eCV = new PrepareCategoryView($current_category_id, $prepareSetting, $_GET['sorting'], $_POST['tfSearch']); /* $current_category_id is a global variable from xt:Commerce */
-        if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
-                echo $eCV->renderAjaxReply();
-        } else {
-                echo $eCV->printForm();
-        }
-	unset($_MagnaShopSession['prepareMode']);
+	if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+		require_once(DIR_MAGNALISTER_MODULES.'ebay/prepare/EbayPrepareProductList.php');
+		$o = new EbayPrepareProductList();
+		echo $o;
+	} else {
+		require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/PrepareCategoryView.php');
+		if (!isset($_GET['sorting'])) $_GET['sorting'] = false;
+		if (!isset($_POST['tfSearch'])) $_POST['tfSearch'] = '';
+		$eCV = new PrepareCategoryView(null, $prepareSetting, $_GET['sorting'], $_POST['tfSearch']); /* $current_category_id is a global variable from xt:Commerce */
+		if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
+			echo $eCV->renderAjaxReply();
+		} else {
+			echo $eCV->printForm();
+		}
+		unset($_MagnaShopSession['prepareMode']);
+	}
 }

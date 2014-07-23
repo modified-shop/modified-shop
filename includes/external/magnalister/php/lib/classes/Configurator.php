@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Configurator.php 3663 2014-03-23 15:40:17Z derpapst $
+ * $Id: Configurator.php 3925 2014-06-03 12:54:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -20,7 +20,7 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-class Configurator {
+class MLConfigurator {
 	private $form = array();
 	private $id = '';
 	private $url = array();
@@ -242,6 +242,9 @@ class Configurator {
 
 			foreach ($this->form as $fi) {
 				foreach ($fi['fields'] as $configItem) {
+					if (!isset($configItem['key'])) {
+						continue;
+					}
 					if ($key == $configItem['key']) {
 						$foundItem = $configItem;
 						break;
@@ -293,15 +296,22 @@ class Configurator {
 
 			$correct = $this->verify($verify, $key, $value);
 			if (!empty($foundItem) && ($foundItem['type'] == 'extern') && is_callable($foundItem['procFunc'])) {
-				$correct = call_user_func($foundItem['procFunc'], array_merge(
-					$foundItem['params'], 
-					array(
-						'key' => $foundItem['key'],
-						'kind' => 'save',
-					)
-				), $value);
+				#echo print_m($value, basename(__FILE__).'{L'.__LINE__.'}');
+				$correct = call_user_func_array($foundItem['procFunc'], array (
+					'args' => array_merge(
+						$foundItem['params'],
+						array (
+							'key' => $foundItem['key'],
+							'kind' => 'save',
+						)
+					),
+					'value' => &$value
+				));
+				#echo print_m($value, basename(__FILE__).'{L'.__LINE__.'}');
 			}
-			if (!$correct) $noError = false;
+			if (!$correct) {
+				$noError = false;
+			}
 
 			if (!empty($key) && $correct) {
 				if (empty($value) && ($value !== '0')) $value = '';
@@ -488,6 +498,9 @@ class Configurator {
 		#echo print_m($item);
 		
 		$value = '';
+		if (!isset($item['key'])) {
+			$item['key'] = '';
+		}
 		if (array_key_exists($item['key'], $this->config)) {
 			$value = $this->config[$item['key']];
 			if (is_array($value) && isset($item['default']) && is_array($item['default'])) {
@@ -570,7 +583,7 @@ class Configurator {
 							}
 						}
 					} else {
-						$html .= '<option value="'.$k.'"'.(($value == $k) ? ' selected="selected"' : '').'>'.(!preg_match('/&[^\s;]*;/', $v) ? fixHTMLUTF8Entities($v) : $v).'</option>'."\n";
+						$html .= '<option value="'.$k.'"'.(((strlen((string)$value) == strlen((string)$k)) && ($value == $k)) ? ' selected="selected"' : '').'>'.(!preg_match('/&[^\s;]*;/', $v) ? fixHTMLUTF8Entities($v) : $v).'</option>'."\n";
 					}
 				}
 				$html .= '</select>'."\n";
@@ -798,6 +811,7 @@ class Configurator {
 
 	public function renderConfigForm() {
 		$html = '';
+		#echo print_m($this->form);
 		
 		if (array_key_exists('conf', $_POST) && is_array($_POST['conf']) &&
 			array_key_exists('configtool', $_POST) && ($_POST['configtool'] == 'MagnaConfigurator') /* Nur um gaaaanz sicher zu gehen :D */
@@ -887,6 +901,9 @@ class Configurator {
 			
 			foreach ($section['fields'] as $item) {
 				$isExpert = array_key_exists('expertsetting', $item) && $item['expertsetting'];
+				if (!isset($item['key'])) {
+					$item['key'] = '';
+				}
 				$idkey = str_replace('.', '_', $item['key']);
 				$input = $this->renderInput($item);
 				if ($item['type'] != 'hidden') {

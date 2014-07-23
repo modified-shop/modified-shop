@@ -157,9 +157,10 @@ $(document).ready(function() {
 			SELECT MpIdentifier, CustomIdentifier
 			  FROM '.TABLE_MAGNA_MEINPAKET_VARIANTMATCHING.'
 			 WHERE MpId = '.$this->mpId.'
+			       AND MpIdentifier <> ""
 		');
 		
-		$html .= '
+		$html = '
 				<tr class="headline">
 					<td colspan="3"><h4>' . ML_MEINPAKET_VARIATIONCONFIG . '</h4></td>
 				</tr>
@@ -196,7 +197,8 @@ $(document).ready(function() {
 		
 		return $html;
 	}
-	protected function renderShippingDetailsJs(){
+	
+	protected function renderShippingDetailsJs() {
 		ob_start();
 		?>
 			<script type="text/javascript">/*<![CDATA[*/

@@ -41,7 +41,7 @@ abstract class MagnaCompatibleBase {
 		$pathTmpl = DIR_MAGNALISTER_MODULES.'%s'.'/%s/%s'.$file.'.php';
 		if (is_string($this->specificResource) && !empty($this->specificResource)) {
 			$lpath = sprintf($pathTmpl, strtolower($this->specificResource), $dir, ucfirst($this->specificResource));
-			//echo $lPath.'<br>';
+			//echo $lpath.'<br>';
 			if (file_exists($lpath)) {
 				return $lpath;
 			}
@@ -55,7 +55,6 @@ abstract class MagnaCompatibleBase {
 	}
 	
 	protected function loadResource($dir, $file) {
-		$class = false;
 		if (($path = $this->getResourcePath($dir, $file)) === false) {
 			return false;
 		}

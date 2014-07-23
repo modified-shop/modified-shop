@@ -19,9 +19,9 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FilterQuickCategoryView.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/QuickCategoryView.php');
 
-class HoodPrepareCategoryView extends FilterQuickCategoryView {
+class HoodPrepareCategoryView extends QuickCategoryView {
 	
 	protected $priceConfig = array();
 	
@@ -39,6 +39,8 @@ class HoodPrepareCategoryView extends FilterQuickCategoryView {
 	}
 
 	protected function init() {
+		parent::init();
+		
 		if (isset($_POST['action']) && ($_POST['action'] == 'uncheckSelection')) {
 			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array (
 				'mpID' => $this->_magnasession['mpID'],
@@ -46,6 +48,8 @@ class HoodPrepareCategoryView extends FilterQuickCategoryView {
 				'session_id' => session_id(),
 			));
 		}
+		
+		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 
 	public function getAdditionalHeadlines() {
@@ -156,9 +160,15 @@ class HoodPrepareCategoryView extends FilterQuickCategoryView {
 			$textHoodPrice = implode('<br>', $textHoodPrice);
 		}
 		if ('OK' != $a['Verified']) {
-			return '
-				<td title="'.ML_HOOD_PRICE_CALCULATED_TOOLTIP.'">'.$textHoodPrice.'</td>
-				<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_HOOD_PRODUCT_PREPARED_FAULTY, 12, 12).'</td>';
+			if ('EMPTY' == $a['Verified']) {
+				return '
+					<td title="'.ML_HOOD_PRICE_CALCULATED_TOOLTIP.'">'.$textHoodPrice.'</td>
+					<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/white_dot.png', ML_EBAY_PRODUCT_PREPARED_FAULTY_BUT_MP, 12, 12).'</td>';
+			} else {
+				return '
+					<td title="'.ML_HOOD_PRICE_CALCULATED_TOOLTIP.'">'.$textHoodPrice.'</td>
+					<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_HOOD_PRODUCT_PREPARED_FAULTY, 12, 12).'</td>';
+			}
 		}
 		return '
 			<td title="'.ML_HOOD_PRICE_CALCULATED_TOOLTIP.'">'.$textHoodPrice.'</td>
@@ -166,8 +176,6 @@ class HoodPrepareCategoryView extends FilterQuickCategoryView {
 	}
 	
 	public function getFunctionButtons() {
-		global $_url;
-
 		$mmatch = true;
 
 		return '

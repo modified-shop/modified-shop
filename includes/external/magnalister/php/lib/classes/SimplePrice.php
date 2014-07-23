@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimplePrice.php 3392 2013-12-12 14:31:54Z derpapst $
+ * $Id: SimplePrice.php 3735 2014-04-03 23:17:24Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -27,7 +27,9 @@ class SimplePrice {
 	private $isGroupPrice   = false;
 	
 	private $addedTax = 0;
-
+	
+	protected static $cache = array();
+	
 	public function __construct($price = null, $actualCurr = null) {
 		$currencies_query = MagnaDB::gi()->query('SELECT * FROM '.TABLE_CURRENCIES);
 		while ($currency = MagnaDB::gi()->fetchNext($currencies_query)) {
@@ -253,16 +255,24 @@ class SimplePrice {
 		$this->price = ($this->price / (($tax + 100) / 100));
 		return $this;
 	}
-
+	
+	protected static function queryCache($query, $invalidate = false) {
+		$sMd5 = md5($query);
+		if (!isset(self::$cache[$sMd5]) || $invalidate) {
+			self::$cache[$sMd5] = MagnaDB::gi()->fetchOne($query);
+		}
+		return self::$cache[$sMd5];
+	}
+	
 	public static function getTaxByClassID($taxClassID, $countryID = -1) {
 		if ($countryID == -1) {
 			# Fallback to shop default
-			$countryID = (int)MagnaDB::gi()->fetchOne('
+			$countryID = (int)self::queryCache('
 				SELECT configuration_value FROM '.TABLE_CONFIGURATION.'
 				 WHERE configuration_key="STORE_COUNTRY"
 			');
 		}
-		$taxRate = MagnaDB::gi()->fetchOne(eecho('
+		$taxRate = self::queryCache(eecho('
 			SELECT MAX(tax_rate)
 			  FROM '.TABLE_TAX_RATES.' tr, '.TABLE_ZONES_TO_GEO_ZONES.' zgz 
 			 WHERE tr.tax_class_id="'.$taxClassID.'"
@@ -273,7 +283,7 @@ class SimplePrice {
 		//echo var_dump_pre($taxRate);
 		if (($taxRate === false) || ($taxRate === null)) {
 			// Fallback for shops with broken zgz <--> tr tables
-			$taxRate = MagnaDB::gi()->fetchOne(eecho('
+			$taxRate = self::queryCache(eecho('
 				SELECT MAX(tax_rate)
 				  FROM '.TABLE_TAX_RATES.' tr
 				 WHERE tr.tax_class_id="'.$taxClassID.'"

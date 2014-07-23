@@ -28,7 +28,7 @@ class HoodSyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 	}
 	
 	protected function cancelOrder($date) {
-		$parent = parent::confirmShipment($date);
+		$parent = parent::cancelOrder($date);
 		$parent['SendMail'] = $this->config['SendMail'];
 		return $parent;
 	}

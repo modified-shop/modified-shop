@@ -41,11 +41,11 @@ if ($_magnaQuery['view'] == 'inventory') {
 			$_MagnaShopSession[$_MagnaSession['currentPlatform']]['Delete']
 		);
 	}
-	$dV = new DeletedView($_MagnaSession['mpID']);
+	$dV = new DeletedView();
 	echo $dV->renderView();
 	
 } else {
-	$eV = new ErrorView($_MagnaSession['mpID']);
+	$eV = new ErrorView();
 	echo $eV->renderView();
 }
 

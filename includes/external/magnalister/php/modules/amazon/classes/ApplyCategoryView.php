@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ApplyCategoryView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: ApplyCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -19,9 +19,9 @@
  */
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
-require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/FilterQuickCategoryView.php');
+require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/QuickCategoryView.php');
 
-class ApplyCategoryView extends FilterQuickCategoryView {
+class ApplyCategoryView extends QuickCategoryView {
 
 	public function __construct($cPath = 0, $settings = array(), $sorting = false, $search = '') {
 		global $_MagnaSession;
@@ -82,6 +82,12 @@ class ApplyCategoryView extends FilterQuickCategoryView {
 		if (!isset($_GET['kind']) || ($_GET['kind'] != 'ajax')) {
 			$this->simplePrice->setCurrency(getCurrencyFromMarketplace($this->_magnasession['mpID']));
 		}
+	}
+
+	protected function init() {
+		parent::init();
+		
+		$this->productIdFilterRegister('ManufacturerFilter', array());
 	}
 
 	/**

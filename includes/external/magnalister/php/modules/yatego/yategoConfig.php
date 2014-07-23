@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: yategoConfig.php 3655 2014-03-21 22:01:56Z derpapst $
+ * $Id: yategoConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -56,32 +56,31 @@ $form = loadConfigForm($_lang,
 );
 
 $form['ftp']['headline'] = sprintf($form['ftp']['headline'], ML_MODULE_YATEGO);
-$form['ftp']['desc'] = sprintf($form['ftp']['desc'], ML_MODULE_YATEGO);
 
-getManufacturers($form['checkin']['fields']['manufacturerfilter']);
+mlGetManufacturers($form['checkin']['fields']['manufacturerfilter']);
 
-getCountries($form['shipping']['fields']['country']);
-getLanguages($form['lang']['fields']['lang']);
-getShippingMethods($form['shipping']['fields']['method']);
-getCustomersStatus($form['price']['fields']['whichprice'], false);
+mlGetCountries($form['shipping']['fields']['country']);
+mlGetLanguages($form['lang']['fields']['lang']);
+mlGetShippingMethods($form['shipping']['fields']['method']);
+mlGetCustomersStatus($form['price']['fields']['whichprice'], false);
 if (!empty($form['price']['fields']['whichprice'])) {
 	$form['price']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
 	ksort($form['price']['fields']['whichprice']['values']);
 } else {
 	unset($form['price']['fields']['whichprice']);
 }
-//getOrderStatus($form['orderstatus']['fields']['openstatus']);
-//getOrderStatus($form['orderstatus']['fields']['cancelstatus']);
-//getOrderStatus($form['orderstatus']['fields']['shippedstatus']);
-getOrderStatus($form['import']['fields']['openstatus']);
+//mlGetOrderStatus($form['orderstatus']['fields']['openstatus']);
+//mlGetOrderStatus($form['orderstatus']['fields']['cancelstatus']);
+//mlGetOrderStatus($form['orderstatus']['fields']['shippedstatus']);
+mlGetOrderStatus($form['import']['fields']['openstatus']);
 
-getCustomersStatus($form['import']['fields']['customersgroup']);
-getShippingModules($form['import']['fields']['defaultshipping']);
-getPaymentModules($form['import']['fields']['defaultpayment']);
+mlGetCustomersStatus($form['import']['fields']['customersgroup']);
+mlGetShippingModules($form['import']['fields']['defaultshipping']);
+mlGetPaymentModules($form['import']['fields']['defaultpayment']);
 
 $form['shipping']['fields']['method']['label'] = ML_GENERIC_SHIPPING_COST_ADDITIONAL;
 
-$cG = new Configurator($form, $_MagnaSession['mpID'], 'conf_yatego');
+$cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_yatego');
 $cG->setRenderTabIdent(true);
 
 $boxes = '';
@@ -97,8 +96,8 @@ if ((!is_array($auth) || !$auth['state']) &&
 }
 
 if (array_key_exists('conf', $_POST)) {
-    $nUser = trim($_POST['conf'][$_Marketplace.'.username']);
-    $nPass = trim($_POST['conf'][$_Marketplace.'.password']);
+	$nUser = trim($_POST['conf'][$_Marketplace.'.username']);
+	$nPass = trim($_POST['conf'][$_Marketplace.'.password']);
 
 	if (!empty($nUser) && (getDBConfigValue($_Marketplace.'.password', $_MagnaSession['mpID']) == '__saved__') 
 	    && empty($nPass)
@@ -112,21 +111,21 @@ if (array_key_exists('conf', $_POST)) {
 			'state' => false,
 			'expire' => time()
 		), true);
-	    if (!empty($nUser) && !empty($nPass)) {
-	        try {
-	            $result = MagnaConnector::gi()->submitRequest(array(
-	                'ACTION' => 'SetCredentials',
-                    'USER' => $nUser,
-                    'PASS' => $nPass,
-	            ));
-	            $boxes .= '
-	                <p class="successBox">'.ML_GENERIC_STATUS_LOGIN_SAVED.'</p>
-	            ';
-	        } catch (MagnaException $e) {
-	            $boxes .= '
-	                <p class="errorBox">'.ML_GENERIC_STATUS_LOGIN_SAVEERROR.'</p>
-	            ';
-	        }
+		if (!empty($nUser) && !empty($nPass)) {
+			try {
+				$result = MagnaConnector::gi()->submitRequest(array(
+					'ACTION' => 'SetCredentials',
+					'USER' => $nUser,
+					'PASS' => $nPass,
+				));
+				$boxes .= '
+					<p class="successBox">'.ML_GENERIC_STATUS_LOGIN_SAVED.'</p>
+				';
+			} catch (MagnaException $e) {
+				$boxes .= '
+					<p class="errorBox">'.ML_GENERIC_STATUS_LOGIN_SAVEERROR.'</p>
+				';
+			}
 			try {
 				MagnaConnector::gi()->submitRequest(array(
 					'ACTION' => 'IsAuthed',
@@ -140,15 +139,14 @@ if (array_key_exists('conf', $_POST)) {
 				$e->setCriticalStatus(false);
 				$boxes .= renderAuthError($e->getErrorArray());
 			}
-	    }
+		}
 	} else {
-        $boxes .= '
-            <p class="errorBox">'.ML_ERROR_INVALID_PASSWORD.'</p>
-        ';
+		$boxes .= '
+			<p class="errorBox">'.ML_ERROR_INVALID_PASSWORD.'</p>';
 	}
 }
 
-$allCorrect = $cG->processPOST($keysToSubmit);
+$allCorrect = $cG->processPOST();
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {
 	echo $cG->processAjaxRequest();
