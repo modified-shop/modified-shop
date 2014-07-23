@@ -1,0 +1,14 @@
+{
+    "orders": {
+        "headline": "Bestellimport",
+        "fields": {
+            "defaultpayment": {
+                "values": {
+                    "textfield": "Aus Textfeld",
+                    "matching": "Automatische Zurodnung"
+                },
+                "default": "matching"
+            }
+        }
+    }
+}
