@@ -200,6 +200,8 @@ define('ORDERS_STATUS_REMINDER', 'Zahlung Erinnerung');
 define('ORDERS_STATUS_VAUTHORIZATION', 'Zahlung vAuth');
 define('ORDERS_STATUS_VSETTLEMENT', 'Zahlung vSettlement');
 define('ORDERS_STATUS_INVOICE', 'Zahlung Rechnung');
+define('TEXT_EXTERN_CALLBACK_URL', 'URL Statusweiterleitung');
+define('TEXT_EXTERN_CALLBACK_TIMEOUT', 'Timeout');
 
 // global
 define('TEXT_YES', 'Ja');
