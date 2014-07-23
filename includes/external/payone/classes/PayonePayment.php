@@ -286,6 +286,13 @@ class PayonePayment {
 	}
 
 	function pre_confirmation_check() {
+    // delete tmp order
+    if (isset($_SESSION['tmp_payone_oID']) && is_numeric($_SESSION['tmp_payone_oID'])) {
+      $this->_remove_order($_SESSION['tmp_payone_oID']);
+    }
+	  unset($_SESSION['tmp_payone_oID']);
+	  unset($_SESSION['tmp_oID']);
+
 		if ($this->config['address_check']['active'] == 'true' && !$this->_addressesAreValidated()) {
 			$_SESSION['payone_error'] = 'address_changed';
 			xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, '', 'SSL'));
