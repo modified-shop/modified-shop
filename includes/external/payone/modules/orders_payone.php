@@ -148,7 +148,7 @@ if (in_array($order->info['payment_method'], $payone_payment_methods)) {
 	<tr>
 	  <td colspan="2" style="width:840px;">
       <style type="text/css">
-        p.message { padding: 1ex 1em; border: 2px solid red; background-color: #ffa; }
+        p.message { padding: 1ex 1em; margin: 5px 1px; border: 2px solid red; background-color: #ffa; }
         div.p1_box { background: #E2E2E2; float: left; padding: 1ex; margin: 1px; min-height: 125px; min-width:48.4%; width:48.4%; }
         .p1_box_full {width:98.3% !important;}
         div.p1_boxheading { font-size: 1.2em; font-weight: bold; background: #CCCCCC; padding: .2ex .5ex;}
