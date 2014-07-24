@@ -85,10 +85,8 @@ class PayoneAddressCheck {
 				$billto_checktype = 'BA';
 			}
 			$billto_check = $this->_payone->addressCheck($_SESSION['billto'], $billto_checktype);
-			if ($billto_check instanceof Payone_Api_Response_AddressCheck_Invalid) {
+			if ($billto_check instanceof Payone_Api_Response_AddressCheck_Invalid || $billto_check instanceof Payone_Api_Response_Error) {
 				$addresses_correct = false;
-				$this->set_content_data('billto_errorcode', $billto_check->getErrorcode());
-				$this->set_content_data('billto_errormessage', $billto_check->getErrormessage());
 				$this->set_content_data('billto_customermessage', $billto_check->getCustomermessage());
 				$this->set_content_data('billto_corrected_street', $ab_billto['entry_street_address']);
 				$this->set_content_data('billto_corrected_zip', $ab_billto['entry_postcode']);
@@ -127,10 +125,8 @@ class PayoneAddressCheck {
 				$sendto_checktype = 'BA';
 			}
 			$sendto_check = $this->_payone->addressCheck($_SESSION['sendto'], $sendto_checktype);
-			if ($sendto_check instanceof Payone_Api_Response_AddressCheck_Invalid) {
+			if ($sendto_check instanceof Payone_Api_Response_AddressCheck_Invalid || $sendto_check instanceof Payone_Api_Response_Error) {
 				$addresses_correct = false;
-				$this->set_content_data('sendto_errorcode', $sendto_check->getErrorcode());
-				$this->set_content_data('sendto_errormessage', $sendto_check->getErrormessage());
 				$this->set_content_data('sendto_customermessage', $sendto_check->getCustomermessage());
 				$this->set_content_data('sendto_corrected_street', $ab_sendto['entry_street_address']);
 				$this->set_content_data('sendto_corrected_zip', $ab_sendto['entry_postcode']);
