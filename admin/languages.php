@@ -384,7 +384,7 @@ input[type=checkbox], input[type=radio] {
                 <div class="clear"></div>                
                 <div class="transfer main">
                 <?php 
-                    echo xtc_draw_form('languages', FILENAME_LANGUAGES, 'action=transfer').PHP_EOL; 
+                    echo xtc_draw_form('languages', FILENAME_LANGUAGES, 'action=transfer', 'post', 'onsubmit="return confirmSubmit(\'\',\''. TEXT_LANGUAGE_TRANSFER_BTN .' ?\',this)"').PHP_EOL; 
                     echo '<fieldset class="fieldset">'.PHP_EOL;
                     echo '<legend><b>'. TEXT_LANGUAGE_TRANSFER_INFO . '</b></legend>'.PHP_EOL;
                     $lng_query = xtc_db_query("SELECT languages_id, name FROM ".TABLE_LANGUAGES."  ORDER BY sort_order");
@@ -402,7 +402,7 @@ input[type=checkbox], input[type=radio] {
                     echo '<br />'.PHP_EOL;
                     echo '<div class="mrg5">'.TEXT_LANGUAGE_TRANSFER_FROM.xtc_draw_pull_down_menu('lngID_from', $lng_array, '' , 'style="width: 135px"').PHP_EOL;
                     echo TEXT_LANGUAGE_TRANSFER_TO. xtc_draw_pull_down_menu('lngID_to', $lng_array, '' , 'style="width: 135px"').PHP_EOL;
-                    echo '<button class="button" type="submit" />'.TEXT_LANGUAGE_TRANSFER_BTN.'</button>'.PHP_EOL;
+                    echo '<input type="submit" class="button" value="' . TEXT_LANGUAGE_TRANSFER_BTN . '" />'.PHP_EOL;
                     echo '</div>'.PHP_EOL;
                     echo '</fieldset>'.PHP_EOL;
                     echo '</form>'.PHP_EOL;
@@ -430,7 +430,7 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order'));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
-                $contents[] = array('align' => 'center', 'text' => '<br /><button class="button" type="submit" />' . BUTTON_INSERT . '</button> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_LANGUAGES, 'page=' . $_GET['page'] . '&lID=' . $_GET['lID']) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_LANGUAGE . '</b>');
