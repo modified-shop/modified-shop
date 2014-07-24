@@ -80,7 +80,7 @@
 
     <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
 
-    <div style="width:900px;">    
+    <div class="div_box" style="width: 900px; margin:5px;">
   
     <?php
     $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
@@ -88,7 +88,7 @@
 
       <!-- BOF - Tomcraft - 2009-11-02 - Block1 //-->
       <div style="padding:5px;">
-      <table class="tableInput">
+      <table class="tableInput border0">
         <tr>
           <td class="main" style="width:204px;"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
           <td class="main"><?php echo xtc_draw_file_field('categories_image') . '<br />' . xtc_draw_separator('pixel_trans.gif', '24', '15') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?>
@@ -159,6 +159,8 @@
       ?>
       <!-- EOF Customers group block //-->
 
+      <!-- BOF Block2 //-->
+      <div style="padding:5px;clear:both;">
         <?php
         include('includes/lang_tabs.php');
         for ($i=0; $i<sizeof($languages); $i++) {
@@ -198,6 +200,7 @@
         <?php echo ('</div>');?>
         <?php } ?>
       </div>
+      <!-- EOF Block2 //-->
       <div style="clear:both;"></div>
       <div class="txta-r pdg2 mrg5">
         <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
