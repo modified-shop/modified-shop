@@ -138,7 +138,7 @@ class PayonePayment {
 	}
 
   function _credit_risk_check() {
-    global $smarty, $breadcrumb;
+    global $smarty, $breadcrumb, $request_type;
     
     $active_genre = $this->_getActiveGenreIdentifier();
         
@@ -220,7 +220,7 @@ class PayonePayment {
 				if ($check_required) {
 					$this->payone->log('selection() redirecting customer '.$_SESSION['customer_id'].' to address check');
 					
-					global $smarty, $breadcrumb;
+					global $smarty, $breadcrumb, $request_type;
 					
           require_once (DIR_FS_EXTERNAL.'payone/classes/PayoneAddressCheck.php');
           $payone_ac = new PayoneAddressCheck();
