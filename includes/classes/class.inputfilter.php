@@ -192,11 +192,8 @@ class InputFilter {
 	  */
 	function quoteSmart($source) {
 		// strip slashes
-    if ((function_exists("get_magic_quotes_gpc") && get_magic_quotes_gpc())
-        || (ini_get('magic_quotes_sybase') && (strtolower(ini_get('magic_quotes_sybase')) != 'off')))
-    {
-			$source = stripslashes($source);
-		}
+		$source = stripslashes($source);
+		
 		return $source;
 	}
 }
