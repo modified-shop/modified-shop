@@ -70,7 +70,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                       ON pd.products_id = p.products_id  
                                          AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
                                  JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                      ON p2c.products_id = p.products_id 
+                                      ON p2c.products_id = p.products_id
+                                         AND p2c.categories_id != '0' 
                              GROUP BY p.products_id  
                              ORDER BY products_quantity ASC";
         $products_split = new splitPageResults($_GET['page'], $page_max_display_results, $products_query_raw, $products_query_numrows, 'p.products_id');
