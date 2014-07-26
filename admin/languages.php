@@ -49,9 +49,9 @@
                                 'directory' => $directory,  
                                 'status' => $status,  
                                 'sort_order' => $sort_order, 
-                                'language_charset' => $charset
+                                'language_charset' => $charset,
+                                'status_admin' => $status_admin
                                 ); 
-        $sql_data_array['status_admin'] = $status_admin;                                
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array);      
         $insert_id = xtc_db_insert_id();
 
@@ -106,9 +106,9 @@
                                 'directory' => $directory,  
                                 'status' => $status,  
                                 'sort_order' => $sort_order, 
-                                'language_charset' => $charset
+                                'language_charset' => $charset,
+                                'status_admin' => $status_admin,
                                 ); 
-        $sql_data_array['status_admin'] = $status_admin;  
         xtc_db_perform(TABLE_LANGUAGES, $sql_data_array, 'update', 'languages_id = \''.xtc_db_input($lID).'\'');        
         
         if ($_POST['default'] == 'on') {
@@ -442,7 +442,7 @@ input[type=checkbox], input[type=radio] {
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_IMAGE . '<br />' . xtc_draw_input_field('image', $lInfo->image));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_DIRECTORY . '<br />' . xtc_draw_input_field('directory', $lInfo->directory));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS . '<br />' . xtc_draw_input_field('status', $lInfo->status));
-                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status', $lInfo->status_admin));
+                $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_STATUS_ADMIN . '<br />' . xtc_draw_input_field('status_admin', $lInfo->status_admin));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_LANGUAGE_SORT_ORDER . '<br />' . xtc_draw_input_field('sort_order', $lInfo->sort_order));
                 if (DEFAULT_LANGUAGE != $lInfo->code)
                   $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
