@@ -72,7 +72,8 @@ require (DIR_WS_INCLUDES.'head.php');
                                       ON pd.products_id = p.products_id  
                                          AND pd.language_id = '" . $_SESSION['languages_id'] . "' 
                                  JOIN " . TABLE_PRODUCTS_TO_CATEGORIES . " p2c
-                                      ON p2c.products_id = p.products_id  
+                                      ON p2c.products_id = p.products_id
+                                         AND p2c.categories_id != '0'  
                                 WHERE p.products_ordered > 0 
                              GROUP BY pd.products_id 
                              ORDER BY p.products_ordered DESC, pd.products_name ASC";
