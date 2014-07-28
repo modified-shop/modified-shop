@@ -46,13 +46,13 @@ if ($random_product = xtc_random_select("-- templates/xtc5/source/boxes/whats_ne
                                               p.products_price,
                                               pd.products_name
                                          FROM ".TABLE_PRODUCTS." p
-                                    LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                         JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                            ON p.products_id = pd.products_id 
                                              AND pd.language_id = ".$_SESSION['languages_id']."
                                              AND trim(pd.products_name) != ''
-                                    LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
+                                         JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c
                                            ON p.products_id = p2c.products_id
-                                    LEFT JOIN ".TABLE_CATEGORIES." c
+                                         JOIN ".TABLE_CATEGORIES." c
                                            ON c.categories_id = p2c.categories_id 
                                              AND c.categories_status = 1 
                                              ".CATEGORIES_CONDITIONS_C."
