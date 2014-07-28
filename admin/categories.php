@@ -59,13 +59,13 @@ if (isset ($_POST['multi_status_on'])) {
   //set multi_categories status=on
   if (is_array($_POST['multi_categories'])) {
     foreach ($_POST['multi_categories'] AS $category_id) {
-      $catfunc->set_category_recursive($category_id, '1');
+      $catfunc->set_category_recursive((int)$category_id, '1');
     }
   }
   //set multi_products status=on
   if (is_array($_POST['multi_products'])) {
     foreach ($_POST['multi_products'] AS $product_id) {
-      $catfunc->set_product_status($product_id, '1');
+      $catfunc->set_product_status((int)$product_id, '1');
     }
   }
   xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));
@@ -75,13 +75,13 @@ if (isset ($_POST['multi_status_off'])) {
   //set multi_categories status=off
   if (is_array($_POST['multi_categories'])) {
     foreach ($_POST['multi_categories'] AS $category_id) {
-      $catfunc->set_category_recursive($category_id, "0");
+      $catfunc->set_category_recursive((int)$category_id, "0");
     }
   }
   //set multi_products status=off
   if (is_array($_POST['multi_products'])) {
     foreach ($_POST['multi_products'] AS $product_id) {
-      $catfunc->set_product_status($product_id, "0");
+      $catfunc->set_product_status((int)$product_id, "0");
     }
   }
   xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('cPath', 'action', 'pID', 'cID')).'cPath='.$_GET['cPath']));

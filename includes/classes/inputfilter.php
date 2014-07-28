@@ -82,6 +82,7 @@ class Inputfilter {
                   case 'mID':
                   case 'rID':
                   case 'sID':
+                  case 'bID':
                       $this->params[$key] = $this->validateNumeric($value);
                       break;
                   //0-9a-zA-Z _ -
