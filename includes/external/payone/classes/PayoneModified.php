@@ -272,22 +272,25 @@ class PayoneModified {
 	}
 
 	public function getConfig($identifier = null) {				
+    if ($this->checkConfig()) {
+      $configuration_flat = array();
+      $query = xtc_db_query("SELECT * FROM `payone_config`");
+      while($row = xtc_db_fetch_array($query)) {
+        $configuration_flat[$row['path']] = $row['value'];
+      }
+      $configuration = $this->_inflateArray($configuration_flat);
 
-    $configuration_flat = array();
-    $query = xtc_db_query("SELECT * FROM `payone_config`");
-    while($row = xtc_db_fetch_array($query)) {
-      $configuration_flat[$row['path']] = $row['value'];
-    }
-    $configuration = $this->_inflateArray($configuration_flat);
+      $default_config = $this->_getDefaultConfig();
 
-		$default_config = $this->_getDefaultConfig();
-
-		$configuration = $this->mergeConfigs($default_config, $configuration);
-		if (!empty($identifier) && array_key_exists($identifier, $configuration)) {
-			return $configuration[$identifier];
-		}
-		else {
-			return $configuration;
+      $configuration = $this->mergeConfigs($default_config, $configuration);
+      if (!empty($identifier) && array_key_exists($identifier, $configuration)) {
+        return $configuration[$identifier];
+      }
+      else {
+        return $configuration;
+      }
+		} else {
+		  return array();
 		}
 	}
 
