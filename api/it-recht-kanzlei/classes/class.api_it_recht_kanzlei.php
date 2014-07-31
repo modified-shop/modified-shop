@@ -139,11 +139,14 @@ class it_recht_kanzlei {
           $file_pdf_target = DIR_FS_CATALOG.$local_dir_for_pdf_storage.$file_pdf_targetfilename;
           $file_pdf_target_temp = DIR_FS_CATALOG.$local_dir_for_pdf_storage.md5($xml->rechtstext_type).'.pdf';
           
+          // include needed function
+          require_once(DIR_FS_INC.'get_external_content.inc.php');
+          
           $file_pdf = fopen($file_pdf_target_temp, 'w+');
           if ($file_pdf === false) { // catch errors
             $this->return_error('7');
           }
-          $retval = fwrite($file_pdf, file_get_contents($xml->rechtstext_pdf_url)); 
+          $retval = fwrite($file_pdf, get_external_content($xml->rechtstext_pdf_url, 5, false)); 
           if ($retval === false) { // catch errors
             $this->return_error('7');
           }
@@ -227,7 +230,10 @@ class it_recht_kanzlei {
     $urlregex .= "(#[a-z_.-][a-z0-9+\$_.-]*)?"; // Anchor
     
     $array_url = parse_url($url);
-    $limit_to_host = array('it-recht-kanzlei.de', 'itrelaunch.blickreif.com');
+    $limit_to_host = array('it-recht-kanzlei.de', 
+                           'www.it-recht-kanzlei.de', 
+                           'itrelaunch.blickreif.com', 
+                           'www.itrelaunch.blickreif.com');
     if (!in_array(strtolower($array_url['host']), $limit_to_host)) {
       return false;
     }
