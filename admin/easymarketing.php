@@ -34,11 +34,19 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
-        <div class="pageHeading pdg2">Easymarketing</div>
+        <div class="pageHeading pdg2">EASYMARKETING</div>
         <div class="main">Modules</div>         
-        <table class="tableCenter" style="width:1100px;">
+        <table class="tableCenter">
+          <tr>
+            <td valign="middle" class="dataTableHeadingContent" style="width:250px;">
+              Vollautomatisierte Online-Werbung
+            </td>
+            <td valign="middle" class="dataTableHeadingContent">
+              <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=easymarketing'); ?>"><u>Einstellungen</u></a>  
+            </td>
+          </tr>
           <tr style="background-color: #FFFFFF;">
-            <td style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
+            <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
               <font color="#FF7A00"><strong>Vollautomatisiert und optimiert werben auf Google uvm.</strong></font>
               <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><img src="images/easymarketing/logo-easymarketing.jpg" align="right" /></a>
@@ -62,11 +70,11 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li style="list-style-type: circle !important;">Hohe Zeitersparnis, da Kampagnen automatisch erstellt und gepflegt werden</li>
               </ul>
               <br />
-              <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><span style="font-size:12px; color:#FF7A00;"><u><strong>Weitere Infos zu Easymarketing finden Sie unter www.easymarketing.de</strong></u></span></a>
+              <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><span style="font-size:12px; color:#FF7A00;"><u><strong>Weitere Infos zu EASYMARKETING finden Sie unter www.easymarketing.de</strong></u></span></a>
             </td>
           </tr>
           <tr style="background-color: #FFFFFF;">
-            <td>
+            <td colspan="2">
             <iframe style="background-color: transparent; border: 0px none transparent;padding: 0px; overflow: hidden;" seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" width="300px" height="250px" src="http://api.easymarketing.de/demo_chart?website_url=<?php echo urlencode(HTTP_SERVER.DIR_WS_CATALOG); ?>&partner_id=modified&version=large"></iframe>
             </td>
           </tr>
