@@ -29,7 +29,7 @@ class paypal_ipn {
     $this->code = 'paypal_ipn';
     $this->logo = xtc_image('../'.DIR_WS_ICONS . 'pp_logo_100x31.gif');
     $this->title = MODULE_PAYMENT_PAYPAL_IPN_TEXT_TITLE;
-    $this->description = MODULE_PAYMENT_PAYPAL_IPN_TEXT_DESCRIPTION;
+    $this->description = MODULE_PAYMENT_PAYPAL_IPN_TEXT_DESCRIPTION.((defined('_VALID_XTC')) ? MODULE_PAYMENT_PAYPAL_IPN_LP : '');
     $this->sort_order = MODULE_PAYMENT_PAYPAL_IPN_SORT_ORDER;
     $this->enabled = ((MODULE_PAYMENT_PAYPAL_IPN_STATUS == 'True') ? true : false);
     $this->info = MODULE_PAYMENT_PAYPAL_IPN_TEXT_INFO;

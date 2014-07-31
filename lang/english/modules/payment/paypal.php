@@ -25,6 +25,7 @@ define('MODULE_PAYMENT_PAYPAL_SORT_ORDER_TITLE' , 'Sort order');
 define('MODULE_PAYMENT_PAYPAL_SORT_ORDER_DESC' , 'Sort order of the view. Lowest numeral will be displayed first');
 define('MODULE_PAYMENT_PAYPAL_ZONE_TITLE' , 'Payment zone');
 define('MODULE_PAYMENT_PAYPAL_ZONE_DESC' , 'If a zone is choosen, the payment method will be valid for this zone only.');
+define('MODULE_PAYMENT_PAYPAL_LP', '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Create PayPal account now.</strong></a>');
 
 // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
 define('MODULE_PAYMENT_PAYPAL_NEG_SHIPPING_TITLE', 'Exclusion in case of shipping');

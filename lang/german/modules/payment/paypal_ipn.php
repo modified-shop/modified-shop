@@ -120,6 +120,7 @@ define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_SUB3','INVALID f&uuml;r PayPal-Zahlungsv
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_HEADER','Vielen Dank');
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT1','Wir bedanken uns f&uuml;r Ihre PayPal-Zahlung in H&ouml;he von');
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT2','f&uuml;r Ihre Bestellung vom');
+define('MODULE_PAYMENT_PAYPAL_IPN_LP', '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>');
 
 // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
 define('MODULE_PAYMENT_PAYPAL_IPN_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
