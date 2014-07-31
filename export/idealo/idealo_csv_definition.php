@@ -3,7 +3,7 @@
 /*
 	Idealo, Export-Modul
 
-	(c) Idealo 2012,
+	(c) Idealo 2013,
 	
 	Please note that this extension is provided as is and without any warranty. It is recommended to always backup your installation prior to use. Use at your own risk.
 	
@@ -13,75 +13,66 @@
 */
 
 
-$_csv_version_number_idealo = '3.6.0';
-$_csv_version_date = '25.06.2013';
+$_csv_version_number_idealo = '3.11.0';
+$_csv_version_date = '11.02.2014';
 $_csv_idealo_module_modified = 'no';
 
-define( 'TEXT_IDEALO_CSV_MODIFIED', $_csv_idealo_module_modified );
+define('TEXT_IDEALO_CSV_MODIFIED', $_csv_idealo_module_modified);
 
-define( 'MODULE_IDEALO_CSV_VERSION_TEXT_01', 'Idealo - CSV Exportmodul V ' );
-define( 'MODULE_IDEALO_CSV_VERSION_TEXT_02', $_csv_version_number_idealo );
-define( 'MODULE_IDEALO_CSV_VERSION_TEXT_03', ' f&uuml;r xt-Systeme vom ' );
-define( 'MODULE_IDEALO_CSV_VERSION_TEXT_04', $_csv_version_date );
-define( 'TEXT_NEW_IDEALO_MODULE_01', 'Die Version ' );
-define( 'TEXT_NEW_IDEALO_MODULE_02', ' des Moduls ist auf Idealo verf&uuml;gbar.' );
-define( 'TEXT_IDEALO_CSV_TEAM', '<br>Da das installierte Modul f&uuml;r Ihr Shopsystem modifiziert wurde, wenden Sie sich f&uuml;r ein Update bitte an <a href="mailto:csv@idealo.de">csv@idealo.de.</a>');
+define('MODULE_IDEALO_CSV_VERSION_TEXT_01', 'Idealo - CSV Exportmodul V ');
+define('MODULE_IDEALO_CSV_VERSION_TEXT_02', $_csv_version_number_idealo);
+define('MODULE_IDEALO_CSV_VERSION_TEXT_03', ' f&uuml;r xt-Systeme vom ');
+define('MODULE_IDEALO_CSV_VERSION_TEXT_04', $_csv_version_date);
+define('TEXT_NEW_IDEALO_MODULE_01', 'Die Version ');
+define('TEXT_NEW_IDEALO_MODULE_02', ' des Moduls ist auf Idealo verf&uuml;gbar.');
+define('TEXT_IDEALO_CSV_TEAM', '<br>Da das installierte Modul f&uuml;r Ihr Shopsystem modifiziert wurde, wenden Sie sich f&uuml;r ein Update bitte an <a href="mailto:csv@idealo.de">csv@idealo.de.</a>');
 
-define( 'MODULE_VERSION_TEXT', MODULE_IDEALO_CSV_VERSION_TEXT_01 . $_csv_version_number_idealo . MODULE_IDEALO_CSV_VERSION_TEXT_03 . $_csv_version_date );
+define('MODULE_VERSION_TEXT', MODULE_IDEALO_CSV_VERSION_TEXT_01 . $_csv_version_number_idealo . MODULE_IDEALO_CSV_VERSION_TEXT_03 . $_csv_version_date);
 $_csv_version_location_idealo = 'http://ftp.idealo.de/software/modules/version.xml';
 $_csv_new_idealo_version_text = '';
 
- if( @file_get_contents ( $_csv_version_location_idealo ) !== false ) {
-	$_csv_xml_idealo = simplexml_load_file ( $_csv_version_location_idealo );
-	$_csv_version_idealo = ( string ) $_csv_xml_idealo->csv_export->xt_systeme;
+if(@file_get_contents($_csv_version_location_idealo) !== false){
+	$_csv_xml_idealo = simplexml_load_file($_csv_version_location_idealo);
+	$_csv_version_idealo = (string)$_csv_xml_idealo->csv_export->xt_systeme;
 
-	$_csv_idealo_module_download = ( string )$_csv_xml_idealo->download->url;
+	$_csv_idealo_module_download = (string)$_csv_xml_idealo->download->url;
 
-	$_csv_old_version_idealo = explode ( '.', $_csv_version_number_idealo );
-	$_csv_new_version_idealo = explode ( '.', $_csv_version_idealo );
+	$_csv_old_version_idealo = explode('.', $_csv_version_number_idealo);
+	$_csv_new_version_idealo = explode('.', $_csv_version_idealo);
 
-   	   $_csv_idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
-	   $_csv_idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $_csv_idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; //DokuMan - 2012-08-21 - removed "blink"-tag
-	   
-			if ( count ( $_csv_old_version_idealo ) == count ( $_csv_new_version_idealo ) ){
-	
-					if (
-	   						( $_csv_old_version_idealo [0] < $_csv_new_version_idealo [0] )
-	   						or
-	   						(
-	   								$_csv_old_version_idealo [0] == $_csv_new_version_idealo [0]
-	   								and
-	   								$_csv_old_version_idealo[1] < $_csv_new_version_idealo [1]
-	   						)
-	   						or
-	   						(
-	   								$_csv_old_version_idealo [0] == $_csv_new_version_idealo [0]
-	   								and
-	   								$_csv_old_version_idealo [1] == $_csv_new_version_idealo [1]
-	   								and
-	   								$_csv_old_version_idealo [2] < $_csv_new_version_idealo [2]
-	   									
-	   						)
-	   				){
-						if ( TEXT_IDEALO_CSV_MODIFIED == 'no' ){
-							
-							$_csv_new_idealo_version_text = $_csv_idealo_version_text_no_modified;
-							
-						}else{
-							
-							$_csv_new_idealo_version_text = $_csv_idealo_version_text_modified;
-							
-						}
-						
-					}
-					
-				}
-	 }
+	$_csv_idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
+	$_csv_idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $_csv_version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $_csv_idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; // DokuMan - 2012-08-21 - removed "blink"-tag
    
-define( 'NEW_IDEALO_CSV_VERSION_TEXT', $_csv_new_idealo_version_text );
-define( 'MODULE_IDEALO_CSV_TEXT_DESCRIPTION', 'CSV - Idealo' );
-define( 'MODULE_IDEALO_CSV_TEXT_TITLE',  '<img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"> - CSV');
-
+	if(count($_csv_old_version_idealo) == count($_csv_new_version_idealo)){
+		if(
+				($_csv_old_version_idealo[0] < $_csv_new_version_idealo[0])
+				or
+				(
+					$_csv_old_version_idealo[0] == $_csv_new_version_idealo[0]
+					and
+					$_csv_old_version_idealo[1] < $_csv_new_version_idealo [1]
+				)
+				or
+				(
+					$_csv_old_version_idealo[0] == $_csv_new_version_idealo[0]
+					and
+					$_csv_old_version_idealo[1] == $_csv_new_version_idealo[1]
+					and
+					$_csv_old_version_idealo[2] < $_csv_new_version_idealo[2]	
+				)
+		){
+			if(TEXT_IDEALO_CSV_MODIFIED == 'no'){
+				$_csv_new_idealo_version_text = $_csv_idealo_version_text_no_modified;
+			}else{
+				$_csv_new_idealo_version_text = $_csv_idealo_version_text_modified;
+			}
+		}
+	}
+}
+   
+define('NEW_IDEALO_CSV_VERSION_TEXT', $_csv_new_idealo_version_text);
+define('MODULE_IDEALO_CSV_TEXT_DESCRIPTION', 'CSV - Idealo');
+define('MODULE_IDEALO_CSV_TEXT_TITLE',  '<img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"/> - CSV');
 
 define('MODULE_IDEALO_CSV_FILE_TITLE' , '<hr noshade>User');
 define('MODULE_IDEALO_CSV_FILE_DESC' , 'Geben Sie an, unter welchen Namen die Datei gescheichert werden soll. z.B. idealo.csv' );
@@ -121,8 +112,6 @@ define('CURRENCY','EUR');
 define('SHIPPING','<hr noshade><b>Versandl&auml;nder / Versandkosten</b>');
 
 define('EXPORT','Bitte den Sicherungsprozess AUF KEINEN FALL unterbrechen. Dieser kann einige Minuten in Anspruch nehmen.');
-define('CAMPAIGNS','<hr noshade><b>Kampagnen:</b>');
-define('CAMPAIGNS_DESC','Mit Kampagne zur Nachverfolgung verbinden.');
 define('TEXT_WARANTY_IDEALO_CSV', '* Idealo &uuml;bernimmt keine Haftung f&uuml;r den einwandfreien Betrieb, die Funktionalit&auml;t des Moduls, der Sicherheit der &uuml;bertragenen Daten und Haftung f&uuml;r etwaige Sch&auml;den. Idealo kann den Service der Module jederzeit einstellen. Mit der Nutzung der Module stimmt der Kooperationspartner dem vorgenannten Haftungsausschluss von Idealo zu.');
 define('DATE_FORMAT_EXPORT', '%d.%m.%Y'); 
 define('DISPLAY_PRICE_WITH_TAX','true');
@@ -167,12 +156,12 @@ $_csv_separator_input_query = xtc_db_query("select configuration_value from " . 
 $_csv_separator_db = xtc_db_fetch_array($_csv_separator_input_query);
 $_csv_separator = $_csv_separator_db['configuration_value'];
 
-define ( 'IDEALO_CSV_SEPARATOR', $_csv_separator );
+define('IDEALO_CSV_SEPARATOR', $_csv_separator);
 $_csv_quoting_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_QUOTING' LIMIT 1");
 $_csv_quoting_db = xtc_db_fetch_array($_csv_quoting_input_query);
 $_csv_quoting = 	$_csv_quoting_db['configuration_value'];	
 
-define ( 'IDEALO_CSV_QUOTECHAR', $_csv_quoting );
+define('IDEALO_CSV_QUOTECHAR', $_csv_quoting);
 $_csv_file_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_FILE' LIMIT 1");
 $_csv_file_db = xtc_db_fetch_array($_csv_file_input_query);
 $_csv_file = $_csv_file_db['configuration_value'];
@@ -188,7 +177,6 @@ $_csv_article_filter_query = xtc_db_query("select configuration_value from " . T
 $_csv_article_filter_db = xtc_db_fetch_array($_csv_article_filter_query);
 $_csv_article_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_ARTICLE_FILTER_VALUE' LIMIT 1");
 $_csv_article_filter_value_db = xtc_db_fetch_array($_csv_article_filter_value_query);
-
 
 define('IDEALO_CSV_ARTICLE_FILTER_VALUE', $_csv_article_filter_value);
 define('IDEALO_CSV_ARTICLE_EXPORT', $_csv_article_filter);
@@ -206,8 +194,7 @@ define('IDEALO_CSV_CAT_FILTER', '<b>Filter nach Kategorien</b>');
 define('IDEALO_CSV_CAT_FILTER_SELECTION', 'W&auml;hlen Sie aus, ob die Kategorien gefiltert, oder &quot;nur diese&quot; exportiert werden sollen.');
 define('IDEALO_CSV_CAT_FILTER_TEXT', 'Geben Sie hier die Kategorien ein. Trennen Sie die Kategorien mit einem Semikolon &quot;;&quot;. Es gen&uuml;gt, einen Teilpfad der Kategorie anzugeben. wird der Teilpfad in der Kategorie eines Artikels gefunden, wird dieser gefiltert. Z.B. Filter &quot;TV&quot;: alle Kategorien mit &quot;TV&quot; als Teilpfad (z.B. TV->LCD und TV->Plasma) werden gefiltert. Filter &quot;LCD&quot;: alle Artikel mit dem Teilpfad &quot;LCD&quot; werden gefiltert. &quot;TV->Plasma&quot; wird exportiert.');
 
-define ( 'IDEALO_FILENAME', $_csv_file );
-
+define('IDEALO_FILENAME', $_csv_file);
 define('IDEALO_CSV_MIN_ORDER_TITLE', '<hr noshade><b>Mindermengenzuschlag / Mindestbestellwert</b>');
 define('IDEALO_CSV_MIN_ORDER', 'Mindestbestellwert: ');
 define('IDEALO_CSV_MIN_EXTRA_COSTS', '<b>Mindermengenzuschlag</b>');
@@ -220,6 +207,22 @@ define('IDEALO_CSV_MIN_ORDER_BORDER_TEXT', 'Tragen Sie die H&ouml;he des Zuschla
 define('IDEALO_CSV_MIN_ORDER_BORDER_VALUE', '<b>Mindermengengrenze</b>');
 define('IDEALO_CSV_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab welchem der Mindermengenzuschlag nicht mehr anfällt. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 49.95');
 
+define('IDEALO_CSV_SHIPPING_FORMAT_TEXT', 'Sie haben ein falsches Format bei den Versandkosten f&uuml;r die ausgew&auml;hlte Berechnungsart eingestellt.');
+define('IDEALO_TEXT_WRONG_COSTS_FORMAT_DE','F&uuml;r DE haben Sie ein falsches Format angegeben.');
+define('IDEALO_TEXT_ONEWRONG_COSTS_FORMAT_DE','Min. eine Berechnungsgrenze wurde falsch eingetragen bei DE.');
+define('IDEALO_TEXT_WRONG_COSTS_FORMAT_AT','F&uuml;r AT haben Sie ein falsches Format angegeben.');
+define('IDEALO_TEXT_ONEWRONG_COSTS_FORMAT_AT','Min. eine Berechnungsgrenze wurde falsch eingetragen bei AT.');
+
 define('IDEALO_CSV_EXPORT_TEXT', '<hr noshade><b>Exportieren</b>');
+
+define('IDEALO_CSV_CAMPAIGNS','<b>Kampagnen:</b>');
+define('IDEALO_CSV_CAMPAIGNS_DESC','Mit Kampagne zur Nachverfolgung verbinden.');
+
+define('IDEALO_CSV_EXPORT_SETTINGS', '<hr noshade><b>Exporteinstellungsn</b>');
+define('IDEALO_CSV_EXPORT_WAREHOUSE_TEXT', '<b>Lagerbestand beim Export beachten?</b>');
+define('IDEALO_CSV_EXPORT_WAREHOUSE_TEXTDEFINITION', 'Bei "ja" werden nur die Artikel exportiert, die einen Lagerbestand gr&ouml;&szlig;er 0 haben.');
+
+define('IDEALO_CSV_EXPORT_VARIANTEXPORT_TEXT', '<b>Variantenexport</b>');
+define('IDEALO_CSV_EXPORT_VARIANTEXPORT_TEXTDEFINITION', 'Bei "ja" werden max. 20 Varianten eines Artikels exportiert. Aus einer m&ouml;glichen Attributekombination, die ein Artikel hat, wird jeweils ein eigener Artikel in der CSV erzeugt.');
 
 ?>

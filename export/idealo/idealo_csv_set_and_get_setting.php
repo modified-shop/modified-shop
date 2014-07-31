@@ -16,47 +16,81 @@
 
 define ( 'COMMENTLENGTH', 100 );
 
-// check if campaign is already in db
-$_csv_campaign_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_CAMPAIGN' LIMIT 1");
-$_csv_campaign_db = xtc_db_fetch_array($_csv_campaign_query); // false if 'MODULE_IDEALO_CAMPAIGN' doesn't exist
+// check if $key is already in db
+function getConfigurationValue($key){
+    $value_query = xtc_db_query("SELECT configuration_value
+                                 FROM " . TABLE_CONFIGURATION . "
+                                 WHERE configuration_key = '" . $key . "'
+                                 LIMIT 1");
+    return xtc_db_fetch_array($value_query);// false if $key doesn't exist
+}
 
-// check if shippinglimit_input is already in db
-$_csv_shipping_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_SHIPPINGCOMMENT' LIMIT 1");
-$_csv_shipping_comment_db = xtc_db_fetch_array($_csv_shipping_input_query); // false if 'MODULE_IDEALO_CSV_SHIPPINGCOMMENT' doesn't exist
-
-// check if separator_input is already in db																					   
-$_csv_separator_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_SEPARATOR' LIMIT 1");
-$_csv_separator_db = xtc_db_fetch_array($_csv_separator_input_query); // false if 'MODULE_IDEALO_CSV_SEPARATOR' doesn't exist
-
-// check if quoting_input is already in db
-$_csv_quoting_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_QUOTING' LIMIT 1");
-$_csv_quoting_db = xtc_db_fetch_array($_csv_quoting_input_query); // false if 'MODULE_IDEALO_CSV_QUOTING' doesn't exist
-
-
-// check if catfilter is already in db
-$_csv_cat_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_CAT_FILTER' LIMIT 1");
-$_csv_cat_filter_db = xtc_db_fetch_array($_csv_cat_filter_query); // false if 'MODULE_IDEALO_CSV_CAT_FILTER' doesn't exist
-
-// check if catfilter is already in db
-$_csv_cat_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_CAT_FILTER_VALUE' LIMIT 1");
-$_csv_cat_filter_value_db = xtc_db_fetch_array($_csv_cat_filter_value_query); // false if 'MODULE_IDEALO_CSV_CAT_FILTER' doesn't exist
-
-// check if brandfilter is already in db
-$_csv_brand_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_BRAND_FILTER' LIMIT 1");
-$_csv_brand_filter_db = xtc_db_fetch_array($_csv_brand_filter_query); // false if 'MODULE_IDEALO_CSV_BRAND_FILTER' doesn't exist
-
-// check if brandfilter is already in db
-$_csv_brand_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_BRAND_FILTER_VALUE' LIMIT 1");
-$_csv_brand_filter_value_db = xtc_db_fetch_array($_csv_brand_filter_value_query); // false if 'MODULE_IDEALO_CSV_BRAND_FILTER' doesn't exist
+$_csv_variant_db = getConfigurationValue('MODULE_IDEALO_CSV_VARIANT');
+$_csv_warehouse_db = getConfigurationValue('MODULE_IDEALO_CSV_WAREHOUSE');
+$_csv_campaign_db = getConfigurationValue('MODULE_IDEALO_CSV_CAMPAIGN');
+$_csv_shipping_comment_db = getConfigurationValue('MODULE_IDEALO_CSV_SHIPPINGCOMMENT');
+$_csv_separator_db = getConfigurationValue('MODULE_IDEALO_CSV_SEPARATOR');
+$_csv_quoting_db = getConfigurationValue('MODULE_IDEALO_CSV_QUOTING');
+$_csv_cat_filter_db = getConfigurationValue('MODULE_IDEALO_CSV_CAT_FILTER');
+$_csv_cat_filter_value_db = getConfigurationValue('MODULE_IDEALO_CSV_CAT_FILTER_VALUE');
+$_csv_brand_filter_db = getConfigurationValue('MODULE_IDEALO_CSV_BRAND_FILTER');
+$_csv_brand_filter_value_db = getConfigurationValue('MODULE_IDEALO_CSV_BRAND_FILTER_VALUE');
+$_csv_article_filter_db = getConfigurationValue('MODULE_IDEALO_CSV_ARTICLE_FILTER');
+$_csv_article_filter_value_db = getConfigurationValue('MODULE_IDEALO_CSV_ARTICLE_FILTER_VALUE');
 
 
-// check if articlefilter is already in db
-$_csv_article_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_ARTICLE_FILTER' LIMIT 1");
-$_csv_article_filter_db = xtc_db_fetch_array($_csv_article_filter_query); // false if 'MODULE_IDEALO_CSV_ARTICLE_FILTER' doesn't exist
+/*
+ * variantexport value
+ */
 
-// check if articlefilter is already in db
-$_csv_article_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_ARTICLE_FILTER_VALUE' LIMIT 1");
-$_csv_article_filter_value_db = xtc_db_fetch_array($_csv_article_filter_value_query); // false if 'MODULE_IDEALO_CSV_ARTICLE_FILTER' doesn't exist
+// is variantexport set?
+if(isset($_POST['variantexport'])){
+    // does a dataset exist?
+    if($_csv_variant_db !== false){
+        // update value if $_POST['cat_filter_value'] != $_csv_filter_db
+        if($_POST['variantexport'] != $_csv_variant_db['configuration_value']){
+            xtc_db_query("update " . TABLE_CONFIGURATION . "
+					      set configuration_value = '" . $_POST['variantexport'] . "'
+					      where configuration_key = 'MODULE_IDEALO_CSV_VARIANT'");
+        }
+    }else{
+        // insert data
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . "
+					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
+					  values ('MODULE_IDEALO_CSV_VARIANT', '" . $_POST['variantexport'] . "', 6, 1, '', now()) ");
+    }
+
+    $_csv_variant_value = stripcslashes($_POST['variantexport']);
+}else{
+    $_csv_variant_value = "";
+}
+
+
+/*
+ * warehouse value
+ */
+
+// is warehouse set?
+if(isset($_POST['warehouse'])){
+    // does a dataset exist?
+    if($_csv_warehouse_db !== false){
+        // update value if $_POST['cat_filter_value'] != $_csv_filter_db
+        if( $_POST['warehouse'] != $_csv_warehouse_db['configuration_value']){
+            xtc_db_query("update " . TABLE_CONFIGURATION . "
+					      set configuration_value = '" . $_POST['warehouse'] . "'
+					      where configuration_key = 'MODULE_IDEALO_CSV_WAREHOUSE'");
+        }
+    }else{
+        // insert data
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . "
+					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
+					  values ('MODULE_IDEALO_CSV_WAREHOUSE', '" . $_POST['warehouse'] . "', 6, 1, '', now()) ");
+    }
+
+    $_csv_warehouse_value = stripcslashes($_POST['warehouse']);
+}else{
+    $_csv_warehouse_value = "";
+}
 
 
 /*
