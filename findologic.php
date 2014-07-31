@@ -28,7 +28,11 @@
   }
 
   function rawurlencode_query($string) {
-    return rawurlencode(utf8_encode(urldecode($string)));    
+    while ($string != urldecode($string)) {
+      $string = urldecode($string);
+    }
+    
+    return rawurlencode($string);   
   }
 
   function array_map_recursive($callback, $array) {
