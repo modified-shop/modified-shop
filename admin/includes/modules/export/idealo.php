@@ -3,7 +3,7 @@
 /*
 	Idealo, Export-Modul
 
-	(c) Idealo 2012,
+	(c) Idealo 2013,
 	
 	Please note that this extension is provided as is and without any warranty. It is recommended to always backup your installation prior to use. Use at your own risk.
 	
@@ -96,7 +96,7 @@ class idealo{
       $this->CAT=array();
       $this->PARENT=array();
       $this->productsPrice = 0;
-      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png"></a></center>';
+      $this->description = '<center><a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png"/></a></center>';
       $this->country_array = array();
     }
 
@@ -182,8 +182,8 @@ class idealo{
 				
 			}
 			
-			$sql .= ", `idealoMinorderprice` varchar(10), `idealoMinorder` varchar(10), `idealoMinorderBorder` varchar(10));";
-			$sql2 .= ", '', '', '');";
+			$sql .= ", `idealoMinorderprice` varchar(10), `idealoMinorder` varchar(10), `idealoMinorderBorder` varchar(10), `idealoExportAttributes` varchar(1000));";
+			$sql2 .= ", '', '', '', '');";
 
 			xtc_db_query ( $sql );			
 			xtc_db_query ( $sql2 );			
@@ -247,7 +247,7 @@ class idealo{
 			 			<form action="javascript:history.back()">
 			 				<br><br>
 			 				<div id="logo">
-								<a href="http://www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+								<a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
 							</div>
 										
 							<br><br>
@@ -257,45 +257,76 @@ class idealo{
 							
 		if ( $this->isInError ( $not_set, "file" ) ){
 				
-				$html .= IDEALO_TEXT_MISSING_CONFIG;
-				
-			}
+			$html .= IDEALO_TEXT_MISSING_CONFIG;
 			
-			if ( $this->isInError ( $not_set, "separator" ) ){
-				
-				$html .= IDEALO_TEXT_MISSING_SEPARATOR . '<br><br>';
-				
-			}
+		}
+		
+		if ( $this->isInError ( $not_set, "separator" ) ){
 			
-			if ( $this->isInError ( $not_set, "to_long" ) ){
-				
-				$html .= IDEALO_TEXT_MISSING_SEPARATOR_TO_LONG . '<br><br>';
-				
-			}
+			$html .= IDEALO_TEXT_MISSING_SEPARATOR . '<br><br>';
 			
-			if ( $this->isInError ( $not_set, "shipping" ) ){
-				
-				$html .= IDEALO_TEXT_MISSING_SHIPPING . '<br><br>';
-				
-			}
+		}
+		
+		if ( $this->isInError ( $not_set, "to_long" ) ){
 			
-			if ( $this->isInError ( $not_set, "payment" ) ){
-				
-				$html .= IDEALO_TEXT_MISSING_PAYMENT . '<br><br>';
-				
-			}
+			$html .= IDEALO_TEXT_MISSING_SEPARATOR_TO_LONG . '<br><br>';
 			
-			if ( $this->isInError ( $not_set, "idealo_DE_active" ) ){
-				
-				$html .= IDEALO_TEXT_MISSING_COSTS_IDEALO_DE . '<br><br>';
-				
-			}
+		}
+		
+		if ( $this->isInError ( $not_set, "shipping" ) ){
 			
-			if ( $this->isInError ( $not_set, "idealo_AT_active" ) ){
-				
-				$html .= IDEALO_TEXT_MISSING_COSTS_IDEALO_DE . '<br><br>';
-				
+			$html .= IDEALO_TEXT_MISSING_SHIPPING . '<br><br>';
+			
+		}
+		
+		if ( $this->isInError ( $not_set, "payment" ) ){
+			
+			$html .= IDEALO_TEXT_MISSING_PAYMENT . '<br><br>';
+			
+		}
+		
+		if ( $this->isInError ( $not_set, "idealo_DE_active" ) ){
+			
+			$html .= IDEALO_TEXT_MISSING_COSTS_IDEALO_DE . '<br><br>';
+			
+		}
+		
+		if ( $this->isInError ( $not_set, "idealo_AT_active" ) ){
+			
+			$html .= IDEALO_TEXT_MISSING_COSTS_IDEALO_DE . '<br><br>';
+			
+		}
+		
+		if($this->isInError ( $not_set, "shippingDElenght" )
+			|| $this->isInError ( $not_set, "shippingDEone" )
+			|| $this->isInError ( $not_set, "shippingATlenght" )
+			|| $this->isInError ( $not_set, "shippingATone" )){
+				$html .= IDEALO_CSV_SHIPPING_FORMAT_TEXT . '<br><br>';
 			}
+					
+		if ( $this->isInError ( $not_set, "shippingDElenght" ) ){
+			
+			$html .= IDEALO_TEXT_WRONG_COSTS_FORMAT_DE . '<br><br>';
+			
+		}
+		
+		if ( $this->isInError ( $not_set, "shippingDEone" ) ){
+			
+			$html .= IDEALO_TEXT_ONEWRONG_COSTS_FORMAT_DE . '<br><br>';
+			
+		}
+		
+		if ( $this->isInError ( $not_set, "shippingATlenght" ) ){
+			
+			$html .= IDEALO_TEXT_WRONG_COSTS_FORMAT_AT . '<br><br>';
+			
+		}
+		
+		if ( $this->isInError ( $not_set, "shippingATone" ) ){
+			
+			$html .= IDEALO_TEXT_ONEWRONG_COSTS_FORMAT_AT . '<br><br>';
+			
+		}
 							
 		$html .=		'<input id="export" type="submit" name="failed" value="Zur&uuml;ck zum Modul" />
 		    				 		
@@ -361,10 +392,8 @@ class idealo{
 			
 	 	}
 
-   		if ( !$shipping_active ){
-   			
+   		if($shipping_active !== true){
    			$not_set [] = 'shipping';
-   			
    		}
    		$idealo_payment = new idealo_csv_payment();
 	 	$this->payment = $idealo_payment->payment;
@@ -392,6 +421,51 @@ class idealo{
    			
    		}
    		
+   		if($_POST['shipping_DE_active'] == 1 && $_POST['shipping_DE_type'] == 3){
+   			if(!is_numeric($_POST['shipping_DE_costs'])){
+   				$not_set [] = 'shippingDElenght';
+   			}
+   		}
+
+   		if($_POST['shipping_DE_active'] == 1 && $_POST['shipping_DE_type'] != 3){
+   			$shippingCostsDE = explode(";", $_POST['shipping_DE_costs']);
+   			if(count($shippingCostsDE) <= 1){
+   				$not_set []= 'shippingDElenght';
+   			}else{
+   				foreach($shippingCostsDE as $costs){
+   					$costs = explode(":", $costs);
+   					if(count($costs) <= 1){
+						$not_set [] = 'shippingDEone';
+						break;
+   					}	
+   					
+   				}
+   			}
+   			
+   		}
+   		
+   		if($_POST['shipping_AT_active'] == 1 && $_POST['shipping_AT_type'] == 3){
+   			if(!is_numeric($_POST['shipping_AT_costs'])){
+   				$not_set [] = 'shippingATlenght';
+   			}
+   		}
+   		if($_POST['shipping_AT_active'] == 1 && $_POST['shipping_AT_type'] != 3){
+   			$shippingCostsDE = explode(";", $_POST['shipping_AT_costs']);
+   			if(count($shippingCostsDE) <= 1){
+   				$not_set []= 'shippingATlenght';
+   			}else{
+   				foreach($shippingCostsDE as $costs){
+   					$costs = explode(":", $costs);
+   					if(count($costs) <= 1){
+						$not_set [] = 'shippingATone';
+						break;
+   					}	
+   					
+   				}
+   			}
+   			
+   		}
+
    		if ( count ( $not_set ) > 0 ){
    			
    			$this->errorSettingMessage ( $not_set );
@@ -578,7 +652,7 @@ class idealo{
 					echo $javaSK;
 	    		
 	    	}
-	    	
+
 	    	$this->backToBackend(substr ( $_SERVER [ 'PHP_SELF' ], 0, -24));
 			    
 		}else{
@@ -590,14 +664,13 @@ class idealo{
 	
 	
 	 public function backToBackend ( $url ){
-
-	 $html = '	<body bgcolor="#99CCFF">
+       $html = '	<body bgcolor="#99CCFF">
 					<b>
 					<center>
 					<font face="Arial,MS Sans Serif">
 		 				<br><br>
 		 				<div id="logo">
-							<a href="www.idealo.de" target="_blank"><img src="http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
+							<a href="http://www.idealo.de" target="_blank"><img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_big.png" alt="Price Comparison" class="logo noborder"/></a>
 						</div><br><br>';
 									
 		$html .= '<br><br>';
@@ -606,10 +679,10 @@ class idealo{
 
 						Sie k&ouml;nnen die Datei hier herunterladen:<br><br>
 						<a href="' . $url . '/export/idealo.csv"><img src="' . $url . '/export/idealo/idealo_csv_file.gif"></a><br><br>
-						Link zu der CSV Datei:<br><br>'.
-							$url . '/export/idealo.csv<br><br>'
+						Link zu der CSV Datei:<br><br>'
+						. HTTP_CATALOG_SERVER . $url . '/export/idealo.csv</a><br><br>
 
-						.'Schicken Sie diesen Link bitte an csv@idealo.de<br><br>
+						Schicken Sie diesen Link bitte an csv@idealo.de<br><br>
 						<form name="back" action="javascript:history.back()">
 	    				<input id="back" type="submit" name="back" value="zur&uuml;ck zum Backend" />
 	    			</form>		
@@ -617,17 +690,14 @@ class idealo{
 					</center>
 					</b>
 				</body>';
-			
-			echo $html;die();
+
+		echo $html;die();
 				 
 	 }	
 	
     public function display() {
-
 		$tools = new idealo_csv_tools();
-		$missing_config_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_MISSING_CONFIG' LIMIT 1");
-		$missing_config_db = xtc_db_fetch_array($missing_config_query);
-		$missing_config_db = $missing_config_db['configuration_value'];
+		$missing_config_db = $tools->getConfigurationValue('MODULE_IDEALO_CSV_MISSING_CONFIG');
 		$missing_config_file = '';
 		$missing_config_separator = '';
 		$missing_config_separator_to_long = '';		
@@ -636,6 +706,9 @@ class idealo{
 		
 		$missing_config_costs_idealo_DE_active = '';
 		$missing_config_costs_idealo_DE_active = '';
+		$missing_config_format_idealo_AT_shipping = '';
+		$missing_config_format_idealo_AT_shipping = '';
+		
 		if ( $missing_config_db != '' ){
 			
 			if ( strpos ( $missing_config_db, "file" ) !== false ){
@@ -656,7 +729,7 @@ class idealo{
 				
 			}
 			
-			if ( strpos ( $missing_config_db, "shipping" ) !== false ){
+			if ( strpos ( $missing_config_db, "shipping" ) !== false && strpos ( $missing_config_db, "shippingDE" ) === false){
 				
 				$missing_config_shipping = IDEALO_TEXT_MISSING_SHIPPING;
 				
@@ -680,39 +753,45 @@ class idealo{
 				
 			}
 			
+			if ( strpos ( $missing_config_db, "shippingDElenght" ) !== false || strpos ( $missing_config_db, "shippingDEone" ) !== false){
+				
+				$missing_config_format_idealo_DE_shipping = '<font color="#FF0000"><b>* ' . IDEALO_TEXT_WRONG_COSTS_FORMAT_DE . '</b></font>';
+				
+			}
+			
+			if ( strpos ( $missing_config_db, "shippingATlenght" ) !== false || strpos ( $missing_config_db, "shippingATone" ) !== false){
+				
+				$missing_config_format_idealo_AT_shipping = '<font color="#FF0000"><b>* ' . IDEALO_TEXT_WRONG_COSTS_FORMAT_AT . '</b></font>';
+				
+			}
+			
 		}
 		
 		$button_text = 'Exportieren';
-		$shipping_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_SHIPPINGCOMMENT' LIMIT 1");
-		$shipping_comment_db = xtc_db_fetch_array($shipping_input_query);
-		$shipping_comment_text = ( $shipping_comment_db !== false ) ? $shipping_comment_db['configuration_value'] : '';
 
 	    $customers_statuses_array = xtc_get_customers_statuses();	    
 	    
-	    $campaign_array[] = array ('id' => '0', 'text' => 'no');
-		$campaign_array[] = array ('id' => 'refID=' . CAMPAIGN . '&', 'text' => '94511215 (idealo)');
-		$campaign_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CAMPAIGN' LIMIT 1");
-		$campaign_db = xtc_db_fetch_array($campaign_query);
-		$campaign = $campaign_db['configuration_value'];
 		$ship_text = '';
 		
 		$tools->getShipping();
 	 	$this->shipping = $tools->shipping;
 		
 		foreach($this->shipping as $ship){     		
-			
-			if ( $ship [ 'country' ] == 'DE'){
-				
-				$ship_text .= $this->getDisplayShip ( $ship, $missing_config_costs_idealo_DE_active );	
-				 
+			if($ship['country'] == 'DE'){
+				$ship_text .= $this->getDisplayShip($ship,
+				                                    $missing_config_costs_idealo_DE_active,
+				                                    $missing_config_format_idealo_DE_shipping
+				                                   );	
 			}
 			
-			if ( $ship [ 'country' ] == 'AT'){
-				
-				$ship_text .= $this->getDisplayShip ( $ship, $missing_config_costs_idealo_AT_active );	
-				 
+			if($ship['country'] == 'AT'){
+				$ship_text .= $this->getDisplayShip($ship,
+				                                    $missing_config_costs_idealo_AT_active,
+				                                    $missing_config_format_idealo_AT_shipping
+				                                   );	
 			}
      	}
+     	
 		$payment_text = '';	
 		
 		$tools->getPayment();
@@ -722,55 +801,44 @@ class idealo{
      		$payment_text .= $this->getDisplayPayment($payment);	
      	}		
    			   	
-   		$article_filter_array[] = array ('id' => 'filter', 'text' => 'filtern',);
-		$article_filter_array[] = array ('id' => 'export', 'text' => 'exportieren',);
-		
-		$article_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_ARTICLE_FILTER' LIMIT 1");
-		$article_filter_db = xtc_db_fetch_array($article_filter_query);
-		$article_value = $article_filter_db['configuration_value'];
-		
-		$article_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_ARTICLE_FILTER_VALUE' LIMIT 1");
-		$article_filter_value_db = xtc_db_fetch_array($article_filter_value_query);
-		$article_filter_value = $article_filter_value_db['configuration_value'];
-		
+   		$article_filter_array[] = array('id' => 'filter', 'text' => 'filtern',);
+		$article_filter_array[] = array('id' => 'export', 'text' => 'exportieren',);
 		$article_filter = IDEALO_CSV_ARTICLE_FILTER . '<br>' .
 						  IDEALO_CSV_ARTICLE_FILTER_SELECTION . '<br>'.
-						  xtc_draw_pull_down_menu('article_filter',$article_filter_array , $article_value).'<br><br>'.
+						  xtc_draw_pull_down_menu('article_filter',
+						                          $article_filter_array,
+						                          $tools->getConfigurationValue('MODULE_IDEALO_CSV_ARTICLE_FILTER')
+						                         ).'<br><br>'.
 						  IDEALO_CSV_ARTICLE_FILTER_TEXT . '<br>' .
-						  xtc_draw_input_field('article_filter_value', $article_filter_value) . '<br><br>';
+						  xtc_draw_input_field('article_filter_value',
+						                       $tools->getConfigurationValue('MODULE_IDEALO_CSV_ARTICLE_FILTER_VALUE')
+						                      ) . '<br><br>';
 		
-		$brand_filter_array[] = array ('id' => 'filter', 'text' => 'filtern',);
-		$brand_filter_array[] = array ('id' => 'export', 'text' => 'exportieren',);
-		
-		$brand_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_BRAND_FILTER' LIMIT 1");
-		$brand_filter_db = xtc_db_fetch_array($brand_filter_query);
-		$brand_value = $brand_filter_db['configuration_value'];
-		
-		$brand_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_BRAND_FILTER_VALUE' LIMIT 1");
-		$brand_filter_value_db = xtc_db_fetch_array($brand_filter_value_query);
-		$brand_filter_value = $brand_filter_value_db['configuration_value'];
-		
+		$brand_filter_array[] = array('id' => 'filter', 'text' => 'filtern',);
+		$brand_filter_array[] = array('id' => 'export', 'text' => 'exportieren',);
 		$brand_filter = IDEALO_CSV_BRAND_FILTER . '<br>' .
 						IDEALO_CSV_BRAND_FILTER_SELECTION . '<br>'.
-						xtc_draw_pull_down_menu('brand_filter',$brand_filter_array , $brand_value).'<br><br>'.
+						xtc_draw_pull_down_menu('brand_filter',
+						                        $brand_filter_array,
+						                        $tools->getConfigurationValue('MODULE_IDEALO_CSV_BRAND_FILTER')
+						                       ).'<br><br>'.
 						IDEALO_CSV_BRAND_FILTER_TEXT . '<br>' .
-						xtc_draw_input_field('brand_filter_value', $brand_filter_value) . '<br><br>';
-		$cat_filter_array[] = array ('id' => 'filter', 'text' => 'filtern',);
-		$cat_filter_array[] = array ('id' => 'export', 'text' => 'exportieren',);
+						xtc_draw_input_field('brand_filter_value',
+						                     $tools->getConfigurationValue('MODULE_IDEALO_CSV_BRAND_FILTER_VALUE')
+						                    ) . '<br><br>';
 		
-		$cat_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_CAT_FILTER' LIMIT 1");
-		$cat_filter_db = xtc_db_fetch_array($cat_filter_query);
-		$cat_value = $cat_filter_db['configuration_value'];
-		
-		$cat_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CSV_CAT_FILTER_VALUE' LIMIT 1");
-		$cat_filter_value_db = xtc_db_fetch_array($cat_filter_value_query);
-		$cat_filter_value = $cat_filter_value_db['configuration_value'];
-		
+		$cat_filter_array[] = array('id' => 'filter', 'text' => 'filtern',);
+		$cat_filter_array[] = array('id' => 'export', 'text' => 'exportieren',);
 		$cat_filter = IDEALO_CSV_CAT_FILTER . '<br>' .
 					  IDEALO_CSV_CAT_FILTER_SELECTION . '<br>'.
-					  xtc_draw_pull_down_menu('cat_filter',$cat_filter_array , $cat_value).'<br><br>'.
+					  xtc_draw_pull_down_menu('cat_filter',
+					                          $cat_filter_array,
+					                          $tools->getConfigurationValue('MODULE_IDEALO_CSV_CAT_FILTER')
+					                         ).'<br><br>'.
 					  IDEALO_CSV_CAT_FILTER_TEXT . '<br>' .
-					  xtc_draw_input_field('cat_filter_value', $cat_filter_value) . '<br><br>';		
+					  xtc_draw_input_field('cat_filter_value',
+					                       $tools->getConfigurationValue('MODULE_IDEALO_CSV_CAT_FILTER_VALUE')
+					                      ) . '<br><br>';		
 		
 		$tools->getMinorderValues();
 		
@@ -785,8 +853,7 @@ class idealo{
 							xtc_draw_input_field('idealo_csv_minOrderBorder_input', $tools->minorderBorder) . '<br>' .
 							IDEALO_CSV_MIN_ORDER_BORDER_TEXT;
 		   			   		
-   			   					
-	    return array('text' => 	$missing_config_file. '<br>' . 
+	    return array('text' => $missing_config_file. '<br>' . 
 	    						
 	    						FIELDSEPARATOR . '<br>' .
 	    						FIELDSEPARATOR_HINT_IDEALO . '<br>' .
@@ -800,25 +867,26 @@ class idealo{
 	    						$missing_config_shipping . '<br><br>' .
 	    						
 	    						$ship_text .
+	            
+	                            SHIPPINGCOMMENT . '<br>' .
+	                            SHIPPINGCOMMENT_HINT . '<br>' .
+	                            xtc_draw_input_field('shippingcomment_input',
+	                                                 $tools->getConfigurationValue('MODULE_IDEALO_CSV_SHIPPINGCOMMENT')
+	                                                ) . '<br><br>'.
 																
 	    						PAYMENT . '<br>' .
 	    						$missing_config_payment . '<br><br>' .
 	    							 
 								$payment_text .
 								
-								SHIPPINGCOMMENT . '<br>' .
-								SHIPPINGCOMMENT_HINT . '<br>' .
-								xtc_draw_input_field('shippingcomment_input', $shipping_comment_text) . '<br><br>'.
-								
-	                            CAMPAIGNS.'<br>'.
-	                            CAMPAIGNS_DESC.'<br>'.
-	                          	xtc_draw_pull_down_menu('campaign',$campaign_array, $campaign).'<br><br>'.
 
 								$article_filter .
 								$brand_filter .
 								$cat_filter .
 								
 								$minOrderDisplay . '<br><br>' .
+	            
+	                            $this->displayExportKonfigs() .
 								
 								IDEALO_CSV_EXPORT_TEXT .
 
@@ -826,7 +894,9 @@ class idealo{
 	                
 	                			'<input id ="export" type="hidden" name="export" value="yes">' .
 	                
-	                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set =' . $_GET['set'] . '&module=idealo')) .
+	                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT,
+	                                                                         'set =' . $_GET['set'] . '&module=idealo')
+	                                                                        ) .
 
 	                            EXPORT . '<br><br>' .
 	                            TEXT_WARANTY_IDEALO_CSV
@@ -835,8 +905,84 @@ class idealo{
 
     }
 
+    public function myPopUp(){
+        return 
+        '<script language="JavaScript" type="text/javascript">
+             function OpenWindowWithPost(url, windowoption, name, params){
+                var form = document.createElement("form");
+                form.setAttribute("method", "post");
+                form.setAttribute("action", url);
+                form.setAttribute("target", name);
+     
+                for(var i in params){
+                    if(params.hasOwnProperty(i)){
+                        var input = document.createElement(\'input\');
+                        input.type = \'hidden\';
+                        input.name = i;
+                        input.value = params[i];
+                        form.appendChild(input);
+                    }
+                }
+     
+                document.body.appendChild(form);
+    
+                w = window.open(url, name, windowoption);
+                w.focus();
+                    
+                form.submit();
+     
+                document.body.removeChild(form);
+            }      
+                      
+            function popup(URL) {
+               param = {\'languages_id\' : \'' . $_SESSION [ 'languages_id' ] . '\'};
+               w = OpenWindowWithPost(URL, "toolbar=0,scrollbars=1,location=0,statusbar=0,menubar=0,resizable=0,width=200,height=400,left=740,top=325", "Attribute Choise", param);
+            }
+        </script>
+       
+        <form id="attributeSelection" action="attributeSelectionAction" method="post">       
+           <input class=button value="Attributauswahl" onClick="javascript:popup(\'' . substr ( $_SERVER [ 'PHP_SELF' ], 0, -24) . '/export/idealo/csv_variant_choise.php\')">    
+        </form>
+        Nach dem Klicken &ouml;ffnet sich ein neues Fenster f&uuml;r die Einstellungen, 1x Klicken und bitte warten!<br><br>';
+    }
+    
+	public function displayExportKonfigs(){
+	    $tools = new idealo_csv_tools();
+	    
+	    $text = IDEALO_CSV_EXPORT_SETTINGS . '<br><br>';
+	    
+	    $campaign_array[] = array ('id' => '0', 'text' => 'no');
+	    $campaign_array[] = array ('id' => 'refID=' . CAMPAIGN . '&', 'text' => '94511215 (idealo)');
 
-	
+	    $text .= IDEALO_CSV_CAMPAIGNS.'<br>'.
+	             IDEALO_CSV_CAMPAIGNS_DESC.'<br>'.
+	             xtc_draw_pull_down_menu('campaign',
+	                                     $campaign_array,
+	                                     $tools->getConfigurationValue('MODULE_IDEALO_CSV_CAMPAIGN')
+	                                    ).'<br><br>';
+	    
+        $text .= IDEALO_CSV_EXPORT_WAREHOUSE_TEXT . '<br>' .
+                 IDEALO_CSV_EXPORT_WAREHOUSE_TEXTDEFINITION . '<br>';
+        
+	    $warehouse_array[] = array ('id' => '0', 'text' => 'nein');
+	    $warehouse_array[] = array ('id' => '1', 'text' => 'ja');
+	    
+	    $text.= xtc_draw_pull_down_menu('warehouse',
+	                                    $warehouse_array,
+	                                    $tools->getConfigurationValue('MODULE_IDEALO_CSV_WAREHOUSE')
+	                                   ).'<br><br>';
+	    $text .= IDEALO_CSV_EXPORT_VARIANTEXPORT_TEXT . '<br>' .
+                 IDEALO_CSV_EXPORT_VARIANTEXPORT_TEXTDEFINITION . '<br>';
+	    $text.= xtc_draw_pull_down_menu('variantexport',
+	                                    $warehouse_array,
+	                                    $tools->getConfigurationValue('MODULE_IDEALO_CSV_VARIANT')
+	                                   );
+	    $text .= $this->myPopUp();
+	     
+	    return $text;
+	}
+    
+    
 	 public function getDisplayPayment( $payment ){
 	 	
 	 	$active_array[] = array ('id' => '1', 'text' => 'ja',);
@@ -866,8 +1012,8 @@ class idealo{
 	 }
 
 	
-	 public function getDisplayShip ( $ship, $missing_text ){
-	 	
+	 public function getDisplayShip ( $ship, $missing_text, $wrongShippingFormat ){
+
 	 	$active_array[] = array ('id' => '1', 'text' => 'ja',);
 		$active_array[] = array ('id' => '0', 'text' => 'nein',);
 		$country_array[] = array ('id' => '3', 'text' => 'Pauschal',);
@@ -878,6 +1024,7 @@ class idealo{
 		return  SHIPPING_TEXT_01 . ' '. $ship['country'] . '?<br>' .
 				xtc_draw_pull_down_menu('shipping_' . $ship['country'] . '_active', $active_array, $ship['active']).'<br>' .
 				SHIPPING_TEXT_02 . '<br>' .
+				$wrongShippingFormat . '<br>' .
 				xtc_draw_input_field('shipping_' . $ship['country'] . '_costs', $ship['costs']) . SHIPPING_TEXT_03 . '<br>' .$missing_text . '<br>' .
 				SHIPPING_TEXT_04 . '<br>' .
 				xtc_draw_input_field('shipping_' . $ship['country'] . '_free', $ship['free']) . SHIPPING_TEXT_05. '<br>' .
