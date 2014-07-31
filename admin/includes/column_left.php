@@ -110,7 +110,11 @@ echo endMenue(BOX_HEADING_MODULES);
 
 //---------------------------PARTNER
 echo mainMenue(BOX_HEADING_PARTNER_MODULES);
-    if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
+    if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {
+      if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
+    } else {
+      if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=export&module=magnalister', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MAGNALISTER . '</a></li>';
+    }
     if (isset($admin_access['janolaw']) && $admin_access['janolaw'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
     if (isset($admin_access['it_recht_kanzlei']) && $admin_access['it_recht_kanzlei'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_IT_RECHT_KANZLEI, '') . '" class="menuBoxContentLink"> -' . BOX_IT_RECHT_KANZLEI . '</a></li>';
     if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
