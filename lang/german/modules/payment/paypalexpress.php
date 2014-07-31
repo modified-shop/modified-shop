@@ -22,4 +22,5 @@ define('MODULE_PAYMENT_PAYPALEXPRESS_TEXT_INFO', '');
 define('MODULE_PAYMENT_PAYPALEXPRESS_STATUS_TITLE', 'PayPal-Express Modul aktivieren');
 define('MODULE_PAYMENT_PAYPALEXPRESS_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per PayPal-Express akzeptieren?');
 define('MODULE_PAYMENT_PAYPALEXPRESS_ALT_BUTTON', ' Bezahlen mit PayPal ');
+define('MODULE_PAYMENT_PAYPALEXPRESS_LP', '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>');
 ?>

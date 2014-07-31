@@ -122,4 +122,6 @@ define('MODULE_PAYMENT_PAYPAL_IPN_ERROR_SUB3','INVALID für PayPal-Zahlungsvorgan
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_HEADER','Vielen Dank');
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT1','Wir bedanken uns für Ihre PayPal-Zahlung in Höhe von');
 define('MODULE_PAYMENT_PAYPAL_IPN_RETURN_TEXT2','für Ihre Bestellung vom');
+
+define('MODULE_PAYMENT_PAYPAL_IPN_LP', '<br /><br /><a target="_blank" href="http://www.paypal.com/de/webapps/mpp/referral/paypal-business-account2?partner_id=EHALBVD4M2RQS"><strong>Jetzt PayPal Konto hier erstellen.</strong></a>');
 ?>
