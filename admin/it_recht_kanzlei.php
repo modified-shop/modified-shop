@@ -84,7 +84,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
               <font color="#2B7AC4"><strong>Schnittstellenmodul der IT-Recht Kanzlei M&uuml;nchen: Entspannter e-Commerce.</strong></font><br />
-              <img src="images/it_recht_kanzlei/it_recht_kanzlei.png" />
+              <img src="images/it_recht_kanzlei/it_recht_kanzlei.png" /><img src="images/it_recht_kanzlei/pruefzeichen-partner3.png" align="right" />
               <br />
               <br />
               <img src="images/it_recht_kanzlei/schutzpaket_grafik.png" align="right" />
@@ -116,6 +116,10 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li style="list-style-type: circle !important;"><strong>Bequeme Integration durch das Schnittstellen-Modul</strong></li>
                 <li style="list-style-type: circle !important;"><strong>Selbstverst&auml;ndlich: Haftung f&uuml;r die Richtigkeit der Texte</strong></li>
               </ul>
+              <p align="left">
+                <br />
+                <a href="http://www.it-recht-kanzlei.de/Service/agb-online-shop.php?partner_id=21" target="_blank"><font size="3" color="#893769"><u><strong>Jetzt den Update-Service der IT-Recht Kanzlei buchen.</strong></u></font></a> 
+              </p>
             </td>
           </tr>
         </table>      
