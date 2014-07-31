@@ -3,7 +3,7 @@
 /*
 	Idealo, Export-Modul
 
-	(c) Idealo 2012,
+	(c) Idealo 2013,
 	
 	Please note that this extension is provided as is and without any warranty. It is recommended to always backup your installation prior to use. Use at your own risk.
 	
@@ -22,9 +22,46 @@ class idealo_universal {
 	public $minOrderPrice = '';
 	public $minOrder = '';
 	public $idealoMinorderBorder = '';
+	public $shippingCheckValue = array();	
 	
 	
-	public function sendMail($eMail, $testCSV, $errorTXT, $shopUrl, $moduleVersion, $log, $lastAnswer, $lastRequest, $triggerUrl = 'keine'){
+	public $separatorArray = array ('0' => array('separator'	=> '|', 
+												 'comes' 	 	=> 0,),
+									'1' => array('separator' 	=> ';', 
+												 'comes' 	 	=> 0,),			 
+									'2' => array('separator' 	=> '$', 
+												 'comes' 	 	=> 0,),			 
+									'3' => array('separator'	=> '~', 
+												 'comes' 	 	=> 0,),			 
+									'4' => array('separator' 	=> ',', 
+												 'comes' 	 	=> 0,),
+									'5' => array('separator' 	=> '@', 
+												 'comes' 	 	=> 0,),
+									'6' => array('separator' 	=> '*', 
+												 'comes' 	 	=> 0,),
+									'7' => array('separator' 	=> '%', 
+												 'comes' 	 	=> 0,),
+									'8' => array('separator' 	=> '<', 
+												 'comes' 	 	=> 0,),
+									'9' => array('separator'	=> '>', 
+												 'comes' 	 	=> 0,),
+									'10' => array('separator' 	=> '#', 
+												 'comes' 		=> 0,),
+									'11' => array('separator' 	=> '{', 
+												 'comes' 		=> 0,),
+									'12' => array('separator' 	=> '}', 
+												 'comes' 		=> 0,),
+									'13' => array('separator' 	=> '^', 
+												 'comes' 		=> 0,),			 			 			 			 			 			 
+									);			 
+												 	
+	public $separatorWarning = false;
+	
+	public $separatorInt = 0;
+	
+	
+	
+	public function sendMail($eMail, $testCSV, $errorTXT, $shopUrl, $moduleVersion, $log, $lastAnswer, $lastRequest, $triggerUrl = 'keine', $activeProducts = '', $products = ''){
 		try{
 			$xml_idealo = simplexml_load_file('http://ftp.idealo.de/software/modules/version.xml');
 								
@@ -46,6 +83,10 @@ class idealo_universal {
 			$message .= 'Last answer: ' . $lastAnswer;
 			$message .= "\n\n";
 			$message .= 'TriggerURL: ' . $triggerUrl;
+			$message .= "\n\n";
+			$message .= 'Produktanzahl: ' . $products;
+			$message .= "\n\n";
+			$message .= 'Anzahl aktiver Produkte: ' . $activeProducts;
 
 			$header =  "From: " . $eMail . "<" . $eMail . ">\n";
 			
@@ -66,7 +107,18 @@ class idealo_universal {
 	 	return false; 	
 	 } 
 	 
+	
+	public function validateRemoteUrl($url) {
+	  $headers = get_headers($url);
+	  return (isset($headers) && count($headers) > 0 && $this->contains($headers[0], "200"));
+	}
 	 
+	
+	public function contains($str, $needle) {
+	  return (strpos($str, $needle) !== false);
+	}
+	
+	
 	public function checkMinOrder($art_price){
 		if($this->minOrder != ''){
 			if((float)$this->minOrder >= (float)$art_price){
@@ -79,7 +131,6 @@ class idealo_universal {
 	
 	
 	public function checkEan($ean){
-		$ean = preg_replace("/([^\d])/", "", $ean);
 		if(strlen($ean) == 13){
 			if($this->Ean13Checksum(substr($ean, 0, 12)) == $ean{12}){
 	        	return true;
@@ -106,25 +157,58 @@ class idealo_universal {
 	}
 	
 	
-	 public function prepareText($string){
-	 	$spaceToReplace = array("$", ".", "|");
-	 	$string = str_replace($spaceToReplace, " ", $string);
-	 	$string = str_replace("&", "und", $string);
-	 	$string = str_replace("ä", "ae", $string);
-	 	$string = str_replace("ü", "ue", $string);
-	 	$string = str_replace("ö", "oe", $string);
-	 	$string = str_replace("Ä", "Ae", $string);
-	 	$string = str_replace("Ü", "Ue", $string);
-	 	$string = str_replace("Ö", "Oe", $string);
-	 	$string = str_replace("ß", "ss", $string);
-	 	
-		return $string;	 		
-	 }
+	    public function checkShipping($type, $value, $country){
+    	if($type == '0')$type = 'weight';
+    	if($type == '1')$type = 'price';
+    	if($type == '2')$type = 'hard';
+
+    	if($type == 'hard'){
+   			if(!is_numeric($value)){
+   				$this->shippingCheckValue[$country] = 'lenght';
+   			}
+   		}else{
+   			$shippingCosts = explode(";", $value);
+   			if(count($shippingCosts) <= 1){
+   				$this->shippingCheckValue[$country] = 'lenght';
+   			}else{
+   				foreach($shippingCosts as $costs){
+   					$costs = explode(":", $costs);
+   					if(count($costs) <= 1){
+						$this->shippingCheckValue[$country] = 'one';
+						break;
+   					}	
+   					
+   				}
+   			}
+   		}
+
+	}
+	
+	public function prepareText($string){
+	    $string = strip_tags($string);
+	    $Regex = '/<.*>/';
+	    $Ersetzen = ' ';
+	    $string = preg_replace($Regex, $Ersetzen, $string);
+	    $string = html_entity_decode($string, ENT_QUOTES, "UTF-8");
+	    $spaceToReplace = array("$", "|");
+	    $string = str_replace($spaceToReplace, " ", $string);
+	    $string = str_replace( "&", "und", $string);
+	    $string = str_replace("ä", "ae", $string);
+	    $string = str_replace("ü", "ue", $string);
+	    $string = str_replace("ö", "oe", $string);
+	    $string = str_replace("Ä", "Ae", $string);
+	    $string = str_replace("Ü", "Ue", $string);
+	    $string = str_replace("Ö", "Oe", $string);
+	    $string = str_replace("ß", "ss", $string);
+	    $string = ereg_replace("[^A-Za-z0-9 .\,\:\"\']", '', $string);
+
+	    return $string;	
+	}
+	
 	 
 	 
-    public function cleanText($text, $cut){
+    public function cleanText($text, $cut, $type = '0'){
 		$text = str_replace("°", " Grad", $text);
-		$text = str_replace("é", "e", $text);
 		$text = str_replace("®", "", $text);
 		$text = str_replace("•", " ", $text);
 		$text = str_replace("™", " ", $text);
@@ -134,24 +218,26 @@ class idealo_universal {
 		$text = str_replace("„", "", $text);
 		$text = str_replace("“", "", $text);		
 		$text = str_replace("â", "", $text);
-				
-		if(mb_detect_encoding($text, 'UTF-8, ISO-8859-1') == 'ISO-8859-1'){
-			$text = utf8_decode($text);
-		}
 		
-		if(mb_detect_encoding($text,"UTF-8, ISO-8859-15") == "ISO-8859-15"){
-			$text = iconv("UTF-8", "ISO-8859-15", $text);
-		}
-		
-    	$text = str_replace(array("\r\n", "\r", "\n", "|", "&nbsp;", "\t", "\v"), " ", $text);
+		$text = str_replace(array("\r\n", "\r", "\n", "|", "&nbsp;", "\t", "\v"), " ", $text);
 		$commaToReplace = array("'");
-        $text = strip_tags($text);
+		$text = strip_tags($text);
 		$text = str_replace($commaToReplace, ", ", $text);
 		$Regex = '/<.*>/';
 		$Ersetzen = ' ';
 		$text = preg_replace($Regex, $Ersetzen, $text);
-		$text = html_entity_decode($text, ENT_QUOTES, "UTF-8");
-		if(function_exists(mb_substr)){
+		if($type == '1'){
+		    $text = utf8_encode($text);
+		}
+				
+		if($type == '2' || $type == '3'){
+		    $text = utf8_decode($text);
+		}
+		
+		if($type == '3'){
+		    $text = utf8_decode($text);
+		}
+		if(function_exists('mb_substr')){
 			$text = mb_substr($text, 0, $cut);
 		}else{
 		 	$text = substr($text, 0, $cut);
@@ -222,5 +308,28 @@ class idealo_universal {
 		return true;
 	}
 	
+		
+	 public function checkSeparator($text, $separator){
+
+	 	if(strpos($text, $separator) !== false){
+	 		$this->separatorWarning = true;
+	 		$textarray = str_split($text);
+	 		foreach($textarray as $t){
+	 		    if($t == $separator){
+	 		        $this->separatorInt++;
+	 		    }
+	 		}
+	 	}
+	 	
+	 	foreach($this->separatorArray as $key => $separ){
+	 		if($separ != $separator){
+	 			if(strpos($text, $separ['separator']) !== false){
+		 			$this->separatorArray[$key]['comes']++;
+		 		}
+	 		}
+	 	}
+	 	
+	 	return $text;
+	 }
 }
 ?>

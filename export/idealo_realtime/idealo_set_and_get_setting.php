@@ -1,4 +1,4 @@
-<?php
+<?php 
 /* -----------------------------------------------------------------------------------------
 
    Extended by
@@ -16,61 +16,105 @@
 
 define ( 'COMMENTLENGTH', 100 );
 
-// check if certifate is already in db
-$certificate_query = xtc_db_query( "select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_CERTIFICATE' LIMIT 1" );
-$certificate_db = xtc_db_fetch_array( $certificate_query ); // false if 'MODULE_IDEALO_REALTIME_CERTIFICAT' doesn't exist
+// check if $key is already in db
+function getRealConfigurationValue($key){
+    $value_query = xtc_db_query("SELECT configuration_value
+                                 FROM " . TABLE_CONFIGURATION . "
+                                 WHERE configuration_key = '" . $key . "'
+                                 LIMIT 1");
+    return xtc_db_fetch_array($value_query);// false if $key doesn't exist
+}
 
-// check if testmode active is already in db
-$testmode_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_TESTMODE' LIMIT 1");
-$testmode_db = xtc_db_fetch_array($testmode_query); // false if 'MODULE_IDEALO_REALTIME_TESTMODE' doesn't exist
-
-
-// check if campaign is already in db
-$campaign_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_CAMPAIGN' LIMIT 1");
-$campaign_db = xtc_db_fetch_array($campaign_query); // false if 'MODULE_IDEALO_CAMPAIGN' doesn't exist
-
-// check if shop_id is already in db
-$shop_id_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_SHOP_ID' LIMIT 1");
-$shop_id_db = xtc_db_fetch_array($shop_id_query); // false if 'MODULE_IDEALO_REALTIME_SHOP_ID' doesn't exist
-
-// check if a password character is already in db
-$password_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_PASSWORD' LIMIT 1");
-$password_db = xtc_db_fetch_array($password_query); // false if 'MODULE_IDEALO_REALTIME_PASSWORD doesn't exist
-
-// check if a pagesize character is already in db
-$pagesize_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_PAGESIZE' LIMIT 1");
-$pagesize_db = xtc_db_fetch_array($pagesize_query); // false if 'MODULE_IDEALO_REALTIME_PAGESIZE doesn't exist
-
-// check if shippinglimit_input is already in db
-$shipping_input_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_SHIPPINGCOMMENT' LIMIT 1");
-$shipping_comment_db = xtc_db_fetch_array($shipping_input_query); // false if 'MODULE_IDEALO_REALTIME_SHIPPINGCOMMENT' doesn't exist
+$_realtime_code_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_CODE');
+$_realtime_variant_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_VARIANT');
+$_realtime_warehouse_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_WAREHOUSE');
+$certificate_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_CERTIFICATE');
+$testmode_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_TESTMODE');
+$campaign_db = getRealConfigurationValue('MODULE_IDEALO_CAMPAIGN');
+$shop_id_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_SHOP_ID');
+$password_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_PASSWORD');
+$pagesize_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_PAGESIZE');
+$shipping_comment_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_SHIPPINGCOMMENT');
+$_realtime_cat_filter_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_CAT_FILTER');
+$_realtime_cat_filter_value_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_CAT_FILTER_VALUE');
+$_realtime_brand_filter_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_BRAND_FILTER');
+$_realtime_brand_filter_value_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_BRAND_FILTER_VALUE');
+$_realtime_article_filter_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_ARTICLE_FILTER');
+$_realtime_article_filter_value_db = getRealConfigurationValue('MODULE_IDEALO_REALTIME_ARTICLE_FILTER_VALUE');
 
 
-// check if catfilter is already in db
-$_realtime_cat_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_CAT_FILTER' LIMIT 1");
-$_realtime_cat_filter_db = xtc_db_fetch_array($_realtime_cat_filter_query); // false if 'MODULE_IDEALO_REALTIME_CAT_FILTER' doesn't exist
+/*
+ * realtime_code value
+*/
+//is realtime_warehouse_value set?
+if(isset($_POST['realtime_code'])) {
+    // does a dataset exist?
+    if( $_realtime_code_db !== false ) {
+        if( $_POST['realtime_code'] != $_realtime_code_db['configuration_value'] ) {
+            xtc_db_query("update " . TABLE_CONFIGURATION . "
+					      set configuration_value = '" . $_POST['realtime_code'] . "'
+					      where configuration_key = 'MODULE_IDEALO_REALTIME_CODE'");
+        }
+    } else {
+        // insert data
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . "
+					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
+					  values ('MODULE_IDEALO_REALTIME_CODE', '" . $_POST['realtime_code'] . "', 6, 1, '', now()) ");
+    }
 
-// check if catfilter is already in db
-$_realtime_cat_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_CAT_FILTER_VALUE' LIMIT 1");
-$_realtime_cat_filter_value_db = xtc_db_fetch_array($_realtime_cat_filter_value_query); // false if 'MODULE_IDEALO_REALTIME_CAT_FILTER' doesn't exist
-
-// check if brandfilter is already in db
-$_realtime_brand_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_BRAND_FILTER' LIMIT 1");
-$_realtime_brand_filter_db = xtc_db_fetch_array($_realtime_brand_filter_query); // false if 'MODULE_IDEALO_REALTIME_BRAND_FILTER' doesn't exist
-
-// check if brandfilter is already in db
-$_realtime_brand_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_BRAND_FILTER_VALUE' LIMIT 1");
-$_realtime_brand_filter_value_db = xtc_db_fetch_array($_realtime_brand_filter_value_query); // false if 'MODULE_IDEALO_REALTIME_BRAND_FILTER' doesn't exist
+    $_realtime_code = stripcslashes($_POST['realtime_code']);
+} else {
+    $_realtime_code = "";
+}
 
 
-// check if articlefilter is already in db
-$_realtime_article_filter_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_ARTICLE_FILTER' LIMIT 1");
-$_realtime_article_filter_db = xtc_db_fetch_array($_realtime_article_filter_query); // false if 'MODULE_IDEALO_REALTIME_ARTICLE_FILTER' doesn't exist
+/*
+ * realtime_variant value
+*/
+//is realtime_variant_value set?
+if( isset($_POST['realtime_variant'])) {
+    // does a dataset exist?
+    if( $_realtime_variant_db !== false ) {
+        if( $_POST['realtime_variant'] != $_realtime_variant_db['configuration_value'] ) {
+            xtc_db_query("update " . TABLE_CONFIGURATION . "
+					      set configuration_value = '" . $_POST['realtime_variant'] . "'
+					      where configuration_key = 'MODULE_IDEALO_REALTIME_VARIANT'");
+        }
+    } else {
+        // insert data
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . "
+					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
+					  values ('MODULE_IDEALO_REALTIME_VARIANT', '" . $_POST['realtime_variant'] . "', 6, 1, '', now()) ");
+    }
 
-// check if articlefilter is already in db
-$_realtime_article_filter_value_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_IDEALO_REALTIME_ARTICLE_FILTER_VALUE' LIMIT 1");
-$_realtime_article_filter_value_db = xtc_db_fetch_array($_realtime_article_filter_value_query); // false if 'MODULE_IDEALO_REALTIME_ARTICLE_FILTER' doesn't exist
+    $_realtime_variant = stripcslashes($_POST['realtime_variant']);
+} else {
+    $_realtime_variant = "";
+}
 
+/*
+ * realtime_warehouse value
+*/
+//is realtime_warehouse_value set?
+if( isset($_POST['realtime_warehouse'])) {
+    // does a dataset exist?
+    if( $_realtime_warehouse_db !== false ) {
+        if( $_POST['realtime_warehouse'] != $_realtime_warehouse_db['configuration_value'] ) {
+            xtc_db_query("update " . TABLE_CONFIGURATION . "
+					      set configuration_value = '" . $_POST['realtime_warehouse'] . "'
+					      where configuration_key = 'MODULE_IDEALO_REALTIME_WAREHOUSE'");
+        }
+    } else {
+        // insert data
+        xtc_db_query("insert into " . TABLE_CONFIGURATION . "
+					  (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added)
+					  values ('MODULE_IDEALO_REALTIME_WAREHOUSE', '" . $_POST['realtime_warehouse'] . "', 6, 1, '', now()) ");
+    }
+
+    $_realtime_warehouse_value = stripcslashes($_POST['realtime_warehouse']);
+} else {
+    $_realtime_warehouse_value = "";
+}
 
 /*
  * cat filter value

@@ -3,7 +3,7 @@
 /*
 	Idealo, Export-Modul
 
-	(c) Idealo 2012,
+	(c) Idealo 2013,
 	
 	Please note that this extension is provided as is and without any warranty. It is recommended to always backup your installation prior to use. Use at your own risk.
 	
@@ -13,8 +13,8 @@
 */
 
 
-$version_number_idealo = '1.3.4';
-$version_date = '02.08.2013';
+$version_number_idealo = '1.7.1';
+$version_date = '05.03.2014';
 $idealo_module_modified = 'no';
 
 define( 'TEXT_IDEALO_REALTIME_MODIFIED', $idealo_module_modified );
@@ -41,7 +41,7 @@ $new_idealo_version_text = '';
 	$new_version_idealo = explode ( '.', $version_idealo );
 
    	   $idealo_version_text_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' ' . TEXT_IDEALO_CSV_TEAM;
-	   $idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; //DokuMan - 2012-08-21 - removed "blink"-tag
+	   $idealo_version_text_no_modified = TEXT_NEW_IDEALO_MODULE_01 . $version_idealo . TEXT_NEW_IDEALO_MODULE_02 . ' <a href="' . $idealo_module_download . '" target="_newtab"><b>zur Download-Seite</b></a>'; // DokuMan - 2012-08-21 - removed "blink"-tag
 	   
 			if ( count ( $old_version_idealo ) == count ( $new_version_idealo ) ){
 	
@@ -80,7 +80,7 @@ $new_idealo_version_text = '';
    
 define( 'NEW_IDEALO_REALTIME_VERSION_TEXT', $new_idealo_version_text );
 define( 'MODULE_IDEALO_REALTIME_TEXT_DESCRIPTION', 'Realtime - Idealo' );
-define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  '<img src = "http://cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"> - Realtime');
+define( 'MODULE_IDEALO_REALTIME_TEXT_TITLE',  '<img src="//cdn.idealo.com/ipc/1/-WmNoOZsF/pics/logos/logo_blue_small.png"/> - Realtime');
 
 
 define('MODULE_IDEALO_REALTIME_FILE_TITLE' , '<hr noshade>User');
@@ -205,6 +205,14 @@ define('IDEALO_REALTIME_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab we
 
 define('IDEALO_REALTIME_EXPORT_TEXT', '<hr noshade><b>Aktualisieren</b>');
  
- 
- 
+define('IDEALO_REALTIME_SETTINGS', '<hr noshade><b>Exporteinstellungsn</b>');
+
+define('IDEALO_REALTIME_EXPORT_VARIANTEXPORT_TEXT', '<b>Variantenexport</b>');
+define('IDEALO_REALTIME_EXPORT_VARIANTEXPORT_TEXTDEFINITION', 'Bei "ja" werden max. 20 Varianten eines Artikels exportiert. Aus einer m&ouml;glichen Attributekombination, die ein Artikel hat, wird jeweils ein eigener Artikel an idealo &uuml;bermittelt.');
+
+define('IDEALO_REALTIME_EXPORT_CODE_TEXT', '<b>Kodierung</b>');
+
+define('IDEALO_REALTIME_EXPORT_WAREHOUSE_TEXT', '<b>Lagerbestand beim Export beachten?</b>');
+define('IDEALO_REALTIME_EXPORT_WAREHOUSE_TEXTDEFINITION', 'Bei "ja" werden nur die Artikel exportiert, die einen Lagerbestand gr&ouml;&szlig;er 0 haben.');
+
 ?>
