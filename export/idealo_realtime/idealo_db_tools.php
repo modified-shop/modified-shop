@@ -1,6 +1,6 @@
 <?php
 
-class idealo_db_tools{
+class idealo_db_tools_realtime{
 
     public $hanExists = false;
     

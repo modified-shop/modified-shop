@@ -1066,7 +1066,7 @@ class idealo_real{
 	                            '<br>' . xtc_button(IDEALO_TEXT_SOFT_RESET_BUTTON_TEXT) . '<font size="+1">*</font> ' .
 	                            '<br>' . IDEALO_TEXT_SOFT_RESET_TEXT . 
 	                            '<br><br>' .
-	                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set =' . $_GET['set'] . '&module=idealo_real')) .
+	                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT, 'set=' . $_GET['set'] . '&module=idealo_real')) .
 	                            '<input id ="come_from" type="hidden" name="come_from" value="' . $_SERVER['HTTP_REFERER'] . '"> <br><br>' .
 	                            EXPORT . '<br><br>' .
 	                            TEXT_WARANTY_IDEALO_REALTIME
