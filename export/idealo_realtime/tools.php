@@ -64,7 +64,7 @@ class tools extends idealo_universal{
 	}
 
 	public function AllNeeded(){
-        $db_tolls = new idealo_db_tools();
+        $db_tolls = new idealo_db_tools_realtime();
         $db_tolls->checkAll();
         
         $this->hanExists = $db_tolls->hanExists;
@@ -596,7 +596,7 @@ class tools extends idealo_universal{
     
     public function getXMLValues($variant, $id, $extraName = '', $exrtaPrice = 0, $extraWeight = 0, $optionNumer = '', $stock = ''){
         $xml = '';
-        $db_tolls = new idealo_db_tools();
+        $db_tolls = new idealo_db_tools_realtime();
         $db_tolls->checkAll();
         
         $products = $this->getArticle($id);

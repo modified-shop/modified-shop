@@ -16,7 +16,7 @@
 include_once ( DIR_FS_CATALOG . 'export/idealo/idealo_db_tools.php' );
 
 
-class idealo_csv_universal extends idealo_db_tools{
+class idealo_csv_universal extends idealo_db_tools_csv{
 	public $minOrderPrice = '';
 	public $minOrder = '';
 	public $minorderBorder = '';
