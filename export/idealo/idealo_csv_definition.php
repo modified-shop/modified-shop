@@ -205,7 +205,7 @@ define('IDEALO_CSV_MIN_ORDER_VALUE', '<b>Mindestbestellwert</b>');
 define('IDEALO_CSV_MIN_ORDER_TEXT', 'Tragen Sie Ihren Mindestbestellwert ein. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 5.00. Die betreffenden Angebote erhalten automatisch einen entsprechenden Versandkommentar.');
 define('IDEALO_CSV_MIN_ORDER_BORDER_TEXT', 'Tragen Sie die H&ouml;he des Zuschlages ein. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 2.99. ');
 define('IDEALO_CSV_MIN_ORDER_BORDER_VALUE', '<b>Mindermengengrenze</b>');
-define('IDEALO_CSV_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab welchem der Mindermengenzuschlag nicht mehr anfällt. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 49.95');
+define('IDEALO_CSV_MIN_ORDER_PRICE_TEXT', 'Tragen Sie den Betrag ein, ab welchem der Mindermengenzuschlag nicht mehr anf&auml;llt. Verwenden Sie als Dezimaltrenner das Punktzeichen, z.B. 49.95');
 
 define('IDEALO_CSV_SHIPPING_FORMAT_TEXT', 'Sie haben ein falsches Format bei den Versandkosten f&uuml;r die ausgew&auml;hlte Berechnungsart eingestellt.');
 define('IDEALO_TEXT_WRONG_COSTS_FORMAT_DE','F&uuml;r DE haben Sie ein falsches Format angegeben.');
