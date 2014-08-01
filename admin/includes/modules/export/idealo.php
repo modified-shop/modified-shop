@@ -895,7 +895,7 @@ class idealo{
 	                			'<input id ="export" type="hidden" name="export" value="yes">' .
 	                
 	                            xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_MODULE_EXPORT,
-	                                                                         'set =' . $_GET['set'] . '&module=idealo')
+	                                                                         'set=' . $_GET['set'] . '&module=idealo')
 	                                                                        ) .
 
 	                            EXPORT . '<br><br>' .
