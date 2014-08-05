@@ -378,7 +378,7 @@ class MagnaCompatibleInventoryView {
 		$offset = $currentPage * $this->settings['itemLimit'] - $this->settings['itemLimit'] + 1;
 		$limit = $offset + count($this->renderableData) - 1;
 		$html .= '<table class="listingInfo"><tbody><tr>
-					<td class="pagination">
+					<td class="ml-pagination">
 						'.(($this->numberofitems > 0)
 							?	('<span class="bold">'.ML_LABEL_PRODUCTS.':&nbsp; '.
 								 $offset.' bis '.$limit.' von '.($this->numberofitems).'&nbsp;&nbsp;&nbsp;&nbsp;</span>'
@@ -424,12 +424,12 @@ $(document).ready(function() {
 
 		$js = '';
 		$left = (!empty($this->renderableData) ? 
-			'<input type="button" class="button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>' : 
+			'<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>' : 
 			''
 		);
 		$right = '<table class="right"><tbody>
 			'.(in_array(getDBConfigValue('meinpaket.stocksync.tomarketplace', $this->mpID), array('abs', 'auto'))
-				? '<tr><td><input type="submit" class="button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
+				? '<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
 				: ''
 			).'
 		</tbody></table>';
@@ -464,7 +464,7 @@ $(document).ready(function() {
 						<td class="firstChild">'.$left.'</td>
 						<td><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
 							<input id="tfSearch" name="tfSearch" type="text" value="'.fixHTMLUTF8Entities($this->search, ENT_COMPAT).'"/>
-							<input type="submit" class="button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
+							<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
 						<td class="lastChild">'.$right.'</td>
 					</tr></tbody></table>
 				</td></tr></tbody>

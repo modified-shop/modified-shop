@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: DeletedView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -138,7 +138,7 @@ class DeletedView {
 
 	public function renderActionBox() {
 		#return '';
-		$left = '<input type="submit" class="button" value="'.ML_BUTTON_LABEL_DELETE.'" id="logDelete" name="action[delete]"/>';
+		$left = '<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="logDelete" name="action[delete]"/>';
 		$right = '&nbsp;';
 
 		ob_start();
@@ -180,7 +180,7 @@ $(document).ready(function() {
 			$html .= '
 				<form action="'.toURL($this->url).'" method="POST">
 					<table class="listingInfo"><tbody><tr>
-						<td class="pagination">
+						<td class="ml-pagination">
 							<span class="bold">'.ML_LABEL_CURRENT_PAGE.' &nbsp;&nbsp; '.$this->currentPage.'</span>
 						</td>
 						<td class="textright">

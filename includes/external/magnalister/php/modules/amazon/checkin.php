@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 3854 2014-05-12 12:55:03Z markus.bauer $
+ * $Id: checkin.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -47,7 +47,7 @@ try {
 		'SUBSYSTEM' => 'Amazon',
 	));
 	$cm->extendTopFormHtml('
-		<a class="button" target="_blank" title="'.ML_LABEL_HISTORY.'" href="'.$result['DATA'].'">'.ML_LABEL_HISTORY.'</a>
+		<a class="ml-button" target="_blank" title="'.ML_LABEL_HISTORY.'" href="'.$result['DATA'].'">'.ML_LABEL_HISTORY.'</a>
 	');	
 } catch (MagnaException $e) { }
 

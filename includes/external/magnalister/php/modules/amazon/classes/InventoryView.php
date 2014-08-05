@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 4219 2014-07-17 11:25:15Z tim.neumann $
+ * $Id: InventoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -95,10 +95,10 @@ class InventoryView {
 			#echo print_m($request);
 			$result = MagnaConnector::gi()->submitRequest($request);
 			if ($result['LATESTCHANGE']) {
-				$this->latestChange = strtotime($result['LATESTCHANGE'].' +0000');
+				$this->latestChange = strtotime($result['LATESTCHANGE']);
 			}
 			if ($result['LATESTREPORT']) {
-				$latestReport = strtotime($result['LATESTREPORT'].' +0000');
+				$latestReport = strtotime($result['LATESTREPORT']);
 				if ($this->latestReport != $latestReport) {
 					$this->getPendingItems();
 				}
@@ -261,7 +261,7 @@ class InventoryView {
 					'ItemTitle' => '',
 					'Type' => 'add',
 				), $item);
-				$item['DateAdded'] = strtotime($item['DateAdded'].' +0000');
+				$item['DateAdded'] = strtotime($item['DateAdded']);
 				$this->renderableData[] = $item;
 			}
 		}
@@ -323,7 +323,7 @@ class InventoryView {
 				}
 				$item['DateAdded'] = ($item['DateAdded'] == '0000-00-00 00:00:00')
 					? 0
-					: strtotime($item['DateAdded'].' +0000');
+					: strtotime($item['DateAdded']);
 
 				$this->renderableData[] = $item;
 			}
@@ -510,7 +510,7 @@ class InventoryView {
 		$offset = $currentPage * $this->settings['itemLimit'] - $this->settings['itemLimit'] + 1;
 		$limit = $offset + count($this->renderableData) - 1;
 		$html .= '<table class="listingInfo"><tbody><tr>
-					<td class="pagination">
+					<td class="ml-pagination">
 						'.(($this->numberofitems > 0)
 							?	('<span class="bold">'.ML_LABEL_PRODUCTS.':&nbsp; '.
 								 $offset.' bis '.$limit.' von '.($this->numberofitems).'&nbsp;&nbsp;&nbsp;&nbsp;</span>'
@@ -566,11 +566,11 @@ $(document).ready(function() {
 	private function renderActionBox() {
 		global $_modules;
 
-		$left = '<input type="button" class="button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>';
+		$left = '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>';
 		$right = '<table class="right"><tbody>
-			<tr><td><input type="submit" class="button fullWidth smallmargin" name="reload" value="'.ML_BUTTON_RELOAD_INVENTORY.'"/></td></tr>
+			<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="reload" value="'.ML_BUTTON_RELOAD_INVENTORY.'"/></td></tr>
 			'.(in_array(getDBConfigValue('amazon.stocksync.tomarketplace', $this->magnaSession['mpID']), array('abs', 'auto'))
-				? '<tr><td><input type="submit" class="button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
+				? '<tr><td><input type="submit" class="ml-button fullWidth smallmargin" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/></td></tr>'
 				: ''
 			).'
 		</tbody></table>';
@@ -602,7 +602,7 @@ $(document).ready(function() {
 						<td class="firstChild">'.$left.'</td>
 						<td><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
 							<input id="tfSearch" name="tfSearch" type="text" value="'.fixHTMLUTF8Entities($this->search, ENT_COMPAT).'"/>
-							<input type="submit" class="button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
+							<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
 						<td class="lastChild">'.$right.'</td>
 					</tr></tbody></table>
 				</td></tr></tbody>

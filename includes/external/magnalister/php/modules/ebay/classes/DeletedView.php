@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 3753 2014-04-07 12:19:48Z derpapst $
+ * $Id: DeletedView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -399,7 +399,7 @@ class DeletedView {
 		$offset = $currentPage * $this->settings['itemLimit'] - $this->settings['itemLimit'] + 1;
 		$limit = $offset + count($this->renderableData) - 1;
 		$html .= '<table class="listingInfo"><tbody><tr>
-					<td class="pagination">
+					<td class="ml-pagination">
 						'.(($this->numberofitems > 0)
 							?	('<span class="bold">'.ML_LABEL_PRODUCTS.':&nbsp; '.
 								 $offset.' bis '.$limit.' von '.($this->numberofitems).'&nbsp;&nbsp;&nbsp;&nbsp;</span>'
@@ -445,7 +445,7 @@ $(document).ready(function() {
 	public function renderActionBox() {
 		global $_modules;
 		/*$left = (!empty($this->renderableData) ? 
-			'<input type="button" class="button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>' : 
+			'<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="listingDelete" name="listing[delete]"/>' : 
 			''
 		);*/
 		$left  = '';
@@ -481,7 +481,7 @@ $(document).ready(function() {
 						<td class="firstChild">'.$left.'</td>
 						<td><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
 							<input id="tfSearch" name="tfSearch" type="text" value="'.fixHTMLUTF8Entities($this->search, ENT_COMPAT).'"/>
-							<input type="submit" class="button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
+							<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" /></td>
 						<td class="lastChild">'.$right.'</td>
 					</tr></tbody></table>
 				</td></tr></tbody>

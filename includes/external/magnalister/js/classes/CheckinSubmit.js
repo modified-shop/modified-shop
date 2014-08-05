@@ -183,7 +183,7 @@ var GenericCheckinSubmitAjaxController = (function (_super, $) {
 	 * @private
 	 */
 	GenericCheckinSubmitAjaxController.prototype._handleFatalError = function () {
-		var btn = $('<button class="button">+</button>').click(function () {
+		var btn = $('<button class="ml-button">+</button>').click(function () {
 			$('#checkinSubmitDebug').css({'display': 'block'});
 		});
 		$('#checkinSubmitStatus').html(this.__('MessageUploadFatalError'));

@@ -174,7 +174,7 @@ class PrepareCategoryView extends QuickCategoryView {
 					</td>
 					<td class="texcenter inputCell">
 						<table class="right"><tbody>
-							<tr><td><input type="submit" class="fullWidth button smallmargin" value="'.ML_EBAY_BUTTON_PREPARE.'" id="prepare" name="prepare"/></td></tr>
+							<tr><td><input type="submit" class="fullWidth ml-button smallmargin" value="'.ML_EBAY_BUTTON_PREPARE.'" id="prepare" name="prepare"/></td></tr>
 						</tbody></table>
 					</td>
 					<td>
@@ -188,8 +188,8 @@ class PrepareCategoryView extends QuickCategoryView {
 
 	public function getLeftButtons() {
 		return '
-			<input type="submit" class="button" value="'.ML_EBAY_BUTTON_UNPREPARE.'" id="unprepare" name="unprepare"/><br/>
-			<input type="submit" class="button" value="'.ML_EBAY_BUTTON_RESET_DESCRIPTION.'" id="reset_description" name="reset_description"/>';
+			<input type="submit" class="ml-button" value="'.ML_EBAY_BUTTON_UNPREPARE.'" id="unprepare" name="unprepare"/><br/>
+			<input type="submit" class="ml-button" value="'.ML_EBAY_BUTTON_RESET_DESCRIPTION.'" id="reset_description" name="reset_description"/>';
 	}
 	
 	protected function renderDeletedArticlesSelector() {

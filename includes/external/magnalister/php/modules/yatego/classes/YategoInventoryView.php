@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: YategoInventoryView.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: YategoInventoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -78,6 +78,6 @@ class YategoInventoryView extends InventoryView {
 		if (!in_array(getDBConfigValue('yatego.stocksync.tomarketplace', $this->magnasession['mpID']), array('abs', 'auto'))) {
 			return '';
 		}
-		return '<input type="submit" class="button" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/>'; 
+		return '<input type="submit" class="ml-button" name="refreshStock" value="'.ML_BUTTON_REFRESH_STOCK.'"/>'; 
 	}
 }

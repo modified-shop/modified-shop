@@ -22,5 +22,5 @@
 class_exists('MLProductList') or die();
 ?>
 <form action="<?php echo $this->getUrl(false, false, false); ?>" method="post">
-	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][unmatching]" id="unmatching" value="<?php echo ML_AMAZON_BUTTON_MATCHING_DELETE; ?>" class="button"><br>
+	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][unmatching]" id="unmatching" value="<?php echo ML_AMAZON_BUTTON_MATCHING_DELETE; ?>" class="ml-button"><br>
 </form>

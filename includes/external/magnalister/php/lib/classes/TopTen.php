@@ -143,7 +143,7 @@ abstract class TopTen {
 		echo '
 			</select>';
 		?>
-			<input class="button" type="button" value="<?php echo ML_TOPTEN_MANAGE ?>" id="edit-topTen" />
+			<input class="ml-button" type="button" value="<?php echo ML_TOPTEN_MANAGE ?>" id="edit-topTen" />
 			<script type="text/javascript">/*<!CDATA[*/
 								jQuery(document).ready(function () {
 					jQuery("#edit-topTen").click(function () {

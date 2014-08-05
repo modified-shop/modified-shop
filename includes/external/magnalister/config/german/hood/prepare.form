@@ -210,6 +210,20 @@
                 "key": "_#_platform_#_.imagepath",
                 "type": "text",
                 "desc": "Verzeichnis, aus dem das Hauptbild sowie die Bilder f&uuml;r die Produktbeschreibung (Template) f&uuml;r _#_platformName_#_ genommen werden"
+            },
+            "imgcount": {
+                 "label": "Maximale Bildanzahl",
+                 "desc": "Je nach Tarif auf _#_platformName_#_ ist die Anzahl der kostenlosen Produktbilder beschr&auml;nkt. Hier k&ouml;nnen Sie festlegen wie viele Produktbilder maximal &uuml;bertragen werden sollen. Jedes Bild, welches extra &uuml;bermittelt wird, verursacht kosten (0,09&euro; pro kostenpflichtigem Bild).",
+                 "key": "_#_platform_#_.prepare.maximagecount",
+                 "type": "selection",
+                 "values": {
+                      "1": "1 Bild (einfacher Tariff)",
+                      "2": "2 Bilder (Silber Shop)",
+                      "5": "5 Bilder (Gold Shop)",
+                      "8": "8 Bilder (Platin Shop)",
+                      "all": "Alle"
+                 },
+                 "default": "all"
             }
         }
     },

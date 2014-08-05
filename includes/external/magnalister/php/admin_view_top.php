@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 4116 2014-07-05 13:36:22Z derpapst $
+ * $Id: admin_view_top.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -171,12 +171,9 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 					'padding': '10px',
 					'border': 'none',
 					'border-radius': '10px',
-					'-moz-border-radius': '10px',
-					'-webkit-border-radius': '10px',
 					'box-shadow': '0 0 20px #000000',
-					'-moz-box-shadow': '0 0 20px #000000',
-					'-webkit-box-shadow': '0 0 20px #000000',
-					'z-index': '9001'
+					'z-index': '9001',
+					'box-sizing': 'content-box'
 				},
 				message: '<div></div>',
 				onBlock: function() {
@@ -200,12 +197,9 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 					'padding': '10px',
 					'border': 'none',
 					'border-radius': '10px',
-					'-moz-border-radius': '10px',
-					'-webkit-border-radius': '10px',
 					'box-shadow': '0 0 20px #000000',
-					'-moz-box-shadow': '0 0 20px #000000',
-					'-webkit-box-shadow': '0 0 20px #000000',
-					'z-index': '9001'
+					'z-index': '9001',
+					'box-sizing': 'content-box'
 				},
 				message: '<div class="progressBarContainer"><div class="progressBar"></div><div class="progressPercent">0%</div></div>'
 			};

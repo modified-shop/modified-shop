@@ -43,6 +43,8 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		'UpdateItems' => 5,
 		'UploadItems' => 30,
 	);
+	
+	protected $hasDbColumn = array();
 
 	public function __construct($mpID, $marketplace, $limit = 100) {
 		parent::__construct($mpID, $marketplace);
@@ -56,6 +58,8 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 			include_once($helperPath);
 		}
 		//$this->limit = 10;
+		
+		$this->hasDbColumn['pa.attributes_stock'] = MagnaDB::gi()->columnExistsInTable('attributes_stock', TABLE_PRODUCTS_ATTRIBUTES);
 	}
 	
 	protected function initSync() {
@@ -197,7 +201,7 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		}
 		
 		$curQty = false;
-		if ($this->cItem['aID'] > 0) {
+		if (($this->cItem['aID'] > 0) && $this->hasDbColumn['pa.attributes_stock']) {
 			$curQty = MagnaDB::gi()->fetchOne('
 				SELECT attributes_stock FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
 				 WHERE products_attributes_id = \''.$this->cItem['aID'].'\'

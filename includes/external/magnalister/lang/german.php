@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: german.php 4256 2014-07-22 11:53:02Z MaW $
+ * $Id: german.php 4290 2014-07-25 22:09:49Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -323,10 +323,10 @@ define('ML_TEXT_MORE_MODULES', '<p>Sie haben keine weiteren Anbindungen gebucht,
 	<p>Sollten Sie eine Anbindung w&uuml;nschen, die wir noch nicht im Programm haben, senden Sie uns bitte eine Nachricht &ndash; 
 	   wir sind f&uuml;r Ihre Anregungen und Vorschl&auml;ge dankbar:<br />
 	   <a href="'.MAGNA_PUBLIC_SERVER.'support" title="Support" target="_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'support</a></p>');
-define('ML_TEXT_BUTTON_CHECKIN_ADD', 'Wenn Sie auf <span class="button">'.ML_BUTTON_LABEL_CHECKIN_ADD.'</span> klicken,
+define('ML_TEXT_BUTTON_CHECKIN_ADD', 'Wenn Sie auf <span class="ml-button">'.ML_BUTTON_LABEL_CHECKIN_ADD.'</span> klicken,
 	wird die CSV um	die &uuml;bermittelten Artikel erg&auml;nzt. Bzw. wenn die Artikel schon in der CSV sind, werden sie 
 	&uuml;berschrieben/aktualisiert.');
-define('ML_TEXT_BUTTON_CHECKIN_PURGE', 'Wenn Sie auf <span class="button">'.ML_BUTTON_LABEL_CHECKIN_PURGE.'</span> klicken,
+define('ML_TEXT_BUTTON_CHECKIN_PURGE', 'Wenn Sie auf <span class="ml-button">'.ML_BUTTON_LABEL_CHECKIN_PURGE.'</span> klicken,
 	wird die alte CSV gel&ouml;scht und nur die &uuml;bermittelten Artikel sind enthalten');
 define('ML_TEXT_CONFIG_SAVED_SUCCESSFULLY', 'Die Konfiguration wurde erfolgreich gespeichert.');
 define('ML_TEXT_CONFIG_SAVED_SEMI_SUCCESSFULLY', 'Einige &Auml;nderungen konnten nicht gespeichert werden, da diese fehlerhaft sind.
@@ -1234,7 +1234,7 @@ define('ML_HOOD_SHIPPING_INTL_OPTIONAL', 'Versand Ausland (Optional)');
 define('ML_HOOD_SHIPPING_INTL_DESC', 'Angebotene ausl&auml;ndische Versandarten');
 define('ML_HOOD_LABEL_HOODERROR', 'Hood meldet: Fehler %s');
 define('ML_HOOD_PICTURES', 'Bilder');
-define('ML_HOOD_PICTURES_DESC', 'Das erste Bild wird als Hauptbild verwendet.');
+define('ML_HOOD_PICTURES_DESC', 'Das erste Bild wird als Hauptbild verwendet.<br>Je nach Hood Tarif kosten <span style="color:red;">weitere Bilder 0,09&euro;</span> pro Bild.');
 define('ML_HOOD_PICTURE_PATH', 'Bildpfad');
 define('ML_HOOD_AGE_PROTECTION', 'Altersbeschr&auml;nkung');
 define('ML_HOOD_ADDITIONAL_FEATURES', 'Zusatzoptionen');
