@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Configurator.php 3925 2014-06-03 12:54:45Z tim.neumann $
+ * $Id: Configurator.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -800,7 +800,7 @@ class MLConfigurator {
 		switch ($button) {
 			case '#restoreDefault#': {
 				$this->renderResetJS = true;
-				return '<input class="button" type="button" onclick="resetDefaults(\'config_'.$idkey.'\')" value="'.ML_BUTTON_RESTORE_DEFAULTS.'" />';
+				return '<input class="ml-button" type="button" onclick="resetDefaults(\'config_'.$idkey.'\')" value="'.ML_BUTTON_RESTORE_DEFAULTS.'" />';
 				break;
 			}
 			default: {
@@ -840,7 +840,7 @@ class MLConfigurator {
 			$tabLabel = getDBConfigValue(array('general.tabident', $this->mpID), '0', '');
 			$tabLabel = fixHTMLUTF8Entities($tabLabel);
 			$html .= '
-				<tr class="conf"><th class="label">
+				<tr class="conf"><th class="ml-label">
 					<label for="config_tabident">'.ML_LABEL_TAB_IDENT.'</label></th>
 					<th class="desc">
 						<div class="desc" id="desc_'.($descCount++).'" title="'.ML_LABEL_INFOS.'"><span>'.ML_TEXT_TAB_IDENT.'</span></div>
@@ -944,7 +944,7 @@ class MLConfigurator {
 						<tr class="conf">
 							'.(!empty($item['label'])
 								? (
-									'<th class="label">'.
+									'<th class="ml-label">'.
 										'<label for="config_'.$idkey.'" class="'.$labelClasses.'">'.$item['label'].'</label>'.
 									'</th>' 
 								)
@@ -1028,14 +1028,14 @@ class MLConfigurator {
 								<td class="firstChild">
 									<a href="'.toUrl(
 										$this->realUrl, array('expert' => 'true')
-									).'" title="'.ML_BUTTON_LABEL_EXPERTVIEW.'" class="button">'.
+									).'" title="'.ML_BUTTON_LABEL_EXPERTVIEW.'" class="ml-button">'.
 										ML_BUTTON_LABEL_EXPERTVIEW.
 									'</a>
 								</td>
 								<td class="lastChild">
 									<input type="hidden" value="MagnaConfigurator" name="configtool"/>
-									<input class="button" type="submit" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
-									<input class="button" type="reset" value="'.ML_BUTTON_LABEL_RESET.'"/>
+									<input class="ml-button" type="submit" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
+									<input class="ml-button" type="reset" value="'.ML_BUTTON_LABEL_RESET.'"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketPrepareCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
+ * $Id: MeinpaketPrepareCategoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -154,7 +154,7 @@ class MeinpaketPrepareCategoryView extends SimpleCategoryView {
 			<table class="right"><tbody>
 				<tr>
 					<td class="texcenter inputCell">
-						<input type="submit" class="fullWidth button smallmargin" value="'.ML_EBAY_LABEL_PREPARE.'" id="prepare" name="prepare"/>
+						<input type="submit" class="fullWidth ml-button smallmargin" value="'.ML_EBAY_LABEL_PREPARE.'" id="prepare" name="prepare"/>
 					</td>
 				</tr>
 			</tbody></table>
@@ -163,6 +163,6 @@ class MeinpaketPrepareCategoryView extends SimpleCategoryView {
 	}
 
 	public function getLeftButtons() {
-		return '<input type="submit" class="button" value="'.ML_EBAY_BUTTON_UNPREPARE.'" id="unprepare" name="unprepare"/>';
+		return '<input type="submit" class="ml-button" value="'.ML_EBAY_BUTTON_UNPREPARE.'" id="unprepare" name="unprepare"/>';
 	}
 }

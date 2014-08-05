@@ -102,7 +102,7 @@ body.magna table.actions tbody table.matchingTable tbody tr td {
 	text-align: left;
 	width: auto;
 }
-body.magna table.actions tbody table.matchingTable tbody tr td.buttons {
+body.magna table.actions tbody table.matchingTable tbody tr td.ml-buttons {
 	width: 6em;
 }
 body.magna table.actions tbody table.matchingTable tbody tr td.actionbuttons {
@@ -125,7 +125,7 @@ div.catVisual {
 					<td class="buttons">
 						<input type="hidden" id="mpCategory" name="mpCategory" value="'.$preSelected['MarketplaceCategory'].'"/>
 						<input type="hidden" id="mpCategoryName" name="mpCategoryName" value="'.strip_tags($preSelected['MarketplaceCategoryName']).'"/>
-						<input class="fullWidth button smallmargin" type="button" value="'.ML_LABEL_CHOOSE.'" id="selectMPCategory"/>
+						<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_LABEL_CHOOSE.'" id="selectMPCategory"/>
 					</td>
 				</tr>
 				<tr><td colspan="2">&nbsp;</td></tr>'.(!getDBConfigValue(array($this->marketplace.'.catmatch.mpshopcats', 'val'), $this->mpID, false) ? ('
@@ -135,7 +135,7 @@ div.catVisual {
 					<td class="buttons">
 						<input type="hidden" id="storeCategory" name="storeCategory" value="'.$preSelected['StoreCategory'].'"/>
 						<input type="hidden" id="storeCategoryName" name="storeCategoryName" value="'.strip_tags($preSelected['StoreCategoryName']).'"/>
-						<input class="fullWidth button smallmargin" type="button" value="'.ML_LABEL_CHOOSE.'" id="selectStoreCategory"/>
+						<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_LABEL_CHOOSE.'" id="selectStoreCategory"/>
 					</td>
 				</tr>') : '').'
 			</tbody></table>
@@ -174,7 +174,7 @@ $(document).ready(function() {
 		return '
 			<table><tbody>
 				<tr><td>
-					<input type="submit" class="button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
+					<input type="submit" class="ml-button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
 				</td></tr>
 			</tbody></table>';
 	}

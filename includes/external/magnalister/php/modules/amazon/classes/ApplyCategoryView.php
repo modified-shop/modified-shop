@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ApplyCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
+ * $Id: ApplyCategoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -224,7 +224,7 @@ class ApplyCategoryView extends QuickCategoryView {
 				<tr>
 					<td class="texcenter inputCell">
 						<table class="right"><tbody>
-							<tr><td><input type="submit" class="fullWidth button smallmargin" value="'. ML_AMAZON_BUTTON_PREPARE.'" id="apply" name="apply"/></td></tr>
+							<tr><td><input type="submit" class="fullWidth ml-button smallmargin" value="'. ML_AMAZON_BUTTON_PREPARE.'" id="apply" name="apply"/></td></tr>
 						</tbody></table>
 					</td>
 				</tr>
@@ -236,8 +236,8 @@ class ApplyCategoryView extends QuickCategoryView {
 	public function getLeftButtons() {
 		// ML_AMAZON_BUTTON_APPLY_DELETE
 		return '
-			<input type="submit" class="button" value="'.ML_EBAY_BUTTON_UNPREPARE.'" id="removeapply" name="removeapply"/><br>
-			<input type="submit" class="button" value="'.ML_EBAY_BUTTON_RESET_DESCRIPTION.'" id="resetapply" name="resetapply"/>';
+			<input type="submit" class="ml-button" value="'.ML_EBAY_BUTTON_UNPREPARE.'" id="removeapply" name="removeapply"/><br>
+			<input type="submit" class="ml-button" value="'.ML_EBAY_BUTTON_RESET_DESCRIPTION.'" id="resetapply" name="resetapply"/>';
 	}
 	
 	protected function getEmptyInfoText() {

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinManager.php 4098 2014-07-03 22:05:53Z derpapst $
+ * $Id: CheckinManager.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -263,9 +263,9 @@ class CheckinManager {
 						<table class="right"><tbody>
 							<tr>
 								<td class="textleft">
-									<input type="button" class="fullWidth button smallmargin" value="'.ML_BUTTON_LABEL_CHECKIN_ADD.'" id="checkin_add" name="checkin_add"/>
+									<input type="button" class="fullWidth ml-button smallmargin" value="'.ML_BUTTON_LABEL_CHECKIN_ADD.'" id="checkin_add" name="checkin_add"/>
 									'.(MAGNA_DEBUG || (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true'))
-										? '<input type="button" class="button smallmargin" style="margin-top: -21px; position: absolute; right: 30px;" '.
+										? '<input type="button" class="ml-button smallmargin" style="margin-top: -21px; position: absolute; right: 30px;" '.
 									             'value=" " id="checkin_add_debug" name="checkin_add_debug"/>'
 									    : '').'
 								</td>
@@ -276,7 +276,7 @@ class CheckinManager {
 							'.(($this->settings['hasPurge']) ? '
 							<tr>
 								<td class="textleft">
-									<input type="button" class="fullWidth button smallmargin" value="'.ML_BUTTON_LABEL_CHECKIN_PURGE.'" id="checkin_purge" name="checkin_purge"/>
+									<input type="button" class="fullWidth ml-button smallmargin" value="'.ML_BUTTON_LABEL_CHECKIN_PURGE.'" id="checkin_purge" name="checkin_purge"/>
 								</td>
 								<td>
 									<div class="desc" id="desc_ci_purge" title="'.ML_LABEL_INFOS.'"><span>'.ML_TEXT_BUTTON_CHECKIN_PURGE.'</span></div>

@@ -10,7 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ChangeLog 4109 2014-07-04 11:53:28Z derpapst $
+ * $Id: ChangeLog 4277 2014-07-24 13:19:41Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -19,8 +19,13 @@
 
 = Change-Log =
 
-== Aktuell (bis 4109) ==
+== Aktuell (bis 4277) ==
 	=== Allgemein ===
+		* Diverse CSS Korrekturen für commerce:SEO (4277)
+		* Ausweisung der Kleinunternehmerregelung bei importieren Bestellungen, wenn die Einstellung aktiv ist (nur Gambio) (4234)
+		* Rekursiv arbeitender Kategoriefilter (4209)
+		* Neue Vorbereitungsfilter (4193)
+		* Marketplace Artikelfilter korrigiert (4177)
 		* Neue Marketplace Anbindung: DaWanda (4107)
 		* Neue Produktlisten (4106)
 		* Statistiken können nun 13 Monate angezeigt werden (4017)

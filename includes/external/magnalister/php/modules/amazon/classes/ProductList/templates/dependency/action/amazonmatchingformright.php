@@ -29,7 +29,7 @@ $mmatch = $oObject->getConfig('matchall');
 		<tbody>
 			<tr>				
 				<td class="texcenter inputCell">
-					<input type="submit" class="fullWidth button smallmargin" value="<?php echo ML_AMAZON_LABEL_MANUAL_MATCHING; ?>" id="matching" name="matching"/>
+					<input type="submit" class="fullWidth ml-button smallmargin" value="<?php echo ML_AMAZON_LABEL_MANUAL_MATCHING; ?>" id="matching" name="matching"/>
 				</td>
 				<td>
 					<div class="desc" id="desc_man_match" title="<?php echo ML_LABEL_INFOS; ?>"><span><?php echo ML_AMAZON_LABEL_MANUAL_MATCHING; ?></span></div>
@@ -37,7 +37,7 @@ $mmatch = $oObject->getConfig('matchall');
 			</tr>
 			<tr>
 				<td class="texcenter inputCell">
-					<input type="button" class="fullWidth button smallmargin" value="<?php echo ML_AMAZON_LABEL_AUTOMATIC_MATCHING; ?>" id="automatching" name="automatching"/>
+					<input type="button" class="fullWidth ml-button smallmargin" value="<?php echo ML_AMAZON_LABEL_AUTOMATIC_MATCHING; ?>" id="automatching" name="automatching"/>
 				</td>
 				<td>
 					<div class="desc" id="desc_auto_match" title="<?php echo ML_LABEL_INFOS; ?>"><span><?php echo ML_AMAZON_LABEL_AUTOMATIC_MATCHING; ?></span></div>

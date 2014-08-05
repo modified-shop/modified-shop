@@ -80,9 +80,9 @@ class_exists('MLProductList') or die();
 		</tbody>
 	</table>
 	<?php ob_start(); ?>
-	<table class="pagination">
+	<table class="ml-pagination">
 		<tr>
-			<td class="pagination">
+			<td class="ml-pagination">
 				<span class="bold"><?php echo ML_LABEL_CURRENT_PAGE.' '.$this->getCurrentPage(); ?></span>
 			</td>
 			<td class="textright">

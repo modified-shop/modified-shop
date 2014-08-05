@@ -386,7 +386,7 @@ class MagnaRecalcOrdersTotal {
 			) {
 				$this->magnaDB->insert(TABLE_ORDERS_TOTAL, array(
 					'orders_id' => $sOrderId,
-					'title' => MODULE_ORDER_TOTAL_GM_TAX_FREE_TITLE,
+					'title' => MODULE_ORDER_TOTAL_GM_TAX_FREE_TEXT,
 					'class' => 'ot_gm_tax_free',
 					'sort_order' => MODULE_ORDER_TOTAL_GM_TAX_FREE_SORT_ORDER
 				));

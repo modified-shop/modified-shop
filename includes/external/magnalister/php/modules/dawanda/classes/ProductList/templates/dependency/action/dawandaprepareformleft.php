@@ -24,5 +24,5 @@ class_exists('MLProductList') or die();
 
 ?>
 <form action="<?php echo $this->getUrl(false, false, false); ?>" method="post">
-	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][unprepare]" id="unprepare" value="<?php echo ML_GENERIC_PREPARE_BUTTON_UNPREPARE; ?>" class="button"><br>
+	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][unprepare]" id="unprepare" value="<?php echo ML_GENERIC_PREPARE_BUTTON_UNPREPARE; ?>" class="ml-button"><br>
 </form>

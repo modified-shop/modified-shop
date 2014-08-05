@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 4238 2014-07-18 13:14:55Z MaW $
+ * $Id: magnalister.php 4285 2014-07-24 23:17:44Z derpapst $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -251,6 +251,9 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10, $forceSSLO
 		$path = str_replace('http://', 'https://', $path);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		if (defined('MAGNA_CURLOPT_SSLVERSION')) {
+			curl_setopt($ch, CURLOPT_SSLVERSION, MAGNA_CURLOPT_SSLVERSION);
+		}
 	}
 	
 	curl_setopt($ch, CURLOPT_URL, $path);

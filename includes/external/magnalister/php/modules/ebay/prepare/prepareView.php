@@ -675,7 +675,7 @@ function renderMultiPrepareView($data) {
 												? 'value=\''.$PrimaryPreselectedValues.'\''
 												: ''
 										).' />
-										<input class="fullWidth button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectPrimaryCategory"/>
+										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectPrimaryCategory"/>
 									</td>
 								</tr>
 								<tr>
@@ -689,8 +689,8 @@ function renderMultiPrepareView($data) {
 										</div>
 									</td>
 									<td class="buttons">
-										<input class="fullWidth button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectSecondaryCategory"/>
-										<input class="fullWidth button smallmargin" type="button" value="'.ML_EBAY_DELETE.'" id="deleteSecondaryCategory"/>
+										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectSecondaryCategory"/>
+										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_DELETE.'" id="deleteSecondaryCategory"/>
 									</td>
 								</tr>';
 			if ($hasStore) {
@@ -706,7 +706,7 @@ function renderMultiPrepareView($data) {
 										</div>
 									</td>
 									<td class="buttons">
-										<input class="fullWidth button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectStoreCategory"/>
+										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectStoreCategory"/>
 									</td>
 								</tr>
 								<tr>
@@ -720,7 +720,7 @@ function renderMultiPrepareView($data) {
 										</div>
 									</td>
 									<td class="buttons">
-										<input class="fullWidth button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectStoreCategory2"/>
+										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectStoreCategory2"/>
 									</td>
 								</tr>';
 			}
@@ -899,7 +899,7 @@ table.attributesTable table.inner tr td {
 table.attributesTable table.inner.middle tr td {
 	vertical-align: middle;
 }
-table.attributesTable table.categorySelect tr td.buttons {
+table.attributesTable table.categorySelect tr td.ml-buttons {
 	width: 6em;
 }
 table.attributesTable table.categorySelect tr td.label {
@@ -1172,10 +1172,10 @@ jQuery.blockUI(blockUILoading);
 					<tr class="firstChild"><td>
 						<table><tbody><tr>
 							<td class="firstChild">'.(($prepareView == 'single')
-								? '<input class="button" type="submit" name="unprepare" id="unprepare" value="'.ML_BUTTON_LABEL_REVERT.'"/>'
+								? '<input class="ml-button" type="submit" name="unprepare" id="unprepare" value="'.ML_BUTTON_LABEL_REVERT.'"/>'
 								: ''
 							).'</td>
-							<td class="lastChild">'.'<input class="button" type="submit" name="savePrepareData" id="savePrepareData" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
+							<td class="lastChild">'.'<input class="ml-button" type="submit" name="savePrepareData" id="savePrepareData" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
 						</tr></tbody></table>
 					</td></tr>
 				</tbody>
