@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCategoryMatching.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: MeinpaketCategoryMatching.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -37,7 +37,7 @@ body.magna table.actions tbody table.matchingTable tbody tr td {
 	text-align: left;
 	width: auto;
 }
-body.magna table.actions tbody table.matchingTable tbody tr td.buttons {
+body.magna table.actions tbody table.matchingTable tbody tr td.ml-buttons {
 	width: 6em;
 }
 body.magna table.actions tbody table.matchingTable tbody tr td.actionbuttons {
@@ -60,7 +60,7 @@ div.catVisual {
 					<td><div class="catVisual" id="mpCategoryVisual">'.$primaryCategoryName.'</div></td>
 					<td class="buttons">
 						<input type="hidden" id="mpCategory" name="mpCategory" value="'.$primaryCategory.'"/>
-						<input class="fullWidth button smallmargin" type="button" value="W&auml;hlen" id="selectMPCategory"/>
+						<input class="fullWidth ml-button smallmargin" type="button" value="W&auml;hlen" id="selectMPCategory"/>
 					</td>
 				</tr>
 				<tr><td colspan="2">&nbsp;</td></tr>'.(!getDBConfigValue(array('meinpaket.catmatch.mpshopcats', 'val'), $this->mpID, false) ? ('
@@ -69,7 +69,7 @@ div.catVisual {
 					<td><div class="catVisual" id="storeCategoryVisual">'.$primaryCategoryName.'</div></td>
 					<td class="buttons">
 						<input type="hidden" id="storeCategory" name="storeCategory" value="'.$primaryCategory.'"/>
-						<input class="fullWidth button smallmargin" type="button" value="W&auml;hlen" id="selectStoreCategory"/>
+						<input class="fullWidth ml-button smallmargin" type="button" value="W&auml;hlen" id="selectStoreCategory"/>
 					</td>
 				</tr>') : '').'
 			</tbody></table>
@@ -103,7 +103,7 @@ $(document).ready(function() {
 		return '
 			<table><tbody>
 				<tr><td>
-					<input type="submit" class="button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
+					<input type="submit" class="ml-button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
 				</td></tr>
 			</tbody></table>';
 	}

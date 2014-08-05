@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: apitest.php 3663 2014-03-23 15:40:17Z derpapst $
+ * $Id: apitest.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -286,8 +286,8 @@ if (!isset($_GET['kind']) || ($_GET['kind'] != 'ajax')) {
 		<tbody>
 			<tr class="firstChild"><td>
 				<table><tbody><tr>
-					<td class="firstChild"><input class="button" type="button" id="ajaxLoadForm" value="Load"/></td>
-					<td class="lastChild"><input class="button" type="submit" value="Daten speichern"/></td>
+					<td class="firstChild"><input class="ml-button" type="button" id="ajaxLoadForm" value="Load"/></td>
+					<td class="lastChild"><input class="ml-button" type="submit" value="Daten speichern"/></td>
 				</tr></tbody></table>
 			</td></tr>
 		</tbody>

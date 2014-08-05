@@ -55,9 +55,9 @@ class MLProduct {
 	protected $attributesMainSelectFields = '';
 	protected $productDescriptionSelectFields = '';
 	protected $attributesOfferSelectFields = '';
-	protected $attributesHasSortorder = false;
 	
 	protected $existingTables = array();
+	protected $existingColumns = array();
 	
 	protected $cache = array();
 	
@@ -79,6 +79,13 @@ class MLProduct {
 			'ShippingStatus' => 'TABLE_SHIPPING_STATUS'
 		) as $key => $tableDefine) {
 			$this->existingTables[$key] = defined($tableDefine) && MagnaDB::gi()->tableExists(constant($tableDefine));
+		}
+		foreach (array (
+			'pa.attributes_stock' => array ('table' => TABLE_PRODUCTS_ATTRIBUTES, 'column' => 'attributes_stock'),
+			'pa.sortorder'        => array ('table' => TABLE_PRODUCTS_ATTRIBUTES, 'column' => 'sortorder'),
+			'pa.attributes_model' => array ('table' => TABLE_PRODUCTS_ATTRIBUTES, 'column' => 'attributes_model'),
+		) as $key => $define) {
+			$this->existingColumns[$key] = MagnaDB::gi()->columnExistsInTable($define['column'], $define['table']);
 		}
 	}
 	
@@ -844,6 +851,9 @@ class MLProduct {
 	/**
 	 * Loads the single-dimensional variations to a product.
 	 *
+	 * @todo: In case products_attributes.attributes_stock does not exist fall back to products.quantity.
+	 *        Use $this->existingColumns['pa.attributes_stock'] to check.
+	 *
 	 * @param array $parent
 	 *    The parent product
 	 * @param bool $onlyOffer
@@ -872,13 +882,17 @@ class MLProduct {
 		if ($pVID === false) {
 			return false;
 		}
+		$selectFields = ($onlyOffer ? $this->attributesOfferSelectFields : $this->attributesMainSelectFields);
+		if (!$this->existingColumns['pa.attributes_stock']) {
+			$selectFields = str_replace('pa.attributes_stock', '\''.$parent['Quantity'].'\'', $selectFields);
+		}
 		$variations = MagnaDB::gi()->fetchArray(eecho('
-		    SELECT '.($onlyOffer ? $this->attributesOfferSelectFields : $this->attributesMainSelectFields).'
+		    SELECT '.$selectFields.'
 		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa
 		     WHERE pa.products_id = '.$parent['ProductId'].'
 		           AND pa.options_id = '.$pVID['options_id'].'
-		           AND pa.attributes_stock IS NOT NULL
-		  '.($this->attributesHasSortorder ? 'ORDER BY pa.sortorder' : '').'
+		           '.($this->existingColumns['pa.attributes_stock'] ? 'AND pa.attributes_stock IS NOT NULL' : '').'
+		  '.($this->existingColumns['pa.sortorder'] ? 'ORDER BY pa.sortorder' : '').'
 		', false));
 		
 		if ($variations == false) {
@@ -888,6 +902,18 @@ class MLProduct {
 		$quantity = 0;
 		
 		foreach ($variations as &$v) {
+			$v['MarketplaceId'] = 'MLV'.$parent['ProductId'].'_'.$v['VariationNameId'].'_'.$v['VariationValueId'];
+			if (empty($v['VariationModel'])) {
+				if (empty($parent['ProductsModel'])) {
+					$v['MarketplaceSku'] = $v['MarketplaceId'];
+				} else {
+					$v['MarketplaceSku'] = $parent['ProductsModel'].'_MLV'.$v['VariationNameId'].'_'.$v['VariationValueId'];
+				}
+			} else {
+				$v['MarketplaceSku'] = $v['VariationModel'];
+			}
+			unset($v['VariationModel']);
+			
 			if (!$this->cacheKeyExists('ProductOptionGroups', $v['VariationNameId'])) {
 				$this->cachePopulate('ProductOptionGroups', '
 					SELECT products_options_id AS `Key`, language_id AS LanguageId, products_options_name AS Value
@@ -917,6 +943,7 @@ class MLProduct {
 			
 			$vPriceSurcharge = $v['Price'] * (($v['PricePrefix'] == '+') ? 1 : -1);
 			$this->calcPriceVariation($v, $vPriceSurcharge, $parent['Prices'], $parent['TaxPercent']);
+			unset($v['PricePrefix']);
 			
 			$v['Quantity'] = $this->calcQuantity($v['Quantity']);
 			$quantity += $v['Quantity'];
@@ -1538,12 +1565,12 @@ $images = array (
 				$addAttributesFields[$ml] = '';
 			}
 		}
-		if (array_key_exists('sortorder', $attr)) {
-			$this->attributesHasSortorder = true;
-		}
+		
 		$attributesSelectFields = array (
 			'pa.products_attributes_id AS VariationId',
-			'pa.attributes_model AS VariationModel',
+			($this->existingColumns['pa.attributes_model'] ? 'pa.attributes_model' : '""').' AS VariationModel',
+			'"" AS MarketplaceId',
+			'"" AS MarketplaceSku',
 			'"" AS Variation',
 			'pa.options_id AS VariationNameId',
 			'pa.options_values_id AS VariationValueId',

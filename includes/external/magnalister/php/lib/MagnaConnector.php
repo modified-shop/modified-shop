@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaConnector.php 4003 2014-06-21 13:02:12Z derpapst $
+ * $Id: MagnaConnector.php 4285 2014-07-24 23:17:44Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -251,6 +251,9 @@ class MagnaConnector {
 		if ($hasSSL) {
 			curl_setopt($connection, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($connection, CURLOPT_SSL_VERIFYHOST, 0);
+			if (defined('MAGNA_CURLOPT_SSLVERSION')) {
+				curl_setopt($connection, CURLOPT_SSLVERSION, MAGNA_CURLOPT_SSLVERSION);
+			}
 		}
 		curl_setopt($connection, CURLOPT_USERAGENT, "MagnaConnect cURLVersion".($hasSSL ? ' (SSL)' : ''));
 		curl_setopt($connection, CURLOPT_FRESH_CONNECT, true);

@@ -10,7 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.css 4022 2014-06-26 08:27:44Z derpapst $
+ * $Id: magnalister.css 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -109,7 +109,12 @@ body.xonsoft table.columnLeft {
 	border-spacing: 3px;
 	padding: 0;
 }
-h1, h2, h3, h4, h5, h6 {
+body.magna h1,
+body.magna h2,
+body.magna h3,
+body.magna h4,
+body.magna h5,
+body.magna h6 {
 	color: black;
 	background: none;
 	font-weight: normal;
@@ -117,25 +122,28 @@ h1, h2, h3, h4, h5, h6 {
 	margin: 0 0 .17em 0;
 	border-bottom: 1px solid #aaa;
 }
-h1 { font-size: 188%; }
-h1 span { font-size: 53%; }
-h1#threeDots span { font-size: 100%; }
-h2 { font-size: 150%; }
-h2 span { font-size: 67%; }
-h3, h4, h5, h6 {
+body.magna h1 { font-size: 188%; }
+body.magna h1 span { font-size: 53%; }
+body.magna h1#threeDots span { font-size: 100%; }
+body.magna h2 { font-size: 150%; }
+body.magna h2 span { font-size: 67%; }
+body.magna h3,
+body.magna h4,
+body.magna h5,
+body.magna h6 {
 	border-bottom: none;
 	font-weight: bold;
 }
-h3 { font-size: 132%; }
-h3 span { font-size: 76%; font-weight: normal; }
-h4 { font-size: 116%; }
-h4 span { font-size: 86%; font-weight: normal; }
-h5 { font-size: 100%; }
-h5 span { font-weight: normal; }
-h6 { font-size: 80%;  }
-h6 span { font-size: 125%; font-weight: normal; }
+body.magna h3 { font-size: 132%; }
+body.magna h3 span { font-size: 76%; font-weight: normal; }
+body.magna h4 { font-size: 116%; }
+body.magna h4 span { font-size: 86%; font-weight: normal; }
+body.magna h5 { font-size: 100%; }
+body.magna h5 span { font-weight: normal; }
+body.magna h6 { font-size: 80%;  }
+body.magna h6 span { font-size: 125%; font-weight: normal; }
 
-hr {
+body.magna hr {
 	color: #fff;
 	background: transparent;
 	margin: 0 0 0.5em 0;
@@ -144,10 +152,9 @@ hr {
 	border-bottom: 1px #aaa solid;
 }
 
-table th {
+body.magna table th {
 	text-align: left;
 }
-
 body.magna td.boxCenter a {
 	font-family: sans-serif;
 	font-size: inherit;
@@ -160,100 +167,112 @@ body.magna.veyton a:hover {
 body.magna td.boxCenter p a {
 	text-decoration: underline;
 }
+/* reset */
+body.magna label {
+	margin-bottom: 0;
+	font-weight: normal;
+	display: inline;
+}
+body.magna td {
+	padding: 1px;
+}
+
 
 /* General */
-.bold {
+body.magna .bold {
 	font-weight: bold !important;
 }
-.italic {
+body.magna  .italic {
 	font-style: italic !important;
 }
-.center {
+body.magna .center {
 	text-align: center !important;
 }
-.underline,
-a.underline,
-.normaltext a {
+body.magna .underline,
+body.magna a.underline,
+body.magna .normaltext a {
 	text-decoration: underline !important;
 }
-.notice {
+body.magna .notice {
 	color: #900 !important;
 }
-.error {
+body.magna .error {
 	color: #f00 !important;
 }
-.magnatext {
+body.magna .magnatext {
 	color: #DC043D !important;
 }
-.larger {
+body.magna .larger {
 	font-size: 120% !important;
 }
-.left {
+body.magna .left {
 	float: left;
+	width: auto;
 }
-.textleft {
+body.magna .textleft {
 	text-align: left !important;
 }
-.right {
+body.magna .right {
 	float: right;
+	width: auto;
 }
-.textright {
+body.magna .textright {
 	text-align: right !important;
 }
-.textcenter {
+body.magna .textcenter {
 	text-align: center !important;
 }
-.small {
+body.magna .small {
 	font-size: 80% !important;
 }
-.normal {
+body.magna .normal {
 	font-weight: normal !important;
 	font-style: normal !important;
 	text-decoration: none !important;
 }
-.nowrap {
+body.magna .nowrap {
 	white-space: nowrap !important;
 }
-.tt {
+body.magna .tt {
 	font-family: monospace !important;
 	margin: 0 !important;
 }
-.visualClear {
+body.magna .visualClear {
 	clear: both !important;
 }
-.grey {
+body.magna .grey {
 	color: #999 !important;
 }
-.fullWidth {
+body.magna .fullWidth {
 	width: 100% !important;
 }
-.autoWidth {
+body.magna .autoWidth {
 	width: auto !important;
 } 
-.inline {
+body.magna .inline {
 	display: inline !important;
 }
-.paddingBottom {
+body.magna .paddingBottom {
 	padding-bottom: 1em !important;
 }
-.paddingRight {
+body.magna .paddingRight {
 	padding-right: 1em !important;
 }
-.nopadding {
+body.magna .nopadding {
 	padding: 0 !important;
 }
-.line15 {
+body.magna .line15 {
 	line-height: 1.5em;
 }
-.valigntop,
-.valigntop th,
-.valigntop td {
+body.magna .valigntop,
+body.magna .valigntop th,
+body.magna .valigntop td {
 	vertical-align: top !important;
 }
-.valignmid {
+body.magna .valignmid {
 	vertical-align: middle;
 }
-.valignbottom {
+body.magna .valignbottom {
 	vertical-align: bottom;
 }
 .successBox {
@@ -380,8 +399,8 @@ table#magnafooter div.copyleft {
 	color: #555;
 	padding-top: 1px;
 }
-body.magna div#content .button,
-body.magna .ui-dialog .button {
+body.magna div#content .ml-button,
+body.magna .ui-dialog .ml-button {
 	font-family: Verdana, Arial, sans-serif;
 	font-weight: normal;
 	text-transform: none;
@@ -392,7 +411,7 @@ body.magna .ui-dialog .button {
 	padding: 1px 5px;
 	display: inline-block;
 	text-align: center;
-
+	
 	border: 1px solid #999;
 	outline: none;
 	background: #a1b8f1;
@@ -417,17 +436,17 @@ body.magna .ui-dialog .button {
 	
 	white-space: nowrap;
 }
-input#unprepare.button, input#reset_description.button {
+input#unprepare.ml-button, input#reset_description.ml-button {
 	min-width: 253px;
 }
-input#unprepare.button {
+input#unprepare.ml-button {
 	margin-bottom: 4px !important;
 } 
-input#reset_description.button{
+input#reset_description.ml-button{
 	margin-top: 0px !important;
 }
-body.magna div#content .button:hover,
-body.magna .ui-dialog .button:hover {
+body.magna div#content .ml-button:hover,
+body.magna .ui-dialog .ml-button:hover {
 	background: #a7bbff;
 	background: -webkit-gradient(
 		linear,
@@ -442,8 +461,8 @@ body.magna .ui-dialog .button:hover {
 		#ffffff 70%
 	);
 }
-body.magna div#content .button:active,
-body.magna .ui-dialog .button:active {
+body.magna div#content .ml-button:active,
+body.magna .ui-dialog .ml-button:active {
 	background: #d5dcf8;
 	background: -webkit-gradient(
 		linear,
@@ -459,51 +478,52 @@ body.magna .ui-dialog .button:active {
 	);
 }
 
-body.magna div#content .button:focus,
-body.magna div#content .button::-moz-focus-inner,
-body.magna .ui-dialog .button:focus,
-body.magna .ui-dialog .button::-moz-focus-inner {
+body.magna div#content .ml-button:focus,
+body.magna div#content .ml-button::-moz-focus-inner,
+body.magna .ui-dialog .ml-button:focus,
+body.magna .ui-dialog .ml-button::-moz-focus-inner {
 	outline: none;
 }
 
-body.magna div#content .button.smallmargin,
-body.magna .ui-dialog .button.smallmargin {
+body.magna div#content .ml-button.smallmargin,
+body.magna .ui-dialog .ml-button.smallmargin {
 	margin: 1px;
 }
-body.magna div#content .button img,
-body.magna .ui-dialog .button img {
+body.magna div#content .ml-button img,
+body.magna .ui-dialog .ml-button img {
 	border: none;
 	outline: none;
 	vertical-align: text-top;
 	margin-top: -3px;
 }
-body.magna div#content button.button img {
+body.magna div#content button.ml-button img {
 	vertical-align: text-top;
 	margin-top: -2px;
 	margin-left: -2px;
 	margin-bottom: -2px;
 }
-body.magna div#content input.button,
-body.magna div#content button.button {
+body.magna div#content input.ml-button,
+body.magna div#content button.ml-button {
 	padding-top: 0;
 	padding-bottom: 2px;
 	display: inline-block;
 }
-body.magna.webkit div#content input.button,
-body.magna.webkit div#content button.button {
+body.magna.webkit div#content input.ml-button,
+body.magna.webkit div#content button.ml-button {
 	padding-top: 1px;
 	padding-bottom: 1px;
 	display: inline-block;
 }
-body.magna div#content a.button {
+body.magna div#content a.ml-button {
+	box-sizing: content-box;
 	height: 15px;
 	padding: 3px 4px 0px 4px;
 }
-body.magna.ielt9 div#content a.button {
+body.magna.ielt9 div#content a.ml-button {
 	height: 15px;
 	padding: 2px 4px 0 4px;
 }
-body.magna .ui-dialog span.button {
+body.magna .ui-dialog span.ml-button {
 	height: 1.3em;
 	margin: 0;
 	vertical-align: top;
@@ -511,7 +531,7 @@ body.magna .ui-dialog span.button {
 }
 
 /* GFX Buttons */
-.gfxbutton {
+body.magna .gfxbutton {
 	width: 18px;
 	height: 18px;
 	display: inline-block;
@@ -526,63 +546,64 @@ body.magna .ui-dialog span.button {
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	border: 1px solid transparent;
+	box-sizing: content-box;
 }
-body.ielt9 .gfxbutton {
+body.magna.ielt9 .gfxbutton {
 	color: #fff;
 }
-.gfxbutton:hover {
+body.magna .gfxbutton:hover {
 	border: 1px solid #aaa;
 	background-color: #ddd;
 	-moz-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
 	-webkit-box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
 	box-shadow: inset 1px 1px 2px rgba(0,0,0,0.2);
 }
-.gfxbutton:active {
+body.magna .gfxbutton:active {
 	border: 1px solid #999;
 	background-color: #ccc;
 	outline: none;
 }
-.gfxbutton.small {
+body.magna .gfxbutton.small {
 	background-position: -1px -1px;
 	width: 16px;
 	height: 16px;
 	margin: 0 0 -5px !important;
 }
-.gfxbutton.medium {
+body.magna .gfxbutton.medium {
 	background-position: 3px 3px;
 	width: 22px;
 	height: 22px;
 }
-.gfxbutton.large {
+body.magna .gfxbutton.large {
 	background-position: 7px 7px;
 	width: 30px;
 	height: 30px;
 	margin: 0 0 -5px !important;
 }
-.gfxbutton::-moz-focus-inner {
+body.magna .gfxbutton::-moz-focus-inner {
 	outline: none;
 	border: none;
 }
-.gfxbutton.edit {
+body.magna .gfxbutton.edit {
 	background-image: url('../images/pencil.png');
 }
-.gfxbutton.delete {
+body.magna .gfxbutton.delete {
 	background-image: url('../images/cross.png');
 }
-.gfxbutton.magnifier {
+body.magna .gfxbutton.magnifier {
 	background-image: url('../images/magnifier.png');
 }
-.gfxbutton.refresh {
+body.magna .gfxbutton.refresh {
 	background-image: url('../images/arrow_rotate_clockwise_top.png');
 }
-.gfxbutton.info {
+body.magna .gfxbutton.info {
 	background-image: url('../images/information.png');
 }
-.gfxbutton.cog {
+body.magna .gfxbutton.cog {
 	background-image: url('../images/icons/cog.png');
 }
 /* GFX Buttons w Border */
-.gfxbutton.border {
+body.magna .gfxbutton.border {
 	-webkit-border-radius: 3px;
 	border-radius: 3px;
 	border: 1px solid rgba(0, 0, 0, 0.07);
@@ -591,14 +612,14 @@ body.ielt9 .gfxbutton {
 	-webkit-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
 	box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
 }
-.gfxbutton.border:hover {
+body.magna .gfxbutton.border:hover {
 	border: 1px solid #aaa;
 	
 	-moz-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
 	-webkit-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
 	box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 1), inset -1px -1px 2px rgba(0, 0, 0, 0.2);
 }
-.gfxbutton.border:active {
+body.magna .gfxbutton.border:active {
 	outline: none;
 
 	border-width: 1px;
@@ -609,10 +630,10 @@ body.ielt9 .gfxbutton {
 	-webkit-box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
 	box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
-.gfxbutton.visiblebg {
+body.magna .gfxbutton.visiblebg {
 	background-color: rgba(0, 0, 0, 0.05);
 }
-div#globalButtonBox .gfxbutton {
+body.magna div#globalButtonBox .gfxbutton {
 	background-repeat: no-repeat;
 	background-position: 3px 3px;
 	width: 22px;
@@ -621,16 +642,16 @@ div#globalButtonBox .gfxbutton {
 	background-image: url('../images/icons/buttonbox.png');
 	margin-left: 5px;
 }
-div#globalButtonBox .gfxbutton.cart {
+body.magna div#globalButtonBox .gfxbutton.cart {
 	background-position: 0px 0;	
 }
-div#globalButtonBox .gfxbutton.sync {
+body.magna div#globalButtonBox .gfxbutton.sync {
 	background-position: -22px 0;	
 }
-div#globalButtonBox .gfxbutton.upload {
+body.magna div#globalButtonBox .gfxbutton.upload {
 	background-position: -44px 0;	
 }
-div#globalButtonBox .gfxbutton.update {
+body.magna div#globalButtonBox .gfxbutton.update {
 	background-position: -66px 0;
 }
 /* Update Error */
@@ -1024,7 +1045,7 @@ input.refresh {
 	margin-right: 2px;
 	cursor: help;
 }
-body.magna div#content input.button.refresh {
+body.magna div#content input.ml-button.refresh {
 	height: 20px;
 	width: 20px;
 	background-image: url('../images/resultset_first.png');
@@ -1064,6 +1085,9 @@ form.config table.conftbl tr.conf td,
 form.config table.conftbl tr.conf th {
 	border-bottom: 1px solid #999;
 	border-top: 1px solid #999;
+}
+form.config table.conftbl tr.conf th.ml-label label {
+	font-weight: bold;
 }
 form.config table.conftbl tr.conf th label.missing {
 	color: #a00000;
@@ -1106,11 +1130,11 @@ form.config table.conftbl tr td.externalDesc dl dd {
 	margin-bottom: 4px;
 	color: #444;
 }
-body.magna div#content form.config table.conftbl tr th.space .button {
+body.magna div#content form.config table.conftbl tr th.space .ml-button {
 	margin-top: 0;
 	margin-bottom: 0;
 }
-body.magna div#content form.config table.conftbl tr th.space .button:last-child {
+body.magna div#content form.config table.conftbl tr th.space .ml-button:last-child {
 	margin-right: 0;
 }
 /*
@@ -1237,7 +1261,7 @@ tr.bottomDashed {
 
 body.mac form.config table.conftbl tr.conf td label.savedPassword span,
 body.webkit form.config table.conftbl tr.conf td label.savedPassword span {
-	padding-top: 4px;
+	padding-top: 3px;
 }
 form.config table.conftbl tr.conf td label.savedPassword.partial span {
 	color: #c0c0c0;
@@ -1994,7 +2018,7 @@ body.magna div.productList table.actions tbody tr td.actionswrap {
 }
 
 /* Pagination */
-body.magna div.productList table.pagination {
+body.magna div.productList table.ml-pagination {
 	width: 100%;
 
 	margin-top: 4px;
@@ -2003,14 +2027,14 @@ body.magna div.productList table.pagination {
 	border-collapse: collapse;
 	border-spacing: 0px;
 }
-body.magna div.productList table.pagination td {
+body.magna div.productList table.ml-pagination td {
 	border-top: 1px solid #aaa;
 	border-bottom: 1px solid #aaa;
 	background: #f3f3f3;
 	padding: 2px 5px;
 }
-body.magna div.productList table.pagination input,
-body.magna div.productList table.pagination a {
+body.magna div.productList table.ml-pagination input,
+body.magna div.productList table.ml-pagination a {
 	border: none;
 	padding: 0;
 	margin: 0;
@@ -2678,13 +2702,13 @@ body.magna div.magnaTabs2 ul li a:visited {
 	font-weight: bold;
 }
 /* Amazon Prepare */
-input#removeapply.button, input#resetapply.button {
+input#removeapply.ml-button, input#resetapply.ml-button {
 	min-width: 278px;
 }
-input#removeapply.button {
+input#removeapply.ml-button {
 	margin-bottom: 0 !important;
 }
-input#resetapply.button {
+input#resetapply.ml-button {
 	margin-top: 4px !important;
 }
 
@@ -2712,7 +2736,7 @@ table.listingProcessDetails {
 table.listingProcessDetails p {
 	margin: 0;
 }
-body.magna div#content table.listingProcessDetails a.button {
+body.magna div#content table.listingProcessDetails a.ml-button {
 	margin: 0 0 0 5px;
 }
 
@@ -2739,10 +2763,10 @@ body.magna.jqueryui .ui-widget .ui-widget-header a:hover {
 }
 
 /* Pagination */
-body.magna table.pagination {
+body.magna table.ml-pagination {
 	width: 100%;
 }
-body.magna table.pagination input {
+body.magna table.ml-pagination input {
 	border: none;
 	padding: 0;
 	margin: 0;

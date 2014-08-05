@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 4071 2014-07-01 16:12:40Z derpapst $
+ * $Id: applicationviews.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -558,10 +558,10 @@ echo '
 			<tr class="firstChild"><td>
 				<table><tbody><tr>
 					<td class="firstChild">'.(($applyAction == 'singleapplication')
-						? '<input id="resetToDefaults" class="button" type="button" value="'.ML_BUTTON_LABEL_REVERT.'"/>'
+						? '<input id="resetToDefaults" class="ml-button" type="button" value="'.ML_BUTTON_LABEL_REVERT.'"/>'
 						: ''
 					).'</td>
-					<td class="lastChild">'.'<input class="button" type="submit" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
+					<td class="lastChild">'.'<input class="ml-button" type="submit" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
 				</tr></tbody></table>
 			</td></tr>
 		</tbody>

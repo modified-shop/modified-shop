@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 406 2014-07-07 09:38:30Z derpapst $
+ * $Id: magnalister.php 413 2014-07-31 10:29:56Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -19,7 +19,8 @@
  *
  * Installation class for osC based shop systems for magnalister.
  */
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+defined('_VALID_XTC') OR die('Direct access to this location is not allowed.');
 
 define('MODULE_MAGNALISTER_TEXT_TITLE', 'magnalister');
 define('MODULE_MAGNALISTER_TEXT_DESCRIPTION', '<div style="margin-left: 0.5em;">magnalister - das ultimative Listing-Tool f&uuml;r amazon, yatego, 

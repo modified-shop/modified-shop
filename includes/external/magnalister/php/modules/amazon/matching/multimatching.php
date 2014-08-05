@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: multimatching.php 3347 2013-12-02 15:42:17Z tim.neumann $
+ * $Id: multimatching.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -165,8 +165,8 @@ if (!empty($products)) {
 		<thead><tr><th>Aktionen</th></tr></thead>
 		<tbody><tr><td>
 			<table><tbody><tr>
-				<td class="first_child"><a href="'.toURL($_url).'" title="'.ML_BUTTON_LABEL_BACK.'" class="button">'.ML_BUTTON_LABEL_BACK.'</a></td>
-				<td class="last_child"><input type="submit" class="button" value="'.
+				<td class="first_child"><a href="'.toURL($_url).'" title="'.ML_BUTTON_LABEL_BACK.'" class="ml-button">'.ML_BUTTON_LABEL_BACK.'</a></td>
+				<td class="last_child"><input type="submit" class="ml-button" value="'.
 					(($currentPage == $totalPages) ? ML_BUTTON_LABEL_SAVE_DATA : ML_BUTTON_LABEL_SAVE_AND_NEXT).'" /></td>
 			</tr></tbody></table>
 		</td></tr></tbody>

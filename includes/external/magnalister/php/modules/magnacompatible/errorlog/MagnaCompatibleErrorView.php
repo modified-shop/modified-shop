@@ -206,7 +206,7 @@ class MagnaCompatibleErrorView {
 	}
 
 	public function renderActionBox() {
-		$left = '<input type="button" class="button" value="'.ML_BUTTON_LABEL_DELETE.'" id="errorLogDelete" name="errorLog[delete]"/>';
+		$left = '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="errorLogDelete" name="errorLog[delete]"/>';
 		$right = '&nbsp;';
 
 		ob_start();?>
@@ -327,7 +327,7 @@ $(document).ready(function() {
 		$html .= '
 			<form action="'.toURL($this->url).'" method="POST">
 				<table class="listingInfo"><tbody><tr>
-					<td class="pagination">
+					<td class="ml-pagination">
 						<span class="bold">'.ML_LABEL_CURRENT_PAGE.' &nbsp;&nbsp; '.$this->currentPage.'</span>
 					</td>
 					<td class="textright">

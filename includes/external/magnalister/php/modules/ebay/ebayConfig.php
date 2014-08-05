@@ -77,7 +77,7 @@ function eBayGenToken($args, &$value = '') {
 		else
 			$expires = sprintf(ML_EBAY_TEXT_TOKEN_EXPIRES_AT, date('d.m.Y H:i:s', unix_timestamp($expires)));
 	}
-	return '<input class="button" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
+	return '<input class="ml-button" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
 	'.$expires.'
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {

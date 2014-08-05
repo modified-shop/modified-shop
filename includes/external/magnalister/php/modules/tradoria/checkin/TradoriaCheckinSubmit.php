@@ -23,16 +23,21 @@ require_once(DIR_MAGNALISTER_MODULES.'magnacompatible/checkin/MagnaCompatibleChe
 
 class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 	private $regions = array();
+	
+	protected $hasDbColumn = array();
 
 	public function __construct($settings = array()) {
 		$settings = array_merge(array(
 			'itemsPerBatch'   => 1,
 		), $settings);
 		parent::__construct($settings);
+		
+		$this->hasDbColumn['pa.attributes_stock'] = MagnaDB::gi()->columnExistsInTable('attributes_stock', TABLE_PRODUCTS_ATTRIBUTES);
 	}
 	
 	protected function getVariations($pID, $product, &$data) {
 		if (!getDBConfigValue(array($this->marketplace.'.checkin.usevariations', 'val'), $this->mpID, true)) {
+			#echo __LINE__."<br>\n";
 			return false;
 		}
 		
@@ -46,34 +51,38 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		  ORDER BY rate DESC
 		');
 
-		if ($pVID === false) return false;
-		$variationTheme = MagnaDB::gi()->fetchArray('
+		if ($pVID === false) {
+			#echo __LINE__."<br>\n";
+			return false;
+		}
+		$variationTheme = MagnaDB::gi()->fetchArray(eecho('
 		    SELECT po.products_options_name AS VariationTitle,
 		           pov.products_options_values_name AS VariationValue,
 		           pa.products_attributes_id AS aID,
 		           pa.options_values_price AS vPrice,
 		           pa.price_prefix AS vPricePrefix,
-		           pa.attributes_stock AS Quantity,
+		           '.($this->hasDbColumn['pa.attributes_stock'] ? 'pa.attributes_stock' : $data['submit']['Quantity']).' AS Quantity,
 		           '.(defined('MAGNA_FIELD_ATTRIBUTES_EAN')
 		              ? MAGNA_FIELD_ATTRIBUTES_EAN
 		           	  : '\'\''
 		           ).' AS EAN
 		      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa,
 		           '.TABLE_PRODUCTS_OPTIONS.' po, 
-		           '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov, 
-		           '.TABLE_LANGUAGES.' l
+		           '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov
 		     WHERE pa.products_id = \''.$pID.'\'
 		           AND pa.options_id='.$pVID['options_id'].'
-		           AND po.language_id = l.languages_id
+		           AND po.language_id = \''.$this->settings['language'].'\'
 		           AND po.products_options_id = pa.options_id
 		           AND po.products_options_name<>\'\'
-		           AND pov.language_id = l.languages_id
+		           AND pov.language_id = \''.$this->settings['language'].'\'
 		           AND pov.products_options_values_id = pa.options_values_id
 		           AND pov.products_options_values_name<>\'\'
-		           AND pa.attributes_stock IS NOT NULL
-		           AND l.directory = \''.$_SESSION['language'].'\'
-		');
-		if ($variationTheme == false) return false;
+		           '.($this->hasDbColumn['pa.attributes_stock'] ? 'AND pa.attributes_stock IS NOT NULL' : '').'
+		', false));
+		if ($variationTheme == false) {
+			#echo __LINE__."<br>\n";
+			return false;
+		}
 		
 		$tax = $this->simpleprice->getTaxByClassID($product['products_tax_class_id']);
 		

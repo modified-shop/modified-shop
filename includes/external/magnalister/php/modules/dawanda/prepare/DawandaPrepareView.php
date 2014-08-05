@@ -215,12 +215,12 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 							<table><tbody><tr>
 								<td class="firstChild">'.(
 			($prepareView == 'single')
-				? '<input class="button" type="submit" name="unprepare" id="unprepare" value="' . ML_BUTTON_LABEL_REVERT . '"/>'
+				? '<input class="ml-button" type="submit" name="unprepare" id="unprepare" value="' . ML_BUTTON_LABEL_REVERT . '"/>'
 				: ''
 			).'
 								</td>
 								<td class="lastChild">
-									<input class="button" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
+									<input class="ml-button" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>
@@ -424,7 +424,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectPrimaryCategory"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectPrimaryCategory"/>
 								</td>
 							</tr>
 							<tr>
@@ -437,7 +437,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectSecondaryCategory"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectSecondaryCategory"/>
 								</td>
 							</tr>
 							<tr>
@@ -450,7 +450,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectStoreCategory"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectStoreCategory"/>
 								</td>
 							</tr>
 						</tbody></table>
@@ -516,13 +516,29 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		return $html;
 	}
 
+	protected function processMagnaExceptions() {
+		$ex = DawandaApiConfigValues::gi()->getMagnaExceptions();
+		$html = '';
+		foreach ($ex as $e) {
+			if (in_array($e->getSubsystem(), array('Core', 'PHP', 'Database'))) {
+				continue;
+			}
+			$html .= '<p class="errorBox">'.fixHTMLUTF8Entities($e->getMessage()).'</p>';
+			$e->setCriticalStatus(false);
+		}
+		return $html;
+	}
+
 	public function process() {
+		DawandaApiConfigValues::gi()->cleanMagnaExceptions();
 		$this->price = new SimplePrice(null, getCurrencyFromMarketplace($this->mpID));
 		//$ycm = new DawandaCategoryMatching('view');
 		//return $ycm->render().$this->renderPrepareView($this->getSelection());
 		$this->oCategoryMatching = new DawandaCategoryMatching();
 		
-		return $this->renderPrepareView($this->getSelection());
+		$html = $this->renderPrepareView($this->getSelection());
+		
+		return $this->processMagnaExceptions().$html;
 	}
 
 	public function renderAjax() {

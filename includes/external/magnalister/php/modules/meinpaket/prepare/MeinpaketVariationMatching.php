@@ -253,7 +253,7 @@ body.magna table#variationMatcher table.attrTable.matchingTable tr td.input {
 								<td class="firstChild"></td>
 								<td></td>
 								<td class="lastChild">
-									<input id="saveMatching" class="button" type="submit">
+									<input id="saveMatching" class="ml-button" type="submit">
 								</td>
 							</tr></tbody></table>
 						</td></tr>

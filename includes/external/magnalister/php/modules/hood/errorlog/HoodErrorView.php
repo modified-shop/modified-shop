@@ -227,8 +227,8 @@ class HoodErrorView {
 	}
 	
 	public function renderActionBox() {
-		$left  = '<input type="button" class="button" value="' . ML_BUTTON_LABEL_DELETE . '" id="errorLogDelete" name="errorLog[delete]"/>';
-		$right = '<input type="submit" class="button" value="' . ML_BUTTON_LABEL_DELETE_COMPLETE_LOG . '" name="deleteall"/>';
+		$left  = '<input type="button" class="ml-button" value="' . ML_BUTTON_LABEL_DELETE . '" id="errorLogDelete" name="errorLog[delete]"/>';
+		$right = '<input type="submit" class="ml-button" value="' . ML_BUTTON_LABEL_DELETE_COMPLETE_LOG . '" name="deleteall"/>';
 		
 		ob_start();
 		?><script type="text/javascript">/*<![CDATA[*/
@@ -323,7 +323,7 @@ class HoodErrorView {
 		$html .= '
 			<form action="' . toURL($this->url) . '" method="POST">
 				<table class="listingInfo"><tbody><tr>
-					<td class="pagination">
+					<td class="ml-pagination">
 						<span class="bold">' . ML_LABEL_CURRENT_PAGE . ' &nbsp;&nbsp; ' . $this->currentPage . '</span>
 					</td>
 					<td class="textright">
