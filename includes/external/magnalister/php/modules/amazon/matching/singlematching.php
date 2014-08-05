@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: singlematching.php 3347 2013-12-02 15:42:17Z tim.neumann $
+ * $Id: singlematching.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -193,10 +193,10 @@ echo '
 	<thead><tr><th>Aktionen</th></tr></thead>
 	<tbody><tr><td>
 		<table><tbody><tr>
-			<td class="first_child"><a href="'.toURL(array('mp' => $_MagnaSession['mpID'], 'mode' => 'prepare', 'view' => 'match')).'" title="'.ML_BUTTON_LABEL_BACK.'" class="button">
+			<td class="first_child"><a href="'.toURL(array('mp' => $_MagnaSession['mpID'], 'mode' => 'prepare', 'view' => 'match')).'" title="'.ML_BUTTON_LABEL_BACK.'" class="ml-button">
 				'.ML_BUTTON_LABEL_BACK.
 			'</a></td>
-			<td class="last_child"><input type="submit" class="button" value="'.ML_BUTTON_LABEL_SAVE_DATA.'" /></td>
+			<td class="last_child"><input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_SAVE_DATA.'" /></td>
 		</tr></tbody></table>
 	</td></tr></tbody>
 </table>

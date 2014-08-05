@@ -49,6 +49,9 @@ class HoodProductSaver {
 		}
 		$this->config['templateContent'] = getDBConfigValue($this->marketplace.'.template.content', $this->mpId);
 		$this->config['templateTitle']   = getDBConfigValue($this->marketplace.'.template.name', $this->mpId, '#TITLE#');
+		
+		$this->config['maxImages'] = getDBConfigValue($this->marketplace.'.prepare.maximagecount', $this->mpId, 'all');
+		$this->config['maxImages'] = ($this->config['maxImages'] == 'all') ? true : (int)$this->config['maxImages'];
 	}
 	
 	protected function insertPrepareData($data) {
@@ -96,8 +99,12 @@ class HoodProductSaver {
 			'BaseUrl' => $this->config['imagepath'],
 			'Images' => array(),
 		);
+		$maxImages = $this->config['maxImages'];
 		foreach ($images as $img) {
-			$gallery['Images'][$img] = true;
+			$gallery['Images'][$img] = (int)$maxImages > 0;
+			if ($maxImages !== true) {
+				--$maxImages;
+			}
 		}
 		return $gallery;
 	}
@@ -135,7 +142,7 @@ class HoodProductSaver {
 		
 		$row['ListingType'] = $itemDetails['ListingType'];
 		$row['ListingDuration']  = isset($itemDetails['ListingDuration']) ? $itemDetails['ListingDuration'] : '';
-		$row['PaymentMethods']   = json_encode($itemDetails['PaymentMethods']);
+		$row['PaymentMethods']   = json_encode(isset($itemDetails['PaymentMethods']) ? $itemDetails['PaymentMethods'] : array());
 	
 		$row['ConditionType']    = $itemDetails['ConditionType'];
 		$row['noIdentifierFlag'] = $itemDetails['noIdentifierFlag'];

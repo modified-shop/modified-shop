@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ErrorView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: ErrorView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -136,8 +136,8 @@ class ErrorView {
 	}
 	
 	public function renderActionBox() {
-		$left = '<input type="button" class="button" value="'.ML_BUTTON_LABEL_DELETE.'" id="errorLogDelete" name="errorLog[delete]"/>';
-		$right = '<input type="button" class="button" value="'.ML_BUTTON_LABEL_RETRY.'" id="errorLogRetry" name="errorLog[retry]"/>';
+		$left = '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="errorLogDelete" name="errorLog[delete]"/>';
+		$right = '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_RETRY.'" id="errorLogRetry" name="errorLog[retry]"/>';
 
 		ob_start();
 		echo '<div id="infodiag" class="dialog2" title="'.ML_LABEL_NOTE.'">'.ML_HINT_NO_PRODUCTS_SELECTED.'</div>';
@@ -210,7 +210,7 @@ $(document).ready(function() {
 			$html .= '
 				<form action="'.toURL($this->url).'" method="POST">
 					<table class="listingInfo"><tbody><tr>
-						<td class="pagination">
+						<td class="ml-pagination">
 							<span class="bold">'.ML_LABEL_CURRENT_PAGE.' &nbsp;&nbsp; '.$this->currentPage.'</span>
 						</td>
 						<td class="textright">

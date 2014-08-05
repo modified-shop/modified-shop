@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: TemplateAdmin.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: TemplateAdmin.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -54,7 +54,7 @@ class TemplateAdmin {
 				<p class="noticeBox">'.ML_LABEL_NO_TEMPLATES_YET.'</p>
 				<table class="actions"><thead><tr><th>'.ML_LABEL_ACTIONS.'</th></tr></thead><tbody><tr><td>
 					<table><tbody><tr><td>
-						<a class="button" href="'.toURL($backURL).'" title="'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'">'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'</a>
+						<a class="ml-button" href="'.toURL($backURL).'" title="'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'">'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'</a>
 					</td><td>&nbsp;</td></tr></tbody></table>
 				</td></tr></tbody></table>
 			';
@@ -96,9 +96,9 @@ class TemplateAdmin {
 			</tbody></table>
 			<table class="actions"><thead><tr><th>'.ML_LABEL_ACTIONS.'</th></tr></thead><tbody><tr><td>
 				<table><tbody><tr><td class="firstChild">
-					<a class="button" href="'.toURL($backURL).'" title="'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'">'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'</a>
+					<a class="ml-button" href="'.toURL($backURL).'" title="'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'">'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'</a>
 				</td><td class="lastChild">
-					<button class="button" type="button" id="removeSelected" value="remove" name="removeSelected" title="'.ML_BUTTON_LABEL_DELETE.'">
+					<button class="ml-button" type="button" id="removeSelected" value="remove" name="removeSelected" title="'.ML_BUTTON_LABEL_DELETE.'">
 						<img src="'.DIR_MAGNALISTER_WS_IMAGES.'cross.png" alt="'.ML_BUTTON_LABEL_DELETE.'"/> '.ML_BUTTON_LABEL_DELETE.'
 					</button>				
 				</td></tr></tbody></table>

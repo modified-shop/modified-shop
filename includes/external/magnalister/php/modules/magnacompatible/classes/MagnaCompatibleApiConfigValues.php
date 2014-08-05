@@ -25,6 +25,8 @@ class MagnaCompatibleApiConfigValues {
 	protected $marketplace = '';
 	protected $data = array();
 	
+	protected $exceptions = array();
+	
 	protected function __construct() {
 		
 	}
@@ -47,6 +49,8 @@ class MagnaCompatibleApiConfigValues {
 			$magnaSession[$this->mpId][$class] = array();
 		}
 		$this->data = &$magnaSession[$this->mpId][$class];
+		
+		return $this;
 	}
 	
 	protected function fetchDataFromApi($action, $extend = array(), $encode = true) {
@@ -65,10 +69,19 @@ class MagnaCompatibleApiConfigValues {
 				arrayEntitiesFixHTMLUTF8($this->data[$key]);
 			}
 		} catch (MagnaException $e) {
-			echo print_m($e);
+			$this->exceptions[] = $e;
 			$this->data[$key] = false;
 		}
 		return $this->data[$key];
+	}
+	
+	public function getMagnaExceptions() {
+		return $this->exceptions;
+	}
+	
+	public function cleanMagnaExceptions() {
+		$this->exceptions = array();
+		return $this;
 	}
 	
 }

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimpleSummaryView.php 3857 2014-05-12 16:02:21Z derpapst $
+ * $Id: SimpleSummaryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -651,8 +651,8 @@ $(document).ready(function() {
 		$html = '
 		'.(!empty($infoText) ? '<p class="successBox">'.$infoText.'</p>' : '').'
 		<form action="'.toURL($this->url).'" method="POST" id="summaryForm">
-			<table class="pagination"><tbody><tr>
-				<td class="pagination">
+			<table class="ml-pagination"><tbody><tr>
+				<td class="ml-pagination">
 					<span class="bold">'.ML_LABEL_CURRENT_PAGE.' &nbsp;&nbsp; '.$this->currentPage.'</span>
 				</td>
 				<td class="textright">
@@ -729,8 +729,8 @@ $(document).ready(function() {
 		
 		$html .= '
 			</tbody></table>
-			<table class="pagination listingInfo"><tbody><tr>
-				<td class="pagination">
+			<table class="ml-pagination listingInfo"><tbody><tr>
+				<td class="ml-pagination">
 					<span class="bold">'.ML_LABEL_CURRENT_PAGE.' &nbsp;&nbsp; '.$this->currentPage.'</span>
 				</td>
 				<td class="textright">
@@ -758,7 +758,7 @@ $(document).ready(function() {
 				'</option>';
 			}
 			$tplSelect .= '</select></td>
-				<td><input type="submit" class="button smallmargin" value="'.ML_BUTTON_LABEL_OK.'" name="oldTemplate"/></td>
+				<td><input type="submit" class="ml-button smallmargin" value="'.ML_BUTTON_LABEL_OK.'" name="oldTemplate"/></td>
 			</tr>';
 		}
 		$html .= '
@@ -767,11 +767,11 @@ $(document).ready(function() {
 					';
 
 		if ($this->settings['mode'] == 'administrate') {
-			$html .= '<a class="button" href="'.toURL($this->url).'" title="'.ML_BUTTON_LABEL_BACK_TO_TEMPLATEADMIN.'">'.ML_BUTTON_LABEL_BACK_TO_TEMPLATEADMIN.'</a>';
+			$html .= '<a class="ml-button" href="'.toURL($this->url).'" title="'.ML_BUTTON_LABEL_BACK_TO_TEMPLATEADMIN.'">'.ML_BUTTON_LABEL_BACK_TO_TEMPLATEADMIN.'</a>';
 		} else {
 			$backURL = $this->url;
 			unset($backURL['view']);
-			$html .= '<a class="button" href="'.toURL($backURL).'" title="'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'">'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'</a>';
+			$html .= '<a class="ml-button" href="'.toURL($backURL).'" title="'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'">'.ML_BUTTON_LABEL_BACK_TO_CHECKIN.'</a>';
 		}
 
 		$html .= '
@@ -789,7 +789,7 @@ $(document).ready(function() {
 					<table><tbody><tr>
 						<td><label>'.ML_LABEL_TEMPLATE_SAVE_AS_NEW.'</label></td>
 						<td><input type="text" name="saveTemplate[templateName]"/></td>
-						<td><input type="submit" class="button smallmargin" value="'.ML_BUTTON_LABEL_OK.'" name="newTemplate"/></td>
+						<td><input type="submit" class="ml-button smallmargin" value="'.ML_BUTTON_LABEL_OK.'" name="newTemplate"/></td>
 					</tr>'.$tplSelect.'</tbody></table>
 				</td>';
 		}
@@ -799,7 +799,7 @@ $(document).ready(function() {
 					<input type="hidden" name="timestamp" value="'.time().'"/>
 					';
 		if ($this->settings['mode'] == 'administrate') {
-			$html .= '<input type="submit" class="button" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>';
+			$html .= '<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>';
 		} else {
 			$html .= $this->additionalActions;
 		}

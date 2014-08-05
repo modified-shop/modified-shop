@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
+ * $Id: AmazonCategoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -301,7 +301,7 @@ $(document).ready(function() {
 						<label for="match_notmatched_rb">'.ML_AMAZON_LABEL_ONLY_NOT_MATCHED.'</label>
 					</td>
 					<td class="texcenter inputCell">
-						<input type="submit" class="fullWidth button smallmargin" value="'.ML_AMAZON_LABEL_MANUAL_MATCHING.'" id="matching" name="matching"/>
+						<input type="submit" class="fullWidth ml-button smallmargin" value="'.ML_AMAZON_LABEL_MANUAL_MATCHING.'" id="matching" name="matching"/>
 					</td>
 					<td>
 						<div class="desc" id="desc_man_match" title="'.ML_LABEL_INFOS.'"><span>'.ML_AMAZON_LABEL_MANUAL_MATCHING.'</span></div>
@@ -309,7 +309,7 @@ $(document).ready(function() {
 				</tr>
 				<tr>
 					<td class="texcenter inputCell">
-						<input type="button" class="fullWidth button smallmargin" value="'.ML_AMAZON_LABEL_AUTOMATIC_MATCHING.'" id="automatching" name="automatching"/>
+						<input type="button" class="fullWidth ml-button smallmargin" value="'.ML_AMAZON_LABEL_AUTOMATIC_MATCHING.'" id="automatching" name="automatching"/>
 					</td>
 					<td>
 						<div class="desc" id="desc_auto_match" title="'.ML_LABEL_INFOS.'"><span>'.ML_AMAZON_LABEL_AUTOMATIC_MATCHING.'</span></div>
@@ -326,7 +326,7 @@ $(document).ready(function() {
 	}
 
 	public function getLeftButtons() {
-		return '<input type="submit" class="button" value="'.ML_AMAZON_BUTTON_MATCHING_DELETE.'" id="unmatching" name="unmatching"/>';
+		return '<input type="submit" class="ml-button" value="'.ML_AMAZON_BUTTON_MATCHING_DELETE.'" id="unmatching" name="unmatching"/>';
 	}
 	
 }

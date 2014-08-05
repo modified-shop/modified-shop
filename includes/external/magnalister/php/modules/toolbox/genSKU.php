@@ -151,7 +151,7 @@ if ($rendered) {
 	unset($tURL['search']);
 	unset($_url['search']);
 	$leftButtons = '
-		<a class="button" href="'.toURL($tURL).'">'.
+		<a class="ml-button" href="'.toURL($tURL).'">'.
 			imageHTML(DIR_MAGNALISTER_WS_IMAGES.'folder_back.png', ML_BUTTON_LABEL_BACK).' '. ML_BUTTON_LABEL_BACK . 
 		'</a>';
 	echo '
@@ -164,7 +164,7 @@ if ($rendered) {
 							<td class="firstChild">'.$leftButtons.'</td>
 							<td><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
 								<input id="tfSearch" name="search" type="text" value="'.fixHTMLUTF8Entities($search, ENT_COMPAT).'"/>
-								<input type="submit" class="button" value="'.ML_BUTTON_LABEL_GO.'" /></td>
+								<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" /></td>
 							<td class="lastChild"></td>
 						</tr></tbody></table>
 					</td></tr>

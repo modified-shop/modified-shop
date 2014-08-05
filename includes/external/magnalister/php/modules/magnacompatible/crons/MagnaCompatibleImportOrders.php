@@ -183,10 +183,18 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	}
 
 	protected function getBeginDate() {
+		global $_modules;
 		if ($this->beginImportDate !== false) {
 			return $this->beginImportDate;
 		}
 		$begin = strtotime($this->config['FirstImportDate']);
+		if ($begin <= '1970-01-01 00:00:00') {
+			# not configured. Check if this is a required key for the platform.
+			# If so, return false, which stops the import.
+			if (in_array($this->marketplace.'.preimport.start', $_modules[$this->marketplace]['requiredConfigKeys'])) {
+				return false;
+			}
+		}
 		if ($begin > time()) {
 			if ($this->verbose) echo "Date in the future --> no import\n";
 			return false;
@@ -239,7 +247,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 			echo print_m($request, '$request');
 		}
 		if ($request['BEGIN'] === false) {
-			if ($this->verbose) echo "No BEGIN Date has been set, so no import yet.\n";
+			echo "No BEGIN Date has been set, so no import yet.\n";
 			return false;
 		}
 		try {
@@ -938,7 +946,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		if (MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS) {
 			$this->db->insert(TABLE_ORDERS_TOTAL, array(
 				'orders_id' => $this->cur['OrderID'],
-				'title' => MODULE_ORDER_TOTAL_GM_TAX_FREE_TITLE,
+				'title' => MODULE_ORDER_TOTAL_GM_TAX_FREE_TEXT,
 				'class' => 'ot_gm_tax_free',
 				'sort_order' => MODULE_ORDER_TOTAL_GM_TAX_FREE_SORT_ORDER
 			));

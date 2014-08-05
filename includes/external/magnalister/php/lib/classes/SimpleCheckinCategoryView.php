@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimpleCheckinCategoryView.php 3701 2014-03-30 17:55:43Z derpapst $
+ * $Id: SimpleCheckinCategoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -48,7 +48,7 @@ class SimpleCheckinCategoryView extends SimpleCategoryView {
 		$new_url = $_url;
 		unset($new_url['cPath']);
 		
-		return '<a class="button" href="'.toURL($new_url, array('view' => 'summary')).'" title="'.ML_BUTTON_LABEL_SUMMARY.'">'.ML_BUTTON_LABEL_SUMMARY.'</a>';
+		return '<a class="ml-button" href="'.toURL($new_url, array('view' => 'summary')).'" title="'.ML_BUTTON_LABEL_SUMMARY.'">'.ML_BUTTON_LABEL_SUMMARY.'</a>';
 	}
 	
 	public function getInfoText() {

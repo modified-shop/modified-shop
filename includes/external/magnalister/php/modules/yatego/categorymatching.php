@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: categorymatching.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: categorymatching.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -225,7 +225,7 @@ class YategoCategoryMatching {
 					<tr class="firstChild"><td>
 						<table><tbody><tr>
 							<td class="firstChild">'.
-								'<input type="button" class="button" value="'.ML_YATEGO_LABEL_PURGE_CATEGORIES.'" id="yPurgeCategories" />
+								'<input type="button" class="ml-button" value="'.ML_YATEGO_LABEL_PURGE_CATEGORIES.'" id="yPurgeCategories" />
 								 <div id="confirmPurgeDiag" class="dialog2" title="'.ML_YATEGO_HINT_HEADLINE_PURGE_CATEGORIES.'">'.ML_YATEGO_TEXT_PURGE_CATEGORIES.'</div>
 								 <script type="text/javascript">/*<![CDATA[*/
 								 	$(document).ready(function() {
@@ -245,7 +245,7 @@ class YategoCategoryMatching {
 									});
 								/*]]>*/</script>'.
 							'</td>
-							<td class="lastChild">'.'<input type="button" class="button" value="'.ML_BUTTON_LABEL_SAVE_DATA.'" id="saveMatching"/>'.'</td>
+							<td class="lastChild">'.'<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_SAVE_DATA.'" id="saveMatching"/>'.'</td>
 						</tr></tbody></table>
 					</td></tr>
 				</tbody>

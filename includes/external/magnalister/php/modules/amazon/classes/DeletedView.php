@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 3661 2014-03-23 15:24:59Z derpapst $
+ * $Id: DeletedView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -122,7 +122,7 @@ class DeletedView {
 								<input type="text" id="toDate" readonly="readonly"/>
 								<input type="hidden" id="toActualDate" name="date[to]" value=""/>
 							</td>
-							<td><input class="button" type="submit" value="Los"/></td>
+							<td><input class="ml-button" type="submit" value="Los"/></td>
 						</tr>
 					</tbody></table>
 				</td></tr></tbody>

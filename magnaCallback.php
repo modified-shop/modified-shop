@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 3882 2014-05-20 19:32:06Z derpapst $
+ * $Id: magnaCallback.php 4285 2014-07-24 23:17:44Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -202,6 +202,9 @@ function magnaCompartCheck() {
 			$url = str_replace('http://', 'https://', $url);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+			if (defined('MAGNA_CURLOPT_SSLVERSION')) {
+				curl_setopt($ch, CURLOPT_SSLVERSION, MAGNA_CURLOPT_SSLVERSION);
+			}
 		}
 		curl_setopt($ch, CURLOPT_URL, $url);
 		
@@ -352,6 +355,9 @@ function fileGetContentsCURL($path, &$warnings = null, $timeout = 10, $forceSSLO
 		$path = str_replace('http://', 'https://', $path);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+		if (defined('MAGNA_CURLOPT_SSLVERSION')) {
+			curl_setopt($ch, CURLOPT_SSLVERSION, MAGNA_CURLOPT_SSLVERSION);
+		}
 	}
 	
 	curl_setopt($ch, CURLOPT_URL, $path);

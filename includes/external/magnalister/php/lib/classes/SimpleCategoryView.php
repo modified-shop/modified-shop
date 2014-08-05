@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: SimpleCategoryView.php 3951 2014-06-11 15:37:34Z derpapst $
+ * $Id: SimpleCategoryView.php 4283 2014-07-24 22:00:04Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -1204,12 +1204,12 @@ $(document).ready(function() {
 			if (count($this->cPathArray) > 1) {
 				$leftButtons = $this->cPathArray;
 				array_pop($leftButtons);
-				$leftButtons = '<a class="button" href="'.toURL($this->url, array('cPath' => implode('_', $leftButtons))).'">'.
+				$leftButtons = '<a class="ml-button" href="'.toURL($this->url, array('cPath' => implode('_', $leftButtons))).'">'.
 					$this->imageHTML(DIR_MAGNALISTER_WS_IMAGES.'folder_back.png', ML_BUTTON_LABEL_BACK).' '. ML_BUTTON_LABEL_BACK . 
 				'</a>';
 			} else if (((count($this->cPathArray) == 1) && ($this->cPathArray[0] != '0')) || !empty($this->search)) {
 				unset($this->url['cPath']);
-				$leftButtons = '<a class="button" href="'.toURL($this->url).'">'.
+				$leftButtons = '<a class="ml-button" href="'.toURL($this->url).'">'.
 					$this->imageHTML(DIR_MAGNALISTER_WS_IMAGES.'folder_back.png', ML_BUTTON_LABEL_BACK).' '. ML_BUTTON_LABEL_BACK . 
 				'</a>';
 			}
@@ -1231,7 +1231,7 @@ $(document).ready(function() {
 								<td><label for="tfSearch">'.ML_LABEL_SEARCH.':</label>
 									<input id="tfSearch" name="tfSearch" type="text" value="'.fixHTMLUTF8Entities($this->search, ENT_COMPAT).'"/>
 									
-									<input type="submit" class="button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" id="search_go" /></td>
+									<input type="submit" class="ml-button" value="'.ML_BUTTON_LABEL_GO.'" name="search_go" id="search_go" /></td>
 								<td class="lastChild">'.$functionButtons.'</td>
 							</tr></tbody></table>
 						</td></tr>

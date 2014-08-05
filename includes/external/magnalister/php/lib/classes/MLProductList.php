@@ -49,7 +49,7 @@ abstract class MLProductList {
 			'head' => array(
 				'attributes'	=> 'class="katProd"',
 				'content'		=> 'ML_GENERIC_ITEM',
-				'sort'			=> array('param' => 'name', 'field' => 'pd.products_name'),
+				'sort'			=> array('param' => 'name', 'field' => 'TRIM(pd.products_name)'),
 				'altSort'		=> array('param' => 'sku',  'field' => 'p.products_model')
 			),
 			'field' => array('name'),
@@ -163,7 +163,7 @@ abstract class MLProductList {
 			}
 		}
 		if($sSort == ''){// default
-			$sSort = 'pd.products_name ASC';
+			$sSort = 'TRIM(pd.products_name) ASC';
 		}
 		return $sSort;
 	}

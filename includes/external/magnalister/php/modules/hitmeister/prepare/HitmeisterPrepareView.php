@@ -228,7 +228,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 					<tr><td>
 						<table><tbody>
 							<tr><td>
-								<input type="submit" class="button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
+								<input type="submit" class="ml-button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
 							</td></tr>
 						</tbody></table>
 					</td></tr>

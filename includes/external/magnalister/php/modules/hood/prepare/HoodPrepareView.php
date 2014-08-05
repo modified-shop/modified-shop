@@ -270,7 +270,15 @@ class HoodPrepareView extends MagnaCompatibleBase {
 		
 		$productImagesHTML = '';
 		if (!empty($data['GalleryPictures']['Images'])) {
+			$maxImages = getDBConfigValue($this->marketplace.'.prepare.maximagecount', $this->mpID, 'all');
+			$maxImages = $maxImages == 'all'
+				? true
+				: (int)$maxImages;
+			
 			foreach ($data['GalleryPictures']['Images'] as $img => $checked) {
+				if ((int)$maxImages <= 0) {
+					$checked = false;
+				}
 				$productImagesHTML .= '
 					<table class="imageBox"><tbody>
 						<tr><td class="image"><label for="image_'.$img.'">'.generateProductCategoryThumb($img, 60, 60).'</label></td></tr>
@@ -280,6 +288,9 @@ class HoodPrepareView extends MagnaCompatibleBase {
 							       value="true" '.($checked ? 'checked="checked"' : '').'/>
 						</td></tr>
 					</tbody></table>';
+				if ($checked && ($maxImages !== true)) {
+					--$maxImages;
+				}
 			}
 			$productImagesHTML .= '<br style="clear:both">'.ML_HOOD_PICTURE_PATH.': <input class="fullwidth" type="text" name="GalleryPictures[BaseUrl]" value="'.htmlspecialchars($data['GalleryPictures']['BaseUrl']).'">';
 		}
@@ -722,7 +733,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectPrimaryCategory"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectPrimaryCategory"/>
 								</td>
 							</tr>
 							<tr>
@@ -735,7 +746,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectSecondaryCategory"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectSecondaryCategory"/>
 								</td>
 							</tr>';
 		if ('noShop' != $this->shopType) {
@@ -750,7 +761,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectStoreCategory"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectStoreCategory"/>
 								</td>
 							</tr>
 							<tr>
@@ -763,7 +774,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectStoreCategory2"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectStoreCategory2"/>
 								</td>
 							</tr>
 							<tr>
@@ -776,7 +787,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectStoreCategory3"/>
+									<input class="fullWidth ml-button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectStoreCategory3"/>
 								</td>
 							</tr>';
 		}
@@ -1005,12 +1016,12 @@ class HoodPrepareView extends MagnaCompatibleBase {
 							<table><tbody><tr>
 								<td class="firstChild">'.(
 									($prepareView == 'single')
-										? '<input class="button" type="submit" name="unprepare" id="unprepare" value="' . ML_BUTTON_LABEL_REVERT . '"/>'
+										? '<input class="ml-button" type="submit" name="unprepare" id="unprepare" value="' . ML_BUTTON_LABEL_REVERT . '"/>'
 										: ''
 									).'
 								</td>
 								<td class="lastChild">
-									<input class="button" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
+									<input class="ml-button" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>

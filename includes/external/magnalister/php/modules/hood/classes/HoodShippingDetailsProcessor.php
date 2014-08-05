@@ -124,10 +124,10 @@ class HoodShippingDetailsProcessor {
 					<td class="textright">'.ML_HOOD_LABEL_SHIPPING_COSTS.':&nbsp;</td>
 					<td class="paddingRight">'.$shippingCost.'</td>
 					<td rowspan="2">
-						<input id="" type="button" value="(+)" class="button plus" />
+						<input id="" type="button" value="(+)" class="ml-button plus" />
 						'.((array_key_exists('func', $this->args) && ($this->args['func'] == '' || $this->args['func'] == 'addRow'))
-							? '<input type="button" value="(-)" class="button minus" />'
-							: '<input type="button" value="(-)" class="button minus" style="display: none" />'
+							? '<input type="button" value="(-)" class="ml-button minus" />'
+							: '<input type="button" value="(-)" class="ml-button minus" style="display: none" />'
 						).'
 					</td>
 				</tr>
@@ -138,10 +138,10 @@ class HoodShippingDetailsProcessor {
 		ob_start();?>
 		<script type="text/javascript">/*<![CDATA[*/
 			$(document).ready(function() {
-				$('#<?php echo $idkey; ?> input.button.plus').click(function () {
+				$('#<?php echo $idkey; ?> input.ml-button.plus').click(function () {
 					var $tableBox = $('#<?php echo $idkey; ?>');
 					if ($tableBox.parent('td').find('table').length == 1) {
-						$tableBox.find('input.button.minus').fadeIn(0);
+						$tableBox.find('input.ml-button.minus').fadeIn(0);
 					}
 					myConsole.log();
 					jQuery.blockUI(blockUILoading); 
@@ -167,12 +167,12 @@ class HoodShippingDetailsProcessor {
 						dataType: 'html'
 					});
 				});
-				$('#<?php echo $idkey; ?> input.button.minus').click(function () {
+				$('#<?php echo $idkey; ?> input.ml-button.minus').click(function () {
 					var $tableBox = $('#<?php echo $idkey; ?>'),
 						tables = $tableBox.parent('td').find('table');
 					$tableBox.detach();
 					if (tables.length == 2) {
-						tables.find('input.button.minus').fadeOut(0);
+						tables.find('input.ml-button.minus').fadeOut(0);
 					}
 				});
 			});

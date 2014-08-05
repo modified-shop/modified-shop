@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 3999 2014-06-20 17:48:59Z derpapst $
+ * $Id: MagnaDB.php 4276 2014-07-24 13:17:41Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -410,6 +410,7 @@ class MagnaDB {
 	protected $query = '';
 	protected $error = '';
 	protected $result = null;
+	protected $inTransaction = false;
 	
 	protected $sqlErrors = array();
 	
@@ -737,6 +738,58 @@ class MagnaDB {
 		
 		return $this->result;
 	}
+	
+
+	/**
+	 * Set the isolation level for the next transaction. So call *BEFORE* beginTransation()!
+	 * @param $level: Can be either READ UNCOMMITTED, READ COMMITTED, REPEATABLE READ or SERIALIZABLE
+	 */
+	public function setTransactionLevel($level, $commit = false) {
+		try {
+			$this->query('SET TRANSACTION ISOLATION LEVEL '.$level);
+		} catch (DatabaseException $dbe) {
+			if ($dbe->getMySqlErrNo() == 1568) {
+				if ($commit) {
+					$this->commit();
+				} else {
+					$this->rollback();
+				}
+			} else {
+				throw $dbe;
+			}
+		}
+	}
+	
+	public function getTransactionLevel() {
+		return $this->fetchOne('SELECT @@session.tx_isolation');
+	}
+	
+	/**
+	 * Begins a transaction. The parameter sets the isolation level. If omitted it won't be set for this
+	 * transaction. The global isolation level of mysql will be used.
+	 */
+	public function beginTransaction($level = false, $commit = false) {
+		if ($level !== false) {
+			$this->setTransactionLevel($level, $commit);
+		}
+		$this->query('BEGIN');
+		$this->inTransaction = true;
+	}
+	
+	public function commit() {
+		$this->query('COMMIT');
+		$this->inTransaction = false;
+	}
+	
+	public function rollback() {
+		$this->query('ROLLBACK');
+		$this->inTransaction = false;
+	}
+	
+	public function isInTransaction() {
+		return $this->inTransaction;
+	}
+	
 	
 	public function setCharset($charset) {
 		$this->driver->setCharset($charset);

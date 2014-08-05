@@ -22,6 +22,6 @@
 class_exists('MLProductList') or die();
 ?>
 <form action="<?php echo $this->getUrl(false, false, false); ?>" method="post">
-	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][removeapply]" id="removeapply" value="<?php echo ML_EBAY_BUTTON_UNPREPARE; ?>" class="button"><br>
-	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][resetapply]" id="resetapply" value="<?php echo ML_EBAY_BUTTON_RESET_DESCRIPTION; ?>" class="button">
+	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][removeapply]" id="removeapply" value="<?php echo ML_EBAY_BUTTON_UNPREPARE; ?>" class="ml-button"><br>
+	<input type="submit" name="action[<?php echo $oObject->getIdent(); ?>][resetapply]" id="resetapply" value="<?php echo ML_EBAY_BUTTON_RESET_DESCRIPTION; ?>" class="ml-button">
 </form>
