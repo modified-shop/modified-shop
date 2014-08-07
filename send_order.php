@@ -39,7 +39,10 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
     $password_encrypted =  xtc_RandomString(10);
     $password = xtc_encrypt_password($password_encrypted);
-    xtc_db_query("update " . TABLE_CUSTOMERS . " set customers_password = '" . $password . "' where customers_id = '" . (int) $_SESSION['customer_id'] . "'");
+    $sql_data_array = array(
+        'customers_password' => $password
+      );
+    xtc_db_perform(TABLE_CUSTOMERS,$sql_data_array,'update',"customers_id = '" . (int)$_SESSION['customer_id'] . "'");
     $smarty->assign('NEW_PASSWORD', $password_encrypted);
   }
 // EOF - Tomcraft - 2009-10-03 - Paypal Express Modul
@@ -275,18 +278,23 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     //Comment out the next line for setting  the $orders_status_id= '1 '- Auskommentieren der nächste Zeile, um die $orders_status_id = '1' zu setzen
     $orders_status_id = ($order->info['orders_status']  < 1) ? '1' : $order->info['orders_status'];
 
-    xtc_db_query("UPDATE ".TABLE_ORDERS."
-                     SET orders_status = '".xtc_db_input($orders_status_id)."',
-                         last_modified = now()
-                   WHERE orders_id = '".xtc_db_input($insert_id)."'");
-
-    xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY."
-                          SET orders_id = '".xtc_db_input($insert_id)."',
-                              orders_status_id = '".xtc_db_input($orders_status_id)."',
-                              date_added = now(),
-                              customer_notified = '".$customer_notified."',
-                              comments = '".COMMENT_SEND_ORDER_BY_ADMIN."'");
-
+    $sql_data_array = array(
+        'orders_status' => (int)$orders_status_id,
+        'last_modified' => 'now()'
+      );
+      
+    xtc_db_perform(TABLE_ORDERS,$sql_data_array,'update',"orders_id = '".(int)$insert_id."'");
+    
+    $sql_data_array = array(
+        'orders_id' => (int)$insert_id,
+        'orders_status_id' => (int)$orders_status_id,
+        'date_added' => 'now()',
+        'customer_notified ' => $customer_notified,
+        'comments ' => COMMENT_SEND_ORDER_BY_ADMIN
+      );
+    
+    xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY,$sql_data_array);
+    
     $messageStack->add_session(SUCCESS_ORDER_SEND, 'success');
 
     if (isset($_GET['site']) && $_GET['site'] == 1) {
