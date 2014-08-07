@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ErrorView.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: ErrorView.php 4319 2014-08-01 13:49:42Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -262,22 +262,31 @@ $(document).ready(function() {
 	
 	private function additionalDataHandler($data) {
 		$fData = array();
-		if (array_key_exists('SKU', $data) && !empty($data['SKU'])) {
-			$fData['SKU'] = htmlspecialchars($data['SKU']);
-			$pID = magnaSKU2pID($data['SKU']);
+		if ((array_key_exists('SKU', $data) && !empty($data['SKU'])) || (array_key_exists('PID', $data) && !empty($data['PID']))) {
+			if (isset($data['PID'])) {
+				$fData[ML_LABEL_PRODUCT_ID] = $data['PID'];
+				$pID = $data['PID'];
+			}
+
+			if (isset($data['SKU'])) {
+				$fData['SKU'] = htmlspecialchars($data['SKU']);
+				if (!isset($pID)) {
+					$pID = magnaSKU2pID($data['SKU']);
+				}
+			}
 
 			$title = MagnaDB::gi()->fetchOne('
-				SELECT products_name
-				  FROM '.TABLE_PRODUCTS_DESCRIPTION.' 
-				 WHERE products_id=\''.(string)$pID.'\' 
-				       AND language_id = \''.$_SESSION['languages_id'].'\'
-			');
+					SELECT products_name
+					  FROM '.TABLE_PRODUCTS_DESCRIPTION.'
+					 WHERE products_id=\''.(string)$pID.'\'
+						   AND language_id = \''.$_SESSION['languages_id'].'\'
+				');
 			if (!empty($title)) {
 				$fData[ML_LABEL_SHOP_TITLE] = '<a title="'.ML_LABEL_EDIT.'" '.
 					'target="_blank" href="categories.php?pID='.$pID.'&action=new_product">'.
 					$title.'</a>';
 			}
-		} else if (array_key_exists('AmazonOrderID', $data)) {
+		} elseif (array_key_exists('AmazonOrderID', $data)) {
 			if (!empty($data['AmazonOrderID'])) {
 				$fData['AmazonOrderID'] = $data['AmazonOrderID'];
 				$oID = MagnaDB::gi()->fetchOne('

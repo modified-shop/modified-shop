@@ -75,6 +75,8 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 					ML_Database_Model_Query_Select::JOIN_TYPE_INNER
 				)
 			;
+		} else {
+				$this->getQuery()->where('p.products_id in(SELECT distinct p2c.products_id from '.TABLE_PRODUCTS_TO_CATEGORIES.' p2c)');
 		}
 		return $this;
 	}

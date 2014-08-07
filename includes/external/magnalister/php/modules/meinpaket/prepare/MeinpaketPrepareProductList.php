@@ -41,7 +41,7 @@ class MeinpaketPrepareProductList extends MLProductListMeinpaketAbstract {
 		$this
 			->addDependency('MLProductListDependencyMeinpaketPrepareFormAction', array('selectionname' => $this->getSelectionName()))
 			->addDependency('MLProductListDependencyStatusFilter')
-			->addDependency('MLProductListDependencyMeinpaketPrepareStatusFilter')			
+			->addDependency('MLProductListDependencyMeinpaketPrepareStatusFilter')
 		;
 	}
 

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 4285 2014-07-24 23:17:44Z derpapst $
+ * $Id: magnalister.php 4330 2014-08-05 11:45:12Z tim.neumann $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -127,7 +127,7 @@ define('MAGNA_PLUGIN_DIR', 'magnalister/');
 define('DIR_MAGNALISTER_ABSOLUTE', dirname(__FILE__).'/');
 define('DIR_MAGNALISTER', 'includes/'.MAGNA_PLUGIN_DIR);
 	
-if (defined('DIR_FS_EXTERNAL') && defined('DIR_WS_EXTERNAL')) {
+if (defined('DIR_FS_EXTERNAL') && is_dir(DIR_FS_EXTERNAL.'magnalister/') && defined('DIR_WS_EXTERNAL')) {
 	define('DIR_MAGNALISTER_FS', DIR_FS_EXTERNAL.'magnalister/');
 	define('DIR_MAGNALISTER_WS', DIR_WS_EXTERNAL.'magnalister/');
 } else {

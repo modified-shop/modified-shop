@@ -18,6 +18,7 @@
  * -----------------------------------------------------------------------------
  */
 require_once DIR_MAGNALISTER_INCLUDES.'lib/classes/ProductList/Dependency/MLProductListDependency.php';
+
 class MLProductListDependencyTemplateSelectionAction extends MLProductListDependency {
 	
 	public function getActionTopTemplate() {
@@ -131,16 +132,16 @@ class MLProductListDependencyTemplateSelectionAction extends MLProductListDepend
 	}
 		
 	public function getTemplates() {
-                        $aTemplates =  MagnaDB::gi()->fetchArray(
-			"SELECT * FROM ".TABLE_MAGNA_SELECTION_TEMPLATES.
-			 " WHERE mpID='".$this->getMagnaSession('mpID')."'"
+		$aTemplates = MagnaDB::gi()->fetchArray(
+			"SELECT *
+			   FROM ".TABLE_MAGNA_SELECTION_TEMPLATES."
+			  WHERE mpID = '".$this->getMagnaSession('mpID')."'"
 		);
-                        $aSelected = $this->getMagnaSession($this->getMagnaSession('mpID'));
-                        return array(
-                                    'list'=>$aTemplates ,
-                                    'selected'=> (isset($aSelected['checkinTemplate'])?$aSelected['checkinTemplate']:'')
-                        );
+		$aSelected = $this->getMagnaSession($this->getMagnaSession('mpID'));
+		return array(
+			'list' => $aTemplates,
+			'selected' => (isset($aSelected['checkinTemplate']) ? $aSelected['checkinTemplate'] : '')
+		);
 	}
-	
 	
 }

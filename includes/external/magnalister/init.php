@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: init.php 4106 2014-07-04 10:27:59Z derpapst $
+ * $Id: init.php 4345 2014-08-06 20:04:19Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -186,24 +186,7 @@ function mlGetCurrentClientVersion($localVersion = 'unknown') {
 	return $version;
 }
 
-function mlPrintLastUpdateError() {
-	if (file_exists(DIR_MAGNALISTER_FS.'UpdaterError')) {
-		$magnaUpdateErrorText['other']['headline'] = 'Error during last automatic update process';
-		$magnaUpdateErrorText['other']['introduction'] = 'Some errors occured during the last automatic update procces of your mgnalister plugins:';
-		$magnaUpdateErrorText['other']['suggestions'] = 'Click <a href="'.FILENAME_MAGNALISTER.'?update=true" title="restart the update process">here</a> to restart '.
-							 							'the update process.';
-	
-		$magnaUpdateErrorText['german']['headline'] = 'Fehler bei letztmaliger automatischer Aktualisierung';
-		$magnaUpdateErrorText['german']['introduction'] = 'Bei der letzten automatischen Aktualisierung ihres magnalister Plugins sind folgende Fehler aufgetreten:';
-		$magnaUpdateErrorText['german']['suggestions'] = 'Klicken sie <a href="'.FILENAME_MAGNALISTER.'?update=true" title="Update-Vorang erneut starten">hier</a> '.
-														'um den Update-Vorgang erneut zu starten.';
-	
-		$updaterErrors = unserialize(file_get_contents(DIR_MAGNALISTER_FS.'UpdaterError'));
-		updateErrorDiePage($magnaUpdateErrorText, $updaterErrors);
-	}
-}
-
-function mlUpdatePlugin($mUpdater, $currentVersion, $localVersion) {
+function mlGetUpdateErrorTexts() {
 	$magnaUpdateErrorText = array();
 	$magnaUpdateErrorText['german'] = array(
 		'headline' => 'Fehler bei automatischer Aktualisierung',
@@ -235,6 +218,29 @@ function mlUpdatePlugin($mUpdater, $currentVersion, $localVersion) {
 		MagnaUpdaterDirectoryNotWritable    => 'The directory is not writable.',
 		MagnaUpdaterFileNotWritable         => 'The file is not writable.',
 	);
+	return $magnaUpdateErrorText;
+}
+
+function mlPrintLastUpdateError() {
+	if (file_exists(DIR_MAGNALISTER_FS.'UpdaterError')) {
+		$magnaUpdateErrorText = mlGetUpdateErrorTexts();
+		$magnaUpdateErrorText['other']['headline'] = 'Error during last automatic update process';
+		$magnaUpdateErrorText['other']['introduction'] = 'Some errors occured during the last automatic update procces of your mgnalister plugins:';
+		$magnaUpdateErrorText['other']['suggestions'] = 'Click <a href="'.FILENAME_MAGNALISTER.'?update=true" title="restart the update process">here</a> to restart '.
+							 							'the update process.';
+	
+		$magnaUpdateErrorText['german']['headline'] = 'Fehler bei letztmaliger automatischer Aktualisierung';
+		$magnaUpdateErrorText['german']['introduction'] = 'Bei der letzten automatischen Aktualisierung ihres magnalister Plugins sind folgende Fehler aufgetreten:';
+		$magnaUpdateErrorText['german']['suggestions'] = 'Klicken sie <a href="'.FILENAME_MAGNALISTER.'?update=true" title="Update-Vorang erneut starten">hier</a> '.
+														'um den Update-Vorgang erneut zu starten.';
+	
+		$updaterErrors = unserialize(file_get_contents(DIR_MAGNALISTER_FS.'UpdaterError'));
+		updateErrorDiePage($magnaUpdateErrorText, $updaterErrors);
+	}
+}
+
+function mlUpdatePlugin($mUpdater, $currentVersion, $localVersion) {
+	$magnaUpdateErrorText = mlGetUpdateErrorTexts();
 	$magnaFilePermissionErrors['german'] = array(
 		'headline' => 'Fehler bei den Dateiberechtigungen',
 		'introduction' => 'Bei der &Uuml;berpr&uuml;fung der Dateiberechtigungen wurde festgestellt, dass folgende Berechtigungen fehlerhaft gesetzt sind:',

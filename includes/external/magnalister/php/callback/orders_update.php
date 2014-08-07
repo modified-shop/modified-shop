@@ -102,7 +102,7 @@ function magnaUpdateAllOrders() {
 	/* Bitte nicht vor Lachen in Traenen ausbrechen, aber die naechsten Zeilen sollen so etwas wie ein "mutex" darstellen :-) */
 	$doUpdates = false;
 	usleep(rand(200, 800));
-	$lockName = DIR_MAGNALISTER.'OrderUpdateLock';
+	$lockName = DIR_MAGNALISTER_FS.'OrderUpdateLock';
 	if (!file_exists($lockName)) {
 		$myTime = time();
 		file_put_contents($lockName, $myTime);

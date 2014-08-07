@@ -26,17 +26,17 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 		return 'checkin';
 	}
 	public function __construct() {
-		 $this->aListConfig[] = array(
-                            'head' => array(
-                                'attributes' => 'class="lowestprice"',
-                                'content' => 'ML_MAGNACOMPAT_LABEL_CATEGORY',
-                            ),
-                            'field' => array('magnacompatmpcategory'),
-                        );
+		$this->aListConfig[] = array(
+			'head' => array(
+				'attributes' => 'class="lowestprice"',
+				'content' => 'ML_MAGNACOMPAT_LABEL_CATEGORY',
+			),
+			'field' => array('magnacompatmpcategory'),
+		);
 		parent::__construct();
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
-                                    ->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyTemplateSelectionAction')
 		;
 	}
 	
@@ -44,7 +44,7 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 	 * adding propertiestable for filter
 	 */
 	protected function buildQuery(){
-                        $allPreparedItems = (array)MagnaDB::gi()->fetchArray('
+		$allPreparedItems = (array)MagnaDB::gi()->fetchArray('
 			SELECT DISTINCT '.((getDBConfigValue('general.keytype', '0') == 'artNr')
 					? 'products_model'
 					: 'products_id'
@@ -61,18 +61,18 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 			WHERE products_ean IS NOT NULL AND products_ean <> \'\'
 		', true);
 		$preparedItems = array_intersect($allPreparedItems, $itemsWithEAN);
-                        $oQueryBuilder = parent::buildQuery()->oQuery;	
-                        if (getDBConfigValue('general.keytype', '0') == 'artNr') {				
-                                    $oQueryBuilder->where( 'p.products_model IN (\''.implode('\', \'', MagnaDB::gi()->escape($preparedItems)).'\')');				
-                        } else {
-                                    $oQueryBuilder->where('p.products_id IN (\''.implode('\', \'', $preparedItems).'\')');
-                        }
+		$oQueryBuilder = parent::buildQuery()->oQuery;	
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {				
+			$oQueryBuilder->where( 'p.products_model IN (\''.implode('\', \'', MagnaDB::gi()->escape($preparedItems)).'\')');				
+		} else {
+			$oQueryBuilder->where('p.products_id IN (\''.implode('\', \'', $preparedItems).'\')');
+		}
 		return $this;
 	}
-        
-            protected function getPrepareData($aRow, $sFieldName = null) {
+	
+	protected function getPrepareData($aRow, $sFieldName = null) {
 		if (!isset($this->aPrepareData[$aRow['products_id']])) {
-                                    $this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
+			$this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
 				SELECT * 
 				FROM ".TABLE_MAGNA_HITMEISTER_PREPARE." 
 				WHERE 
@@ -90,18 +90,21 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
-        
-            protected function getMarketPlaceCategory($aRow) {
-                        $aData = $this->getPrepareData($aRow);
-                        if ($aData !== false) {
-                                    return '<table class="nostyle"><tbody>
-                                    <tr><td>
-                                                <table class="nostyle"><tbody>
-                                                        <tr><td class="label">'.'Kategorie'.':&nbsp;</td><td>'.(empty($aData['mp_category_id']) ? '&mdash;' : $aData['mp_category_id']).(empty($aData['mp_category_name']) ? '' : ' '.$aData['mp_category_name']).'</td><tr>
-                                                </tbody></table>
-                                    </td><tr>
+	
+	protected function getMarketPlaceCategory($aRow) {
+		$aData = $this->getPrepareData($aRow);
+		if ($aData !== false) {
+			return '<table class="nostyle"><tbody>
+				<tr><td>
+					<table class="nostyle"><tbody>
+						<tr>
+							<td class="label">'.'Kategorie'.':&nbsp;</td>
+							<td>'.(empty($aData['mp_category_id']) ? '&mdash;' : $aData['mp_category_id']).(empty($aData['mp_category_name']) ? '' : ' '.$aData['mp_category_name']).'</td>
+						<tr>
+					</tbody></table>
+				</td><tr>
 			</tbody></table>';
-                        }
-                        return '&mdash;';
-            }
+		}
+		return '&mdash;';
+	}
 }
