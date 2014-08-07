@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: viewchangelog.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: viewchangelog.php 4337 2014-08-06 12:09:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -21,7 +21,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_top.php');
 
-$chlog = file_get_contents(DIR_MAGNALISTER.'ChangeLog');
+$chlog = file_get_contents(DIR_MAGNALISTER_FS.'ChangeLog');
 
 $chlog = str_replace(array("\r\n", "\r"), "\n", $chlog);
 $chlog = fixHTMLUTF8Entities($chlog);

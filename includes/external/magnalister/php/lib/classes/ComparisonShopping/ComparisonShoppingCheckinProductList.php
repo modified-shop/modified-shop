@@ -26,7 +26,8 @@ class ComparisonShoppingCheckinProductList extends MLProductListComparisonShoppi
 
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
-			->addDependency('MLProductListDependencyTemplateSelectionAction');
+			->addDependency('MLProductListDependencyTemplateSelectionAction')
+		;
 	}
 
 	protected function getSelectionName() {
