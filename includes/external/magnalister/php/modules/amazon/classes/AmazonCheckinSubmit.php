@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCheckinSubmit.php 3621 2014-03-16 22:21:05Z derpapst $
+ * $Id: AmazonCheckinSubmit.php 4319 2014-08-01 13:49:42Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -48,7 +48,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 		);
 	}
 	
-	protected function markAsFailed($sku) {
+	protected function markAsFailed($iPID) {
 		MagnaDB::gi()->insert(
 			TABLE_MAGNA_AMAZON_ERRORLOG,
 			array (
@@ -57,12 +57,13 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				'errormessage' => ML_GENERIC_ERROR_UNABLE_TO_LOAD_PREPARE_DATA,
 				'dateadded' => gmdate('Y-m-d H:i:s'),
 				'additionaldata' => serialize(array(
-					'SKU' => $sku
+					'PID' => $iPID,
+					'SKU' => magnaPID2SKU($iPID),
 				))
 			)
 		);
-		$this->badItems[] = $pID;
-		unset($this->selection[$pID]);
+		$this->badItems[] = $iPID;
+		unset($this->selection[$iPID]);
 	}
 
 	protected function getVariations($pID, $product, &$data) {
@@ -247,7 +248,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 			);
 			unset($productApply['category']);
 			if (!is_array($productApply['data']) || empty($productApply['data'])) {
-				$this->markAsFailed(magnaPID2SKU($pID));
+				$this->markAsFailed($pID);
 				return;
 			} 
 			$data['submit'] = array_merge(
@@ -289,7 +290,7 @@ class AmazonCheckinSubmit extends CheckinSubmit {
 				);
 			}
 		} else {
-			$this->markAsFailed(magnaPID2SKU($pID));
+			$this->markAsFailed($pID);
 			return;
 		}
 		

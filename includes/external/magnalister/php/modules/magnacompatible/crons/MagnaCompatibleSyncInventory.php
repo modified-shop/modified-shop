@@ -315,7 +315,7 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 				'Price not changed ('.$price.')'
 			);
 		}
-		return $data;		
+		return $data;
 	}
 
 	protected function updateCustomFields(&$data) {

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
+ * $Id: amazonConfig.php 4337 2014-08-06 12:09:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -44,7 +44,7 @@ function renderAuthError($authError) {
 
 function amazonTopTenConfig($aArgs = array(), &$sValue = ''){
 	global $_MagnaSession;
-	require_once DIR_MAGNALISTER.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php';
+	require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php';
 	$oTopTen = new amazonTopTen();
 	$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
 	if (isset($_GET['what'])) {

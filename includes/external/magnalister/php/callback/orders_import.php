@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: orders_import.php 4234 2014-07-18 12:01:48Z tim.neumann $
+ * $Id: orders_import.php 4337 2014-08-06 12:09:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -114,7 +114,7 @@ function magnaImportAllOrders() {
 	/* Bitte nicht vor Lachen in Traenen ausbrechen, aber die naechsten Zeilen sollen so etwas wie ein "mutex" darstellen :-) */
 	$doImports = false;
 	usleep(rand(0, $verbose ? 2000 : 2000000)); // sleep for 0 to max 2 seconds
-	$lockName = DIR_MAGNALISTER.'OrderImportLock';
+	$lockName = DIR_MAGNALISTER_FS.'OrderImportLock';
 	$myTime = time();
 	if (!file_exists($lockName)) {
 		file_put_contents($lockName, $myTime);

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configuration.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: configuration.php 4330 2014-08-05 11:45:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -37,7 +37,7 @@ try {
 MagnaConnector::gi()->resetTimeOut();
 */
 
-$form = json_decode(file_get_contents(DIR_MAGNALISTER.'config/'.$_lang.'/global.form'), true);
+$form = json_decode(file_get_contents(DIR_MAGNALISTER_FS.'config/'.$_lang.'/global.form'), true);
 
 $keysToSubmit = array();
 

@@ -26,18 +26,17 @@ class MagnaCompatibleCheckinProductList extends MLProductListMagnaCompatibleAbst
 		return 'checkin';
 	}
 	public function __construct() {
-		 $this->aListConfig[] = array(
-                            'head' => array(
-                                'attributes' => 'class="lowestprice"',
-                                'content' => 'ML_MAGNACOMPAT_LABEL_CATEGORY',
-                            ),
-                            'field' => array('magnacompatmpcategory'),
-                        );
+		$this->aListConfig[] = array(
+			'head' => array(
+				'attributes' => 'class="lowestprice"',
+				'content' => 'ML_MAGNACOMPAT_LABEL_CATEGORY',
+			),
+			'field' => array('magnacompatmpcategory'),
+		);
 		parent::__construct();
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
-//			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;
 	}
 	
@@ -46,21 +45,20 @@ class MagnaCompatibleCheckinProductList extends MLProductListMagnaCompatibleAbst
 	 */
 	protected function buildQuery(){
 		parent::buildQuery()->oQuery->join(
-			array(
+			array (
 				TABLE_MAGNA_COMPAT_CATEGORYMATCHING,
-					'mcc',
-					(
-						(getDBConfigValue('general.keytype', '0') == 'artNr')
-							? 'p.products_model=mcc.products_model'
-							: 'p.products_id=mcc.products_id'
-					).
-					"
-						AND mcc.mpID = '".$this->aMagnaSession['mpID']."'
-						AND mcc.mp_category_id<>''
-					"
-				),
-				ML_Database_Model_Query_Select::JOIN_TYPE_INNER
-			);
+				'mcc',
+				(
+					(getDBConfigValue('general.keytype', '0') == 'artNr')
+						? 'p.products_model=mcc.products_model'
+						: 'p.products_id=mcc.products_id'
+				)."
+					AND mcc.mpID = '".$this->aMagnaSession['mpID']."'
+					AND mcc.mp_category_id<>''
+				"
+			),
+			ML_Database_Model_Query_Select::JOIN_TYPE_INNER
+		);
 		return $this;
 	}
 }

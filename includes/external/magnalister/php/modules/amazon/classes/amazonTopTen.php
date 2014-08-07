@@ -1,5 +1,5 @@
 <?php
-require_once DIR_MAGNALISTER . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'TopTen.php';
+require_once DIR_MAGNALISTER_FS . DIRECTORY_SEPARATOR . 'php' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'classes' . DIRECTORY_SEPARATOR . 'TopTen.php';
 
 class AmazonTopTen extends TopTen {
 

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ComparisonShoppingCheckinSubmit.php 3246 2013-10-23 07:32:49Z tim.neumann $
+ * $Id: ComparisonShoppingCheckinSubmit.php 4331 2014-08-05 13:48:23Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -233,6 +233,13 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 		$data['submit']['ItemWeight']		= $product['products_weight'];	# in kg
 		if (defined('MAGNA_FIELD_PRODUCTS_EAN') && array_key_exists(MAGNA_FIELD_PRODUCTS_EAN, $product)) {
 			$data['submit']['EAN']			= $product[MAGNA_FIELD_PRODUCTS_EAN];
+		}
+		// BasePrice
+		if (isset($product['products_vpe_name']) && (0 <> $product['products_vpe_value'])) {
+			$data['submit']['BasePrice'] = array (
+				'Unit' => $product['products_vpe_name'],
+				'Value' => $product['products_vpe_value'],
+			);
 		}
 
 	}

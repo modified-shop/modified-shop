@@ -50,11 +50,11 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	protected function formExists($name) {
 		$path = '%s/%s.form';
 		$lpath = sprintf($path, strtolower($this->marketplace), $name);
-		if (file_exists(DIR_MAGNALISTER.'config/'.$this->lang.'/'.$lpath)) {
+		if (file_exists(DIR_MAGNALISTER_FS.'config/'.$this->lang.'/'.$lpath)) {
 			return $lpath;
 		}
 		$lpath = sprintf($path, 'modules', $name);
-		if (file_exists(DIR_MAGNALISTER.'config/'.$this->lang.'/'.$lpath)) {
+		if (file_exists(DIR_MAGNALISTER_FS.'config/'.$this->lang.'/'.$lpath)) {
 			return $lpath;
 		}
 		return false;
@@ -98,7 +98,7 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 		$form = array();
 		foreach ($files as $file => $options) {
 			$fC = $this->loadConfigFormFile(
-				DIR_MAGNALISTER.'config/'.$this->lang.'/'.$file,
+				DIR_MAGNALISTER_FS.'config/'.$this->lang.'/'.$file,
 				$replace,
 				array_key_exists('unset', $options) ? $options['unset'] : array()
 			);

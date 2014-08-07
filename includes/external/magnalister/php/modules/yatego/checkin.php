@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: checkin.php 3974 2014-06-16 12:16:40Z masoud.khodaparast $
+ * $Id: checkin.php 4344 2014-08-06 19:35:33Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -25,13 +25,13 @@ require_once(DIR_MAGNALISTER_MODULES.'yatego/classes/YategoSummaryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'yatego/classes/YategoCheckinSubmit.php');
 $sCheckinView = '';
 if (
-            defined('MAGNA_DEV_PRODUCTLIST') 
-            && MAGNA_DEV_PRODUCTLIST === true 
+	defined('MAGNA_DEV_PRODUCTLIST') 
+	&& MAGNA_DEV_PRODUCTLIST === true 
 ) {
-            require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php');
-            $sCheckinView = 'ComparisonShoppingCheckinProductList';
+	require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/ComparisonShopping/ComparisonShoppingCheckinProductList.php');
+	$sCheckinView = 'ComparisonShoppingCheckinProductList';
 } else {
-            $sCheckinView = 'ComparisonShoppingCategoryView';
+	$sCheckinView = 'ComparisonShoppingCategoryView';
 }
 $cm = new CheckinManager(
 	array(

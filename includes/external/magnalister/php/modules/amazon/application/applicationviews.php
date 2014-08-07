@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: applicationviews.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: applicationviews.php 4337 2014-08-06 12:09:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -36,7 +36,7 @@ function renderFlat($data, $prefix = '') {
 
 function renderAmazonTopTen($sField, $aConfig = array()){
 	global $_MagnaSession;
-	require_once DIR_MAGNALISTER.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php';
+	require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'amazon'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'amazonTopTen.php';
 	$oTopTen = new amazonTopTen();
 	$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
 	$aTopTen = $oTopTen->getTopTenCategories($sField, $aConfig);

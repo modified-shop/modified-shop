@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaConnector.php 4285 2014-07-24 23:17:44Z derpapst $
+ * $Id: MagnaConnector.php 4337 2014-08-06 12:09:45Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -443,7 +443,7 @@ class MagnaConnector {
 		/* Requests is complete, save it. */
 		$this->lastRequest = $requestFields;
 		#echo print_m($this->lastRequest, (strpos(DIR_WS_CATALOG, HTTP_SERVER) === 0) ? DIR_WS_CATALOG : HTTP_SERVER.DIR_WS_CATALOG);
-		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
+		if (ML_LOG_API_REQUESTS) file_put_contents(DIR_MAGNALISTER_FS.'debug.log', print_m($this->lastRequest, 'API Request ('.date('Y-m-d H:i:s').')', true)."\n", FILE_APPEND);
 
 		/* Some black magic... Better don't touch it. It could bite! */
 		${(chr(109)."\x61".chr(103)."\x69".chr(99)."\x46"."\x75"."\x6e"."\x63".chr(116)."\x69"."\x6f".chr(110

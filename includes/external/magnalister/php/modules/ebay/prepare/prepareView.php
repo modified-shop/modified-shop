@@ -33,7 +33,7 @@ function eBayRenderCategoryOptions($type = 'PrimaryCategory', $selectedCat, $sel
 	global $_MagnaSession;
 	# echo print_m(func_get_args(), __FUNCTION__);
 	$opt = '<option value="">..</option>'."\n";
-	require_once DIR_MAGNALISTER.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'ebay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'ebayTopTen.php';
+	require_once DIR_MAGNALISTER_FS.DIRECTORY_SEPARATOR.'php'.DIRECTORY_SEPARATOR.'modules'.DIRECTORY_SEPARATOR.'ebay'.DIRECTORY_SEPARATOR.'classes'.DIRECTORY_SEPARATOR.'ebayTopTen.php';
 	$oTopTen = new ebayTopTen();
 	$oTopTen->setMarketPlaceId($_MagnaSession['mpID']);
 	$aTopTenCatIds = $oTopTen->getTopTenCategories($type);

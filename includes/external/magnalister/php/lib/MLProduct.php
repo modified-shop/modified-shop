@@ -62,19 +62,6 @@ class MLProduct {
 	protected $cache = array();
 	
 	private function __construct() {
-		$this->simpleprice = new SimplePrice();
-		$this->variationCalculator = new VariationsCalculator();
-		
-		$this->loadLanguagesAvailable();
-		$this->buildSelectFields();
-		$this->reset();
-		
-		$this->options = array (
-			'purgeVariations' => false,
-			'useGambioProperties' => false,
-			'includeVariations' => true,
-		);
-		
 		foreach (array(
 			'ShippingStatus' => 'TABLE_SHIPPING_STATUS'
 		) as $key => $tableDefine) {
@@ -87,6 +74,19 @@ class MLProduct {
 		) as $key => $define) {
 			$this->existingColumns[$key] = MagnaDB::gi()->columnExistsInTable($define['column'], $define['table']);
 		}
+		
+		$this->options = array (
+			'purgeVariations' => false,
+			'useGambioProperties' => false,
+			'includeVariations' => true,
+		);
+		
+		$this->simpleprice = new SimplePrice();
+		$this->variationCalculator = new VariationsCalculator();
+		
+		$this->loadLanguagesAvailable();
+		$this->buildSelectFields();
+		$this->reset();
 	}
 	
 	/**
