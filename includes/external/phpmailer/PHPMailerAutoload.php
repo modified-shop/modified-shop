@@ -24,7 +24,7 @@
 function PHPMailerAutoload($classname)
 {
     //Can't use __DIR__ as it's only in PHP 5.3+
-    $filename = DIR_FS_EXTERNAL.'class.'.strtolower($classname).'.php';
+    $filename = DIR_FS_EXTERNAL.'phpmailer/class.'.strtolower($classname).'.php';
     if (is_readable($filename)) {
         require $filename;
     }
