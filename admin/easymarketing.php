@@ -20,35 +20,6 @@
 require('includes/application_top.php');
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-    <script language="JavaScript" type="text/javascript">
-      function change_color(id){
-        if(document.getElementById('result_row_'+id).style.backgroundColor != 'rgb(255, 195, 107)' && document.getElementById('result_row_'+id).style.backgroundColor != '#ffc36b'){
-          document.getElementById('result_row_'+id).style.backgroundColor = '#FFFFFF';
-        }
-      }
-
-      function change_color_out(id){
-        if(document.getElementById('result_row_'+id).style.backgroundColor != 'rgb(255, 195, 107)' && document.getElementById('result_row_'+id).style.backgroundColor != '#ffc36b'){
-          if(id % 2 == 0) {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#FFFFFF';
-          } else {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#d6e6f3';
-          }
-        }
-      }
-
-      function set_color(id){
-        if(document.getElementById('result_row_'+id).style.backgroundColor == 'rgb(255, 195, 107)' || document.getElementById('result_row_'+id).style.backgroundColor == '#ffc36b'){
-          if(id % 2 == 0) {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#FFFFFF';
-          } else {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#d6e6f3';
-          }
-        } else {
-          document.getElementById('result_row_'+id).style.backgroundColor = '#ffc36b';
-        }
-      }
-    </script>
   </head>
 <body>
   <!-- header //-->
@@ -69,9 +40,17 @@ require (DIR_WS_INCLUDES.'head.php');
       <!-- body_text //-->
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
-        <div class="pageHeading pdg2">Easymarketing</div>
+        <div class="pageHeading pdg2">EASYMARKETING</div>
         <div class="main">Modules</div>         
         <table class="tableCenter">
+          <tr>
+            <td valign="middle" class="dataTableHeadingContent" style="width:250px;">
+              Vollautomatisierte Online-Werbung
+            </td>
+            <td valign="middle" class="dataTableHeadingContent">
+              <a href="<?php echo xtc_href_link('module_export.php', 'set=system&module=easymarketing'); ?>"><u>Einstellungen</u></a>  
+            </td>
+          </tr>
           <tr style="background-color: #FFFFFF;">
             <td colspan="2" style="font-family: Verdana, Arial, Helvetica, sans-serif; font-size: 12px; padding: 0px 10px 11px 10px; text-align: justify">
               <br />
@@ -97,13 +76,12 @@ require (DIR_WS_INCLUDES.'head.php');
                 <li style="list-style-type: circle !important;">Hohe Zeitersparnis, da Kampagnen automatisch erstellt und gepflegt werden</li>
               </ul>
               <br />
-              <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><span style="font-size:12px; color:#FF7A00;"><u><strong>Weitere Infos zu Easymarketing finden Sie unter www.easymarketing.de</strong></u></span></a>
-              <br /><br /><br />
-              <center><iframe width="300" height="169" src="//www.youtube.com/embed/4L_SY9T7vks" frameborder="0" allowfullscreen></iframe></center>
-              <br /><br />
-              <a href="http://easymarketing.de/?partner=modified" target="_blank"><img src="images/easymarketing/EM-rechner-stand-alone.jpg" align="left" /></a>
-              <a href="http://easymarketing.de/?partner=modified" target="_blank"><img src="images/easymarketing/EM-overview.jpg" align="right" /></a>
-              <br style="clear: both;" />
+              <a href="https://easymarketing.de/analysis/new?partner=modified" target="_blank"><span style="font-size:12px; color:#FF7A00;"><u><strong>Weitere Infos zu EASYMARKETING finden Sie unter www.easymarketing.de</strong></u></span></a>
+            </td>
+          </tr>
+          <tr style="background-color: #FFFFFF;">
+            <td colspan="2">
+            <iframe style="background-color: transparent; border: 0px none transparent;padding: 0px; overflow: hidden;" seamless="seamless" scrolling="no" frameborder="0" allowtransparency="true" width="300px" height="250px" src="http://api.easymarketing.de/demo_chart?website_url=<?php echo urlencode(HTTP_SERVER.DIR_WS_CATALOG); ?>&partner_id=modified&version=large"></iframe>
             </td>
           </tr>
         </table>       
