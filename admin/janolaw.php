@@ -20,35 +20,6 @@
 require('includes/application_top.php');
 require (DIR_WS_INCLUDES.'head.php');
 ?>
-    <script language="JavaScript" type="text/javascript">
-      function change_color(id){
-        if(document.getElementById('result_row_'+id).style.backgroundColor != 'rgb(255, 195, 107)' && document.getElementById('result_row_'+id).style.backgroundColor != '#ffc36b'){
-          document.getElementById('result_row_'+id).style.backgroundColor = '#FFFFFF';
-        }
-      }
-
-      function change_color_out(id){
-        if(document.getElementById('result_row_'+id).style.backgroundColor != 'rgb(255, 195, 107)' && document.getElementById('result_row_'+id).style.backgroundColor != '#ffc36b'){
-          if(id % 2 == 0) {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#FFFFFF';
-          } else {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#d6e6f3';
-          }
-        }
-      }
-
-      function set_color(id){
-        if(document.getElementById('result_row_'+id).style.backgroundColor == 'rgb(255, 195, 107)' || document.getElementById('result_row_'+id).style.backgroundColor == '#ffc36b'){
-          if(id % 2 == 0) {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#FFFFFF';
-          } else {
-            document.getElementById('result_row_'+id).style.backgroundColor = '#d6e6f3';
-          }
-        } else {
-          document.getElementById('result_row_'+id).style.backgroundColor = '#ffc36b';
-        }
-      }
-    </script>
   </head>
 <body>
   <!-- header //-->
