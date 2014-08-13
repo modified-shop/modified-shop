@@ -29,7 +29,13 @@ if($_GET["api_konfiguration"] == 1) {
 <link href="includes/haendlerbund/css/main.css" rel="stylesheet" type="text/css" />
 <link href="http://fonts.googleapis.com/css?family=Cuprum" rel="stylesheet" type="text/css" />
 
+<?php
+// BOF - Tomcraft - 2014-08-13 - jquery-1.8.3.min.js already global available via "/admin/includes/head.php"
+/*
 <script src="includes/haendlerbund/jquery-1.4.4.js" type="text/javascript"></script>
+*/
+// EOF - Tomcraft - 2014-08-13 - jquery-1.8.3.min.js already global available via "/admin/includes/head.php"
+?>
 <script type="text/javascript" src="includes/haendlerbund/jquery.smartWizard.min.js"></script>
 <script type="text/javascript" src="includes/haendlerbund/custom.js"></script>
 
