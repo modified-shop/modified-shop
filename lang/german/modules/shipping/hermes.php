@@ -17,7 +17,6 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_SHIPPING_HERMES_TEXT_TITLE', 'Versand mit Hermes');
-define('MODULE_SHIPPING_HERMES_TEXT_INFO', '(AURO/Awalan und Werkzeug Nachnahme [<A HREF="index.php/cat/c151_Versand-AURO.html">info</A>]).');
 define('MODULE_SHIPPING_HERMES_TEXT_DESCRIPTION', 'Hermes Paket Service');
 define('MODULE_SHIPPING_HERMES_TEXT_WAY_DE', 'Deutschlandweit: ');
 define('MODULE_SHIPPING_HERMES_TEXT_WAY_EU', 'International: ');
