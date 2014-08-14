@@ -88,11 +88,12 @@ if ($listing_split->number_of_rows > 0) {
     $category['categories_name'] = TEXT_SEARCH_TERM . stripslashes(trim(urldecode($_GET['keywords'])));
   }
 
-  if (isset($category['categories_heading_title'])) {
+  if (isset($category['categories_heading_title']) && $category['categories_heading_title'] != '') {
     $list_title = $category['categories_heading_title'];
-  } elseif (isset($category['categories_name'])) {
+  } elseif (isset($category['categories_name']) && $category['categories_name'] != '') {
     $list_title = $category['categories_name'];
   }
+
   $module_smarty->assign('LIST_TITLE',  isset($list_title) ? $list_title : '');
   $module_smarty->assign('CATEGORIES_NAME', isset($category['categories_name']) ? $category['categories_name'] : '');
   $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
