@@ -18,6 +18,7 @@
 
 class it_recht_kanzlei {
   
+  var $modulversion = '1.0';
   var $api_action_flag, 
       $api_version_flag, 
       $api_username_flag, 
@@ -27,6 +28,9 @@ class it_recht_kanzlei {
       $post_xml;
   
   function __construct($post_xml) {
+  
+    $this->set_shopversion();
+    
     // Catch errors - no data sent
     (string)$post_xml = $post_xml;
     
@@ -258,6 +262,15 @@ class it_recht_kanzlei {
     }
   }
   
+  function set_shopversion() {
+    if (!$this->shopversion) {
+      $query = xtc_db_query('SELECT * FROM database_version');
+      while ($row = xtc_db_fetch_array($query)) {
+        $this->shopversion = $row['version'];
+      }
+    }
+  }
+    
   // return error and end script
   function return_error($errorcode) {
     // output error
@@ -266,6 +279,8 @@ class it_recht_kanzlei {
     echo "<response>\n";
     echo "  <status>error</status>\n";
     echo "  <error>".$errorcode."</error>\n";
+    echo "  <meta_shopversion>".$this->shopversion."</meta_shopversion>\n";
+    echo "  <meta_modulversion>".$this->modulversion."</meta_modulversion>\n";
     echo "</response>";
     exit();
   }
@@ -277,6 +292,8 @@ class it_recht_kanzlei {
     echo "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n";
     echo "<response>\n";
     echo "  <status>success</status>\n";
+    echo "  <meta_shopversion>".$this->shopversion."</meta_shopversion>\n";
+    echo "  <meta_modulversion>".$this->modulversion."</meta_modulversion>\n";
     echo "</response>";
     exit();
   }
