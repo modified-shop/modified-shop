@@ -137,6 +137,7 @@
           'cc_issue' => $order['cc_issue'],
           'cc_cvv' => $order['cc_cvv'],
           'date_purchased' => $order['date_purchased'],
+          'orders_date_finished' => $order['orders_date_finished'],
           'orders_status' => $order_status,
           'last_modified' => $order['last_modified'],
           'total' => strip_tags($order_total['ot_total_text']),
