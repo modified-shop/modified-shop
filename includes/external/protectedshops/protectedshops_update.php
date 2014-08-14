@@ -21,10 +21,12 @@ class protectedshops_update {
 
   protected $result = '';
   
+  
   function __construct() {
     $this->token = MODULE_PROTECTEDSHOPS_TOKEN;
     $this->enabled = ((MODULE_PROTECTEDSHOPS_STATUS == 'true') ? true : false);
   }
+  
   
   function check_update() {
     if ($this->enabled === true) {
@@ -165,10 +167,8 @@ class protectedshops_update {
         $email_text .= "\n".$request;
       }
       
-      // TODO - waiting for eMail Address
       // forward to protectedshops      
-      // $forwarding = 'info@protectedshops.de' . ',' . EMAIL_SUPPORT_FORWARDING_STRING;
-      $forwarding = '';
+      $forwarding = 'info@protectedshops.de' . ((EMAIL_SUPPORT_FORWARDING_STRING != '') ? ',' . EMAIL_SUPPORT_FORWARDING_STRING : '');
       
       xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
                    EMAIL_SUPPORT_NAME, 
