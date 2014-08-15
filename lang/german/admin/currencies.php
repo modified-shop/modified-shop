@@ -25,7 +25,7 @@ define('TABLE_HEADING_ACTION', 'Aktion');
 
 define('TEXT_INFO_EDIT_INTRO', 'Bitte f&uuml;hren Sie alle notwendigen &Auml;nderungen durch');
 define('TEXT_INFO_CURRENCY_TITLE', 'Name der W&auml;hrung:');
-define('TEXT_INFO_CURRENCY_CODE', 'W&auml;hrungsk&uuml;rzel:');
+define('TEXT_INFO_CURRENCY_CODE', 'W&auml;hrungscode nach ISO 4217:');
 define('TEXT_INFO_CURRENCY_SYMBOL_LEFT', 'W&auml;hrungsymbol links:');
 define('TEXT_INFO_CURRENCY_SYMBOL_RIGHT', 'W&auml;hrungsymbol rechts:');
 define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Symbol f&uuml;r Dezimalkomma:');

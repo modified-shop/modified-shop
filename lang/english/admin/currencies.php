@@ -25,7 +25,7 @@ define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_CURRENCY_TITLE', 'Currency name:');
-define('TEXT_INFO_CURRENCY_CODE', 'Currency Code:');
+define('TEXT_INFO_CURRENCY_CODE', 'Currency code ISO 4217:');
 define('TEXT_INFO_CURRENCY_SYMBOL_LEFT', 'Currency Symbol Left:');
 define('TEXT_INFO_CURRENCY_SYMBOL_RIGHT', 'Currency Symbol Right:');
 define('TEXT_INFO_CURRENCY_DECIMAL_POINT', 'Symbol for Decimal Point:');
