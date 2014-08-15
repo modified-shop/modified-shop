@@ -56,7 +56,7 @@ class xtcPrice {
     }
 
     // select Currencies
-    $currencies_query = xtDBquery("SELECT * FROM " . TABLE_CURRENCIES);
+    $currencies_query = xtDBquery("SELECT * FROM " . TABLE_CURRENCIES . " WHERE status = '1'");
     while ($currencies = xtc_db_fetch_array($currencies_query, true)) {
       // direct array assignment
       $this->currencies[$currencies['code']] = $currencies;
