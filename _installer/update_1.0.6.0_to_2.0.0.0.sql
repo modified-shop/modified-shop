@@ -183,4 +183,10 @@ UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1;
 #GTB - 2014-07-01 - delete configuration
 DELETE FROM configuration WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
 
+#GTB - 2014-08-15 - added geo_zone_info
+ALTER TABLE geo_zones ADD geo_zone_info INT(1) DEFAULT 0 AFTER geo_zone_description;
+
+#GTB - 2014-08-15 - added status for currencies
+ALTER TABLE currencies ADD status INT(1) NOT NULL DEFAULT 0;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

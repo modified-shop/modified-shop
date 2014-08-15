@@ -350,6 +350,7 @@ CREATE TABLE currencies (
   decimal_point CHAR(1),
   thousands_point CHAR(1),
   decimal_places CHAR(1),
+  status INT(1) DEFAULT 0 NOT NULL,
   value FLOAT(13,8),
   last_updated DATETIME NULL,
   PRIMARY KEY (currencies_id),
@@ -982,6 +983,7 @@ CREATE TABLE geo_zones (
   geo_zone_id INT NOT NULL AUTO_INCREMENT,
   geo_zone_name VARCHAR(32) NOT NULL,
   geo_zone_description VARCHAR(255) NOT NULL,
+  geo_zone_info INT(1) DEFAULT 0,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
   PRIMARY KEY (geo_zone_id)
@@ -1923,7 +1925,10 @@ INSERT INTO countries VALUES (240,'Serbia','RS','SRB',1,1,0);
 INSERT INTO countries VALUES (241,'Montenegro','ME','MNE',1,1,0);
 
 # DEFAULT CURRENCY
-INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1.0000', NOW());
+INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1','1.0000', NOW());
+INSERT INTO currencies VALUES (2,'United States Dollar','USD', '$', '', '.', ',', '2','0','1.2978', NOW());
+INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', '2','0','1.2044', NOW());
+INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '&pound;', '.', ',', '2','0','0.8094', NOW());
 
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'iso-8859-15',1,1);
 INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'iso-8859-15',1,1);

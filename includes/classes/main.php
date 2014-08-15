@@ -263,23 +263,33 @@ class main {
    * @return boolean, string
    */
   function getDeliveryDutyInfo($iso2code) {
-    $eu_countries_query = xtDBquery("-- includes/classes/main.php
-                                     SELECT c.countries_iso_code_2
-                                       FROM ".TABLE_COUNTRIES." c
-                                       JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz ON c.countries_id = gz.zone_country_id
-                                      WHERE gz.geo_zone_id = 5
-                                    ");
     $eu_countries = array();
-    if (xtc_db_num_rows($eu_countries_query, true)) {
-      while ($eu_countries_values = xtc_db_fetch_array($eu_countries_query, true)) {
-        $eu_countries[] = $eu_countries_values['countries_iso_code_2'];
+    $geo_zone_array = array();
+
+    $geo_zone_query = xtDBquery("SELECT geo_zone_id 
+                                   FROM ".TABLE_GEO_ZONES." 
+                                  WHERE geo_zone_info = '1'");
+    if (xtc_db_num_rows($geo_zone_query, true) > 0) {
+      while ($geo_zone = xtc_db_fetch_array($geo_zone_query, true)) {
+        $geo_zone_array[] = $geo_zone['geo_zone_id'];
+      }
+      $eu_countries_query = xtDBquery("-- includes/classes/main.php
+                                       SELECT c.countries_iso_code_2
+                                         FROM ".TABLE_COUNTRIES." c
+                                         JOIN " . TABLE_ZONES_TO_GEO_ZONES . " gz ON c.countries_id = gz.zone_country_id
+                                        WHERE gz.geo_zone_id IN ('".implode("', '", $geo_zone_array)."')");
+      if (xtc_db_num_rows($eu_countries_query, true)) {
+        while ($eu_countries_values = xtc_db_fetch_array($eu_countries_query, true)) {
+          $eu_countries[] = $eu_countries_values['countries_iso_code_2'];
+        }
       }
     }
-
+    
     if (!in_array($iso2code, $eu_countries)) {
       return true;
     }
-    return '';
+    
+    return false;
   }
   
   /**

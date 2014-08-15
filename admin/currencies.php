@@ -190,7 +190,7 @@
                 ?>
                   <td class="dataTableContent"><?php echo $currency['code']; ?></td>
                   <td class="dataTableContent txta-r"><?php echo number_format($currency['value'], 8); ?></td>
-                    <td class="dataTableContent">
+                    <td class="dataTableContent txta-r">
                       <?php
                       if ($currency['status'] == '1') {
                         echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setcflag&flag=0&cID=' . $currency['currencies_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';

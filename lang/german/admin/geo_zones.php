@@ -50,4 +50,7 @@ define('TEXT_INFO_COUNTRY_ZONE', 'Bundesland:');
 define('TYPE_BELOW', 'Alle Bundesl&auml;nder');
 define('PLEASE_SELECT', 'Alle Bundesl&auml;nder');
 define('TEXT_ALL_COUNTRIES', 'Alle L&auml;nder');
+
+define('TEXT_INFO_ZONE_INFO', 'Soll f&uuml;r diese Steuerzone der Zollhinweis angezeigt werden ?');
+define('TEXT_INFO_ZONE_INFO_DEFAULT', 'F&uuml;r diese Steuerzone wird der Zollhinweis angezeigt.');
 ?>

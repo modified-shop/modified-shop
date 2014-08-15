@@ -109,6 +109,8 @@
       $messageStack->add('install_step7', SELECT_TAX_ERROR2);
     }
     if ($error == false) {
+      xtc_db_query("TRUNCATE `customers_status`");
+
       // Status Admin
       xtc_db_query("INSERT INTO customers_status SET customers_status_id = '0',
                                                      language_id = '2',
@@ -336,7 +338,14 @@
                                                      customers_fsk18_display = 1,
                                                      customers_status_write_reviews = 1,
                                                      customers_status_read_reviews = 1");
+
       // create Group prices (Admin wont get own status!)
+      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_0`");
+      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_1`");
+      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_2`");
+      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_3`");
+      xtc_db_query("DROP TABLE IF EXISTS `personal_offers_by_customers_status_4`");
+      
       xtc_db_query("create table personal_offers_by_customers_status_0 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
       xtc_db_query("create table personal_offers_by_customers_status_1 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
       xtc_db_query("create table personal_offers_by_customers_status_2 (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY ,products_id int NOT NULL,quantity int, personal_offer decimal(15,4)) ");
