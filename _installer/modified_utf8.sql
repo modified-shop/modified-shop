@@ -1934,10 +1934,10 @@ INSERT INTO countries VALUES (239,'Zimbabwe','ZW','ZWE',1,1,0);
 INSERT INTO countries VALUES (240,'Serbia','RS','SRB',1,1,0);
 INSERT INTO countries VALUES (241,'Montenegro','ME','MNE',1,1,0);
 
-INSERT INTO currencies VALUES (1, 'Euro', 'EUR', '', '&euro;', ',', '.', '2', 1.0000, '2012-11-26 00:00:00');
-INSERT INTO currencies VALUES (2, 'United States Dollar', 'USD', '$', '', '.', ',', '2', 1.2978, '2012-11-26 00:00:00');
-INSERT INTO currencies VALUES (3, 'Schweizer Franken', 'CHF', 'CHF', '', '.', '', '2', 1.2044, '2012-11-26 00:00:00');
-INSERT INTO currencies VALUES (4, 'Great Britain Pound', 'GBP', '', '&pound;', '.', ',', '2', 0.8094, '2012-11-26 00:00:00');
+INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1','1.0000', NOW());
+INSERT INTO currencies VALUES (2,'United States Dollar','USD', '$', '', '.', ',', '2','0','1.2978', NOW());
+INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', '2','0','1.2044', NOW());
+INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '&pound;', '.', ',', '2','0','0.8094', NOW());
 
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'utf-8',1,1);
 INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'utf-8',1,1);
