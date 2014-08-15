@@ -25,6 +25,14 @@
 
   if ($_GET['action']) {
     switch ($_GET['action']) {
+
+      case 'setcflag':
+        $currency_id = xtc_db_prepare_input($_GET['cID']);
+        $status = xtc_db_prepare_input($_GET['flag']);
+        xtc_db_query("UPDATE " . TABLE_CURRENCIES . " set status = '" . xtc_db_input($status) . "' where currencies_id = '" . (int)$currency_id . "'");
+        xtc_redirect(xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . (int)$currency_id));
+        break;
+
       case 'insert':
       case 'save':
         $currency_id = xtc_db_prepare_input($_GET['cID']);
@@ -36,7 +44,7 @@
         $thousands_point = xtc_db_prepare_input($_POST['thousands_point']);
         $decimal_places = xtc_db_prepare_input($_POST['decimal_places']);
         $value = xtc_db_prepare_input($_POST['value']);
-
+        
         $sql_data_array = array('title' => $title,
                                 'code' => $code,
                                 'symbol_left' => $symbol_left,
@@ -44,7 +52,8 @@
                                 'decimal_point' => $decimal_point,
                                 'thousands_point' => $thousands_point,
                                 'decimal_places' => $decimal_places,
-                                'value' => $value);
+                                'value' => $value,
+                                );
 
         if ($_GET['action'] == 'insert') {
           xtc_db_perform(TABLE_CURRENCIES, $sql_data_array);
@@ -141,6 +150,7 @@
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_NAME; ?></td>
                   <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_CURRENCY_CODES; ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_CURRENCY_VALUE; ?></td>
+                  <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_CURRENCY_STATUS; ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TEXT_INFO_CURRENCY_LAST_UPDATED; ?></td>
                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
                 </tr>
@@ -155,6 +165,7 @@
                                                       thousands_point,
                                                       decimal_places,
                                                       value,
+                                                      status,
                                                       last_updated
                                                  FROM " . TABLE_CURRENCIES . "
                                              ORDER BY title";
@@ -179,6 +190,15 @@
                 ?>
                   <td class="dataTableContent"><?php echo $currency['code']; ?></td>
                   <td class="dataTableContent txta-r"><?php echo number_format($currency['value'], 8); ?></td>
+                    <td class="dataTableContent">
+                      <?php
+                      if ($currency['status'] == '1') {
+                        echo xtc_image(DIR_WS_IMAGES . 'icon_status_green.gif', IMAGE_ICON_STATUS_GREEN, 10, 10, 'style="margin-left: 5px;"') . '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'cID')) . 'action=setcflag&flag=0&cID=' . $currency['currencies_id'] . '&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_red_light.gif', IMAGE_ICON_STATUS_RED_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>';
+                      } else {
+                        echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, xtc_get_all_get_params(array('page', 'action', 'lID')) . 'action=setcflag&flag=1&cID=' . $currency['currencies_id'].'&page='.$_GET['page']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_status_green_light.gif', IMAGE_ICON_STATUS_GREEN_LIGHT, 10, 10, 'style="margin-left: 5px;"') . '</a>' . xtc_image(DIR_WS_IMAGES . 'icon_status_red.gif', IMAGE_ICON_STATUS_RED, 10, 10, 'style="margin-left: 5px;"');
+                      }
+                      ?>
+                    </td>
                   <td class="dataTableContent txta-r"><?php if (isset($currency['last_updated'])) { echo xtc_date_short($currency['last_updated']);} else {echo '&nbsp;';} ?></td>
                   <td class="dataTableContent txta-r"><?php if (isset($cInfo) && is_object($cInfo) && ($currency['currencies_id'] == $cInfo->currencies_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_CURRENCIES, 'page=' . $_GET['page'] . '&cID=' . $currency['currencies_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                 </tr>

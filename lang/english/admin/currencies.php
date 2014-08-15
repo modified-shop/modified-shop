@@ -21,6 +21,7 @@ define('TABLE_HEADING_CURRENCY_NAME', 'Currency');
 define('TABLE_HEADING_CURRENCY_CODES', 'Code');
 define('TABLE_HEADING_CURRENCY_VALUE', 'Value');
 define('TABLE_HEADING_ACTION', 'Action');
+define('TABLE_HEADING_CURRENCY_STATUS', 'Status');
 
 define('TEXT_INFO_EDIT_INTRO', 'Please make any necessary changes');
 define('TEXT_INFO_CURRENCY_TITLE', 'Title:');
