@@ -584,6 +584,7 @@ function xtcCheckSpecial($pID) {
           'old_price' =>  $old_price,
           'save_percent' =>  $save_percent,
           'save_diff' =>  $save_diff,
+          'group_discount' => round($discount),
           'from' =>  $from,
           'flag' => 'SpecialDiscount'          
         );
