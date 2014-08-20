@@ -33,7 +33,8 @@ $oldpage = isset($_GET['page']) ? '&page='.$_GET['page'] : (isset($_POST['page']
 //nach Speichern zur Kontrolle neu laden
 if (isset($_POST['products_options_id']) && $_POST['action'] == 'change') {
    include(DIR_WS_MODULES.'new_attributes_change.php');
-   xtc_redirect(xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage));
+   $options_id = isset($_POST['options_id']) ? '&options_id='.implode(',',$_POST['options_id']) : '';
+   xtc_redirect(xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'cpath='. $_POST['cpath'].'&current_product_id='. $_POST['current_product_id'].'&option_order_by='.$_POST['option_order_by'].'&products_options_id=' .$_POST['products_options_id'].$oldaction.$oldpage.$options_id));
 }
 
 //nach Abbrechen zurück zur Kategorie
@@ -45,10 +46,12 @@ if (isset($_GET['cPath'])) {
 if (isset($_GET['action']) && !isset($_POST['action'])) {
   $_POST = $_GET;
 }
+
 require (DIR_WS_INCLUDES.'head.php');
+
 ?>
-<link rel="stylesheet" type="text/css" href="includes/css/attributes.css">
-<script type="text/javascript" src="includes/javascript/jquery.attributes.js"></script>
+<link rel="stylesheet" type="text/css" href="includes/css/new_attributes.css">
+<script type="text/javascript" src="includes/javascript/jquery.new_attributes.js"></script>
 <script type="text/javascript" src="includes/general.js"></script>
 </head>
 <body>
