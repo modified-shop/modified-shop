@@ -16,6 +16,8 @@
   Released under the GNU General Public License
   --------------------------------------------------------------*/
 
+defined('RUN_MODE_ADMIN') or define('RUN_MODE_ADMIN', true);
+
 // compatibility for modified eCommerce Shopsoftware 1.06 files
 $config_path = realpath(dirname(__FILE__) . '/../../') . '/';
 
