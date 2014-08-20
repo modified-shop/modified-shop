@@ -28,7 +28,7 @@
                                   WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
                                     AND products_id = '" . (int)$current_pid . "'");
     if (xtc_db_num_rows($name_query) > 0) {
-      $line = xtc_db_fetch_array($result);
+      $line = xtc_db_fetch_array($name_query);
       return $line['products_name'];
     } else {
       return "Something isn't right....";
