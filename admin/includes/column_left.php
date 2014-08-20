@@ -120,6 +120,7 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
     if (isset($admin_access['safeterms']) && $admin_access['safeterms'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
     if (isset($admin_access['easymarketing']) && $admin_access['easymarketing'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
+    if (isset($admin_access['protectedshops']) && $admin_access['protectedshops'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PROTECTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_PROTECTEDSHOPS . '</a></li>';
     //if (($admin_access['econda'] == '1')) echo '<li><a href="' . xtc_href_link('econda.php') . '" class="menuBoxContentLink"> -ECONDA Shop Monitor' . '</a></li>';
     //if (($admin_access['cleverreach'] == '1')) echo '<li><a href="' . xtc_href_link('cleverreach.php') . '" class="menuBoxContentLink"> -CleverReach Newsletter' . '</a></li>';
     
