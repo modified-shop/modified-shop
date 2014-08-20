@@ -21,19 +21,14 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-
   function xtc_findTitle($current_pid, $languageFilter) {
-    $query = "SELECT * FROM ".TABLE_PRODUCTS_DESCRIPTION."  where language_id = '" . $_SESSION['languages_id'] . "' AND products_id = '" . $current_pid . "'";
-
-    $result = xtc_db_query($query);
-
-    $matches = xtc_db_num_rows($result);
-
-    if ($matches) {
-      while ($line = xtc_db_fetch_array($result)) {
-        $productName = $line['products_name'];
-      }
-      return $productName;
+    $name_query =  xtc_db_query("SELECT products_name 
+                                   FROM ".TABLE_PRODUCTS_DESCRIPTION."  
+                                  WHERE language_id = '" . (int)$_SESSION['languages_id'] . "' 
+                                    AND products_id = '" . (int)$current_pid . "'");
+    if (xtc_db_num_rows($name_query) > 0) {
+      $line = xtc_db_fetch_array($name_query);
+      return $line['products_name'];
     } else {
       return "Something isn't right....";
     }
