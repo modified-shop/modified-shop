@@ -1,6 +1,6 @@
 <?php
 /* --------------------------------------------------------------
-   $Id: new_attributes_include.php 5453 2013-09-02 10:18:30Z web28 $
+   $Id: new_attributes_include.php 6142 2013-12-05 12:24:44Z web28 $
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
@@ -49,7 +49,7 @@
   <!--
   function go_option() {
     if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-      location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . ($_GET['option_page'] ? $_GET['option_page'] : 1)).'&current_product_id='. $_POST['current_product_id']; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
+      location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)).'&current_product_id='. $_POST['current_product_id']; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
     }
   }
   //-->
@@ -118,17 +118,18 @@ if ($_POST['cpath'] != '') {
       $current_product_option_name = $line['products_options_name'];
       $current_product_option_id = $line['products_options_id'];
       // Print the Option Name
-      echo '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
-      echo '<td class="dataTableHeadingContent" style="width:150px"><input style="float:left;" type="checkbox" class="select_all" name="set_'.$current_product_option_id.'" value="'.$current_product_option_id.'">&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
-      echo '<td class="dataTableHeadingContent" style="width:80px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
-      echo '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
-      echo '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
-      echo '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_STOCK.'</strong></td>'. PHP_EOL;
-      echo '<td colspan="2" class="dataTableHeadingContent" style="min-width:120px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
-      //echo '<td class="dataTableHeadingContent"><strong>'.ATTR_PREFIXWEIGHT.'</strong></td>';
-      echo '<td colspan="2" class="dataTableHeadingContent" style="min-width:120px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
-      //echo '<td class="dataTableHeadingContent"><strong>'.ATTR_PREFIXPRICE.'</strong></td>';
-      echo '</tr>'. PHP_EOL;
+      $output = '';
+      $output .= '<tr id="oid-' . $current_product_option_id . '" class="dataTableHeadingRow">'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px"><input type="checkbox" class="select_all" name="set_'.$current_product_option_id.'" value="'.$current_product_option_id.'">&nbsp;&nbsp;<strong>' . $current_product_option_name . '</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:80px"><strong>'.SORT_ORDER.'</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_MODEL.'</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_EAN.'</strong></td>'. PHP_EOL;
+      $output .= '<td class="dataTableHeadingContent" style="width:150px"><strong>'.ATTR_STOCK.'</strong></td>'. PHP_EOL;
+      $output .= '<td colspan="2" class="dataTableHeadingContent" style="min-width:120px;"><strong>'.ATTR_WEIGHT.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
+      //$output .= '<td class="dataTableHeadingContent"><strong>'.ATTR_PREFIXWEIGHT.'</strong></td>';
+      $output .= '<td colspan="2" class="dataTableHeadingContent" style="min-width:120px;"><strong>'.ATTR_PRICE.'&nbsp;&nbsp;&nbsp;</strong></td>'. PHP_EOL;
+      //$output .= '<td class="dataTableHeadingContent"><strong>'.ATTR_PREFIXPRICE.'</strong></td>';
+      $output .= '</tr>'. PHP_EOL;
 
       // Find all of the Current Option's Available Values
       $query2 = "SELECT *
@@ -137,6 +138,8 @@ if ($_POST['cpath'] != '') {
                ORDER BY products_options_values_id ASC";
       $result2 = xtc_db_query($query2);
       $matches2 = xtc_db_num_rows($result2);
+      
+      $isChecked = false;
 
       if ($matches2) {
         $i = 0;
@@ -146,7 +149,11 @@ if ($_POST['cpath'] != '') {
           $current_value_id = $line['products_options_values_id'];
           $isSelected = checkAttribute($current_value_id, $_POST['current_product_id'], $current_product_option_id);
           $checked = ($isSelected) ? ' checked="checked"' : '';
-          $class_checked = ($isSelected) ? ' ischecked' : '';
+          $disable = (empty($checked)) ? ' disabled="true" ' : ' ';
+          
+          if ($isSelected) {
+            $isChecked = true;
+          }
 
           $query3 = "SELECT *
                        FROM ".TABLE_PRODUCTS_OPTIONS_VALUES."
@@ -167,52 +174,57 @@ if ($_POST['cpath'] != '') {
             }
     
             // Print the Current Value Name
-            echo '<tr class="' . $rowClass . $class_checked . '">'. PHP_EOL;
-            echo '<td class="main nobr">'. PHP_EOL;
-            echo '<input type="checkbox" name="optionValues[]" class="cb check_'.$current_product_option_id.'" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
-            echo '</td>'. PHP_EOL;
-            echo '<td class="main"><input type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
-            echo '<td class="main"><input type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?$attr_array['attributes_model']:'') . '" size="15"></td>'. PHP_EOL;
-            echo '<td class="main"><input type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
-            echo '<td class="main"><input type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
-            echo '<td style="width:35px;" class="main">'. PHP_EOL;
-            echo '   <select name="' . $current_value_id . '_weight_prefix">'. PHP_EOL;
-            $prefix_array = array('+','-');
+            $output .= '<tr class="' . $rowClass . '">'. PHP_EOL;
+            $output .= '<td class="main nobr">'. PHP_EOL;
+            $output .= '<input type="checkbox" name="optionValues[]" class="cbx_optval cb check_'.$current_product_option_id.'" value="' . $current_value_id . '"' . $checked . '>&nbsp;&nbsp;' . $current_value_name . '&nbsp;&nbsp;'. PHP_EOL;
+            $output .= '</td>'. PHP_EOL;
+            $output .= '<td class="main"><input'.$disable.'type="text" name="' . $current_value_id . '_sortorder" value="' . (isset($attr_array['sortorder'])?$attr_array['sortorder']:'') . '" size="8"></td>'. PHP_EOL;
+            $output .= '<td class="main"><input'.$disable.'type="text" name="' . $current_value_id . '_model" value="' . (isset($attr_array['attributes_model'])?$attr_array['attributes_model']:'') . '" size="15"></td>'. PHP_EOL;
+            $output .= '<td class="main"><input'.$disable.'type="text" name="' . $current_value_id . '_ean" value="' . (isset($attr_array['attributes_ean'])?$attr_array['attributes_ean']:'') . '" size="15"></td>'. PHP_EOL;
+            $output .= '<td class="main"><input'.$disable.'type="text" name="' . $current_value_id . '_stock" value="' . (isset($attr_array['attributes_stock'])?$attr_array['attributes_stock']:'') . '" size="10"></td>'. PHP_EOL;
+            $output .= '<td style="width:35px;" class="main">'. PHP_EOL;
+            $output .= '   <select'.$disable.'name="' . $current_value_id . '_weight_prefix">'. PHP_EOL;
+            $prefix_array = array('+','-'); //weight prefix
             foreach ($prefix_array as $prefix) {
-              echo '     <option value="'.$prefix.'"' . (isset($attr_array['weight_prefix']) && $attr_array['weight_prefix'] == $prefix ? ' selected="selected"' : '') . '>'.$prefix.'</option>'. PHP_EOL;
+              $output .= '     <option value="'.$prefix.'"' . (isset($attr_array['weight_prefix']) && $attr_array['weight_prefix'] == $prefix ? ' selected="selected"' : '') . '>'.$prefix.'</option>'. PHP_EOL;
             }
-            echo '    </select>'. PHP_EOL;
-            echo '  </td>'. PHP_EOL;
-            echo '<td class="main"><input type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight'])?$attr_array['options_values_weight']:'') . '" size="10"></td>'. PHP_EOL;
-            echo '<td style="width:35px;" class="main">'. PHP_EOL;
-            echo '   <select name="' . $current_value_id . '_prefix">'. PHP_EOL;
-            $prefix_array = array('+','-');
+            $output .= '    </select>'. PHP_EOL;
+            $output .= '  </td>'. PHP_EOL;
+            $output .= '<td class="main"><input'.$disable.'type="text" name="' . $current_value_id . '_weight" value="' . (isset($attr_array['options_values_weight'])?$attr_array['options_values_weight']:'') . '" size="10"></td>'. PHP_EOL;
+            $output .= '<td style="width:35px;" class="main">'. PHP_EOL;
+            $output .= '   <select'.$disable.'name="' . $current_value_id . '_prefix">'. PHP_EOL;
+            $prefix_array = array('+','-'); //price prefix
             foreach ($prefix_array as $prefix) {
-              echo '     <option value="'.$prefix.'"' . (isset($attr_array['price_prefix']) && $attr_array['price_prefix'] == $prefix ? ' selected="selected"' : '') . '>'.$prefix.'</option>'. PHP_EOL;
+              $output .= '     <option value="'.$prefix.'"' . (isset($attr_array['price_prefix']) && $attr_array['price_prefix'] == $prefix ? ' selected="selected"' : '') . '>'.$prefix.'</option>'. PHP_EOL;
             } 
-            echo '    </select>'. PHP_EOL;
-            echo '  </td>'. PHP_EOL;
-            echo '<td style="white-space: nowrap;" class="main"><input type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. $attribute_value_price_calculate_netto. '</td>'. PHP_EOL;
-            echo '</tr>'. PHP_EOL;
+            $output .= '    </select>'. PHP_EOL;
+            $output .= '  </td>'. PHP_EOL;
+            $output .= '<td style="white-space: nowrap;" class="main"><input'.$disable.'type="text" name="' . $current_value_id . '_price" value="' . $attribute_value_price_calculate . '" size="10">'. $attribute_value_price_calculate_netto. '</td>'. PHP_EOL;
+            $output .= '</tr>'. PHP_EOL;
             
             // Download function start
-            if(strtoupper($current_product_option_name) == 'DOWNLOADS') {
-              echo '<tr class="downloads oid-'.$current_product_option_id.'">'. PHP_EOL;
-             // echo '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
-              echo '<td class="main" colspan="'.$colspan .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), 'class="dl"'). PHP_EOL;
-              echo '&nbsp;&nbsp;&nbsp;'.DL_COUNT.' <input type="text" name="' . $current_value_id . '_download_count" value="' . (isset($attr_dl_array['products_attributes_maxcount'])?$attr_dl_array['products_attributes_maxcount']:'') . '" size="6">'. PHP_EOL;
-              echo '&nbsp;&nbsp;&nbsp;'.DL_EXPIRE.' <input type="text" name="' . $current_value_id . '_download_expire" value="' . (isset($attr_dl_array['products_attributes_maxdays'])?$attr_dl_array['products_attributes_maxdays']:'') . '" size="6"></td>'. PHP_EOL;
-              echo '</tr>'. PHP_EOL;
+            if (strtoupper($current_product_option_name) == 'DOWNLOADS') {
+              $output .= '<tr class="downloads oid-'.$current_product_option_id.'">'. PHP_EOL;
+             // $output .= '<td colspan="2">File: <input type="file" name="' . $current_value_id . "_download_file"></td>';
+              $output .= '<td class="main">&nbsp;</td>';
+              $output .= '<td class="main" colspan="'.(int)($colspan - 1) .'" style="white-space: nowrap; background: #ccc; padding: 4px;">'.xtc_draw_pull_down_menu($current_value_id . '_download_file', xtc_getDownloads(), (isset($attr_dl_array['products_attributes_filename'])?$attr_dl_array['products_attributes_filename']:''), $disable). PHP_EOL;
+              $output .= '&nbsp;&nbsp;&nbsp;'.DL_COUNT.' <input'.$disable.'type="text" name="' . $current_value_id . '_download_count" value="' . (isset($attr_dl_array['products_attributes_maxcount'])?$attr_dl_array['products_attributes_maxcount']:'') . '" size="6">'. PHP_EOL;
+              $output .= '&nbsp;&nbsp;&nbsp;'.DL_EXPIRE.' <input'.$disable.'type="text" name="' . $current_value_id . '_download_expire" value="' . (isset($attr_dl_array['products_attributes_maxdays'])?$attr_dl_array['products_attributes_maxdays']:'') . '" size="6"></td>'. PHP_EOL;
+              $output .= '</tr>'. PHP_EOL;
             }
             // Download function end
           }
           if ($i == $matches2 ) $i = 0;
         }
       } else {
-        echo '<tr>'. PHP_EOL;
-        echo '<td class="main"><small>No values under this option.</small></td>'. PHP_EOL;
-        echo '</tr>'. PHP_EOL;
+        $output .= '<tr>'. PHP_EOL;
+        $output .= '<td class="main"><small>No values under this option.</small></td>'. PHP_EOL;
+        $output .= '</tr>'. PHP_EOL;
       }
+      if ($isChecked) {
+        $output = str_replace('dataTableHeadingContent','dataTableHeadingContent attr-chk',$output);
+      }
+      echo $output;
     }
   }
 ?>
@@ -224,6 +236,7 @@ if ($_POST['cpath'] != '') {
     <?php
     echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
     echo '&emsp;' . xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+    echo isset($_GET['options_id']) ? '<input type="hidden" name="get_options_id" value="'.$_GET['options_id'].'">'. PHP_EOL : '';
     ?>
 </div>
  <?php // EOC new button to send only checked post values, noRiddle ?>
