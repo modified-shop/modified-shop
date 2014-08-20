@@ -12,12 +12,12 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-define('MODULE_PROTECTEDSHOPS_TEXT_TITLE', 'Protectedshops Auto Updater');
-define('MODULE_PROTECTEDSHOPS_TEXT_DESCRIPTION', 'Protectedshops - Auto Updater f&uuml;r automatische Rechtstexte<br/><br/><b>WICHTIG:</b> vor der Nutzung des Moduls muss ein g&uuml;ltiger Token eingetragen und gespeichert sein bevor die Zuordnung der Content Seiten gemacht werden kann.<hr noshade>');
+define('MODULE_PROTECTEDSHOPS_TEXT_TITLE', 'Protected Shops Auto Updater');
+define('MODULE_PROTECTEDSHOPS_TEXT_DESCRIPTION', 'Protected Shops - Auto Updater f&uuml;r automatische Rechtstexte<br/><br/><b>WICHTIG:</b> vor der Nutzung des Moduls muss ein g&uuml;ltiger Token eingetragen und gespeichert sein bevor die Zuordnung der Content Seiten gemacht werden kann.<hr noshade>');
 define('MODULE_PROTECTEDSHOPS_STATUS_TITLE', 'Status');
 define('MODULE_PROTECTEDSHOPS_STATUS_DESC', 'Modulstatus');
 define('MODULE_PROTECTEDSHOPS_TOKEN_TITLE', 'Authentifizierungs-Token');
-define('MODULE_PROTECTEDSHOPS_TOKEN_DESC', 'Authentifizierungs-Token den Sie im Anbietermen&uuml; von Protectedshops finden.');
+define('MODULE_PROTECTEDSHOPS_TOKEN_DESC', 'Authentifizierungs-Token den Sie im Anbietermen&uuml; von Protected Shops finden.');
 define('MODULE_PROTECTEDSHOPS_TYPE_TITLE', '<hr noshade>Speichern als');
 define('MODULE_PROTECTEDSHOPS_TYPE_DESC', 'Sollen die Daten in einer Datei oder in der Datenbank gepseichert werden?');
 define('MODULE_PROTECTEDSHOPS_FORMAT_TITLE', 'Format Typ');
