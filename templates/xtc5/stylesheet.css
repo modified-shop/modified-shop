@@ -497,7 +497,7 @@ h2.boxheader a:link, h2.boxheader a:hover, h2.boxheader a:active, h2.boxheader a
   list-style-type:none;
 }
 .boxbody img {
-  max-width:182px;
+  max-width:170px;
 }
 .contentlist a {
   border-bottom:1px solid #ccc;
