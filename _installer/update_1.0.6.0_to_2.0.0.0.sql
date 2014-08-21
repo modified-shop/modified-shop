@@ -140,4 +140,7 @@ ALTER TABLE admin_access
 UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#Tomcraft - 2014-08-21 - Croatia is now member of the EU
+UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE association_id = 53;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

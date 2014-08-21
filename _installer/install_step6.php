@@ -450,7 +450,7 @@
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (50, 50, 0, 6, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (51, 51, 0, 6, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (52, 52, 0, 6, NULL, now())");
-        xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (53, 53, 0, 6, NULL, now())");
+        xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (53, 53, 0, 5, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (54, 54, 0, 6, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (58, 58, 0, 6, NULL, now())");
         xtc_db_query("INSERT INTO zones_to_geo_zones VALUES (59, 59, 0, 6, NULL, now())");
