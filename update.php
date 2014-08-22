@@ -82,6 +82,7 @@ $unlink_dir = array('admin/includes/javascript/images',
                     'includes/classes/Smarty_2.6.22',
                     'includes/classes/Smarty_2.6.26',
                     'includes/iclear',
+                    'includes/janolaw',
                     'shopstat');
 
 // set all update sql files to be executed and deleted afterwards
