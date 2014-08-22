@@ -7,5 +7,6 @@ $unlink_dir = array('admin/includes/modules/carp',
                     'includes/classes/Smarty_2.6.22',
                     'includes/classes/Smarty_2.6.26',
                     'includes/iclear',
+                    'includes/janolaw',
                     'shopstat');
 ?>
