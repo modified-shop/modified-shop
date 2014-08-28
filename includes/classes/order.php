@@ -139,6 +139,7 @@
           'date_purchased' => $order['date_purchased'],
           'orders_date_finished' => $order['orders_date_finished'],
           'orders_status' => $order_status,
+          'orders_status_id' => $order['orders_status'],
           'last_modified' => $order['last_modified'],
           'total' => strip_tags($order_total['ot_total_text']),
           #PayPal API Modul / Paypal Express Modul
