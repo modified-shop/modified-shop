@@ -160,6 +160,7 @@
           'cc_cvv' => $order['cc_cvv'],
           'date_purchased' => $order['date_purchased'],
           'orders_status' => $order_status,
+          'orders_status_id' => $order['orders_status'],
           'last_modified' => $order['last_modified'],
           'total' => strip_tags($order_total['text']),
           #PayPal API Modul / Paypal Express Modul
