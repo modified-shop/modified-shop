@@ -1,0 +1,54 @@
+{config_load file="$language/lang_$language.conf" section="duty_info"} 
+{$address_label_customer}
+
+{if $PAYMENT_METHOD}Paymentmethod: {$PAYMENT_METHOD}{/if}
+Order No.: {$oID}
+Date: {$DATE}
+{if $csID}Customer ID: {$csID}{/if}
+Your e-mail-address: {$EMAIL}
+----------------------------------------------------------------------
+
+
+Dear {$NAME},
+
+thank you for your order.
+
+{$PAYMENT_INFO_TXT}
+
+{if $COMMENTS}
+Your Comments:
+{$COMMENTS}
+{/if}
+
+Your ordered following products
+----------------------------------------------------------------------
+{foreach name=aussen item=order_values from=$order_data} 
+{$order_values.PRODUCTS_QTY} x {$order_values.PRODUCTS_NAME} {$order_values.PRODUCTS_PRICE}
+{if $order_values.PRODUCTS_ORDER_DESCRIPTION neq ''}{$order_values.PRODUCTS_ORDER_DESCRIPTION}{/if}
+{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}Shipping time: {$order_values.PRODUCTS_SHIPPING_TIME}{/if}
+{if $order_values.PRODUCTS_ATTRIBUTES !=''}{$order_values.PRODUCTS_ATTRIBUTES}{/if}
+
+{/foreach}
+
+{foreach name=aussen item=order_total_values from=$order_total}
+{$order_total_values.TITLE}{$order_total_values.TEXT}
+{/foreach}
+
+
+{if $address_label_payment}
+Paymentaddress
+----------------------------------------------------------------------
+{$address_label_payment}
+{/if}
+Shippingaddress 
+----------------------------------------------------------------------
+{$address_label_shipping}
+{if $DELIVERY_DUTY_INFO neq ''}
+
+----------------------------------------------------------------------
+{#text_duty_info#}
+----------------------------------------------------------------------{/if}
+
+[SIGNATUR]
+
+{$REVOCATION_TXT}

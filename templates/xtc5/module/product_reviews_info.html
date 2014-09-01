@@ -1,0 +1,13 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+<h1>{#heading_product_reviews#} {$PRODUCTS_NAME}</h1>
+<p>
+	<strong> {#text_date#}</strong> {$DATE}<br />
+	<strong>{#text_author#}</strong> {$AUTHOR}<br />
+    <strong>{#heading_product_reviews#}</strong><a href="{$PRODUCTS_LINK}">{$PRODUCTS_NAME}</a>
+</p>
+<div class="highlightbox">
+	<h1>{#text_text#}</h1>
+	<p>{$REVIEWS_TEXT}</p>
+	<p><strong>{#text_rating#}</strong>{$RATING}</p>
+</div>
+<p>{$BUTTON_BACK}&nbsp;{$BUTTON_BUY_NOW}</p>

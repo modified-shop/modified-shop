@@ -1,0 +1,74 @@
+{config_load file="$language/lang_$language.conf" section="address_book_process"}
+<div class="highlightbox">
+<h1>{#title_address#} ({#text_must#})</h1>
+<table width="100%" border="0" cellspacing="2" cellpadding="4">
+  {if $gender=='1'} 
+  <tr> 
+    <td width="25%">{#text_gender#}</td>
+    <td width="75%">
+      <table cellspacing="0" cellpadding="0">
+      <tr>
+        <td>{$INPUT_MALE}</td>
+        <td>{$INPUT_FEMALE}</td>
+      </tr>
+    </table></td>
+  </tr>
+  {/if} 
+  <tr> 
+    <td >{#text_firstname#}</td>
+    <td class="inputRequirement" >{$INPUT_FIRSTNAME}</td>
+  </tr>
+  <tr> 
+    <td>{#text_lastname#}</td>
+    <td class="inputRequirement">{$INPUT_LASTNAME}</td>
+  </tr>
+  {if $company=='1'} 
+  <tr>
+    <td>&nbsp;</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr> 
+    <td>{#text_company#}<br /> </td>
+    <td class="inputRequirement">{$INPUT_COMPANY}</td>
+  </tr>
+  {/if} 
+  <tr> 
+    <td>&nbsp;</td>
+    <td >&nbsp;</td>
+  </tr>
+  <tr> 
+    <td>{#text_street#}</td>
+    <td class="inputRequirement" >{$INPUT_STREET}</td>
+  </tr>
+  {if $suburb=='1'} 
+  <tr> 
+    <td>{#text_suburb#}</td>
+    <td class="inputRequirement">{$INPUT_SUBURB}</td>
+  </tr>
+  {/if} 
+  <tr> 
+    <td>{#text_code#}</td>
+    <td class="inputRequirement">{$INPUT_CODE}</td>
+  </tr>
+  <tr> 
+    <td>{#text_city#}</td>
+    <td class="inputRequirement">{$INPUT_CITY}</td>
+  </tr>
+  {if $state=='1'} 
+  <tr> 
+    <td>{#text_state#}</td>
+    <td class="inputRequirement">{$INPUT_STATE}</td>
+  </tr>
+  {/if} 
+  <tr> 
+    <td>{#text_country#}</td>
+    <td class="inputRequirement">{$SELECT_COUNTRY}</td>
+  </tr>
+  {if $new=='1'}
+  <tr>
+    <td>&nbsp;</td>
+    <td>{$CHECKBOX_PRIMARY} {#text_standard#}</td>
+  </tr>
+  {/if}
+</table>
+</div>

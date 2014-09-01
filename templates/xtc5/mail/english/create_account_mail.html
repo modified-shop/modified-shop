@@ -1,0 +1,32 @@
+<table  width="100%" border="0" align="center" cellpadding="4" cellspacing="0">
+  <tr> 
+    <td style="border-bottom: 1px solid; border-color: #cccccc;"><div align="right"><img src="{$logo_path}logo.gif"></div></td>
+  </tr>
+  <tr> 
+    <td><p><font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Your account has been successfully created!</strong></font> <br />
+        <br />
+        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">You now have access to the following features:</font><br /> 
+        <br />
+        <font size="2"><b><font face="Verdana, Arial, Helvetica, sans-serif">-Shopping cart</font></b><font face="Verdana, Arial, Helvetica, sans-serif"> - Products placed in the shopping cart will remain there until they've been deleted or purchased.<br />
+        <b>-Address book</b> - The address book allows you to save several different shipping destinations.<br />
+        <b>-Order history</b> - Your order history is always available for you.<br />
+        <b>-Product evaluation</b> - Rate and comment our products!</font></font></p>
+      <p>
+        <font size="2" face="Verdana, Arial, Helvetica, sans-serif">If this account wasn't created by you, please contact us at 
+        <A HREF="mailto:{$content.MAIL_REPLY_ADDRESS}">{$content.MAIL_REPLY_ADDRESS}</A>
+        . <br />
+    <br />
+    {if $SEND_GIFT==true}
+      <br />
+As a thank you for creating your account, you've received a <b>{$GIFT_AMMOUNT}</b> gift voucher!<br />
+<br />
+Redeem your voucher with the following code <b>{$GIFT_CODE}</b> when placing an order or simply by clicking the following link <a href="{$GIFT_LINK}">[redeem Voucher]</a>.{/if} {if $SEND_COUPON==true} As a thank you for creating your account, you've recieved a discount voucher!<br />
+The voucher details are:<br />
+<b>{$COUPON_DESC}</b> <br />
+Redeem your voucher by entering the code <b>{$COUPON_CODE}</b> during checkout process, when asked for it.{/if} 
+<br />If you have any questions, please contact us at <A HREF="mailto:{$content.MAIL_REPLY_ADDRESS}">{$content.MAIL_REPLY_ADDRESS}</A> !
+</font></p></td>
+  </tr>
+</table>
+
+ 	  	 

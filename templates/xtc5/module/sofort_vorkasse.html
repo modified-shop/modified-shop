@@ -1,0 +1,59 @@
+{config_load file="$language/lang_$language.conf" section="checkout_success"}
+<table border="0" cellspacing="0" cellpadding="5">
+  <tr>
+    <td colspan="2" class="main" valign="top">{$TEXT}</td>
+  </tr>
+{if $HOLDER != ''}
+  <tr>
+    <td>{$HOLDER_TEXT}</td>
+    <td><b>{$HOLDER}</b></td>
+  </tr>
+{/if}
+{if $ACCOUNT_NUMBER != ''}
+  <tr>
+    <td>{$ACCOUNT_NUMBER_TEXT}</td>
+    <td><b>{$ACCOUNT_NUMBER}</b></td>
+  </tr>
+{/if}
+{if $BANK_CODE != ''}
+  <tr>
+    <td>{$BANK_CODE_TEXT}</td>
+    <td><b>{$BANK_CODE}</b></td>
+  </tr>
+{/if}
+{if $IBAN != ''}
+  <tr>
+    <td>{$IBAN_TEXT}</td>
+    <td><b>{$IBAN}</b></td>
+  </tr>
+{/if}
+{if $BIC != ''}
+  <tr>
+    <td>{$BIC_TEXT}</td>
+    <td><b>{$BIC}</b></td>
+  </tr>
+{/if}
+{if $AMOUNT != ''}
+  <tr>
+    <td>{$AMOUNT_TEXT}</td>
+    <td><b>{$AMOUNT}</b></td>
+  </tr>
+{/if}
+{if $REASON_1 != ''}
+  <tr>
+    <td>{$REASON_1_TEXT}</td>
+    <td><b>{$REASON_1}</b></td>
+  </tr>
+{/if}
+{if $REASON_2 != ''}
+  <tr>
+    <td>{$REASON_2_TEXT}</td>
+    <td><b>{$REASON_2}</b></td>
+  </tr>
+{/if}
+{if $REASONS_HINT != ''}
+  <tr>
+    <td colspan="2"><b><span style='color:red;'>{$REASONS_HINT}</span></b></td>
+  </tr>
+{/if}
+</table>

@@ -1,0 +1,36 @@
+#  -----------------------------------------------------------------------------------------
+#  $Id: .htaccess,v 1.1 2003/09/06 21:47:50 fanta2k Exp $
+#
+#   XT-Commerce - ebusiness solutions
+#   http://www.xt-commerce.com
+#
+#   Copyright (c) 2003 XT-Commerce
+#  -----------------------------------------------------------------------------------------
+#  based on: 
+#  (c) 2000-2001 The Exchange Project 
+#  (c) 2002-2003 osCommerce (.htaccess,v 1.4 2001/04/22); www.oscommerce.com 
+#  (c) 2003	 nextcommerce (.htaccess,v 1.3 2003/08/13); www.nextcommerce.org 
+#
+#  Released under the GNU General Public License 
+#  -----------------------------------------------------------------------------------------
+#
+# This is used with Apache WebServers
+# The following blocks direct HTTP requests in this directory recursively
+#
+# For this to work, you must include the parameter 'Limit' to the AllowOverride configuration
+#
+# Example:
+#
+#<Directory "/usr/local/apache/htdocs">
+#  AllowOverride Limit
+#
+# 'All' with also work. (This configuration is in your apache/conf/httpd.conf file)
+#
+# This does not affect PHP include/require functions
+#
+# Example: http://server/catalog/includes/application_top.php will not work
+
+<Files *.php>
+Order Deny,Allow
+Deny from all
+</Files>

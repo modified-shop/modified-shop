@@ -1,0 +1,83 @@
+<style>
+.klarna_header {
+    display: block;
+    padding-left: 0px;
+}
+.klarna_header li {
+    text-decoration:underline;
+    font-weight: bold;
+}
+.klarna_row {
+    display: block;
+    padding-left: 0px;
+}
+.klarna_li {
+    display: inline;
+    min-width: 80px;
+    min-height: 10px;
+    float: left;
+}
+.klarna_li.months {
+    min-width: 60px;
+}
+.klarna_li.startfee {
+    min-width: 60px;
+}
+.klarna_li.flag {
+    min-width: 50px;
+}
+.klarna_error_box {
+    border: 1px solid #CC0000;
+    background-color: #F5CCCC;
+    padding: 10px;
+    font-family: Arial, Verdana;
+    font-size: 11px;
+    margin: 10px;
+}
+.klarna_success_box {
+    border: 1px solid #8CC63F;
+    background-color: #D7EBBC;
+    padding: 10px;
+    font-family: Arial, Verdana;
+    font-size: 11px;
+    margin: 10px;
+}
+</style>
+
+{{#error}}
+    {{#country}}
+        <div class="klarna_error_box">
+            <div class='klarna_flag_{{country}}'></div>
+            <br>
+            <strong> Error:</strong> {{message}}
+            <br/>
+            <strong>Code:</strong> {{code}}
+        </div>
+    {{/country}}
+{{/error}}
+{{#success}}
+<div class="klarna_success_box">
+    <ul class='klarna_header'>
+        <li class="klarna_li flag">ID</li>
+        <li class="klarna_li months">Months</li>
+        <li class="klarna_li">Interest Rate</li>
+        <li class="klarna_li">Invoice Fee</li>
+        <li class="klarna_li startfee">Start Fee</li>
+        <li class="klarna_li">Min Amount</li>
+        <li class="klarna_li">Description</li>
+    </ul>
+    <div style="clear: both;"></div>
+    {{#country}}
+    <ul class='klarna_row'>
+        <li class="klarna_li flag"><span class='klarna_flag_{{country}}'></span> {{id}}</li>
+        <li class="klarna_li months">{{months}}</li>
+        <li class="klarna_li">{{interestrate}}%</li>
+        <li class="klarna_li">{{invoicefee}}</li>
+        <li class="klarna_li startfee">{{startfee}}</li>
+        <li class="klarna_li">{{minamount}}</li>
+        <li class="klarna_li">{{{description}}}</li>
+    </ul>
+    <div style="clear: both;"></div>
+    {{/country}}
+</div>
+{{/success}}

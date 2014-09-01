@@ -1,0 +1,27 @@
+#page {
+	width: 480px;
+	margin: 0em auto;
+}
+div.element.sofort_button {
+	display: inline;
+	float: left;
+	text-align: center;
+}
+div.element.sofort_button.wide-box {
+	width: 416px;
+}
+div.element.sofort_button.narrow-box {
+	width: 180px;
+	float: left;
+	text-align: center;
+}
+.clear {
+	height: 1em;
+}
+a {
+	text-decoration: none;
+	color: #AAAAAA;
+}
+a:hover {
+	filter: '';
+}

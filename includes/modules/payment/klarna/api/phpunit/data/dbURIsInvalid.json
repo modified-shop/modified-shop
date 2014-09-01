@@ -1,0 +1,2 @@
+["user:@pdo:pgsql:host=localhost;port=5432;dbname=testdb;\/dbName.dbTable","user","pass","pgsql:host=localhost;port=5432;dbname=testdb;","dbName","dbTable"]
+[":pass@pdo:pgsql:host=localhost;port=5432;dbname=testdb;\/dbName.dbTable", "", "pass", "pgsql:host=localhost;port=5432;dbname=testdb;","dbName","dbTable"]

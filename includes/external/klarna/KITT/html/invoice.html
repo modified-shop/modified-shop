@@ -1,0 +1,42 @@
+<!-- KLARNA BOX -->
+<!--[if IE 6 ]> <div class="klarna_box_container ie6"> <![endif]-->
+<!--[if IE 7 ]> <div class="klarna_box_container ie7"> <![endif]-->
+<!--[if IE 8 ]> <div class="klarna_box_container ie8"> <![endif]-->
+<!--[if IE 9 ]> <div class="klarna_box_container ie9"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <div class="klarna_box_container"> <!--<![endif]-->
+    <div class="klarna_box klarna_tulip_bg" id="klarna_box_invoice">
+        <div class="klarna_box_top">
+            <span id="klarna_logo_invoice" class="logo klarna_logo_invoice_{{country}}"></span>
+            <div id="klarna_box_invoice_top_right" class="klarna_box_top_right">
+                <div class="klarna_language"></div>
+            </div>
+        </div>
+        <div class="klarna_box_bottom">
+            <div class="klarna_box_top_agreement"></div>
+            {{>error}}
+            <div class="klarna_box_bottom_contents">
+                <div class="klarna_box_bottom_left">
+                </div>
+                <div class="klarna_box_bottom_right">
+                    <div class="klarna_box_bottom_content">
+                        {{>input}}
+                        <div class="klarna_box_bottom_address" style="display: none">
+                            <div class="klarna_box_bottom_address_title klarna_translate" data-t-key="delivery_address">{{lang.delivery_address}}</div>
+                            <div class="klarna_box_bottom_address_content"></div>
+                        </div>
+                        <div class="klarna_additional_information">
+                            {{>additional_information}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<input type="hidden" name="{{input.emailAddress}}"
+    value="{{value.emailAddress}}" />
+<input type="hidden" name="{{input.invoiceType}}"
+    value="{{value.invoiceType}}" id="invoiceType" />
+{{>invoice_head}}
+<!-- END KLARNA BOX -->

@@ -1,0 +1,86 @@
+{config_load file="$language/lang_$language.conf" section="product_info"}
+{$FORM_ACTION}
+<h1>{$PRODUCTS_NAME}</h1>
+
+<div id="productinfowrap">
+<table><tr><td style="padding-right:20px;">
+	{if $PRODUCTS_IMAGE!=''}
+
+		<a title="{$PRODUCTS_NAME}" href="{$PRODUCTS_IMAGE|replace:"info_images":"popup_images"}" class="thickbox" rel="{$PRODUCTS_ID}"><img src="{$PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" class="productimage" />{if $PRODUCTS_POPUP_LINK!=''}<br/>{#text_zoom#}{/if}</a>
+
+	{/if}</td><td>
+  	<div id="productinfoprice">
+		
+			<p class="productprice"><strong>{$PRODUCTS_PRICE}</strong></p>
+			<p class="taxandshippinginfo" style="white-space:nowrap">{$PRODUCTS_TAX_INFO}{if $PRODUCTS_SHIPPING_LINK}{$PRODUCTS_SHIPPING_LINK}{/if}</p>
+			{if $SHIPPING_NAME}<p class="shippingtime"><strong>{#text_shippingtime#}</strong>{if $SHIPPING_IMAGE}<img src="{$SHIPPING_IMAGE}" alt="{$SHIPPING_NAME}" />{/if} {$SHIPPING_NAME_LINK}</p>
+			{/if}
+			{if $PRODUCTS_VPE}
+			<div class="hrlightgrey"></div>{$PRODUCTS_VPE}{/if}
+			{if $MODULE_graduated_price !=''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}
+			{if $PRODUCTS_DISCOUNT!=''}<div class="hrlightgrey"></div>{$PRODUCTS_DISCOUNT}{/if}
+			{if $PRODUCTS_FSK18=='true'}<div class="hrlightgrey"></div><img src="{$tpl_path}img/fsk18.gif" alt="" style="cursor:default" />{/if}
+			{if $PRODUCTS_EXPIRES}<p class="taxandshippinginfo">{#text_expires_date#} {$PRODUCTS_EXPIRES}</p>{/if}
+			{if $PRODUCTS_MODEL!=''}<div class="hrlightgrey"></div>
+			<strong>{#model#}</strong> {$PRODUCTS_MODEL}{/if}
+			{if $PRODUCTS_URL != ''}
+			<div class="hrlightgrey"></div><div style="padding-top:5px;">{$PRODUCTS_URL}</div>
+			{/if} <br />
+			{if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
+			<div style="margin-top:10px"></div>
+			{$PRODUCTS_PRINT}
+
+		{if $PRODUCTS_DATE_AVIABLE != ''}<p>{$PRODUCTS_DATE_AVIABLE}</p>{/if}
+	</div>	
+	<div style="clear:both;"></div>
+    </td></tr></table>
+	{if $MODULE_product_options !=''}
+	<div class="productoptions">{$MODULE_product_options}</div>{/if}
+<!-- BOF - Tomcraft - 2009-11-28 - Included xs:booster //-->
+	{if $XTB_REDIRECT_USER_TO=='product'}<div style='width:400px;padding:10px;color:white;background-color:green;'><strong>Sie haben die eBay Auktion gewonnen!</strong><br/>Bitte w&auml;hlen Sie nun noch die gew&uuml;nschten Produkteigenschaften und legen Sie den Artikel danach in den Warenkorb, um mit der Zahlung fortzufahren und das Produkt versandfertig zu machen!</div>{/if}
+<!-- EOF - Tomcraft - 2009-11-28 - Included xs:booster //-->
+	<div class="addtobasket">
+	<table border="0" cellspacing="0" cellpadding="2">
+  		<tr>
+    		<td style="width:100%; padding-right:5px;">{$ADD_QTY}</td>
+    		<td>{$ADD_CART_BUTTON}</td>
+  		</tr>
+	</table>
+	</div>	
+</div>
+
+{$FORM_END}
+
+{*BEGIN TABS*}
+<div id="tabbed_product_info">
+
+<ul>
+	{if $PRODUCTS_DESCRIPTION !=''}<li><a href="#tab_description">{#description#}</a></li>{/if}
+	{if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<li><a href="#tab_cross_selling">{#cross_selling#}</a></li>{/if}
+	{if $MODULE_also_purchased != ''}<li><a href="#tab_also_purchased">{#also_purchased#}</a></li>{/if}
+	{if $MODULE_products_reviews != ''}<li><a href="#tab_reviews">{#products_reviews#}</a></li>{/if}
+	{if $MODULE_products_media != ''}<li><a href="#tab_media">{#products_media#}</a></li>{/if}
+	{if $more_images|@count > 0}<li><a href="#tab_more_images">{#more_images#}</a></li>{/if}
+</ul>
+
+{if $PRODUCTS_DESCRIPTION !=''}<div id="tab_description">{$PRODUCTS_DESCRIPTION}</div>{/if}
+{if $more_images|@count > 0}<div id="tab_more_images">
+	<!-- More Pictures -->
+	<div class="morepics">
+	{foreach item=more_images_data from=$more_images} 
+		<a class="thickbox" rel="{$PRODUCTS_ID}" title="{$PRODUCTS_NAME}" href="{$more_images_data.PRODUCTS_IMAGE|replace:"info_images":"popup_images"}"><img align="left" src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$PRODUCTS_NAME}" /></a>                          
+	{/foreach}
+	</div>
+	<div style="clear:both;"></div>
+	</div>
+{/if}
+{if $MODULE_products_media != ''}<div id="tab_media">{$MODULE_products_media}</div>{/if}
+{if $MODULE_products_reviews != ''}<div id="tab_reviews">{$MODULE_products_reviews}</div>{/if}
+{if $MODULE_cross_selling != '' || $MODULE_reverse_cross_selling != ''}<div id="tab_cross_selling">{$MODULE_cross_selling}{if $MODULE_reverse_cross_selling != ''}{$MODULE_reverse_cross_selling}{/if}</div>{/if}
+{if $MODULE_also_purchased != ''}<div id="tab_also_purchased">{$MODULE_also_purchased}</div>{/if}
+
+</div>
+{*END TABS*}
+
+{if $PRODUCTS_ADDED != ''}<p class="productinfoproductadded">{$PRODUCTS_ADDED}</p>{/if}
+{$PRODUCT_NAVIGATOR}

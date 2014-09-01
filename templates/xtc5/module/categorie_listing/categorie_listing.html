@@ -1,0 +1,38 @@
+{config_load file="$language/lang_$language.conf" section="categorie_listing"}
+{if $CATEGORIES_HEADING_TITLE}
+	<h1>{$CATEGORIES_HEADING_TITLE}</h1>
+{else}
+	<h1>{$CATEGORIES_NAME}</h1>
+{/if}
+{if $CATEGORIES_IMAGE}<img src="{$CATEGORIES_IMAGE}" alt="{$CATEGORIES_NAME}" />{/if}
+{if $CATEGORIES_DESCRIPTION}<p>{$CATEGORIES_DESCRIPTION}</p>{/if}
+
+{if $module_content !=''} <strong>{#heading_more_categories#}</strong> 
+      <br />
+      <table style="border-top: 2px solid; border-color: #d4d4d4;" width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> {foreach name=aussen item=module_data from=$module_content} 
+		{php} 
+          $col++; 
+		{/php} 
+          <td class="main"><table  width="100%" border="0" cellpadding="0" cellspacing="4">
+                <tr> 
+                  <td align="center" >{if $module_data.CATEGORIES_IMAGE}<a href="{$module_data.CATEGORIES_LINK}"><img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME}" /></a>{/if}</td>
+                </tr>
+                <tr>
+                  <td align="center" ><strong><a href="{$module_data.CATEGORIES_LINK}">{$module_data.CATEGORIES_NAME}</a></strong></td>
+                </tr>
+                <tr>
+                  <td align="center" >{$module_data.CATEGORIES_DESCRIPTION}</td>
+                </tr>
+              </table>
+            </td>
+          {php} 
+		  if ($col>=3) { 
+		  $col=0; 
+		  echo '</tr><tr>';
+		   } 
+		  {/php} 
+		 {/foreach} </tr>
+      </table> 
+       {/if} <br />
+{$MODULE_new_products}

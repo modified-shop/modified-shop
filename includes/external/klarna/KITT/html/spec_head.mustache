@@ -1,0 +1,32 @@
+<script type="text/javascript">
+__klarna_spec = new Klarna.Checkout.Special({
+    box: 'klarna_box_spec',
+
+    eid: '{{eid}}',
+    ajax_path: '{{config.web.ajax}}',
+
+    country: '{{country}}',
+    language: '{{language}}',
+
+    langDefault: '{{defaultLanguage}}',
+    langAvailable: {{{languages}}},
+
+    params: {
+        'shipmentAddressInput': '{{addressKey}}'
+    },
+
+    lang: {
+        companyNotAllowed: '{{lang.company_not_allowed}}',
+        personNum: '{{lang.person_number}}',
+        orgNum: '{{lang.organisation_number}}'
+    }
+
+    {{#config.collapse}}
+	,
+    collapse: {
+        selector : '{{config.selector}}',
+        paymentCode : '{{paymentCode}}'
+    }
+    {{/config.collapse}}
+});
+</script>

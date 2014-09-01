@@ -1,0 +1,11 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<h2 class="boxheader">{#heading_last_viewed#}</h2>
+<div class="boxbody">
+	{if $box_content.PRODUCTS_IMAGE!=''}<p class="center"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME}" class="productboximage"/></a></p>{/if}
+	<p class="center"><a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a>
+	<br />{$box_content.PRODUCTS_PRICE}
+	{if $box_content.PRODUCTS_VPE}<br />{$box_content.PRODUCTS_VPE}{/if}
+	<br />{$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}
+  	<br />{#text_watch_category#}<a href="{$CATEGORY_LINK}">{$CATEGORY_NAME}</a>
+  	<br /><a href="{$MY_PERSONAL_PAGE}"><span>{#text_my_page#}</span></a></p>
+</div>

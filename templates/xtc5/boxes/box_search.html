@@ -1,0 +1,15 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+{$FORM_ACTION}
+<table border="0" class="search_header" cellspacing="0" cellpadding="0">
+     <tr>
+          <td colspan="2"><strong>{#heading_search#}:</strong></td>
+     </tr>
+     <tr>
+          <td>{$INPUT_SEARCH}</td>
+          <td>{$BUTTON_SUBMIT}</td>
+     </tr>
+     <tr>
+          <td colspan="2"><a href="{$LINK_ADVANCED}">{#text_advanced_search#}</a></td>
+     </tr>
+</table>
+{$FORM_END} 
