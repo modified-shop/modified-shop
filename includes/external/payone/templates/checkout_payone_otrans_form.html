@@ -1,0 +1,26 @@
+<link rel="stylesheet" href="{$payonecss}" type="text/css" media="screen" />
+<div class="payone_cc_container">
+  <table width="100%" class="payone_cc_table">
+  {if $required_fields}
+    {foreach key=key_data item=item_data from=$required_fields}
+      <tr>
+        <td class="label">{$key_data|constant}</td>
+        <td><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+      </tr>
+    {/foreach}
+  {/if}
+  {if $bank_group != ''}
+    <tr>
+      <td class="label">{$otrans_type|constant}</td>
+      <td>
+        <select name="bankgrouptype" id="bankgrouptype">
+          {foreach key=key_data item=item_data from=$bank_group}
+            <option value="{$key_data}">{$item_data}</option>
+          {/foreach}
+        </select>
+      </td>
+    </tr>
+  {/if}
+  </table>
+</div>
+{$hidden}

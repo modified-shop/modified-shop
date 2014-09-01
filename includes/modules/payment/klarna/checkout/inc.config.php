@@ -1,0 +1,25 @@
+<?php
+define('MODULE_PAYMENT_KLARNA_LIVEMODE', 1); //1 = BETA; 0 = LIVE
+define('KLARNA_SPECIAL_CAMPAIGN', 'sommar');
+define('MODULE_PAYMENT_KLARNA_EID_SE', 1429);
+define('MODULE_PAYMENT_KLARNA_EID_NO', 1429);
+define('MODULE_PAYMENT_KLARNA_EID_FI', 1429);
+define('MODULE_PAYMENT_KLARNA_EID_DK', 1429);
+define('MODULE_PAYMENT_KLARNA_EID_DE', 1429);
+define('MODULE_PAYMENT_KLARNA_EID_NL', 1429);
+define('MODULE_PAYMENT_KLARNA_SECRET_SE', 'fisk');
+define('MODULE_PAYMENT_KLARNA_SECRET_NO', 'fisk');
+define('MODULE_PAYMENT_KLARNA_SECRET_DK', 'fisk');
+define('MODULE_PAYMENT_KLARNA_SECRET_DE', 'fisk');
+define('MODULE_PAYMENT_KLARNA_SECRET_NL', 'fisk');
+define('MODULE_PAYMENT_KLARNA_PC_TYPE', 'mysql');
+
+define('DB_USER', 'root');
+define('DB_PASSWD', 'mysql');
+define('DB_NAME', 'prestashop');
+define('DB_TABLE', 'ps_klarna_pclasses');
+define('MODULE_PAYMENT_KLARNA_PC_URI',
+        DB_USER . ':' . DB_PASSWD . '@localhost/' . DB_NAME . '.' . DB_TABLE);
+
+define('EID', MODULE_PAYMENT_KLARNA_EID_SE);
+define('SHARED_SECRET', MODULE_PAYMENT_KLARNA_SECRET_SE);

@@ -1,0 +1,48 @@
+{config_load file="$language/lang_$language.conf" section="print_product_info"}
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <title>{$PRODUCTS_NAME} / {$PRODUCTS_MODEL}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset={$charset}" />
+  <meta name="robots" content="noindex, nofollow, noodp" />
+  {if $CanonicalLink}
+    <link href="{$CanonicalLink}" rel="canonical" />
+  {/if}
+  <meta http-equiv="Content-Style-Type" content="text/css" />
+  <link rel="stylesheet" type="text/css" href="{$tpl_path}stylesheet.css" />
+  <style type="text/css">
+  {literal}
+    body {background: none;}
+  {/literal}
+  </style>
+</head>
+<body class="popupproductinfo" {if !$noprint} onload="window.print()"{/if}>
+  <h1 style="margin-top:0px;">{$PRODUCTS_NAME}</h1>
+  <div id="productinfowrap">
+    {if $PRODUCTS_IMAGE!=''}
+      <div id="productinfoimages" style="width:{$smarty.const.PRODUCT_IMAGE_THUMBNAIL_WIDTH}px;"><img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME}" border="0" />
+      {foreach item=more_images_data from=$more_images}
+        <div class="hrlightgrey"></div><img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME}" border="0" class="productimage"/>
+      {/foreach}
+    </div>
+    {/if}
+    <div id="productinfodescription">
+      {if $PRODUCTS_MODEL != ''}<p>{$PRODUCTS_MODEL}</p>{/if}
+      <p>{$PRODUCTS_DESCRIPTION}</p>
+      {if $module_content !=''}
+        <h2>{#options#}</h2>    
+        <ul>{foreach name=aussen item=module_data from=$module_content}
+        <li>{$module_data.GROUP}: {$module_data.NAME}</li>
+        {/foreach}
+        </ul>    
+      {/if}
+      <h2>{#price#}</h2>
+      <p><strong>{$PRODUCTS_PRICE}</strong>, {$PRODUCTS_TAX_INFO}{$PRODUCTS_SHIPPING_LINK}</p>
+      {if $MODULE_graduated_price !=''}<div class="hrlightgrey"></div>{$MODULE_graduated_price}{/if}
+      {if $PRODUCTS_DISCOUNT!=''}<div class="hrlightgrey"></div>{$PRODUCTS_DISCOUNT}{/if}
+      {if $PRODUCTS_VPE} <p>{$PRODUCTS_VPE}</p>{/if}
+    </div>
+    <div style="clear:left; height:15px;"></div>
+  </div>
+</body>
+</html>

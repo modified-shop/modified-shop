@@ -1,0 +1,42 @@
+<table class="paymentblock" width="100%" border="0" cellspacing="0" cellpadding="6">
+{foreach name=aussenpayment item=module_data from=$module_content}
+  <tr>
+    <td class="header left" width="1%">{$module_data.selection}</td>
+    <td class="header" width="89%">{$module_data.module}</td>
+    <td class="header right" width="10%">{$module_data.module_cost}</td>
+  </tr>
+  {if $module_data.description!=''}
+  <tr>
+    <td class="payleft">&nbsp;</td>
+    <td class="payright" colspan="2" width="100%"><strong>{$module_data.description}</strong></td>
+  </tr>
+  {/if}
+  {if $module_data.error!=''}
+  <tr>
+    <td class="payleft">&nbsp;</td>
+    <td class="payright" colspan="2">{$module_data.error}</td>
+  </tr>
+  {elseif $module_data.fields}
+  <tr>
+    <td class="payleft">&nbsp;</td>
+    <td class="payright" colspan="2">
+    <table border="0" cellspacing="0" cellpadding="0">
+    {foreach name=aussen item=method_data from=$module_data.fields}
+      <tr>
+        <td>{$method_data.title}</td>
+        <td>&nbsp;</td>
+        <td>{$method_data.field}</td>
+        <td>&nbsp;</td>
+       </tr>
+    {/foreach}
+    </table>
+    </td>
+  </tr>
+  {/if}
+  {if !$smarty.foreach.aussenpayment.last}  
+  <tr>
+    <td colspan="3" class="filler">&nbsp;</td>
+  </tr>
+  {/if}
+{/foreach}
+</table>

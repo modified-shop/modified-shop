@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<template>
+  <title>Klarna Default Campaign template</title>
+  <description><![CDATA[The is the default out-of-the-box template from Klarna. If you do not want to install any different templates and want to keep the default look, you can use this template.]]></description>
+  <thumb>thumb.png</thumb>
+  <id>0</id>
+  <version>1.0</version>
+  <name>default</name>
+  <conditions>http://integration.klarna.com:81/external/html/sommar_{{LANG}}.html</conditions>
+</template>

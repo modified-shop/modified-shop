@@ -1,0 +1,52 @@
+{config_load file="$language/lang_$language.conf" section="account"}
+<h1>{#heading_account#}</h1>
+{if $error_message}<div class="errormessage">{$error_message}</div>{/if}
+{if !$products_history}
+<h2>{#title_welcome#}</h2>
+{if #text_welcome#}
+<p>{#text_welcome#}</p>
+{if $LINK_LOGIN}
+<p><a href="{$LINK_LOGIN}" style="font-size:13px;"><strong>{#text_login#}</strong></a></p>
+{/if}
+{/if}
+{/if}
+<h2>{#title_account#}</h2>
+<div class="highlightbox">
+	<ul>
+		<li><a href="{$LINK_EDIT}"><strong>{#text_edit#}</strong></a></li>
+		<li><a href="{$LINK_ADDRESS}"><strong>{#text_address#}</strong></a></li>
+		<li><a href="{$LINK_PASSWORD}"><strong>{#text_password#}</strong></a></li>
+    {if $LINK_DELETE}	
+		<li><a href="{$LINK_DELETE}"><strong>{#text_delete#}</strong></a></li>
+		{/if}
+	</ul>
+</div>
+	{if $order_content}
+		<h2>{#title_orders#}</h2>
+		<div class="highlightbox">
+		{foreach name=aussen item=order_data from=$order_content}
+			<p><strong><a href="{$order_data.ORDER_LINK}">{$order_data.ORDER_DATE}</a> / {#order_nr#}{$order_data.ORDER_ID}</strong><br />
+			{#order_total#}{$order_data.ORDER_TOTAL} / {#order_status#}{$order_data.ORDER_STATUS}<br /></p>
+			<div class="hr"></div>
+		{/foreach}
+		<a href="{$LINK_ALL}">{#text_all#}</a>
+		</div>
+	{/if}
+<h2>{#title_notification#}</h2>
+<div class="highlightbox">
+	<ul>
+		<li><a href="{$LINK_NEWSLETTER}">{#text_newsletter#}</a></li>
+	</ul>
+</div>	
+{if $products_history}
+	<h2>{#title_viewed_products#}</h2>
+		<div class="highlightbox">
+		<ul>
+		{foreach name=history_products item=products_history from=$products_history}
+			<li><a href="{$products_history.PRODUCTS_LINK}">{$products_history.PRODUCTS_NAME} / {$products_history.PRODUCTS_PRICE}</a></li>
+		{/foreach}
+		</ul>
+		</div>
+{/if} 
+
+

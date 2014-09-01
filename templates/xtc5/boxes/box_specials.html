@@ -1,0 +1,10 @@
+{config_load file="$language/lang_$language.conf" section="boxes"}
+<h2 class="boxheader"><a href="{$SPECIALS_LINK}">{#heading_specials#}</a></h2>
+<div class="boxbody">
+{if $box_content.PRODUCTS_IMAGE}<p class="center"><a href="{$box_content.PRODUCTS_LINK}"><img src="{$box_content.PRODUCTS_IMAGE}" alt="{$box_content.PRODUCTS_NAME}" class="productboximage"/></a></p>{/if}
+<p class="center"><a href="{$box_content.PRODUCTS_LINK}"><strong>{$box_content.PRODUCTS_NAME}</strong></a><br />
+<strong>{$box_content.PRODUCTS_PRICE}</strong><br />
+{if $box_content.PRODUCTS_VPE}{$box_content.PRODUCTS_VPE}<br />{/if}
+{$box_content.PRODUCTS_TAX_INFO}{$box_content.PRODUCTS_SHIPPING_LINK}
+</p>
+</div>

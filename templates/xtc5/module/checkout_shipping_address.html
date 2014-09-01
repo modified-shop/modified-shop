@@ -1,0 +1,16 @@
+{config_load file="$language/lang_$language.conf" section="checkout_shipping_address"}
+<h1>{#heading_address#}</h1>
+{$FORM_ACTION}
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<p>{#text_current_address#}</p>
+<p><strong>{#title_current_address#}:</strong><br />{$ADDRESS_LABEL}</p>
+{if $BLOCK_ADDRESS}
+<h1>{#title_old_addresses#}</h1>
+<p>{#text_old_addresses#}</p>
+<p>{$BLOCK_ADDRESS}</p>
+{/if}
+{if $MODULE_new_address}
+{$MODULE_new_address}
+{/if}
+<p>{$BUTTON_BACK}&nbsp;{$BUTTON_CONTINUE}</p>
+{$FORM_END}

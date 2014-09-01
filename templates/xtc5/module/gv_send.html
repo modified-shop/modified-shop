@@ -1,0 +1,36 @@
+{config_load file="$language/lang_$language.conf" section="gv_send"}
+<h1>{#heading_gvsend#}</h1>
+{if $action eq 'process'}
+<p>{$LINK_DEFAULT}</p>
+{elseif $action eq 'send'}
+{$FORM_ACTION}
+<p>{$MAIN_MESSAGE}</p>
+{if $POST_MESSAGE neq ''}
+	<p>{$PERSONAL_MESSAGE}</p>
+	<p>{$POST_MESSAGE}</p>
+{/if}
+{$HIDDEN_FIELDS}
+<p>{$LINK_BACK}&nbsp;{$LINK_SUBMIT}</p>
+{$FORM_END}
+{elseif $action eq ''}
+<p>{#heading_text#}</p>
+{$FORM_ACTION}
+<div class="highlightbox">
+<table border="0" width="100%" cellspacing="0" cellpadding="4">
+	<tr>
+    	<td>{#entry_name#}<br />{$INPUT_TO_NAME}</td>
+    </tr>
+    <tr>
+         <td>{#entry_email#}<br />{$INPUT_EMAIL} {if $ERROR_EMAIL neq ''}{$ERROR_EMAIL}{/if}</td>
+       </tr>
+       <tr>
+         <td>{#entry_amount#}<br />{$INPUT_AMOUNT} {if $ERROR_AMOUNT neq ''}{$ERROR_AMOUNT}{/if}</td>
+       </tr>
+       <tr>
+         <td>{#entry_message#}<br />{$TEXTAREA_MESSAGE}</td>
+       </tr>
+</table>
+</div>
+<p>{$LINK_SUBMIT}</p>
+{$FORM_END}
+{/if}

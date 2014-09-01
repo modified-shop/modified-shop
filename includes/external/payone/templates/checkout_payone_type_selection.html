@@ -1,0 +1,23 @@
+<link rel="stylesheet" href="{$payonecss}" type="text/css" media="screen" />
+<table width="100%" class="payone_type_selection_table">
+	<tr>
+		<td class="label">{$smarty.const.selection_type}</td>
+		<td>
+			<select name="{$code}_type" id="{$code}_type">
+			  {foreach key=key_data item=item_data from=$genre_config}
+			    {if $item_data.active == 'true'}
+					  <option value="{$key_data}">{$item_data.name|constant}</option>
+					{/if}
+			  {/foreach}
+			</select>
+		</td>
+	</tr>
+	{if $required_fields}
+    {foreach key=key_data item=item_data from=$required_fields}
+      <tr>
+        <td class="label">{$key_data|constant}</td>
+        <td><input id="{$key_data}" name="{$key_data}" type="text" value="{$item_data}"></td>
+      </tr>
+    {/foreach}
+  {/if}
+</table>

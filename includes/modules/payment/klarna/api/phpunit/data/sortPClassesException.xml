@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<klarna>
+  <estore id="1029">
+    <pclass pid="362" type="0">
+      <description>24 m&amp;#229;n</description>
+      <months>24</months>
+      <startfee>295</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>9.95</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+    <pclass pid="112" type="0">
+      <description></description>
+      <months>12</months>
+      <startfee>295</startfee>
+      <invoicefee>29</invoicefee>
+      <interestrate>0</interestrate>
+      <minamount>1000</minamount>
+      <country>209</country>
+      <expire>1903816800</expire>
+    </pclass>
+  </estore>
+</klarna>

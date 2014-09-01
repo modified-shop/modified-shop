@@ -1,0 +1,190 @@
+.klarnaMobile_box {
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
+    height: 220px;
+    width: 210px;
+
+    background-color: #CCCCCC;
+
+    background-image: url('back.png');
+    background-repeat: repeat-x;
+    border: 1px solid #999999;
+
+    font-family: Arial, Verdana, Helvetica, Calibri;
+    font-size: 11px;
+
+    margin: 0;
+    padding: 0;
+    position: relative;
+}
+
+.klarnaMobile_error {
+    width: 210px;
+    height: 220px;
+    background-color: black;
+    position: absolute;
+    z-index: 100;
+    top: 0;
+
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+
+    opacity:0.7;
+    filter:alpha(opacity=70);
+
+    display: none;
+}
+
+.klarnaMobile_error_Inner {
+    top: 0;
+    z-index: 101;
+
+    width: 210px;
+    height: 220px;
+    position: absolute;
+    color: #FFFFFF;
+
+    vertical-align: center;
+    text-align: center;
+
+    font-size: 13px;
+
+    display: none;
+}
+
+.klarnaMobile_errorText {
+    padding: 0 15px 0 15px;
+}
+
+.klarnaMobile_errorText a {
+    color: #02A0DA;
+    text-decoration: none;
+}
+
+.klarnaMobile_errorText a:hover {
+    color: #02A0DA;
+    text-decoration: underline;
+}
+
+.klarnaMobile_errorClose {
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.klarnaMobile_boxLogo {
+    background-image: url("logo.png");
+    background-repeat: no-repeat;
+
+    min-width: 74px;
+    height: 24px;
+    margin: 3px 0 0 10px;
+}
+
+.klarnaMobile_boxContent {
+    position: relative;
+    padding: 10px 5px 0px 5px;
+}
+
+.klarnaMobile_boxContent h1 {
+    font-size: 15px;
+    font-family: Arial;
+    text-shadow: 1px 1px #FFFFFF;
+    color: #000000;
+    font-weight: normal;
+    margin-top: 0;
+    margin-bottom: 5px;
+}
+
+.klarnaMobile_boxInputField {
+    background-image: url("input.png");
+    background-repeat: no-repeat;
+    width: 185px;
+    height: 33px;
+    margin-bottom: 5px;
+    margin-left: 8px;
+}
+
+.klarnaMobile_boxInputField_left, .klarnaMobile_boxInputField_left_inputPlaceholder {
+    width: 50%;
+    float: left;
+}
+
+.klarnaMobile_boxInputField_right {
+    width: 50%;
+    float: right;
+    position: relative;
+    cursor: pointer;
+}
+
+.klarnaMobile_boxInputField_left input, .klarnaMobile_boxInputField_left_inputPlaceholder input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    height: 33px;
+    padding: 0 0 0 5px;
+    font-size: 13px;
+}
+
+.klarnaMobile_boxInputField_left_inputPlaceholder input{
+    color: #999999;
+}
+
+.klarnaMobile_boxInputField_left input {
+    color: #000000;
+}
+
+.klarnaMobile_boxInputField_right input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    height: 33px;
+    margin: -2px 0 0 0;
+    font-size: 13px;
+    text-shadow: 0px -1px #FFFFFF;
+    text-align: left;
+    cursor: pointer;
+}
+
+.klarnaMobile_boxInputField_right_send {
+    background-image: url("icon_send.png");
+    width: 21px;
+}
+
+.klarnaMobile_boxInputField_right_buy {
+    background-image: url("icon_buy.png");
+    width: 24px;
+}
+
+.klarnaMobile_boxInputField_right_send, .klarnaMobile_boxInputField_right_buy {
+    float: right;
+    position: absolute;
+    background-repeat: no-repeat;
+    height: 21px;
+    top: 0;
+    right: 0;
+    margin: 7px 5px 0 0;
+}
+
+.klarnaMobile_info {
+    width: 180px;
+    text-align: left;
+    color: #333333;
+    font-size: 11px;
+    font-family: Arial, Verdana, Helvetica, Calibri;
+    margin: 10px 15px 0px 15px;
+}
+
+.klarnaMobile_info a
+{
+    color: #02A0DA;
+    text-decoration: none;
+}
+
+.klarnaMobile_info a:hover
+{
+    color: #02A0DA;
+    text-decoration: underline;
+}

@@ -1,0 +1,129 @@
+<project>
+    <property name="version" value="${build.version.major}.${build.version.minor}.${build.version.bug}"/>
+    <property name="zipfile" value="klarna_${module}_${version}.zip" />
+
+    <tstamp>
+        <format property="build.date" pattern="yyyy-MM-dd" />
+    </tstamp>
+
+    <target name="fetched">
+        <git command="fetch" />
+    </target>
+
+    <target name="gitup" depends="fetched">
+        <git command="pull">
+        </git>
+        <git-submodule-update />
+    </target>
+
+    <target name="zip">
+        <zip basedir="${build.dir}" destfile="${zipfile}" description="zip file" />
+        <checksum file="${zipfile}" forceOverwrite="yes" />
+    </target>
+
+    <target name="dist" depends="clean, changelog, create-doc, increment_build_number">
+        <antcall target="install">
+            <param name="install.dir" value="${build.dir}" />
+        </antcall>
+
+        <copy todir="${build.dir}">
+            <fileset dir="." id="alldirs">
+                <include name="changelog.pdf" />
+                <include name="CHANGELOG" />
+                <include name="README" />
+                <include name="${doc.dir}" />
+            </fileset>
+        </copy>
+
+        <antcall target="check-fixme" />
+        <antcall target="strip-todo" />
+        <antcall target="package" />
+    </target>
+
+    <target name="changelog">
+        <exec executable="rst2pdf" failonerror="true">
+            <arg value="CHANGELOG" />
+            <arg value="-o" />
+            <arg value="${build.changelog.file}" />
+        </exec>
+    </target>
+
+    <target name="increment_build_number">
+        <propertyfile file="version"
+            comment="version properties">
+            <entry key="build.version.build" type="int"
+                operation="+" default="1" />
+        </propertyfile>
+    </target>
+
+    <!-- for modules
+         !-->
+    <target name="install-api">
+        <property name="api.path" location="${install.dir}/${api.dir}"/>
+        <ant antfile="build.xml" dir="${api.dir}"
+            target="install" inheritAll="false">
+            <property name="install.dir" value="${api.path}" />
+        </ant>
+    </target>
+
+    <target name="install-checkout">
+        <property name="checkout.path" location="${install.dir}/${checkout.dir}"/>
+        <ant antfile="build.xml" dir="${checkout.dir}"
+            target="install" inheritAll="false">
+            <property name="install.dir" value="${checkout.path}" />
+        </ant>
+    </target>
+
+    <!-- aliases
+         should only have dependencies, override if needed
+         !-->
+    <target name="package" depends="zip" />
+    <target name="tests" depends="check, unittests" />
+
+    <!-- STUBS
+         override these in your build.xml
+        !-->
+    <target name="check">
+        <echo>STUB</echo>
+    </target>
+
+    <target name="check-fixme">
+        <check-fixme>
+            <files>
+                <fileset dir="${build.dir}">
+                    <include name="**/*.php" />
+                </fileset>
+            </files>
+        </check-fixme>
+    </target>
+
+    <target name="strip-todo">
+        <strip-todo>
+            <files>
+                <fileset dir="${build.dir}">
+                    <include name="**/*.php" />
+                </fileset>
+            </files>
+        </strip-todo>
+    </target>
+
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <target name="init" depends="clean">
+        <echo>STUB</echo>
+    </target>
+
+    <target name="unittests">
+        <echo>STUB</echo>
+    </target>
+
+    <target name="install" description="Creates the binary/run-time folder">
+        <echo>STUB</echo>
+    </target>
+
+    <target name="create-doc" description="Creates the phpDoc for this project">
+        <echo>STUB</echo>
+    </target>
+</project>

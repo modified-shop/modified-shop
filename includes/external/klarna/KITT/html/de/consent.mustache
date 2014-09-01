@@ -1,0 +1,7 @@
+<script type="text/javascript">
+    function _klarna_{{type}}_openAgreement() {
+        openAgreement('{{country}}');
+        ShowKlarnaConsentPopup('{{config.eid}}', '{{type}}');
+    }
+</script>
+<div class="klarna_box_bottom_title klarna_einwilligung">Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung der gew&auml;hlten Klarna Zahlungsmethode und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an Klarna bin ich einverstanden. Meine <a onClick="_klarna_{{type}}_openAgreement(); return false;" href="https://online.klarna.com/consent_{{country}}.yaws" target="_blank">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen. Es gelten die <a href="{{config.agb_link}}" target="_blank">AGB</a> des H&auml;ndlers.</div>

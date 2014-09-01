@@ -1,0 +1,42 @@
+.tablangmenu{
+	padding: 0px 0px 0px 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;	
+	font-size: 10px;
+	font-weight: bold;
+	height: 25px;
+	line-height: 16px;	
+	border-left: 1px solid #aaaaaa;	
+}
+
+.tablangmenu ul{
+	margin: 0;
+	padding: 0;
+	list-style-type: none;		
+}
+
+/*Top level list items*/
+.tablangmenu ul li{
+	padding: 5px 5px 3px 5px;
+	position: relative;
+	display: inline;
+	float: left;
+	width: 100px;	
+	border-top: 1px solid #aaaaaa;
+	border-right: 1px solid #aaaaaa;
+	color: #aaaaaa;		
+}
+* html .tablangmenu {
+	height: 23px;
+	margin-bottom: 0px;	
+	
+}
+* html .tablangmenu ul li { 
+	float: left; 
+	padding: 5px 5px 5px 5px;
+	height: 1%;
+}
+
+#tabselect_0{
+  background: #d0d0d0;
+  color: #000000;
+}

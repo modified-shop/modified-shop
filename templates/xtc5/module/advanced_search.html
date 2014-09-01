@@ -1,0 +1,35 @@
+{config_load file="$language/lang_$language.conf" section="advanced_search"}
+<h1>{#heading_search#}</h1>
+{$FORM_ACTION}
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<div class="highlightbox">
+<table width="100%" border="0" cellpadding="4">
+  <tr> 
+    <td width="45%"><strong>{#title_keywords#}</strong></td>
+    <td width="55%">{$INPUT_KEYWORDS}</td>
+  </tr>
+  <tr>
+    <td>&nbsp;</td>
+    <td><a href="{$HELP_LINK}" title="Information" class="thickbox">{#text_help#}</a></td>
+  </tr>
+  <tr> 
+    <td width="45%" valign="top"><strong>{#text_categories#}</strong></td>
+    <td width="55%">{$SELECT_CATEGORIES}<br />
+      {$ENTRY_SUBCAT}{#text_subkategories#}</td>
+  </tr>
+  <tr> 
+    <td width="45%" valign="top"><strong>{#text_manufacturer#}</strong></td>
+    <td width="55%">{$SELECT_MANUFACTURERS}</td>
+  </tr>
+  <tr> 
+    <td width="45%" valign="top"><strong>{#text_min#}</strong></td>
+    <td width="55%">{$SELECT_PFROM}</td>
+  </tr>
+  <tr>
+    <td width="45%" valign="top"><strong>{#text_max#}</strong></td>
+    <td width="55%">{$SELECT_PTO}</td>
+  </tr>
+</table>
+</div>
+<p>{$BUTTON_SUBMIT}</p>
+{$FORM_END}

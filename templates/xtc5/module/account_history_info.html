@@ -1,0 +1,75 @@
+{config_load file="$language/lang_$language.conf" section="account_history_info"}
+{config_load file="$language/lang_$language.conf" section="print_order"}
+{config_load file="$language/lang_$language.conf" section="product_info"}
+<h1>{#heading_history_info#}</h1>
+<p>{$BUTTON_PRINT}&nbsp;{$BUTTON_BACK}</p>
+<div class="highlightbox">
+	<h1>{#text_oid#}{$ORDER_NUMBER} ({$ORDER_STATUS})</h1>
+	<p>{#text_date#} {$ORDER_DATE}</p>
+	<h2>{#text_shipping_address#}</h2>
+	<p>{$DELIVERY_LABEL}</p>
+	{if $BILLING_LABEL}
+	<h2>{#text_payment_address#}</h2>
+	<p>{$BILLING_LABEL}</p>
+	{/if}
+	{if $SHIPPING_METHOD!=''}
+	<h2>{#text_shipping_method#}</h2>
+	<p>{$SHIPPING_METHOD}</p>
+	{/if}
+	{if $PAYMENT_METHOD}
+	<h2>{#text_payment_method#}</h2>
+	<p>{$PAYMENT_METHOD}</p>
+	{/if}
+	{if $ORDER_COMMENTS!=''}
+	<h2>{#text_comments#}</h2>
+	<p>{$ORDER_COMMENTS}</p>
+	{/if}
+	{if $PAYMENT_INFORMATION!=''}
+	<h2>{#text_payment_info#}</h2>
+	<p>{$PAYMENT_INFORMATION}</p>
+	{/if}
+	<h2>{#title_history#}:</h2>
+	<p>{$HISTORY_BLOCK}</p>
+	<h2>{#text_products#}</h2>
+	<table class="accounthistoryinfoorderdetails" width="100%" border="0" cellspacing="0" cellpadding="4">
+	<tr class="header">
+      <td>{#head_units#}</td>
+      <td>{#head_products#}</td>
+      <td>{#head_artnr#}</td>
+      <td>{#head_single_price#}</td>
+	  <td>{#head_price#}</td>
+    </tr>
+  {foreach name=aussen item=order_values from=$order_data}
+    <tr>
+    <td>{$order_values.PRODUCTS_QTY}&nbsp;x</td>
+    <td>{$order_values.PRODUCTS_NAME}</strong><em>{$order_values.PRODUCTS_ATTRIBUTES}</em>{if $order_values.PRODUCTS_SHIPPING_TIME neq ''}<br />{#text_shippingtime#} {$order_values.PRODUCTS_SHIPPING_TIME}<br />{/if}</td>
+    <td>{$order_values.PRODUCTS_MODEL}<em>{$order_values.PRODUCTS_ATTRIBUTES_MODEL}</em></td>
+    <td>{$order_values.PRODUCTS_SINGLE_PRICE}</td>
+	<td>{$order_values.PRODUCTS_PRICE}</td>
+  </tr>
+  {/foreach}
+  <tr>
+    <td colspan="5" align="right"><div class="hr"></div></td>
+  </tr>
+  {foreach name=aussen item=order_total_values from=$order_total}
+  <tr>
+    <td colspan="5" align="right">{$order_total_values.TITLE} <strong>{$order_total_values.TEXT}</strong></td>
+    </tr>
+	{/foreach}
+</table>
+	<div class="hr"></div>
+	<!-- BOF - web28 - 2010-03-27 PayPal Bezahl-Link -->
+	{if $PAYPAL_LINK}	    
+		<p><div style="padding:5px;">{$PAYPAL_LINK}</div></p>		
+    {/if}
+	<!-- EOF - web28 - 2010-03-27 PayPal Bezahl-Link -->
+	<p>{$TOTAL_BLOCK}</p>
+	{if $downloads_content neq ''}
+  	<p>{$downloads_content}</p>
+	{/if}
+</div>
+{if $text_print!=''}
+<h2>{#title_print#}</h2>
+<p>{#text_print#}</p> 
+{/if}
+<p>{$BUTTON_PRINT}</p>

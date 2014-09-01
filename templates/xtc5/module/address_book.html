@@ -1,0 +1,20 @@
+{config_load file="$language/lang_$language.conf" section="address_book"}
+<h1>{#heading_address#}</h1>
+{$FORM_ACTION}
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<h2>{#title_standard#}</h2>
+<p>{#text_standard#}</p>
+<div class="highlightbox">
+<h1>{#title_standard#}:</h1>
+<p>{$ADDRESS_DEFAULT}</p>
+</div>
+<h1>{#title_addresses#}</h1>
+{foreach name=aussen item=addresses from=$addresses_data}
+<p><strong>{$addresses.NAME} {if $addresses.PRIMARY=='1'} ({#title_standard#}) {/if}</strong><br />
+{$addresses.ADDRESS}</p>
+<p>{$addresses.BUTTON_EDIT}&nbsp;{$addresses.BUTTON_DELETE}</p>
+<div class="hr"></div>
+{/foreach}
+<p>{$BUTTON_NEW}&nbsp;{$BUTTON_BACK}</p>
+
+<p>{$ADDRESS_COUNT}</p>
