@@ -1,0 +1,126 @@
+{config_load file="$language/lang_$language.conf" section="create_account"}
+<h1>{#heading_create_guest_account#}</h1>
+{$FORM_ACTION}
+{if $error!=''}<div class="errormessage">{$error}</div>{/if}
+<h2>{#title_personal#} ({#text_must#})</h2>
+<div class="highlightbox">
+<table width="100%" cellspacing="0" cellpadding="4">
+{if $gender=='1'}
+  <tr> 
+    <td width="120">{#text_gender#}</td>
+    <td>
+		<table cellspacing="0" cellpadding="0">
+			<tr>
+			  	<td>{$INPUT_MALE}</td>
+			  	<td>{$INPUT_FEMALE}</td>				
+  			</tr>
+		</table>
+	</td>
+  </tr>
+  {/if}
+  <tr> 
+    <td width="120">{#text_firstname#}</td>
+    <td>{$INPUT_FIRSTNAME}</td>
+  </tr>
+  <tr> 
+    <td>{#text_lastname#}</td>
+    <td>{$INPUT_LASTNAME}</td>
+  </tr>
+  {if $birthdate=='1'}
+  <tr> 
+    <td>{#text_birthdate#}</td>
+    <td>{$INPUT_DOB}</td>
+  </tr>
+  {/if}
+  <tr>
+    <td>{#text_email#}</td>
+    <td>{$INPUT_EMAIL}</td>
+  </tr>
+  <tr>
+    <td>{#text_confirm_email#}</td>
+    <td>{$INPUT_CONFIRM_EMAIL}</td>
+  </tr>
+</table>
+</div>
+{if $company=='1'}
+<h2>{#title_company#}</h2>
+<div class="highlightbox">
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr> 
+    <td width="120">{#text_company#}</td>
+    <td>{$INPUT_COMPANY}</td>
+  </tr>
+  {if $vat=='1'}
+  <tr>
+     <td>{#text_ustid#}</td>
+     <td>{$INPUT_VAT}</td>
+  </tr>
+  {/if}
+</table>
+</div>
+{/if}
+<h2>{#title_address#}</h2>
+<div class="highlightbox">
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr> 
+    <td width="120">{#text_street#}</td>
+    <td>{$INPUT_STREET}</td>
+  </tr>
+  {if $suburb=='1'}
+  <tr> 
+    <td>{#text_suburb#}</td>
+    <td>{$INPUT_SUBURB}</td>
+  </tr>
+  {/if}
+  <tr> 
+    <td>{#text_code#}</td>
+    <td>{$INPUT_CODE}</td>
+  </tr>
+  <tr> 
+    <td>{#text_city#}</td>
+    <td>{$INPUT_CITY}</td>
+  </tr>
+  {if $state=='1'}
+  <tr> 
+    <td>{#text_state#}</td>
+    <td>{$INPUT_STATE}</td>
+  </tr>
+  {/if}
+  <tr>
+    <td>{#text_country#}</td>
+    <td>{$SELECT_COUNTRY}</td>
+  </tr>
+</table>
+</div>
+<h2>{#title_contact#}</h2>
+<div class="highlightbox">
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr> 
+    <td width="120">{#text_tel#}</td>
+    <td>{$INPUT_TEL}</td>
+  </tr>
+  <tr>
+    <td>{#text_fax#}</td>
+    <td>{$INPUT_FAX}</td>
+  </tr>
+</table>
+</div>
+<h2>{#title_newsletter#}</h2>
+<div class="highlightbox">
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr> 
+    <td width="25">{$CHECKBOX_NEWSLETTER}</td>
+    <td>{#text_newsletter#}</td>
+  </tr>
+</table>
+</div>
+{if $PRIVACY_CHECKBOX}
+<table width="100%" border="0" cellspacing="0" cellpadding="4">
+  <tr>
+    <td>{$PRIVACY_CHECKBOX}</td>
+    <td width="100%"><strong>{#text_privacy_accept#}</strong> {$PRIVACY_LINK}</td>
+  </tr>
+</table>
+{/if}
+<p>{$BUTTON_SUBMIT}</p>
+{$FORM_END}

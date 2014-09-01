@@ -1,0 +1,323 @@
+diff --git a/html/campaigns/default/de/spec.html b/html/campaigns/default/de/spec.html
+index 0373728..2c63a9a 100755
+--- a/html/campaigns/default/de/spec.html
++++ b/html/campaigns/default/de/spec.html
+@@ -115,8 +115,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_de}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/klarna_logo.png"
+-                alt="{{lang.img_logo_account}}" class="klarna_logo" id="klarna_logo_spec" />
++            <img
++                src="//cdn.klarna.com/public/images/DE/logos/v1/basic/DE_basic_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_spec"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/campaigns/default/dk/spec.html b/html/campaigns/default/dk/spec.html
+index 3ea5c68..6620b4e 100755
+--- a/html/campaigns/default/dk/spec.html
++++ b/html/campaigns/default/dk/spec.html
+@@ -115,8 +115,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_dk}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/klarna_logo.png"
+-                alt="{{lang.img_logo_account}}" class="klarna_logo" id="klarna_logo_spec" />
++            <img
++                src="//cdn.klarna.com/public/images/DK/logos/v1/basic/DK_basic_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_spec"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/campaigns/default/fi/spec.html b/html/campaigns/default/fi/spec.html
+index 783368b..5dfb156 100755
+--- a/html/campaigns/default/fi/spec.html
++++ b/html/campaigns/default/fi/spec.html
+@@ -115,8 +115,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_fi}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/klarna_logo.png"
+-                alt="{{lang.img_logo_account}}" class="klarna_logo" id="klarna_logo_spec" />
++            <img
++                src="//cdn.klarna.com/public/images/FI/logos/v1/basic/FI_basic_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_spec"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/campaigns/default/nl/spec.html b/html/campaigns/default/nl/spec.html
+index 79783d1..077b1d8 100755
+--- a/html/campaigns/default/nl/spec.html
++++ b/html/campaigns/default/nl/spec.html
+@@ -115,8 +115,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_nl}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/klarna_logo.png"
+-                alt="{{lang.img_logo_account}}" class="klarna_logo" id="klarna_logo_spec" />
++            <img
++                src="//cdn.klarna.com/public/images/NL/logos/v1/basic/NL_basic_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_spec"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/campaigns/default/no/spec.html b/html/campaigns/default/no/spec.html
+index a686922..13d05b8 100755
+--- a/html/campaigns/default/no/spec.html
++++ b/html/campaigns/default/no/spec.html
+@@ -115,8 +115,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_no}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/klarna_logo.png"
+-                alt="{{lang.img_logo_account}}" class="klarna_logo" id="klarna_logo_spec" />
++            <img
++                src="//cdn.klarna.com/public/images/NO/logos/v1/basic/NO_basic_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_spec"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/campaigns/default/se/spec.html b/html/campaigns/default/se/spec.html
+index c913c86..8328a91 100755
+--- a/html/campaigns/default/se/spec.html
++++ b/html/campaigns/default/se/spec.html
+@@ -115,8 +115,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_se}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/klarna_logo.png"
+-                alt="{{lang.img_logo_account}}" class="klarna_logo" id="klarna_logo_spec" />
++            <img
++                src="//cdn.klarna.com/public/images/SE/logos/v1/basic/SE_basic_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_spec"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/de/invoice.html b/html/de/invoice.html
+index 6108a0a..ba7ad13 100755
+--- a/html/de/invoice.html
++++ b/html/de/invoice.html
+@@ -125,9 +125,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_de}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_invoice.png"
+-                id="klarna_logo_invoice" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}" />
++            <img
++                src="//cdn.klarna.com/public/images/DE/logos/v1/invoice/DE_invoice_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_invoice"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/de/part.html b/html/de/part.html
+index a2f832a..ced5f7d 100755
+--- a/html/de/part.html
++++ b/html/de/part.html
+@@ -123,9 +123,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_de}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_account.png"
+-                id="klarna_logo_part" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}"/>
++            <img
++                src="//cdn.klarna.com/public/images/DE/logos/v1/account/DE_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_part"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/dk/invoice.html b/html/dk/invoice.html
+index 99ff35e..ad2a31f 100755
+--- a/html/dk/invoice.html
++++ b/html/dk/invoice.html
+@@ -125,8 +125,9 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_dk}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_invoice.png"
+-                alt="{{lang.img_logo_account}}" id="klarna_logo_invoice"
++            <img
++                src="//cdn.klarna.com/public/images/DK/logos/v1/invoice/DK_invoice_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_invoice"
+                 class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+diff --git a/html/dk/part.html b/html/dk/part.html
+index 1b8ee97..4f38ae8 100755
+--- a/html/dk/part.html
++++ b/html/dk/part.html
+@@ -124,9 +124,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_dk}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_account.png"
+-                id="klarna_logo_part" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}"/>
++            <img
++                src="//cdn.klarna.com/public/images/DK/logos/v1/account/DK_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_part"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/fi/invoice.html b/html/fi/invoice.html
+index cb6aec6..bda3a47 100755
+--- a/html/fi/invoice.html
++++ b/html/fi/invoice.html
+@@ -125,8 +125,9 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_fi}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_invoice.png"
+-                alt="{{lang.img_logo_account}}" id="klarna_logo_invoice"
++            <img
++                src="//cdn.klarna.com/public/images/FI/logos/v1/invoice/FI_invoice_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_invoice"
+                 class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+diff --git a/html/fi/part.html b/html/fi/part.html
+index 7dd1a35..8667784 100755
+--- a/html/fi/part.html
++++ b/html/fi/part.html
+@@ -122,9 +122,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_fi}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_account.png"
+-                id="klarna_logo_part" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}"/>
++            <img
++                src="//cdn.klarna.com/public/images/FI/logos/v1/account/FI_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_part"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/nl/invoice.html b/html/nl/invoice.html
+index c234e5e..9322260 100755
+--- a/html/nl/invoice.html
++++ b/html/nl/invoice.html
+@@ -125,8 +125,9 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_nl}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_invoice.png"
+-                alt="{{lang.img_logo_account}}" id="klarna_logo_invoice"
++            <img
++                src="//cdn.klarna.com/public/images/NL/logos/v1/invoice/NL_invoice_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_invoice"
+                 class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+diff --git a/html/nl/part.html b/html/nl/part.html
+index ce6c4f9..2f845fc 100755
+--- a/html/nl/part.html
++++ b/html/nl/part.html
+@@ -123,9 +123,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_nl}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_account.png"
+-                id="klarna_logo_part" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}"/>
++            <img
++                src="//cdn.klarna.com/public/images/NL/logos/v1/account/NL_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_part"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/no/invoice.html b/html/no/invoice.html
+index 7384eb9..f2cdd4f 100755
+--- a/html/no/invoice.html
++++ b/html/no/invoice.html
+@@ -125,8 +125,9 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_no}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_invoice.png"
+-                alt="{{lang.img_logo_account}}" id="klarna_logo_invoice"
++            <img
++                src="//cdn.klarna.com/public/images/NO/logos/v1/invoice/NO_invoice_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_invoice"
+                 class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+diff --git a/html/no/part.html b/html/no/part.html
+index a609280..f93d277 100755
+--- a/html/no/part.html
++++ b/html/no/part.html
+@@ -123,9 +123,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_no}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_account.png"
+-                id="klarna_logo_part" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}"/>
++            <img
++                src="//cdn.klarna.com/public/images/NO/logos/v1/account/NO_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_part"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/html/se/invoice.html b/html/se/invoice.html
+index 4dbc1cc..6eac2e4 100755
+--- a/html/se/invoice.html
++++ b/html/se/invoice.html
+@@ -124,8 +124,9 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_se}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_invoice.png"
+-                alt="{{lang.img_logo_account}}" id="klarna_logo_invoice"
++            <img
++                src="//cdn.klarna.com/public/images/SE/logos/v1/invoice/SE_invoice_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_invoice"
+                 class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+diff --git a/html/se/part.html b/html/se/part.html
+index bd7b80e..d579d38 100755
+--- a/html/se/part.html
++++ b/html/se/part.html
+@@ -123,9 +123,10 @@ jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path
+                         alt="{{lang.languageSetting_note_se}}" />
+                 </div>
+             </div>
+-            <img src="{{setup.path_img}}logo/{{setup.countryCode}}/klarna_account.png"
+-                id="klarna_logo_part" class="klarna_logo"
+-                alt="{{lang.img_logo_account}}"/>
++            <img
++                src="//cdn.klarna.com/public/images/SE/logos/v1/account/SE_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
++                id="klarna_logo_part"
++                class="klarna_logo" />
+         </div>
+         <div class="klarna_box_bottom">
+             <div class="klarna_box_bottom_contents">
+diff --git a/media/checkout/style.css b/media/checkout/style.css
+index aef6be6..03c7234 100644
+--- a/media/checkout/style.css
++++ b/media/checkout/style.css
+@@ -170,10 +170,6 @@
+     width: 100%;
+     background-color: #FFFFFF;
+     display: inline-block;
+-
+-    background-image: url(tulip_bottomRight.png);
+-    background-position: 0 bottom;
+-    background-repeat: no-repeat;
+ }
+ 
+ /**

@@ -1,0 +1,71 @@
+.klarna_PPBox {
+    width: 200px;
+}
+
+.klarna_PPBox .klarna_PPBox_bottomMid table {
+    width: 200px;
+    font-size: 11px;
+}
+
+.klarna_box_container.ie6,
+.klarna_box_container.ie7,
+.klarna_box_container.ie8,
+.klarna_box_container.ie9 {
+    width: 800px;
+}
+
+.klarna_box_container.ie6 .input_row,
+.klarna_box_container.ie7 .input_row,
+.klarna_box_container.ie8 .input_row,
+.klarna_box_container.ie9 .input_row {
+    float: none;
+}
+
+
+.klarna_box_container.ie6 .klarna_box_bottom,
+.klarna_box_container.ie7 .klarna_box_bottom,
+.klarna_box_container.ie8 .klarna_box_bottom,
+.klarna_box_container.ie9 .klarna_box_bottom {
+    height: 300px;
+}
+
+
+.klarna_box_container.ie6 .klarna_box_bottom_left,
+.klarna_box_container.ie7 .klarna_box_bottom_left,
+.klarna_box_container.ie8 .klarna_box_bottom_left,
+.klarna_box_container.ie9 .klarna_box_bottom_left {
+    width: 40%;
+}
+
+.klarna_box_container.ie9 .klarna_box_bottom ol.paymentPlan li div
+{
+    width: auto;
+}
+
+.ie9 .klarna_box_bottom ol.paymentPlan input
+{
+    display: inline;
+    margin: 1px;
+    padding: 0px;
+    height: 20px;
+    width: 20px;
+    border: none;
+}
+
+.ie9 .klarna_box_bottom ol.paymentPlan label
+{
+    background-color: #FFFFFF;
+}
+
+.ie9 .klarna_box_bottom ol.paymentPlan li:hover label
+{
+    background-color: #ccd;
+}
+
+.klarna_box_container.ie6 .klarna_box_bottom ol.paymentPlan li div span,
+.klarna_box_container.ie7 .klarna_box_bottom ol.paymentPlan li div span,
+.klarna_box_container.ie8 .klarna_box_bottom ol.paymentPlan li div span,
+.klarna_box_container.ie9 .klarna_box_bottom ol.paymentPlan li div span
+{
+    float: none;
+}

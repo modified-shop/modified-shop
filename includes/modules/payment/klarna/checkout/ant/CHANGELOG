@@ -1,0 +1,44 @@
+ANT-BASE - Changelog
+====================
+
+v0.1.0
+----------------
+Date: 2011-06-27
+EDIT ME
+
+* add a neat changelog script
+
+* some message tweaks
+
+* pep8 task
+
+* tweak to git-authors
+
+* dist and preview targets in base
+
+* add branch attribute to git-up2date
+
+* Merge branch 'master' of msgit.internal.machines:ant-base
+
+* Updated the skeleton for check (depends xml, php, js) and added a conf file for jslint macro.
+
+* Added macros for js, xml and php testing
+
+* set version and build date in base.xml
+
+* Added changelog target (also formatted the XML)
+
+* Added build.properties to ignore, so we can have a local for testing.
+
+* Added build.xml to ignore, so we can have a local test file.
+
+* Adding a skeleton prop file.
+
+* Added a task for downloading a google docs
+
+* move files out of ant dir
+
+* remove invalid attribute
+
+* initial import
+

@@ -1,0 +1,347 @@
+* html a:hover {
+	background:		transparent;
+}
+
+a:hover .sofort_on_over {
+	display:		block;
+	padding-left:	0px !important;
+}
+
+a.sofort_button {
+	background-color:buttonface !important;
+	border:			1px solid #c0c0c0;
+	display:		inline-block;
+	font:			-webkit-small-control;
+	font-size:		12px;
+	padding:		1px;
+	text-decoration:none;
+}
+
+a.sofort_button:hover {
+	background-color:#c0c0c0;
+}
+
+a.sofort_info_icon {
+	position:		relative;
+	outline:		none;
+	cursor:			help;
+}
+
+.hr {
+	background:		#c0c0c0;
+	height:			1px;
+	margin-bottom:	5px;
+	margin-left:	10px;
+	margin-right:	10px;
+}
+
+input,
+form button,
+form input,
+form select {
+	cursor:			pointer;
+}
+
+input,
+form button,
+form input,
+form select,
+form textarea {
+	border:			1px solid #c0c0c0 !important;
+	font-size:		12px !important;
+	padding:		1px !important;
+}
+
+input:hover,
+form button:hover,
+form input:hover,
+form select:hover,
+form textarea:hover {
+	background-color:#c0c0c0;
+}
+
+textarea {
+	width:			100% !important;
+	height:			100% !important;
+}
+
+#sofort {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	width:			860px;
+}
+
+#sofort_additional_infos {
+	height:			65px;
+	margin-top:		10px;
+	padding-top:	5px;
+	width:			100%;
+}
+
+#sofort_billing, #sofort_customer, #sofort_delivery {
+	float:			left;
+	font-size:		1em;
+	margin-right:	10px;
+	width:			32%;
+}
+
+.sofort_button {
+	border:			1px dotted #c0c0c0;
+	font-size:		14px;
+	line-height:	14px;
+}
+
+#sofort_buttons {
+	text-align:		center;
+	width:			860px;
+}
+
+#sofort_comments {
+	border:			1px solid #c0c0c0;
+	height:			140px;
+	margin-left:	5px;
+	width:			853px;
+}
+
+.sofort_copt {
+	float:			left;
+	width:			40%;
+}
+
+.sofort_ctarea {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	height:			100px;
+	text-align:		center;
+	width:			40%;
+}
+
+.sofort_ctd {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	text-align:		right;
+	vertical-align:	middle;
+	width:			50%;
+}
+
+.sofort_chtd {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	font-weight:	bold;
+	text-align:		right;
+	vertical-align:	middle;
+	width:			50%;
+}
+
+.sofort_ctitle {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-weight:	bold;
+	margin-top:		38px;
+	text-align:		center;
+	width:			15%;
+}
+
+#sofort_customer_infos {
+	height:			100px;
+	padding-top:	5px;
+	width:			100%;
+}
+
+.sofort_error {
+	background-color:#AA5020;
+	color:			#FFF;
+	font-size:		14px;
+	font-style:		italic;
+	margin-left:	5px;
+	margin-top:		5px;
+	padding:		3px;
+	text-align:		center;
+}
+
+.sofort_etitle {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-weight:	bold;
+	margin-top:		38px;
+	text-align:		center;
+	width:			30%;
+}
+
+.sofort_etarea {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	height:			75px;
+	text-align:		center;
+	width:			45%;
+}
+
+.sofort_fl {
+	font-size:		1em;
+	margin-left:	10px;
+}
+
+.sofort_flb {
+	font-size:		1em;
+	font-weight:	bold;
+	margin-left:	10px;
+	width:			150px;
+}
+
+#sofort_head {
+	font-size:		18px;
+	font-weight:	bold;
+	height:			30px;
+	margin-left:	5px;
+	margin-top:		10px;
+}
+
+.sofort_hfl {
+	float:			left;
+	font-size:		1em;
+	line-height:	14px !important;
+	margin-left:	10px;
+}
+
+.sofort_hflb {
+	float:			left;
+	font-size:		1em;
+	font-weight:	bold;
+	line-height:	14px !important;
+	margin-left:	10px;
+	width:			156px;
+}
+
+.sofort_hfr {
+	float:			right;
+	font-size:		1em;
+	line-height:	14px !important;
+	margin-left:	10px;
+}
+
+.sofort_hint {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		11px;
+	margin-left:	5px;
+	margin-top:		5px;
+	text-align:		center;
+	width:			855px;
+}
+
+.sofort_hint a {
+	text-decoration:underline;
+}
+
+.sofort_htd {
+	border:			1px solid #c0c0c0;
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	font-weight:	bold;
+	padding:		5px;
+}
+
+.sofort_htr {
+	background-color:#c0c0c0;
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	font-weight:	bold;
+	width:			100%;
+}
+
+#sofort_infos {
+	border:			1px solid #c0c0c0;
+	margin-left:	5px;
+	width:			853px;
+}
+
+.sofort_label_icon {
+	vertical-align:	text-top;
+	margin-top: -4px;
+}
+
+#sofort_oders {
+	border:			1px solid #c0c0c0;
+}
+
+.sofort_on_over_head {
+	display:		block;
+	background:		url(../images/on_over.png) left top no-repeat;
+	height:			10px;
+	width:			214px;
+}
+
+.sofort_on_over_inner {
+	display:		block;
+	width:			194px;
+	padding:		10px;
+	background:		url(../images/on_over.png) left bottom no-repeat;
+	color:			#fff;
+	font-size:		10px;
+	line-height:	16px;
+	text-decoration:none;
+	text-align:		left;
+}
+
+.sofort_save {
+	float:			right;
+	margin-top:		38px;
+	width:			20%;
+}
+
+.sofort_success {
+	background-color:#83B817;
+	color:			#FFF;
+	font-size:		14px;
+	font-style:		italic;
+	margin-left:	5px;
+	margin-top:		5px;
+	padding:		3px;
+	text-align:		center;
+}
+
+.sofort_table {
+	border:			1px solid #c0c0c0;
+	border-spacing:	0;
+	margin-left:	5px;
+	width:			855px;
+}
+
+.sofort_td {
+	border-bottom:	1px dashed #C0C0C0;
+	color:			black;
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	padding:		5px;
+	vertical-align:	middle;
+}
+
+.sofort_tr {
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	width:			100%;
+}
+
+.sofort_ttd {
+	color:			black;
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		12px;
+	vertical-align:	middle;
+}
+
+.sofort_ttds {
+	color:			black;
+	font-family:	Helvetica, Verdana, Arial, sans-serif;
+	font-size:		10px;
+	vertical-align:	middle;
+}
+
+span.sofort_on_over {
+	display:		none;
+	width:			214px;
+	z-index:		1000;
+	position:		absolute;
+	left:			-13px;
+	top:			16px;
+}
+
+.vr {
+	background:		#c0c0c0;
+	float:			left;
+	height:			100%;
+	width:			1px;
+}

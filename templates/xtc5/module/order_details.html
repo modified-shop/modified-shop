@@ -1,0 +1,56 @@
+{config_load file="$language/lang_$language.conf" section="checkout_new_address"}
+{config_load file="$language/lang_$language.conf" section="shopping_cart"}
+<table class="orderdetails" width="100%" border="0" cellspacing="0" cellpadding="6">
+  <tr class="headerrow">
+    <td class="left">{#text_qty#}</td>
+    <td class="left">{#text_article#}</td>
+    <td class="right">{#text_single#}</td>
+    <td class="right">{#text_total#}</td>
+    <td class="center">{#text_remove#}</td>
+  </tr>
+  {foreach name=aussen item=module_data from=$module_content} 
+  <tr class="{cycle values="contentrow1,contentrow2"}">
+    <td class="quantity">{$module_data.PRODUCTS_QTY}</td>
+    <td class="productname">
+		<strong><a href="{$module_data.PRODUCTS_LINK}">{$module_data.PRODUCTS_NAME}</a></strong>
+		{if $module_data.PRODUCTS_MODEL}<br /><br />{$module_data.PRODUCTS_MODEL}{/if}
+		{if $module_data.ATTRIBUTES!=''} 
+      		<table class="productattributes" width="100%" border="0" cellspacing="0" cellpadding="0">
+        	{foreach key=key_data item=item_data from=$module_data.ATTRIBUTES} 
+        	<tr> 
+          		<td class="attribute"><strong>{$item_data.NAME}:</strong></td>
+          		<td class="value">{$item_data.VALUE_NAME}</td>
+        	</tr>
+        	{/foreach} 
+      		</table>
+       {/if}</td>
+    <td class="singleprice">{$module_data.PRODUCTS_SINGLE_PRICE}</td>
+    <td class="totalprice">{$module_data.PRODUCTS_PRICE}</td>    
+    {* DokuMan - 2009-11-03 - use delete button instead of checkbox in template (commented out)
+    <td class="delete">{$module_data.BOX_DELETE}{$module_data.BUTTON_DELETE}</td>
+    *}
+    <td class="delete">{$module_data.BUTTON_DELETE}</td>
+  </tr>
+  {/foreach}
+{* BOF VERSANDKOSTEN IM WARENKORB *}
+  <!--tr>
+    <td colspan="4" class="subtotal">{$UST_CONTENT}<strong>{$TOTAL_CONTENT}</strong>{if $SHIPPING_INFO}{$SHIPPING_INFO}{/if}{if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}</td>
+    <td class="subtotal">&nbsp;</td>
+  </tr-->  
+  <tr>
+    <td colspan="4" class="subtotal">
+    {if $UST_CONTENT}{$UST_CONTENT}{else}<strong>{$smarty.const.TAX_INFO_EXCL|sprintf:''}</strong><br />{/if}
+    <strong>{$TOTAL_CONTENT}</strong><br />
+    {if $SELECT_COUNTRY}{$SELECT_COUNTRY}<br />{/if}
+    {foreach name=aussen item=shipping_data from=$shipping_content}
+      {$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}<br />
+    {/foreach}
+    {if $total}
+    <strong>{#text_total#}: {$total}</strong>
+    {/if}
+    {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
+    </td>
+    <td class="subtotal">&nbsp;</td>
+ </tr>
+ {* EOF VERSANDKOSTEN IM WARENKORB *}
+</table>

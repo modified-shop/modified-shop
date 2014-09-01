@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+    <!--
+    Document   : UnitPersonTestList.xml
+    Created on : den 3 januari 2011, 16:30
+    Author     : henrik.sundset
+    Description:
+        Purpose of the document follows.
+-->
+    <VALID id="Persons">
+        <SE>
+            <DESCRIPTION><![CDATA["Valid test persons in Sweden"]]></DESCRIPTION>
+            <!--
+                Testperson Karl Lidin
+            -->
+            <COUNTRY>SE</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Karl</FNAME>
+            <LNAME>Lidin</LNAME>
+            <PNO>430415-8399</PNO>
+            <ADDRESS>Junibacksg</ADDRESS>
+            <ADDR_NUMBER>42</ADDR_NUMBER>
+            <POST_NUMBER>236 34</POST_NUMBER>
+            <CITY>Hollviken</CITY>
+            <PHONE>076 526 00 00</PHONE>
+            <EMAIL>karl.lidin@klarna.com</EMAIL>
+        </SE>
+        <FI>
+            <DESCRIPTION><![CDATA["Valid test persons in Finland"]]></DESCRIPTION>
+            <!--
+                Testperson Suvi Aurinkoinen
+            -->
+            <COUNTRY>FI</COUNTRY>
+            <GENDER>Female</GENDER>
+            <FNAME>Suvi</FNAME>
+            <LNAME>Aurinkoinen</LNAME>
+            <PNO>230246-8989</PNO>
+            <ADDRESS>Planeettatie</ADDRESS>
+            <ADDR_NUMBER>2</ADDR_NUMBER>
+            <POST_NUMBER>014 50</POST_NUMBER>
+            <CITY>Vantaa</CITY>
+            <PHONE>040 123 45 67</PHONE>
+            <EMAIL>suvi.aurinkoinen@klarna.com</EMAIL>
+        </FI>
+        <DK>
+            <DESCRIPTION><![CDATA["Valid test persons in Denmark"]]></DESCRIPTION>
+            <!--
+                Testperson Rasmus Jens-Peter Lybert
+            -->
+            <COUNTRY>DK</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Rasmus Jens-Peter</FNAME>
+            <LNAME>Lybert</LNAME>
+            <PNO>0505610059</PNO>
+            <ADDRESS>Godthåbvej</ADDRESS>
+            <ADDR_NUMBER>8,-2</ADDR_NUMBER>
+            <POST_NUMBER>3900</POST_NUMBER>
+            <CITY>Godthåb</CITY>
+            <PHONE>20 123 46</PHONE>
+            <EMAIL>rasmus.jenspeter@klarna.com</EMAIL>
+        </DK>
+        <NO>
+            <DESCRIPTION><![CDATA["Valid test persons in Norway"]]></DESCRIPTION>
+            <!--
+                Testperson Petter Testmann
+            -->
+            <COUNTRY>NO</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Petter</FNAME>
+            <LNAME>Testmann</LNAME>
+            <PNO>18106500157</PNO>
+            <ADDRESS>Hundremeterskogen</ADDRESS>
+            <ADDR_NUMBER>100</ADDR_NUMBER>
+            <POST_NUMBER>0563</POST_NUMBER>
+            <CITY>Oslo</CITY>
+            <PHONE>40 123 456</PHONE>
+            <EMAIL>petter.testmann@klarna.com</EMAIL>
+        </NO>
+        <DE>
+            <DESCRIPTION><![CDATA["Valid test persons in Germany"]]></DESCRIPTION>
+            <!--
+                Testperson Uno Eins
+            -->
+            <COUNTRY>DE</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Uno</FNAME>
+            <LNAME>Eins</LNAME>
+            <PNO>07071960</PNO>
+            <ADDRESS>Hellersbergstrasse</ADDRESS>
+            <ADDR_NUMBER>14</ADDR_NUMBER>
+            <POST_NUMBER>41460</POST_NUMBER>
+            <CITY>Neuss</CITY>
+            <PHONE>015 2211 3356</PHONE>
+            <EMAIL>uno.eins@deutschland.de</EMAIL>
+        </DE>
+        <NL>
+            <DESCRIPTION><![CDATA["Valid test persons in Netherlands"]]></DESCRIPTION>
+            <!--
+                Testperson Test Persoon
+            -->
+            <COUNTRY>NL</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Test</FNAME>
+            <LNAME>Persoon</LNAME>
+            <PNO>01071970</PNO>
+            <ADDRESS>Neherkade</ADDRESS>
+            <ADDR_NUMBER>1</ADDR_NUMBER>
+            <POST_NUMBER>2421 VA</POST_NUMBER>
+            <CITY>Gravenhage</CITY>
+            <PHONE>0612345678</PHONE>
+            <EMAIL>test.persoon@klarna.com</EMAIL>
+        </NL>
+    </VALID>
+    <VALID id="Company">
+        <SE>
+            <DESCRIPTION><![CDATA["Valid test company in Sweden"]]></DESCRIPTION>
+            <!--
+                Testcompany Kalle Anka AB
+            -->
+            <COUNTRY>SE</COUNTRY>
+            <PNO>6020310139</PNO>
+            <COMPANY>Kalle Anka AB</COMPANY>
+            <ADDRESS1>Storgatan</ADDRESS1>
+            <ADDR_NUMBER1>42</ADDR_NUMBER1>
+            <POST_NUMBER1>236 34</POST_NUMBER1>
+            <CITY1>Ankeborg</CITY1>
+            <ADDRESS2>Lillgatan</ADDRESS2>
+            <ADDR_NUMBER2>99</ADDR_NUMBER2>
+            <POST_NUMBER2>236 34</POST_NUMBER2>
+            <CITY2>Ankeborg</CITY2>
+            <PHONE>076 526 00 00</PHONE>
+            <EMAIL>kalle.anka.ab@klarna.com</EMAIL>
+        </SE>
+        <FI>
+            <DESCRIPTION><![CDATA["Valid test company in Finland"]]></DESCRIPTION>
+            <!--
+                Testcompany Porin Mies-Laulu r.y.
+            -->
+            <COUNTRY>FI</COUNTRY>
+            <PNO>10891871</PNO>
+            <COMPANY>Porin Mies-Laulu r.y.</COMPANY>
+            <ADDRESS1>Vapaudenkatu</ADDRESS1>
+            <ADDR_NUMBER1>10</ADDR_NUMBER1>
+            <POST_NUMBER1>281 00</POST_NUMBER1>
+            <CITY1>Pori</CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE>040 123 45 67</PHONE>
+            <EMAIL>porin.mies.laulu@klarna.com</EMAIL>
+        </FI>
+        <DK>
+            <DESCRIPTION><![CDATA["Valid test company in Denmark"]]></DESCRIPTION>
+            <!--
+                Testcompany Onbase ApS
+            -->
+            <COUNTRY>DK</COUNTRY>
+            <PNO>27968880</PNO>
+            <COMPANY>Onbase ApS</COMPANY>
+            <ADDRESS1>Centrumgaden</ADDRESS1>
+            <ADDR_NUMBER1>37</ADDR_NUMBER1>
+            <POST_NUMBER1>2750</POST_NUMBER1>
+            <CITY1>Ballerup</CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE>20 123 456</PHONE>
+            <EMAIL>onbase.aps@klarna.com</EMAIL>
+        </DK>
+        <NO>
+            <DESCRIPTION><![CDATA["Valid test company in Norway"]]></DESCRIPTION>
+            <!--
+                Testcompany [none]
+            -->
+            <COUNTRY>NO</COUNTRY>
+            <PNO></PNO>
+            <COMPANY></COMPANY>
+            <ADDRESS1></ADDRESS1>
+            <ADDR_NUMBER1></ADDR_NUMBER1>
+            <POST_NUMBER1></POST_NUMBER1>
+            <CITY1></CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </NO>
+        <DE>
+            <DESCRIPTION><![CDATA["Valid test company in Germany"]]></DESCRIPTION>
+            <!--
+                Testcompany [none]
+            -->
+            <COUNTRY>DE</COUNTRY>
+            <PNO></PNO>
+            <COMPANY></COMPANY>
+            <ADDRESS1></ADDRESS1>
+            <ADDR_NUMBER1></ADDR_NUMBER1>
+            <POST_NUMBER1></POST_NUMBER1>
+            <CITY1></CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </DE>
+        <NL>
+            <DESCRIPTION><![CDATA["Valid test company in Netherlands"]]></DESCRIPTION>
+            <!--
+                Testcompany [none]
+            -->
+            <COUNTRY>NL</COUNTRY>
+            <PNO></PNO>
+            <COMPANY></COMPANY>
+            <ADDRESS1></ADDRESS1>
+            <ADDR_NUMBER1></ADDR_NUMBER1>
+            <POST_NUMBER1></POST_NUMBER1>
+            <CITY1></CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </NL>
+    </VALID>
+    <INVALID id="Persons">
+        <SE>
+            <DESCRIPTION><![CDATA["Invalid test persons in Sweden"]]></DESCRIPTION>
+            <!--
+                Testperson Maud Johansson
+            -->
+            <COUNTRY>SE</COUNTRY>
+            <GENDER>Female</GENDER>
+            <FNAME>Maud</FNAME>
+            <LNAME>Johansson</LNAME>
+            <PNO>531109-6845</PNO>
+            <ADDRESS>Köpmang</ADDRESS>
+            <ADDR_NUMBER>7</ADDR_NUMBER>
+            <POST_NUMBER>121 49</POST_NUMBER>
+            <CITY>Johanneshov</CITY>
+            <PHONE>076 526 00 00</PHONE>
+            <EMAIL>maud.johansson@klarna.com</EMAIL>
+        </SE>
+        <FI>
+            <DESCRIPTION><![CDATA["Invalid test persons in Finland"]]></DESCRIPTION>
+            <!--
+                Testperson Mikael Miehinen
+            -->
+            <COUNTRY>FI</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Mikael</FNAME>
+            <LNAME>Miehinen</LNAME>
+            <PNO>010130-887T</PNO>
+            <ADDRESS>Tikkuritie</ADDRESS>
+            <ADDR_NUMBER>11</ADDR_NUMBER>
+            <POST_NUMBER>01370</POST_NUMBER>
+            <CITY>Vantaa</CITY>
+            <PHONE>040 123 45 67</PHONE>
+            <EMAIL>mikael.miehinen@klarna.com</EMAIL>
+        </FI>
+        <DK>
+            <DESCRIPTION><![CDATA["Invalid test persons in Denmark"]]></DESCRIPTION>
+            <!--
+                Testperson [none]
+            -->
+            <COUNTRY>DK</COUNTRY>
+            <GENDER></GENDER>
+            <FNAME></FNAME>
+            <LNAME></LNAME>
+            <PNO></PNO>
+            <ADDRESS></ADDRESS>
+            <ADDR_NUMBER></ADDR_NUMBER>
+            <POST_NUMBER></POST_NUMBER>
+            <CITY></CITY>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </DK>
+        <NO>
+            <DESCRIPTION><![CDATA["Invalid test persons in Norway"]]></DESCRIPTION>
+            <!--
+                Testperson Petra Testdame
+            -->
+            <COUNTRY>NO</COUNTRY>
+            <GENDER>Female</GENDER>
+            <FNAME>Petra</FNAME>
+            <LNAME>Testdame</LNAME>
+            <PNO>18106500076</PNO>
+            <ADDRESS>Sofienberggate</ADDRESS>
+            <ADDR_NUMBER>56</ADDR_NUMBER>
+            <POST_NUMBER>0563</POST_NUMBER>
+            <CITY>Oslo</CITY>
+            <PHONE>40 123 456</PHONE>
+            <EMAIL>petra.testdame@klarna.com</EMAIL>
+        </NO>
+        <DE>
+            <DESCRIPTION><![CDATA["Invalid test persons in Germany"]]></DESCRIPTION>
+            <!--
+                Testperson Uno Vier
+            -->
+            <COUNTRY>DE</COUNTRY>
+            <GENDER>Male</GENDER>
+            <FNAME>Uno</FNAME>
+            <LNAME>Vier</LNAME>
+            <PNO>07071930</PNO>
+            <ADDRESS>Hellersbergstrasse</ADDRESS>
+            <ADDR_NUMBER>14</ADDR_NUMBER>
+            <POST_NUMBER>41460</POST_NUMBER>
+            <CITY>Neuss</CITY>
+            <PHONE>015 2211 3356</PHONE>
+            <EMAIL>uno.vier@klarna.com</EMAIL>
+        </DE>
+        <NL>
+            <DESCRIPTION><![CDATA["Invalid test persons in Netherlands"]]></DESCRIPTION>
+            <!--
+                Testperson [none]
+            -->
+            <COUNTRY>NL</COUNTRY>
+            <GENDER></GENDER>
+            <FNAME></FNAME>
+            <LNAME></LNAME>
+            <PNO></PNO>
+            <ADDRESS></ADDRESS>
+            <ADDR_NUMBER></ADDR_NUMBER>
+            <POST_NUMBER></POST_NUMBER>
+            <CITY></CITY>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </NL>
+    </INVALID>
+    <INVALID id="Company">
+        <SE>
+            <DESCRIPTION><![CDATA["Invalid test company in Sweden"]]></DESCRIPTION>
+            <!--
+                Testcompany Björnligan AB
+            -->
+            <COUNTRY>SE</COUNTRY>
+            <PNO>6720217931</PNO>
+            <COMPANY>Björnligan AB</COMPANY>
+            <ADDRESS1>Fulgatan</ADDRESS1>
+            <ADDR_NUMBER1>1</ADDR_NUMBER1>
+            <POST_NUMBER1>123 45</POST_NUMBER1>
+            <CITY1>Ankeborg</CITY1>
+            <ADDRESS2>Bakgatan</ADDRESS2>
+            <ADDR_NUMBER2>99</ADDR_NUMBER2>
+            <POST_NUMBER2>777 77</POST_NUMBER2>
+            <CITY2>Ankeborg</CITY2>
+            <PHONE>076 526 00 00</PHONE>
+            <EMAIL>bjornligan.ab@klarna.com</EMAIL>
+        </SE>
+        <FI>
+            <DESCRIPTION><![CDATA["Invalid test company in Finland"]]></DESCRIPTION>
+            <!--
+                Testcompany Mankalan Perhekodit Oy
+            -->
+            <COUNTRY>FI</COUNTRY>
+            <PNO>07527622</PNO>
+            <COMPANY>Mankalan Perhekodit Oy</COMPANY>
+            <ADDRESS1>Porrassalmenkatu</ADDRESS1>
+            <ADDR_NUMBER1>19 B</ADDR_NUMBER1>
+            <POST_NUMBER1>501 00</POST_NUMBER1>
+            <CITY1>Parikkala</CITY1>
+            <ADDRESS2>Kanttorinkatu</ADDRESS2>
+            <ADDR_NUMBER2>11</ADDR_NUMBER2>
+            <POST_NUMBER2>591 00</POST_NUMBER2>
+            <CITY2>Litti</CITY2>
+            <PHONE>040 123 45 67</PHONE>
+            <EMAIL>mankalan.perhekodit@klarna.com</EMAIL>
+        </FI>
+        <DK>
+            <DESCRIPTION><![CDATA["Invalid test company in Denmark"]]></DESCRIPTION>
+            <!--
+                Testcompany Larsen & Olsen Contracters Aps
+            -->
+            <COUNTRY>DK</COUNTRY>
+            <PNO>99999993</PNO>
+            <COMPANY>Larsen &#38; Olsen Contracters Aps</COMPANY>
+            <ADDRESS1>Glarmestervej</ADDRESS1>
+            <ADDR_NUMBER1>2</ADDR_NUMBER1>
+            <POST_NUMBER1>8600</POST_NUMBER1>
+            <CITY1>Silkeborg</CITY1>
+            <ADDRESS2>Kristianiagade</ADDRESS2>
+            <ADDR_NUMBER2>9</ADDR_NUMBER2>
+            <POST_NUMBER2>2100</POST_NUMBER2>
+            <CITY2>København Ø</CITY2>
+            <PHONE>20 123 456</PHONE>
+            <EMAIL>larsen.olsen.contracters@klarna.com</EMAIL>
+        </DK>
+        <NO>
+            <DESCRIPTION><![CDATA["Invalid test company in Norway"]]></DESCRIPTION>
+            <!--
+                Testcompany [none]
+            -->
+            <COUNTRY>NO</COUNTRY>
+            <PNO></PNO>
+            <COMPANY></COMPANY>
+            <ADDRESS1></ADDRESS1>
+            <ADDR_NUMBER1></ADDR_NUMBER1>
+            <POST_NUMBER1></POST_NUMBER1>
+            <CITY1></CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </NO>
+        <DE>
+            <DESCRIPTION><![CDATA["Invalid test company in Germany"]]></DESCRIPTION>
+            <!--
+                Testcompany [none]
+            -->
+            <COUNTRY>DE</COUNTRY>
+            <PNO></PNO>
+            <COMPANY></COMPANY>
+            <ADDRESS1></ADDRESS1>
+            <ADDR_NUMBER1></ADDR_NUMBER1>
+            <POST_NUMBER1></POST_NUMBER1>
+            <CITY1></CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </DE>
+        <NL>
+            <DESCRIPTION><![CDATA["Invalid test company in Netherlands"]]></DESCRIPTION>
+            <!--
+                Testcompany [none]
+            -->
+            <COUNTRY>NL</COUNTRY>
+            <PNO></PNO>
+            <COMPANY></COMPANY>
+            <ADDRESS1></ADDRESS1>
+            <ADDR_NUMBER1></ADDR_NUMBER1>
+            <POST_NUMBER1></POST_NUMBER1>
+            <CITY1></CITY1>
+            <ADDRESS2></ADDRESS2>
+            <ADDR_NUMBER2></ADDR_NUMBER2>
+            <POST_NUMBER2></POST_NUMBER2>
+            <CITY2></CITY2>
+            <PHONE></PHONE>
+            <EMAIL></EMAIL>
+        </NL>
+    </INVALID>
+</root>

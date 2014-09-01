@@ -1,0 +1,53 @@
+                                     INFO
+###################################################################################
+
+  XT-Commerce v3.0.4SP2.1
+  Release Datum: 20.08.2006
+  
+  ------------------------------------------------------------------------
+  Dieses Programm ist freie Software. Sie koennen es unter den Bedingungen
+  der GNU General Public License, wie von der Free Software Foundation
+  veroeffentlicht, weitergeben und/oder modifizieren, entweder gemaess Version 2 
+  der Lizenz oder (nach Ihrer Option) jeder spaeteren Version.
+  
+  Die Veroeffentlichung dieses Programms erfolgt in der Hoffnung, dass es Ihnen
+  von Nutzen sein wird, aber OHNE IRGENDEINE GARANTIE, sogar ohne die
+  implizite Garantie der MARKTREIFE oder der VERWENDBARKEIT FUER EINEN
+  BESTIMMTEN ZWECK. Details finden Sie in der GNU General Public License.
+  
+  Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
+  Programm erhalten haben. Falls nicht, schreiben Sie an die Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307, USA.
+
+
+  Infos:
+  ------------------------------------------------------------------------
+  xt:Commerce ist eine Weiterentwicklung der bekannten Shop-software osCommerce.
+  Der xt:Commerce Shop legt ein besonderes Augenmerk auf Sicherheitsrelevante 
+  Aspekte,Usability und ist durch einen neuen professionellen Aufbau gekennzeichnet.
+  
+  xt:Commerce ist auf jedem System lauffaehig, welches eine PHP Umgebung
+  (ab PHP 4.1.3) und mySQL zur Verfuegung stellt, wie zum Beispiel Linux, 
+  Solaris, BSD, und Microsoft Windows.
+ 
+  Weiters sollte am Server installiert sein:
+
+  GDlib2+ 
+  PDFlib
+
+
+  Installation:
+  ------------------------------------------------------------------------
+
+  Installationsanleitung/Installguide:
+  http://www.xt-commerce.com/forum/showthread.php?t=35187
+
+
+  mfg,
+  xt:Commerce Entwicklungsteam, http://www.xt-commerce.com
+
+
+
+   
+
+

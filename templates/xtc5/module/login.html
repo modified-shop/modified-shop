@@ -1,0 +1,52 @@
+{config_load file="$language/lang_$language.conf" section="login"}
+<h1>{#heading_login#}</h1>
+{if $info_message!=''}
+<div class="errormessage">{$info_message}</div>
+{/if}
+{if $account_option=='account' or $account_option=='both'}
+<div class="highlightbox">
+      <h1>{#title_returning#}</h1>
+      {$FORM_ACTION}
+      <p>{#text_returning#}</p>
+      <br />
+      {* BOC different texts depending on where customer comes from, noRiddle*}
+      {if $smarty.get.order_id}
+        {#text_after_login1#}
+      {elseif $smarty.get.review_prod_id}
+         {#text_after_login2#}
+      {else}
+        {#text_after_login#}
+      {/if}
+      {* EOC different texts depending on where customer comes from, noRiddle*}
+      <table width="100" border="0" cellspacing="4" cellpadding="0">
+            <tr>
+                  <td style="white-space:nowrap;"><strong>{#text_email#}</strong></td>
+                  <td>{$INPUT_MAIL}</td>
+                  <td>&nbsp;</td>
+            </tr>
+            <tr>
+                  <td style="white-space:nowrap;"><strong>{#text_password#}</strong></td>
+                  <td>{$INPUT_PASSWORD}</td>
+                  <td>{$BUTTON_LOGIN}</td>
+            </tr>
+            <tr>
+                  <td>&nbsp;</td>
+                  <td colspan="2"><a href="{$LINK_LOST_PASSWORD}">{#text_lost_password#}</a></td>
+            </tr>
+      </table>
+      {$FORM_END}
+</div>
+<br />
+<div class="highlightbox">
+      <h1>{#title_new#}</h1>
+      <p>{#text_new#}</p>
+      <p>{$BUTTON_NEW_ACCOUNT}</p>
+</div>
+{/if} {if $account_option=='both' or $account_option=='guest'}
+<br />
+<div class="highlightbox">
+      <h1>{#title_guest#}</h1>
+      <p>{#text_guest#}</p>
+      <p>{$BUTTON_GUEST}</p>
+</div>
+{/if}

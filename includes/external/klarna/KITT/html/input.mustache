@@ -1,0 +1,60 @@
+{{#fields}}
+<div class="input_row {{class}}">
+    {{#title}}
+        <div class="input_title">
+            <span {{#key}}
+                class="klarna_translate" data-t-key="{{key}}"
+                {{/key}}>{{text}}</span>
+        </div>
+    {{/title}}
+    {{#fields}}
+        <div class="input_field {{class}}">
+        {{#select}}
+            <select name="{{name}}" class="klarna_select {{class}}">
+                {{#values}}
+                    <option value="{{value}}" {{#default}}selected="selected"{{/default}} {{#disabled}}disabled="disabled"{{/disabled}}>{{text}}</option>
+                {{/values}}
+            </select>
+        {{/select}}
+        {{^select}}
+            {{#title}}
+            <div class="input_title">
+                <span {{#key}}
+                    class="klarna_translate" data-t-key="{{key}}"
+                    {{/key}}>{{text}}</span>
+            </div>
+            {{/title}}
+            {{#radio}}
+                {{#values}}
+                    <input id="{{id}}" class="klarna_radio {{class}}"
+                        name="{{name}}" type="radio"
+                        value="{{value}}"
+                        {{#default}}checked="checked"{{/default}}
+                        />
+                    {{#text}}
+                    <label for="{{id}}" {{#key}}
+                        class="klarna_translate" data-t-key="{{key}}"
+                        {{/key}}>{{text}}</label>
+                    {{/text}}
+                {{/values}}
+            {{/radio}}
+            {{^radio}}
+                <input type="{{type}}"
+                    class="klarna_{{type}} {{class}}"
+                    size="{{size}}"
+                    name="{{name}}" value="{{value}}"/>
+            {{/radio}}
+        {{/select}}
+        {{#notice}}
+            <div class="input_notice">
+                <span {{#key}}
+                    class="klarna_translate" data-t-key="{{key}}"
+                    {{/key}}>{{text}}</span>
+            </div>
+        {{/notice}}
+    </div>
+    {{/fields}}
+    {{text}}
+    {{{custom}}}
+</div>
+{{/fields}}

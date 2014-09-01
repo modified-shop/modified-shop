@@ -1,0 +1,177 @@
+##-- $Id: .htaccess 3209 2012-07-12 11:51:11Z gtb-modified $
+
+##-- Default charset
+#AddDefaultCharset UTF-8
+AddDefaultCharset ISO-8859-15
+
+##-- Disable the server signature
+ServerSignature Off
+
+##-- Turn off ETags in HTTP-header (use both directives)
+<IfModule mod_headers.c>
+  Header unset ETag
+</IfModule>
+FileETag None
+
+##-- When caching of gzipped JS and CSS files is used, enable this setting
+#<IfModule mod_headers.c>
+#  Header set Vary Accept-Encoding
+#</IfModule>
+
+##-- when using Provider 1&1 set the following lines to activate PHP5
+#AddType x-mapp-php5 .php
+#AddHandler x-mapp-php5 .php
+
+# Disable directory browsing (disabled by default as this causes problems on some servers)
+#Options All -Indexes
+
+##-- Enable the compression for any type of content
+#<IfModule mod_deflate.c>
+#  <FilesMatch "\\.(js|css|html|htm|php|xml|jpg|jpeg|png|gif)$">
+#    SetOutputFilter DEFLATE
+#  </FilesMatch>
+#</IfModule>
+
+##-- Customization of HTTP request and response headers
+<IfModule mod_headers.c>
+  <FilesMatch "\\.(ico|jpe?g|png|gif|swf|flv)$">
+    Header set Cache-Control "max-age=2592000, public"
+  </FilesMatch>
+  <FilesMatch "\\.(css)$">
+    Header set Cache-Control "max-age=604800, public"
+  </FilesMatch>
+  <FilesMatch "\\.(js)$">
+    Header set Cache-Control "max-age=216000, private"
+  </FilesMatch>
+  <FilesMatch "\\.(xml|txt)$">
+    Header set Cache-Control "max-age=216000, public, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\\.(html|htm|php)$">
+    Header set Cache-Control "max-age=1, private, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+##-- Generation of Expires and Cache-Control HTTP headers
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 seconds"
+  ExpiresByType image/gif "access plus 2592000 seconds"
+  ExpiresByType image/jpeg "access plus 2592000 seconds"
+  ExpiresByType image/png "access plus 2592000 seconds"
+  ExpiresByType text/html "access plus 1 seconds"
+  ExpiresByType text/css "access plus 604800 seconds"
+  ExpiresByType text/javascript "access plus 216000 seconds"
+  ExpiresByType application/x-javascript "access plus 216000 seconds"
+</IfModule>
+
+##-- Configure php_flags if necessary
+##-- BEGIN - use IfModule clause if PHP runs in CGI mode, otherwise just uncomment the lines with php_flag...
+#<IfModule mod_php.c>
+
+  ##-- Warn when arguments are passed by reference at function call time (from PHP5 allow_call_time_pass_reference is deprecated)
+  #php_flag allow_call_time_pass_reference on
+
+  ##-- Disable transparent sid support PHP-default is off (XTC Session only on first visit)
+  #php_flag session.use_trans_sid off
+
+  ##-- set suhosin flags because of errors with attributes (for webhosters with suhosin hardening patch enabled)
+  #php_value suhosin.post.max_array_depth 0
+  #php_value suhosin.post.max_array_index_length 0
+  #php_value suhosin.post.max_vars 0
+  #php_value suhosin.request.max_array_depth 0
+  #php_value suhosin.request.max_array_index_length 0
+  #php_value suhosin.request.max_vars 0
+
+  ##-- set suhosin flags to have unencrypted session data, affecting "whos_online" & "shopping cart" (for webhosters with suhosin hardening patch enabled)patch enabled
+  #php_value suhosin.session.encrypt Off
+  #php_value suhosin.session.cryptkey ''
+
+##-- END - use IfModule clause if PHP runs in CGI mode, otherwise just uncomment the lines with php_flag...
+#</IfModule>
+
+##-- Redirect error pages to Sitemap
+##-- set the correct Path to ErrorDocument
+ErrorDocument 400 /sitemap.html?error=400
+ErrorDocument 401 /sitemap.html?error=401
+ErrorDocument 402 /sitemap.html?error=402
+ErrorDocument 403 /sitemap.html?error=403
+ErrorDocument 404 /sitemap.html?error=404
+ErrorDocument 500 /sitemap.html?error=500
+
+##-----------------------------------------
+##- SEO Shopstat Modul (Hartmut Koenig)
+##-----------------------------------------
+<IfModule mod_rewrite.c>
+  ##-- Initialize and enable rewrite engine
+  ##-- Documentation http://httpd.apache.org/docs/misc/rewriteguide.html
+  RewriteEngine On
+
+  ##-- EXAMPLE: If your shop is located at "http://www.yourdomain.com/shop",
+  ##-- set the following line like e.g.: RewriteBase /shop/
+  RewriteBase /
+
+  ##-- Use canonical URLs
+  ##-- redirect to www-domain, when www is missing and no subdomain given and not using an ssl-proxy
+  ##-- HostEurope
+  #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl\.webpack\.de$ [NC]
+  ##-- 1und1
+  #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl\.kundenserver\.de$ [NC]
+  ##-- domainFACTORY
+  #RewriteCond %{HTTP:X-Forwarded-Server}   !^sslsites\.de$ [NC]
+  ##-- All-Inkl
+  #RewriteCond %{HTTP:X-Forwarded-Server}   !^ssl-account\.com$ [NC]
+  ##-- Strato
+  #RewriteCond %{HTTP:X-Forwarded-Server}   !^www\.ssl-id\.de$ [NC]
+
+  #RewriteCond %{HTTP_HOST}                 !^www\.(.*) [NC]
+  #RewriteCond %{HTTP_HOST}                 !^(.*)\.(.*)\.(.*) [NC]
+  #RewriteCond %{HTTP_HOST}                 !^localhost(.*)$ [NC]
+  #RewriteRule ^(.*)                        http://www.%{HTTP_HOST}/$1 [R=301,L]
+
+  ##-- Sitemap
+  RewriteRule ^sitemap(.*)\.html$ shop_content.php?coID=8 [QSA,L]
+
+  ##----------------------------------------------------------------------------------
+  ##-- When working with SEO-Urls you can decide, whether to use a colon ":" or a dash "-" symbol
+  ##-- (Windows Servers might have problems with colon as delimiter!)
+  ##-- Change the delimiter symbol also in file "/inc/shopstat_functions.inc.php"
+  ##----------------------------------------------------------------------------------
+
+  ##-- Use colon delimiter ":" for SEO-URLS (default setting)
+  ##-- Categories (:::)
+  RewriteCond %{REQUEST_URI} (.*):::([_0-9]+):([_0-9]+)\.html$
+  RewriteRule (.*):::([_0-9]+):([_0-9]+)\.html$ index.php?cPath=$2&page=$3 [QSA,L]
+  RewriteCond %{REQUEST_URI} (.*):::([_0-9]+)\.html$
+  RewriteRule (.*):::([_0-9]+)\.html$ index.php?cPath=$2 [QSA,L]
+
+  ##-- Products (::)
+  RewriteRule (.*)::(.+)\.html$ product_info.php?products_id=$2 [QSA,L]
+
+  ##-- Content (:_:)
+  RewriteRule (.*):_:([0-9]+)\.html$ shop_content.php?coID=$2 [QSA,L]
+
+  ##-- Manufacturers (:.:)
+  RewriteCond %{REQUEST_URI} (.*):.:([_0-9]+):([_0-9]+)\.html$
+  RewriteRule (.*):.:([_0-9]+):([_0-9]+)\.html$ index.php?manufacturers_id=$2&page=$3 [QSA,L]
+  RewriteCond %{REQUEST_URI} (.*):.:([_0-9]+)\.html$
+  RewriteRule (.*):.:([0-9]+)\.html$ index.php?manufacturers_id=$2 [QSA,L]
+
+  ##-- Use dash delimiter "-" for SEO-URLS
+  ##-- Categories (---)
+  #RewriteCond %{REQUEST_URI} (.*)---([_0-9]+)-([_0-9]+)\.html$
+  #RewriteRule (.*)---([_0-9]+)-([_0-9]+)\.html$ index.php?cPath=$2&page=$3 [QSA,L]
+  #RewriteCond %{REQUEST_URI} (.*)---([_0-9]+)\.html$
+  #RewriteRule (.*)---([_0-9]+)\.html$ index.php?cPath=$2 [QSA,L]
+
+  ##-- Products (--)
+  #RewriteRule (.*)--(.+)\.html$ product_info.php?products_id=$2 [QSA,L]
+
+  ##-- Content (-_-)
+  #RewriteRule (.*)-_-([0-9]+)\.html$ shop_content.php?coID=$2 [QSA,L]
+
+  ##-- Manufacturers (-.-)
+  #RewriteCond %{REQUEST_URI} (.*)-.-([_0-9]+)-([_0-9]+)\.html$
+  #RewriteRule (.*)-.-([_0-9]+)-([_0-9]+)\.html$ index.php?manufacturers_id=$2&page=$3 [QSA,L]
+  #RewriteCond %{REQUEST_URI} (.*)-.-([_0-9]+)\.html$
+  #RewriteRule (.*)-.-([0-9]+)\.html$ index.php?manufacturers_id=$2 [QSA,L]
+</IfModule>

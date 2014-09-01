@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit
+	bootstrap="bootstrap.php">
+    <testsuite name="All tests">
+        <file>phpunit/testDispatcher.php</file>
+        <file>phpunit/testSettings.php</file>
+        <file>phpunit/testLanguagePack.php</file>
+        <file>phpunit/testAddress.php</file>
+        <file>phpunit/testRetrieveHTML.php</file>
+    </testsuite>
+</phpunit>

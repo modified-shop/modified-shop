@@ -1,0 +1,72 @@
+{config_load file="$language/lang_$language.conf" section="index"}
+<div id="wrap">
+  <div id="header">
+    <div id="logo"><img src="{$tpl_path}img/spacer.gif" width="400" height="115" alt="{$store_name}" /></div>
+    <div id="search">{$box_SEARCH}</div>
+  </div>
+  <div id="topmenuwrap">
+    <ul id="topmenu">
+      <li><a href="{$index}">{#link_index#}</a></li>
+      <li><a href="{$cart}">{#link_cart#}</a></li>
+      {if $account}
+        <li><a href="{$account}">{#link_account#}</a></li>
+      {/if}
+      {if $smarty.session.customers_status.customers_status_id == '1'}
+        <li><a href="{php}echo xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL');{/php}">{#new_customer#}</a></li>
+      {/if}
+      <li><a href="{$checkout}">{#link_checkout#}</a></li>
+      {if $smarty.session.customer_id}
+        <li><a href="{$logoff}">{#link_logoff#}</a></li>
+      {else}
+        <li><a href="{$login}">{#link_login#}</a></li>
+      {/if}
+    </ul>
+    <div id="languages">{$box_LANGUAGES}</div>
+  </div>
+  <div id="breadcrumb">{$navtrail}</div>
+  <div id="contentwrap">
+    {if !strstr ($smarty.server.PHP_SELF, 'checkout')}
+      <div id="leftcol">
+          {$box_CATEGORIES}
+          {$box_ADD_QUICKIE}
+          {$box_CONTENT}
+          {$box_INFORMATION}
+          {$box_LAST_VIEWED}
+          {$box_REVIEWS}
+          {$box_SPECIALS}
+          {$box_WHATSNEW}
+       </div>
+      {/if}
+    <div id="content{if strpos($smarty.server.PHP_SELF, 'checkout')}full{/if}">
+      {if strstr ($smarty.server.PHP_SELF, 'index')}
+        {if $smarty.get.cPath==null and $smarty.get.manufacturers_id==''}
+          {if $BANNER}{$BANNER}{/if}
+        {/if}
+      {/if}
+      {$main_content}
+    </div>
+    {if !strstr ($smarty.server.PHP_SELF, 'checkout')}
+      <div id="rightcol">
+        {$box_CART}
+        {$box_LOGIN}
+        {$box_ADMIN}
+        {$box_NEWSLETTER}
+        {$box_BESTSELLERS}
+        {$box_INFOBOX}
+        {$box_CURRENCIES}
+        {$box_MANUFACTURERS_INFO}
+        {$box_MANUFACTURERS}
+      </div>
+    {/if}
+  </div>
+  <p class="footer">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></p>
+</div>
+{if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE=='true' and $smarty.session.customers_status.customers_status_id == '0')
+  or $smarty.session.customers_status.customers_status_id != '0'}
+  {if $smarty.const.TRACKING_PIWIK_ACTIVE=='true'}
+    {piwik url=$smarty.const.TRACKING_PIWIK_LOCAL_PATH id=$smarty.const.TRACKING_PIWIK_ID goal=$smarty.const.TRACKING_PIWIK_GOAL}
+  {/if}
+  {if $smarty.const.TRACKING_GOOGLEANALYTICS_ACTIVE=='true'}
+    {googleanalytics account=$smarty.const.TRACKING_GOOGLEANALYTICS_ID trackorders=true}
+  {/if}
+{/if}

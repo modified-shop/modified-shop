@@ -1,0 +1,23 @@
+{if $options != ''}
+  <table width="100%"  border="0" cellpadding="0" cellspacing="0">
+    {foreach name=outer item=options_data from=$options}
+      <tr>
+        <td style="border-bottom: 1px solid;" colspan="4"><strong>{$options_data.NAME}:</strong></td>
+      </tr>
+      {foreach name=inner key=key_data item=item_data from=$options_data.DATA}
+        <tr class="{cycle values="tableListingI,tableListingII"}">
+          <td>
+            {if $smarty.foreach.inner.iteration == 1}
+              <input type="radio" name="id[{$options_data.ID}]" id="{$item_data.ID}" value="{$item_data.ID}" checked="checked" />
+            {else}
+              <input type="radio" name="id[{$options_data.ID}]" id="{$item_data.ID}" value="{$item_data.ID}" />
+            {/if}
+          </td>
+          <td><label for="{$item_data.ID}">{$item_data.TEXT}<br />ArtNr.: {$item_data.MODEL}</label></td>
+          <td>&nbsp;</td>
+          <td align="right">{if $item_data.FULL_PRICE}{$item_data.FULL_PRICE}{elseif $item_data.PRICE}{$item_data.PREFIX}{$item_data.PRICE}{/if}</td>
+        </tr>
+      {/foreach}
+    {/foreach}
+  </table>
+{/if}

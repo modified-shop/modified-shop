@@ -1,0 +1,51 @@
+<project name="Project-Name" default="tests">
+    <property name="props" location="build.properties" />
+    <property name="versionp" location="version" />
+    <property name="git.tasks.macro" location="ant/git-tasks.xml"/>
+    <property name="tasks" location="ant/tasks.xml"/>
+    <property name="base" location="ant/base.xml"/>
+
+    <property file="${props}" />
+    <property file="${versionp}" />
+    <import file="${tasks}" />
+    <import file="${git.tasks.macro}" />
+    <import file="${base}" />
+
+    <patternset id="source">
+        <include name="**/*.php" />
+    </patternset>
+
+    <target name="install" description="Creates the binary/run-time folder">
+        <copy todir="${install.dir}">
+            <fileset dir="." id="alldirs">
+                <patternset refid="source" />
+            </fileset>
+        </copy>
+
+        <replace-ver-n-date dir="${install.dir}">
+            <fileset dir="${install.dir}" id="alldirs">
+                <patternset refid="source" />
+            </fileset>
+        </replace-ver-n-date>
+    </target>
+
+    <target name="check" depends="check-php, check-xml, check-js" />
+
+    <target name="check-php">
+        <phplint dest="." />
+    </target>
+
+    <target name="check-xml">
+        <xmllint dest="." />
+    </target>
+
+    <target name="check-js">
+        <jslint dest="." />
+    </target>
+
+    <target name="list-authors">
+        <git-authors />
+        <echo>${authors}</echo>
+    </target>
+
+</project>
