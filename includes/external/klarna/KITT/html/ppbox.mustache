@@ -1,0 +1,53 @@
+<div id="klarna_PPBox" class="klarna_PPBox" style="display: none">
+    <div id="klarna_partpayment" style="display: none"></div>
+    <div class="klarna_PPBox_inner">
+         <div class="klarna_PPBox_top">
+            <div class="klarna_PPBox_topRight"></div>
+            <div class="klarna_PPBox_topLeft"></div>
+            <div class="klarna_PPBox_topMid">
+                  <span>{{lang.PPBOX_fromText}}<label>{{pclasses.minimumPClass}}</label>{{lang.PPBOX_monthText}}{{asterisk}}</span>
+            </div>
+         </div>
+         <div class="klarna_PPBox_bottom">
+            <div class="klarna_PPBox_bottomMid">
+                <table cellpadding="0" cellspacing="0" width="100%" border="0">
+                    <thead>
+                        <tr>
+                            <th class="klarna_column_left"></th>
+                            <th class="klarna_column_right">{{lang.PPBOX_th_sum}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {{#pclasses.table}}
+                        <tr>
+                            <td class="klarna_column_left">
+                                {{{description}}}
+                            </td>
+                            <td class='klarna_column_right klarna_PPBox_pricetag'>
+                                {{cost}}
+                            </td>
+                        </tr>
+                        {{/pclasses.table}}
+                    </tbody>
+                  </table>
+                  <div class="klarna_PPBox_bottomMid_readMore"></div>
+                <div class="klarna_PPBox_pull" id="klarna_PPBox_pullUp">
+                    <div class="klarna_PPBox_pull_img"></div>
+                </div>
+              </div>
+              <div class="klarna_PPBox_pull" id="klarna_PPBox_pullDown">
+                  <div class="klarna_PPBox_pullDown_img"></div>
+              </div>
+              <div class="bannerhook"></div>
+         </div>
+    </div>
+</div>
+<script>
+__klarna_product = new Klarna.Product.PPBox({
+    box: 'klarna_PPBox',
+    eid: '{{eid}}',
+    country: '{{country}}',
+    ajax_path: '{{config.web.ajax}}'
+});
+__klarna_product.setup();
+</script>

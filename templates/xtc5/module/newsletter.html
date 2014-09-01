@@ -1,0 +1,38 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"}
+<h1>{#heading_title#}</h1>
+{if $info_message!=''}<div class="errormessage">{$info_message}</div>{/if}
+{$FORM_ACTION}
+<div class="highlightbox">
+<table border="0" cellspacing="0" cellpadding="4">
+  <tr> 
+    <td width="140"><strong>{#text_sec_code#}:</strong></td>
+    <td>{$VVIMG}</td>
+  </tr>
+  <tr> 
+    <td><strong>{#text_sec_code#}:</strong></td>
+    <td>{$INPUT_CODE}</td>
+  </tr>
+  <tr> 
+    <td><strong>{#text_email#}:</strong></td>
+    <td>{$INPUT_EMAIL}</td>
+  </tr>
+  <tr> 
+    <td>&nbsp;</td>
+    <td><table cellspacing="0" cellpadding="0">
+        <tr> 
+          <td>{$CHECK_INP}</td>
+          <td>{#text_in#}</td>
+        </tr>
+        <tr> 
+          <td>{$CHECK_DEL}</td>
+          <td>{#text_out#}</td>
+        </tr>
+      </table></td>
+  </tr>
+  <tr> 
+    <td>&nbsp;</td>
+    <td>{$BUTTON_SEND}</td>
+  </tr>
+</table>
+</div>
+{$FORM_END}

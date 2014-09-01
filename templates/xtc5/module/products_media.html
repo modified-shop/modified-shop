@@ -1,0 +1,11 @@
+{config_load file="$language/lang_$language.conf" section="products_media"} 
+<h1>{#file#}:</h1>
+<table class="medialist" border="0" width="100%" cellspacing="0" cellpadding="4">
+	   {foreach name=aussen item=module_data from=$module_content}
+      <tr class="{cycle values="contentrow1,contentrow2"}"> 
+        <td width="100%"><strong>{$module_data.FILENAME}</strong><br />{$module_data.DESCRIPTION}</td>
+        <td>{$module_data.FILESIZE}</td>
+        <td>{$module_data.BUTTON}</td>
+      </tr>
+	  {/foreach}
+</table>

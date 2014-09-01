@@ -1,0 +1,69 @@
+{config_load file="$language/lang_$language.conf" section="newsletter"} 
+{config_load file="$language/lang_$language.conf" section="contact_us"}
+<h1>{$CONTACT_HEADING}</h1>
+{$CONTACT_CONTENT} <br />
+<br />
+{if $error_message!=''}
+<div class="errormessage">{$error_message}</div>
+{/if} {if $success!='1'} {$FORM_ACTION}
+<div class="highlightbox">
+	<table width="100%" border="0" cellspacing="0" cellpadding="4">        
+	        <tr> 
+	          <td width="41%">{#text_name#}</td>
+	          <td width="59%">{$INPUT_NAME}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_email#}*</td>
+	          <td width="59%">{$INPUT_EMAIL}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_phone#}</td>
+	          <td width="59%">{$INPUT_PHONE}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_fax#}</td>
+	          <td width="59%">{$INPUT_FAX}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_street#}</td>
+	          <td width="59%">{$INPUT_STREET}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_postcode#}</td>
+	          <td width="59%">{$INPUT_POSTCODE}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_city#}</td>
+	          <td width="59%">{$INPUT_CITY}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_company#}</td>
+	          <td width="59%">{$INPUT_COMPANY}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_sec_code#}</td>
+	          <td>{$VVIMG}</td>
+	        </tr>
+	        <tr> 
+	          <td>{#text_sec_code#}*</td>
+	          <td width="59%">{$INPUT_CODE}</td>
+	        </tr>
+	        <tr>
+	          <td valign="top">{#text_message#}*</td>
+	          <td width="59%">{$INPUT_TEXT}</td>
+	        </tr>
+	        <tr>
+	          <td valign="top">&nbsp;</td>
+	          <td width="59%">{$BUTTON_SUBMIT}</td>
+	        </tr>
+	        <tr>
+            <th>{#text_hint#}</th>
+          </tr>
+	</table>
+</div>
+<!--p>{*$BUTTON_SUBMIT*}</p-->
+{$FORM_END}
+{else}
+<p>{#text_success#}</p>
+<p>{$BUTTON_CONTINUE}</p>
+{/if}

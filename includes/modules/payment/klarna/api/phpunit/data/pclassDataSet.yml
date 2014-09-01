@@ -1,0 +1,13 @@
+pclasses:
+  -
+    eid: 2
+    id: 666
+    type: 2
+    description: "desc_pclass"
+    months: 12
+    interestrate: 12.2
+    invoicefee: 0
+    startfee: 0
+    minamount: 1
+    country: 81
+    expire: 1903816800

@@ -1,0 +1,64 @@
+body {
+	font-family: 'Helvetica', sans-serif;
+	font-size: 16px;
+	text-align: center;
+	background: #ffffff url('https://images.sofort.com/de/pnag/logo.gif') no-repeat fixed right bottom;
+}
+a {
+	text-decoration: none;
+	color: #C0C0C0;
+}
+a:hover {
+	text-shadow: 1px 1px 2px #c7c7c7;
+	filter: dropshadow(color=#c7c7c7, offx=1, offy=1);
+}
+h1 {
+	font-size: 1.5em;
+}
+#page {
+	width: 420px;
+	margin: 0em auto;
+}
+#page h1 {
+	color: #C0C0C0;
+}
+div.element.sofort_button {
+	float: left;
+	display:block;
+	margin: 0 15px 20px 15px;
+	padding: 10px 2px 0 2px;
+	text-align: center;
+	background: #fff;
+	border: 1px solid #C0C0C0;
+	border-radius: 7px;
+	-moz-border-radius: 7px;
+	-webkit-border-radius: 7px;
+	-webkit-box-shadow: 3px 3px 1px 1px rgba(0, 0, 0, 0.1);
+	-moz-box-shadow: 3px 3px 1px 1px rgba(0, 0, 0, 0.1);
+	box-shadow: 3px 3px 4px 1px rgba(202, 206, 216, 1);
+}
+div.element.sofort_button.wide-box {
+	width: 384px;
+}
+div.element.sofort_button.narrow-box {
+	width: 174px;
+}
+hr.line {
+	background-color: #C0C0C0;
+	color: #C0C0C0;
+	height: 3px;
+	margin: 10px;
+}
+.clear {
+	clear: both;
+	float: none;
+	line-height: 0;
+	font-size: 0;
+	display: block;
+}
+.big {
+	font-size: 1.2em;
+}
+.small {
+	font-size: 0.75em;
+}

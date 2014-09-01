@@ -1,0 +1,130 @@
+#cssmenu{
+clear:both;
+border:none;
+margin:0;
+padding:0;
+font-family:verdana,geneva,arial,helvetica,sans-serif;
+font-size:10px;
+font-weight:bold;
+color:#333;
+min-width:1100px;
+height: 40px;
+}
+#cssmenu ul{
+background:url(images/menu-bg.gif) top left repeat-x;
+height:36px;
+list-style:none;
+margin:0;
+padding:0;
+margin-top: -6px;
+}
+#cssmenu li{
+float:left;
+padding:10px 0px 0px 0px;
+cursor:pointer;
+border: 0;
+}
+#cssmenu li a{
+background: #b40076; /* url(images/current-bg.gif) top left repeat-x;*/
+color:#fff;
+display:block;
+font-weight:bold;
+line-height:24px;
+padding:0px 7px;
+text-align:center;
+text-decoration:none;
+width: 70px;
+}
+#cssmenu li a:hover{
+color:#fff;
+text-decoration:none;
+}
+#cssmenu li ul{
+margin-top: 0px;
+background: #e0e0e0;
+border-left:1px solid #B40076;
+border-right:1px solid #B40076;
+border-bottom:1px solid #B40076;
+display:none;
+height:auto;
+position:absolute;
+z-index:2000;
+}
+#cssmenu ul li:hover ul{
+display:block;
+}
+#cssmenu li li {
+display:block;
+float:none;
+padding:0px;
+width:180px;
+}
+#cssmenu li ul a{
+background: #d3d3d3 url(images/menu-bg-li.gif) repeat-x bottom;
+border-top:1px solid #B40076;
+line-height:24px;
+height:24px;
+color:#000;
+display:block;
+font-size:10px;
+font-weight:normal;
+padding:0px 5px 0px 5px;
+text-align:left;
+}
+#cssmenu li ul a:hover{
+background:#bbb;
+color:#000000;
+}
+#cssmenu p{
+clear:left;
+}
+#cssmenu .active > a{
+background:url(images/current-bg.gif) top left repeat-x;
+color:#fff;
+}
+#cssmenu .active > a:hover {
+color:#fff;
+}
+
+#cssmenu .dataTableHeadingContent {
+background: transparent url(images/trenner.gif) no-repeat right;
+border: none;
+padding: 6px 10px;
+}
+#cssmenu a.menuBoxContentLink{
+width:170px;
+}
+
+#lang_flag{
+float: left;
+margin: 7px 6px 0 6px;
+}
+
+#top1{
+margin-top: 0px;
+margin-bottom: 5px;
+border-top: 0px solid #b40076;
+}
+
+/* FAVORITEN */
+#favorites{
+min-width: 1100px;
+}
+#favorites div{
+float:left;
+}
+td.fastmenu{
+width: 105px;
+font-size: 9px;
+text-align: center;
+font-family: Verdana, Geneva, Arial, Helvetica, sans-serif;
+letter-spacing: normal;
+}
+td.fastmenu img{
+margin: 3px 0;
+}
+.columnLeft2{
+display: none;
+}
+
+

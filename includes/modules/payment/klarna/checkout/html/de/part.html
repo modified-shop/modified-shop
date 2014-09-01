@@ -1,0 +1,300 @@
+
+<!-- KLARNA BOX -->
+{{setup.threatmetrix}}
+<script type="text/javascript">
+ <!--
+window.klarna_global = {
+    eid: '{{setup.eid}}',
+    countryCode: '{{setup.countryCode}}',
+    flag: '{{setup.flag}}',
+    sum: '{{setup.sum}}',
+    pid: '{{setup.payment_id}}',
+    unary_checkout: '{{setup.unary_checkout}}',
+    ajax_path: '{{setup.ajax_path}}',
+    gender: '{{value.gender}}',
+    lang_companyNotAllowed: '{{lang.company_not_allowed}}',
+    invoice_name: '{{setup.invoice_name}}',
+    part_name: '{{setup.part_name}}',
+    spec_name: '{{setup.spec_name}}'
+};
+
+if ((typeof window.klarna_red_baloon_content == "undefined")
+    || (window.klarna_red_baloon_content == "")
+) {
+    window.klarna_red_baloon_content = '{{setup.red_baloon_content}}';
+    window.klarna_red_baloon_box = '{{setup.red_baloon_paymentBox}}';
+}
+window.klarna_part = {
+    params: {
+        companyName: '{{input.companyName}}',
+        socialNumber: '{{input.socialNumber}}',
+        firstName: '{{input.firstName}}',
+        lastName: '{{input.lastName}}',
+        gender: '{{input.gender}}',
+        street: '{{input.street}}',
+        homenumber: '{{input.homenumber}}',
+        house_extension: '{{input.house_extension}}',
+        city: '{{input.city}}',
+        zipcode: '{{input.zipcode}}',
+        reference: '{{input.reference}}',
+        phoneNumber: '{{input.phoneNumber}}',
+        emailAddress: '{{input.emailAddress}}',
+        invoiceType: '{{input.invoiceType}}',
+        shipmentAddressInput: '{{input.shipmentAddressInput}}',
+        birth_day: '{{input.birth_day}}',
+        birth_month: '{{input.birth_month}}',
+        birth_year: '{{input.birth_year}}',
+        paymentPlan: '{{input.paymentPlan}}'
+    },
+    language: '{{setup.langISO}}',
+    select_bday: '{{value.birth_day}}',
+    select_bmonth: '{{value.birth_month}}',
+    select_byear: '{{value.birth_year}}',
+    lang_personNum: '{{lang.person_number}}',
+    lang_orgNum: '{{lang.organisation_number}}'
+};
+if (typeof klarna != "undefined") {
+    klarna.part = new KlarnaPaymentOption(klarna_part);
+    klarna.global = new KlarnaGlobalContext(klarna_global);
+}
+
+
+if(typeof klarnaGeneralLoaded == 'undefined') {
+    document.write('<scr'+'ipt src="{{setup.path_js}}checkout/klarnaGeneral.js" type="text/javascript"></scr'+'ipt>');
+}
+
+if(typeof klarnaAgreementLoaded == 'undefined') {
+    document.write('<scr'+'ipt src="http://static.klarna.com/external/js/klarnaConsentNew.js" type="text/javascript"></scr'+'ipt>');
+    klarnaAgreementLoaded = true;
+}
+
+jQuery('head').append('<link type="text/css" rel="stylesheet" href="{{setup.path_css}}checkout/style.css" />');
+//-->
+</script>
+<div class="klarna_baloon" id="klarna_baloon" style="display: none">
+    <div class="klarna_baloon_top"></div>
+    <div class="klarna_baloon_middle" id="klarna_baloon_content">
+        <div></div>
+    </div>
+    <div class="klarna_baloon_bottom"></div>
+</div>
+<div class="klarna_blue_baloon" id="klarna_blue_baloon"
+    style="display: none">
+    <div class="klarna_blue_baloon_top"></div>
+    <div class="klarna_blue_baloon_middle" id="klarna_blue_baloon_content">
+        <div></div>
+    </div>
+    <div class="klarna_blue_baloon_bottom"></div>
+</div>
+<div class="klarna_box_container">
+    <div class="klarna_box" id="klarna_box_part">
+        <script type="text/javascript">
+            jQuery(document).ready(function() {
+                if (typeof klarnaAgreementLoaded != 'undefined') {
+                    openAgreement('{{setup.countryCode}}');
+                }
+            });
+        </script>
+        <div class="klarna_box_top">
+            <div id="klarna_box_part_top_right" class="klarna_box_top_right">
+                <div class="klarna_box_top_flag">
+                    <div class="box_active_language">
+                        <img src="{{setup.path_img}}checkout/flags/{{setup.langISO}}.png"
+                            alt="{{setup.langISOName}}" /> <img
+                            src="{{setup.path_img}}checkout/arrow_down.gif" alt=""
+                            style="float: right; padding: 6px 2px 0 0; margin: 0" />
+                    </div>
+                    <div class="klarna_box_top_flag_list">
+                        <img src="{{setup.path_img}}checkout/flags/en.png" alt="en" />
+                        <img src="{{setup.path_img}}checkout/flags/da.png" alt="da" />
+                        <img src="{{setup.path_img}}checkout/flags/de.png" alt="de" />
+                        <img src="{{setup.path_img}}checkout/flags/fi.png" alt="fi" />
+                        <img src="{{setup.path_img}}checkout/flags/nl.png" alt="nl" />
+                        <img src="{{setup.path_img}}checkout/flags/nb.png" alt="nb" />
+                        <img src="{{setup.path_img}}checkout/flags/sv.png" alt="sv" />
+                    </div>
+                </div>
+                <div class="klarna_box_top_agreement">
+                    <a href="javascript:ShowKlarnaPopup('{{setup.eid}}', '{{setup.sum}}','part')">
+                        {{lang.klarna_account_agreement}} </a>
+                </div>
+                <div class="klarna_box_bottom_languageInfo">
+                    <img src="{{setup.path_img}}checkout/notice.png"
+                        alt="{{lang.languageSetting_note_de}}" />
+                </div>
+            </div>
+            <img
+                src="//cdn.klarna.com/public/images/DE/logos/v1/account/DE_account_logo_std_blue-black.png?width=151&height=44&eid={{setup.eid}}"
+                id="klarna_logo_part"
+                class="klarna_logo" />
+        </div>
+        <div class="klarna_box_bottom">
+            <div class="klarna_box_bottom_contents">
+                <div class="klarna_box_bottom_left">
+                    <div class="klarna_box_bottom_content">
+                        <div class="klarna_box_bottom_title">{{lang.part_payment}}</div>
+                        <ol class="paymentPlan">{{setup.pclasses}}
+                        </ol>
+                        <input type="hidden" name="{{input.paymentPlan}}"
+                            value="{{value.paymentPlan}}" class="paymentPlan" />
+                    </div>
+                </div>
+                <div class="klarna_box_bottom_right">
+                    <div class="klarna_box_bottom_content">
+                        <div class="klarna_box_bottom_input_combo" style="width: 100%">
+                            <div id="left" style="width: 60%">
+                                <div class="klarna_box_bottom_title">{{lang.first_name}}</div>
+                                <input alt="{{lang.notice_firstName}}" type="text"
+                                    name="{{input.firstName}}" value="{{value.firstName}}"
+                                    style="width: 98%"
+                                    class="klarna-validate-text"/>
+                            </div>
+                            <div id="right" style="width: 40%">
+                                <div class="klarna_box_bottom_title">{{lang.last_name}}</div>
+                                <input alt="{{lang.notice_lastName}}" type="text"
+                                    name="{{input.lastName}}" value="{{value.lastName}}"
+                                    style="width: 100%"
+                                    class="klarna-validate-text"/>
+                            </div>
+                        </div>
+                        <div class="klarna_gender_box">
+                            <div class="klarna_box_bottom_title">{{lang.sex}}</div>
+                            <input type="radio" name="{{input.gender}}" value="1" id="part_male"
+                                   class="Klarna_radio gender klarna-validate-radio" />
+                            <div class="klarna_box_bottom_radio_title" style="float: left">
+                                <label for="part_male">{{lang.sex_male}}</label>
+                            </div>
+                            <input type="radio" name="{{input.gender}}" value="0" id="part_female"
+                                   class="Klarna_radio gender klarna-validate-radio" />
+                            <div class="klarna_box_bottom_radio_title" style="float: none">
+                                <label for="part_female">{{lang.sex_female}}</label>
+                            </div>
+                        </div>
+                        <div class="klarna_box_bottom_title">{{lang.phone_number}}</div>
+                        <input alt="{{lang.notice_phoneNumber_de}}" type="text"
+                            name="{{input.phoneNumber}}" value="{{value.phoneNumber}}"
+                            class="Klarna_fullwidth klarna-validate-text" />
+                        <div class="klarna_box_bottom_input_combo" style="width: 100%">
+                            <div id="left" style="width: 60%">
+                                <div class="klarna_box_bottom_title">{{lang.address_street}}</div>
+                                <input alt="{{lang.notice_streetaddress}}" type="text"
+                                    name="{{input.street}}" value="{{value.street}}"
+                                    style="width: 98%"
+                                    class="klarna-validate-text"/>
+                            </div>
+                            <div id="right" style="width: 40%">
+                                <div class="klarna_box_bottom_title">{{lang.address_homenumber}}</div>
+                                <input alt="{{lang.notice_housenumber}}" type="text"
+                                    name="{{input.homenumber}}" value="{{value.homenumber}}"
+                                    style="width: 100%"
+                                    class="klarna-validate-text"/>
+                            </div>
+                        </div>
+                        <div class="klarna_box_bottom_input_combo" style="width: 100%">
+                            <div id="left" style="width: 60%">
+                                <div class="klarna_box_bottom_title">{{lang.address_zip}}</div>
+                                <input alt="{{lang.notice_zip}}" type="text"
+                                    name="{{input.zipcode}}" value="{{value.zipcode}}"
+                                    style="width: 98%"
+                                    class="klarna-validate-text"/>
+                            </div>
+                            <div id="right" style="width: 40%">
+                                <div class="klarna_box_bottom_title">{{lang.address_city}}</div>
+                                <input alt="{{lang.notice_city}}" type="text"
+                                    name="{{input.city}}" value="{{value.city}}"
+                                    style="width: 100%"
+                                    class="klarna-validate-text"/>
+                            </div>
+                        </div>
+                        <div class="klarna_box_bottom_title">{{lang.birthday}}</div>
+                        <div class="klarna_box_bottom_input_combo" style="width: 100%">
+                            <div id="left" style="width: 30%">
+                                <select style="width: 98%" name="{{input.birth_day}}"
+                                    id="selectBox_part_bday"
+                                    class="klarna-validate-select">
+                                    <option value="00" disabled="disabled" selected="selected">{{lang.date_day}}</option>
+                                    <option value="01">01</option>
+                                    <option value="02">02</option>
+                                    <option value="03">03</option>
+                                    <option value="04">04</option>
+                                    <option value="05">05</option>
+                                    <option value="06">06</option>
+                                    <option value="07">07</option>
+                                    <option value="08">08</option>
+                                    <option value="09">09</option>
+                                    <option value="10">10</option>
+                                    <option value="11">11</option>
+                                    <option value="12">12</option>
+                                    <option value="13">13</option>
+                                    <option value="14">14</option>
+                                    <option value="15">15</option>
+                                    <option value="16">16</option>
+                                    <option value="17">17</option>
+                                    <option value="18">18</option>
+                                    <option value="19">19</option>
+                                    <option value="20">20</option>
+                                    <option value="21">21</option>
+                                    <option value="22">22</option>
+                                    <option value="23">23</option>
+                                    <option value="24">24</option>
+                                    <option value="25">25</option>
+                                    <option value="26">26</option>
+                                    <option value="27">27</option>
+                                    <option value="28">28</option>
+                                    <option value="29">29</option>
+                                    <option value="30">30</option>
+                                    <option value="31">31</option>
+                                </select>
+                            </div>
+                            <div id="left" style="width: 40%">
+                                <select style="width: 98%" name="{{input.birth_month}}"
+                                    id="selectBox_part_bmonth"
+                                    class="klarna-validate-select">
+                                    <option value="00" disabled="disabled" selected="selected">{{lang.date_month}}</option>
+                                    <option value="01">{{lang.month_1}}</option>
+                                    <option value="02">{{lang.month_2}}</option>
+                                    <option value="03">{{lang.month_3}}</option>
+                                    <option value="04">{{lang.month_4}}</option>
+                                    <option value="05">{{lang.month_5}}</option>
+                                    <option value="06">{{lang.month_6}}</option>
+                                    <option value="07">{{lang.month_7}}</option>
+                                    <option value="08">{{lang.month_8}}</option>
+                                    <option value="09">{{lang.month_9}}</option>
+                                    <option value="10">{{lang.month_10}}</option>
+                                    <option value="11">{{lang.month_11}}</option>
+                                    <option value="12">{{lang.month_12}}</option>
+                                </select>
+                            </div>
+                            <div id="right" style="width: 30%">
+                                <select style="width: 100%" name="{{input.birth_year}}"
+                                    id="selectBox_part_year"
+                                    class="klarna-validate-select">
+                                    <option value="00" disabled="disabled" selected="selected">{{lang.date_year}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="klarna_box_bottom_input_combo" style="width: 100%">
+                            <div class="klarna_box_bottom_title" style="width: 90%; margin-top: 3px">
+                                <em>{{lang.notice_billing_same_as_shipping}}</em>
+                            </div>
+                        </div>
+                        <div class="klarna_box_bottom_input_combo" style="width: 100%">
+                            <input type="checkbox" name="{{input.consent}}"
+                                id="box_{{input.consent}}"
+                                style="float: left; margin-right: 3px"
+                                class="klarna-validate-checkbox"/>
+                                <div class="klarna_box_bottom_title" style="width: 80%; margin-top: 3px">Mit der &Uuml;bermittlung der f&uuml;r die Abwicklung des Rechnungskaufes und einer Identit&auml;ts- und Bonit&auml;tspr&uuml;fung erforderlichen Daten an Klarna bin ich einverstanden. Meine <a href="javascript:ShowKlarnaConsentPopup('{{setup.eid}}','part')">Einwilligung</a> kann ich jederzeit mit Wirkung f&uuml;r die Zukunft widerrufen. Es gelten die <a href="{{setup.agb_link}}" target="{{setup.agb_target}}">AGB</a> des H&auml;ndlers.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="klarna_box_ilt">
+            <div class="klarna_box_ilt_title">{{lang.ilt_title}}</div>
+            <div class="klarna_box_iltContents">{{ilt.box}}</div>
+        </div>
+    </div>
+</div>
+<input type="hidden" name="{{input.emailAddress}}"
+    value="{{value.emailAddress}}" />
+<!-- END KLARNA BOX -->

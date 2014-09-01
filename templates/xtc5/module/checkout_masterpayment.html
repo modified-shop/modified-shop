@@ -1,0 +1,36 @@
+{config_load file="$language/lang_$language.conf" section="checkout_payment"}
+{config_load file="$language/lang_$language.conf" section="checkout_navigation"}
+
+<ul id="checkoutnavigation">
+	<li class="inactive"><span class="number">1.</span> <span class="title">{#title_shipping#}</span><br /><span class="description">{#desc_shipping#}</span></li>
+	<li class="inactive"><span class="number">2.</span> <span class="title">{#title_payment#}</span><br /><span class="description">{#desc_payment#}</span></li>
+	<li class="inactive"><span class="number">3.</span> <span class="title">{#title_confirmation#}</span><br /><span class="description">{#desc_confirmation#}</span></li>
+	<li class="active"><span class="number">4.</span> <span class="title">{#title_success#}</span><br /><span class="description">{#desc_success#}</span></li>
+</ul>
+<div style="clear:both"></div>
+<br />
+
+<link type="text/css" rel="stylesheet" href="templates/{$tpl_path}/css/masterpayment.css" />
+
+	{if $masterpayment_payment_title!=''}
+    	<h3>{$masterpayment_payment_title}</h3>
+    {/if}
+    
+
+		<div class="masterpayment_box">
+        	
+            <iframe class="masterpayment_frame" allowtransparency="true" src="{$masterpayment_request_url}" scrolling="no" width="100%" height="500" frameborder="0">                             
+            
+         		<p>
+                
+                    <form name="masterpaymentForm" id="masterpaymentForm" action="{$masterpayment_request_url}" method="post">
+                
+                        <input class="masterpayment_submit_button" type="submit" name="sent" value="&raquo; {$masterpayment_button_text}" />
+                        
+                    </form>
+                    
+                </p>        
+        	
+           	</iframe>           
+    
+		</div>

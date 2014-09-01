@@ -1,0 +1,11 @@
+{config_load file="$language/lang_$language.conf" section="reviews"}
+<h1>{#heading_reviews#}</h1>
+{foreach name=aussen item=module_data from=$module_content} 
+<p><strong>{#text_author#}</strong>&nbsp;{$module_data.AUTHOR}&nbsp;am&nbsp;{$module_data.DATE}<br /><strong>{#text_rating#}</strong>{$module_data.RATING}</p>
+<div class="highlightbox">
+<h1>{#text_text#}</h1>
+<p>{$module_data.TEXT}</p>
+</div>
+{/foreach}
+<p>{$BUTTON_WRITE}</p>
+<div class="hrlightgrey"></div>
