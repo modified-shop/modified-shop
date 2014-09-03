@@ -18,7 +18,7 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   ////
   // The HTML href link wrapper function
-  function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+  function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = true) {
   
     $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
   
@@ -40,12 +40,9 @@
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
     }
     if ($parameters == '') {
-      $link = $link . $page . '?' . SID;
+      $link .= $page . (($add_session === true) ? '?' . SID : '');
     } else {
-      //BOF - DokuMan - 2011-01-07 - Sanitize parameters
-      $link = $link . $page . '?' . $parameters . '&' . SID;
-      //$link = $link . $page . '?' . xtc_output_string($parameters) . '&' . SID;
-      //EOF - DokuMan - 2011-01-07 - Sanitize parameters
+      $link .= $page . '?' . $parameters . (($add_session === true) ? '&' . SID : '');
     }
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
@@ -55,7 +52,7 @@
     return $link;
   }
 
-  function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL') {
+  function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
   
     $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
 
@@ -80,9 +77,9 @@
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
     }
     if ($parameters == '') {
-      $link .= $page . '?' . SID;
+      $link .= $page . (($add_session === true) ? '?' . SID : '');
     } else {
-      $link .= $page . '?' . $parameters . '&' . SID;
+      $link .= $page . '?' . $parameters . (($add_session === true) ? '&' . SID : '');
     }
     while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
       $link = substr($link, 0, -1);
