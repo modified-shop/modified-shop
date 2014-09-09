@@ -31,7 +31,7 @@ require('./basexml.php') ;
 require('./commands.php') ;
 require('./phpcompat.php') ;
 
-//SendError( 1, 'Cookie:'.$_COOKIE['XTCsid'].' isAdmin:'.$_COOKIE['isAdmin'] ) ; //Debug
+//SendError( 1, 'Cookie:'.$_COOKIE['MODsid'].' isAdmin:'.$_COOKIE['isAdmin'] ) ; //Debug
 
 if ( !$Config['Enabled'] && !isset($_COOKIE['MODsid'])) {
   SendError( 1, 'This connector is disabled. Cookies need to be enabled in your Internet browser! ' ) ;
