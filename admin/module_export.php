@@ -194,7 +194,7 @@
               if (xtc_class_exists($class)) {
                 $module = new $class();
               }
-              if ($module->check() > 0) {
+              if (method_exists($module,'check') && $module->check() > 0) {
                 $directory_array[0][] = $file;
               } else {
                 $directory_array[1][] = $file;
