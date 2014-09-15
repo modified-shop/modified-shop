@@ -302,12 +302,7 @@ class vat_validation {
     $coo_soap_proxy = $coo_soap_client->getProxy();
 
     // check connection
-    if($coo_soap_client->getError() || !is_object($coo_soap_proxy))
-    {
-      $coo_ekomi_log = new FileLog('vat_validation_errors');
-      $coo_ekomi_log->write(date('Y-m-d H:i:s') . " connection to http://ec.europa.eu/ could not be established. " . print_r($coo_soap_client->getError(), true) . "\n");
-    }
-    else
+    if(!$coo_soap_client->getError() && is_object($coo_soap_proxy))
     {
       $params = array('countryCode' => $country_id, 'vatNumber' => $vatNumber);
 
@@ -343,11 +338,10 @@ class vat_validation {
         }
 
         return $t_error_code;
-      }
-
-      return false;
+      }      
     }
 
+    return false;
   } // end checkVatID_EU
   //EOF - DokuMan - 2011-08-24 - check UstID live via SOAP at http://ec.europa.eu
 
