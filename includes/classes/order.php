@@ -298,11 +298,13 @@
         $attributes_array = array();
         $attributes_query = xtc_db_query($attributes_query);
         while ($attributes_data_values = xtc_db_fetch_array($attributes_query)) {
+          $attrib_model = xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
           $attributes_array[] = array('option' => $attributes_data_values['products_options'],
-                                      'value' => $attributes_data_values['products_options_values']
+                                      'value' => $attributes_data_values['products_options_values'],
+                                      'model' => $attrib_model
                                       );
           $attributes_data .= '<br />'.$attributes_data_values['products_options'].':'.$attributes_data_values['products_options_values'];
-          $attributes_model .= '<br />'.xtc_get_attributes_model($order_data_values['products_id'], $attributes_data_values['products_options_values'],$attributes_data_values['products_options'],$order_lang_id);
+          $attributes_model .= '<br />'.$attrib_model;
         }
 
         $short_description = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? xtc_get_short_description($order_data_values['products_id'],$order_lang_id) : '';
