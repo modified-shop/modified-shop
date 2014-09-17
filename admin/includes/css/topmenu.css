@@ -116,6 +116,15 @@ border-top:1px solid #AF417E;
 min-width:170px;
 width:auto;
 }
+#cssmenu a.menuBoxContentLinkSub{
+border-top:1px solid #AF417E;
+min-width:170px;
+background: url("images/bullet_arrow_right.png") no-repeat center right;
+}
+#cssmenu a.menuBoxContentLinkSub:hover {
+background: #bbb url("images/bullet_arrow_right.png") no-repeat center right;
+color:#000000;
+}
 #lang_flag {
 float: left;
 margin: 7px 6px 0 6px;
