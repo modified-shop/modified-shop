@@ -209,10 +209,16 @@ class it_recht_kanzlei {
       }
       
       if ($content_group != '') {
-        $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
-        xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
-        if (xtc_db_affected_rows() < 1) {
-          $this->return_error('99');
+        $check_query = xtc_db_query("SELECT content_text FROM ".TABLE_CONTENT_MANAGER." WHERE content_group = '".$content_group."' AND languages_id = '".$languages_id."' LIMIT 1");
+        $check = xtc_db_fetch_array($check_query);
+        if ($check['content_text'] == utf8_decode($xml->rechtstext_html.$pdf_file_text)) {
+          $this->return_success();
+        } else {
+          $sql_data_array = array('content_text' => utf8_decode($xml->rechtstext_html.$pdf_file_text));
+          xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_group = '".$content_group."' AND languages_id = '".$languages_id."'");
+          if (xtc_db_affected_rows() < 1) {
+            $this->return_error('99');
+          }
         }
       } else {
         $this->return_error('99');
