@@ -116,6 +116,15 @@ border-top:1px solid #AF417E;
 min-width:170px;
 width:auto;
 }
+#cssmenu a.menuBoxContentLinkSub{
+border-top:1px solid #AF417E;
+min-width:170px;
+background: url("images/bullet_arrow_right.png") no-repeat center right;
+}
+#cssmenu a.menuBoxContentLinkSub:hover {
+background: #bbb url("images/bullet_arrow_right.png") no-repeat center right;
+color:#000000;
+}
 #lang_flag {
 float: left;
 margin: 7px 6px 0 6px;
@@ -124,6 +133,20 @@ margin: 7px 6px 0 6px;
 margin-top: 0px;
 margin-bottom: 5px;
 border-top: 0px solid #AF417E;
+}
+#cssmenu ul ul li {
+  position:relative;
+}  
+#cssmenu ul ul ul {
+  display:none !important;
+  width:200px;
+  display:block;
+  position:absolute;
+  left:180px;
+  top:0px;
+}  
+#cssmenu ul ul li:hover ul {
+  display:block !important;
 }
 
 /*FIXED HEADER*/
