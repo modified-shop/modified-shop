@@ -35,7 +35,7 @@ class janolaw_content {
         $this->get_page_content('agb', 3);
         $this->get_page_content('impressum', 4);
         $this->get_page_content('widerrufsbelehrung', REVOCATION_ID);
-        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(time()) . "', last_modified = NOW() where configuration_key='MODULE_JANOLAW_UPDATED'");
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input(time()) . "', last_modified = NOW() where configuration_key='MODULE_JANOLAW_LAST_UPDATED'");
       }
     }
   }
