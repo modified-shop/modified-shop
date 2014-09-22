@@ -180,7 +180,7 @@ class xtcPrice {
    * @param Integer $pID product id
    * @return Double price
    */
-function getPprice($pID) {
+  function getPprice($pID) {
     $pQuery = xtDBquery("SELECT products_price FROM ".TABLE_PRODUCTS." WHERE products_id='".$pID."'");
     $pData = xtc_db_fetch_array($pQuery, true);
     return $pData['products_price'];
@@ -264,16 +264,17 @@ function getPprice($pID) {
     
     $graduated_price_query = xtDBquery("SELECT max(quantity) AS qty
                                           FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
-                                         WHERE products_id='" . $pID . "'
-                                           AND quantity<='" . $qty . "'");
-    $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
-    if ($graduated_price_data['qty']) {
+                                         WHERE products_id = '" . $pID . "'
+                                           AND quantity <= '" . $qty . "'");
+    if (xtc_db_num_rows($graduated_price_query, true) > 0) {
+      $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
       $graduated_price_query = xtDBquery("SELECT personal_offer
                                             FROM " . TABLE_PERSONAL_OFFERS_BY . $this->actualGroup . "
-                                           WHERE products_id='" . $pID . "'
-                                             AND quantity='" . $graduated_price_data['qty'] . "'");
+                                           WHERE products_id = '" . $pID . "'
+                                             AND quantity = '" . $graduated_price_data['qty'] . "'");
       $graduated_price_data  = xtc_db_fetch_array($graduated_price_query, true);
       $sPrice = $graduated_price_data['personal_offer'];
+
       if ($sPrice != 0.00) {
         return $sPrice;
       }
@@ -292,20 +293,20 @@ function getPprice($pID) {
   function xtcGetGroupPrice($pID, $qty) {
     $graduated_price_query = xtDBquery("SELECT max(quantity) AS qty
                                           FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
-                                         WHERE products_id='".$pID."'
-                                           AND quantity<='".$qty."'");
-    $graduated_price_data = xtc_db_fetch_array($graduated_price_query, true);
-
-    if ($graduated_price_data['qty']) {
+                                         WHERE products_id = '".$pID."'
+                                           AND quantity <= '".$qty."'");
+    if (xtc_db_num_rows($graduated_price_query, true) > 0) {
+      $graduated_price_data = xtc_db_fetch_array($graduated_price_query, true);
       $graduated_price_query = xtDBquery("SELECT personal_offer
                                             FROM ".TABLE_PERSONAL_OFFERS_BY.$this->actualGroup."
-                                           WHERE products_id='".$pID."'
-                                             AND quantity='".$graduated_price_data['qty']."'");
+                                           WHERE products_id = '".$pID."'
+                                             AND quantity = '".$graduated_price_data['qty']."'");
       $graduated_price_data = xtc_db_fetch_array($graduated_price_query, true);
-      
       $sPrice = $graduated_price_data['personal_offer'];
-      if ($sPrice != 0.00)
+
+      if ($sPrice != 0.00) {
         return $sPrice;
+      }
     } else {
       return;
     }
@@ -394,10 +395,12 @@ function xtcCheckSpecial($pID) {
     $product_query = xtDBquery("SELECT specials_new_products_price
                                   FROM ".TABLE_SPECIALS."
                                  WHERE products_id = '".$pID."'
-                                   AND status = 1
+                                   AND status = '1'
                                ");
-    $product = xtc_db_fetch_array($product_query, true);
-    return $product['specials_new_products_price'];
+    if (xtc_db_num_rows($product_query, true) > 0) {
+      $product = xtc_db_fetch_array($product_query, true);
+      return $product['specials_new_products_price'];
+    }
   }
   
   /**
@@ -494,11 +497,10 @@ function xtcCheckSpecial($pID) {
    */
   function checkAttributes($pID) {
     if (!$this->showFrom_Attributes || $pID == 0) return;
-    $products_attributes_query = "SELECT 
-                                         count(*) as total 
+    $products_attributes_query = "SELECT count(*) as total 
                                     FROM " . TABLE_PRODUCTS_OPTIONS . " popt,
                                          " . TABLE_PRODUCTS_ATTRIBUTES . " patrib
-                                   WHERE patrib.products_id='" . $pID . "'
+                                   WHERE patrib.products_id = '" . $pID . "'
                                      AND patrib.options_id = popt.products_options_id
                                      AND popt.language_id = '" . (int) $_SESSION['languages_id'] . "'
                                      AND patrib.options_values_price > 0";
