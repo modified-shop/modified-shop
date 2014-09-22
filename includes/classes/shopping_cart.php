@@ -363,6 +363,22 @@ class shoppingCart {
   }
 
   /**
+   * get an array of ids of all products in cart
+   *
+   * @return array
+   */
+  function get_product_id_array() {
+    $products_array = array();
+    $products_list = $this->get_product_id_list();
+    if ($products_list != '') {
+      $products_array = explode(',', $products_list);
+      $products_array = array_map('trim', $products_array);
+      $products_array = array_map('xtc_get_prid', $products_array);
+    }
+    return $products_array;
+  }
+
+  /**
    * calculate cart totals
    *
    * @return unknown
