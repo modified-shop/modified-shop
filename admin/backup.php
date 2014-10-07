@@ -15,6 +15,10 @@
 
    Released under the GNU General Public License
 
+   Datenbank Backup Ver. 2.00
+   modified by web28 - www.rpa-com.de 14.09.2014
+   //jquery ajax handling
+   
    Datenbank Backup Ver. 1.92
    modified by web28 - www.rpa-com.de 23.11.2011
    //new restore_backup.php - no admin restrictions
@@ -46,7 +50,7 @@
   define('BK_FILENAME', 'backup_db.php'); //BACKUP
   define('RS_FILENAME', 'backup_restore.php'); //RESTORE
 
-  define ('VERSION', 'Database Backup/Restore Ver. 1.92');
+  define ('VERSION', 'Database Backup/Restore Ver. 2.00');
 
   require('includes/application_top.php');
 
@@ -73,6 +77,17 @@
       $target .= $filename['name'];
       move_uploaded_file($filename['tmp_name'], $target);
     }
+  }
+  
+  function createDBTableList($data)
+  {
+    if(!is_array($data)) return $data;
+    //echo '<pre>'.print_r($data,1).'</pre>';
+    $newdata = array();
+    foreach($data as $keys) {
+      $newdata[] = $keys['name'] . ' ['.$keys['rows'].']';
+    }
+    return implode('<br>',$newdata);
   }
 
   if (xtc_not_null($action)) {
@@ -125,9 +140,27 @@
   } else {
     $messageStack->add(ERROR_BACKUP_DIRECTORY_DOES_NOT_EXIST, 'error');
   }
-require (DIR_WS_INCLUDES.'head.php');
-?>
+  
+  if(is_file(DIR_WS_INCLUDES.'head.php')) {
+      require (DIR_WS_INCLUDES.'head.php');
+  } else {
+      ?>
+      <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+      <html <?php echo HTML_PARAMS; ?>>
+      <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>"> 
+      <title><?php echo TITLE; ?></title>
+      <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+      <?php 
+  }
+  ?>
+  <link rel="stylesheet" type="text/css" href="includes/css/backup_db.css">
+  <script type="text/javascript">
+    //Check if jQuery is loaded
+    !window.jQuery && document.write('<script src="includes/javascript/jquery-1.8.3.min.js" type="text/javascript"><\/script>');
+  </script>
 </head>
+
 <body>
 <!-- header //-->
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
@@ -182,14 +215,45 @@ require (DIR_WS_INCLUDES.'head.php');
                             $file_array['file'] = $entry;
                             $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry));
                             $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $entry)) . ' bytes';
+                            $file_array['table_list'] = array();
+                            $file_array['tables_row_count'] = 0;
                             switch (substr($entry, -3)) {
-                              case 'zip': $file_array['compression'] = 'ZIP'; break;
-                              case '.gz': $file_array['compression'] = 'GZIP'; break;
-                              default: $file_array['compression'] = TEXT_NO_EXTENSION; break;
+                              case 'zip': 
+                                $file_array['compression'] = 'ZIP'; 
+                                break;
+                              case '.gz': 
+                                $file_array['compression'] = 'GZIP';
+                                if ($fp = gzopen(DIR_FS_BACKUP . $entry, 'r')) {
+                                  while ( ! gzeof($fp) ) {
+                                    $line = gzgets($fp, 4096);
+                                    if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+                                    if (substr($line, 0, 9) == "-- TABLE|") {
+                                      $table_info = explode('|',trim(substr($line, 9)));
+                                      $file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
+                                      $file_array['tables_row_count'] += $table_info[1];
+                                    }
+                                  }
+                                }                          
+                                break;
+                              default: 
+                                $file_array['compression'] = TEXT_NO_EXTENSION; 
+                                if ($fp = fopen(DIR_FS_BACKUP . $entry, 'r')) {
+                                  while ( ! feof($fp) ) {
+                                    $line = fgets($fp, 4096);
+                                    if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+                                    if (substr($line, 0, 9) == "-- TABLE|") {
+                                      $table_info = explode('|',trim(substr($line, 9)));
+                                      $file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
+                                      $file_array['tables_row_count'] += $table_info[1];
+                                    }
+                                  }
+                                }
+                                break;
                             }
+                            $file_array['table_list'] = !$file_array['table_list'] ? TEXT_INFO_NO_INFORMATION : $file_array['table_list'];
                             $buInfo = new objectInfo($file_array);
                           }
-                          if (is_object($buInfo) && ($entry == $buInfo->file)) {
+                          if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
                             echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'">' . "\n";
                             $onclick_link = 'file=' . $buInfo->file . '&action=restore';
                           } else {
@@ -200,7 +264,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
                             <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
                             <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
-                            <td class="dataTableContent txta-r" ><?php if ( (is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                            <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                           </tr>
                           <?php
                         }
@@ -225,6 +289,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <?php
                   $heading = array();
                   $contents = array();
+                  $info_heading = '<b>Backup Dated: ' . $buInfo->date . ' '. ($buInfo->table_list != TEXT_INFO_NO_INFORMATION ? ' (' . count($buInfo->table_list) . ' tables)' : ''). '</b>';
                   switch ($action) {
                     case 'backup':
                       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_BACKUP . '</b>');
@@ -243,7 +308,8 @@ require (DIR_WS_INCLUDES.'head.php');
                       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                       break;
                     case 'restore':
-                      $heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
+                      $heading[] = array('text' => $info_heading);
+                      //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                       $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
                       $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(RS_FILENAME, 'file=' . $buInfo->file . '&action=restorenow') . '">' . BUTTON_RESTORE . '</a>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
                       break;
@@ -272,6 +338,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         $contents[] = array('text' => '<br />' . TEXT_INFO_DATE . ' ' . $buInfo->date);
                         $contents[] = array('text' => TEXT_INFO_SIZE . ' ' . $buInfo->size);
                         $contents[] = array('text' => '<br />' . TEXT_INFO_COMPRESSION . ' ' . $buInfo->compression);
+                        $contents[] = array('text' => TEXT_INFO_TABLES_IN_BACKUP . ($buInfo->table_list != TEXT_INFO_NO_INFORMATION ? count($buInfo->table_list) : '') . '<br>' . createDBTableList($buInfo->table_list));
                       }
                       break;
                   }

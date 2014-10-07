@@ -3,6 +3,8 @@
 *Script von MySQLDumper 1.24 
 * Pfad und Dateiname MySQLDumper 1.24: inc/functions_restore.php
 * Angepasst für XTC Datenbank Manager von web28
+* Version 1.0.4
+* 2014-10-07 add  compatility functions
 * Version 1.0.3
 * 2012-01-11 encode_htmlspecialchars
 * Version 1.0.2
@@ -556,3 +558,38 @@ function set_admin_access() {
 		}
 	}  
 }
+  
+  //BOC compatility functions
+  if (!function_exists('xtc_db_get_client_info')) {
+    function xtc_db_get_client_info($link='db_link') {
+      global $$link;
+
+      return mysql_get_client_info();
+    }
+  }
+  
+  if (!function_exists('xtc_db_fetch_row')) {
+    function xtc_db_fetch_row(&$db_query, $cq=false) {
+
+      if ($db_query === false) {
+        return false;
+      }
+      if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
+        if (!is_array($db_query) || !count($db_query)) {
+          return false;
+        }
+        $curr = current($db_query);
+        next($db_query);
+        return $curr;
+      } else {
+        if (is_array($db_query)) {
+          $curr = current($db_query);
+          next($db_query);
+          return $curr;
+        }
+        return mysql_fetch_row($db_query);
+      }
+    }
+  }
+  //EOC compatility functions
+?>

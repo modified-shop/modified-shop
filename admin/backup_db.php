@@ -2,10 +2,11 @@
 /**************************************************************
 $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
 
-  * XTC Datenbank Manager Version 1.92
+  * XTC Datenbank Manager Version 2.00
   *(c) by  web28 - www.rpa-com.de
   * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
   * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
+  * 2014-09-14 - jquery ajax handling
   * 2011-11-23 - restore in separate file
   * 2010-09-09 - add set_admin_access
   * 2011-07-02 - Security Fix - PHP_SELF
@@ -16,15 +17,12 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   define ('ANZAHL_ZEILEN_BKUP', 20000); //Anzahl der Zeilen die beim Backup pro Durchlauf maximal aus einer Tabelle  gelesen werden.
   define ('MAX_RELOADS', 600); //Anzahle der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
   //#################################
-  define ('VERSION', 'Database Backup Ver. 1.92');
+  define ('VERSION', 'Database Backup Ver. 2.00');
 
   require('includes/application_top.php');
   include ('includes/functions/db_restore.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
-
-  //Dateiname fuer Selbstaufruf
-  $bk_filename =  basename($_SERVER['SCRIPT_NAME']); // web28 - 2011-07-02 - Security Fix - PHP_SELF
 
   //Animierte Gif-Datei und Hinweistext
   $info_wait = '<img src="images/loading.gif"> '. TEXT_INFO_WAIT ;
@@ -34,17 +32,51 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   if (!@ob_start("ob_gzhandler")) @ob_start();
 
   //Start Session
-  session_name('dbdump');
-  if(!isset($_SESSION)) {
-    session_start();
-  }
+  //session_name('dbdump');
+  //if(!isset($_SESSION)) {
+    //session_start();
+  //}
 
 
   //#### BACKUP ANFANG #######
   if (isset($_SESSION['dump'])) {
     $dump=$_SESSION['dump'];
   }
+  
+  //BOC compatility functions
+  if (!function_exists('xtc_db_get_client_info')) {
+    function xtc_db_get_client_info($link='db_link') {
+      global $$link;
 
+      return mysql_get_client_info();
+    }
+  }
+  
+  if (!function_exists('xtc_db_fetch_row')) {
+    function xtc_db_fetch_row(&$db_query, $cq=false) {
+
+      if ($db_query === false) {
+        return false;
+      }
+      if (defined('DB_CACHE') && DB_CACHE=='true' && $cq) {
+        if (!is_array($db_query) || !count($db_query)) {
+          return false;
+        }
+        $curr = current($db_query);
+        next($db_query);
+        return $curr;
+      } else {
+        if (is_array($db_query)) {
+          $curr = current($db_query);
+          next($db_query);
+          return $curr;
+        }
+        return mysql_fetch_row($db_query);
+      }
+    }
+  }
+  //EOC compatility functions
+  
   function WriteToDumpFile($data) {
     $df = $_SESSION['dump']['file'];
     if (isset($data) && $data!='') {
@@ -171,7 +203,8 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     unset($_SESSION['restore']);
     $dump = array();
     unset($_SESSION['dump']);
-
+    
+    $dump['starttime'] = time();
 
     @xtc_set_time_limit(0);
 
@@ -182,12 +215,9 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     }
     //EOF Disable "STRICT" mode!
 
-    if (function_exists('xtc_db_get_client_info')) {
-      $mysql_version = '-- MySQL-Client-Version: ' . xtc_db_get_client_info() . "\n--\n";
-    } else {
-      $mysql_verion = '';
-    }
-    $schema = '-- XT-Commerce & compatible' . "\n" .
+    $mysql_version = '-- MySQL-Client-Version: ' . @xtc_db_get_client_info() . "\n--\n";
+    
+    $schema = '-- Modified-Shop & compatible' . "\n" .
               '--' . "\n" .
               '-- ' . VERSION . ' (c) by web28 - www.rpa-com.de' . "\n" .
               '-- ' . STORE_NAME . "\n" .
@@ -196,7 +226,8 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
               '-- Database: ' . DB_DATABASE . "\n" .
               '-- Database Server: ' . DB_SERVER . "\n" .
               '--' . "\n" . $mysql_version .
-              '-- Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n\n";
+              '-- Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n";
+              
     $backup_file =  'dbd_' . DB_DATABASE . '-' . date('YmdHis');
     $dump['file'] = DIR_FS_BACKUP . $backup_file;
 
@@ -212,72 +243,100 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
       $dump['complete_inserts']  = 'yes';
     }
 
-    $tabellen = xtc_db_query('SHOW TABLE STATUS');
-    $dump['num_tables'] = xtc_db_num_rows($tabellen);
+    $tables_query = xtc_db_query('SHOW TABLE STATUS');
+    $dump['num_tables'] = xtc_db_num_rows($tables_query);
 
+    $table_info = '--' . "\n";
+    $table_info .= '-- TABLE-INFO' . "\n";
     //Tabellennamen in Array einlesen
-    $dump['tables'] = Array();
+    $dump['tables'] = array();
     if ($dump['num_tables'] > 0){
       for ($i=0; $i < $dump['num_tables']; $i++){
-        $row = xtc_db_fetch_array($tabellen);
-        $dump['tables'][$i] = $row['Name'];
+        $erg = xtc_db_fetch_array($tables_query);
+        //echo '<pre>'.print_r($erg,1).'</pre>';
+        $dump['tables'][$i] = $erg['Name'];
+        // Get nr of records -> need to do it this way because of incorrect returns when using InnoDBs
+        $data_query = xtc_db_query(
+            "SELECT count(*) as `count_records` 
+               FROM `". $erg['Name'] ."`
+            ");
+        $data_array = xtc_db_fetch_array($data_query);
+        
+        $erg['Rows'] = $data_array['count_records'];
+		    $table_info .= '-- TABLE|'.$erg['Name'].'|'.$erg['Rows'].'|'.($erg['Data_length']+$erg['Index_length']).'|'.$erg['Update_time'].'|'.$erg['Engine']."\n";
+        
       }
       $dump['nr'] = 0;
     } //else ERROR
-
+    $table_info .= '-- EOF TABLE-INFO' . "\n";
+    $table_info .= '--' . "\n\n";
+    
+    $dump['ready'] = 0;
     $dump['table_offset'] = 0;
 
-    $_SESSION['dump']=$dump;
-    WriteToDumpFile($schema);
-    flush();
-    $selbstaufruf='<script language="javascript" type="text/javascript">setTimeout("document.dump.submit()", 3000);</script></div>';
+    $_SESSION['dump'] = $dump;
+    //echo $schema.$table_info; EXIT;
+    WriteToDumpFile($schema.$table_info);
   }
+  
   //Seite neu laden wenn noch nicht alle Tabellen ausgelesen sind
-  if ($dump['num_tables'] > 0 && $action != 'backupnow'){
+  if ($dump['num_tables'] > 0 && $action == 'readdb'){
 
     $info_text = TEXT_INFO_DO_BACKUP;
 
     @xtc_set_time_limit(0);
 
-    if ($dump['nr'] < $dump['num_tables']) {
-      $nr = $dump['nr'];
-      $dump['aufruf']++;
-      $table_ok = 'Tabellen gesichert: ' . ($nr + 1) .  '<br><br>Zuletzt bearbeitet: ' . $dump['tables'][$nr] . '<br><br>Seitenaufrufe: ' . $dump['aufruf'] ;
-
-      //Neue Tabelle
-      if ($dump['table_offset'] == 0) {
-        $dump['table_records'] = GetTableInfo($dump['tables'][$nr]);
-        $dump['anzahl_zeilen']= ANZAHL_ZEILEN_BKUP;
-        $dump['table_offset'] = 1;
-        $dump['zeilen_offset'] = 0;
-      } else {
-        //Daten aus  Tabelle lesen
-        GetTableData($dump['tables'][$nr]);
-      }
-
-      $_SESSION['dump']= $dump;
-
-      $selbstaufruf='<script language="javascript" type="text/javascript">setTimeout("document.dump.submit()", 10);</script></div>';
-      //Verhindert Endlosschleife - Script wir nach MAX_RELOADS beendet
-      if ( $dump['aufruf'] > MAX_RELOADS) {
-        $selbstaufruf = '';
-      }
-
-    } else { //Fertig
-      $info_wait = '';
-      $info_text = TEXT_INFO_DO_BACKUP_OK;
-      $table_ok= 'Tabellen gesichert: ' . $dump['nr'] .  '<br><br>Seitenaufrufe: ' . $dump['aufruf'] ;
-      $button_back = '<a href="backup.php" class="button">'. BUTTON_BACK .'</a>';
-      $selbstaufruf = '';
-      unset ($_SESSION['dump']);
-      $button_back = '<a href="backup.php" class="button">'. BUTTON_BACK .'</a>';
-      //$selbstaufruf='<script language="javascript" type="text/javascript">window.location.href = "backup.php";</script></div>';
+    $nr = $dump['nr'];
+    $dump['aufruf']++;
+    
+    //Neue Tabelle
+    if ($dump['table_offset'] == 0) {
+      $dump['table_records'] = GetTableInfo($dump['tables'][$nr]);
+      $dump['anzahl_zeilen']= ANZAHL_ZEILEN_BKUP;
+      $dump['table_offset'] = 1;
+      $dump['zeilen_offset'] = 0;
+    } else {
+      //Daten aus  Tabelle lesen
+      GetTableData($dump['tables'][$nr]);
     }
+
+    $_SESSION['dump']= $dump;
+    
+    $sec = time() - $dump['starttime']; 
+    $time = sprintf('%d:%02d Min.', floor($sec/60), $sec % 60);
+    
+    $json_output = array();
+    $json_output['aufruf'] = $dump['aufruf'];
+    $json_output['nr'] = $dump['nr'];
+    $json_output['num_tables'] = $dump['num_tables'];
+    $json_output['time'] = $time;
+    $json_output['actual_table'] = $dump['tables'][$nr];
+   
+    //$json_output = $export;
+    $json_output = json_encode($json_output);
+    echo $json_output;
+    EXIT;
   }
   //#### BACKUP ENDE #######
 
-require (DIR_WS_INCLUDES.'head.php');
+if(is_file(DIR_WS_INCLUDES.'head.php')) {
+    require (DIR_WS_INCLUDES.'head.php');
+} else {
+    ?>
+    <!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
+    <html <?php echo HTML_PARAMS; ?>>
+    <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>"> 
+    <title><?php echo TITLE; ?></title>
+    <link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+    <?php 
+}
 ?>
+<link rel="stylesheet" type="text/css" href="includes/css/backup_db.css">
+<script type="text/javascript">
+  //Check if jQuery is loaded
+  !window.jQuery && document.write('<script src="includes/javascript/jquery-1.8.3.min.js" type="text/javascript"><\/script>');
+</script>
 </head>
   <body>
     <!-- header //-->
@@ -297,17 +356,22 @@ require (DIR_WS_INCLUDES.'head.php');
       ?>
       <!-- body_text //--> 
         <td class="boxCenter"> 
-          <?php
-            echo '<form name="dump" action="'. $bk_filename.'?dbdump='.session_id().'" method="POST"></form>';
-          ?> 
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><span class="smallText"> [<?php echo VERSION; ?>]</span></div>
-          <div class="pageHeading txta-r"><?php echo xtc_draw_separator('pixel_trans.gif', HEADING_IMAGE_WIDTH, HEADING_IMAGE_HEIGHT); ?></div>
           <div class="main txta-c">
-            <p>&nbsp;</p>
-            <p>&nbsp;</p>
-            <p class="pageHeading">&nbsp;<?php echo $info_text . '<br /> <br />' . $info_wait; ?>&nbsp;</p>
-            <p class="main">&nbsp;<b><?php echo $table_ok; ?><b>&nbsp;</p>
-            <p>&nbsp;<?php echo $button_back; ?>&nbsp;</p>
+            <div id="info_text" class="pageHeading txta-c mrg10"><?php echo $info_text; ?></div>
+            <div id="info_wait" class="pageHeading txta-c mrg10" style="margin-top:20px;"><?php echo $info_wait; ?></div>
+            <div style="clear:both;"></div>
+            <div class="process_wrapper">
+                <div class="process_inner_wrapper">
+                  <div id="backup_process"></div>
+                </div>
+                <div id="backup_precents">0%</div>
+              </div>
+            <div id="data_ok" class="main txta-c" style="margin-top:30px;"></div>
+            <div id="button_back" class="main txta-c" style="margin-top:20px;"></div>
+            <?php //if($button_log != '') ?>
+            <div id="button_log" class="main txta-c" style="margin-top:10px;"></div>
+            <div style="clear:both"></div>
           </div>                 
         </td>
         <!-- body_text_eof //-->
@@ -315,8 +379,7 @@ require (DIR_WS_INCLUDES.'head.php');
     </table>
     <!-- body_eof //-->
     <?php
-      if ($selbstaufruf != '')
-        echo $selbstaufruf;
+    require (DIR_WS_INCLUDES.'javascript/jquery.backup_db.js.php');
     ?>
     <!-- footer //-->
     <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
@@ -326,6 +389,4 @@ require (DIR_WS_INCLUDES.'head.php');
 </html>
 <?php
   require(DIR_WS_INCLUDES . 'application_bottom.php');
-  //Pufferinhalte an den Client ausgeben
-  ob_end_flush();
 ?>
