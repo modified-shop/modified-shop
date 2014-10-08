@@ -564,7 +564,7 @@ class PayonePayment {
 			'key' => $this->global_config['key'],
 			'clearingtype' => $clearingtype,
 			'reference' => $insert_id,
-			'amount' => round($order->info['total'], 2),
+			'amount' => round(((isset($order->info['pp_total'])) ? $order->info['pp_total'] : $order->info['total']), 2),
 			'currency' => $order->info['currency'],
 			'personal_data' => $this->personal_data,
 			'delivery_data' => $this->delivery_data,
