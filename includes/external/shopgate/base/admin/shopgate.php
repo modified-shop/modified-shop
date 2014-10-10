@@ -293,7 +293,8 @@ if($_GET["sg_option"] === "config") {
 
 ##### XTCM BOF #####
 //
-$shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
+//$shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
+$shopgateWikiLink = SHOPGATE_CONFIG_WIKI_LINK;
 //
 //
 //
