@@ -1,4 +1,26 @@
 <?php
+/*
+* Shopgate GmbH
+*
+* URHEBERRECHTSHINWEIS
+*
+* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+*
+* COPYRIGHT NOTICE
+*
+* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+* for the purpose of facilitating communication between the IT system of the customer and the IT system
+* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+*
+*  @author Shopgate GmbH <interfaces@shopgate.com>
+*/
+
 /**
  * Manages configuration for library _and_ plugin options.
  *
@@ -133,6 +155,16 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	/**
 	 * @var bool
 	 */
+	protected $enable_check_cart;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_redeem_coupons;
+	
+	/**
+	 * @var bool
+	 */
 	protected $enable_get_orders;
 	
 	/**
@@ -184,6 +216,11 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	 * @var bool
 	 */
 	protected $enable_clear_cache;
+	
+	/**
+	 * @var bool
+	 */
+	protected $enable_get_settings;
 	
 	#######################################################
 	### Options regarding shop system specific settings ###
@@ -327,6 +364,8 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_ping = 1;
 		$this->enable_add_order = 0;
 		$this->enable_update_order = 0;
+		$this->enable_check_cart = 0;
+		$this->enable_redeem_coupons = 0;
 		$this->enable_get_orders = 0;
 		$this->enable_get_customer = 0;
 		$this->enable_get_items_csv = 0;
@@ -338,6 +377,7 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		$this->enable_cron = 0;
 		$this->enable_clear_log_file = 1;
 		$this->enable_clear_cache = 1;
+		$this->enable_get_settings = 0;
 		
 		$this->country = 'DE';
 		$this->language = 'de';
@@ -715,6 +755,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 		return $this->enable_update_order;
 	}
 	
+	public function getEnableCheckCart() {
+		return $this->enable_check_cart;
+	}
+	
+	public function getEnableRedeemCoupons() {
+		return $this->enable_redeem_coupons;
+	}
+	
 	public function getEnableGetOrders() {
 		return $this->enable_get_orders;
 	}
@@ -757,6 +805,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function getEnableClearCache() {
 		return $this->enable_clear_cache;
+	}
+	
+	public function getEnableGetSettings() {
+		return $this->enable_get_settings;
 	}
 	
 	public function getCountry() {
@@ -958,6 +1010,14 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	public function setEnableUpdateOrder($value) {
 		$this->enable_update_order = $value;
 	}
+
+	public function setEnableCheckCart($value) {
+		$this->enable_check_cart = $value;
+	}
+	
+	public function setEnableRedeemCoupons($value) {
+		$this->enable_redeem_coupons = $value;
+	}
 	
 	public function setEnableGetOrders($value) {
 		$this->enable_get_orders = $value;
@@ -1001,6 +1061,10 @@ class ShopgateConfig extends ShopgateContainer implements ShopgateConfigInterfac
 	
 	public function setEnableClearCache($value) {
 		$this->enable_clear_cache = $value;
+	}
+	
+	public function setEnableGetSettings($value) {
+		$this->enable_get_settings = $value;
 	}
 	
 	public function setCountry($value) {
@@ -1829,7 +1893,7 @@ interface ShopgateConfigInterface {
 	
 	/**
 	 * Checks if there is more than one configuration file available.
-	 * 
+	 *
 	 * @return bool true if multiple configuration files are available, false otherwise.
 	 */
 	public function checkMultipleConfigs();
@@ -1955,7 +2019,17 @@ interface ShopgateConfigInterface {
 	 * @return bool
 	 */
 	public function getEnableUpdateOrder();
+	
+	/**
+	 * @return bool
+	 */
+	public function getEnableCheckCart();
 
+	/**
+	 * @return bool
+	 */
+	public function getEnableRedeemCoupons();
+	
 	/**
 	 * @return bool
 	 */
@@ -2255,7 +2329,17 @@ interface ShopgateConfigInterface {
 	 * @param bool $value
 	 */
 	public function setEnableUpdateOrder($value);
+	
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableCheckCart($value);
 
+	/**
+	 * @param bool $value
+	 */
+	public function setEnableRedeemCoupons($value);
+	
 	/**
 	 * @param bool $value
 	 */
