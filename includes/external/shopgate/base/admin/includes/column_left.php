@@ -58,6 +58,7 @@ if((MODULE_PAYMENT_SHOPGATE_STATUS=='True') && ($result['shopgate'] == 1)) {
 
 ##### XTCM BOF #####
 	$displayCssClass = 'menuBoxContentLink';
+	/*
 	if (defined('NEW_ADMIN_STYLE')) {
 		$surroundingHtml = array(
 			'start'	=>	'<li>' .
@@ -66,13 +67,14 @@ if((MODULE_PAYMENT_SHOPGATE_STATUS=='True') && ($result['shopgate'] == 1)) {
 			'end'	=>	'</ul></li>',
 		);
 	} else {
+	*/
 	$surroundingHtml = array(
 		'start'	=>	'<li>' .
 					'<div class="dataTableHeadingContent"><strong>'.BOX_SHOPGATE.'</strong></div>' .
 					'<ul>',
 		'end'	=>	'</ul></li>',
 	);
-	}
+	/*}*/
 	$surroundingTags = array(
 		'start'	=>	'<li>',
 		'end'	=>	'</li>',
