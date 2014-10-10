@@ -1,18 +1,55 @@
 '''Deutsch'''
 
-'''Version 2.1.29'''
+'''Version 2.3.8'''
+* Unterstützung für erweiterte Informationen zum Versand, die jetzt durch check_cart und redeem_coupon zur Verfügung gestellt werden
+* Konstanten zur Umrechnung von Gewichten
+
+'''Version 2.3.7'''
+* das in der ShopgateConfig hinterlegte Encoding wird jetzt auch beim Export berücksichtigt
+
+'''Version 2.3.6'''
+* shopgate_license.txt hinzugefügt
+
+'''Version 2.3.5'''
+* je eine index.php zu jedem Verzeichnis hinzugefügt
+
+'''Version 2.3.4'''
+* Bugfix in der ShopgateOrder Klasse - delivery_notes wird nun mit einem Leerarray initialisiert
+* Beim Ausführen von Loader-Methoden werden detailliertere Exception-Meldungen erzeugt
+
+'''Version 2.3.3'''
+* Lizenz Header hinzugefügt
+
+'''Version 2.3.2'''
+* Logging verbessert, wenn Datei nicht geöffnet werden konnte
+* neue payment method ids hinzugefügt
+* Logger erlaubt jetzt, Feldnamen, die in den Logs verschleiert oder entfernt werden sollen, dynamisch hinzuzufügen
+
+'''Version 2.3.1'''
+* Wenn keine Shopnumber gesetzt ist, wird der Redirect Script nicht in die Seite gerendert
+* bei einem Ping wird die Dateigröße und der Besitzer ausgelesen
+
+'''Version 2.3.0'''
+* Neue Funktion get_settings() zum Exportieren der Steuersätze, -klassen, und -regeln des Shops (und zukünftig weiterer Einstellungen)
+* Standard-Wert für send_customer_email für Methode add_order_delifery_note auf false geändert
+* Bei API-calls kann nun ein Feld "handle_errors" übergeben werden. Der übergebene Wert wird an error_reporting() weitergereicht
+
+'''Version 2.2.2'''
 * die Header für die Authentifizierung werden jetzt bei jedem Request per ShopgateMerchantApi-Klasse neu generiert
 * die Einstellung "enable_get_redirect_keywords" wird jetzt konsequent als Boolean genutzt, die Nutzung als Zeitangabe für die Cache-Lifetime entfällt
 * es gibt einen neuen Weiterleitungstyp "default", der für Seiten eingesetzt wird, die nicht zugeordnet werden können
 * es gibt eine neue Einstellung "enable_default_redirect", mit denen die "default"-Weiterleitung (de-)aktiviert werden kann
 * die Einstellung "server" wurde um den Wert "sl" erweitert, mit dem der Shopgate Spotlight-Server angesprochen werden kann (API, Mobile Header, Weiterleitung)
+* der Paramter "cart" wird bei Aufrufen der Shopgate Plugin API jetzt entfernt, um zu große Logdateien zu vermeiden
 
-'''Version 2.1.28'''
-* die ShopgateOrder Klasse wurde um Shipping-Informationen erweitert, welche über die Shopgate Merchant API verfügbar sind 
-
-'''Version 2.1.27'''
-* neuen Schalter für die Standard-Weiterleitung von Contentseiten zur mobilen Startseite in der Klasse ShopgateConfig hinzugefügt
+'''Version 2.2.1'''
+* Neuen Schalter für die Standard-Weiterleitung von Contentseiten zur mobilen Startseite in der Klasse ShopgateConfig hinzugefügt
 * Paramater send_customer_mail zu Merchant API Methode addOrderDeliveryNote() hinzugefügt 
+* Neues Shopgate Versandsystem wird jetzt unterstützt
+
+'''Version 2.2.0'''
+* Es sind zwei neue Methoden hinzugekommen, die implementiert werden müssen: ShopgatePlugin::redeemCoupons() und ::checkCart(). Dadurch werden durch das Shopsystem angebotene Gutscheine auch im Mobilshop verwendbar
+* Der Parameter "keep_debug_log" verhindert das Überschreiben der Debug-Log bei eingehenden API-Requests
 
 '''Version 2.1.26'''
 * die Konvertierung der Zeichensätze wird jetzt optional mit iconv durchgeführt, wenn die mb_string-Erweiterung für PHP nicht installiert ist
@@ -109,26 +146,63 @@
 * Bei Plugin-API-Anfragen wird jetzt auch die Plugin-Version zurückgegeben, falls gesetzt.
 
 '''Version 2.1.5'''
-* Fehler in der Verwendung der alten Konfiguaration behoben
+* Fehler in der Verwendung der alten Konfiguration behoben
 * changelog.txt hinzugefügt
 
 
 
 '''English'''
 
-'''Version 2.1.29'''
+'''Version 2.3.8'''
+* handle extended shipping information that is provided in check_cart and redeem_coupon now
+* constant values to use for converting weights
+
+'''Version 2.3.7'''
+* ShopgateConfig's "encoding" setting is now used for exporting products as well
+
+'''Version 2.3.6'''
+* added shopgate_license.txt
+
+'''Version 2.3.5'''
+* added index.php to each directory
+
+'''Version 2.3.4'''
+* bugfix inside of the ShopgateOrder class - delivery_notes are now initialized with an empty array
+* on execution of loader methods, all thrown exceptions are processed to get more details
+
+'''Version 2.3.3'''
+* added license header
+
+'''Version 2.3.2'''
+* improved logging when a file couldn't be opened
+* added new payment method ids
+* Logger now allows to dynamically add field names that should be disuised in or removed from the log
+
+'''Version 2.3.1'''
+* if shop number is missing the js redirect script is not rendered
+* ping returns size and ownership of files from now on 
+
+'''Version 2.3.0'''
+* New function get_settings() for exporting the shop's tax rates, tax rules and tax classes (and other settings in the future)
+* Standard value of send_customer_email for method add_order_delivery_note changed to false
+* API calls can now contain a new field called "handle_errors". The given value will be passed on to error_reporting()
+
+'''Version 2.2.2'''
 * the authentication headers are regenerated on every call via the ShopgateMerchantApi class
 * the setting "enable_get_redirect_keywords" is now all boolean; the prior use of it as cache lifetime does not apply any longer
 * added new redirect type "default" for pages whose type cannot be determined
 * added new setting "enable_default_redirect" to (de-)activate the "default" redirect type
 * added new value "sl" for the setting "server" to enbale switching to Shopgate's Spotlight environment (API, Mobile Header, Mobile Redirect)
+* paramter "cart" gets removed now on calls to the Shopgate Plugin API to prevent log files from growing too big
 
-'''Version 2.1.28'''
-* added additional information about shipping into the ShopgateOrder class, that is available by the Shopgate Merchant API
-
-'''Version 2.1.27'''
+'''Version 2.2.1'''
 * added switch for default redirect from content pages to mobile homepage in class ShopgateConfig
 * added paramater send_customer_mail to Merchant API method addOrderDeliveryNote()
+* support for new Shopgate shipping system
+
+'''Version 2.2.0'''
+* two new methods have been added and must be implemented: ShopgatePlugin::redeemCoupons() and ::checkCart(). These make coupons offered by the shoppingsystem available to the mobile shop
+* add the parameter "keep_debug_log" to incoming requests to prevent the debug log file from being discarded
 
 '''Version 2.1.26'''
 * conversion of encodings is now performed via iconv if the mb_string extension for PHP is not installed

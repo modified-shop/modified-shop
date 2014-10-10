@@ -1,4 +1,25 @@
 <?php
+/*
+* Shopgate GmbH
+*
+* URHEBERRECHTSHINWEIS
+*
+* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+*
+* COPYRIGHT NOTICE
+*
+* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+* for the purpose of facilitating communication between the IT system of the customer and the IT system
+* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+*
+*  @author Shopgate GmbH <interfaces@shopgate.com>
+*/
 require_once 'includes/application_top.php';
 
 
@@ -126,6 +147,11 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 		$shopgateConfig = $shopgateConfig->toArray();
 	}
 }
+
+$catIdQuery = "SELECT MAX(c.categories_id) as maxid FROM ".TABLE_CATEGORIES." AS c ";
+$catIdResult= xtc_db_query($catIdQuery);
+$maxCatId = xtc_db_fetch_array($catIdResult);
+$maxCatId = $maxCatId['maxid'];
 
 // load all languages
 $qry = xtc_db_query("SELECT LOWER(code) AS code, name, directory FROM `".TABLE_LANGUAGES."` ORDER BY code");
@@ -556,6 +582,24 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 									</td>
 								</tr>
 								<?php endif; ?>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_DEFAULT_REDIRECT; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['redirect_languages']) ? '' : ' error' ?>">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["enable_default_redirect"] ? 'checked=""' : ''?> value="1" name="_shopgate_config[enable_default_redirect]">
+														<?php echo SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["enable_default_redirect"] ? 'checked=""' : ''?> value="0" name="_shopgate_config[enable_default_redirect]">
+														<?php echo SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_OFF; ?><br>
+													</div>
+													<?php echo SHOPGATE_CONFIG_DEFAULT_REDIRECT_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_EXPORT_SETTINGS; ?></th></tr>
@@ -737,6 +781,52 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["export_new_products_category"]?'checked=""':''?> value="1" name="_shopgate_config[export_new_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["export_new_products_category"]?'checked=""':''?> value="0" name="_shopgate_config[export_new_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_OFF; ?>
+													</div>
+													<div>
+														<input type="text"  value="<?php echo  $shopgateConfig["export_new_products_category_id"]?>" name="_shopgate_config[export_new_products_category_id]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_MAX_ID . ":" . $maxCatId ?>
+													</div>
+													
+													<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>								
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["export_special_products_category"]?'checked=""':''?> value="1" name="_shopgate_config[export_special_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["export_special_products_category"]?'checked=""':''?> value="0" name="_shopgate_config[export_special_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF; ?>
+													</div>
+													<div>
+														<input type="text"  value="<?php echo  $shopgateConfig["export_special_products_category_id"]?>" name="_shopgate_config[export_special_products_category_id]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID . ":" . $maxCatId ?>
+													</div>
+													
+													<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_DESCRIPTION; ?>
 												</td>
 											</tr>
 										</table>
@@ -942,6 +1032,24 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['redirect_languages']) ? '' : ' error' ?>">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["send_order_confirmation_mail"] ? 'checked=""' : ''?> value="1" name="_shopgate_config[send_order_confirmation_mail]">
+														<?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["send_order_confirmation_mail"] ? 'checked=""' : ''?> value="0" name="_shopgate_config[send_order_confirmation_mail]">
+														<?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL_OFF; ?><br>
+													</div>
+													<?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL_DESCRIPTION; ?>
 												</td>
 											</tr>
 										</table>

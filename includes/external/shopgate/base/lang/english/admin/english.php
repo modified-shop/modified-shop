@@ -1,4 +1,25 @@
 <?php
+/*
+* Shopgate GmbH
+*
+* URHEBERRECHTSHINWEIS
+*
+* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+*
+* COPYRIGHT NOTICE
+*
+* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+* for the purpose of facilitating communication between the IT system of the customer and the IT system
+* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+*
+*  @author Shopgate GmbH <interfaces@shopgate.com>
+*/
 
 
 ### Plugin ###
@@ -32,9 +53,9 @@ define('BOX_SHOPGATE_CONFIG', 'Settings');
 define('BOX_SHOPGATE_MERCHANT', 'Shopgate login');
 
 ### Links ###
-define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/welcome?partner=30051');
-define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register?partner=30051');
-define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2?partner=30051');
+define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com');
+define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register');
+define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2');
 
 ### Configuration ###
 define('SHOPGATE_CONFIG_TITLE', 'SHOPGATE');
@@ -84,6 +105,13 @@ define('SHOPGATE_CONFIG_REDIRECT_LANGUAGES_DESCRIPTION',
 		'Choose the languages that should be redirected to this Shopgate shop. At least one language must be selected. Hold CTRL to select multiple entries.'
 );
 
+define('SHOPGATE_CONFIG_DEFAULT_REDIRECT', 'Accumulative forwarding');
+define('SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_ON', 'Yes');
+define('SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_OFF', 'No');
+define('SHOPGATE_CONFIG_DEFAULT_REDIRECT_DESCRIPTION',
+		'Activate/deactivate this function to forward all other of your shop system\'s pages (excluding home page, category pages and product pages) to the mobile version of your shop.'
+);
+
 ### Export ###
 define('SHOPGATE_CONFIG_EXPORT_SETTINGS', 'Exporting Categories and Products');
 
@@ -122,6 +150,17 @@ define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP', 'Price group for Shopgat
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_DESCRIPTION', 'Choose the valid price group for Shopgate (the customer group of which the price information is taken for the products export).');
 define('SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP_OFF', '-- Deactivated --');
 
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY', 'Export the "New" category');
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_DESCRIPTION', 'This shopsystem allows you to show all new products in an virtual category. With this option it is possible to export the new products in an real category. Therefore you can use the input field to change the category id.');
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_ON', 'Yes');
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_OFF', 'No');
+define('SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_MAX_ID', 'Currently highest categorie-Id in the shopsystem');
+
+define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY', 'Export the "Special" category');
+define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_DESCRIPTION', 'This shopsystem allows you to show all special products in an virtual category. With this option it is possible to export the new products in an real category. Therefore you can use the input field to change the category id.');
+define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_ON', 'Yes');
+define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF', 'No');
+define('SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID', 'Currently highest categorie-Id in the shopsystem');
 ##### XTC3 | XTCM BOF #####
 define('SHOPGATE_PLUGIN_FIELD_AVAILABLE_TEXT_AVAILABLE_ON_DATE', 'Available on #DATE#');
 ##### XTC3 | XTCM EOF #####
@@ -148,6 +187,11 @@ define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_SENT_DESCRIPTION', 'Choose the sta
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED', 'Cancelled');
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_NOT_SET', '- Status not set -');
 define('SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_DESCRIPTION', 'Choose the status for orders that have been cancelled.');
+
+define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL', 'Confirmation Mail');
+define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_ON', 'Yes');
+define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_OFF', 'No');
+define('SHOPGATE_CONFIG_SEND_ORDER_EMAIL_DESCRIPTION', 'After an shopgate order has been successfully completed, an confirmation mail will be send to the customer.if the product(s) were downloadble the download link is included in this mail.');
 
 ### System Settings ###
 define('SHOPGATE_CONFIG_SYSTEM_SETTINGS', 'System Settings');
