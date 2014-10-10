@@ -1,4 +1,26 @@
 <?php
+/*
+* Shopgate GmbH
+*
+* URHEBERRECHTSHINWEIS
+*
+* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+*
+* COPYRIGHT NOTICE
+*
+* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+* for the purpose of facilitating communication between the IT system of the customer and the IT system
+* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+*
+*  @author Shopgate GmbH <interfaces@shopgate.com>
+*/
+
 class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInterface {
 	/**
 	 * @var ShopgatePlugin
@@ -75,8 +97,9 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 				'get_log_file',
 				'clear_log_file',
 				'clear_cache',
-				'check_coupon',
-				'redeem_coupon'
+				'check_cart',
+				'redeem_coupons',
+				'get_settings',
 		);
 	}
 
@@ -100,9 +123,13 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 				set_error_handler('ShopgateErrorHandler');
 			}
 			
-			// check if the request is for the correct shop number
-			if (!empty($this->params['shop_number']) && ($this->params['shop_number'] != $this->config->getShopNumber())) {
-				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_SHOP_NUMBER, "'{$this->params['shop_number']}'");
+			// check if the request is for the correct shop number or an adapter-plugin
+			if (
+					!$this->config->getIsShopgateAdapter() &&
+					!empty($this->params['shop_number']) &&
+					($this->params['shop_number'] != $this->config->getShopNumber())
+			) {
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_SHOP_NUMBER, "{$this->params['shop_number']}");
 			}
 
 			// check if an action to call has been passed, is known and enabled
@@ -112,20 +139,25 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 
 			// check if the action is white-listed
 			if (!in_array($this->params['action'], $this->actionWhitelist)) {
-				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_ACTION, "'{$this->params['action']}'");
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_UNKNOWN_ACTION, "{$this->params['action']}");
 			}
 
 			// check if action is enabled in the config
 			$configArray = $this->config->toArray();
 			if (empty($configArray['enable_'.$this->params['action']])) {
-				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION, "'{$this->params['action']}'");
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_DISABLED_ACTION, "{$this->params['action']}");
 			}
 			
 			// enable debugging if requested
 			if (!empty($data['debug_log'])) {
 				ShopgateLogger::getInstance()->enableDebug();
+				ShopgateLogger::getInstance()->keepDebugLog(!empty($data['keep_debug_log']));
 			}
-
+			// enable error handler if requested
+			if (!empty($data['error_reporting'])) {
+				error_reporting($data['error_reporting']);
+			}
+			
 			// call the action
 			$action = $this->camelize($this->params['action']);
 			$this->{$action}();
@@ -186,7 +218,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		$this->responseData['plugin_info'] = $this->plugin->createPluginInfo();
 		$this->responseData['permissions'] = $this->getPermissions();
 		$this->responseData['php_version'] = phpversion();
-		$this->responseData['php_config'] = $this->getSettings();
+		$this->responseData['php_config'] = $this->getPhpSettings();
 		$this->responseData['php_curl'] = function_exists('curl_version') ? curl_version() : 'No PHP-CURL installed';
 		$this->responseData['php_extensions'] = get_loaded_extensions();
 		$this->responseData['shopgate_library_version'] = SHOPGATE_LIBRARY_VERSION;
@@ -252,7 +284,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		$responses['execution_time'] = $runtime;
 
 		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
-		$this->responseData = array_merge($responses);
+		$this->responseData = $responses;
 	}
 
 	/**
@@ -278,7 +310,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		
 		$orderData = $this->plugin->addOrder($orders[0]);
 		if (is_array($orderData)) {
-			$this->responseData = array_merge($orderData, $this->responseData);
+			$this->responseData = $orderData;
 		} else {
 			$this->responseData['external_order_id'] = $orderData;
 			$this->responseData['external_order_number'] = null;
@@ -323,13 +355,110 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		
 		$orderData = $this->plugin->updateOrder($orders[0]);
 		if (is_array($orderData)) {
-			$this->responseData = array_merge($orderData, $this->responseData);
+			$this->responseData = $orderData;
 		} else {
 			$this->responseData['external_order_id'] = $orderData;
 			$this->responseData['external_order_number'] = null;
 		}
 	}
+	
+	/**
+	 * Represents the "redeem_coupons" action.
+	 *
+	 * @throws ShopgateLibraryException
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_redeem_coupons
+	 */
+	protected function redeemCoupons() {
+		if (!isset($this->params['cart'])) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_NO_CART);
+		}
+		
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
+		
+		$cart = new ShopgateCart($this->params['cart']);
+		$couponData = $this->plugin->redeemCoupons($cart);
+		
+		if(!is_array($couponData)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT, 'Plugin Response: '.var_export($couponData, true));
+		}
+		
+		// Workaround:
+		// $couponData was specified to be a ShopgateExternalCoupon[].
+		// Now supports the same format as checkCart(), i.e. array('external_coupons' => ShopgateExternalCoupon[]).
+		if (!empty($couponData['external_coupons']) && is_array($couponData['external_coupons'])) {
+			$couponData = $couponData['external_coupons'];
+		}
+		
+		$responseData = array("external_coupons" => array());
+		foreach($couponData as $coupon) {
+			if (!is_object($coupon) || !($coupon instanceof ShopgateExternalCoupon)) {
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT, 'Plugin Response: '.var_export($coupon, true));
+			}
+			
+			$coupon = $coupon->toArray();
+			unset($coupon["order_index"]);
+			
+			$responseData["external_coupons"][] = $coupon;
+		}
+		
+		$this->responseData = $responseData;
+	}
+	
+	/**
+	 * Represents the "check_cart" action.
+	 *
+	 * @throws ShopgateLibraryException
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_check_cart
+	 */
+	protected function checkCart() {
+		if (!isset($this->params['cart'])) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_NO_CART);
+		}
 
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
+
+		$cart = new ShopgateCart($this->params['cart']);
+		$cartData = $this->plugin->checkCart($cart);
+		
+		$responseData = array(
+// 				"items" => array(),
+				"external_coupons" => array(),
+// 				"shippings" => array(),
+		);
+		
+		if(!is_array($cartData)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT, 'Plugin Response: '.var_export($cartData, true));
+		}
+		
+		$coupons = array();
+		foreach($cartData["external_coupons"] as $coupon) {
+			if (!is_object($coupon) || !($coupon instanceof ShopgateExternalCoupon)) {
+				throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_API_WRONG_RESPONSE_FORMAT, 'Plugin Response: '.var_export($coupon, true));
+			}
+			
+			$coupon = $coupon->toArray();
+			unset($coupon["order_index"]);
+				
+			$coupons[] = $coupon;
+		}
+		$responseData["external_coupons"] = $coupons;
+		
+		$this->responseData = $responseData;
+	}
+
+	/**
+	 * Represents the "get_settings" action.
+	 *
+	 * @throws ShopgateLibraryException
+	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_check_cart
+	 */
+	protected function getSettings() {
+		$this->responseData = $this->plugin->getSettings();
+		
+		// set data and return response
+		if (empty($this->response)) $this->response = new ShopgatePluginApiResponseAppJson($this->trace_id);
+	}
+	
 	/**
 	 * Represents the "get_customer" action.
 	 *
@@ -401,6 +530,12 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 	 * @see http://wiki.shopgate.com/Shopgate_Plugin_API_get_reviews_csv/
 	 */
 	protected function getReviewsCsv() {
+		if (isset($this->params['limit']) && isset($this->params['offset'])) {
+			$this->plugin->setExportLimit((int) $this->params['limit']);
+			$this->plugin->setExportOffset((int) $this->params['offset']);
+			$this->plugin->setSplittedExport(true);
+		}
+		
 		// generate / update reviews csv file
 		$this->plugin->startGetReviewsCsv();
 
@@ -472,7 +607,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		
 		$logFilePointer = @fopen($logFilePath, 'w');
 		if ($logFilePointer === false) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_OPEN_ERROR, "Cannot open file {$logFilePath}");
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_OPEN_ERROR, "File: $logFilePath", true);
 		}
 		fclose($logFilePointer);
 		
@@ -526,7 +661,7 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 	### Helpers ###
 	###############
 	
-	private function getSettings() {
+	private function getPhpSettings() {
 		$settingDetails = array();
 
 		$allSettings = function_exists('ini_get_all') ? ini_get_all() : array();
@@ -579,29 +714,57 @@ class ShopgatePluginApi extends ShopgateObject implements ShopgatePluginApiInter
 		);
 
 		foreach ($files as $file) {
-			$permission = array();
-			$permission['file'] = $file;
-			$permission['exist'] = (bool) file_exists($file);
-			$permission['writeable'] = (bool) is_writable($file);
-			$permission['permission'] = '-';
-			if (file_exists($file)) {
-				$permission['last_modification_time'] = date('d.m.Y H:i:s.', filemtime($file));
-			}
-			
-			$fInfo = pathinfo($file);
-			if (file_exists($file)) {
-				$permission['permission'] = substr(sprintf('%o', fileperms($file)), -4);
-			} else {
-				if (file_exists($fInfo['dirname'])) {
-					$permission['parent_permission'] = substr(sprintf('%o', fileperms($fInfo['dirname'])), -4);
-				}
-			}
-
-			$permissions[] = $permission;
+			$permissions[] = $this->_getFileMeta($file, 1);
 		}
 
 		return $permissions;
 	}
+
+	/**
+	 * get meta data for given file.
+	 * if file doesn't exists, move up to parent directory
+	 *
+	 * @param string $file (max numbers of parent directory lookups)
+	 * @param number $parentLevel
+	 * @return array with file meta data
+	 */
+	private function _getFileMeta($file, $parentLevel = 0) {
+		$meta = array('file' => $file);
+
+		if ($meta['exist'] = (bool) file_exists($file)) {
+			$meta['writeable'] = (bool) is_writable($file);
+
+			$uid = fileowner($file);
+			if (function_exists('posix_getpwuid')) {
+				$uinfo = posix_getpwuid($uid);
+				$uid = $uinfo['name'];
+			}
+
+			$gid = filegroup($file);
+			if (function_exists('posix_getgrgid')) {
+				$ginfo = posix_getgrgid($gid);
+				$gid = $ginfo['name'];
+			}
+
+			$meta['owner'] = $uid;
+			$meta['group'] = $gid;
+			$meta['permission'] = substr(sprintf('%o', fileperms($file)), -4);
+			$meta['last_modification_time'] = date('d.m.Y H:i:s', filemtime($file));
+
+			if (is_file($file)) {
+				$meta['filesize'] = round(filesize($file)/(1024*1024), 4) .' MB';
+			}
+		}
+		else if ($parentLevel > 0) {
+			$fInfo = pathinfo($file);
+			if (file_exists($fInfo['dirname'])) {
+				$meta['parent_dir'] = $this->_getFileMeta($fInfo['dirname'], --$parentLevel);
+			}
+		}
+
+		return $meta;
+	}
+
 }
 
 class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiInterface {
@@ -620,23 +783,21 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	 */
 	private $apiUrl;
 	
-	private $curlOpt = array();
-	
 	public function __construct(ShopgateAuthentificationServiceInterface $authService, $shopNumber, $apiUrl) {
 		$this->authService = $authService;
 		$this->shopNumber = $shopNumber;
 		$this->apiUrl = $apiUrl;
-		$this->curlOpt = $this->getCurlOptArray();
 	}
 	
 	/**
 	 * Returns an array of curl-options for requests
 	 *
-	 * @return mixed[]
+	 * @param mixed[] $override cURL options to override for this request.
+	 * @return mixed[] The default cURL options for a Shopgate Merchant API request merged with the options in $override.
 	 */
-	protected function getCurlOptArray() {
+	protected function getCurlOptArray($override = array()) {
 		$opt = array();
-
+		
 		$opt[CURLOPT_HEADER] = false;
 		$opt[CURLOPT_USERAGENT] = 'ShopgatePlugin/'.(defined('SHOPGATE_PLUGIN_VERSION') ? SHOPGATE_PLUGIN_VERSION : 'called outside plugin');
 		$opt[CURLOPT_SSL_VERIFYPEER] = false;
@@ -651,29 +812,31 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 		$opt[CURLOPT_TIMEOUT] = 30; // Default timeout 30sec
 		$opt[CURLOPT_POST] = true;
 		
-		return $opt;
+		return ($override + $opt);
 	}
 	
 	/**
 	 * Prepares the request and sends it to the configured Shopgate Merchant API.
 	 *
 	 * @param mixed[] $parameters The parameters to send.
+	 * @param mixed[] $curlOptOverride cURL options to override for this request.
 	 * @return ShopgateMerchantApiResponse The response object.
 	 * @throws ShopgateLibraryException in case the connection can't be established, the response is invalid or an error occured.
 	 */
-	protected function sendRequest($parameters) {
+	protected function sendRequest($parameters, $curlOptOverride = array()) {
 		$parameters['shop_number'] = $this->shopNumber;
 		$parameters['trace_id'] = 'spa-'.uniqid();
 		
 		$this->log('Sending request to "'.$this->apiUrl.'": '.ShopgateLogger::getInstance()->cleanParamsForLog($parameters), ShopgateLogger::LOGTYPE_REQUEST);
 		
+		// init new auth session and generate cURL options
 		$this->authService->startNewSession();
+		$curlOpt = $this->getCurlOptArray($curlOptOverride);
 		
+		// init cURL connection and send the request
 		$curl = curl_init($this->apiUrl);
-		
 		curl_setopt($curl, CURLOPT_POSTFIELDS, http_build_query($parameters));
-		curl_setopt_array($curl, $this->curlOpt);
-		
+		curl_setopt_array($curl, $curlOpt);
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
 		curl_close($curl);
@@ -732,22 +895,24 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 		return $response;
 	}
 	
-	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false) {
+	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false, $sendCustomerEmail = false) {
 		$request = array(
-				'action' => 'add_order_delivery_note',
-				'order_number' => $orderNumber,
-				'shipping_service_id' => $shippingServiceId,
-				'tracking_number' => (string) $trackingNumber,
-				'mark_as_completed' => $markAsCompleted,
+			'action' => 'add_order_delivery_note',
+			'order_number' => $orderNumber,
+			'shipping_service_id' => $shippingServiceId,
+			'tracking_number' => (string) $trackingNumber,
+			'mark_as_completed' => $markAsCompleted,
+			'send_customer_email' => $sendCustomerEmail,
 		);
 		
 		return $this->sendRequest($request);
 	}
 	
-	public function setOrderShippingCompleted($orderNumber) {
+	public function setOrderShippingCompleted($orderNumber, $sendCustomerEmail = false) {
 		$request = array(
-				'action' => 'set_order_shipping_completed',
-				'order_number' => $orderNumber,
+			'action' => 'set_order_shipping_completed',
+			'order_number' => $orderNumber,
+			'send_customer_email' => $sendCustomerEmail,
 		);
 		
 		return $this->sendRequest($request);
@@ -755,12 +920,12 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	
 	public function cancelOrder($orderNumber, $cancelCompleteOrder = false, $cancellationItems = array(), $cancelShipping = false, $cancellationNote = '') {
 		$request = array(
-				'action' => 'cancel_order',
-				'order_number' => $orderNumber,
-				'cancel_complete_order' => $cancelCompleteOrder,
-				'cancellation_items' => $cancellationItems,
-				'cancel_shipping' => $cancelShipping,
-				'cancellation_note' => $cancellationNote,
+			'action' => 'cancel_order',
+			'order_number' => $orderNumber,
+			'cancel_complete_order' => $cancelCompleteOrder,
+			'cancellation_items' => $cancellationItems,
+			'cancel_shipping' => $cancelShipping,
+			'cancellation_note' => $cancellationNote,
 		);
 		
 		return $this->sendRequest($request);
@@ -774,26 +939,26 @@ class ShopgateMerchantApi extends ShopgateObject implements ShopgateMerchantApiI
 	 * @deprecated
 	 */
 	public function getMobileRedirectKeywords() {
-		// Set timeout to 1 second
-		$this->curlOpt[CURLOPT_TIMEOUT] = 1;
-		
 		$request = array(
 				'action' => 'get_mobile_redirect_keywords',
 		);
 		
-		$response = $this->sendRequest($request);
+		$response = $this->sendRequest($request, array(CURLOPT_TIMEOUT => 1));
 		return $response->getData();
 	}
 	
 	public function getMobileRedirectUserAgents() {
-		// Set timeout to 1 second
-		$this->curlOpt[CURLOPT_TIMEOUT] = 1;
-		
 		$request = array(
 				'action' => 'get_mobile_redirect_user_agents',
 		);
 		
-		$response = $this->sendRequest($request);
+		$response = $this->sendRequest($request, array(CURLOPT_TIMEOUT => 1));
+		
+		$responseData = $response->getData();
+		if(!isset($responseData["keywords"]) || !isset($responseData["skip_keywords"])) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::MERCHANT_API_INVALID_RESPONSE, "\"keyword\" or \"skip_keyword\" is not set. Response: " . var_export($responseData, true));
+		}
+		
 		return $response->getData();
 	}
 	
@@ -1052,8 +1217,14 @@ class ShopgateAuthentificationService extends ShopgateObject implements Shopgate
 	 * @param string $customerNumber
 	 * @param int $timestamp
 	 * @param string $apiKey
+	 * @throws ShopgateLibraryException when no customer number or API key is set
+	 * @return string The SHA-1 hash Auth Token for Shopgate's Authentication
 	 */
 	protected function buildCustomAuthToken($prefix, $customerNumber, $timestamp, $apiKey) {
+		if (empty($customerNumber) || empty($apiKey)) {
+			throw new ShopgateLibraryException(ShopgateLibraryException::CONFIG_INVALID_VALUE, 'Shopgate customer number or  API key not set.', true, false);
+		}
+		
 		return sha1("{$prefix}-{$customerNumber}-{$timestamp}-{$apiKey}");
 	}
 }
@@ -1114,7 +1285,7 @@ class ShopgatePluginApiResponseTextPlain extends ShopgatePluginApiResponse {
 class ShopgatePluginApiResponseTextCsv extends ShopgatePluginApiResponse {
 	public function setData($data) {
 		if (!file_exists($data)) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_NOT_FOUND, 'File: '.$data);
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_NOT_FOUND, 'File: '.$data, true);
 		}
 		
 		$this->data = $data;
@@ -1123,7 +1294,7 @@ class ShopgatePluginApiResponseTextCsv extends ShopgatePluginApiResponse {
 	public function send() {
 		$fp = @fopen($this->data, 'r');
 		if (!$fp) {
-			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_OPEN_ERROR, 'File: '.$this->data);
+			throw new ShopgateLibraryException(ShopgateLibraryException::PLUGIN_FILE_OPEN_ERROR, 'File: '.$this->data, true);
 		}
 		
 		// output headers ...
@@ -1149,7 +1320,7 @@ class ShopgatePluginApiResponseAppJson extends ShopgatePluginApiResponse {
 		$data['error'] = $this->error;
 		$data['error_text'] = $this->error_text;
 		$data['trace_id'] = $this->trace_id;
-		$data['version'] = $this->version;
+		$data['shopgate_library_version'] = $this->version;
 		if (!empty($this->pluginVersion)) {
 			$data['plugin_version'] = $this->pluginVersion;
 		}
@@ -1348,6 +1519,7 @@ interface ShopgateMerchantApiInterface {
 	 * @param string $shippingServiceId
 	 * @param int $trackingNumber
 	 * @param bool $markAsCompleted
+	 * @param bool $sendCustomerMail
 	 *
 	 * @return ShopgateMerchantApiResponse
 	 *
@@ -1356,7 +1528,7 @@ interface ShopgateMerchantApiInterface {
 	 *
 	 * @see http://wiki.shopgate.com/Merchant_API_add_order_delivery_note/
 	 */
-	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false);
+	public function addOrderDeliveryNote($orderNumber, $shippingServiceId, $trackingNumber, $markAsCompleted = false, $sendCustomerMail = true);
 	
 	/**
 	 * Represents the "set_order_shipping_completed" action.

@@ -1,5 +1,171 @@
 '''Deutsch'''
 
+'''Version 2.8.1'''
+* fehler bei dem Auslesen der Textfelder während des Bestellimports behoben
+* fehler bei dem Auslesen der Steuern behoben
+
+'''Version 2.8.0'''
+* nutzt Shopgate Library 2.8.3
+
+'''Version 2.7.2'''
+* Fehler in der Datenstruktur der Steuerregeln behoben
+
+'''Version 2.7.1'''
+* Fehlende instanziierung eines Smarty Objektes hinzugefügt
+
+'''Version 2.7.0'''
+* nutzt Shopgate Library 2.7.0
+* Fehler bei dem Auslesen der Shop Version behoben
+
+'''Version 2.6.9'''
+* Bestellbestätigungsmail für modified Versionen kleiner gleich Version 1.05
+
+'''Version 2.6.8'''
+* Fehler in Shopgate Connect behoben
+
+'''Version 2.6.7'''
+* Bei einem Bestellimport werden nun Textfelder brücksichtigt
+* Bei dem Senden der Bestellbestätigungsemail wird die Sprache richtig gesetzt
+* Shopgate Connect setzt nun auch die zweite Benutzer-Id
+
+'''Version 2.6.6'''
+* Logik zum deaktivieren von Produkten, welche nichtmehr auf Lager sind, verbessert
+* Textfelder werden nun bei Bestellungen unterstützt
+
+'''Version 2.6.5'''
+* unterstützt das Bezahlmodul paypal_ipn im Bestellungs-Import
+
+'''Version 2.6.4'''
+* variable in config gesetzt
+
+'''Version 2.6.3'''
+* Versandpreis in Netto wird nun exportiert
+
+'''Version 2.6.2'''
+* Versandmethoden können ausgelesen werden.
+
+'''Version 2.6.1'''
+* Abfrage der Plugin-Einstellungen erweitert
+
+'''Version 2.6.0'''
+* virtuelle Kategorie "Neue Produkte" kann nun exportiert werden
+* virtuelle Kategorie "Spezial Produkte" kann nun exportiert werden
+
+'''Version 2.5.5'''
+* nutzt Shopgate Library 2.6.6
+* Anzeigefehler der Mehrwertsteuer während des Bestellimports behoben
+
+'''Version 2.5.4'''
+* nutzt Shopgate Library 2.5.6
+* Funktion um die Erreichbarkeit des Plugins zu ermitteln erweitert.
+
+'''Version 2.5.3'''
+* nutzt Shopgate Library 2.5.5
+* Shopgate-Einstellungen können abgefragt werden
+
+'''Version 2.5.2'''
+* Bestellbestätigungsmail kann nun über das shopsystem versendet werden
+
+'''Version 2.5.1'''
+* Fehler in der Plugin-Installation behoben
+
+'''Version 2.5.0'''
+* nutzt Shopgate Library 2.5.2
+
+'''Version 2.4.9'''
+* Optimierung der Plugin-Installation
+
+'''Version 2.4.8'''
+* Installationsproblem fixed (column_left)
+
+'''Version 2.4.7'''
+* Fehler bei der Anzeige des Shopgate-Menüs behoben
+
+'''Version 2.4.6'''
+* Fehler bei der Anzeige des Shopgate-Menüs behoben
+* nutzt Shopgate Library 2.4.13
+
+'''Version 2.4.5'''
+* nutzt Shopgate Library 2.4.12
+
+'''Version 2.4.4'''
+* Versandklasse und Versandmethode wird nun bei shopgate Bestellungen richtig gesetzt
+
+'''Version 2.4.3'''
+* Kopf-Kommentare (Lizens) in Plugin Dateien eingefügt
+
+'''Version 2.4.2'''
+* register_customer implementiert.
+
+'''Version 2.4.1'''
+* Css problem im Menü des Admin Backends gefixt
+* nutzt Shopgate Library 2.4.6
+
+'''Version 2.4.0'''
+* nutzt Shopgate Library 2.4.0
+
+'''Version 2.3.3'''
+* Ausgabepuffer wird geleert um Fehler bringende Zeilenumbrüche/Leerzeichen zu vermeiden.
+
+'''Version 2.3.2'''
+* Problem beim Bestellimport mit Sonderpreisen und der Deaktivierung der Sonderpreise behoben.
+
+'''Version 2.3.1'''
+* nutzt die Shopgate Library 2.3.8
+* Problem beim Bearbeiten der englischen Bestellungen behoben
+
+'''Version 2.3.0'''
+* bugfix beim Import von Bestellungen mit Kundengruppendiscount
+
+'''Version 2.1.26'''
+* Beim Bestellungsimport ohne Shopgate-Connect wird das Land und die Zone für den Gastkundenaccount nun richtig gesetzt.
+
+'''Version 2.1.25'''
+* Fehler in dem Installationsscript behoben
+* Fehler beim Item CSV Export behoben. Produkte mit mehr als 10 Optionen werden nicht mehr exportiert, weil die CSV Datei dadurch unbrauchbar wird
+* Nur noch Start-, Produkt- und Kategorieseiten werden zwingend zur mobilen Website weitergeleitet. Ob die übrigen Seiten auch weitergeleitet werden sollen, lässt sich jetzt einstellen.
+* Es wurde ein Problem behoben, bei dem das Shopgate Modul bei der Weiterleitung Warnmeldungen produzierte, wenn das Error-Level des Servers auf streng eingestellt war
+* nutzt die Shopgate Library 2.3.0
+
+'''Version 2.1.24'''
+* Änderungen des modified eCommerce Teams in das Plugin eingepflegt
+* Auf Anfrage besteht nun die Möglichkeit, Kategorien auf eine Maximaltiefe zu reduzieren. Tieferliegende Produkte werden dabei der tiefsten verfügbaren Elternkategorie zugeordnet.
+* Es wurde ein Problem behoben, bei dem das Shopgate Modul bei den CSV-Exporten und bei Bestellungsimporten Warnmeldungen verursachte, wenn das Error-Level des Servers auf streng eingestellt war
+* nutzt die Shopgate Library 2.1.29
+
+'''Version 2.1.23'''
+* Unterstützung für SEO-URLs beim Export der Produkte und Kategorien
+* CSS-Klassen für die Darstellung im Backend angepasst
+
+'''Version 2.1.22'''
+* Beim Produktexport ist es nun möglich eine Kombination aus der Artikelbeschreibung und der Kurzbeschreibung zu verwenden. Einstellbar über die Konfigurationsseite.
+* Der Adresszusatz bei Shopgate-Bestellungen wird beim Bestellungsimport nun berücksichtigt
+* Die Kundendaten des Kunden im Shop werden beim Bestellungsimport nun auch mit den Daten des Kunden auf Seiten des Shops eingetragen anstatt, wie zuvor, nur die übermittelten Kundendaten zu verwenden
+
+'''Version 2.1.21'''
+* Der Bestellungsimport bricht nun nicht mehr mit einem Fehler ab, wenn optionale Datenbankfelder fehlen
+
+'''Version 2.1.20'''
+* Die Bestände von Produktattributen werden jetzt korrekt exportiert
+
+'''Version 2.1.19'''
+* Die ausgewählte Versandart sollte nun korrekt berücksichtigt werden, um die Steuern für die Versandkosten zu berechnen
+
+'''Version 2.1.18'''
+* Ein Fehler wurde behoben, der bei der Installation des Shopgate-Payment-Moduls auftrat
+
+'''Version 2.1.17'''
+* Beim Bestellungsimport werden nun auch die Lageroptionen korrekt für Produkte, zugehörige Attribute und Sonderangebote berücksichtigt. Produkte und Sonderangebote dem Shopsystem entsprechend inaktiv gesetzt
+* Support für die alte Produktstruktur ist bereits enthalten, um fehlerhafte Bestellungimports kurz nach einem Update des Shopgate Plugins zu vermeiden
+* Vorbestell-Produkte werden nun als solche exportiert
+* Die Methode updateOrder() wirft keine Fehlermeldung mehr, wenn die Bezahlung nach dem Versand eingeht und der Versand nicht blockiert war
+* Die Shopgate Konfigurationsdatei kann nun auch dann problemfrei gespeichert werden, wenn fehlerhaft Formatierte Parameter via GET angehängt werden
+* Der Bestellstatus "Versand blockiert (Shopgate)" kann bei der Installation des Shopgate Zahlungsmoduls nun auch dann zugeordnet werden, wenn er anders benannt ist, solange dieser mit dem Schlüsselwort "Shopgate" (ohne Anführungszeichen) gekennzeichnet ist
+* Problem mit DreamRobot und Versandkosten behoben
+* Funktionalität zur Verarbeitung der globalen und sprachabhängigen Konfigurationen in die Shopgate Library verlegt
+* Fehler beim Speichern der Logdateien behoben
+* nutzt die Shopgate Library 2.1.26
+
 '''Version 2.1.16'''
 * überarbeitete Konfigurationsseite
 * es können jetzt mehrere Sprachen für die mobile Weiterleitung ausgewählt werden
@@ -115,6 +281,172 @@
 
 '''English'''
 
+'''Version 2.8.1'''
+* bug while reading textfield information from database fixed
+* bug in parsing the tax classes fixed
+
+'''Version 2.8.0'''
+* uses Shopgate Library 2.8.3
+
+'''Version 2.7.2'''
+* bug in tax rules datastructure fixed
+
+'''Version 2.7.1'''
+* added missing instantiation of an Smarty Objektes
+
+'''Version 2.7.0'''
+* uses Shopgate Library 2.7.0
+* bug finding out shop version fixed
+
+'''Version 2.6.9'''
+* send order confirmation mail in modified lower than 1.05
+
+'''Version 2.6.8'''
+* Bug in Shopgate Connect fixed
+
+'''Version 2.6.7'''
+* Now textfields were considered while order import
+* While senden the order confirmation mail the language is set correctly
+* Shopgate Connect sets the second user-id now
+
+'''Version 2.6.6'''
+* improved stock check logic
+* Textfields in orders are supported now
+
+'''Version 2.6.5'''
+* supports paypal_ipn payment module at orders import
+
+'''Version 2.6.4'''
+* shopgate config variable set
+
+'''Version 2.6.3'''
+* shipping price will now be exported as net
+
+'''Version 2.6.2'''
+* Shipping methods can be selected
+
+'''Version 2.6.1'''
+* request plugin configuration extended 
+
+'''Version 2.6.0'''
+* virtual category "new products" can now be exported
+* virtual category "special products" can now be exported
+
+'''Version 2.5.5'''
+* uses Shopgate Library 2.6.6
+* VAT bug fixed in Shopgate order import 
+
+'''Version 2.5.4'''
+* uses Shopgate Library 2.5.6
+* plugin ping function extended
+
+'''Version 2.5.3'''
+* uses Shopgate Library 2.5.5
+* request Shopgate plugin properties
+
+'''Version 2.5.2'''
+* order confirmation mail can now be sent through the shop system
+
+'''Version 2.5.1'''
+* bug fixed in plugin installation 
+
+'''Version 2.5.0'''
+* uses Shopgate Library 2.5.0
+
+'''Version 2.4.9'''
+* plugin installation optimized
+
+'''Version 2.4.8'''
+* installation problem fixedf (column_left)
+
+'''Version 2.4.7'''
+* Bug fixed which disabled the Shopgate-Menue
+
+'''Version 2.4.6'''
+* uses Shopgate Library 2.4.13
+* Bug fixed which disabled the Shopgate-Menue
+
+'''Version 2.4.5'''
+* uses Shopgate Library 2.4.12
+
+'''Version 2.4.4'''
+* Shipping class and method are now set correctly in shopgate orders
+
+'''Version 2.4.3'''
+* added head comment (license) into plugin files
+
+'''Version 2.4.2'''
+* register customer implemented
+
+'''Version 2.4.1'''
+* Fixed a Css problem in the Admin Backend Menü
+* nutzt Shopgate Library 2.4.6
+
+'''Version 2.4.0'''
+* uses Shopgate Library 2.4.0
+
+'''Version 2.3.3'''
+* Output buffer will be deleted to prevent error which caused through linebreaks/spaces
+
+'''Version 2.3.2'''
+* fixed special prices deactiviation issue on order import with special prices
+
+'''Version 2.3.1'''
+* uses Shopgate Library 2.3.8
+* fixed issue on editing English orders
+
+'''Version 2.3.0'''
+* fixed issue in the import of orders with customer group discount
+
+'''Version 2.1.26'''
+* the country and state-zone is now set correctly for guest customers while importing an order without Shopgate-Connect
+
+'''Version 2.1.25'''
+* fixed issue in install script
+* fixed issue with item csv export. Items with more than 10 options are ignored, since they would break the export file
+* Only home page, product detail pages and category pages are always redirected to the mobile web site from now on. There's a new setting for specifying whether or not other pages should also be redirected.
+* a problem has been solved, that happened to cause warnings while redirect on servers that has set its error level to strict
+* uses Shopgate Library 2.3.0
+
+'''Version 2.1.24'''
+* applied all plugin modifications, done by the modified eCommerce team
+* it's now possible to reduce the category depth to a maximum value upon request, where products deeper will be assigned to the deepest exported parent
+* a problem has been solved, that happened to cause warnings while csv exports and order imports on servers that has set its error level to strict
+* uses Shopgate Library 2.1.29
+
+'''Version 2.1.23'''
+* added support for SEO URLs to export of products and categories
+* adapted CSS classes for backend
+
+'''Version 2.1.22'''
+* it is now possible to choose a combination of the products description and the short description on the Shopgate settings page
+* the additional address field on Shopgate orders is now appended to the address while importing orders
+* the customers data while importing orders is now taken from the shop customer data, instead of the customer data, given by the addOrder request
+
+'''Version 2.1.21'''
+* the add order request doesn't stop anymore with an error message, when optional database fields are missing
+
+'''Version 2.1.20'''
+* the stock of the products attributes is now exported correctly
+
+'''Version 2.1.19'''
+* the selected shipping method should now consulted correctly to be able to calculate taxes for the shipping costs
+
+'''Version 2.1.18'''
+* fixed an issue where the shopgate payment module could not be installed properly
+
+'''Version 2.1.17'''
+* the stock level options are now accessed on importing orders and adapted to the ordered products, attributes and specials. Products and specials are now deactivated according to the shoppingsystem
+* support for the older products structure to avoid false order imports after updating to a newer shopgate plugin is already included
+* preorder products are now exported as such
+* method updateOrder() doesn't throw an exception anymore if payment is done after shipping and shipping was not blocked by Shopgate. 
+* the Shopgate configuration file can now be saved without any problems, even if false formatted GET parameters are appended on navigation to the Shopgate configuration page
+* the orders status "Shipping blocked (Shopgate)" can now be recognized while installing the Shopgate payment module even if its name has been changed, as long as it is marked with the keyword "Shopgate" (without quoutes)
+* fixed an issue with DreamRobot and shipping costs
+* moved functionality for handling of global and language dependend configurations to Shopgate Library
+* fixed a bug in saving of log files
+* uses Shopgate Library 2.1.26
+
 '''Version 2.1.16'''
 * revised configuration interface
 * it's now possible to select multiple languages for the Mobile Redirect 
@@ -174,7 +506,7 @@
 
 '''Version 2.1.5'''
 * The comments for orders via Shopgate have been revised due to misconceptions in the past.
-: Orders that are not blocked for shipping by Shopgaste are ''not'' approved for shipping either. When an order is placed with a merchant's payment method the transaction must be reviewed before shipping.
+: Orders that are not blocked for shipping by Shopgate are ''not'' approved for shipping either. When an order is placed with a merchant's payment method the transaction must be reviewed before shipping.
 * item number export for one dimension variants
 
 '''Version 2.1.4'''
