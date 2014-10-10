@@ -174,6 +174,7 @@
           'postcode' => $order['customers_postcode'],
           'state' => $order['customers_state'],
           'country' => $order['customers_country'],
+          'country_iso_2' => $order['customers_country_iso_code_2'],
           'format_id' => $order['customers_address_format_id'],
           'telephone' => $order['customers_telephone'],
           'email_address' => $order['customers_email_address'],

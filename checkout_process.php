@@ -137,6 +137,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'customers_country' => $order->customer['country']['title'],
       'customers_telephone' => $order->customer['telephone'],
       'customers_email_address' => $order->customer['email_address'],
+      'customers_country_iso_code_2' => $order->customer['country']['iso_code_2'],
       'customers_address_format_id' => $order->customer['format_id'],
       'delivery_name' => $order->delivery['firstname'].' '.$order->delivery['lastname'],
       'delivery_firstname' => $order->delivery['firstname'],
