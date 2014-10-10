@@ -15,11 +15,19 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-require_once(DIR_FS_INC . 'xtc_set_banner_status.inc.php');
+  require_once(DIR_FS_INC . 'xtc_set_banner_status.inc.php');
    
-// Auto expire banners
+  // Auto expire banners
   function xtc_expire_banners() {
-    $banners_query = xtc_db_query("select b.banners_id, b.expires_date, b.expires_impressions, sum(bh.banners_shown) as banners_shown from " . TABLE_BANNERS . " b, " . TABLE_BANNERS_HISTORY . " bh where b.status = '1' and b.banners_id = bh.banners_id group by b.banners_id");
+    $banners_query = xtc_db_query("SELECT b.banners_id, 
+                                          b.expires_date, 
+                                          b.expires_impressions, 
+                                          sum(bh.banners_shown) as banners_shown 
+                                     FROM " . TABLE_BANNERS . " b
+                                     JOIN " . TABLE_BANNERS_HISTORY . " bh 
+                                          ON b.banners_id = bh.banners_id
+                                    WHERE b.status = '1'
+                                 GROUP BY b.banners_id");
     if (xtc_db_num_rows($banners_query)) {
       while ($banners = xtc_db_fetch_array($banners_query)) {
         if (xtc_not_null($banners['expires_date'])) {
@@ -34,4 +42,4 @@ require_once(DIR_FS_INC . 'xtc_set_banner_status.inc.php');
       }
     }
   }
- ?>
+?>
