@@ -57,11 +57,11 @@ if((MODULE_PAYMENT_SHOPGATE_STATUS=='True') && ($result['shopgate'] == 1)) {
 	);
 
 ##### XTCM BOF #####
-	$displayCssClass = 'menuBoxContentLinkSub';
+	$displayCssClass = 'menuBoxContentLink';
 	if (defined('NEW_ADMIN_STYLE')) {
 		$surroundingHtml = array(
 			'start'	=>	'<li>' .
-						'<a href="#" class="'.$displayCssClass.'">-'.BOX_SHOPGATE.'</a>' .
+						'<a href="#" class="menuBoxContentLinkSub">-'.BOX_SHOPGATE.'</a>' .
 						'<ul>',
 			'end'	=>	'</ul></li>',
 		);
