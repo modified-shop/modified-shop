@@ -53,7 +53,7 @@
           $messageStack->add(ERROR_BANNER_GROUP_REQUIRED, 'error');
           $banner_error = true;
         }
-        if (empty($banners_image_local)) {
+        if (!empty($banners_image_target)) {
           $accepted_banners_image_files_extensions = array("jpg","jpeg","jpe","gif","png","bmp","tiff","tif","bmp","swf","cab");
           $accepted_banners_image_files_mime_types = array("image/jpeg","image/gif","image/png","image/bmp","application/x-shockwave-flash");
           if (!$banners_image = xtc_try_upload('banners_image', DIR_FS_CATALOG_IMAGES.'banner/' . $banners_image_target, '644', $accepted_banners_image_files_extensions, $accepted_banners_image_files_mime_types)) {
@@ -61,16 +61,21 @@
             $banner_error = true;
           }
         }
+                
         if ($banner_error == false) {
           $db_image_location = (xtc_not_null($banners_image_local)) ? $banners_image_local : $banners_image_target . $banners_image->filename;
           $sql_data_array = array('banners_title' => $banners_title,
-                                    'banners_url' => $banners_url,
+                                  'banners_url' => $banners_url,
                                   'banners_image' => $db_image_location,
                                   'banners_group' => $banners_group,
-                              'banners_html_text' => $html_text);
+                                  'banners_html_text' => $html_text,
+                                  'expires_date' => 'null',
+                                  'expires_impressions' => 'null',
+                                  'date_scheduled' => 'null',
+                                  );
           if ($action == 'insert') {
             $insert_sql_data = array('date_added' => 'now()',
-                                         'status' => '1');
+                                     'status' => '1');
             $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_BANNERS, $sql_data_array);
             $banners_id = xtc_db_insert_id();
@@ -80,7 +85,7 @@
             $messageStack->add_session(SUCCESS_BANNER_UPDATED, 'success');
           }
 
-          if ($_POST['expires_date']) {
+          if ($_POST['expires_date'] && $_POST['expires_date'] != '0000-00-00') {          
             $expires_date = xtc_db_prepare_input($_POST['expires_date']);
             // BOF - Tomcraft - 2009-11-06 - Use "iso 8601" for the date format
             //list($day, $month, $year) = explode('/', $expires_date);
@@ -92,12 +97,12 @@
                             ((strlen($day) == 1) ? '0' . $day : $day);
 
             xtc_db_query("update " . TABLE_BANNERS . " set expires_date = '" . xtc_db_input($expires_date) . "', expires_impressions = null where banners_id = '" . (int)$banners_id . "'");
-          } elseif ($_POST['impressions']) {
-            $impressions = xtc_db_prepare_input($_POST['impressions']);
-            xtc_db_query("update " . TABLE_BANNERS . " set expires_impressions = '" . xtc_db_input($impressions) . "', expires_date = null where banners_id = '" . (int)$banners_id . "'");
+          } elseif ($_POST['expires_impressions'] && $_POST['expires_impressions'] != '0') {
+            $expires_impressions = xtc_db_prepare_input($_POST['expires_impressions']);
+            xtc_db_query("update " . TABLE_BANNERS . " set expires_impressions = '" . xtc_db_input($expires_impressions) . "', expires_date = null where banners_id = '" . (int)$banners_id . "'");
           }
 
-          if ($_POST['date_scheduled']) {
+          if ($_POST['date_scheduled'] && $_POST['date_scheduled'] != '0000-00-00') {
             $date_scheduled = xtc_db_prepare_input($_POST['date_scheduled']);
             // BOF - Tomcraft - 2009-11-06 - Use "iso 8601" for the date format
             //list($day, $month, $year) = explode('/', $date_scheduled);
@@ -276,15 +281,15 @@ require (DIR_WS_INCLUDES.'head.php');
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_SCHEDULED_AT; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                         <td class="dataTableConfig col-middle">
-                          <?php echo xtc_draw_input_field('dateScheduled', $bInfo->date_scheduled ,'id="Datepicker1"'); ?>
+                          <?php echo xtc_draw_input_field('date_scheduled', $bInfo->date_scheduled ,'id="Datepicker1"'); ?>
                         </td>
                         <td class="dataTableConfig col-right">&nbsp;</td>
                       </tr>                     
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo TEXT_BANNERS_EXPIRES_ON; ?><br /><small><?php echo TEXT_BANNERS_DATE_FORMAT; ?></small></td>
                         <td class="dataTableConfig col-middle">
-                          <?php echo xtc_draw_input_field('dateExpires', $bInfo->expires_date ,'id="Datepicker2"'); ?>
-                          <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
+                          <?php echo xtc_draw_input_field('expires_date', $bInfo->expires_date ,'id="Datepicker2"'); ?>
+                          <?php echo TEXT_BANNERS_OR_AT . '<br />' . xtc_draw_input_field('expires_impressions', $bInfo->expires_impressions, 'maxlength="7" size="7"') . ' ' . TEXT_BANNERS_IMPRESSIONS; ?>
                         </td>
                         <td class="dataTableConfig col-right">&nbsp;</td>
                       </tr>

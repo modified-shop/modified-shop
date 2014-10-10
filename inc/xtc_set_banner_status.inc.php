@@ -27,7 +27,7 @@
     } elseif ($status == '0') {
       xtc_db_query("UPDATE " . TABLE_BANNERS . " 
                        SET status = '".(int)$status."', 
-                           date_status_change = now(), 
+                           date_status_change = now()
                      WHERE banners_id = '" . (int)$banners_id . "'");
     } else {
       return -1;
