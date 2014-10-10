@@ -1,10 +1,34 @@
 <?php
+/*
+* Shopgate GmbH
+*
+* URHEBERRECHTSHINWEIS
+*
+* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+*
+* COPYRIGHT NOTICE
+*
+* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+* for the purpose of facilitating communication between the IT system of the customer and the IT system
+* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+*
+*  @author Shopgate GmbH <interfaces@shopgate.com>
+*/
 require_once 'includes/application_top.php';
 
-defined( '_VALID_XTC' ) or die('Direct Access not allowed.');
 
+
+##### XTCM BOF #####
 require(DIR_FS_CATALOG.'/includes/external/shopgate/shopgate_library/shopgate.php');
 require(DIR_FS_CATALOG.'/includes/external/shopgate/base/shopgate_config.php');
+##### XTCM EOF #####
+
 $encodings = array('UTF-8', 'ISO-8859-1', 'ISO-8859-15');
 $error = array();
 
@@ -14,6 +38,42 @@ $sg_language = (!empty($_GET['sg_language'])
 	: null
 );
 
+// remove '?' characters from the language id. This can happen if a wrong formatted link is used
+if(!empty($sg_language)) {
+	$sg_language = trim($sg_language, '?');
+	if(strpos($sg_language, '?') !== false) {
+		$sg_language = explode('?', $sg_language);
+		$sg_language = $sg_language[0];
+	}
+}
+
+##### XTC3 | XTCM BOF #####
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+//
+//
+//
+//
+//
+//
+##### XTC3 | XTCM EOF #####
+
 // determine redirect_languages for global configuration
 if (($sg_language === null) && !isset($_POST['_shopgate_config']['redirect_languages'])) {
 	$_POST['_shopgate_config']['redirect_languages'] = array();
@@ -22,12 +82,14 @@ if (($sg_language === null) && !isset($_POST['_shopgate_config']['redirect_langu
 // load configuration
 if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 	try {
+##### XTCM BOF #####
 		$shopgateConfig = new ShopgateConfigModified();
+##### XTCM EOF #####
 		
 		// check if some settings are selected, keep default if not
 		$sgEmptySettings = array(
-		'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
-		'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_cancled'
+			'language', 'currency', 'country', 'tax_zone_id', 'customer_price_group', 'customer_status_id',
+			'order_status_open', 'order_status_shipping_blocked', 'order_status_shipped', 'order_status_cancled'
 		);
 		foreach ($sgEmptySettings as $sgEmptySetting) {
 			if ($_POST['_shopgate_config'][$sgEmptySetting] == '-') {
@@ -61,7 +123,9 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 } else {
 	try {
 		$shopgate_message = '';
+##### XTCM BOF #####
 		$shopgateConfig = new ShopgateConfigModified();
+##### XTCM EOF #####
 		
 		if ($sg_language !== null) {
 			$sgUseGlobalConfig = $shopgateConfig->checkUseGlobalFor($sg_language);
@@ -83,6 +147,11 @@ if (isset($_GET['action']) && ($_GET["action"] === "save")) {
 		$shopgateConfig = $shopgateConfig->toArray();
 	}
 }
+
+$catIdQuery = "SELECT MAX(c.categories_id) as maxid FROM ".TABLE_CATEGORIES." AS c ";
+$catIdResult= xtc_db_query($catIdQuery);
+$maxCatId = xtc_db_fetch_array($catIdResult);
+$maxCatId = $maxCatId['maxid'];
 
 // load all languages
 $qry = xtc_db_query("SELECT LOWER(code) AS code, name, directory FROM `".TABLE_LANGUAGES."` ORDER BY code");
@@ -113,7 +182,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgOrderStates[$row['orders_status_id']] = $row;
 	}
-
+	
 	// get customer groups
 	$qry = xtc_db_query("
 		SELECT
@@ -129,11 +198,18 @@ if($_GET["sg_option"] === "config") {
 			 customers_status_id != '0'
 	");
 	
+	$sgExportDescriptionTypes = array(
+		SHOPGATE_SETTING_EXPORT_DESCRIPTION						=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_ONLY,
+		SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION				=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_ONLY,
+		SHOPGATE_SETTING_EXPORT_DESCRIPTION_SHORTDESCRIPTION	=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESC_SHORTDESC,
+		SHOPGATE_SETTING_EXPORT_SHORTDESCRIPTION_DESCRIPTION	=> SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_SHORTDESC_DESC,
+	);
+	
 	$sgCustomerGroups = array();
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCustomerGroups[$row['customers_status_id']] = $row;
 	}
-
+	
 	// get tax zones
 	$qry = xtc_db_query("
 		SELECT
@@ -148,7 +224,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgTaxZones[$row['geo_zone_id']] = $row;
 	}
-
+	
 	// get currencies
 	$qry = xtc_db_query("
 		SELECT
@@ -161,7 +237,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCurrencies[$row["code"]] = $row["title"];
 	}
-
+	
 	// get countries
 	$qry = xtc_db_query("
 		SELECT
@@ -176,7 +252,7 @@ if($_GET["sg_option"] === "config") {
 	while ($row = xtc_db_fetch_array($qry)) {
 		$sgCountries[$row['countries_iso_code_2']] = $row;
 	}
-
+	
 	// get directory name by language of the backend interface
 	if(!empty($_SESSION['language'])) {
 		$languageDirectory = strtolower(trim($_SESSION['language']));
@@ -193,35 +269,47 @@ if($_GET["sg_option"] === "config") {
 			require(DIR_FS_LANGUAGES . $languageDirectory . '/modules/shipping/' . $shippingModule);
 			
 			$shippingModule = substr($shippingModule, 0, strrpos($shippingModule, '.'));
-			$sgInstalledShippingModules[$shippingModule] = constant(MODULE_SHIPPING_.strtoupper($shippingModule)._TEXT_TITLE);
+			$sgInstalledShippingModules[$shippingModule] = constant('MODULE_SHIPPING_'.strtoupper($shippingModule).'_TEXT_TITLE');
 		}
 	}
+	
+##### XTC3 | XTCM BOF #####
+//
+//
+//
+//
+//
+//
 }
 
+//
+//
+//
+//
+//
+//
+//
+##### XTC3 | XTCM EOF #####
 
-
-
-
-
-
-
-
-
-
+##### XTCM BOF #####
+//
 $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
-
-
-
-
-
-?>
-<!doctype html public "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html <?php echo HTML_PARAMS; ?>>
+//
+//
+//
+##### XTCM BOF #####
+if (defined('RUN_MODE_ADMIN')) {
+	require (DIR_WS_INCLUDES.'head.php');
+} else {
+echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
+<html '.HTML_PARAMS.'>
 <head>
-	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $_SESSION['language_charset']; ?>">
+	<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'">
 	<meta name="robots" content="noindex,nofollow">
-	<title><?php echo TITLE; ?></title>
-	<link rel="stylesheet" type="text/css" href="includes/stylesheet.css">
+	<title>'.TITLE.'</title>
+	<link rel="stylesheet" type="text/css" href="includes/stylesheet.css" />'."\n";
+}
+?>
 	<script type="text/javascript" src="includes/general.js"></script>
 	<script type="text/javascript">
 		<!--
@@ -249,7 +337,9 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		}
 		
 		table.shopgate_setting {
-			
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php // ?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 		}
 		
 		td.shopgate_setting {
@@ -257,16 +347,22 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		}
 		
 		tr.shopgate_even {
-			
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php // ?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 		}
 		
 		tr.shopgate_uneven {
-			
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php // ?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 		}
 		
 		td.shopgate_input div {
+<?php ##### XTCM BOF ##### ?>
 			background: #f9f0f1;
 			border: 1px solid #cccccc;
+<?php ##### XTCM EOF ##### ?>
 			margin-bottom: 10px;
 			padding: 2px;
 		}
@@ -277,7 +373,9 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		
 		div.shopgate_language_selection {
 			font-size: 11pt;
+<?php ##### XTCM | GambioGX BOF ##### ?>
 			background: #f9f0f1;
+<?php ##### XTCM | GambioGX EOF ##### ?>
 			padding: 12px;
 			margin-top: 8px;
 			margin-bottom: 8px;
@@ -311,7 +409,11 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 		}
 	</style>
 </head>
-<?php $tableClass = 'dataTableContent'; ?>
+<?php
+##### XTC3 | XTCM BOF #####
+	$tableClass = 'dataTableContent';
+##### XTC3 | XTCM EOF #####
+?>
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
 
 	<!-- header //-->
@@ -334,7 +436,9 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 				<table border="0" width="100%" cellspacing="0" cellpadding="2" style="height:100%;">
 					<tr>
 						<td>
+<?php ##### XTC3 | XTCM BOF ##### ?>
 							<div class="pageHeading">
+<?php ##### XTC3 | XTCM EOF ##### ?>
 								<?php echo SHOPGATE_CONFIG_TITLE; ?>
 							</div>
 						</td>
@@ -478,6 +582,24 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 									</td>
 								</tr>
 								<?php endif; ?>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_DEFAULT_REDIRECT; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['redirect_languages']) ? '' : ' error' ?>">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["enable_default_redirect"] ? 'checked=""' : ''?> value="1" name="_shopgate_config[enable_default_redirect]">
+														<?php echo SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["enable_default_redirect"] ? 'checked=""' : ''?> value="0" name="_shopgate_config[enable_default_redirect]">
+														<?php echo SHOPGATE_CONFIG_ENABLE_DEFAULT_REDIRECT_OFF; ?><br>
+													</div>
+													<?php echo SHOPGATE_CONFIG_DEFAULT_REDIRECT_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_EXPORT_SETTINGS; ?></th></tr>
@@ -620,6 +742,28 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 									<td class="shopgate_setting" align="right">
 										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
 											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<select name="_shopgate_config[export_description_type]">
+															<?php foreach($sgExportDescriptionTypes as $sgDescriptionType => $sgDescriptionTypeName): ?>
+															<option value="<?php echo $sgDescriptionType; ?>"
+																<?php echo $shopgateConfig["export_description_type"]==$sgDescriptionType?'selected=""':''?>>
+																<?php echo $sgDescriptionTypeName; ?>
+															</option>
+															<?php endforeach; ?>
+														</select>
+													</div>
+													<?php echo SHOPGATE_CONFIG_EXTENDED_PRODUCTSDESCRIPTION_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
 												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXTENDED_CUSTOMER_PRICE_GROUP; ?></b></td>
 												<td class="<?php echo $tableClass; ?> shopgate_input">
 													<div>
@@ -642,6 +786,78 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 										</table>
 									</td>
 								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["export_new_products_category"]?'checked=""':''?> value="1" name="_shopgate_config[export_new_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["export_new_products_category"]?'checked=""':''?> value="0" name="_shopgate_config[export_new_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_OFF; ?>
+													</div>
+													<div>
+														<input type="text"  value="<?php echo  $shopgateConfig["export_new_products_category_id"]?>" name="_shopgate_config[export_new_products_category_id]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_MAX_ID . ":" . $maxCatId ?>
+													</div>
+													
+													<?php echo SHOPGATE_CONFIG_EXPORT_NEW_PRODUCTS_CATEGORY_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>								
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["export_special_products_category"]?'checked=""':''?> value="1" name="_shopgate_config[export_special_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["export_special_products_category"]?'checked=""':''?> value="0" name="_shopgate_config[export_special_products_category]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_OFF; ?>
+													</div>
+													<div>
+														<input type="text"  value="<?php echo  $shopgateConfig["export_special_products_category_id"]?>" name="_shopgate_config[export_special_products_category_id]">
+														<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_MAX_ID . ":" . $maxCatId ?>
+													</div>
+													
+													<?php echo SHOPGATE_CONFIG_EXPORT_SPECIAL_PRODUCTS_CATEGORY_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+<?php ##### XTC3 | XTCM BOF ##### ?>
+<?php
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+?>
+<?php ##### XTC3 | XTCM EOF ##### ?>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><td colspan="2">&nbsp;</td></tr>
 								<tr><th colspan="2" style="text-align: left;"><?php echo SHOPGATE_CONFIG_ORDER_IMPORT_SETTINGS; ?></th></tr>
@@ -816,6 +1032,24 @@ $shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
 														</select>
 													</div>
 													<?php echo SHOPGATE_CONFIG_EXTENDED_STATUS_ORDER_CANCELED_DESCRIPTION; ?>
+												</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+								<tr>
+									<td class="shopgate_setting" align="right">
+										<table width="100%" cellspacing="0" cellpadding="4" border="0" class="shopgate_setting">
+											<tr valign="top" class="<?php echo ($alt == 'shopgate_uneven') ? $alt = 'shopgate_even' : $alt = 'shopgate_uneven' ?>">
+												<td width="300" class="<?php echo $tableClass; ?>"><b><?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL; ?></b></td>
+												<td class="<?php echo $tableClass; ?> shopgate_input<?php echo empty($error['redirect_languages']) ? '' : ' error' ?>">
+													<div>
+														<input type="radio" <?php echo  $shopgateConfig["send_order_confirmation_mail"] ? 'checked=""' : ''?> value="1" name="_shopgate_config[send_order_confirmation_mail]">
+														<?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL_ON; ?><br>
+														<input type="radio" <?php echo !$shopgateConfig["send_order_confirmation_mail"] ? 'checked=""' : ''?> value="0" name="_shopgate_config[send_order_confirmation_mail]">
+														<?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL_OFF; ?><br>
+													</div>
+													<?php echo SHOPGATE_CONFIG_SEND_ORDER_EMAIL_DESCRIPTION; ?>
 												</td>
 											</tr>
 										</table>
