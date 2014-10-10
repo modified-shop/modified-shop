@@ -1,4 +1,25 @@
 <?php
+/*
+* Shopgate GmbH
+*
+* URHEBERRECHTSHINWEIS
+*
+* Dieses Plugin ist urheberrechtlich geschützt. Es darf ausschließlich von Kunden der Shopgate GmbH
+* zum Zwecke der eigenen Kommunikation zwischen dem IT-System des Kunden mit dem IT-System der
+* Shopgate GmbH über www.shopgate.com verwendet werden. Eine darüber hinausgehende Vervielfältigung, Verbreitung,
+* öffentliche Zugänglichmachung, Bearbeitung oder Weitergabe an Dritte ist nur mit unserer vorherigen
+* schriftlichen Zustimmung zulässig. Die Regelungen der §§ 69 d Abs. 2, 3 und 69 e UrhG bleiben hiervon unberührt.
+*
+* COPYRIGHT NOTICE
+*
+* This plugin is the subject of copyright protection. It is only for the use of Shopgate GmbH customers,
+* for the purpose of facilitating communication between the IT system of the customer and the IT system
+* of Shopgate GmbH via www.shopgate.com. Any reproduction, dissemination, public propagation, processing or
+* transfer to third parties is only permitted where we previously consented thereto in writing. The provisions
+* of paragraph 69 d, sub-paragraphs 2, 3 and paragraph 69, sub-paragraph e of the German Copyright Act shall remain unaffected.
+*
+*  @author Shopgate GmbH <interfaces@shopgate.com>
+*/
 
 ##### XTCM BOF #####
 include_once DIR_FS_CATALOG.'includes/external/shopgate/shopgate_library/shopgate.php';
@@ -45,7 +66,12 @@ class ShopgateConfigModified extends ShopgateConfig {
 	protected $shopgate_table_version;
 ##### GambioGX | osCommerce | ZenCart EOF #####
 	protected $maximum_category_export_depth;
-	
+	protected $send_order_confirmation_mail;
+	protected $export_new_products_category;
+	protected $export_new_products_category_id;
+	protected $export_special_products_category;
+	protected $export_special_products_category_id;
+
 	public function startup() {
 		// overwrite some library defaults
 ##### XTCM BOF #####
@@ -66,6 +92,9 @@ class ShopgateConfigModified extends ShopgateConfig {
 		$this->enable_cron = 1;
 		$this->enable_clear_log_file = 1;
 		$this->enable_clear_cache = 1;
+		$this->enable_get_settings = 1;
+		$this->enable_check_cart = 1;
+		$this->enable_register_customer = 1;
 ##### XTC3 | XTCM | GambioGX BOF #####
 		$this->shop_is_active = 1;
 ##### XTC3 | XTCM | GambioGX EOF #####
@@ -121,6 +150,11 @@ class ShopgateConfigModified extends ShopgateConfig {
 		$this->shopgate_table_version = '';
 ##### GambioGX | osCommerce | ZenCart EOF #####
 		$this->maximum_category_export_depth = '';
+		$this->send_order_confirmation_mail = false;
+		$this->export_new_products_category 		= 0;
+		$this->export_new_products_category_id 		= 999;
+		$this->export_special_products_category 	= 0;
+		$this->export_special_products_category_id 	= 1000;
 	}
 	
 	
@@ -216,6 +250,26 @@ class ShopgateConfigModified extends ShopgateConfig {
 		return $this->maximum_category_export_depth;
 	}
 	
+	public function getSendOrderConfirmationMail(){
+		return $this->send_order_confirmation_mail;
+	}
+	
+	public function getExportNewProductsCategory(){
+		return $this->export_new_products_category;
+	}
+	
+	public function getExportNewProductsCategoryId() {
+		return $this->export_new_products_category_id;
+	}
+
+	public function getExportSpecialProductsCategory() {
+		return $this->export_special_products_category;
+	}
+
+	public function getExportSpecialProductsCategoryId() {
+		return $this->export_special_products_category_id;
+	}
+	
 	public function setRedirectLanguages($value) {
 		$this->redirect_languages = $value;
 	}
@@ -289,4 +343,25 @@ class ShopgateConfigModified extends ShopgateConfig {
 	public function setMaximumCategoryExportDepth($value) {
 		$this->maximum_category_export_depth = $value;
 	}
+	
+	public function setSendOrderConfirmationMail($value){
+		$this->send_order_confirmation_mail = $value;
+	}
+	
+	public function setExportNewProductsCategory($value) {
+		$this->export_new_products_category = $value;
+	}
+
+	public function setExportNewProductsCategoryId($value) {
+		$this->export_new_products_category_id = $value;
+	}
+
+	public function setExportSpecialProductsCategory($value) {
+		$this->export_special_products_category = $value;
+	}
+
+	public function setExportSpecialProductsCategoryId($value) {
+		$this->export_special_products_category_id = $value;
+	}
+
 }
