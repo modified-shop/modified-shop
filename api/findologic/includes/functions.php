@@ -82,6 +82,9 @@ function ensure_encoding($string) {
   if (!is_string($string)) {
     return $string;
   }
+
+  // convert entities
+  $string = decode_htmlentities($string);
   
   /* ensure that strings are not utf8-encoded twice */
   $is_unicode = (mb_detect_encoding($string, array('UTF-8'), true) == 'UTF-8');
