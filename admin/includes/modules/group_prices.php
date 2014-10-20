@@ -121,9 +121,7 @@ foreach($group_array as $group_data) {
                 <td class="main">
                   <?php
                   if (PRICE_IS_BRUTTO == 'true') {
-                    $tax_query = xtc_db_query("select tax_rate from ".TABLE_TAX_RATES." where tax_class_id = '".$pInfo->products_tax_class_id."' ");
-                    $tax = xtc_db_fetch_array($tax_query);
-                    $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + $tax['tax_rate']) / 100), PRICE_PRECISION);
+                    $products_price = xtc_round($staffel_values['personal_offer'] * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
                   } else {
                     $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
                   }
