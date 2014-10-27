@@ -212,7 +212,7 @@
 
                 $contents = array('form' => xtc_draw_form('status', FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->shipping_status_id  . '&action=save', 'post', 'enctype="multipart/form-data"'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
-                $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . '<br />' . xtc_draw_file_field('shipping_status_image') . 
+                $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_IMAGE . '<br />' . xtc_draw_file_field('shipping_status_image') . 
                                               '<br />' . $oInfo->shipping_status_image . xtc_draw_hidden_field('shipping_image', $oInfo->shipping_status_image) .
                                               '<br />' . xtc_draw_checkbox_field('delete_image', '', false) . ' ' . TEXT_DELETE_IMAGE);
 
@@ -221,6 +221,7 @@
                 for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
                   $shipping_status_inputs_string .= '<br />' . xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']) . '&nbsp;' . xtc_draw_input_field('shipping_status_name[' . $languages[$i]['id'] . ']', xtc_get_shipping_status_name($oInfo->shipping_status_id, $languages[$i]['id']));
                 }
+
                 $contents[] = array('text' => '<br />' . TEXT_INFO_SHIPPING_STATUS_NAME . $shipping_status_inputs_string);
                 if (DEFAULT_SHIPPING_STATUS_ID != $oInfo->shipping_status_id) $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SHIPPING_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->shipping_status_id) . '">' . BUTTON_CANCEL . '</a>');
