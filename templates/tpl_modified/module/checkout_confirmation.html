@@ -8,7 +8,9 @@
   <li class="active"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
   <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
 </ul>
- 
+
+{if $error != ''}<div class="errormessage">{$error}</div>{/if}
+
 <h1 class="checkout">{#heading_confirmation#}</h1>
 
 <div class="twoColums">

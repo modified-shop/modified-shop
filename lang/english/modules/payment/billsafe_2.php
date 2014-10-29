@@ -31,14 +31,15 @@
 * @license GPLv2
 */
 
-define('MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE', 'Pay on invoice via BillSAFE');
+define('MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE', 'Purchase on account');
 define('MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO', 'Pay your order the convinient way via invoice. Easily and efficiently with BillSAFE, a service of PayPal.');
 define('MODULE_PAYMENT_BILLSAFE_2_SCHG_TEXT_INFO', 'For this payment method we raise a surcharge of: ');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON', 'Sorry, the payment via BillSAFE is not possible. Please select another payment method.');
-define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_101', 'Payment via BillSAFE is not possible right now, please select another payment method.');
+define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_101', 'Payment via BillSAFE is not possible for this transaction, please select another payment method.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_102', 'An error occured during data processing. Please contact us.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_215', 'There were missing parameters during data processing. Please contact us.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_216', 'There were invalid parameters during data processing. Please contact us.');
+define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE', 'You have not entered all necessary information. Please check your information for the payment method!');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMPANY', 'Payment via BillSAFE is unfortunately only possible for private individuals.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_ADDRESS', 'Payment via BillSAFE is unfortunately not possible with an alternate delivery address.');
 define('MODULE_PAYMENT_BILLSAFE_2_STATUS_TEXT', 'Status');
@@ -52,6 +53,8 @@ define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID_TITLE', 'Merchant ID');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID_DESC', 'The Merchant ID to use for the BillSAFE API service');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE_TITLE', 'Merchant License');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE_DESC', 'The Merchant License to use for the BillSAFE API service');
+define('MODULE_PAYMENT_BILLSAFE_2_PKEY_TITLE', 'Public Key');
+define('MODULE_PAYMENT_BILLSAFE_2_PKEY_DESC', 'Security code provided by BillSAFE. You will find your code at your personal BillSAFE website.');
 define('MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER_TITLE', 'Minimum order value');
 define('MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER_DESC', 'BillSAFE minimum order value');
 define('MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER_TITLE', 'Maximim order value');
@@ -135,5 +138,9 @@ define('MODULE_PAYMENT_BILLSAFE_2_DAY', 'Day');
 define('MODULE_PAYMENT_BILLSAFE_2_MONTH', 'Month');
 define('MODULE_PAYMENT_BILLSAFE_2_YEAR', 'Year');
 define('MODULE_PAYMENT_BILLSAFE_2_LAYER_TITLE', 'Payment Layer');
-define('MODULE_PAYMENT_BILLSAFE_2_LAYER_DESC', 'Would you like to enable the layer mode for payments via BillSAFE? <b>Note: It is absolutely necessary to disable <i>Force Cookie Use</i> in the <i>Sessions</i> settings!</b>');
+define('MODULE_PAYMENT_BILLSAFE_2_LAYER_DESC', 'Would you like to enable the layer mode for payments via BillSAFE? <b>Note: Does not function with Onsite Checkout activated! It is absolutely necessary to disable <i>Force Cookie Use</i> in the <i>Sessions</i> settings!</b>');
+define('MODULE_PAYMENT_BILLSAFE_2_INLINE_TITLE', 'Onsite Checkout');
+define('MODULE_PAYMENT_BILLSAFE_2_INLINE_DESC', 'Would you like to enable Onsite Checkout for payments via BillSAFE? <b>Note: Does not function with Payment Layer activated! This function must be agreed with BillSAFE.</b>');
+define('MODULE_PAYMENT_BILLSAFE_2_DOB', 'Please enter your birthdate (e.g. 21.05.1970):');
+define('MODULE_PAYMENT_BILLSAFE_2_TC', '<b>I agree to the <a class="info" href="https://www.billsafe.de/privacy-policy/buyer" target="_blank">privacy policy</a> and the <a class="info" href="https://www.billsafe.de/privacy-policy/credit-check" target="_blank">credit investigation</a> of <a class="info" href="https://www.billsafe.de/imprint" target="_blank">PayPal</a>. The <a class="info" href="https://www.billsafe.de/resources/docs/pdf/Kaeufer_AGB.pdf" target="_blank">general terms and conditions</a> for invoice purchase apply.</b>');
 ?>
