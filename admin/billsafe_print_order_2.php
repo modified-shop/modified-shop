@@ -154,6 +154,7 @@ $order_total[] = array('TITLE' => '<b>'.MODULE_PAYMENT_BILLSAFE_2_TOTAL.':</b>',
 
 $smarty->assign('language', $_SESSION['language']);
 $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+$smarty->assign('tpl_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/');
 $smarty->assign('oID',$_GET['oID']);
 if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {
   include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
@@ -165,9 +166,9 @@ $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
 $smarty->assign('order_data', $order_data);
 $smarty->assign('order_total', $order_total);
 
-require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
-require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
-$bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
+require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+$bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 if ($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
   $bs->setUtf8Mode(false);
 } else {

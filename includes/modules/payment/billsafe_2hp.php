@@ -41,13 +41,18 @@ class billsafe_2hp {
 
   function billsafe_2hp() {
     global $order;
-    require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+    require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
     $this->code = 'billsafe_2hp';
     $this->title = MODULE_PAYMENT_BILLSAFE_2HP_TEXT_TITLE;
+    // BOF - Changed to white label solution
+    /*
     if (preg_match('/checkout_payment/',$_SERVER['PHP_SELF'])) {
       $url_image = $this->checkBillSAFELogoURL(MODULE_PAYMENT_BILLSAFE_2HP_BILLSAFE_LOGO_URL);
       $this->info = MODULE_PAYMENT_BILLSAFE_2HP_CHECKOUT_TEXT_INFO;
     }
+    */
+    $this->info = MODULE_PAYMENT_BILLSAFE_2HP_CHECKOUT_TEXT_INFO;
+    // EOF - Changed to white label solution
     $this->description = MODULE_PAYMENT_BILLSAFE_2HP_TEXT_DESCRIPTION;
     $this->sort_order = MODULE_PAYMENT_BILLSAFE_2HP_SORT_ORDER;
     $this->enabled = ((MODULE_PAYMENT_BILLSAFE_2HP_STATUS == 'True') ? true : false);
@@ -57,7 +62,7 @@ class billsafe_2hp {
     $this->signature = 'billsafe|billsafe|1.0|2.0';
     $currency = $_SESSION ['currency'];
     if ((int)MODULE_PAYMENT_BILLSAFE_2HP_ORDER_STATUS_ID > 0) $this->order_status = MODULE_PAYMENT_BILLSAFE_2HP_ORDER_STATUS_ID;
-    if(isset($_SESSION['billsafe_status']) && $_SESSION['billsafe_status'] == 'declined') $this->enabled = false; //Dokuman - 2012-06-19 - added isset check
+    if(isset($_SESSION['billsafe_status']) && $_SESSION['billsafe_status'] == 'declined') $this->enabled = false; // Dokuman - 2012-06-19 - added isset check
     $this->check();
     if (is_object($order)) $this->update_status();
   }
@@ -66,8 +71,8 @@ class billsafe_2hp {
     global $order;
 
     // BOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
-    if( MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING != '' ) {
-      $neg_shpmod_arr = explode(',',MODULE_PAYMENT_BILLSAFE_2_NEG_SHIPPING);
+    if( MODULE_PAYMENT_BILLSAFE_2HP_NEG_SHIPPING != '' ) {
+      $neg_shpmod_arr = explode(',',MODULE_PAYMENT_BILLSAFE_2HP_NEG_SHIPPING);
       foreach( $neg_shpmod_arr as $neg_shpmod ) {
         $nd=$neg_shpmod.'_'.$neg_shpmod;
         if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
@@ -80,6 +85,7 @@ class billsafe_2hp {
     //  $this->enabled = false;
     //}
     // EOF - Hendrik - 2010-07-15 - exlusion config for shipping modules
+
 
     if (($this->enabled == true) && ((int)MODULE_PAYMENT_BILLSAFE_2HP_ZONE > 0) ) {
       $check_flag = false;
@@ -118,17 +124,17 @@ class billsafe_2hp {
       return $display;
       break;
     }
-    require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php');//DokuMan - 2012-06-19 - move billsafe to external directory
-    $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+    require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+    $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
     if (MODULE_PAYMENT_BILLSAFE_2HP_LOG == 'True') {
       if (MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE == 'Echo') {
-        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs->setLogger(new Billsafe_LoggerEcho());
       } elseif (MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE == 'Mail') {
-        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2HP_LOG_ADDR));
       } elseif (MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE == 'File') {
-        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+        require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
       }
     }
@@ -160,8 +166,14 @@ class billsafe_2hp {
     }
     $total = round($xtPrice->xtcCalculateCurrEx($total, $_SESSION['currency']), $xtPrice->get_decimal_places($_SESSION['currency']));
     $total = number_format(round(($total + $shipping_cost), $xtPrice->get_decimal_places($currency)), 2, '.', '');
-    $company_b = md5($order->billing['company']);
-    $company_d = md5($order->delivery['company']);
+    // BOF - Fix for Austria
+	/*
+    if ($order->billing['company'] !== '') $company_b = md5($order->billing['company']);
+    if ($order->delivery['company'] !== '') $company_d = md5($order->delivery['company']);
+	*/
+    if ($order->billing['company'] !== '') $company_b = $order->billing['company'];
+    if ($order->delivery['company'] !== '') $company_d = $order->delivery['company'];
+    // EOF - Fix for Austria
     $firstname_b = md5($order->billing['firstname']);
     $firstname_d = md5($order->delivery['firstname']);
     $lastname_b = md5($order->billing['lastname']);
@@ -237,17 +249,17 @@ class billsafe_2hp {
     }
 //    if ($order->billing['company'] != '') xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2HP_ERROR_MESSAGE_COMPANY)), 'SSL'));
     if (empty($_GET['token'])) {
-      require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php');//DokuMan - 2012-06-19 - move billsafe to external directory
-      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
       if (MODULE_PAYMENT_BILLSAFE_2HP_LOG == 'True') {
         if (MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE == 'Echo') {
-          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
           $bs->setLogger(new Billsafe_LoggerEcho());
         } elseif (MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE == 'Mail') {
-          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
           $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2HP_LOG_ADDR));
         } elseif (MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE == 'File') {
-          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+          require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
           $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
         }
       }
@@ -431,8 +443,8 @@ class billsafe_2hp {
       $check_query = xtc_db_query('SELECT token FROM billsafe_orders_2 WHERE token = "'.$token.'"');
       $check_token = xtc_db_num_rows($check_query);
       if ($check_token == 1) xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2HP_ERROR_MESSAGE_COMMON))), 'SSL'));
-      require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php');//DokuMan - 2012-06-19 - move billsafe to external directory
-      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
       if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
         $bs->setUtf8Mode(false);
       } else {
@@ -473,7 +485,7 @@ class billsafe_2hp {
       $resultQuery = xtc_db_query('SELECT id FROM billsafe_orders_2 WHERE transactionId = "'.xtc_db_input($this->response->transactionId).'"');
       $result = xtc_db_fetch_array($resultQuery);
       xtc_db_query('INSERT INTO billsafe_orders_user_2 (id, bsorders_id, gender, company, firstname, lastname, street, housenumber, postcode, city, country, dateofbirth, email, phone) VALUES (NULL, "'.xtc_db_input($result['id']).'", "'.xtc_db_input($customer->gender).'", "'.xtc_db_input($customer->firstname).'", "'.xtc_db_input($customer->company).'", "'.xtc_db_input($customer->lastname).'", "'.xtc_db_input($customer->street).'", "'.xtc_db_input($customer->housenumber).'", "'.xtc_db_input($customer->postcode).'", "'.xtc_db_input($customer->city).'", "'.xtc_db_input($customer->country).'", "0000-00-00", "'.xtc_db_input($customer->email).'", "'.xtc_db_input($customer->phone).'")');
-      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+      $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
       if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
         $bs->setUtf8Mode(false);
       } else {
@@ -528,9 +540,7 @@ class billsafe_2hp {
       xtc_db_query('CREATE TABLE billsafe_orders_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, orderid VARCHAR(255) NOT NULL, transactionid VARCHAR(255) NOT NULL, billsafeStatus VARCHAR(255) NOT NULL, type VARCHAR(64) NOT NULL, token VARCHAR(255) NOT NULL, date TIMESTAMP ON UPDATE CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, paymentStatus VARCHAR(255) NULL DEFAULT NULL) ENGINE = MYISAM;');
     } elseif (xtc_db_num_rows($check_query) != 0) {
       $check_query = xtc_db_query('SHOW COLUMNS FROM billsafe_orders_2 like "type"');
-      if (xtc_db_num_rows($check_query) == 0) {
-        xtc_db_query('ALTER TABLE billsafe_orders_2 ADD type VARCHAR(64) NOT NULL AFTER billsafeStatus');
-      }
+      if (xtc_db_num_rows($check_query) == 0) xtc_db_query('ALTER TABLE billsafe_orders_2 ADD type VARCHAR(64) NOT NULL AFTER billsafeStatus');
     }
     $check_query = xtc_db_query('SHOW TABLES LIKE "billsafe_orders_details_2"');
     if (xtc_db_num_rows($check_query) == 0) {
@@ -558,9 +568,7 @@ class billsafe_2hp {
       xtc_db_query('CREATE TABLE billsafe_orders_user_2 (id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, bsorders_id INT NOT NULL, gender VARCHAR(255) NOT NULL, company VARCHAR(255) NOT NULL, firstname VARCHAR(255) NOT NULL, lastname VARCHAR(255) NOT NULL, street VARCHAR(255) NOT NULL, housenumber VARCHAR(255) NOT NULL, postcode VARCHAR(255) NOT NULL, city VARCHAR(255) NOT NULL, country VARCHAR(255) NOT NULL, dateofbirth VARCHAR(255) NOT NULL, email VARCHAR(255) NOT NULL, phone VARCHAR(255) NOT NULL) ENGINE = MYISAM;');
     } elseif (xtc_db_num_rows($check_query) != 0) {
       $check_query = xtc_db_query('SHOW COLUMNS FROM billsafe_orders_user_2 like "company"');
-      if (xtc_db_num_rows($check_query) == 0) {
-        xtc_db_query('ALTER TABLE billsafe_orders_user_2 ADD company VARCHAR(255) NOT NULL AFTER gender');
-      }
+      if (xtc_db_num_rows($check_query) == 0) xtc_db_query('ALTER TABLE billsafe_orders_user_2 ADD company VARCHAR(255) NOT NULL AFTER gender');
     }
     $check_query = xtc_db_query('SHOW COLUMNS FROM admin_access like "billsafe_orders_2hp"');
     if (xtc_db_num_rows($check_query) == 0) {
@@ -573,7 +581,11 @@ class billsafe_2hp {
       xtc_db_query('UPDATE admin_access SET billsafe_print_order_2 = "1" WHERE customers_id = "1" OR customers_id = "groups"');
     }
     $logo_url = HTTPS_CATALOG_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/top_logo.jpg';
+    // BOF - Changed to white label solution
+    /*
     $billsafe_logo = 'https://images.billsafe.de/image/image/id/2120806d6053';
+    */
+    // EOF - Changed to white label solution
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_STATUS"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_STATUS", "True", "6", "1", "xtc_cfg_select_option(array(\'True\', \'False\'), ", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_LAYER"');
@@ -594,8 +606,12 @@ class billsafe_2hp {
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_MAX_ORDER", "500", "6", "0", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_SHOP_LOGO_URL"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_SHOP_LOGO_URL", "'.$logo_url.'", "6", "0", now())');
+    // BOF - Changed to white label solution
+    /*
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_BILLSAFE_LOGO_URL"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_BILLSAFE_LOGO_URL", "'.$billsafe_logo.'", "6", "0", now())');
+    */
+    // EOF - Changed to white label solution
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_SERVER"');
     if (xtc_db_num_rows($check_query) == 0) xtc_db_query('INSERT INTO '.TABLE_CONFIGURATION.' (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ("MODULE_PAYMENT_BILLSAFE_2HP_SERVER", "Sandbox", "6", "1", "xtc_cfg_select_option(array(\'Live\', \'Sandbox\'), ", now())');
     $check_query = xtc_db_query('SHOW COLUMNS FROM '.TABLE_CONFIGURATION.' like "MODULE_PAYMENT_BILLSAFE_2HP_ZONE"');
@@ -615,7 +631,12 @@ class billsafe_2hp {
   }
 
   function keys() {
+    // BOF - Changed to white label solution
+    /*
     return array('MODULE_PAYMENT_BILLSAFE_2HP_STATUS', 'MODULE_PAYMENT_BILLSAFE_2HP_LAYER', 'MODULE_PAYMENT_BILLSAFE_2HP_LOG', 'MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2HP_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2HP_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2HP_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2HP_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2HP_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2HP_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2HP_BILLSAFE_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2HP_SERVER', 'MODULE_PAYMENT_BILLSAFE_2HP_ZONE', 'MODULE_PAYMENT_BILLSAFE_2HP_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2HP_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2HP_ALLOWED', 'MODULE_PAYMENT_BILLSAFE_2HP_NEG_SHIPPING');
+    */
+    return array('MODULE_PAYMENT_BILLSAFE_2HP_STATUS', 'MODULE_PAYMENT_BILLSAFE_2HP_LAYER', 'MODULE_PAYMENT_BILLSAFE_2HP_LOG', 'MODULE_PAYMENT_BILLSAFE_2HP_LOG_TYPE', 'MODULE_PAYMENT_BILLSAFE_2HP_LOG_ADDR', 'MODULE_PAYMENT_BILLSAFE_2HP_MERCHANT_ID', 'MODULE_PAYMENT_BILLSAFE_2HP_MERCHANT_LICENSE', 'MODULE_PAYMENT_BILLSAFE_2HP_MIN_ORDER', 'MODULE_PAYMENT_BILLSAFE_2HP_MAX_ORDER', 'MODULE_PAYMENT_BILLSAFE_2HP_SHOP_LOGO_URL', 'MODULE_PAYMENT_BILLSAFE_2HP_SERVER', 'MODULE_PAYMENT_BILLSAFE_2HP_ZONE', 'MODULE_PAYMENT_BILLSAFE_2HP_ORDER_STATUS_ID', 'MODULE_PAYMENT_BILLSAFE_2HP_SORT_ORDER', 'MODULE_PAYMENT_BILLSAFE_2HP_ALLOWED', 'MODULE_PAYMENT_BILLSAFE_2HP_NEG_SHIPPING');
+    // EOF - Changed to white label solution
   }
 
   public function checkLogoURL($logoURL) {
@@ -626,6 +647,8 @@ class billsafe_2hp {
     }
   }
 
+  // BOF - Changed to white label solution
+  /*
   public function checkBillSAFELogoURL($logoURL) {
     if ($logoURL != '' ) {
       if (ENABLE_SSL == true) {
@@ -641,6 +664,8 @@ class billsafe_2hp {
       return 'https://images.billsafe.de/image/image/id/04105000caae';
     }
   }
+  */
+  // EOF - Changed to white label solution
 
   function get_shipping_tax_rate($shipping_id) {
     $check_query = xtc_db_query('SELECT configuration_value FROM '.TABLE_CONFIGURATION.' WHERE configuration_key = "MODULE_SHIPPING_'.$shipping_id.'_TAX_CLASS"');
