@@ -60,10 +60,11 @@ if (isset($_POST['cot_gv']))  $_SESSION['cot_gv'] = true;
 
 // if conditions are not accepted, redirect the customer to the payment method selection page
 if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
-  if (!isset($_POST['conditions']) || $_POST['conditions'] == false) {
+  if ((!isset($_POST['conditions']) || $_POST['conditions'] == false) && !isset($_GET['conditions'])) {
     $error = str_replace('\n', '<br />', ERROR_CONDITIONS_NOT_ACCEPTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
   }
+  $bsicid = md5(session_id());
 }
 
 // load the selected payment module

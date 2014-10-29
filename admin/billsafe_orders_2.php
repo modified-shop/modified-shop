@@ -45,10 +45,10 @@
   require (DIR_WS_CLASSES.'currencies.php');
   $currencies = new currencies();
 
-  require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php');//DokuMan - 2012-06-19 - move billsafe to external directory
-  require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+  require_once (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+  require (DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 
-  $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php');//DokuMan - 2012-06-19 - move billsafe to external directory
+  $bs = new Billsafe_Sdk(DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 
   if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
     $bs->setUtf8Mode(false);
@@ -63,13 +63,13 @@
 
   if (MODULE_PAYMENT_BILLSAFE_2_LOG == 'True') {
     if (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Echo') {
-      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerEcho.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs->setLogger(new Billsafe_LoggerEcho());
     } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'Mail') {
-      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerMail.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs->setLogger(new Billsafe_LoggerMail(MODULE_PAYMENT_BILLSAFE_2_LOG_ADDR));
     } elseif (MODULE_PAYMENT_BILLSAFE_2_LOG_TYPE == 'File') {
-      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php';//DokuMan - 2012-06-19 - move billsafe to external directory
+      require_once DIR_FS_EXTERNAL.'billsafe/classes/billsafe_2/LoggerFile.php'; // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs->setLogger(new Billsafe_LoggerFile(DIR_FS_CATALOG.'export/BillSAFE_'.date('YmdHis').'.log'));
     }
   }
@@ -217,7 +217,7 @@
     if ($dpaymentAmountKomma == '') $dpaymentAmountKomma = 0;
     $dpayment = $dpaymentAmount.'.'.$dpaymentAmountKomma;
     if ($_POST['dpaymentDay'] > 0 && $_POST['dpaymentDay'] <= 31) {
-      if ($_POST['dpaymentDay'] > 0 && $_POST['dpaymentDay'] < 10 && substr($_POST['dpaymentDay'],0,1) != 0) {
+      if ($_POST['dpaymentDay'] > 0 && $_POST['dpaymentDay'] < 10 && substr($_POST['dpaymentDay'], 0, 1) != 0) {
         $dpaymentDay = '0'.$_POST['dpaymentDay'];
       } else {
         $dpaymentDay = $_POST['dpaymentDay'];
@@ -226,7 +226,7 @@
       $dpaymentDay = date('d');
     }
     if ($_POST['dpaymentMonth'] > 0 && $_POST['dpaymentMonth'] <= 12) {
-      if ($_POST['dpaymentMonth'] > 0 && $_POST['dpaymentMonth'] < 10 && substr($_POST['dpaymentDay'],0,1) != 0) {
+      if ($_POST['dpaymentMonth'] > 0 && $_POST['dpaymentMonth'] < 10 && substr($_POST['dpaymentMonth'], 0, 1) != 0) {
         $dpaymentMonth = '0'.$_POST['dpaymentMonth'];
       } else {
         $dpaymentMonth = $_POST['dpaymentMonth'];
