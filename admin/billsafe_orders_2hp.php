@@ -380,7 +380,7 @@ require (DIR_WS_INCLUDES.'head.php');
 <body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <table border="0" width="100%" cellspacing="2" cellpadding="2"><tr>
-<td width="<?php echo BOX_WIDTH; ?>" valign="top">
+<td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">
 <table border="0" width="<?php echo BOX_WIDTH; ?>" cellspacing="1" cellpadding="1" class="columnLeft">
 <?php if (USE_ADMIN_TOP_MENU != 'true') require(DIR_WS_INCLUDES . 'column_left.php'); ?>
 </table></td>
