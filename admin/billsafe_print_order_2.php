@@ -166,9 +166,9 @@ $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
 $smarty->assign('order_data', $order_data);
 $smarty->assign('order_total', $order_total);
 
-require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
-require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
-$bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); //DokuMan - 2012-06-19 - move billsafe to external directory
+require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+require (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
+$bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
 if ($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
   $bs->setUtf8Mode(false);
 } else {

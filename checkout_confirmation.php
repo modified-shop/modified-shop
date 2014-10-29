@@ -60,6 +60,7 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
     $error = str_replace('\n', '<br />', ERROR_CONDITIONS_NOT_ACCEPTED);
     xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message=' . urlencode($error), 'SSL', true, false));
   }
+  $bsicid = md5(session_id());
 }
 
 // load the selected payment module
