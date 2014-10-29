@@ -425,7 +425,7 @@
   
   require (DIR_WS_INCLUDES.'head.php');
 ?>
-<meta name="robots" content="noindex,nofollow">
+
 <script language="javascript" src="includes/general.js"></script>
 <script type="text/javascript" >
   function doShipment(jalert) {
