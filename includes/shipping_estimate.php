@@ -27,7 +27,9 @@
 if (!defined('SHOW_ALWAYS_LANG_DROPDOWN')) {
   define('SHOW_ALWAYS_LANG_DROPDOWN', true); // true: Zeigt immer das Länderauswahlfeld an - false: Zeigt Länderauswahlfeld nur bei nicht eingeloggten Kunden
 }
+
 require_once (DIR_WS_CLASSES.'order.php');
+require_once (DIR_WS_CLASSES.'order_total.php');
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
 
 $order = new order();
@@ -59,83 +61,108 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
   $order->delivery['zone_id'] = 0;
 }
 
+foreach ($_SESSION['cart']->tax as $key => $value) {
+  if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
+    // price with tax
+    $order->info['tax'] += $_SESSION['cart']->tax[$key]['value'];
+    $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] += $_SESSION['cart']->tax[$key]['value'];
+    $order->info['total'] += $_SESSION['cart']->tax[$key]['value'];
+  } else {
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
+      $order->info['tax'] = $order->info['tax'] += $_SESSION['cart']->tax[$key]['value'];
+      $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] = $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] += $_SESSION['cart']->tax[$key]['value'];
+    }
+  }
+}
+
+$order_total_modules = new order_total();
+$order_total_modules->collect_posts();
+$order_total_modules->pre_confirmation_check();
+
+if (MODULE_ORDER_TOTAL_INSTALLED) {
+  $order_total_modules->process();
+  $total_block = $order_total_modules->output();
+  $module_smarty->assign('TOTAL_BLOCK', $total_block);
+  $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_modules->output_array());
+}
+
 if (!isset($order->info['total'])) {
   $order->info['total'] = $_SESSION['cart']->show_total();
 }
+$total = round($order->info['total'] + $order->info['tax'], 2);
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 
 //suppot downloads and gifts
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
-    $shipping_content = array();
-    $shipping_content[] = array('NAME' => _SHIPPING_FREE);
+  $shipping_content = array();
+  $shipping_content[] = array('NAME' => _SHIPPING_FREE);
 } else {
-    require (DIR_WS_CLASSES.'shipping.php');
-    $shipping = new shipping;
-    
-    $free_shipping = $free_shipping_freeamount = $has_freeamount = false;
-    require (DIR_WS_MODULES.'order_total/ot_shipping.php');
-    include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
-    $ot_shipping = new ot_shipping;
-    $ot_shipping->process();
+  require (DIR_WS_CLASSES.'shipping.php');
+  $shipping = new shipping;
+  
+  $free_shipping = $free_shipping_freeamount = $has_freeamount = false;
+  include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
+  $ot_shipping = new ot_shipping;
+  $ot_shipping->process();
 
-    // load all enabled shipping modules
-    $quotes = $shipping->quote();
+  // load all enabled shipping modules
+  $quotes = $shipping->quote();
 
-    foreach ($quotes as $quote) {
-      if ($quote['id'] == 'freeamount') {
-        $has_freeamount = true;
-        if (isset($quote['methods'])) {
-          $free_shipping_freeamount = true;
-          break;
-        }
+  foreach ($quotes as $quote) {
+    if ($quote['id'] == 'freeamount') {
+      $has_freeamount = true;
+      if (isset($quote['methods'])) {
+        $free_shipping_freeamount = true;
+        break;
       }
     }
+  }
 
-    $shipping_content = array ();
-    if ($free_shipping == true) {
-        $shipping_content[] = array(
-            'NAME' => FREE_SHIPPING_TITLE,
-            'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
-        );
-    } else if ($free_shipping_freeamount) {
-        $shipping_content[] = array(
+  $shipping_content = array ();
+  if ($free_shipping == true) {
+    $shipping_content[] = array(
+      'NAME' => FREE_SHIPPING_TITLE,
+      'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
+    );
+  } else if ($free_shipping_freeamount) {
+    $shipping_content[] = array(
+      'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
+      'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
+    );
+  } else {
+    if ($has_freeamount) {
+      $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)));
+    }
+    $i = 0;
+    foreach ($quotes AS $quote) {
+      if ($quote['id'] != 'freeamount') { 
+        //BOC web28 Error Fix
+        if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {      
+          $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
+          $total += ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
+          $shipping_content[$i] = array(
             'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
-            'VALUE' => $xtPrice->xtcFormat(0, true, 0, true)
-        );
-    } else {
-        if ($has_freeamount) {
-          $module_smarty->assign('FREE_SHIPPING_INFO', sprintf(FREE_SHIPPING_DESCRIPTION, $xtPrice->xtcFormat(MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER, true, 0, true)));
+            'VALUE' => $xtPrice->xtcFormat(((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0')), true)
+          );
+        } else {
+          $shipping_content[$i] = array(
+            'NAME' => $quote['error'] . ' - ' . $quote['methods'][0]['title'],
+            'VALUE' => ''
+          );
         }
-        $i = 0;
-        foreach ($quotes AS $quote) {
-          if ($quote['id'] != 'freeamount') { 
-            //BOC web28 Error Fix
-            if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {      
-              $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
-              $total += ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
-              $shipping_content[$i] = array(
-                'NAME' => $quote['module'] . ' - ' . $quote['methods'][0]['title'],
-                'VALUE' => $xtPrice->xtcFormat(((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0')), true)
-                );
-            } else {
-              $shipping_content[$i] = array(
-                'NAME' => $quote['error'] . ' - ' . $quote['methods'][0]['title'],
-                'VALUE' => ''
-                );
-            }
-            //EOC web28 Error Fix
-            $i++;
-          }
-        }
+        //EOC web28 Error Fix
+        $i++;
+      }
     }
+  }
 
-    if (sizeof($quotes) < 1) {
-      $shipping_content[] = array('NAME' => _MODULE_INVALID_SHIPPING_ZONE);
-    }
-    if (sizeof($shipping_content) < 1) {  
-      $shipping_content[] = array('NAME' => _MODULE_UNDEFINED_SHIPPING_RATE); 
-    }
+  if (sizeof($quotes) < 1) {
+    $shipping_content[] = array('NAME' => _MODULE_INVALID_SHIPPING_ZONE);
+  }
+  if (sizeof($shipping_content) < 1) {  
+    $shipping_content[] = array('NAME' => _MODULE_UNDEFINED_SHIPPING_RATE); 
+  }
 }
 
 #unset($_SESSION['billto']);

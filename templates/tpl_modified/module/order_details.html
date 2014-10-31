@@ -31,13 +31,43 @@
 </table>
 <div class="hr_10"></div>
 <div class="ord_subtotal">
-  {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
-  <strong>{$TOTAL_CONTENT}</strong>
-  {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
-  {foreach name=aussen item=shipping_data from=$shipping_content}
-    <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
-  {/foreach}
-  {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
-  {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
+  {if sizeof($TOTAL_BLOCK_ARRAY) > 0}
+    <div class="total_table_right">
+      <table class="total_table">
+        {foreach name=aussen item=order_total_values from=$TOTAL_BLOCK_ARRAY}
+        <tr>
+          <td class="ord_table_right">{$order_total_values.title}</td>
+          <td class="ord_table_right ord_width120">{$order_total_values.text}</td>
+        </tr>
+        {/foreach}
+        {if $SELECT_COUNTRY}
+        <td class="ord_table_right" colspan="2">{$SELECT_COUNTRY}
+        {/if}
+        {foreach name=aussen item=shipping_data from=$shipping_content}
+        <tr>
+          <td class="ord_table_right">{$shipping_data.NAME} ({$COUNTRY}):</td>
+          <td class="ord_table_right ord_width120">{$shipping_data.VALUE}</td>
+        </tr>
+        {/foreach}
+        {if $total}
+        <tr>
+          <td class="ord_table_right"><strong>{#text_total#}:</strong></td>
+          <td class="ord_table_right ord_width120"><strong>{$total}</strong></td>
+        <tr>
+        {/if}
+      </table>
+    </div>
+    <br class="clearfix" /> 
+  {else}
+    {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+    <strong>{$TOTAL_CONTENT}</strong>
+    {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
+    {foreach name=aussen item=shipping_data from=$shipping_content}
+      <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+    {/foreach}
+    {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
+  {/if}
+
+  {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT|number_format:2:",":"."} kg{/if*}
   {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
 </div>
