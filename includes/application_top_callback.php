@@ -146,7 +146,7 @@ xtc_db_connect() or die('Unable to connect to database server!');
 // set the application parameters
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-  define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+    define($configuration['cfgKey']) OR define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
 }
 
 // if gzip_compression is enabled, start to buffer the output
