@@ -29,6 +29,12 @@
 * @package BillSAFE_2
 * @copyright (C) 2013 Bernd Blazynski
 * @license GPLv2
+*
+* Modified 2014-03 by Christoph Peters SIP / Marktantrieb:
+* Module extension to prevent php process termination if a connection error to the billsafe server occur.
+* If connection errors occur, the process will not stop but continue without billsafe payment option.
+* Changes in Lines 166 ff
+*
 */
 
 class billsafe_2 {
@@ -182,18 +188,24 @@ class billsafe_2 {
     } else {
       $params = array('order_amount' => round($total, $xtPrice->get_decimal_places($currency)), 'order_currencyCode' => $currency, 'customer_id' => $customer_id, 'customer_company' => $company_b, 'deliveryAddress_company' => $company_d, 'customer_firstname' => $firstname_b, 'deliveryAddress_firstname' => $firstname_d, 'customer_lastname' => $lastname_b, 'deliveryAddress_lastname' => $lastname_d, 'customer_street' => $order->billing['street_address'], 'deliveryAddress_street' => $order->delivery['street_address'], 'customer_postcode' => $order->billing['postcode'], 'deliveryAddress_postcode' => $order->delivery['postcode'], 'customer_city' => $order->billing['city'], 'deliveryAddress_city' => $order->delivery['city'], 'customer_country' => $order->billing['country']['iso_code_2'], 'deliveryAddress_country' => $order->delivery['country']['iso_code_2'], 'customer_dateOfBirth' => $customer['customers_dob'],'customer_email' => $email, 'customer_phone' => $phone, );
     }
-    $response = $bs->callMethod('prevalidateOrder', $params);
-    if ($response->ack == 'OK') {
-      if ($response->invoice->isAvailable == 'TRUE') {
-        $display = array('id' => $this->code, 'module' => $this->title, 'description' => $this->info.$schg.'<div style="clear:both;"></div>');
+    /* Modified 2014-03 by Christoph Peters SIP / Marktantrieb: Check for connection errors */
+    try {
+      $response = $bs->callMethod('prevalidateOrder', $params);
+      if ($response->ack == 'OK') {
+        if ($response->invoice->isAvailable == 'TRUE') {
+          $display = array('id' => $this->code, 'module' => $this->title, 'description' => $this->info.$schg.'<div style="clear:both;"></div>');
+        } else {
+          $display = array('id' => $this->code, 'module' => $this->title, 'description' => $this->info.$schg.'<br /><b><font color="#ff0000">'.$response->invoice->message.'</font></b><div style="clear:both;"></div>');
+        }
       } else {
-        $display = array('id' => $this->code, 'module' => $this->title, 'description' => $this->info.$schg.'<br /><b><font color="#ff0000">'.$response->invoice->message.'</font></b><div style="clear:both;">
-</div>');
-//        $display = null;
+        $display = null;
       }
-    } else {
+    }
+    catch(Exception $e) {
+      // Return null to continue payment process
       $display = null;
     }
+    /* / Modified 2014-03 by Christoph Peters SIP / Marktantrieb: Check for connection errors */
     return $display;
   }
 
