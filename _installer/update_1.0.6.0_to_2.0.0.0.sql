@@ -187,7 +187,7 @@ DELETE FROM configuration WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
 ALTER TABLE geo_zones ADD geo_zone_info INT(1) DEFAULT 0 AFTER geo_zone_description;
 
 #GTB - 2014-08-15 - added status for currencies
-ALTER TABLE currencies ADD status INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE currencies ADD status INT(1) NOT NULL DEFAULT 1;
 
 #Tomcraft - 2014-08-20 - added protectedshops
 ALTER TABLE admin_access ADD protectedshops INT(1) NOT NULL DEFAULT 0;
