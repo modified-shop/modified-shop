@@ -11,6 +11,8 @@
    based on:
    - Andreas Zimmermann / IT eSolutions http://www.it-esolutions.de
      Copyright (c) 2004 IT eSolutions
+   - v. 1.8 (c) by rpa-com.de
+     FIX: falsche Anzeige von Rabatt/Zuschlag in checkout_payment.php
    - v. 1.7 (c) by rpa-com.de
      Add: Anzeige bei der Zahlungsauswahl JA/NEIN
           Anzeigeart bei Zahlungsauswahl  STANDARD/PREIS
@@ -161,7 +163,9 @@ class ot_payment
                             if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
                                 foreach($this->amounts as $key2=>$value2) {
                                     if (strpos($key, $key2 . '%')) {
+                                      if ($god_amount > 0) {
                                         $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
+                                      }
                                     }
                                 }
                             }
@@ -194,7 +198,8 @@ class ot_payment
         
         $this->amounts['total'] = 0;
 
-        $order_total = $order->info['total'];
+        //$order_total = $order->info['total'];  //FEHLER  $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
+        $order_total = $_SESSION['cart']->total;
 
         // Check if gift voucher is in cart and adjust total
         $products = $_SESSION['cart']->get_products();
@@ -219,7 +224,9 @@ class ot_payment
                 $this->amounts['total'] += $gv_result['products_price'] * $qty;
             }
         }
-        if ($this->include_shipping == 'false') $order_total -= $order->info['shipping_cost'];
+        //if ($this->include_shipping == 'false') $order_total -= $order->info['shipping_cost'];
+        if ($this->include_shipping != 'false') $order_total += $this->get_shipping_cost();
+        
         if ($this->include_tax == 'false') $order_total -= $order->info['tax'];
 
         $this->amount = $order_total;
@@ -227,7 +234,7 @@ class ot_payment
 
     function get_percent($payment, $type = 'percent')
     {
-        global $order, $xtPrice;
+        global $order, $xtPrice, $debug_mesages;
         $string = '';
         $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
 
@@ -236,7 +243,7 @@ class ot_payment
             if ($this->discount['sum']!=0) {
                 for ($i=1; $i<=$this->num; $i++) {
                     if ($this->discount['amount' . $i]!=0) {
-                        if ($type == 'price') {
+                        if ($type == 'price' || $this->show_type == 'price' || $payment == 'paypal') {
                             $string .= $xtPrice->xtcFormat(abs($this->discount['amount' . $i]), true) . ' ' . ($this->discount['amount' . $i]<0?MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT:MODULE_ORDER_TOTAL_PAYMENT_FEE);
                         } else {
                             $string .= ($this->discount['pro' . $i] != 0.0 ?
@@ -265,6 +272,20 @@ class ot_payment
       if ($this->show_in_checkout_payment) {
         return $this->get_percent($payment_modul['id'], $this->show_type);
       }
+    }
+    
+    function get_shipping_cost()
+    {
+        global $order, $PHP_SELF;
+        $shipping_cost = $order->info['shipping_cost'];
+        //Steuer auf der Seite checkout_payment hinzurechnen
+        if (basename($PHP_SELF) == 'checkout_payment.php') {
+            $shipping_modul = explode('_',$order->info['shipping_class']);
+            $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
+            $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+            $shipping_cost = $order->info['shipping_cost'] * (1.0 + ($shipping_tax_rate / 100));
+        }
+        return $shipping_cost;
     }
 
     function check()
