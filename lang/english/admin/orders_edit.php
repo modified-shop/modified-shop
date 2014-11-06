@@ -21,10 +21,10 @@ define('TABLE_HEADING', 'Edit Order');
 define('TABLE_HEADING_ORDER', 'Order #:&nbsp;');
 define('TEXT_SAVE_ORDER', 'Finish Editing and Recalculate Order');
 
-define('TEXT_EDIT_ADDRESS', 'Edit Address');
-define('TEXT_EDIT_PRODUCTS', 'Edit Products');
-define('TEXT_EDIT_SHIPPING', 'Edit Shipping Information');
-define('TEXT_EDIT_GIFT', 'Add or Edit Gift Vouchers or Discount');
+define('TEXT_EDIT_ADDRESS', 'Address and customer details');
+define('TEXT_EDIT_PRODUCTS', 'Products, products options and prices');
+define('TEXT_EDIT_OTHER', 'Shipping costs, payment methods, currencies, languages, totals, VAT, discounts, etc.');
+define('TEXT_EDIT_GIFT', 'Gift Vouchers and discount');
 define('TEXT_EDIT_ADDRESS_SUCCESS', 'Address Saved');
 
 define('IMAGE_EDIT_ADDRESS', 'Edit Address');
@@ -87,11 +87,11 @@ define('TEXT_PRICE', 'Costs: ');
 define('TEXT_ADD_TAX','incl. ');
 define('TEXT_NO_TAX','plus ');
 
-define('TEXT_ORDERS_EDIT_INFO', '<b> Important Notes: </ b> <br>
-Please check with the address/customer data, the right customer group choose <br>
-When you change the customer group, all invoice items are newly save! <br>
-Shippincosts must be changed manually! <br>
-In this case, depending on the customer group the shippingcost entered gross or net! <br>
+define('TEXT_ORDERS_EDIT_INFO', '<b>Important Notes:</b><br />
+Please chose the right customer group with the address/customer data!<br />
+When changing the customer group, every invoice item has to be newly saved!<br />
+Shipping costs must be changed manually!<br />
+In this case, shipping costs have to be entered gross or net depending on the customer group!<br />
 ');
 
 define('TEXT_CUSTOMER_GROUP_INFO', ' <span style="background:#FFD6D6;padding:3px;border:solid 1px red;">When you change the customer group, all invoice items are newly save!</span>');
