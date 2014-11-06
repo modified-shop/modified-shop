@@ -34,21 +34,24 @@
     }
 
     function process() {
-      global $order, $xtPrice;      
+      global $order, $xtPrice;
+      
+      // merchant
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-        //web28 - $order->info['total'] ist Nettosumme, enthält bereits Rabatte und Versandkosten und kann direkt übernommen werden
         $this->output[] = array('title' => $this->title . ':',
                                 'text' => '<strong>' . $xtPrice->xtcFormat($order->info['total'], true).'</strong>',
                                 'value' => $xtPrice->xtcFormat($order->info['total'], false));
-      } elseif ((MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) || $order->info['total'] >=  $_SESSION['customers_status']['customers_status_show_tax_total']) {
-        //BOC Nettopreis anzeigen, auch wenn Brutto bei Kundengruppe
-        //echo 'OTT'.$order->info['tax'];
+      }
+      
+      // default customer
+      elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0 && $xtPrice->xtcRemoveCurr($order->info['total']) >= $_SESSION['customers_status']['customers_status_show_tax_total']) {
+        
+        // calculate notax
         $sub_total_price = $order->info['total']-$order->info['tax'];
- 
+        
         $this->output[] = array('title' => $this->title . ':',
                                 'text' => '<b>' . $xtPrice->xtcFormat($sub_total_price, true).'</b>',
                                 'value' => $xtPrice->xtcFormat($sub_total_price, false));
-        //EOC Nettopreis anzeigen, auch wenn Brutto bei Kundengruppe
       }
     }
 
