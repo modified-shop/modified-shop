@@ -21,10 +21,10 @@ define('TABLE_HEADING', 'Bestelldaten bearbeiten');
 define('TABLE_HEADING_ORDER', 'Bestellung Nr:&nbsp;');
 define('TEXT_SAVE_ORDER', 'Bestellungsbearbeitung beenden und Bestellung neu berechnen.');
 
-define('TEXT_EDIT_ADDRESS', 'Adressdaten und Kundendaten bearbeiten und einf&uuml;gen.');
-define('TEXT_EDIT_PRODUCTS', 'Artikel und Artikeloptionen bearbeiten und einf&uuml;gen.');
-define('TEXT_EDIT_OTHER', 'Versandkosten, Zahlungsweisen, W&auml;hrungen, Sprachen usw bearbeiten und einf&uuml;gen.');
-define('TEXT_EDIT_GIFT', 'Gutscheine und Rabatt bearbeiten oder einf&uuml;gen');
+define('TEXT_EDIT_ADDRESS', 'Adress- und Kundendaten');
+define('TEXT_EDIT_PRODUCTS', 'Artikel, Artikeloptionen und Preise');
+define('TEXT_EDIT_OTHER', 'Versandkosten, Zahlungsweisen, W&auml;hrungen, Sprachen, Summen, MwSt., Rabatte, usw.');
+define('TEXT_EDIT_GIFT', 'Gutscheine und Rabatt');
 define('TEXT_EDIT_ADDRESS_SUCCESS', 'Adress&auml;nderung wurde gespeichert.');
 
 define('IMAGE_EDIT_ADDRESS', 'Adressen bearbeiten oder einf&uuml;gen');
@@ -86,11 +86,11 @@ define('TEXT_PRICE', 'Kosten: ');
 define('TEXT_ADD_TAX','inkl. ');
 define('TEXT_NO_TAX','zzgl. ');
 
-define('TEXT_ORDERS_EDIT_INFO', '<b>Wichtige Hinweise:</b><br>
-Bitte bei den Adress/Kundendaten die richtige Kundengruppe w&auml;hlen <br>
-Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!<br>
-Versandkosten m&uuml;ssen manuell ge&auml;ndert werden!<br>
-Hierbei sind je nach Kundengruppe die Versandkosten brutto oder netto einzutragen!<br>
+define('TEXT_ORDERS_EDIT_INFO', '<b>Wichtige Hinweise:</b><br />
+Bitte bei den Adress-/Kundendaten die richtige Kundengruppe w&auml;hlen.<br />
+Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!<br />
+Versandkosten m&uuml;ssen manuell ge&auml;ndert werden!<br />
+Hierbei sind je nach Kundengruppe die Versandkosten brutto oder netto einzutragen!<br />
 ');
 
 define('TEXT_CUSTOMER_GROUP_INFO', ' <span style="background:#FFD6D6;padding:3px;border:solid 1px red;">Bei einem Wechsel der Kundengruppe sind alle Einzelposten der Rechnung neu abzuspeichern!</span>');
