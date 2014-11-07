@@ -170,12 +170,12 @@ class billsafe_2 {
     $total = round($xtPrice->xtcCalculateCurrEx($total, $_SESSION['currency']), $xtPrice->get_decimal_places($_SESSION['currency']));
     $total = number_format(round(($total + $shipping_cost), $xtPrice->get_decimal_places($currency)), 2, '.', '');
     // BOF - Fix for Austria
-	/*
+    /*
+    $company_b = md5($order->billing['company']);
+    $company_d = md5($order->delivery['company']);
+    */
     if ($order->billing['company'] !== '') $company_b = md5($order->billing['company']);
     if ($order->delivery['company'] !== '') $company_d = md5($order->delivery['company']);
-	*/
-    if ($order->billing['company'] !== '') $company_b = $order->billing['company'];
-    if ($order->delivery['company'] !== '') $company_d = $order->delivery['company'];
     // EOF - Fix for Austria
     $firstname_b = md5($order->billing['firstname']);
     $firstname_d = md5($order->delivery['firstname']);
@@ -269,7 +269,7 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
     } else {
       if (is_array($order->billing)) {
         foreach ($order->billing as $key => $val) {
-          if ($order->billing[$key] != $order->delivery[$key]) xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_ADDRESS))), 'SSL'));
+          if ($order->billing[$key] != $order->delivery[$key]) xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_ADDRESS))), 'SSL'));
         }
       }
     }
@@ -448,17 +448,17 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
         } else {
           $dob = $_POST['dob'];
           if (is_numeric(xtc_date_raw($dob)) == false || (@checkdate(substr(xtc_date_raw($dob), 4, 2), substr(xtc_date_raw($dob), 6, 2), substr(xtc_date_raw($dob), 0, 4)) == false)) {
-            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
+            xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
           } else {
             $dob = substr(xtc_date_raw($dob), 0, 4).'-'.substr(xtc_date_raw($dob), 4, 2).'-'.substr(xtc_date_raw($dob), 6, 2);
           }
         }
       } elseif (!$_POST['checkbox_billsafe_tc'] && ($order->billing['company'] === '' && $order->delivery['company'] === '') && ($_SESSION['dob'] == '0000-00-00' || $_POST['dob'] == '')) {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
       } elseif ($_POST['checkbox_billsafe_tc'] && ($order->billing['company'] === '' && $order->delivery['company'] === '') && ($_SESSION['dob'] == '0000-00-00' || $_POST['dob'] == '')) {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
       } elseif (!$_POST['checkbox_billsafe_tc'] && ($order->billing['company'] !== '' && $order->delivery['company'] !== '')) {
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_CONFIRMATION, 'conditions=1&dob='.$_POST['dob'].'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE))), 'SSL'));
       }
       require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
       $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
@@ -495,10 +495,10 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
       } elseif ($this->response->ack === 'OK' && $this->response->status === 'DECLINED') {
         $_SESSION['billsafe_status'] = 'declined';
         $message = $this->get_error_message($this->response);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode($message))), 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities($message))), 'SSL'));
       } else {
         $message = $this->get_error_message($this->response);
-        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode($message))), 'SSL'));
+        xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities($message))), 'SSL'));
       }
     } elseif (MODULE_PAYMENT_BILLSAFE_2_INLINE === 'False') {
       if (empty($_GET['token'])) {
@@ -542,13 +542,13 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
           }
         } else {
           $message = $this->get_error_message($response);
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode($message))), 'SSL'));
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities($message))), 'SSL'));
         }
       } else {
         $token = $_GET['token'];
         $check_query = xtc_db_query('SELECT token FROM billsafe_orders_2 WHERE token = "'.$token.'"');
         $check_token = xtc_db_num_rows($check_query);
-        if ($check_token == 1) xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON))), 'SSL'));
+        if ($check_token == 1) xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON))), 'SSL'));
         require_once (DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/billsafe_2.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
         $bs = new Billsafe_Sdk(DIR_FS_CATALOG.'includes/external/billsafe/classes/billsafe_2/ini.php'); // DokuMan - 2012-06-19 - move billsafe to external directory
         if($_SESSION['language_charset'] == 'iso-8859-1' || $_SESSION['language_charset'] == 'iso-8859-15') {
@@ -567,7 +567,7 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
         if ($this->response->ack == 'OK' && $this->response->status == 'ACCEPTED') {
         } else {
           $_SESSION['billsafe_status'] = 'declined';
-          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON))), 'SSL'));
+          xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities(MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON))), 'SSL'));
         }
       }
     }
@@ -633,7 +633,7 @@ LazyLoad.js("https://fn.billsafe.de/fb/js/fb-min.js", function() {
     } else {
       $_SESSION['billsafe_status'] = 'declined';
       $message = $this->get_error_message($response);
-      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(html_entity_decode($message))), 'SSL'));
+      xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'payment_error='.$this->code.'&error_message='.stripslashes(urlencode(decode_htmlentities($message))), 'SSL'));
     }
     return false;
   }
