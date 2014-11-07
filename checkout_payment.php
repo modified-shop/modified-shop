@@ -202,8 +202,7 @@ if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true') {
 
 ### BILLSAFE payment module
 if ((isset($_GET['billsafe_close']) && $_GET['billsafe_close'] == 'true') 
-|| (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2')
-|| (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2hp')) {
+|| (isset($_GET['payment_error']) && $_GET['payment_error'] == 'billsafe_2')) {
   echo '<script type="text/javascript"> if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_PAYMENT, 'error_message='.stripslashes(urlencode(decode_htmlentities($_GET['error_message']))), 'SSL').'"); </script>';
 }
 ### BILLSAFE payment module
