@@ -977,8 +977,6 @@ elseif ($action == 'custom_action') {
                       //BOF - Dokuman - 2012-06-19 - BILLSAFE payment module
                       if ($oInfo->payment_method === 'billsafe_2') {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="billsafe_orders_2.php?oID='.$oInfo->orders_id.'">BillSAFE Details</a>');
-                      } elseif ($oInfo->payment_method === 'billsafe_2hp') {
-                        $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="billsafe_orders_2hp.php?oID='.$oInfo->orders_id.'">BillSAFE Details</a>');
                       }
                       //EOF - Dokuman - 2012-06-19 - BILLSAFE payment module
                       if (AFTERBUY_ACTIVATED == 'true') {

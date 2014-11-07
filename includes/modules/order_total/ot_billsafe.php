@@ -72,12 +72,12 @@ class ot_billsafe {
       $schg_tax_rate = xtc_get_tax_rate(MODULE_PAYMENT_BILLSAFE_2_SCHGTAX);
       $schg_tax_name = xtc_get_tax_description(MODULE_PAYMENT_BILLSAFE_2_SCHGTAX);
       if (stristr(MODULE_PAYMENT_BILLSAFE_2_SCHG, '%')) {
-          $schg_amount = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
-          $schg_amount_calc = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
-        } else {
-          $schg_amount = MODULE_PAYMENT_BILLSAFE_2_SCHG;
-          $schg_amount_calc = MODULE_PAYMENT_BILLSAFE_2_SCHG;
-        }
+        $schg_amount = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
+        $schg_amount_calc = $this->amount * MODULE_PAYMENT_BILLSAFE_2_SCHG / 100;
+      } else {
+        $schg_amount = MODULE_PAYMENT_BILLSAFE_2_SCHG;
+        $schg_amount_calc = MODULE_PAYMENT_BILLSAFE_2_SCHG;
+      }
       if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
         $schg_tax = $schg_amount_calc * $schg_tax_rate / 100;
       } elseif ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0) {

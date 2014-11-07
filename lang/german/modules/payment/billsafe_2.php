@@ -31,16 +31,23 @@
 * @license GPLv2
 */
 
+// BOF - Changed to white label solution
+/*
 define('MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE', 'Kauf auf Rechnung mit BillSAFE');
 define('MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO', 'Bezahlen Sie bequem per Rechnung. Ganz einfach und unb&uuml;rokratisch mit BillSAFE, einem Service von PayPal.');
+*/
+define('MODULE_PAYMENT_BILLSAFE_2_TEXT_TITLE', 'Rechnung');
+define('MODULE_PAYMENT_BILLSAFE_2_CHECKOUT_TEXT_INFO', 'Kaufen Sie jetzt auf Rechnung und begutachten Sie Ihre Eink&auml;ufe in Ruhe bevor Sie bezahlen.');
+// EOF - Changed to white label solution
 define('MODULE_PAYMENT_BILLSAFE_2_SCHG_TEXT_INFO', 'F&uuml;r diese Zahlweise erheben wir einen Zuschlag von: ');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMMON', 'Leider ist der Rechnungskauf &uuml;ber BillSAFE nicht m&ouml;glich. Bitte w&auml;hlen Sie eine andere Zahlungsweise.');
-define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_101', 'BillSAFE steht derzeit leider nicht zur Verf&uuml;gung, bitte w&auml;hlen Sie eine andere Zahlungsweise.');
+define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_101', 'F&uuml;r diese Transaktion steht die Zahlart BillSAFE nicht zur Verf&uuml;gung. Bitte w&auml;hlen Sie eine andere Zahlungsweise.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_102', 'Bei der Daten&uuml;bertragung ist ein Fehler aufgetreten. Bitte kontaktieren Sie uns.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_215', 'Bei der Daten&uuml;bertragung sind nicht alle erforderlichen Parameter &uuml;bergeben worden. Bitte kontaktieren Sie uns.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_216', 'Bei der Daten&uuml;bertragung sind ung&uuml;ltige Parameter &uuml;bergeben worden. Bitte kontaktieren Sie uns.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_COMPANY', 'Die Zahlung &uuml;ber BillSAFE ist leider nur f&uuml;r Privatpersonen m&ouml;glich.');
 define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_ADDRESS', 'Die Zahlung &uuml;ber BillSAFE ist leider nicht bei abweichender Lieferadresse m&ouml;glich.');
+define('MODULE_PAYMENT_BILLSAFE_2_ERROR_MESSAGE_INLINE', 'Sie haben nicht alle Pflichtangaben gemacht. Bitte &uuml;berpr&uuml;fen Sie Ihre Angaben zur gew&auml;hlten Zahlweise!');
 define('MODULE_PAYMENT_BILLSAFE_2_STATUS_TEXT', 'Status');
 define('MODULE_PAYMENT_BILLSAFE_2_TRANSACTIONID', 'BillSAFE Transaktions-ID');
 define('MODULE_PAYMENT_BILLSAFE_2_CODE_TEXT', 'Code');
@@ -52,6 +59,8 @@ define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID_TITLE', 'Merchant-ID');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_ID_DESC', 'Die Merchant-ID, die mit der BillSAFE-API genutzt wird.');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE_TITLE', 'Merchant-License');
 define('MODULE_PAYMENT_BILLSAFE_2_MERCHANT_LICENSE_DESC', 'Die Merchant-License, die mit der BillSAFE-API genutzt wird.');
+define('MODULE_PAYMENT_BILLSAFE_2_PKEY_TITLE', 'Public Key');
+define('MODULE_PAYMENT_BILLSAFE_2_PKEY_DESC', 'Von BillSAFE bereitgestellter Sicherheitscode. Sie k&ouml;nnen Ihren Code im H&auml;ndlerportal einsehen.');
 define('MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER_TITLE', 'Mindest-Bestellwert');
 define('MODULE_PAYMENT_BILLSAFE_2_MIN_ORDER_DESC', 'Betrag, ab dem Kauf auf Rechnung mit BillSAFE angeboten wird.');
 define('MODULE_PAYMENT_BILLSAFE_2_MAX_ORDER_TITLE', 'H&ouml;chst-Bestellwert');
@@ -135,5 +144,9 @@ define('MODULE_PAYMENT_BILLSAFE_2_DAY', 'Tag');
 define('MODULE_PAYMENT_BILLSAFE_2_MONTH', 'Monat');
 define('MODULE_PAYMENT_BILLSAFE_2_YEAR', 'Jahr');
 define('MODULE_PAYMENT_BILLSAFE_2_LAYER_TITLE', 'Payment Layer');
-define('MODULE_PAYMENT_BILLSAFE_2_LAYER_DESC', 'M&ouml;chten Sie den Layer-Modus f&uuml;r Zahlungen per BillSAFE aktivieren? <b>Achtung: Unbedingt in den <i>Sessions</i>-Einstellungen den Parameter <i>Cookie Benutzung bevorzugen</i> auf <i>False</i> setzen!</b>');
+define('MODULE_PAYMENT_BILLSAFE_2_LAYER_DESC', 'M&ouml;chten Sie den Layer-Modus f&uuml;r Zahlungen per BillSAFE aktivieren? <b>Hinweis: Funktioniert nicht zusammen mit Inline-Checkout! Achtung: Unbedingt in den <i>Sessions</i>-Einstellungen den Parameter <i>Cookie Benutzung bevorzugen</i> auf <i>False</i> setzen!</b>');
+define('MODULE_PAYMENT_BILLSAFE_2_INLINE_TITLE', 'Onsite Checkout');
+define('MODULE_PAYMENT_BILLSAFE_2_INLINE_DESC', 'M&ouml;chten Sie den Onsite Checkout f&uuml;r Zahlungen per BillSAFE aktivieren? <b>Hinweis: Funktioniert nicht zusammen mit dem Payment Layer! F&uuml;r diese Funktionalit&auml;t ist eine Zusatzvereinbarung mit BillSAFE erforderlich.</b>');
+define('MODULE_PAYMENT_BILLSAFE_2_DOB', 'Bitte geben Sie hier noch Ihr Geburtsdatum ein (z. B. 21.05.1970):');
+define('MODULE_PAYMENT_BILLSAFE_2_TC', '<b>Ich stimme den <a class="info" href="https://www.billsafe.de/privacy-policy/buyer" target="_blank">Datenschutzgrunds&auml;tzen</a> und der <a class="info" href="https://www.billsafe.de/privacy-policy/credit-check" target="_blank">Bonit&auml;tspr&uuml;fung</a> von <a class="info" href="https://www.billsafe.de/imprint" target="_blank">PayPal</a> zu. Es gelten die <a class="info" href="https://www.billsafe.de/resources/docs/pdf/Kaeufer_AGB.pdf" target="_blank">Allgemeinen Nutzungsbedingungen</a> f&uuml;r den Rechnungskauf.</b>');
 ?>
