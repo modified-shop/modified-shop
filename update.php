@@ -13,6 +13,7 @@ include ('includes/application_top.php');
 
 // set all files to be deleted
 $unlink_file = array('_unterverzeichnis_.htaccess',
+                     'admin/billsafe_orders_2hp.php',
                      'admin/includes/configure.org.php',
                      'admin/includes/javascript/jquery-ui.custom.css',
                      'admin/includes/javascript/images/ui-bg_diagonals-thick_75_f3d8d8_40x40.png',
@@ -59,8 +60,11 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/rss/xtc.cache',
                      'copyright.php',
                      'includes/configure.org.php',
+                     'includes/modules/payment/billsafe_2hp.php',
                      'includes/modules/payment/iclear.php',
+                     'lang/english/modules/payment/billsafe_2hp.php',
                      'lang/english/modules/payment/iclear.php',
+                     'lang/german/modules/payment/billsafe_2hp.php',
                      'lang/german/modules/payment/iclear.php',
                      'shopstat/.htaccess',
                      'templates/xtc5/css/no_javascript.css',
@@ -70,7 +74,8 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'templates/xtc5/mail/english/widerruf.html',
                      'update_1.0.5.0_to_1.0.6.0.sql',
                      'wsdl_iclear_order.php',
-                     'xtbcallback.php');
+                     'xtbcallback.php',
+                     );
 
 // set all directories to be deleted                     
 $unlink_dir = array('admin/includes/javascript/images',
