@@ -366,23 +366,22 @@ if(xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' && $_SESSION['customers_status
 	EXIT;
 }
 
-//BOF - Dokuman - 2012-06-19 - BILLSAFE payment module (BillSAFE-Layer Start)
-if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER')) {
-  if (preg_match('/checkout_payment/',$_SERVER['PHP_SELF']) && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
+// BillSAFE-Layer Start
+if (defined('MODULE_PAYMENT_BILLSAFE_2_LAYER') && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
+  $bs_error = '';
+  if (basename($PHP_SELF) == 'checkout_payment.php') {
     if (isset($_GET['payment_error'])) {
       $bs_error = stripslashes(html_entity_decode('payment_error='.$_GET['payment_error'].'&error_message='.$_GET['error_message']));
-    } else {
-      $bs_error = '';
     }
-    echo '<script type="text/javascript"><!--
-      if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");
-    --></script>';
+    echo '<script type="text/javascript"><!--' .
+         ' if (top.lpg) top.lpg.close("'.str_replace('&amp;', '&', xtc_href_link(FILENAME_CHECKOUT_PAYMENT, $bs_error, 'SSL')).'");' .
+         '--></script>' . PHP_EOL;
   }
-  if (preg_match('/checkout_success/',$_SERVER['PHP_SELF']) && MODULE_PAYMENT_BILLSAFE_2_LAYER == 'True') {
-    echo '<script type="text/javascript"><!--
-      if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");
-    --></script>';
+  if (basename($PHP_SELF) == 'checkout_success.php') {
+    echo '<script type="text/javascript"><!--' .
+         '  if (top.lpg) top.lpg.close("'.xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL').'");' .
+         '--></script>' . PHP_EOL;
   }
 }
-//EOF - Dokuman - 2012-06-19 - BILLSAFE payment module - BillSAFE-Layer End
+// BillSAFE-Layer End
 ?>

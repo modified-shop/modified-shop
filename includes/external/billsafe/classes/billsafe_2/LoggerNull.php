@@ -15,7 +15,7 @@
 
 /*
 * id = LoggerNull.php
-* location = /includes/classes/billsafe_2
+* location = /includes/external/billsafe/classes/billsafe_2 // DokuMan - 2012-06-19 - move billsafe to external directory
 *
 * This program is free software; you can redistribute it and/or modify
 * it under the terms of the GNU General Public License, version 2, as
