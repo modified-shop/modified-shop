@@ -81,8 +81,29 @@ class paypalexpress {
   }
 /**************************************************************/
   function before_process() {
-    // Stand: 29.04.2009
-    return false;
+    if (isset($_SESSION['nvpReqArray']) && is_array($_SESSION['nvpReqArray']) && $_SESSION['payment'] == 'paypalexpress') {
+      if ($_POST['comments_added'] != '') {
+        $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
+      }
+      $error_mess  = '';
+      if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && $_POST['conditions'] != 'conditions') {
+        $error_mess = '1';
+      }
+      if ($_POST['check_address'] != 'address') {
+        $error_mess .= '2';
+      }
+      if($error_mess != '') {
+        xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, 'error_message='.$error_mess, 'SSL', true, false));
+      }
+    }
+    if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
+      if (isset($_SESSION['cartID']) && $_SESSION['cart']->cartID != $_SESSION['cartID']) {
+        xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
+      }
+      if (!isset($_SESSION['sendto'])) {
+        xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
+      }
+    }
   }
 /**************************************************************/
   function payment_action(){
@@ -97,6 +118,26 @@ class paypalexpress {
     $o_paypal->complete_ceckout($insert_id, $_GET);
     $o_paypal->write_status_history($insert_id);
     $o_paypal->logging_status($insert_id);
+
+    if(isset($_SESSION['reshash']['ACK']) && strtoupper($_SESSION['reshash']['ACK']) != "SUCCESS" && strtoupper($_SESSION['reshash']['ACK']) != "SUCCESSWITHWARNING") {
+      if($_SESSION['payment'] == 'paypalexpress') {
+        xtc_redirect($o_paypal->EXPRESS_CANCEL_URL);
+      } else {
+        if(isset($_SESSION['reshash']['REDIRECTREQUIRED']) && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED']) == "TRUE") {
+          xtc_redirect($o_paypal->EXPRESS_CANCEL_URL);
+        } else {
+          xtc_redirect($o_paypal->CANCEL_URL);
+        }
+      }
+    }
+
+    if(isset($_SESSION['reshash']['REDIRECTREQUIRED'])  && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED']) == "TRUE") {
+      $payment_modules->giropay_process();
+    } else {
+      unset($_SESSION['payment']);
+      unset($_SESSION['nvpReqArray']);
+      unset($_SESSION['reshash']);
+    }
   }
 /**************************************************************/
   function giropay_process() {

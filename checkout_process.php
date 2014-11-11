@@ -40,32 +40,6 @@ require_once (DIR_FS_INC.'ip_clearing.inc.php');
 // initialize smarty
 $smarty = new Smarty;
 
-### Paypal Express Modul
-if (isset($_SESSION['nvpReqArray']) && is_array($_SESSION['nvpReqArray']) && $_SESSION['payment'] == 'paypalexpress') {
-  if ($_POST['comments_added'] != '') {
-    $_SESSION['comments'] = xtc_db_prepare_input($_POST['comments']);
-  }
-  $error_mess  = '';
-  if (DISPLAY_CONDITIONS_ON_CHECKOUT == 'true' && $_POST['conditions'] != 'conditions') {
-    $error_mess = '1';
-  }
-  if ($_POST['check_address'] != 'address') {
-    $error_mess .= '2';
-  }
-  if($error_mess != '') {
-    xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, 'error_message='.$error_mess, 'SSL', true, false));
-  }
-}
-if(isset($_SESSION['payment']) && $_SESSION['payment'] == 'paypalexpress') {
-  if (isset($_SESSION['cartID']) && $_SESSION['cart']->cartID != $_SESSION['cartID']) {
-    xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
-  }
-  if (!isset($_SESSION['sendto'])) {
-    xtc_redirect(xtc_href_link(FILENAME_PAYPAL_CHECKOUT, '', 'SSL'));
-  }
-}
-### Paypal Express Modul
-
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // load selected payment module
@@ -390,6 +364,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   }
 
   // check refID
+  $refferers_id = '';
   if (isset($_SESSION['tracking']['refID'])) {
     $refferers_id = $_SESSION['tracking']['refID'];
   } else {
@@ -406,7 +381,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   }
   //write refID into TABLE_ORDERS
   xtc_db_query("UPDATE ".TABLE_ORDERS."
-                     SET refferers_id = '".$_SESSION['tracking']['refID']."'
+                     SET refferers_id = '".xtc_db_input($refferers_id)."'
                    WHERE orders_id = '".$insert_id."'");
   
   // check if late or direct sale
@@ -420,8 +395,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
   //write conversion_type into TABLE_ORDERS
   xtc_db_query("UPDATE ".TABLE_ORDERS."
                    SET conversion_type = '".$conversion_type."'
-                 WHERE orders_id = '".$insert_id."'
-               ");
+                 WHERE orders_id = '".$insert_id."'");
 
   // redirect to payment service
   if ($tmp) {
@@ -439,33 +413,18 @@ if (!$tmp) {
   // load the after_process function from the payment modules
   $payment_modules->after_process();
 
-  ### PayPal Express Modul - PayPal ERROR Check, Order gespeichert, Mail gesendet, Cart noch belegt
-  if( isset($_SESSION['reshash']['ACK']) && strtoupper($_SESSION['reshash']['ACK'])!="SUCCESS" && strtoupper($_SESSION['reshash']['ACK'])!="SUCCESSWITHWARNING") {
-    if($_SESSION['payment'] == 'paypalexpress') {
-      xtc_redirect($o_paypal->EXPRESS_CANCEL_URL);
-    } else {
-      if(isset($_SESSION['reshash']['REDIRECTREQUIRED']) && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED'])=="TRUE") {
-        xtc_redirect($o_paypal->EXPRESS_CANCEL_URL);
-      } else {
-        xtc_redirect($o_paypal->CANCEL_URL);
-      }
-    }
-  }
-  ### PayPal Express Modul
-
   $_SESSION['cart']->reset(true);
 
   // unregister session variables used during checkout
   unset ($_SESSION['sendto']);
   unset ($_SESSION['billto']);
   unset ($_SESSION['shipping']);
-  ### PayPal Express Modul
-  //unset ($_SESSION['payment']);
-  ### PayPal Express Modul
+  unset ($_SESSION['payment']);
   unset ($_SESSION['comments']);
-  //unset ($_SESSION['last_order']);
+  unset ($_SESSION['last_order']);
   unset ($_SESSION['tmp_oID']);
   unset ($_SESSION['cc']);
+  
   $last_order = $insert_id;
   //GV Code Start
   if (isset($_SESSION['credit_covers'])) {
@@ -480,16 +439,6 @@ if (!$tmp) {
     require_once (DIR_FS_CATALOG.'callback/xtbooster/xtbcallback.php');
   }
   ### Included xs:booster
-
-  ### PayPal Express Modul - PayPal GiroPay aufrufen zum bestätigen
-  if(isset($_SESSION['reshash']['REDIRECTREQUIRED'])  && strtoupper($_SESSION['reshash']['REDIRECTREQUIRED'])=="TRUE") {
-    $payment_modules->giropay_process();
-  } else {
-    unset($_SESSION['payment']);
-    unset($_SESSION['nvpReqArray']);
-    unset($_SESSION['reshash']);
-  }
-  ### PayPal Express Modul
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }
