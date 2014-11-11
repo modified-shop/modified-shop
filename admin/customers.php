@@ -47,12 +47,12 @@
   $error = false;
   $entry_vat_error_text = '';
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
-  $customers_id = filter_input(INPUT_GET, 'cID', FILTER_VALIDATE_INT);
+  $customers_id = (int)$_GET['cID'];
 
   if (isset($_GET['special']) && $_GET['special'] == 'remove_memo') {
     $mID = xtc_db_prepare_input($_GET['mID']);
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_MEMO." WHERE memo_id = '".(int)$mID."'");
-    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'cID='.$customers_id.'&action=edit'));
+    xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action', 'special')).'cID='.$customers_id.'&action=edit'));
   }
 
   if (($action == 'edit' || $action == 'update') && !(($customers_id == 1 && $_SESSION['customer_id'] == 1) || $customers_id != 1)) {
@@ -237,7 +237,7 @@
         xtc_db_query("INSERT INTO  ".TABLE_CUSTOMERS_STATUS_HISTORY." (customers_id, new_value, old_value, date_added, customer_notified) VALUES ('".$customers_id."', '".xtc_db_input($_POST['status'])."', '".$check_status['customers_status']."', now(), '".$customer_notified."')");
         $customer_updated = true;
       }
-      xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, 'page='.(int)$_GET['page'].'&cID='.$customers_id));
+      xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('cID', 'action')).'cID='.$customers_id));
       break;
     case 'update' :
       $customers_cid = xtc_db_prepare_input($_POST['csID']);

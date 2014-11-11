@@ -74,11 +74,13 @@
                   $search = "AND (c.customers_lastname LIKE '%".$keywords."%' 
                                   OR c.customers_firstname LIKE '%".$keywords."%' 
                                   OR c.customers_email_address LIKE '%".$keywords."%'
+                                  OR a.entry_company LIKE '%".$keywords."%'
                                  )";
                   //BOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
                   if(isset($_GET['asb']) && $_GET['asb'] == 'asb') {
                     $search = "AND (c.customers_lastname LIKE '%".$keywords."%' 
                                     OR c.customers_firstname LIKE '%".$keywords."%'
+                                    OR a.entry_company LIKE '%".$keywords."%'
                                    )";
                   }
                   //EOF - web28 - 2010-05-29 added for ADMIN SEARCH BAR
