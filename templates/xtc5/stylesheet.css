@@ -57,7 +57,7 @@ h3 {
   font-size:12px;
 }
 /* LINKS GLOBAL */
-a, a:link, a:link, a:link, a:hover {
+a, a:link, a:visited, a:active, a:hover {
   background:transparent;
   text-decoration:none;
   outline:none;
