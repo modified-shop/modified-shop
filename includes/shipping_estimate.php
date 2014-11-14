@@ -61,18 +61,12 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
   $order->delivery['zone_id'] = 0;
 }
 
-foreach ($_SESSION['cart']->tax as $key => $value) {
-  $order->info['tax'] += $_SESSION['cart']->tax[$key]['value'];
-  $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] += $_SESSION['cart']->tax[$key]['value'];
-}
-
 $order_total_modules = new order_total();
 $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 
 if (MODULE_ORDER_TOTAL_INSTALLED) {
   $order_total_array = $order_total_modules->process();
-  //Summe (ot_total) nur anzeigen wenn unterschiedlich
   if (count($order_total_array)) {
     foreach($order_total_array as $key => $entry) {
        if ($entry['code'] == 'ot_subtotal') {
@@ -83,7 +77,16 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
          $ot_total_value = $entry['value'];
          $ot_total_key = $key;
        }
+       if ($entry['code'] == 'ot_subtotal_no_tax') {
+         $ot_subtotal_no_tax_value = $entry['value'];
+         $ot_subtotal_no_tax = $key;
+       }
     }
+    //ot_subtotal_no_tax nur anzeigen wenn notwendig
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1 || $ot_subtotal_no_tax_value == $ot_total_value) {
+      unset($order_total_array[$ot_subtotal_no_tax]);
+    }
+    //ot_total nur anzeigen wenn unterschiedlich
     if ($ot_subtotal_value == $ot_total_value) {
       unset($order_total_array[$ot_total_key]);
       $order_total_array = array_merge($order_total_array);
@@ -97,7 +100,7 @@ if (MODULE_ORDER_TOTAL_INSTALLED) {
 if (!isset($order->info['total'])) {
   $order->info['total'] = $_SESSION['cart']->show_total();
 }
-$total = round($order->info['total'],2);
+$total = $ot_total_value;
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 

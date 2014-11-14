@@ -429,6 +429,11 @@
                                        ");
       $tax_address = xtc_db_fetch_array($tax_address_query);
 
+      // web28 - set tax country id for using order total in shopping cart
+      if (!isset($tax_address['entry_country_id'])) {
+        $tax_address['entry_country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
+      }
+
       $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
                           'currency' => $_SESSION['currency'],
                           'currency_value' => $xtPrice->currencies[$_SESSION['currency']]['value'],
