@@ -173,7 +173,7 @@ if (xtc_db_num_rows($products)) {
                           <td colspan="3"><?php echo xtc_black_line(); ?></td>
                         </tr>
                         <tr>
-                          <td class="main" colspan="3>" style="background-color: #d4d4d4;">
+                          <td class="main" colspan="3" style="background-color: #d4d4d4;">
                             <div style="margin:10px 0";>
                               <?php echo TEXT_WARNING_OF_DELETE; ?>&nbsp;&nbsp;&nbsp;
                               <?php  //BOF - webkiste - auf der selben Seite bleiben
@@ -190,7 +190,7 @@ if (xtc_db_num_rows($products)) {
 //Produkt nicht zugeordnet - Ok - Optionswert kann gelöscht werden
 ?>
                         <tr>
-                          <td class="main" colspan="3>" style="background-color: #d4d4d4;">
+                          <td class="main" colspan="3" style="background-color: #d4d4d4;">
                             <div style="margin:10px 0";>
                               <?php echo TEXT_OK_TO_DELETE; ?>
                               <?php //BOF - webkiste - auf der selben Seite bleiben
@@ -201,7 +201,7 @@ if (xtc_db_num_rows($products)) {
                           </td>
                         </tr>
                         <tr>
-                          <td colspan="<3"><?php echo xtc_black_line(); ?></td>
+                          <td colspan="3"><?php echo xtc_black_line(); ?></td>
                         </tr>
 <?php
     }
