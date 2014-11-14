@@ -120,7 +120,10 @@ if (isset($_GET['info_message_3'])) {
 if (isset($_GET['coupon_message']) && xtc_not_null($_GET['coupon_message'])) {
   $smarty->assign('coupon_message', get_message('coupon_message'));
 }
-
+// coupon min order info
+if (isset($cc_amount_min_order_info)) {
+  $smarty->assign('info_message', $cc_amount_min_order_info);
+}
 // continue shopping link
 if (!empty($_SERVER['HTTP_REFERER']) && strpos($_SERVER['HTTP_REFERER'], FILENAME_SHOPPING_CART) === false  && strpos($_SERVER['HTTP_REFERER'],'in_cart') === false && strpos($_SERVER['HTTP_REFERER'], 'checkout_') === false) {
   $_SESSION['continue_link'] = $_SERVER['HTTP_REFERER'];

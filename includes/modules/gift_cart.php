@@ -72,7 +72,8 @@ if (isset($_SESSION['cc_post']) && !$cc_check) {
   unset($_SESSION['cc_id']); 
   unset($_SESSION['cc_post']);   
   $_GET['info'] = 0;
-  $_GET['info_message'] = sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON,$xtPrice->xtcFormat($_SESSION['cc_amount_min_order'],true)).ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD;
+  unset($_GET['info_message']);
+  $cc_amount_min_order_info = sprintf(ERROR_INVALID_MINIMUM_ORDER_COUPON,$xtPrice->xtcFormat($_SESSION['cc_amount_min_order'],true)).ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD;
 }
 
 if (isset($_GET['coupon_message']) && xtc_not_null($_GET['coupon_message'])) {

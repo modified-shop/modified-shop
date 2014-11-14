@@ -62,17 +62,8 @@ if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['count
 }
 
 foreach ($_SESSION['cart']->tax as $key => $value) {
-  if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1) {
-    // price with tax
-    $order->info['tax'] += $_SESSION['cart']->tax[$key]['value'];
-    $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] += $_SESSION['cart']->tax[$key]['value'];
-    $order->info['total'] += $_SESSION['cart']->tax[$key]['value'];
-  } else {
-    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 0 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 1) {
-      $order->info['tax'] = $order->info['tax'] += $_SESSION['cart']->tax[$key]['value'];
-      $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] = $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] += $_SESSION['cart']->tax[$key]['value'];
-    }
-  }
+  $order->info['tax'] += $_SESSION['cart']->tax[$key]['value'];
+  $order->info['tax_groups'][$_SESSION['cart']->tax[$key]['desc']] += $_SESSION['cart']->tax[$key]['value'];
 }
 
 $order_total_modules = new order_total();
@@ -80,16 +71,33 @@ $order_total_modules->collect_posts();
 $order_total_modules->pre_confirmation_check();
 
 if (MODULE_ORDER_TOTAL_INSTALLED) {
-  $order_total_modules->process();
+  $order_total_array = $order_total_modules->process();
+  //Summe (ot_total) nur anzeigen wenn unterschiedlich
+  if (count($order_total_array)) {
+    foreach($order_total_array as $key => $entry) {
+       if ($entry['code'] == 'ot_subtotal') {
+         $ot_subtotal_value = $entry['value'];
+         $ot_subtotal_key = $key;
+       }
+       if ($entry['code'] == 'ot_total') {
+         $ot_total_value = $entry['value'];
+         $ot_total_key = $key;
+       }
+    }
+    if ($ot_subtotal_value == $ot_total_value) {
+      unset($order_total_array[$ot_total_key]);
+      $order_total_array = array_merge($order_total_array);
+    }
+  }
+  $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_array);
   $total_block = $order_total_modules->output();
   $module_smarty->assign('TOTAL_BLOCK', $total_block);
-  $module_smarty->assign('TOTAL_BLOCK_ARRAY', $order_total_modules->output_array());
 }
 
 if (!isset($order->info['total'])) {
   $order->info['total'] = $_SESSION['cart']->show_total();
 }
-$total = round($order->info['total'] + $order->info['tax'], 2);
+$total = round($order->info['total'],2);
 
 $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 
