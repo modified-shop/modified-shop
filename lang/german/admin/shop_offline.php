@@ -22,5 +22,5 @@ define('SETTINGS_OFFLINE', 'Shop offline <br /><font color="red">(Zugriff nur no
 define('SETTINGS_OFFLINE_MSG', 'Offline Nachricht');
 
 define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_GROUPS_TXT', '<b>Erlaubte Kundengruppen: </b><br />(f&uumlr diese Kundengruppen ist der Shop weiterhin sichtbar)');
-define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Erlaubte Emailadressen (kommagetrennt):</b> <br />(f&uumlr Kunden mit diesen Emailadressen ist der Shop weiterhin sichtbar)');
+define('SHOP_OFFLINE_ALLOWED_CUSTOMERS_EMAILS_TXT', '<b>Erlaubte E-Mail-Adressen (kommagetrennt):</b> <br />(f&uumlr Kunden mit diesen E-Mail-Adressen ist der Shop weiterhin sichtbar)');
 ?>

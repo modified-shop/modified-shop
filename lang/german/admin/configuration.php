@@ -29,11 +29,11 @@ define('STORE_NAME_TITLE' , 'Name des Shops');
 define('STORE_NAME_DESC' , 'Der Name dieses Online Shops');
 define('STORE_OWNER_TITLE' , 'Inhaber');
 define('STORE_OWNER_DESC' , 'Der Name des Shop-Betreibers');
-define('STORE_OWNER_EMAIL_ADDRESS_TITLE' , 'E-Mail Adresse');
-define('STORE_OWNER_EMAIL_ADDRESS_DESC' , 'Die E-Mail Adresse des Shop-Betreibers');
+define('STORE_OWNER_EMAIL_ADDRESS_TITLE' , 'E-Mail-Adresse');
+define('STORE_OWNER_EMAIL_ADDRESS_DESC' , 'Die E-Mail-Adresse des Shop-Betreibers');
 
 define('EMAIL_FROM_TITLE' , 'E-Mail von');
-define('EMAIL_FROM_DESC' , 'E-Mail Adresse, die beim Versenden (send mail) benutzt werden soll.');
+define('EMAIL_FROM_DESC' , 'E-Mail-Adresse, die beim Versenden (sendmail) benutzt werden soll.');
 
 define('STORE_COUNTRY_TITLE' , 'Land');
 define('STORE_COUNTRY_DESC' , 'Das Land, aus dem der Versand erfolgt <br /><br /><b>Hinweis: Bitte nicht vergessen, die Region richtig anzupassen.</b>');
@@ -63,7 +63,7 @@ define('ALLOW_GUEST_TO_TELL_A_FRIEND_DESC' , 'G&auml;sten erlauben, ihre Bekannt
 define('ADVANCED_SEARCH_DEFAULT_OPERATOR_TITLE' , 'Suchverkn&uuml;pfungen');
 define('ADVANCED_SEARCH_DEFAULT_OPERATOR_DESC' , 'Standardoperator zum Verkn&uuml;pfen von Suchw&ouml;rtern.');
 
-define('STORE_NAME_ADDRESS_TITLE' , 'Gesch&auml;ftsadresse und Telefonnummer etc');
+define('STORE_NAME_ADDRESS_TITLE' , 'Gesch&auml;ftsadresse und Telefonnummer etc.');
 define('STORE_NAME_ADDRESS_DESC' , 'Tragen Sie hier Ihre Gesch&auml;ftsadresse wie in einem Briefkopf ein.');
 
 define('SHOW_COUNTS_TITLE' , 'Artikelanzahl hinter Kategorienamen?');
@@ -77,7 +77,7 @@ define('DEFAULT_CUSTOMERS_STATUS_ID_ADMIN_DESC' , 'W&auml;hlen Sie den Kundensta
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_TITLE' , 'Kundenstatus(Kundengruppe) f&uuml;r G&auml;ste');
 define('DEFAULT_CUSTOMERS_STATUS_ID_GUEST_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r G&auml;ste anhand der jeweiligen ID!');
 define('DEFAULT_CUSTOMERS_STATUS_ID_TITLE' , 'Kundenstatus f&uuml;r Neukunden');
-define('DEFAULT_CUSTOMERS_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r G&auml;ste anhand der jeweiligen ID!<br />TIPP: Sie k&ouml;nnen im Men&uuml; Kundengruppen weitere Gruppen einrichten und zb Aktionswochen machen: Diese Woche 10% Rabatt f&uuml;r alle Neukunden?');
+define('DEFAULT_CUSTOMERS_STATUS_ID_DESC' , 'W&auml;hlen Sie den Kundenstatus(Gruppe) f&uuml;r G&auml;ste anhand der jeweiligen ID!<br />TIPP: Sie k&ouml;nnen im Men&uuml; Kundengruppen weitere Gruppen einrichten und z.B. Aktionswochen machen: Diese Woche 10% Rabatt f&uuml;r alle Neukunden?');
 
 define('ALLOW_ADD_TO_CART_TITLE' , 'Erlaubt, Artikel in den Einkaufswagen zu legen');
 define('ALLOW_ADD_TO_CART_DESC' , 'Erlaubt das Einf&uuml;gen von Artikeln in den Warenkorb auch dann, wenn "Preise anzeigen" in der Kundengruppe auf "Nein" steht');
@@ -94,8 +94,8 @@ define('ENTRY_LAST_NAME_MIN_LENGTH_TITLE' , 'Nachname');
 define('ENTRY_LAST_NAME_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Nachnamens');
 define('ENTRY_DOB_MIN_LENGTH_TITLE' , 'Geburtsdatum');
 define('ENTRY_DOB_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Geburtsdatums');
-define('ENTRY_EMAIL_ADDRESS_MIN_LENGTH_TITLE' , 'E-Mail Adresse');
-define('ENTRY_EMAIL_ADDRESS_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der E-Mailadresse');
+define('ENTRY_EMAIL_ADDRESS_MIN_LENGTH_TITLE' , 'E-Mail-Adresse');
+define('ENTRY_EMAIL_ADDRESS_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der E-Mail-Adresse');
 define('ENTRY_STREET_ADDRESS_MIN_LENGTH_TITLE' , 'Strasse');
 define('ENTRY_STREET_ADDRESS_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Strassenanschrift');
 define('ENTRY_COMPANY_MIN_LENGTH_TITLE' , 'Firma');
@@ -366,82 +366,82 @@ define('DIR_FS_CACHE_DESC' , 'Der Ordner, wo die gecachten Files gespeichert wer
 define('ACCOUNT_OPTIONS_TITLE','Art der Kontoerstellung');
 define('ACCOUNT_OPTIONS_DESC','Wie m&ouml;chten Sie die Anmeldeprozedur in Ihrem Shop gestallten?<br />Sie haben die Wahl zwischen regul&auml;ren Kundenkonten und "Einmalbestellungen" ohne Erstellung eines Kundenkontos (es wird ein Konto erstellt, aber dies ist f&uuml;r den Kunden nicht ersichtlich)');
 
-define('EMAIL_TRANSPORT_TITLE' , 'E-Mail Transport Methode');
-define('EMAIL_TRANSPORT_DESC' , '<b>Empfehlung: smtp</b> - Definiert ob der Server eine lokale Verbindung zum "Sendmail-Programm" benutzt oder ob er eine SMTP Verbindung &uuml;ber TCP/IP ben&ouml;tigt. Server die auf Windows oder MacOS laufen sollten SMTP verwenden.');
+define('EMAIL_TRANSPORT_TITLE' , 'E-Mail-Transport-Methode');
+define('EMAIL_TRANSPORT_DESC' , '<b>Empfehlung: smtp</b> - Definiert ob der Server eine lokale Verbindung zum "Sendmail-Programm" benutzt oder ob er eine SMTP-Verbindung &uuml;ber TCP/IP ben&ouml;tigt. Server, die auf Windows oder Mac OS laufen, sollten SMTP verwenden.');
 
-define('EMAIL_LINEFEED_TITLE' , 'E-Mail Linefeeds');
-define('EMAIL_LINEFEED_DESC' , 'Definiert die Zeichen die benutzt werden sollen um die Mail Header zu trennen.');
+define('EMAIL_LINEFEED_TITLE' , 'E-Mail-Linefeeds');
+define('EMAIL_LINEFEED_DESC' , 'Definiert die Zeichen, die benutzt werden sollen, um die E-Mail-Header zu trennen.');
 define('EMAIL_USE_HTML_TITLE' , 'Benutzen von MIME HTML beim Versand von E-Mails');
-define('EMAIL_USE_HTML_DESC' , 'E-Mails im HTML Format versenden');
-define('ENTRY_EMAIL_ADDRESS_CHECK_TITLE' , '&Uuml;berpr&uuml;fen der E-Mail Adressen &uuml;ber DNS');
-define('ENTRY_EMAIL_ADDRESS_CHECK_DESC' , 'Die E-Mail Adressen k&ouml;nnen &uuml;ber einen DNS Server gepr&uuml;ft werden');
+define('EMAIL_USE_HTML_DESC' , 'E-Mails im HTML-Format versenden');
+define('ENTRY_EMAIL_ADDRESS_CHECK_TITLE' , '&Uuml;berpr&uuml;fen der E-Mail-Adressen &uuml;ber DNS');
+define('ENTRY_EMAIL_ADDRESS_CHECK_DESC' , 'Die E-Mail-Adressen k&ouml;nnen &uuml;ber einen DNS-Server gepr&uuml;ft werden');
 define('SEND_EMAILS_TITLE' , 'Senden von E-Mails');
-define('SEND_EMAILS_DESC' , 'E-Mails an Kunden versenden (bei Bestellungen etc)');
+define('SEND_EMAILS_DESC' , 'E-Mails an Kunden versenden (bei Bestellungen etc.)');
 define('SENDMAIL_PATH_TITLE' , 'Der Pfad zu Sendmail');
-define('SENDMAIL_PATH_DESC' , 'Wenn Sie Sendmail benutzen, geben Sie hier den Pfad zum Sendmail Programm an(normalerweise: /usr/bin/sendmail):');
-define('SMTP_MAIN_SERVER_TITLE' , 'Adresse des SMTP Servers');
-define('SMTP_MAIN_SERVER_DESC' , 'Geben Sie die Adresse Ihres Haupt SMTP Servers ein.');
-define('SMTP_BACKUP_SERVER_TITLE' , 'Adresse des SMTP Backup Servers');
-define('SMTP_BACKUP_SERVER_DESC' , 'Geben Sie die Adresse Ihres Backup SMTP Servers ein.');
-define('SMTP_USERNAME_TITLE' , 'SMTP Username');
-define('SMTP_USERNAME_DESC' , 'Bitte geben Sie hier den Usernamen Ihres SMTP Accounts ein.');
-define('SMTP_PASSWORD_TITLE' , 'SMTP Passwort');
-define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP Accounts ein.');
-define('SMTP_AUTH_TITLE' , 'SMTP AUTH');
-define('SMTP_AUTH_DESC' , 'Erfordert der SMTP Server eine sichere Authentifizierung?');
-define('SMTP_PORT_TITLE' , 'SMTP Port');
-define('SMTP_PORT_DESC' , 'Geben sie den SMTP Port Ihres SMTP Servers ein (default: 25)?');
+define('SENDMAIL_PATH_DESC' , 'Wenn Sie Sendmail benutzen, geben Sie hier den Pfad zum Sendmail Programm an (normalerweise: /usr/bin/sendmail):');
+define('SMTP_MAIN_SERVER_TITLE' , 'Adresse des SMTP-Servers');
+define('SMTP_MAIN_SERVER_DESC' , 'Geben Sie die Adresse Ihres Haupt SMTP-Servers ein.');
+define('SMTP_BACKUP_SERVER_TITLE' , 'Adresse des SMTP-Backup-Servers');
+define('SMTP_BACKUP_SERVER_DESC' , 'Geben Sie die Adresse Ihres Backup SMTP-Servers ein.');
+define('SMTP_USERNAME_TITLE' , 'SMTP-Benutzername');
+define('SMTP_USERNAME_DESC' , 'Bitte geben Sie hier den Benutzernamen Ihres SMTP-Kontos ein.');
+define('SMTP_PASSWORD_TITLE' , 'SMTP-Passwort');
+define('SMTP_PASSWORD_DESC' , 'Bitte geben Sie hier das Passwort Ihres SMTP-Kontos ein.');
+define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
+define('SMTP_AUTH_DESC' , 'Erfordert der SMTP-Server eine sichere Authentifizierung?');
+define('SMTP_PORT_TITLE' , 'SMTP-Port');
+define('SMTP_PORT_DESC' , 'Geben sie den SMTP-Port Ihres SMTP-Servers ein (default: 25)?');
 
 //DokuMan - 2011-09-20 - E-Mail SQL errors
-define('EMAIL_SQL_ERRORS_TITLE','SQL Fehlermeldungen als E-Mail versenden');
-define('EMAIL_SQL_ERRORS_DESC','Bei "true" wird an die E-Mailadresse des Shop-Betreibers eine E-Mail mit der SQL-Fehlermeldung gesendet. Die SQL-Fehlermeldung dagegen wird vor dem Kunden versteckt.<br />Bei "false" wird die entsprechende Fehlermeldung direkt und f&uuml;r alle sichtbar ausgegeben (Standard).');
+define('EMAIL_SQL_ERRORS_TITLE','SQL-Fehlermeldungen als E-Mail versenden');
+define('EMAIL_SQL_ERRORS_DESC','Bei "true" wird an die E-Mail-Adresse des Shop-Betreibers eine E-Mail mit der SQL-Fehlermeldung gesendet. Die SQL-Fehlermeldung dagegen wird vor dem Kunden versteckt.<br />Bei "false" wird die entsprechende Fehlermeldung direkt und f&uuml;r alle sichtbar ausgegeben (Standard).');
 
 //Constants for contact_us
-define('CONTACT_US_EMAIL_ADDRESS_TITLE' , 'Kontakt - E-Mail Adresse');
-define('CONTACT_US_EMAIL_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absender Adresse f&uuml;r das Versenden der E-Mails &uuml;ber das "Kontakt" Formular ein.');
-define('CONTACT_US_NAME_TITLE' , 'Kontakt - E-Mail Adresse, Name');
+define('CONTACT_US_EMAIL_ADDRESS_TITLE' , 'Kontakt - E-Mail-Adresse');
+define('CONTACT_US_EMAIL_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absenderadresse f&uuml;r das Versenden der E-Mails &uuml;ber das "Kontakt" Formular ein.');
+define('CONTACT_US_NAME_TITLE' , 'Kontakt - E-Mail-Adresse, Name');
 define('CONTACT_US_NAME_DESC' , 'Bitte geben Sie einen Absender Namen f&uuml;r das Versenden der E-Mails &uuml;ber das "Kontakt" Formular ein.');
-define('CONTACT_US_FORWARDING_STRING_TITLE' , 'Kontakt - Weiterleitungsadressen');
-define('CONTACT_US_FORWARDING_STRING_DESC' , 'Geben Sie weitere Mailadressen ein, an welche die E-Mails des "Kontakt" Formulares noch versendet werden sollen (mit , getrennt)');
-define('CONTACT_US_REPLY_ADDRESS_TITLE' , 'Kontakt - Antwortadresse');
-define('CONTACT_US_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mailadresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
-define('CONTACT_US_REPLY_ADDRESS_NAME_TITLE' , 'Kontakt - Antwortadresse, Name');
-define('CONTACT_US_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwortmails.');
-define('CONTACT_US_EMAIL_SUBJECT_TITLE' , 'Kontakt - E-Mail Betreff');
+define('CONTACT_US_FORWARDING_STRING_TITLE' , 'Kontakt - Weiterleitungs-E-Mail-Adressen');
+define('CONTACT_US_FORWARDING_STRING_DESC' , 'Geben Sie weitere E-Mail-Adressen ein, an welche die E-Mails des "Kontakt" Formulares noch versendet werden sollen (mit , getrennt)');
+define('CONTACT_US_REPLY_ADDRESS_TITLE' , 'Kontakt - Antwort-E-Mail-Adresse');
+define('CONTACT_US_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mail-Adresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
+define('CONTACT_US_REPLY_ADDRESS_NAME_TITLE' , 'Kontakt - Antwort-E-Mail-Adresse, Name');
+define('CONTACT_US_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwort-E-Mails.');
+define('CONTACT_US_EMAIL_SUBJECT_TITLE' , 'Kontakt - E-Mail-Betreff');
 define('CONTACT_US_EMAIL_SUBJECT_DESC' , 'Betreff f&uuml;r E-Mails vom Kontaktformular des Shops');
 
 //Constants for support system
-define('EMAIL_SUPPORT_ADDRESS_TITLE' , 'Technischer Support - E-Mail Adresse');
-define('EMAIL_SUPPORT_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absender Adresse f&uuml;r das Versenden der E-Mails &uuml;ber das <b>Support System</b> ein (Kontoerstellung, Passwort vergessen).');
-define('EMAIL_SUPPORT_NAME_TITLE' , 'Technischer Support - E-Mail Adresse, Name');
-define('EMAIL_SUPPORT_NAME_DESC' , 'Bitte geben Sie einen Absender Namen f&uuml;r das Versenden der mails &uuml;ber das <b>Support System</b> ein (Kontoerstellung, Passwort vergessen).');
-define('EMAIL_SUPPORT_FORWARDING_STRING_TITLE' , 'Technischer Support - Weiterleitungsadressen');
-define('EMAIL_SUPPORT_FORWARDING_STRING_DESC' , 'Geben Sie weitere E-Mailadressen ein, an welche die E-Mails des <b>Support Systems</b> noch versendet werden sollen (mit , getrennt)');
-define('EMAIL_SUPPORT_REPLY_ADDRESS_TITLE' , 'Technischer Support - Antwortadresse');
-define('EMAIL_SUPPORT_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mailadresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
-define('EMAIL_SUPPORT_REPLY_ADDRESS_NAME_TITLE' , 'Technischer Support - Antwortadresse, Name');
-define('EMAIL_SUPPORT_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwortmails.');
-define('EMAIL_SUPPORT_SUBJECT_TITLE' , 'Technischer Support - E-Mail Betreff');
-define('EMAIL_SUPPORT_SUBJECT_DESC' , 'Betreff f&uuml;r E-Mails des <b>Support Systems</b>.');
+define('EMAIL_SUPPORT_ADDRESS_TITLE' , 'Technischer Support - E-Mail-Adresse');
+define('EMAIL_SUPPORT_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absenderadresse f&uuml;r das Versenden der E-Mails &uuml;ber das <b>Support-System</b> ein (Kontoerstellung, Passwort vergessen).');
+define('EMAIL_SUPPORT_NAME_TITLE' , 'Technischer Support - E-Mail-Adresse, Name');
+define('EMAIL_SUPPORT_NAME_DESC' , 'Bitte geben Sie einen Absender Namen f&uuml;r das Versenden der E-Mails &uuml;ber das <b>Support-System</b> ein (Kontoerstellung, Passwort vergessen).');
+define('EMAIL_SUPPORT_FORWARDING_STRING_TITLE' , 'Technischer Support - Weiterleitungs-E-Mail-Adressen');
+define('EMAIL_SUPPORT_FORWARDING_STRING_DESC' , 'Geben Sie weitere E-Mail-Adressen ein, an welche die E-Mails des <b>Support-Systems</b> noch versendet werden sollen (mit , getrennt)');
+define('EMAIL_SUPPORT_REPLY_ADDRESS_TITLE' , 'Technischer Support - Antwort-E-Mail-Adresse');
+define('EMAIL_SUPPORT_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mail-Adresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
+define('EMAIL_SUPPORT_REPLY_ADDRESS_NAME_TITLE' , 'Technischer Support - Antwort-E-Mail-Adresse, Name');
+define('EMAIL_SUPPORT_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwort-E-Mails.');
+define('EMAIL_SUPPORT_SUBJECT_TITLE' , 'Technischer Support - E-Mail-Betreff');
+define('EMAIL_SUPPORT_SUBJECT_DESC' , 'Betreff f&uuml;r E-Mails des <b>Support-Systems</b>.');
 
 //Constants for Billing system
-define('EMAIL_BILLING_ADDRESS_TITLE' , 'Verrechnung - E-Mail Adresse');
-define('EMAIL_BILLING_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absenderadresse f&uuml;r das Versenden der mails &uuml;ber das <b>Verrechnungssystem</b> ein (Bestellbest&auml;tigung, Status&auml;nderungen,..).');
-define('EMAIL_BILLING_NAME_TITLE' , 'Verrechnung - Mail Adresse, Name');
+define('EMAIL_BILLING_ADDRESS_TITLE' , 'Verrechnung - E-Mail-Adresse');
+define('EMAIL_BILLING_ADDRESS_DESC' , 'Bitte geben Sie eine korrekte Absenderadresse f&uuml;r das Versenden der E-Mails &uuml;ber das <b>Verrechnungssystem</b> ein (Bestellbest&auml;tigung, Status&auml;nderungen,..).');
+define('EMAIL_BILLING_NAME_TITLE' , 'Verrechnung - E-Mail-Adresse, Name');
 define('EMAIL_BILLING_NAME_DESC' , 'Bitte geben Sie einen Absendernamen f&uuml;r das Versenden der E-Mails &uuml;ber das <b>Verrechnungssystem</b> ein (Bestellbest&auml;tigung, Status&auml;nderungen,..).');
-define('EMAIL_BILLING_FORWARDING_STRING_TITLE' , 'Verrechnung - Weiterleitungsadressen');
-define('EMAIL_BILLING_FORWARDING_STRING_DESC' , 'Geben Sie weitere Mailadressen ein, wohin die E-Mails des <b>Verrechnungssystem</b> noch versendet werden sollen (mit , getrennt)');
-define('EMAIL_BILLING_REPLY_ADDRESS_TITLE' , 'Verrechnung - Antwortadresse');
-define('EMAIL_BILLING_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mailadresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
-define('EMAIL_BILLING_REPLY_ADDRESS_NAME_TITLE' , 'Verrechnung - Antwortadresse, Name');
-define('EMAIL_BILLING_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwort E-Mails.');
-define('EMAIL_BILLING_SUBJECT_TITLE' , 'Verrechnung - E-Mail Betreff Status&auml;nderungen');
-define('EMAIL_BILLING_SUBJECT_DESC' , 'Geben Sie bitte einen E-Mailbetreff f&uuml;r E-Mails des <b>Verrechnungs-Systems</b> Ihres Shops ein (Status&auml;nderungen).');
-define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Verrechnung - E-Mail Betreff f&uuml;r Bestellungen');
-define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Geben Sie bitte einen E-Mailbetreff f&uuml;r Ihre Bestellmails an. (zb: <b>Ihre Bestellung {$nr},am {$date}</b>) ps: folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
+define('EMAIL_BILLING_FORWARDING_STRING_TITLE' , 'Verrechnung - Weiterleitungs-E-Mail-Adressen');
+define('EMAIL_BILLING_FORWARDING_STRING_DESC' , 'Geben Sie weitere E-Mail-Adressen ein, wohin die E-Mails des <b>Verrechnungssystem</b> noch versendet werden sollen (mit , getrennt)');
+define('EMAIL_BILLING_REPLY_ADDRESS_TITLE' , 'Verrechnung - Antwort-E-Mail-Adresse');
+define('EMAIL_BILLING_REPLY_ADDRESS_DESC' , 'Bitte geben Sie eine E-Mail-Adresse ein, an die Ihre Kunden Antworten k&ouml;nnen.');
+define('EMAIL_BILLING_REPLY_ADDRESS_NAME_TITLE' , 'Verrechnung - Antwort-E-Mail-Adresse, Name');
+define('EMAIL_BILLING_REPLY_ADDRESS_NAME_DESC' , 'Absendername f&uuml;r Antwort-E-Mails.');
+define('EMAIL_BILLING_SUBJECT_TITLE' , 'Verrechnung - E-Mail-Betreff Status&auml;nderungen');
+define('EMAIL_BILLING_SUBJECT_DESC' , 'Geben Sie bitte einen E-Mail-Betreff f&uuml;r E-Mails des <b>Verrechnungs-Systems</b> Ihres Shops ein (Status&auml;nderungen).');
+define('EMAIL_BILLING_SUBJECT_ORDER_TITLE','Verrechnung - E-Mail-Betreff f&uuml;r Bestellungen');
+define('EMAIL_BILLING_SUBJECT_ORDER_DESC','Geben Sie bitte einen E-Mail-Betreff f&uuml;r Ihre Bestell-E-Mails an. (z.B.: <b>Ihre Bestellung {$nr},am {$date}</b>) ps: folgende Variablen stehen zur Verf&uuml;gung, {$nr},{$date},{$firstname},{$lastname}');
 
 define('DOWNLOAD_ENABLED_TITLE' , 'Download von Artikeln erlauben');
-define('DOWNLOAD_ENABLED_DESC' , 'Die Artikel Download Funktionen einschalten (Software etc).');
+define('DOWNLOAD_ENABLED_DESC' , 'Die Artikel Download Funktionen einschalten (Software etc.).');
 define('DOWNLOAD_BY_REDIRECT_TITLE' , 'Download durch Redirection');
 define('DOWNLOAD_BY_REDIRECT_DESC' , 'Browser-Umleitung f&uuml;r Artikeldownloads benutzen. Auf nicht Linux/Unix Systemen ausschalten.');
 define('DOWNLOAD_MAX_DAYS_TITLE' , 'Verfallsdatum der Download Links(Tage)');
@@ -463,15 +463,15 @@ beeinflussen. Bitte nur &auml;ndern, wenn man sich &uuml;ber die m&ouml;glichen 
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Speicherort');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'Wenn Sessions als Files gespeichert werden sollen, benutzen Sie folgenden Ordner.');
 define('SESSION_FORCE_COOKIE_USE_TITLE' , 'Cookie Benutzung bevorzugen');
-define('SESSION_FORCE_COOKIE_USE_DESC' , 'Session starten falls Cookies vom Browser erlaubt werden. (Standard &quot;false&quot;)'.SESSION_WARNING);
-define('SESSION_CHECK_SSL_SESSION_ID_TITLE' , 'Checken der SSL Session ID');
+define('SESSION_FORCE_COOKIE_USE_DESC' , 'Session starten, falls Cookies vom Browser erlaubt werden. (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_CHECK_SSL_SESSION_ID_TITLE' , 'Checken der SSL-Session-ID');
 define('SESSION_CHECK_SSL_SESSION_ID_DESC' , '&Uuml;berpr&uuml;fen der SSL_SESSION_ID bei jedem HTTPS Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
-define('SESSION_CHECK_USER_AGENT_TITLE' , 'Checken des User Browsers');
-define('SESSION_CHECK_USER_AGENT_DESC' , '&Uuml;berpr&uuml;fen des Browsers den der User benutzt, bei jedem Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
-define('SESSION_CHECK_IP_ADDRESS_TITLE' , 'Checken der IP Adresse');
-define('SESSION_CHECK_IP_ADDRESS_DESC' , '&Uuml;berpr&uuml;fen der IP Adresse des Users bei jedem Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_CHECK_USER_AGENT_TITLE' , '&Uuml;berpr&uuml;fen des Useragents');
+define('SESSION_CHECK_USER_AGENT_DESC' , '&Uuml;berpr&uuml;fen des Browser-Useragents des Benutzers bei jedem Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_CHECK_IP_ADDRESS_TITLE' , 'Checken der IP-Adresse');
+define('SESSION_CHECK_IP_ADDRESS_DESC' , '&Uuml;berpr&uuml;fen der IP-Adresse des Benutzers bei jedem Seitenaufruf. (Standard &quot;false&quot;)'.SESSION_WARNING);
 define('SESSION_RECREATE_TITLE' , 'Session erneuern');
-define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session ID sobald ein User einloggt oder sich registriert (PHP >=4.1 needed). (Standard &quot;false&quot;)'.SESSION_WARNING);
+define('SESSION_RECREATE_DESC' , 'Erneuern der Session und Zuweisung einer neuen Session-ID sobald sich ein Benutzer einloggt oder registriert (PHP >=4.1 needed). (Standard &quot;false&quot;)'.SESSION_WARNING);
 
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_TITLE' , 'Unterzeichnen der AGB');
 define('DISPLAY_CONDITIONS_ON_CHECKOUT_DESC' , 'Anzeigen und Unterzeichnen der AGB beim Bestellvorgang');
@@ -676,7 +676,7 @@ define('USE_ADMIN_THUMBS_IN_LIST_STYLE_DESC', 'Hier k&ouml;nnen einfache CSS Sty
 
 // BOF - Tomcraft - 2009-11-05 - Advanced contact form
 define('USE_CONTACT_EMAIL_ADDRESS_TITLE' , 'Kontaktformular - Sendeoption');
-define('USE_CONTACT_EMAIL_ADDRESS_DESC' , '"Kontakt E-Mail" Adresse des Shops zum Versenden des Kontaktformulars verwenden (wichtig f&uuml;r einige Provider z.B Hosteurope)');
+define('USE_CONTACT_EMAIL_ADDRESS_DESC' , 'Kontakt-E-Mail-Adresse des Shops zum Versenden des Kontaktformulars verwenden (wichtig f&uuml;r einige Provider z.B Hosteurope)');
 // EOF - Tomcraft - 2009-11-05 - Advanced contact form
 
 // BOF - Dokuman - 2010-02-04 - delete cache files in admin section
@@ -725,7 +725,7 @@ define('MAX_DISPLAY_COUPON_RESULTS_DESC', 'Maximum Anzahl der Ergebnisse die bei
 
 //whos online
 define('WHOS_ONLINE_TIME_LAST_CLICK_TITLE', 'Wer ist Online - Anzeigezeitraum in Sek.');
-define('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Anzeigedauer der Online User in der "Wer ist Online" Tabelle, nach dieser Zeit werden die Eintr&auml;ge gel&ouml;scht. (min. Wert: 900)');
+define('WHOS_ONLINE_TIME_LAST_CLICK_DESC', 'Anzeigedauer der Online-Benutzer in der "Wer ist Online" Tabelle, nach dieser Zeit werden die Eintr&auml;ge gel&ouml;scht. (min. Wert: 900)');
 
 //sessions
 define('SESSION_LIFE_ADMIN_TITLE', 'Session Lebenszeit Admin: ');
@@ -742,16 +742,16 @@ define('CHECKOUT_SHOW_PRODUCTS_MODEL_TITLE','Bestellbest&auml;tigungsseite: Arti
 define('CHECKOUT_SHOW_PRODUCTS_MODEL_DESC','Sollen auf der Bestellbest&auml;tigungsseite die Artikel-Nr. angezeigt werden?');
 
 // email billing attachments
-define('EMAIL_BILLING_ATTACHMENTS_TITLE', 'Verrechnung - E-Mail Anh&auml;nge f&uuml;r Bestellungen ');
+define('EMAIL_BILLING_ATTACHMENTS_TITLE', 'Verrechnungs-E-Mail-Anh&auml;nge f&uuml;r Bestellungen ');
 define('EMAIL_BILLING_ATTACHMENTS_DESC', 'Beispiel f&uuml;r Anh&auml;nge - vorausgesetzt die Dateien befinden sich im Shopverzeichnis <b>/media/content/</b>. Mehrere Anh&auml;nge mit Komma ohne Leerzeichen trennen:<br /> media/content/agb.pdf,media/content/widerruf.pdf');
 
 // email images
-define('SHOW_IMAGES_IN_EMAIL_TITLE', 'Artikelbilder in Bestell - E-Mail einf&uuml;gen');
-define('SHOW_IMAGES_IN_EMAIL_DESC', 'Artikelbilder in die HTML-Bestellbest&auml;tigungs - E-Mail einf&uuml;gen (erh&ouml;ht die Gefahr, das die E-Mail als SPAM eingestuft wird)');
-define('SHOW_IMAGES_IN_EMAIL_DIR_TITLE', 'E-Mail Bilderordner ');
-define('SHOW_IMAGES_IN_EMAIL_DIR_DESC', 'Auswahl E-Mail Bilderordner');
-define('SHOW_IMAGES_IN_EMAIL_STYLE_TITLE', 'E-Mail Bilder CSS-Style');
-define('SHOW_IMAGES_IN_EMAIL_STYLE_DESC', 'Hier k&ouml;nnen einfache CSS Style Angaben eingegeben werden - z.B. f&uuml;r die maximale Breite: max-width:90px;');
+define('SHOW_IMAGES_IN_EMAIL_TITLE', 'Artikelbilder in Bestell-E-Mail einf&uuml;gen');
+define('SHOW_IMAGES_IN_EMAIL_DESC', 'Artikelbilder in die HTML-Bestellbest&auml;tigungs-E-Mail einf&uuml;gen (erh&ouml;ht die Gefahr, dass die E-Mail als SPAM eingestuft wird)');
+define('SHOW_IMAGES_IN_EMAIL_DIR_TITLE', 'E-Mail-Bilderordner ');
+define('SHOW_IMAGES_IN_EMAIL_DIR_DESC', 'Auswahl E-Mail-Bilderordner');
+define('SHOW_IMAGES_IN_EMAIL_STYLE_TITLE', 'E-Mail-Bilder-CSS-Style');
+define('SHOW_IMAGES_IN_EMAIL_STYLE_DESC', 'Hier k&ouml;nnen einfache CSS-Style Angaben eingegeben werden - z.B. f&uuml;r die maximale Breite: max-width:90px;');
 
 //popup windows configuration
 define('POPUP_SHIPPING_LINK_PARAMETERS_TITLE', 'Versandkosten Popup Fenster URL-Parameter');
@@ -777,7 +777,7 @@ define('POPUP_PRINT_ORDER_SIZE_TITLE', 'Bestellung Druckansicht Fenstergr&ouml;&
 define('POPUP_PRINT_ORDER_SIZE_DESC', 'Hier kann die Gr&ouml;&szlig;e des Popup-Fensters definiert werden - Standard: width=640, height=600');
 
 define('TRACKING_COUNT_ADMIN_ACTIVE_TITLE' , 'Seitenaufrufe des Shopbetreibers mitz&auml;hlen');
-define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden auch alle Zugriffe des Administrator-Users des Shopbetreibers mitgez&auml;hlt, die (durch die h&auml;ufigeren  Zugriffe auf den Shop) die Besucherstatistik verf&auml;lschen k&ouml;nnen.');
+define('TRACKING_COUNT_ADMIN_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden auch alle Zugriffe des Administrators mitgez&auml;hlt, die (durch die h&auml;ufigeren Zugriffe auf den Shop) die Besucherstatistik verf&auml;lschen k&ouml;nnen.');
 
 define('TRACKING_GOOGLEANALYTICS_ACTIVE_TITLE' , 'Google Analytics Tracking aktivieren');
 define('TRACKING_GOOGLEANALYTICS_ACTIVE_DESC' , 'Wird diese Option aktiviert, so werden alle Seitenaufrufe an Google Analytics &uuml;bermittelt und k&ouml;nnen sp&auml;ter ausgewertet werden. Dazu ist vorher die Anlage eines Kontos bei <a href="http://www.google.com/analytics/" target="_blank"><b>Google Analytics</b></a> erforderlich.');
@@ -803,13 +803,13 @@ define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_TITLE', 'Bestellabschlu&szlig; - A
 define('STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS_DESC', 'Soll ein ausverkaufter Artikel (Lagermenge 0) am Ende der Bestellung automatisch deaktiviert werden? Der Artikel ist dann nicht mehr im Shop sichtbar!<br />Bei Artikeln die in K&uuml;rze wieder lieferbar sind, sollte die Option auf "false" gesetzt werden');
 
 define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In f&uuml;r Newsletteranmeldung');
-define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','Bei "true" wird eine eMail an den Kunden geschickt worin die Newsletteranmeldung best&auml;tigt werden muss. Es muss hierf&uuml;r das Senden von eMails aktiviert sein.');
+define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','Bei "true" wird eine E-Mail an den Kunden geschickt, in der die Newsletteranmeldung best&auml;tigt werden muss. Es muss hierf&uuml;r das Senden von E-Mails aktiviert sein.');
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Admin Seitenkopf fixieren?');
 define('USE_ADMIN_FIXED_TOP_DESC', 'Soll der Seitenkopf beim Scrollen immer sichtbar sein? Standard: true (ja)');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
-define('SMTP_SECURE_DESC' , 'Erfordert der SMTP Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');
+define('SMTP_SECURE_DESC' , 'Erfordert der SMTP-Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');
 
 define('DISPLAY_ERROR_REPORTING_TITLE', 'Error Reporting');
 define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte Liste im Footer angezeigt werden?');
@@ -817,8 +817,8 @@ define('DISPLAY_ERROR_REPORTING_DESC', 'Soll das Error Reporting als formatierte
 define('DISPLAY_BREADCRUMB_OPTION_TITLE', 'Breadcrumb Navigation');
 define('DISPLAY_BREADCRUMB_OPTION_DESC', '<strong>name:</strong> In der Breadcrumb Navigation wird der komplette Artikelname angezeigt angezeigt.<br /><strong>model:</strong> In der Breadcrumb Navigation wird die Artikelnummer angezeigt, sofern sie vorhanden ist. Ansonsten Fallback auf auf Artikelname.');
 
-define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text E-Mails');
-define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');
+define('EMAIL_WORD_WRAP_TITLE', 'WordWrap f&uuml;r Text-E-Mails');
+define('EMAIL_WORD_WRAP_DESC', 'Hier die Anzahl der Zeichen f&uuml;r eine Zeile in Text-E-Mails eingeben, bevor Text umgebrochen werden soll (nur ganze Zahlen).<br /><strong>Achtung:</strong> Eine Zeichenzahl &uuml;ber 76 kann dazu f&uuml;hren, dass die E-Mails des Shops durch SpamAssassin als SPAM eingestuft werden! Weitere Infos dazu <a href="http://wiki.apache.org/spamassassin/Rules/MIME_QP_LONG_LINE" target="_blank">hier</a>.');
 
 define('USE_PAGINATION_LIST_TITLE', 'Pagination Liste');
 define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uuml;r die Pagination / Seitenschaltung.');
@@ -826,8 +826,8 @@ define('USE_PAGINATION_LIST_DESC', 'Verwende eine HTML Liste (ul / li Tag) f&uum
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Bestellstatus welcher in der Umsatzstatistik ber&uuml;cksichtigt werden soll.');
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier den Bestellstatus ausw&auml;hlen f&uuml;r den die Ums&auml;tze angezeigt werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde den Status w&auml;hlen der bei abgeschlossener Bestellung verwendet wird.)');
 
-define('SAVE_IP_LOG_TITLE', 'IP Adresse speichern');
-define('SAVE_IP_LOG_DESC', 'Soll die IP Adresse in der Datenbank gespeichert werden ?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
+define('SAVE_IP_LOG_TITLE', 'IP-Adresse speichern');
+define('SAVE_IP_LOG_DESC', 'Soll die IP-Adresse in der Datenbank gespeichert werden ?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
 
 define('META_MAX_KEYWORD_LENGTH_TITLE', 'Maximum L&auml;nge Meta-Keywords');
 define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
@@ -842,9 +842,9 @@ define('META_GO_WORDS_DESC', 'Bitte geben sie Keywords ein, die explizit erlaubt
 define('CSV_CATEGORY_DEFAULT_TITLE','Kategorie f&uuml;r den Import');
 define('CSV_CATEGORY_DEFAULT_DESC','Alle Artikel, die in der CSV-Importdatei <b>keine</b> Kategorie zugeordnet haben und noch nicht im Shop vorhanden sind, werden in diese Kategorie importiert.<br/><b>Wichtig:</b> Wenn Sie Artikel ohne Kategorie in der CSV-Importdatei nicht importieren m&ouml;chten, dann w&auml;hlen Sie Kategorie "Top" aus, da in diese Kategorie keine Artikel importiert werden.');
 define('CSV_TEXTSIGN_TITLE','Texterkennungszeichen');
-define('CSV_TEXTSIGN_DESC','zb. " &nbsp; | &nbsp;<span style="color:#c00;">Bei Semikolon als Trennzeichen sollte das Texterkennungszeichen auf " gesetzt werden!</span>');
+define('CSV_TEXTSIGN_DESC','Z.B. " &nbsp; | &nbsp;<span style="color:#c00;">Bei Semikolon als Trennzeichen sollte das Texterkennungszeichen auf " gesetzt werden!</span>');
 define('CSV_SEPERATOR_TITLE','Trennzeichen');
-define('CSV_SEPERATOR_DESC','zb. ; &nbsp; | &nbsp;<span style="color:#c00;">wird das Eingabefeld leer gelassen wird beim Export/Import per default \\t (= Tab) benutzt !</span>');
+define('CSV_SEPERATOR_DESC','Z.B. ; &nbsp; | &nbsp;<span style="color:#c00;">wird das Eingabefeld leer gelassen wird beim Export/Import per default \\t (= Tab) benutzt !</span>');
 define('COMPRESS_EXPORT_TITLE','Kompression');
 define('COMPRESS_EXPORT_DESC','Kompression der exportierten Daten');
 define('CSV_CAT_DEPTH_TITLE','Kategorietiefe');

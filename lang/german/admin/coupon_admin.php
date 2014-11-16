@@ -55,7 +55,7 @@ define('TABLE_HEADING_ACTION', 'Aktion');
 define('CUSTOMER_ID', 'Kunden Nr.');
 define('CUSTOMER_NAME', 'Kunden Name');
 define('REDEEM_DATE', 'eingel&ouml;st am');
-define('IP_ADDRESS', 'IP Adresse');
+define('IP_ADDRESS', 'IP-Adresse');
 
 define('TEXT_REDEMPTIONS', 'Einl&ouml;sung');
 define('TEXT_REDEMPTIONS_TOTAL', 'Insgesamt:');

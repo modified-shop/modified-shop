@@ -41,7 +41,7 @@ define('TODAY_VISITORS','Besucher von heute:');
 define('LAST_VISITORS','Letzte 100 Besucher:');
 define('ALL_LAST_VISITORS','Alle Besucher:');
 define('DATE_TIME','Datum / Uhrzeit:');
-define('IP_ADRESS','IP Adresse:');
+define('IP_ADRESS','IP-Adresse:');
 define('OPERATING_SYSTEM','Betriebssystem:');
 define('REFFERING_HOST','Referring Host:');
 define('ENTRY_PAGE','Einstiegsseite:');
