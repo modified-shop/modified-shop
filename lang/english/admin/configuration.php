@@ -388,7 +388,7 @@ define('SMTP_USERNAME_TITLE' , 'SMTP Username');
 define('SMTP_USERNAME_DESC' , 'Please enter the username of your SMTP Account.');
 define('SMTP_PASSWORD_TITLE' , 'SMTP Password');
 define('SMTP_PASSWORD_DESC' , 'Please enter the password of your SMTP Account.');
-define('SMTP_AUTH_TITLE' , 'SMTP AUTH');
+define('SMTP_AUTH_TITLE' , 'SMTP-Auth');
 define('SMTP_AUTH_DESC' , 'Enable secure authentication for your SMTP Server');
 define('SMTP_PORT_TITLE' , 'SMTP Port');
 define('SMTP_PORT_DESC' , 'Please enter the SMTP port of your SMTP server(default: 25)?');

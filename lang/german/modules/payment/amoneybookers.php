@@ -58,8 +58,8 @@ define('MODULE_PAYMENT_AMONEYBOOKERS_ICONS_DESC', '');
 
 define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_TITLE', 'Moneybookers aktivieren');
 define('MODULE_PAYMENT_AMONEYBOOKERS_STATUS_DESC', 'M&ouml;chten Sie Zahlungen per Moneybookers akzeptieren?<br /><br /><img src="images/icon_arrow_right.gif"> <b><a href="http://www.xt-commerce.com/index.php?option=com_content&task=view&id=76&lang=de" target="_blank">Hilfe zu Einstellungen</a></b>');
-define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_TITLE', 'Moneybookers E-Mail Adresse');
-define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_DESC', 'E-Mail Adresse, die bei Moneybookers registriert ist. <br /><font color="#ff0000">* Erforderlich</font>');
+define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_TITLE', 'Moneybookers E-Mail-Adresse');
+define('MODULE_PAYMENT_AMONEYBOOKERS_EMAILID_DESC', 'E-Mail-Adresse, die bei Moneybookers registriert ist. <br /><font color="#ff0000">* Erforderlich</font>');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_TITLE', 'Moneybookers Geheimwort');
 define('MODULE_PAYMENT_AMONEYBOOKERS_PWD_DESC', 'Geben Sie Ihr Moneybookers Geheimwort ein (dies ist nicht ihr Passwort!)');
 define('MODULE_PAYMENT_AMONEYBOOKERS_MERCHANTID_TITLE', 'H&auml;ndler ID ');
