@@ -263,7 +263,7 @@ define('SUCCESS_ADDRESS_BOOK_ENTRY_DELETED', 'The selected entry has been delete
 define('SUCCESS_ADDRESS_BOOK_ENTRY_UPDATED', 'Your address book has been updated sucessfully!');
 define('WARNING_PRIMARY_ADDRESS_DELETION', 'The standard postal address can not be deleted. Please create another address and define it as standard postal address first. Then this entry can be deleted.');
 define('ERROR_NONEXISTING_ADDRESS_BOOK_ENTRY', 'This address book entry is not available.');
-define('ERROR_ADDRESS_BOOK_FULL', 'Your adressbook is full. In order to add new addresses, please erase previous ones first.');
+define('ERROR_ADDRESS_BOOK_FULL', 'Your addressbook is full. In order to add new addresses, please erase previous ones first.');
 define('ERROR_CHECKOUT_SHIPPING_NO_METHOD', 'No shipping method selected.');
 define('ERROR_CHECKOUT_SHIPPING_NO_MODULE', 'No shipping method available.');
 
@@ -392,7 +392,7 @@ define('NAVBAR_TITLE_DOWNLOAD', 'Downloads');
  */
 
 define('TEXT_NEWSLETTER','You want to stay up to date?<br />No problem, receive our newsletter for the latest updates.');
-define('TEXT_EMAIL_INPUT','Your e-mail adress has been registered in our system.<br />An e-mail with a confirmation link has been send out. Click the link in order to complete registration!');
+define('TEXT_EMAIL_INPUT','Your e-mail address has been registered in our system.<br />An e-mail with a confirmation link has been sent out. Click the link to complete registration!');
 
 define('TEXT_WRONG_CODE','<font color="#ff0000">The security code you entered was not correct. Please try again. <br />The form is not case sensitive.</font>');
 define('TEXT_EMAIL_EXIST_NO_NEWSLETTER','<font color="#ff0000">This e-mail address is registered but not yet activated!</font>');
