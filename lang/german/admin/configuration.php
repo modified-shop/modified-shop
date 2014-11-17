@@ -362,7 +362,7 @@ define('DIR_FS_CACHE_TITLE' , 'Cache Ordner');
 define('DIR_FS_CACHE_DESC' , 'Der Ordner, wo die gecachten Files gespeichert werden sollen');
 
 define('ACCOUNT_OPTIONS_TITLE','Art der Kontoerstellung');
-define('ACCOUNT_OPTIONS_DESC','Wie m&ouml;chten Sie die Anmeldeprozedur in Ihrem Shop gestallten?<br />Sie haben die Wahl zwischen regul&auml;ren Kundenkonten und "Einmalbestellungen" ohne Erstellung eines Kundenkontos (es wird ein Konto erstellt, aber dies ist f&uuml;r den Kunden nicht ersichtlich)');
+define('ACCOUNT_OPTIONS_DESC','Wie m&ouml;chten Sie die Anmeldeprozedur in Ihrem Shop gestalten?<br />Sie haben die Wahl zwischen regul&auml;ren Kundenkonten und "Einmalbestellungen" ohne Erstellung eines Kundenkontos (es wird ein Konto erstellt, aber dies ist f&uuml;r den Kunden nicht ersichtlich)');
 
 define('EMAIL_TRANSPORT_TITLE' , 'E-Mail Transport Methode');
 define('EMAIL_TRANSPORT_DESC' , '<b>Empfehlung: smtp</b> - Definiert ob der Server eine lokale Verbindung zum "Sendmail-Programm" benutzt oder ob er eine SMTP Verbindung &uuml;ber TCP/IP ben&ouml;tigt. Server die auf Windows oder MacOS laufen sollten SMTP verwenden.');
