@@ -10,10 +10,10 @@
    based on:
    (c) 2003 nextcommerce (write_customers_status.php,v 1.8 2003/08/1); www.nextcommerce.org
    (c) 2006 xtCommerce (write_customers_status.php)
-   
+
    Released under the GNU General Public License
-   --------------------------------------------------------------------------------------- 
-   
+   ---------------------------------------------------------------------------------------
+
    based on Third Party contribution:
    Customers Status v3.x  (c) 2002-2003 Copyright Elari elari@free.fr | www.unlockgsm.com/dload-osc/ | CVS : http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/elari/?sortby=date#dirlist
 
@@ -28,6 +28,10 @@ if (!defined('SHOW_ALWAYS_LANG_DROPDOWN')) {
   define('SHOW_ALWAYS_LANG_DROPDOWN', true); // true: Zeigt immer das Länderauswahlfeld an - false: Zeigt Länderauswahlfeld nur bei nicht eingeloggten Kunden
 }
 
+// unset SESSION payment + shipping
+unset($_SESSION['shipping']);
+unset($_SESSION['payment']);
+
 require_once (DIR_WS_CLASSES.'order.php');
 require_once (DIR_WS_CLASSES.'order_total.php');
 require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
@@ -35,25 +39,24 @@ require_once (DIR_FS_INC.'xtc_get_country_list.inc.php');
 $order = new order();
 $total_weight = $_SESSION['cart']->show_weight();
 $total_count = $_SESSION['cart']->count_contents();
-  
+
 $selected = isset($_SESSION['customer_country_id']) ? $_SESSION['customer_country_id'] : STORE_COUNTRY;
 if (!isset($_SESSION['customer_id']) || SHOW_ALWAYS_LANG_DROPDOWN) {
   if (isset($_SESSION['country'])) {
     $selected = $_SESSION['country'];
-  } 
+  }
   $module_smarty->assign('SELECT_COUNTRY', _SHIPPING_TO. xtc_get_country_list(array ('name' => 'country'), (int)$selected, 'onchange="this.form.submit()"'));
 }
 
 if (!isset($order->delivery['country']['iso_code_2']) || $order->delivery['country']['iso_code_2'] == ''  || SHOW_ALWAYS_LANG_DROPDOWN) {
-  unset($_SESSION['shipping']);
-  $delivery_zone_query = xtc_db_query("SELECT countries_id, 
-                                              countries_iso_code_2, 
-                                              countries_name 
-                                         FROM ".TABLE_COUNTRIES." 
+  $delivery_zone_query = xtc_db_query("SELECT countries_id,
+                                              countries_iso_code_2,
+                                              countries_name
+                                         FROM ".TABLE_COUNTRIES."
                                         WHERE countries_id = '". (int)$selected."'
                                      ");
   $delivery_zone = xtc_db_fetch_array($delivery_zone_query);
-  
+
   $order->delivery['country']['iso_code_2'] = $delivery_zone['countries_iso_code_2'];
   $order->delivery['country']['title'] = $delivery_zone['countries_name'];
   $order->delivery['country']['id'] = $delivery_zone['countries_id'];
@@ -111,7 +114,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
 } else {
   require (DIR_WS_CLASSES.'shipping.php');
   $shipping = new shipping;
-  
+
   $free_shipping = $free_shipping_freeamount = $has_freeamount = false;
   include (DIR_WS_LANGUAGES.$_SESSION['language'].'/modules/order_total/ot_shipping.php');
   $ot_shipping = new ot_shipping;
@@ -147,9 +150,9 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
     }
     $i = 0;
     foreach ($quotes AS $quote) {
-      if ($quote['id'] != 'freeamount') { 
+      if ($quote['id'] != 'freeamount') {
         //BOC web28 Error Fix
-        if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {      
+        if (!isset($quote['error']) || (isset($quote['error']) && trim($quote['error']) == '')) {
           $quote['methods'][0]['cost'] = $xtPrice->xtcCalculateCurr($quote['methods'][0]['cost']);
           $total += ((isset($quote['tax']) && $quote['tax'] > 0) ? $xtPrice->xtcAddTax($quote['methods'][0]['cost'],$quote['tax']) : (!empty($quote['methods'][0]['cost']) ? $quote['methods'][0]['cost'] : '0'));
           $shipping_content[$i] = array(
@@ -171,8 +174,8 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
   if (sizeof($quotes) < 1) {
     $shipping_content[] = array('NAME' => _MODULE_INVALID_SHIPPING_ZONE);
   }
-  if (sizeof($shipping_content) < 1) {  
-    $shipping_content[] = array('NAME' => _MODULE_UNDEFINED_SHIPPING_RATE); 
+  if (sizeof($shipping_content) < 1) {
+    $shipping_content[] = array('NAME' => _MODULE_UNDEFINED_SHIPPING_RATE);
   }
 }
 
