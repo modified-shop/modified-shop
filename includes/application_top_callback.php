@@ -12,7 +12,7 @@
    (c) 2002-2003 osCommerce(application_top.php,v 1.273 2003/05/19); www.oscommerce.com
    (c) 2003	 nextcommerce (application_top.php,v 1.54 2003/08/25); www.nextcommerce.org
    (c) 2003 XT-Commerce
-   
+
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------
    Third Party contribution:
@@ -49,7 +49,7 @@ require_once (DIR_FS_INC . 'auto_require.inc.php');
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
 	date_default_timezone_set('Europe/Berlin');
 }
-  
+
 // define the project version
 define('PROJECT_VERSION', 'modified eCommerce Shopsoftware');
 
@@ -146,7 +146,7 @@ xtc_db_connect() or die('Unable to connect to database server!');
 // set the application parameters
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION);
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
-    define($configuration['cfgKey']) OR define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+    defined($configuration['cfgKey']) OR define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
 }
 
 // if gzip_compression is enabled, start to buffer the output
@@ -160,7 +160,7 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
 
 // Paypal API Modul
 require (DIR_WS_FUNCTIONS.'sessions.php');
-   
+
 // Smarty Template Engine - needed for PayPal Error notification
 if (!defined('TEMPLATE_ENGINE')) {
   define('TEMPLATE_ENGINE','smarty_2');
