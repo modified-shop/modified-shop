@@ -255,7 +255,7 @@
         $customers_newsletter = (isset($_POST['customers_newsletter']) ? xtc_db_prepare_input($_POST['customers_newsletter']) : '');
         if (ACCOUNT_GENDER == 'true') $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
         if (ACCOUNT_DOB == 'true') $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
-        $default_address_id = xtc_db_prepare_input($_POST['default_address_id']);
+        $customers_default_address_id = xtc_db_prepare_input($_POST['customers_default_address_id']);
         $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
         $entry_street_address = xtc_db_prepare_input($_POST['entry_street_address']);
         if (ACCOUNT_SUBURB == 'true') $entry_suburb = xtc_db_prepare_input($_POST['entry_suburb']);
@@ -586,43 +586,6 @@
         xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS." WHERE customers_id = '".$customers_id."'");
         xtc_db_query("DELETE FROM ".TABLE_COUPON_GV_CUSTOMER." WHERE customer_id = '".$customers_id."'");
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action'))));
-        break;
-
-      default :
-        $customers_query = xtc_db_query("-- admin/customers.php
-                                         SELECT c.customers_id,
-                                                c.customers_cid,
-                                                c.customers_vat_id,
-                                                c.customers_status, # DokuMan 2011-12-13 - Added missing customers_status
-                                                c.customers_gender,
-                                                c.customers_firstname,
-                                                c.customers_lastname,
-                                                c.customers_dob,
-                                                c.customers_email_address,
-                                                c.customers_default_address_id,
-                                                c.customers_telephone,
-                                                c.customers_fax,
-                                                c.customers_newsletter,
-                                                c.payment_unallowed, # Tomcraft 2011-03-18 - Added missing payment_unallowed
-                                                c.shipping_unallowed, # Tomcraft 2011-03-18 - Added missing payment_unallowed
-                                                a.entry_company,
-                                                a.entry_street_address,
-                                                a.entry_suburb,
-                                                a.entry_postcode,
-                                                a.entry_city,
-                                                a.entry_state,
-                                                a.entry_country_id,
-                                                a.entry_zone_id
-                                           FROM ".TABLE_CUSTOMERS." c
-                                      LEFT JOIN ".TABLE_ADDRESS_BOOK." a
-                                                ON c.customers_default_address_id = a.address_book_id
-                                                   AND a.customers_id = c.customers_id
-                                      LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
-                                                ON c.customers_id = cgc.customer_id
-                                          WHERE c.customers_id = ".$customers_id
-                                           );
-        $customers = xtc_db_fetch_array($customers_query);
-        $cInfo = new objectInfo($customers);
         break;
     }
   }

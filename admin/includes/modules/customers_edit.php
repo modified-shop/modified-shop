@@ -17,10 +17,9 @@
             $customers_default_address_id_checkbox = xtc_draw_checkbox_field('primary', 'on', false);
           } else {
             $check = "c.customers_default_address_id = a.address_book_id";
-
           }
 
-          if (!is_object($cInfo)) {
+          if (!isset($cInfo) || !is_object($cInfo)) {
             $customers_query = xtc_db_query("-- admin/customers.php
                                              SELECT c.customers_id,
                                                     c.customers_cid,
@@ -54,11 +53,11 @@
                                                     cgc.amount
                                                FROM ".TABLE_CUSTOMERS." c
                                           LEFT JOIN ".TABLE_ADDRESS_BOOK." a
-                                                 ON ".$check."
+                                                    ON ".$check."
+                                                       AND a.customers_id = c.customers_id
                                           LEFT JOIN ".TABLE_COUPON_GV_CUSTOMER." cgc
                                                  ON c.customers_id = cgc.customer_id
-                                              WHERE a.customers_id = c.customers_id
-                                                AND c.customers_id = '".(int)$_GET['cID']."'"
+                                              WHERE c.customers_id = '".(int)$_GET['cID']."'"
                                            );
             $customers = xtc_db_fetch_array($customers_query);
             if (xtc_db_num_rows($customers_query) != 0) {
@@ -80,10 +79,13 @@
         </div>
         <div class="clear"></div>
         <div class="flt-l"><?php if ($customers_statuses_id_array[$cInfo->customers_status]['csa_image'] != '') { echo xtc_image(DIR_WS_ICONS . $customers_statuses_id_array[$cInfo->customers_status]['csa_image'], ''); } ?></div>
-        <div class="main" style="margin:12px 0;"><?php echo HEADING_TITLE_STATUS  .': ' . $customers_statuses_id_array[$customers['customers_status']]['text'] ; ?></div>
+        <div class="main" style="margin:12px 0;"><?php echo HEADING_TITLE_STATUS  .': ' . $customers_statuses_id_array[$cInfo->customers_status]['text'] ; ?></div>
         <div class="clear"></div>
 
-        <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post', 'onSubmit="return check_form();"') . xtc_draw_hidden_field('default_address_id', $cInfo->customers_default_address_id) . xtc_draw_hidden_field('address_book_id', $cInfo->address_book_id) . xtc_draw_hidden_field('customers_status', $cInfo->customers_status); ?>
+        <?php echo xtc_draw_form('customers', FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')) . 'action=update', 'post', 'onSubmit="return check_form();"') .
+                   xtc_draw_hidden_field('customers_default_address_id', $cInfo->customers_default_address_id) .
+                   xtc_draw_hidden_field('address_book_id', $cInfo->address_book_id) .
+                   xtc_draw_hidden_field('customers_status', $cInfo->customers_status); ?>
         <div class="formAreaTitle"><span class="title"><?php echo CATEGORY_PERSONAL; ?></span></div>
         <div class="formAreaC">
           <table class="tableConfig borderall">
@@ -537,7 +539,7 @@
         }
         ?>
 
-        <div class="main mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>"><?php echo ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action'))) .'">' . BUTTON_CANCEL . '</a>'; ?></div>
+        <div class="main mrg5"><input type="submit" class="button" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>"><?php echo ' <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action', 'edit'))) .'">' . BUTTON_CANCEL . '</a>'; ?></div>
 
       </form>
     </div>
