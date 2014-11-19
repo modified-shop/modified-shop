@@ -93,7 +93,7 @@
           'customers_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
           'customers_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
           'customers_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
-          'customers_gender' => xtc_db_prepare_input($customers['entry_gender']), 
+          'customers_gender' => xtc_db_prepare_input($customers['entry_gender']),
           'customers_company' => xtc_db_prepare_input($customers['entry_company']),
           'customers_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
           'customers_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
@@ -107,7 +107,7 @@
           'delivery_name' => xtc_db_prepare_input($customers['entry_firstname'].' '.$customers['entry_lastname']),
           'delivery_lastname' => xtc_db_prepare_input($customers['entry_lastname']),
           'delivery_firstname' => xtc_db_prepare_input($customers['entry_firstname']),
-          'delivery_gender' => xtc_db_prepare_input($customers['entry_gender']), 
+          'delivery_gender' => xtc_db_prepare_input($customers['entry_gender']),
           'delivery_company' => xtc_db_prepare_input($customers['entry_company']),
           'delivery_street_address' => xtc_db_prepare_input($customers['entry_street_address']),
           'delivery_suburb' => xtc_db_prepare_input($customers['entry_suburb']),
@@ -198,12 +198,12 @@
                                         WHERE address_book_id = '".(int) $_GET['default']."'
                                           AND customers_id = '".$customers_id."'"
                                            );
-        $address_book_array = xtc_db_fetch_array($address_book_query);  
+        $address_book_array = xtc_db_fetch_array($address_book_query);
 
         if (ACCOUNT_GENDER != 'true') {
           unset($address_book_array['customers_gender']);
         }
-        
+
         $sql_data_array = array (
             'customers_default_address_id' => (int) $_GET['default'],
             'customers_last_modified' => 'now()'
@@ -250,17 +250,17 @@
       $customers_fax = xtc_db_prepare_input($_POST['customers_fax']);
       $customers_newsletter = (isset($_POST['customers_newsletter']) ? xtc_db_prepare_input($_POST['customers_newsletter']) : '');
       if (ACCOUNT_GENDER == 'true') $customers_gender = xtc_db_prepare_input($_POST['customers_gender']);
-      $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
+      if (ACCOUNT_DOB == 'true') $customers_dob = xtc_db_prepare_input($_POST['customers_dob']);
       $default_address_id = xtc_db_prepare_input($_POST['default_address_id']);
       $address_book_id = xtc_db_prepare_input($_POST['address_book_id']);
       $entry_street_address = xtc_db_prepare_input($_POST['entry_street_address']);
-      $entry_suburb = xtc_db_prepare_input($_POST['entry_suburb']);
+      if (ACCOUNT_SUBURB == 'true') $entry_suburb = xtc_db_prepare_input($_POST['entry_suburb']);
       $entry_postcode = xtc_db_prepare_input($_POST['entry_postcode']);
       $entry_city = xtc_db_prepare_input($_POST['entry_city']);
       $entry_country_id = xtc_db_prepare_input($_POST['entry_country_id']);
-      $entry_company = xtc_db_prepare_input($_POST['entry_company']);
-      $entry_state = (isset($_POST['entry_state']) ? xtc_db_prepare_input($_POST['entry_state']) : '');
-      $entry_zone_id = (isset($_POST['entry_zone_id']) ? xtc_db_prepare_input($_POST['entry_zone_id']) : '');
+      if (ACCOUNT_COMPANY == 'true') $entry_company = xtc_db_prepare_input($_POST['entry_company']);
+      if (ACCOUNT_STATE == 'true') $entry_state = xtc_db_prepare_input($_POST['entry_state']);
+      if (ACCOUNT_STATE == 'true') $entry_zone_id = xtc_db_prepare_input($_POST['entry_zone_id']);
       $memo_title = xtc_db_prepare_input($_POST['memo_title']);
       $memo_text = xtc_db_prepare_input($_POST['memo_text']);
       $payment_unallowed = implode(',', (is_array($_POST['payment_unallowed']) ? $_POST['payment_unallowed'] : array()));
@@ -273,23 +273,31 @@
                                 'amount' => $amount
                                 );
         $check_gv_query = xtc_db_query("SELECT * FROM " . TABLE_COUPON_GV_CUSTOMER . " WHERE customer_id = '".$customers_id."'");
-        if (xtc_db_num_rows($check_gv_query) > 0) {                     
+        if (xtc_db_num_rows($check_gv_query) > 0) {
           xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array, 'update', "customer_id = '".$customers_id."'");
         } else {
-          xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);        
+          xtc_db_perform(TABLE_COUPON_GV_CUSTOMER, $sql_data_array);
         }
       }*/
 
+      unset($_POST['memo_title']);
+      unset($_POST['memo_text']);
+      $_POST['payment_unallowed'] = $payment_unallowed;
+      $_POST['shipping_unallowed'] = $shipping_unallowed;
+      $cInfo = new objectInfo($_POST);
+
       if ($memo_text != '' && $memo_title != '') {
-        $sql_data_array = array ('customers_id' => $customers_id, 
-                                 'memo_date' => date("Y-m-d"), 
-                                 'memo_title' => $memo_title, 
-                                 'memo_text' => $memo_text, 
+        $sql_data_array = array ('customers_id' => $customers_id,
+                                 'memo_date' => date("Y-m-d"),
+                                 'memo_title' => $memo_title,
+                                 'memo_text' => $memo_text,
                                  'poster_id' => (int)$_SESSION['customer_id']
                                 );
         xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
       }
-      $error = false; // reset error flag
+
+      // reset error flag
+      $error = false;
 
       if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
         $error = true;
@@ -486,7 +494,7 @@
             'customers_last_modified' => 'now()'
           );
 
-        if ($password != "") $sql_data_array['customers_password'] = xtc_encrypt_password($password);          
+        if ($password != "") $sql_data_array['customers_password'] = xtc_encrypt_password($password);
         if (ACCOUNT_GENDER == 'true') $sql_data_array['customers_gender'] = $customers_gender;
         if (ACCOUNT_DOB == 'true') $sql_data_array['customers_dob'] = xtc_date_raw($customers_dob);
 
@@ -511,7 +519,7 @@
           );
 
 
-          
+
         if (ACCOUNT_GENDER == 'true')
           $sql_data_array['entry_gender'] = $customers_gender;
 
@@ -537,7 +545,7 @@
         } else {
           //xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND address_book_id = '".xtc_db_input($default_address_id)."'");
           xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array, 'update', "customers_id = '".$customers_id."' AND address_book_id = '".xtc_db_input($address_book_id)."'");
-        }   
+        }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array ('cID', 'action')).'cID='.$customers_id));
       }  elseif ($error == true) {
         $cInfo = new objectInfo($_POST);
@@ -728,14 +736,14 @@ function check_form() {
       <?php //left_navigation
       if (USE_ADMIN_TOP_MENU == 'false') {
         echo '<td class="columnLeft2">'.PHP_EOL;
-        echo '<!-- left_navigation //-->'.PHP_EOL;       
+        echo '<!-- left_navigation //-->'.PHP_EOL;
         require_once(DIR_WS_INCLUDES . 'column_left.php');
-        echo '<!-- left_navigation eof //-->'.PHP_EOL; 
-        echo '</td>'.PHP_EOL;      
+        echo '<!-- left_navigation eof //-->'.PHP_EOL;
+        echo '</td>'.PHP_EOL;
       }
       ?>
       <!-- body_text //-->
-      <td class="boxCenter">      
+      <td class="boxCenter">
       <?php
       if ($action == 'edit' || $action == 'update') {
         include (DIR_WS_MODULES.'customers_edit.php'); // ACTION EDIT - UPDATE
