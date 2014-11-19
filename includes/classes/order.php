@@ -205,7 +205,7 @@
 
         $subindex = 0;
         $attributes_query = xtc_db_query("SELECT *,
-                                                 products_options as option,
+                                                 products_options as `option`,
                                                  products_options_values as value,
                                                  price_prefix as prefix,
                                                  options_values_price as price
