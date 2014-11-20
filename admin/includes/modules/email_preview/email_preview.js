@@ -1,15 +1,18 @@
+/* jQuery Version 1.00 */
+
 function email_popup () {
-  //alert (document.status.notify.checked);
-  if (document.status.notify.checked) {
-    document.status.target = "emailPreview";
-    document.status.email_preview.value = 1; 
-    var w = window.open('', 'emailPreview', 'width=700,height=800,resizable=yes,scrollbars=yes,left=100,top=50');
-    document.status.onsubmit = function() {return w};
-    document.status.submit();
-    document.status.email_preview.value = ''; 
-    document.status.target = "";
-    return true;
-  }
-  alert ('Für Email Vorschau "Kunde benachrichtigen" anhaken!');
-  return false;
+    var form = $("form[name='status']");
+    var checkbox_notify = $("input[name='notify']");
+    var email_preview = $("input[name='email_preview']");
+    if (checkbox_notify.is(':checked')) {
+        form.attr('target', 'emailPreview');
+        email_preview.val('1');
+        var w = window.open('', 'emailPreview', 'width=700,height=800,resizable=yes,scrollbars=yes,left=100,top=50');
+        form.submit(function() {
+            return w;
+        });
+        form.submit();
+        email_preview.val('');
+        form.attr('target', '');        
+    }
 }
