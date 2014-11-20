@@ -131,8 +131,10 @@ if (!is_object($product) || !$product->isProduct()) {
                                     AND (start_date IS NULL 
                                          OR start_date <= NOW())";
   $special_expires_date_query = xtDBquery($special_expires_date_query);
-  $sDate = xtc_db_fetch_array($special_expires_date_query, true);
-  $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+  if (xtc_db_num_rows($special_expires_date_query, true) > 0) {
+    $sDate = xtc_db_fetch_array($special_expires_date_query, true);
+    $info_smarty->assign('PRODUCTS_EXPIRES', $sDate['expires_date'] != '0000-00-00 00:00:00' ? xtc_date_short($sDate['expires_date']) : '');
+  }
 
   // FSK18
   $info_smarty->assign('PRODUCTS_FSK18', $product->data['products_fsk18'] == '1' ? 'true' : '');
