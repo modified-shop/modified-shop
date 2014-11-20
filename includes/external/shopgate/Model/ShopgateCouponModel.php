@@ -44,7 +44,39 @@ class ShopgateCouponModel {
 		}
 		return $shippingConfig;
 	}
+	/**
+	 * @param $zoneCountryId
+	 * @return array
+	 */
+	public function getZoneByCountryId($zoneCountryId) {
+		$query = "select * from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_SHIPPING_FLAT_ZONE . "' and zone_country_id = '" . $zoneCountryId . "' order by zone_id";
+		$result = xtc_db_query($query);
+		$CountryResult = xtc_db_fetch_array($result);
+		return $CountryResult;
+	}
 
+	/**
+	 * @param $taxValue
+	 * @return string
+	 */
+	public function getTaxClassByValue($taxValue) {
+		$query = "SELECT tc.tax_class_title AS title FROM ".TABLE_TAX_RATES." AS tr
+					JOIN ".TABLE_TAX_CLASS." AS tc ON tc.tax_class_id = tr.tax_class_id
+					WHERE tr.tax_rate = {$taxValue}";
+		$result = xtc_db_query($query);
+		$taxClassResult = xtc_db_fetch_array($result);
+		return $taxClassResult["title"];
+	}
+	/**
+	 * @param $name
+	 * @return array
+	 */
+	public function getCountryByIso2Name($name) {
+		$query = "SELECT c.* FROM ".TABLE_COUNTRIES." AS c WHERE c.countries_iso_code_2 = \"{$name}\"";
+		$result = xtc_db_query($query);
+		$CountryResult = xtc_db_fetch_array($result);
+		return $CountryResult;
+	}
 	/**
 	 * @param $name
 	 * @return mixed
@@ -76,7 +108,28 @@ class ShopgateCouponModel {
 		$taxResult = xtc_db_fetch_array($result);
 		return $taxResult["title"];
 	}
-	
+
+	public function getProductIdFromCartItem(ShopgateOrderItem $product){
+		return is_null($product->getParentItemNumber()) ? $product->getItemNumber() : $product->getParentItemNumber();
+	}
+
+	/**
+	 * @param $products
+	 * @return mixed
+	 */
+	public function getProductsWeight($products) {
+		$tmpArr = array();
+
+		foreach($products as $product){
+			$tmpArr[] = $this->getProductIdFromCartItem($product);
+		}
+
+		$query = "SELECT SUM(p.products_weight) AS weight FROM ".TABLE_PRODUCTS." AS p WHERE p.products_id IN (".implode(',',$tmpArr).")";
+		$result = xtc_db_query($query);
+		$CountryResult = xtc_db_fetch_array($result);
+		return $CountryResult["weight"];
+	}
+
 	/*#######################
 	 # 	redeem_coupons
 	 ######################*/

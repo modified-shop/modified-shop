@@ -26,9 +26,7 @@
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Shop system encoding');
 ##### XTCM BOF #####
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'Choose the encoding of your shop system. This is usually "ISO-8859-15" for versions before 1.06.');
-//define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
-//define('SHOPGATE_CONFIG_WIKI_LINK', 'https://support.shopgate.com/hc/en-us/articles/202911763-Connecting-to-modified-eCommerce');
-define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified_new/de');
+define('SHOPGATE_CONFIG_WIKI_LINK', 'https://wiki.shopgate.com/Modified/de');
 ##### XTCM EOF #####
 
 ##### XTC3 | XTCM BOF #####
@@ -55,9 +53,9 @@ define('BOX_SHOPGATE_CONFIG', 'Settings');
 define('BOX_SHOPGATE_MERCHANT', 'Shopgate login');
 
 ### Links ###
-define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com');
-define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register');
-define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2');
+define('SHOPGATE_LINK_HOME', 'https://www.shopgate.com/?partner=30051');
+define('SHOPGATE_LINK_REGISTER', 'https://www.shopgate.com/welcome/shop_register?partner=30051');
+define('SHOPGATE_LINK_LOGIN', 'https://www.shopgate.com/users/login/0/2?partner=30051');
 
 ### Configuration ###
 define('SHOPGATE_CONFIG_TITLE', 'SHOPGATE');

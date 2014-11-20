@@ -269,7 +269,7 @@ if($_GET["sg_option"] === "config") {
 			require(DIR_FS_LANGUAGES . $languageDirectory . '/modules/shipping/' . $shippingModule);
 			
 			$shippingModule = substr($shippingModule, 0, strrpos($shippingModule, '.'));
-			$sgInstalledShippingModules[$shippingModule] = constant('MODULE_SHIPPING_'.strtoupper($shippingModule).'_TEXT_TITLE');
+			$sgInstalledShippingModules[$shippingModule] = constant(MODULE_SHIPPING_'.strtoupper($shippingModule).'_TEXT_TITLE);
 		}
 	}
 	
@@ -293,8 +293,7 @@ if($_GET["sg_option"] === "config") {
 
 ##### XTCM BOF #####
 //
-//$shopgateWikiLink = 'http://wiki.shopgate.com/Modified/de';
-$shopgateWikiLink = SHOPGATE_CONFIG_WIKI_LINK;
+//
 //
 //
 //
@@ -455,7 +454,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 <?php if ($_GET["sg_option"] === "info"): ?>
 							<iframe src="<?php echo SHOPGATE_LINK_HOME; ?>" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "help"): ?>
-							<iframe src="<?php echo $shopgateWikiLink; ?>" class="shopgate_iframe"></iframe>
+							<iframe src="<?php echo SHOPGATE_CONFIG_WIKI_LINK; ?>" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "register"): ?>
 							<iframe src="<?php echo SHOPGATE_LINK_REGISTER; ?>" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "config"): ?>
