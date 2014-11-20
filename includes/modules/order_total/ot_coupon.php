@@ -410,10 +410,17 @@ class ot_coupon {
 ///////////////////////////////////////////////////////////////////////
 
   function apply_credit() {
-    global $insert_id, $REMOTE_ADDR;
+    global $insert_id;
 
     if ($this->deduction != 0) {
-      xtc_db_query("insert into ".TABLE_COUPON_REDEEM_TRACK." (coupon_id, redeem_date, redeem_ip, customer_id, order_id) values ('".$_SESSION['cc_id']."', now(), '".$REMOTE_ADDR."', '".$_SESSION['customer_id']."', '".$insert_id."')");
+      $sql_data_array = array(
+         'coupon_id' => $_SESSION['cc_id'], 
+         'redeem_date' => 'now()',  
+         'redeem_ip' => (isset($_SESSION['tracking']['ip']) xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''),  
+         'customer_id' => $_SESSION['customer_id'],  
+         'order_id' => $insert_id 
+      );
+      xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);
     }
     unset ($_SESSION['cc_id']);
   }
