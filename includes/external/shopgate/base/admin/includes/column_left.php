@@ -61,14 +61,14 @@ if((MODULE_PAYMENT_SHOPGATE_STATUS=='True') && ($result['shopgate'] == 1)) {
 	if (defined('NEW_ADMIN_STYLE')) {
 		$surroundingHtml = array(
 			'start'	=>	'<li>' .
-						'<div class="dataTableHeadingContent"><a href="#"><strong>'.BOX_SHOPGATE.'</strong></a></div>' .
+						'<a class="menuBoxContentLinkSub" href="#">-'.BOX_SHOPGATE.'</a>' .
 						'<ul>',
 			'end'	=>	'</ul></li>',
 		);
 	} else {
 	$surroundingHtml = array(
 		'start'	=>	'<li>' .
-					'<div class="dataTableHeadingContent"><strong>'.BOX_SHOPGATE.'</strong></div>' .
+					'<div class="dataTableHeadingContent"><strong>-'.BOX_SHOPGATE.'</strong></div>' .
 					'<ul>',
 		'end'	=>	'</ul></li>',
 	);
