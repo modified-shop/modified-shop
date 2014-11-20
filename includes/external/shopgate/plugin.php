@@ -20,7 +20,7 @@
 *
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
-define('SHOPGATE_PLUGIN_VERSION', '2.8.1');
+define('SHOPGATE_PLUGIN_VERSION', '2.9.0');
 
 /**
  * Modified eCommerce Plugin for Shopgate
@@ -1151,7 +1151,7 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		}
 		
 		require_once(DIR_FS_LANGUAGES . $languageDirectory . '/modules/shipping/' . $shippingModuleName . '.php');
-		$shippingMethod = constant(MODULE_SHIPPING_.strtoupper($shippingModuleName)._TEXT_TITLE);
+		$shippingMethod = constant('MODULE_SHIPPING_'.strtoupper($shippingModuleName).'_TEXT_TITLE');
 		$shippingClass  = $shippingModuleName.'_'.$shippingModuleName;
 		
 		$orderData["shipping_method"]				= $shippingMethod;
@@ -4176,6 +4176,61 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$stock_values = xtc_db_fetch_array($stock_query);
 		
 		return $stock_values['products_quantity'];
+	}
+
+	/**
+	 * Exports orders from the shop system's database to Shopgate.
+	 *
+	 * @see http://developer.shopgate.com/plugin_api/orders/get_orders
+	 *
+	 * @param string $customerToken
+	 * @param string $customerLanguage
+	 * @param int    $limit
+	 * @param int    $offset
+	 * @param string $orderDateFrom
+	 * @param string $sortOrder
+	 *
+	 * @return ShopgateExternalOrder[] A list of ShopgateExternalOrder objects
+	 *
+	 * @throws ShopgateLibraryException
+	 */
+	public function getOrders(
+		$customerToken, $customerLanguage, $limit = 10, $offset = 0,
+		$orderDateFrom = '', $sortOrder = 'created_desc'
+	) {
+		// TODO: Implement getOrders() method.
+	}
+
+	/**
+	 * Updates and returns synchronization information for the favourite list of a customer.
+	 *
+	 * @see http://developer.shopgate.com/plugin_api/customers/sync_favourite_list
+	 *
+	 * @param string             $customerToken
+	 * @param ShopgateSyncItem[] $items A list of ShopgateSyncItem objects that need to be synchronized
+	 *
+	 * @return ShopgateSyncItem[] The updated list of ShopgateSyncItem objects
+	 */
+	public function syncFavouriteList($customerToken, $items)
+	{
+		// TODO: Implement syncFavouriteList() method.
+	}
+
+	/**
+	 * Loads the product reviews of the shop system's database and passes them to the buffer.
+	 *
+	 * @param int      $limit  pagination limit; if not null, the number of exported reviews must be <= $limit
+	 * @param int      $offset pagination; if not null, start the export with the reviews at position $offset
+	 * @param string[] $uids   A list of products that should be fetched for the reviews.
+	 *
+	 * @see http://developer.shopgate.com/plugin_api/export/get_reviews
+	 *
+	 * @throws ShopgateLibraryException
+	 */
+	protected function createReviews(
+		$limit = null, $offset = null, array $uids = array()
+	) {
+		// TODO: Implement createReviews() method.
 	}
 }
 

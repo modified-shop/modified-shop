@@ -1,5 +1,11 @@
 '''Deutsch'''
 
+'''Version 2.9.0'''
+* Fehler im Export der Versandmethoden behoben
+* dynamisches setzen von Konstanten für das Auslesen von Versandmethoden verbessert
+* Shopgate wiki link wird nun aus der configuration ausgelesen
+* nutzt Shopgate Library 2.9.4
+
 '''Version 2.8.1'''
 * fehler bei dem Auslesen der Textfelder während des Bestellimports behoben
 * fehler bei dem Auslesen der Steuern behoben
@@ -280,6 +286,12 @@
 
 
 '''English'''
+
+'''Version 2.9.0'''
+* dynamic initialising of shipping module constants improved 
+* Shopgate wiki link will be red out of the config now
+* bug in export shipping methods fixed
+* uses Shopgate Library 2.9.4
 
 '''Version 2.8.1'''
 * bug while reading textfield information from database fixed
