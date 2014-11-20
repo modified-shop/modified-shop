@@ -271,7 +271,9 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     $specials_result = xtc_db_query("SELECT products_id,
                                             specials_quantity
                                        FROM ".TABLE_SPECIALS."
-                                      WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."' ");
+                                      WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'
+                                        AND (start_date IS NULL 
+                                             OR start_date <= NOW())");
     if (xtc_db_num_rows($specials_result)) {
       $spq = xtc_db_fetch_array($specials_result);
       if ($spq['specials_quantity'] != 0) {
