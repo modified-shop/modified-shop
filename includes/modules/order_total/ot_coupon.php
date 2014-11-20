@@ -416,7 +416,7 @@ class ot_coupon {
       $sql_data_array = array(
          'coupon_id' => $_SESSION['cc_id'], 
          'redeem_date' => 'now()',  
-         'redeem_ip' => (isset($_SESSION['tracking']['ip']) xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''),  
+         'redeem_ip' => ((isset($_SESSION['tracking']['ip'])) ? xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''),
          'customer_id' => $_SESSION['customer_id'],  
          'order_id' => $insert_id 
       );
