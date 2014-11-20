@@ -21,7 +21,6 @@ function showSpecialsBox() {
     // include localized categories specials strings
     require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/categories_specials.php');
 
-    //BOF web28 - 2010-07-27 - show products_price
     if (PRICE_IS_BRUTTO == 'true') {
       $products_price_sp = xtc_round($pInfo->products_price * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
       $products_price_netto_sp = TEXT_NETTO.'<strong>'. xtc_round($pInfo->products_price,PRICE_PRECISION)  .'</strong>  ';
@@ -29,10 +28,9 @@ function showSpecialsBox() {
       $products_price_sp = xtc_round($pInfo->products_price, PRICE_PRECISION);
       $products_price_netto_sp = '';
     }
-    //EOF web28 - 2010-07-27 - show products_price
 
-      // if editing an existing product
-    if(isset($_GET['pID'])) {
+    // if editing an existing product
+    if (isset($_GET['pID'])) {
       $specials_query = "SELECT p.products_tax_class_id,
                                 p.products_id,
                                 p.products_price,
@@ -42,6 +40,7 @@ function showSpecialsBox() {
                                 s.specials_new_products_price,
                                 s.specials_date_added,
                                 s.specials_last_modified,
+                                s.start_date,
                                 s.expires_date,
                                 s.status
                            FROM " . TABLE_PRODUCTS . " p,
@@ -50,7 +49,7 @@ function showSpecialsBox() {
                           WHERE p.products_id = pd.products_id
                             AND pd.language_id = '" . (int)$_SESSION['languages_id'] . "'
                             AND p.products_id = s.products_id
-                            AND s.products_id = '" . (int)$_GET['pID'] . "'";  //DokuMan - 2011-11-8 - added missing s.status from SP1b
+                            AND s.products_id = '" . (int)$_GET['pID'] . "'"; 
       $specials_query = xtDBquery($specials_query);
       // if there exists already a special for this product
       if(xtc_db_num_rows($specials_query, true) > 0) {
@@ -58,26 +57,32 @@ function showSpecialsBox() {
         $sInfo = new objectInfo($special);
       }
     }
-    $price=$sInfo->products_price;
-    $new_price=$sInfo->specials_new_products_price;
-    $new_price_netto = ''; //web28 - 2010-07-27 - show special_price netto
+    $price = $sInfo->products_price;
+    $new_price = $sInfo->specials_new_products_price;
+    $new_price_netto = '';
     if (PRICE_IS_BRUTTO=='true') {
-      $price_netto=xtc_round($price,PRICE_PRECISION);
+      $price_netto = xtc_round($price,PRICE_PRECISION);
       if ($price > 0) {
-        $new_price_netto= TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>'; //web28 - 2010-07-27 - show special_price netto
+        $new_price_netto = TEXT_NETTO.'<strong>'.xtc_round($new_price,PRICE_PRECISION).'</strong>';
       }
-      $price= ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
-      $new_price= ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+      $price = ($price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
+      $new_price = ($new_price*(xtc_get_tax_rate($sInfo->products_tax_class_id)+100)/100);
     }
-    $price=xtc_round($price,PRICE_PRECISION);
-    $new_price=xtc_round($new_price,PRICE_PRECISION);
+    $price = xtc_round($price,PRICE_PRECISION);
+    $new_price = xtc_round($new_price,PRICE_PRECISION);
+
     // build the expires date in the format YYYY-MM-DD
     if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0 and $sInfo->expires_date != 0) {
-      $expires_date = substr($sInfo->expires_date, 0, 4)."-".
-              substr($sInfo->expires_date, 5, 2)."-".
-              substr($sInfo->expires_date, 8, 2);
+      $expires_date = date('Y-m-d', strtotime($sInfo->expires_date));
     } else {
       $expires_date = "";
+    }
+
+    // build the start date in the format YYYY-MM-DD
+    if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0 and $sInfo->start_date != 0) {
+      $start_date = date('Y-m-d', strtotime($sInfo->start_date));
+    } else {
+      $start_date = "";
     }
 
     if ($sInfo->status == 1) {
@@ -94,8 +99,8 @@ function showSpecialsBox() {
           : "insert"
         )
       );
-    echo xtc_draw_hidden_field('tax_rate', xtc_get_tax_rate($pInfo->products_tax_class_id)); //web28 - 2010-07-27 - add hidden field
-    echo xtc_draw_hidden_field('products_price_hidden', $pInfo->products_price); //web28 - 2010-07-27 - FIX wrong specials price
+    echo xtc_draw_hidden_field('tax_rate', xtc_get_tax_rate($pInfo->products_tax_class_id));
+    echo xtc_draw_hidden_field('products_price_hidden', $pInfo->products_price);
     if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) {
       echo xtc_draw_hidden_field('specials_id', $sInfo->specials_id);
     }
@@ -120,85 +125,91 @@ function showSpecialsBox() {
     <div class="main" style="padding: 8px 0px 3px 5px;">      
       <strong><?php echo SPECIALS_TITLE; ?></strong>          
     </div>
-         <table class="tableInput">
-            <?php if(!isset($_GET['pID'])) { ?>
-            <tr>
-              <td class="main"><?php echo TEXT_SPECIALS_NO_PID; ?>&nbsp;</td>             
-            </tr>
-            <?php } else { ?>
-            <tr>
-              <td class="main"><?php echo TEXT_PRODUCTS_PRICE; ?>&nbsp;</td>
-              <td class="main"><?php echo $products_price_sp; ?>&nbsp;&nbsp;&nbsp;<?php echo $products_price_netto_sp; ?></td>
-              <td class="main">&nbsp;</td>
-            </tr>            
-            <tr>
-              <td class="main" style="width:270px;">
-                <?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;
-              </td>
-              <td class="main" style="width:250px;">
-                <?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"'). '&nbsp;&nbsp;&nbsp;' . $new_price_netto;?>
-              </td>
-              <td class="main" style="width:340px;">
-                &nbsp;
-                <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
-                <input type="checkbox" name="specials_delete" value="true" id="input_specials_delete"  onclick="if(this.checked==true)return confirm('<?php echo TEXT_INFO_DELETE_INTRO; ?>');"style="vertical-align:middle;"/><label for="input_specials_delete">&nbsp;<?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label>
-                <?php } ?>
-              </td>
-            </tr>
-            <tr>
-              <td class="main">
-                <?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>&nbsp;
-              </td>
-              <td class="main">
-                <?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity, 'style="width: 135px"');?>
-              </td>
-              <td class="main">
-                &nbsp;
-              </td>
-            </tr>
-            <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
-              <tr>
-                <td class="main"><?php echo TEXT_INFO_DATE_ADDED; ?></td>
-                <td class="main"><?php echo xtc_date_short($sInfo->specials_date_added); ?></td>
-                <td class="main">&nbsp;</td>
-              </tr>
-              <tr>
-                <td class="main"><?php echo TEXT_INFO_LAST_MODIFIED; ?></td>
-                <td class="main"><?php echo xtc_date_short($sInfo->specials_last_modified); ?></td>
-                <td class="main">&nbsp;</td>
-              </tr>
-            <?php } ?>
-            <tr>
-              <td class="main">
-                <?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>
-              </td>
-              <td class="main">
-                <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(SPECIALS_DATE_END_TT); ?>                
-              </td>
-              <td class="main">
-                &nbsp;
-                <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
-                <input type="checkbox" name="specials_status" value="1" id="input_specials_status"  style="vertical-align:middle;" <?php echo $status;?>/><label for="input_specials_status">&nbsp;<?php echo TEXT_EDIT_STATUS; ?></label>
-                <?php } ?>
-              </td>
-            </tr>
-            <tr>
-              <td colspan="3" class="main" style="padding:3px; background: #D8D8D8;">
-                <?php echo TEXT_SPECIALS_PRICE_TIP; ?>
-              </td>
-            </tr>
-            <?php } ?>
-          </table>
+    <table class="tableInput">
+      <?php if(!isset($_GET['pID'])) { ?>
+      <tr>
+        <td class="main"><?php echo TEXT_SPECIALS_NO_PID; ?>&nbsp;</td>             
+      </tr>
+      <?php } else { ?>
+      <tr>
+        <td class="main"><?php echo TEXT_PRODUCTS_PRICE; ?>&nbsp;</td>
+        <td class="main"><?php echo $products_price_sp; ?>&nbsp;&nbsp;&nbsp;<?php echo $products_price_netto_sp; ?></td>
+        <td class="main">&nbsp;</td>
+      </tr>            
+      <tr>
+        <td class="main" style="width:270px;">
+          <?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;
+        </td>
+        <td class="main" style="width:250px;">
+          <?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"'). '&nbsp;&nbsp;&nbsp;' . $new_price_netto;?>
+        </td>
+        <td class="main" style="width:340px;">
+          &nbsp;
+          <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
+          <input type="checkbox" name="specials_delete" value="true" id="input_specials_delete"  onclick="if(this.checked==true)return confirm('<?php echo TEXT_INFO_DELETE_INTRO; ?>');"style="vertical-align:middle;"/><label for="input_specials_delete">&nbsp;<?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label>
+          <?php } ?>
+        </td>
+      </tr>
+      <tr>
+        <td class="main">
+          <?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>&nbsp;
+        </td>
+        <td class="main">
+          <?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity, 'style="width: 135px"');?>
+        </td>
+        <td class="main">
+          &nbsp;
+        </td>
+      </tr>
+      <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
+        <tr>
+          <td class="main"><?php echo TEXT_INFO_DATE_ADDED; ?></td>
+          <td class="main"><?php echo xtc_date_short($sInfo->specials_date_added); ?></td>
+          <td class="main">&nbsp;</td>
+        </tr>
+        <tr>
+          <td class="main"><?php echo TEXT_INFO_LAST_MODIFIED; ?></td>
+          <td class="main"><?php echo xtc_date_short($sInfo->specials_last_modified); ?></td>
+          <td class="main">&nbsp;</td>
+        </tr>
+      <?php } ?>
+      <tr>
+        <td class="main">
+          <?php echo TEXT_SPECIALS_START_DATE; ?>
+        </td>
+        <td class="main">
+          <?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart" style="width: 135px"') . draw_tooltip(SPECIALS_DATE_START_TT); ?>                
+        </td>
+      </tr>
+      <tr>
+        <td class="main">
+          <?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>
+        </td>
+        <td class="main">
+          <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(SPECIALS_DATE_END_TT); ?>                
+        </td>
+        <td class="main">
+          &nbsp;
+          <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
+          <input type="checkbox" name="specials_status" value="1" id="input_specials_status"  style="vertical-align:middle;" <?php echo $status;?>/><label for="input_specials_status">&nbsp;<?php echo TEXT_EDIT_STATUS; ?></label>
+          <?php } ?>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" class="main" style="padding:3px; background: #D8D8D8;">
+          <?php echo TEXT_SPECIALS_PRICE_TIP; ?>
+        </td>
+      </tr>
+      <?php } ?>
+    </table>
   </div>
 <?php
 }
 
 function saveSpecialsData($products_id) {
-    // decide whether to insert a new special,
-    // or to update an existing one
-  if($_POST['specials_action'] == "insert" && isset($_POST['specials_price']) && !empty($_POST['specials_price'])) {
-    // insert a new special, code taken from /admin/specials.php, and modified
-    if(!isset($_POST['specials_quantity']) or empty($_POST['specials_quantity'])) {
+  // insert or update specials
+  if (isset($_POST['specials_price']) && !empty($_POST['specials_price'])) {
+    if (!isset($_POST['specials_quantity']) || empty($_POST['specials_quantity'])) {
       $_POST['specials_quantity'] = 0;
     }
     if (PRICE_IS_BRUTTO=='true' && substr($_POST['specials_price'], -1) != '%'){
@@ -209,48 +220,30 @@ function saveSpecialsData($products_id) {
     }
 
     $expires_date = isset($_POST['specials_expires']) && !empty($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
+    $start_date = isset($_POST['specials_start']) && !empty($_POST['specials_start']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_start'].' 00:00:00')) : '';
     
     $sql_data_array = array('products_id' => $products_id,
                             'specials_quantity' => (int)$_POST['specials_quantity'],
                             'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
                             'specials_date_added' => 'now()',
+                            'specials_last_modified' => 'now()',
+                            'start_date' => $start_date,
                             'expires_date' => $expires_date,
                             'status' => '1'
                             );
-    xtc_db_perform (TABLE_SPECIALS,$sql_data_array);
-
-  } elseif($_POST['specials_action'] == "update" && isset($_POST['specials_price']) && isset($_POST['specials_quantity'])) {
-    // update the existing special for this product, code taken from /admin/specials.php, and modified
-    if (PRICE_IS_BRUTTO=='true' && substr($_POST['specials_price'], -1) != '%'){
-      $sql="SELECT tr.tax_rate
-              FROM " . TABLE_TAX_RATES . " tr,
-                   " . TABLE_PRODUCTS . " p
-             WHERE tr.tax_class_id = p. products_tax_class_id
-               AND p.products_id = '". $products_id . "' ";
-      $tax_query = xtc_db_query($sql);
-      $tax = xtc_db_fetch_array($tax_query);
-      $_POST['specials_price'] = ($_POST['specials_price']/($_POST['tax_rate']+100)*100); //web28 - 2010-07-27 - tax_rate from  hidden field
-    }
-    if (substr($_POST['specials_price'], -1) == '%')  {
-      $_POST['specials_price'] = ($_POST['products_price_hidden'] - (($_POST['specials_price'] / 100) * $_POST['products_price_hidden'])); //web28 - 2010-07-27 - products_price_hidden from  hidden field
-    }
-
-    $expires_date = isset($_POST['specials_expires']) && !empty($_POST['specials_expires']) ? date('Y-m-d H:i:s', strtotime($_POST['specials_expires'].' 23:59:59')) : '';
     
-    $sql_data_array = array(
-                      'specials_quantity' => (int)$_POST['specials_quantity'],
-                      'specials_new_products_price' => xtc_db_prepare_input($_POST['specials_price']),
-                      'specials_date_added' => 'now()',
-                      'expires_date' => $expires_date,
-                      'status' => (int)$_POST['specials_status']
-                      );
-
-    //$sql_data_array['specials_attribute'] = (int)$_POST['specials_attribute'];
-
-    xtc_db_perform (TABLE_SPECIALS,$sql_data_array, 'update', "specials_id = '" . xtc_db_input($_POST['specials_id'])  . "'" );    
-  }
+    if ($_POST['specials_action'] == 'insert') {
+      unset($sql_data_array['specials_last_modified']);
+      xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
+    } else {
+      unset($sql_data_array['specials_date_added']);
+      unset($sql_data_array['status']);
+      xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$_POST['specials_id']  . "'" );    
+    }
+  } 
+  
+  // delete specials
   if(isset($_POST['specials_delete'])) {
-    // delete existing special for this product, code taken from /admin/specials.php, and modified
     xtc_db_query("DELETE FROM " . TABLE_SPECIALS . " WHERE specials_id = '" . xtc_db_input($_POST['specials_id']) . "'");
   }
 }

@@ -197,4 +197,7 @@ UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 'groups' LIMIT 1
 #Tomcraft - 2014-08-21 - Croatia is now member of the EU
 UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE association_id = 53;
 
+#GTB - 2014-11-20 - added startdate for specials
+ALTER TABLE specials ADD start_date DATETIME AFTER specials_last_modified;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -93,6 +93,7 @@
   $(function() {  /* set Datepicker for new_products (1) and products_specials (2) */
     $('#DatepickerProduct').datepick();
     $('#DatepickerSpecials').datepick();
+    $('#DatepickerSpecialsStart').datepick();
   });
 </script>
 

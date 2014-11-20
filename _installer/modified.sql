@@ -949,6 +949,7 @@ CREATE TABLE specials (
   specials_new_products_price DECIMAL(15,4) NOT NULL,
   specials_date_added DATETIME,
   specials_last_modified DATETIME,
+  start_date DATETIME,
   expires_date DATETIME,
   date_status_change DATETIME,
   status INT(1) NOT NULL DEFAULT 1,
