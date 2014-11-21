@@ -37,9 +37,9 @@ define('EMAIL_FROM_TITLE' , 'E-Mail From');
 define('EMAIL_FROM_DESC' , 'The e-mail address used to send e-mails.');
 
 define('STORE_COUNTRY_TITLE' , 'Country');
-define('STORE_COUNTRY_DESC' , 'The country my store is located in <br /><br /><b>Note: Please remember to update the store district.</b>');
-define('STORE_ZONE_TITLE' , 'District');
-define('STORE_ZONE_DESC' , 'The district my store is located in.');
+define('STORE_COUNTRY_DESC' , 'The country my store is located in <br /><br /><b>Note: Please remember to update the store state.</b>');
+define('STORE_ZONE_TITLE' , 'State');
+define('STORE_ZONE_DESC' , 'The state my store is located in.');
 
 define('EXPECTED_PRODUCTS_SORT_TITLE' , 'Expected Products Sort Order');
 define('EXPECTED_PRODUCTS_SORT_DESC' , 'This is the sort order used in the expected products box.');
@@ -295,8 +295,8 @@ define('ACCOUNT_COMPANY_TITLE' , 'Company');
 define('ACCOUNT_COMPANY_DESC' , 'Display company in customer account');
 define('ACCOUNT_SUBURB_TITLE' , 'Suburb');
 define('ACCOUNT_SUBURB_DESC' , 'Display suburb in customer account');
-define('ACCOUNT_STATE_TITLE' , 'District');
-define('ACCOUNT_STATE_DESC' , 'Display district in customer account');
+define('ACCOUNT_STATE_TITLE' , 'State');
+define('ACCOUNT_STATE_DESC' , 'Display state in customer account');
 
 define('DEFAULT_CURRENCY_TITLE' , 'Default Currency');
 define('DEFAULT_CURRENCY_DESC' , 'Currency to be used as default');
