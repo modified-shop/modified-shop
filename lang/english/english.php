@@ -126,8 +126,8 @@ define('ENTRY_POST_CODE_ERROR', 'Your postcode must consist of at least ' . ENTR
 define('ENTRY_POST_CODE_TEXT', '*');
 define('ENTRY_CITY_ERROR', 'City must consist of at least ' . ENTRY_CITY_MIN_LENGTH . ' characters.');
 define('ENTRY_CITY_TEXT', '*');
-define('ENTRY_STATE_ERROR', 'Your district must consist of at least ' . ENTRY_STATE_MIN_LENGTH . ' characters.');
-define('ENTRY_STATE_ERROR_SELECT', 'Please choose your district from the list.');
+define('ENTRY_STATE_ERROR', 'Your state must consist of at least ' . ENTRY_STATE_MIN_LENGTH . ' characters.');
+define('ENTRY_STATE_ERROR_SELECT', 'Please choose your state from the list.');
 define('ENTRY_STATE_TEXT', '*');
 define('ENTRY_COUNTRY_ERROR', 'Please choose your country.');
 define('ENTRY_COUNTRY_TEXT', '*');
