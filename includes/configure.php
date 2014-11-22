@@ -22,7 +22,7 @@
   define('HTTPS_SERVER', 'https://localhost'); // eg, https://localhost - should not be empty for productive servers
   define('ENABLE_SSL', false); // secure webserver for checkout procedure?
   define('USE_SSL_PROXY', false); // using SSL proxy?
-  define('DIR_WS_CATALOG', '/modified-shop/');
+  define('DIR_WS_CATALOG', '/');
   define('DIR_FS_DOCUMENT_ROOT', '/web1/modified-shop/'); // absolute path required
   define('DIR_FS_CATALOG', '/web1/modified-shop/'); // absolute path required
   define('DIR_WS_ADMIN', 'admin/');
@@ -45,9 +45,9 @@
 
 // define our database connection
   define('DB_SERVER', 'localhost'); // eg, localhost - should not be empty for productive servers
-  define('DB_SERVER_USERNAME', 'root');
-  define('DB_SERVER_PASSWORD', 'root');
-  define('DB_DATABASE', 'modified-shop');
+  define('DB_SERVER_USERNAME', '');
+  define('DB_SERVER_PASSWORD', '');
+  define('DB_DATABASE', '');
   define('USE_PCONNECT', 'false'); // use persistent connections?
   define('STORE_SESSIONS', 'mysql'); // leave empty '' for default handler or set to 'mysql'
   define('DB_SERVER_CHARSET', 'latin1'); // set db charset utf8 or latin1

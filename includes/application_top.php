@@ -39,6 +39,12 @@ if (file_exists('includes/local/configure.php')) {
   include ('includes/configure.php');
 }
 
+// call Installer
+if (DB_DATABASE == '' && is_dir('./_installer')) {
+  header("Location: ./_installer");
+  exit();
+}
+
 // LOG dir
 define('DIR_FS_LOG', DIR_FS_CATALOG . 'log/');
 
