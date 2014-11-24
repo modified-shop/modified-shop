@@ -1,5 +1,11 @@
+<noscript>
+<style type="text/css">
+  .nonjs-fallback { display:none !important; }
+</style>
+</noscript>
+
 <div id="horizontalAccordion" class="checkout_accordion">
-  <ul class="resp-tabs-list">
+  <ul class="resp-tabs-list nonjs-fallback">
     {foreach name=outer item=gift_data from=$module_gift}
       <li><span class="payment_radio">{$gift_data.selection}</span>{$gift_data.module}<span class="payment_costs">{$gift_data.credit_amount}</span></li>
     {/foreach}
@@ -15,6 +21,9 @@
 
     {foreach name=outer item=module_data from=$module_content}
       <div>
+        <noscript>
+          <li><span class="payment_radio">{$module_data.selection}</span>{$module_data.module}<span class="payment_costs">{$module_data.module_cost}</span></li>
+        </noscript>
         {if $module_data.description}{$module_data.description}<br />{/if}
         {if $module_data.error != ''}
           {$module_data.error}<br />
