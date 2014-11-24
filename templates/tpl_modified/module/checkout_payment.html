@@ -1,11 +1,17 @@
 {config_load file="$language/lang_$language.conf" section="checkout_payment"}
 {config_load file="$language/lang_$language.conf" section="checkout_navigation"}
 {config_load file="lang_`$language`.custom"}
+<noscript>
+<style type="text/css">
+  .nonjs-fallback { display:none !important; }
+</style>
+</noscript>
+
 <ul id="checkoutnavigation" class="cf">
-  <li class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></li>
-  <li class="active"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></li>
-  <li class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></li>
-  <li class="inactive last"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></li>
+  <li><span class="inactive"><span class="title">1. {#title_shipping#}</span><span class="description">{#desc_shipping#}</span></span></li>
+  <li><span class="active"><span class="title">2. {#title_payment#}</span><span class="description">{#desc_payment#}</span></span></li>
+  <li><span class="inactive"><span class="title">3. {#title_confirmation#}</span><span class="description">{#desc_confirmation#}</span></span></li>
+  <li><span class="inactive"><span class="title">4. {#title_success#}</span><span class="description">{#desc_success#}</span></span></li>
 </ul>
 
 <h1 class="checkout">{#heading_payment#}</h1>
@@ -36,7 +42,7 @@
   <br />
   <div class="highlightbox">
     <div id="horizontalTab">
-      <ul class="resp-tabs-list">
+      <ul class="resp-tabs-list nonjs-fallback">
         {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
           <li>{#title_agb#}</li>
         {/if}
@@ -45,12 +51,14 @@
       <div class="resp-tabs-container">
         {if $smarty.const.DISPLAY_CONDITIONS_ON_CHECKOUT == 'true'}
         <div>
+          <noscript><h4>{#title_agb#}</h4></noscript>
           <div class="checkoutagb">{$AGB}</div>
           <div class="checkoutconditions">
           {$AGB_checkbox} <strong><label for="conditions">{#text_accept_agb#}</label></strong>&nbsp;{$AGB_LINK}
           </div>
         </div>
         {/if}
+        <noscript><h4>{#title_comments_short#}</h4></noscript>
         <div class="checkoutcomment">{$COMMENTS}</div>
       </div>
     </div>
