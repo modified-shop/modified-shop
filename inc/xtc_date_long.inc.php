@@ -1,20 +1,21 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: xtc_date_long.inc.php 899 2005-04-29 02:40:57Z hhgag $   
+   $Id$
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(general.php,v 1.225 2003/05/29); www.oscommerce.com 
-   (c) 2003	 nextcommerce (xtc_date_long.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2002-2003 osCommerce(general.php,v 1.225 2003/05/29); www.oscommerce.com
+   (c) 2003	nextcommerce (xtc_date_long.inc.php,v 1.3 2003/08/13); www.nextcommerce.org
+   (c) 2006 XT-Commerce
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-   
+
 // Output a raw date string in the selected locale date format
 // $raw_date needs to be in this format: YYYY-MM-DD HH:MM:SS
   function xtc_date_long($raw_date) {
@@ -33,7 +34,13 @@
     $minute = (int)substr($raw_date, 14, 2);
     $second = (int)substr($raw_date, 17, 2);
 
-    return strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
-  }
+    $date = strftime(DATE_FORMAT_LONG, mktime($hour,$minute,$second,$month,$day,$year));
+    $is_unicode = (mb_detect_encoding($date, array('UTF-8'), true) == 'UTF-8');
 
+    if ($is_unicode) {
+      return utf8_decode($date);
+    } else {
+      return $date;
+    }
+  }
  ?>
