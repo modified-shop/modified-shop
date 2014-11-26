@@ -28,7 +28,7 @@
     $_SESSION['REFERER'] = '';
     if (strpos($PHP_SELF, 'admin') === false &&
         strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false &&
-        strpos($PHP_SELF, FILENAME_LOGIN) === false) &&
+        strpos($PHP_SELF, FILENAME_LOGIN) === false &&
         strpos($PHP_SELF, FILENAME_PASSWORD_DOUBLE_OPT) === false)
     {
       $_SESSION['REFERER'] = basename($PHP_SELF);
