@@ -37,7 +37,7 @@
     // save SESSION before redirect
     session_write_close();
 
-    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
+    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", decode_htmlentities($url)));
     exit();
   }
 ?>
