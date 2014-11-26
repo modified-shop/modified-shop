@@ -15,7 +15,7 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
-  
+
   function xtc_redirect($url, $ssl='') {
   	global $request_type, $PHP_SELF;
 
@@ -24,18 +24,19 @@
 		    $url = HTTPS_SERVER . substr($url, strlen(HTTP_SERVER));
 		  }
     }
-    
+
     $_SESSION['REFERER'] = '';
-    if (strpos($PHP_SELF, 'admin') === false && 
+    if (strpos($PHP_SELF, 'admin') === false &&
         strpos($PHP_SELF, FILENAME_CHECKOUT_SUCCESS) === false &&
-        strpos($PHP_SELF, FILENAME_LOGIN) === false) 
+        strpos($PHP_SELF, FILENAME_LOGIN) === false) &&
+        strpos($PHP_SELF, FILENAME_PASSWORD_DOUBLE_OPT) === false)
     {
       $_SESSION['REFERER'] = basename($PHP_SELF);
     }
-    
+
     // save SESSION before redirect
     session_write_close();
-    
+
     header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     exit();
   }
