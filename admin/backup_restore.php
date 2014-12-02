@@ -5,6 +5,7 @@
   * backup_restore.php
   * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
   * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
+  * 2014-12-02 - fix TITLE, actual_table
   * 2014-09-14 - jquery ajax handling
   * 2010-09-09 - add set_admin_access
   * 2011-07-02 - Security Fix - PHP_SELF
@@ -90,15 +91,18 @@
     $_SESSION['language'] = $lng->language['directory'];
     $_SESSION['languages_id'] = $lng->language['id'];
     $_SESSION['language_code'] = $lng->language['code']; //web28 - 2010-09-05 - add $_SESSION['language_code']
+    $_SESSION['language_charset'] = $lng->language['language_charset'];
   }
 
   // include the language translations
-  require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
   require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
   if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.'backup_db.php')) {
     include(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'. 'backup_db.php');
   }
 
+  if (!defined('TITLE')) {
+    define('TITLE', HEADING_TITLE);
+  }
   include ('includes/functions/db_restore.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
@@ -106,9 +110,6 @@
   //Animierte Gif-Datei und Hinweistext
   $info_wait = '<img src="images/loading.gif"> '. TEXT_INFO_WAIT ;
   $button_back = '';
-
-  //aktiviert die Ausgabepufferung
-  if (!@ob_start("ob_gzhandler")) @ob_start();
 
   //#### RESTORE ANFANG ########
   if (isset($_SESSION['restore'])) {
@@ -122,8 +123,6 @@
     
     $restore = array();
     unset($_SESSION['restore']);
-    $dump = array();
-    unset($_SESSION['dump']);
     
     $restore['starttime'] = time();
     
@@ -180,14 +179,17 @@
     $restore['anzahl_zeilen']= $config['minspeed'];
 
     // Disable Keys of actual table to speed up restoring
-    if (sizeof($restore['tables_to_restore'])==0 && ($restore['actual_table'] > ''&& $restore['actual_table']!='unbekannt'))
+    if (sizeof($restore['tables_to_restore']) == 0 && ($restore['actual_table'] > '' && $restore['actual_table'] != 'unbekannt')) {
       @xtc_db_query('/*!40000 ALTER TABLE `'.$restore['actual_table'].'` DISABLE KEYS */;');
+    }
     
+    $actual_table = '';
     while (($a < $restore['anzahl_zeilen']) && (!$restore['fileEOF']) && !$restore['EOB']) {
       xtc_set_time_limit(0);
       $sql_command = get_sqlbefehl();
       //Echo $sql_command;
       if ($sql_command > '') {
+        $actual_table = $restore['actual_table'];
         if (!RESTORE_TEST) {
           $res = xtc_db_query($sql_command);
           if ($res===false) {
@@ -215,7 +217,7 @@
     $json_output['aufruf'] = $restore['aufruf'];
     $json_output['table_ready'] = ($restore['table_ready'] > 0) ? $restore['table_ready'] : '0';
     $json_output['time'] = $time;
-    $json_output['actual_table'] = $restore['fileEOF'] ? '' : $restore['actual_table'];
+    $json_output['actual_table'] = $restore['fileEOF'] ? '' : $actual_table;
     $json_output['fileEOF'] = $restore['fileEOF'] ? 1 : 0;
    
     $json_output['filesize'] = filesize($restore['file']);;
@@ -252,9 +254,6 @@ if(is_file(DIR_WS_INCLUDES.'head.php')) {
 <script type="text/javascript">
   //Check if jQuery is loaded
   !window.jQuery && document.write('<script src="includes/javascript/jquery-1.8.3.min.js" type="text/javascript"><\/script>');
-  $(document).ready(function() {
-    document.title = "<?php echo HEADING_TITLE; ?>";
-  });
 </script>
 </head>
   <body>

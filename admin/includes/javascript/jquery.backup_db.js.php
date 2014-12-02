@@ -10,7 +10,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 <script type="text/javascript">
 var debug = false;
-var ajax_url = 'backup_db.php?ajax=1&action=readdb';
+var ajax_url = 'backup_db.php?ajax=1&action=readdb<?php echo SID ? '&'. SID : '';?>';
 var ajax_type = 'POST';
 var dataStr = '';
 
@@ -70,14 +70,14 @@ function JStoPHPResponse(data) {
       if (maxReloadsText != '') infoText = maxReloadsText;
       $('#info_text').html(infoText);
     
-      var button_back = '<a href="backup.php" class="button">'+ '<?php echo BUTTON_BACK;?>' +'</a>';
+      var button_back = '<a href="backup.php<?php echo SID ? '?'. SID : '';?>" class="button">'+ '<?php echo BUTTON_BACK;?>' +'</a>';
       $('#button_back').html(button_back);
       
     }
 }
 
 function updateProgressBar(total,counter,type) {
-  precent = (counter *100/total).toFixed(1); //+ '%';
+  precent = (counter *100/total).toFixed(0); //+ '%';
   $('#'+ type + '_process').css('width',precent + '%');
   $('#'+ type + '_precents').html(precent + '%');
  
