@@ -10,7 +10,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
 <script type="text/javascript">
 var debug = false;
-var ajax_url = 'backup_restore.php?ajax=1&action=restoredb';
+var ajax_url = 'backup_restore.php?ajax=1&action=restoredb<?php echo SID ? '&'. SID : '';?>';
 var ajax_type = 'POST';
 var dataStr = '';
 
@@ -67,20 +67,21 @@ function JStoPHPResponse(data) {
        if (debug) console.log('$.param:' + dataStrNew); 
        ajaxCall(dataStrNew);
     } else {
-      $('#info_wait').css('display','none');
+      //$('#info_wait').css('display','none');
+      $('#info_wait').html('&nbsp;');
       
       var infoText = '<?php echo TEXT_INFO_DO_RESTORE_OK;?>';
       if (maxReloadsText != '') infoText = maxReloadsText;
       $('#info_text').html(infoText);
     
-      var button_back = '<a href="../login.php" class="button">Login</a>';
+      var button_back = '<a href="../login.php<?php echo SID ? '?'. SID : '';?>" class="button">Login</a>';
       $('#button_back').html(button_back);
       
     }
 }
 
 function updateProgressBar(total,counter,type) {
-  precent = (counter *100/total).toFixed(1); //+ '%';
+  precent = (counter *100/total).toFixed(0); //+ '%';
   $('#'+ type + '_process').css('width',precent + '%');
   $('#'+ type + '_precents').html(precent + '%');
  
