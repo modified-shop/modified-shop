@@ -36,7 +36,7 @@
       $_SESSION['REFERER'] = basename($PHP_SELF);
     }
 
-    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", decode_htmlentities($url)));
+    header('Location: ' . preg_replace("/[\r\n]+(.*)$/i", "", html_entity_decode($url)));
     xtc_exit();
   }
 ?>
