@@ -1,16 +1,16 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id:$   
+   $Id:$
 
    modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2003 XT-Commerce - www.xt-commerce.com
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 // include smarty
@@ -21,7 +21,7 @@ $cache_id = '';
 
 if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['tracking']['products_history']) > 0) {
   $random_last_viewed = xtc_rand(0, (count($_SESSION['tracking']['products_history']) - 1));
-  
+
   // set cache id
   $cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status'].$_SESSION['tracking']['products_history'][$random_last_viewed];
 
@@ -47,13 +47,13 @@ if (isset($_SESSION['tracking']['products_history']) && count($_SESSION['trackin
                        JOIN " . TABLE_CATEGORIES_DESCRIPTION . " cd
                             ON cd.categories_id = p2c.categories_id
                                AND cd.language_id = '".$_SESSION['languages_id']."'
-                      WHERE p.products_status = '1'                                                                                               
+                      WHERE p.products_status = '1'
                         AND p.products_id = '".(int)$_SESSION['tracking']['products_history'][$random_last_viewed]."'
                             ".PRODUCTS_CONDITIONS_P;
 
     $random_query = xtDBquery($random_query);
-  
-    if (xtc_db_num_rows($random_query) > 0) {
+
+    if (xtc_db_num_rows($random_query, true) > 0) {
       $random_product = xtc_db_fetch_array($random_query, true);
       $box_smarty->assign('box_content', $product->buildDataArray($random_product));
       $box_smarty->assign('MY_PERSONAL_PAGE', xtc_href_link(FILENAME_ACCOUNT));
