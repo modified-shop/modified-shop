@@ -17,12 +17,10 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_products_stock($products_id) {
+
     $products_id = xtc_get_prid($products_id);
-    //BOF - DokuMan - 2010-08-24 - do not use cached results here
-    //$stock_query = xtDBquery("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . $products_id . "'");
     $stock_query = xtc_db_query("select products_quantity from " . TABLE_PRODUCTS . " where products_id = '" . $products_id . "'");
-    //EOF - DokuMan - 2010-08-24 - do not use cached results here
-    $stock_values = xtc_db_fetch_array($stock_query,true);
+    $stock_values = xtc_db_fetch_array($stock_query);
 
     return $stock_values['products_quantity'];
   }
