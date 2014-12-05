@@ -10,9 +10,15 @@
    based on:
    (c) 2005 XT-Commerce & H.H.G. group
    (c) 2008 Hetfield - http://www.MerZ-IT-SerVice.de
+   (c) 2014 web28 - http://www.rpa-com.de
 
    Released under the GNU General Public License
 ---------------------------------------------------------------------------------------*/
+
+function editorJSLink()
+{
+    return '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>';
+}
 
 function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') {
 

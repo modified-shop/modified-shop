@@ -65,7 +65,6 @@
   require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
-<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>
 <?php 
 if (USE_WYSIWYG == 'true') {
   $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".$_SESSION['languages_id']."'");
