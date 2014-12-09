@@ -677,17 +677,17 @@ class KlarnaUtils
         $q = "SELECT address_book_id FROM " . TABLE_ADDRESS_BOOK .
             " WHERE customers_id = '" . (int)$customer_id .
             "' AND entry_firstname = '" .
-            mysql_real_escape_string($order->delivery['firstname']) .
+            xtc_db_input($order->delivery['firstname']) .
             "' AND entry_lastname = '" .
-            mysql_real_escape_string($order->delivery['lastname']) .
+            xtc_db_input($order->delivery['lastname']) .
             "' AND entry_street_address = '" .
-            mysql_real_escape_string($order->delivery['street_address']) .
+            xtc_db_input($order->delivery['street_address']) .
             "' AND entry_postcode = '" .
-            mysql_real_escape_string($order->delivery['postcode']) .
+            xtc_db_input($order->delivery['postcode']) .
             "' AND entry_city = '" .
-            mysql_real_escape_string($order->delivery['city']) .
+            xtc_db_input($order->delivery['city']) .
             "' AND entry_company = '" .
-            mysql_real_escape_string($order->delivery['company']) . "'";
+            xtc_db_input($order->delivery['company']) . "'";
         $check_address_query = $this->_klarnaDB->query($q);
         $check_address = $check_address_query->getArray();
 
@@ -1467,8 +1467,8 @@ class KlarnaUtils
     {
         global $insert_id;
 
-        $orderid = mysql_real_escape_string($insert_id);
-        $refno = mysql_real_escape_string($_SESSION['klarna_refno']);
+        $orderid = xtc_db_input($insert_id);
+        $refno = xtc_db_input($_SESSION['klarna_refno']);
 
         $sql_data_arr = array(
             'orders_id' => $orderid,

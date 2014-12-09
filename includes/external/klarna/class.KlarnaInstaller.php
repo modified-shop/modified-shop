@@ -166,7 +166,7 @@ class KlarnaInstaller
             $query_string = implode(', ', array_keys($merged));
             $query_values = implode(
                 '", "', array_map(
-                    "mysql_real_escape_string", array_values($merged)
+                    "xtc_db_input", array_values($merged)
                 )
             );
 
