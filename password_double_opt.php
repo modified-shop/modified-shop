@@ -221,7 +221,7 @@ switch ($case) {
     // EOF - DokuMan - 2010-10-28 - added missing arguments for xtc_draw_input_field
 
     $smarty->assign('INPUT_CODE', xtc_draw_input_field('vvcode', '', 'size="8" maxlength="6"', 'text', '', false));
-    $smarty->assign('BUTTON_SEND', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_LOGIN));
+    $smarty->assign('BUTTON_SEND', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
     $smarty->assign('FORM_END', '</form>');
     $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/password_double_opt_in.html');
     break;
