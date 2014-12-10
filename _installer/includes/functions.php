@@ -141,6 +141,9 @@ function sql_update($file, $plain=false) {
       }
     }
     if (!$exists) {
+      if (INSTALL_CHARSET == 'utf8') {
+        $sql = mb_convert_encoding($sql, 'utf-8', 'ISO-8859-15');
+      }
       xtc_db_query($sql);
     }
     $success .= ' - <span style="color:red;">Success!</span><br/>';
