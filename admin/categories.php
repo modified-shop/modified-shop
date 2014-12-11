@@ -345,7 +345,7 @@ if (USE_WYSIWYG == 'true') {
   $data = xtc_db_fetch_array($query);
   // generate editor for categories EDIT
   $languages = xtc_get_languages();
-  echo editorJSLink();
+  echo PHP_EOL . (function_exists('editorJSLink') ? editorJSLink() : '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>') . PHP_EOL;
 ?>
 <script type="text/javascript">
   $(document).ready(function(){
