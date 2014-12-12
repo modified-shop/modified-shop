@@ -208,6 +208,9 @@ include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 // set the language
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
 
+// call from filemanager
+if (defined('_IS_FILEMANAGER')) return;
+
 // include the language translations
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');

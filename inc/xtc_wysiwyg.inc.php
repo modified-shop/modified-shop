@@ -30,7 +30,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') {
   $flash_path = '&Type=Flash';
   $media_path = '&Type=Media';
   
-  $sid = '&'.session_name() . '=' . session_id(); //web28 security fix
+  $sid = ''; //'&'.session_name() . '=' . session_id(); //web28 security fix
   
   $default_init = '
    oFCKeditor.BasePath = "'.$path.'" ;
