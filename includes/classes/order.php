@@ -431,7 +431,7 @@
         $customer_address = xtc_db_fetch_array($customer_address_query);
 
         $shipping_address_query = xtc_db_query("SELECT ab.entry_firstname as firstname,
-                                                       ab.entry_lastname as lastame,
+                                                       ab.entry_lastname as lastname,
                                                        " . $default_select . "
                                                   FROM " . TABLE_ADDRESS_BOOK . " ab
                                                        " . $default_join . "
