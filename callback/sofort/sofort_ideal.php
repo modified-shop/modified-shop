@@ -35,16 +35,8 @@ $sofortLibNotification = new sofortLibNotificationClassic($userId,
                                                           );
 $sofortLibNotification->getNotification(array_merge($_GET, $_POST));
 
-// write callback to log
-$file = 'sofort_ideal_'.date('Y-m-d').'.log';
-$fp = fopen(DIR_FS_LOG . $file, "a");
-fwrite($fp, $_SERVER['REQUEST_URI']."\n");
-fwrite($fp, print_r($sofortLibNotification, true));
-
 // check hash
 if ($sofortLibNotification->_hashCheck === false) {
-  fwrite($fp, 'ERROR_WRONG_HASH'."\n");
-  fclose($fp);
   die('ERROR_WRONG_HASH');
 }
 
@@ -56,7 +48,6 @@ if (xtc_db_num_rows($orders_query) == 1) {
   // order id
   $orders = xtc_db_fetch_array($orders_query);
   $order = new order($orders['order_id']);
-  fwrite($fp, print_r($order, true));
 
   $tID = $sofortLibNotification->getTransaction();
   $status = $sofortLibNotification->getStatus();
@@ -113,21 +104,15 @@ if (xtc_db_num_rows($orders_query) == 1) {
                           'comments_sent' => '0'
                           );
   xtc_db_perform(TABLE_ORDERS_STATUS_HISTORY, $sql_data_array);
-  fwrite($fp, print_r($sql_data_array, true));
-  fwrite($fp, 'SUCCESS'."\n");
-  fclose($fp);
+
 } else {
-  fwrite($fp, 'order is missing'."\n");
 
   // order is missing
   header("HTTP/1.0 404 Not Found");
   header("Status: 404 Not Found");
 
   if(constant('MODULE_PAYMENT_'.strtoupper($sofort_code).'_TMP_ORDER') == 'False') {
-    fwrite($fp, 'redirect to: '.$sofortLibNotification->getUserVariable(3).'&nonexistorder=true'."\n");
-    fclose($fp);
     xtc_redirect($sofortLibNotification->getUserVariable(3).'&nonexistorder=true');
   }
 
-  fclose($fp);
 }
