@@ -16,68 +16,63 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
-//BOF - 2009-08-25 - Require password to disable account
+
+// include needed functions
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
-//EOF - 2009-08-25 - Require password to disable account
 
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
-//BOF - DokuMan - 2010-03-16 - do not delete the admin user (ID=1)
+
 if ($_SESSION['customer_id'] == 1) {    
-  //BOF - web28.de - FIX redirect to NONSSL
-  //xtc_redirect(xtc_href_link(FILENAME_DEFAULT, ''));
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
-  //EOF - web28.de - FIX redirect to NONSSL
 }
-//EOF - DokuMan - 2010-03-16 - do not delete the admin user (ID=1)
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
-//BOF - 2009-08-25 - Require password to disable account
-    $password = xtc_db_prepare_input($_POST['password']);
-    $check_customer_query = xtc_db_query("select customers_password from ".TABLE_CUSTOMERS." where customers_id = '".(int) $_SESSION['customer_id']."'");
-    $check_customer = xtc_db_fetch_array($check_customer_query);
+  $password = xtc_db_prepare_input($_POST['password']);
+  $check_customer_query = xtc_db_query("SELECT customers_password 
+                                          FROM ".TABLE_CUSTOMERS." 
+                                         WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
+  $check_customer = xtc_db_fetch_array($check_customer_query);
 
-    if (!xtc_validate_password($password, $check_customer['customers_password'])) {
-      $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
-    } else {
-//EOF - 2009-08-25 - Require password to disable account
+  if (!xtc_validate_password($password, $check_customer['customers_password'])) {
+    $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
+  } else {
+
+    $_SESSION['cart']->reset();
+      
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
     
-  // delete account and logout customer  
-  xtc_db_query("delete from ".TABLE_ADDRESS_BOOK." where customers_id = '".(int) $_SESSION['customer_id']."'");
-  xtc_db_query("delete from ".TABLE_CUSTOMERS." where customers_id = '".(int) $_SESSION['customer_id']."'");
-  xtc_db_query("delete from ".TABLE_CUSTOMERS_INFO." where customers_info_id = '".(int) $_SESSION['customer_id']."'");
+    xtc_session_destroy();
   
-  xtc_session_destroy();
-
-  unset ($_SESSION['customer_id']);
-  unset ($_SESSION['customer_default_address_id']);
-  unset ($_SESSION['customer_first_name']);
-  unset ($_SESSION['customer_country_id']);
-  unset ($_SESSION['customer_zone_id']);
-  unset ($_SESSION['comments']);
-  unset ($_SESSION['user_info']);
-  unset ($_SESSION['customers_status']);
-  unset ($_SESSION['selected_box']);
-  unset ($_SESSION['navigation']);
-  unset ($_SESSION['shipping']);
-  unset ($_SESSION['payment']);
-  unset ($_SESSION['ccard']);
-  // GV Code Start
-  unset ($_SESSION['gv_id']);
-  unset ($_SESSION['cc_id']);
-  // GV Code End
-  $_SESSION['cart']->reset();
-
-  $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
-//BOF - 2009-08-25 - Require password to disable account
+    unset ($_SESSION['customer_id']);
+    unset ($_SESSION['customer_default_address_id']);
+    unset ($_SESSION['customer_first_name']);
+    unset ($_SESSION['customer_country_id']);
+    unset ($_SESSION['customer_zone_id']);
+    unset ($_SESSION['comments']);
+    unset ($_SESSION['user_info']);
+    unset ($_SESSION['customers_status']);
+    unset ($_SESSION['selected_box']);
+    unset ($_SESSION['navigation']);
+    unset ($_SESSION['shipping']);
+    unset ($_SESSION['payment']);
+    unset ($_SESSION['ccard']);
+    unset ($_SESSION['gv_id']);
+    unset ($_SESSION['cc_id']);
+  
+    require (DIR_WS_INCLUDES.'write_customers_status.php');
+  
+    $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
   }
-//EOF - 2009-08-25 - Require password to disable account
 }
 
 $breadcrumb->add(NAVBAR_TITLE_1_ACCOUNT_DELETE, xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
@@ -90,7 +85,6 @@ if ($messageStack->size('account_delete') > 0) {
 }
 $smarty->assign('FORM_ACTION', xtc_draw_form('account_delete', xtc_href_link(FILENAME_ACCOUNT_DELETE, '', 'SSL'), 'post'). xtc_draw_hidden_field('action', 'process'));
 $smarty->assign('INPUT_PASSWORD', xtc_draw_password_field('password'));
-
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
 $smarty->assign('BUTTON_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 $smarty->assign('FORM_END', '</form>');
