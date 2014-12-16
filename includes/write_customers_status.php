@@ -44,6 +44,7 @@
         $_SESSION['customers_status']['customers_status'] = $customers_status_value_1['customers_status'];
       }
     } else {
+      unset($_SESSION['customer_id']);
       xtc_redirect(xtc_href_link(FILENAME_LOGOFF),'NONSSL');
     }
   } else {
