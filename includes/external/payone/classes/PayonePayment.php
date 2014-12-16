@@ -41,7 +41,7 @@ class PayonePayment {
     
 		!empty($this->code) OR $this->code = 'payone';
 		$this->title = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_TITLE'); 
-		$this->description = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('_VALID_XTC')) ? MODULE_PAYMENT_PAYONE_LP : ''); 
+		$this->description = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_DESCRIPTION').((defined('RUN_MODE_ADMIN')) ? MODULE_PAYMENT_PAYONE_LP : ''); 
 		$this->sort_order = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_SORT_ORDER');
 		$this->enabled = ((@constant('MODULE_PAYMENT_'.strtoupper($this->code).'_STATUS') == 'True') ? true : false);
 		$this->info = @constant('MODULE_PAYMENT_'.strtoupper($this->code).'_TEXT_INFO'); 
