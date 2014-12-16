@@ -45,7 +45,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
   } else {
 
-    $_SESSION['cart']->reset();
+    $_SESSION['cart']->reset(true);
 
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
@@ -68,8 +68,6 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     unset ($_SESSION['ccard']);
     unset ($_SESSION['gv_id']);
     unset ($_SESSION['cc_id']);
-
-    require (DIR_WS_INCLUDES.'write_customers_status.php');
 
     $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
   }
