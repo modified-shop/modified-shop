@@ -1,18 +1,18 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: account_delete.php 4220 2013-01-11 09:57:28Z gtb-modified $   
+   $Id: account_delete.php 4220 2013-01-11 09:57:28Z gtb-modified $
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
 
    Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(account_password.php,v 1.1 2003/05/19); www.oscommerce.com 
+   (c) 2002-2003 osCommerce(account_password.php,v 1.1 2003/05/19); www.oscommerce.com
    (c) 2003 nextcommerce (account_password.php,v 1.14 2003/08/17); www.nextcommerce.org
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
@@ -29,7 +29,7 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 //BOF - DokuMan - 2010-03-16 - do not delete the admin user (ID=1)
-if ($_SESSION['customer_id'] == 1) {    
+if ($_SESSION['customer_id'] == 1) {
   //BOF - web28.de - FIX redirect to NONSSL
   //xtc_redirect(xtc_href_link(FILENAME_DEFAULT, ''));
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
@@ -47,12 +47,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
       $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
     } else {
 //EOF - 2009-08-25 - Require password to disable account
-    
-  // delete account and logout customer  
+
+  // delete account and logout customer
   xtc_db_query("delete from ".TABLE_ADDRESS_BOOK." where customers_id = '".(int) $_SESSION['customer_id']."'");
   xtc_db_query("delete from ".TABLE_CUSTOMERS." where customers_id = '".(int) $_SESSION['customer_id']."'");
   xtc_db_query("delete from ".TABLE_CUSTOMERS_INFO." where customers_info_id = '".(int) $_SESSION['customer_id']."'");
-  
+
   xtc_session_destroy();
 
   unset ($_SESSION['customer_id']);
@@ -73,6 +73,8 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   unset ($_SESSION['cc_id']);
   // GV Code End
   $_SESSION['cart']->reset();
+
+  require (DIR_WS_INCLUDES.'write_customers_status.php');
 
   $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 //BOF - 2009-08-25 - Require password to disable account
