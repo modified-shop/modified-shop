@@ -45,7 +45,7 @@
       }
     } else {
       unset($_SESSION['customer_id']);
-      xtc_redirect(xtc_href_link(FILENAME_LOGOFF),'NONSSL');
+      xtc_redirect(xtc_href_link(FILENAME_LOGOFF, '', 'SSL'));
     }
   } else {
     $customers_status_query = xtc_db_query("SELECT *
