@@ -18,7 +18,6 @@
 
 <script type="text/javascript">var DIR_WS_BASE="<?php echo DIR_WS_BASE ?>"</script>
 
-<script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery-1.8.3.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.easyTabs.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.colorbox.min.js" type="text/javascript"></script>
 <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.unveil.min.js" type="text/javascript"></script>
