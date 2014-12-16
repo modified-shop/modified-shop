@@ -1,18 +1,18 @@
 <?php
 /* -----------------------------------------------------------------------------------------
-   $Id: account_delete.php 4220 2013-01-11 09:57:28Z gtb-modified $   
+   $Id: account_delete.php 4220 2013-01-11 09:57:28Z gtb-modified $
 
    XT-Commerce - community made shopping
    http://www.xt-commerce.com
 
    Copyright (c) 2003 XT-Commerce
    -----------------------------------------------------------------------------------------
-   based on: 
+   based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(account_password.php,v 1.1 2003/05/19); www.oscommerce.com 
+   (c) 2002-2003 osCommerce(account_password.php,v 1.1 2003/05/19); www.oscommerce.com
    (c) 2003 nextcommerce (account_password.php,v 1.14 2003/08/17); www.nextcommerce.org
 
-   Released under the GNU General Public License 
+   Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
@@ -30,29 +30,29 @@ if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-if ($_SESSION['customer_id'] == 1) {    
+if ($_SESSION['customer_id'] == 1) {
   xtc_redirect(xtc_href_link(FILENAME_DEFAULT),'NONSSL');
 }
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
   $password = xtc_db_prepare_input($_POST['password']);
-  $check_customer_query = xtc_db_query("SELECT customers_password 
-                                          FROM ".TABLE_CUSTOMERS." 
+  $check_customer_query = xtc_db_query("SELECT customers_password
+                                          FROM ".TABLE_CUSTOMERS."
                                          WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
   $check_customer = xtc_db_fetch_array($check_customer_query);
 
-  if (!xtc_validate_password($password, $check_customer['customers_password'])) {
+  if (!xtc_validate_password($password, $check_customer['customers_password'], $_SESSION['customer_id'])) {
     $messageStack->add('account_delete', TEXT_LOGIN_ERROR);
   } else {
 
     $_SESSION['cart']->reset();
-      
+
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_ADDRESS_BOOK." WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     xtc_db_query("DELETE FROM ".TABLE_CUSTOMERS_INFO." WHERE customers_info_id = '".(int)$_SESSION['customer_id']."'");
-    
+
     xtc_session_destroy();
-  
+
     unset ($_SESSION['customer_id']);
     unset ($_SESSION['customer_default_address_id']);
     unset ($_SESSION['customer_first_name']);
@@ -68,9 +68,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
     unset ($_SESSION['ccard']);
     unset ($_SESSION['gv_id']);
     unset ($_SESSION['cc_id']);
-  
+
     require (DIR_WS_INCLUDES.'write_customers_status.php');
-  
+
     $smarty->assign('BUTTON_CONTINUE', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
   }
 }
