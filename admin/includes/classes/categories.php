@@ -24,27 +24,11 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-// ----------------------------------------------------------------------------------------------------- //
+defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-//###############################//
-/* NEUE FUNKTION  by web28 - www.rpa-com.de
-Hier koennen neue Zusatzfelder definiert werden
-Bezeichnung genauso wie das neue Tabellenfeld, kommagetrennt ohne Leerzeichen
-Die neuen Felder werden automatisch gespeichert bzw. mitkopiert
-Beispiel neueTabellenfelder in der Tabelle products: products_manufacturer_model, products_shipping_class
-define('ADD_PRODUCTS_FIELDS','products_manufacturer_model,products_shipping_class');
-*/
-
-define('ADD_PRODUCTS_FIELDS','products_manufacturers_model');
-define('ADD_PRODUCTS_DESCRIPTION_FIELDS','products_order_description'); //products_order_description
-
-define('ADD_CATEGORIES_FIELDS','');
-define('ADD_CATEGORIES_DESCRIPTION_FIELDS','');
-
-//###############################//
+//Neue Zusatzfelder koennen hier definiert werden: admin/includes/add_db_fields.php
 
 // holds functions for manipulating products & categories
-defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 class categories {
   // ----------------------------------------------------------------------------------------------------- //
   // deletes an array of categories, with products
