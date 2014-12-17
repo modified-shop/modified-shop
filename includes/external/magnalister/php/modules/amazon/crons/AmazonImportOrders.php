@@ -29,6 +29,7 @@ class AmazonImportOrders extends MagnaCompatibleImportOrders {
 	
 	public function __construct($mpID, $marketplace) {
 		parent::__construct($mpID, $marketplace);
+		$this->gambioPropertiesEnabled = (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties');
 	}
 	
 	protected function getConfigKeys() {

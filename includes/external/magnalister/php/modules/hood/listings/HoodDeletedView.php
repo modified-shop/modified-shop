@@ -75,7 +75,7 @@ class HoodDeletedView {
 				'Filters' => array('Active' => array('false')),
 			);
 			if (!empty($this->search)) {
-				#$request['SEARCH'] = (!isUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
+				#$request['SEARCH'] = (!magnalisterIsUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
 				$request['SEARCH'] = $this->search;
 			}
 			MagnaConnector::gi()->setTimeOutInSeconds(1800);

@@ -202,7 +202,8 @@ class GenerateProductsDetailInput {
 				} else {
 					$class = 'class="'.implode(' ', $class).'"';
 				}
-				$ret = '<select id="'.$inputID.'" name="'.$inputName.'[]" '.$class.' size="5" multiple="multiple">'."\n";
+				$ret = '<select id="'.$inputID.'" name="'.$inputName.'[]" '.$class.' size="5" '.
+					'multiple="multiple"'.(isset($this->curInput['limit']) ? ' data-limit="'.$this->curInput['limit'].'"' : '').'>'."\n";
 				$default = $this->getInputValue($curRowC, $isMulticolumn);
 				foreach ($this->curInput['values'] as $val => $text) {
 					if (is_array($default) && in_array($val, $default)) {
@@ -229,7 +230,7 @@ class GenerateProductsDetailInput {
 				$default = $this->getInputValue($curRowC, $isMulticolumn, 'select');
 				foreach ($this->curInput['values'] as $val => $text) {
 					if ($default == $val) {
-					 	$sel = ' selected="selected"';
+						$sel = ' selected="selected"';
 					} else {
 						$sel = '';
 					}
@@ -324,8 +325,9 @@ class GenerateProductsDetailInput {
 				break;
 			}
 			case 'textarea': {
-                if (    ('tinyMCE' == getDBConfigValue('general.editor',0,'tinyMCE'))
-				     && (array_key_exists('wysiwyg', $this->curInput) && $this->curInput['wysiwyg'])) {
+				if (('tinyMCE' == getDBConfigValue('general.editor',0,'tinyMCE'))
+					&& (array_key_exists('wysiwyg', $this->curInput) && $this->curInput['wysiwyg'])
+				) {
 					$class[] = $inputID;
 					$this->out .= '
 						'.$this->initTinyMCE().'
@@ -407,6 +409,7 @@ class GenerateProductsDetailInput {
 				#$this->out .= ($hasIndex > 2) ? '<br />'."\n" : '';
 			}
 			$this->out .= '</tbody></table>';
+			
 			$this->curInput = null;
 			array_pop($this->curProcItem);
 
@@ -472,7 +475,34 @@ class GenerateProductsDetailInput {
 			</tr>';
 		$hidden = '';
 	}
-
+	
+	protected function renderAdditionalJs() {
+		ob_start();
+		?>
+		<script type="text/javascript">/*<![CDATA[*/
+		jQuery(document).ready(function() {
+			jQuery('select[data-limit]')
+				.off('click.limit')
+				.on('click.limit', 'option', function (event) {
+					if (jQuery(this).parent('select').data('limit') <= jQuery(this).siblings(':selected').length) {
+						jQuery(this).removeAttr("limit");
+					}
+				})
+				.off('change.limit')
+				.on('change.limit', function() {
+					maxSize = jQuery(this).data('limit');
+					if (jQuery(this).find('option:selected').length > maxSize) {
+						jQuery.each(jQuery(this).find('option:selected').slice(maxSize), function (idx, el) {
+							jQuery(el).removeAttr('selected');
+						});
+					}
+				});
+		});
+		/*]]>*/</script>
+		<?php
+		return ob_get_clean();
+	}
+	
 	public function render() {
 		#echo print_m($this->failedItems);
 		if (empty($this->structure)) {
@@ -488,7 +518,7 @@ class GenerateProductsDetailInput {
 			array_pop($this->curProcItem);
 		}
 		$this->curBlock = null;
-		return $this->out;
+		return $this->out.$this->renderAdditionalJs();
 	}
 	
 	private static function keysToHTMLName($keys) {

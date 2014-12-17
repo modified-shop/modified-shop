@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Shipping.php 3910 2014-05-27 00:58:20Z derpapst $
+ * $Id: Shipping.php 4799 2014-11-04 18:15:56Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -183,12 +183,15 @@ class Shipping {
 				return $this->settings['fallback'];
 			}
 			return false;
-		}
-		if ($this->settings['prefferedMethod'] == '__ml_gambio') {
+		
+		} else if ($this->settings['prefferedMethod'] == '__ml_gambio') {
 			return (float)$shippingDefault;
+		
+		} else if ($this->settings['prefferedMethod'] == '__ml_weight') {
+			return (float)$weight;
+			
 		}
-
-
+		
 		$this->quote($this->settings['prefferedMethod']);
 		$quotes = $this->instances[$this->settings['prefferedMethod']]->quotes;
 		

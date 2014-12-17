@@ -32,7 +32,7 @@ class_exists('MLProductList') or die();
 						<tbody>
 							<tr>
 								<td>
-									<input type="submit" name="apply" id="apply" value="<?php echo ML_AMAZON_BUTTON_PREPARE ?>" class="fullWidth ml-button smallmargin" />
+									<input type="submit" name="apply" id="apply" value="<?php echo ML_AMAZON_BUTTON_PREPARE ?>" class="fullWidth ml-button smallmargin mlbtn-action" />
 								</td>
 							</tr>
 						</tbody>

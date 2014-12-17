@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: main.php 4017 2014-06-24 18:39:57Z derpapst $
+ * $Id: main.php 4582 2014-09-12 03:39:06Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -134,21 +134,6 @@ $phPlotSettings = array(
 		),
 	)
 );
-
-function retinarize(&$phPlotSettings) {
-	$factor = (ML_RETINA_DISPLY ? 2 : 1);
-	
-	$phPlotSettings['width'] *= $factor;
-	$phPlotSettings['height'] *= $factor;
-	
-	foreach ($phPlotSettings['fonts'] as &$font) {
-		$font['size'] *= $factor;
-		$font['spacing'] = is_null($font['spacing']) ? $font['spacing'] : $font['spacing'] * $factor;
-	}
-	
-}
-
-retinarize($phPlotSettings);
 
 /* Berechnet Farben anhand der Einstellungen neu. */
 foreach ($phPlotSettings['colorMap']['data']['colors'] as $key => &$color) {

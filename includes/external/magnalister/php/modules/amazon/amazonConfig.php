@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonConfig.php 4337 2014-08-06 12:09:45Z tim.neumann $
+ * $Id: amazonConfig.php 4595 2014-09-15 10:57:13Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -64,7 +64,7 @@ function amazonTopTenConfig($aArgs = array(), &$sValue = ''){
 			$aArgs['key'],
 			isset($_POST['conf'][$aArgs['key']])
 			? (int)$_POST['conf'][$aArgs['key']]
-			: (int)getDBConfigValue($aArgs['key'], $_MagnaSession['mpID'])
+			: (int)getDBConfigValue($aArgs['key'], $_MagnaSession['mpID'], 10)
 		);
 	}
 }

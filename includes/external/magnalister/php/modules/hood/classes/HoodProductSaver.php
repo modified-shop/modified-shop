@@ -55,8 +55,8 @@ class HoodProductSaver {
 	}
 	
 	protected function insertPrepareData($data) {
-		# Filter Gambio TABs
-		if ((SHOPSYSTEM == 'gambio') && isset($data['Description'])) {
+		// Filter JNH Tab
+		if (isset($data['Description'])) {
 			$data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
 		}
 		
@@ -224,7 +224,8 @@ class HoodProductSaver {
 		
 		$row['ShortDescription'] = trim($itemDetails['ShortDescription']);
 		$row['Description'] = trim($itemDetails['Description']);
-		
+		$row['PreparedTs'] = date('Y-m-d H:i:s');
+				
 		$this->insertPrepareData($row);
 	}
 	
@@ -260,6 +261,7 @@ class HoodProductSaver {
 		#echo print_m($data);
 		
 		$priceConfig = HoodHelper::loadPriceSettings($this->mpId);
+		$preparedTs = date('Y-m-d H:i:s');
 		
 		foreach ($data as $dataRow) {
 			$row = $this->preparePropertiesRow($dataRow['products_id'], $itemDetails);
@@ -303,7 +305,7 @@ class HoodProductSaver {
 			$row['Description'] = HoodHelper::getSubstitutePictures(HoodHelper::substituteTemplate(
 				$this->mpId, $dataRow['products_id'], $this->config['templateContent'], $substitution
 			), $dataRow['products_id'], $this->config['imagepath']);
-			
+			$row['PreparedTs'] = $preparedTs;
 			$this->insertPrepareData($row);
 		}
 	}

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaConnector.php 4337 2014-08-06 12:09:45Z tim.neumann $
+ * $Id: MagnaConnector.php 4717 2014-10-15 12:10:30Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -29,14 +29,14 @@ class MagnaConnector {
 	const DEFAULT_TIMEOUT_RECEIVE = 30;
 	const DEFAULT_TIMEOUT_SEND    = 10;
 
-	protected static $instance = NULL;
+	protected static $instance = null;
 
-	protected $passPhrase;
+	protected $passPhrase = '';
 	protected $language = 'english';
 	protected $subsystem = 'Core';
 	protected $timeoutrc = self::DEFAULT_TIMEOUT_RECEIVE; /* Receive Timeout in Seconds */
 	protected $timeoutsn = self::DEFAULT_TIMEOUT_SEND;    /* Send Timeout in Seconds    */
-	protected $magnaApiScript = MAGNA_API_SCRIPT;
+	protected $apiUrl = '';
 	protected $lastRequest = array();
 	protected $requestTime = 0;
 	protected $addRequestProps = array();
@@ -48,15 +48,31 @@ class MagnaConnector {
 	protected function __construct() {
 		$this->updatePassPhrase();
 		$this->cURLStatusInit();
+		
+		$this->setApiUrl(MAGNA_SERVICE_URL.MAGNA_API_SCRIPT);
+		if (function_exists('getDBConfigValue')) {
+			$this->setApiUrl(getDBConfigValue('general.apiurl', 0, ''));
+		}
 	}
 
 	protected function __clone() {}
 
 	public static function gi() {
-		if (self::$instance == NULL) {
+		if (self::$instance === null) {
 			self::$instance = new self();
 		}
 		return self::$instance;
+	}
+	
+	public function setApiUrl($apiUrl) {
+		if (!empty($apiUrl)) {
+			$this->apiUrl = $apiUrl;
+		}
+		return $this;
+	}
+	
+	public function getApiUrl() {
+		return $this->apiUrl;
 	}
 	
 	public function setLanguage($lang) {
@@ -336,9 +352,9 @@ class MagnaConnector {
 		$requestFields['SHOPSYSTEM'] = SHOPSYSTEM;
 	}
 
-	protected function decodeResponse($response) {
+	protected function decodeResponse($response, $timePerRequest) {
 		if (MAGNA_DEBUG && isset($_SESSION['MagnaRAW']) && ($_SESSION['MagnaRAW'] == 'true')) {
-			echo print_m($response, MAGNA_SERVICE_URL.$this->magnaApiScript);
+			echo print_m($response, $this->apiUrl);
 		}
 
 		$startPos = strpos($response, '{#') + 2;
@@ -482,21 +498,22 @@ class MagnaConnector {
 		$response = $this->getFromShortTimeCache($requestHash);
 		if ($response === false) {
 			if (function_exists("curl_version")) {
-				$response = $this->curlRequest(MAGNA_SERVICE_URL.MAGNA_API_SCRIPT, $requestString);
+				$response = $this->curlRequest($this->apiUrl, $requestString);
 			} else {
-				$response = $this->file_post_contents(MAGNA_SERVICE_URL.MAGNA_API_SCRIPT, $requestString);
+				$response = $this->file_post_contents($this->apiUrl, $requestString);
 			}
 		} else {
 			#echo print_m('Cache');
 		}
 		$timePerRequest = array (
+			'apiurl' => $this->apiUrl,
 			'request' => $requestFields,
 			'time' => microtime(true) - $_timer,
 			'status' => 'ERROR'
 		);
-				$this->setShortTimeCache($requestHash, $response);
+		$this->setShortTimeCache($requestHash, $response);
 		
-		$result = $this->decodeResponse($response);
+		$result = $this->decodeResponse($response, $timePerRequest);
 		
 		$this->preprocessResult($result, $response, $timePerRequest);
 		

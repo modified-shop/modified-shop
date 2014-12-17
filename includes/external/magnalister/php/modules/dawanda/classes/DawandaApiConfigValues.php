@@ -76,6 +76,17 @@ class DawandaApiConfigValues extends MagnaCompatibleApiConfigValues {
 	
 	public function getReturnPolicies() {
 		$data = $this->fetchDataFromApi('GetReturnPolicies');
+		#$data = array();
+		if (empty($data)) {
+			$data = array (
+				'' => array (
+					'Id' => '',
+					'Language' => '',
+					'Title' => ML_LABEL_NONE_DEFINED_ON_MP,
+					'Description' => ML_LABEL_NONE_DEFINED_ON_MP,
+				)
+			);
+		}
 		return $data;
 	}
 	

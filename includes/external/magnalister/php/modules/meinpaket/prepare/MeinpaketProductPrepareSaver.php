@@ -121,6 +121,8 @@ class MeinpaketProductPrepareSaver {
 		$defaults = $this->loadDefaults();
 		
 		$pIds = $this->loadProductsModel($pIds);
+		
+		$data['PreparedTs'] = date('Y-m-d H:i:s');
 		foreach ($pIds as $row) {
 			$set = array_replace_recursive(
 				array (

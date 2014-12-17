@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configFunctions.php 4116 2014-07-05 13:36:22Z derpapst $
+ * $Id: configFunctions.php 4799 2014-11-04 18:15:56Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -65,6 +65,9 @@ function mlGetShippingMethods(&$form) {
 	if (SHOPSYSTEM == 'gambio') {
 		$form['values']['__ml_gambio'] = ML_COMPARISON_SHOPPING_LABEL_ARTICLE_SHIPPING_COSTS;
 	}
+	if (MagnaDB::gi()->columnExistsInTable('products_weight', TABLE_PRODUCTS)) {
+		$form['values']['__ml_weight'] = ML_LABEL_SHIPPINGCOSTS_EQ_ARTICLEWEIGHT;
+	}
 	if (!empty($shippingMethods)) {
 		foreach ($shippingMethods as $method) {
 			if ($method['code'] == 'gambioultra') continue;
@@ -76,11 +79,12 @@ function mlGetShippingMethods(&$form) {
 
 function mlGetOrderStatus(&$form) {
 	if (!isset($_SESSION['languages_id'])) {
-		$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne(
-		'SELECT languages_id '.
-		'FROM '.TABLE_LANGUAGES.' l, '.TABLE_CONFIGURATION.' c '.
-		'WHERE l.code=c.configuration_value '.
-		'AND c.configuration_key=\'DEFAULT_LANGUAGE\'');
+		$_SESSION['languages_id'] = MagnaDB::gi()->fetchOne("
+			SELECT languages_id
+			  FROM ".TABLE_LANGUAGES." l, ".TABLE_CONFIGURATION." c 
+			 WHERE l.code=c.configuration_value 
+			       AND c.configuration_key='DEFAULT_LANGUAGE'
+		");
 	}
 	$orders_status_array = MagnaDB::gi()->fetchArray(
 		'SELECT orders_status_id, orders_status_name '.

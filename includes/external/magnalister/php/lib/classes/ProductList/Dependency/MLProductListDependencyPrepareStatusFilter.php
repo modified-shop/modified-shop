@@ -21,13 +21,20 @@ require_once DIR_MAGNALISTER_INCLUDES . 'lib/classes/ProductList/Dependency/MLPr
 
 abstract class MLProductListDependencyPrepareStatusFilter extends MLProductListDependency {
 
-	abstract protected function getPrepareTabel();
+	abstract protected function getPrepareTable();
 
 	abstract protected function getPrepareCondition();
 
 	protected $aConditions = array();
-	protected $sKyeType = '';
+	protected $sKeyType = '';
 	protected $sTable = '';
+	
+	/**
+	 * switch between manipulatequery and keytypefilter
+	 * @var bool
+	 */
+	protected $blUseIdentFilter = true;
+	
 	/**
 	 * makes array of unexecuted ML_Database_Model_Query_Select with querys over prepare table 
 	 * the result will be excluded in MLProductListDependencyPrepareStatusFilter
@@ -36,7 +43,7 @@ abstract class MLProductListDependencyPrepareStatusFilter extends MLProductListD
 	 */
 	protected function getPreparedStatus() {
 		$this->sKeyType = (getDBConfigValue('general.keytype', '0') == 'artNr') ? 'products_model' : 'products_id';
-		$this->sTable = $this->getPrepareTabel();
+		$this->sTable = $this->getPrepareTable();
 		$this->aConditions = $this->getPrepareCondition();
 		$aStatusCOndition = array();
 		foreach($this->aConditions as $sStatus => $aValue){
@@ -46,11 +53,29 @@ abstract class MLProductListDependencyPrepareStatusFilter extends MLProductListD
 	}
 
 	public function manipulateQuery() {
-		if (!in_array($this->getFilterRequest(), array(null, 'all', ''))) {
-			$sStatusValues = $this->getPreparedStatus();
-			$this->getQuery()->where(" {$sStatusValues[$this->getFilterRequest()]}");
+		if (!$this->blUseIdentFilter && !in_array($this->getFilterRequest(), array(null, 'all', ''))) {
+			$aStatusValues = $this->getPreparedStatus();
+			$aFilter = $aStatusValues[$this->getFilterRequest()];
+			$this->getQuery()->where("p." . $this->sKeyType ." ".($aFilter['filter'] == 'in' ? "IN" : "NOT IN")."(".$aFilter['query']->getQuery(false).")");
 		}
 		return $this;
+	}
+	
+	public function getKeyTypeFilter () { 
+		if ($this->blUseIdentFilter && !in_array($this->getFilterRequest(), array(null, 'all', ''))) {
+			$aStatusValues = $this->getPreparedStatus();
+			$aFilter = $aStatusValues[$this->getFilterRequest()];
+			$aFilterValues = array();
+			foreach ($aFilter['query']->getResult() as $aRow) {
+				$aFilterValues[] = $aRow[$this->sKeyType];
+			}
+			return array(
+				'in' => $aFilter['filter'] == 'in' ? $aFilterValues : null,
+				'notIn' => $aFilter['filter'] == 'notIn' ? $aFilterValues : null,
+			);
+		} else {
+			return parent::getKeyTypeFilter();
+		}
 	}
 
 	protected function getDefaultConfig() {
@@ -72,40 +97,40 @@ abstract class MLProductListDependencyPrepareStatusFilter extends MLProductListD
 	}
 	
 	protected function getFailedCondition(){
-		return 'p.' . $this->sKeyType . ' IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
-				->from($this->sTable)
-				->where("
-						mpID = '" . $this->aMagnaSession['mpID'] . "'
+		return array(
+			'filter' => 'in',
+			'query' => MLDatabase::factorySelectClass()
+					->select('DISTINCT '.$this->sKeyType)
+					->from($this->sTable)
+					->where("
+						mpID = '".$this->aMagnaSession['mpID']."'
 						{$this->aConditions['failed']}
-				")
-				->getQuery(false) .
-			')';
+					")
+		);
 	}
 	protected function getPreparedCondition(){
-		return 'p.' . $this->sKeyType . ' IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
+		return array(
+			'filter' => 'in',
+			'query' => MLDatabase::factorySelectClass()
+				->select('DISTINCT '.$this->sKeyType)
 				->from($this->sTable)
 				->where("
-						mpID = '" . $this->aMagnaSession['mpID'] . "'
+						mpID = '".$this->aMagnaSession['mpID']."'
 						{$this->aConditions['prepared']}
 				")
-				->getQuery(false) .
-			')';
+		);
 	}
 	protected function getNotpreparedCondition(){
-		return 'p.' . $this->sKeyType . ' NOT IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
+		return array(
+			'filter' => 'notIn',
+			'query' => MLDatabase::factorySelectClass()
+				->select('DISTINCT '.$this->sKeyType)
 				->from($this->sTable)
 				->where("
-					mpID='" . $this->aMagnaSession['mpID'] . "'
+					mpID = '".$this->aMagnaSession['mpID']."'
 					{$this->aConditions['notprepared']}
 				")
-				->getQuery(false) .
-			')';
+		);
 	}
 
 }

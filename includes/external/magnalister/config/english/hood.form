@@ -53,7 +53,12 @@
                 "desc": "Voreinstellung f&uuml den Artikelzustand (f&uuml;r hood-Kategorien wo dieser angegeben werden kann oder mu&szlig;). Nicht alle Werte sind f&uuml;r jede Kategorie zul&auml;ssig, ggf. mu&szlig; nach der Wahl der Kategorie der Zustand noch mal korrigiert werden.",
                 "values": {
                     "new": "Neu",
-                    "used": "Gebraucht"
+                    "likeNew": "Gebraucht (wie neu)",
+                    "veryGood": "Gebraucht (sehr gut)",
+                    "usedGood": "Gebraucht (gut)",
+                    "acceptable": "Gebraucht (akzeptabel)",
+                    "refurbished": "Generalüberholt",
+                    "defect": "Mit Fehlern oder defekt"
                 }
             },
             "Statusfilter": {
@@ -175,8 +180,8 @@
                 "desc": "Maximale Dauer die Sie brauchen, bis Sie den Artikel versenden. Der Wert wird bei hood angezeigt. <br \/><br>\r\n\t\t\t\t\t\t<b>Hinweis:<\/b><br \/>\r\n\t\t\t\t\t\tWenn Sie Versand \"am gleichen Tag\" w&auml;hlen, legen Sie bitte in Ihrem hood Account entsprechend Ihren Gesch&auml;ftsabl&auml;ufen einen Zeitpunkt fest, bis zu dem die Zahlung des K&auml;ufers bei Ihnen eingegangen sein muss. Die voreingestellte Zeit ist 14:00 Uhr. Pr&uuml;fen Sie, ob Sie die angegebene Bearbeitungszeit einhalten k&ouml;nnen."
             },
             "topTen": {
-                "label": "Kategorie-Schnellauswahl",
-                "desc": "Anzeigen der Kategorie-Schnellauswahl unter Produkte vorbereiten",
+                "label": "Category Quick Selection",
+                "desc": "Display the quick category selection in \"Prepare Products\"",
                 "key": "_#_platform_#_.topten",
                 "type": "extern",
                 "procFunc": "HoodTopTenCategories::renderConfigForm",

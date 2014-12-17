@@ -201,6 +201,7 @@ class DawandaPrepare extends MagnaCompatibleBase {
 
 	public function process() {
 		$this->saveMatching();
+		
 		if ((
 				isset($_POST['prepare'])
 				|| (

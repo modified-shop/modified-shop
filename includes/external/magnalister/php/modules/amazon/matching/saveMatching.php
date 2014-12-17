@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: saveMatching.php 3347 2013-12-02 15:42:17Z tim.neumann $
+ * $Id: saveMatching.php 4658 2014-09-30 11:26:51Z markus.bauer $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -144,8 +144,9 @@ function amazonAutoMatching($mpID, $selectionName) {
 			if (!isset($searchResult[0]['LowestPrice'])) {
 				$searchResult[0]['LowestPrice'] = '0.0';
 			}
-			
+			$_MagnaSession['amazonLastPreparedTS'] = array_key_exists('amazonLastPreparedTS', $_MagnaSession) ? $_MagnaSession['amazonLastPreparedTS'] : date('Y-m-d H:i:s');
 			$data = array(
+				'PreparedTS' => $_MagnaSession['amazonLastPreparedTS'],
 				'mpID' => $mpID,
 				'products_id' => $pID,
 				'products_model' => $pRow['products_model'],
@@ -211,6 +212,8 @@ if (array_key_exists('amazonProperties', $_POST)) {
 		$data['asin'] = $data['item_note'] = $data['category_id'] = $data['category_name'] = $data['item_condition'] = '';
 		$data['asin_type'] = $data['will_ship_internationally'] = $data['lowestprice'] = 0;
 	}
+	$_MagnaSession['amazonLastPreparedTS'] = array_key_exists('amazonLastPreparedTS', $_MagnaSession) ? $_MagnaSession['amazonLastPreparedTS'] : date('Y-m-d H:i:s');
+	$data['PreparedTS'] = $_MagnaSession['amazonLastPreparedTS'];
 	$data['products_model'] = $_POST['model'][$data['products_id']];
 	$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
 		? array (
@@ -263,6 +266,8 @@ if (array_key_exists('action', $_GET) && ($_GET['action'] == 'multimatching') &&
 			$data['asin_type'] = $data['will_ship_internationally'] = $data['lowestprice'] = 0;
 		}
 
+		$_MagnaSession['amazonLastPreparedTS'] = array_key_exists('amazonLastPreparedTS', $_MagnaSession) ? $_MagnaSession['amazonLastPreparedTS'] : date('Y-m-d H:i:s');
+		$data['PreparedTS'] = $_MagnaSession['amazonLastPreparedTS'];
 		$where = (getDBConfigValue('general.keytype', '0') == 'artNr')
 			? array (
 				'products_model' => $data['products_model']

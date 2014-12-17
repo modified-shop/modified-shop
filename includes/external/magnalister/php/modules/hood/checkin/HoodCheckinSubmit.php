@@ -206,7 +206,7 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			), $this->_magnasession['mpID'], true)
 		) {
 			$this->getVariations($pID, $product, $data);
-			if (count($data['submit']['Variations']) == 0) {
+			if (isset($data['submit']['Variations']) && (count($data['submit']['Variations']) == 0)) {
 				unset($data['submit']['Variations']);
 			}
 		}
@@ -569,15 +569,15 @@ class HoodCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 
 		$this->initSelection(0, 1);
 		$this->init('Verify', count($this->selection));
-		//echo print_m($this->selection, '$this->selection[1]');
-		foreach ($this->selection as $pID => &$data) {
-			if (!isset($data['quantity']) || ($data['quantity'] == 0)) {
-				$data['quantity'] = 1; // hack to get verification of zero quantity items working
-			}
-		}
 		
+		//echo print_m($this->selection, '$this->selection[1]');
 		$this->populateSelectionWithData();
 		//echo print_m($this->selection, '$this->selection[2]');
+		foreach ($this->selection as $pID => &$data) {
+			if (!isset($data['submit']['Quantity']) || ((int)$data['submit']['Quantity'] == 0)) {
+				$data['submit']['Quantity'] = 1; // hack to get verification of zero quantity items working
+			}
+		}
 		
 		$result = $this->sendRequest(false, $echoRequest);
 		

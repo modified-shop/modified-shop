@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaFunctionLib.php 4346 2014-08-06 21:43:33Z derpapst $
+ * $Id: magnaFunctionLib.php 4961 2014-12-09 14:10:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -166,7 +166,7 @@ function shopAdminDiePage($content) {
 }
 
 function sanitizeProductDescription($str, $allowable_tags = '', $allowable_attributes = '') {
-	$str = !isUTF8($str) ? utf8_encode($str) : $str;
+	$str = !magnalisterIsUTF8($str) ? utf8_encode($str) : $str;
 	
 	$str = stripEvilBlockTags($str);
 
@@ -184,7 +184,7 @@ function sanitizeProductDescription($str, $allowable_tags = '', $allowable_attri
 	
 	if ($allowable_tags == '') {
 		$str = str_replace(array("\n", "\t", "\v", "|"), " ", $str);
-    	$str = str_replace(array("&quot;", "&qout;"), " \"", $str);
+		$str = str_replace(array("&quot;", "&qout;"), " \"", $str);
 
 		$str = str_replace(array("&nbsp;"), " ", $str);
 
@@ -706,6 +706,12 @@ function getCurrencyFromMarketplace($mpID) {
 }
 
 function magnaSKU2pID($sku, $mainOnly = false) {
+	$pID = 0;
+
+	if (empty($sku)) {
+		return $pID;
+	}
+
 	# check character sets
 	global $_MagnaSession;
 	if (    (!array_key_exists('character_set_client', $_MagnaSession)) 
@@ -726,8 +732,6 @@ function magnaSKU2pID($sku, $mainOnly = false) {
 	
 	$sku = MagnaDB::gi()->escape($sku);
 
-	$pID = 0;
-
 	/* {Hook} "MagnaSKU2pID": Enables you to implement your own algorithm to identify products in your shop
 	   based on their SKU.<br>
 	   Variables that can be used: 
@@ -745,25 +749,62 @@ function magnaSKU2pID($sku, $mainOnly = false) {
 
 	if (!$mainOnly) {
 		# Assume it's a Variation.
-		$aID = magnaSKU2aID($sku);
-		if ($aID !== false) {
+		# if Gambio Properties enabled, check it out
+		# use 'while' so that we can 'break'
+		while (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+			$lengthMasterNo = strpos($sku, '-'); # <masterNo>-<var>[-<varNo>]*
+			if (!$lengthMasterNo) break; // ggf noch vorsehen dass ArtNr mit '-' anfangen koennte
+			$skuInParts = explode('-', $sku);
+			if (getDBConfigValue('general.keytype', '0') != 'artNr') {
+				$skuInParts[0] = ltrim($skuInParts[0], 'MLV_');
+				if (!is_numeric($skuInParts[0])) break;
+				$pID = $skuInParts[0];
+				return $pID;
+			}
+			# keytype == artNr
 			$pID = (int)MagnaDB::gi()->fetchOne('
-				SELECT products_id FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
-				WHERE products_attributes_id=\''.$aID.'\' LIMIT 1
+				SELECT products_id FROM '.TABLE_PRODUCTS.'
+					WHERE products_model=\''.$skuInParts[0].'\' LIMIT 1
 			');
+			if (!$pID) {
+				# the master No. can have several '-'s inside
+				$partSku = $skuInParts[0];
+				$lastPart = 1;
+				do {
+					$partSku .= '-'.$skuInParts[$lastPart];
+					$pID = (int)MagnaDB::gi()->fetchOne('
+						SELECT products_id FROM '.TABLE_PRODUCTS.'
+						WHERE products_model=\''.$partSku.'\' LIMIT 1
+					');
+					$lastPart += 1;
+				} while ((0 == $pID) && isset($skuInParts[$lastPart]));
+			}
 			if ($pID > 0)  {
 				return $pID;
 			}
-		}
-		
-		# Try a variation from the magnalister variations table
-		$pID = (int)MagnaDB::gi()->fetchOne(eecho('
-		    SELECT MAX(products_id) FROM '.TABLE_MAGNA_VARIATIONS.' 
-		     WHERE ('.mlGetVariationSkuField().'="'.$sku.'" OR variation_products_model="'.$sku.'")
-		     LIMIT 1
-		', false));
-		if ($pID > 0) {
-			return $pID;
+			break;
+		} 
+		if (getDBConfigValue('general.options', '0', 'old') != 'gambioProperties') {
+			$aID = magnaSKU2aID($sku);
+			if ($aID !== false) {
+				$pID = (int)MagnaDB::gi()->fetchOne('
+					SELECT products_id FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
+					WHERE products_attributes_id=\''.$aID.'\' LIMIT 1
+				');
+				if ($pID > 0)  {
+					return $pID;
+				}
+			}
+			
+			# Try a variation from the magnalister variations table
+			$pID = (int)MagnaDB::gi()->fetchOne(eecho('
+		    	SELECT MAX(products_id) FROM '.TABLE_MAGNA_VARIATIONS.' 
+		     	WHERE ('.mlGetVariationSkuField().'="'.$sku.'" OR variation_products_model="'.$sku.'")
+		     	LIMIT 1
+			', false));
+			if ($pID > 0) {
+				return $pID;
+			}
 		}
 	}
 
@@ -793,11 +834,15 @@ function magnaSKU2pID($sku, $mainOnly = false) {
 function magnaSKU2aID($sku, $pId = false, $multiple = false) {
 	$aID = false;
 
+	if (empty($sku)) {
+		return $aID;
+	}
+
 	/* {Hook} "MagnaSKU2aID": Enables you to implement your own algorithm to identify variation products in your shop
 	   based on their SKU.<br>
 	   Variables that can be used: 
 	   <ul><li>$sku: The SKU string.</li>
-	       <li>$aID: The detected products_id. If $pID !== false the function returns the value, otherwise it will continue with the identification process.</li>
+	       <li>$aID: The detected products_id. If $pId !== false the function returns the value, otherwise it will continue with the identification process.</li>
 	   </ul>
 	 */
 	if (($hp = magnaContribVerify('MagnaSKU2aID', 1)) !== false) {
@@ -807,6 +852,53 @@ function magnaSKU2aID($sku, $pId = false, $multiple = false) {
 	if ($aID !== false) {
 		return $aID;
 	}
+
+	# if Gambio Properties enabled, check it out
+	if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+		if (false === $pId) $pId = magnaSKU2pID($sku);
+		if (false === $pId) {
+			return false;
+		}
+		if ('artNr' != getDBConfigValue('general.keytype', '0')) {
+			$skuInParts = explode('-', $sku);
+			if (!array_key_exists(1, $skuInParts)) {
+				return false;
+			}
+			$propLists = array();
+			// take every single property in the SKU, and look for matching products_properties_combis_id
+			// for the product. Then look which products_properties_combis_id matches all properties.
+			// If several do (cannot happen), take the first one.
+			foreach ($skuInParts as $prop) {
+				if (!strpos($prop, '.')) {
+					// leave out the products_id
+					continue;
+				}
+				$combis_ids = MagnaDB::gi()->fetchArray('
+					SELECT DISTINCT products_properties_combis_id
+					  FROM products_properties_index
+					 WHERE products_id = '.$pId.'
+					       AND CONCAT(properties_id, \'.\', properties_values_id) = \''.$prop.'\'
+				', true);
+				$propLists[] = $combis_ids;
+			}
+			$propResult = array();
+			foreach ($propLists as $propList) {
+				if (empty($propResult)) $propResult = $propList;
+				else $propResult = array_intersect($propResult, $propList);
+			}
+			$combis_id = (int)array_pop($propResult);
+			return $combis_id;
+		} else {
+			$aID = (int)MagnaDB::gi()->fetchOne('
+				SELECT ppc.products_properties_combis_id
+				  FROM products_properties_combis ppc, '.TABLE_PRODUCTS.' p
+				 WHERE ppc.products_id = p.products_id
+					   AND CONCAT(p.products_model, \'-\', ppc.combi_model) = \''.$sku.'\'
+					   AND p.products_id = '.$pId
+			);
+			return $aID;
+		}
+	}
 	
 	do {
 		if ('artNr' != getDBConfigValue('general.keytype', '0')) {
@@ -815,7 +907,7 @@ function magnaSKU2aID($sku, $pId = false, $multiple = false) {
 
 		// preg_match might interpret latin1 strings with umlauts as binary string.
 		// So we have to convert them to proper utf8 first.
-		$utf8Sku = isUTF8($sku) ? $sku : utf8_encode($sku);
+		$utf8Sku = magnalisterIsUTF8($sku) ? $sku : utf8_encode($sku);
 		if (preg_match('/(.*)_MLV([0-9]*)_([0-9]*)$/u', $utf8Sku, $match)) {
 			$pID = magnaSKU2pID($match[1]);
 			return MagnaDB::gi()->fetchOne('
@@ -921,6 +1013,9 @@ function magnaPID2SKU($pID) {
 }
 
 function magnaAID2SKU($aID) {
+	if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+		return magnaGambioPropID2SKU($aID);
+	}
 	if ('artNr' == getDBConfigValue('general.keytype', '0')) {
 		$attrModel = '';
 		if (MagnaDB::gi()->columnExistsInTable('attributes_model', TABLE_PRODUCTS_ATTRIBUTES)) {
@@ -953,6 +1048,45 @@ function magnaAID2SKU($aID) {
 	}
 }
 
+function magnaGambioPropID2SKU($combisID) {
+	if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+		$propModel = (string)MagnaDB::gi()->fetchOne('
+			SELECT CONCAT(p.products_model, \'-\', ppc.combi_model) AS SKU
+				FROM '.TABLE_PRODUCTS.' p, products_properties_combis ppc
+			   WHERE ppc.products_id=p.products_id
+				     AND ppc.products_properties_combis_id = '.$combisID);
+	}
+	if (!empty($propModel)) {
+		return $propModel;
+	}
+	# else keytype = products_id
+	$pID = (int)MagnaDB::gi()->fetchOne('
+		SELECT DISTINCT products_id FROM products_properties_combis WHERE products_properties_combis_id = '.$combisID);
+	if (false === $pID) {
+		return false;
+	}
+	$language_id = magnaGetDefaultLanguageID(); // we need 1 language here, no matter which one
+	$propModel = 'ML'.$pID;
+	$props = MagnaDB::gi()->fetchArray('
+		SELECT CONCAT(\'-\', properties_id, \'.\', properties_values_id)
+			FROM products_properties_index
+		  WHERE products_properties_combis_id = '.$combisID.'
+		        AND products_id = '.$pID.'
+		        AND language_id = '.$language_id.'
+		  ORDER BY properties_id, properties_values_id
+		');
+	foreach ($props as $prop) {
+		if (!empty($prop)) {
+			$propModel .= $prop;
+		}
+	}
+	if (!empty($propModel)) {
+		return $propModel;
+	} else {
+		return false;
+	}
+}
+
 function magnaSKU2pOpt($sku, $language = 'en', $multiple = false) {
 	$ret = array(
 		'options_id' => 0,
@@ -970,6 +1104,24 @@ function magnaSKU2pOpt($sku, $language = 'en', $multiple = false) {
 	if ($aID === false) {
 		return $ret;
 	}
+
+	if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+	// aID ist dann combis_id
+		$ret = MagnaDB::gi()->fetchArray('
+			SELECT ppi.properties_id AS options_id,
+			       ppi.properties_name AS options_name,
+                   ppi.properties_values_id AS options_values_id,
+			       ppi.values_name AS options_values_name,
+			       ABS(ppi.values_price) AS options_values_price,
+			       IF(ppi.values_price < 0, \'-\', \'+\') AS price_prefix
+			  FROM products_properties_index ppi, '.TABLE_LANGUAGES.' l
+			 WHERE ppi.products_properties_combis_id = '.$aID.'
+			   AND LOWER(l.code) = LOWER(\''.$language.'\')
+			   AND l.languages_id = ppi.language_id
+		');
+		return $ret;
+	}
+
 	if (!is_array($aID)) $aID = array($aID); 
 	$options = array();
 	$optionsAreEmpty = true;
@@ -1133,6 +1285,7 @@ function loadConfigForm($lang, $files, $replace = array()) {
 
 function getTinyMCEDefaultConfigObject() {
 	global $_langISO;
+	$fullpage = getDBConfigValue(array('general.editor.fullpage', 'val'), 0, 'false') == 'true';
 	return '
 if (typeof tinyMCEMagnaDefaultConfig == "undefined") {
 	var tinyMCEMagnaDefaultConfig = {
@@ -1141,7 +1294,7 @@ if (typeof tinyMCEMagnaDefaultConfig == "undefined") {
 		plugins: [
 			"advlist autolink lists link image charmap print preview anchor",
 			"searchreplace visualblocks code fullscreen textcolor",
-			"insertdatetime media table contextmenu paste emoticons"
+			"insertdatetime media table contextmenu paste emoticons'.($fullpage ? ' fullpage' : '').'"
 		],
 		toolbar: "insertfile undo redo | styleselect | fontselect | fontsizeselect | bold italic | forecolor backcolor | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image",
 		//toolbar1: "insertfile undo redo | bold italic | forecolor backcolor | fontselect fontsizeselect | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | styleselect | link image",
@@ -1172,7 +1325,7 @@ function magna_wysiwyg($params, $value = '') {
 	}
 	$html .= '>'.str_replace('<', '&lt;', (string)$value).'</textarea>';
 
-	if ('tinyMCE' == getDBConfigValue('general.editor',0,'tinyMCE')) {
+	if ('tinyMCE' == getDBConfigValue('general.editor', 0, 'tinyMCE')) {
 		$html .= '<script type="text/javascript" src="'.DIR_MAGNALISTER_WS.'js/tinymce/tinymce.min.js"></script>';
 		
 		ob_start();?>

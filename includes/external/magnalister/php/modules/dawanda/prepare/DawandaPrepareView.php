@@ -53,17 +53,14 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			$dbOldSelectionQuery .= '
 		INNER JOIN ' . TABLE_PRODUCTS . ' p ON dp.products_model = p.products_model
 		INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON p.products_id = ms.pID AND dp.mpID = ms.mpID
-		 LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id
 			';
 		} else {
 			$dbOldSelectionQuery .= '
 		INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON dp.products_id = ms.pID AND dp.mpID = ms.mpID
-		 LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = dp.products_id
 			';
 		}
 		$dbOldSelectionQuery .='
-		     WHERE pd.language_id = "' . getDBConfigValue($this->marketplace.'.lang', $this->mpID) . '"
-		           AND selectionname = "prepare"
+		     WHERE selectionname = "prepare"
 		           AND ms.mpID = "' . $this->mpID . '"
 		           AND session_id="' . session_id() . '"
 		           AND dp.products_id IS NOT NULL
@@ -81,20 +78,10 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		# die Namen schon fuer diese Tabelle
 		# products_short_description nicht bei OsC, nur bei xtC, Gambio und Klonen
 		$dbNewSelectionQuery = '
-		    SELECT p.products_id, p.products_model,
-		           p.products_price Price,
-		           ms.mpID mpID,
-		           pd.products_name products_name,
-		           '.($shortDescColumnExists ? 'pd.products_short_description' : '"" AS products_short_description').',
-		           pd.products_description,
-		           m.manufacturers_name Manufacturer
+		    SELECT ms.mpID mpID, p.products_id, p.products_model
 		      FROM ' . TABLE_PRODUCTS . ' p
 		INNER JOIN ' . TABLE_MAGNA_SELECTION . ' ms ON ms.pID = p.products_id
-		 LEFT JOIN ' . TABLE_PRODUCTS_DESCRIPTION . ' pd ON pd.products_id = p.products_id
-		 LEFT JOIN ' . TABLE_MANUFACTURERS . ' m ON p.manufacturers_id = m.manufacturers_id
 		     WHERE '.($keytypeIsArtNr ? 'p.products_model' : 'p.products_id').' NOT IN ("' . implode('", "', $oldProducts) . '")
-		           AND pd.language_id = "' . getDBConfigValue($this->marketplace.'.lang', $this->mpID) . '"
-		           AND ms.mpID = "' . $this->mpID . '"
 		           AND selectionname="prepare"
 		           AND session_id="' . session_id() . '"
 		';
@@ -143,9 +130,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 	 * @returns string
 	 *     option tags for the select element
 	 */
-	protected function renderCategoryOptions($sType, $jsonCats = null, $sCategoryArrayKey = '') {
-		$aCategories = json_decode($jsonCats, true);
-
+	protected function renderCategoryOptions($sType, $aCategories = array(), $sCategoryArrayKey = '') {
 		switch ($sType) {
 			case 'MarketplaceCategories':
 				$sCMFunc = 'getMPCategoryPath';
@@ -220,7 +205,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			).'
 								</td>
 								<td class="lastChild">
-									<input class="ml-button" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
+									<input class="ml-button mlbtn-action" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>
@@ -243,6 +228,8 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 	 * 	enhealt bereits vorausgefuellte daten aus Config oder User-eingaben
 	 */
 	protected function renderMultiPrepareView($data) {
+		#echo print_m($data, '$data');
+		
 		// Check which values all prepared products have in common to preselect the values.
 		$preSelected = array (
 			'MarketplaceCategories' => array(),
@@ -260,59 +247,66 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			'ReturnPolicy' => getDBConfigValue($this->marketplace.'.prepare.returnpolicy', $this->mpID, ''),
 			'ListingDuration' => getDBConfigValue($this->marketplace.'.listing_duration', $this->mpID, '120'),
 			'ShippingService' => getDBConfigValue($this->marketplace.'.shipping_service', $this->mpID, ''),
+			'MarketplaceCategories' => '[]',
+			'StoreCategories' => '[]',
+			'MpColors' => '[]',
+			'Attributes' => '[]',
 		);
 
 		$loadedPIds = array();
 		foreach ($data as $row) {
 			$loadedPIds[] = $row['products_id'];
 			foreach ($preSelected as $field => $collection) {
-				$preSelected[$field][] = isset($row[$field]) ? $row[$field] : array();
+				$preSelected[$field][] = isset($row[$field]) ? $row[$field] : null;
 			}
 		}
+		#echo print_m($preSelected, '$preSelected{'.__LINE__.'}');
 		foreach ($preSelected as $field => $collection) {
 			$collection = array_unique($collection);
 			if (count($collection) == 1) {
 				$preSelected[$field] = array_shift($collection);
+				if (($preSelected[$field] === null) && isset($defaults[$field])) {
+					$preSelected[$field] = $defaults[$field];
+				}
 			} else {
 				$preSelected[$field] = isset($defaults[$field])
 					? $defaults[$field]
 					: null;
 			}
 		}
+		#echo print_m($preSelected, '$preSelected{'.__LINE__.'}');
 		
-		// prepare the categories
-		foreach (array('PrimaryCategory', 'SecondaryCategory') as $kat) {
-			if (!isset($preSelected[$kat]) || !((int)$preSelected[$kat] > 0)) {
-				$preSelected[$kat] = '';
-				$preSelected[$kat.'Name'] = '';
-			} else {
-				$preSelected[$kat.'Name'] = $this->oCategoryMatching->getMPCategoryPath($preSelected[$kat]);
-			}
+		$preSelected['MarketplaceCategories'] = json_decode($preSelected['MarketplaceCategories'], true);
+		if (!is_array($preSelected['MarketplaceCategories'])) {
+			$preSelected['MarketplaceCategories'] = array();
 		}
-		foreach (array('StoreCategory') as $kat) {
-			if (!isset($preSelected[$kat]) || !((int)$preSelected[$kat] > 0)) {
-				$preSelected[$kat] = '';
-				$preSelected[$kat.'Name'] = '';
-			} else {
-				$preSelected[$kat.'Name'] = $this->oCategoryMatching->getShopCategoryPath($preSelected[$kat]);
-			}
+		$preSelected['StoreCategories'] = json_decode($preSelected['StoreCategories'], true);
+		if (!is_array($preSelected['StoreCategories'])) {
+			$preSelected['StoreCategories'] = array();
 		}
-
-		//Marktplatz Farben Array
-		$preSelected['MpColors'] = json_decode($preSelected['MpColors']);
+		
+		$preSelected['MpColors'] = json_decode($preSelected['MpColors'], true);
 		if (!isset($preSelected['MpColors'][0])) {
 			$preSelected['MpColors'][0] = 'X';
 		}
 		if (!isset($preSelected['MpColors'][1])) {
 			$preSelected['MpColors'][1] = 'X';
 		}
+		
+		$preSelected['Attributes'] = json_decode($preSelected['Attributes'], true);
+		if (!is_array($preSelected['Attributes'])) {
+			$preSelected['Attributes'] = array();
+		}
+		foreach (array('primary', 'secondary') as $attribGroup) {
+			if (!isset($preSelected['Attributes'][$attribGroup])) {
+				$preSelected['Attributes'][$attribGroup] = array();
+			}
+		}
 
 		#Show $preSelected
-		#echo print_m($preSelected, '$preSelected');
+		#echo print_m($preSelected, '$preSelected{'.__LINE__.'}');
 
-		/*
-		 * Feldbezeichner | Eingabefeld | Beschreibung
-		 */
+		// Feldbezeichner | Eingabefeld | Beschreibung
 		$oddEven = false;
 		$html = '
 			<tbody>
@@ -415,7 +409,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 					<td class="input">
 						<table class="inner middle fullwidth categorySelect"><tbody>
 							<tr>
-								<td class="label">1. '.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.':</td>
+								<td class="label"><!--1. -->'.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.':</td>
 								<td>
 									<div class="hoodCatVisual" id="PrimaryCategoryVisual">
 										<select id="PrimaryCategory" name="PrimaryCategory" style="width:100%">
@@ -424,10 +418,10 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectPrimaryCategory"/>
+									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectPrimaryCategory"/>
 								</td>
 							</tr>
-							<tr>
+							<!--<tr> Currently not supported by dawanda.
 								<td class="label">2. '.ML_GENERIC_CATEGORIES_MARKETPLACE_CATEGORIE.':</td>
 								<td>
 									<div class="hoodCatVisual" id="SecondaryCategoryVisual">
@@ -437,9 +431,9 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectSecondaryCategory"/>
+									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectSecondaryCategory"/>
 								</td>
-							</tr>
+							</tr>-->
 							<tr>
 								<td class="label">'.ML_GENERIC_CATEGORIES_MARKETPLACE_STORE_CATEGORIE.':</td>
 								<td>
@@ -450,7 +444,7 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectStoreCategory"/>
+									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_GENERIC_CATEGORIES_CHOOSE.'" id="selectStoreCategory"/>
 								</td>
 							</tr>
 						</tbody></table>
@@ -460,13 +454,50 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 				<tr class="spacer">
 					<td colspan="3">&nbsp;</td>
 				</tr>
-			</tbody>
-		';
+			</tbody>';
+		foreach ($preSelected['Attributes'] as $attribGroup => $attribSets) {
+			$cId = isset($preSelected['MarketplaceCategories'][$attribGroup])
+				? $preSelected['MarketplaceCategories'][$attribGroup]
+				: '';
+			
+			$catAttribHtml = '';
+			if (!empty($cId)) {
+				$catAttribHtml = $this->getMpCategoryAttributes($cId, $attribGroup, $attribSets);
+			}
+			$html .= '
+			<tbody id="ml-js-attributes'.$attribGroup.'" style="display:'.(empty($catAttribHtml) ? 'none' : 'table-row-group').'">
+				'.$catAttribHtml.'
+			</tbody>';
+		}
 
 		ob_start();
 		?>
 		<script type="text/javascript">/*<![CDATA[*/
-			function generateCategoryPath(dropDown, cID, categoryPath) {
+			function getMpCategoryAttributes(cID, aMode, preselectedValues) {
+				jQuery.ajax({
+					type: 'POST',
+					url: '<?php echo toURL($this->resources['url'], array('where' => 'prepareView', 'kind' => 'ajax'), true);?>',
+					data: {
+						'action': 'GetMpCategoryAttributes',
+						'cId': cID,
+						'mode': aMode,
+						'preselectedValues': preselectedValues || {}
+					},
+					success: function(data) {
+						$('#ml-js-attributes'+aMode).html(data+'');
+						if (data == '') {
+							$('#ml-js-attributes'+aMode).css({'display':'none'});
+						} else {
+							$('#ml-js-attributes'+aMode).css({'display':'table-row-group'});
+						}
+					},
+					error: function() {
+					},
+					dataType: 'html'
+				});
+			}
+			
+			function generateCategoryPath(dropDown, categoryPath) {
 				dropDown.find('option').attr('selected', '');
 				if (dropDown.find('[value='+cID+']').length > 0) {
 					dropDown.find('[value='+cID+']').attr('selected','selected');
@@ -491,13 +522,21 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			$(document).ready(function() {
 				$('#selectPrimaryCategory').click(function() {
 					mpCategorySelector.startCategorySelector(function(cID, categoryPath) {
-						generateCategoryPath($('#PrimaryCategory'), cID, categoryPath);
+						generateCategoryPath($('#PrimaryCategory'), categoryPath);
+						$('#PrimaryCategory').trigger('change');
 					}, 'mp');
+				});
+				$('#PrimaryCategory').change(function () {
+					getMpCategoryAttributes($(this).val(), 'primary', $('#primaryPreselectedValues').val());
 				});
 				$('#selectSecondaryCategory').click(function() {
 					mpCategorySelector.startCategorySelector(function(cID, categoryPath) {
-						generateCategoryPath($('#SecondaryCategory'), cID, categoryPath);
+						generateCategoryPath($('#SecondaryCategory'), categoryPath);
+						$('#SecondaryCategory').trigger('change');
 					}, 'mp');
+				});
+				$('#SecondaryCategory').change(function () {
+					getMpCategoryAttributes($(this).val(), 'secondary', $('#secondaryPreselectedValues').val());
 				});
 				
 				$('#selectStoreCategory').click(function() {
@@ -516,6 +555,42 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 		return $html;
 	}
 
+	protected function getMpCategoryAttributes($cId, $mode, $preselectedValues) {
+		try {
+			$specsOptions = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'GetItemSpecifics',
+				'DATA' => array (
+					'CategoryID' => $cId,
+					'FormStructure' => true,
+				)
+			));
+		} catch (MagnaException $e) {
+			return '';
+		}
+		if (!array_key_exists('specifics', $specsOptions['DATA'])
+			|| empty($specsOptions['DATA']['specifics'])
+		) {
+			return '';
+		}
+		$specsOptions = $specsOptions['DATA'];
+		$specsOptions['specifics']['key'] = array('Attributes', $mode);
+		$const = 'ML_LABEL_EBAY_'.strtoupper($mode).'_CATEGORY';
+		$specsOptions['specifics']['head'] = ML_EBAY_LABEL_ATTRIBUTES_FOR.' '.(defined($const)
+			? constant($const)
+			: ML_LABEL_EBAY_PRIMARY_CATEGORY
+		);
+		if (!is_array($preselectedValues)) {
+			$preselectedValues = json_decode($preselectedValues, true);
+		}
+		require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/GenerateProductsDetailInput.php');
+		if (!empty($preselectedValues)) {
+			$gPDI = new GenerateProductsDetailInput($specsOptions, $preselectedValues);
+		} else {
+			$gPDI = new GenerateProductsDetailInput($specsOptions);
+		}
+		return $gPDI->render();
+	}
+	
 	protected function processMagnaExceptions() {
 		$ex = DawandaApiConfigValues::gi()->getMagnaExceptions();
 		$html = '';
@@ -547,6 +622,10 @@ class DawandaPrepareView extends MagnaCompatibleBase {
 			echo $this->oCategoryMatching->renderAjax();
 		} else if (array_key_exists('action', $_POST)) {
 			switch ($_POST['action']) {
+				case 'GetMpCategoryAttributes': {
+					echo $this->getMpCategoryAttributes($_POST['cId'], $_POST['mode'], isset($_POST['preselectedValues']) ? $_POST['preselectedValues'] : array());
+					break;
+				}
 				default: {
 					break;
 				}

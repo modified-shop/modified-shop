@@ -42,6 +42,7 @@ class AmazonCheckinProductList extends MLProductListAmazonAbstract {
 			->addDependency('MLProductListDependencyCheckinToSummaryAction', array('selectionname' => $this->getSelectionName()))                        
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
 			->addDependency('MLProductListDependencyAmazonHistoryAction')
+			->addDependency('MLProductListDependencyAmazonLastPreparedFilter')//no config, amazon is very special
 //			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;
 	}
@@ -54,10 +55,10 @@ class AmazonCheckinProductList extends MLProductListAmazonAbstract {
 		parent::buildQuery()
 			->oQuery->join(
 				"(
-					SELECT products_id FROM `".TABLE_MAGNA_AMAZON_APPLY."` WHERE data<>'' AND is_incomplete='false' AND mpID='".$this->aMagnaSession['mpID']."'
+					SELECT ".$sKeyType." FROM `".TABLE_MAGNA_AMAZON_APPLY."` WHERE data <> '' AND is_incomplete = 'false' AND mpID = '".$this->aMagnaSession['mpID']."'
 					UNION 
-					SELECT products_id FROM `".TABLE_MAGNA_AMAZON_PROPERTIES."` WHERE asin <>'' AND mpID='".$this->aMagnaSession['mpID']."'
-				) prepared on p.`products_id` = prepared.`products_id`",
+					SELECT ".$sKeyType." FROM `".TABLE_MAGNA_AMAZON_PROPERTIES."` WHERE asin <> '' AND mpID = '".$this->aMagnaSession['mpID']."'
+				) prepared ON p.".$sKeyType." = prepared.".$sKeyType."",
 				ML_Database_Model_Query_Select::JOIN_TYPE_INNER
 			)
 		;

@@ -104,7 +104,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			<ul><li>$orderId</li>
 			    <li>$TrackingCode (must be calculated in the contrib file)</li>
 			</ul>
-			Please use MagnaDB methods to acces the database.
+			Please use MagnaDB methods to access the database.
 		*/
 		if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('EbaySyncOrderStatus_replaceGetTrackingCode', 1)) !== false)) {
 			require($hp);
@@ -128,7 +128,7 @@ class EbaySyncOrderStatus extends MagnaCompatibleSyncOrderStatus {
 			<ul><li>$orderId</li>
 			    <li>$Carrier (must be calculated in the contrib file)</li>
 			</ul>
-			Please use MagnaDB methods to acces the database.
+			Please use MagnaDB methods to access the database.
 		*/
 		if (function_exists('magnaContribVerify') && (($hp = magnaContribVerify('EbaySyncOrderStatus_replaceGetCarrier', 1)) !== false)) {
 			require($hp);

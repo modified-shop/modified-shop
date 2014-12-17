@@ -29,11 +29,10 @@ class MeinpaketSyncInventory extends MagnaCompatibleSyncInventory {
 
 	public function __construct($mpID, $marketplace, $limit = 100) {
 		parent::__construct($mpID, $marketplace, $limit);
-		
-		$this->setupMlProduct();
 	}
 	
-	protected function setupMlProduct() {
+	protected function initMLProduct() {
+		parent::initMLProduct();
 		MLProduct::gi()->setLanguage(getDBConfigValue('meinpaket.lang', $this->mpID, 1))
 			->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID))
 			->setQuantityConfig(MeinpaketHelper::loadQuantitySettings($this->mpID))

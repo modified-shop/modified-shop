@@ -32,7 +32,7 @@ class_exists('MLProductList') or die();
 						<tbody>
 							<tr>
 								<td>
-									<input type="submit" name="prepare" id="prepare" value="<?php echo ML_EBAY_LABEL_PREPARE; ?>" class="fullWidth ml-button smallmargin" />
+									<input type="submit" name="prepare" id="prepare" value="<?php echo ML_EBAY_LABEL_PREPARE; ?>" class="fullWidth ml-button smallmargin mlbtn-action" />
 								</td>
 							</tr>
 						</tbody>

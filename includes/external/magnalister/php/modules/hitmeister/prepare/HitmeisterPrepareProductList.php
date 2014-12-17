@@ -20,28 +20,33 @@
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/MLProductList.php');
 
 class HitmeisterPrepareProductList extends MLProductList {
+	protected $aPrepareData = array();
 	
 	public function __construct() {
-	       $this->aListConfig[] = array(
-                            'head' => array(
-                                'attributes' => 'class="lowestprice"',
-                                'content' => 'ML_MAGNACOMPAT_LABEL_CATEGORY',
-                            ),
-                            'field' => array('magnacompatmpcategory'),
-                        );
-                        $this->aListConfig[] = array(
-                            'head' => array(
-                                'attributes' => 'class="matched"',
-                                'content' => 'ML_MAGNACOMPAT_LABEL_PREPARED',
-                            ),
-                            'field' => array('preparestatusindicator'),
-                        );
-                        parent::__construct();
-                        $this
+		$this->aListConfig[] = array(
+			'head' => array(
+				'attributes' => 'class="lowestprice"',
+				'content' => 'ML_MAGNACOMPAT_LABEL_CATEGORY'
+			),
+			'field' => array(
+				'magnacompatmpcategory'
+			)
+		);
+		$this->aListConfig[] = array(
+			'head' => array(
+				'attributes' => 'class="matched"',
+				'content' => 'ML_MAGNACOMPAT_LABEL_PREPARED'
+			),
+			'field' => array(
+				'preparestatusindicator'
+			)
+		);
+		
+		parent::__construct();
+		
+		$this
 			->addDependency('MLProductListDependencyHitmeisterPrepareFormAction', array('selectionname' => $this->getSelectionName()))
-			->addDependency('MLProductListDependencyHitmeisterPrepareStatusFilter')
-				
-                        ;
+			->addDependency('MLProductListDependencyHitmeisterPrepareStatusFilter');
 	}
 	
 	protected function getSelectionName() {
@@ -49,61 +54,70 @@ class HitmeisterPrepareProductList extends MLProductList {
 	}
 	
 	protected function getPreparedStatusIndicator($aRow) {
-                        $aData = $this->getPrepareData($aRow);
-                        if ($aData !== false) {
-                                    if ($aData['mp_category_id'] != '') {
-                                                return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_COMPLETE, 12, 12);
-                                    } else {
-                                                return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 12, 12);
-                                    }
-                        }
-                        return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_NOT_PREPARED, 12, 12);
-            }
-            
-            protected $aPrepareData = array();
+		$aData = $this->getPrepareData($aRow);
+		if ($aData !== false) {
+			if ($aData['mp_category_id'] != '') {
+				return html_image(DIR_MAGNALISTER_WS_IMAGES.'status/green_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_COMPLETE, 9, 9);
+			} else {
+				return html_image(DIR_MAGNALISTER_WS_IMAGES.'status/red_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 9, 9);
+			}
+		}
+		return html_image(DIR_MAGNALISTER_WS_IMAGES.'status/grey_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_NOT_PREPARED, 9, 9);
+	}
+	
+
 	protected function getPrepareData($aRow, $sFieldName = null) {
 		if (!isset($this->aPrepareData[$aRow['products_id']])) {
-                                    $this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
+			$this->aPrepareData[$aRow['products_id']] = MagnaDB::gi()->fetchRow("
 				SELECT * 
-				FROM ".TABLE_MAGNA_HITMEISTER_PREPARE." 
-				WHERE 
-					".(
-						(getDBConfigValue('general.keytype', '0') == 'artNr')
-							? 'products_model=\''.MagnaDB::gi()->escape($aRow['products_model']).'\''
-							: 'products_id=\''.$aRow['products_id'].'\''
-					)."
-					AND mpID = '".$this->aMagnaSession['mpID']."'
+				  FROM ".TABLE_MAGNA_HITMEISTER_PREPARE." 
+				 WHERE ".((getDBConfigValue('general.keytype', '0') == 'artNr') 
+					? 'products_model=\''.MagnaDB::gi()->escape($aRow['products_model']).'\'' 
+					: 'products_id=\''.$aRow['products_id'].'\''
+				)."
+				        AND mpID = '".$this->aMagnaSession['mpID']."'
 			");
 		}
-		if($sFieldName === null){
+		if ($sFieldName === null) {
 			return $this->aPrepareData[$aRow['products_id']];
-		}else{
+		} else {
 			return isset($this->aPrepareData[$aRow['products_id']][$sFieldName]) ? $this->aPrepareData[$aRow['products_id']][$sFieldName] : null;
 		}
 	}
-        
-         protected function getMarketPlaceCategory($aRow) {
-                        $aData = $this->getPrepareData($aRow);
-                        if ($aData !== false) {
-                                    $matchMPShopCats = !getDBConfigValue(array($this->aMagnaSession['currentPlatform'] . '.catmatch.mpshopcats', 'val'), $this->aMagnaSession['mpID'], false);
-                                    return '
+	
+	protected function getMarketPlaceCategory($aRow) {
+		$aData = $this->getPrepareData($aRow);
+		if ($aData !== false) {
+			$matchMPShopCats = !getDBConfigValue(array(
+				$this->aMagnaSession['currentPlatform'].'.catmatch.mpshopcats', 'val'
+			), $this->aMagnaSession['mpID'], false);
+			
+			return '
 			<table class="nostyle"><tbody>
-				<tr><td>MP:</td><td>'.(empty($aData['mp_category_id']) ? '&mdash;' : $aData['mp_category_id']).(empty($aData['mp_category_name']) ? '' : ' '.$aData['mp_category_name']).'</td><tr>
-				'.($matchMPShopCats 
-					? ('<tr><td>Store:</td><td>'.(empty($aData['store_category_id']) ? '&mdash;' : $aData['store_category_id']).'</td><tr>')
+				<tr>
+					<td>MP:</td>
+					<td>'.(empty($aData['mp_category_id']) ? '&mdash;' : $aData['mp_category_id']).(empty($aData['mp_category_name']) ? '' : ' '.$aData['mp_category_name']).'</td>
+				</tr>
+				'.($matchMPShopCats
+					? ('<tr><td>Store:</td><td>'.(
+						empty($aData['store_category_id']) 
+							? '&mdash;' 
+							: $aData['store_category_id']
+						).'</td></tr>') 
 					: ''
 				).'
 			</tbody></table>';
-                        }
-                        return '&mdash;';
-            }
-            /**
+		}
+		return '&mdash;';
+	}
+	
+	/**
 	 * adding propertiestable for filter
 	 */
-	protected function buildQuery(){
-                        $oQueryBuilder = parent::buildQuery()->oQuery;					
-                        $oQueryBuilder->where( "p.products_ean IS NOT NULL AND products_ean <> ''");
+	protected function buildQuery() {
+		$oQueryBuilder = parent::buildQuery()->oQuery;
+		$oQueryBuilder->where("p.products_ean IS NOT NULL AND products_ean <> ''");
 		return $this;
 	}
-
+	
 }

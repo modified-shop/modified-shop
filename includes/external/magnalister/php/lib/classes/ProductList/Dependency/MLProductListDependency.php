@@ -42,6 +42,7 @@ abstract class MLProductListDependency{
 	protected $aMagnaConfig = array();
 	
 	public function setConfig($aFilterConfig) {
+		$this->aConfig = $aFilterConfig;// set twice, to have external config in getDefaultConfig method
 		$this->aConfig = array_merge_recursive_simple($this->getDefaultConfig(), $aFilterConfig);
 		return $this;
 	}
@@ -162,4 +163,16 @@ abstract class MLProductListDependency{
 		}
 		return $sClass;
 	}
+	
+	/**
+	 * returns array of global.config.keytypes which are in main-query in and not in
+	 * @return array  array('in'=> array(), 'notIn'=>array()) // if value === null, dont will be used
+	 */
+	public function getKeyTypeFilter () { 
+		return array(
+			'in' => null,
+			'notIn' => null,
+		);
+	}
+	
 }

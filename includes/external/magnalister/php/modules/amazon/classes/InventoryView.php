@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: InventoryView.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: InventoryView.php 4835 2014-11-11 19:02:20Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -241,9 +241,7 @@ class InventoryView {
 
 	private function prepareInventoryData() {
 		$result = $this->getInventory();
-		if (empty($this->add) && empty($this->updatedelete)) {
-			$this->getPendingItems();
-		}
+		$this->getPendingItems();
 		/*
 		echo print_m(array(
 			'add' => $this->add,
@@ -279,22 +277,38 @@ class InventoryView {
 				
 				$variationTheme = false;
 				if ($aID !== false) {
-					$variationTheme = MagnaDB::gi()->fetchRow('
-					    SELECT pa.products_id AS pID, po.products_options_name AS VariationTitle,
-					           pov.products_options_values_name AS VariationValue
-					      FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa,
-					           '.TABLE_PRODUCTS_OPTIONS.' po, 
-					           '.TABLE_PRODUCTS_OPTIONS_VALUES.' pov, 
-					           '.TABLE_LANGUAGES.' l
-					     WHERE pa.products_attributes_id = \''.$aID.'\'
-					           AND po.language_id = l.languages_id
-					           AND po.products_options_id = pa.options_id
-					           AND pov.language_id = l.languages_id
-					           AND pov.products_options_values_id = pa.options_values_id
-					           AND l.directory = \''.$_SESSION['language'].'\'
-					     LIMIT 1
-					');
+					if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+						$variationTheme = MagnaDB::gi()->fetchArray(eecho('
+							SELECT ppi.products_id AS pID, ppi.properties_name AS VariationTitle,
+					   			ppi.values_name AS VariationValue
+				  			FROM products_properties_index ppi
+				 			WHERE ppi.products_id = \''.$item['pID'].'\'
+							AND ppi.products_properties_combis_id = \''.$aID.'\'
+				   			AND ppi.language_id = \''.getDBConfigValue(
+			                			$this->magnaSession['currentPlatform'].'.lang',
+			                			$this->magnaSession['mpID'],
+			                			$_SESSION['languages_id']
+										).'\''
+							, false));
+						$item['pID'] = $variationTheme[0]['pID'];
+					} else {
+						$variationTheme = MagnaDB::gi()->fetchRow('
+					    	SELECT pa.products_id AS pID, po.products_options_name AS VariationTitle,
+					           	pov.products_options_values_name AS VariationValue
+					      	FROM '.TABLE_PRODUCTS_ATTRIBUTES.' pa,
+					           	'.TABLE_PRODUCTS_OPTIONS.' po, 
+					           	'.TABLE_PRODUCTS_OPTIONS_VALUES.' pov, 
+					           	'.TABLE_LANGUAGES.' l
+					     	WHERE pa.products_attributes_id = \''.$aID.'\'
+					           	AND po.language_id = l.languages_id
+					           	AND po.products_options_id = pa.options_id
+					           	AND pov.language_id = l.languages_id
+					           	AND pov.products_options_values_id = pa.options_values_id
+					           	AND l.directory = \''.$_SESSION['language'].'\'
+					     	LIMIT 1
+						');
 					$item['pID'] = $variationTheme['pID'];
+					}
 				}
 				
 				if ($item['pID'] > 0) {
@@ -304,8 +318,15 @@ class InventoryView {
 						 WHERE products_id=\''.$item['pID'].'\'
 						       AND language_id = \''.$_SESSION['languages_id'].'\'
 					');
-					if (is_array($variationTheme) && !empty($variationTheme['VariationTitle']) && !empty($variationTheme['VariationValue'])) {
-						$item['ShopItemName'] .= ' '.$variationTheme['VariationTitle'].': '.$variationTheme['VariationValue'];
+					if (is_array($variationTheme)) {
+						if (array_key_exists('VariationTitle', $variationTheme)) {
+						$variationTheme = array($variationTheme);
+						}
+						foreach ($variationTheme as $theme) {
+							if(is_array($theme) && !empty($theme['VariationTitle']) && !empty($theme['VariationValue'])) {
+								$item['ShopItemName'] .= ' '.$theme['VariationTitle'].': '.$theme['VariationValue'];
+							}
+						}
 					}
 					$item['Type'] = 'inventory';
 				} else {

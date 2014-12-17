@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinManager.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: CheckinManager.php 4633 2014-09-23 08:19:58Z miguel.heredia $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -263,9 +263,9 @@ class CheckinManager {
 						<table class="right"><tbody>
 							<tr>
 								<td class="textleft">
-									<input type="button" class="fullWidth ml-button smallmargin" value="'.ML_BUTTON_LABEL_CHECKIN_ADD.'" id="checkin_add" name="checkin_add"/>
+									<input type="button" class="fullWidth ml-button smallmargin mlbtn-action" value="'.ML_BUTTON_LABEL_CHECKIN_ADD.'" id="checkin_add" name="checkin_add"/>
 									'.(MAGNA_DEBUG || (isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] == 'true'))
-										? '<input type="button" class="ml-button smallmargin" style="margin-top: -21px; position: absolute; right: 30px;" '.
+										? '<input type="button" class="ml-button smallmargin" style="margin-top: -26px; position: absolute; right: 30px;" '.
 									             'value=" " id="checkin_add_debug" name="checkin_add_debug"/>'
 									    : '').'
 								</td>

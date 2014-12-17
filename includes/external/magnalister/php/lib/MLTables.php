@@ -42,7 +42,7 @@ define('TABLE_MAGNA_TECDOC', 'magnalister_tecdoc');
 define('TABLE_MAGNA_API_REQUESTS', 'magnalister_api_requests');
 define('TABLE_MAGNA_MEINPAKET_CATEGORYMATCHING', 'magnalister_meinpaket_categorymatching');
 define('TABLE_MAGNA_MEINPAKET_PROPERTIES', 'magnalister_meinpaket_properties');
-define('TABLE_MAGNA_MEINPAKET_CATEGORIES', 'magnalister_meinpaket_categories');
+define('TABLE_MAGNA_MEINPAKET_CATEGORIES', 'magnalister_meinpaket_categories'); //@deprecated
 define('TABLE_MAGNA_MEINPAKET_ERRORLOG', 'magnalister_meinpaket_errorlog');
 define('TABLE_MAGNA_MEINPAKET_VARIANTMATCHING', 'magnalister_meinpaket_variantmatching');
 define('TABLE_MAGNA_COMPAT_CATEGORYMATCHING', 'magnalister_magnacompat_categorymatching');
@@ -55,3 +55,4 @@ define('TABLE_MAGNA_HOOD_PROPERTIES', 'magnalister_hood_properties');
 define('TABLE_MAGNA_HOOD_ERRORLOG', 'magnalister_hood_errorlog');
 define('TABLE_MAGNA_HOOD_DELETEDLOG', 'magnalister_hood_deletedlog');
 define('TABLE_MAGNA_DAWANDA_PROPERTIES', 'magnalister_dawanda_properties');
+define('TABLE_MAGNA_BEPADO_PROPERTIES', 'magnalister_bepado_properties');

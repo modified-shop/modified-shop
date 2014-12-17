@@ -105,6 +105,10 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 				'key' => 'orderstatus.shipped',
 				'default' => false,
 			),
+			'CarrierDefault' => array(
+				'key' => 'orderstatus.carrier.default',
+				'default' => false,
+			),
 			'CarrierMatchingTable' => array (
 				'key' => 'orderstatus.carrier.dbmatching.table',
 				'default' => false,
@@ -173,14 +177,22 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	
 	/**
 	 * Fetches a carrier if supported by the marketplace.
+	 *   more priority on matching
 	 * @return string
 	 *   The carrier
 	 */
 	protected function getCarrier($orderId) {
-		return $this->runDbMatching(array (
+		$mCarrier = $this->runDbMatching(array (
 			'Table' => $this->config['CarrierMatchingTable'],
 			'Alias' => $this->config['CarrierMatchingAlias']
 		), 'orders_id', $orderId);
+
+		// carrier should not be empty
+		if (false == $mCarrier && !empty($this->config['CarrierDefault'])) {
+			$mCarrier = $this->config['CarrierDefault'];
+		}
+
+		return $mCarrier;
 	}
 	
 	/**
@@ -426,6 +438,9 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		}
 		$this->processResponseConfirmations($result);
 		$this->processResponseErrors($result);
+
+		$this->storeLogging('Request', $request);
+		$this->storeLogging('Result', $result);
 	}
 	
 	/**
@@ -528,6 +543,7 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 	 */
 	public function process() {
 		#echo print_m($this->config, '$this->config');
+		$this->storeLogging('Config', $this->config);
 		
 		if ($this->config['OrderStatusSync'] != 'auto') {
 			return false;
@@ -576,7 +592,8 @@ class MagnaCompatibleSyncOrderStatus extends MagnaCompatibleCronBase {
 		$this->submitStatusUpdate('CancelShipment',  $this->cancellations);
 		
 		$this->saveDirtyOrders();
-		
+
+		$this->storeLogging('Unprocessed', $this->unprocessed);
 		$this->updateUnprocessed();
 		//*/
 		return true;

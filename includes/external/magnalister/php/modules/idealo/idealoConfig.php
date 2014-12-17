@@ -36,6 +36,15 @@ $form = loadConfigForm($_lang,
 mlGetCountries($form['shipping']['fields']['country']);
 mlGetLanguages($form['lang']['fields']['lang']);
 mlGetShippingMethods($form['shipping']['fields']['method']);
+mlGetCustomersStatus($form['price']['fields']['whichprice'], false);
+if (!empty($form['price']['fields']['whichprice'])) {
+	$form['price']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
+	ksort($form['price']['fields']['whichprice']['values']);
+	unset($form['price']['fields']['specialprices']);
+} else {
+	unset($form['price']['fields']['whichprice']);
+}
+
 $form['checkin']['fields']['imagepath']['default'] =
 	defined('DIR_WS_CATALOG_POPUP_IMAGES')	? HTTP_CATALOG_SERVER.DIR_WS_CATALOG_POPUP_IMAGES
 		: HTTP_CATALOG_SERVER.DIR_WS_CATALOG_IMAGES;

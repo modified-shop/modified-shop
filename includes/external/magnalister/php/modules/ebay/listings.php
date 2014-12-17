@@ -24,17 +24,12 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/listingsBox.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/InventoryView.php');
 require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/DeletedView.php');
-require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/ErrorView.php');
 
 $_url['mode'] = 'listings';
 
 echo generateListingsBox();
 
-if ($_magnaQuery['view'] == 'inventory') {
-	$iV = new InventoryView($_MagnaSession['mpID']);
-	echo $iV->renderView();
-	
-} else if ($_magnaQuery['view'] == 'deleted') {
+if ($_magnaQuery['view'] == 'deleted') {
 	if (isset($_MagnaShopSession[$_MagnaSession['currentPlatform']]['Delete'])) {
 		$iV = new InventoryView();
 		$productsToDelete = $iV->processAddedDeletedProducts(
@@ -45,7 +40,9 @@ if ($_magnaQuery['view'] == 'inventory') {
 	echo $dV->renderView();
 	
 } else {
-	$eV = new ErrorView();
-	echo $eV->renderView();
+	$_magnaQuery['view'] = 'inventory';
+	
+	$iV = new InventoryView($_MagnaSession['mpID']);
+	echo $iV->renderView();
 }
 

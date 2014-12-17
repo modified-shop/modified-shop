@@ -36,6 +36,14 @@ $form = loadConfigForm($_lang,
 mlGetCountries($form['shipping']['fields']['country']);
 mlGetLanguages($form['lang']['fields']['lang']);
 mlGetShippingMethods($form['shipping']['fields']['method']);
+mlGetCustomersStatus($form['price']['fields']['whichprice'], false);
+if (!empty($form['price']['fields']['whichprice'])) {
+	$form['price']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
+	ksort($form['price']['fields']['whichprice']['values']);
+	unset($form['price']['fields']['specialprices']);
+} else {
+	unset($form['price']['fields']['whichprice']);
+}
 
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_getdeal');
 $cG->setRenderTabIdent(true);

@@ -36,6 +36,8 @@ MagnaConnector::gi()->setAddRequestsProps(array(
 ));
 
 require_once(DIR_MAGNALISTER_MODULES.'ebay/ebayFunctions.php');
+require_once(DIR_MAGNALISTER_MODULES.'ebay/classes/EbayApiConfigValues.php');
+EbayApiConfigValues::gi()->init($_MagnaSession);
 
 loadDBConfig($_MagnaSession['mpID']);
 $requiredConfigKeys =$_modules[$_MagnaSession['currentPlatform']]['requiredConfigKeys'];
@@ -105,6 +107,9 @@ if ($_magnaQuery['mode'] == 'prepare') {
 
 } else if ($_magnaQuery['mode'] == 'listings') {
 	$includes[] = DIR_MAGNALISTER_MODULES.'ebay/listings.php';
+	
+} else if ($_magnaQuery['mode'] == 'errorlog') {
+	$includes[] = DIR_MAGNALISTER_MODULES.'ebay/errorlog.php';
 
 } else if ($_magnaQuery['mode'] == 'conf') {
 	$includes[] = DIR_MAGNALISTER_MODULES.'ebay/ebayConfig.php';

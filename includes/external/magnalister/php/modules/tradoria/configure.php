@@ -74,6 +74,7 @@ class TradoriaConfigure extends MagnaCompatibleConfigure {
 	}
 	
 	protected function finalizeForm() {
+		parent::finalizeForm();
 		$this->form['checkin']['fields']['tax']['procFunc'] = array($this, 'confTaxMatching');
 	}
 

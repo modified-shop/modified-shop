@@ -116,8 +116,11 @@ function getPaymentClassForEbayPaymentMethod($paymentMethod) {
             $class = 'paypal';
         else if (in_array('paypalng.php', $PaymentModules))
             $class = 'paypalng';
+        else if (in_array('paypalexpress.php', $PaymentModules))
+            $class = 'paypalexpress';
         
-    } else if (stripos($paymentMethod, 'Rechnung') !== false) {
+    } else if (  (stripos($paymentMethod, 'Rechnung') !== false)
+	           ||('PayUponInvoice' == $paymentMethod)) {
         # Auf Rechnung
         if (in_array('invoice.php', $PaymentModules))
             $class = 'invoice';
@@ -320,6 +323,11 @@ function magnaUpdateEbayOrders($mpID) {
             if (MagnaDB::gi()->columnExistsInTable('payment_class', TABLE_ORDERS)) {
                 $order['payment_class'] = $order['payment_method'];
             }
+			if (!array_key_exists('PaymentInstruction', $order)) {
+				$order['PaymentInstruction'] = ML_EBAY_ORDER_PAID;
+			} else {
+				$order['PaymentInstruction'] = ML_EBAY_PUI_MSG_TO_BUYER.$order['PaymentInstruction'];
+			}
             unset ($order['PaymentMethod']);
             if ($updateOrdersStatus && in_array($order['orders_id'], $paidOrders)) {
                 # Status aendern aktiv, Bestellung bei eBay bezahlt
@@ -338,9 +346,30 @@ function magnaUpdateEbayOrders($mpID) {
                         'orders_status_id' => $paidStatus,
                         'date_added' => date('Y-m-d H:i:s'),
                         'customer_notified' => '0',
-                        'comments' => ML_EBAY_ORDER_PAID
+                        'comments' => $order['PaymentInstruction']
                     ));
-                }
+				}
+            } else if (ML_EBAY_ORDER_PAID != $order['PaymentInstruction']) {
+				list($oldStatus,$oldPaymentMethod) = MagnaDB::gi()->fetchRow('SELECT orders_status, payment_method FROM '.TABLE_ORDERS.' WHERE orders_id = '.$order['orders_id']);
+				$PaymentInstructionAlreadyInserted = (boolean)MagnaDB::gi()->fetchOne('SELECT COUNT(*)
+					FROM '.TABLE_ORDERS.'
+				   WHERE orders_id = '.$order['orders_id'].'
+					 AND comments LIKE \''.ML_EBAY_PUI_MSG_TO_BUYER.'%\'');
+				# Keine Status-Aenderung, aber PaymentInstruction uebermittelt
+				# (bei PayUponInvoice, nur wenn wir die payment_method updaten
+				#  - ggf. gibt es für beide Zahlarten kein match, daher
+				#    Zusatzbedingung 'PaymentInstruction noch nicht eingetragen'
+				if (    ($order['payment_method'] != $oldPaymentMethod)
+				     || (!$PaymentInstructionAlreadyInserted)
+				   ) {
+                    $MagnaDB->insert(TABLE_ORDERS_STATUS_HISTORY, array (
+                        'orders_id' => $order['orders_id'],
+                        'orders_status_id' => $oldStatus,
+                        'date_added' => date('Y-m-d H:i:s'),
+                        'customer_notified' => '0',
+                        'comments' => $order['PaymentInstruction']
+                     ));
+				}
             }
             $currentOrderID = $order['orders_id'];
             unset($order['orders_id']);
@@ -407,6 +436,7 @@ function magnaUpdateEbayOrders($mpID) {
 			}
 
             unset($currentOrderID);
+            unset($order);
         }
 	
         # acknowledge the update to server

@@ -25,7 +25,7 @@ define('MODULE_SHIPPING_YATEGO_SORT_ORDER', 'Sortierung');
 define('MODULE_SHIPPING_YATEGO_TEXT_TITLE', 'Versand festgelegt durch Yatego.');
 define('MODULE_SHIPPING_YATEGO_TEXT_WAY', 'Versand festgelegt durch Yatego.');
 define('MODULE_SHIPPING_YATEGO_ALLOWED_TITLE' , 'Erlaubte Zonen');
-define('MODULE_SHIPPING_YATEGO_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
+define('MODULE_SHIPPING_YATEGO_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand möglich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_YATEGO_STATUS_TITLE', 'Versandfestlegung durch Yatego');
 define('MODULE_SHIPPING_YATEGO_STATUS_DESC', 'M&ouml;chten Sie Versandfestlegung durch Yatego anbieten?');
 define('MODULE_SHIPPING_YATEGO_SORT_ORDER_TITLE', 'Sortierreihenfolge');

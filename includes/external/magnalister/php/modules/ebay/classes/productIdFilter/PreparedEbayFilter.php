@@ -53,12 +53,12 @@ class PreparedEbayFilter extends AbstractProductIdFilter {
 		
 		$sSql = "
 			SELECT DISTINCT p.products_id 
-			FROM " . TABLE_PRODUCTS . " p 
-			INNER JOIN " . TABLE_MAGNA_EBAY_PROPERTIES . " ep on " . (
-				(getDBConfigValue('general.keytype', '0') == 'artNr') ? 'p.products_model=ep.products_model' : 'p.products_id=ep.products_id'
-			) . "
-			WHERE ep.Verified ='OK'
-			AND ep.mpID='" . $_MagnaSession['mpID'] . "'
+			FROM ".TABLE_PRODUCTS." p
+			INNER JOIN ".TABLE_MAGNA_EBAY_PROPERTIES." ep on ".(
+				(getDBConfigValue('general.keytype', '0') == 'artNr') ? 'p.products_model = ep.products_model' : 'p.products_id = ep.products_id'
+			)."
+			WHERE ep.Verified = 'OK'
+			AND ep.mpID = '".$_MagnaSession['mpID']."'
 		";
 		
 		// Makes simple filters perform worse

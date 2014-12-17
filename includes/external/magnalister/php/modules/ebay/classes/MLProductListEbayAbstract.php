@@ -52,9 +52,10 @@ abstract class MLProductListEbayAbstract extends MLProductList {
 				'frozen' => false,
 				'value' => '&mdash;'
 			);
-		}else{
-			if (0.0 == $fPrice) { # Preis nicht eingefroren => berechnen
-				$fPrice = makePrice($aRow['products_id'], $this->getPrepareData($aRow, 'ListingType'));
+		} else {
+			$sListingsType = $this->getPrepareData($aRow, 'ListingType');
+			if (0.0 == $fPrice || $sListingsType != 'Chinese') { # Preis nicht eingefroren => berechnen
+				$fPrice = makePrice($aRow['products_id'], $sListingsType);
 				$priceFrozen = false;
 			} else {
 				$priceFrozen = true;

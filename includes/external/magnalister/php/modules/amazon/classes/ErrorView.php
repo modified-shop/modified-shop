@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ErrorView.php 4319 2014-08-01 13:49:42Z tim.neumann $
+ * $Id: ErrorView.php 4826 2014-11-09 02:39:18Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -85,6 +85,7 @@ class ErrorView {
 					'mpID' => $this->mpID,
 					'batchid' => $item['BatchID'],
 					'dateadded' => $item['DateAdded'],
+					'errorcode' => $item['ErrorCode'],
 					'errormessage' => $item['ErrorMessage'],
 					'additionaldata' => serialize($item['AdditionalData']),
 				);
@@ -120,6 +121,14 @@ class ErrorView {
 				$this->sort['order'] = 'errormessage';
 				$this->sort['type']  = 'DESC';
 				break;
+			case 'errorcode':
+				$this->sort['order'] = 'errorcode';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'errorcode-desc':
+				$this->sort['order'] = 'errorcode';
+				$this->sort['type']  = 'DESC';
+				break;
 			case 'dateadded':
 				$this->sort['order'] = 'dateadded';
 				$this->sort['type']  = 'ASC';
@@ -144,7 +153,7 @@ class ErrorView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
-		    SELECT al.id, al.batchid, al.dateadded, al.errormessage, al.additionaldata
+		    SELECT al.id, al.batchid, al.dateadded, al.errorcode, al.errormessage, al.additionaldata
 		      FROM '.TABLE_MAGNA_AMAZON_ERRORLOG.' al
 		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
@@ -331,6 +340,7 @@ $(document).ready(function() {
 						<td class="nowrap"><input type="checkbox" id="selectAll"/><label for="selectAll">'.ML_LABEL_CHOICE.'</label></td>
 						<td>BatchID</td>
 						<td>'.ML_AMAZON_LABEL_ADDITIONAL_DATA.'</td>
+						<td>'.ML_GENERIC_ERROR_CODE.'&nbsp;'.$this->sortByType('errorcode').'</td>
 						<td>'.ML_GENERIC_ERROR_MESSAGES.'&nbsp;'.$this->sortByType('errormessage').'</td>
 						<td>'.ML_GENERIC_COMMISSIONDATE.'&nbsp;'.$this->sortByType('commissiondate').'</td>
 					</tr></thead>
@@ -363,6 +373,7 @@ $(document).ready(function() {
 								: $item['batchid']
 							).'</td>
 							<td class="nopadding" style="width: 1px">'.$this->additionalDataHandler($item['additionaldata']).'</td>
+							<td class="errorcode">'.(empty($item['errorcode']) ? '&mdash;' : $item['errorcode']).'</td>
 							<td class="errormessage">'.(
 								($shortMessage !== false) 
 									? $shortMessage.'&hellip;<span>'.$item['errormessage'].'</span>' 
