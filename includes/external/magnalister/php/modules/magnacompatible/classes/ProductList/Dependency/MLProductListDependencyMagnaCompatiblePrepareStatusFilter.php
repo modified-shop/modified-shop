@@ -29,7 +29,7 @@ class MLProductListDependencyMagnaCompatiblePrepareStatusFilter extends MLProduc
 		);
 	}
 
-	protected function getPrepareTabel() {
+	protected function getPrepareTable() {
 		return TABLE_MAGNA_COMPAT_CATEGORYMATCHING;
 	}
 

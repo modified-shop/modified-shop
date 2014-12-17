@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnaCallback.php 4285 2014-07-24 23:17:44Z derpapst $
+ * $Id: magnaCallback.php 4779 2014-10-30 12:41:14Z tim.neumann $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -491,6 +491,16 @@ function magnaInstalled($woDBCheck = false) {
 	//commerce:Seo v2
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+	} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
+		$sVersion = MagnaDB::gi()->fetchOne('
+			    SELECT version
+			      FROM version_history
+			  ORDER BY installation_date DESC
+			     LIMIT 1
+			');
+		if (version_compare($sVersion, '2.1', '>=')) {
+			MagnaDB::gi()->setCharset('utf8');
+		}
 	}
 	$_magnaIsInstalled = MagnaDB::gi()->tableExists(TABLE_MAGNA_CONFIG);
 	if (!$_magnaIsInstalled) return $_magnaIsInstalled;
@@ -714,6 +724,16 @@ function magnaCallbackRun() {
 	//commerce:Seo v2
 	if (defined('DB_SERVER_CHARSET')) {
 		MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+	} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
+		$sVersion = MagnaDB::gi()->fetchOne('
+			    SELECT version
+			      FROM version_history
+			  ORDER BY installation_date DESC
+			     LIMIT 1
+			');
+		if (version_compare($sVersion, '2.1', '>=')) {
+			MagnaDB::gi()->setCharset('utf8');
+		}
 	}
 	/* Language-Foo */
 	$_magnaAvailableLanguages = magnaGetAvailableLanguages();
@@ -838,9 +858,9 @@ function magnaCallbackRun() {
 		
 		echo magnaEncodeResult(magnaExecute($_POST['function'], $arguments, $includes));
 
-		ob_start(); /* Kein Output, nur ordendliches Beenden */
-		require_once('includes/application_bottom.php');
-		ob_end_clean();
+		#ob_start(); /* Kein Output, nur ordendliches Beenden */
+		#require_once('includes/application_bottom.php'); // Bindet oftmals jede menge mist ein den wir nicht gebrauchen koennen, der dann auseinander fallt, daher erst mal raus.
+		#ob_end_clean();
 		return;
 	}
 	
@@ -855,9 +875,9 @@ function magnaCallbackRun() {
 			$magnaFunc = MAGNA_EXECUTE_INSTEAD;
 			$magnaFunc();
 		}
-		ob_start(); /* Kein Output, nur ordendliches Beenden */
-		require_once('includes/application_bottom.php');
-		ob_end_clean();
+		#ob_start(); /* Kein Output, nur ordendliches Beenden */
+		#require_once('includes/application_bottom.php'); // Selbe Grund wie weiter oben.
+		#ob_end_clean();
 	}
 
 }

@@ -25,7 +25,7 @@ define('MODULE_SHIPPING_AMAZON_SORT_ORDER', 'Sortierung');
 define('MODULE_SHIPPING_AMAZON_TEXT_TITLE', 'Versand festgelegt durch Amazon.');
 define('MODULE_SHIPPING_AMAZON_TEXT_WAY', 'Versand festgelegt durch Amazon.');
 define('MODULE_SHIPPING_AMAZON_ALLOWED_TITLE' , 'Erlaubte Zonen');
-define('MODULE_SHIPPING_AMAZON_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
+define('MODULE_SHIPPING_AMAZON_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand möglich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_AMAZON_STATUS_TITLE', 'Versandfestlegung durch Amazon');
 define('MODULE_SHIPPING_AMAZON_STATUS_DESC', 'M&ouml;chten Sie Versandfestlegung durch Amazon anbieten?');
 define('MODULE_SHIPPING_AMAZON_SORT_ORDER_TITLE', 'Sortierreihenfolge');

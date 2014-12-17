@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: german.php 4290 2014-07-25 22:09:49Z derpapst $
+ * $Id: german.php 4918 2014-11-25 17:01:05Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -31,6 +31,7 @@ define('ML_HEADLINE_MORE_MODULES', 'Weitere Anbindungen an Marketplaces&hellip;'
 define('ML_HEADLINE_NOT_YET_BOOKED', 'Anbindung noch nicht aktiviert.');
 define('ML_HEADLINE_STATS', 'Statistiken');
 define('ML_HEADLINE_SUBMIT_PRODUCTS', '&Uuml;bermittlung der Daten');
+define('ML_HEADLINE_NEWS', 'News');
 
 define('ML_LABEL_CATEGORY_TOP', 'Top');
 define('ML_LABEL_CHOICE', 'Auswahl');
@@ -174,6 +175,9 @@ define('ML_LABEL_UNLIMITED', 'unbegrenzt');
 define('ML_LABEL_SHOP_LANGUAGE', 'Shop Sprache');
 define('ML_LABEL_DONT_SUBMIT', 'Nicht &uuml;bertragen');
 define('ML_LABEL_DATA_CANNOT_BE_FETCHED', 'Daten k&ouml;nnen nicht abgerufen werden.');
+define('ML_LABEL_SHIPPINGCOSTS_EQ_ARTICLEWEIGHT', 'Versandkosten = Artikel-Gewicht');
+define('ML_LABEL_NO_SELECTION', 'Keine Angabe');
+define('ML_LABEL_NONE_DEFINED_ON_MP', 'Keine bei Marktplatz hinterlegt');
 
 /* productlists */
 define('ML_LABEL_TO_SELECTION_SELECT', 'Auswahl (%s ausgew&auml;hlt)');
@@ -185,9 +189,11 @@ define('ML_LABEL_TO_SELECTION_SELECT_SUB_PAGE', 'Auswahl dieser Seite aufheben')
 define('ML_LABEL_TO_SELECTION_SELECT_SUB_ALL', 'Auswahl aller Produkte aufheben');
 
 define('ML_OPTION_FILTER_CATEGORY_ARTICLES_ALL', 'Filter: Kategorien');
+define('ML_OPTION_FILTER_LASTPREPARED_ARTICLES_ALL', 'Filter: Vorbereitet am');
+define('ML_OPTION_FILTER_LASTPREPARED_DATE_FORMAT', 'd.m.Y | H:i \U\h\r');//escape fixed text!!!
 
 define('ML_OPTION_FILTER_ARTICLES_ALL', 'Filter: Marktplatzstatus');
-define('ML_OPTION_FILTER_ARTICLES_NOTTRANSFERRED', 'Zeige noch nicht auf %s eingestellte');
+define('ML_OPTION_FILTER_ARTICLES_NOTTRANSFERRED', 'Zeige noch nie auf %s eingestellte');
 define('ML_OPTION_FILTER_ARTICLES_NOTACTIVE', 'Zeige nicht auf %s vorhandene');
 define('ML_OPTION_FILTER_ARTICLES_ACTIVE', 'Zeige auf %s vorhandene');
 define('ML_OPTION_FILTER_ARTICLES_DELETEDBY_SYNC', 'Zeige beendete durch Ausverkauf');
@@ -198,6 +204,7 @@ define('ML_OPTION_FILTER_PREPARESTATUS_ARTICLES_ALL', 'Filter: Vorbereitungsstat
 define('ML_OPTION_FILTER_PREPARESTATUS_ARTICLES_NOTPREPARED', 'nicht vorbereitete');
 define('ML_OPTION_FILTER_PREPARESTATUS_ARTICLES_FAILED', 'fehlerhaft vorbereitete');
 define('ML_OPTION_FILTER_PREPARESTATUS_ARTICLES_PREPARED', 'vorbereitete');
+
 /* Statistics Labels */
 define('ML_LABEL_STATS_ORDERS_PER_MARKETPLACE_PERCENT', 'Bestellungen pro Marketplace (Prozentual)');
 define('ML_LABEL_STATS_PERCENT_OF_ORDERS', '% der Bestellungen');
@@ -223,6 +230,7 @@ define('ML_MODULE_MEINPAKET', 'MeinPaket.de');
 define('ML_MODULE_LAARY', 'Laary.eu');
 define('ML_MODULE_TWENGA', 'Twenga');
 define('ML_MODULE_GLOBAL_CONFIG', 'Globale Konfiguration');
+define('ML_MODULE_STATISTICS', 'Statistiken');
 define('ML_MODULE_GUIDE', 'Hilfe');
 define('ML_MODULE_TRADORIA', 'Rakuten');
 
@@ -237,6 +245,7 @@ define('ML_BUTTON_LABEL_SAVE_AND_NEXT', 'Speichern und weiter');
 define('ML_BUTTON_LABEL_RESET', 'Zur&uuml;cksetzen');
 define('ML_BUTTON_LABEL_SUMMARY', 'Auswahl hochladen: Zusammenfassung');
 define('ML_BUTTON_LABEL_DELETE', 'L&ouml;schen');
+define('ML_BUTTON_LABEL_DELETE_ENTIRE_PROTOCOL', 'Gesamtes Protokoll l&ouml;schen');
 define('ML_BUTTON_LABEL_REFRESH', 'Aktualisieren');
 define('ML_BUTTON_LABEL_BACK_TO_TEMPLATEADMIN', 'Zur&uuml;ck zur Vorlagenverwaltung');
 define('ML_BUTTON_LABEL_BACK_TO_CHECKIN', 'Zur&uuml;ck');
@@ -271,25 +280,29 @@ define('ML_TEXT_GENERIC_SAFE_MODE', 'Auf Ihrem System ist die Safe-Mode Beschr&a
 define('ML_TEXT_NEW_VERSION', 'Eine neue Version (%s) des magnalisters ist verf&uuml;gbar.
 	Um den magnalister zu aktualisieren, klicken Sie bitte #hier#.<br/>
 	<b>Wichtig:</b> Erstellen Sie zuvor ein Backup Ihres Shops (Dateien und Datenbank).
-	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.');
+	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.
+	Anpassungen durch Hook-Points gehen nicht verloren und sind update-sicher.');
 define('ML_TEXT_NEW_VERSION_SAFE_MODE', 'Eine neue Version (%s) des magnalisters ist verf&uuml;gbar.<br/><br/>
 	'.ML_TEXT_GENERIC_SAFE_MODE.'<br/><br/>
 	<b>Wichtig:</b> Erstellen Sie zuvor ein Backup Ihres Shops (Dateien und Datenbank).
-	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.');
+	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.
+	Anpassungen durch Hook-Points gehen nicht verloren und sind update-sicher.');
 define('ML_TEXT_IMPORTANT_UPDATE', 'Eine neue Version (%s) des magnalisters ist verf&uuml;gbar.
 	Diese ist nicht abw&auml;rtskompatibel zum vorherigen System. Daher ist ein
 	Update auf die neuste Version zwingend notwendig! Um den magnalister zu aktualisieren
 	klicken Sie bitte #hier#.<br/>
 	<b>Wichtig:</b> Erstellen Sie zuvor ein Backup Ihres Shops (Dateien und Datenbank).
-	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.');
+	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.
+	Anpassungen durch Hook-Points gehen nicht verloren und sind update-sicher.');
 define('ML_TEXT_IMPORTANT_UPDATE_SAFE_MODE', 'Eine neue Version des magnalisters (%s) ist verf&uuml;gbar.
 	Diese ist nicht abw&auml;rtskompatibel zum vorherigen System. Daher ist ein
 	Update auf die neuste Version zwingend notwendig!<br/><br/>
 	'.ML_TEXT_GENERIC_SAFE_MODE.'<br/><br/>
 	<b>Wichtig:</b> Erstellen Sie zuvor ein Backup Ihres Shops (Dateien und Datenbank).
-	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.');
+	Selbst gemachte &Auml;nderungen am magnalister gehen durch das Update verloren.
+	Anpassungen durch Hook-Points gehen nicht verloren und sind update-sicher.');
 define('ML_TEXT_UPDATE_SUCCESS', 'Das Update wurde erfolgreich durchgef&uuml;hrt. Eine Liste der wichtigsten &Auml;nderungen k&ouml;nnen Sie im 
-    <a href="'.toURL(array('module' => 'viewchangelog')).'" title="Change-Log">Change-Log</a> einsehen.');
+	<a href="'.toURL(array('module' => 'viewchangelog')).'" title="Change-Log">Change-Log</a> einsehen.');
 define('ML_TEXT_UPDATE_SHOP_CHANGES', 'Bei diesem Update sind &Auml;nderungen an den Original-Quelltexten Ihres Shops n&ouml;tig.<br /><br />
 	Bitte laden Sie die <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/download.php" title="aktuelle Version">aktuelle Version</a>
 	des magnalisters herunter und lesen Sie die Upgrade-Anleitung.<br /><br />
@@ -313,8 +326,8 @@ define('ML_TEXT_LISTING_GOING_TO_EXCEED', '
 	<p>Sie k&ouml;nnen einfach ein <a target="_blank" href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php/rateupgrade:%d" title="Tarif-Upgrade">Tarif-Upgrade</a>
 	   r&uuml;ckwirkend zum Monatsanfang vornehmen und haben damit volle Kostenkontrolle.</p>');
 define('ML_TEXT_CURRENT_MODULE_NOT_BOOKED', 'Zur Aktivierung von <b>%s</b> loggen Sie sich unter 
-    <a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein, 
-    w&auml;hlen "Meine Shops" und beantragen &uuml;ber den "Bearbeiten-Button" weitere Marketplaces.');
+	<a href="'.MAGNA_PUBLIC_SERVER.'frontend/login.php" title="Kunden Login" target=_blank">'.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login</a> ein, 
+	w&auml;hlen "Meine Shops" und beantragen &uuml;ber den "Bearbeiten-Button" weitere Marketplaces.');
 define('ML_TEXT_MORE_MODULES', '<p>Sie haben keine weiteren Anbindungen gebucht, 
 	oder es sind keine weiteren Marketplaces zur Anbindung vorhanden.</p>
 	<p>Zur Buchung weiterer Anbindungen loggen Sie sich unter 
@@ -335,7 +348,7 @@ define('ML_TEXT_CONFIG_SAVED_SEMI_SUCCESSFULLY', 'Einige &Auml;nderungen konnten
 define('ML_TEXT_TEMPLATE_INFO', 'In den Vorauswahlen speichern Sie eine Auswahl an Produkten mit verschiedenen Werten, die nachtr&auml;glich vor dem Einstellprozess 
 	teilweise &auml;nderbar sind.');
 define('ML_TEXT_CONFIRM_PURGE', '<strong>Hinweis:</strong> Sie sind dabei Ihr Inventar vollst&auml;ndig zu ersetzen. 
-    Dieser Vorgang l&ouml;scht erst <strong>komplett</strong> Ihren Marketplace-Bestand, und ersetzt ihn dann mit den hier ausgew&auml;hlten Artikeln.<br/><br/>
+	Dieser Vorgang l&ouml;scht erst <strong>komplett</strong> Ihren Marketplace-Bestand, und ersetzt ihn dann mit den hier ausgew&auml;hlten Artikeln.<br/><br/>
 	Wollen Sie wirklich fortfahren?');
 define('ML_TEXT_TAB_IDENT', 'Legt die Bezeichnung des Tabs f&uuml;r diesen Marketplace fest, um ihn besser von den anderen Marketplace-Tabs unterscheiden zu k&ouml;nnen (optional).');
 define('ML_TEXT_FTP_CORRECT', 'FTP Zugangsdaten &uuml;berpr&uuml;ft und gespeichert.');
@@ -346,10 +359,14 @@ define('ML_TEXT_CONFIRM_SKU_CHANGE_TEXT', 'Seien Sie sich bewusst, dass sich die
 	&auml;ndern, nach dem Sie bereits Artikel mit einer der beiden Einstellungen &uuml;bertragen haben, zerst&ouml;ren Sie die Nummernkreise, somit
 	kann dann kein Abgleich mehr zwischen magnalister, dem Shop und den Marktpl&auml;tzen erfolgen.');
 
+/* Warning text for switching Attributes / Gambio Variations */
+define('ML_TEXT_CONFIRM_OPTIONS_CHANGE_TITLE', 'Vorsicht!');
+define('ML_TEXT_CONFIRM_OPTIONS_CHANGE_TEXT', 'Durch die Umstellung &auml;ndern sich die Nummernkreise. Sollten Sie bereits Artikelvarianten auf den Marktpl&auml;tzen gelistet haben, k&ouml;nnen die alten Nummernkreise nicht mehr verwendet werden. Damit Lager- und Preisabgleiche funktionieren, m&uuml;ssen Sie die Angebote auf den Marktpl&auml;tzen l&ouml;schen und nach der Umstellung neu hochladen! (betrifft nur Artikel mit Varianten)');
+
 /* NOTICES */
 define('ML_NOTICE_PLACE_PASSPHRASE', 'Bitte hinterlegen Sie Ihre PassPhrase. Diese erhalten Sie nach der 
-    <a href="'.MAGNA_PUBLIC_SERVER.'freetest/%s" title="Jetzt kostenlos testen" target="_blank">Registrierung</a>
-    auf '.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login, sowie per E-Mail.');
+	<a href="'.MAGNA_PUBLIC_SERVER.'freetest/%s" title="Jetzt kostenlos testen" target="_blank">Registrierung</a>
+	auf '.str_replace('http://', 'www.', MAGNA_PUBLIC_SERVER).'login, sowie per E-Mail.');
 define('ML_NOTICE_SUBMIT_PRODUCTS', 'Dieser Vorgang kann je nach Anzahl der Artikel einige Minuten in Anspruch nehmen. 
 	Bitte laden Sie den Browser w&auml;hrend dieser Zeit nicht neu!');
 
@@ -462,6 +479,7 @@ define('ML_GENERIC_ERRORLOG', 'Fehlerlog');
 define('ML_GENERIC_PRODUCTDETAILS', 'Produktdetails');
 define('ML_GENERIC_IMAGES', 'Bilder');
 define('ML_GENERIC_CONDITION', 'Zustand');
+define('ML_GENERIC_CONDITION_NOTE', 'Zustandsbeschreibung');
 define('ML_GENERIC_SHIPPING', 'Versand');
 define('ML_GENERIC_PRICE', 'Preis');
 define('ML_GENERIC_NO_IMAGE', 'Kein Bild');
@@ -471,6 +489,7 @@ define('ML_GENERIC_CHECKINDATE', 'Einstelldatum');
 define('ML_GENERIC_DELETEDDATE', 'L&ouml;schdatum');
 define('ML_GENERIC_COMMISSIONDATE', 'Auftragsdatum');
 define('ML_GENERIC_STATUS', 'Status');
+define('ML_GENERIC_ERROR_CODE', 'Fehlercode');
 define('ML_GENERIC_ERROR_MESSAGES', 'Fehlermeldung');
 define('ML_GENERIC_ERROR_DETAILS', 'Fehlerdetails');
 define('ML_GENERIC_NO_ERRORS_YET', 'Keine Fehlermeldungen vorhanden.');
@@ -512,7 +531,8 @@ define('ML_GENERIC_ORDER_THROUGH_COMPARISON_SHOPPING', 'Der Kunde der diese Best
 define('ML_GENERIC_STATUS_LOGIN_SAVED', 'Die Zugangsdaten wurden erfolgreich an den magnalister-Service &uuml;bermittelt.');
 define('ML_GENERIC_STATUS_LOGIN_SAVEERROR','Die Zugangsdaten konnten nicht an den magnalister-Service &uuml;bermittelt werden.');
 define('ML_GENERIC_DELETE_LISTINGS', 'M&ouml;chten Sie die markierten Produkte wirklich bei %s l&ouml;schen?');
-define('ML_GENERIC_DELETE_ERROR_MESSAGES', 'M&ouml;chten Sie die markierten Fehlermeldungen wirklich unwiderruflich l&ouml;schen?');
+define('ML_GENERIC_DELETE_ERROR_MESSAGES', 'M&ouml;chten Sie wirklich die markierten Fehlermeldungen unwiderruflich l&ouml;schen?');
+define('ML_GENERIC_CONFIRM_DELETE_ENTIRE_ERROR_PROTOCOL', 'M&ouml;chten Sie wirklich das gesamte Fehlerprotokoll unwiderruflich l&ouml;schen?');
 
 define('ML_GENERIC_ORDER_DETAILS_CURRENCY_CONVERSION_LABEL', 'W&auml;hrungsumrechnung');
 define('ML_GENERIC_ORDER_DETAILS_CURRENCY_CONVERSION_TEXT',  'W&auml;hrung: {#Currency#} &nbsp;&nbsp;&nbsp;&nbsp; Umrechnungsfaktor: {#CurrencyValue#} &nbsp;&nbsp;&nbsp;&nbsp; Wert in Standard-W&auml;hrung ({#DefaultCurrency#}): {#Value#}');
@@ -530,6 +550,7 @@ define('ML_GENERIC_ERROR_PRODUCTS_WITHOUT_MODEL_EXIST','Es sind Produkte ohne od
 	die	Artikelnummern zu korrigieren! <br/>
 	Alternativ k&ouml;nnen Sie die Nummernkreissynchronisation in der Konfiguration auf "Produkt ID" &auml;ndern.');
 define('ML_GENERIC_LABEL_LISTINGTIME', 'Eingestellt von-bis');
+define('ML_GENERIC_LABEL_ORIGIN', 'Herkunft');
 
 /* Platform specific stuff */
 /* amazon */
@@ -875,7 +896,7 @@ define('ML_EBAY_PRICE_FOR_EBAY', 'Preis f&uuml;r eBay');
 define('ML_EBAY_YOUR_PRICE_IF_OTHER', 'Ihr eBay Preis<br />(falls anders)'); /* deprecated */
 define('ML_EBAY_FREEZE_PRICE_TOOLTIP', 'Blau = Preis einfrieren (so dass es bei &Auml;nderungen im Shop nicht automatisch angepa&szlig;t wird)');
 define('ML_EBAY_FREEZE_PRICE', 'Preis einfrieren (dann keine Synchronisierung)'); /* deprecated */
-define('ML_EBAY_PRICE_FROZEN_TOOLTIP', 'Der Preis wurde bei der Vorbereitung eingefroren und bleibt fest.');
+define('ML_EBAY_PRICE_FROZEN_TOOLTIP', 'Der Preis wurde bei der Vorbereitung eingefroren und bleibt fest.'); /* deprecated */
 define('ML_EBAY_PRICE_CALCULATED_TOOLTIP', 'Der Preis wird je nach Konfigurations-Einstellung berechnet.');
 define('ML_EBAY_BUYITNOW_PRICE', 'Sofort-Kaufen Preis');
 define('ML_EBAY_YOUR_CHINESE_PRICE', 'Ihr Start-Preis');
@@ -915,6 +936,10 @@ define('ML_EBAY_SHIPPING_DOMESTIC', 'Versand Inland');
 define('ML_EBAY_SHIPPING_DOMESTIC_DESC', 'Angebotene inl&auml;ndische Versandarten');
 define('ML_EBAY_SHIPPING_INTL_OPTIONAL', 'Versand Ausland (Optional)');
 define('ML_EBAY_SHIPPING_INTL_DESC', 'Angebotene ausl&auml;ndische Versandarten');
+define('ML_EBAY_DISPATCH_TIME', 'Zeit bis Versand');
+define('ML_EBAY_DISPATCH_ON_SAME_DAY', 'am gleichen Tag');
+define('ML_EBAY_DISPATCH_ONE_DAY', '1 Tag');
+define('ML_DAYS', 'Tage');
 define('ML_EBAY_SHIPPING_PROFILE', 'Rabatte Kombizahlung und Versand');
 define('ML_EBAY_SHIPPING_DISCOUNT', 'Regeln f&uuml;r Versand zum Sonderpreis anwenden');
 define('ML_EBAY_LABEL_EBAYERROR', 'eBay Fehler %s');
@@ -946,6 +971,9 @@ define('ML_EBAY_SUBMIT_ADD_TEXT_ZERO_STOCK_ITEMS_REMOVED','Artikel mit Bestand =
 
 /* Status-Aenderung bei Bestellungen */
 define('ML_EBAY_ORDER_PAID', "magnalister-Verarbeitung:\nZahlung bei eBay eingegangen.");
+
+/* eBay Nachricht an Kunden (bei PayUponInvoice) */
+define('ML_EBAY_PUI_MSG_TO_BUYER', "eBay Rechnungskauf, eBay Nachricht an den Kunden:\n");
 
 define('ML_LABEL_EBAY_SALES_RECORD_NUMBER', 'Verkaufsprotokollnummer');
 
@@ -1065,10 +1093,10 @@ define('ML_MAGNACOMPAT_ERROR_ACCESS_DENIED', 'Die Zugangsdaten zu %s scheinen ni
 define('ML_LAARY_ERROR_NO_REGION_SELECTED', 'Bitte w&auml;hlen Sie in der Konfiguration mindestens eine Einstellregion aus.');
 
 /* Internal Stuff */
-define('ML_INTERNAL_EMPTY_RESPONSE', 'Antwort von Service-Layer ist leer.');
-define('ML_INTERNAL_INVALID_RESPONSE', 'Antwort von Service-Layer ist ung&uuml;ltig.');
-define('ML_INTERNAL_API_CALL_UNSUCCESSFULL', 'API-Aufruf nicht erfolgreich.');
-define('ML_INTERNAL_API_TIMEOUT', 'API-Aufruf dauerte zu lange.');
+define('ML_INTERNAL_EMPTY_RESPONSE', 'Antwort von magnalister-Servern ohne Inhalt. Bitte wenden Sie sich an unseren Support.');
+define('ML_INTERNAL_INVALID_RESPONSE', 'Antwort von magnalister-Servern ung&uuml;ltig. Bitte wenden Sie sich an unseren Support.');
+define('ML_INTERNAL_API_CALL_UNSUCCESSFULL', 'Keine Antwort von magnalister-Schnittstelle. Bitte wenden Sie sich an unseren Support.');
+define('ML_INTERNAL_API_TIMEOUT', 'Die erlaubte Ausf&uuml;hrungszeit der Funktion wurde &uuml;berschritten. Bitte versuchen Sie es in wenigen Minuten erneut.');
 
 define('ML_RATE_FREETRIAL', 'Testzeitraum');
 define('ML_RATE_BUSINESS2', 'Business 2');
@@ -1108,15 +1136,12 @@ define('ML_HOOD_LABEL_LISTINGDURATION_GTC', 'unbegrenzt');
 define('ML_LABEL_HOOD_LISTINGTIME', 'Eingestellt von-bis');
 
 define('ML_HOOD_CONDITION_NEW', 'Neu');
-define('ML_HOOD_CONDITION_NEW_OTHER', 'Neu / Sonstige (s. Artikelbeschreibung)');
-define('ML_HOOD_CONDITION_NEW_WITH_DEFECTS', 'Neu mit Fehlern');
-define('ML_HOOD_CONDITION_MANUF_REFURBISHED', 'Vom Hersteller general&uuml;berholt');
-define('ML_HOOD_CONDITION_SELLER_REFURBISHED', 'Vom Verk&auml;fer general&uuml;berholt');
-define('ML_HOOD_CONDITION_USED', 'Gebraucht');
-define('ML_HOOD_CONDITION_VERY_GOOD', 'Gebraucht, wie neu');
-define('ML_HOOD_CONDITION_GOOD', 'Gebraucht, gut');
-define('ML_HOOD_CONDITION_ACCEPTABLE', 'Gebraucht, akzeptabel');
-define('ML_HOOD_CONDITION_FOR_PARTS_OR_NOT_WORKING', 'Als Ersatzteil / Defekt');
+define('ML_HOOD_CONDITION_LIKE_NEW', 'Gebraucht (wie neu)');
+define('ML_HOOD_CONDITION_VERY_GOOD', 'Gebraucht (sehr gut)');
+define('ML_HOOD_CONDITION_USED_GOOD', 'Gebraucht (gut)');
+define('ML_HOOD_CONDITION_ACCEPTABLE', 'Gebraucht (akzeptabel)');
+define('ML_HOOD_CONDITION_REFURBISHED', 'Generalüberholt');
+define('ML_HOOD_CONDITION_DEFECT', 'Mit Fehlern oder defekt');
 
 define('ML_HOOD_SPECIAL_MODEL', 'Sonderanfertigung');
 define('ML_HOOD_SPECIAL_MODEL_NONE', 'Nein');
@@ -1192,7 +1217,7 @@ define('ML_HOOD_PRICE_FOR_HOOD', 'Preis f&uuml;r Hood');
 define('ML_HOOD_YOUR_PRICE_IF_OTHER', 'Ihr Hood Preis<br />(falls anders)'); /* deprecated */
 define('ML_HOOD_FREEZE_PRICE_TOOLTIP', 'Blau = Preis einfrieren (so dass es bei &Auml;nderungen im Shop nicht automatisch angepa&szlig;t wird)');
 define('ML_HOOD_FREEZE_PRICE', 'Preis einfrieren (dann keine Synchronisierung)'); /* deprecated */
-define('ML_HOOD_PRICE_FROZEN_TOOLTIP', 'Der Preis wurde bei der Vorbereitung eingefroren und bleibt fest.');
+define('ML_HOOD_PRICE_FROZEN_TOOLTIP', 'Der Preis wurde bei der Vorbereitung eingefroren und bleibt fest.'); /* deprecated */
 define('ML_HOOD_PRICE_CALCULATED_TOOLTIP', 'Der Preis wird je nach Konfigurations-Einstellung berechnet.');
 define('ML_HOOD_BUYITNOW_PRICE', 'Sofort-Kaufen Preis');
 define('ML_HOOD_YOUR_CLASSIC_PRICE', 'Ihr Start-Preis');
@@ -1277,6 +1302,11 @@ define('ML_DAWANDA_LABEL_LANGUAGE', 'DaWanda Sprache');
 define('ML_DAWANDA_LABEL_RETURNPOLICY', 'Widerrufsbelehrung');
 define('ML_DAWANDA_LABEL_PRODUCTTYPE', 'Art des Produktes');
 
+/* Bepado */
+define('ML_BEPADO_LABEL_SHIPPINGTIME', 'Versand');
+define('ML_BEPADO_LABEL_ERROR', 'bepado meldet: ');
+define('ML_BEPADO_USE_MATCHING', 'verwende Lieferzeit-Matching');
+
 /* ML_GENERIC */
 define('ML_GENERIC_LISTING_DURATION', 'Laufzeit');
 define('ML_GENERIC_PREPARE_SETTINGS', 'Produktdetails');
@@ -1285,3 +1315,4 @@ define('ML_GENERIC_CATEGORIES_MARKETPLACE_STORE_CATEGORIE', 'Shop-Kategorie');
 define('ML_GENERIC_CATEGORIES_CHOOSE', 'W&auml;hlen');
 define('ML_GENERIC_PREPARE_BUTTON_UNPREPARE', 'Vorbereitung f&uuml;r komplette Auswahl aufheben');
 define('ML_GENERIC_ERROR_ORDERSYNC_FAILED', 'Der Bestellstatus konnte nicht synchronisiert werden.');
+define('ML_GENERIC_ERROR_TRACKING_CODE_MATCHING', 'Um das Tacking-Code-Matching zu verwenden m&uuml;ssen Sie einen Spediteur angegeben oder diesen auch matchen.');

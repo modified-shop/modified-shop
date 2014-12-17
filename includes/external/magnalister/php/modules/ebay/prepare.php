@@ -34,7 +34,7 @@ function eBayGetSelection() {
 		.' pd.products_name products_name, pd.products_description description, PictureURL, GalleryURL, ConditionID,  '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
 		.' Attributes, ItemSpecifics, '
-		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails '
+		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS .' p, ' . TABLE_PRODUCTS_DESCRIPTION .' pd '
 		.' WHERE ep.products_model = p.products_model '
@@ -52,7 +52,7 @@ function eBayGetSelection() {
 		.' pd.products_name products_name, pd.products_description description, PictureURL, GalleryURL, ConditionID,  '
 		.' PrimaryCategory, SecondaryCategory, StoreCategory, StoreCategory2, '
 		.' Attributes, ItemSpecifics, '
-		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails '
+		.' ListingType, ListingDuration, PaymentMethods, ShippingDetails, DispatchTimeMax '
 		.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '.TABLE_MAGNA_SELECTION.' ms, '
 		. TABLE_PRODUCTS_DESCRIPTION .' pd '
 		.' WHERE ep.products_id = ms.pID AND ep.mpID = ms.mpID  AND pd.products_id = ep.products_id '
@@ -78,19 +78,20 @@ function eBayGetSelection() {
 	# die Namen schon fuer diese Tabelle
 	# products_short_description nicht bei OsC, nur bei xtC, Gambio und Klonen
 	$dbNewSelectionQuery = 'SELECT '
-		.' p.products_id products_id, '
-		.' p.products_model products_model, '
-		.' p.products_price Price, '
-		.' ms.mpID mpID, '
-		.' pd.products_name products_name, ';
+		.' p.products_id AS products_id, '
+		.' p.products_model AS products_model, '
+		.' p.products_price AS Price, '
+		.' ms.mpID AS mpID, '
+		.' pd.products_name AS products_name, ';
 	if (MagnaDB::gi()->columnExistsInTable('products_short_description', TABLE_PRODUCTS_DESCRIPTION)) {
 		$dbNewSelectionQuery .=
-		 ' pd.products_short_description Subtitle, ';
+		 ' pd.products_short_description AS Subtitle, ';
 	}
 	$dbNewSelectionQuery .= 
-		 ' pd.products_description description, '
-		.' p.products_image PictureURL, '
-		.' p.products_weight products_weight '
+		 ' pd.products_description AS description, '
+		.' p.products_image AS PictureURL, '
+		.' p.products_weight AS products_weight, '
+		.' \''.getDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], 30).'\' AS DispatchTimeMax '
 		.' FROM '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd, '.TABLE_MAGNA_SELECTION.' ms '
 		.' WHERE pd.products_id = p.products_id AND ms.pID = p.products_id '
 		.' AND '.($keytypeIsArtNr ? 'p.products_model' : 'p.products_id').' NOT IN ('.$oldProductsList.') '
@@ -113,10 +114,9 @@ function eBayGetSelection() {
 	if (empty($galleryPath)) $galleryPath = $imagePath;
 	foreach ($dbSelection as &$current_row) {
 		++$rowCount;
-		# Filter Gambio TABs
-		if (SHOPSYSTEM == 'gambio') {
-			$current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
-		}
+		// Filter JNH Tab
+		$current_row['description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $current_row['description']);
+		
 		#$current_row['SKU'] = magnaPID2SKU($current_row['products_id']);
 		if (isset($current_row['PrimaryCategory'])) continue;
 		# Nur bei unvorbereiteten Produkten: Pfade an Bilder dranmachen
@@ -141,8 +141,8 @@ function eBayGetSelection() {
 			'#ARTNR#' => $dbSelection[0]['products_model'],
 			'#PID#' => $dbSelection[0]['products_id'],
 			'#SKU#' => magnaPID2SKU($dbSelection[0]['products_id']),
-			'#SHORTDESCRIPTION#' => $dbSelection[0]['shortdescription'],
-			'#DESCRIPTION#' => stripLocalWindowsLinks($dbSelection[0]['description']),
+			'#SHORTDESCRIPTION#' => fixHTMLUTF8Entities($dbSelection[0]['shortdescription']),
+			'#DESCRIPTION#' => fixHTMLUTF8Entities(stripLocalWindowsLinks($dbSelection[0]['description'])),
 			'#PICTURE1#' => $dbSelection[0]['PictureURL'],
 			'#WEIGHT#' => ((float)$dbSelection[0]['products_weight']>0)?$dbSelection[0]['products_weight']:'',
 		);
@@ -206,9 +206,6 @@ if (array_key_exists('savePrepareData', $_POST)) {
 			'selectionname' => $prepareSetting['selectionName'],
 			'session_id' => session_id()
 		));
-		if (isset($verified['RESPONSEDATA'][0]['DATA']['Fees']['ListingFee'])) {
-			echo '<p class="successBox">'.sprintf(ML_EBAY_LABEL_ADDITEM_COSTS, $verified['RESPONSEDATA'][0]['DATA']['Fees']['ListingFee']).'</p>';
-		}
 	} else if('ERROR' == $verified['STATUS']) {
 		# noch mal in der Maske bleiben
 		$_POST['prepare'] = 'prepare';

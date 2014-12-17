@@ -283,7 +283,7 @@ abstract class TopTen {
 				$aArgs['key'],
 				isset($_POST['conf'][$aArgs['key']])
 					? (int)$_POST['conf'][$aArgs['key']]
-					: (int)getDBConfigValue($aArgs['key'], $this->iMarketPlaceId)
+					: (int)getDBConfigValue($aArgs['key'], $this->iMarketPlaceId, 10)
 			);
 		}
 	}

@@ -184,10 +184,10 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 		if (array_key_exists('shippingtime', $_POST)) {
 			if (getDBConfigValue('general.keytype', '0') == 'artNr') {
 				$shippingtimeSQL = '
-					UPDATE '.TABLE_MAGNA_HITMEISTER_PREPARE.' AS a 
-			    INNER JOIN '.TABLE_PRODUCTS.' AS p ON (a.products_model = p.products_model)
-		               SET a.shippingtime = \'_#_VALUE_#_\'
-		             WHERE p.products_id = \'_#_ID_#_\'
+				    UPDATE '.TABLE_MAGNA_HITMEISTER_PREPARE.' AS a 
+				INNER JOIN '.TABLE_PRODUCTS.' AS p ON (a.products_model = p.products_model)
+				       SET a.shippingtime = \'_#_VALUE_#_\'
+				     WHERE p.products_id = \'_#_ID_#_\'
 				';
 			} else {
 				$shippingtimeSQL = '
@@ -232,19 +232,21 @@ class HitmeisterSummaryView extends MagnaCompatibleSummaryView {
 		}
 		$html = '
 			<td>
-				<select id="shippingtime_'.$dbRow['products_id'].'" name="shippingtime['.$dbRow['products_id'].']">';
+				<select id="shippingtime_'.$dbRow['products_id'].'" name="shippingtime['.$dbRow['products_id'].']" class="ml-js-noBlockUi">';
 				foreach ($this->shippingTimes as $vk => $vv) {
 					$html .= '    <option value="'.$vk.'"'.(($vk == $dbRow['shippingtime']) ? 'selected="selected"' : '').'>'.$vv.'</option>'."\n";
 				}
-    			$html .= '
-	    		</select>
-	    	</td>';
+				$html .= '
+				</select>
+			</td>';
 
 		return parent::getAdditionalItemCells($key, $dbRow).$html;
 	}
 	
 	public function renderSelection() {
 		ob_start();
+		$formatOptions = $this->simplePrice->getFormatOptions();
+		$formatOptions = array('2', '.', '');
 ?>
 <script type="text/javascript">/*<![CDATA[*/
 var formatOptions = <?php echo json_encode($formatOptions); ?>;

@@ -59,7 +59,7 @@ class MagnaCompatibleApiConfigValues {
 			return $this->data[$key];
 		}
 		try {
-			$data = MagnaConnector::gi()->submitRequest(array_merge(array(
+			$data = MagnaConnector::gi()->submitRequest(array_replace(array(
 				'ACTION' => $action,
 				'SUBSYSTEM' => $this->marketplace,
 				'MARKETPLACEID' => $this->mpId
@@ -82,6 +82,12 @@ class MagnaCompatibleApiConfigValues {
 	public function cleanMagnaExceptions() {
 		$this->exceptions = array();
 		return $this;
+	}
+	
+	public function getCountries() {
+		return $this->fetchDataFromApi('GetCountries', array (
+			'SUBSYSTEM' => 'Core',
+		));
 	}
 	
 }

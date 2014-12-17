@@ -31,6 +31,10 @@ abstract class MagnaCompatibleCronBase {
 	protected $marketplaceTitle = '';
 	protected $language = '';
 	
+	protected $specificResource = false;
+	
+	protected $resources = array();
+	
 	protected $config = array(); 
 	
 	protected $echoMarker = true;
@@ -40,17 +44,28 @@ abstract class MagnaCompatibleCronBase {
 	protected $_debugDryRun = false;
 	
 	public function __construct($mpID, $marketplace) {
-		global $_magnaLanguage, $_modules;
+		global $_MagnaSession, $_magnaLanguage, $_modules;
 
 		$this->mpID = $mpID;
 		$this->marketplace = $marketplace;
 		$this->marketplaceTitle = $_modules[$marketplace]['title'];
+		
+		// $this->specificResource can be set by the inheriting class!
+		if ($this->specificResource === false) {
+			$this->specificResource = strtolower($this->marketplace);
+		}
+		
+		$this->resources = array (
+			'session' => &$_MagnaSession,
+		);
 		
 		$this->language = $_magnaLanguage;
 		
 		$this->determineDebugOptions();
 		
 		$this->initConfig();
+		
+		$this->loadDependencies();
 	}
 	
 	protected function out($str) {
@@ -81,6 +96,53 @@ abstract class MagnaCompatibleCronBase {
 	
 	protected function logAPIErrors($errors) {
 		$this->log("\n\nAPI-Errors: ".print_m(json_indent(json_encode($errors))));
+	}
+
+	protected function storeLogging($sType, $mData) {
+		$sLogPath = DIR_MAGNALISTER_LOGS.get_class($this).'_'.$this->mpID.'.log';
+		if (!file_exists(dirname($sLogPath))) {
+			mkdir(dirname($sLogPath), 0777, true);
+		}
+		if (file_exists($sLogPath) && filesize($sLogPath) > (50 * 1024 * 1024)) {
+			$sDir = dirname($sLogPath);
+			if (!file_exists($sDir . '/old')) {
+				mkdir($sDir . '/old', 0777, true);
+			}
+			$sBackupPath = DIR_MAGNALISTER_LOGS.get_class($this).$this->mpID.'_%s.log.gz';
+			if (function_exists('gzopen')) {
+				$mFiles = glob(sprintf($sBackupPath, '*'));
+				if (is_array($mFiles)) {
+					foreach ($mFiles as $iFile => $sFile) {
+						if (in_array(basename($sFile), array('.', '..'))) {
+							unset($mFiles[$iFile]);
+						}
+					}
+				} else {
+					$mFiles = array();
+				}
+				foreach ($mFiles as $sBackupFile) {
+					if (time() - filemtime($sBackupFile) > 120) { //9 days, modifiedtime for remote filesystems (see touch)
+						unlink($sBackupFile);
+					}
+				}
+				$rDate = fopen($sLogPath, 'r');
+				$sStartDate = fgets($rDate, 20);
+				fclose($rDate);
+				$sBackupFile = sprintf($sBackupPath, str_replace(array(' ', ':'),array('.', '.'),$sStartDate).'_'.date('Y-m-d.H.i.s'));
+				$rBackup = gzopen($sBackupFile, 'wb9');
+				gzwrite($rBackup, file_get_contents($sLogPath));
+				gzclose($rBackup);
+				chmod($sBackupFile, 0777);
+				touch($sBackupFile, time());
+				unlink($sLogPath);
+			} else {
+				rename($sLogPath, $sBackupPath);
+			}
+		}
+		$r = fopen($sLogPath, 'a+');
+		fwrite($r, date('Y-m-d H:i:s ').' '.$sType.':: '.MagnaCompatibleHelper::encodeData($mData)."\n");
+		fclose($r);
+		chmod($sLogPath, 0777);
 	}
 
 	protected function logException($e, $details = true) {
@@ -137,7 +199,33 @@ abstract class MagnaCompatibleCronBase {
 			}
 		}
 	}
-
+	
+	protected function loadFile($file) {
+		if (file_exists($file)) {
+			require_once($file);
+			return true;
+		}
+		return false;
+	}
+	
+	protected function initApiConfigValuesClass() {
+		$class = ucfirst($this->marketplace).'ApiConfigValues';
+		if ($this->loadFile(DIR_MAGNALISTER_MODULES.$this->specificResource.'/classes/'.$class.'.php')) {
+			# http://3v4l.org/am7HB
+			if (version_compare(PHP_VERSION, '5.2.2', '>=')) {
+				$instance = call_user_func_array($class.'::gi', array());
+			} else {
+				$instance = call_user_func_array(array($class, 'gi'), array());
+			}
+			$r = $instance->init($this->resources['session']);
+		}
+	}
+	
+	protected function loadDependencies() {
+		$this->loadFile(DIR_MAGNALISTER_MODULES.$this->specificResource.'/'.ucfirst($this->marketplace).'Helper.php');
+		$this->initApiConfigValuesClass();
+	}
+	
 	protected function getBaseRequest() {
 		return array (
 			'SUBSYSTEM' => $this->marketplace,

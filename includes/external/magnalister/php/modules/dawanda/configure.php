@@ -104,6 +104,7 @@ class DawandaConfigure extends MagnaCompatibleConfigure {
 	}
 
 	protected function finalizeForm() {
+		parent::finalizeForm();
 		if (!$this->isAuthed) {
 			$this->form = array (
 				'login' => $this->form['login']

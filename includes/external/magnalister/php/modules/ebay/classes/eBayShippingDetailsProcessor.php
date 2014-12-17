@@ -108,28 +108,43 @@ class eBayShippingDetailsProcessor {
 		$serviceSelect .= '</select>';
 
 		$locationSelect = '';
+		if (isset($locations['None'])) unset($locations['None']);
+		if (empty($settings['location'])) $settings['location'] = array();
+		if (!is_array($settings['location'])) $settings['location'] = array($settings['location']);
 		if (!empty($locations)) {
-			if (empty($settings['location'])) $settings['location'] = 'None';
-			$locationSelect .= '<select name="'.$nameKey.'['.$uniqueKey.'][location]">'."\n";
+			$maxRows = (int)(ceil(count($locations) / 5));
+			$locationSelect .= "<table><tr>\n";
+			$currRow=0;
 			foreach ($locations as $key => $loc) {
-				$locationSelect .= '<option value="'.$key.'"'.(
-					($settings['location'] == $key)
-						? ' selected="selected"'
-						: ''
-				).'>'.$loc.'</option>'."\n";
+				if (0 == $currRow % $maxRows) {
+					$locationSelect .= '<td>';
+				}
+				$locationSelect .= '<input type="checkbox" name="'.$nameKey.'['.$uniqueKey.'][location][]" value="'.$key.'"';
+				if (  ($settings['location'] == $key)
+				    ||(is_array($settings['location']) && in_array($key, $settings['location']))) { $locationSelect .= ' checked="checked"';
+				}
+				$locationSelect .= ' /><nobr>'.$loc."&nbsp;</nobr>\n";
+				if (  ($currRow % $maxRows == $maxRows - 1)
+				    ||($currRow == count($locations))) {
+					$locationSelect .= '</td>';
+				} else {
+					$locationSelect .= '<br />';
+				}
+				$currRow++;
 			}
-			$locationSelect .= '</select>';
+			$locationSelect .= "</tr></table>\n";
 		}
 		$shippingCost = '<input type="text" name="'.$nameKey.'['.$uniqueKey.'][cost]" value="'.$settings['cost'].'">';
-		#$additionalShippingCost = '<input type="text" name="'.$nameKey.'['.$uniqueKey.'][addcost]" value="'.$settings['addcost'].'">';
 		$idkey = str_replace('.', '_', $this->args['key']).'_'.$uniqueKey;
 
 		$html = '
 			<table id="'.$idkey.'" class="shippingDetails inlinetable nowrap autoWidth"><tbody>
-				<tr class="row1">
-					<td class="paddingRight" '.(empty($locationSelect) ? ' rowspan="2"' : '').'>'.$serviceSelect.'</td>
+				<tr class="row1">'. (empty($locationSelect) ? '
+					<td class="paddingRight">'.$serviceSelect.'</td>
 					<td class="textright">'.ML_EBAY_LABEL_SHIPPING_COSTS.':&nbsp;</td>
 					<td class="paddingRight">'.$shippingCost.'</td>
+					' : '
+					<td class="paddingRight" colspan="3">'.$serviceSelect.'&nbsp;&nbsp;'.ML_EBAY_LABEL_SHIPPING_COSTS.':&nbsp;'.$shippingCost.'</td>').'
 					<td rowspan="2">
 						<input id="" type="button" value="(+)" class="ml-button plus" />
 						'.((array_key_exists('func', $this->args) && ($this->args['func'] == '' || $this->args['func'] == 'addRow'))
@@ -139,9 +154,7 @@ class eBayShippingDetailsProcessor {
 					</td>
 				</tr>
 				<tr class="bottomDashed">
-					'.(!empty($locationSelect) ? '<td class="paddingRight">'.$locationSelect.'</td>' : '')."\n";/*'
-					<td class="textright">'.ML_EBAY_LABEL_EACH_ONE_MORE.':&nbsp;</td>
-					<td class="paddingRight">'.$additionalShippingCost."\n";*/
+					'.(!empty($locationSelect) ? '<td class="paddingRight" colspan="3">'.$locationSelect.'</td>' : '')."\n";
 			ob_start();?>
 	        <script type="text/javascript">/*<![CDATA[*/
 				$(document).ready(function() {
@@ -201,7 +214,6 @@ class eBayShippingDetailsProcessor {
 			return false;
 		}
 		$data = $data[$this->args['key']];
-		#echo print_m($data);
 		if (!empty($data)) {
 			foreach ($data as $key => &$item) {
 				if (empty($item['service'])) {
@@ -209,13 +221,9 @@ class eBayShippingDetailsProcessor {
 				}
 				if ('=GEWICHT' == strtoupper($item['cost'])) {
 					$item['cost'] = '=GEWICHT';
-					#unset($item['addcost']);
+					if (isset($item['addcost'])) unset($item['addcost']);
 				} else {
 					$item['cost'] = (float)str_replace(',', '.', trim($item['cost']));
-					#$item['addcost'] = str_replace(',', '.', trim($item['addcost']));
-					#if (!empty($item['addcost'])) {
-					#	$item['addcost'] = (float)$item['addcost'];
-					#}
 				}
 			}
 		}
@@ -279,10 +287,13 @@ class eBayShippingDetailsProcessor {
 			$service['service'] = $service['ShippingService'];
 			unset($service['ShippingService']);
 
-			$service['cost'] = $sp->setPrice($service['ShippingServiceCost'])->getPrice();
+			if ('=GEWICHT' == strtoupper($service['ShippingServiceCost'])) {
+				$service['cost'] = '=GEWICHT';
+			} else {
+				$service['cost'] = $sp->setPrice($service['ShippingServiceCost'])->getPrice();
+			}
 			unset($service['ShippingServiceCost']);
 
-			#$service['addcost'] = $sp->setPrice($service['ShippingServiceAdditionalCost'])->getPrice();
 			unset($service['ShippingServiceAdditionalCost']);
 
 			if (isset($service['ShipToLocation'])) {

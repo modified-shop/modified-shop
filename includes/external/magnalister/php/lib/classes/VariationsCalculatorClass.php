@@ -11,9 +11,9 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: VariationsCalculator.php 1214 2011-08-29 12:42:46Z MaW $
+ * $Id$
  *
- * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
+ * (c) 2010 - 2014 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
  * -----------------------------------------------------------------------------
  */
@@ -71,17 +71,20 @@ class VariationsCalculator {
 		if (empty($attrByOptionsID)) {
 			return false;
 		}
-
+		#echo print_m($attrByOptionsID, '$attrByOptionsID');
+		
+		$dimensions = count($attrByOptionsID);
+		#echo print_m($dimensions, '$dimensions')."\n";
+		
 		$permutationsCount = 1;
 		foreach ($attrByOptionsID as $vID => $vector) {
 			$permutationsCount *= count($vector);
 		}
 		
+		#echo print_m($permutationsCount, '$permutationsCount')."\n";
 		if ($permutationsCount > self::MAX_PERMUTATIONS) {
 			return false;
 		}
-		
-		#echo print_m($permutationsCount, '$permutationsCount');
 		
 		$std = array_merge(array (
 			'products_id' => '',
@@ -100,7 +103,7 @@ class VariationsCalculator {
 			'variation_unit_of_measure' => '',
 		), $base);
 		$permutations = array_fill(0, $permutationsCount, $std);
-		//echo mp_print_r($attrByOptionsID, '$attrByOptionsID['.$permutationsCount.']');
+		//echo print_m($attrByOptionsID, '$attrByOptionsID['.$permutationsCount.']');
 
 		// To avoid database errors since the variations table does not support NULL
 		array_walk($base, array($this, 'nullToEmptyString')); 
@@ -123,6 +126,11 @@ class VariationsCalculator {
 					}
 					$permutations[$offset]['variation_attributes'] .= $oID.','.$vID.'|';
 					$permutations[$offset]['variation_price'] += (float)$attr['options_values_price'] * ($attr['price_prefix'] == '+' ? 1 : -1);
+					
+					if (isset($attr['options_values_weight'])) {
+						$permutations[$offset]['variation_weight'] += (float)$attr['options_values_weight'] * ($attr['weight_prefix'] == '+' ? 1 : -1);
+					}
+					
 					switch ($this->settings['stockmerge']) {
 						case 'add': {
 							$permutations[$offset]['variation_quantity'] += (int)$attr['attributes_stock'];
@@ -145,6 +153,16 @@ class VariationsCalculator {
 					$permutations[$offset]['variation_products_model'] .= $tModel;
 					$permutations[$offset]['marketplace_sku'] .= $tModel;
 					$permutations[$offset]['marketplace_id'] .= '_'.$oID.'.'.$vID;
+					
+					if ($dimensions === 1) {
+						$permutations[$offset]['variation_ean'] = isset($attr['attributes_ean'])
+							? $attr['attributes_ean']
+							: (isset($attr['gm_ean'])
+								? $attr['gm_ean']
+								: ''
+							);
+					}
+					
 					++$offset;
 				}
 				++$attrC;

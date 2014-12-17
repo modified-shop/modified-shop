@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: multimatching.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: multimatching.php 4961 2014-12-09 14:10:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -103,9 +103,9 @@ if (!empty($_MagnaSession['amazon']['multimatching']['items'])) {
 		$price->addTaxByTaxID($productsData['products_tax_class_id']);
 		
 		$productsData['products_description'] = stripEvilBlockTags($productsData['products_description']);
-		$productsData['products_description'] = isUTF8($productsData['products_description']) ? 
+		$productsData['products_description'] = magnalisterIsUTF8($productsData['products_description']) ?
 				$productsData['products_description'] : utf8_encode($productsData['products_description']);
-		$productsData['products_model'] = isUTF8($productsData['products_model']) ? 
+		$productsData['products_model'] = magnalisterIsUTF8($productsData['products_model']) ?
 				$productsData['products_model'] : utf8_encode($productsData['products_model']);
 
 		if ($productsData['manufacturers_id'] > 0) {

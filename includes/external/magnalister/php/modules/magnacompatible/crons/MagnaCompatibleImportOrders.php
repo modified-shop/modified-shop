@@ -50,6 +50,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 
 	/* multivariations, set to true for modules which support it */
 	protected $multivariationsEnabled = false;
+
+	/* gambio properties, set to true if enabled, for modules which support it */
+	/* (currently only Amazon) */
+	protected $gambioPropertiesEnabled = false;
 	
 	protected $verbose = false;
 	
@@ -499,7 +503,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$oID = MagnaDB::gi()->fetchOne(eecho('
 			SELECT orders_id
 			  FROM '.TABLE_MAGNA_ORDERS.'
-			 WHERE special="'.MagnaDB::gi()->escape($mOID).'"
+			 WHERE mpID = '.$this->mpID.'
+			   AND special="'.MagnaDB::gi()->escape($mOID).'"
 			 LIMIT 1
 		', false));
 		if ($oID === false) {
@@ -658,7 +663,9 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		$this->o['order']['currency_value'] = $this->allCurrencies[$this->o['order']['currency']];
 		
 		$this->doBeforeInsertOrder();
-		//echo var_dump_pre($this->o['order'], 'InsertOrder');
+		//if ($this->verbose) {
+		//	echo print_m($this->o['order'], 'InsertOrder');
+		//}
 		$this->db->insert(TABLE_ORDERS, $this->o['order']);
 
 		# OrderId merken
@@ -751,7 +758,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		   Daher bevor products_id ermittelt wird. */
 		/* sku needed later */
 		$sku = $this->p['products_id']; 
-		$attrValues = magnaSKU2pOpt($sku, $this->o['orderInfo']['BuyerCountryISO'], $this->multivariationsEnabled);
+		$customersLanguage = getLanguageIsoForCountryIso($this->o['orderInfo']['BuyerCountryISO']);
+		$attrValues = magnaSKU2pOpt($sku, $customersLanguage, $this->multivariationsEnabled);
 		$this->p['products_id'] = magnaSKU2pID($sku);
 		
 		$this->additionalProductsIdentification();
@@ -767,8 +775,8 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		} else {
 			$this->syncBatch[$this->p['products_id']] = array (
 				'SKU' => ('artNr' == getDBConfigValue('general.keytype', '0'))
-						?$sku
-						:magnaPID2SKU($this->p['products_id']), /* add ML */
+						? $sku
+						: magnaPID2SKU($this->p['products_id']), /* add ML */
 				'NewQuantity' => array (
 					'Mode' => 'SUB',
 					'Value' => (int)$this->p['products_quantity']
@@ -784,6 +792,10 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		if (!MagnaDB::gi()->recordExists(TABLE_PRODUCTS, array('products_id' => (int)$this->p['products_id']))) {
 			$this->p['products_id'] = 0;
 		} else {
+			if ($this->gambioPropertiesEnabled) {
+				/* products_properties_combis_id ermitteln */
+				$combisId = magnaSKU2aID($this->p['products_model'], $this->p['products_id'], true);
+			}
 			/* Lagerbestand reduzieren */
 			if ($this->hasReduceStock()) {
 				$this->db->query('
@@ -813,6 +825,12 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 							');
 						}
 					}
+				}
+				if ($this->gambioPropertiesEnabled && ($combisId != false)) {
+					$this->db->query(eecho('
+						UPDATE products_properties_combis
+							SET combi_quantity = combi_quantity - '.(int)$this->p['products_quantity'].'
+						 WHERE products_properties_combis_id = '.$combisId, false));
 				}
 			}
 			/* Steuersatz und Model holen */
@@ -874,6 +892,20 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 				}
 				$this->db->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 			}
+		}
+		if ($this->gambioPropertiesEnabled && ($combisId != false)) {
+			$languageId = MagnaDB::gi()->fetchOne("SELECT languages_id FROM ".TABLE_LANGUAGES." WHERE directory = '".$this->language."'");
+			$this->db->query(eecho("
+					INSERT INTO orders_products_properties (orders_products_id, products_properties_combis_id, properties_name, values_name, properties_price_type, properties_price)
+					 (SELECT '$ordersProductsId' AS orders_products_id,
+						'$combisId' AS products_properties_combis_id,
+						ppi.properties_name, ppi.values_name,
+						ppc.combi_price_type AS properties_price_type,
+						ppi.values_price AS properties_price
+					   FROM products_properties_index ppi, products_properties_combis ppc
+					  WHERE ppi.products_properties_combis_id = ppc.products_properties_combis_id
+						AND ppi.language_id=$languageId
+						AND ppc.products_properties_combis_id=$combisId)", false));
 		}
 	}
 
@@ -943,7 +975,7 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 		}
 
 		// Gambio specific "Kleinunternehmer Regelung"
-		if (MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS) {
+		if (defined('MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS') && MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS) {
 			$this->db->insert(TABLE_ORDERS_TOTAL, array(
 				'orders_id' => $this->cur['OrderID'],
 				'title' => MODULE_ORDER_TOTAL_GM_TAX_FREE_TEXT,
@@ -960,18 +992,22 @@ abstract class MagnaCompatibleImportOrders extends MagnaCompatibleCronBase {
 	 */
 	protected function generatePromoMailContent() {
 		return array (
-			'#FIRSTNAME#' => $this->o['customer']['customers_firstname'],
-			'#LASTNAME#' => $this->o['customer']['customers_lastname'],
+			'#FIRSTNAME#' => $this->o['order']['billing_firstname'],
+			'#LASTNAME#' => $this->o['order']['billing_lastname'],
 			'#EMAIL#' => $this->o['customer']['customers_email_address'],
 			'#PASSWORD#'  => $this->cur['customer']['Password'],
 			'#ORDERSUMMARY#' => $this->mailOrderSummary,
 			'#MARKETPLACE#' => $this->marketplaceTitle,
 			'#SHOPURL#' => HTTP_SERVER.DIR_WS_CATALOG,
+			'#KUNDE#' => $this->cur['customer']['CID'],
 		);
 	}
 	
 	protected function sendPromoMail() {
-		if (($this->config['MailSend'] != 'true') || (get_class($this->db) == 'MagnaTestDB')) return;
+		if (($this->config['MailSend'] != 'true') || (get_class($this->db) == 'MagnaTestDB')) {
+			// echo print_m($this->generatePromoMailContent());
+			return;
+		}
 		sendSaleConfirmationMail(
 			$this->mpID,
 			$this->o['customer']['customers_email_address'],

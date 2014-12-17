@@ -73,7 +73,8 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 				       '.$shippingTimeSql.' AS shippingtime,
 				       \''.MagnaDB::gi()->escape($_POST['is_porn']).'\' AS is_porn,
 				       \''.MagnaDB::gi()->escape($_POST['age_rating']).'\' AS age_rating,
-				       \''.MagnaDB::gi()->escape(strip_tags($_POST['comment'])).'\' AS `comment`
+				       \''.MagnaDB::gi()->escape(strip_tags($_POST['comment'])).'\' AS `comment`,
+					   \''.date('Y-m-d H:i:s').'\' AS PreparedTs
 				  FROM '.TABLE_MAGNA_SELECTION.' ms, '.TABLE_PRODUCTS.' p
 				 WHERE ms.mpID=\''.$this->mpID.'\' AND
 				       ms.selectionname=\''.$this->prepareSettings['selectionName'].'\' AND
@@ -125,8 +126,8 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 			MagnaDB::gi()->delete(TABLE_MAGNA_SELECTION, array(
 				'pID' => $pID,
 				'mpID' => $this->mpID,
-			    'selectionname' => $this->prepareSettings['selectionName'],
-			    'session_id' => session_id()
+				'selectionname' => $this->prepareSettings['selectionName'],
+				'session_id' => session_id()
 			));
 		}
 		unset($_POST['unprepare']);
@@ -143,12 +144,12 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 		}
 	
 		$params = array();
-		foreach (array('mpID', 'marketplace', 'marketplaceName', 'resources') as $attr) {
+		foreach (array('mpID', 'marketplace', 'marketplaceName', 'resources', 'prepareSettings') as $attr) {
 			if (isset($this->$attr)) {
 				$params[$attr] = &$this->$attr;
 			}
 		}
-
+		
 		$cMDiag = new $class($params);
 
 		if ($this->isAjax) {
@@ -204,13 +205,11 @@ class HitmeisterPrepare extends MagnaCompatibleBase {
 		if (isset($_POST['prepare']) || (isset($_GET['where']) && ($_GET['where'] == 'catMatchView'))) {
 			$this->processMatching();
 		} else {
-                                    if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
+			if (defined('MAGNA_DEV_PRODUCTLIST') && MAGNA_DEV_PRODUCTLIST === true ) {
 				$this->processProductList();
 			} else {
-                                                $this->processSelection();
-                                    }
+				$this->processSelection();
+			}
 		}
 	}
-
 }
-

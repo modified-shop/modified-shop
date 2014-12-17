@@ -37,6 +37,11 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyLastPreparedFilter', array(
+				'propertiestablename' => TABLE_MAGNA_HITMEISTER_PREPARE, 
+				'propertiestablealias' => 'hp', 
+				'preparedtimestampfield' => 'PreparedTS',
+			))
 		;
 	}
 	
@@ -44,29 +49,22 @@ class HitmeisterCheckinProductList extends MLProductListMagnaCompatibleAbstract{
 	 * adding propertiestable for filter
 	 */
 	protected function buildQuery(){
-		$allPreparedItems = (array)MagnaDB::gi()->fetchArray('
-			SELECT DISTINCT '.((getDBConfigValue('general.keytype', '0') == 'artNr')
-					? 'products_model'
-					: 'products_id'
-				).'
-			FROM '.TABLE_MAGNA_HITMEISTER_PREPARE.'
-			WHERE mpID=\''.$this->aMagnaSession['mpID'].'\'
-		', true);
-		$itemsWithEAN = (array)MagnaDB::gi()->fetchArray('
-			SELECT DISTINCT '.((getDBConfigValue('general.keytype', '0') == 'artNr')
-					? 'products_model'
-					: 'products_id'
-				).'
-			FROM '.TABLE_PRODUCTS.'
-			WHERE products_ean IS NOT NULL AND products_ean <> \'\'
-		', true);
-		$preparedItems = array_intersect($allPreparedItems, $itemsWithEAN);
-		$oQueryBuilder = parent::buildQuery()->oQuery;	
-		if (getDBConfigValue('general.keytype', '0') == 'artNr') {				
-			$oQueryBuilder->where( 'p.products_model IN (\''.implode('\', \'', MagnaDB::gi()->escape($preparedItems)).'\')');				
-		} else {
-			$oQueryBuilder->where('p.products_id IN (\''.implode('\', \'', $preparedItems).'\')');
-		}
+		parent::buildQuery()->oQuery
+			->join(
+				array(
+					TABLE_MAGNA_HITMEISTER_PREPARE,
+						'hp',
+						(
+							(getDBConfigValue('general.keytype', '0') == 'artNr')
+								? 'p.products_model = hp.products_model'
+								: 'p.products_id = hp.products_id'
+						).
+						" AND hp.mpID = '".$this->aMagnaSession['mpID']."'"
+				),
+				ML_Database_Model_Query_Select::JOIN_TYPE_INNER
+			)
+//			->where("p.products_ean IS NOT NULL AND p.products_ean <> ''")
+		;
 		return $this;
 	}
 	

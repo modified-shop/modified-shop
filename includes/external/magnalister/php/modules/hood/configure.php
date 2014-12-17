@@ -56,6 +56,7 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 		
 		$forms[] = 'orderStatus';
 		$forms[] = 'orderStatusHood';
+		$forms[] = 'orders_payment_matching';
 		$forms[] = 'template';
 		
 		return $forms;
@@ -156,6 +157,7 @@ class HoodConfigure extends MagnaCompatibleConfigure {
 	}
 	
 	protected function finalizeForm() {
+		parent::finalizeForm();
 		#echo var_dump_pre($this->isAuthed, '$this->isAuthed');
 		if (!$this->isAuthed) {
 			$this->form = array (

@@ -28,7 +28,7 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 		parent::__construct($mpID, $marketplace);
 	}
 
-        protected function getConfigKeys() {
+	protected function getConfigKeys() {
 		$keys = parent::getConfigKeys();
 		$keys['OrderStatusOpen'] = array (
 			'key' => 'orderstatus.open',
@@ -60,7 +60,7 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 	
 	protected function getOrdersStatus() {
 //		return $this->o['orderInfo']['PaymentCompleted'] ? $this->config['OrderStatusOpen'] : $this->config['OrderStatusUnpaid'];
-            return $this->config['OrderStatusOpen'];
+		return $this->config['OrderStatusOpen'];
 	}
 	
 	protected function generateOrderComment() {
@@ -73,6 +73,78 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 	
 	protected function generateOrdersStatusComment() {
 		return $this->generateOrderComment();
+	}
+	
+	/**
+	 * Returs the payment method for the current order.
+	 * @return string
+	 */
+	protected function getPaymentMethod() {
+		if ($this->config['PaymentMethod'] == 'matching') {
+			$paymentMethod = $this->o['order']['payment_method'];
+			$paymentModules = explode(';', MODULE_PAYMENT_INSTALLED);
+			
+			$class = 'marketplace';
+			if (stripos($paymentMethod, 'sofortueberweisung') !== false) {
+				if (in_array('pn_sofortueberweisung.php', $paymentModules))
+					$class = 'pn_sofortueberweisung';
+				if (in_array('moneybookers_sft.php', $paymentModules))
+					$class = 'moneybookers_sft';
+				
+			} else if (stripos($paymentMethod, 'Moneybookers') !== false) {
+				if (in_array('moneybookers.php', $paymentModules))
+					$class = 'moneybookers';
+				if (in_array('amoneybookers.php', $paymentModules))
+					$class = 'amoneybookers';
+				
+			} else if (stripos($paymentMethod, 'paypal') !== false) {
+				# PayPal
+				if (in_array('paypal.php', $paymentModules))
+					$class = 'paypal';
+				if (in_array('paypalng.php', $paymentModules))
+					$class = 'paypalng';
+				if (in_array('paypalexpress.php', $paymentModules))
+					$class = 'paypalexpress';
+				if (in_array('paypalgambio_alt.php', $paymentModules))
+					$class = 'paypalgambio_alt';
+				if (in_array('wcp_paypal.php', $paymentModules))
+					$class = 'wcp_paypal';
+				
+			} else if ((stripos($paymentMethod, 'Barzahlung') !== false)) {
+				# Barzahlung
+				if (in_array('cash.php', $paymentModules))
+					$class = 'cash';
+				
+			} else if (stripos($paymentMethod, 'billSafe') !== false) {
+				# PayPal
+				if (in_array('billsafe_2.php', $paymentModules))
+					$class = 'billsafe_2';
+				if (in_array('billsafe_3_invoice.php', $paymentModules))
+					$class = 'billsafe_3_invoice';
+				if (in_array('billsafe_3_installment.php', $paymentModules))
+					$class = 'billsafe_3_installment';
+			
+			} else if (stripos($paymentMethod, 'Bezahlung per Nachnahme') !== false) {
+				# Nachnahme
+				if (in_array('cod.php', $paymentModules))
+					$class = 'cod';
+			
+			} else if (stripos($paymentMethod, 'Bezahlung per Überweisung') !== false) {
+				# Vorkasse
+				if (in_array('moneyorder.php', $paymentModules))
+					$class = 'moneyorder';
+				if (in_array('uos_vorkasse_modul.php', $paymentModules))
+					$class = 'uos_vorkasse_modul';
+				
+			} else if (stripos($paymentMethod, 'Kauf auf Rechnung') !== false) {
+				# Nachnahme
+				if (in_array('cod.php', $paymentModules))
+					$class = 'cod';
+				
+			}
+			return $class;
+		}
+		return $this->config['PaymentMethod'];
 	}
 	
 	protected function doBeforeInsertMagnaOrder() {
@@ -95,6 +167,7 @@ class HoodImportOrders extends MagnaCompatibleImportOrders {
 				ML_LABEL_MARKETPLACE_SHIPPING_TIME_VALUE, $sDay
 			);
 		}
+		
 		return array();
 	}
 

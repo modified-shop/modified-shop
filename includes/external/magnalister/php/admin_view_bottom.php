@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_bottom.php 3304 2013-11-24 17:27:37Z derpapst $
+ * $Id: admin_view_bottom.php 4799 2014-11-04 18:15:56Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -63,9 +63,9 @@ if (class_exists('MagnaDB') && class_exists('MagnaConnector')) {
 echo '
 									<div class="bold">
 										<span class="customerinfo">'.ML_LABEL_CUSTOMERSID.': '.((isset($magnaConfig['maranon']['CustomerID'])) ? $magnaConfig['maranon']['CustomerID'] : ML_LABEL_UNKNOWN).' :: Shop ID: '.((isset($magnaConfig['maranon']['ShopID'])) ? $magnaConfig['maranon']['ShopID'] : ML_LABEL_UNKNOWN).'</span>
-										<span class="magnatext">m</span>agnalister Version <span class="version">'.LOCAL_CLIENT_VERSION.'
+										<span class="version-text">magnalister Version</span> <span class="version">'.LOCAL_CLIENT_VERSION.'</span>
 										<span class="build">Build: '.((defined('CLIENT_BUILD_VERSION')) ? CLIENT_BUILD_VERSION : ML_LABEL_UNKNOWN).' :: Current: '.((defined('CURRENT_BUILD_VERSION')) ? CURRENT_BUILD_VERSION : ML_LABEL_UNKNOWN).'</span>
-									</span></div>
+									</div>
 									<div class="copyleft">'.ML_LABEL_COPYLEFT.'</div>';
 ?>
 								</td></tr></tbody></table>
@@ -75,7 +75,7 @@ if (MAGNA_DEBUG && class_exists('MagnaConnector')) {
 	if (!empty($tpR)) {
 		echo '<textarea class="apiRequestTime" readonly="readonly" spellcheck="false" wrap="off">';
 		foreach ($tpR as $item) {
-			echo print_m(json_indent($item['request']), microtime2human($item['time']).' ['.$item['status'].']', true)."\n";
+			echo print_m(json_indent($item['request']), microtime2human($item['time']).' ['.$item['status'].'] <-- '.(isset($item['apiurl']) ? $item['apiurl'] : 'url unknown').'', true)."\n";
 		}
 		echo '</textarea>';
 	}

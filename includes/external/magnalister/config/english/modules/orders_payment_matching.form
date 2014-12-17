@@ -1,0 +1,11 @@
+{
+    "orders": {
+        "fields": {
+            "defaultpayment": {
+                "values": {
+                    "matching": "Automatic matching"
+                }
+            }
+        }
+    }
+}

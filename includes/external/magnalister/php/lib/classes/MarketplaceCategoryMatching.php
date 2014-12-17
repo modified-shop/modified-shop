@@ -33,6 +33,7 @@ abstract class MarketplaceCategoryMatching {
 	protected $url;
 	
 	protected $hasPlatformCol = true;
+	protected $columns = array();
 
 	public function __construct() {
 		global $_url, $_MagnaSession;
@@ -43,6 +44,8 @@ abstract class MarketplaceCategoryMatching {
 		$this->marketplace = $_MagnaSession['currentPlatform'];
 		
 		$this->hasPlatformCol = MagnaDB::gi()->columnExistsInTable('platform', $this->getTableName());
+		
+		$this->columns = MagnaDB::gi()->getTableColumns($this->getTableName());
 	}
 	
 	protected abstract function getTableName();
@@ -53,6 +56,30 @@ abstract class MarketplaceCategoryMatching {
 	
 	protected function getStoreCategoryValidityPeriod() {
 		return self::STORE_CAT_VALIDITY_PERIOD;
+	}
+	
+	protected function insertMpCategories($categories) {
+		$now = gmdate('Y-m-d H:i:s');
+		foreach($categories as $curRow) {
+			if (!isset($curRow['mpID'])) {
+				$curRow['mpID'] = '0';
+			}
+			if ($this->hasPlatformCol) {
+				$curRow['platform'] = $this->marketplace;
+			}
+			$curRow['InsertTimestamp'] = $now;
+			if (!isset($curRow['Selectable'])) {
+				$curRow['Selectable'] = $curRow['LeafCategory'] == '1' ? '1' : '0';
+			}
+			$not = array_diff(array_keys($curRow), $this->columns);
+			if (!empty($not)) {
+				foreach ($not as $notKey) {
+					unset($curRow[$notKey]);
+				}
+			}
+			#echo print_m($curRow, $this->getTableName());
+			MagnaDB::gi()->insert($this->getTableName(), $curRow, true);
+		}
 	}
 	
 	# Die Funktion wird verwendet beim Aufruf der Kategorie-Zuordnung, nicht vorher.
@@ -84,13 +111,7 @@ abstract class MarketplaceCategoryMatching {
 			}
 			MagnaDB::gi()->delete($this->getTableName(), $w);
 		}
-		$now = gmdate('Y-m-d H:i:s');
-		foreach($categories['DATA'] as &$curRow) {
-			$curRow['mpID'] = '0';
-			if ($this->hasPlatformCol) $curRow['platform'] = $this->marketplace;
-			$curRow['InsertTimestamp'] = $now;
-		}
-		MagnaDB::gi()->batchinsert($this->getTableName(), $categories['DATA'], true);
+		$this->insertMpCategories($categories['DATA']);
 		return true;
 	}
 	
@@ -109,15 +130,13 @@ abstract class MarketplaceCategoryMatching {
 		if (!is_array($categories['DATA']) || empty($categories['DATA'])) {
 			return false;
 		}
-		// echo print_m($categories);
-		$now = gmdate('Y-m-d H:i:s');
-		foreach($categories['DATA'] as &$curRow) {
-			$curRow['mpID'] = $this->mpID;
-			if ($this->hasPlatformCol) $curRow['platform'] = $this->marketplace;
-			$curRow['InsertTimestamp'] = $now;
+		$categoryData = $categories['DATA'];
+		foreach ($categoryData as &$set) {
+			$set['mpID'] = $this->mpID;
 		}
-		$categories = array_values($categories['DATA']);
-		MagnaDB::gi()->batchinsert($this->getTableName(), $categories, true);
+		#echo print_m($categoryData);
+		$this->insertMpCategories($categoryData);
+		#echo print_m(MagnaDB::gi()->getSqlErrors());
 		return true;
 	}
 
@@ -136,7 +155,7 @@ abstract class MarketplaceCategoryMatching {
 
 		$mpCategories = MagnaDB::gi()->fetchArray('
 		    SELECT DISTINCT CategoryID, CategoryName,
-		           ParentID, LeafCategory
+		           ParentID, LeafCategory, Selectable
 		      FROM '.$this->getTableName().'
 		     WHERE ParentID="'.$parentID.'"
 		           AND mpID="0"
@@ -149,7 +168,7 @@ abstract class MarketplaceCategoryMatching {
 			# Wenn Daten bekommen, noch mal select
 			$mpCategories = MagnaDB::gi()->fetchArray('
 			    SELECT DISTINCT CategoryID, CategoryName,
-			           ParentID, LeafCategory
+			           ParentID, LeafCategory, Selectable
 			      FROM '.$this->getTableName().'
 			     WHERE ParentID="'.$parentID.'"
 			           AND mpID="0"
@@ -168,7 +187,7 @@ abstract class MarketplaceCategoryMatching {
 		$validTo = gmdate('Y-m-d H:i:s', time() - $this->getStoreCategoryValidityPeriod());
 		$mpCategories = MagnaDB::gi()->fetchArray('
 		    SELECT DISTINCT CategoryID, CategoryName,
-		           ParentID, LeafCategory
+		           ParentID, LeafCategory, Selectable
 		      FROM '.$this->getTableName().'
 		     WHERE ParentID="'.$parentID.'"
 		           AND mpID="'.$this->mpID.'"
@@ -182,7 +201,7 @@ abstract class MarketplaceCategoryMatching {
 			# Wenn Daten bekommen, noch mal select
 			$mpCategories = MagnaDB::gi()->fetchArray('
 			    SELECT DISTINCT CategoryID, CategoryName,
-			           ParentID, LeafCategory
+			           ParentID, LeafCategory, Selectable
 			      FROM '.$this->getTableName().'
 			     WHERE ParentID="'.$parentID.'"
 			           AND mpID="'.$this->mpID.'"
@@ -195,7 +214,11 @@ abstract class MarketplaceCategoryMatching {
 		}
 		return $mpCategories;
 	}
-
+	
+	private function cssId($id) {
+		return preg_replace('/[^A-Za-z0-9-_]/', '_', $id);
+	}
+	
 	private function renderCategories($parentID = 0, $purge = false) {
 		if ($this->isStoreCategory) {
 			$subCats = $this->getMPStoreCategories($parentID, $purge);
@@ -207,15 +230,21 @@ abstract class MarketplaceCategoryMatching {
 		}
 		$topLevelList = '';
 		foreach ($subCats as $item) {
+			$classes = array('toggle');
 			if ($item['LeafCategory'] == 1) {
-				$class = 'leaf';
+				$classes[] = 'leaf';
 			} else {
-				$class = 'plus';
+				$classes[] = 'plus';
 			}
+			if ($item['Selectable'] == '1') {
+				$classes[] = 'selectable';
+			}
+			$cssId = $this->cssId($item['CategoryID']);
+			$escId = htmlspecialchars($item['CategoryID']);
 			$topLevelList .= '
-				<div class="catelem" id="y_'.$item['CategoryID'].'">
-					<span class="toggle '.$class.'" id="y_toggle_'.$item['CategoryID'].'">&nbsp;</span>
-					<div class="catname" id="y_select_'.$item['CategoryID'].'">
+				<div class="catelem" id="y_'.$cssId.'">
+					<span class="'.implode(' ', $classes).'" id="y_toggle_'.$cssId.'" data-id="'.$escId.'">&nbsp;</span>
+					<div class="catname" id="y_select_'.$cssId.'" data-id="'.$escId.'">
 						<span class="catname">'.fixHTMLUTF8Entities($item['CategoryName']).'</span>
 					</div>
 				</div>';
@@ -230,7 +259,7 @@ abstract class MarketplaceCategoryMatching {
 		# dann das gleiche fuer die ParentCategory usw.
 		# bis bei Top angelangt (CategoryID = ParentID)
 		$yCP = MagnaDB::gi()->fetchRow(eecho('
-			SELECT CategoryID, CategoryName, ParentID
+			SELECT CategoryID, CategoryName, ParentID, Selectable
 			  FROM '.$this->getTableName().'
 			 WHERE CategoryID="'.$categoryID.'"
 			       AND mpID="'.$mpID.'"
@@ -287,9 +316,10 @@ abstract class MarketplaceCategoryMatching {
 	}
 	
 	private function renderMPCategoryItem($id) {
+		$cssId = $this->cssId($id);
 		return '
-			<div id="yc_'.$id.'" class="mpCategory">
-				<div id="y_remove_'.$id.'" class="y_rm_handle">&nbsp;</div><div class="ycpath">'.$this->getMPCategoryPath($id).'</div>
+			<div id="yc_'.$cssId.'" class="mpCategory">
+				<div id="y_remove_'.$cssId.'" class="y_rm_handle">&nbsp;</div><div class="ycpath">'.$this->getMPCategoryPath($id).'</div>
 			</div>';
 	}
 	
@@ -331,12 +361,22 @@ var mpCategorySelector = (function() {
 	
 	function selectCategory(elem) {
 		elem = $(elem).parent();
-		var tmpNewID = $(elem).attr('id');
-		selectedCategory = tmpNewID;
-		myConsole.log('selectedCategory', selectedCategory);
+		
+		var handleId = $(elem).attr('id');
+		selectedCategory = $(elem).attr('data-id');
+		
+		myConsole.log('selectedCategory', $(elem), handleId, selectedCategory);
 	
-		$('div.catname span.catname.selected', mpCats).removeClass('selected').css({'font-weight':'normal'});
-		$('span.catname', elem).addClass('selected').css({'font-weight':'bold'});
+		//$('div.catname span.catname.selected', mpCats).removeClass('selected').css({'font-weight':'normal'});
+		//$('span.catname', elem).addClass('selected').css({'font-weight':'bold'});
+
+		$('#mpCats div.catView').find('span.catname.selected').removeClass('selected').css({'font-weight':'normal'});
+		$('#mpCats div.catView').find('span.toggle.tick').removeClass('tick');
+
+		$('#'+handleId+' > span.catname').addClass('selected').css({'font-weight':'bold'});
+		$('#'+handleId+' > span.catname').parents().prevAll('span.catname').addClass('selected').css({'font-weight':'bold'});
+		$('#'+handleId+' > span.catname').parents().prev('span.toggle').addClass('tick');
+		
 		generateCategoryPath(tmpSelectedCat);
 	}
 	
@@ -355,7 +395,7 @@ var mpCategorySelector = (function() {
 							url: '<?php echo toURL($this->url, array('where' => 'catMatchView', 'kind' => 'ajax'), true);?>',
 							data: {
 								'action': 'getMPCategories',
-								'objID': tmpElem.attr('id'),
+								'objID': tmpElem.attr('data-id'),
 								'isStoreCategory': isStoreCategory
 							},
 							success: function(data) {
@@ -379,7 +419,10 @@ var mpCategorySelector = (function() {
 				}
 			});
 		});	
-		$('div.catelem span.toggle.leaf', $(elem)).each(function() {
+		$('div.catelem span.toggle.selectable', $(elem)).each(function() {
+			$(this).click(function () {
+				selectCategory($(this).parent().children('div.catname').children('span.catname'));
+			});
 			$(this).parent().children('div.catname').children('span.catname').each(function() {
 				$(this).click(function () {
 					selectCategory($(this));

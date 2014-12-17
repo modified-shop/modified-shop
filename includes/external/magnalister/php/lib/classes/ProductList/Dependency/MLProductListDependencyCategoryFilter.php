@@ -51,7 +51,7 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 	 * @return array
 	 */
 	protected function getSubCatsIds ($iParentId) {
-		$aIds = MagnaDB::gi()->fetchArray("SELECT categories_id FROM ".TABLE_CATEGORIES." where parent_id='".$iParentId."'", true);
+		$aIds = MagnaDB::gi()->fetchArray("SELECT categories_id FROM ".TABLE_CATEGORIES." WHERE parent_id='".$iParentId."'", true);
 		foreach ($aIds as $iId) {
 			foreach ($this->getSubCatsIds($iId) as $iChild) {
 				$aIds[] = $iChild;
@@ -59,7 +59,25 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 		}
 		return $aIds;
 	}
-	
+
+	public function getKeyTypeFilter() {
+		if ((int)$this->getFilterRequest() != 0) {
+			return parent::getKeyTypeFilter();
+		} else {
+			$sKeyType = ((getDBConfigValue('general.keytype', '0') == 'artNr') ? 'products_model' : 'products_id');
+			$aResult = MagnaDB::gi()->fetchArray("
+				   SELECT p.".$sKeyType."
+					 FROM ".TABLE_PRODUCTS." p
+				LEFT JOIN products_to_categories p2c ON p.products_id = p2c.products_id
+					WHERE p2c.products_id IS NULL
+			", true);
+			return array(
+				'in' => null,
+				'notIn' => $aResult,
+			);
+		}
+	}
+
 	public function manipulateQuery() {
 		$iSearch = (int)$this->getFilterRequest();
 		if ($iSearch != 0) {
@@ -70,31 +88,28 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 					array(
 						TABLE_PRODUCTS_TO_CATEGORIES,
 						'p2c',
-						"p.`products_id` = p2c.`products_id` AND p2c.`categories_id` in('".implode("', '", $aSubCats)."')"
+						"p.`products_id` = p2c.`products_id` AND p2c.`categories_id` IN('".implode("', '", $aSubCats)."')"
 					),
 					ML_Database_Model_Query_Select::JOIN_TYPE_INNER
 				)
 			;
-		} else {
-				$this->getQuery()->where('p.products_id in(SELECT distinct p2c.products_id from '.TABLE_PRODUCTS_TO_CATEGORIES.' p2c)');
 		}
 		return $this;
 	}
-	
+
 	protected function getDefaultConfig() {
 		return array('selectValues' => array('0' => ML_OPTION_FILTER_CATEGORY_ARTICLES_ALL) + $this->getCategoryTree());
 	}
 
-
 	protected function getCategoryTree($iParentId = 0){
 		$this->getFilterCategories();
 		$sQuery = "
-			SELECT c.categories_id, cd.categories_name".($this->blCountProducts ? ", count(p2c.products_id) as productcount" : '')."
-			FROM ".TABLE_CATEGORIES." c 
-			INNER JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id=cd.categories_id AND cd.language_id = '".(int)$_SESSION['languages_id']."'
-			".($this->blCountProducts ? "LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c ON c.categories_id=p2c.categories_id" : '')."
-			WHERE c.parent_id='".$iParentId."' ".$this->getFilterCategories()."
-			".($this->blCountProducts ? "GROUP BY c.categories_id" : '')."
+			    SELECT c.categories_id, cd.categories_name".($this->blCountProducts ? ", count(p2c.products_id) as productcount" : '')."
+			      FROM ".TABLE_CATEGORIES." c
+			INNER JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd ON c.categories_id = cd.categories_id AND cd.language_id = '".(int)$_SESSION['languages_id']."'
+			           ".($this->blCountProducts ? "LEFT JOIN ".TABLE_PRODUCTS_TO_CATEGORIES." p2c ON c.categories_id = p2c.categories_id" : '')."
+				 WHERE c.parent_id = '".$iParentId."' ".$this->getFilterCategories()."
+			           ".($this->blCountProducts ? "GROUP BY c.categories_id" : '')."
 		"; 
 		$aCats = array();
 		$sPad = str_repeat('&nbsp;', 3);
@@ -120,8 +135,7 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 	protected function getFilterCategories(){
 		if ($this->aCatsFilter === null) {
 			$this->aCatsFilter = array();
-			if (MagnaDB::gi()->fetchOne("select count(categories_id) from ".TABLE_CATEGORIES."") > $this->iTreeMaxCount ) {
-				
+			if (MagnaDB::gi()->fetchOne("SELECT COUNT(categories_id) FROM ".TABLE_CATEGORIES."") > $this->iTreeMaxCount) {
 				$iRequestId = (int)$this->getFilterRequest();
 				
 				//rootcat
@@ -132,23 +146,23 @@ class MLProductListDependencyCategoryFilter extends MLProductListDependency {
 				
 				//parents till 0
 				$iParentId = $iRequestId;
-				$sParentQuery = "SELECT parent_id from ".TABLE_CATEGORIES." WHERE categories_id = '%s'";
+				$sParentQuery = "SELECT parent_id FROM ".TABLE_CATEGORIES." WHERE categories_id = '%s'";
 				while (($iParentId = MagnaDB::gi()->fetchOne(sprintf($sParentQuery, $iParentId))) != 0) {
 					$this->aCatsFilter[$iParentId] = null;
 				}
 				
 				//siblings of all parents and current
-				foreach(MagnaDB::gi()->fetchArray("SELECT categories_id from ".TABLE_CATEGORIES." where parent_id in ('".implode("', '", array_keys($this->aCatsFilter))."')") as $aRow){
+				foreach(MagnaDB::gi()->fetchArray("SELECT categories_id FROM ".TABLE_CATEGORIES." WHERE parent_id IN('".implode("', '", array_keys($this->aCatsFilter))."')") as $aRow){
 					$this->aCatsFilter[$aRow['categories_id']] = null;
 				}
 				
 				//childs of request
-				foreach(MagnaDB::gi()->fetchArray("SELECT categories_id from ".TABLE_CATEGORIES." where parent_id = '".$iRequestId."'") as $aRow){
+				foreach(MagnaDB::gi()->fetchArray("SELECT categories_id FROM ".TABLE_CATEGORIES." WHERE parent_id = '".$iRequestId."'") as $aRow){
 					$this->aCatsFilter[$aRow['categories_id']] = null;
 				}
 				
 				//count subsubcats
-				foreach(MagnaDB::gi()->fetchArray("SELECT parent_id, count(categories_id) as count from ".TABLE_CATEGORIES." where parent_id in ('".implode("', '", array_keys($this->aCatsFilter))."') GROUP BY categories_id") as $aRow){
+				foreach(MagnaDB::gi()->fetchArray("SELECT parent_id, count(categories_id) AS count FROM ".TABLE_CATEGORIES." WHERE parent_id IN('".implode("', '", array_keys($this->aCatsFilter))."') GROUP BY categories_id") as $aRow){
 					$this->aCatsFilter[$aRow['parent_id']] = $aRow['count'];
 				}
 			}

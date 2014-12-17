@@ -77,8 +77,8 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		           AND pov.language_id = \''.$this->settings['language'].'\'
 		           AND pov.products_options_values_id = pa.options_values_id
 		           AND pov.products_options_values_name<>\'\'
-		           '.($this->hasDbColumn['pa.attributes_stock'] ? 'AND pa.attributes_stock IS NOT NULL' : '').'
 		', false));
+
 		if ($variationTheme == false) {
 			#echo __LINE__."<br>\n";
 			return false;
@@ -100,7 +100,7 @@ class TradoriaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 				'Currency' => $this->settings['currency'],
 				'ItemTax' => $data['submit']['ItemTax'],
 				'Quantity' => ($this->quantityLumb === false)
-					? max(0, $v['Quantity'] - (int)$this->quantitySub)
+					? max(0, (int)$v['Quantity'] - (int)$this->quantitySub)
 					: $this->quantityLumb,
 				'EAN' => $v['EAN'],
 				'Variation' => array (

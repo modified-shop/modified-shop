@@ -21,4 +21,4 @@
 /* @var $oObject MLProductListDependencyAction */
 class_exists('MLProductList') or die();
 ?>
-<a title="<?php echo ML_BUTTON_LABEL_SUMMARY; ?>" href="<?php echo $this->getUrl(false, false, false, array('view' => 'summary')); ?>" class="ml-button"><?php echo ML_BUTTON_LABEL_SUMMARY; ?></a>
+<a title="<?php echo ML_BUTTON_LABEL_SUMMARY; ?>" href="<?php echo $this->getUrl(false, false, false, array('view' => 'summary')); ?>" class="ml-button mlbtn-action"><?php echo ML_BUTTON_LABEL_SUMMARY; ?></a>

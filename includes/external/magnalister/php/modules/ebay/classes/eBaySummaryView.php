@@ -176,9 +176,6 @@ class eBaySummaryView extends SimpleSummaryView {
 		     LIMIT 1
 		');
 
-		if (0.0 != $listingproperties['Price']) {
-			$data['price'] = $listingproperties['Price'];
-		}
 		if (!isset($data['price']) || ($data['price'] === null)) {
 			$data['price'] = makePrice($pID, $listingproperties['ListingType']);
 		}
@@ -189,6 +186,10 @@ class eBaySummaryView extends SimpleSummaryView {
 		}
 		
 		if ($data['listingsupertype'] == 'chinese') {
+			// frozen price only at chinese auction
+			if (0.0 != $listingproperties['Price']) {
+				$data['price'] = $listingproperties['Price'];
+			}
 			$availableQuantity = (int)MagnaDB::gi()->fetchOne('SELECT products_quantity FROM '.TABLE_PRODUCTS.' WHERE products_id=\''.$pID.'\'');
 			if ($availableQuantity > 0) {
 				$data['quantity'] = 1;
