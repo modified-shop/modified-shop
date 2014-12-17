@@ -129,8 +129,22 @@ class xtcPrice {
       } else {
         $cinfo = xtc_oe_customer_infos($cedit_id);
       }
+      if ($this->cStatus['customers_status_show_price_tax'] == 1
+          && $this->cStatus['customers_status_add_tax_ot'] == 0
+          && $this->get_content_type_product($pID) == 'virtual'
+          ) 
+      {
+        $tax_class = xtc_get_tax_class($tax_class, $cinfo['country_id'], $cinfo['zone_id']);
+      }
       $products_tax = xtc_get_tax_rate($tax_class, $cinfo['country_id'], $cinfo['zone_id']);
     } else {
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          && $this->get_content_type_product($pID) == 'virtual'
+          ) 
+      {
+        $tax_class = xtc_get_tax_class($tax_class);
+      }
       $products_tax = isset($this->TAX[$tax_class]) ? $this->TAX[$tax_class] : 0;
     }
     
@@ -723,6 +737,57 @@ function xtcCheckSpecial($pID) {
    */
   function get_decimal_places($code) {
     return $this->currencies[$this->actualCurr]['decimal_places'];
+  }
+
+  /**
+   * get_content_type_product
+   *
+   * @return unknown
+   */
+  function get_content_type_product($products_id) {
+    $this->content_type_product = array(); 
+
+    if (DOWNLOAD_ENABLED == 'true') {
+      if (defined('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED') && DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED == 'true') {
+        // new routine for multiple attributes for downloads
+        $virtual_check_query = xtc_db_query("SELECT pa.products_attributes_id
+                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                               JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                    ON pa.products_attributes_id = pad.products_attributes_id
+                                              WHERE pa.products_id = '".(int)$products_id."'");
+        if (xtc_db_num_rows($virtual_check_query) > 0) {
+          $this->content_type_product[$products_id] = 'virtual';
+        } else {
+          $this->content_type_product[$products_id] = 'physical';
+        }
+      } else {
+        // old routine as standard
+        $virtual_check_query1 = xtc_db_query("SELECT products_attributes_id
+                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES."
+                                              WHERE products_id = '".(int)$products_id."'");
+        $total_attributes = xtc_db_num_rows($virtual_check_query1);
+
+        $virtual_check_query = xtc_db_query("SELECT pa.products_attributes_id
+                                               FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa
+                                               JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad
+                                                    ON pa.products_attributes_id = pad.products_attributes_id
+                                              WHERE pa.products_id = '".(int)$products_id."'
+                                           GROUP BY pa.options_values_id");
+        $total_virtual = xtc_db_num_rows($virtual_check_query);
+        
+        if ($total_virtual == 0) {
+          $this->content_type_product[$products_id] = 'physical';
+        } elseif ($total_attributes == $total_virtual) {
+          $this->content_type_product[$products_id] = 'virtual';
+        } elseif ($total_attributes > $total_virtual) {
+          $this->content_type_product[$products_id] = 'mixed';
+        }          
+      }
+    } else {
+      $this->content_type_product[$products_id] = 'physical';
+    }
+    
+    return $this->content_type_product[$products_id];
   }
   
 }

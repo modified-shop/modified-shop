@@ -17,7 +17,7 @@
 
   function xtc_get_tax_rate($class_id, $country_id = -1, $zone_id = -1) {
 
-    if ( ($country_id == -1) && ($zone_id == -1) ) {
+    if ($country_id == -1 && $zone_id == -1) {
       if (!isset($_SESSION['customer_id'])) {
         $country_id = STORE_COUNTRY;
         $zone_id = STORE_ZONE;
@@ -25,7 +25,7 @@
         $country_id = $_SESSION['customer_country_id'];
         $zone_id = $_SESSION['customer_zone_id'];
       }
-    }else{
+    } else {
       $country_id = $country_id;
       $zone_id = $zone_id;
     }
@@ -54,4 +54,46 @@
       return 0;
     }
   }
- ?>
+
+
+  function xtc_get_tax_class($tax_class_id, $country_id = -1, $zone_id = -1) {
+        
+    if ($country_id == -1 && $zone_id == -1) {
+      if (!isset($_SESSION['customer_id'])) {
+        if (isset($_SESSION['country'])) {
+          $country_id = $_SESSION['country'];
+        } else {
+          $country_id = STORE_COUNTRY;
+          $zone_id = STORE_ZONE;
+        }
+      } else {
+        $country_id = $_SESSION['customer_country_id'];
+        $zone_id = $_SESSION['customer_zone_id'];
+      }
+    } else {
+      $country_id = $country_id;
+      $zone_id = $zone_id;
+    }
+                                                              
+    $tax_query = xtDBquery("SELECT tax_class_id
+                              FROM " . TABLE_TAX_RATES . " tr 
+                         LEFT JOIN " . TABLE_ZONES_TO_GEO_ZONES . " za 
+                                   ON (tr.tax_zone_id = za.geo_zone_id) 
+                         LEFT JOIN " . TABLE_GEO_ZONES . " tz 
+                                   ON (tz.geo_zone_id = tr.tax_zone_id) 
+                             WHERE (za.zone_country_id is null 
+                                    OR za.zone_country_id = '0' 
+                                    OR za.zone_country_id = '" . (int)$country_id . "') 
+                               AND (za.zone_id is null 
+                                    OR za.zone_id = '0' 
+                                    OR za.zone_id = '" . (int)$zone_id . "') 
+                                AND tr.tax_priority = '99'
+                              LIMIT 1");
+    if (xtc_db_num_rows($tax_query, true) == 1) {
+      $tax = xtc_db_fetch_array($tax_query, true);
+      return $tax['tax_class_id'];
+    } else {
+      return $tax_class_id;
+    }
+  }
+?>

@@ -17,7 +17,7 @@
 
 define('HEADING_TITLE', 'Steuers&auml;tze');
 
-define('TABLE_HEADING_TAX_RATE_PRIORITY', 'Priorit&auml;t');
+define('TABLE_HEADING_TAX_RATE_PRIORITY', 'Priorit&auml;t<br/><b>WICHTIG:</b>F&uuml;r elektronisch erbrachte Leistungen muss diese auf 99 gesetzt werden.');
 define('TABLE_HEADING_TAX_CLASS_TITLE', 'Steuerklasse');
 define('TABLE_HEADING_COUNTRIES_NAME', 'Land');
 define('TABLE_HEADING_ZONE', 'Steuerzone');

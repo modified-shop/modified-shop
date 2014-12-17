@@ -404,6 +404,15 @@ class shoppingCart {
                                        from ".TABLE_PRODUCTS."
                                       where products_id='".xtc_get_prid($products_id)."'");
       if ($product = xtc_db_fetch_array($product_query)) {
+
+        if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+            && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+            && $xtPrice->get_content_type_product($product['products_id']) == 'virtual'
+            ) 
+        {
+          $product['products_tax_class_id'] = xtc_get_tax_class($product['products_tax_class_id']);
+        }
+
         $products_price = $xtPrice->xtcGetPrice($product['products_id'],
                                                 $format = false,
                                                 $qty,
@@ -536,6 +545,14 @@ class shoppingCart {
           if ($products['products_status'] == 0) {
               $this->remove($products_id);
           } else {
+            if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+                && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+                && $xtPrice->get_content_type_product($products['products_id']) == 'virtual'
+                ) 
+            {
+              $products['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id']);
+            }
+            
             $products_price = $xtPrice->xtcGetPrice(
                                   $products['products_id'],
                                   $format = false,
