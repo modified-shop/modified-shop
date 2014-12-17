@@ -17,7 +17,7 @@
 
 define('HEADING_TITLE', 'Tax Rates');
 
-define('TABLE_HEADING_TAX_RATE_PRIORITY', 'Priority');
+define('TABLE_HEADING_TAX_RATE_PRIORITY', 'Priority<br/><b>Attention:</b>For electronically supplied services, this must be set to 99.');
 define('TABLE_HEADING_TAX_CLASS_TITLE', 'Tax Class');
 define('TABLE_HEADING_COUNTRIES_NAME', 'Country');
 define('TABLE_HEADING_ZONE', 'Zone');

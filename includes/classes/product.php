@@ -25,6 +25,8 @@ class product {
    * @return product
    */
   function product($pID = 0) {
+    global $xtPrice;
+
     $this->pID = (int)$pID;
     
     //set default select, using in function getAlsoPurchased, getCrossSells, getReverseCrossSells
@@ -66,6 +68,14 @@ class product {
     } else {
       $this->isProduct = true;
       $this->data = xtc_db_fetch_array($product_query, true);
+
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+          && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+          && $xtPrice->get_content_type_product($this->data['products_id']) == 'virtual'
+          ) 
+      {
+        $this->data['products_tax_class_id'] = xtc_get_tax_class($this->data['products_tax_class_id']);
+      }
     }
   }
 
@@ -360,6 +370,14 @@ class product {
    */
   function buildDataArray(&$array, $image='thumbnail') {
     global $xtPrice, $main;
+
+    if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
+        && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
+        && $xtPrice->get_content_type_product($array['products_id']) == 'virtual'
+        ) 
+    {
+      $array['products_tax_class_id'] = xtc_get_tax_class($array['products_tax_class_id']);
+    }
 
     //get tax rate
     $tax_rate = isset($xtPrice->TAX[$array['products_tax_class_id']]) ? $xtPrice->TAX[$array['products_tax_class_id']] : 0;

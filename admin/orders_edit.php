@@ -158,6 +158,14 @@ if ($action == 'product_edit') {
 
   $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2'])); // web28 - 2012-04-05 - FIX orders tax
 
+  if ($status['customers_status_show_price_tax'] == 1
+      && $status['customers_status_add_tax_ot'] == 0
+      && $xtPrice->get_content_type_product((int)$_POST['products_id']) == 'virtual'
+      ) 
+  {
+    $product['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
+  }
+
   $tax_rate = xtc_get_tax_rate($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
 
   // FIX tax by customers_status_add_tax_ot == 0
@@ -296,6 +304,14 @@ if ($action == 'product_ins') {
   $product = xtc_db_fetch_array($product_query);
 
   $c_info = get_c_infos($order->customer['ID'], trim($order->delivery['country_iso_2'])); // web28 - 2012-04-05 - FIX orders tax
+
+  if ($status['customers_status_show_price_tax'] == 1
+      && $status['customers_status_add_tax_ot'] == 0
+      && $xtPrice->get_content_type_product((int)$_POST['products_id']) == 'virtual'
+      ) 
+  {
+    $product['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
+  }
 
   $tax_rate = xtc_get_tax_rate($product['products_tax_class_id'], $c_info['country_id'], $c_info['zone_id']);
 
