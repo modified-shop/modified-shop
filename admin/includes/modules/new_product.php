@@ -206,6 +206,11 @@
           <td><span class="main">&nbsp;</span></td>
         </tr>
       </table>
+      
+      <?php //autoload new product addons 
+      require_once(DIR_FS_INC.'auto_require.inc.php');
+      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
+      ?>
 
       <?php
       if (file_exists("includes/modules/categories_specials.php")) {
@@ -219,11 +224,6 @@
         document.getElementById('butSpecial').innerHTML= '<a href="JavaScript:showSpecial()" class="button">Sonderangebot &raquo;</a>';
       </script>
       <?php } ?>
-      
-      <?php //autoload new product addons 
-      require_once(DIR_FS_INC.'auto_require.inc.php');
-      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
-      ?>
       
       <div class="main" style="padding-bottom:5px;margin-bottom:10px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
