@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: admin_view_top.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: admin_view_top.php 4962 2014-12-09 16:21:54Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -42,7 +42,7 @@ function renderTabs($pages, $kind, $selected, $baseURL) {
 		}
 		$html .= '
 				<li'.(($url == $selected) ? ' class="selected"' : '').'>
-					<a href="'.toURL($baseURL, array($kind => $url)).'" title="'.$title.'">'.$title.'</a>
+					<a href="'.toURL($baseURL, array($kind => $url, 'isTab' => 'true')).'" title="'.$title.'">'.$title.'</a>
 		 		</li>';
 	}
 	$html .= '
@@ -57,6 +57,9 @@ global $magnaConfig, $_executionTime, $_js, $_mainTitle, $_url,
 
 if (in_array(SHOPSYSTEM, array('oscommerce', 'xonsoft'))) {
 	global $PHP_SELF;
+	if (!isset($cfgModules)) {
+		global $cfgModules;
+	}
 }
 
 if (array_key_exists('module', $_GET) && array_key_exists($_GET['module'], $_modules)) {
@@ -87,7 +90,7 @@ if (!isset($_SESSION['language_charset'])) {
 	}
 }
 
-if ((SHOPSYSTEM == 'xtcmodified') && defined('RUN_MODE_ADMIN')) {
+if ((SHOPSYSTEM == 'xtcmodified') && defined('RUN_MODE_ADMIN') && file_exists(DIR_WS_INCLUDES.'head.php')) {
 	require (DIR_WS_INCLUDES.'head.php');
 } else {
 echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.w3.org/TR/html4/loose.dtd">
@@ -115,6 +118,31 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 		</style>'."\n";
 			}
 ?>
+		<style>
+		@-moz-keyframes ml-css-spin {
+			0% {-moz-transform: rotate(0deg);}
+			100% {-moz-transform: rotate(360deg);}
+		}
+		@-webkit-keyframes ml-css-spin {
+			0% {-webkit-transform: rotate(0deg);}
+			100% {-webkit-transform: rotate(360deg);}
+		}
+		@keyframes ml-css-spin {
+			0% {transform: rotate(0deg);}
+			100% {transform: rotate(360deg);}
+		}
+
+		.ml-css-loading {
+			-o-box-sizing: border-box;
+			-ie-box-sizing: border-box;
+			-moz-box-sizing: border-box;
+			-webkit-box-sizing: border-box;
+			box-sizing: border-box;
+			-moz-animation: ml-css-spin .8s infinite linear;
+			-webkit-animation: ml-css-spin .8s infinite linear;
+			animation: ml-css-spin .8s infinite linear;
+		}
+		</style>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/debugFunctions.js"></script>
 		<script type="text/javascript">/*<![CDATA[*/
 			var debugging = true;/*<?php echo (MAGNA_DEBUG) ? 'true' : 'false'; ?>;*/
@@ -159,27 +187,31 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 			
 			var blockUILoading = {
 				overlayCSS: { 
-					backgroundColor: '#000',
-					'opacity': '0.1',
+					backgroundColor: '#fff',
+					'opacity': '0.8',
 					'z-index': '9000'
 				},
 				css: {
-					'background': '#fff url("<?php echo DIR_MAGNALISTER_WS; ?>images/loading.gif") no-repeat 50% 50%',
-					'width': '31px',
-					'height': '31px',
+					'width': '32px',
+					'height': '32px',
+					'border-width': '4px',
+					'border-style': 'solid',
+					'border-color': 'rgba(199, 53, 47, 0.25) rgba(199, 53, 47, 0.25) rgba(199, 53, 47, 0.25) rgba(199, 53, 47, 1)',
+					'border-radius': '32px',
+					'padding': '0',
 					'left': '50%',
-					'padding': '10px',
-					'border': 'none',
-					'border-radius': '10px',
-					'box-shadow': '0 0 20px #000000',
-					'z-index': '9001',
-					'box-sizing': 'content-box'
+					'margin': '0 0 0 -16px',
+					'padding': '0',
+					'top': '300px',
+					'z-index': '9999',
+					'background': 'transparent'
 				},
+				blockMsgClass: 'ml-css-loading',
 				message: '<div></div>',
 				onBlock: function() {
-					$('.blockUI.blockMsg.blockPage').bind('dblclick', function() {
-						$.unblockUI();
-					});
+						jQuery('.blockUI.ml-css-loading.blockPage').bind('dblclick', function() {
+								jQuery.unblockUI();
+						});
 				}
 			};
 			var blockUIProgress = {
@@ -205,8 +237,6 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 			};
 			
 			/* Preload Loading Animation */
-			loadingImage = new Image(); 
-			loadingImage.src = "<?php echo DIR_MAGNALISTER_WS; ?>images/loading.gif";
 			progressbarImage = new Image(); 
 			progressbarImage.src = "<?php echo DIR_MAGNALISTER_WS; ?>images/progressbar.png";
 		/*]]>*/</script>
@@ -220,6 +250,8 @@ if (!isset($_GET['module']) || ($_GET['module'] != 'nojs')) {
 
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/magnalister_general.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
 		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/classes/JSClass.js?<?php echo CLIENT_BUILD_VERSION?>"></script>
+		
+		<script type="text/javascript" src="<?php echo DIR_MAGNALISTER_WS; ?>js/loading-timer.js"></script>
 
 <?php if (defined('MERCARI_INSTALLED')) { 
 		global $tage, $monate;
@@ -335,8 +367,8 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 		require(DIR_WS_INCLUDES . 'header.php'); 
 		if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE | E_STRICT);
 		$out = ob_get_contents();
-		ob_clean();
-		echo preg_replace('/(<script (type="text\/javascript")*.*jquery.[^tooltip].*(type="text\/javascript")* *><\/script>)/', '', $out);
+		ob_end_clean();
+		echo preg_replace('/(<script (type="text\/javascript")*.*jquery.[^tooltip|^colorbox].*(type="text\/javascript")* *><\/script>)/', '', $out);
 
 		/* Prepare Navigation */
 		$nav = '';
@@ -355,7 +387,7 @@ echo '		<script type="text/javascript" src="'.$js.'"></script>'."\n";
 			require(DIR_WS_INCLUDES . 'column_left.php');
 			if (MAGNA_SHOW_WARNINGS) error_reporting(error_reporting(E_ALL) | E_WARNING | E_NOTICE | E_STRICT);
 			$nav = ob_get_contents();
-			ob_clean();
+			ob_end_clean();
 			unset($tnav);
 		}
 		
@@ -449,9 +481,7 @@ $globalButtons = array (
 								</a></h1>
 								<?php if (isset($_SESSION['magna_UPDATE_PATH']) && (strpos($_SESSION['magna_UPDATE_PATH'], 'debug') !== false)) { ?>
 									<span style="display: inline-block; padding-left: 3px; padding-top: 36px;"> :: Debug &#4314;(&#3232;&#30410;&#3232;&#4314;</span>
-								<?php } ?>
-								<div id="antlogo" title="<?php echo ML_HEADLINE_MAIN; ?>">&nbsp;</div>
-								
+								<?php } ?>								
 								<div id="globalButtonBox"><?php
 									foreach ($globalButtons as $blargh) {
 										echo '<span class="gfxbutton border '.$blargh['icon'].'" data-href="'.toURL($_url, $blargh['link']).'" title="'.$blargh['title'].'"></span> ';

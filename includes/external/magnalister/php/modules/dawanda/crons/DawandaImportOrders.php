@@ -42,17 +42,15 @@ class DawandaImportOrders extends MagnaCompatibleImportOrders {
 	}
 
 	protected function getPaymentMethod() {
-		$paymentMethod = ($this->config['PaymentMethod'] == 'matching')
-			? $this->getPaymentClassForDaWandaPaymentMethod($this->o['order']['payment_method'])
-			: $this->config['PaymentMethod'];
-		return ($paymentMethod == 'dawanda')
-			? $this->config['PaymentMethod']
-			: $paymentMethod;
+		if ($this->config['PaymentMethod'] == 'matching') {
+			return $this->getPaymentClassForDaWandaPaymentMethod($this->o['order']['payment_method']);
+		}
+		return $this->config['PaymentMethod'];
 	}
 
 	protected function getPaymentClassForDaWandaPaymentMethod($paymentMethod) {
 		$paymentModules = explode(';', MODULE_PAYMENT_INSTALLED);
-		$class = 'dawanda';
+		$class = 'marketplace';
 		/*
 			'BankTransfer',+
 			'CashOnDelivery',+

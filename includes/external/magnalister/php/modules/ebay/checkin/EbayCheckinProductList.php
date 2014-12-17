@@ -51,6 +51,11 @@ class EbayCheckinProductList extends MLProductListEbayAbstract{
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyMarketplaceSync', array('propertiestablename' => $this->isAjax() ? TABLE_MAGNA_EBAY_PROPERTIES :'ep.')) //table will be joined in $this->buildQuery()
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyLastPreparedFilter', array(
+				'propertiestablename' => TABLE_MAGNA_EBAY_PROPERTIES, 
+				'propertiestablealias' => 'ep', 
+				'preparedtimestampfield' => 'PreparedTS',
+			))
 //			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;
 	}
@@ -65,8 +70,8 @@ class EbayCheckinProductList extends MLProductListEbayAbstract{
 					'ep',
 					(
 						(getDBConfigValue('general.keytype', '0') == 'artNr')
-							? 'p.products_model=ep.products_model'
-							: 'p.products_id=ep.products_id'
+							? 'p.products_model = ep.products_model'
+							: 'p.products_id = ep.products_id'
 					).
 					"
 						AND ep.mpID = '".$this->aMagnaSession['mpID']."'

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: ComparisonShoppingCheckinSubmit.php 4331 2014-08-05 13:48:23Z tim.neumann $
+ * $Id: ComparisonShoppingCheckinSubmit.php 4806 2014-11-05 20:33:08Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -23,6 +23,7 @@ require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/CheckinSubmit.php');
 
 class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 	protected $firstRun = false;
+	protected $priceConfig = array();
 
 	public function __construct($settings = array()) {
 		global $_MagnaSession, $_modules;
@@ -31,8 +32,26 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 			'language' => getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID']),
 			'currency' => getCurrencyFromMarketplace($_MagnaSession['mpID']),
 		), $settings);
-
+		
 		parent::__construct($settings);
+		
+		$this->priceConfig = self::loadPriceSettings($_MagnaSession['mpID']);
+	}
+	
+	public static function loadPriceSettings($mpId) {
+		$mp = magnaGetMarketplaceByID($mpId);
+
+		$config = array(
+			'AddKind' => 'percent', // hard coded because not allowed for ComparisonShopping
+			'Factor'  => 0,
+			'Signal'  => getDBConfigValue($mp.'.price.signal', $mpId, ''),
+			'Group'   => getDBConfigValue($mp.'.price.group', $mpId, ''),
+			'UseSpecialOffer' => getDBConfigValue(array($mp.'.price.usespecialoffer', 'val'), $mpId, false),
+			'Currency' => getCurrencyFromMarketplace($mpId),
+			'ConvertCurrency' => getDBConfigValue(array($mp.'.exchangerate', 'update'), $mpId, false),
+		);
+
+		return $config;
 	}
 	
 	private function initUploadInfo() {
@@ -145,6 +164,8 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 	}
 
 	protected function appendAdditionalData($pID, $product, &$data) {
+		$finalPrice = $this->simpleprice->setFinalPriceFromDB($pID, $this->mpID, $this->priceConfig)->roundPrice()->getPrice();
+		/*
 		$this->simpleprice->setPrice($product['products_price']);
 		
 		if (getDBConfigValue(array($this->settings['marketplace'].'.price.usespecialoffer', 'val'), $this->_magnasession['mpID'], false)) {
@@ -156,6 +177,7 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 			$this->simpleprice->setPrice($specialPrice);
 		}
 		$finalPrice = $this->simpleprice->addTaxByTaxID($product['products_tax_class_id'])->calculateCurr()->roundPrice()->getPrice();
+		*/
 
 /*
 		if (MagnaDB::gi()->tableExists(TABLE_SHIPPING_STATUS)) {
@@ -173,13 +195,13 @@ class ComparisonShoppingCheckinSubmit extends CheckinSubmit {
 */
 
 		if (defined('TABLE_SHIPPING_STATUS')) {
-			$shippingTime = MagnaDB::gi()->fetchOne(
-				'SELECT shipping_status_name 
+			$shippingTime = MagnaDB::gi()->fetchOne('
+			     SELECT shipping_status_name 
 			       FROM '.TABLE_SHIPPING_STATUS.' 
 			      WHERE shipping_status_id=\''.$product['products_shippingtime'].'\'
-			      		AND language_id=\''.getDBConfigValue($this->settings['marketplace'].'.lang', $this->_magnasession['mpID']).'\'
-			      LIMIT 1'
-			);
+			            AND language_id=\''.getDBConfigValue($this->settings['marketplace'].'.lang', $this->_magnasession['mpID']).'\'
+			      LIMIT 1
+			');
 		} else {
 			$shippingTime = '';
 		}

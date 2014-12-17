@@ -71,13 +71,16 @@ function magnaUpdateCurrencyValues($args) {
 function eBayGenToken($args, &$value = '') {
 	global $_MagnaSession, $_url;
 	$expires = getDBConfigValue('ebay.token.expires', $_MagnaSession['mpID'], '');
+	$firstToken = '';
 	if (!empty($expires)) {
 		if(is_numeric($expires))
 			$expires = sprintf(ML_EBAY_TEXT_TOKEN_EXPIRES_AT, date('d.m.Y H:i:s', $expires));
 		else
 			$expires = sprintf(ML_EBAY_TEXT_TOKEN_EXPIRES_AT, date('d.m.Y H:i:s', unix_timestamp($expires)));
+	} else {
+		$firstToken = ' mlbtn-action';
 	}
-	return '<input class="ml-button" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
+	return '<input class="ml-button'.$firstToken.'" type="button" value="'.ML_EBAY_BUTTON_TOKEN_NEW.'" id="requestToken"/>
 	'.$expires.'
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
@@ -129,7 +132,7 @@ function eBayTopTenConfig($aArgs = array(), &$sValue = '') {
 			$aArgs['key'],
 			isset($_POST['conf'][$aArgs['key']])
 			? (int)$_POST['conf'][$aArgs['key']]
-			: (int)getDBConfigValue($aArgs['key'], $_MagnaSession['mpID'])
+			: (int)getDBConfigValue($aArgs['key'], $_MagnaSession['mpID'], 10)
 		);
 	}
 }
@@ -195,13 +198,12 @@ $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_ebay');
 
 $boxes = '';
 $auth = getDBConfigValue('ebay.authed', $_MagnaSession['mpID'], false);
-if ((!is_array($auth) || !$auth['state']) &&
-	allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID']) && 
-	!(
-		array_key_exists('conf', $_POST) && 
-		allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID'], $_POST['conf'])
-	) &&
-	isset($authError)
+if (   (!is_array($auth) || !$auth['state'])
+	&& allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID'])
+	&& !(   array_key_exists('conf', $_POST)
+		 && allRequiredConfigKeysAvailable($authConfigKeys, $_MagnaSession['mpID'], $_POST['conf'])
+	)
+	&& isset($authError)
 ) {
     $boxes .= renderAuthError($authError);
 }
@@ -248,6 +250,20 @@ if (array_key_exists('conf', $_POST)) {
 		setDBConfigValue('ebay.validconfig', $_MagnaSession['mpID'], true, true);
 	}
 */
+
+	// Tracking-Code-Matching only one of both settings for carrier is set display notice
+	if ((      isset($_POST['conf']['ebay.orderstatus.carrier.default'])
+			&& isset($_POST['conf']['ebay.orderstatus.carrier.dbmatching.table']['table'])
+			&& isset($_POST['conf']['ebay.orderstatus.trackingcode.dbmatching.table']['table'])
+		)
+		&& ((      empty($_POST['conf']['ebay.orderstatus.carrier.default'])
+				&& empty($_POST['conf']['ebay.orderstatus.carrier.dbmatching.table']['table'])
+			)
+			&& !empty($_POST['conf']['ebay.orderstatus.trackingcode.dbmatching.table']['table'])
+		)
+	) {
+		$boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
+	}
 } else {
 	$nSite = getDBConfigValue('ebay.site', $_MagnaSession['mpID']);
 }
@@ -293,7 +309,7 @@ if (!$auth['state']) {
 			setDBConfigValue('ebay.authed', $_MagnaSession['mpID'], $auth, true);
 		}
 	} else {
-		$form = array ('ebayaccount' => $form['ebayaccount']);
+		$form = array('ebayaccount' => $form['ebayaccount']);
 		unset($form['ebayaccount']['fields']['currency']);
 		$boxes .= '<p class="successBoxBlue">'.ML_EBAY_TEXT_TOKEN_NOT_AVAILABLE_YET.'</p>';
 	}
@@ -310,6 +326,10 @@ if ($auth['state']) {
 	}
 	
 	mlGetLanguages($form['listingdefaults']['fields']['language']);
+	// show status filter only if products_status is available in shop
+	if (!MagnaDB::gi()->columnExistsInTable('products_status', TABLE_PRODUCTS)) {
+		unset($form['listingdefaults']['fields']['Statusfilter']);
+	}
 	$form['location']['fields']['country']['values'] = $magnaConfig['ebay']['countries'];
 	mlGetCustomersStatus($form['fixedsettings']['fields']['whichprice'], true);
 	if (!empty($form['fixedsettings']['fields']['whichprice'])) {
@@ -437,6 +457,13 @@ if ($auth['state']) {
 	$form['mail']['fields']['subject']['default'] = str_replace('#SHOPURL#', '', $form['mail']['fields']['subject']['default']);
 	$form['mail']['fields']['mail']['default'] = str_replace(' unter <strong>#SHOPURL#</strong>', '', $form['mail']['fields']['mail']['default']);
 	$form['mail']['fields']['mail']['externalDesc'] = str_replace('<dt>#SHOPURL#</dt>', '', str_replace('<dd>URL zu Ihrem Shop</dd>', '',  str_replace('<dd>URL to your shop</dd>', '', $form['mail']['fields']['mail']['externalDesc'])));
+
+	# Carriers
+	$form['orderSyncState']['fields']['carrier']['values'] = array('' => ML_LABEL_NO_SELECTION);
+	$carriers = EbayApiConfigValues::gi()->getCarriers();
+	foreach ($carriers as $carKey => $carName) {
+		$form['orderSyncState']['fields']['carrier']['values'][$carKey] = $carName;
+	}
 }
 
 if (isset($_GET['kind']) && ($_GET['kind'] == 'ajax')) {

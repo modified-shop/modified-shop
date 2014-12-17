@@ -53,7 +53,7 @@ class AmazonMatchingProductList extends MLProductListAmazonAbstract {
 		parent::buildQuery()->oQuery->where(
 			'p.'.$sKeyType.' NOT IN ('.
 				MLDatabase::factorySelectClass()
-				->select('distinct '.$sKeyType)
+				->select('DISTINCT '.$sKeyType)
 				->from(TABLE_MAGNA_AMAZON_APPLY)
 				->where("
 					mpID = '".$this->aMagnaSession['mpID']."'

@@ -24,38 +24,13 @@ class MLProductListDependencyEbayPrepareStatusFilter extends MLProductListDepend
 	protected function getPrepareCondition() {
 		return array(
 		    'failed' => " AND Verified <> 'OK' AND Verified <> 'EMPTY' ",
-		    'prepared' => "AND Verified = 'OK'",
-		    'notprepared' => ""
+		    'prepared' => " AND Verified = 'OK'",
+		    'notprepared' => " AND Verified != 'EMPTY'"
 		);
 	}
 
-	protected function getPrepareTabel() {
+	protected function getPrepareTable() {
 		return TABLE_MAGNA_EBAY_PROPERTIES;
-	}
-	
-	protected function getNotpreparedCondition(){
-		return 'p.' . $this->sKeyType . ' NOT IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
-				->from($this->sTable)
-				->where("
-					mpID='" . $this->aMagnaSession['mpID'] . "'
-					{$this->aConditions['notprepared']}
-				")
-				->getQuery(false) .
-			')
-			 OR 
-		         p.' . $this->sKeyType . ' IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
-				->from($this->sTable)
-				->where("
-						mpID = '" . $this->aMagnaSession['mpID'] . "'
-						AND Verified = 'EMPTY'
-				")
-				->getQuery(false) .
-			')'
-		;
 	}
 
 }

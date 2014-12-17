@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaError.php 3814 2014-04-25 07:52:40Z derpapst $
+ * $Id: MagnaError.php 4655 2014-09-29 13:23:38Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -91,6 +91,7 @@ class MagnaError {
 				if (!is_array($response) || !isset($response['ERRORS'])) {
 					$response = array(
 						'ERRORS' => array(array(
+							'SUBSYSTEM' => 'Core',
 							'ERRORLEVEL' => 'FATAL',
 							'ERRORMESSAGE' => $exc->getMessage(),
 							'REPLY' => $exc->getErrorArray(),

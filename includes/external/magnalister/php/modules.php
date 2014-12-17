@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: modules.php 4045 2014-06-29 17:28:18Z derpapst $
+ * $Id: modules.php 4899 2014-11-20 09:02:25Z derpapst $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -94,9 +94,9 @@ $_modules = array(
 				'views' => array (
 					'inventory' => ML_GENERIC_INVENTORY,
 					'deleted' => ML_GENERIC_DELETED,
-	#				'failed' => ML_GENERIC_FAILED
 				)
 			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
 			'conf' => ML_GENERIC_CONFIGURATION,
 		),
 		'settings' => array (
@@ -213,9 +213,6 @@ $_modules = array(
 			'hitmeister.ident',
 			'hitmeister.accesskey',
 			'hitmeister.lang',
-			/*'hitmeister.inventorysync',
-			'hitmeister.stocksync.frommarketplace',
-			'hitmeister.stocksync.tomarketplace',*/
 			'hitmeister.shippingtime',
 			'hitmeister.itemcondition',
 			'hitmeister.itemcountry',
@@ -648,6 +645,39 @@ $_modules = array(
 		),
 		'type' => 'marketplace',
 	),
+	'bepado' => array (
+		'title' => 'bepado',
+		'logo' => 'bepado',
+		'displayAlways' => false,
+		'requiredConfigKeys' => array (
+			'bepado.access.MPUsername',
+			'bepado.access.MPPassword',
+			'bepado.access.ShopId',
+			'bepado.access.ApiKey',
+			'bepado.access.FtpUsername',
+			'bepado.access.FtpPassword',
+		),
+		'pages' => array (
+			'prepare' => ML_GENERIC_PREPARE,
+			'checkin' => ML_GENERIC_CHECKIN,
+			'listings' => array (
+				'title' => ML_GENERIC_LISTINGS,
+				'views' => array (
+					'inventory' => ML_GENERIC_INVENTORY,
+					'deleted' => ML_GENERIC_DELETED
+				)
+			),
+			'errorlog' => ML_GENERIC_ERRORLOG,
+			'conf' => ML_GENERIC_CONFIGURATION,
+		),
+		'settings' => array (
+			'defaultpage' => 'checkin',
+			'subsystem' => 'bepado',
+			'currency' => 'EUR',
+			'hasOrderImport' => true,
+		),
+		'type' => 'marketplace',
+	),
 	'more' => array (
 		'title' => '&hellip;',
 		'displayAlways' => true,
@@ -656,6 +686,11 @@ $_modules = array(
 	),
 	'configuration' => array (
 		'title' => ML_MODULE_GLOBAL_CONFIG,
+		'displayAlways' => true,
+		'type' => 'system',
+	),
+	'statistics' => array (
+		'title' => ML_MODULE_STATISTICS,
 		'displayAlways' => true,
 		'type' => 'system',
 	),

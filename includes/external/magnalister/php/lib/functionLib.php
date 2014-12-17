@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: functionLib.php 3998 2014-06-20 13:37:53Z derpapst $
+ * $Id: functionLib.php 4961 2014-12-09 14:10:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -447,7 +447,7 @@ function eecho($str, $print = false) {
 	return $str;
 }
 
-function isUTF8($str) {
+function magnalisterIsUTF8($str) {
     $len = strlen($str);
     for($i = 0; $i < $len; ++$i){
         $c = ord($str[$i]);
@@ -485,7 +485,7 @@ function arrayEntitiesToUTF8(&$array) {
 	foreach ($array as &$item) {
 		if (is_array($item)) arrayEntitiesToUTF8($item);
 		if (!is_string($item)) continue;
-		$item = (isUTF8($item) ? $item : utf8_encode($item));
+		$item = (magnalisterIsUTF8($item) ? $item : utf8_encode($item));
 	}
 }
 
@@ -494,12 +494,12 @@ function arrayEntitiesToLatin1(&$array) {
 	foreach ($array as &$item) {
 		if (is_array($item)) arrayEntitiesToLatin1($item);
 		if (!is_string($item)) continue;
-		$item = ((isUTF8($item) || isNotIso8859_1($item)) ? utf8_decode($item) : $item);
+		$item = ((magnalisterIsUTF8($item) || isNotIso8859_1($item)) ? utf8_decode($item) : $item);
 	}
 }
 
 function stringToUTF8($string) {
-	return (isUTF8($string) ? $string : utf8_encode($string));
+	return (magnalisterIsUTF8($string) ? $string : utf8_encode($string));
 }
 
 function charset_decode_utf_8($string) {
@@ -535,7 +535,7 @@ function fixHTMLUTF8Entities($str, $quoteStyle = ENT_NOQUOTES) {
 		"\xc2\xa4" => '&euro;', // --> '&curren;'
 	);
 	
-	$str = isUTF8($str) ? $str : utf8_encode($str);
+	$str = magnalisterIsUTF8($str) ? $str : utf8_encode($str);
 	$str = str_replace(array_keys($savelist), array_values($savelist), $str);
 	#exploreEncoding($str);
 	$str = htmlentities($str, $quoteStyle, 'UTF-8');
@@ -852,18 +852,72 @@ function arrayMap($callback, $arr1) {
 	return $results;
 }
 
-function stripObjectsAndResources($a, $lv = 0) {
-	if (empty($a) || ($lv >= 10)) return $a;
-	foreach ($a as $key => &$value) {
-		if (is_object($value)) {
-			$value = 'OBJECT ('.get_class($value).')';
-		} else if (is_resource($value)) {
-			$value = 'RESOURCE ('.get_resource_type($value).')';
-		} else if (is_array($value)) {
-			$value = stripObjectsAndResources($value, $lv + 1);
+class BacktraceProccessor {
+	const MAX_RECURSION_DEPTH = 10;
+	
+	protected static $projectDir = '';
+	protected static $hideFromStack = array();
+	
+	public static function setProjectDir($dir) {
+		if (is_string($dir) && file_exists($dir)) {
+			self::$projectDir = $dir;
 		}
 	}
-	return $a;
+	
+	public static function addHiddenStackElement($el) {
+		self::$hideFromStack[] = $el;
+	}
+
+	public static function stripObjectsAndResources($a, $lv = 0) {
+		if (empty($a) || ($lv >= self::MAX_RECURSION_DEPTH)) return $a;
+		#echo '('.$lv.') :: '; print_r($a); echo "\n";
+		//echo print_m($a, trim(var_dump_pre($lv, true)));
+		$aa = array();
+		foreach ($a as $k => $value) {
+			$toString = '';
+			#echo ' --> $value :: '; print_r($value); echo "\n";
+			if (!is_object($value) && !is_array($value)) {
+				$toString = $value.'';
+			}
+			if (is_object($value)) {
+				$value = 'OBJECT ('.get_class($value).')';
+			} else if (is_resource($value)/* || (strpos($toString, 'Resource') !== false)*/) {
+				if (is_resource($value)) {
+					$value = 'RESOURCE ('.get_resource_type($value).')';
+				} else {
+					$value = $toString.' (Unknown)';
+				}
+			} else if (is_array($value)) {
+				$value = self::stripObjectsAndResources($value, $lv + 1);
+			} else {
+				$value = $toString;
+			}
+			
+			if (is_string($value)) {
+				if (!empty(self::$projectDir)) {
+					$value = str_replace(self::$projectDir, '', $value);
+				}
+			}
+			if ($k == 'args') {
+				if (is_string($value) && (strlen($value) > 5000)) {
+					$value = substr($value, 0, 5000).'[...]';
+				}
+			}
+			foreach (self::$hideFromStack as $el) {
+				if (($value === $el) && ($el != null)) {
+					$aa = '*****';
+					break;
+				}
+			}
+			$aa[$k] = $value;
+		}
+		return $aa;
+	}
+	
+}
+
+function stripObjectsAndResources($a) {
+	return BacktraceProccessor::stripObjectsAndResources($a);
 }
 
 function prepareErrorBacktrace($offset = 0) {
@@ -873,7 +927,7 @@ function prepareErrorBacktrace($offset = 0) {
 		$dbt = @debug_backtrace();
 	}
 	if (empty($dbt)) return array();
-	return stripObjectsAndResources(array_slice($dbt, $offset));
+	return BacktraceProccessor::stripObjectsAndResources(array_slice($dbt, $offset));
 }
 
 function decodeData(&$array, $fieldName) {
@@ -941,7 +995,7 @@ if (!function_exists('array_replace_recursive')) {
 }
 
 if (!function_exists('array_replace')) {
-	function array_replace(array &$array, array &$array1) {
+	function array_replace(array $array, array $array1) {
 		$args = func_get_args();
 		$count = func_num_args();
 		
@@ -1040,8 +1094,16 @@ function renderDataGrid($data, $opts = array()) {
 		echo '
 				<tr>';
 		foreach ($row as $key => $item) {
+			$sReturnItem = $item;
+
+			if ($item === null) {
+				$sReturnItem = '<span style="color: rgba(0,0,0,0.3); font-style: italic;">null</span>';
+			} elseif (is_bool($item)) {
+				$sReturnItem = '<span style="color: rgba(0,0,0,0.3);">(bool)</span>'.($item ? 'true' : 'false');
+			}
+
 			echo '
-					<td class="'.strtolower($key).'">'.$item.'</td>';
+					<td class="'.strtolower($key).'">'.$sReturnItem.'</td>';
 		}
 		echo '
 				</tr>';
@@ -1127,6 +1189,27 @@ function magnaGetAvailableLanguages() {
 		$langs = array_merge(array('german'), $langs);
 	}
 	return $langs;
+}
+
+function getLanguageIsoForCountryIso($countryIso2) {
+	$countryIso2 = strtolower($countryIso2);
+	$languages = MagnaDB::gi()->fetchArray('SELECT LOWER(code) FROM '.TABLE_LANGUAGES, true);
+	if (in_array($countryIso2, $languages)) {
+		return $countryIso2;
+	}
+	foreach ($languages as $lang) {
+		if ('de' == $lang) {
+			if (    ('at' == $countryIso2)
+			     || ('ch' == $countryIso2)
+			     || ('be' == $countryIso2)
+			   ) {
+				return 'de';
+			}
+		}
+	}
+	// TODO extend to France, Spain etc. in the future
+	// (at the moment, Austria is the main issue)
+	return 'en';
 }
 
 function mlFloatalize($sFloat) {

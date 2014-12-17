@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: init.php 4345 2014-08-06 20:04:19Z derpapst $
+ * $Id: init.php 4897 2014-11-20 00:18:14Z miguel.heredia $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -489,6 +489,16 @@ if (isset($_GET['module']) && ($_GET['module'] == 'ajax') && isset($_GET['reques
 		//commerce:Seo v2
 		if (defined('DB_SERVER_CHARSET')) {
 			MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+		} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
+			$sVersion = MagnaDB::gi()->fetchOne('
+			    SELECT version
+			      FROM version_history
+			  ORDER BY installation_date DESC
+			     LIMIT 1
+			');
+			if (version_compare($sVersion, '2.1', '>=')) {
+				MagnaDB::gi()->setCharset('utf8');
+			}
 		}
 	}
 	echo 'live!';
@@ -583,11 +593,24 @@ $magnaDB = MagnaDB::gi(); /* Database Connector */
 //commerce:Seo v2
 if (defined('DB_SERVER_CHARSET')) {
 	MagnaDB::gi()->setCharset(DB_SERVER_CHARSET);
+} elseif (SHOPSYSTEM == 'gambio' && MagnaDB::gi()->tableExists('version_history')) {
+	$sVersion = MagnaDB::gi()->fetchOne('
+			    SELECT version
+			      FROM version_history
+			  ORDER BY installation_date DESC
+			     LIMIT 1
+			');
+	if (version_compare($sVersion, '2.1', '>=')) {
+		MagnaDB::gi()->setCharset('utf8');
+	}
 }
 
 mlDetectShopFeatures();
 
 require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/functionLib.php');
+
+BacktraceProccessor::setProjectDir(DIR_FS_CATALOG);
+BacktraceProccessor::addHiddenStackElement(DB_SERVER_PASSWORD);
 
 /* Update the database */
 $_dbUpdateErrors = null;
@@ -651,6 +674,33 @@ if (version_compare(CURRENT_CLIENT_VERSION, LOCAL_CLIENT_VERSION, '>') && versio
 			</p>';
 	}
 	shopAdminDiePage($content);
+}
+
+
+if (isset($_GET['fix_ot_tax_free']) 
+	&& ($_GET['fix_ot_tax_free'] == 'true') 
+	// && (SHOPSYSTEM == 'gambio')
+	&& (
+		!defined('MODULE_ORDER_TOTAL_GM_TAX_FREE_STATUS')
+		|| (strtolower(MODULE_ORDER_TOTAL_GM_TAX_FREE_STATUS) != 'true')
+	)
+) {
+	$orderIds = MagnaDB::gi()->fetchArray("
+	    SELECT ot.orders_id 
+	      FROM ".TABLE_ORDERS_TOTAL." ot
+	INNER JOIN ".TABLE_MAGNA_ORDERS." mo ON ot.orders_id = mo.orders_id AND mo.platform='ebay'
+	     WHERE ot.`class` = 'ot_gm_tax_free'
+	           AND ot.sort_order = 0 
+	  ORDER BY ot.orders_id ASC
+	", true);
+	if (!empty($orderIds)) {
+		MagnaDB::gi()->query("
+			DELETE FROM ".TABLE_ORDERS_TOTAL."
+			 WHERE `class` = 'ot_gm_tax_free'
+			       AND sort_order = 0
+			       AND orders_id IN (".implode(', ', $orderIds).")
+		");
+	}
 }
 
 $_url = array();
@@ -885,35 +935,9 @@ if (array_key_exists('mp', $_GET) && array_key_exists($_GET['mp'], $magnaConfig[
 			');
 		}
 	} else {
-		$marketingText = fileGetContents(MAGNA_SERVICE_URL.MAGNA_APIRELATED.'Marketing/', $warings, 10);
+		$marketingText = fileGetContents(MAGNA_SERVICE_URL.MAGNA_APIRELATED.'Marketing/?shop='.SHOPSYSTEM.'&build='.CLIENT_BUILD_VERSION, $warings, 10);
 		$marketingText = !empty($marketingText) ? '<div class="marketing">'.$marketingText.'</div>' : '';
-
-		$_mainTitle = ' - '.ML_HEADLINE_WELCOME;
-		$welcomeHTML = '
-			<h2>'.ML_HEADLINE_WELCOME.'</h2>
-			<p>'.ML_TEXT_MAKE_YOUR_CHOISE.'</p>';
-
-		if (!empty($globalStats)) {
-			$welcomeHTML .= '
-				<h2>'.ML_HEADLINE_STATS.'</h2>
-				<div id="stats">';
-			if (!function_exists('imagecreatetruecolor')) {
-				$welcomeHTML .= '<b class="noticeBox">'.ML_ERROR_GD_LIB_MISSING.'</b>';
-			} else {
-				foreach ($globalStats as $stat) {
-					$welcomeHTML .= '
-						<div class="stat" title="'.$stat['title'].'">
-							<img width="'.$globalStatSize['w'].'" height="'.$globalStatSize['h'].'" alt="'.$stat['title'].'" src="'.toURL($stat['url']).'"/>
-						</div>';
-				}
-			}
-			$welcomeHTML .= '
-				<div class="visualClear"></div>
-				</div>';
-		}
-		$welcomeHTML .= '
-			'.$marketingText;
 		
-		shopAdminDiePage($welcomeHTML);
+		shopAdminDiePage($marketingText);
 	}
 }

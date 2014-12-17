@@ -31,8 +31,10 @@ class MLProductListDependencyManufacturersFilter extends MLProductListDependency
 			$this
 				->getQuery()
 				->where("
-					p.manufacturers_id NOT IN (".implode(' ,', $aManufacturers).")
-			");
+					   p.manufacturers_id NOT IN (".implode(' ,', $aManufacturers).")
+					OR (p.manufacturers_id IS NULL OR p.manufacturers_id = '')
+				")
+			;
 		}
 
 		return $this;

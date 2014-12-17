@@ -95,8 +95,11 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			return;
 		}
 
-		foreach (array('MarketplaceCategories', 'StoreCategories', 'MpColors') as $jsonKey) {
+		foreach (array('MarketplaceCategories', 'StoreCategories', 'MpColors', 'Attributes') as $jsonKey) {
 			$aPropertiesRow[$jsonKey] = json_decode($aPropertiesRow[$jsonKey], true);
+			if (!is_array($aPropertiesRow[$jsonKey])) {
+				$aPropertiesRow[$jsonKey] = array();
+			}
 		}
 		
 		#echo print_m(func_get_args());
@@ -105,7 +108,11 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		 * set product data to submit array
 		 * language based
 		 */
-		$aData['submit']['SKU'] = $aProduct['ProductsModel'];
+		if (getDBConfigValue('general.keytype', '0') == 'artNr') {
+			$aData['submit']['SKU'] = $aProduct['ProductsModel'];
+		} else {
+			$aData['submit']['SKU'] = 'ML'.$aProduct['ProductId'];
+		}
 		foreach ($this->settings['additionalLanguages'] as $sLangId) {
 			$sLangCode = MLProduct::gi()->languageIdToCode($sLangId);
 			$aData['submit']['Descriptions'][$sLangCode] = array(
@@ -153,13 +160,23 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 			);
 		}
 
-		//ShippingService
+		// ShippingService
 		$aData['submit']['ShippingService'] = $aPropertiesRow['ShippingService'];
-		//MarketplaceCategories
-		$aData['submit']['MarketplaceCategories'] = $aPropertiesRow['MarketplaceCategories'];
-		//StoreCategories
-		$aData['submit']['StoreCategories'] = $aPropertiesRow['StoreCategories'];
-		//ShippingTime
+		// MarketplaceCategories
+		if (is_array($aPropertiesRow['MarketplaceCategories'])) {
+			$aData['submit']['MarketplaceCategories'] = array_values($aPropertiesRow['MarketplaceCategories']);
+			// tmp hack, because DaWanda doesn't support the second marketplace category
+			if (isset($aData['submit']['MarketplaceCategories'][0])) {
+				$aData['submit']['MarketplaceCategories'] = array($aData['submit']['MarketplaceCategories'][0]);
+			}
+		}
+		
+		// StoreCategories
+		if (is_array($aPropertiesRow['StoreCategories'])) {
+			$aData['submit']['StoreCategories'] = array_values($aPropertiesRow['StoreCategories']);
+		}
+		
+		// ShippingTime
 		if (getDBConfigValue(array('dawanda.leadtimetoshipmatching.prefer', 'val'), $this->mpID, false)) {
 			$sProductsShippingTime = MagnaDB::gi()->fetchOne("
 				SELECT products_shippingtime
@@ -174,11 +191,28 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		} else {
 			$aData['submit']['ShippingTime'] = getDBConfigValue('dawanda.checkin.leadtimetoship', $this->mpID, 0);
 		}
-		//MpColors
+		// MpColors
 		if (is_array($aPropertiesRow['MpColors'])) {
 			$aData['submit']['MpColors'] = $aPropertiesRow['MpColors'];
 		}
-		//ListingDuration
+		
+		if (!empty($aPropertiesRow['Attributes'])) {
+			$aData['submit']['Attributes'] = array();
+			foreach ($aPropertiesRow['Attributes'] as $attribGroup => $attribSets) {
+				if (!is_array($attribSets)) {
+					$attribSets = array($attribSets);
+				}
+				foreach ($attribSets as $attribs) {
+					if (!is_array($attribs)) {
+						$attribs = array($attribs);
+					}
+					$aData['submit']['Attributes'] = array_merge($aData['submit']['Attributes'], $attribs);
+				}
+			}
+			$aData['submit']['Attributes'] = array_unique($aData['submit']['Attributes']);
+		}
+		
+		// ListingDuration
 		$aData['submit']['ListingDuration'] = $aPropertiesRow['ListingDuration'];
 		
 		$aData['submit']['ProductType'] = $aPropertiesRow['ProductType'];
@@ -265,6 +299,19 @@ class DawandaCheckinSubmit extends MagnaCompatibleCheckinSubmit {
 		');
 
 		return $aResult;
+	}
+
+	protected function postSubmit() {
+		try {
+			//*
+			$result = MagnaConnector::gi()->submitRequest(array(
+				'ACTION' => 'UploadItems',
+			));
+			//*/
+		} catch (MagnaException $e) {
+			$this->submitSession['api']['exception'] = $e;
+			$this->submitSession['api']['html'] = MagnaError::gi()->exceptionsToHTML();
+		}
 	}
 
 }

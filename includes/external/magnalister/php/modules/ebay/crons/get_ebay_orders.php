@@ -36,9 +36,10 @@ function variation_products_model2pOpt($variation_products_model, $products_id, 
 	$variation_attributes_select = 'SELECT variation_attributes
 	    FROM '.TABLE_MAGNA_VARIATIONS;
 	if ('artNr' != getDBConfigValue('general.keytype', '0')) {
-		$variation_attributes_select .= ' WHERE REPLACE('.mlGetVariationSkuField().',\'ML\',\'\') = \''.str_replace('ML','',$variation_products_model).'\'';
+		$sVariantSKU = str_replace('ML', '', $variation_products_model);
+		$variation_attributes_select .= " WHERE REPLACE(".mlGetVariationSkuField().", 'ML', '') = '".MagnaDB::gi()->escape($sVariantSKU)."'";
 	} else {
-		$variation_attributes_select .= ' WHERE '.mlGetVariationSkuField().' = \''.$variation_products_model.'\'';
+		$variation_attributes_select .= " WHERE ".mlGetVariationSkuField()." = '".MagnaDB::gi()->escape($variation_products_model)."'";
 	}
 	$variation_attributes_select .=
 	    ' AND products_id = '.$products_id.'
@@ -46,14 +47,18 @@ function variation_products_model2pOpt($variation_products_model, $products_id, 
 	$variation_attributes = MagnaDB::gi()->fetchOne($variation_attributes_select);
 	if (!$variation_attributes) {
 		/* Fall: Variantentabelle nach Upgrade im Dez '13 noch nicht neu gefuellt */
+		$sVariantSKU = str_replace('ML', '', $variation_products_model);
 		if (  ('auto' <> getDBConfigValue('ebay.stocksync.tomarketplace', $mpID, 'none'))
-		    &&(MagnaDB::gi()->columnExistsInTable('variation_products_model', TABLE_MAGNA_VARIATIONS))
-		    &&(MagnaDB::gi()->fetchOne('SELECT COUNT(*) FROM '.TABLE_MAGNA_VARIATIONS.'
-				WHERE '. ('artNr' == getDBConfigValue('general.keytype', '0') ?
-				          'variation_products_model = \''.$variation_products_model.'\''
-				         :'REPLACE(variation_products_model,\'ML\',\'\') = \''.str_replace('ML','',$variation_products_model).'\'').'
-				 AND products_id = '.$products_id.'
-				ORDER BY variation_id DESC LIMIT 1') > 0)
+			&&(MagnaDB::gi()->columnExistsInTable('variation_products_model', TABLE_MAGNA_VARIATIONS))
+			&&(MagnaDB::gi()->fetchOne("
+			    SELECT COUNT(*)
+			      FROM ".TABLE_MAGNA_VARIATIONS."
+			     WHERE ".('artNr' == getDBConfigValue('general.keytype', '0')
+			             ? "variation_products_model = '".MagnaDB::gi()->escape($variation_products_model)."'"
+			             : "REPLACE(variation_products_model, 'ML', '') = '".MagnaDB::gi()->escape($sVariantSKU)."'"
+			            ).'
+			           AND products_id = '.$products_id.'
+			  ORDER BY variation_id DESC LIMIT 1') > 0)
 			) {
 			if (false == setProductVariations($products_id, false, false)) {
 				return false;
@@ -76,11 +81,11 @@ function variation_products_model2pOpt($variation_products_model, $products_id, 
 		$options .= $attrValues[$k]['options_id'].', ';
 		$values .= $attrValues[$k]['options_values_id'].', ';
 	}
-	$lauguageID = magnaGetDefaultLanguageID();
+	$languageID = magnaGetDefaultLanguageID();
 	$options = trim($options,', ');
 	$values = trim($values,', ');
 	$options_name_select = 'SELECT products_options_id, products_options_name
-		FROM '.TABLE_PRODUCTS_OPTIONS.' WHERE language_id = '.$lauguageID.'
+		FROM '.TABLE_PRODUCTS_OPTIONS.' WHERE language_id = '.$languageID.'
 		AND products_options_id in ('.$options.')';
 	$options_names_array = MagnaDB::gi()->fetchArray($options_name_select);
 	$options_names = array();
@@ -88,7 +93,7 @@ function variation_products_model2pOpt($variation_products_model, $products_id, 
 		$options_names[$name['products_options_id']] = $name['products_options_name'];
 	}
 	$options_values_name_select = 'SELECT products_options_values_id, products_options_values_name
-		FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.' WHERE language_id = '.$lauguageID.'
+		FROM '.TABLE_PRODUCTS_OPTIONS_VALUES.' WHERE language_id = '.$languageID.'
 		AND products_options_values_id in ('.$values.')';
 	$options_values_names_array = MagnaDB::gi()->fetchArray($options_values_name_select);
 	foreach ($options_values_names_array as $name) {
@@ -202,6 +207,8 @@ function magnaImportEbayOrders($mpID) {
 	global $magnaConfig, $_magnaLanguage, $_modules;
 
 	$mp = 'ebay';
+	$_magnaLanguageId = MagnaDB::gi()->fetchOne("SELECT languages_id FROM ".TABLE_LANGUAGES." WHERE directory = '$_magnaLanguage'");
+	$useGambioProperties = (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties');
 
 	settingsOK($mpID) or die ("\nOrder import aborted. Please configure the $mp module of the magnalister plugin.\n");
 
@@ -413,10 +420,10 @@ function magnaImportEbayOrders($mpID) {
 				$order['customer']['customers_date_added']    = magnaTimeToLocalTime($order['customer']['customers_date_added']);
 			}
 			if (MagnaDB::gi()->columnExistsInTable('address_last_modified', TABLE_ADDRESS_BOOK)){
-			$order['adress']['address_last_modified'] = magnaTimeToLocalTime($order['customer']['address_last_modified']);
+			$order['adress']['address_last_modified'] = magnaTimeToLocalTime($order['adress']['address_last_modified']);
 			}
 			if (MagnaDB::gi()->columnExistsInTable('address_date_added', TABLE_ADDRESS_BOOK)){
-			$order['adress']['address_date_added']    = magnaTimeToLocalTime($order['customer']['address_date_added']);
+			$order['adress']['address_date_added']    = magnaTimeToLocalTime($order['adress']['address_date_added']);
 			}
 			$order['order']['date_purchased'] = magnaTimeToLocalTime($order['order']['date_purchased']);
 			$order['order']['last_modified']  = magnaTimeToLocalTime($order['order']['last_modified']);
@@ -701,7 +708,12 @@ function magnaImportEbayOrders($mpID) {
 				$prodOrderData['orders_id'] = $ordersId;
 				$prodOrderData['products_id'] = magnaSKU2pID($prodOrderData['products_id'], true);
 				/* Attribute Values ermitteln aus der VariantenSKU von eBay */
-				$attrValues = variation_products_model2pOpt($prodOrderData['products_model'], $prodOrderData['products_id'], $mpID);
+				/* (bei Gambio Properties ist es einfacher, da wird nur die 1 Tabelle genommen) */
+				if ($useGambioProperties) {
+					$attrValues = false;
+				} else {
+					$attrValues = variation_products_model2pOpt($prodOrderData['products_model'], $prodOrderData['products_id'], $mpID);
+				}
 	
 				if (!MagnaDB::gi()->recordExists(TABLE_PRODUCTS, array('products_id' => (int)$prodOrderData['products_id']))) {
 					$prodOrderData['products_id'] = 0;
@@ -732,6 +744,14 @@ function magnaImportEbayOrders($mpID) {
 								   SET  variation_quantity = variation_quantity - '.(int)$prodOrderData['products_quantity'].'
 								 WHERE '.mlGetVariationSkuField().' = \''.MagnaDB::gi()->escape($prodOrderData['products_model']).'\'
 							');
+						} else if ($useGambioProperties) {
+							$combisId = magnaSKU2aID($prodOrderData['products_model'], $prodOrderData['products_id'], true);
+							if (false != $combisId) {
+								$MagnaDB->query(eecho('
+									UPDATE products_properties_combis
+										SET combi_quantity = combi_quantity - '.(int)$prodOrderData['products_quantity'].'
+										WHERE products_properties_combis_id = '.$combisId, false));
+							}
 						}
 					}
 					/* Steuersatz und Model holen */
@@ -742,7 +762,9 @@ function magnaImportEbayOrders($mpID) {
 					');
 					if ($row !== false) {
 						$tax = SimplePrice::getTaxByClassID((int)$row['products_tax_class_id'], (int)$shippingCountry['countries_id']);
-						$prodOrderData['products_model'] = $row['products_model'];
+						if (!$useGambioProperties) {
+							$prodOrderData['products_model'] = $row['products_model'];
+						}
 					} else {
 						$tax = 
 							isDomestic($shippingCountry['countries_id'])
@@ -794,6 +816,20 @@ function magnaImportEbayOrders($mpID) {
 						    $MagnaDB->insert(TABLE_ORDERS_PRODUCTS_ATTRIBUTES, $prodOrderAttrData);
 						}
 				    }
+				}
+				// orders_products_properties (bei Gambio)
+				if (isset($combisId) && (false != $combisId)) {
+					$MagnaDB->query(eecho("
+						INSERT INTO orders_products_properties (orders_products_id, products_properties_combis_id, properties_name, values_name, properties_price_type, properties_price)
+						 (SELECT '$ordersProductsId' AS orders_products_id,
+							'$combisId' AS products_properties_combis_id,
+							ppi.properties_name, ppi.values_name,
+							ppc.combi_price_type AS properties_price_type,
+							ppi.values_price AS properties_price
+						   FROM products_properties_index ppi, products_properties_combis ppc
+						  WHERE ppi.products_properties_combis_id = ppc.products_properties_combis_id
+							AND ppi.language_id=$_magnaLanguageId
+							AND ppc.products_properties_combis_id=$combisId)", false));
 				}
 				# Anzahl Produkte merken
 				$currProductsCount += (int)$prodOrderData['products_quantity'];

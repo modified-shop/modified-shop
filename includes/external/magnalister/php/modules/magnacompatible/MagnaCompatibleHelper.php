@@ -45,4 +45,32 @@ class MagnaCompatibleHelper {
 			MagnaDB::gi()->insert(TABLE_MAGNA_COMPAT_ERRORLOG, $err);
 		}
 	}
+	
+	public static function checkProductSaveJsonArray($aCheckArray) {
+		foreach ($aCheckArray as $sKey => &$sEntry) {
+			if (empty($sEntry)) {
+				unset($aCheckArray[$sKey]);
+			}
+		}
+		
+		if (0 < count($aCheckArray)) {
+			return json_encode($aCheckArray);
+		} else {
+			return '';
+		}
+	}
+
+	public static function encodeData($mValue) {
+		if (is_array($mValue)) {
+			$sValue = json_encode($mValue);
+		} elseif (is_object($mValue)) {
+			$sValue = serialize($mValue);
+		} elseif ($mValue !== null) {
+			$sValue = (string) $mValue;
+		} else {
+			$sValue = null;
+		}
+		return $sValue;
+	}
+	
 }

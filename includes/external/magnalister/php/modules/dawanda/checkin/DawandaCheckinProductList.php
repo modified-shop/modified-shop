@@ -34,6 +34,11 @@ class DawandaCheckinProductList extends MLProductListDawandaAbstract {
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyLastPreparedFilter', array(
+				'propertiestablename' => TABLE_MAGNA_DAWANDA_PROPERTIES, 
+				'propertiestablealias' => 'hp', 
+				'preparedtimestampfield' => 'PreparedTS',
+			))
 //			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;
 	}

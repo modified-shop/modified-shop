@@ -107,25 +107,25 @@ abstract class QuickCategoryView extends SimpleCategoryView {
 		if (($iFailed == 0) && ($iMatched == 0)) { /* Nichts gematched und auch kein matching probiert */
 			$sHtml = '
 				<td class="nowrap" title="'.ML_EBAY_CATEGORY_PREPARED_NONE.'">
-					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES.'status/grey_dot.png', ML_EBAY_CATEGORY_PREPARED_NONE, 12, 12), $sDebug).'
+					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES.'status/grey_dot.png', ML_EBAY_CATEGORY_PREPARED_NONE, 9, 9), $sDebug).'
 				</td>';
 		
 		} else if ($iFailed == $iTotal) { /* Keine gematched */
 			$sHtml = '
 				<td title="'.ML_EBAY_CATEGORY_PREPARED_FAULTY.'">
-					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_EBAY_CATEGORY_PREPARED_FAULTY, 12, 12), $sDebug).'
+					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_EBAY_CATEGORY_PREPARED_FAULTY, 9, 9), $sDebug).'
 				</td>';
 		
 		} else if ($iMatched == $iTotal) {  /* Alle Items in Category gematched */
 			$sHtml = '
 				<td title="'.ML_EBAY_CATEGORY_PREPARED_ALL.'">
-					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_EBAY_CATEGORY_PREPARED_ALL, 12, 12), $sDebug).'
+					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_EBAY_CATEGORY_PREPARED_ALL, 9, 9), $sDebug).'
 				</td>';
 		
 		} else if (($iFailed > 0) || ($iMatched > 0)) { /* Einige nicht erfolgreich gematched */
 			$sHtml = '
 				<td title="'.ML_EBAY_CATEGORY_PREPARED_INCOMPLETE.'">
-					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/yellow_dot.png', ML_EBAY_CATEGORY_PREPARED_INCOMPLETE, 12, 12), $sDebug).'
+					'.sprintf($sTableTemplate, html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/yellow_dot.png', ML_EBAY_CATEGORY_PREPARED_INCOMPLETE, 9, 9), $sDebug).'
 				</td>';
 		
 		} else {
@@ -133,8 +133,8 @@ abstract class QuickCategoryView extends SimpleCategoryView {
 				<td title="'.ML_ERROR_UNKNOWN.' $totalItems:'.$iTotal.' $itemsMatched:'.$iMatched.' $itemsFailed:'.$iFailed.'">
 					'.sprintf(
 							$sTableTemplate, 
-							html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_ERROR_UNKNOWN, 12, 12).
-								html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_ERROR_UNKNOWN, 12, 12), 
+							html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_ERROR_UNKNOWN, 9, 9).
+								html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_ERROR_UNKNOWN, 9, 9), 
 							''
 					).'
 				</td>';

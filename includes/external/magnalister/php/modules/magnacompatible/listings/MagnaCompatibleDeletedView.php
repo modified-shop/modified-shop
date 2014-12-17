@@ -79,24 +79,24 @@ class MagnaCompatibleDeletedView {
 		}
 
 		switch ($sorting) {
-	        case 'itemname':
-	            $this->sort['order'] = 'itemname';
-	            $this->sort['type']  = 'ASC';
-	            break;
-	        case 'itemname-desc':
-	            $this->sort['order'] = 'itemname';
-	            $this->sort['type']  = 'DESC';
-	            break;
+			case 'itemname':
+				$this->sort['order'] = 'itemname';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'itemname-desc':
+				$this->sort['order'] = 'itemname';
+				$this->sort['type']  = 'DESC';
+				break;
 			case 'date':
-	            $this->sort['order'] = 'date';
-	            $this->sort['type']  = 'ASC';
-	            break;
-	        case 'date-desc':
-	        default:
-	            $this->sort['order'] = 'date';
-	            $this->sort['type']  = 'DESC';
-	            break;
-	    }
+				$this->sort['order'] = 'date';
+				$this->sort['type']  = 'ASC';
+				break;
+			case 'date-desc':
+			default:
+				$this->sort['order'] = 'date';
+				$this->sort['type']  = 'DESC';
+				break;
+		}
 
 		$this->numberofitems = (int)MagnaDB::gi()->fetchOne(
 			'SELECT DISTINCT count(id) FROM '.TABLE_MAGNA_COMPAT_DELETEDLOG.' WHERE `mpID`=\''.$this->magnasession['mpID'].'\''
@@ -111,16 +111,17 @@ class MagnaCompatibleDeletedView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 		$artNr = getDBConfigValue('general.keytype', '0') == 'artNr';
 		$this->deletedLog = MagnaDB::gi()->fetchArray('
-			SELECT csd.id, '.($artNr ? 'p.products_id' : 'csd.products_id').', csd.products_model as sku, csd.old_price,
-			       csd.timestamp AS date, pd.products_name AS itemname 
-			  FROM '.TABLE_MAGNA_COMPAT_DELETEDLOG.' csd
+			   SELECT csd.id, '.($artNr ? 'p.products_id' : 'csd.products_id').', csd.products_model as sku, csd.old_price,
+			          csd.timestamp AS date, pd.products_name AS itemname 
+			     FROM '.TABLE_MAGNA_COMPAT_DELETEDLOG.' csd
 			LEFT JOIN '.TABLE_PRODUCTS.' p ON '.($artNr
 				? 'csd.products_model=p.products_model'
 				: 'csd.products_id=p.products_id'
 			).'
 			LEFT JOIN '.TABLE_PRODUCTS_DESCRIPTION.' pd ON p.products_id=pd.products_id AND pd.language_id = \''.$_SESSION['languages_id'].'\'
+			    WHERE mpID = \''.$this->magnasession['mpID'].'\'
 			 ORDER BY `'.$this->sort['order'].'` '.$this->sort['type'].' 
-			 LIMIT '.$this->offset.','.$this->settings['itemLimit'].'
+			    LIMIT '.$this->offset.','.$this->settings['itemLimit'].'
 		');
 	}
 

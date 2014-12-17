@@ -25,7 +25,7 @@ define('MODULE_SHIPPING_HITMEISTER_SORT_ORDER', 'Sortierung');
 define('MODULE_SHIPPING_HITMEISTER_TEXT_TITLE', 'Versand festgelegt durch Hitmeister.');
 define('MODULE_SHIPPING_HITMEISTER_TEXT_WAY', 'Versand festgelegt durch Hitmeister.');
 define('MODULE_SHIPPING_HITMEISTER_ALLOWED_TITLE' , 'Erlaubte Zonen');
-define('MODULE_SHIPPING_HITMEISTER_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
+define('MODULE_SHIPPING_HITMEISTER_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand möglich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_HITMEISTER_STATUS_TITLE', 'Versandfestlegung durch Hitmeister');
 define('MODULE_SHIPPING_HITMEISTER_STATUS_DESC', 'M&ouml;chten Sie Versandfestlegung durch Hitmeister anbieten?');
 define('MODULE_SHIPPING_HITMEISTER_SORT_ORDER_TITLE', 'Sortierreihenfolge');

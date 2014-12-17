@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaException.php 2453 2013-05-07 21:25:19Z derpapst $
+ * $Id: MagnaException.php 4655 2014-09-29 13:23:38Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -117,4 +117,17 @@ class MagnaException extends Exception {
 		return $this->subsystem;
 	}
 
+	public function toJson() {
+		return array (
+			'Message' => $this->getMessage(),
+			'Action' => $this->action,
+			'Subsystem' => $this->subsystem,
+			'Time' => $this->time,
+			'IsCritical' => $this->isCritical,
+			'Request' => $this->request,
+			'Response' => $this->response,
+			'Backtrace' => $this->backtrace,
+		);
+	}
+	
 }

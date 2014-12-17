@@ -66,12 +66,12 @@ class MagnaCompatibleCategoryMatchingProductList extends MLProductListMagnaCompa
 		$aData = $this->getPrepareData($aRow);
 		if ($aData !== false) {
 			if ($aData['mp_category_id'] != '') {
-				return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_COMPLETE, 12, 12);
+				return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_COMPLETE, 9, 9);
 			} else {
-				return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 12, 12);
+				return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_PREPARE_INCOMPLETE, 9, 9);
 			}
 		}
-		return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_NOT_PREPARED, 12, 12);
+		return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_MAGNACOMPAT_LABEL_CATMATCH_NOT_PREPARED, 9, 9);
 	}
 
 }

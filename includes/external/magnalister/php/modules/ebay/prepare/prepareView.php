@@ -59,8 +59,6 @@ function eBayRenderCategoryOptions($type = 'PrimaryCategory', $selectedCat, $sel
 function renderSinglePrepareView($data) {
 	global $_MagnaSession;
 
-	#echo print_m($data);
-
 	require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 	$prepareViewPrice = new SimplePrice(null, getDBConfigValue('ebay.currency', $_MagnaSession['mpID']));
 	$html = '
@@ -161,21 +159,20 @@ function renderSinglePrepareView($data) {
 							</td>
 							<td></td>
 						</tr>
-						<tr id="changePrice">
+						<tr id="chinesePrice" style="display:none">
 							<td>
-								<span id="bidPriceLabel" style="display:none;">'.ML_EBAY_YOUR_CHINESE_PRICE.':</span>
-								<span id="buyNowPriceLabel" style="display:none;">'.ML_EBAY_YOUR_FIXED_PRICE.':</span>
+								<span id="bidPriceLabel">'.ML_EBAY_YOUR_CHINESE_PRICE.':</span>
 							</td>
 							<td>
 								<input type="text" id="frozenPrice" name="frozenPrice" value="';
 	if (isset($data[0]['priceFrozen']) && $data[0]['priceFrozen']) {
-	    $prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'FixedPriceItem', $data[0]['priceFrozen']));
+	    $prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'Chinese', $data[0]['priceFrozen']));
 	    $html .= $prepareViewPrice->formatWOCurrency();
 	} else {
-		$html .= $fixedPrice;
+		$prepareViewPrice->setPrice(makePrice($data[0]['products_id'], 'Chinese'));
+		$html .= $prepareViewPrice->formatWOCurrency();
 	}
 	$html .= '">
-								<span class="iceCrystal" id="freezePrice" title="'.ML_EBAY_FREEZE_PRICE_TOOLTIP.'"></span>
 								<input type="hidden" id="isPriceFrozen" name="isPriceFrozen" value="'.(
 									(isset($data[0]['priceFrozen']) && $data[0]['priceFrozen'])
 										? 'true'
@@ -189,7 +186,7 @@ function renderSinglePrepareView($data) {
 							<td>
 								<input type="text" length="55" maxlength="55" value="'.$buyItNowPrice.'" name="BuyItNowPrice" id="BuyItNowPrice"/>
 								<input type="checkbox" name="enableBuyItNowPrice" '.(
-									(getDBConfigValue(array('ebay.chinese.buyitnow.price.active', 'val'), $_MagnaSession['mpID']))
+									(getDBConfigValue(array('ebay.chinese.buyitnow.price.active', 'val'), $_MagnaSession['mpID']) || (magnalisterEbayGetPriceByType($data[0]['products_id'], 'BuyItNowPrice') !== false))
 										? ' checked="checked" '
 										: ''
 								).'/> aktiv
@@ -200,9 +197,9 @@ function renderSinglePrepareView($data) {
 	ob_start();
 	?>
 					<script type="text/javascript">/*<![CDATA[*/
-		                if (jQuery('#isPriceFrozen').val() == 'true') {
-		                    jQuery('#freezePrice').addClass('active');
-		                }
+						if (jQuery('#isPriceFrozen').val() == 'true') {
+							jQuery('#freezePrice').addClass('active');
+						}
 						jQuery('#freezePrice').click(function () {
 							var ih = jQuery('#isPriceFrozen');
 							jQuery(this).toggleClass('active');
@@ -247,6 +244,7 @@ function renderMultiPrepareView($data) {
 	$ConditionIDArray = array();
 	$PaymentMethodsArray = array();
 	$ShippingDetailsArray = array();
+	$DispatchTimeMaxArray = array();
 	
 	foreach ($data as $row) {
 		if (   isset($row['PrimaryCategory']) 
@@ -264,7 +262,6 @@ function renderMultiPrepareView($data) {
 			    'StoreCategory'    => $row['StoreCategory'],
 			    'StoreCategory2'   => $row['StoreCategory2']
 		    );
-            $lastI = $i;
         }
 		if (isset($row['ListingType'])) {
 			$ListingTypeArray[]     = $row['ListingType'];
@@ -273,6 +270,10 @@ function renderMultiPrepareView($data) {
 			$PaymentMethodsArray[] = $row['PaymentMethods'];
 			$ShippingDetailsArray[] = $row['ShippingDetails'];
 		}
+		if ($row['DispatchTimeMax'] <= 30) { // gueltige Werte bis 30, table default == 99
+			$DispatchTimeMaxArray[] = $row['DispatchTimeMax'];
+		}
+        $lastI = $i;
 		++$i;
 	}
 	/* nur vorausfuellen wenn fuer alle gleich */
@@ -350,6 +351,15 @@ function renderMultiPrepareView($data) {
 		$ShippingDetailsArray = array_unique($ShippingDetailsArray);
 		if (1 == count($ShippingDetailsArray)) {
 			$prefilledShippingDetails = $ShippingDetailsArray[0];
+		}
+	}
+	$prefilledDispatchTimeMax = null;
+	if (is_array($DispatchTimeMaxArray)) {
+		$DispatchTimeMaxArray = array_unique($DispatchTimeMaxArray);
+		if (1 == count($DispatchTimeMaxArray)) {
+			$prefilledDispatchTimeMax = $DispatchTimeMaxArray[0];
+		} else {
+			$prefilledDispatchTimeMax = getDBConfigValue('ebay.DispatchTimeMax', $_MagnaSession['mpID'], 30);
 		}
 	}
 
@@ -675,7 +685,7 @@ function renderMultiPrepareView($data) {
 												? 'value=\''.$PrimaryPreselectedValues.'\''
 												: ''
 										).' />
-										<input class="fullWidth ml-button smallmargin" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectPrimaryCategory"/>
+										<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="'.ML_EBAY_CHOOSE.'" id="selectPrimaryCategory"/>
 									</td>
 								</tr>
 								<tr>
@@ -784,6 +794,28 @@ function renderMultiPrepareView($data) {
 						</td>
 					</tr>
 					<tr class="even">
+						<th>'.ML_EBAY_DISPATCH_TIME.'</th>
+						<td class="input">
+							<select name="dispatchTime" id="dispatchTime">';
+				for ($days = 0; $days <= 30; $days++) {
+					$isSelected = ($days == $prefilledDispatchTimeMax? 'selected' : '');
+					switch ($days) {
+						case (0): $daysText = ML_EBAY_DISPATCH_ON_SAME_DAY; break;
+						case (1): $daysText = ML_EBAY_DISPATCH_ONE_DAY; break;
+						default : $daysText = $days.' '.ML_DAYS; break;
+					}
+					$html .= '
+								<option '.$isSelected.' value="'.$days.'">'.$daysText."</option>\n";
+					
+				}
+				$html .= '
+							</select>
+						</td>
+						<td class="info">
+							&nbsp;
+						</td>
+					</tr>
+					<tr class="odd">
 						<th>'.ML_EBAY_SHIPPING_PROFILE.'</th>
 						<td class="input">
 							<select name="localProfile" id="localProfile">';
@@ -816,7 +848,7 @@ function renderMultiPrepareView($data) {
 					&nbsp;
 				</td>
 			</tr>
-			<tr class="odd">
+			<tr class="even">
 				<th>'.ML_EBAY_SHIPPING_INTL_OPTIONAL.'</th>
 				<td class="input">';
 
@@ -841,7 +873,7 @@ function renderMultiPrepareView($data) {
 				</td>
 				<td class="info">'.ML_EBAY_SHIPPING_INTL_DESC.'</td>
 			</tr>
-		<tr class="even">
+		<tr class="odd">
 			<th>'.ML_EBAY_SHIPPING_PROFILE.'</th>
 			<td class="input">
 				<select name="internationalProfile" id="internationalProfile">';
@@ -1020,12 +1052,14 @@ function getEBayCategoryAttributes(cID, aMode, preselectedValues) {
 function toggleChineseAuction() {
 	$('#bidPriceLabel').css({'display': 'inline'});
 	$('#buyNowPriceLabel').css({'display': 'none'});
+	$('#chinesePrice').css({'display': 'table-row'});
 	$('#chinesePrice2').css({'display': 'table-row'});
 }
 
 function toggleFixedPriceAuction() {
 	$('#bidPriceLabel').css({'display': 'none'});
 	$('#buyNowPriceLabel').css({'display': 'inline'});
+	$('#chinesePrice').css({'display': 'none'});
 	$('#chinesePrice2').css({'display': 'none'});
 }
 
@@ -1175,7 +1209,7 @@ jQuery.blockUI(blockUILoading);
 								? '<input class="ml-button" type="submit" name="unprepare" id="unprepare" value="'.ML_BUTTON_LABEL_REVERT.'"/>'
 								: ''
 							).'</td>
-							<td class="lastChild">'.'<input class="ml-button" type="submit" name="savePrepareData" id="savePrepareData" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
+							<td class="lastChild">'.'<input class="ml-button mlbtn-action" type="submit" name="savePrepareData" id="savePrepareData" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>'.'</td>
 						</tr></tbody></table>
 					</td></tr>
 				</tbody>

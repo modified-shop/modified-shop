@@ -1,0 +1,11 @@
+{
+    "orders": {
+        "fields": {
+            "defaultpayment": {
+                "values": {
+                    "matching": "Automatische Zuordnung"
+                }
+            }
+        }
+    }
+}

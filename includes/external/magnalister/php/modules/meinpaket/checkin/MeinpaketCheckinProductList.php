@@ -37,6 +37,11 @@ class MeinpaketCheckinProductList extends MLProductListMeinpaketAbstract{
 		$this
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyLastPreparedFilter', array(
+				'propertiestablename' => TABLE_MAGNA_MEINPAKET_PROPERTIES, 
+				'propertiestablealias' => 'mcc', 
+				'preparedtimestampfield' => 'PreparedTS',
+			))
 //			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;
 	}

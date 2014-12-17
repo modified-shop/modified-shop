@@ -40,6 +40,7 @@ class MagnaCompatibleErrorView {
 			'maxTitleChars' => 90,
 			'itemLimit'     => 50,
 			'hasImport' => false,
+			'hasOrigin' => false,
 		), $settings);
 
 		$this->url = $_url;
@@ -48,15 +49,18 @@ class MagnaCompatibleErrorView {
 		$this->marketplace = $_MagnaSession['currentPlatform'];
 
 		/* Delete selected Error Messages*/
-		if (isset($_POST['errIDs']) && isset($_POST['action']) && ($_POST['action'] == 'delete')) {
-			foreach ($_POST['errIDs'] as $errID) {
-				if (ctype_digit($errID)) {
-					MagnaDB::gi()->delete(
-						TABLE_MAGNA_COMPAT_ERRORLOG,
-						array(
+		if (isset($_POST['action'])) {
+			if ($_POST['action'] == 'deleteall') {
+				MagnaDB::gi()->delete(TABLE_MAGNA_COMPAT_ERRORLOG, array(
+					'mpID' => $this->mpID
+				));
+			} else if (($_POST['action'] == 'delete') && isset($_POST['errIDs'])) {
+				foreach ($_POST['errIDs'] as $errID) {
+					if (ctype_digit($errID)) {
+						MagnaDB::gi()->delete(TABLE_MAGNA_COMPAT_ERRORLOG, array(
 							'id' => (int)$errID
-						)
-					);
+						));
+					}
 				}
 			}
 		}
@@ -102,7 +106,7 @@ class MagnaCompatibleErrorView {
 		$this->offset = ($this->currentPage - 1) * $this->settings['itemLimit'];
 
 		$this->errorLog = MagnaDB::gi()->fetchArray('
-		    SELECT al.id, al.dateadded, al.errormessage, al.additionaldata
+		    SELECT al.id, al.origin, al.dateadded, al.errormessage, al.additionaldata
 		      FROM '.TABLE_MAGNA_COMPAT_ERRORLOG.' al
 		     WHERE al.mpID=\''.$this->mpID.'\'
 		  GROUP BY al.id
@@ -152,6 +156,7 @@ class MagnaCompatibleErrorView {
 			$begin = strtotime($begin.' +0000') + 1;
 		}
 		$begin = gmdate('Y-m-d H:i:s', max($begin, time() - 60 * 60 * 24 * 12));
+		#$begin = '2013-01-01 00:00:00';
 		
 		$request = array(
 			'ACTION' => 'GetErrorLogForDateRange',
@@ -175,6 +180,7 @@ class MagnaCompatibleErrorView {
 				$this->processErrorAdditonalData($item['ErrorData']);
 				$data = array (
 					'mpID' => $item['MpId'],
+					'origin' => isset($item['Origin']) ? $item['Origin'] : '',
 					'dateadded' => $item['DateAdded'],
 					'errormessage' => $item['ErrorMessage'],
 					'additionaldata' => serialize($item['ErrorData']),
@@ -206,17 +212,25 @@ class MagnaCompatibleErrorView {
 	}
 
 	public function renderActionBox() {
-		$left = '<input type="button" class="ml-button" value="'.ML_BUTTON_LABEL_DELETE.'" id="errorLogDelete" name="errorLog[delete]"/>';
-		$right = '&nbsp;';
+		$left = '<input type="button" class="ml-button ml-js-deleteBtn" value="'.ML_BUTTON_LABEL_DELETE.'" name="delete"/>';
+		$right = '<input type="button" class="ml-button ml-js-deleteBtn" value="'.ML_BUTTON_LABEL_DELETE_ENTIRE_PROTOCOL.'" id="errorLogDelete" name="deleteall"/>';
 
 		ob_start();?>
 <script type="text/javascript">/*<![CDATA[*/
 $(document).ready(function() {
-	$('#errorLogDelete').click(function() {
-		if (($('#errorlog input[type="checkbox"]:checked').length > 0) &&
-			confirm(unescape(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
+	$('.ml-js-deleteBtn').click(function() {
+		var btnAction = $(this).attr('name');
+		
+		if ((btnAction == 'deleteall')
+			&& confirm(unescape(<?php echo "'".html2url(ML_GENERIC_CONFIRM_DELETE_ENTIRE_ERROR_PROTOCOL)."'"; ?>))
 		) {
-			$('#action').val('delete');
+			$('#action').val(btnAction);
+			$(this).parents('form').submit();
+			
+		} else if (($('#errorlog input[type="checkbox"]:checked').length > 0)
+			&& confirm(unescape(<?php echo "'".html2url(ML_GENERIC_DELETE_ERROR_MESSAGES)."'"; ?>))
+		) {
+			$('#action').val(btnAction);
 			$(this).parents('form').submit();
 		}
 	});
@@ -339,6 +353,7 @@ $(document).ready(function() {
 						<td class="nowrap" style="width: 5px;"><input type="checkbox" id="selectAll"/><label for="selectAll">'.ML_LABEL_CHOICE.'</label></td>
 						<td>'.ML_AMAZON_LABEL_ADDITIONAL_DATA.'</td>
 						<td>'.ML_GENERIC_ERROR_MESSAGES.'&nbsp;'.$this->sortByType('errormessage').'</td>
+						'.($this->settings['hasOrigin'] ? '<td>'.ML_GENERIC_LABEL_ORIGIN.'</td>' : '').'
 						<td>'.ML_GENERIC_COMMISSIONDATE.'&nbsp;'.$this->sortByType('commissiondate').'</td>
 					</tr></thead>
 					<tbody>';
@@ -352,6 +367,7 @@ $(document).ready(function() {
 							<td><input type="checkbox" name="errIDs[]" value="'.$item['id'].'"></td>
 							<td class="nopadding" style="width: 1px">'.$this->additionalDataHandler($item['additionaldata']).'</td>
 							<td class="errormessage">'.$message['short'].'<span>'.$message['long'].'</span></td>
+							'.($this->settings['hasOrigin'] ? '<td>'.$item['origin'].'</td>' : '').'
 							<td>'.$hdate.'</td>
 						</tr>';
 		}
@@ -375,7 +391,7 @@ $(document).ready(function() {
 	});
 	/*]]>*/</script>
 <?php
-		$html .= ob_get_contents();	
+		$html .= ob_get_contents();
 		ob_end_clean();
 		$html .= $this->renderActionBox().'
 			</form>';

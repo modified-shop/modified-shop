@@ -100,7 +100,7 @@ table.actions table.matchingTable {
 }
 body.magna table.actions tbody table.matchingTable tbody tr td {
 	text-align: left;
-	width: auto;
+	width: 90%;
 }
 body.magna table.actions tbody table.matchingTable tbody tr td.ml-buttons {
 	width: 6em;

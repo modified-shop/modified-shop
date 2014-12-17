@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: configuration.php 4330 2014-08-05 11:45:12Z tim.neumann $
+ * $Id: configuration.php 4835 2014-11-11 19:02:20Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -38,6 +38,15 @@ MagnaConnector::gi()->resetTimeOut();
 */
 
 $form = json_decode(file_get_contents(DIR_MAGNALISTER_FS.'config/'.$_lang.'/global.form'), true);
+
+/* check for Gambio Properties: If not there, remove the resp. fields */
+if (    (    (!MagnaDB::gi()->tableExists('products_properties_combis'))
+          || (!MagnaDB::gi()->columnExistsInTable('combi_ean', 'products_properties_combis'))
+        )
+     && (array_key_exists('options', $form))
+   ) {
+    unset($form['options']);
+}
 
 $keysToSubmit = array();
 
@@ -88,14 +97,17 @@ if (empty($passPhrase) || isset($_GET['welcome'])) {
 	} else {
 		$partner = '';
 	}
-
+	
+	$promoContent = MAGNA_SERVICE_URL.MAGNA_APIRELATED.'promotion/?shopsystem='.SHOPSYSTEM;
+	$promoContent = preg_replace('/:\/\/[a-z]+\./', '://devshops.', $promoContent);
+	
 	unset($form['general']['headline']);
 	/* Hier die bunte Startseite */
 	echo '
 		<p class="noticeBox bottomSpace">'.sprintf(ML_NOTICE_PLACE_PASSPHRASE, $partner).'</p>
 		<div style="padding-bottom: 1em"></div>';
 	$comercialText = '
-		<div id="pageContent">'.fileGetContents(MAGNA_SERVICE_URL.MAGNA_APIRELATED.'promotion/?shopsystem='.SHOPSYSTEM, $warnings, 10).'</div>';	
+		<div id="pageContent">'.fileGetContents($promoContent, $warnings, 10).'</div>';	
 	$comercialText = str_replace(
 		array('##_PARTNER_##', ),
 		array($partner,        ),
@@ -257,6 +269,35 @@ $(document).ready(function() {
     });
 });
 /*]]>*/</script>
+
+<?php if (isset($form['options'])): ?>
+<?php
+echo '<div id="switchOptions" class="dialog2" title="'.ML_TEXT_CONFIRM_OPTIONS_CHANGE_TITLE.'">'.ML_TEXT_CONFIRM_OPTIONS_CHANGE_TEXT.'</div>';
+?>
+<script type="text/javascript">/*<![CDATA[*/
+$(document).ready(function() {
+    $('input[name="conf[general.options]"]').change(function (e) {
+        $('#switchOptions').dialog({
+            modal: true,
+            width: '600px',
+            buttons: {
+                "<?php echo ML_BUTTON_LABEL_ABORT; ?>": function() {
+                    if ($('input[name="conf[general.options]"]')[1].checked) {
+                        $('input[name="conf[general.options]"]')[0].checked = true;
+                    } else {
+                        $('input[name="conf[general.options]"]')[1].checked = true;                
+                    }
+                    $(this).dialog("close");
+                },
+                "<?php echo ML_BUTTON_LABEL_OK; ?>": function() { 
+                    $(this).dialog("close");    
+                }
+            }
+        });
+    });
+});
+/*]]>*/</script>
+<?php endif; ?>
 <?php
 
 include_once(DIR_MAGNALISTER_INCLUDES.'admin_view_bottom.php');

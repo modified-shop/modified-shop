@@ -375,14 +375,14 @@ class MagnaRecalcOrdersTotal {
 			$aProcessedOrderIDs[$otSet['orders_id']] = true;
 		}
 
-		foreach($aProcessedOrderIDs as $sOrderId => $bValue) {
+		foreach ($aProcessedOrderIDs as $sOrderId => $bValue) {
 			// Gambio specific "Kleinunternehmer Regelung"
-			if (
-				    MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS
+			if (defined('MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS')
+				&& MAGNA_GAMBIO_PLUGIN_GM_TAX_FREE_STATUS
 				&& !MagnaDB::gi()->recordExists(TABLE_ORDERS_TOTAL, array (
-						'orders_id' => $sOrderId,
-						'class' => 'ot_gm_tax_free'
-					))
+					'orders_id' => $sOrderId,
+					'class' => 'ot_gm_tax_free'
+				))
 			) {
 				$this->magnaDB->insert(TABLE_ORDERS_TOTAL, array(
 					'orders_id' => $sOrderId,
@@ -407,8 +407,9 @@ class MagnaRecalcOrdersTotal {
 		$this->calcShippingDetails();
 		$this->finalizeOT();
 		
-		if (!$save) return;
-		
+		if (!$save) {
+			return;
+		}
 		$this->saveOrder();
 	}
 

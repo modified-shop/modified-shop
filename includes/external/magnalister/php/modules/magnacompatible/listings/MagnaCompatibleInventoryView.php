@@ -91,7 +91,7 @@ class MagnaCompatibleInventoryView {
 				'SORTORDER' => $this->sort['type']
 			);
 			if (!empty($this->search)) {
-				#$request['SEARCH'] = (!isUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
+				#$request['SEARCH'] = (!magnalisterIsUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
 				$request['SEARCH'] = $this->search;
 			}
 			$result = MagnaConnector::gi()->submitRequest($request);
@@ -125,14 +125,18 @@ class MagnaCompatibleInventoryView {
 		} else {
 			$sorting = 'blabla'; // fallback for default
 		}
-		//ToDo
-		$sortFlags = array (
-			'sku' => 'SKU',
-			'meinpaketid' => 'MeinpaketID',
-			'price' => 'Price',
-			'quantity' => 'Quantity',
-			'dateadded' => 'DateAdded'
-		);
+		
+		$fields = $this->getFields();
+		$sortFlags = array ();
+		foreach ($fields as $key => $fieldCfg) {
+			if (empty($fieldCfg['Sorter'])) {
+				continue;
+			}
+			$sortFlags[$fieldCfg['Sorter']] = $key;
+		}
+		
+		#echo print_m($sortFlags, '$sortFlags');
+		
 		$order = 'ASC';
 		if (strpos($sorting, '-desc') !== false) {
 			$order = 'DESC';
@@ -229,19 +233,23 @@ class MagnaCompatibleInventoryView {
 					unset($item['ItemTitle']);
 				}
 				$pID = magnaSKU2pID($item['SKU']);
-				$stitle = (string)MagnaDB::gi()->fetchOne('
+				if (is_array($this->settings['language'])) {
+					$iLanguageId = current($this->settings['language']);
+				} else {
+					$iLanguageId = $this->settings['language'];
+				}
+				$sTitle = (string)MagnaDB::gi()->fetchOne("
 					SELECT products_name 
-					  FROM '.TABLE_PRODUCTS_DESCRIPTION.'
-					 WHERE products_id=\''.$pID.'\' 
-					       AND language_id = \''.$this->settings['language'].'\'
-				');
-				if (!empty($stitle)) {
-					$item['Title'] = $stitle;
+					  FROM ".TABLE_PRODUCTS_DESCRIPTION."
+					 WHERE     products_id = '".$pID."'
+					       AND language_id = '".$iLanguageId."'
+				");
+				if (!empty($sTitle)) {
+					$item['Title'] = $sTitle;
 				}
 				$item['TitleShort'] = (strlen($item['Title']) > $this->settings['maxTitleChars'] + 2)
 						? (fixHTMLUTF8Entities(substr($item['Title'], 0, $this->settings['maxTitleChars'])).'&hellip;')
 						: fixHTMLUTF8Entities($item['Title']);
-				$item['DateAdded'] = ((isset($item['DateAdded'])) ? strtotime($item['DateAdded']) : '');
 			}
 			unset($result);
 		}
@@ -303,11 +311,14 @@ class MagnaCompatibleInventoryView {
 	}
 	
 	protected function getItemDateAdded($item) {
+		$item['DateAdded'] = ((isset($item['DateAdded'])) ? strtotime($item['DateAdded']) : '');
 		return '<td>'.date("d.m.Y", $item['DateAdded']).' &nbsp;&nbsp;<span class="small">'.date("H:i", $item['DateAdded']).'</span>'.'</td>';	
 	}
 
 	private function renderDataGrid($id = '') {
 		global $magnaConfig;
+
+		#echo print_m($this->renderableData, '$this->renderableData');
 
 		$html = '
 			<table'.(($id != '') ? ' id="'.$id.'"' : '').' class="datagrid">
@@ -322,27 +333,26 @@ class MagnaCompatibleInventoryView {
 		}
 		$html .= '
 				</tr></thead>
-				<tbody>
-		';
+				<tbody>';
+		
 		$oddEven = false;
 		foreach ($this->renderableData as $item) {
 			$details = htmlspecialchars(str_replace('"', '\\"', serialize(array(
 			 	'SKU' => $item['SKU'],
 			 	'Price' => $item['Price'],
-			 	'Currency' => $item['Currency'],
+			 	'Currency' => isset($item['Currency']) ? $item['Currency'] : $this->mpCurrency,
 			))));
 			$html .= '
 				<tr class="'.(($oddEven = !$oddEven) ? 'odd' : 'even').'">
 					<td><input type="checkbox" name="SKUs[]" value="'.$item['SKU'].'">
 						<input type="hidden" name="details['.$item['SKU'].']" value="'.$details.'"></td>';
 			foreach ($fieldsDesc as $fdesc) {
-				if ($fdesc['Field'] != null) {
-					$html .= '
-					<td>'.$item[$fdesc['Field']].'</td>';
-					
-				} else {
+				if (isset($fdesc['Getter']) && !empty($fdesc['Getter'])) {
 					$html .= '
 					'.call_user_func(array($this, $fdesc['Getter']), $item);
+				} else {
+					$html .= '
+					<td>'.$item[$fdesc['Field']].'</td>';
 				}
 			}
 			$html .= '	

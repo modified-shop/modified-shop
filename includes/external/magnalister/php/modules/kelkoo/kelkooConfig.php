@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: kelkooConfig.php 3925 2014-06-03 12:54:45Z tim.neumann $
+ * $Id: kelkooConfig.php 4799 2014-11-04 18:15:56Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -36,6 +36,14 @@ $form = loadConfigForm($_lang,
 mlGetCountries($form['shipping']['fields']['country']);
 mlGetLanguages($form['lang']['fields']['lang']);
 mlGetShippingMethods($form['shipping']['fields']['method']);
+mlGetCustomersStatus($form['price']['fields']['whichprice'], false);
+if (!empty($form['price']['fields']['whichprice'])) {
+	$form['price']['fields']['whichprice']['values']['0'] = ML_LABEL_SHOP_PRICE;
+	ksort($form['price']['fields']['whichprice']['values']);
+	unset($form['price']['fields']['specialprices']);
+} else {
+	unset($form['price']['fields']['whichprice']);
+}
 
 $cG = new MLConfigurator($form, $_MagnaSession['mpID'], 'conf_kelkoo');
 $cG->setRenderTabIdent(true);

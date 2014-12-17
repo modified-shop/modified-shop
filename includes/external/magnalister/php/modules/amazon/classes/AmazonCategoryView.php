@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: AmazonCategoryView.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: AmazonCategoryView.php 4688 2014-10-08 13:06:57Z miguel.heredia $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -148,16 +148,16 @@ class AmazonCategoryView extends QuickCategoryView {
 		if (empty($a)) {
 			return '
 				<td>&mdash;</td>
-				<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_AMAZON_PRODUCT_MATHCED_NO, 12, 12).'</td>';
+				<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_AMAZON_PRODUCT_MATHCED_NO, 9, 9).'</td>';
 		}
 		if (empty($a['asin'])) {
 			return '
 				<td>&mdash;</td>
-				<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_AMAZON_PRODUCT_MATCHED_FAULTY, 12, 12).'</td>';
+				<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_AMAZON_PRODUCT_MATCHED_FAULTY, 9, 9).'</td>';
 		}
 		return '
 			<td>'.((!empty($a['lowestprice']) && ($a['lowestprice'] > 0)) ?  $this->simplePrice->setPrice($a['lowestprice'])->format().'<br />&nbsp;' : '&mdash;').'</td>
-			<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_AMAZON_PRODUCT_MATCHED_OK, 12, 12).'</td>';
+			<td>'.html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_AMAZON_PRODUCT_MATCHED_OK, 9, 9).'</td>';
 	}
 	
 	public function getFunctionButtons() {
@@ -301,7 +301,7 @@ $(document).ready(function() {
 						<label for="match_notmatched_rb">'.ML_AMAZON_LABEL_ONLY_NOT_MATCHED.'</label>
 					</td>
 					<td class="texcenter inputCell">
-						<input type="submit" class="fullWidth ml-button smallmargin" value="'.ML_AMAZON_LABEL_MANUAL_MATCHING.'" id="matching" name="matching"/>
+						<input type="submit" class="fullWidth ml-button smallmargin mlbtn-action" value="'.ML_AMAZON_LABEL_MANUAL_MATCHING.'" id="matching" name="matching"/>
 					</td>
 					<td>
 						<div class="desc" id="desc_man_match" title="'.ML_LABEL_INFOS.'"><span>'.ML_AMAZON_LABEL_MANUAL_MATCHING.'</span></div>
@@ -309,7 +309,7 @@ $(document).ready(function() {
 				</tr>
 				<tr>
 					<td class="texcenter inputCell">
-						<input type="button" class="fullWidth ml-button smallmargin" value="'.ML_AMAZON_LABEL_AUTOMATIC_MATCHING.'" id="automatching" name="automatching"/>
+						<input type="button" class="fullWidth ml-button smallmargin mlbtn-action" value="'.ML_AMAZON_LABEL_AUTOMATIC_MATCHING.'" id="automatching" name="automatching"/>
 					</td>
 					<td>
 						<div class="desc" id="desc_auto_match" title="'.ML_LABEL_INFOS.'"><span>'.ML_AMAZON_LABEL_AUTOMATIC_MATCHING.'</span></div>

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.php 4330 2014-08-05 11:45:12Z tim.neumann $
+ * $Id: magnalister.php 4691 2014-10-08 13:32:11Z miguel.heredia $
  *
  * (c) 2010 - 2012 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -310,8 +310,10 @@ function echoDiePage($title, $content, $style = '', $showbacklink = true) {
 		<meta charset="UTF-8">
 		<title>magnalister :: '.$title.'</title>
 		<style>
-			body { font: 12px sans-serif; }
-			h1   { font-size: 130%; }
+			body { max-width: 600px; padding: 20px; font: 12px sans-serif; line-height: 16px; color: #333334;}
+			h1{ font-size: 130%; letter-spacing: -0.5px; }
+			a { color: #E31A1C; text-decoration: none; }
+			a:hover { text-decoration: underline; }
 			'.$style.'
 		</style>
 	</head>

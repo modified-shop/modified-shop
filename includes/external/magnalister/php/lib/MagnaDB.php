@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaDB.php 4276 2014-07-24 13:17:41Z derpapst $
+ * $Id: MagnaDB.php 4966 2014-12-10 11:28:10Z derpapst $
  *
  * (c) 2010 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -191,13 +191,12 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 	}
 	
 	public function close() {
-		//echo __METHOD__.' called!';
-		//echo print_m(MagnaDB::gi()->stripObjectsAndResources(debug_backtrace(true)));
-		
-		if ($this->isConnected()) {
-			return $this->oInstance->close();
+		$success = false;
+		if (is_object($this->oInstance) && is_callable(array($this->oInstance, 'close'))) {
+			$success = $this->oInstance->close();
 		}
-		return false;
+		$this->oInstance = null;
+		return $success;
 	}
 	
 	public function getLastErrorMessage() {
@@ -272,12 +271,17 @@ class MagnaDBDriverMysqli extends MagnaDBDriver {
 	}
 	
 	public function freeResult($result) {
+		if (!is_object($result)) {
+			return;
+		}
 		return $result->free_result();
 	}
 }
 
 class MagnaDBDriverMysql extends MagnaDBDriver {
 	protected $rLink = null;
+	protected $resourceValid = false;
+	protected $resourceIsShared = false;
 	
 	protected $access = array(
 		'host' => '',
@@ -293,24 +297,41 @@ class MagnaDBDriverMysql extends MagnaDBDriver {
 	public function isConnected() {
 		return is_resource($this->rLink) && mysql_ping($this->rLink);
 	}
-	
+
 	public function connect($force = false) {
+		global $db_link;
+
 		$this->rLink = $this->access['persistent']
 			? mysql_pconnect($this->access['host'], $this->access['user'], $this->access['pass'])
 			: mysql_connect($this->access['host'], $this->access['user'], $this->access['pass']);
-		
+
+		$this->resourceValid = is_resource($this->rLink);
+
+		// Passiert nur beim reconnect.
+		if ($this->resourceIsShared && ($db_link !== $this->rLink)) {
+			$db_link = $this->rLink;
+		}
+
+		// Passiert nur beim initial connect.
+		if ($db_link === $this->rLink) {
+			$this->resourceIsShared = true;
+		}
+
 		if (!empty($this->charset)) {
 			$this->setCharset($this->charset);
 		}
 	}
-	
+
 	public function close() {
-		if ($this->isConnected()) {
-			return mysql_close($this->rLink);
+		$success = false;
+		if (is_resource($this->rLink)) {
+			$success = mysql_close($this->rLink);
 		}
-		return false;
+
+		$this->resourceValid = false;
+
+		return $success;
 	}
-	
 	
 	public function getLastErrorMessage() {
 		if (is_resource($this->rLink)) {
@@ -556,7 +577,25 @@ class MagnaDB {
 			return false;
 		}
 		
-		$this->driver->connect();
+		// Try to connect...
+		$error = '';
+		$errno = 0;
+		
+		$attempts = 0;
+		$maxAttempts = $initialConnect ? 2 : 100;
+		do {
+			$this->driver->connect();
+			if (!$this->isConnected()) {
+				$errno = $this->driver->getLastErrorNumber();
+				$error = $this->driver->getLastErrorMessage();
+			} else {
+				break;
+			}
+			$this->closeConnection(true);
+			
+			usleep(100000); // 100ms
+			# Retry if '2006 MySQL server has gone away'
+		} while (++$attempts < $maxAttempts);
 		
 		if (!$initialConnect
 			&& isset($_GET['MLDEBUG']) && ($_GET['MLDEBUG'] === 'true')
@@ -567,14 +606,18 @@ class MagnaDB {
 		
 		if (!$this->isConnected()) {
 			// called in the destructor: Just leave. No need to close connection, it's lost
-			if ($this->destructed) exit;
-			// die is bad behaviour. But meh...
+			if ($this->destructed) {
+				exit();
+			}
+			
+			// die is bad behaviour. But meh..
 			die(
 				'<span style="color:#000000;font-weight:bold;">
 					<small style="color:#ff0000;font-weight:bold;">[SQL Error]</small><br>
 					Establishing a connection to the database failed.<br><br>
+					<pre style="font-weight:normal">Giving up after '.$attempts.' attempts. Last error message received:'."\n".'('.$errno.') '.$error.'</pre>
 					<pre style="font-weight:normal">'.htmlspecialchars(
-						print_r(array_slice(debug_backtrace(true), 4), true)
+						print_r($this->stripObjectsAndResources(array_slice(debug_backtrace(true), 4)), true)
 					).'</pre>
 				</span>'
 			);
@@ -688,7 +731,7 @@ class MagnaDB {
 			//if (defined('MAGNALISTER_PLUGIN')) echo 'mmysql_query errorno: '.var_export($errno, true)."\n";
 			if (($errno === false) || ($errno == 2006)) {
 				$this->closeConnection(true);
-				usleep(100000);
+				usleep(100000); // 100ms
 				$this->selfConnect(true);
 			}
 			# Retry if '2006 MySQL server has gone away'

@@ -10,7 +10,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: magnalister.css 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: magnalister.css 4897 2014-11-20 00:18:14Z miguel.heredia $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -197,7 +197,7 @@ body.magna .notice {
 	color: #900 !important;
 }
 body.magna .error {
-	color: #f00 !important;
+	color: #fff !important;
 }
 body.magna .magnatext {
 	color: #DC043D !important;
@@ -275,42 +275,30 @@ body.magna .valignmid {
 body.magna .valignbottom {
 	vertical-align: bottom;
 }
-.successBox {
-	border-width: 1px 1px 1px 5px;
-	border-style: solid;
-	border-color: #0e0;
-	padding: 5px;
-	background: #cfc;
+.successBox,
+.successBoxBlue,
+.noticeBox, 
+.errorBox {
+	padding: 9px 15px;
 	margin: 0 0 1em 0;
 	text-align: left;
+	font-weight: bold;
+}
+.successBox {
+	background: #59E28D;
+	color: #fff;
 }
 .successBoxBlue {
-	border-width: 1px 1px 1px 5px;
-	border-style: solid;
-	border-color: #00e;
-	padding: 5px;
-	background: #ccf;	
-	margin: 0 0 1em 0;
-	text-align: left;
+	background: #AFC8E7;
+	color: #fff;
 }
 .noticeBox {
-	border-width: 1px 1px 1px 5px;
-	border-style: solid;
-	border-color: #F00;
-	padding: 5px;
-	background: #FA2;
-	margin: 0 0 1em 0;
-	text-align: left;
+	background: #FFF6B7;
+	color: #727273;
 }
 .errorBox {
-	border-width: 2px 2px 2px 6px;
-	border-style: solid;
-	border-color: #f90;
-	padding: 5px;
-	background: #900;
+	background: #FC807B;
 	color: #fff;
-	margin: 0 0 1em 0;
-	text-align: left;
 }
 .errorBox .error {
 	color: #FA2 !important;
@@ -357,18 +345,19 @@ div#antlogo {
 }
 div#globalButtonBox {
 	float: right;
-	height: 22px;
+	height: 22px;#ebayCategorySelector ~ div button, #moda
 	margin-top: 32px;
 	margin-right: 25px;
 	text-align: right;
 }
-
-body.magna div.marketing {
-	margin-top: 1em;
-	border-top: 1px dotted #999;
+table#magnafooter {
+	margin: 19px 0 0;
+	border: none;
+	line-height: 18px;
 }
 table#magnafooter td {
 	position: relative;
+	padding: 8px;
 }
 table#magnafooter div.debug {
 	display: none;
@@ -385,6 +374,7 @@ table#magnafooter div.debug {
 	-webkit-box-shadow: 0 0 30px -4px #000000;
 	box-shadow: 0 0 30px -4px #000000;
 	z-index: 1;
+	line-height: 1em;
 }
 table#magnafooter:hover div.debug {
 	display: block;
@@ -395,49 +385,47 @@ body.ielt8 table#magnafooter div.debug {
 	margin-top: -154px;
 }
 table#magnafooter div.copyleft {
-	font-size: 8.5px;
+	font-size: 9px;
 	color: #555;
-	padding-top: 1px;
+	position: relative;
+	bottom: 2px;
 }
 body.magna div#content .ml-button,
 body.magna .ui-dialog .ml-button {
-	font-family: Verdana, Arial, sans-serif;
-	font-weight: normal;
-	text-transform: none;
-	text-decoration: none;
-	width: auto;
-	font-size: 10px;
-	line-height: 12px !important;
-	padding: 1px 5px;
-	display: inline-block;
-	text-align: center;
-	
-	border: 1px solid #999;
-	outline: none;
-	background: #a1b8f1;
-	background: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0, #a1b8f1),
-		color-stop(1, #ffffff)
-	);
-	background: linear-gradient(
-		to top,
-		#a1b8f1 0%,
-		#ffffff 100%
-	);
-	-moz-border-radius: 3px;
-	-webkit-border-radius: 3px;
-	border-radius: 3px;
-	color: #000;
-	margin: 6px;
-	height: 20px;
-	
-	white-space: nowrap;
+    background-image: none;
+    background-color: #f7f6f5;
+    background-repeat: repeat-x;
+    border-color: rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.25) rgba(0, 0, 0, 0.35);
+    -moz-border-bottom-colors: none;
+    -moz-border-left-colors: none;
+    -moz-border-right-colors: none;
+    -moz-border-top-colors: none;
+    border-image: none;
+    border-radius: 3px;
+    border-style: solid;
+    border-width: 1px;
+    /*box-shadow: 0 1px 0 rgba(255, 255, 255, 0.2) inset, 0 1px 2px rgba(0, 0, 0, 0.05);*/
+    color: #333333 !important;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 10px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    line-height: 17px;
+    margin: 3px;
+    padding: 2px 10px;
+    text-align: center;
+    /*text-shadow: 0 1px 1px rgba(255, 255, 255, 0.75);*/
+    vertical-align: middle;
+    text-transform: uppercase;
+    text-decoration: none;
+}
+body.magna div#content a.ml-button,
+body.magna .ui-dialog a.ml-button {
+    padding: 4px 10px;
 }
 input#unprepare.ml-button, input#reset_description.ml-button {
-	min-width: 253px;
+	min-width: 320px;
 }
 input#unprepare.ml-button {
 	margin-bottom: 4px !important;
@@ -446,36 +434,13 @@ input#reset_description.ml-button{
 	margin-top: 0px !important;
 }
 body.magna div#content .ml-button:hover,
-body.magna .ui-dialog .ml-button:hover {
-	background: #a7bbff;
-	background: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0, #a7bbff),
-		color-stop(0.7, #ffffff)
-	);
-	background: linear-gradient(
-		to top,
-		#a7bbff 0%,
-		#ffffff 70%
-	);
-}
+body.magna .ui-dialog .ml-button:hover,
 body.magna div#content .ml-button:active,
 body.magna .ui-dialog .ml-button:active {
-	background: #d5dcf8;
-	background: -webkit-gradient(
-		linear,
-		left bottom,
-		left top,
-		color-stop(0.3, #d5dcf8),
-		color-stop(1, #a1caf1)
-	);
-	background: linear-gradient(
-		to top,
-		#d5dcf8 30%,
-		#a1b8f1 100%
-	);
+    background-color: #666;
+    color: #fff !important;
+    border-color: #666;
+    text-shadow: none;
 }
 
 body.magna div#content .ml-button:focus,
@@ -502,32 +467,27 @@ body.magna div#content button.ml-button img {
 	margin-left: -2px;
 	margin-bottom: -2px;
 }
-body.magna div#content input.ml-button,
-body.magna div#content button.ml-button {
-	padding-top: 0;
-	padding-bottom: 2px;
-	display: inline-block;
-}
-body.magna.webkit div#content input.ml-button,
-body.magna.webkit div#content button.ml-button {
-	padding-top: 1px;
-	padding-bottom: 1px;
-	display: inline-block;
-}
-body.magna div#content a.ml-button {
-	box-sizing: content-box;
-	height: 15px;
-	padding: 3px 4px 0px 4px;
-}
-body.magna.ielt9 div#content a.ml-button {
-	height: 15px;
-	padding: 2px 4px 0 4px;
-}
 body.magna .ui-dialog span.ml-button {
 	height: 1.3em;
 	margin: 0;
 	vertical-align: top;
 	cursor: default;
+}
+body.magna div#content .ml-button.mlbtn-action,
+body.magna .ui-dialog .ml-button.mlbtn-action {
+    background-color: #e31a1c;
+    border-color: #e31a1c;
+    color: #ffffff !important;
+    text-shadow: none;
+}
+body.magna div#content .ml-button.mlbtn-action:hover,
+body.magna .ui-dialog .ml-button.mlbtn-action:hover,
+body.magna div#content .ml-button.mlbtn-action:active,
+body.magna .ui-dialog .ml-button.mlbtn-action:active {
+    background-color: #666;
+    color: #fff !important;
+    border-color: #666;
+    text-shadow: none;
 }
 
 /* GFX Buttons */
@@ -1393,7 +1353,7 @@ table.magnaframe thead th {
 	line-height: 23px;
 }
 table.magnaframe tbody td {
-	background: #eaeaea;
+	background: #f6f6f7;
 }
 table.magnaframe tbody td p {
 	margin: 5px;
@@ -2390,6 +2350,12 @@ body.magna div.productList table.price td {
 .mlbtn-inverse:active, .mlbtn-inverse.active {
 	background-color: #080808 \9;
 }
+.mlbtn-action {
+    background-color: #e31a1c;
+    border-color: #e31a1c;
+    color: #ffffff !important;
+    text-shadow: none;
+}
 
 
 
@@ -2521,21 +2487,29 @@ textarea.debugBox {
 }
 table#magnafooter td div.bold {
 	position: relative;
+	color: #333334;
 }
-table#magnafooter span.build {
+table#magnafooter span.build,
+table#magnafooter span.customerinfo {
 	font-weight: normal;
-	color: #aaa;
+	color: #8d8d8f;
 	position: absolute;
 	right: 0;
 	display: inline;
+	padding: 9px 27px;
 }
-
+table#magnafooter span.build {
+	font-size: 9.6px;
+}
 table#magnafooter span.customerinfo {
-	color: #AAAAAA;
-	display: inline;
-	font-weight: normal;
+	right: auto;
 	left: 0;
-	position: absolute;
+}
+table#magnafooter span.version-text,
+table#magnafooter span.version {
+	 font-size: 11.5px;
+	 position: relative;
+	 top: 2px;
 }
 
 /* Dialogs v2 */
@@ -2703,7 +2677,7 @@ body.magna div.magnaTabs2 ul li a:visited {
 }
 /* Amazon Prepare */
 input#removeapply.ml-button, input#resetapply.ml-button {
-	min-width: 278px;
+	min-width: 320px;
 }
 input#removeapply.ml-button {
 	margin-bottom: 0 !important;
@@ -2750,16 +2724,86 @@ table#errorlog tbody td.errormessage span[title].inline {
 body.magna.jqueryui .ui-widget {
 	font-family: sans-serif;
 	font-size: 13px;
+	background: #F5F5F5;
+	border: none;
+	border-radius: 0;
+	-moz-border-radius: 0;
+	-webkit-border-radius: 0;
+	padding: 8px 26px 23px;
 }
 body.magna.jqueryui .ui-widget a {
 	font-family: sans-serif !important;
+}
+body.magna.jqueryui .ui-dialog-titlebar {
+	background: none;
+	border: 0;
+	padding-top: 2em;
+}
+body.magna.jqueryui .ui-dialog-titlebar span {
+	color: #E31A1C;
+	font-size: 15px;
 }
 body.magna.jqueryui .ui-dialog a {
 	text-decoration: underline;
 	font-size: 13px;
 }
-body.magna.jqueryui .ui-widget .ui-widget-header a:hover {
+body.magna.jqueryui .ui-widget .ui-widget-header a:hover,
+body.magna.jqueryui .ui-widget .ui-widget-header a.ui-state-hover,
+body.magna.jqueryui .ui-widget .ui-widget-header a:focus {
 	font-size: inherit;
+	border: 0;
+	background: transparent;
+}
+body.magna.jqueryui .ui-dialog p {
+	color: #333334;
+}
+body.magna.jqueryui .ui-dialog .ui-dialog-titlebar-close {
+	top: 15px;
+	right: -9px;
+	border: 0;
+	background: none;
+	padding: 0;
+}
+body.magna.jqueryui .ui-dialog .ui-dialog-titlebar-close span.ui-icon-closethick {
+	background: url("../images/icons/closethick.png");
+	width: 19px;
+	height: 18px;
+}
+body.magna.jqueryui .ui-dialog a.ui-icon-arrowrefresh-wrap {
+	height: 24px;
+	width: 24px;
+	padding: 0;
+	border: 0;
+	background: none;
+	position: relative;
+	top: 8px;
+}
+body.magna.jqueryui .ui-dialog span.ui-icon-arrowrefresh-1-n {
+	background-image: url("../images/icons/buttonbox.png");
+	background-position: -66px 0;
+	background-repeat: no-repeat;
+	background-color: rgba(0, 0, 0, 0.05);
+	height: 22px;
+	width: 22px;
+	float: right;
+	padding: 0;
+	position: relative;
+	top: 30px;
+	right: 5px;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	border: 1px solid rgba(0, 0, 0, 0.07);
+	box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
+	-moz-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
+	-webkit-box-shadow: inset 1px 1px 3px rgba(255, 255, 255, 0.5), inset -1px -1px 2px rgba(0, 0, 0, 0.06);
+}
+body.magna.jqueryui .ui-dialog a.ui-icon-arrowrefresh-wrap span.ui-icon-arrowrefresh-1-n {
+	top: 0;
+	right: 0;
+}
+body.magna.jqueryui .ui-dialog .ui-resizable-se {
+	display: none !important;
 }
 
 /* Pagination */
@@ -2850,7 +2894,7 @@ table#catMatch td#yategoCustomCats div.catView {
 	height: 150px;
 }
 table#catMatch span.toggle {
-	width: 26px;
+	width: 34px;
 	height: 16px;
 	vertical-align: text-bottom;
 	background: transparent url("../images/togglebuttons.png") no-repeat 0 0;
@@ -3034,9 +3078,37 @@ body.magna div#mceModalBlocker {
 	opacity: .50;
 	filter:Alpha(Opacity=50);
 }
+body.jqueryui .ui-dialog .ui-dialog-buttonpane {
+	border: 0;
+	padding: 0;
+	margin: 0 11px 0 0;
+	background: transparent;
+}
 body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget {
 	padding: 0;
 	margin-bottom: 0;
+	margin-right: 4px;
+	background-color: #E31A1C;
+	border: 1px solid #E31A1C;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	color: #fff;
+	outline: none;
+}
+#ebayCategorySelector ~ div button, #modal-dawanda_prepare_form_field_primarycategory ~ div button {
+	margin-right: 4px;
+	text-transform: uppercase;
+}
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget:hover,
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget:active {
+    background-color: #666666;
+    border-color: #666666;
+}
+body.jqueryui .ui-dialog .ui-dialog-buttonpane button.ui-widget .ui-button-text {
+	font-size: 10px;
+	padding: 0.3em 1.3em;
+	text-transform: uppercase;
 }
 /* Removes the white gap at the bottom of the page where the datepicker is used. */
 body.magna .ui-datepicker.ui-helper-hidden-accessible {

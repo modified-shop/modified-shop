@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: singlematching.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: singlematching.php 4961 2014-12-09 14:10:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -56,7 +56,8 @@ if (!empty($amazonProperties) && !empty($amazonProperties['asin'])) {
 	$productDetails['asin'] = '';
 	$productDetails['asin_type'] = '';
 	$productDetails['item_condition'] = getDBConfigValue('amazon.itemCondition', $_MagnaSession['mpID']);
-	$productDetails['will_ship_internationally'] = getDBConfigValue('internationalShipping', $_MagnaSession['mpID']);
+	$productDetails['will_ship_internationally'] = getDBConfigValue('amazon.internationalShipping', $_MagnaSession['mpID']);
+	$productDetails['item_note'] = '';
 	
 	if (defined('DEVELOPMENT_TEST')) {
 		$productDetails['item_note'] = DEVELOPMENT_TEST;
@@ -74,10 +75,10 @@ $searchResults = performItemSearch(
 $charLimit = 2000;
 
 $productsData['products_description'] = stripEvilBlockTags($productsData['products_description']);
-$productsData['products_description'] = isUTF8($productsData['products_description'])
+$productsData['products_description'] = magnalisterIsUTF8($productsData['products_description'])
 	? $productsData['products_description']
 	: utf8_encode($productsData['products_description']);
-$productsData['products_model'] = isUTF8($productsData['products_model'])
+$productsData['products_model'] = magnalisterIsUTF8($productsData['products_model'])
 	? $productsData['products_model']
 	: utf8_encode($productsData['products_model']);
 
@@ -123,14 +124,13 @@ echo '
 	<tbody>
 		<tr>
 			<td class="label top">
-				'.ML_AMAZON_CONDITION_DESCRIPTION.'<br/>
+				'.ML_GENERIC_CONDITION_NOTE.'<br/>
 				<span class="normal">'.sprintf(ML_AMAZON_X_CHARS_LEFT, '<span id="charsLeft">0</span>').'</span>
 			</td>
 			<td class="options">
 				<textarea class="fullwidth" rows="10" cols="100" wrap="soft" name="amazonProperties[item_note]" id="item_note">'.
 					$productDetails['item_note'].
 				'</textarea>
-				'.$mwststr.'
 			</td>
 		</tr>
 		<tr class="odd">

@@ -26,15 +26,16 @@ require_once(DIR_MAGNALISTER_MODULES.'hitmeister/HitmeisterHelper.php');
 class HitmeisterPrepareView extends MagnaCompatibleBase {
 	
 	protected $catMatch = null;
+	protected $prepareSettings = array();
 	
 	protected function initCatMatching() {
 		$params = array();
-		foreach (array('mpID', 'marketplace', 'marketplaceName') as $attr) {
+		foreach (array('mpID', 'marketplace', 'marketplaceName', 'prepareSettings') as $attr) {
 			if (isset($this->$attr)) {
 				$params[$attr] = &$this->$attr;
 			}
 		}
-
+		
 		$this->catMatch = new HitmeisterCategoryMatching($params);
 	}
 
@@ -132,7 +133,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 		if (1 == $numberOfItems) {
 			# single item
 			if ((1 != $numberOfPreparedValues) && $useproductsfsk18) {
-				$defaultAgeRating = ('1' == $preselectShopValues[0]['fsk18']) ? '18' : '0';
+				$defaultAgeRating = (isset($preselectShopValues[0]['fsk18']) && ('1' == $preselectShopValues[0]['fsk18'])) ? '18' : '0';
 			}
 			# 'Lieferzeit Matching bevorzugen'? Wenn Einzel-Art., nehme direkt vom Artikel
 			if ('m' == $defaultShippingTime) {
@@ -221,6 +222,9 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 					</td>
 					<td class="info">&nbsp;</td>
 				</tr>
+				<tr class="spacer">
+					<td colspan="3">&nbsp;</td>
+				</tr>
 			</tbody></table>
 			<table class="actions">
 				<thead><tr><th>'.ML_LABEL_ACTIONS.'</th></tr></thead>
@@ -228,7 +232,7 @@ class HitmeisterPrepareView extends MagnaCompatibleBase {
 					<tr><td>
 						<table><tbody>
 							<tr><td>
-								<input type="submit" class="ml-button" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
+								<input type="submit" class="ml-button mlbtn-action" name="saveMatching" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
 							</td></tr>
 						</tbody></table>
 					</td></tr>

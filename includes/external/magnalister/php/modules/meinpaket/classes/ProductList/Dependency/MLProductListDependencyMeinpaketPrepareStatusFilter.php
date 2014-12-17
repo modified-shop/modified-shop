@@ -29,7 +29,7 @@ class MLProductListDependencyMeinpaketPrepareStatusFilter extends MLProductListD
 		);
 	}
 
-	protected function getPrepareTabel() {
+	protected function getPrepareTable() {
 		return TABLE_MAGNA_MEINPAKET_PROPERTIES;
 	}
 

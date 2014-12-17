@@ -405,7 +405,7 @@ class ML_Database_Model_Query_Select {
             return $this->iResult;
         }else{
             if($this->iResultAll===null){
-                $this->sExecutedSql = "Select count($sField) as count " . $this->buildSql(
+                $this->sExecutedSql = "SELECT COUNT($sField) as count " . $this->buildSql(
                                 array(
                                     'from' => 'From',
                                     'join' => 'Join',

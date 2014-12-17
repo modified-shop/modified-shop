@@ -51,7 +51,8 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		$this->limit = $limit;
 		
 		$this->initSync();
-
+		$this->initMLProduct();
+		
 		$this->helperClass = ucfirst($this->marketplace).'Helper';
 		$helperPath = DIR_MAGNALISTER_MODULES.strtolower($this->marketplace).'/'.$this->helperClass.'.php';
 		if (file_exists($helperPath)) {
@@ -67,11 +68,19 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		$this->simplePrice = new SimplePrice();
 	}
 	
+	protected function initMLProduct() {
+		MLProduct::gi()->resetOptions();
+	}
+	
 	protected function getConfigKeys() {
 		return array (
 			'KeyType' => array (
 				'key' => 'general.keytype',
 				'default' => 'artNr',
+			),
+			'VarType' => array (
+				'key' => 'general.options',
+				'default' => 'old',
 			),
 			'StockSync' => array (
 				'key' => 'stocksync.tomarketplace',
@@ -201,11 +210,26 @@ abstract class MagnaCompatibleSyncInventory extends MagnaCompatibleCronBase {
 		}
 		
 		$curQty = false;
-		if (($this->cItem['aID'] > 0) && $this->hasDbColumn['pa.attributes_stock']) {
-			$curQty = MagnaDB::gi()->fetchOne('
-				SELECT attributes_stock FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
-				 WHERE products_attributes_id = \''.$this->cItem['aID'].'\'
-			');
+		switch ($this->config['VarType']) {
+			case ('gambioProperties'): {
+				if ($this->cItem['aID'] > 0) {
+					$curQty = MagnaDB::gi()->fetchOne('
+						SELECT combi_quantity FROM products_properties_combis
+				 		WHERE products_properties_combis_id = \''.$this->cItem['aID'].'\'
+					');
+				}
+				break;
+			}
+			case('old'):
+			default: {
+				if (($this->cItem['aID'] > 0) && $this->hasDbColumn['pa.attributes_stock']) {
+					$curQty = MagnaDB::gi()->fetchOne('
+						SELECT attributes_stock FROM '.TABLE_PRODUCTS_ATTRIBUTES.' 
+				 		WHERE products_attributes_id = \''.$this->cItem['aID'].'\'
+					');
+				}
+				break;
+			}
 		}
 		if ($curQty === false) {
 			$curQty = MagnaDB::gi()->fetchOne('
@@ -361,14 +385,21 @@ if (($this->marketplace == 'amazon') && ($this->cItem['SKU'] == 'blabla123')) {
 		$this->identifySKU();
 		$this->fixIdentification();
 		
+		$title = isset($this->cItem['Title'])
+			? $this->cItem['Title']
+			: (isset($this->cItem['ItemTitle'])
+				? $this->cItem['ItemTitle']
+				: 'unknown'
+			);
+		
 		if ((int)$this->cItem['pID'] <= 0) {
 			$this->log("\n".
-				'SKU: '.$this->cItem['SKU'].' ('.$this->cItem['ItemTitle'].') not found'
+				'SKU: '.$this->cItem['SKU'].' ('.$title.') not found'
 			);
 			return;
 		} else {
 			$this->log("\n".
-				'SKU: '.$this->cItem['SKU'].' ('.$this->cItem['ItemTitle'].') found ('.
+				'SKU: '.$this->cItem['SKU'].' ('.$title.') found ('.
 				'pID: '.$this->cItem['pID'].'; aID: '.$this->cItem['aID'].
 			')');
 		}

@@ -545,26 +545,13 @@ function substitutePictures($tmplStr, $pID, $imagePath) {
 
 # Hilfsfunktion: Preis bestimmen
 # priceType: == ListingType oder BuyItNowPrice
-function makePrice($pID, $priceType, $takePrepared=false, $variationPrice = 0.0) {
+function makePrice($pID, $priceType, $takePrepared = false, $variationPrice = 0.0) {
 	global $_MagnaSession;
 	if ($takePrepared) {
-
-		if ('artNr' == getDBConfigValue('general.keytype', '0')) {
-			$preparedPriceQuery = 'SELECT '
-			.('BuyItNowPrice' == $priceType? 'ep.BuyItNowPrice':'ep.Price').' AS Price '
-			.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES .' ep, '. TABLE_PRODUCTS .' p '
-			.' WHERE ep.products_model = p.products_model AND p.products_id = '.$pID
-			.' AND ep.mpID = '. $_MagnaSession['mpID']
-			.' LIMIT 1';
-		} else {
-			$preparedPriceQuery = 'SELECT '
-			.('BuyItNowPrice' == $priceType? 'BuyItNowPrice':'Price').' AS Price '
-			.' FROM '.TABLE_MAGNA_EBAY_PROPERTIES
-			.' WHERE products_id = '.$pID.' AND mpID = '. $_MagnaSession['mpID']
-			.' LIMIT 1';
+		$iBuyItNowPrice = magnalisterEbayGetPriceByType($pID, $priceType);
+		if ($iBuyItNowPrice !== false) {
+			return $iBuyItNowPrice;
 		}
-		$preparedPriceRow = MagnaDB::gi()->fetchArray($preparedPriceQuery);
-		if (1 == MagnaDB::gi()->numRows()) return($preparedPriceRow[0]['Price']);
 	}
 	require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/SimplePrice.php');
 	switch ($priceType) {
@@ -582,10 +569,12 @@ function makePrice($pID, $priceType, $takePrepared=false, $variationPrice = 0.0)
 		}
 	}
 	$myPrice = new SimplePrice(null,getCurrencyFromMarketplace($_MagnaSession['mpID']));
-	if ($variationPrice) 
+	if ($variationPrice) {
 		$myPrice->setPriceFromDB($pID, $_MagnaSession['mpID'], $which)->addLump($variationPrice)->finalizePrice($pID, $_MagnaSession['mpID'], $which);
-	else
+	} else {
 		$myPrice->setFinalPriceFromDB($pID, $_MagnaSession['mpID'], $which);
+	}
+
 	return $myPrice->getPrice();
 }
 
@@ -954,10 +943,11 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
 		}
 		$next_service = true; # FreeShipping darf nur beim 1ten Service gesetzt sein
 	}
+	$row['DispatchTimeMax'] = $itemDetails['dispatchTime'];
 	if (isset($itemDetails['localProfile'])) {
 		$ShippingDetails['LocalProfile'] = $itemDetails['localProfile'];
 	}
-	if ('on' == $itemDetails['localPromotionalDiscount']) {
+	if ((array_key_exists('localPromotionalDiscount', $itemDetails)) && ('on' == $itemDetails['localPromotionalDiscount'])) {
 		$ShippingDetails['LocalPromotionalDiscount'] = 'true';
 	} else {
 		$ShippingDetails['LocalPromotionalDiscount'] = 'false';
@@ -991,7 +981,7 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
 	if (isset($itemDetails['internationalProfile'])) {
 		$ShippingDetails['InternationalProfile'] = $itemDetails['internationalProfile'];
 	}
-	if ('on' == $itemDetails['internationalPromotionalDiscount']) {
+	if ((array_key_exists('internationalPromotionalDiscount', $itemDetails)) && ('on' == $itemDetails['internationalPromotionalDiscount'])) {
 		$ShippingDetails['InternationalPromotionalDiscount'] = 'true';
 	} else {
 		$ShippingDetails['InternationalPromotionalDiscount'] = 'false';
@@ -1004,14 +994,13 @@ function prepareEBayPropertiesRow($pID, $itemDetails) {
 
 function eBayInsertPrepareData($data) {
 	$data['topPrimaryCategory']	  = $data['PrimaryCategory']      == null ? '': $data['PrimaryCategory'];
-	$data['topSecondaryCategory'] = $data['topSecondaryCategory'] == null ? '': $data['SecondaryCategory'];
-	$data['topStoreCategory1']    = $data['topStoreCategory1']    == null ? '': $data['StoreCategory'];
-	$data['topStoreCategory2']    = $data['topStoreCategory2']    == null ? '': $data['StoreCategory2'];
+	$data['topSecondaryCategory'] = !array_key_exists('topSecondaryCategory', $data) || $data['topSecondaryCategory'] == null ? '': $data['SecondaryCategory'];
+	$data['topStoreCategory1']    = !array_key_exists('topStoreCategory1', $data)    || $data['topStoreCategory1']    == null ? '': $data['StoreCategory'];
+	$data['topStoreCategory2']    = !array_key_exists('topStoreCategory2', $data)    || $data['topStoreCategory2']    == null ? '': $data['StoreCategory2'];
 
-	# Filter Gambio TABs
-	if (SHOPSYSTEM == 'gambio') {
-		$data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
-	}
+	// Filter JNH Tab
+	$data['Description'] = preg_replace('/\[TAB:([^\]]*)\]/', '<h1>${1}</h1>', $data['Description']);
+	
 	/* {Hook} "eBayInsertPrepareData": Enables you to modify the prepared product data before it will be saved.<br>
 	   Variables that can be used:
 	   <ul>
@@ -1029,7 +1018,7 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
 	global $_MagnaSession;
 	$row = prepareEBayPropertiesRow($pID, $itemDetails);
 	$row['Title']           = trim(strip_tags(html_entity_decode($itemDetails['Title'])));
-	if (('on' == $itemDetails['enableSubtitle']) && !empty($itemDetails['Subtitle'])) {
+	if (array_key_exists('enableSubtitle', $itemDetails) && ('on' == $itemDetails['enableSubtitle']) && !empty($itemDetails['Subtitle'])) {
 		$row['Subtitle'] = trim(strip_tags($itemDetails['Subtitle']));
 	}
 	if (!empty($itemDetails['PictureURL'])) {
@@ -1038,10 +1027,10 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
 	if (!empty($itemDetails['GalleryURL']) && ('on' == $itemDetails['enableGallery'])) {
 		$row['GalleryURL'] = trim($itemDetails['GalleryURL']);
 	}
-    if ('on' == $itemDetails['privateListing']) {
+	if (array_key_exists('privateListing', $itemDetails) && ('on' == $itemDetails['privateListing'])) {
         $row['PrivateListing'] = '1';
     }
-    if (('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])){
+	if (array_key_exists('bestOfferEnabled', $itemDetails) && ('on' == $itemDetails['bestOfferEnabled']) && ('Chinese' != $itemDetails['ListingType'])){
         $row['BestOfferEnabled'] = '1';
     }
     if (!empty($itemDetails['startTime'])) {
@@ -1051,8 +1040,8 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
         $row['HitCounter'] = $itemDetails['hitcounter'];
     }
 	
-	#if (isset($itemDetails['freezePrice'])) 
-	if ('true' == $itemDetails['isPriceFrozen']) {
+	// only set price if a chinese auction otherwise set it to zero
+	if (('true' == $itemDetails['isPriceFrozen']) && ('Chinese' == $itemDetails['ListingType'])) {
 		if ($itemDetails['frozenPrice'] == (string)(float) $itemDetails['frozenPrice']) {
 			$row['Price'] = $itemDetails['frozenPrice'];	
 		} else {
@@ -1063,6 +1052,7 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
 	} else {
 		$row['Price'] = (float)0;
 	}
+
 	if (  isset($itemDetails['isPriceFrozen'])
 	   && isset($itemDetails['enableBuyItNowPrice'])
 	   && !empty($itemDetails['BuyItNowPrice'])
@@ -1088,6 +1078,7 @@ function SaveEBaySingleProductProperties($pID, $itemDetails) {
 			'products_id' => $pID
 		));
 	}
+	$row['PreparedTs'] = date('Y-m-d H:i:s');
 	eBayInsertPrepareData($row);
 }
 
@@ -1143,7 +1134,7 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
 	$imagePath = getDBConfigValue('ebay.imagepath',$_MagnaSession['mpID']);
 	$eBayTemplate = getDBConfigValue('ebay.template.content',$_MagnaSession['mpID']);
 	$eBayTitleTemplate = getDBConfigValue('ebay.template.name',$_MagnaSession['mpID'], '#TITLE#');
-	
+	$preparedTs = date('Y-m-d H:i:s');
 	foreach ($more_data as $dataRow) {
 		$row = prepareEBayPropertiesRow($dataRow['products_id'], $itemDetails);
 		$pID = $dataRow['products_id'];
@@ -1203,7 +1194,36 @@ function SaveEBayMultipleProductProperties($pIDs, $itemDetails) {
             $row['Price'] = (float)MagnaDB::gi()->fetchOne('SELECT Price FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' WHERE mpID = '.$_MagnaSession['mpID'].' AND products_id = '.$dataRow['products_id']);
 			MagnaDB::gi()->delete(TABLE_MAGNA_EBAY_PROPERTIES, array('mpID'=>$_MagnaSession['mpID'], 'products_id'=>$dataRow['products_id']));
         }
+		// reset frozen price if not chinese auction
+		if ('Chinese' != $itemDetails['ListingType']) {
+			$row['Price'] = (float)0;
+		}
+
+		$row['PreparedTs'] = $preparedTs;
 		eBayInsertPrepareData($row);
 	}
 }
 
+function magnalisterEbayGetPriceByType($iProductsId, $sPriceType = false) {
+	global $_MagnaSession;
+	if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+		$preparedPriceQuery = "
+			SELECT ".('BuyItNowPrice' == $sPriceType ? 'ep.BuyItNowPrice' : 'ep.Price')."
+			  FROM ".TABLE_MAGNA_EBAY_PROPERTIES ." ep, ".TABLE_PRODUCTS." p
+			 WHERE     ep.products_model = p.products_model
+			       AND p.products_id = ".$iProductsId."
+			       AND ep.mpID = ".$_MagnaSession['mpID']."
+			LIMIT 1
+		";
+	} else {
+		$preparedPriceQuery = "
+			SELECT ".('BuyItNowPrice' == $sPriceType ? 'ep.BuyItNowPrice' : 'ep.Price')."
+			  FROM ".TABLE_MAGNA_EBAY_PROPERTIES ." ep
+			 WHERE     ep.products_id = ".$iProductsId."
+			       AND ep.mpID = ".$_MagnaSession['mpID']."
+			LIMIT 1
+		";
+	}
+
+	return MagnaDB::gi()->fetchOne($preparedPriceQuery);
+}

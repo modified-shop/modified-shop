@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCategoryMatching.php 3364 2013-12-06 14:07:57Z derpapst $
+ * $Id: MeinpaketCategoryMatching.php 4900 2014-11-20 09:31:15Z derpapst $
  *
  * (c) 2011 - 2013 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -23,10 +23,11 @@ defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 require_once(DIR_MAGNALISTER_INCLUDES.'lib/classes/MarketplaceCategoryMatching.php');
 
 class MeinpaketCategoryMatching extends MarketplaceCategoryMatching {
+	
 	protected function getTableName() {
-		return TABLE_MAGNA_MEINPAKET_CATEGORIES;
+		return TABLE_MAGNA_COMPAT_CATEGORIES;
 	}
-
+	
 	protected function getMatchingBoxHTML() {
 		return '';
 	}
@@ -34,5 +35,5 @@ class MeinpaketCategoryMatching extends MarketplaceCategoryMatching {
 	protected function getActionBoxHTML() {
 		return '';
 	}
-
+	
 }

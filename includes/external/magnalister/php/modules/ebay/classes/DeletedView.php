@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: DeletedView.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: DeletedView.php 4961 2014-12-09 14:10:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -75,7 +75,7 @@ class DeletedView {
 				'FILTER' => 'DELETED'
 			);
 			if (!empty($this->search)) {
-				#$request['SEARCH'] = (!isUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
+				#$request['SEARCH'] = (!magnalisterIsUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
 				$request['SEARCH'] = $this->search;
 			}
 			MagnaConnector::gi()->setTimeOutInSeconds(1800);
@@ -276,14 +276,47 @@ class DeletedView {
                                         AND pd.language_id='.$language.'
                                         AND CONCAT(\'ML\',p.products_id) IN ('.$SKUlist.')');
         }
-        $ShopDataForVariationItems = MagnaDB::gi()->fetchArray('SELECT DISTINCT v.'.mlGetVariationSkuField().' AS SKU, v.products_id products_id,
-                                        variation_attributes,
-                                        CAST(v.variation_quantity AS SIGNED) ShopQuantity, v.variation_price + p.products_price ShopPrice, pd.products_name ShopTitle
-                                        FROM '.TABLE_MAGNA_VARIATIONS.' v, '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
-                                        WHERE v.products_id=p.products_id
-                                        AND v.products_id=pd.products_id
-                                        AND pd.language_id='.$language.'
-                                        AND v.'.mlGetVariationSkuField().' IN ('.$SKUlist.')');
+		if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+			if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+				$selectSku = " CONCAT(p.products_model, '-', ppc.combi_model) ";
+           	$ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho("
+			SELECT DISTINCT $selectSku AS SKU,
+				   ppc.products_id products_id, '' AS variation_attributes,
+				   CAST(ppc.combi_quantity AS SIGNED) AS ShopQuantity,
+				   ppc.combi_price + p.products_price AS ShopPrice,
+				   pd.products_name AS ShopTitle
+				FROM products_properties_combis ppc, ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd
+			   WHERE ppc.products_id=p.products_id
+					AND ppc.products_id=pd.products_id
+					AND pd.language_id='$language'
+					AND $selectSku IN ($SKUlist)", false));
+			} else {
+				$ShopDataForVariationItems = array();
+				foreach ($SKUarr as $sku) {
+					$combisId = magnaSKU2aID($sku, false, true);
+					$ShopDataForVariationItems[] = MagnaDB::gi()->fetchRow("
+						SELECT '$sku' AS SKU,
+				   		ppc.products_id AS products_id, '' AS variation_attributes,
+				   		CAST(ppc.combi_quantity AS SIGNED) AS ShopQuantity,
+				   		ppc.combi_price + p.products_price AS ShopPrice,
+				   		pd.products_name AS ShopTitle
+						FROM products_properties_combis ppc, ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd
+				   	  	WHERE ppc.products_id=p.products_id
+							AND ppc.products_id=pd.products_id
+							AND pd.language_id='$language'
+							AND ppc.products_properties_combis_id = '$combisId'");
+				}
+			}
+		} else {
+        	$ShopDataForVariationItems = MagnaDB::gi()->fetchArray('SELECT DISTINCT v.'.mlGetVariationSkuField().' AS SKU, v.products_id products_id,
+                                        	variation_attributes,
+                                        	CAST(v.variation_quantity AS SIGNED) ShopQuantity, v.variation_price + p.products_price ShopPrice, pd.products_name ShopTitle
+                                        	FROM '.TABLE_MAGNA_VARIATIONS.' v, '.TABLE_PRODUCTS.' p, '.TABLE_PRODUCTS_DESCRIPTION.' pd
+                                        	WHERE v.products_id=p.products_id
+                                        	AND v.products_id=pd.products_id
+                                        	AND pd.language_id='.$language.'
+                                        	AND v.'.mlGetVariationSkuField().' IN ('.$SKUlist.')');
+		}
         $ShopDataForItemsBySKU = array();
         foreach ($ShopDataForSimpleItems as $ShopDataForSimpleItem) {
             $ShopDataForItemsBySKU[$ShopDataForSimpleItem['SKU']] = $ShopDataForSimpleItem;

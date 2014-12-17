@@ -38,6 +38,9 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 	protected $totalQuantityForItemCalculated = array();
 	
 	protected $uqTime = 0.0;
+
+	# wenn true, verwende alten Code
+	private $mlProductsUseLegacy = false;
 	
 	public function __construct($mpID, $marketplace, $limit = 100) {
 		global $_MagnaSession;
@@ -62,6 +65,16 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		$this->timeouts['GetInventory'] = 1800;
 		
 		$this->startedAtTimestamp = time();
+	}
+
+	protected function initMLProduct() {
+		parent::initMLProduct();
+		MLProduct::gi()->useMultiDimensionalVariations(true);
+		MLProduct::gi()->setOptions(array(
+			'sameVariationsToAttributes' => false,
+			'purgeVariations' => true,
+			'useGambioProperties' => (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties')
+		));
 	}
 
 	protected function getConfigKeys() {
@@ -121,9 +134,7 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 	protected function extendGetInventoryRequest(&$request) {
 		$request['ORDERBY'] = 'DateAdded';
 		$request['SORTORDER'] = 'DESC';
-		if (isset($_GET['fixEbayPrices']) && ($_GET['fixEbayPrices'] == 'true')) {
-			$request['EXTRA'] = 'ROUNDPRICES';
-		}
+		$this->mlProductsUseLegacy or $request['EXTRA'] = 'useVariationMatrix';
 	}
 	
 	protected function postProcessRequest(&$request) {
@@ -189,10 +200,6 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 		$this->syncFixedPrice   = $this->config['FixedPriceSync']   == 'auto';
 		$this->syncChinesePrice = $this->config['ChinesePriceSync'] == 'auto';
 		
-		if (isset($_GET['fixEbayPrices']) && ($_GET['fixEbayPrices'] == 'true')) {
-			$this->syncFixedPrice   = true;
-			$this->syncChinesePrice = true;
-		}
 		/*
 		if ($this->_debugDryRun) {
 			$this->syncFixedStock = $this->syncChineseStock = $this->syncFixedPrice = $this->syncChinesePrice = true;
@@ -240,35 +247,19 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 	}
 
 	protected function calcPrice($isVariation) {
-		# Wenn fixEbayPrices eingegeben, immer Preis synchronisieren (sogar wenn eingefroren)
-		if (isset($_GET['fixEbayPrices']) && ($_GET['fixEbayPrices'] == 'true')) {
-			$frozenPrice = (float)MagnaDB::gi()->fetchOne('
-				SELECT Price FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' 
-				 WHERE mpID = '.$this->mpID.' 
-				       AND '.(('artNr' == $this->config['SKUType'])
+		if ($this->cItem['ListingType'] != 'Chinese') {
+			$priceFrozen = 0.0;
+		} else {
+			# schauen ob Preis eingefroren
+			$priceFrozen = (float)MagnaDB::gi()->fetchOne('
+				SELECT Price FROM '.TABLE_MAGNA_EBAY_PROPERTIES.'
+				 WHERE mpID = '.$this->mpID.'
+					   AND '.(('artNr' == $this->config['SKUType'])
 							? 'products_model = "'.MagnaDB::gi()->escape(magnaPID2SKU($this->cItem['pID'], true)).'"'
 							: 'products_id = '.$this->cItem['pID']
 				).'
 			');
-			if (0.0 == $frozenPrice) {
-				$frozenPrice = false;
-			}
-			if ($isVariation) {
-				return makeVariationPrice($this->cItem['pID'], $this->cItem['SKU'], $frozenPrice);
-			} else {
-				return makePrice($this->cItem['pID'], $this->cItem['ListingType'], (boolean)$frozenPrice);
-			}
 		}
-
-		# schauen ob Preis eingefroren
-		$priceFrozen = (float)MagnaDB::gi()->fetchOne('
-			SELECT Price FROM '.TABLE_MAGNA_EBAY_PROPERTIES.' 
-			 WHERE mpID = '.$this->mpID.' 
-			       AND '.(('artNr' == $this->config['SKUType'])
-						? 'products_model = "'.MagnaDB::gi()->escape(magnaPID2SKU($this->cItem['pID'], true)).'"'
-						: 'products_id = '.$this->cItem['pID']
-			).'
-		');
 		
 		# Preis berechnen
 		if ($isVariation) {
@@ -291,6 +282,221 @@ class EbaySyncInventory extends MagnaCompatibleSyncInventory {
 	}
 
 	protected function updateItem() {
+		if ($this->mlProductsUseLegacy) {
+			$this->updateItemOld();
+			return;
+		}
+		if (in_array($this->cItem['ItemID'], $this->itemsProcessed)) {
+			$this->log("\nItemID ".$this->cItem['ItemID'].' already processed.');
+			return;
+		}
+		$this->cItem['SKU'] = trim($this->cItem['SKU']);
+		if (empty($this->cItem['SKU'])) {
+			$this->log("\nItemID ".$this->cItem['ItemID'].' has an emtpy SKU.');
+			return;
+		}
+
+		@set_time_limit(180);
+		$this->identifySKU();
+
+		$articleIdent = 'SKU: '.$this->cItem['SKU'].(empty($this->cItem['MasterSKU']) ? '' : ' [MasterSKU: '.$this->cItem['MasterSKU'].']').' ('.$this->cItem['ItemTitle'].'); eBay-ItemID: '.$this->cItem['ItemID'].'; ListingType: '.$this->cItem['ListingType'].' ';
+		if ((int)$this->cItem['pID'] <= 0) {
+			$this->log("\n".$articleIdent.' not found');
+			return;
+		} else {
+			$this->log("\n".$articleIdent.' found (pID: '.$this->cItem['pID'].')');
+		}
+
+		//prepare product
+		MLProduct::gi()->setLanguage($this->config['Lang']);
+		MLProduct::gi()->setPriceConfig(
+			EbayHelper::getPriceSettingsByListingType($this->mpID, $this->cItem['ListingType'])
+		);
+		MLProduct::gi()->setQuantityConfig(
+			EbayHelper::getQuantitySettingsByListingType($this->mpID, $this->cItem['ListingType'])
+		);
+		$product =  MLProduct::gi()->getProductById($this->cItem['pID']);
+		arrayEntitiesToUTF8($product);
+		$process = false;
+		$data = array(
+			'fixed.stocksync' => $this->config['FixedStockSync'],
+			'fixed.pricesync' => $this->config['FixedPriceSync'],
+			'chinese.stocksync' => $this->config['ChineseStockSync'],
+			'chinese.pricesync' => $this->config['ChinesePriceSync'],
+		);
+		$listingMasterType = ($this->cItem['ListingType'] == 'Chinese') ? 'chinese' : 'fixed';
+		$syncStock = $this->config[ucfirst($listingMasterType).'StockSync'] != 'no';
+		$syncPrice = $this->config[ucfirst($listingMasterType).'PriceSync'] != 'no';
+		$data['SKU'] = magnaPID2SKU($product['ProductId']);
+		$data['ItemID'] = $this->cItem['ItemID'];
+
+		// Check Quantity variants or master
+		if ($syncStock) {
+			// QuantityTotal is only set if product has variants
+			if ((isset($this->cItem['Variations']) && isset($product['Variations'])) && isset($product['QuantityTotal'])) {
+				$data['NewQuantity'] = $product['QuantityTotal'];
+			} else {
+				$data['NewQuantity'] = $product['Quantity'];
+			}
+			$process = ($process || ($this->cItem['Quantity'] != $data['NewQuantity']));
+		}
+
+		// Check Price variants or master
+		if ($syncPrice && !isset($this->cItem['Variations'])) {
+			$data['Price'] = $product['Price'][$listingMasterType];
+
+			// if PriceReduced is set use this one
+			if (isset($product['PriceReduced'][$listingMasterType])) {
+				$data['Price'] = $product['PriceReduced'][$listingMasterType];
+			}
+
+			// if listing type is chinese check for prepared price
+			if ($listingMasterType == 'chinese') {
+				$fPrice = magnalisterEbayGetPriceByType($product['ProductId']);
+				if ($fPrice != 0.00) {
+					$data['Price'] = $fPrice;
+				}
+			}
+			// master price is empty for variation items, therefore check if isset
+			$process = $process || (isset($data['Price']) && (float)$this->cItem['Price'] != (float)$data['Price']);
+		}
+
+		if (isset($this->cItem['Variations']) && isset($product['Variations'])) {
+			$data['Variations'] = array();
+			foreach ($product['Variations'] as $variantData) {
+				$variant = array();
+				$variationSpecifics = array();
+				foreach ($variantData['Variation'] as $specific) {
+					$variationSpecifics[] = array(
+						'Name' => $specific['Name'],
+						'Value' => $specific['Value'],
+					);
+				}
+				$variant['SKU'] = ($this->config['SKUType'] == 'artNr') ? $variantData['MarketplaceSku'] : $variantData['MarketplaceId'];
+				$currentCVariation = array();
+				foreach ($this->cItem['Variations'] as $cVariation){
+					if ($cVariation['SKU'] == $variant['SKU']) {
+						$currentCVariation = $cVariation;
+						break;
+					}
+				}
+
+				$process = ($process || (count($currentCVariation) == 0));
+				if ($syncStock) {
+					$variant['Quantity'] = $variantData['Quantity'];
+					$process = ($process || (count($currentCVariation) > 0 && $currentCVariation['Quantity'] != $variant['Quantity']));
+				}
+				if ($syncPrice) {
+					$variant['StartPrice'] = $variantData['Price'][$listingMasterType];
+					// if PriceReduced is set use this one
+					if (isset($variantData['PriceReduced'][$listingMasterType])) {
+						$variant['StartPrice'] = $variantData['PriceReduced'][$listingMasterType];
+					}
+
+					// if listing type is chinese check for prepared price
+					if ($listingMasterType == 'chinese') {
+						$fPrice = magnalisterEbayGetPriceByType($variantData['VariationId']);
+						if ($fPrice != 0.00) {
+							$variant['StartPrice'] = $fPrice;
+						}
+					}
+					$process = ($process || (count($currentCVariation) > 0 && (float)$currentCVariation['Price'] != (float)$variant['StartPrice']));
+				}
+				$variant['Variation'] = $variationSpecifics;
+				$data['Variations'][] = $variant;
+			}
+			
+		}
+		$this->log(
+		"\n\teBay Quantity: ".$this->cItem['Quantity'].
+		"\n\tShop Main Quantity: ". $data['NewQuantity'].
+		"\n\teBay Price: ".$this->cItem['Price'].
+		"\n\tShop Price: ".$product['Price'][$listingMasterType]
+		);
+
+		if ($this->config['StatusMode'] == 'true') {
+			$iStatus = MagnaDB::gi()->fetchOne('
+				SELECT products_status FROM ' . TABLE_PRODUCTS . '
+				WHERE products_id = "' . $this->cItem['pID'] . '"
+			');
+			if ($iStatus == 0) {//notavailible => noStock
+				if (    (0  != $this->cItem['Quantity'])
+				     || (isset($this->cItem['Variations']))
+				   ) {
+					$process = true;
+					$this->log(
+					"\n\tDeleting Item due to inactive Status"
+					);
+				}
+				$data['NewQuantity'] = 0;
+				unset($data['Variations']);
+			}
+		}
+
+		// log Variations
+		if(isset($this->cItem['Variations']) && isset($product['Variations'])){
+			$this->log(
+				"\n\tVariations:"
+			);
+			foreach ($this->cItem['Variations'] as $aEBayVariation) {
+				foreach ($product['Variations'] as $aShopVariantData) {
+					if ($aEBayVariation['SKU'] == $aShopVariantData[(($this->config['SKUType'] == 'artNr') ? 'MarketplaceSku' : 'MarketplaceId')]) {
+						$this->log(
+							"\n\t\tVariation SKU: ".$aEBayVariation['SKU'].
+							"\n\t\teBay Quantity: ".$aEBayVariation['Quantity'].
+							"\n\t\tShop Main Quantity: ". $aShopVariantData['Quantity'].
+							"\n\t\teBay Price: ".$aEBayVariation['Price'].
+							"\n\t\tShop Price: ".(isset($aShopVariantData['PriceReduced'][$listingMasterType])
+								? $aShopVariantData['PriceReduced'][$listingMasterType]
+								: $aShopVariantData['Price'][$listingMasterType]).
+							"\n"
+						);
+						break;
+					}
+				}
+			}
+		}
+		
+		/* {Hook} "EBay_SyncInventory_UpdateItem": Runs during the inventory synchronization from your shop to eBay, directly before the 
+			   update will be send to eBay.<br>
+			   Variables that can be used: 
+			   <ul><li>$this->mpID: The ID of the marketplace.</li>
+				   <li>$data (array): The content of the changes of one product (used to generate the <code>UpdateItems</code> request).<br>
+					   Supported are <span class="tt">Price</span> and <span class="tt">NewQuantity</span>
+				   </li>
+				   <li>$this->cItem (array): The current product from the marketplaces inventory including some identification information.
+					   <ul><li>SKU: Article number of marketplace</li>
+						   <li>pID: products_id of product</li></ul>
+				   </li>
+				   <li>$currMainQty: Quantity of main product (same as in $data['NewQuantity']). Has to be modified in order to trigger an update.</li>
+				   <li>$currPrice: Price of main product (same as in $data['Price'], if set). Has to be modified in order to trigger an update.</li>
+				   <li>$currVarQty: Quantity of variation. Has to be modified in order to trigger an update. $data['Variations'] has to be updated
+					   in order to modify the quantity of a variation.
+				   </li>
+			   </ul>
+			   <p>Notice: It is only possible to modify products that have been identified by the magnalister plugin!<br>
+				  Additionally the eBay inventory synchronisation is very complex. Be carefull, because in case of mistakes all your
+				  active autions may be terminated.</p>
+		*/
+		if (($hp = magnaContribVerify('EBay_SyncInventory_UpdateItem', 1)) !== false) {
+			/* Calculate the variations customers who use the EBay_SyncInventory_UpdateItem hook. Has to be done before the hook
+			   is executed.
+			   Usually the martix only has to be calcullated when there is a definitive update,
+			   but the data has to be available for the hook as well. Slows things down.
+			*/
+			require($hp);
+			
+			// submit the contrib for debugging purposes.
+			$data['DEBUG']['contrib'] = file_get_contents($hp);
+		}
+
+		if ($process) {
+			$this->updateItems($data);
+			$this->itemsProcessed[] = $this->cItem['ItemID'];
+		}
+	}
+
+	protected function updateItemOld() {
 		if (in_array($this->cItem['ItemID'], $this->itemsProcessed)) {
 			$this->log("\nItemID ".$this->cItem['ItemID'].' already processed.');
 			return;

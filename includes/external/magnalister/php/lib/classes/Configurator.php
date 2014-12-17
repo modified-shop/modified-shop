@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: Configurator.php 4283 2014-07-24 22:00:04Z derpapst $
+ * $Id: Configurator.php 4633 2014-09-23 08:19:58Z miguel.heredia $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -1034,8 +1034,8 @@ class MLConfigurator {
 								</td>
 								<td class="lastChild">
 									<input type="hidden" value="MagnaConfigurator" name="configtool"/>
-									<input class="ml-button" type="submit" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
 									<input class="ml-button" type="reset" value="'.ML_BUTTON_LABEL_RESET.'"/>
+									<input class="ml-button mlbtn-action" type="submit" value="'.ML_BUTTON_LABEL_SAVE_DATA.'"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>

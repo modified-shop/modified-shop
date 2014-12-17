@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: CheckinSubmit.php 4042 2014-06-29 17:12:42Z derpapst $
+ * $Id: CheckinSubmit.php 4833 2014-11-10 22:39:32Z MaW $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -61,22 +61,18 @@ abstract class CheckinSubmit {
 		$this->settings = array_merge(array(
 			'itemsPerBatch'   => 50,
 			'selectionName'   => 'checkin',
-			'language'        => $_SESSION['languages_id'],
+			'language'        => getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID'], $_SESSION['languages_id']),
 			'currency'        => DEFAULT_CURRENCY,
 			'mlProductsUseLegacy' => true,
 		), $settings);
-		
-		$tLang = getDBConfigValue($settings['marketplace'].'.lang', $_MagnaSession['mpID'], false);
-		if ($tLang !== false) {
-			$this->settings['language'] = $tLang;
-		}
+
 		$this->_magnasession = &$_MagnaSession;
 		$this->_magnashopsession = &$_MagnaShopSession;
 		$this->magnaConfig = &$magnaConfig;
 		$this->url = $_url;
 		$this->realUrl = array (
 			'mp' => $this->mpID,
-			'mode' => $_magnaQuery['mode'],
+			'mode' => (isset($_magnaQuery['mode']) ? $_magnaQuery['mode'] : ''),
 			'view' => (isset($_magnaQuery['view']) ? $_magnaQuery['view'] : '')
 		);
 		
@@ -164,8 +160,20 @@ abstract class CheckinSubmit {
 	protected function checkSingleItem($pID, $product, $data) {
 		return true;
 	}
+
+	protected function getProduct($pID) {
+		if ($this->settings['mlProductsUseLegacy']) {
+			$product = MLProduct::gi()->getProductByIdOld($pID, $this->settings['language']);
+		} else {
+			$product = MLProduct::gi()->getProductById($pID);
+		}
+		return $product;
+	}
 	
 	protected function setUpMLProduct() {
+		// reset everything to the defaults
+		MLProduct::gi()->resetOptions();
+		
 		// Set the language
 		MLProduct::gi()->setLanguage($this->settings['language']);
 		
@@ -195,13 +203,7 @@ abstract class CheckinSubmit {
 				$data['submit'] = array();
 			}
 			
-			if ($this->settings['mlProductsUseLegacy']) {
-				$product = MLProduct::gi()->getProductByIdOld($pID, $this->settings['language']);
-			} else {
-				// @todo: Do not always purge the variations.
-				$product = MLProduct::gi()->getProductById($pID, array('purgeVariations' => true));
-			}
-
+			$product = $this->getProduct($pID);
 			if (!$this->checkSingleItem($pID, $product, $data) || !is_array($product)) {
 				$this->badItems[] = $pID;
 				unset($this->selection[$pID]);
@@ -294,6 +296,15 @@ abstract class CheckinSubmit {
 			//$this->ajaxReply['result'] = $checkInResult;
 			
 			$this->processSubmitResult($checkInResult);
+			if (!array_key_exists('state',$this->submitSession)) { 
+				$this->submitSession['state'] = array();
+			}
+			if (!array_key_exists('success',$this->submitSession['state'])) { 
+				$this->submitSession['state']['success'] = 0;
+			}
+			if (!array_key_exists('failed',$this->submitSession['state'])) { 
+				$this->submitSession['state']['failed'] = 0;
+			}
 			$this->submitSession['state']['success'] += count($this->selection);
 			$this->submitSession['state']['failed']  += count($this->badItems);
 			
@@ -309,7 +320,7 @@ abstract class CheckinSubmit {
 			$this->submitSession['api']['exception'] = $e->getErrorArray();
 			
 			$subsystem = $e->getSubsystem();
-			if (($subsystem != 'Core') || ($subsystem != 'PHP')) {
+			if (($subsystem != 'Core') && ($subsystem != 'PHP') && ($subsystem != 'Database')) {
 				$this->ajaxReply['ignoreErrors'] = $this->ignoreErrors;
 			} else {
 				$this->ajaxReply['ignoreErrors'] = false;
@@ -354,7 +365,7 @@ abstract class CheckinSubmit {
 		}
 		
 		$this->submitSession['state']['submitted'] += count($this->selection);
-		
+
 		$this->populateSelectionWithData();
 		$this->filterSelection();
 		
@@ -373,7 +384,7 @@ abstract class CheckinSubmit {
 			$this->sendRequest($abort || isset($_GET['abort']));
 			MagnaConnector::gi()->resetTimeOut();
 		} else {
-			$this->submitSession['state']['failed']  += count($this->badItems);
+			$this->submitSession['state']['failed'] += count($this->badItems);
 		}
 		
 		if (isset($this->submitSession['selectionFromErrorLog']) && !empty($this->submitSession['selectionFromErrorLog'])) {

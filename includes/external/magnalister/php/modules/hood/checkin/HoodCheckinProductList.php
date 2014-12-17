@@ -48,6 +48,11 @@ class HoodCheckinProductList extends MLProductListHoodAbstract {
 			->addDependency('MLProductListDependencyCheckinToSummaryAction')
 			->addDependency('MLProductListDependencyMarketplaceSync', array('propertiestablename' => $this->isAjax() ? TABLE_MAGNA_HOOD_PROPERTIES :'hp.')) //table will be joined in $this->buildQuery()
 			->addDependency('MLProductListDependencyTemplateSelectionAction')
+			->addDependency('MLProductListDependencyLastPreparedFilter', array(
+				'propertiestablename' => TABLE_MAGNA_HOOD_PROPERTIES, 
+				'propertiestablealias' => 'hp', 
+				'preparedtimestampfield' => 'PreparedTS',
+			))
 //			->addDependency('MLProductListDependencyManufacturersFilter')// its now in MLProductList as global filter
 		;
 	}

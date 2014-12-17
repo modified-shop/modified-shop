@@ -254,8 +254,33 @@ abstract class MLProductList {
 	}
 	
 	protected function init(){
+		$aFilterKeyType = array('in' => null, 'notIn' => null);
 		foreach ($this->getDependencies() as $oDependency) {
 			$oDependency->manipulateQuery();
+			$aDependencyFilterKeyTypes = $oDependency->getKeyTypeFilter();
+			if (isset($aDependencyFilterKeyTypes['in']) && is_array($aDependencyFilterKeyTypes['in'])) {
+				if ($aFilterKeyType['in'] === null) {
+					$aFilterKeyType['in'] = $aDependencyFilterKeyTypes['in'];
+				} else {
+					$aFilterKeyType['in'] = array_intersect($aFilterKeyType['in'], $aDependencyFilterKeyTypes['in']);
+				}
+			}
+			if (isset($aDependencyFilterKeyTypes['notIn']) && is_array($aDependencyFilterKeyTypes['notIn']) && !empty($aDependencyFilterKeyTypes['notIn'])) {
+				if ($aFilterKeyType['notIn'] === null) {
+					$aFilterKeyType['notIn'] = $aDependencyFilterKeyTypes['notIn'];
+				} else {
+					$aFilterKeyType['notIn'] = array_unique (array_merge ($aDependencyFilterKeyTypes['notIn'], $aFilterKeyType['notIn']));
+				}
+			}
+		}
+		foreach ($aFilterKeyType as $sType  => $aFilterIdents) {
+			if ($aFilterIdents !== null) {
+				$this->oQuery->where("
+					p.".((getDBConfigValue('general.keytype', '0') == 'artNr') ? 'products_model' : 'products_id')." ".
+					(($sType == 'in') ? "IN" : "NOT IN")."
+					('".implode("', '", MagnaDB::gi()->escape($aFilterIdents))."')"
+				);
+			}
 		}
 		foreach ($this->getDependencies() as $oDependency) {
 			$oDependency->executeAction();
@@ -387,12 +412,27 @@ abstract class MLProductList {
 	 */
 	protected function getRequest($sName){
 		if(isset($_POST[$sName])){
-			return $_POST[$sName];
+			$mRequest = $_POST[$sName];
 		}elseif(isset($_GET[$sName])){
-			return $_GET[$sName];
+			$mRequest = $_GET[$sName];
 		}else{
-			return null;
+			$mRequest = null;
 		}
+		if ($sName == 'filter') {
+			if (
+				empty($mRequest) 
+				&& isset($_SESSION['productlistfilter']) 
+				&& isset ($_SESSION['productlistfilter']['name']) && $_SESSION['productlistfilter']['name'] == get_class($this)
+				&& isset ($_SESSION['productlistfilter']['values'])
+			) {
+				$mRequest = $_SESSION['productlistfilter']['values'];
+			}
+			$_SESSION['productlistfilter'] = array(
+				'name' => get_class($this),
+				'values' => $mRequest,
+			);
+		}
+		return $mRequest;
 	}
 	
 	/**

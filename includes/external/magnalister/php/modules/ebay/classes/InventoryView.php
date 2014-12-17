@@ -89,7 +89,7 @@ class InventoryView {
 				'SORTORDER' => $this->sort['type']
 			);
 			if (!empty($this->search)) {
-				#$request['SEARCH'] = (!isUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
+				#$request['SEARCH'] = (!magnalisterIsUTF8($this->search)) ? utf8_encode($this->search) : $this->search;
 				$request['SEARCH'] = $this->search;
 			}
 			MagnaConnector::gi()->setTimeOutInSeconds(1800);
@@ -331,7 +331,40 @@ class InventoryView {
                            AND CONCAT(\'ML\',p.products_id) IN ('.$SKUlist.')
                 ');
             }
-            $ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho('
+			if (getDBConfigValue('general.options', '0', 'old') == 'gambioProperties') {
+				if ('artNr' == getDBConfigValue('general.keytype', '0')) {
+					$selectSku = "CONCAT(p.products_model, '-', ppc.combi_model)";
+					$ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho("
+					SELECT DISTINCT ".$selectSku." AS SKU,
+					       ".$selectSku." AS SKUDeprecated,
+					       ppc.products_id AS products_id, '' AS variation_attributes,
+					       CAST(ppc.combi_quantity AS SIGNED) AS ShopQuantity,
+					       ppc.combi_price + p.products_price AS ShopPrice,
+					       pd.products_name AS ShopTitle
+					  FROM products_properties_combis ppc, ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd
+					 WHERE     ppc.products_id = p.products_id
+					       AND ppc.products_id = pd.products_id
+					       AND pd.language_id = '$language'
+					       AND ".$selectSku." IN (".$SKUlist.")", false));
+				} else {
+					$ShopDataForVariationItems = array();
+					foreach ($SKUarr as $sku) {
+						$combisId = magnaSKU2aID($sku, false, true);
+						$ShopDataForVariationItems[] = MagnaDB::gi()->fetchRow("
+							SELECT '$sku' AS SKU, '$sku' AS SKUDeprecated,
+					   	ppc.products_id AS products_id, '' AS variation_attributes,
+					   	CAST(ppc.combi_quantity AS SIGNED) AS ShopQuantity,
+					   	ppc.combi_price + p.products_price AS ShopPrice,
+					   	pd.products_name AS ShopTitle
+						FROM products_properties_combis ppc, ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd
+				   	WHERE ppc.products_id=p.products_id
+							AND ppc.products_id=pd.products_id
+							AND pd.language_id='$language'
+							AND ppc.products_properties_combis_id = '$combisId'");
+					}
+				}
+			} else {
+            	$ShopDataForVariationItems = MagnaDB::gi()->fetchArray(eecho('
                 SELECT DISTINCT v.'.mlGetVariationSkuField().' AS SKU, v.variation_products_model AS SKUDeprecated,
                        v.products_id products_id, variation_attributes,
                        CAST(v.variation_quantity AS SIGNED) ShopQuantity, v.variation_price + p.products_price ShopPrice, pd.products_name ShopTitle
@@ -344,6 +377,7 @@ class InventoryView {
                             OR v.variation_products_model IN ('.$SKUlist.')
                        )
             ', false));
+			}
 			
             $ShopDataForItemsBySKU = array();
             foreach ($ShopDataForSimpleItems as $ShopDataForSimpleItem) {

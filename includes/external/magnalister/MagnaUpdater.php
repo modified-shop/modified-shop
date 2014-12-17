@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MagnaUpdater.php 3852 2014-05-09 21:10:54Z derpapst $
+ * $Id: MagnaUpdater.php 4989 2014-12-16 23:37:06Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -491,9 +491,9 @@ class MagnaUpdater {
 	}
 	
 	public function updateDatabase() {
-		require_once(DIR_MAGNALISTER_INCLUDES.'lib/MagnaDB.php');
+		require_once(DIR_MAGNALISTER_FS_INCLUDES.'lib/MagnaDB.php');
 
-		$dbDir = DIR_MAGNALISTER.'db/';
+		$dbDir = DIR_MAGNALISTER_FS.'db/';
 		if (!$dirhandle = @opendir($dbDir)) {
 			return false;
 		}

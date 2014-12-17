@@ -345,8 +345,15 @@ function selectHoodCategory(yID, html) {
 	selectedHoodCategory = yID;
 	myConsole.log('selectedHoodCategory', selectedHoodCategory);
 
-	$('#hoodCats div.catname span.catname.selected').removeClass('selected').css({'font-weight':'normal'});
+	//$('#hoodCats div.catname span.catname.selected').removeClass('selected').css({'font-weight':'normal'});
+	//$('#'+yID+' span.catname').addClass('selected').css({'font-weight':'bold'});
+	
+	$('#hoodCats div.catView').find('span.catname.selected').removeClass('selected').css({'font-weight':'normal'});
+	$('#hoodCats div.catView').find('span.toggle.tick').removeClass('tick');
+	
 	$('#'+yID+' span.catname').addClass('selected').css({'font-weight':'bold'});
+	$('#'+yID+' span.catname').parents().prevAll('span.catname').addClass('selected').css({'font-weight':'bold'});
+	$('#'+yID+' span.catname').parents().prev('span.toggle').addClass('tick');
 }
 
 function clickHoodCategory(elem) {

@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: MeinpaketCheckinSubmit.php 3856 2014-05-12 15:56:27Z derpapst $
+ * $Id: MeinpaketCheckinSubmit.php 4984 2014-12-15 12:15:49Z tim.neumann $
  *
  * (c) 2011 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -189,6 +189,9 @@ class MeinpaketCheckinSubmit extends CheckinSubmit {
 		
 		// Use multi dimensional variations
 		MLProduct::gi()->useMultiDimensionalVariations(true);
+		MLProduct::gi()->setOptions(array(
+			'purgeVariations' => true,
+		));
 		
 		// Set Price and Quantity settings
 		MLProduct::gi()->setPriceConfig(MeinpaketHelper::loadPriceSettings($this->mpID));

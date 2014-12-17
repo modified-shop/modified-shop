@@ -29,7 +29,7 @@ class MLProductListDependencyAmazonApplyPrepareStatusFilter extends MLProductLis
 		);
 	}
 
-	protected function getPrepareTabel() {
+	protected function getPrepareTable() {
 		return TABLE_MAGNA_AMAZON_APPLY;
 	}
 

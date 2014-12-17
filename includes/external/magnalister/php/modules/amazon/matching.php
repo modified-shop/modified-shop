@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: matching.php 3854 2014-05-12 12:55:03Z markus.bauer $
+ * $Id: matching.php 4961 2014-12-09 14:10:12Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -28,6 +28,9 @@ $matchingSetting = array(
 
 $matchAction = 'categoryview';
 
+if (array_key_exists('PreparedTS', $_POST)) {
+	$_MagnaSession['amazonLastPreparedTS'] = $_POST['PreparedTS'];
+}
 /**
  * Save and organize Multimatching
  */
@@ -129,7 +132,7 @@ if ($matchAction == 'singlematching') {
 			$_autoMatchingStats['almost'],
 			microtime2human($_autoMatchingStats['_timer'])
 		));
-		echo isUTF8($re) ? $re : utf8_encode($re);
+		echo magnalisterIsUTF8($re) ? $re : utf8_encode($re);
 	} else {
 		echo json_encode(array('x' => MagnaDB::gi()->fetchOne('
 	        SELECT count(pID) FROM '.TABLE_MAGNA_SELECTION.'

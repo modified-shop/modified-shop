@@ -53,7 +53,12 @@
                 "desc": "Voreinstellung f&uuml den Artikelzustand (f&uuml;r hood-Kategorien wo dieser angegeben werden kann oder mu&szlig;). Nicht alle Werte sind f&uuml;r jede Kategorie zul&auml;ssig, ggf. mu&szlig; nach der Wahl der Kategorie der Zustand noch mal korrigiert werden.",
                 "values": {
                     "new": "Neu",
-                    "used": "Gebraucht"
+                    "likeNew": "Gebraucht (wie neu)",
+                    "veryGood": "Gebraucht (sehr gut)",
+                    "usedGood": "Gebraucht (gut)",
+                    "acceptable": "Gebraucht (akzeptabel)",
+                    "refurbished": "Generalüberholt",
+                    "defect": "Mit Fehlern oder defekt"
                 }
             },
             "Statusfilter": {

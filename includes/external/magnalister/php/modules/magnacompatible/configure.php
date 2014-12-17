@@ -278,7 +278,21 @@ class MagnaCompatibleConfigure extends MagnaCompatibleBase {
 	}
 	
 	/* Can be extendet by extending classes */
-	protected function finalizeForm() { }
+	protected function finalizeForm() {
+		// Tracking-Code-Matching only one of both settings for carrier is set display notice
+		if (( isset($_POST['conf'][$this->marketplace.'.orderstatus.carrier.default'])
+				&& isset($_POST['conf'][$this->marketplace.'.orderstatus.carrier.dbmatching.table']['table'])
+				&& isset($_POST['conf'][$this->marketplace.'.orderstatus.trackingcode.dbmatching.table']['table'])
+			)
+			&& (( empty($_POST['conf'][$this->marketplace.'.orderstatus.carrier.default'])
+					&& empty($_POST['conf'][$this->marketplace.'.orderstatus.carrier.dbmatching.table']['table'])
+				)
+				&& !empty($_POST['conf'][$this->marketplace.'.orderstatus.trackingcode.dbmatching.table']['table'])
+			)
+		) {
+			$this->boxes .= '<p class="errorBox">'.ML_GENERIC_ERROR_TRACKING_CODE_MATCHING.'</p>';
+		}
+	}
 
 	public function process() {
 		$this->form = $this->loadConfigForm(

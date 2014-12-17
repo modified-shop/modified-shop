@@ -23,7 +23,7 @@ define('MODULE_SHIPPING_DHLMEINPAKET_TEXT_DESCRIPTION', 'Versand mit DHL festgel
 define('MODULE_SHIPPING_DHLMEINPAKET_SORT_ORDER', 'Sortierung');
 define('MODULE_SHIPPING_DHLMEINPAKET_TEXT_WAY', MODULE_SHIPPING_DHLMEINPAKET_TEXT_DESCRIPTION);
 define('MODULE_SHIPPING_DHLMEINPAKET_ALLOWED_TITLE' , 'Erlaubte Zonen');
-define('MODULE_SHIPPING_DHLMEINPAKET_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand m&ouml;glich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
+define('MODULE_SHIPPING_DHLMEINPAKET_ALLOWED_DESC' , 'Geben Sie <b>einzeln</b> die Zonen an, in welche ein Versand möglich sein soll. (z.B. AT,DE (lassen Sie dieses Feld leer, wenn Sie alle Zonen erlauben wollen))');
 define('MODULE_SHIPPING_DHLMEINPAKET_STATUS_TITLE', 'Versandfestlegung durch MeinPaket');
 define('MODULE_SHIPPING_DHLMEINPAKET_STATUS_DESC', 'M&ouml;chten Sie Versandfestlegung durch DHL MeinPaket anbieten?');
 define('MODULE_SHIPPING_DHLMEINPAKET_SORT_ORDER_TITLE', 'Sortierreihenfolge');

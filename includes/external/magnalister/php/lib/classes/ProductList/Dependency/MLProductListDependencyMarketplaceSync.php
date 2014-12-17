@@ -78,15 +78,15 @@ class MLProductListDependencyMarketplaceSync extends MLProductListDependency {
 		
 		switch ($this->getFilterRequest()) {
 			case 'notactive' : {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='0' or ".$sAlias."deletedBy!='')";
+				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='0' or ".$sAlias."itemid is null or ".$sAlias."itemid ='' or ".$sAlias."deletedBy!='')";
 				break;
 			}
 			case 'nottransferred' : {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND ".$sAlias."transferred='0'";
+				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='0' or ".$sAlias."itemid is null or ".$sAlias."itemid ='') AND deletedBy=''";
 				break;
 			}
 			case 'active': {
-				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='1' and ".$sAlias."deletedBy='')";
+				$sSql = $sAlias."Verified in('OK', 'EMPTY') AND (".$sAlias."transferred='1' and ".$sAlias."itemid is not null and ".$sAlias."itemid !='' and ".$sAlias."deletedBy='')";
 				break;
 			}
 			case 'sync':
@@ -273,15 +273,32 @@ class MLProductListDependencyMarketplaceSync extends MLProductListDependency {
 			return;
 		}
 		$mpID = $this->getMagnaSession('mpID');
-		
+		//setItemd=='true' if not setted
 		$data['transferred'] = 1; //todo check if depends on entry exists
 		if (MagnaDB::gi()->recordExists($this->getConfig('propertiestablename'), array('products_id' => $pID, 'mpID' => $mpID))) {
-			MagnaDB::gi()->update($this->getConfig('propertiestablename'), $data, array(
-				'products_id' => $pID,
-				'mpID' => $mpID
-			), 'LIMIT 1');
+			$sSet = '';
+			foreach ($data as $sKey => $sValue) {
+				$sSet .= $sKey."='".MagnaDB::gi()->escape($sValue)."', ";
+			}
+			if (!isset($data['ItemID']) || empty($data['ItemID'])) {
+				// set itemid to not null, if response comes from GetInventoryOnlySkus itemid is not setted
+				$sSet .= "ItemID = if (ItemID is null, '__true__', ItemID), ";
+			}
+			$sSet = substr($sSet, 0, -2);
+			/**
+			 * limit is deactive, because one customer had changed the productmodel
+			 */
+			MagnaDB::gi()->query("
+				UPDATE ".$this->getConfig('propertiestablename')."
+				SET ".$sSet."
+				WHERE
+					products_id = '".$pID."' AND
+					mpID = '".$mpID."'
+				-- LIMIT 1
+			");
 		} else {
 			$products_model = MagnaDB::gi()->fetchOne('SELECT products_model FROM '.TABLE_PRODUCTS.' WHERE products_id = '.$pID.'');
+			$data['ItemID'] = (isset($data['ItemID']) && !empty($data['ItemID'])) ? $data['ItemID'] : '__true__';
 			$data['products_id'] = $pID;
 			$data['products_model'] = $products_model;
 			$data['Verified'] = 'EMPTY';

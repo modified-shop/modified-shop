@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: generictests.php 4042 2014-06-29 17:12:42Z derpapst $
+ * $Id: generictests.php 4939 2014-12-02 18:03:31Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -154,24 +154,51 @@ if (isset($mps[$_MagnaSession['currentPlatform']])) {
 
 function testMLProduct() {
 	$cfg = array (
-		'lang' => isset($_GET['lang']) ? $_GET['lang'] : '2',
-		'single' => isset($_GET['single']),
 		'pid' => (isset($_GET['pid']) ? $_GET['pid'] : 4641),
+		'lang' => isset($_GET['lang']) ? $_GET['lang'] : '2',
 		'onlyoffer' => isset($_GET['onlyoffer']),
+		'single' => isset($_GET['single']),
 		'optionsTmp' => array (
 			'purgeVariations' => isset($_GET['optionsTmp']['purgeVariations']) && ($_GET['optionsTmp']['purgeVariations'] == 'true'),
 			'useGambioProperties' => isset($_GET['optionsTmp']['useGambioProperties'])
 				? ($_GET['optionsTmp']['useGambioProperties'] == 'true')
-				: (MAGNA_GAMBIO_VARIATIONS && (getDBConfigValue('general.gambio.useproperties', '0', 'true') == 'true'))
+				: (getDBConfigValue('general.options', '0') == 'gambioProperties'),
+			'sameVariationsToAttributes' => isset($_GET['optionsTmp']['sameVariationsToAttributes']) && ($_GET['optionsTmp']['sameVariationsToAttributes'] == 'true'),
+			'allowSingleVariations' => !isset($_GET['optionsTmp']['allowSingleVariations']) || isset($_GET['optionsTmp']['allowSingleVariations']) && ($_GET['optionsTmp']['allowSingleVariations'] == 'true')
 		),
 		'blacklist' => array(),
 		'useold' => isset($_GET['useold']) && ($_GET['useold'] == 'true'),
+		'mpid' => isset($_GET['mpid']) && ctype_digit($_GET['mpid']) ? $_GET['mpid'] : '0',
+		'info' => array (
+			'marketplace' => '',
+			'configs' => array(
+				'price' => array(),
+				'quantity' => array(),
+			),
+		)
 	);
 	if (preg_match('/^([a-zA-Z0-9]+,)+[a-zA-Z0-9]+$/', $cfg['lang'])) {
 		$cfg['lang'] = explode(',', $cfg['lang']);
 	}
 	if (isset($_GET['blacklist']) && preg_match('/^([0-9]+,)*[0-9]+$/', $_GET['blacklist'])) {
 		$cfg['blacklist'] = explode(',', $_GET['blacklist']);
+	}
+	
+	if (
+		($cfg['mpid'] > 0)
+		&& ($cfg['info']['marketplace'] = magnaGetMarketplaceByID($cfg['mpid']))
+		&& !empty($cfg['info']['marketplace'])
+		&& ($helper = ucfirst($cfg['info']['marketplace']).'Helper')
+		&& ($helperFile = DIR_MAGNALISTER_MODULES.$cfg['info']['marketplace'].'/'.$helper.'.php')
+		&& file_exists($helperFile)
+	) {
+		require_once($helperFile);
+		if (method_exists($helper, 'loadPriceSettings')) {
+			$cfg['info']['configs']['price'] = $helper::loadPriceSettings($cfg['mpid']);
+		}
+		if (method_exists($helper, 'loadQuantitySettings')) {
+			$cfg['info']['configs']['quantity'] = $helper::loadQuantitySettings($cfg['mpid']);
+		}
 	}
 	
 	echo print_m($cfg, '$cfg');
@@ -185,6 +212,12 @@ function testMLProduct() {
 			'Column' => 'products_model',
 			'Alias' => 'products_id',
 		));
+		if (!empty($cfg['info']['configs']['price'])) {
+			MLProduct::gi()->setPriceConfig($cfg['info']['configs']['price']);
+		}
+		if (!empty($cfg['info']['configs']['quantity'])) {
+			MLProduct::gi()->setQuantityConfig($cfg['info']['configs']['quantity']);
+		}
 		if ($cfg['single']) {
 			MLProduct::gi()->setVariationDimensionBlacklist($cfg['blacklist']);
 			MLProduct::gi()->useMultiDimensionalVariations(false);
@@ -211,11 +244,11 @@ function blargh() {
 	}
 	echo '== Erkennen =='."\n";
 	
-	$sku = 'ABC123_m-gold';
+	$sku = 'ABC123-xxl-white';
 	echo '=== ProductsModel (SKU: '.$sku.') ==='."\n";
 	
 	$productsPropertiesCombisId = MagnaDB::gi()->fetchArray(eecho('
-		    SELECT CONCAT(p.products_model, "_", ppc.combi_model) AS SKU, ppc.*
+		    SELECT CONCAT(p.products_model, "-", ppc.combi_model) AS SKU, ppc.*
 		      FROM products_properties_combis ppc
 		INNER JOIN products p ON p.products_id = ppc.products_id
 		    HAVING SKU = "'.MagnaDB::gi()->escape($sku).'"
@@ -223,9 +256,9 @@ function blargh() {
 	
 	echo "\n".print_m($productsPropertiesCombisId, '$productsPropertiesCombisId');
 	
-	$sku = 'ML1_1.2_2.4';
+	$sku = 'ML1-1.9-2.11';
 	echo "\n".'=== ProductsId (SKU: '.$sku.') ==='."\n";
-	$data = explode('_', $sku);
+	$data = explode('-', $sku);
 	$pId = substr(array_shift($data), 2);
 	
 	$productsPropertiesCombisId = false;
@@ -244,10 +277,39 @@ function blargh() {
 			       ).'
 		', true), true);
 	}
-	echo "\n".print_m($productsPropertiesCombisId, '$productsPropertiesCombisId');
+	if ((count($productsPropertiesCombisId) === 1) && ((int)$productsPropertiesCombisId[0] > 0)) {
+		echo "\n".print_m(MagnaDB::gi()->fetchArray(eecho('
+			    SELECT CONCAT(p.products_model, "-", ppc.combi_model) AS SKU, ppc.*
+			      FROM products_properties_combis ppc
+			INNER JOIN products p ON p.products_id = ppc.products_id
+			    HAVING products_properties_combis_id = "'.((int)$productsPropertiesCombisId[0]).'"
+		', false)), '$productsPropertiesCombisId['.$productsPropertiesCombisId[0].']');
+	} else {
+		echo print_m($productsPropertiesCombisId, '$productsPropertiesCombisId');
+	}
 }
 
 blargh();
+
+function testSku() {
+	if (!isset($_GET['SKU'])) {
+		return;
+	}
+	
+	$pId = magnaSKU2pID($_GET['SKU']);
+	$aId = magnaSKU2aID($_GET['SKU']);
+	$oDt = magnaSKU2pOpt($_GET['SKU']);
+	echo "\n\n== Ident Test ==\n";
+	echo print_m($_GET['SKU'], 'SKU')."\n";
+	echo print_m(getDBConfigValue('general.keytype', '0'), 'IdentType')."\n";
+	echo "---------------------\n";
+	echo print_m($pId, 'pId')."\n";
+	echo print_m($aId, 'aId')."\n";
+	echo print_m($oDt, 'Opt')."\n";
+	
+}
+
+testSku();
 
 
 /*
@@ -312,12 +374,20 @@ if (class_exists('MagnaConnector') && true) {
 	}
 	
 }
-if (class_exists('MagnaDB') && false) {
+if (class_exists('MagnaDB')) {
 	$tpR = MagnaDB::gi()->getTimePerQuery();
-	if (!empty($tpR)) {
+	if (!empty($tpR) && false) {
 		foreach ($tpR as $item) {
 			echo print_m(ltrim(rtrim($item['query'], "\n"), "\n"), microtime2human($item['time']), true)."\n";
 		}
+		echo '----------------------------------------------------'."\n";
+	}
+	$err = MagnaDB::gi()->getSqlErrors();
+	if (!empty($err)) {
+		foreach ($err as &$eItem) {
+			unset($eItem['Backtrace']);
+		}
+		echo print_m($err, 'DB SQL Errors')."\n";
 		echo '----------------------------------------------------'."\n";
 	}
 }

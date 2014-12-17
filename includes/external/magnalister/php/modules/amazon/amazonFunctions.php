@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: amazonFunctions.php 3537 2014-02-18 02:54:19Z derpapst $
+ * $Id: amazonFunctions.php 4470 2014-08-29 12:10:17Z tim.neumann $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -618,7 +618,7 @@ function magnaAmazonSaveTrackingCode3rdParty($oID, $tc, $mpID) {
 }
 
 function magnaAmazonFetchCarrier3rdParty($oID, $mpID) {
-	$table = getDBConfigValue('amazon.orderstatus.carrier.carrier.table', $mpID, false);
+	$table = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.table', $mpID, false);
 	if (($table === false) || empty($table['column']) || empty($table['table'])) return '';
 	$cIDAlias = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.alias', $mpID);
 	if (empty($cIDAlias)) {
@@ -632,7 +632,7 @@ function magnaAmazonFetchCarrier3rdParty($oID, $mpID) {
 }
 
 function magnaAmazonSaveCarrier3rdParty($oID, $carrier, $mpID) {
-	$table = getDBConfigValue('amazon.orderstatus.carrier.carrier.table', $mpID, false);
+	$table = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.table', $mpID, false);
 	if ($table === false || empty($table['column']) || empty($table['table'])) return;
 	$cIDAlias = getDBConfigValue('amazon.orderstatus.carrier.carrierDBMatching.alias', $mpID);
 	if (empty($cIDAlias)) {

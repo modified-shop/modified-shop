@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: orders.php 3691 2014-03-27 14:23:22Z derpapst $
+ * $Id: orders.php 4582 2014-09-12 03:39:06Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -125,7 +125,12 @@ foreach ($labels as $label) {
 }
 
 $plot = new PHPlotMagna($phPlotSettings['width'], $phPlotSettings['height']);
+foreach ($phPlotSettings['fonts'] as $fontItem) {
+	$plot->SetFontTTF($fontItem['for'], $fontItem['font'], $fontItem['size'], $fontItem['spacing']);
+}
 $plot->SetFileFormat($phPlotSettings['filetype']);
+
+$plot->retinarize(ML_RETINA_DISPLY ? 2 : 1);
 
 $plot->SetImageBorderType('none');
 $plot->SetDefaultDashedStyle($phPlotSettings['dashedLineStyle']);
@@ -166,10 +171,6 @@ $plot->SetYDataLabelPos('plotstack');
 $plot->SetYDataLabelType('data', 0);
 
 $plot->SetPlotBorderType(array('left', 'bottom'));
-
-foreach ($phPlotSettings['fonts'] as $fontItem) {
-	$plot->SetFontTTF($fontItem['for'], $fontItem['font'], $fontItem['size'], $fontItem['spacing']);
-}
 
 $yTick = $plot->GetCalcTicks('y');
 $plot->SetLegendWorld(count($finalData), $yTick[1]);

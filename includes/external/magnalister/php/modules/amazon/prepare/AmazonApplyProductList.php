@@ -42,19 +42,17 @@ class AmazonApplyProductList extends MLProductListAmazonAbstract {
 	 */
 	protected function buildQuery(){
 		$sKeyType = (getDBConfigValue('general.keytype', '0') == 'artNr') ? 'products_model' : 'products_id';
+		$aAmazonProperties = MagnaDB::gi()->fetchArray("
+			SELECT DISTINCT ".$sKeyType."
+			           FROM ".TABLE_MAGNA_AMAZON_PROPERTIES."
+			          WHERE     mpID = '".$this->aMagnaSession['mpID']."'
+			                AND `asin` IS NOT NULL
+			                AND `asin` <>''
+		", true);
+
 		parent::buildQuery()->oQuery->where(
-			'p.'.$sKeyType.' NOT IN ('.
-				MLDatabase::factorySelectClass()
-				->select('distinct '.$sKeyType)
-				->from(TABLE_MAGNA_AMAZON_PROPERTIES)
-				->where("
-					mpID='".$this->aMagnaSession['mpID']."'
-					AND `asin` IS NOT NULL
-					AND `asin` <>''
-				")
-				->getQuery(false).
-			')'
-		);
+			"p.".$sKeyType." NOT IN ('".implode('\' , \'', $aAmazonProperties)."')
+		");
 		return $this;
 	}
 	protected function getSelectionName() {

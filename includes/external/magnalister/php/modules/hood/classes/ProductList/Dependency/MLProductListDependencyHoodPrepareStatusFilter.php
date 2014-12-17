@@ -25,36 +25,12 @@ class MLProductListDependencyHoodPrepareStatusFilter extends MLProductListDepend
 		return array(
 		    'failed' => "AND Verified <> 'OK' AND Verified <> 'EMPTY'",
 		    'prepared' => "AND Verified = 'OK' ",
-		    'notprepared' => ""
+		    'notprepared' => "AND Verified != 'EMPTY' "
 		);
 	}
 
-	protected function getPrepareTabel() {
+	protected function getPrepareTable() {
 		return TABLE_MAGNA_HOOD_PROPERTIES;
 	}
-
-	protected function getNotpreparedCondition(){
-		return 'p.' . $this->sKeyType . ' NOT IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
-				->from($this->sTable)
-				->where("
-					mpID='" . $this->aMagnaSession['mpID'] . "'
-					{$this->aConditions['notprepared']}
-				")
-				->getQuery(false) .
-			')
-			 OR 
-		         p.' . $this->sKeyType . ' IN (' .
-				MLDatabase::factorySelectClass()
-				->select('distinct ' . $this->sKeyType)
-				->from($this->sTable)
-				->where("
-						mpID = '" . $this->aMagnaSession['mpID'] . "'
-						AND Verified = 'EMPTY'
-				")
-				->getQuery(false) .
-			')'
-		;
-	}
+	
 }

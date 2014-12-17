@@ -29,7 +29,7 @@ class MLProductListDependencyHitmeisterPrepareStatusFilter extends MLProductList
 		);
 	}
 
-	protected function getPrepareTabel() {
+	protected function getPrepareTable() {
 		return TABLE_MAGNA_HITMEISTER_PREPARE;
 	}
 

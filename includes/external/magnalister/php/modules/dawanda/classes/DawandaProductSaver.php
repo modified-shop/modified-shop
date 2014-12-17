@@ -94,12 +94,17 @@ class DawandaProductSaver {
 		$aRow['ReturnPolicy'] = $aItemDetails['ReturnPolicy'];
 
 		$aRow['MpColors'] = DawandaHelper::checkProductSaveJsonArray(array($aItemDetails['MarketplaceColors1'], $aItemDetails['MarketplaceColors2']));
-		$aRow['MarketplaceCategories'] = DawandaHelper::checkProductSaveJsonArray(array('primary' => $aItemDetails['PrimaryCategory'], 'secondary' => $aItemDetails['SecondaryCategory']));
+		$aRow['MarketplaceCategories'] = DawandaHelper::checkProductSaveJsonArray(array(
+			'primary' => $aItemDetails['PrimaryCategory'],
+			'secondary' => isset($aItemDetails['SecondaryCategory']) ? $aItemDetails['SecondaryCategory'] : ''
+		));
 		$aRow['StoreCategories'] = DawandaHelper::checkProductSaveJsonArray(array('primary' => $aItemDetails['StoreCategory']));
 
 		//TopTenCategories
 		$aRow['TopMarketplaceCategory'] = $aItemDetails['PrimaryCategory'];
 		$aRow['TopStoreCategory'] = $aItemDetails['StoreCategory'];
+		
+		$aRow['Attributes'] = json_encode(isset($aItemDetails['Attributes']) ? $aItemDetails['Attributes'] : array());
 
 		return $aRow;
 	}
@@ -110,8 +115,10 @@ class DawandaProductSaver {
 	}
 
 	public function saveMultipleProductProperties($iProductIds, $aItemDetails) {
+		$preparedTs = date('Y-m-d H:i:s');
 		foreach ($iProductIds as $iProductId) {
 			$aRow = $this->preparePropertiesRow($iProductId, $aItemDetails);
+			$aRow['PreparedTs'] = $preparedTs;
 			$this->insertPrepareData($aRow);
 		}
 	}

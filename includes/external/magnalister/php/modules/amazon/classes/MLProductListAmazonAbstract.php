@@ -47,15 +47,15 @@ abstract class MLProductListAmazonAbstract extends MLProductList {
 	protected function getPreparedStatusIndicator($aRow){
 		$aData = $this->getPrepareData($aRow);
 		if (empty($aData)) {
-			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_AMAZON_LABEL_APPLY_NOT_PREPARED, 12, 12);
+			return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/grey_dot.png', ML_AMAZON_LABEL_APPLY_NOT_PREPARED, 9, 9);
 		}elseif (
                                             (isset($aData['is_incomplete']) && 'true' == $aData['is_incomplete'])//apply
                                             ||
                                             (isset($aData['asin']) && empty($aData['asin']))//matching
                                     ) {
-                                            return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_AMAZON_LABEL_APPLY_PREPARE_INCOMPLETE, 12, 12);
+                                            return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/red_dot.png', ML_AMAZON_LABEL_APPLY_PREPARE_INCOMPLETE, 9, 9);
                                     }else{
-                                            return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_AMAZON_LABEL_APPLY_PREPARE_COMPLETE, 12, 12);
+                                            return html_image(DIR_MAGNALISTER_WS_IMAGES . 'status/green_dot.png', ML_AMAZON_LABEL_APPLY_PREPARE_COMPLETE, 9, 9);
                                     }
                         }
 	

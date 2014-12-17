@@ -602,8 +602,13 @@ class HoodPrepareView extends MagnaCompatibleBase {
 					<td class="input">
 						<div id="hood_Condition">
 						<select name="ConditionType" id="Condition">
-							<option ' . ('new' == $preSelected['ConditionType'] ? 'selected' : '') . ' value="new">' . ML_HOOD_CONDITION_NEW . '</option>
-							<option ' . ('used' == $preSelected['ConditionType'] ? 'selected' : '') . ' value="used">' . ML_HOOD_CONDITION_USED . '</option>
+							<option '.('new' == $preSelected['ConditionType'] ? 'selected' : '').' value="new">'.ML_HOOD_CONDITION_NEW.'</option>
+							<option '.('likeNew' == $preSelected['ConditionType'] ? 'selected' : '').' value="likeNew">'.ML_HOOD_CONDITION_LIKE_NEW.'</option>
+							<option '.('veryGood' == $preSelected['ConditionType'] ? 'selected' : '').' value="veryGood">'.ML_HOOD_CONDITION_VERY_GOOD.'</option>
+							<option '.('usedGood' == $preSelected['ConditionType'] ? 'selected' : '').' value="usedGood">'.ML_HOOD_CONDITION_USED_GOOD.'</option>
+							<option '.('acceptable' == $preSelected['ConditionType'] ? 'selected' : '').' value="acceptable">'.ML_HOOD_CONDITION_ACCEPTABLE.'</option>
+							<option '.('refurbished' == $preSelected['ConditionType'] ? 'selected' : '').' value="refurbished">'.ML_HOOD_CONDITION_REFURBISHED.'</option>
+							<option '.('defect' == $preSelected['ConditionType'] ? 'selected' : '').' value="defect">'.ML_HOOD_CONDITION_DEFECT.'</option>
 						</select>
 						</div>
 					</td>
@@ -733,7 +738,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									</div>
 								</td>
 								<td class="buttons">
-									<input class="fullWidth ml-button smallmargin" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectPrimaryCategory"/>
+									<input class="fullWidth ml-button smallmargin mlbtn-action" type="button" value="' . ML_HOOD_CHOOSE . '" id="selectPrimaryCategory"/>
 								</td>
 							</tr>
 							<tr>
@@ -1021,7 +1026,7 @@ class HoodPrepareView extends MagnaCompatibleBase {
 									).'
 								</td>
 								<td class="lastChild">
-									<input class="ml-button" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
+									<input class="ml-button mlbtn-action" type="submit" name="savePrepareData" id="savePrepareData" value="' . ML_BUTTON_LABEL_SAVE_DATA . '"/>
 								</td>
 							</tr></tbody></table>
 						</td></tr>

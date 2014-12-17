@@ -11,7 +11,7 @@
  *                                      boost your Online-Shop
  *
  * -----------------------------------------------------------------------------
- * $Id: yatego.php 2332 2013-04-04 16:12:19Z derpapst $
+ * $Id: yatego.php 4578 2014-09-11 23:04:08Z derpapst $
  *
  * (c) 2010 RedGecko GmbH -- http://www.redgecko.de
  *     Released under the MIT License (Expat)
@@ -20,7 +20,7 @@
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
-function importYategoCategories($file) {
+function importYategoCategories() {
 	@set_time_limit(60 * 3); // 3 min
 	@ini_set('memory_limit', '512M');
 	MagnaConnector::gi()->setTimeOutInSeconds(60 * 2); // 2 min
@@ -120,13 +120,13 @@ if (!allRequiredConfigKeysAvailable($requiredConfigKeys, $_MagnaSession['mpID'],
 	if ( (($lastUpdate + (60 * 60 * 24 * 30)) < time())
 		|| (array_key_exists('yPurgeCategories', $_GET) && ($_GET['yPurgeCategories'] == 'true'))
 	) {
-		if (importYategoCategories(ML_YATEGO_CATEGORIES_CSV)) {
+		if (importYategoCategories()) {
 			$magnaConfig['db']['yatego.lastcategoryupdate'] = time();
 			setDBConfigValue($_Marketplace.'.lastcategoryupdate', $_MagnaSession['mpID'], time(), true);
 	
 			$invalidCategories = MagnaDB::gi()->fetchArray('
 				SELECT DISTINCT `category_id` FROM `'.TABLE_MAGNA_YATEGO_CATEGORYMATCHING.'` WHERE NOT EXISTS (
-	  				SELECT `object_id` FROM `'.TABLE_MAGNA_YATEGO_CATEGORIES.'` WHERE `yatego_category_id`=`object_id`
+					SELECT `object_id` FROM `'.TABLE_MAGNA_YATEGO_CATEGORIES.'` WHERE `yatego_category_id`=`object_id`
 				)
 			', true);
 			
