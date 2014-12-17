@@ -17,7 +17,11 @@
    
 // The HTML form submit button wrapper function
 // Outputs a button in the selected language
-  function xtc_image_submit($image, $alt = '', $parameters = '') {
+  function xtc_image_submit($image, $alt = '', $parameters = '', $useCssButton = true) {
+  
+    if (function_exists('css_button') && $useCssButton) {
+      return css_button($image, $alt, $parameters, true); //function parameters: imagename, alttext, parameters, isSubmitBtn
+    }
 
     $image_submit = '<input type="image" src="' . xtc_parse_input_field_data('templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
