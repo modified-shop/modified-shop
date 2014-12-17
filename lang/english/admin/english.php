@@ -530,4 +530,7 @@ define('DISPLAY_PER_PAGE', 'Display per page: ');
 
 define('SPECIALS_DATE_START_TT', 'Offers starts at 00.00.00');
 define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23.59.59)');
+
+require_once(DIR_FS_INC.'auto_require.inc.php');
+foreach(auto_require(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>
