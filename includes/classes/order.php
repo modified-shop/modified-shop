@@ -529,6 +529,7 @@
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
         $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
+        $this->products[$index]['tax_info'] = $main->getTaxInfo($this->products[$index]['tax']);
         $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
         $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
