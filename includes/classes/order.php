@@ -436,7 +436,7 @@
                                                   FROM " . TABLE_ADDRESS_BOOK . " ab
                                                        " . $default_join . "
                                                  WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                                   AND ab.address_book_id = '" . $_SESSION['sendto'] . "'
+                                                   AND ab.address_book_id = '" . ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id']) . "'
                                               ");
         $shipping_address = xtc_db_fetch_array($shipping_address_query);
 
@@ -446,7 +446,7 @@
                                                  FROM " . TABLE_ADDRESS_BOOK . " ab
                                                       " . $default_join . "
                                                 WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                                  AND ab.address_book_id = '" . (isset($_SESSION['billto']) ? $_SESSION['billto'] : $_SESSION['sendto']) . "'
+                                                  AND ab.address_book_id = '" . ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) . "'
                                              ");
 
         $billing_address = xtc_db_fetch_array($billing_address_query);
@@ -456,14 +456,15 @@
                                              FROM " . TABLE_ADDRESS_BOOK . " ab
                                         LEFT JOIN " . TABLE_ZONES . " z ON (ab.entry_zone_id = z.zone_id)
                                             WHERE ab.customers_id = '" . $_SESSION['customer_id'] . "'
-                                              AND ab.address_book_id = '" . ($this->content_type == 'virtual' ? $_SESSION['billto'] : $_SESSION['sendto']) . "'
+                                              AND ab.address_book_id = '" . (($this->content_type == 'virtual') ? ((isset($_SESSION['billto'])) ? $_SESSION['billto'] : ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) : ((isset($_SESSION['sendto'])) ? $_SESSION['sendto'] : $_SESSION['customer_default_address_id'])) . "'
                                          ");
         $tax_address = xtc_db_fetch_array($tax_address_query);
       }
 
       // web28 - set tax country id for using order total in shopping cart
-      if (!isset($tax_address['entry_country_id'])) {
-        $tax_address['entry_country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
+      if (!isset($tax_address['country_id'])) {
+        $tax_address['country_id'] = isset($_SESSION['country']) ?  $_SESSION['country'] : STORE_COUNTRY;
+        $tax_address['zone_id'] = -1;
       }
 
       $this->info = array('order_status' => DEFAULT_ORDERS_STATUS_ID,
@@ -525,12 +526,10 @@
         //using short description  if order description is not defined or empty
         $this->products[$index]['short_description'] = CHECKOUT_USE_PRODUCTS_SHORT_DESCRIPTION == 'true' ? $products[$i]['short_description'] : '';
         $this->products[$index]['order_description'] = !empty($products[$i]['order_description']) ? nl2br($products[$i]['order_description']) : $products[$i]['short_description'];
-
         $this->products[$index]['image'] = !empty($products[$i]['image']) ? $main->getProductPopupLink($products[$i]['id'],$products[$i]['image'], 'image') : '&nbsp;';
         $this->products[$index]['link'] = $main->getProductPopupLink($products[$i]['id'],$products[$i]['name'], 'details');
-        $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
-        $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['entry_country_id'], $tax_address['entry_zone_id']);
-
+        $this->products[$index]['tax'] = xtc_get_tax_rate($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
+        $this->products[$index]['tax_description'] = xtc_get_tax_description($products[$i]['tax_class_id'], $tax_address['country_id'], $tax_address['zone_id']);
         $this->products[$index]['price_formated'] = $xtPrice->xtcFormat($products[$i]['price'],true); //$products[$i]['price'] is single plain price including attributes_price
         $this->products[$index]['final_price_formated'] = $xtPrice->xtcFormat($products[$i]['final_price'],true); //$products[$i]['final_price'] is quantity * plain price including attributes_price
 
