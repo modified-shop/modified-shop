@@ -16,8 +16,12 @@
    ---------------------------------------------------------------------------------------*/
    
 // Output a function button in the selected language
-  function xtc_image_button($image, $alt = '', $parameters = '') {
-
+  function xtc_image_button($image, $alt = '', $parameters = '', $useCssButton = true) {
+    
+    if (function_exists('css_button') && $useCssButton) {
+      return css_button($image, $alt, $parameters, false); //function parameters: imagename, alttext, parameters, isSubmitBtn
+    }
+    
     return xtc_image('templates/'.CURRENT_TEMPLATE.'/buttons/' . $_SESSION['language'] . '/'. $image, $alt, '', '', $parameters);
   }
  ?>
