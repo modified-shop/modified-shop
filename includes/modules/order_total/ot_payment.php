@@ -386,14 +386,5 @@ class ot_payment {
     return $keys;
   }
 
-  function keys() {
-    $keys = array();
-    $check_query = xtc_db_query("SELECT configuration_key FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_PAYMENT_%' ORDER BY sort_order");
-    while($key = xtc_db_fetch_array($check_query)) {
-        $keys[] = $key['configuration_key'];
-    }
-    return $keys;
-  }
-
 }
 ?>
