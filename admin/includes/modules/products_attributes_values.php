@@ -63,7 +63,7 @@
                  AND po.language_id = '".(int)$_SESSION['languages_id']."'
                      ".$and."
             ORDER BY pov.products_options_values_id";
-
+    
     //BOF Seitenschaltung
     if (defined('MAX_ROW_LISTS_ATTR_VALUES')) {
       $per_page = (int)MAX_ROW_LISTS_ATTR_VALUES;
@@ -134,9 +134,6 @@ if ($_GET['action'] == 'delete_option_value') {
                   <tr>
                     <td colspan="3" class="pageHeading">&nbsp;<?php echo $values_values['products_options_values_name']; ?>&nbsp;</td>
                   </tr>
-                  <tr>
-                    <td colspan="3"><?php echo xtc_black_line(); ?></td>
-                  </tr>
 <?php
 $products = xtc_db_query("-- products_attributes.php
                           SELECT p.products_id,
@@ -162,9 +159,6 @@ if (xtc_db_num_rows($products)) {
                           <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_PRODUCT; ?>&nbsp;</td>
                           <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
                         </tr>
-                        <tr>
-                          <td colspan="3"><?php echo xtc_black_line(); ?></td>
-                        </tr>
   <?php
   while ($products_values = xtc_db_fetch_array($products)) {
   $rows++;
@@ -177,9 +171,6 @@ if (xtc_db_num_rows($products)) {
   <?php
   }
   ?>
-                        <tr>
-                          <td colspan="3"><?php echo xtc_black_line(); ?></td>
-                        </tr>
                         <tr>
                           <td class="main" colspan="3" style="background-color: #d4d4d4;">
                             <div style="margin:10px 0";>
@@ -208,9 +199,6 @@ if (xtc_db_num_rows($products)) {
                             </div>
                           </td>
                         </tr>
-                        <tr>
-                          <td colspan="3"><?php echo xtc_black_line(); ?></td>
-                        </tr>
 <?php
     }
 ?>
@@ -225,31 +213,25 @@ if (xtc_db_num_rows($products)) {
                 <table border="0" cellspacing="0" cellpadding="2" class="option-values-table">
                   <tr>
                     <td colspan="<?php echo $colspan;?>" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
-                       <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
-                       <select name="option_id_filter" onchange="option_filter(this)">
-                          <option value="" name="">---</option>
-                          <?php echo $options_dropdown_select;?>
-                       </select>
-                       <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
-                         <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
-                         <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
-                       </form
+                      <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
+                      <select name="option_id_filter" onchange="option_filter(this)">
+                        <option value="" name="">---</option>
+                        <?php echo $options_dropdown_select;?>
+                      </select>
+                      <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                        <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
+                        <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
+                      </form
                     </td>
                   </tr>
                   <tr>
                     <td colspan="<?php echo $colspan;?>" class="smallText"><?php echo $value_pages;?></td>
-                  </tr>
-                  <tr>
-                    <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
                   </tr>
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_VALUE; ?>&nbsp;</td>
                     <td class="dataTableHeadingContent txta-c">&nbsp;<?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
-                  </tr>
-                  <tr>
-                    <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
                   </tr>
 <?php
 // ############ BOF NEW ENTRY ############ //
@@ -267,9 +249,6 @@ if (xtc_db_num_rows($products)) {
       $inputs.= $lang_img . '&nbsp;<input type="text" name="value_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
     }
     ?>
-                  <tr>
-                    <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
-                  </tr>
                   <?php echo xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
                   <tr style="background-color: #d4d4d4;">
                     <td class="smallText txta-c">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
@@ -278,10 +257,6 @@ if (xtc_db_num_rows($products)) {
                     <td class="smallText txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
                   </tr>
                   </form>
-                  <tr>
-                    <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
-                  </tr>
-
   <?php
   }
 // ############ EOF NEW ENTRY ############ //
@@ -308,9 +283,6 @@ while ($values_values = xtc_db_fetch_array($values)) {
       $inputs .= $lang_img . '&nbsp;<input type="text" name="value_name[' . $languages[$i]['id'] . ']" style="width:200px;" value="' . $value_name['products_options_values_name'] . '">&nbsp;<br />';
     }
 ?>
-                    <tr>
-                      <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
-                    </tr>
                     <?php echo xtc_draw_form('value', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&'.$page_info, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
                     <tr style="background-color: #d4d4d4;">
                       <td class="smallText txta-c">&nbsp;<?php echo $values_values['products_options_values_id']; ?>
@@ -322,9 +294,6 @@ while ($values_values = xtc_db_fetch_array($values)) {
                       <td class="smallText txta-c update">&nbsp;<?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;<?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'value_page='.$_GET['value_page'].$option_filter, 'NONSSL')); ?>&nbsp;</td>
                     </tr>
                     </form>
-                    <tr>
-                      <td colspan="<?php echo $colspan;?>"><?php echo xtc_black_line(); ?></td>
-                    </tr>
 <?php
 // ############ EOF UPDATE ##############//
   } else {
