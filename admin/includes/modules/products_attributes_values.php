@@ -32,17 +32,23 @@
     $selected2 = isset($_GET['option_id']) && $_GET['option_id'] == $options_values['products_options_id'] ? 'selected="selected"' : '';
     $options_dropdown_select .= '<option name="' . $options_values['products_options_name'] . '" value="' . $options_values['products_options_id'] . '"' . $selected2 . '>' . $options_values['products_options_name'] . ' ID-' . $options_values['products_options_id']. '</option>';
   }
-  //BOF Auswahldropdown
+  //EOF Auswahldropdown
 
   if ($_GET['action'] != 'delete_option_value') {
 
     $from = " FROM ".TABLE_PRODUCTS_OPTIONS." po ," . TABLE_PRODUCTS_OPTIONS_VALUES." pov ";
     $and = " AND pov2po.products_options_id = po.products_options_id ";
 
-    if (isset ($_GET['search_optionsname'])){
+    if (isset ($_GET['search_optionsname']) && $_GET['search_optionsname']){
       $and .= " AND (po.products_options_name LIKE '%".$_GET['search_optionsname']."%' or pov.products_options_values_name LIKE '%".$_GET['search_optionsname']."%') ";
     } else {
       $_GET['search_optionsname'] = '';
+    }
+    
+    if (isset ($_GET['option_id']) && $_GET['option_id'] && !$_GET['search_optionsname']){
+      $and .= " AND po.products_options_id = '". (int)$_GET['option_id'] ."'";
+    } else {
+      $_GET['option_id'] = '';
     }
 
     $values = "-- products_attributes.php
@@ -219,10 +225,15 @@ if (xtc_db_num_rows($products)) {
                 <table border="0" cellspacing="0" cellpadding="2" class="option-values-table">
                   <tr>
                     <td colspan="<?php echo $colspan;?>" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
-                      <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
-                        <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
-                        <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
-                      </form
+                       <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
+                       <select name="option_id_filter" onchange="option_filter(this)">
+                          <option value="" name="">---</option>
+                          <?php echo $options_dropdown_select;?>
+                       </select>
+                       <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                         <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
+                         <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
+                       </form
                     </td>
                   </tr>
                   <tr>
@@ -324,9 +335,9 @@ while ($values_values = xtc_db_fetch_array($values)) {
                     <td class="smallText txta-c">&nbsp;<?php echo $options_name; ?>&nbsp;</td>
                     <td class="smallText">&nbsp;<?php echo $values_name; ?>&nbsp;</td>
                     <td class="smallText txta-c">
-                      <?php echo xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_value&value_id=' . $values_values['products_options_values_id'] . '&value_page=' . $_GET['value_page'].$option_id, 'NONSSL'));
+                      <?php echo xtc_button_link(BUTTON_EDIT, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_value&value_id=' . $values_values['products_options_values_id'] . '&value_page=' . $_GET['value_page'].$option_id.$search_optionsname, 'NONSSL'));
                       //BOF - webkiste - auf der selben Seite bleiben
-                      echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option_value&value_id=' . $values_values['products_options_values_id'] . '&value_page=' . $_GET['value_page'], 'NONSSL'));
+                      echo xtc_button_link(BUTTON_DELETE, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'action=delete_option_value&value_id=' . $values_values['products_options_values_id'] . '&value_page=' . $_GET['value_page'].$option_id.$search_optionsname, 'NONSSL'));
                       //EOF - webkiste - auf der selben Seite bleiben
                       ?>
                     </td>
