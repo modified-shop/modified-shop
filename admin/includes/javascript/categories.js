@@ -9,9 +9,9 @@ function CheckMultiForm ()
       var e = ml.elements[i];
       if (e.name == "multi_products[]" || e.name == "multi_categories[]") 
       {
-          if (e.checked == true) {
-              return true;
-          }
+        if (e.checked == true) {
+          return true;
+        }
       }
     }
     alert('Bitte markieren Sie mindestens ein Element!\nPlease check at least one element!');
@@ -28,11 +28,49 @@ function SwitchCheck ()
       var e = maf.elements[i];
       if (e.name == "multi_products[]" || e.name == "multi_categories[]") 
       {
-          if (e.checked == true) {
-              e.checked = false;
-          } else {
-              e.checked = true;
-          }
+        if (e.checked == true) {
+          e.checked = false;
+        } else {
+          e.checked = true;
+        }
+      }
+    }
+  }
+
+// for reverting checkboxes in multi confirm thx to jenser
+function SwitchCheckDeleteConfirm ()
+  {
+    var maf = document.multi_action_form;
+    var len = maf.length;
+    for (var i = 0; i < len; i++)
+    {
+      var e = maf.elements[i];
+      if (e.name.substring(0,25) == "multi_products_categories")
+      {
+        if (e.checked == true) {
+          e.checked = false;
+        } else {
+          e.checked = true;
+        }
+      }
+    }
+  }
+  
+// for reverting checkboxes in multi confirm
+function SwitchCheckCopyConfirm ()
+  {
+    var maf = document.multi_action_form;
+    var len = maf.length;
+    for (var i = 0; i < len; i++)
+    {
+      var e = maf.elements[i];
+      if (e.name == "dest_cat_ids[]")
+      {
+        if (e.checked == true) {
+          e.checked = false;
+        } else {
+          e.checked = true;
+        }
       }
     }
   }
@@ -64,15 +102,15 @@ function SwitchProducts ()
       var e = maf.elements[i];
       if (e.name == "multi_products[]") 
       {
-          if (flag == false) { 
-              if (e.checked == true) { 
-                  wert = false; 
-              } else { 
-                  wert = true; 
-              } 
-              flag = true; 
-          }
-          e.checked = wert;
+        if (flag == false) { 
+          if (e.checked == true) { 
+            wert = false; 
+          } else { 
+            wert = true; 
+          } 
+          flag = true; 
+        }
+        e.checked = wert;
       }
     }
   }
@@ -88,15 +126,15 @@ function SwitchCategories ()
       var e = maf.elements[i];
       if (e.name == "multi_categories[]") 
       {
-          if (flag == false) { 
-              if (e.checked == true) { 
-                  wert = false; 
-              } else { 
-                  wert = true; 
-              } 
-              flag = true; 
-          }
-          e.checked = wert;
+        if (flag == false) { 
+          if (e.checked == true) { 
+            wert = false; 
+          } else { 
+            wert = true; 
+          } 
+          flag = true; 
+        }
+        e.checked = wert;
       }
     }
   }   
