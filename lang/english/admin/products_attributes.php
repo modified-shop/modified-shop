@@ -43,4 +43,5 @@ define('TEXT_OPTION_NAME', 'Option Name');
 define('TABLE_HEADING_SORTORDER', 'Sorting');
 define('TEXT_SORTORDER', 'Sorting');
 // EOF - Tomcraft - 2009-11-07 - Added sortorder to products_options
+define('TEXT_OPTION_ID_FILTER', 'Filter: ');
 ?>
