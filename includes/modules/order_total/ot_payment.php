@@ -365,20 +365,19 @@ class ot_payment {
   }
 
   function keys() {
-    $keys = array(0 => 'MODULE_ORDER_TOTAL_PAYMENT_STATUS',
-                  1 => 'MODULE_ORDER_TOTAL_PAYMENT_ALLOWED', 
-                  2 => 'MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER',
-                  3 => 'MODULE_ORDER_TOTAL_PAYMENT_NUMBER',
+    $keys = $this->keys_number($this->num_payment);
+    $keys[0] = 'MODULE_ORDER_TOTAL_PAYMENT_STATUS';
+    $keys[1] = 'MODULE_ORDER_TOTAL_PAYMENT_ALLOWED'; 
+    $keys[2] = 'MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER';
+    $keys[3] = 'MODULE_ORDER_TOTAL_PAYMENT_NUMBER';
                   
-                  1000 => 'MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT',
-                  2000 => 'MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE',
-                  3000 => 'MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING',
-                  4000 => 'MODULE_ORDER_TOTAL_PAYMENT_INC_TAX',
-                  5000 => 'MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX',
-                  6000 => 'MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS',
-                  7000 => 'MODULE_ORDER_TOTAL_PAYMENT_BREAK',
-                  );
-    $keys = array_merge($keys, $this->keys_number($this->num_payment));
+    $keys[1000] = 'MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT';
+    $keys[1001] = 'MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE';
+    $keys[1002] = 'MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING';
+    $keys[1003] = 'MODULE_ORDER_TOTAL_PAYMENT_INC_TAX';
+    $keys[1004] = 'MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX';
+    $keys[1005] = 'MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS';
+    $keys[1006] = 'MODULE_ORDER_TOTAL_PAYMENT_BREAK';
 
     ksort($keys);
     $keys = array_values($keys);
