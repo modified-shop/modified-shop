@@ -53,7 +53,7 @@ class ot_payment {
       $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
 
       if ($check_zones_rows_query != $this->num_payment) {
-        $this->install_zones($check_zones_rows_query);
+        $this->install_numbers($check_zones_rows_query);
       }
     }
 
@@ -317,10 +317,10 @@ class ot_payment {
     xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_BREAK', 'false', '6', '3','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
   }
 
-  function install_zones($number_of_payment) {
+  function install_numbers($number_of_payment) {
                   
     // backup old values
-    xtc_backup_configuration($this->keys_zones($number_of_payment));
+    xtc_backup_configuration($this->keys_number($number_of_payment));
 
     // add new zone
     if ($number_of_payment <= $this->num_payment) {

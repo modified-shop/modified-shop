@@ -98,4 +98,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_DESC', 'Display duri
 
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_TITLE', '<hr>Display mode of payment types');
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_DESC', 'Display in the ordering process at the checkout <br /> - default: percent or amount, depending on the inputs at discount <br /> - price: it will always show the actual amount');
+
+define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_TITLE', 'Number Paymenttype');
+define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_DESC', 'Number of Payment type discount &amp; surcharge');
 ?>
