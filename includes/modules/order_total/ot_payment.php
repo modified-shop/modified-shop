@@ -26,308 +26,374 @@
          Released under the GNU General Public License
    -----------------------------------------------------------*/
 
-class ot_payment
-{
-    var $title, $output;
+class ot_payment {
+  var $title, $output;
 
-    function ot_payment()
-    {
-        $this->code = 'ot_payment';
-        $this->num = 3;
-        $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';
-        $this->description = defined('MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION')?MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION:'';
-        $this->enabled = MODULE_ORDER_TOTAL_PAYMENT_STATUS=='true' ? true : false;
-        $this->sort_order = defined('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER')?MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER:'';
-        $this->include_shipping = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING')?MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING:'';
-        $this->include_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_INC_TAX:'';
-        $this->calculate_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX:'';
-        // is not used
-        // $this->howto_calc = MODULE_ORDER_TOTAL_PAYMENT_HOWTO_CALC;
-        $this->tax_class = defined('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS')?MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS:'';
-        $this->output = array();
-        $this->amount = 0;
-        $this->original_total = 0;
-        $this->discount = array();
-        $this->amounts = array();
-        $this->show_in_checkout_payment = MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT=='true' ? true : false;
-        $this->show_type = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE')?MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE:'';
-        // Rabattfelder
-        if ($this->enabled) {
-            for ($k=1; $k<=$this->num; $k++) {
-                $this->percentage[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $k);
-                $this->payment[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $k);
-            }
-        }
+  function ot_payment() {
+    $this->code = 'ot_payment';
+    $this->num_payment = defined('MODULE_ORDER_TOTAL_PAYMENT_NUMBER')?MODULE_ORDER_TOTAL_PAYMENT_NUMBER:'';
+    $this->title = defined('MODULE_ORDER_TOTAL_PAYMENT_TITLE')?MODULE_ORDER_TOTAL_PAYMENT_TITLE:'';
+    $this->description = defined('MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION')?MODULE_ORDER_TOTAL_PAYMENT_DESCRIPTION:'';
+    $this->enabled = (MODULE_ORDER_TOTAL_PAYMENT_STATUS == 'true') ? true : false;
+    $this->sort_order = defined('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER')?MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER:'';
+    $this->include_shipping = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING')?MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING:'';
+    $this->include_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_INC_TAX:'';
+    $this->calculate_tax = defined('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX')?MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX:'';
+    $this->tax_class = defined('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS')?MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS:'';
+    $this->output = array();
+    $this->amount = 0;
+    $this->original_total = 0;
+    $this->discount = array();
+    $this->amounts = array();
+    $this->show_in_checkout_payment = MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT=='true' ? true : false;
+    $this->show_type = defined('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE')?MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE:'';
+
+    if ($this->check() > 0) {      
+      $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE%'");
+      $check_zones_rows_query = xtc_db_num_rows($check_zones_query);
+
+      if ($check_zones_rows_query != $this->num_payment) {
+        $this->install_zones($check_zones_rows_query);
+      }
     }
 
-    function process()
-    {
-        global $order, $xtPrice;
+    // Rabattfelder
+    if ($this->enabled) {
+      for ($k=1; $k<=$this->num_payment; $k++) {
+        $this->percentage[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $k);
+        $this->payment[$k] = constant('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $k);
+      }
+    }
+  }
 
-        $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
+  function process() {
+    global $order, $xtPrice;
 
-        if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
-            $this->xtc_order_total();
-            $this->calculate_credit();
-            if (isset($this->discount['sum']) && $this->discount['sum']!=0) {
-                for ($i=1; $i<=$this->num; $i++) {
-                    if (isset($this->discount['amount' . $i]) && $this->discount['amount' . $i]!=0) {
-                        $this->output[] = array('title' =>
-                        ($this->discount['pro' . $i] != 0.0 ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' .
-                        ($this->discount['fee' . $i] != 0 ? ($this->discount['pro' . $i] != 0.0 ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ':'') : '') .
-                        ($this->discount['amount' . $i] < 0 ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT:MODULE_ORDER_TOTAL_PAYMENT_FEE) . ':',
-                        'text' => $this->discount['amount' . $i] < 0 ? '<span class="color_ot_total">' . $xtPrice->xtcFormat($this->discount['amount' . $i], true).'</span>':$xtPrice->xtcFormat($this->discount['amount' . $i], true),
-                        'value' => $this->discount['amount' . $i]);
-                        $order->info['subtotal'] += $this->discount['amount' . $i];
-                        $order->info['total'] += $this->discount['amount' . $i];
-                    }
-                }
-            }
+    $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
+
+    if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
+      $this->xtc_order_total();
+      $this->calculate_credit();
+      if (isset($this->discount['sum']) && $this->discount['sum']!=0) {
+        for ($i=1; $i<=$this->num_payment; $i++) {
+          if (isset($this->discount['amount' . $i]) && $this->discount['amount' . $i]!=0) {
+            $this->output[] = array('title' => (($this->discount['pro' . $i] != 0.0) ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' .
+                                               (($this->discount['fee' . $i] != 0) ? (($this->discount['pro' . $i] != 0.0) ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ' : '') : '') .
+                                               (($this->discount['amount' . $i] < 0) ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT : MODULE_ORDER_TOTAL_PAYMENT_FEE) . ':',
+                                    'text' => ($this->discount['amount' . $i] < 0) ? '<span class="color_ot_total">' . $xtPrice->xtcFormat($this->discount['amount' . $i], true).'</span>' : $xtPrice->xtcFormat($this->discount['amount' . $i], true),
+                                    'value' => $this->discount['amount' . $i]
+                                    );
+                                    
+            $order->info['subtotal'] += $this->discount['amount' . $i];
+            $order->info['total'] += $this->discount['amount' . $i];
+          }
         }
+      }
+    }
+  }
+
+  function calculate_credit($payment = '') {
+    global $order;
+
+    $discount = array();
+    $values = array();
+
+    if ($payment == '' && isset($_SESSION['payment'])) {
+      $payment = $_SESSION['payment'];
     }
 
-    function calculate_credit($payment = '')
-    {
-        global $order;
-        $discount = array();
-        $values = array();
+    if ($this->include_shipping == 'false') {
+      $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
+      $shipping_tax = 0;
+      if (array_key_exists($module, $GLOBALS) && is_object($GLOBALS[$module])) {
+        $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      }
+      if ($_SESSION['customers_status']['customers_status_show_price_tax'] && !$_SESSION['customers_status']['customers_status_add_tax_ot']) {
+        //$tod_shipping = $order->info['shipping_cost'] / (100 + $shipping_tax) * $shipping_tax;
+        $tod_shipping = $order->info['shipping_cost'] * ($shipping_tax / 100 + 1) - $order->info['shipping_cost'];  //web28 - Fix shipping tax
+      } else {
+        $tod_shipping = $order->info['shipping_cost'] / 100 * $shipping_tax;
+      }
+    } else {
+      $tod_shipping = 0;
+    }
 
-        if ($payment == '' && isset($_SESSION['payment'])) {
-            $payment = $_SESSION['payment'];
+    // Fix shipping tax (web28)
+    if ($this->sort_order < MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER) {
+      $tod_shipping = 0;
+    }
+
+    for ($j=1; $j<=$this->num_payment; $j++) {
+      $do = false;
+      if (strpos($this->percentage[$j], "|") !== false) {
+        $strings = explode('|', $this->percentage[$j]);
+        $allowed_zones = explode(',', $strings[0]);
+        if (!in_array($_SESSION['delivery_zone'], $allowed_zones) == true && $strings[0] != '00') {
+          continue;
         }
-
-        if ($this->include_shipping == 'false') {
-            $module = substr($_SESSION['shipping']['id'], 0, strpos($_SESSION['shipping']['id'], '_'));
-            $shipping_tax = 0;
-            if (array_key_exists($module, $GLOBALS) && is_object($GLOBALS[$module])) {
-              $shipping_tax = xtc_get_tax_rate($GLOBALS[$module]->tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-            }
-            if ($_SESSION['customers_status']['customers_status_show_price_tax'] && !$_SESSION['customers_status']['customers_status_add_tax_ot']) {
-                //$tod_shipping = $order->info['shipping_cost'] / (100 + $shipping_tax) * $shipping_tax;
-                $tod_shipping = $order->info['shipping_cost'] * ($shipping_tax / 100 + 1) - $order->info['shipping_cost'];  //web28 - Fix shipping tax
-            } else {
-                $tod_shipping = $order->info['shipping_cost'] / 100 * $shipping_tax;
-            }
+        $string = $strings[1];
+      } else {
+        $string = $this->percentage[$j];
+      }
+      $discount_table = (preg_split("/[:,]/" , $string));
+      for ($i=0; $i<sizeof($discount_table); $i+=2) {
+        if ($this->amount >= $discount_table[$i]) {
+          $values[$j]['minimum'] = $discount_table[$i];
+          $fees = preg_split('/&/', $discount_table[$i+1]);
+          $values[$j]['percent'] = ((isset($fees[0])) ? $fees[0] : '');
+          $values[$j]['fee'] = ((isset($fees[1]) && $fees[1] != '') ? $fees[1] : 0);
         } else {
-            $tod_shipping = 0;
+          break;
         }
+      }
 
-        // Fix shipping tax (web28)
-        if ($this->sort_order < MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER) {
-          $tod_shipping = 0;
+      if (isset($values[$j]['minimum']) && $this->amount >= $values[$j]['minimum']) {
+        $od_amount = 0;
+        $tod_amount = 0;
+        $table = preg_split("/[,]/" , $this->payment[$j]);
+        for ($i = 0; $i < count($table); $i++) {
+          if ($payment == $table[$i]) $do = true;
         }
-
-        for ($j=1; $j<=$this->num; $j++) {
-            $do = false;
-            if (strpos($this->percentage[$j], "|") !== false) {
-                $strings = explode('|', $this->percentage[$j]);
-                $allowed_zones = explode(',', $strings[0]);
-                if (!in_array($_SESSION['delivery_zone'], $allowed_zones) == true && $strings[0] != '00') {
-                    continue;
-                }
-                $string = $strings[1];
-            } else {
-                $string = $this->percentage[$j];
-            }
-            $discount_table = (preg_split("/[:,]/" , $string));
-            //print_r($discount_table);
-            for ($i=0; $i<sizeof($discount_table); $i+=2) {
-                if ($this->amount >= $discount_table[$i]) {
-                    $values[$j]['minimum'] = $discount_table[$i];
-                    $fees = preg_split('/&/', $discount_table[$i+1]);
-                    $values[$j]['percent'] = (isset($fees[0])?$fees[0]:'');
-                    $values[$j]['fee'] = ((isset($fees[1]) && $fees[1]!='')?$fees[1]:0);
-                } else {
-                    break;
-                }
-            }
-
-            if (isset($values[$j]['minimum']) && $this->amount >= $values[$j]['minimum']) {
-                $od_amount = 0;
-                $tod_amount = 0;
-                $table = preg_split("/[,]/" , $this->payment[$j]);
-                for ($i = 0; $i < count($table); $i++) {
-                    if ($payment == $table[$i]) $do = true;
-                }
-                if ($do) {
-                    // Calculate tax reduction if necessary
-                    if($this->calculate_tax == 'true') {
-                        // Calculate tax group deductions
-                        reset($order->info['tax_groups']);
-                        while (list($key, $value) = each($order->info['tax_groups'])) {
-                            if (strpos($key, $shipping_tax . '%')) {
-                                $god_amount = $this->get_discount(($value - $tod_shipping), $values[$j]['percent']);
-                            } else {
-                                $god_amount = $this->get_discount($value, $values[$j]['percent']);
-                            }
-                            if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
-                                foreach($this->amounts as $key2=>$value2) {
-                                    if (strpos($key, $key2 . '%')) {
-                                      if ($god_amount > 0) {
-                                        $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
-                                      }
-                                    }
-                                }
-                            }
-                            $order->info['tax_groups'][$key] -= $god_amount;
-                            $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
-                        }
-                        // Calculate main tax reduction
-                        //$tod_amount = $this->get_discount(($order->info['tax'] - $tod_shipping), $values[$j]['percent']); // FIX web28 - falsche Steuerkorrektur
-                        $order->info['tax'] -= $tod_amount;
+        if ($do) {
+          // Calculate tax reduction if necessary
+          if($this->calculate_tax == 'true') {
+            // Calculate tax group deductions
+            reset($order->info['tax_groups']);
+            while (list($key, $value) = each($order->info['tax_groups'])) {
+              if (strpos($key, $shipping_tax . '%')) {
+                $god_amount = $this->get_discount(($value - $tod_shipping), $values[$j]['percent']);
+              } else {
+                $god_amount = $this->get_discount($value, $values[$j]['percent']);
+              }
+              if ($values[$j]['fee'] != 0 && count($this->amounts) > 0) {
+                foreach($this->amounts as $key2 => $value2) {
+                  if (strpos($key, $key2 . '%')) {
+                    if ($god_amount > 0) {
+                      $god_amount += $values[$j]['fee'] * $value2 / $this->amounts['total'] * $key2 / 100 / (100 + $key2) * 100;
                     }
-                    $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
+                  }
                 }
+              }
+              $order->info['tax_groups'][$key] -= $god_amount;
+              $tod_amount += $god_amount; //hier wird die Steuer aufaddiert
             }
-            (!isset($this->discount['sum'])?$this->discount['sum']='':'');
-            (!isset($this->discount['amount' . $j])?$this->discount['amount' . $j]='':'');
-            (!isset($this->discount['pro' . $j])?$this->discount['pro' . $j]='':'');
-            (!isset($this->discount['fee' . $j])?$this->discount['fee' . $j]='':'');
-            
-            $this->discount['sum'] -= (isset($values[$j]['discount'])?$values[$j]['discount']:'');
-            $this->discount['amount' . $j] = (isset($values[$j]['discount'])?-$values[$j]['discount']:'');
-            $this->discount['pro' . $j] = (isset($values[$j]['percent'])?$values[$j]['percent']:'');
-            $this->discount['fee' . $j] = (isset($values[$j]['fee'])?$values[$j]['fee']:'');
-            if ($do && MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') break;
+            // Calculate main tax reduction
+            //$tod_amount = $this->get_discount(($order->info['tax'] - $tod_shipping), $values[$j]['percent']); // FIX web28 - falsche Steuerkorrektur
+            $order->info['tax'] -= $tod_amount;
+          }
+          $values[$j]['discount'] = $this->get_discount($this->amount, $values[$j]['percent']) + $values[$j]['fee'];
         }
+      }
+      ((!isset($this->discount['sum'])) ? $this->discount['sum'] = '' : '');
+      ((!isset($this->discount['amount' . $j])) ? $this->discount['amount' . $j] = '' : '');
+      ((!isset($this->discount['pro' . $j])) ? $this->discount['pro' . $j] = '' : '');
+      ((!isset($this->discount['fee' . $j])) ? $this->discount['fee' . $j] = '' : '');
+      
+      $this->discount['sum'] -= ((isset($values[$j]['discount'])) ? $values[$j]['discount'] : '');
+      $this->discount['amount' . $j] = ((isset($values[$j]['discount'])) ? -$values[$j]['discount'] : '');
+      $this->discount['pro' . $j] = ((isset($values[$j]['percent'])) ? $values[$j]['percent'] : '');
+      $this->discount['fee' . $j] = ((isset($values[$j]['fee'])) ? $values[$j]['fee'] : '');
+      if ($do && MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') {
+        break;
+      }
     }
+  }
 
-    function xtc_order_total()
-    {
-        global $order;
-        
-        $this->amounts['total'] = 0;
+  function xtc_order_total() {
+    global $order;
+  
+    $this->amounts['total'] = 0;
 
-        //$order_total = $order->info['total'];  //FEHLER  $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
-        $order_total = $_SESSION['cart']->total;
+    //$order_total = $order->info['total'];  //FEHLER  $order->info['total'] enthält auf der Seite checkout_payment die Versandkosten OHNE Steuer warum auch immer
+    $order_total = $_SESSION['cart']->total;
 
-        // Check if gift voucher is in cart and adjust total
-        $products = $_SESSION['cart']->get_products();
-        for ($i=0; $i<sizeof($products); $i++) {
-            $t_prid = xtc_get_prid($products[$i]['id']);
-            $gv_query = xtc_db_query("select products_price, products_tax_class_id, products_model from " . TABLE_PRODUCTS . " where products_id = '" . $t_prid . "'");
-            $gv_result = xtc_db_fetch_array($gv_query);
-            $qty = $_SESSION['cart']->get_quantity($products[$i]['id']);
-            $products_tax = xtc_get_tax_rate($gv_result['products_tax_class_id']);
-            if (!isset($this->amounts[(string)$products_tax])) {
-              $this->amounts[(string)$products_tax] = 0;
-            }
-            if (substr($gv_result['products_model'], 0, 4) == 'GIFT') {
-                if ($this->include_tax =='false') {
-                    $gv_amount = $gv_result['products_price'] * $qty;
-                } else {
-                    $gv_amount = ($gv_result['products_price'] + xtc_calculate_tax($gv_result['products_price'],$products_tax)) * $qty;
-                }
-                $order_total -= $gv_amount;
+    // Check if gift voucher is in cart and adjust total
+    $products = $_SESSION['cart']->get_products();
+    for ($i=0; $i<sizeof($products); $i++) {
+      $t_prid = xtc_get_prid($products[$i]['id']);
+      $gv_query = xtc_db_query("select products_price, products_tax_class_id, products_model from " . TABLE_PRODUCTS . " where products_id = '" . $t_prid . "'");
+      $gv_result = xtc_db_fetch_array($gv_query);
+      $qty = $_SESSION['cart']->get_quantity($products[$i]['id']);
+      $products_tax = xtc_get_tax_rate($gv_result['products_tax_class_id']);
+      if (!isset($this->amounts[(string)$products_tax])) {
+        $this->amounts[(string)$products_tax] = 0;
+      }
+      if (substr($gv_result['products_model'], 0, 4) == 'GIFT') {
+        if ($this->include_tax =='false') {
+          $gv_amount = $gv_result['products_price'] * $qty;
+        } else {
+          $gv_amount = ($gv_result['products_price'] + xtc_calculate_tax($gv_result['products_price'],$products_tax)) * $qty;
+        }
+        $order_total -= $gv_amount;
+      } else {
+        $this->amounts[(string)$products_tax] += $gv_result['products_price'] * (int)$qty;
+        $this->amounts['total'] += $gv_result['products_price'] * $qty;
+      }
+    }
+    //if ($this->include_shipping == 'false') $order_total -= $order->info['shipping_cost'];
+    if ($this->include_shipping != 'false') {
+      $order_total += $this->get_shipping_cost();
+    }
+    if ($this->include_tax == 'false') {
+      $order_total -= $order->info['tax'];
+    }
+    $this->amount = $order_total;
+  }
+
+  function get_percent($payment, $type = 'percent') {
+    global $order, $xtPrice, $debug_mesages;
+    $string = '';
+    $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
+
+    if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
+      $this->calculate_credit($payment);
+      if ($this->discount['sum']!=0) {
+        for ($i=1; $i<=$this->num_payment; $i++) {
+          if ($this->discount['amount' . $i] != 0) {
+            if ($type == 'price' || $this->show_type == 'price' || $payment == 'paypal') {
+              $string .= $xtPrice->xtcFormat(abs($this->discount['amount' . $i]), true) . ' ' . (($this->discount['amount' . $i] < 0) ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT : MODULE_ORDER_TOTAL_PAYMENT_FEE);
             } else {
-                $this->amounts[(string)$products_tax] += $gv_result['products_price'] * (int)$qty;
-                $this->amounts['total'] += $gv_result['products_price'] * $qty;
+              $string .= (($this->discount['pro' . $i] != 0.0) ? number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' : '') .
+                         (($this->discount['fee' . $i] != 0) ? (($this->discount['pro' . $i] != 0.0) ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ' : '') .
+                         (($this->discount['amount' . $i] < 0) ? MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT : MODULE_ORDER_TOTAL_PAYMENT_FEE);
             }
-        }
-        //if ($this->include_shipping == 'false') $order_total -= $order->info['shipping_cost'];
-        if ($this->include_shipping != 'false') $order_total += $this->get_shipping_cost();
-        
-        if ($this->include_tax == 'false') $order_total -= $order->info['tax'];
-
-        $this->amount = $order_total;
-    }
-
-    function get_percent($payment, $type = 'percent')
-    {
-        global $order, $xtPrice, $debug_mesages;
-        $string = '';
-        $allowed_zones = explode(',', MODULE_ORDER_TOTAL_PAYMENT_ALLOWED);
-
-        if ($this->enabled && (in_array($_SESSION['delivery_zone'], $allowed_zones) == true || MODULE_ORDER_TOTAL_PAYMENT_ALLOWED == '')) {
-            $this->calculate_credit($payment);
-            if ($this->discount['sum']!=0) {
-                for ($i=1; $i<=$this->num; $i++) {
-                    if ($this->discount['amount' . $i]!=0) {
-                        if ($type == 'price' || $this->show_type == 'price' || $payment == 'paypal') {
-                            $string .= $xtPrice->xtcFormat(abs($this->discount['amount' . $i]), true) . ' ' . ($this->discount['amount' . $i]<0?MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT:MODULE_ORDER_TOTAL_PAYMENT_FEE);
-                        } else {
-                            $string .= ($this->discount['pro' . $i] != 0.0 ?
-                            number_format(abs($this->discount['pro' . $i]), 2, $xtPrice->currencies[$_SESSION['currency']]['decimal_point'], '') . '% ' : '') .
-                            ($this->discount['fee' . $i]!=0? ($this->discount['pro' . $i] != 0.0 ? ' +' : '') . $xtPrice->xtcFormat(abs($this->discount['fee' . $i]), true) . ' ' : '') .
-                            ($this->discount['amount' . $i]<0?MODULE_ORDER_TOTAL_PAYMENT_DISCOUNT:MODULE_ORDER_TOTAL_PAYMENT_FEE);
-                        }
-                        if (MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') break;
-                    }
-                }
+            if (MODULE_ORDER_TOTAL_PAYMENT_BREAK != 'true') {
+              break;
             }
+          }
         }
-        return $string;
+      }
     }
+    return $string;
+  }
 
-    function get_discount($value, $percent)
-    {
-        global $xtPrice;
-        // return round($value * 100) / 100 * $percent / 100;
-        //return $god_amount = $value * $percent / 100;
-        return $xtPrice->xtcFormat($value * $percent / 100, false);
+  function get_discount($value, $percent) {
+    global $xtPrice;
+    // return round($value * 100) / 100 * $percent / 100;
+    //return $god_amount = $value * $percent / 100;
+    return $xtPrice->xtcFormat($value * $percent / 100, false);
+  }
+  
+  function get_module_cost($payment_modul) {
+    if ($this->show_in_checkout_payment) {
+      return $this->get_percent($payment_modul['id'], $this->show_type);
     }
+  }
+  
+  function get_shipping_cost() {
+    global $order, $PHP_SELF;
     
-    function get_module_cost($payment_modul)
-    {
-      if ($this->show_in_checkout_payment) {
-        return $this->get_percent($payment_modul['id'], $this->show_type);
+    $shipping_cost = $order->info['shipping_cost'];
+    //Steuer auf der Seite checkout_payment hinzurechnen
+    if (basename($PHP_SELF) == 'checkout_payment.php') {
+      $shipping_modul = explode('_',$order->info['shipping_class']);
+      $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
+      $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
+      $shipping_cost = $order->info['shipping_cost'] * (1.0 + ($shipping_tax_rate / 100));
+    }
+    return $shipping_cost;
+  }
+
+  function check() {
+    if (!isset($this->check)) {
+      $check_query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_STATUS'");
+      $this->check = xtc_db_num_rows($check_query);
+    }
+    return $this->check;
+  }
+
+  function install() {
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED', '',   '6', '2', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER', '49', '6', '2', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_ORDER_TOTAL_PAYMENT_NUMBER', '3', '6', '3', now())");
+
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT', 'false', '6', '100','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE', 'default', '6', '101','xtc_cfg_select_option(array(\'default\', \'price\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING', 'false', '6', '100005', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX', 'true', '6', '100006','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX', 'true', '6', '100005','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS', '0','6', '100007', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
+    xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_BREAK', 'false', '6', '3','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
+  }
+
+  function install_zones($number_of_payment) {
+                  
+    // backup old values
+    xtc_backup_configuration($this->keys_zones($number_of_payment));
+
+    // add new zone
+    if ($number_of_payment <= $this->num_payment) {
+      for ($i = (($number_of_payment==0) ? 1 : $number_of_payment); $i <= $this->num_payment; $i ++) {
+        $check_zones_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE".$i."'");
+        if (xtc_db_num_rows($check_zones_query) < 1) {
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE" . $i . "', '', '6', '" . $i . "1', now())");
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_TYPE" . $i . "', '', '6', '" . $i . "2', now())");
+        }
+      }      
+    } else {
+      // remove zone
+      for ($i = $number_of_payment; $i >= $this->num_payment; $i --) {
+        xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE".$i."'");
+        xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_TYPE".$i."'");
+      }
+    }
+
+    // set standard values
+    for ($i = 1; $i <= $this->num_payment; $i ++) {
+      if ($i == 1) {
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '100:4' WHERE configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE1'");
+        xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = 'moneyorder' WHERE  configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_TYPE1'");
       }
     }
     
-    function get_shipping_cost()
-    {
-        global $order, $PHP_SELF;
-        $shipping_cost = $order->info['shipping_cost'];
-        //Steuer auf der Seite checkout_payment hinzurechnen
-        if (basename($PHP_SELF) == 'checkout_payment.php') {
-            $shipping_modul = explode('_',$order->info['shipping_class']);
-            $shipping_tax_class = constant('MODULE_SHIPPING_'.strtoupper($shipping_modul[0]).'_TAX_CLASS');
-            $shipping_tax_rate = xtc_get_tax_rate($shipping_tax_class, $order->delivery['country']['id'], $order->delivery['zone_id']);
-            $shipping_cost = $order->info['shipping_cost'] * (1.0 + ($shipping_tax_rate / 100));
-        }
-        return $shipping_cost;
-    }
+    // restore old values
+    xtc_restore_configuration($this->keys_number($this->num_payment));
+  }
 
-    function check()
-    {
-        if (!isset($this->check)) {
-            $check_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'MODULE_ORDER_TOTAL_PAYMENT_STATUS'");
-            $this->check = xtc_db_num_rows($check_query);
-        }
-        return $this->check;
-    }
+  function remove() {
+    xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key in ('" . implode("', '", $this->keys()) . "')");
+  }
 
-    function install()
-    {
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_STATUS', 'true', '6', '1','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT', 'false', '6', '100','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE', 'default', '6', '101','xtc_cfg_select_option(array(\'default\', \'price\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER', '49', '6', '2', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING', 'false', '6', '100005', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_INC_TAX', 'true', '6', '100006','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function ,date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX', 'true', '6', '100005','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_ALLOWED', '',   '6', '2', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS', '0','6', '100007', 'xtc_get_tax_class_title', 'xtc_cfg_pull_down_tax_classes(', now())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_BREAK', 'false', '6', '3','xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
-        for ($i=1; $i<=$this->num; $i++) {
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE" . $i . "', '100:4', '6', '" . $i . "1', now())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) VALUES ('MODULE_ORDER_TOTAL_PAYMENT_TYPE" . $i . "', 'moneyorder', '6', '" . $i . "2', now())");
-        }
+  function keys_number($number) {
+    $keys_number = array();
+    for ($i = 1; $i <= $number; $i ++) {
+      $keys_number['1'.$i] = 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $i;
+      $keys_number['2'.$i] = 'MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $i;
     }
+    return $keys_number;
+  }
 
-    function keys()
-    {
-        $keys = array();
-        $check_query = xtc_db_query("SELECT configuration_key FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_PAYMENT_%' ORDER BY sort_order");
-        while($key = xtc_db_fetch_array($check_query)) {
-            $keys[] = $key['configuration_key'];
-        }
-        return $keys;
-    }
+  function keys() {
+    $keys = array(0 => 'MODULE_ORDER_TOTAL_PAYMENT_STATUS',
+                  1 => 'MODULE_ORDER_TOTAL_PAYMENT_ALLOWED', 
+                  2 => 'MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER',
+                  3 => 'MODULE_ORDER_TOTAL_PAYMENT_NUMBER',
+                  
+                  1000 => 'MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT',
+                  2000 => 'MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE',
+                  3000 => 'MODULE_ORDER_TOTAL_PAYMENT_INC_SHIPPING',
+                  4000 => 'MODULE_ORDER_TOTAL_PAYMENT_INC_TAX',
+                  5000 => 'MODULE_ORDER_TOTAL_PAYMENT_CALC_TAX',
+                  6000 => 'MODULE_ORDER_TOTAL_PAYMENT_TAX_CLASS',
+                  7000 => 'MODULE_ORDER_TOTAL_PAYMENT_BREAK',
+                  );
+    $keys = array_merge($keys, $this->keys_number($this->num_payment));
 
-    function remove()
-    {
-        xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_PAYMENT_%'");
+    ksort($keys);
+    $keys = array_values($keys);
+
+    return $keys;
+  }
+
+  function keys() {
+    $keys = array();
+    $check_query = xtc_db_query("SELECT configuration_key FROM " . TABLE_CONFIGURATION . " WHERE configuration_key LIKE 'MODULE_ORDER_TOTAL_PAYMENT_%' ORDER BY sort_order");
+    while($key = xtc_db_fetch_array($check_query)) {
+        $keys[] = $key['configuration_key'];
     }
+    return $keys;
+  }
+
 }
 ?>

@@ -14,8 +14,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$num = 3; //Anzahl der Rabattstaffeln
-
 define('MODULE_ORDER_TOTAL_PAYMENT_HELP_LINK', ' <a onclick="window.open(\'popup_help.php?type=order_total&modul=ot_payment&lng=german\', \'Hilfe\', \'scrollbars=yes,resizable=yes,menubar=yes,width=800,height=600\'); return false" target="_blank" href="popup_help.php?type=order_total&modul=ot_payment&lng=german"><b>[HILFE]</b></a>');
 define('MODULE_ORDER_TOTAL_PAYMENT_HELP_TEXT', '<h2>Rabatt und Zuschlag auf Zahlungsarten</h2>
 Sollen mehr Rabattstaffeln m&ouml;glich sein (Standard sind <b>3</b>), muss vor der Installation in allen Dateien der Wert der Variable $num (Sprachdateien) bzw. $this-&gt;num (Moduldatei) auf den gew&uuml;nschten Wert ge&auml;ndert werden.
@@ -66,7 +64,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_STATUS_DESC', 'Wollen Sie den Zahlungsartenra
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_TITLE', '<hr>Sortierreihenfolge');
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_DESC', 'Anzeigereihenfolge');
 
-for ($j=1; $j<=$num; $j++) {
+for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
   define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', '<hr>'.$j . '. Rabattstaffel');
   define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Rabattierung (Mindestwert:Prozent)');
   define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Zahlungsart');
