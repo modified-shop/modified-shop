@@ -97,4 +97,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_IN_CHECKOUT_PAYMENT_DESC', 'Anzeige im B
 
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_TITLE', '<hr>Anzeigeart bei den Zahlungsarten');
 define('MODULE_ORDER_TOTAL_PAYMENT_SHOW_TYPE_DESC', 'Anzeigeart im Bestellprozess bei der Zahlungsauswahl <br />-- default: Prozent oder Betrag, abh&auml;ngig von den Eingaben bei Rabattstaffel<br />-- price: es wird immer der tats&auml;chliche Betrag angezeigt');
+
+define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_TITLE', 'Anzahl Zahlarten');
+define('MODULE_ORDER_TOTAL_PAYMENT_NUMBER_DESC', 'Anzahl an Rabatt &amp; Zuschlag auf Zahlungsarten');
 ?>
