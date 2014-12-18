@@ -358,8 +358,8 @@ class ot_payment {
   function keys_number($number) {
     $keys_number = array();
     for ($i = 1; $i <= $number; $i ++) {
-      $keys_number['1'.$i] = 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $i;
-      $keys_number['2'.$i] = 'MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $i;
+      $keys_number[$i.'1'] = 'MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $i;
+      $keys_number[$i.'2'] = 'MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $i;
     }
     return $keys_number;
   }
