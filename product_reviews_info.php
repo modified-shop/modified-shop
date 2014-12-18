@@ -21,16 +21,20 @@ include ('includes/application_top.php');
 // create smarty elements
 $smarty = new Smarty;
 
-if (!isset($_GET['reviews_id']) && !isset($_GET['products_id'])) {
-	xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
-}
-
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 
 // include needed functions
 require_once (DIR_FS_INC.'xtc_break_string.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
+
+if (!isset($_GET['reviews_id']) && !isset($_GET['products_id'])) {
+	xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
+}
+
+if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
+  xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
+}
 
 $reviews_query = xtc_db_query("SELECT r.*,
                                       rd.reviews_text,
@@ -40,14 +44,16 @@ $reviews_query = xtc_db_query("SELECT r.*,
                                  FROM ".TABLE_REVIEWS." r
                                  JOIN ".TABLE_REVIEWS_DESCRIPTION." rd
                                       ON r.reviews_id = rd.reviews_id
-                            LEFT JOIN ".TABLE_PRODUCTS." p 
+                                         AND rd.languages_id = '".$_SESSION['languages_id']."'
+                                 JOIN ".TABLE_PRODUCTS." p 
                                       ON r.products_id = p.products_id
-                            LEFT JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
+                                 JOIN ".TABLE_PRODUCTS_DESCRIPTION." pd 
                                       ON p.products_id = pd.products_id 
                                          AND pd.language_id = '".(int) $_SESSION['languages_id']."'
                                 WHERE r.reviews_id = '".(int) $_GET['reviews_id']."'
                                   AND r.products_id = '".(int) $_GET['products_id']."'
-                                  AND p.products_status = '1'");
+                                  AND p.products_status = '1'
+                                      ".PRODUCTS_CONDITIONS_P);
 
 if (xtc_db_num_rows($reviews_query) < 1) {
 	xtc_redirect(xtc_href_link(FILENAME_REVIEWS, '', 'NONSSL'));
