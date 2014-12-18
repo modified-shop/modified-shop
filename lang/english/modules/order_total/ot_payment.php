@@ -14,8 +14,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-$num = 3; //Number scale of discounts
-
 define('MODULE_ORDER_TOTAL_PAYMENT_HELP_LINK', ' <a onclick="window.open(\'popup_help.php?type=order_total&modul=ot_payment&lng=english\', \'HELP\', \'scrollbars=yes,resizable=yes,menubar=yes,width=800,height=600\'); return false" target="_blank" href="popup_help.php?type=order_total&modul=ot_payment&lng=english"><b>[HELP]</b></a>');
 define('MODULE_ORDER_TOTAL_PAYMENT_HELP_TEXT', '<h2>Payment type discount &amp; surcharge</h2>
 If there are more scale of discounts required (default is <b>3</b>), the value of the variable $num (language files) and $this->num (module file) has to be changed to the desired value.
@@ -68,7 +66,7 @@ define('MODULE_ORDER_TOTAL_PAYMENT_STATUS_DESC', 'Do you want to enable the orde
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_TITLE', '<hr>Sort order');
 define('MODULE_ORDER_TOTAL_PAYMENT_SORT_ORDER_DESC', 'Sort order of display');
 
-for ($j=1; $j<=$num; $j++) {
+for ($j=1; $j<=MODULE_ORDER_TOTAL_PAYMENT_NUMBER; $j++) {
   define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_TITLE', $j . '. Discount percentage');
   define('MODULE_ORDER_TOTAL_PAYMENT_PERCENTAGE' . $j . '_DESC', 'Amount of discount(countries|value:percentage&fee)');
   define('MODULE_ORDER_TOTAL_PAYMENT_TYPE' . $j . '_TITLE', $j . '. Payment type');
