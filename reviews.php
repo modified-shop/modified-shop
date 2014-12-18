@@ -18,6 +18,7 @@
 
 include ('includes/application_top.php');
 
+// create smarty
 $smarty = new Smarty;
 
 // include boxes
@@ -27,13 +28,13 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_word_count.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 
-$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
-
-require (DIR_WS_INCLUDES.'header.php');
-
 if ($_SESSION['customers_status']['customers_status_read_reviews'] == '0') {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
+
+$breadcrumb->add(NAVBAR_TITLE_REVIEWS, xtc_href_link(FILENAME_REVIEWS));
+
+require (DIR_WS_INCLUDES.'header.php');
 
 $reviews_query_raw = "SELECT r.reviews_id,
                         left(rd.reviews_text, 250) as reviews_text,
@@ -53,7 +54,7 @@ $reviews_query_raw = "SELECT r.reviews_id,
                              ON p.products_id = pd.products_id
                                 AND trim(pd.products_name) != ''
                                 AND pd.language_id = '".$_SESSION['languages_id']."'
-                       WHERE p.products_status = 1
+                       WHERE p.products_status = '1'
                              ".PRODUCTS_CONDITIONS_P."
                     ORDER BY r.reviews_id DESC";
                     
