@@ -103,7 +103,7 @@ if ($_GET['action'] == 'delete_product_option') {
                           );
   $options_values = xtc_db_fetch_array($options);
 ?>
-                  <table class="option-table">
+                  <table class="option-table mrg5">
                     <tr>
                       <td class="pageHeading" colspan="3">&nbsp;<?php echo $options_values['products_options_name']; ?>&nbsp;</td>
                     </tr>
@@ -173,22 +173,21 @@ while ($products_values = xtc_db_fetch_array($products)) {
 } else {
   // ############  BOF DEFAULT  ############ //
 ?>
-                  <table class="option-table">
-                    <tr>
-                      <td colspan="4" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;                          
-                        <?php  
-                          echo xtc_draw_form('option_order_by', FILENAME_PRODUCTS_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-                          echo $options_dropdown_order; ?>
-                          </form>&nbsp;&nbsp;
-                          <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
-                            <span class="main"><?php echo TEXT_SEARCH; ?></span> 
-                            <input type="text" name="searchoption" size="20" value="<?php echo $_GET['searchoption']; ?>">
-                          </form>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td colspan="4" class="smallText"><?php echo $option_pages;?></td>
-                    </tr>
+                  
+                  <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;                          
+                      <?php  
+                        echo xtc_draw_form('option_order_by', FILENAME_PRODUCTS_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+                        echo $options_dropdown_order; ?>
+                        </form>&nbsp;&nbsp;
+                        <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                          <span class="main"><?php echo TEXT_SEARCH; ?></span> 
+                          <input type="text" name="searchoption" size="20" value="<?php echo $_GET['searchoption']; ?>">
+                        </form>
+                  </div>
+                    
+                  <div class="smallText pdg2 mrg5" style="width:800px;"><?php echo $option_pages;?></div>
+
+                  <table class="option-table mrg5">
                     <tr class="dataTableHeadingRow">
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
                       <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_SORTORDER; ?>&nbsp;</td>

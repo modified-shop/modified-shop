@@ -24,7 +24,8 @@ if (isset($_POST['option_id'])) $_GET['option_id'] = $_POST['option_id'];
 $filter_params_arr = array(
     'option_filter',
     'value_order_by',
-    'option_id'
+    'option_id',
+    'search_optionsname'
     );
     
 $filter_arr = array();
@@ -38,7 +39,7 @@ $option_filter = '&'. implode('&', $filter_arr);
 $page_params_arr = array(
     'option_page',
     'value_page',
-    'attribute_page', 
+    'attribute_page',
     'search_optionsname'
     );
     
@@ -62,6 +63,7 @@ if ($_GET['action']) {
 if ($_GET['search_optionsname']) {
   $search_optionsname = isset($_GET['search_optionsname']) && $_GET['search_optionsname'] ? '&search_optionsname=' . $_GET['search_optionsname'] : '';
 }
+
 require (DIR_WS_INCLUDES.'head.php');
 ?>
   <script type="text/javascript">

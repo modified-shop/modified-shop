@@ -130,7 +130,7 @@ if ($_GET['action'] == 'delete_option_value') {
                         );
   $values_values = xtc_db_fetch_array($values);
 ?>
-                <table class="option-values-table">
+                <table class="option-values-table mrg5">
                   <tr>
                     <td colspan="3" class="pageHeading">&nbsp;<?php echo $values_values['products_options_values_name']; ?>&nbsp;</td>
                   </tr>
@@ -181,9 +181,6 @@ if (xtc_db_num_rows($products)) {
                             <div>
                           </td>
                         </tr>
-                        <tr>
-                          <td colspan="3"><?php echo xtc_black_line(); ?></td>
-                        </tr>
 <?php
 } else {
 //Produkt nicht zugeordnet - Ok - Optionswert kann gelöscht werden
@@ -207,26 +204,25 @@ if (xtc_db_num_rows($products)) {
 <?php
 // ############ EOF DELETE ############ //
   } else {
-    $colspan = 4;
 // ############ BOF DEFAULT ############ //
 ?>
-                <table border="0" cellspacing="0" cellpadding="2" class="option-values-table">
-                  <tr>
-                    <td colspan="<?php echo $colspan;?>" class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
-                      <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
-                      <select name="option_id_filter" onchange="option_filter(this)">
-                        <option value="" name="">---</option>
-                        <?php echo $options_dropdown_select;?>
-                      </select>
-                      <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
-                        <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
-                        <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
-                      </form
-                    </td>
-                  </tr>
-                  <tr>
-                    <td colspan="<?php echo $colspan;?>" class="smallText"><?php echo $value_pages;?></td>
-                  </tr>
+                
+                  
+                <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
+                  <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
+                  <select name="option_id_filter" onchange="option_filter(this)">
+                    <option value="" name="">---</option>
+                    <?php echo $options_dropdown_select;?>
+                  </select>
+                  <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                    <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
+                    <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
+                  </form>
+                </div>
+              
+                <div class="smallText pdg2 mrg5" style="width:800px;"><?php echo $value_pages;?></div>
+               
+                <table class="option-values-table mrg5">
                   <tr class="dataTableHeadingRow">
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_ID; ?>&nbsp;</td>
                     <td class="dataTableHeadingContent">&nbsp;<?php echo TABLE_HEADING_OPT_NAME; ?>&nbsp;</td>
