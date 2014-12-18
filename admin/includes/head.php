@@ -52,11 +52,15 @@
     var js_button_no = '<?php echo NO;?>';
     var js_button_cancel = '<?php echo BUTTON_CANCEL;?>';
     var js_button_ok = '<?php echo BUTTON_REVIEW_APPROVE;?>';
-    
+    var js_submit;
+
     $.alerts.okButton = js_button_ok;
     $.alerts.overlayOpacity = .2;
     $.alerts.overlayColor = '#000';
     
+    function ButtonClicked(button) {
+      js_submit = button ;
+    }    
     function alert(message, title) {
       title = title || 'Information';
       jAlert(message, title);
@@ -66,7 +70,11 @@
         title = title || 'Information';    
         jConfirm(message, title, function(r) {
           if (r) {      
-            form.submit();      
+            var addElement = $("<input type='hidden'/>");
+            addElement.attr("name", js_submit.name).val(js_submit.value).appendTo(form);
+            form.submit();
+            addElement.remove();
+            r.preventDefault();
           }   
         }, js_button_yes, js_button_no);            
         return false;
