@@ -27,6 +27,7 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 //Neue Zusatzfelder koennen hier definiert werden: admin/includes/add_db_fields.php
+defined('ADD_PRODUCTS_FIELDS') or require_once (DIR_WS_INCLUDES.'add_db_fields.php');
 
 // holds functions for manipulating products & categories
 class categories {
