@@ -130,7 +130,7 @@ a.black {
 }
 .twoColums.stickyright {
   float:right;
-}
+}      
 
 
 .button_left {
@@ -1530,7 +1530,7 @@ div.highlightbox.checkoutborder {
 .margintop {
   margin-top:38px;
 }
-
+ 
 div.highlightbox ul {
   margin-left:15px;
   padding:0;
