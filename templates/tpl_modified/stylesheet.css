@@ -63,8 +63,8 @@
     40. Carousel Bestseller box
     41. Janolaw.de (BASIC Template for AGB Hosting Content)
     42. Sitemap 
-    43. Miscellaneous
-    44.
+    43. Product_reviews_info
+    44. Miscellaneous
     45.
     46.
         
@@ -3063,7 +3063,55 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
 /* END sitemap  */
 
 
-/* 43. START miscellaneous */
+/* 43. START product_reviews_info */
+.pri_imagebox {
+  float:left;
+  width:262px;
+}
+.pri_big_image {
+  position:relative;
+  width:240px;
+  min-height:240px;
+  margin: 0px 0px 0px 0px;
+  border:1px solid #eee;
+}
+.pri_big_image img {
+  position:absolute;
+  margin: auto;
+  left:0px;
+  right:0px;
+  bottom:0px;
+  top:0px;
+  max-width:240px;
+  height:auto;
+}  
+.pri_zoomtext {
+  line-height:15px;
+  font-size:9px;
+  white-space:nowrap;
+  padding:8px 0px;
+}
+.pri_content {
+  float:right;
+  width:483px;
+}
+.pri_rating_text {
+  float:left;
+  display:inline-block;
+  padding-right:5px;
+}
+.pri_rating_stars {
+  float:left;
+  display:inline-block;
+}
+.pri_rating_stars img {
+  float:left;
+}
+/* END product_reviews_info */
+
+
+
+/* 44. START miscellaneous */
 /* START No Javascript Styles for Tabs */ 
 ul.resp-tabs-list{
   display:none;
