@@ -1,9 +1,3 @@
-<noscript>
-<style type="text/css">
-  .nonjs-fallback { display:none !important; }
-</style>
-</noscript>
-
 <div id="horizontalAccordion" class="checkout_accordion">
   <ul class="resp-tabs-list nonjs-fallback">
     {if $FREE_SHIPPING}
@@ -33,7 +27,7 @@
         {else}
           {foreach name=inner item=method_data from=$module_data.methods} 
             <noscript>
-              <div><span class="shipping_radio">{$method_data.radio_field}</span><label for="{$method_data.id}">{$module_data.module}<span class="shipping_costs">{$method_data.price}</span></label></div>
+              <div class="nonjs-heading"><span class="shipping_radio">{$method_data.radio_field}</span><label for="{$method_data.id}">{$module_data.module}<span class="shipping_costs">{$method_data.price}</span></label></div>
             </noscript>
             <div>{$module_data.icon}{$method_data.title}</div>
           {/foreach}
