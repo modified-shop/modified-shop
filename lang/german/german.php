@@ -457,7 +457,7 @@ define('MSRP','UVP');
 define('YOUR_PRICE','Ihr Preis ');
 define('UNIT_PRICE','St&uuml;ckpreis ');
 define('ONLY',' Jetzt nur ');// DokuMan - Werbung mit durchgestrichenen Statt-Preisen ist zulässig
-define('FROM','Ab ');
+define('FROM','ab ');
 define('YOU_SAVE','Sie sparen ');
 define('INSTEAD','Unser bisheriger Preis ');// DokuMan - Werbung mit durchgestrichenen Statt-Preisen ist zulässig
 define('TXT_PER',' pro ');
