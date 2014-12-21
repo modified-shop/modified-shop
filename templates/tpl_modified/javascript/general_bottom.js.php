@@ -41,6 +41,14 @@
       slideWidth: 109,
       slideMargin: 18
     });
+
+    $(document).bind('cbox_complete', function(){
+      if($('#cboxTitle').height() > 20){
+        $("#cboxTitle").hide();
+        $("<div>"+$("#cboxTitle").html()+"</div>").css({color: $("#cboxTitle").css('color')}).insertAfter("#cboxPhoto");
+        $.fn.colorbox.resize();
+      }
+    });
       
   });
 </script>
