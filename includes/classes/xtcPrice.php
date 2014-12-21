@@ -2,8 +2,8 @@
 /* -----------------------------------------------------------------------------------------
    $Id: xtcPrice.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
+   modified eCommerce Shopsoftware  
+   http://www.modified-shop.org     
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------

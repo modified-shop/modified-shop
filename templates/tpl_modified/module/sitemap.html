@@ -1,51 +1,18 @@
 {config_load file="$language/lang_$language.conf" section="sitemap"}
 {config_load file="lang_`$language`.custom"}
 {if isset($herror)}<div class="errormessage">{$herror}</div>{/if}
-
-
-{foreach name=aussen item=module_data from=$module_content}
-  <div class="sitemapheader"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a></div>
-        <div class="sitemapcontent">
-        {if $module_data.SCATS|@sizeof!=0}
-          <ul>
-          {foreach key=key_data item=item_data from=$module_data.SCATS}
-            <li><a href="{$item_data.link}">{$item_data.text}</a></li>
-          {/foreach}
-          </ul>
-        {/if}
-        </div>
-{/foreach}
-
-
-
-
-
-<br /><br /><br /><br /><br /><br />
-
-
-
-
-<div class="sitemapwrap">
+<div class="sitemap">
   {foreach name=aussen item=module_data from=$module_content}
-    {if $smarty.foreach.aussen.iteration % 2 == 1}
-      <div class="sitemapleft">
-    {else}
-      <div class="sitemapright">
+  <div class="sitemapheader"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a></div>
+  <div class="sitemapcontent">
+    {if $module_data.SCATS|@sizeof!=0}
+    <ul>
+      {foreach key=key_data item=item_data from=$module_data.SCATS}
+      <li><a href="{$item_data.link}">{$item_data.text}</a></li>
+      {/foreach}
+    </ul>
     {/if}
-        <div class="sitemapheader"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a></div>
-        <div class="sitemapcontent">
-        {if $module_data.SCATS|@sizeof!=0}
-          <ul>
-          {foreach key=key_data item=item_data from=$module_data.SCATS}
-            <li><a href="{$item_data.link}">{$item_data.text}</a></li>
-          {/foreach}
-          </ul>
-        {/if}
-        </div>
-      </div>
-    {if $smarty.foreach.aussen.iteration % 2 == 0}
-      <div style="clear:both;"></div>
-    {/if}
+  </div>
   {/foreach}
-  <div style="clear:both;"></div>
 </div>
+<br class="clearfix" />

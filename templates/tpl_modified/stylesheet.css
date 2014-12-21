@@ -62,8 +62,8 @@
     39. Toggle shopping cart box
     40. Carousel Bestseller box
     41. Janolaw.de (BASIC Template for AGB Hosting Content)
-    42. Miscellaneous
-    43.
+    42. Sitemap 
+    43. Miscellaneous
     44.
     45.
     46.
@@ -3012,7 +3012,58 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
 /* END Janolaw.de */
 
 
-/* 42. START miscellaneous */
+/* 42. START sitemap  */
+.sitemap {
+  -moz-column-count: 3;
+  -moz-column-gap: 60px;
+  -moz-column-rule: 1px solid #eee;
+  -webkit-column-count: 3;
+  -webkit-column-gap: 60px;
+  -webkit-column-rule: 1px solid #eee;
+  column-count: 3;
+  column-gap: 60px;
+  column-rule: 1px solid #eee;
+}
+.sitemapheader {
+}
+.sitemapheader a {
+  font-size:13px;
+  font-weight:bold;
+  line-height:31px; 
+  display:block;
+}
+.sitemapheader a:hover {
+  color:#6d2551;
+  text-decoration:none;
+  background: #f2f2f2;
+}
+.sitemapcontent {
+  border-bottom: 1px solid #ddd;  
+}
+.sitemapcontent ul {
+  margin-bottom: 15px; 
+  padding-bottom: 15px;
+  margin-left: 0px;
+}
+.sitemapcontent ul li {
+  list-style-type:none; 
+}
+.sitemapcontent ul li a {
+  color:#333;
+  font-size:13px;
+  line-height:31px;
+  display:block;
+  padding-left:10px;
+  border-bottom: 1px solid #ddd;  
+}
+.sitemapcontent ul li a:hover {
+  text-decoration:none;
+  background: #f2f2f2;
+}
+/* END sitemap  */
+
+
+/* 43. START miscellaneous */
 /* START No Javascript Styles for Tabs */ 
 ul.resp-tabs-list{
   display:none;
@@ -3021,42 +3072,9 @@ ul.resp-tabs-list{
 
 
 
-/* 42. END miscellaneous */
+/* END miscellaneous */
 
 
 
 
-/* SITEMAP */
-.sitemapwrap .sitemapleft {
-  background-color:#f8f8f8;
-  border:#ccc 1px solid;
-  display:table;
-  float:left;
-  width:235px;
-  margin-bottom:15px;
-}
-.sitemapwrap .sitemapright {
-  background-color:#f8f8f8;
-  border:#ccc 1px solid;
-  display:table;
-  float:right;
-  width:235px;
-  margin-bottom:15px;
-}
-.sitemapheader {
-  padding:3px;
-  background-color:#ccc;
-  color:#fff;
-  font-weight:bold;
-}
-.sitemapheader a:link, .sitemapheader a:visited, .sitemapheader a:hover {
-  color:#fff;
-  text-decoration:none;
-  outline:none;
-}
-.sitemapcontent {
-  padding:6px;
-}
-.sitemapcontent li {
-  list-style-type:none;
-}
+
