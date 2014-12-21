@@ -82,7 +82,7 @@
     {if $MODULE_products_category != ''}<li>{#products_category#}</li>{/if}
   </ul>
   <div class="resp-tabs-container">
-    {if $PRODUCTS_DESCRIPTION != ''}<div><h4 class="detailbox">Produktbeschreibung</h4>{$PRODUCTS_DESCRIPTION}</div>{/if}
+    {if $PRODUCTS_DESCRIPTION != ''}<div class="pd_description"><h4 class="detailbox">Produktbeschreibung</h4>{$PRODUCTS_DESCRIPTION}</div>{/if}
     {if $more_images|@count > 0}
     <div class="cf">
       {foreach item=more_images_data from=$more_images} 
