@@ -490,7 +490,7 @@ class xtcPrice {
     $products_attributes = xtDBquery($products_attributes_query);
     $products_attributes = xtc_db_fetch_array($products_attributes, true);
     if ($products_attributes['total'] > 0) {
-      return ' ' . strtolower(FROM) . ' ';
+      return ' ' . FROM . ' ';
     }
   }
 
