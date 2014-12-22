@@ -95,6 +95,13 @@ abstract class Payone_Api_Request_Authorization_Abstract
      * @var Payone_Api_Request_Parameter_Invoicing_Transaction
      */
     protected $invoicing = null;
+    
+    /**
+     * Mandatory for PayPal Express Checkout
+     * Alphanumeric max 16 chars
+     * @var string 
+     */
+    protected $workorderid = null;
 
 
     /**
@@ -288,6 +295,20 @@ abstract class Payone_Api_Request_Authorization_Abstract
     public function getInvoicing()
     {
         return $this->invoicing;
+    }
+    
+    /**
+     * @return string
+     */
+    function getWorkorderId() {
+        return $this->workorderid;
+    }
+
+    /**
+     * @param string $workorderid
+     */
+    function setWorkorderId($workorderid) {
+        $this->workorderid = $workorderid;
     }
 
 }

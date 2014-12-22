@@ -14,7 +14,6 @@
  *
  * @category        Payone
  * @package         Payone_TransactionStatus
- * @subpackage      Request
  * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
  * @author          Matthias Walter <info@noovias.com>
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)

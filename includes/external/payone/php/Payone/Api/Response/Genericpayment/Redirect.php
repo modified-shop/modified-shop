@@ -14,36 +14,31 @@
  *
  * @category        Payone
  * @package         Payone_Api
- * @subpackage      Adapter
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @author          Matthias Walter <info@noovias.com>
+ * @subpackage      Response
+ * @author          Ronny Schröder
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
  */
-interface Payone_Api_Adapter_Interface
+class Payone_Api_Response_Genericpayment_Redirect extends Payone_Api_Response_Genericpayment_Abstract
 {
-    /**
-     * @abstract
-     * @param array $params
-     * @return array
-     */
-    public function request(array $params);
 
     /**
-     * @abstract
-     * @param string $url
+     * @var string
      */
-    public function setUrl($url);
+    protected $redirecturl = NULL;
 
     /**
-     * @abstract
+     * @param string $redirecturl
+     */
+    public function setRedirecturl($redirecturl)
+    {
+        $this->redirecturl = $redirecturl;
+    }
+
+    /**
      * @return string
      */
-    public function getUrl();
-
-    /**
-     * @abstract
-     * @return string
-     */
-    public function getRawResponse();
+    public function getRedirecturl()
+    {
+        return $this->redirecturl;
+    }
 }

@@ -14,19 +14,8 @@
  *
  * @category        Payone
  * @package         Payone_SessionStatus
- * @subpackage      Request
  * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
  * @author          Matthias Walter <info@noovias.com>
- * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
- */
-
-/**
- *
- * @category        Payone
- * @package         Payone_SessionStatus
- * @subpackage      Request
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
  * @link            http://www.noovias.com
  */

@@ -19,15 +19,6 @@
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
  * @link            http://www.noovias.com
  */
-
-/**
- *
- * @category        Payone
- * @package         Payone_Enum
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
- */
 class Payone_Enum_Reminderlevel
 {
     const LVL_1 = '1';

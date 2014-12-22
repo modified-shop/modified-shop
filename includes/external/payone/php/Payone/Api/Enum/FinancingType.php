@@ -35,4 +35,5 @@ class Payone_Api_Enum_FinancingType
     const BSV = 'BSV'; // BILLSAFE
     const CFR = 'CFR'; // COMMERZ FINANZ
     const KLV = 'KLV'; // KLARNA INVOICING
+    const KLS = 'KLS'; // KLARNA FINANCING
 }

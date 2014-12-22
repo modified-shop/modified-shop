@@ -48,13 +48,13 @@ class Payone_TransactionStatus_Config extends Payone_Config_Abstract
                             'percent' => 100
                         )
                     ),
-                    'loggers' => array(
-                        'Payone_Protocol_Logger_Log4php' => array(
-                            'filename' => 'payone_transactionstatus.log',
-                            'max_file_size' => '1MB',
-                            'max_file_count' => 20
-                        )
-                    ),
+//                    'loggers' => array(
+//                        'Payone_Protocol_Logger_Log4php' => array(
+//                            'filename' => 'payone_transactionstatus.log',
+//                            'max_file_size' => '1MB',
+//                            'max_file_count' => 20
+//                        )
+//                    ),
                 ),
             )
         );
