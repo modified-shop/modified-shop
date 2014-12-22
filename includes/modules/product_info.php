@@ -234,7 +234,7 @@ if (!is_object($product) || !$product->isProduct()) {
     array_shift($_SESSION['tracking']['products_history']); 
   }
   $_SESSION['tracking']['products_history'][$i] = $product->data['products_id'];
-  $_SESSION['tracking']['products_history'] = array_unique($_SESSION['tracking']['products_history']);
+  $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
 
   $info_smarty->assign('language', $_SESSION['language']);
 
