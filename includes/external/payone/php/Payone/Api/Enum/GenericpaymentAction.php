@@ -13,14 +13,20 @@
  * needs please refer to http://www.payone.de for more information.
  *
  * @category        Payone
- * @package         Payone_Enum
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @author          Matthias Walter <info@noovias.com>
+ * @package         Payone_Api
+ * @subpackage      Enum
+ * @author          Ronny Schröder
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
  */
-class Payone_Enum_Mode
+class Payone_Api_Enum_GenericpaymentAction
 {
-    const TEST = 'test';
-    const LIVE = 'live';
+    /**
+     * initalize paypal express checkout process
+     */
+    const PAYPAL_ECS_SET_EXPRESSCHECKOUT='setexpresscheckout';
+    
+    /**
+     * get customer shipping address from paypal
+     */
+    const PAYPAL_ECS_GET_EXPRESSCHECKOUTDETAILS='getexpresscheckoutdetails';
 }

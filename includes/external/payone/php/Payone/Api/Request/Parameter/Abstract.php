@@ -70,6 +70,12 @@ abstract class Payone_Api_Request_Parameter_Abstract
             if (!is_array($data) and !is_object($data)) {
                 $result[$key] = $data;
             }
+            else if ($data instanceof Payone_Api_Request_Parameter_Interface) {
+                /**
+                 * @var Payone_Api_Request_Parameter_Interface $data
+                 */
+                $result = array_merge($result, $data->toArray());
+            }
         }
         return $result;
     }

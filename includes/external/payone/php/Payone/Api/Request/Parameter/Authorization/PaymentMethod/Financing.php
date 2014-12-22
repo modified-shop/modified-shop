@@ -51,6 +51,8 @@ class Payone_Api_Request_Parameter_Authorization_PaymentMethod_Financing
      * @var string
      */
     protected $backurl = NULL;
+    
+    protected $paydata = NULL;
 
     /**
      * @param string $financingtype
@@ -115,5 +117,19 @@ class Payone_Api_Request_Parameter_Authorization_PaymentMethod_Financing
     {
         return $this->successurl;
     }
+    
+    /**
+     * @param Payone_Api_Request_Parameter_Paydata_Paydata $paydata
+     */
+    public function setPaydata($paydata) {
+        $this->paydata = $paydata;
+    }
 
+    /**
+     * 
+     * @return Payone_Api_Request_Parameter_Paydata_Paydata
+     */
+    public function getPaydata() {
+        return $this->paydata;
+    }
 }
