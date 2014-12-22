@@ -1,1 +1,6 @@
 zoomtext = 'For a larger view click on the thumbnail'
+first = '&laquo; first'
+back = '&laquo; back'
+overview = 'Overview'
+next = 'next &raquo;'
+last = 'last &raquo;'
