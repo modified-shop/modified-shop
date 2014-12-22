@@ -228,12 +228,15 @@ if (!is_object($product) || !$product->isProduct()) {
   }
 
   // session products history
-  $i = isset($_SESSION['tracking']['products_history']) ? count($_SESSION['tracking']['products_history']) : 0;
-  if ($i >= (int)MAX_DISPLAY_PAGEVIEW_HISTORY) { 
-    $i = (int)MAX_DISPLAY_PAGEVIEW_HISTORY; 
+  if (!isset($_SESSION['tracking']['products_history'])) $_SESSION['tracking']['products_history'] = array();
+  if (in_array($product->data['products_id'], $_SESSION['tracking']['products_history'])) {
+    unset($_SESSION['tracking']['products_history'][array_search($product->data['products_id'], $_SESSION['tracking']['products_history'])]);
+    $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
+  }
+  array_push($_SESSION['tracking']['products_history'], $product->data['products_id']);
+  if (count($_SESSION['tracking']['products_history']) > (int)MAX_DISPLAY_PRODUCTS_HISTORY) {
     array_shift($_SESSION['tracking']['products_history']); 
   }
-  $_SESSION['tracking']['products_history'][$i] = $product->data['products_id'];
   $_SESSION['tracking']['products_history'] = array_values($_SESSION['tracking']['products_history']);
 
   $info_smarty->assign('language', $_SESSION['language']);
