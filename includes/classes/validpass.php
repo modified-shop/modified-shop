@@ -51,7 +51,7 @@ class validpass {
 		{
 			$random = $this->getRandomBytes(16);
 			$hash = crypt($plain, $this->gensalt_blowfish($random));
-			if (strlen($hash) === 60)
+			if (strlen($hash) === 60 && $this->validate_password($plain, $hash) === true)
 			{
 				return $hash;
 			}
@@ -59,23 +59,23 @@ class validpass {
 
 		if (CRYPT_EXT_DES === 1 && !$this->portable_hashes && function_exists('version_compare') && version_compare(phpversion(), '5.3.0', '>='))
 		{
-			if (strlen($random) < 3)
+			if (strlen($random) != 3)
 			{
 				$random = $this->getRandomBytes(3);
 			}
 			$hash = crypt($plain, $this->gensalt_ext_des($random));
-			if (strlen($hash) === 20)
+			if (strlen($hash) === 20 && $this->validate_password($plain, $hash) === true)
 			{
 				return $hash;
 			}
 		}
 
-		if (strlen($random) < 6)
+		if (strlen($random) != 6)
 		{
 			$random = $this->getRandomBytes(6);
 		}
 		$hash = $this->crypt_portable($plain, $this->gensalt_portable($random));
-		if (strlen($hash) === 39)
+		if (strlen($hash) === 39  && $this->validate_password($plain, $hash) === true)
 		{
 			return $hash;
 		}
