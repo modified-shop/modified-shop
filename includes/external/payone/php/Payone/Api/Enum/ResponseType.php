@@ -39,4 +39,5 @@ class Payone_Api_Enum_ResponseType
     const BLOCKED = 'BLOCKED';
     const ENROLLED = 'ENROLLED';
     const ERROR = 'ERROR';
+    const OK = 'OK'; //GenericPayment Requests
 }

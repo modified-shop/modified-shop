@@ -13,14 +13,11 @@
  * needs please refer to http://www.payone.de for more information.
  *
  * @category        Payone
- * @package         Payone_Enum
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @author          Matthias Walter <info@noovias.com>
+ * @package         Payone_Api
+ * @subpackage      Response
+ * @author          Ronny Schröder
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
  */
-class Payone_Enum_Mode
-{
-    const TEST = 'test';
-    const LIVE = 'live';
+class Payone_Api_Response_Genericpayment_Ok extends Payone_Api_Response_Genericpayment_Approved {
+    
 }

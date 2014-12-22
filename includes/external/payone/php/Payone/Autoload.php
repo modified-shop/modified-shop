@@ -19,16 +19,6 @@
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
  * @link            http://www.noovias.com
  */
-
-/**
- * This class provides an autoloader for the PAYONE SDK
- *
- * @category        Payone
- * @package         Payone
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
- */
 class Payone_Autoload
 {
     /**
