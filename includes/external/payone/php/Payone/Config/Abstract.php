@@ -12,15 +12,6 @@
  * versions in the future. If you wish to customize Payone for your
  * needs please refer to http://www.payone.de for more information.
  *
- * @category        Payone
- * @package         Payone
- * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
- * @author          Matthias Walter <info@noovias.com>
- * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
- * @link            http://www.noovias.com
- */
-
-/**
  * Configuration for Payone SDK
  *
  * <b>Example: Replacing the default logging mechanism for Payone Api</b>
@@ -63,8 +54,9 @@
  * </pre>
  *
  * @category        Payone
- * @package         Payone
+ * @package         Payone_Config
  * @copyright       Copyright (c) 2012 <info@noovias.com> - www.noovias.com
+ * @author          Matthias Walter <info@noovias.com>
  * @license         <http://www.gnu.org/licenses/> GNU General Public License (GPL 3)
  * @link            http://www.noovias.com
  */

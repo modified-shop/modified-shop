@@ -86,7 +86,11 @@ abstract class Payone_Api_Response_Abstract implements Payone_Api_Response_Inter
     {
         $stringArray = array();
         foreach ($this->toArray() as $key => $value) {
-            $stringArray[] = $key . '=' . $value;
+            if($value instanceof Payone_Api_Response_Parameter_Interface){
+                $stringArray[] = $value->__toString();
+            } else {
+                $stringArray[] = $key . '=' . $value;
+            }
         }
 
         $result = implode('|', $stringArray);
