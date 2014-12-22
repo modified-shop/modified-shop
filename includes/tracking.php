@@ -44,9 +44,9 @@ if (!isset ($_SESSION['tracking']['browser']))  $_SESSION['tracking']['browser']
 // pageview history
 if (!isset($_SESSION['tracking']['pageview_history'])) $_SESSION['tracking']['pageview_history'] = array();
 $i = count($_SESSION['tracking']['pageview_history']);
-if ($i > 6) {
+if ($i > (int)MAX_DISPLAY_PAGEVIEW_HISTORY) {
   array_shift($_SESSION['tracking']['pageview_history']);
-  $_SESSION['tracking']['pageview_history'][6] = $ref_url;
+  $_SESSION['tracking']['pageview_history'][(int)MAX_DISPLAY_PAGEVIEW_HISTORY] = $ref_url;
 } else {
   $_SESSION['tracking']['pageview_history'][$i] = $ref_url;
   if ($_SESSION['tracking']['pageview_history'][$i] == $_SESSION['tracking']['http_referer']) {

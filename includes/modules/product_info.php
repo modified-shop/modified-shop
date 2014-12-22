@@ -229,7 +229,10 @@ if (!is_object($product) || !$product->isProduct()) {
 
   // session products history
   $i = isset($_SESSION['tracking']['products_history']) ? count($_SESSION['tracking']['products_history']) : 0;
-  if ($i > 6) { $i = 6; array_shift($_SESSION['tracking']['products_history']); }
+  if ($i > (int)MAX_DISPLAY_PAGEVIEW_HISTORY) { 
+    $i = (int)MAX_DISPLAY_PAGEVIEW_HISTORY; 
+    array_shift($_SESSION['tracking']['products_history']); 
+  }
   $_SESSION['tracking']['products_history'][$i] = $product->data['products_id'];
   $_SESSION['tracking']['products_history'] = array_unique($_SESSION['tracking']['products_history']);
 

@@ -891,6 +891,8 @@ define('MAX_DISPLAY_PRODUCTS_CATEGORY_TITLE', 'Maximale Artikel');
 define('MAX_DISPLAY_PRODUCTS_CATEGORY_DESC', 'Maximale Anzahl an Artikeln aus der gleichen Kategorie');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_TITLE', 'Anzahl Suchergebnisse');
 define('MAX_DISPLAY_ADVANCED_SEARCH_RESULTS_DESC', 'Anzahl der Artikel in den Suchergebnissen');
+define('MAX_DISPLAY_PAGEVIEW_HISTORY_TITLE' , 'Anzahl der History');
+define('MAX_DISPLAY_PAGEVIEW_HISTORY_DESC' , 'Maximum Anzahl an Artikel die zuletzt besucht wurden im Account anzeigen');
 
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Anzeige noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Artikelbild angegeben wurde');
