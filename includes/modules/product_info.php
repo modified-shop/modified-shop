@@ -229,7 +229,7 @@ if (!is_object($product) || !$product->isProduct()) {
 
   // session products history
   $i = isset($_SESSION['tracking']['products_history']) ? count($_SESSION['tracking']['products_history']) : 0;
-  if ($i > (int)MAX_DISPLAY_PAGEVIEW_HISTORY) { 
+  if ($i >= (int)MAX_DISPLAY_PAGEVIEW_HISTORY) { 
     $i = (int)MAX_DISPLAY_PAGEVIEW_HISTORY; 
     array_shift($_SESSION['tracking']['products_history']); 
   }
