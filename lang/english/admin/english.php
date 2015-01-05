@@ -349,7 +349,7 @@ define('WARNING_NO_FILE_UPLOADED', 'Warnung: No file uploaded.');
 define('DELETE_ENTRY','Delete entry?');
 define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a Payment Module!');
 define('TEXT_SHIPPING_ERROR','<b>WARNING:</b> Please activate a Shipping Module!');
-define('TEXT_PAYPAL_CONFIG','<b>WARNUNG:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>Partner -> PayPal<strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
+define('TEXT_PAYPAL_CONFIG','<b>WARNING:</b> Please configure the PayPal payment settings for "Live mode" here: <a href="%s"><strong>Partner -> PayPal</strong></a>.'); //DokuMan - 2012-05-31 - show warning if PayPal payment module activated, but not configured for live mode yet
 
 define('TEXT_NETTO','net: ');
 
