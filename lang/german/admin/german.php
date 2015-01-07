@@ -533,5 +533,5 @@ define('SPECIALS_DATE_START_TT', 'Angebote startet um 00.00.00 Uhr');
 define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23.59.59 Uhr)');
 
 require_once(DIR_FS_INC.'auto_require.inc.php');
-foreach(auto_require(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
+foreach(auto_require(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>
