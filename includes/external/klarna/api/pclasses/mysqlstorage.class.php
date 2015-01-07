@@ -116,24 +116,14 @@ class MySQLStorage extends PCStorage
      */
     protected function connect()
     {
-        $this->link = xtc_db_connect($this->addr, $this->user, $this->passwd);
+        $this->link = xtc_db_connect($this->addr, $this->user, $this->passwd, $this->dbName, 'db_klarna');
         if ($this->link === false) {
             throw new Klarna_DatabaseException(
-                'Failed to connect to database! ('.xtc_db_error().')'
+                'Failed to connect to database!'
             );
         }
 
-        if (!xtc_db_query(
-            "CREATE DATABASE IF NOT EXISTS `{$this->dbName}`",
-            $this->link
-        )
-        ) {
-            throw new Klarna_DatabaseException(
-                'Failed to create! ('.xtc_db_error().')'
-            );
-        }
-
-        $create = xtc_db_query(
+        xtc_db_query(
             "CREATE TABLE IF NOT EXISTS `{$this->dbName}`.`{$this->dbTable}` (
                 `eid` int(10) unsigned NOT NULL,
                 `id` int(10) unsigned NOT NULL,
@@ -150,9 +140,9 @@ class MySQLStorage extends PCStorage
             )", $this->link
         );
 
-        if (!$create) {
+        if (xtc_db_num_rows(xtc_db_query("SHOW TABLES LIKE '".$this->dbTable."'")) != '1') {
             throw new Klarna_DatabaseException(
-                'Table not existing, failed to create! ('.xtc_db_error().')'
+                'Table not existing, failed to create Klarna table!'
             );
         }
     }
@@ -236,7 +226,7 @@ class MySQLStorage extends PCStorage
         );
         if ($result === false) {
             throw new Klarna_DatabaseException(
-                'SELECT query failed! ('.xtc_db_error().')'
+                'SELECT query from Klarna table failed!'
             );
         }
         while ($row = xtc_db_fetch_array($result)) {
@@ -300,7 +290,7 @@ class MySQLStorage extends PCStorage
                 );
                 if ($result === false) {
                     throw new Klarna_DatabaseException(
-                        'INSERT INTO query failed! ('.xtc_db_error().')'
+                        'INSERT INTO Klarna table failed!'
                     );
                 }
             }
