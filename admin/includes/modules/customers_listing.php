@@ -72,6 +72,8 @@
                   $keywords = xtc_db_input(xtc_db_prepare_input($_GET['search']));
                   $search = "AND (c.customers_lastname LIKE '%".$keywords."%'
                                   OR c.customers_firstname LIKE '%".$keywords."%'
+                                  OR CONCAT(customers_firstname,' ',customers_lastname) LIKE '%".$keywords."%'
+                                  OR CONCAT(customers_lastname,' ',customers_firstname) LIKE '%".$keywords."%'
                                   OR c.customers_email_address LIKE '%".$keywords."%'
                                   OR a.entry_company LIKE '%".$keywords."%'
                                  )";
@@ -79,6 +81,8 @@
                   if(isset($_GET['asb']) && $_GET['asb'] == 'asb') {
                     $search = "AND (c.customers_lastname LIKE '%".$keywords."%'
                                     OR c.customers_firstname LIKE '%".$keywords."%'
+                                    OR CONCAT(customers_firstname,' ',customers_lastname) LIKE '%".$keywords."%'
+                                    OR CONCAT(customers_lastname,' ',customers_firstname) LIKE '%".$keywords."%'
                                     OR a.entry_company LIKE '%".$keywords."%'
                                    )";
                   }
