@@ -45,7 +45,7 @@ if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
-require_once (DIR_FS_INC . 'auto_require.inc.php');
+require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // BOF - Tomcraft - 2009-11-08 - FIX for PHP5.3 date_default_timezone_set
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
@@ -98,7 +98,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['cfgKey']) OR  define($configuration['cfgKey'], stripslashes($configuration['cfgValue'])); //Web28 - 2012-08-09 - fix slashes
 }
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_export_begin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export_begin/','php') as $file) require ($file);
 
 // if gzip_compression is enabled, start to buffer the output
 if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
@@ -109,6 +109,6 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
   }
 }
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php') as $file) require ($file);
 
 ?>

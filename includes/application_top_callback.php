@@ -43,7 +43,7 @@ if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
-require_once (DIR_FS_INC . 'auto_require.inc.php');
+require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {

@@ -127,8 +127,8 @@
       <!-- EOF Block1 //-->
 
       <?php //autoload new_category addons 
-      require_once(DIR_FS_INC.'auto_require.inc.php');
-      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/modules/new_category/','php') as $file) require ($file);
+      require_once(DIR_FS_INC.'auto_include.inc.php');
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_category/','php') as $file) require ($file);
       ?>
 
       <!-- BOF Customers group block //-->

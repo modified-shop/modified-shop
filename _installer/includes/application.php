@@ -50,7 +50,7 @@
   require_once(DIR_FS_INC.'set_admin_directory.inc.php');
   
   //require('../includes/functions/validations.php');
-  require_once(DIR_FS_CATALOG.'inc/auto_require.inc.php');
+  require_once(DIR_FS_CATALOG.'inc/auto_include.inc.php');
   require_once(DIR_FS_CATALOG.'includes/classes/boxes.php');
   require_once(DIR_FS_CATALOG.'includes/classes/message_stack.php');
   require_once(DIR_FS_CATALOG.'includes/filenames.php');

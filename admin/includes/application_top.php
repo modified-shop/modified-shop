@@ -80,7 +80,7 @@ if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
-require_once (DIR_FS_INC . 'auto_require.inc.php');
+require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // solve compatibility issues
 require_once (DIR_WS_FUNCTIONS.'compatibility.php');
@@ -127,7 +127,7 @@ require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
 require_once(DIR_FS_INC . 'xtc_parse_category_path.inc.php');
 require_once(DIR_FS_INC . 'xtc_input_validation.inc.php');
 
-foreach(auto_require(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/functions/','php') as $file) require ($file);
 
 // design layout (wide of boxes in pixels) (default: 125)
 define('BOX_WIDTH', 125);
@@ -149,7 +149,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   }
 }
 
-foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_top_begin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top_begin/','php') as $file) require ($file);
 
 define('FILENAME_IMAGEMANIPULATOR',IMAGE_MANIPULATOR);
 
@@ -276,6 +276,6 @@ if (!isset($_SESSION['customer_id'])) {
 
 xtc_check_permission($pagename);
 
-foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_top_end/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_top_end/','php') as $file) require ($file);
 
 ?>

@@ -208,8 +208,8 @@
       </table>
       
       <?php //autoload new product addons 
-      require_once(DIR_FS_INC.'auto_require.inc.php');
-      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
+      require_once(DIR_FS_INC.'auto_include.inc.php');
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
       ?>
 
       <?php

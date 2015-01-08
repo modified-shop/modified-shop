@@ -46,7 +46,7 @@ if (is_file('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php')) 
   require('templates/'.CURRENT_TEMPLATE.'/javascript/general_bottom.js.php');
 }
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_bottom/','php') as $file) require ($file);
 
 // new error handling
 if (is_array($error_exceptions) && count($error_exceptions) > 0) {

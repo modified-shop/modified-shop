@@ -540,6 +540,6 @@ define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
 define('PRINTVIEW_INFO', 'Artikeldatenblatt drucken');
 define('PRODUCTS_REVIEW_LINK', 'Bewertung schreiben');
 
-require_once(DIR_FS_INC.'auto_require.inc.php');
-foreach(auto_require(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

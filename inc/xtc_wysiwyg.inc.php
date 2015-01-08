@@ -121,8 +121,8 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') {
              </script>';
       break;
     case 'addon':
-      require_once(DIR_FS_INC.'auto_require.inc.php');
-      foreach(auto_require(DIR_FS_ADMIN.'includes/extra/wysiwyg/','php') as $file) require ($file);
+      require_once(DIR_FS_INC.'auto_include.inc.php');
+      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/wysiwyg/','php') as $file) require ($file);
       break;
 
   }

@@ -23,7 +23,7 @@
     echo $logger->timer_stop(DISPLAY_PAGE_PARSE_TIME);
   }
   
-  foreach(auto_require(DIR_FS_ADMIN.'includes/extra/application_bottom/','php') as $file) require ($file);
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/application_bottom/','php') as $file) require ($file);
 
   // new error handling
   if (is_array($error_exceptions) && count($error_exceptions) > 0) {

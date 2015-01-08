@@ -76,7 +76,7 @@ if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
 if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
 if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
 
-require_once (DIR_FS_INC . 'auto_require.inc.php');
+require_once (DIR_FS_INC . 'auto_include.inc.php');
 
 // include the list of project filenames
 require (DIR_WS_INCLUDES.'filenames.php');
@@ -175,7 +175,7 @@ require_once (DIR_FS_INC.'xtc_backup_restore_configuration.php');
 require_once (DIR_FS_INC.'xtc_hide_session_id.inc.php');
 require_once (DIR_FS_INC.'get_messages.inc.php');
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/functions/','php') as $file) require ($file);
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -186,7 +186,7 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
   defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
 }
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_begin/','php') as $file) require ($file);
 
 //compatibility for modified eCommerce Shopsoftware 1.06 files
 if (!defined('DIR_WS_BASE')) {
@@ -363,6 +363,6 @@ include (DIR_WS_MODULES.'set_account_type.php');
 unset ($_SESSION['actual_content']);
 xtc_count_cart();
 
-foreach(auto_require(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_end/','php') as $file) require ($file);
 
 ?>

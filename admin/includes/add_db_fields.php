@@ -37,8 +37,8 @@ $add_products_description_fields[] = 'products_order_description';
 
 //CUSTOM ADDS
 //autoload new product addons 
-require_once(DIR_FS_INC.'auto_require.inc.php');
-foreach(auto_require(DIR_FS_ADMIN.'includes/extra/modules/add_db_fields/','php') as $file) require ($file);
+require_once(DIR_FS_INC.'auto_include.inc.php');
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/add_db_fields/','php') as $file) require ($file);
 
 define('ADD_PRODUCTS_FIELDS', implode(',',$add_products_fields) );
 define('ADD_PRODUCTS_DESCRIPTION_FIELDS', implode(',',$add_products_description_fields) ); 
