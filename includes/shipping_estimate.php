@@ -162,7 +162,7 @@ if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weigh
           );
         } else {
           $shipping_content[$i] = array(
-            'NAME' => $quote['error'] . ' - ' . $quote['methods'][0]['title'],
+            'NAME' => $quote['module'] . ' - ' . $quote['error'],
             'VALUE' => ''
           );
         }
