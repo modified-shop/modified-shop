@@ -27,13 +27,16 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 // include needed functions
 require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 
-$shop_content_query = xtc_db_query("
-    SELECT content_id, content_title, content_heading, content_text, content_file
-      FROM ".TABLE_CONTENT_MANAGER."
-     WHERE content_group='".(int) $_GET['coID']."'
-           ".CONTENT_CONDITIONS."
-       AND content_active = '1'
-       AND languages_id=".$_SESSION['languages_id']);
+$shop_content_query = xtc_db_query("SELECT content_id, 
+                                           content_title, 
+                                           content_heading, 
+                                           content_text, 
+                                           content_file
+                                      FROM ".TABLE_CONTENT_MANAGER."
+                                     WHERE content_group='".(int) $_GET['coID']."'
+                                           ".CONTENT_CONDITIONS."
+                                       AND content_active = '1'
+                                       AND languages_id=".$_SESSION['languages_id']);
 
 if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
   $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
@@ -45,6 +48,9 @@ if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
 if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
   require (DIR_WS_INCLUDES.'header.php');
 }
+
+// sub content
+include (DIR_WS_MODULES.'sub_content_listing.php');
 
 $smarty->assign('CONTENT_HEADING', $shop_content_data['content_heading']);
 
