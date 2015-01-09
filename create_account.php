@@ -50,6 +50,8 @@ require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
 
+require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
+
 $country = isset($_POST['country']) ? (int)$_POST['country'] : STORE_COUNTRY;
 $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy' : '';
 
@@ -177,9 +179,12 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $messageStack->add('create_account', ENTRY_TELEPHONE_NUMBER_ERROR);
   }
 
-  if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
+  $policy = new password_policy();
+  if (!$policy->validate($password)) {
     $error = true;
-    $messageStack->add('create_account', ENTRY_PASSWORD_ERROR);
+    foreach ($policy->get_errors() as $k => $error) {
+      $messageStack->add('create_account', $error);
+    }
   }
   elseif ($password != $confirmation) {
     $error = true;

@@ -28,6 +28,8 @@ require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
 require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 require_once (DIR_FS_INC.'xtc_encrypt_password.inc.php');
 
+require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
+
 if (!isset ($_SESSION['customer_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
@@ -43,25 +45,30 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		$error = true;
 		$messageStack->add('account_password', ENTRY_PASSWORD_CURRENT_ERROR);
 	}
-	elseif (strlen($password_new) < ENTRY_PASSWORD_MIN_LENGTH) {
-		$error = true;
-		$messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR);
-	}
-	elseif ($password_new != $password_confirmation) {
-		$error = true;
-		$messageStack->add('account_password', ENTRY_PASSWORD_NEW_ERROR_NOT_MATCHING);
-	}
+
+  $policy = new password_policy();
+  if (!$policy->validate($password_new)) {
+    $error = true;
+    foreach ($policy->get_errors() as $k => $error) {
+      $messageStack->add('account_password', $error);
+    }
+  }
+  elseif ($password_new != $password_confirmation) {
+    $error = true;
+    $messageStack->add('account_password', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
+  }
 
 	if ($error === false) {
-		$check_customer_query = xtc_db_query("select customers_password from ".TABLE_CUSTOMERS." where customers_id = '".(int) $_SESSION['customer_id']."'");
+		$check_customer_query = xtc_db_query("SELECT customers_password 
+		                                        FROM ".TABLE_CUSTOMERS." 
+		                                       WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
 		$check_customer = xtc_db_fetch_array($check_customer_query);
 
 		if (xtc_validate_password($password_current, $check_customer['customers_password'], $_SESSION['customer_id'])) {
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_password = '".xtc_encrypt_password($password_new)."', customers_last_modified=now() WHERE customers_id = '".(int) $_SESSION['customer_id']."'");
 			xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." SET customers_info_date_account_last_modified = now() WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
-
 			$messageStack->add_session('account', SUCCESS_PASSWORD_UPDATED, 'success');
-
+			
 			xtc_redirect(xtc_href_link(FILENAME_ACCOUNT, '', 'SSL'));
 		} else {
 			$messageStack->add('account_password', ERROR_CURRENT_PASSWORD_NOT_MATCHING);

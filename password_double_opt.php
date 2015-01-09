@@ -112,7 +112,7 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'verified')) {
     $case = 'no_account';
     $info_message = TEXT_NO_ACCOUNT;
   } else {
-    $newpass = xtc_create_random_value(ENTRY_PASSWORD_MIN_LENGTH);
+    $newpass = xtc_create_random_value(ENTRY_PASSWORD_MIN_LENGTH * 2);
     $crypted_password = xtc_encrypt_password($newpass);
 
     xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 

@@ -29,6 +29,8 @@
   require_once(DIR_FS_INC . 'xtc_draw_input_field.inc.php');
   require_once(DIR_FS_INC . 'xtc_get_country_list.inc.php');
 
+  require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
+  
   require_once(DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/includes/functions.php');
   
    //BOF - web28 - 2010.02.11 - NEW LANGUAGE HANDLING IN application.php
@@ -140,10 +142,14 @@
       $messageStack->add('install_step6', ENTRY_TELEPHONE_NUMBER_ERROR);
     }
 
-    if (strlen($password) < ENTRY_PASSWORD_MIN_LENGTH) {
+    $policy = new password_policy();
+    if (!$policy->validate($password)) {
       $error = true;
-      $messageStack->add('install_step6', ENTRY_PASSWORD_ERROR);
-    } elseif ($password != $confirmation) {
+      foreach ($policy->get_errors() as $k => $error) {
+        $messageStack->add('install_step6', $error);
+      }
+    }
+    elseif ($password != $confirmation) {
       $error = true;
       $messageStack->add('install_step6', ENTRY_PASSWORD_ERROR_NOT_MATCHING);
     }
