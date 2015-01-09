@@ -200,4 +200,7 @@ UPDATE zones_to_geo_zones SET geo_zone_id = 5 WHERE association_id = 53;
 #GTB - 2014-11-20 - added startdate for specials
 ALTER TABLE specials ADD start_date DATETIME AFTER specials_last_modified;
 
+#GTB - 2015-01-09 - Add new index on orders
+ALTER TABLE orders ADD INDEX idx_orders_status (orders_status);
+
 # Keep an empty line at the end of this file for the db_updater to work properly

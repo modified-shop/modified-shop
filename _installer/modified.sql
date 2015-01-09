@@ -644,6 +644,7 @@ CREATE TABLE orders (
   ibn_billdate DATE NOT NULL,
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id)
+  KEY idx_orders_status (orders_status)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS orders_products;
