@@ -1196,6 +1196,7 @@ DROP TABLE IF EXISTS personal_offers_by_customers_status_0;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_1;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_2;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_3;
+DROP TABLE IF EXISTS personal_offers_by_customers_status_4;
 
 #database Version
 INSERT INTO database_version(version) VALUES ('MOD_2.0.0.0');
