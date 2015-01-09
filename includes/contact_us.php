@@ -65,13 +65,35 @@
       if (isset($_POST['phone']))    $additional_fields .= EMAIL_PHONE . $_POST['phone'] . "\n" ;
       if (isset($_POST['fax']))      $additional_fields .= EMAIL_FAX . $_POST['fax'] . "\n" ;
 
-      $email_layout = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
-              "--------------------------------------------------------------" . "\n" .
-              EMAIL_NAME. $_POST['name'] . "\n" .
-              EMAIL_EMAIL. trim($_POST['email']) . "\n" .
-              $additional_fields .
-              "\n".EMAIL_MESSAGE."\n ". $_POST['message_body'] . "\n";
-
+      if (file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html') 
+          && file_exists(DIR_FS_DOCUMENT_ROOT.'templates/'.CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt')
+          ) 
+      {
+        $smarty->assign('language', $_SESSION['language']);
+        $smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');    
+        $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+        $smarty->assign('NAME', $_POST['name']);
+        $smarty->assign('EMAIL', $_POST['email']);
+        $smarty->assign('DATE', $datum);
+        $smarty->assign('TIME', $uhrzeit);
+        $smarty->assign('ADDITIONAL_FIELDS', nl2br($additional_fields));
+        $smarty->assign('MESSAGE', nl2br($_POST['message_body']));
+     
+        // dont allow cache
+        $smarty->caching = false;
+     
+        $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.html');
+        $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/contact_us.txt');
+      } else {
+        $txt_mail = sprintf(EMAIL_SENT_BY, CONTACT_US_NAME, CONTACT_US_EMAIL_ADDRESS, $datum , $uhrzeit) . "\n" .
+                "--------------------------------------------------------------" . "\n" .
+                EMAIL_NAME. $_POST['name'] . "\n" .
+                EMAIL_EMAIL. trim($_POST['email']) . "\n" .
+                $additional_fields .
+                "\n".EMAIL_MESSAGE."\n ". $_POST['message_body'] . "\n";
+        $html_mail = nl2br($txt_mail);
+      }
+      
       xtc_php_mail(CONTACT_US_EMAIL_ADDRESS,
                    CONTACT_US_NAME,
                    CONTACT_US_EMAIL_ADDRESS,
@@ -82,8 +104,8 @@
                    '',
                    '',
                    CONTACT_US_EMAIL_SUBJECT,
-                   nl2br($email_layout),
-                   $email_layout
+                   $html_mail,
+                   $txt_mail
                    );
 
       xtc_redirect(xtc_href_link(FILENAME_CONTENT, 'action=success&coID='.(int) $_GET['coID']));
