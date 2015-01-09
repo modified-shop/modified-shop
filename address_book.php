@@ -1,26 +1,29 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: address_book.php 4221 2013-01-11 10:18:52Z gtb-modified $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(address_book.php,v 1.57 2003/05/29); www.oscommerce.com 
    (c) 2003	 nextcommerce (address_book.php,v 1.14 2003/08/17); www.nextcommerce.org
-
+   (c) 2006 XT-Commerce - www.xt-commerce.com
+   
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_country_name.inc.php');
@@ -40,7 +43,7 @@ if ($messageStack->size('addressbook') > 0)
 $smarty->assign('ADDRESS_DEFAULT', xtc_address_label($_SESSION['customer_id'], $_SESSION['customer_default_address_id'], true, ' ', '<br />'));
 
 $addresses_data = array ();
-$addresses_query = xtc_db_query("select address_book_id,
+$addresses_query = xtc_db_query("SELECT address_book_id,
                                         entry_firstname as firstname,
                                         entry_lastname as lastname,
                                         entry_company as company,
@@ -51,9 +54,9 @@ $addresses_query = xtc_db_query("select address_book_id,
                                         entry_state as state,
                                         entry_zone_id as zone_id,
                                         entry_country_id as country_id 
-                                 from ".TABLE_ADDRESS_BOOK." 
-                                 where customers_id = '".(int) $_SESSION['customer_id']."'
-                                 order by firstname, lastname");
+                                   FROM ".TABLE_ADDRESS_BOOK." 
+                                  WHERE customers_id = '".(int) $_SESSION['customer_id']."'
+                               ORDER BY firstname, lastname");
 while ($addresses = xtc_db_fetch_array($addresses_query)) {
 	$format_id = xtc_get_address_format_id($addresses['country_id']);
 	if ($addresses['address_book_id'] == $_SESSION['customer_default_address_id']) {
