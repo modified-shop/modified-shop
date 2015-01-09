@@ -42,42 +42,44 @@
   if (!defined('DIR_FS_INC')) {
     define('DIR_FS_INC', DIR_FS_CATALOG.'inc/');
   }
+  if (!defined('DIR_FS_INC_INSTALLER')) {
+    define('DIR_FS_INC_INSTALLER', DIR_FS_CATALOG.DIR_MODIFIED_INSTALLER.'/inc/');
+  }
   if (!defined('DIR_WS_BASE')) {
     define('DIR_WS_BASE',''); //web28 - 2010-12-13 - FIX for $messageStack icons //moved to application.php
   }
 
   // set admin directory
   require_once(DIR_FS_INC.'set_admin_directory.inc.php');
-  
-  //require('../includes/functions/validations.php');
-  require_once(DIR_FS_CATALOG.'inc/auto_include.inc.php');
+
+  // include General functions
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  require_once(DIR_FS_INC.'xtc_set_time_limit.inc.php');
+  require_once(DIR_FS_INC.'xtc_check_agent.inc.php');
+  require_once(DIR_FS_INC.'xtc_image.inc.php');
+ 
   require_once(DIR_FS_CATALOG.'includes/classes/boxes.php');
   require_once(DIR_FS_CATALOG.'includes/classes/message_stack.php');
   require_once(DIR_FS_CATALOG.'includes/filenames.php');
   require_once(DIR_FS_CATALOG.'includes/database_tables.php');
-  require_once(DIR_FS_INC.'xtc_image.inc.php');
   
   define('CR', "\n");
   define('BOX_BGCOLOR_HEADING', '#bbc3d3');
   define('BOX_BGCOLOR_CONTENTS', '#f8f8f9');
   define('BOX_SHADOW', '#b6b7cb');
 
-  // include General functions
-  require_once(DIR_FS_INC.'xtc_set_time_limit.inc.php');
-  require_once(DIR_FS_INC.'xtc_check_agent.inc.php');
-
   // include Html output functions
-  require_once(DIR_FS_INC.'xtc_draw_input_field_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_password_field_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_hidden_field_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_checkbox_field_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_radio_field_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_box_heading.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_box_contents.inc.php');
-  require_once(DIR_FS_INC.'xtc_draw_box_content_bullet.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_input_field_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_password_field_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_hidden_field_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_checkbox_field_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_radio_field_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_box_heading.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_box_contents.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_draw_box_content_bullet.inc.php');
 
   // include check functions
-  require_once(DIR_FS_INC .'xtc_gdlib_check.inc.php');
+  require_once(DIR_FS_INC_INSTALLER .'xtc_gdlib_check.inc.php');
 
   if (!defined('DIR_WS_ICONS')) {
     define('DIR_WS_ICONS','images/');

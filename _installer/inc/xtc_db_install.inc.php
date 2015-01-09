@@ -24,7 +24,7 @@ function xtc_db_install($database, $type, $sql_file) {
     $db_error = false;
 
     if (!@xtc_db_select_db($database, $type)) {
-      if (@xtc_db_query_installer("CREATE DATABASE '" . $database . "'", $type)) {
+      if (@xtc_db_query_installer("CREATE DATABASE '" . xtc_db_input($database) . "'", $type)) {
         xtc_db_select_db($database, $type);
       } else {
         $db_error = xtc_db_error_installer($type);

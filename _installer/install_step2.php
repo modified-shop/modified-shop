@@ -19,12 +19,12 @@
   require('includes/application.php');
 
   // include Database functions for installer
-  require_once(DIR_FS_INC.'xtc_db_connect_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_select_db.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_query_installer.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_create_db_permission.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_test_connection.inc.php');
-  require_once(DIR_FS_INC.'xtc_db_install.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_connect_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_select_db.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_query_installer.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_create_db_permission.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_test_connection.inc.php');
+  require_once(DIR_FS_INC_INSTALLER.'xtc_db_install.inc.php');
 
   // include needed functions
   require_once(DIR_FS_INC.'xtc_redirect.inc.php');
