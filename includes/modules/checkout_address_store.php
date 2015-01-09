@@ -10,27 +10,12 @@
      Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-    $process = true;
+    // prepare variables
+    foreach ($_POST as $key => $value) {
+      $$key = xtc_db_prepare_input($value);
+    }
 
-    if (ACCOUNT_GENDER == 'true') {
-      $gender = xtc_db_prepare_input($_POST['gender']);
-    }
-    if (ACCOUNT_COMPANY == 'true') {
-      $company = xtc_db_prepare_input($_POST['company']);
-    }
-    $firstname = xtc_db_prepare_input($_POST['firstname']);
-    $lastname = xtc_db_prepare_input($_POST['lastname']);
-    $street_address = xtc_db_prepare_input($_POST['street_address']);
-    if (ACCOUNT_SUBURB == 'true') {
-      $suburb = xtc_db_prepare_input($_POST['suburb']);
-    }
-    $postcode = xtc_db_prepare_input($_POST['postcode']);
-    $city = xtc_db_prepare_input($_POST['city']);
-    $country = xtc_db_prepare_input($_POST['country']);
-    if (ACCOUNT_STATE == 'true') {
-      $zone_id = xtc_db_prepare_input($_POST['zone_id']);
-      $state = xtc_db_prepare_input($_POST['state']);
-    }
+    $process = true;
 
     if (ACCOUNT_GENDER == 'true' && $gender == '') {
       $error = true;
@@ -71,9 +56,10 @@
           $zone_query = xtc_db_query("SELECT DISTINCT zone_id
                                                  FROM ".TABLE_ZONES."
                                                 WHERE zone_country_id = '".(int)$country ."'
-                                                 AND (zone_id = '" . (int)$state . "'
-                                                 OR zone_code = '" . xtc_db_input($state) . "'
-                                                 OR zone_name LIKE '" . xtc_db_input($state) . "%')");
+                                                  AND (zone_id = '" . (int)$state . "'
+                                                       OR zone_code = '" . xtc_db_input($state) . "'
+                                                       OR zone_name LIKE '" . xtc_db_input($state) . "%'
+                                                       )");
           if (xtc_db_num_rows($zone_query) == 1) {
           $zone = xtc_db_fetch_array($zone_query);
           $zone_id = $zone['zone_id'];

@@ -56,39 +56,12 @@ $privacy = isset($_POST['privacy']) && $_POST['privacy'] == 'privacy' ? 'privacy
 $process = false;
 if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   $process = true;
-
-  if (ACCOUNT_GENDER == 'true') {
-    $gender = isset($_POST['gender']) ? xtc_db_prepare_input($_POST['gender']) : '';
+  
+  // prepare variables
+  foreach ($_POST as $key => $value) {
+    $$key = xtc_db_prepare_input($value);
   }
-  $firstname = xtc_db_prepare_input($_POST['firstname']);
-  $lastname = xtc_db_prepare_input($_POST['lastname']);
-  if (ACCOUNT_DOB == 'true') {
-    $dob = xtc_db_prepare_input($_POST['dob']);
-  }
-  $email_address = xtc_db_prepare_input($_POST['email_address']);
-  $confirm_email_address = isset($_POST['confirm_email_address']) ? xtc_db_prepare_input($_POST['confirm_email_address']) : 0;
-  if (ACCOUNT_COMPANY == 'true') {
-    $company = xtc_db_prepare_input($_POST['company']);
-  }
-  if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
-    $vat = xtc_db_prepare_input($_POST['vat']);
-  }
-  $street_address = xtc_db_prepare_input($_POST['street_address']);
-  if (ACCOUNT_SUBURB == 'true') {
-    $suburb = xtc_db_prepare_input($_POST['suburb']);
-  }
-  $postcode = xtc_db_prepare_input($_POST['postcode']);
-  $city = xtc_db_prepare_input($_POST['city']);
-  $zone_id = isset($_POST['zone_id']) ? xtc_db_prepare_input($_POST['zone_id']) : 0;
-  if (ACCOUNT_STATE == 'true') {
-    $state = isset($_POST['state']) ? xtc_db_prepare_input($_POST['state']) : '';
-  }
-  $telephone = xtc_db_prepare_input($_POST['telephone']);
-  $fax = xtc_db_prepare_input($_POST['fax']);
-  $newsletter = isset($_POST['newsletter']) ? (int)$_POST['newsletter'] : '';
-  $password = xtc_db_prepare_input($_POST['password']);
-  $confirmation = xtc_db_prepare_input($_POST['confirmation']);
-
+  
   $error = false;
 
   if (ACCOUNT_GENDER == 'true' && $gender == '') {
@@ -143,7 +116,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $check_email_query = xtc_db_query("SELECT count(*) as total
                                          FROM ".TABLE_CUSTOMERS."
                                         WHERE customers_email_address = '".xtc_db_input($email_address)."'
-                                         AND account_type = '0'");
+                                          AND account_type = '0'");
     $check_email = xtc_db_fetch_array($check_email_query);
     if ($check_email['total'] > 0) {
       $error = true;
@@ -180,9 +153,10 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
         $zone_query = xtc_db_query("SELECT DISTINCT zone_id
                                                FROM ".TABLE_ZONES."
                                               WHERE zone_country_id = '".(int)$country ."'
-                                               AND (zone_id = '" . (int)$state . "'
-                                               OR zone_code = '" . xtc_db_input($state) . "'
-                                               OR zone_name LIKE '" . xtc_db_input($state) . "%')");
+                                                AND (zone_id = '" . (int)$state . "'
+                                                     OR zone_code = '" . xtc_db_input($state) . "'
+                                                     OR zone_name LIKE '" . xtc_db_input($state) . "%'
+                                                     )");
       if (xtc_db_num_rows($zone_query) == 1) {
         $zone = xtc_db_fetch_array($zone_query);
         $zone_id = $zone['zone_id'];
@@ -289,16 +263,15 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
 
     $address_id = xtc_db_insert_id();
 
-    xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_default_address_id = '".(int)$address_id."' WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
+    xtc_db_query("UPDATE ".TABLE_CUSTOMERS." 
+                     SET customers_default_address_id = '".(int)$address_id."' 
+                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
     
     $sql_data_array = array('customers_info_id' => (int)$_SESSION['customer_id'],
-                            'customers_info_number_of_logons' => '0',
+                            'customers_info_number_of_logons' => '1',
                             'customers_info_date_account_created' => 'now()'
                             );
     xtc_db_perform(TABLE_CUSTOMERS_INFO, $sql_data_array);                       
-
-    $smarty->assign('GENDER', get_customers_gender($gender));
-    $smarty->assign('LASTNAME',$lastname);
 
     if (SESSION_RECREATE == 'True') {
       xtc_session_recreate();
@@ -315,6 +288,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACCOUNT_GENDER == 'true') {
       $_SESSION['customer_gender'] = $gender;
     }
+    
     // restore cart contents
     $_SESSION['cart']->restore_contents();
 
@@ -324,17 +298,20 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     // load data into array
     $module_content = array('MAIL_NAME' => $name,
                             'MAIL_REPLY_ADDRESS' => parse_multi_language_value(EMAIL_SUPPORT_REPLY_ADDRESS),
-                            'MAIL_GENDER' => $gender);
+                            'MAIL_GENDER' => get_customers_gender($gender));
 
     // assign data to smarty
     $smarty->assign('language', $_SESSION['language']);
     $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
     $smarty->assign('content', $module_content);
+    $smarty->assign('GENDER', get_customers_gender($gender));
+    $smarty->assign('LASTNAME',$lastname);
 
 	  // campaign tracking
     if (isset($_SESSION['tracking']['refID'])) {
       $refID = $leads = 0;
-      $campaign_check = xtc_db_query("SELECT campaigns_id, campaigns_leads
+      $campaign_check = xtc_db_query("SELECT campaigns_id, 
+                                             campaigns_leads
                                         FROM ".TABLE_CAMPAIGNS."
                                        WHERE campaigns_refID = '".$_SESSION['tracking']['refID']."'");
       if (xtc_db_num_rows($campaign_check) > 0) {
@@ -344,7 +321,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       }
       $leads++;
       xtc_db_query("UPDATE " . TABLE_CUSTOMERS . "
-	                   SET refferers_id = '".$refID."'
+	                     SET refferers_id = '".$refID."'
                      WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
       xtc_db_query("UPDATE " . TABLE_CAMPAIGNS . "
                        SET campaigns_leads = '".$leads."'
@@ -355,9 +332,21 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     if (ACTIVATE_GIFT_SYSTEM == 'true') {
       if (NEW_SIGNUP_GIFT_VOUCHER_AMOUNT > 0) {
         $coupon_code = create_coupon_code();
-        $insert_query = xtc_db_query("INSERT INTO ".TABLE_COUPONS." (coupon_code, coupon_type, coupon_amount, date_created) VALUES ('".$coupon_code."', 'G', '".NEW_SIGNUP_GIFT_VOUCHER_AMOUNT."', now())");
+        $sql_data_array = array('coupon_code' => $coupon_code,
+                                'coupon_type' => 'G',
+                                'coupon_amount' => NEW_SIGNUP_GIFT_VOUCHER_AMOUNT,
+                                'date_created' => $email_address
+                                );
+        xtc_db_perform(TABLE_COUPONS, $sql_data_array);
+
         $insert_id = xtc_db_insert_id($insert_query);
-        $insert_query = xtc_db_query("INSERT INTO ".TABLE_COUPON_EMAIL_TRACK." (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent) VALUES ('".$insert_id."', '0', 'Admin', '".$email_address."', now() )");
+        $sql_data_array = array('coupon_id' => $insert_id,
+                                'customer_id_sent' => '0',
+                                'sent_firstname' => 'Admin',
+                                'emailed_to' => $email_address,
+                                'date_sent' => 'now()'
+                                );
+        xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
 
         $smarty->assign('SEND_GIFT', 'true');
         $smarty->assign('GIFT_AMMOUNT', $xtPrice->xtcFormat(NEW_SIGNUP_GIFT_VOUCHER_AMOUNT, true));
@@ -366,13 +355,25 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       }
       if (NEW_SIGNUP_DISCOUNT_COUPON != '') {
         $coupon_code = NEW_SIGNUP_DISCOUNT_COUPON;
-        $coupon_query = xtc_db_query("SELECT * FROM ".TABLE_COUPONS." WHERE coupon_code = '".$coupon_code."'");
+        $coupon_query = xtc_db_query("SELECT * 
+                                        FROM ".TABLE_COUPONS." 
+                                       WHERE coupon_code = '".xtc_db_input($coupon_code)."'");
         $coupon = xtc_db_fetch_array($coupon_query);
         $coupon_id = $coupon['coupon_id'];
-        $coupon_desc_query = xtc_db_query("SELECT * FROM ".TABLE_COUPONS_DESCRIPTION." WHERE coupon_id = '".$coupon_id."' and language_id = '".(int)$_SESSION['languages_id']."'");
+        $coupon_desc_query = xtc_db_query("SELECT * 
+                                             FROM ".TABLE_COUPONS_DESCRIPTION." 
+                                            WHERE coupon_id = '".$coupon_id."' 
+                                              AND language_id = '".(int)$_SESSION['languages_id']."'");
         $coupon_desc = xtc_db_fetch_array($coupon_desc_query);
-        $insert_query = xtc_db_query("INSERT INTO ".TABLE_COUPON_EMAIL_TRACK." (coupon_id, customer_id_sent, sent_firstname, emailed_to, date_sent) VALUES ('".$coupon_id."', '0', 'Admin', '".$email_address."', now() )");
-
+        
+        $sql_data_array = array('coupon_id' => $coupon_id,
+                                'customer_id_sent' => '0',
+                                'sent_firstname' => 'Admin',
+                                'emailed_to' => $email_address,
+                                'date_sent' => 'now()'
+                                );
+        xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+        
         $smarty->assign('SEND_COUPON', 'true');
         $smarty->assign('COUPON_DESC', $coupon_desc['coupon_description']);
         $smarty->assign('COUPON_CODE', $coupon['coupon_code']);
@@ -403,30 +404,24 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
       $newsletter->AddUserAuto($email_address);
     }
 
-    if (!isset($mail_error)) {
-      xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
-    } else {
-      $error = true;
-      $messageStack->add('create_account', $mail_error);
-    }
+    xtc_redirect(xtc_href_link(FILENAME_SHOPPING_CART, '', 'SSL'));
   }
 }
 
 $breadcrumb->add(NAVBAR_TITLE_CREATE_ACCOUNT, xtc_href_link(FILENAME_CREATE_ACCOUNT, '', 'SSL'));
-
 require (DIR_WS_INCLUDES.'header.php');
 
 // xs:booster (v1.041)
 if(@isset($_SESSION['xtb0']['tx'][0])) {
-  $GLOBALS['gender']= 'm';
-  $GLOBALS['firstname']= substr($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME'],0,strpos($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME']," "));
-  $GLOBALS['lastname']= substr($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME'],strpos($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME']," ")+1,strlen($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME']));
-  $GLOBALS['street_address']=  $_SESSION['xtb0']['tx'][0]['XTB_EBAY_STREET'];
-  $GLOBALS['postcode']= $_SESSION['xtb0']['tx'][0]['XTB_EBAY_POSTALCODE'];
-  $GLOBALS['city']= $_SESSION['xtb0']['tx'][0]['XTB_EBAY_CITY'];
-  $GLOBALS['country']= $_SESSION['xtb0']['tx'][0]['XTB_EBAY_COUNTRYNAME'];
-  $GLOBALS['email_address']= $_SESSION['xtb0']['tx'][0]['XTB_EBAY_EMAIL'];
-  $GLOBALS['telephone']= $_SESSION['xtb0']['tx'][0]['XTB_EBAY_PHONE'];
+  $GLOBALS['gender'] = 'm';
+  $GLOBALS['firstname'] = substr($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME'],0,strpos($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME']," "));
+  $GLOBALS['lastname'] = substr($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME'],strpos($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME']," ")+1,strlen($_SESSION['xtb0']['tx'][0]['XTB_EBAY_NAME']));
+  $GLOBALS['street_address'] =  $_SESSION['xtb0']['tx'][0]['XTB_EBAY_STREET'];
+  $GLOBALS['postcode'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_POSTALCODE'];
+  $GLOBALS['city'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_CITY'];
+  $GLOBALS['country'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_COUNTRYNAME'];
+  $GLOBALS['email_address'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_EMAIL'];
+  $GLOBALS['telephone'] = $_SESSION['xtb0']['tx'][0]['XTB_EBAY_PHONE'];
 }
 
 
@@ -461,10 +456,7 @@ $smarty->assign('INPUT_CONFIRM_EMAIL', xtc_draw_input_fieldNote(array ('name' =>
 
 if (ACCOUNT_COMPANY == 'true') {
   $smarty->assign('company', '1');
-  $smarty->assign('INPUT_COMPANY', xtc_draw_input_fieldNote(array (
-    'name' => 'company',
-    'text' => '&nbsp;' . (xtc_not_null(ENTRY_COMPANY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COMPANY_TEXT . '</span>' : '')
-  )));
+  $smarty->assign('INPUT_COMPANY', xtc_draw_input_fieldNote(array ('name' => 'company', 'text' => '&nbsp;' . (xtc_not_null(ENTRY_COMPANY_TEXT) ? '<span class="inputRequirement">' . ENTRY_COMPANY_TEXT . '</span>' : ''))));
 } else {
   $smarty->assign('company', '0');
 }
@@ -493,12 +485,15 @@ if (ACCOUNT_STATE == 'true') {
   if ($process == true) {
     if ($entry_state_has_zones == true) {
       $zones_array = array ();
-      $zones_query = xtc_db_query("SELECT zone_id, zone_name FROM ".TABLE_ZONES." WHERE zone_country_id = '".(int)$country."' ORDER BY zone_name");
+      $zones_query = xtc_db_query("SELECT zone_id, 
+                                          zone_name 
+                                     FROM ".TABLE_ZONES." 
+                                    WHERE zone_country_id = '".(int)$country."' 
+                                 ORDER BY zone_name");
       while ($zones_values = xtc_db_fetch_array($zones_query)) {
-        $zones_array[] = array (
-          'id' => $zones_values['zone_id'],
-          'text' => $zones_values['zone_name']
-        );
+        $zones_array[] = array ('id' => $zones_values['zone_id'],
+                                'text' => $zones_values['zone_name']
+                                );
       }
       $state_input = xtc_draw_pull_down_menuNote(array ('name' => 'state', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_STATE_TEXT) ? '<span class="inputRequirement">'.ENTRY_STATE_TEXT.'</span>' : '')), $zones_array, $zone_id);
     } else {
@@ -519,8 +514,8 @@ $smarty->assign('INPUT_PASSWORD', xtc_draw_password_fieldNote(array ('name' => '
 $smarty->assign('CHECKBOX_NEWSLETTER', xtc_draw_checkbox_field('newsletter', '1').'&nbsp;'. (xtc_not_null(ENTRY_NEWSLETTER_TEXT) ? '<span class="inputRequirement">'.ENTRY_NEWSLETTER_TEXT.'</span>' : ''));
 $smarty->assign('INPUT_CONFIRMATION', xtc_draw_password_fieldNote(array ('name' => 'confirmation', 'text' => '&nbsp;'. (xtc_not_null(ENTRY_PASSWORD_CONFIRMATION_TEXT) ? '<span class="inputRequirement">'.ENTRY_PASSWORD_CONFIRMATION_TEXT.'</span>' : ''))));
 if (DISPLAY_PRIVACY_CHECK == 'true') {
-$smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy));
-$smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
+  $smarty->assign('PRIVACY_CHECKBOX', xtc_draw_checkbox_field('privacy', 'privacy', $privacy));
+  $smarty->assign('PRIVACY_LINK', $main->getContentLink(2, MORE_INFO, $request_type));
 }
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('language', $_SESSION['language']);

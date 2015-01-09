@@ -1,26 +1,29 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: address_book_process.php 4221 2013-01-11 10:18:52Z gtb-modified $   
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(address_book_process.php,v 1.77 2003/05/27); www.oscommerce.com
    (c) 2003	 nextcommerce (address_book_process.php,v 1.13 2003/08/17); www.nextcommerce.org 
-
+   (c) 2006 XT-Commerce - www.xt-commerce.com
+   
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
 // create smarty elements
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
 // include needed functions
 require_once (DIR_FS_INC.'xtc_count_customer_address_book_entries.inc.php');
 require_once (DIR_FS_INC.'xtc_address_label.inc.php');
@@ -41,27 +44,13 @@ if (isset ($_GET['action']) && ($_GET['action'] == 'deleteconfirm') && isset ($_
 $process = false;
 if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['action'] == 'update'))) {
 	$process = true;
-	$error = false;
 
-	if (ACCOUNT_GENDER == 'true') {
-		$gender = xtc_db_prepare_input($_POST['gender']);
-	}
-	if (ACCOUNT_COMPANY == 'true') {
-		$company = xtc_db_prepare_input($_POST['company']);
-	}
-	$firstname = xtc_db_prepare_input($_POST['firstname']);
-	$lastname = xtc_db_prepare_input($_POST['lastname']);
-	$street_address = xtc_db_prepare_input($_POST['street_address']);
-	if (ACCOUNT_SUBURB == 'true') {
-		$suburb = xtc_db_prepare_input($_POST['suburb']);
-	}
-	$postcode = xtc_db_prepare_input($_POST['postcode']);
-	$city = xtc_db_prepare_input($_POST['city']);
-	$country = xtc_db_prepare_input($_POST['country']);
-	if (ACCOUNT_STATE == 'true') {
-		$zone_id = xtc_db_prepare_input($_POST['zone_id']);
-		$state = xtc_db_prepare_input($_POST['state']);
-	}
+  // prepare variables
+  foreach ($_POST as $key => $value) {
+    $$key = xtc_db_prepare_input($value);
+  }
+
+	$error = false;
 
 	if (ACCOUNT_GENDER == 'true' && $gender == '') {
 		$error = true;
@@ -107,9 +96,10 @@ if (isset ($_POST['action']) && (($_POST['action'] == 'process') || ($_POST['act
         $zone_query = xtc_db_query("SELECT DISTINCT zone_id
                                                FROM ".TABLE_ZONES."
                                               WHERE zone_country_id = '".(int)$country ."'
-                                               AND (zone_id = '" . (int)$state . "'
-                                               OR zone_code = '" . xtc_db_input($state) . "'
-                                               OR zone_name LIKE '" . xtc_db_input($state) . "%')");
+                                                AND (zone_id = '" . (int)$state . "'
+                                                     OR zone_code = '" . xtc_db_input($state) . "'
+                                                     OR zone_name LIKE '" . xtc_db_input($state) . "%'
+                                                     )");
         if (xtc_db_num_rows($zone_query) == 1) {
         $zone = xtc_db_fetch_array($zone_query);
         $zone_id = $zone['zone_id'];
@@ -231,7 +221,10 @@ if (isset ($_GET['edit']) && is_numeric($_GET['edit'])) {
 
 		xtc_redirect(xtc_href_link(FILENAME_ADDRESS_BOOK, '', 'SSL'));
 	} else {
-		$check_query = xtc_db_query("select count(*) as total from ".TABLE_ADDRESS_BOOK." where address_book_id = '".(int) $_GET['delete']."' and customers_id = '".(int) $_SESSION['customer_id']."'");
+		$check_query = xtc_db_query("SELECT count(*) as total 
+		                               FROM ".TABLE_ADDRESS_BOOK." 
+		                              WHERE address_book_id = '".(int) $_GET['delete']."' 
+		                                AND customers_id = '".(int) $_SESSION['customer_id']."'");
 		$check = xtc_db_fetch_array($check_query);
 
 		if ($check['total'] < 1) {

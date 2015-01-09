@@ -1,18 +1,18 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: account_password.php 4221 2013-01-11 10:18:52Z gtb-modified $
 
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on:
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(account_password.php,v 1.1 2003/05/19); www.oscommerce.com
    (c) 2003	 nextcommerce (account_password.php,v 1.14 2003/08/17); www.nextcommerce.org
-
+   (c) 2006 XT-Commerce - www.xt-commerce.com
+   
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
@@ -33,9 +33,10 @@ if (!isset ($_SESSION['customer_id'])) {
 }
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
-	$password_current = xtc_db_prepare_input($_POST['password_current']);
-	$password_new = xtc_db_prepare_input($_POST['password_new']);
-	$password_confirmation = xtc_db_prepare_input($_POST['password_confirmation']);
+  // prepare variables
+  foreach ($_POST as $key => $value) {
+    $$key = xtc_db_prepare_input($value);
+  }
 
 	$error = false;
 	if (strlen($password_current) < ENTRY_PASSWORD_MIN_LENGTH) {

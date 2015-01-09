@@ -1,17 +1,17 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: account_edit.php 4221 2013-01-11 10:18:52Z gtb-modified $   
    
-   XT-Commerce - community made shopping
-   http://www.xt-commerce.com
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
 
-   Copyright (c) 2003 XT-Commerce
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    based on: 
    (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
    (c) 2002-2003 osCommerce(account_edit.php,v 1.63 2003/05/19); www.oscommerce.com 
    (c) 2003	 nextcommerce (account_edit.php,v 1.14 2003/08/17); www.nextcommerce.org
+   (c) 2006 XT-Commerce - www.xt-commerce.com
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
@@ -41,21 +41,10 @@ if ($_SESSION['customers_status']['customers_status_id']==0) {
 }
 
 if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
-	if (ACCOUNT_GENDER == 'true') {
-		$gender = xtc_db_prepare_input($_POST['gender']);
-	}
-	$firstname = xtc_db_prepare_input($_POST['firstname']);
-	$lastname = xtc_db_prepare_input($_POST['lastname']);
-	if (ACCOUNT_DOB == 'true') {
-		$dob = xtc_db_prepare_input($_POST['dob']);
-	}
-	if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
-		$vat = xtc_db_prepare_input($_POST['vat']);
-	}
-	$email_address = xtc_db_prepare_input($_POST['email_address']);
-	$confirm_email_address = xtc_db_prepare_input($_POST['confirm_email_address']); // Hetfield - 2009-08-15 - confirm e-mail at registration
-	$telephone = xtc_db_prepare_input($_POST['telephone']);
-	$fax = xtc_db_prepare_input($_POST['fax']);
+  // prepare variables
+  foreach ($_POST as $key => $value) {
+    $$key = xtc_db_prepare_input($value);
+  }
 
 	$error = false;
 
@@ -143,7 +132,9 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		}
 		
 		xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array, 'update', "customers_id = '".(int) $_SESSION['customer_id']."'");
-		xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." SET customers_info_date_account_last_modified = now() WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
+		xtc_db_query("UPDATE ".TABLE_CUSTOMERS_INFO." 
+		                 SET customers_info_date_account_last_modified = now() 
+		               WHERE customers_info_id = '".(int) $_SESSION['customer_id']."'");
 
 		// reset the session variables
 		$customer_first_name = $firstname;
