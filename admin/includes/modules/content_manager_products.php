@@ -100,9 +100,9 @@ if (!$action) {
                       <td class="dataTableContent txta-c">
                         <?php
                           if ($content_array[$ii]['file']!='') {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
+                            echo xtc_image(DIR_WS_IMAGES.'icons/icon_'.str_replace('.','',strstr($content_array[$ii]['file'],'.')).'.gif'); //web28 - 2010-09-03 - change path
                           } else {
-                            echo xtc_image('../'. DIR_WS_IMAGES.'icons/icon_link.gif'); //web28 - 2010-09-03 - change path
+                            echo xtc_image(DIR_WS_IMAGES.'icons/icon_link.gif'); //web28 - 2010-09-03 - change path
                           }
                           for ($xx=0,$zz=sizeof($languages); $xx<$zz;$xx++){
                             if ($languages[$xx]['id']==$content_array[$ii]['languages_id']) {
@@ -287,7 +287,7 @@ if (!$action) {
               ?>
               <tr>
                 <td class="dataTableConfig col-left"><?php echo TEXT_FILENAME; ?></td>
-                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image('../'. DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
+                <td class="dataTableConfig col-single-right"><?php echo xtc_draw_hidden_field('file_name',$content['content_file']).xtc_image(DIR_WS_IMAGES. 'icons/icon_'.str_replace('.','',strstr($content['content_file'],'.')).'.gif').$content['content_file']; //DokuMan - 2011-09-06 - change path ?></td>
               </tr>
               <?php
             }
