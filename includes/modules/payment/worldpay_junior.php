@@ -44,21 +44,6 @@
     function update_status() {
       global $order;
 
-    // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-    /* Not used in 1.06
-    if( MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING != '' ) {
-      $neg_shpmod_arr = explode(',',MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING);
-      foreach( $neg_shpmod_arr as $neg_shpmod ) {
-        $nd=$neg_shpmod.'_'.$neg_shpmod;
-        if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
-          $this->enabled = false;
-          break;
-        }
-      }
-    }
-    */
-    // EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-
       if ( ($this->enabled == true) && ((int)MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE > 0) ) {
         $check_flag = false;
         $check_query = xtc_db_query("select zone_id from " . TABLE_ZONES_TO_GEO_ZONES . " where geo_zone_id = '" . MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE . "' and zone_country_id = '" . $order->billing['country']['id'] . "' order by zone_id");
@@ -625,9 +610,6 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, use_function, set_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE', '0', '6', '2', 'xtc_get_zone_class_title', 'xtc_cfg_pull_down_zone_classes(', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID', '" . (int)$status_id . "', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, set_function, use_function, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID', '0', '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', now())");
-      // BOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
-      //xtc_db_query("insert into " . TABLE_CONFIGURATION . " (configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING', '', '6', '99', now())"); // Not used in 1.06
-      // EOF - Hendrik - 2010-08-11 - exlusion config for shipping modules
     }
 
     function remove() {
@@ -645,8 +627,8 @@
                    'MODULE_PAYMENT_WORLDPAY_JUNIOR_ZONE',
                    'MODULE_PAYMENT_WORLDPAY_JUNIOR_PREPARE_ORDER_STATUS_ID',
                    'MODULE_PAYMENT_WORLDPAY_JUNIOR_ORDER_STATUS_ID',
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER'/*,
-                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_NEG_SHIPPING'*/ );  // Hendrik - 2010-08-11 - exlusion config for shipping modules // Not used in 1.06
+                   'MODULE_PAYMENT_WORLDPAY_JUNIOR_SORT_ORDER',
+                   );
     }
 
     // format prices without currency formatting

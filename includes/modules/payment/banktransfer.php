@@ -48,17 +48,6 @@
     function update_status() {
       global $order;
 
-      if( MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING != '' ) {
-        $neg_shpmod_arr = explode(',',MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING);
-        foreach( $neg_shpmod_arr as $neg_shpmod ) {
-          $nd=$neg_shpmod.'_'.$neg_shpmod;
-          if( $_SESSION['shipping']['id']==$nd || $_SESSION['shipping']['id']==$neg_shpmod ) {
-            $this->enabled = false;
-            break;
-          }
-        }
-      }
-
       $check_order_query = xtc_db_query("select count(*) as count from " . TABLE_ORDERS . " where customers_id = '" . (int)$_SESSION['customer_id'] . "'");
       $order_check = xtc_db_fetch_array($check_order_query);
 
@@ -417,7 +406,6 @@
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, set_function, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DATABASE_BLZ', 'false', '6', '0', 'xtc_cfg_select_option(array(\'true\', \'false\'), ', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_URL_NOTE', 'fax.html', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER', '0', '6', '0', now())");
-      xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value,  configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING', '', '6', '99', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_CI', '', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX', '', '6', '0', now())");
       xtc_db_query("insert into " . TABLE_CONFIGURATION . " ( configuration_key, configuration_value, configuration_group_id, sort_order, date_added) values ('MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY', '1', '6', '0', now())");
@@ -438,7 +426,6 @@
                     'MODULE_PAYMENT_BANKTRANSFER_FAX_CONFIRMATION',
                     'MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER',
                     'MODULE_PAYMENT_BANKTRANSFER_URL_NOTE',
-                    'MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING',
                     'MODULE_PAYMENT_BANKTRANSFER_CI',
                     'MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX',
                     'MODULE_PAYMENT_BANKTRANSFER_DUE_DELAY',

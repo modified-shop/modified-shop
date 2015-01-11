@@ -81,8 +81,6 @@ define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE', 'Banktransfer Zahlungen erlau
 define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC', 'M&ouml;chten Sie Banktransfer Zahlungen erlauben?');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE', 'Notwendige Bestellungen');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC', 'Die Mindestanzahl an Bestellungen, die ein Kunde haben muss, damit die Option zur Verf&uuml;gung steht.');
-define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_TITLE', 'Ausschlu&szlig; bei Versandmodulen');
-define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_DESC', 'Dieses Zahlungsmodul deaktivieren, wenn Versandmodul gew&auml;hlt (Kommagetrennte Liste)');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'M&ouml;chten Sie nur IBAN Zahlungen erlauben?');
 

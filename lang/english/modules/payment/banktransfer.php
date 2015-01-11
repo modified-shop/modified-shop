@@ -81,8 +81,6 @@ define('MODULE_PAYMENT_BANKTRANSFER_STATUS_TITLE' , 'Allow Banktransfer Payments
 define('MODULE_PAYMENT_BANKTRANSFER_STATUS_DESC' , 'Do you want to accept banktransfer payments?');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_TITLE' , 'Minimum Orders');
 define('MODULE_PAYMENT_BANKTRANSFER_MIN_ORDER_DESC' , 'Minimum orders for a Customer to view this Option.');
-define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_TITLE', 'Exclude Shipping Modules');
-define('MODULE_PAYMENT_BANKTRANSFER_NEG_SHIPPING_DESC', 'Deactivate Banktransfer if shipping Module is selected (Comma separated List)');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_TITLE', 'IBAN Mode');
 define('MODULE_PAYMENT_BANKTRANSFER_IBAN_ONLY_DESC', 'Do you want to accept IBAN banktransfer payments only?');
 
