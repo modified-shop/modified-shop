@@ -76,6 +76,16 @@
           $unallowed_modules = array_merge($unallowed_modules,explode(',',$download_unallowed_payment));
         }
 
+        // add unallowed payment / shipping
+        if (MODULE_EXCLUDE_PAYMENT_STATUS == 'True') {
+          for ($i=1; $i<=MODULE_EXCLUDE_PAYMENT_NUMBER; $i++) {
+            $shipping_exclude = explode(',', constant('MODULE_EXCLUDE_PAYMENT_SHIPPING_'.$i));
+            if (in_array(substr($_SESSION['shipping']['id'], 0, (strpos($_SESSION['shipping']['id'], '_'))), $shipping_exclude) !== false) {
+              $unallowed_modules = array_merge($unallowed_modules, explode(',', constant('MODULE_EXCLUDE_PAYMENT_PAYMENT_'.$i)));
+            }
+          }
+        }
+
         //print_r($include_modules);
         for ($i = 0, $n = sizeof($include_modules); $i < $n; $i++) {
           if (!in_array($include_modules[$i]['class'], $unallowed_modules)) {
