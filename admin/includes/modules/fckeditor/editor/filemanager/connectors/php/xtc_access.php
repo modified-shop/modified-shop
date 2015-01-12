@@ -13,9 +13,9 @@ define('_IS_FILEMANAGER',true);
 $current_cwd = getcwd();
 
 // AdminDir Shop
-$rootDir = DIR_FS_ADMIN;
+$rootDir = '../../../../../../../';
 chdir($rootDir);
-require_once( 'includes/application_top.php'); // AdminDir Shop
+require('includes/application_top.php'); // AdminDir Shop
 chdir($current_cwd);
 
 $Config['Enabled'] = false;

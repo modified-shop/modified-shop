@@ -28,12 +28,6 @@ global $Config ;
 // WARNING: don't just set "$Config['Enabled'] = true ;", you must be sure that only
 //		authenticated users can access this file or use some kind of session checking.
 
-// Modified for xt:Commerce v3.0.4 SP2.1 by Hetfield (www.merz-it-service.de) - Begin //
-if (file_exists('../../../../../../local/configure.php')) {
-    include('../../../../../../local/configure.php');
-} else {
-    require('../../../../../../configure.php');
-}
 //BOC web28 security fix
 $Config['Enabled'] = false ;
 include('xtc_access.php');
