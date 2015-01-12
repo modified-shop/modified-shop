@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
+
   include_once(DIR_FS_INC . 'xtc_db_error.inc.php');
 
   function xtc_db_connect($server = DB_SERVER, $username = DB_SERVER_USERNAME, $password = DB_SERVER_PASSWORD, $database = DB_DATABASE, $link = 'db_link') {

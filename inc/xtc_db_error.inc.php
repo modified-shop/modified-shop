@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
+
   function xtc_db_error($query, $errno, $error) {
 
     // Deliver 503 Error on database error (so crawlers won't index the error page)

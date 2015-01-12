@@ -15,6 +15,8 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
+
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
    
   //fix for conectors like facturama
   if (!function_exists('encode_htmlspecialchars')) {

@@ -16,6 +16,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
+
   function xtc_db_fetch_array(&$db_query,$cq=false) {
     //BOF - DokuMan - 2010-08-30 - if db_query not a valid result, return false
     if ($db_query === false) return false;

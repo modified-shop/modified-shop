@@ -15,6 +15,8 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
+
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
    
   function xtc_db_free_result($db_query) {
     return mysql_free_result($db_query);

@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
+
   // include needed functions
   include_once(DIR_FS_INC . 'xtc_db_error.inc.php');
 

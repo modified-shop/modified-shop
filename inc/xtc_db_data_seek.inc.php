@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
+
   function xtc_db_data_seek($db_query, $row_number,$cq=false) {
 
     if (defined('DB_CACHE') && DB_CACHE == 'true' && $cq) { //Dokuman - 2011-02-11 - check for defined DB_CACHE

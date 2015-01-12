@@ -15,6 +15,8 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
+
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
    
   function xtc_db_close($link = 'db_link') {
     global $$link;

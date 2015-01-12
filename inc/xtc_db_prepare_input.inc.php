@@ -15,6 +15,9 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/  
+
+  die('Deprecated File. Use db_functions_mysql(i) instead.');
+
   function xtc_db_prepare_input($string) {
     if (is_string($string)) {
       return trim(stripslashes($string));

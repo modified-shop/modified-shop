@@ -15,6 +15,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
+  die('Deprecated File. Use xtc_db_input() instead.');
+
   function xtc_sqlSafeString($param) {
     // Hier wird wg. der grossen Verbreitung auf MySQL eingegangen
 	// BOF - Hetfield - 2009-08-18 - deprecated function mysql_escape_string added mysql_real_escape_string to be ready for PHP >= 5.3
