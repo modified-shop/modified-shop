@@ -16,15 +16,12 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  ////
+
   // The HTML href link wrapper function
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = true) {
   
     $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
   
-    //BOF - DokuMan - 2011-01-07 - Sanitize parameters
-    //$page = xtc_output_string($page);
-    //EOF - DokuMan - 2011-01-07 - Sanitize parameters
     if (!xtc_not_null($page)) {
       die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
     }
@@ -52,6 +49,7 @@
     return $link;
   }
 
+  // The HTML href link wrapper function for frontend
   function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
   
     $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
@@ -60,7 +58,6 @@
       $page = 'index.php';
     }
     
-    // GTB - 2012-04-10 - remove index.php from Startpage
     if ($page == 'index.php' && !xtc_not_null($parameters)) {
       $page = '';
     }
@@ -89,7 +86,6 @@
     return $link;
   }
 
-  ////
   // The HTML image wrapper function
   function xtc_image($src, $alt = '', $width = '', $height = '', $params = '') {
     $params  = preg_replace("'\s+=\s+'",'=',$params);
@@ -116,19 +112,16 @@
     return $image;
   }
 
-  ////
   // Draw a 1 pixel black line
   function xtc_black_line() {
     return xtc_image(DIR_WS_IMAGES . 'pixel_black.gif', '', '100%', '1');
   }
 
-  ////
   // Output a separator either through whitespace, or with an image
   function xtc_draw_separator($image = 'pixel_black.gif', $width = '100%', $height = '1') {
     return xtc_image(DIR_WS_IMAGES . $image, '', $width, $height);
   }
 
-  ////
   // javascript to dynamically update the states/provinces list when the country is changed
   // TABLES: zones
   function xtc_js_zone_list($country, $form, $field) {
@@ -156,7 +149,6 @@
     return $output_string;
   }
 
-  ////
   // Output a form
   function xtc_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
     $form = '<form name="' . $name . '" action="';
@@ -170,10 +162,15 @@
       $form .= ' ' . $params;
     }
     $form .= '>';
+    
+    // secure form with a random token
+    if (isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName']) && $method == 'post') {
+      $form .= '<input type="hidden" name="'.$_SESSION['CSRFName'].'" value="'.$_SESSION['CSRFToken'].'">';
+    }
+
     return $form;
   }
 
-  ////
   // Output a form input field
   function xtc_draw_input_field($name, $value = '', $parameters = '', $required = false, $type = 'text', $reinsert_value = true) {
     $field = '<input type="' . $type . '" name="' . $name . '"';
@@ -208,7 +205,6 @@
     return $field;
   }
 
-  ////
   // Output a form password field
   function xtc_draw_password_field($name, $value = '', $required = false, $parameters = '') {
     $params = strpos($parameters,'maxlength') !== false ? '' : 'maxlength="40"';
@@ -219,24 +215,19 @@
     return $field;
   }
 
-  ////
   // Output a form filefield
   function xtc_draw_file_field($name, $required = false,$parameters = '') {
     $field = xtc_draw_input_field($name, '', $parameters, $required, 'file');
     return $field;
   }
 
-  ////
   // Output a selection field - alias function for xtc_draw_checkbox_field() and xtc_draw_radio_field()
   function xtc_draw_selection_field($name, $type, $value = '', $checked = false, $compare = '', $parameters = '') {
     $selection = '<input type="' . $type . '" name="' . $name . '"';
     if ($value != '') {
       $selection .= ' value="' . $value . '"';
     }
-    //BOF - DokuMan - 2010-09-08 - set undefined index
     if ( ($checked == true) || (isset($GLOBALS[$name]) && ($GLOBALS[$name] == 'on')) || ($value && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
-    //if ( ($checked == true) || ($GLOBALS[$name] == 'on') || ($value && ($GLOBALS[$name] == $value)) || ($value && ($value == $compare)) ) {
-    //EOF - DokuMan - 2010-09-08 - set undefined index
       $selection .= ' checked="checked"';
     }
     
@@ -246,19 +237,16 @@
     return $selection;
   }
 
-  ////
   // Output a form checkbox field
   function xtc_draw_checkbox_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
     return xtc_draw_selection_field($name, 'checkbox', $value, $checked, $compare, $parameters);
   }
 
-  ////
   // Output a form radio field
   function xtc_draw_radio_field($name, $value = '', $checked = false, $compare = '', $parameters = '') {
     return xtc_draw_selection_field($name, 'radio', $value, $checked, $compare, $parameters);
   }
 
-  ////
   // Output a form textarea field
   function xtc_draw_textarea_field($name, $wrap, $width, $height, $text = '', $params = '', $reinsert_value = true) {
     $field = '<textarea id="'.$name.'" name="' . $name . '" wrap="' . $wrap . '" cols="' . $width . '" rows="' . $height . '"';
@@ -273,7 +261,6 @@
     return $field;
   }
 
-  ////
   // Output a form hidden field
   function xtc_draw_hidden_field($name, $value = '') {
     $field = '<input type="hidden" name="' . $name . '" value="';
@@ -286,7 +273,6 @@
     return $field;
   }
 
-  ////
   // Output a form pull down menu
   function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
     $field = '<select name="' . $name . '"';
@@ -295,10 +281,7 @@
     if (is_array($values)) {
       foreach ($values as $key=>$val) {
         $field .= '<option value="' .$val['id'] . '"';
-        //BOF - DokuMan - 2010-09-08 - set undefined index
         if ( ((strlen($val['id']) > 0) && isset($GLOBALS[$name]) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          //if ( ((strlen($val['id']) > 0) && ($GLOBALS[$name] == $val['id'])) || ($default == $val['id']) ) {
-          //EOF - DokuMan - 2010-09-08 - set undefined index
           $field .= ' SELECTED';
         }
         $field .= '>' . $val['text'] . '</option>';
