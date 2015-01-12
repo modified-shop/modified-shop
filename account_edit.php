@@ -36,7 +36,7 @@ if (!isset ($_SESSION['customer_id'])) {
 	xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
 }
 
-if ($_SESSION['customers_status']['customers_status_id']==0) {
+if ($_SESSION['customers_status']['customers_status'] == '0') {
 	xtc_redirect(xtc_href_link_admin(FILENAME_CUSTOMERS, 'cID='.$_SESSION['customer_id'].'&action=edit', 'SSL'));
 }
 
