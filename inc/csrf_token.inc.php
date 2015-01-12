@@ -41,27 +41,23 @@ if (is_array($_POST) && count($_POST) > 0) {
   }
 }
 
-// keep Token for orders.php
+// keep Token for popups
+$CSRFKeep = false;
 if (defined('RUN_MODE_ADMIN') 
-    || strpos(basename($PHP_SELF), 'print_order') !== false  
-    || strpos(basename($PHP_SELF), 'print_packingslip') !== false
-    || strpos(basename($PHP_SELF), 'bill') !== false
-    || strpos(basename($PHP_SELF), 'popup') !== false
-    || strpos(basename($PHP_SELF), 'fck') !== false
+    && (strpos(basename($PHP_SELF), 'print_order') !== false  
+        || strpos(basename($PHP_SELF), 'print_packingslip') !== false
+        || strpos(basename($PHP_SELF), 'bill') !== false
+        || strpos(basename($PHP_SELF), 'popup') !== false
+        || strpos(basename($PHP_SELF), 'fck_wrapper') !== false
+        )
     ) 
 {
-  $_SESSION['CSRFKeep'] = true;  
+  $CSRFKeep = true;
 }
 
 // create CSRF Token
-if (!isset($_SESSION['CSRFKeep'])
-    || (isset($_SESSION['CSRFKeep']) && $_SESSION['CSRFKeep'] == '') 
-    ) 
-{
+if ($CSRFKeep === false) {
   $_SESSION['CSRFName'] = xtc_RandomString(6);
   $_SESSION['CSRFToken'] = xtc_RandomString(32);
-} else {
-  unset($_SESSION['CSRFKeep']);
-  unset($CSRFKeep);
 }
 ?>
