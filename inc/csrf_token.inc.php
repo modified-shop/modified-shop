@@ -10,8 +10,6 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('CSFR_ADMIN_MSG', 'CSRFToken nicht erkannt - Bitte informieren sie ihren Administrator');
-
 // include needed function
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 
@@ -20,41 +18,50 @@ if (is_array($_POST) && count($_POST) > 0) {
 
   if (isset($_POST[$_SESSION['CSRFName']])) {
     if ($_POST[$_SESSION['CSRFName']] != $_SESSION['CSRFToken']) {
+      trigger_error("CSRFToken manipulation.\n".print_r($_POST, true), E_USER_WARNING);
       unset($_POST);
+      
       // create CSRF Token
       $_SESSION['CSRFName'] = xtc_RandomString(6);
       $_SESSION['CSRFToken'] = xtc_RandomString(32);
       if (defined('RUN_MODE_ADMIN')) {
-        $messageStack->add_session(CSFR_ADMIN_MSG, 'warning');
+        $messageStack->add('CSRFToken manipulation', 'warning');
       }
     }
   } else {
+    trigger_error("CSRFToken not defined.\n".print_r($_POST, true), E_USER_WARNING);
     unset($_POST);
+    
     // create CSRF Token
     $_SESSION['CSRFName'] = xtc_RandomString(6);
     $_SESSION['CSRFToken'] = xtc_RandomString(32);
     if (defined('RUN_MODE_ADMIN')) {
-      $messageStack->add_session(CSFR_ADMIN_MSG, 'warning');
+      $messageStack->add('CSRFToken not defined', 'warning');
     }
   }
 }
 
+// keep Token for orders.php
+if (defined('RUN_MODE_ADMIN') 
+    || strpos(basename($PHP_SELF), 'print_order') !== false  
+    || strpos(basename($PHP_SELF), 'print_packingslip') !== false
+    || strpos(basename($PHP_SELF), 'bill') !== false
+    || strpos(basename($PHP_SELF), 'popup') !== false
+    || strpos(basename($PHP_SELF), 'fck') !== false
+    ) 
+{
+  $_SESSION['CSRFKeep'] = true;  
+}
+
 // create CSRF Token
-if ((!isset($_SESSION['CSRFKeep']) && !isset($CSRFKeep)) || ((isset($_SESSION['CSRFKeep']) && $_SESSION['CSRFKeep'] == '') || (isset($CSRFKeep) && $CSRFKeep == ''))) {
+if (!isset($_SESSION['CSRFKeep'])
+    || (isset($_SESSION['CSRFKeep']) && $_SESSION['CSRFKeep'] == '') 
+    ) 
+{
   $_SESSION['CSRFName'] = xtc_RandomString(6);
   $_SESSION['CSRFToken'] = xtc_RandomString(32);
 } else {
   unset($_SESSION['CSRFKeep']);
   unset($CSRFKeep);
-}
-
-// keep Token for orders.php
-if (defined('RUN_MODE_ADMIN') 
-    && strpos(basename($PHP_SELF), 'print_order') !== false  
-    && strpos(basename($PHP_SELF), 'print_packingslip') !== false
-    && strpos(basename($PHP_SELF), 'bill') !== false
-    ) 
-{
-  $_SESSION['CSRFKeep'] = true;  
 }
 ?>
