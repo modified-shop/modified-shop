@@ -15,12 +15,8 @@
    Released under the GNU General Public License
 ---------------------------------------------------------------------------------------*/
 
-function editorJSLink()
+function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') 
 {
-    return '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>';
-}
-
-function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') {
 
   $js_src = DIR_WS_MODULES .'fckeditor/fckeditor.js';
   $path = DIR_WS_MODULES .'fckeditor/';
@@ -42,90 +38,74 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='') {
    oFCKeditor.Config["DefaultLanguage"] = "'.$lang.'" ;
    oFCKeditor.ReplaceTextarea() ;';
 
-  switch($type) {
+  switch ($type) {
     // WYSIWYG editor content manager textarea named cont
     case 'content_manager':
-      $val ='<script type="text/javascript" src="'.$js_src.'"></script>
-             <script type="text/javascript">
-               $(document).ready(function(){
-                 var oFCKeditor = new FCKeditor( \'cont\', \'100%\', \'400\'  ) ;
-                 ' . $default_init . '
-               });
-             </script>';
+      $val = 'var oFCKeditor = new FCKeditor( \'cont\', \'100%\', \'400\'  ) ;';
       break;
     // WYSIWYG editor content manager products content section textarea named file_comment
     case 'products_content':
-      $val ='<script type="text/javascript" src="'.$js_src.'"></script>
-             <script type="text/javascript">
-               $(document).ready(function(){
-                 var oFCKeditor = new FCKeditor( \'file_comment\', \'100%\', \'400\'  ) ;
-                  ' . $default_init . '
-               });
-             </script>';
+      $val = 'var oFCKeditor = new FCKeditor( \'file_comment\', \'100%\', \'400\'  ) ;' ;
       break;
     // WYSIWYG editor categories_description textarea named categories_description[langID]
     case 'categories_description':
-      $val ='var oFCKeditor = new FCKeditor( \'categories_description['.$langID.']\', \'100%\', \'300\' ) ;
-              ' . $default_init . '
-             ';
+      $val = 'var oFCKeditor = new FCKeditor( \'categories_description['.$langID.']\', \'100%\', \'300\' ) ;';
       break;
     // WYSIWYG editor products_description textarea named products_description_langID
     case 'products_description':
-      $val ='var oFCKeditor = new FCKeditor( \'products_description_'.$langID.'\', \'100%\', \'400\'  ) ;
-              ' . $default_init . '
-             ';
+      $val =  'var oFCKeditor = new FCKeditor( \'products_description_'.$langID.'\', \'100%\', \'400\'  ) ;' ;
       break;
     // WYSIWYG editor products short description textarea named products_short_description_langID
     case 'products_short_description':
-      $val ='var oFCKeditor = new FCKeditor( \'products_short_description_'.$langID.'\', \'100%\', \'300\'  ) ;
-              ' . $default_init . '
-             ';
+      $val = 'var oFCKeditor = new FCKeditor( \'products_short_description_'.$langID.'\', \'100%\', \'300\'  ) ;' ;
       break;
     // WYSIWYG editor newsletter textarea named newsletter_body
     case 'newsletter':
-      $val ='<script type="text/javascript" src="'.$js_src.'"></script>
-             <script type="text/javascript">
-               $(document).ready(function(){
-                 ' . $default_init . '
-               });
-             </script>';
+      $val = 'var oFCKeditor = new FCKeditor( \'newsletter_body\', \'700\', \'400\'  ) ;' ;
       break;
     // WYSIWYG editor mail textarea named message
     case 'mail':
-      $val ='<script type="text/javascript" src="'.$js_src.'"></script>
-             <script type="text/javascript">
-               $(document).ready(function(){
-                 var oFCKeditor = new FCKeditor( \'message\', \'700\', \'400\' ) ;
-                  ' . $default_init . '
-               });
-             </script>';
+      $val = 'var oFCKeditor = new FCKeditor( \'message\', \'700\', \'400\' ) ;' ;
       break;
     // WYSIWYG editor gv_mail textarea named message
     case 'gv_mail':
-      $val ='<script type="text/javascript" src="'.$js_src.'"></script>
-             <script type="text/javascript">
-               $(document).ready(function(){
-                 var oFCKeditor = new FCKeditor( \'message\', \'700\', \'400\' ) ;
-                  ' . $default_init . '
-               });
-             </script>';
+      $val = 'var oFCKeditor = new FCKeditor( \'message\', \'700\', \'400\' ) ;' ;
       break;
     // WYSIWYG editor shop offline
     case 'shop_offline':
-      $val ='<script type="text/javascript" src="'.$js_src.'"></script>
-             <script type="text/javascript">
-               $(document).ready(function(){
-                 var oFCKeditor = new FCKeditor( \'offline_msg\', \'800\', \'400\' ) ;
-                  ' . $default_init . '
-               });
-             </script>';
+      $val = 'var oFCKeditor = new FCKeditor( \'offline_msg\', \'800\', \'400\' ) ;' ;
       break;
-    case 'addon':
-      require_once(DIR_FS_INC.'auto_include.inc.php');
-      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/wysiwyg/','php') as $file) require ($file);
-      break;
-
   }
+
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  foreach(auto_include(DIR_FS_CATALOG.'includes/extra/wysiwyg/','php') as $file) require ($file);
+  
+  $val .=  $default_init ; 
+  $val = wysiwyg_add_javascript($js_src,$val);
   return $val;
+}
+
+function editorJSLink($js_src)
+{
+    static $editorJSLinkCache;
+	
+	if (!isset ($editorJSLinkCache)) {
+	  $editorJSLinkCache =  PHP_EOL . '<script type="text/javascript" src="'.$js_src.'"></script>' . PHP_EOL;
+	} else {
+	  $editorJSLinkCache = '';
+	}
+	return $editorJSLinkCache;
+}
+
+function wysiwyg_add_javascript($js_src,$val)
+{
+    $val = editorJSLink($js_src).
+           '<script type="text/javascript">
+              $(document).ready(function() {
+               '.$val.'
+              });
+            </script>'. PHP_EOL;
+
+    return $val;
 }
 ?>
