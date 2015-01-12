@@ -208,9 +208,6 @@ include (DIR_FS_CATALOG.DIR_WS_MODULES.'verify_session.php');
 // set the language
 include (DIR_FS_CATALOG.DIR_WS_MODULES.'set_language_sessions.php');
 
-// call from filemanager
-if (defined('_IS_FILEMANAGER')) return;
-
 // include the language translations
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/'.$_SESSION['language'] . '.php');
 require(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/buttons.php');
@@ -221,6 +218,9 @@ if (is_file(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/' . $current_page
 
 // write customers status in session
 require(DIR_FS_CATALOG.DIR_WS_INCLUDES.'write_customers_status.php');
+
+// call from filemanager
+if (defined('_IS_FILEMANAGER')) return;
 
 // check permission
 if (is_file(DIR_FS_ADMIN.$current_page) == false || $_SESSION['customers_status']['customers_status_id'] !== '0') {

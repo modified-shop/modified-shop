@@ -10,7 +10,7 @@ error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT); //exlude E_STRICT on PHP 5.4
 
 define('_IS_FILEMANAGER',true);
 
-$current_cwd = getcwd();
+$current_cwd = dirname(__FILE__);
 
 // AdminDir Shop
 $rootDir = '../../../../../../../';
