@@ -38,6 +38,6 @@ class XtcFormatter implements KiTT_Formatter
 
         $val = $xtPrice->xtcFormat((float) $price, true);
 
-        return KiTT_String::encode($val, null, 'UTF-8');
+        return KiTT_String::encode(decode_htmlentities($val), null, 'UTF-8');
     }
 }
