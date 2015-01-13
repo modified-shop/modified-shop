@@ -26,39 +26,14 @@ function xtc_get_customer_status_value($customer_id) {
   if (isset($_SESSION['customer_id'])) {
     $customer_status_query = xtc_db_query("SELECT c.customers_status, 
                                                   c.member_flag, 
-                                                  cs.customers_status_id, 
-                                                  cs.customers_status_name, 
-                                                  cs.customers_status_public, 
-                                                  cs.customers_status_show_price, 
-                                                  cs_customers_status_min_order, 
-                                                  cs.customers_status_max_order, 
-                                                  cs.customers_status_show_price_tax, 
-                                                  cs.customers_status_image, 
-                                                  cs.customers_status_discount, 
-                                                  cs.customers_status_ot_discount_flag, 
-                                                  cs.customers_status_ot_discount, 
-                                                  cs.customers_status_graduated_prices, 
-                                                  cs.customers_status_cod_permission, 
-                                                  cs.customers_status_cc_permission, 
-                                                  cs.customers_status_bt_permission  
+                                                  cs.*
                                              FROM " . TABLE_CUSTOMERS . " c 
                                         LEFT JOIN " . TABLE_CUSTOMERS_STATUS . " cs 
                                                   ON customers_status = customers_status_id
                                                      AND cs.language_id = '" . (int)$_SESSION['languages_id'] . "'
                                             WHERE c.customers_id='" . (int)$_SESSION['customer_id'] . "'");
   } else {
-    $customer_status_query = xtc_db_query("SELECT cs.customers_status_id, 
-                                                  cs.customers_status_name, 
-                                                  cs.customers_status_public, 
-                                                  cs.customers_status_show_price, 
-                                                  cs_customers_status_min_order, 
-                                                  cs.customers_status_max_order, 
-                                                  cs.customers_status_show_price_tax, 
-                                                  cs.customers_status_image, 
-                                                  cs.customers_status_discount, 
-                                                  cs.customers_status_ot_discount_flag, 
-                                                  cs.customers_status_ot_discount, 
-                                                  cs.customers_status_graduated_prices  
+    $customer_status_query = xtc_db_query("SELECT cs.*
                                              FROM " . TABLE_CUSTOMERS_STATUS . " cs
                                             WHERE cs.customers_status_id='" . (int) DEFAULT_CUSTOMERS_STATUS_ID_GUEST . "' 
                                               AND cs.language_id = '" . (int)$_SESSION['languages_id'] . "'");
