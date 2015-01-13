@@ -3202,10 +3202,6 @@ ul.resp-tabs-list{
 }
 
 /* checkout */
-/* Checkout */
-.klarna_box_container {
-  margin-left: -20px;
-}
 .klarna_box {
   min-width: 100% !important;
   max-width: 100% !important;
@@ -3222,8 +3218,11 @@ ul.resp-tabs-list{
 .klarna_einwilligung {
   max-width: 100% !important;
 }
-.klarna_language {
+.klarna_language .klarna_display_in {
   display:none !important;
+}
+.klarna_language .klarna_flag_list {
+  border-top:none !important;
 }
 .klarna_box_bottom {
   display:block !important;
