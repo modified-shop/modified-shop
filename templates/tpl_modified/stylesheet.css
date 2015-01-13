@@ -584,11 +584,11 @@ td.checkbox {
   border-top: 1px solid #2c2c2c;  
   margin: 0px 0px 10px 0px;
 }
-ul.footerlist {
+ul.footerlist, ul.footerlist ul {
   list-style-type:none;
 }
 ul.footerlist li { 
-  list-style-type:none;
+
 }
 ul.footerlist li a {
   color:#ffffff;
@@ -597,11 +597,21 @@ ul.footerlist li a {
   display:block;
   border-bottom: 1px dotted #555555;
 }
+ul.footerlist li li a { 
+  padding-left:24px;
+  background: transparent url(img/footer_arrow.png) no-repeat 6px 10px;
+}
 ul.footerlist li a:hover {
   color:#dddddd;
   background: transparent url(img/footer_arrow.png) no-repeat 218px 10px;
   text-decoration:none;
 }
+ul.footerlist li li a:hover {
+  color:#dddddd;
+  background: transparent url(img/footer_arrow.png) no-repeat 6px 10px;
+  text-decoration:none;
+}
+
 p.box3_sub {
   margin: 15px 0px 2px 0px;
   font-size:12px;
@@ -3122,6 +3132,36 @@ ul.resp-tabs-list{
   display:none;
 }
 /* END No Javascript Styles for Tabs */
+
+/* START Subcontent navigation in content */
+.subcontent {
+  float:right; 
+  margin: 8px 0px 40px 40px;
+  background: #f2f2f2;
+  border: 1px solid #ccc;
+  padding: 10px;
+  width:240px;
+}
+.subcontent h4 a:hover {
+  text-decoration:none;
+}
+.subcontent ul {
+  margin: 0px 0px 0px 15px;
+  list-style-type:square;
+}
+.subcontent ul li {
+
+}
+.subcontent ul li a {
+  display:block; 
+  padding: 4px 0px;
+  border-bottom: 1px dotted #ccc;
+}
+.subcontent ul li a:hover {
+  text-decoration:none;
+}
+/* END Subcontent navigation in content */
+
 
 
 
