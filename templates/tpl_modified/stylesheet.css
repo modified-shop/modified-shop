@@ -3167,13 +3167,22 @@ ul.resp-tabs-list{
 /* START Klarna */ 
 
 /* product_info */
-.klarna_PPBox {
+.pd_summarybox .klarna_PPBox {
   margin-top:5px !important;
   height:50px !important;
   width: 99% !important;
 }
 
-
+.karna_container {
+  margin: 5px 0px;
+  float:right;
+  width:300px;
+} 
+.karna_container .klarna_PPBox {
+  margin-top:5px !important;
+  height:50px !important;
+  width: 99% !important;
+}
 
 
 
