@@ -103,6 +103,7 @@ if($action == 'response')
 		$order = new order($masterpayment->order_ID);
 		
 		$smarty->assign('masterpayment_url', $masterpayment->masterpaymentGatewayURL);
+	  $smarty->assign('masterpaymentForm', xtc_draw_form('masterpaymentForm', $masterpayment->masterpaymentGatewayURL, 'post', 'name="masterpaymentForm"'));
 		$smarty->assign('request_parameters', $masterpayment->generateRequest());
 	} else {
 		$smarty->assign('masterpayment_error', 1);
@@ -122,6 +123,7 @@ if($action == 'response')
 	
 	$smarty->assign('language', $_SESSION['language']);
 	$smarty->assign('masterpayment_request_url', $MasterpaymentActions->getRequestURL());
+	$smarty->assign('masterpaymentForm', xtc_draw_form('masterpaymentForm', $MasterpaymentActions->getRequestURL(), 'post', 'name="masterpaymentForm"'));
 	
 	@include('lang/' . $_SESSION['language'] . '/modules/payment/masterpayment_config.php');
 	

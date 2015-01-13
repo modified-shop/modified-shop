@@ -184,7 +184,7 @@ class PayoneAddressCheck {
 			unset($_SESSION['payone_error']);
 		}
 
-		$this->set_content_data('form_action', xtc_href_link(basename($PHP_SELF), '', 'SSL'));
+		$this->set_content_data('FORM_ACTION', xtc_draw_form('payone_address_check', xtc_href_link(basename($PHP_SELF), '', 'SSL'), 'post'));
     $this->set_content_data('BUTTON_CONFIRM', xtc_image_submit('button_confirm.gif', IMAGE_BUTTON_CONFIRM));
     $this->set_content_data('payonecss', DIR_WS_EXTERNAL.'payone/css/payone.css');
 

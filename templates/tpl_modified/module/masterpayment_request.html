@@ -14,7 +14,7 @@
 
 	{if !isset($masterpayment_error)}
 	
-		<form name="masterpaymentForm" id="masterpaymentForm" action="{$masterpayment_url}" method="post">			
+		{$masterpayment_form_action}			
 		
 			{if is_array($request_parameters)}			
 				{foreach key=parameter item=value from=$request_parameters}

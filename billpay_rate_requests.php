@@ -43,7 +43,7 @@
 	echo '<html><head>';
 	echo '</head><body style="margin:0; padding:0">';
 	
-	echo '<form name="billpay_rates_form" method="POST">';
+	echo xtc_draw_form('billpay_rates_form', '', 'post');
 	$country = $rr_data['country'];
 	$currency =  $rr_data['currency'];
 	$billpayLanguage = $billpay->_getLanguage();

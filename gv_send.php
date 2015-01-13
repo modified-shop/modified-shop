@@ -146,7 +146,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send' && !$error) {
   $gv_query = xtc_db_query("select customers_firstname, customers_lastname from ".TABLE_CUSTOMERS." where customers_id = '".$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $send_name = $gv_result['customers_firstname'].' '.$gv_result['customers_lastname'];
-  $smarty->assign('FORM_ACTION', '<form action="'.xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL').'" method="post">');
+  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post'));
   $smarty->assign('MAIN_MESSAGE', sprintf(MAIN_MESSAGE, $xtPrice->xtcFormat(str_replace(",", ".", $_POST['amount']), true), stripslashes($_POST['to_name']), $_POST['email'], stripslashes($_POST['to_name']), $xtPrice->xtcFormat(str_replace(",", ".", $_POST['amount']), true), $send_name));
   if ($_POST['message']) {
     $smarty->assign('PERSONAL_MESSAGE', sprintf(PERSONAL_MESSAGE, $gv_result['customers_firstname']));
@@ -158,7 +158,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'send' && !$error) {
 }
 elseif (!isset($_GET['action']) || $_GET['action'] == '' || $error) {
   $smarty->assign('action', '');
-  $smarty->assign('FORM_ACTION', '<form action="'.xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL').'" method="post">');
+  $smarty->assign('FORM_ACTION', xtc_draw_form('gv_send', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'), 'post'));
   $smarty->assign('LINK_SEND', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'));
   $smarty->assign('INPUT_TO_NAME', xtc_draw_input_field('to_name', stripslashes($_POST['to_name'])));
   $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', $_POST['email']));
