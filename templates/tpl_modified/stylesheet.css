@@ -3171,8 +3171,14 @@ ul.resp-tabs-list{
   margin-top:5px !important;
   height:50px !important;
   width: 99% !important;
+  font-size:13px !important;
+
+}
+.pd_summarybox .klarna_PPBox .klarna_PPBox_topMid span {
+  margin-top:9px !important;
 }
 
+/* shopping cart */
 .karna_container {
   margin: 5px 0px;
   float:right;
@@ -3183,11 +3189,14 @@ ul.resp-tabs-list{
   margin-bottom:0px !important;
   height:50px !important;
   width: 99% !important;
+  font-size:13px !important;
 }
 .karna_container .klarna_PPBox .klarna_PPBox_bottomMid {
   height:170px !important;
 }
-
+.karna_container .klarna_PPBox .klarna_PPBox_topMid span {
+  margin-top:9px !important;
+}
   
 
 
