@@ -26,6 +26,7 @@ require_once(DIR_FS_BOXES_INC . 'gunnart_productRedirect.inc.php');
   require_once(DIR_FS_BOXES . 'search.php');
   require_once(DIR_FS_BOXES . 'content.php');
   require_once(DIR_FS_BOXES . 'information.php');
+  require_once(DIR_FS_BOXES . 'miscellaneous.php');
   require_once(DIR_FS_BOXES . 'languages.php'); 
   require_once(DIR_FS_BOXES . 'infobox.php');
   require_once(DIR_FS_BOXES . 'loginbox.php');
