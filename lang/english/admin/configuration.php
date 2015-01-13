@@ -86,8 +86,6 @@ define('ALLOW_DISCOUNT_ON_PRODUCTS_ATTRIBUTES_TITLE' , 'Allow discount on produc
 define('ALLOW_DISCOUNT_ON_PRODUCTS_ATTRIBUTES_DESC' , 'Allow customers to get discount on attribute price (if main product is not a "specials" product)');
 define('CURRENT_TEMPLATE_TITLE' , 'Template Set (Theme)');
 define('CURRENT_TEMPLATE_DESC' , 'Choose a template set (theme). The theme must have been saved before in the following folder: www.Your-Domain.com/templates/');
-define('CC_KEYCHAIN_TITLE','CC String');
-define('CC_KEYCHAIN_DESC','String to encrypt CC number (please change!)');
 
 define('ENTRY_FIRST_NAME_MIN_LENGTH_TITLE' , 'First Name');
 define('ENTRY_FIRST_NAME_MIN_LENGTH_DESC' , 'Minimum length of first name');
@@ -111,11 +109,6 @@ define('ENTRY_TELEPHONE_MIN_LENGTH_TITLE' , 'Telephone Number');
 define('ENTRY_TELEPHONE_MIN_LENGTH_DESC' , 'Minimum length of telephone number');
 define('ENTRY_PASSWORD_MIN_LENGTH_TITLE' , 'Password');
 define('ENTRY_PASSWORD_MIN_LENGTH_DESC' , 'Minimum length of password');
-
-define('CC_OWNER_MIN_LENGTH_TITLE' , 'Credit Card Owner Name');
-define('CC_OWNER_MIN_LENGTH_DESC' , 'Minimum length of credit card owner name');
-define('CC_NUMBER_MIN_LENGTH_TITLE' , 'Credit Card Number');
-define('CC_NUMBER_MIN_LENGTH_DESC' , 'Minimum length of credit card number');
 
 define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Reviews');
 define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum length of review text');

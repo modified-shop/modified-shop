@@ -41,7 +41,6 @@ define('BUTTON_SEND_EMAIL', 'Send E-Mail');
 define('BUTTON_SEND_COUPON', 'Send Coupon');
 define('BUTTON_INVOICE', 'Invoice');
 define('BUTTON_PACKINGSLIP', 'Packing slip');
-define('BUTTON_REMOVE_CC_INFO', 'Remove CC Info');
 define('BUTTON_AFTERBUY_SEND', 'Afterbuy - send');
 define('BUTTON_NEW_NEWSLETTER', 'New Newsletter');
 define('BUTTON_RESET', 'Reset');

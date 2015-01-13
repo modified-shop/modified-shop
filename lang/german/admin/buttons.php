@@ -41,7 +41,6 @@ define('BUTTON_SEND_EMAIL', 'E-Mail senden');
 define('BUTTON_SEND_COUPON', 'Gutschein senden');
 define('BUTTON_INVOICE', 'Rechnung');
 define('BUTTON_PACKINGSLIP', 'Lieferschein');
-define('BUTTON_REMOVE_CC_INFO', 'L&ouml;sche KK Info');
 define('BUTTON_AFTERBUY_SEND', 'Afterbuy - senden');
 define('BUTTON_NEW_NEWSLETTER', 'Neuer Newsletter');
 define('BUTTON_RESET', 'Zur&uuml;cksetzen');

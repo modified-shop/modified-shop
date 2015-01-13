@@ -614,13 +614,6 @@ CREATE TABLE orders (
   billing_country_iso_code_2 CHAR(2) NOT NULL,
   billing_address_format_id INT(5) NOT NULL,
   payment_method VARCHAR(128) NOT NULL,
-  cc_type VARCHAR(20),
-  cc_owner VARCHAR(64),
-  cc_number VARCHAR(64),
-  cc_expires VARCHAR(4),
-  cc_start VARCHAR(4) DEFAULT NULL,
-  cc_issue VARCHAR(3) DEFAULT NULL,
-  cc_cvv VARCHAR(4) DEFAULT NULL,
   comments text,
   last_modified DATETIME,
   date_purchased DATETIME,
@@ -1271,7 +1264,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ALLOW_ADD_TO_CART', 'false', 1, 24, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CURRENT_TEMPLATE', 'tpl_modified', 1, 26, NULL, NOW(), NULL, 'xtc_cfg_pull_down_template_sets(');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'PRICE_PRECISION', '4', 1, 28, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CC_KEYCHAIN', 'changeme', 1, 29, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'USE_SHORT_DATE_FORMAT', 'false', '1', '50', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 
 
@@ -1295,8 +1287,6 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ENTRY_STATE_MIN_LENGTH', '0', 0, 9, NULL, NOW(), NULL, NULL); 
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ENTRY_TELEPHONE_MIN_LENGTH', '3', 2, 10, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'ENTRY_PASSWORD_MIN_LENGTH', '5', 2, 11, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CC_OWNER_MIN_LENGTH', '3', 2, 12, NULL, NOW(), NULL, NULL);
-INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'CC_NUMBER_MIN_LENGTH', '10', 2, 13, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'REVIEW_TEXT_MIN_LENGTH', '50', 2, 14, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MIN_DISPLAY_BESTSELLERS', '1', 2, 15, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MIN_DISPLAY_ALSO_PURCHASED', '1', 2, 16, NULL, NOW(), NULL, NULL);

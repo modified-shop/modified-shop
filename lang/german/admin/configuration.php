@@ -85,8 +85,6 @@ define('ALLOW_DISCOUNT_ON_PRODUCTS_ATTRIBUTES_TITLE' , 'Rabatte auch auf die Art
 define('ALLOW_DISCOUNT_ON_PRODUCTS_ATTRIBUTES_DESC' , 'Erlaubt, den eingestellten Rabatt der Kundengruppe auch auf die Artikelattribute anzuwenden (Nur wenn der Artikel nicht als "Sonderangebot" ausgewiesen ist)');
 define('CURRENT_TEMPLATE_TITLE' , 'Templateset (Theme)');
 define('CURRENT_TEMPLATE_DESC' , 'W&auml;hlen Sie ein Templateset (Theme) aus. Das Theme muss sich im Ordner www.Ihre-Domain.com/templates/ befinden.');
-define('CC_KEYCHAIN_TITLE','CC String');
-define('CC_KEYCHAIN_DESC','String zur verschl&uuml;sselung der CC Informationen (Bitte umbedingt &auml;ndern!)');
 
 define('ENTRY_FIRST_NAME_MIN_LENGTH_TITLE' , 'Vorname');
 define('ENTRY_FIRST_NAME_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Vornamens');
@@ -110,11 +108,6 @@ define('ENTRY_TELEPHONE_MIN_LENGTH_TITLE' , 'Telefon Nummer');
 define('ENTRY_TELEPHONE_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Telefonnummer');
 define('ENTRY_PASSWORD_MIN_LENGTH_TITLE' , 'Passwort');
 define('ENTRY_PASSWORD_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Passworts');
-
-define('CC_OWNER_MIN_LENGTH_TITLE' , 'Kreditkarteninhaber');
-define('CC_OWNER_MIN_LENGTH_DESC' , 'Minimum L&auml;nge des Namens des Kreditkarteninhabers');
-define('CC_NUMBER_MIN_LENGTH_TITLE' , 'Kreditkartennummer');
-define('CC_NUMBER_MIN_LENGTH_DESC' , 'Minimum L&auml;nge von Kreditkartennummern');
 
 define('REVIEW_TEXT_MIN_LENGTH_TITLE' , 'Bewertungen');
 define('REVIEW_TEXT_MIN_LENGTH_DESC' , 'Minimum L&auml;nge der Texteingabe bei Bewertungen');

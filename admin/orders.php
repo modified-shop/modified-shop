@@ -351,17 +351,6 @@ switch ($action) {
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
 
-  // Remove CVV Number
-  case 'deleteccinfo' :
-    xtc_db_query("UPDATE ".TABLE_ORDERS." SET cc_cvv = null WHERE orders_id = ".$oID);
-    xtc_db_query("UPDATE ".TABLE_ORDERS." SET cc_number = '0000000000000000' WHERE orders_id = ".$oID);
-    xtc_db_query("UPDATE ".TABLE_ORDERS." SET cc_expires = null WHERE orders_id = ".$oID);
-    xtc_db_query("UPDATE ".TABLE_ORDERS." SET cc_start = null WHERE orders_id = ".$oID);
-    xtc_db_query("UPDATE ".TABLE_ORDERS." SET cc_issue = null WHERE orders_id = ".$oID);
-
-    xtc_redirect(xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=edit'));
-    break;
-
   case 'afterbuy_send' :
     require_once (DIR_FS_CATALOG.'includes/classes/afterbuy.php');
     $aBUY = new xtc_afterbuy_functions($oID);

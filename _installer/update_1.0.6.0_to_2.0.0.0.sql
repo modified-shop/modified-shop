@@ -203,4 +203,16 @@ ALTER TABLE specials ADD start_date DATETIME AFTER specials_last_modified;
 #GTB - 2015-01-09 - Add new index on orders
 ALTER TABLE orders ADD INDEX idx_orders_status (orders_status);
 
+#GTB - 2015-01-13 - remove cc modules
+ALTER TABLE orders DROP cc_type;
+ALTER TABLE orders DROP cc_owner;
+ALTER TABLE orders DROP cc_number;
+ALTER TABLE orders DROP cc_expires;
+ALTER TABLE orders DROP cc_start;
+ALTER TABLE orders DROP cc_issue;
+ALTER TABLE orders DROP cc_cvv;
+DELETE FROM configuration WHERE configuration_key = 'CC_KEYCHAIN';
+DELETE FROM configuration WHERE configuration_key = 'CC_OWNER_MIN_LENGTH';
+DELETE FROM configuration WHERE configuration_key = 'CC_NUMBER_MIN_LENGTH';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
