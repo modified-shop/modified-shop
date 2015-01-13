@@ -3180,6 +3180,7 @@ ul.resp-tabs-list{
 } 
 .karna_container .klarna_PPBox {
   margin-top:5px !important;
+  margin-bottom:0px !important;
   height:50px !important;
   width: 99% !important;
 }
@@ -3187,7 +3188,7 @@ ul.resp-tabs-list{
   height:170px !important;
 }
 
-
+  
 
 
 /* END Klarna */ 
