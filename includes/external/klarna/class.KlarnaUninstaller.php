@@ -100,7 +100,7 @@ class KlarnaUninstaller
             }
 
             if ($this->_klarnaDB->query("SELECT * FROM klarna_pclasses")->count() == 0) {
-                $this->_klarnaDB->query("DROP TABLE klarna_pclasses");
+                $this->_klarnaDB->query("DROP TABLE IF EXISTS klarna_pclasses");
             }
         }
     }

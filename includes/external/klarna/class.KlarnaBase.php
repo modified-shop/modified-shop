@@ -121,7 +121,7 @@ class KlarnaBase
 
         if (KlarnaConstant::isAdmin()
             && (!array_key_exists('action', $_GET)
-            || !in_array($_GET['action'], array('install', 'remove')))
+            || !in_array($_GET['action'], array('install', 'remove', 'removeconfirm')))
         ) {
             echo "<link href='" . KlarnaUtils::getStaticPath() .
             "images.css' type='text/css' rel='stylesheet'/>";
