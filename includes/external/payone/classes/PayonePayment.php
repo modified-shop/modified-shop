@@ -322,9 +322,6 @@ class PayonePayment {
 	}
 
 	function process_button() {
-		$order = $GLOBALS['order'];
-		$pb = '';
-		return $pb;
 	}
 	
 	function payment_action() {
