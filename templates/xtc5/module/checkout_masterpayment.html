@@ -21,7 +21,7 @@
 	<iframe name="masterpayment_frame" class="masterpayment_frame" id="masterpayment_frame" allowtransparency="true" src="{$masterpayment_request_url}" scrolling="auto" width="100%" height="500" frameborder="0">   
     	<p>
                 
-    		<form name="masterpaymentForm" id="masterpaymentForm" action="{$masterpayment_request_url}" method="post">
+    		{$masterpayment_form_action}
                 
      			<input class="masterpayment_submit_button" type="submit" name="sent" value="&raquo; {$masterpayment_button_text}" />
                         

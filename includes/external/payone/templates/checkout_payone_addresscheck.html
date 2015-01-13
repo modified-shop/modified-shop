@@ -15,7 +15,7 @@
   <p class="p1_note">{$content_data.note_address_changed}</p>
 {/if}
 
-<form action="{$content_data.form_action}" method="POST">
+{$content_data.FORM_ACTION}
 	{if $content_data.billto_corrected_street}
 	<h4 class="payone">{$smarty.const.AC_BILLING_ADDRESS}</h4>
 
