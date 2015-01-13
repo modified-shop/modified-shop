@@ -214,7 +214,7 @@
               <table class="tableConfig borderall">
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_CUSTOMER; ?></td>
-                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, $_POST['customers_email_address']);?></td>
+                  <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('customers_email_address', $customers, ((isset($_GET['customer'])) ? $_GET['customer'] : $_POST['customers_email_address']));?></td>
                 </tr>
                 <tr>
                   <td class="dataTableConfig col-left"><?php echo TEXT_FROM; ?></td>
