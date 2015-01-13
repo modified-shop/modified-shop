@@ -43,6 +43,10 @@ class payone_cc extends PayonePayment {
 		if (isset($_GET['truncatedcardpan'])) {
 			$_SESSION[$this->code]['truncatedcardpan'] = $_GET['truncatedcardpan'];
 		}
+		
+		if (isset($_GET['payone_cc']) && $_GET['payone_cc'] == 'true') {
+		  $this->tmpOrders = $this->config['orders_status']['tmp'];
+		}
   }
   
 	function _paymentDataFormProcess($active_genre_identifier) {
@@ -61,7 +65,7 @@ class payone_cc extends PayonePayment {
 		$standard_parameters['responsetype'] = 'REDIRECT';
 		$standard_parameters['storecarddata'] = 'yes';
 		$standard_parameters['encoding'] = 'UTF-8';
-		$standard_parameters['successurl'] = ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?'.xtc_session_name().'='.xtc_session_id();
+		$standard_parameters['successurl'] = ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_PROCESS.'?payone_cc=true&'.xtc_session_name().'='.xtc_session_id();
 		$standard_parameters['errorurl'] = ((ENABLE_SSL == true) ? HTTPS_SERVER : HTTP_SERVER).DIR_WS_CATALOG.FILENAME_CHECKOUT_CONFIRMATION.'?'.xtc_session_name().'='.xtc_session_id().'&conditions=true&payment_error='.$this->code;
 		$standard_parameters['hash'] = $this->payone->computeHash($standard_parameters, $this->global_config['key']);
     
@@ -150,8 +154,8 @@ class payone_cc extends PayonePayment {
     return $this->_paymentDataFormProcess($active_genre);
 	}	
 
-	function after_process() {
-	  global $order, $insert_id;
+	function payment_action() {
+	  global $order, $insert_id, $tmp;
     
     if (!isset($insert_id) || $insert_id == '') {
 		  $insert_id = $_SESSION['tmp_oID'];
@@ -183,7 +187,13 @@ class payone_cc extends PayonePayment {
     
       parent::_build_service_authentification('cc');
       parent::_parse_response_payone_api();
-    }
+ 
+      $tmp = false;
+   }
+  }
+  
+	function after_process() {
+	  global $order, $insert_id;
      
 		parent::after_process();
 		unset($_SESSION[$this->code]);
