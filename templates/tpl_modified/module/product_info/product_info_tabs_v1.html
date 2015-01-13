@@ -28,9 +28,6 @@
         <li class="print">{$PRODUCTS_PRINT_LAYER}</li>
         <li class="vote">{$PRODUCTS_WRITE_REVIEW}</li>
       </ul>
-
-      {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
-
     </div>
 
     <div class="pd_summarybox"> 
@@ -58,7 +55,7 @@
       
       {if $ADD_CART_BUTTON == '' && $PRODUCTS_FSK18 == 'true'}<div class="pd_inforow_message">Dieser Artikel kann erst nach erfolgter Altersverifikation gekauft werden.</div>{/if}
       {if $PRODUCTS_DATE_AVIABLE != ''}<div class="pd_inforow_message">{$PRODUCTS_DATE_AVIABLE}</div>{/if}
-
+      {if $KLARNA_PPBOX}{$KLARNA_PPBOX}{/if}
     </div>
     <br class="clearfix" />
     {if $XTB_REDIRECT_USER_TO == 'product'}
