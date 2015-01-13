@@ -3197,6 +3197,44 @@ ul.resp-tabs-list{
 .karna_container .klarna_PPBox .klarna_PPBox_topMid span {
   margin-top:9px !important;
 }
+.karna_container .klarna_PPBox .klarna_PPBox_pull {
+  margin-top: -2px !important;
+}
+
+/* checkout */
+/* Checkout */
+.klarna_box_container {
+  margin-left: -20px;
+}
+.klarna_box {
+  min-width: 100% !important;
+  max-width: 100% !important;
+  border: none !important; 
+  padding: 0px !important;
+}
+.klarna_box_bottom input {
+  height:auto !important;
+}
+.klarna_box_bottom select {
+  height: auto !important;
+  padding:3px !important;
+}
+.klarna_einwilligung {
+  max-width: 100% !important;
+}
+.klarna_language {
+  display:none !important;
+}
+.klarna_box_bottom {
+  display:block !important;
+}
+
+.klarna_box_bottom ol.paymentPlan {
+  margin: 3px 0 10px 0;
+  padding: 5px;
+}
+
+
   
 
 
