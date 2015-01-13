@@ -13,19 +13,19 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
+define('POLICY_MIN_LOWER_CHARS', 1);
+define('POLICY_MIN_UPPER_CHARS', 1);
+define('POLICY_MIN_NUMERIC_CHARS', 1);
+define('POLICY_MIN_SPECIAL_CHARS', 1);
+
 class password_policy 
 {
-    /* Internal variables */
+
     private $rules = array();     // Array of policy rules
     private $errors = array();    // Array of errors for the last validation
     
     /**
      * Constructor
-     *
-     * Allows an array of policy parameters to be passed on construction.
-     * For any rules not listed in parameter array default values are set.
-     *
-     * @param  array $params optional array of policy configuration parameters
      */
     function __construct ()
     {
@@ -34,8 +34,6 @@ class password_policy
          *    Key is rule identifier
          *    Value is rule parameter
          *      false is disabled (default)
-         *    Type is type of parameter data
-         *      permitted values are 'integer' or 'boolean'
          *    Test is php code condition returning true if rule is passed
          *      password string is $p
          *      rule value is $v
@@ -43,31 +41,26 @@ class password_policy
          */
         $this->rules['min_length'] = array(
             'value' => ENTRY_PASSWORD_MIN_LENGTH,
-            'type'  => 'integer',
             'test'  => 'return strlen($p) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR);
                         
         $this->rules['min_lowercase_chars'] = array(
-            'value' => 1,
-            'type'  => 'integer',
+            'value' => ((POLICY_MIN_LOWER_CHARS > 0) ? POLICY_MIN_LOWER_CHARS : false),
             'test'  => 'return preg_match_all("/[a-z]/", $p, $x) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR_MIN_LOWER);
                         
         $this->rules['min_uppercase_chars'] = array(
-            'value' => 1,
-            'type'  => 'integer',
+            'value' => ((POLICY_MIN_UPPER_CHARS > 0) ? POLICY_MIN_UPPER_CHARS : false),
             'test'  => 'return preg_match_all("/[A-Z]/", $p, $x) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR_MIN_UPPER);
                                     
         $this->rules['min_numeric_chars'] = array(
-            'value' => 1,
-            'type'  => 'integer',
+            'value' => ((POLICY_MIN_NUMERIC_CHARS > 0) ? POLICY_MIN_NUMERIC_CHARS : false),
             'test'  => 'return preg_match_all("/[0-9]/", $p, $x) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR_MIN_NUM);
                                 
         $this->rules['min_nonalphanumeric_chars'] = array(
-            'value' => 1,
-            'type'  => 'integer',
+            'value' => ((POLICY_MIN_SPECIAL_CHARS > 0) ? POLICY_MIN_SPECIAL_CHARS : false),
             'test'  => 'return preg_match_all("/[\W]/", $p, $x) >= $v;',
             'error' => ENTRY_PASSWORD_ERROR_MIN_CHAR);
     }
@@ -88,7 +81,7 @@ class password_policy
             $v = $rule['value'];
             
             // Apply each configured rule in turn
-            if ($rule['value'] && !eval($rule['test']))
+            if ($rule['value'] !== false && !eval($rule['test']))
             {
                 $this->errors[$k] = $this->get_rule_error($k);
             }
