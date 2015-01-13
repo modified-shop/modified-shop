@@ -18,9 +18,10 @@ $customers_status_id = $_SESSION['customers_status']['customers_status_id'];
 ########################
 
 # group check
-$group_check = GROUP_CHECK == 'true' ? ' AND group_ids LIKE \'%c_'.$customers_status_id.'_group%\' ' : '';
+$group_check = GROUP_CHECK == 'true' ? ' AND c1.group_ids LIKE \'%c_'.$customers_status_id.'_group%\' ' : '';
 
-define('CONTENT_CONDITIONS', $group_check);
+define('CONTENT_CONDITIONS_C1', $group_check);
+define('CONTENT_CONDITIONS', str_replace('c1.', '', CONTENT_CONDITIONS_C1));
 
 
 # PRODUCTS

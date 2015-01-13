@@ -31,7 +31,8 @@ $shop_content_query = xtc_db_query("SELECT content_id,
                                            content_title, 
                                            content_heading, 
                                            content_text, 
-                                           content_file
+                                           content_file,
+                                           parent_id
                                       FROM ".TABLE_CONTENT_MANAGER."
                                      WHERE content_group='".(int) $_GET['coID']."'
                                            ".CONTENT_CONDITIONS."
@@ -39,6 +40,9 @@ $shop_content_query = xtc_db_query("SELECT content_id,
                                        AND languages_id=".$_SESSION['languages_id']);
 
 if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
+  // sub content
+  include (DIR_WS_MODULES.'sub_content_listing.php');
+
   $breadcrumb->add($shop_content_data['content_title'], xtc_href_link(FILENAME_CONTENT,'coID='.(int) $_GET['coID']));
 } else {
   $site_error = TEXT_CONTENT_NOT_FOUND;
@@ -48,9 +52,6 @@ if ($shop_content_data = xtc_db_fetch_array($shop_content_query)) {
 if (($_GET['coID'] != 7) || (isset($_GET['action']) && $_GET['action'] == 'success')) {
   require (DIR_WS_INCLUDES.'header.php');
 }
-
-// sub content
-include (DIR_WS_MODULES.'sub_content_listing.php');
 
 $smarty->assign('CONTENT_HEADING', $shop_content_data['content_heading']);
 
