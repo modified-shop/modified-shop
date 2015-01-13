@@ -3164,6 +3164,25 @@ ul.resp-tabs-list{
 
 
 
+/* START Klarna */ 
+
+/* product_info */
+.klarna_PPBox {
+  margin-top:5px !important;
+  height:50px !important;
+  width: 99% !important;
+}
+
+
+
+
+
+
+/* END Klarna */ 
+
+
+
+
 
 /* END miscellaneous */
 
