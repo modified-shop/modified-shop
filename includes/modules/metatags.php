@@ -605,7 +605,7 @@ if (metaClean(META_COMPANY) != '') {
 if (metaClean(META_TOPIC) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="page-topic" content="'. metaClean(META_TOPIC) .'" />'."\n";
 }
-if (META_REPLY_TO != 'xx@xx.com') {
+if (META_REPLY_TO != 'xx@xx.com' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="reply-to" content="'. META_REPLY_TO .'" />'."\n";
 }
 if (META_REVISIT_AFTER != '0') {
