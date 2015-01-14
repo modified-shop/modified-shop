@@ -232,8 +232,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
 
     $_SESSION['customer_id'] = xtc_db_insert_id();
-    $user_id = xtc_db_insert_id();
-    xtc_write_user_info($user_id);
+    xtc_write_user_info($_SESSION['customer_id']);
+    
     $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                             'entry_firstname' => $firstname,
                             'entry_lastname' => $lastname,
