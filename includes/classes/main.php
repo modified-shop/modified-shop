@@ -83,6 +83,7 @@ class main {
     }
     $link_parameters = defined('TPL_POPUP_SHIPPING_LINK_PARAMETERS') ? TPL_POPUP_SHIPPING_LINK_PARAMETERS : POPUP_SHIPPING_LINK_PARAMETERS;
     $link_class = defined('TPL_POPUP_SHIPPING_LINK_CLASS') ? TPL_POPUP_SHIPPING_LINK_CLASS : POPUP_SHIPPING_LINK_CLASS;
+    
     return ' '.SHIPPING_EXCL.' <a rel="nofollow" target="_blank" href="'.xtc_href_link(FILENAME_POPUP_CONTENT, 'coID='.SHIPPING_INFOS.$link_parameters, $request_type).'" title="Information" class="'.$link_class.'">'.SHIPPING_COSTS.'</a>';
   }
 
@@ -134,6 +135,11 @@ class main {
     if ($tax_rate == 0) {
       $tax_info = sprintf(TAX_INFO_EXCL, '');
     }
+    
+    if (MODULE_SMALL_BUSINESS == 'true') {
+      $tax_info = TAX_INFO_SMALL_BUSSINESS;
+    }
+    
     return $tax_info;
   }
 

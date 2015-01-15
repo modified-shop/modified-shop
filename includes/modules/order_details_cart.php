@@ -147,8 +147,8 @@ if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
 if (SHOW_SHIPPING == 'true') {
   $module_smarty->assign('SHIPPING_INFO', $main->getShippingLink()); //web28 -2012-09-29 - use main function
 }
-if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
-$module_smarty->assign('UST_CONTENT', $_SESSION['cart']->show_tax());
+if ($_SESSION['customers_status']['customers_status_show_price'] == '1' && MODULE_SMALL_BUSINESS != 'true') {
+  $module_smarty->assign('UST_CONTENT', $_SESSION['cart']->show_tax());
 }
 
 // VERSANDKOSTEN IM WARENKORB

@@ -69,7 +69,9 @@
       $box_smarty->assign('TOTAL', $xtPrice->xtcFormat($total, true));
     }
 
-    $box_smarty->assign('UST', $_SESSION['cart']->show_tax());
+    if (MODULE_SMALL_BUSINESS != 'true') {
+      $box_smarty->assign('UST', $_SESSION['cart']->show_tax());
+    }
     $box_smarty->assign('SHIPPING_INFO', SHOW_SHIPPING == 'true' ? $main->getShippingLink() : '');
 
   }

@@ -544,6 +544,9 @@ define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
 define('PRINTVIEW_INFO', 'Artikeldatenblatt drucken');
 define('PRODUCTS_REVIEW_LINK', 'Bewertung schreiben');
 
+define('TAX_INFO_SMALL_BUSINESS', 'Endpreis nach &sect; 19 UStG.');
+define('TAX_INFO_SMALL_BUSINESS_FOOTER', 'Aufgrund des Kleinunternehmerstatus gem. &sect; 19 UStG erheben wir keine Umsatzsteuer und weisen diese daher auch nicht aus.');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_WS_LANGUAGES.$_SESSION['language'].'/extra/','php') as $file) require ($file);
 ?>

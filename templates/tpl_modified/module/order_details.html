@@ -59,7 +59,9 @@
     </div>
     <br class="clearfix" /> 
   {else}
-    {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+    {if $smarty.const.MODULE_SMALL_BUSINESS != 'true'}
+      {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
+    {/if}
     <strong>{$TOTAL_CONTENT}</strong>
     {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
     {foreach name=aussen item=shipping_data from=$shipping_content}
