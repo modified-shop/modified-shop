@@ -277,19 +277,29 @@
           }
         }*/
 
-        if ($memo_text != '' && $memo_title != '') {
-          $sql_data_array = array ('customers_id' => $customers_id,
-                                   'memo_date' => date("Y-m-d"),
-                                   'memo_title' => $memo_title,
-                                   'memo_text' => $memo_text,
-                                   'poster_id' => (int)$_SESSION['customer_id']
-                                  );
-          xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
-        }
-
         // reset error flag
         $error = false;
-
+        
+        if ($memo_text != '' || $memo_title != '') {
+          if ($memo_text != '' && $memo_title == '') {
+            $error = true;
+            $entry_memo_title_error = true;
+          }
+          if ($memo_text == '' && $memo_title != '') {
+            $error = true;
+            $entry_memo_text_error = true;
+          }
+          if ($error === false) {
+            $sql_data_array = array ('customers_id' => $customers_id,
+                                     'memo_date' => date("Y-m-d"),
+                                     'memo_title' => $memo_title,
+                                     'memo_text' => $memo_text,
+                                     'poster_id' => (int)$_SESSION['customer_id']
+                                    );
+            xtc_db_perform(TABLE_CUSTOMERS_MEMO, $sql_data_array);
+          }
+        }
+        
         if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
           $error = true;
           $entry_firstname_error = true;
@@ -544,9 +554,11 @@
         }  elseif ($error == true) {
 
           // unset memo to avoid duplicate entry
-          unset($_POST['memo_title']);
-          unset($_POST['memo_text']);
-
+          if ($entry_memo_title_error === false && $entry_memo_text_error === false) {
+            unset($_POST['memo_title']);
+            unset($_POST['memo_text']);
+          }
+          
           // unallowd payment/shipping must be comma separated
           $_POST['payment_unallowed'] = $payment_unallowed;
           $_POST['shipping_unallowed'] = $shipping_unallowed;
