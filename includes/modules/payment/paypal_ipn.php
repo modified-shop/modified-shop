@@ -94,8 +94,10 @@ class paypal_ipn {
 /**************************************************************/
 	function after_process() {		
 		global $insert_id;
-		if ($this->order_status)
-			xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");			
+    if (isset($this->order_status) && $this->order_status) {
+      xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status='".$this->order_status."' WHERE orders_id='".$insert_id."'");
+      xtc_db_query("UPDATE ".TABLE_ORDERS_STATUS_HISTORY." SET orders_status_id='".$this->order_status."' WHERE orders_id='".$insert_id."'");
+    }
 	}
 /**************************************************************/
 	function output_error() {
