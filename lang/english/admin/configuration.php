@@ -892,6 +892,6 @@ define('MAX_DISPLAY_PRODUCTS_HISTORY_DESC' , 'Maximum visited products in accoun
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_TITLE', 'Show noimage.gif');
 define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no image assigned');
 
-define('MODULE_SMALL_BUSSINESS_TITLE', 'Small Business');
-define('MODULE_SMALL_BUSSINESS_DESC', 'If the store will be switched to small business according to § 19 UStG.<br/><b>Important:</b>On Module-> Summary The module ot_tax must be disabled or uninstalled. In addition to the individual customer groups the prices incl. VAT must be set to No');
+define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
+define('MODULE_SMALL_BUSINESS_DESC', 'If the store will be switched to small business according to § 19 UStG.<br/><b>Important:</b>On Module-> Summary The module ot_tax must be disabled or uninstalled. In addition to the individual customer groups the prices incl. VAT must be set to No');
 ?>
