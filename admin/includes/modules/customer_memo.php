@@ -30,7 +30,7 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
         ?>
         <table style="width:100%">
           <tr>
-            <td class="main"><strong><?php echo TEXT_DATE; ?></strong>:<i><?php echo $memo_values['memo_date']; ?></i><strong><?php echo TEXT_TITLE; ?></strong>:<?php echo $memo_values['memo_title']; ?><strong>  <?php echo TEXT_POSTER; ?></strong>:<?php echo $poster_values['customers_lastname']; ?> <?php echo $poster_values['customers_firstname']; ?></td>
+            <td class="main"><strong><?php echo TEXT_DATE; ?></strong>: <?php echo $memo_values['memo_date']; ?><br/><strong><?php echo TEXT_TITLE; ?></strong>: <?php echo $memo_values['memo_title']; ?><strong><br/><?php echo TEXT_POSTER; ?></strong>:<?php echo $poster_values['customers_lastname']; ?> <?php echo $poster_values['customers_firstname']; ?></td>
           </tr>
           <tr>
             <td class="main" style="border: 1px solid; border-color: #cccccc; width:140px;"><?php echo $memo_values['memo_text']; ?></td>
