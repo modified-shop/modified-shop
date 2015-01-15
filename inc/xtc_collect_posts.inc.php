@@ -78,7 +78,7 @@
           $sql_data_array = array(
              'coupon_id' => $gv_result['coupon_id'], 
              'redeem_date' => 'now()',  
-             'redeem_ip' => (isset($_SESSION['tracking']['ip']) xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''),  
+             'redeem_ip' => (isset($_SESSION['tracking']['ip']) ? xtc_db_prepare_input($_SESSION['tracking']['ip']) : ''),  
              'customer_id' => (int)$_SESSION['customer_id']  
           );
           $gv_redeem = xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);
