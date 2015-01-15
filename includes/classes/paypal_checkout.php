@@ -1188,7 +1188,6 @@ if (defined('PAYPAL_API_VERSION')) {
       $this->data = $data;
       //$this->_logTrans($data);
             
-      require_once(DIR_FS_INC . 'xtc_Security.inc.php');
       $xtc_order_id=(int)substr($this->data['invoice'],strlen(PAYPAL_INVOICE));
       if(isset($xtc_order_id) && is_numeric($xtc_order_id) && ($xtc_order_id > 0)) {
         // order suchen

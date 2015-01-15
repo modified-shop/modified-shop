@@ -20,6 +20,7 @@
    Released under the GNU General Public License
    -----------------------------------------------------------------------------------------*/
 
+die('Deprecated Function xtc_Security. Use xss_secure instead.');
 
 function xtc_Security()
 {

@@ -217,9 +217,7 @@ class moneybookers_callback {
 	function _notifyTransaction($oID,$text) {
 		
 	  $email_body = "Order ID: ".$oID."\n" . 'Message: '.$text . "\n\n";
-	
-		require_once (DIR_FS_INC . 'xtc_Security.inc.php');
-	
+	  	
     xtc_php_mail(EMAIL_BILLING_ADDRESS, 
                  EMAIL_BILLING_NAME, 
                  EMAIL_BILLING_ADDRESS, 
