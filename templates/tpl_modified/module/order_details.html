@@ -40,15 +40,17 @@
           <td class="ord_table_right ord_width120">{$order_total_values.text}</td>
         </tr>
         {/foreach}
-        {if $SELECT_COUNTRY}
-        <td class="ord_table_right" colspan="2">{$SELECT_COUNTRY}
+        {if sizeof($shipping_content) > 0}
+          {if $SELECT_COUNTRY}
+          <td class="ord_table_right" colspan="2">{$SELECT_COUNTRY}
+          {/if}
+          {foreach name=aussen item=shipping_data from=$shipping_content}
+          <tr>
+            <td class="ord_table_right">{$shipping_data.NAME} ({$COUNTRY}):</td>
+            <td class="ord_table_right ord_width120">{$shipping_data.VALUE}</td>
+          </tr>
+          {/foreach}
         {/if}
-        {foreach name=aussen item=shipping_data from=$shipping_content}
-        <tr>
-          <td class="ord_table_right">{$shipping_data.NAME} ({$COUNTRY}):</td>
-          <td class="ord_table_right ord_width120">{$shipping_data.VALUE}</td>
-        </tr>
-        {/foreach}
         {if $total}
         <tr>
           <td class="ord_table_right"><strong>{#text_total#}:</strong></td>
@@ -63,10 +65,12 @@
       {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
     {/if}
     <strong>{$TOTAL_CONTENT}</strong>
-    {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
-    {foreach name=aussen item=shipping_data from=$shipping_content}
-      <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
-    {/foreach}
+    {if sizeof($shipping_content) > 0}
+      {if $SELECT_COUNTRY}<div class="shipping_container">{$SELECT_COUNTRY}</div>{else}<br />{/if}
+      {foreach name=aussen item=shipping_data from=$shipping_content}
+        <div class="shipping_hinweis">{$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}</div>
+      {/foreach}
+    {/if}
     {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
   {/if}
 

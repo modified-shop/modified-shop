@@ -44,10 +44,12 @@
         {if $UST_CONTENT}{$UST_CONTENT}{else}{$smarty.const.TAX_INFO_EXCL|sprintf:''}<br />{/if}
       {/if}
       <strong>{$TOTAL_CONTENT}</strong><br />
-      {if $SELECT_COUNTRY}{$SELECT_COUNTRY}<br />{/if}
-      {foreach name=aussen item=shipping_data from=$shipping_content}
-        {$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}<br />
-      {/foreach}
+      {if sizeof($shipping_content) > 0}
+        {if $SELECT_COUNTRY}{$SELECT_COUNTRY}<br />{/if}
+        {foreach name=aussen item=shipping_data from=$shipping_content}
+          {$shipping_data.NAME} ({$COUNTRY}): {$shipping_data.VALUE}<br />
+        {/foreach}
+      {/if}
       {if $total}<strong>{#text_total#}: {$total}</strong>{/if}
       {*if $TOTAL_WEIGHT}<br />{#text_total_weight#} {$TOTAL_WEIGHT} kg{/if*}
       {if $KLARNA_PPBOX}<br />{$KLARNA_PPBOX}{/if}
