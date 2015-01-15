@@ -54,7 +54,9 @@ class micropayment_method
             $check_query = xtc_db_query("SELECT orders_status FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$_GET['orderid'] . "' LIMIT 1");
             if ($result = xtc_db_fetch_array($check_query)) {
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
-                    $this->mcp_remove_order((int)$_GET['orderid'], true);
+                    require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
+                    require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
+                    xtc_remove_order((int)$_GET['orderid'], true);
                     unset($_SESSION['tmp_oID']);
                 }
             }
@@ -329,51 +331,4 @@ class micropayment_method
         //return 'https://billing.micropayment.de';
     }
 
-    function mcp_remove_order($order_id, $restock = false)
-    {
-        if ($restock) {
-            $order_query = xtc_db_query("SELECT orders_products_id,
-                                            products_id,
-                                            products_quantity
-                                       FROM " . TABLE_ORDERS_PRODUCTS . "
-                                      WHERE orders_id = '" . (int)$order_id . "'");
-            while ($order = xtc_db_fetch_array($order_query)) {
-                xtc_db_query("UPDATE " . TABLE_PRODUCTS . "
-                           SET products_quantity = products_quantity + " . $order['products_quantity'] . ",
-                               products_ordered = products_ordered - " . $order['products_quantity'] . "
-                         WHERE products_id = '" . (int)$order['products_id'] . "'");
-                if (ATTRIBUTE_STOCK_CHECK == 'true') {
-                    $orders_attributes_query = xtc_db_query("SELECT products_options,
-                                                            products_options_values
-                                                       FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . "
-                                                      WHERE orders_id = '" . (int)$order_id . "'
-                                                        AND orders_products_id = '" . $order['orders_products_id'] . "'");
-                    while ($orders_attributes = xtc_db_fetch_array($orders_attributes_query)) {
-                        $attributes_query = xtc_db_query("SELECT pa.products_attributes_id
-                                                  FROM " . TABLE_PRODUCTS_OPTIONS_VALUES . " pov,
-                                                       " . TABLE_PRODUCTS_OPTIONS . " po,
-                                                       " . TABLE_PRODUCTS_ATTRIBUTES . " pa
-                                                 WHERE po.products_options_name = '" . $orders_attributes['products_options'] . "'
-                                                   AND po.products_options_id = pa.options_id
-                                                   AND pov.products_options_values_id = pa.options_values_id
-                                                   AND pov.products_options_values_name = '" . $orders_attributes['products_options_values'] . "'
-                                                   AND pa.products_id = '" . $order['products_id'] . "'
-                                                 LIMIT 1");
-                        if (xtc_db_num_rows($attributes_query) == 1) {
-                            $attributes = xtc_db_fetch_array($attributes_query);
-                            xtc_db_query("UPDATE " . TABLE_PRODUCTS_ATTRIBUTES . "
-                                 SET attributes_stock = attributes_stock + " . $order['products_quantity'] . "
-                               WHERE products_attributes_id = '" . $attributes['products_attributes_id'] . "'");
-                        }
-                    }
-                }
-            }
-        }
-
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$order_id . "'");
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS_PRODUCTS . " WHERE orders_id = '" . (int)$order_id . "'");
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS_PRODUCTS_ATTRIBUTES . " WHERE orders_id = '" . (int)$order_id . "'");
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS_STATUS_HISTORY . " WHERE orders_id = '" . (int)$order_id . "'");
-        xtc_db_query("DELETE FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . (int)$order_id . "'");
-    }
 }
