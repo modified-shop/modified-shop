@@ -137,7 +137,7 @@ class main {
     }
     
     if (MODULE_SMALL_BUSINESS == 'true') {
-      $tax_info = TAX_INFO_SMALL_BUSSINESS;
+      $tax_info = TAX_INFO_SMALL_BUSINESS;
     }
     
     return $tax_info;
