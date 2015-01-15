@@ -1,6 +1,7 @@
 {if isset($CONTENT_HEADING)}<h1>{$CONTENT_HEADING}</h1>{/if}
 <div class="content_site cf">
   {if isset($file)}
+    {$CONTENT_BODY}
     {$file}
   {else}
     {if isset($SUB_CONTENT_LISTING)}<div class="subcontent cf">{$SUB_CONTENT_LISTING}</div>{/if}

@@ -58,7 +58,7 @@ $smarty->assign('CONTENT_HEADING', $shop_content_data['content_heading']);
 if ($_GET['coID'] == 7) {
   include (DIR_WS_INCLUDES.'contact_us.php');
 } else {
-  $content_body = '';
+  $content_body = $shop_content_data['content_text'];
   if ($shop_content_data['content_file'] != '') {
     ob_start();
     if (strpos($shop_content_data['content_file'], '.txt'))
@@ -68,8 +68,6 @@ if ($_GET['coID'] == 7) {
       echo '</pre>';
     $smarty->assign('file', ob_get_contents());
     ob_end_clean();
-  } else {
-    $content_body = $shop_content_data['content_text'];
   }
   $smarty->assign('CONTENT_BODY', $content_body);
 
