@@ -31,7 +31,7 @@
         break;
 
       case 'save':
-        $carrier_id = xtc_db_prepare_input($_GET['carrierID']);
+        $carrier_id = xtc_db_prepare_input($_GET['cID']);
         $carrier_name = xtc_db_prepare_input($_POST['carrier_name']);
         $carrier_tracking_link = xtc_db_prepare_input($_POST['carrier_tracking_link']);
         $carrier_sort_order = xtc_db_prepare_input($_POST['carrier_sort_order']);
@@ -40,12 +40,12 @@
                                 'carrier_sort_order' => $carrier_sort_order,
                                 'carrier_last_modified' => 'now()'
                                 );
-        xtc_db_perform(TABLE_CARRIERS, $sql_data_array, "carrier_id = '" . (int)$carrier_id . "'");
-        xtc_redirect(xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carrier_id));
+        xtc_db_perform(TABLE_CARRIERS, $sql_data_array, 'update', "carrier_id = '" . (int)$carrier_id . "'");
+        xtc_redirect(xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carrier_id));
         break;
 
       case 'deleteconfirm':
-        $carrier_id = xtc_db_prepare_input($_GET['carrierID']);
+        $carrier_id = xtc_db_prepare_input($_GET['cID']);
         xtc_db_query("DELETE FROM " . TABLE_CARRIERS . " WHERE carrier_id = '" . (int)$carrier_id . "'");
         xtc_redirect(xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel));
         break;
@@ -100,19 +100,19 @@ require (DIR_WS_INCLUDES.'head.php');
                   $carriers_split = new splitPageResults($page_parcel, MAX_DISPLAY_SEARCH_RESULTS, $carriers_query_raw, $carriers_query_numrows);
                   $carriers_query = xtc_db_query($carriers_query_raw);
                   while ($carriers = xtc_db_fetch_array($carriers_query)) {
-                    if ((!isset($_GET['carrierID']) || (isset($_GET['carrierID']) && ($_GET['carrierID'] == $carriers['carrier_id']))) && !isset($carriersInfo) && (substr($action, 0, 3) != 'new')) {
+                    if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $carriers['carrier_id']))) && !isset($carriersInfo) && (substr($action, 0, 3) != 'new')) {
                       $carriersInfo = new objectInfo($carriers);
                     }
                     if (isset($carriersInfo) && is_object($carriersInfo) && ($carriers['carrier_id'] == $carriersInfo->carrier_id) ) {
-                      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id . '&action=edit') . '\'">' . "\n";
+                      echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'pointer\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=edit') . '\'">' . "\n";
                     } else {
-                      echo'              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriers['carrier_id']) . '\'">' . "\n";
+                      echo'              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriers['carrier_id']) . '\'">' . "\n";
                     }
                       ?>
                       <td class="dataTableContent"><?php echo $carriers['carrier_name']; ?></td>
                       <td class="dataTableContent"><?php echo $carriers['carrier_tracking_link']; ?></td>
                       <td class="dataTableContent"><?php echo $carriers['carrier_sort_order']; ?></td>
-                      <td class="dataTableContent txta-r"><?php if (isset($carriersInfo) && is_object($carriersInfo) && ($carriers['carrier_id'] == $carriersInfo->carrier_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriers['carrier_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+                      <td class="dataTableContent txta-r"><?php if (isset($carriersInfo) && is_object($carriersInfo) && ($carriers['carrier_id'] == $carriersInfo->carrier_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriers['carrier_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
                     </tr>
                     <?php
                   }
@@ -131,7 +131,8 @@ require (DIR_WS_INCLUDES.'head.php');
               }
               ?>
               <div class="clear"></div>
-              <div class="pdg2 smallText"><?php echo TEXT_CARRIER_LINK_DESCRIPTION; ?></div>
+              <br/>
+              <div class="pdg2 contentTable smallText"><?php echo TEXT_CARRIER_LINK_DESCRIPTION; ?></div>
             </td>
             <?php
             $heading = array();
@@ -148,24 +149,24 @@ require (DIR_WS_INCLUDES.'head.php');
                 break;
               case 'edit':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_EDIT_CARRIER . '</b>');
-                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id . '&action=save'));
+                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=save'));
                 $contents[] = array('text' => TEXT_INFO_EDIT_INTRO);
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . xtc_draw_input_field('carrier_name', $carriersInfo->carrier_name));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_TRACKING_LINK . '<br />' . xtc_draw_input_field('carrier_tracking_link', $carriersInfo->carrier_tracking_link,'style="width:300px;"'));
                 $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_SORT_ORDER . '<br />' . xtc_draw_input_field('carrier_sort_order', $carriersInfo->carrier_sort_order));
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               case 'delete':
                 $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_DELETE_CARRIER . '</b>');
-                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id . '&action=deleteconfirm'));
+                $contents = array('form' => xtc_draw_form('carrier', FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=deleteconfirm'));
                 $contents[] = array('text' => TEXT_INFO_DELETE_INTRO);
                 $contents[] = array('text' => '<br /><b>' . $carriersInfo->carrier_name . '</b>');
-                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
+                $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_DELETE . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
               default:
                 if (isset($carriersInfo) && is_object($carriersInfo)) {
                   $heading[] = array('text' => '<b>' . $carriersInfo->carrier_name . '</b>');
-                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&carrierID=' . $carriersInfo->carrier_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
+                  $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=edit') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&cID=' . $carriersInfo->carrier_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                   $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_ADDED . ' ' . xtc_date_short($carriersInfo->carrier_date_added));
                   $contents[] = array('text' => '' . TEXT_INFO_LAST_MODIFIED . ' ' . xtc_date_short($carriersInfo->carrier_last_modified));
                   $contents[] = array('text' => '<br />' . TEXT_INFO_CARRIER_NAME . '<br />' . $carriersInfo->carrier_name);
