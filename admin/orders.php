@@ -420,8 +420,8 @@ switch ($action) {
 		$oID = (int)$_GET['oID'];
 		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
 		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
-		$sql_data_array = array('order_id' => $oID
-		                        'carrier_id' => $carrier_id
+		$sql_data_array = array('order_id' => $oID,
+		                        'carrier_id' => $carrier_id,
 		                        'parcel_id' => $parcel_id);
 		xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
 		
