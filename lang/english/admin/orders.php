@@ -146,4 +146,10 @@ define('TEXT_SHIPPING_TO', 'Shipping to');
 define('TEXT_SHIPPING_LANG', 'Language');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Comment is sent');
+
+define('TABLE_HEADING_CARRIER', 'Shipping');
+define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
+
+define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Reverse order');
+define('TEXT_INFO_REVERSE_INTRO', 'Are you sure you want to reverse this order?');
 ?>

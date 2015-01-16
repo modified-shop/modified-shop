@@ -98,6 +98,7 @@ define('FILENAME_EASYMARKETING','easymarketing.php'); // Tomcraft - 2013-08-29 -
 define('FILENAME_GV_CUSTOMERS','gv_customers.php');
 define('FILENAME_IT_RECHT_KANZLEI','it_recht_kanzlei.php');
 define('FILENAME_PROTECTEDSHOPS','protectedshops.php');
+define('FILENAME_PARCEL_CARRIERS','parcel_carriers.php');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_ADMIN.'includes/extra/filenames/','php') as $file) require ($file);

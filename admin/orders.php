@@ -122,6 +122,16 @@ $order_select_fields = 'o.orders_id,
 include('includes/modules/invoice_number/invoice_number_functions.php');
 $order_select_fields = add_select_ibillnr($order_select_fields);
 
+// track & trace
+$carriers = array();
+$carriers_query = xtc_db_query("SELECT carrier_id, 
+                                       carrier_name 
+                                  FROM ".TABLE_CARRIERS." 
+                              ORDER BY carrier_sort_order ASC");
+while ($carrier = xtc_db_fetch_array($carriers_query)) {
+	$carriers[] = array('id' => $carrier['carrier_id'], 'text' => $carrier['carrier_name']);
+}
+
 //admin search bar
 if ($action == 'search' && $oID) {
   $orders_query_raw = "-- /admin/orders.php
@@ -253,6 +263,21 @@ switch ($action) {
         if ($order->customer['status'] != DEFAULT_CUSTOMERS_STATUS_ID_GUEST) {
           $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
         }
+        // track & trace
+        $parcel_link = '';
+        $tracking_links_query = xtc_db_query("SELECT * 
+                                                FROM ".TABLE_ORDERS_TRACKING." ortr
+                                                JOIN ".TABLE_CARRIERS." ca
+                                                     ON ortr.carrier_id = ca.carrier_id
+                                               WHERE ortr.order_id = '".xtc_db_input($oID)."'");
+        $parcel_count = xtc_db_num_rows($tracking_links_query);
+        if ($parcel_count > 0) {
+          while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
+            $parcel_link .= '<a href="'.str_replace('$1', $tracking_link['parcel_id'], $tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['parcel_id'].'</a><br />';
+          }
+        }
+        $smarty->assign('PARCEL_COUNT', $parcel_count);
+        $smarty->assign('PARCEL_LINK', $parcel_link);
         $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
         $smarty->assign('NOTIFY_COMMENTS', nl2br($notify_comments));
         $smarty->assign('ORDER_STATUS', $orders_status_array[$status]);
@@ -351,6 +376,32 @@ switch ($action) {
     xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action'))));
     break;
 
+  case 'stornoconfirm' :
+    xtc_reverse_order($oID, xtc_db_prepare_input($_POST['restock']), xtc_db_prepare_input($_POST['status']));
+    // Paypal Express Modul
+    if(isset($_POST['paypaldelete'])) {
+        if(!defined('TABLE_PAYPAL'))define('TABLE_PAYPAL', 'paypal');
+        if(!defined('TABLE_PAYPAL_STATUS_HISTORY'))define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
+      $query = xtc_db_query("-- /admin/orders.php
+                             SELECT *
+                               FROM " . TABLE_PAYPAL . "
+                              WHERE xtc_order_id = ".$oID
+                            );
+      while ($values = xtc_db_fetch_array($query)) {
+        xtc_db_query("-- /admin/orders.php
+                      DELETE FROM " . TABLE_PAYPAL_STATUS_HISTORY . "
+                            WHERE paypal_ipn_id = '".$values['paypal_ipn_id']."'
+                     ");
+      }
+      xtc_db_query("-- /admin/orders.php
+                    DELETE FROM " . TABLE_PAYPAL . "
+                          WHERE xtc_order_id = ".$oID
+                  );
+    }
+
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action'))));
+    break;
+
   case 'afterbuy_send' :
     require_once (DIR_FS_CATALOG.'includes/classes/afterbuy.php');
     $aBUY = new xtc_afterbuy_functions($oID);
@@ -362,7 +413,26 @@ switch ($action) {
 	/* easyBill */
 	case 'easybill':	
     include (DIR_WS_MODULES.'easybill.action.php');
-		xtc_redirect( xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
+		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
+		break;
+
+	case 'inserttracking' :
+		$oID = (int)$_GET['oID'];
+		$carrier_id = xtc_db_prepare_input($_POST['carrier_id']);
+		$parcel_id = xtc_db_prepare_input($_POST['parcel_id']);
+		$sql_data_array = array('order_id' => $oID
+		                        'carrier_id' => $carrier_id
+		                        'parcel_id' => $parcel_id);
+		xtc_db_perform(TABLE_ORDERS_TRACKING,$sql_data_array);
+		
+		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));              
+		break;
+		
+	case 'deletetracking' :
+		$tracking_id = (int)$_GET['tID'];
+		xtc_db_query("DELETE FROM ".TABLE_ORDERS_TRACKING." WHERE tracking_id = '".(int)$tracking_id."'");
+    
+    xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
 }
 

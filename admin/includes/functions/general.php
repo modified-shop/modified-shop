@@ -1683,9 +1683,21 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     if ($restock == 'on') {
       xtc_restock_order($order_id);
     }
-    xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status = ".$order_status_id." WHERE orders_id = '".(int)$order_id."'");
+    $check_query = xtc_db_query("SELECT orders_status 
+                                   FROM ".TABLE_ORDERS." 
+                                  WHERE orders_id = '".(int)$order_id."'");
+    $check = xtc_db_fetch_array($check_query);
+    if ($check['orders_status'] != $order_status_id) {
+      xtc_db_query("UPDATE ".TABLE_ORDERS." SET orders_status = '".(int)$order_status_id."' WHERE orders_id = '".(int)$order_id."'");
+      xtc_db_query("INSERT INTO ".TABLE_ORDERS_STATUS_HISTORY."
+                            SET orders_id = '".(int)$order_id."',
+                                orders_status_id = '".(int)$order_status_id."',
+                                date_added = now(),
+                                customer_notified = '0',
+                                comments = 'Storniert'");
+    }
     xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET value = '0.0000' WHERE orders_id = '".(int)$order_id."'");
-    xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET text = '' WHERE orders_id = '".(int)$order_id."'");
+    xtc_db_query("UPDATE ".TABLE_ORDERS_TOTAL." SET text = '0.00' WHERE orders_id = '".(int)$order_id."'");
   }
 
   /**

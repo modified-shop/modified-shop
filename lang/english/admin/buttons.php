@@ -74,6 +74,7 @@ define('BUTTON_DETAILS', 'Details');
 define('BUTTON_NEW_TAX_CLASS', 'New Tax Class');
 define('BUTTON_NEW_TAX_RATE', 'New Tax Rate');
 define('BUTTON_SEND', 'Send');
+define('BUTTON_REVERSE', 'Reverse');
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
 define('BUTTON_EDIT_XTBOOSTER', 'eBay-Product');

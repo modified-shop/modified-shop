@@ -531,6 +531,9 @@ define('DISPLAY_PER_PAGE', 'Display per page: ');
 define('SPECIALS_DATE_START_TT', 'Offers starts at 00.00.00');
 define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23.59.59)');
 
+define('BOX_PARCEL_CARRIERS', 'Parcel carriers');
+define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>
