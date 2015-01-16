@@ -703,7 +703,8 @@ if ($action == 'lang_edit') {
     $name = str_replace('ot_', '', $order_total['class']);
     $text = constant('MODULE_ORDER_TOTAL_'.strtoupper($name).'_TITLE');
 
-    $sql_data_array = array ('title' => xtc_db_prepare_input($text));
+    $sql_data_array = array ('language' => xtc_db_prepare_input($lang['directory']),
+                             'languages_id' => xtc_db_prepare_input($lang['languages_id']));
     xtc_db_perform(TABLE_ORDERS_TOTAL, $sql_data_array, 'update', 'orders_total_id  = \''.(int)($order_total['orders_total_id']).'\'');
 
   }
