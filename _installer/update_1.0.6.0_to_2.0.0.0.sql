@@ -240,4 +240,7 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   KEY order_id (order_id)
 ) ENGINE=MyISAM;
 
+ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
