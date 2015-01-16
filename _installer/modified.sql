@@ -207,6 +207,7 @@ CREATE TABLE admin_access (
   payone_config INT(1) NOT NULL DEFAULT 0,
   payone_logs INT(1) NOT NULL DEFAULT 0,
   protectedshops INT(1) NOT NULL DEFAULT 0,
+  parcel_carriers INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (customers_id)
 ) ENGINE=MyISAM;
 
@@ -1186,18 +1187,47 @@ CREATE TABLE coupons_description (
   KEY coupon_id (coupon_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS carriers;
+CREATE TABLE carriers (
+  carrier_id INT(11) NOT NULL AUTO_INCREMENT,
+  carrier_name VARCHAR(80) NOT NULL,
+  carrier_tracking_link VARCHAR(512) NOT NULL,
+  carrier_sort_order INT(11) NOT NULL,
+  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (carrier_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS orders_tracking;
+CREATE TABLE orders_tracking (
+  tracking_id INT(11) NOT NULL AUTO_INCREMENT,
+  order_id INT(11) NOT NULL,
+  carrier_id INT(11) NOT NULL,
+  parcel_id VARCHAR(80) NOT NULL,
+  PRIMARY KEY (tracking_id),
+  KEY order_id (order_id)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS personal_offers_by_customers_status_0;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_1;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_2;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_3;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_4;
 
-#database Version
+# database Version
 INSERT INTO database_version(version) VALUES ('MOD_2.0.0.0');
 
+# file flag
 INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('0', 'information');
 INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('1', 'content');
 
+# carriers
+INSERT INTO carriers VALUES (1, 'LIX', 'http://www.kinder-enduro.de/paketverfolgung.html?paketnummer=$1', '10', NOW(), '');
+INSERT INTO carriers VALUES (2, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', '20', NOW(), '');
+INSERT INTO carriers VALUES (3, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', '30', NOW(), '');
+INSERT INTO carriers VALUES (4, 'GLS', 'http://www.gls-group.eu/276-I-PORTAL-WEB/content/GLS/DE03/DE/5004.htm?txtRefNo=$1&txtAction=71000', '40', NOW(), '');
+
+# shipping status
 INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '');
 INSERT INTO shipping_status VALUES (1, 2, '3-4 Tage', '');
 INSERT INTO shipping_status VALUES (2, 1, '1 Week', '');
@@ -1242,8 +1272,8 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr
 INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
 
 # add entry for admin_access
-INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 # configuration_group_id 1, My Shop
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'STORE_NAME', 'modified eCommerce Shopsoftware', 1, 1, NULL, NOW(), NULL, NULL);

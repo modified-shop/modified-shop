@@ -168,13 +168,13 @@
                 $heading = array ();
                 $contents = array ();
                 switch ($action) {
-                  case 'delete' :
-                    $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_DELETE_ORDER.'</b>');
-                    $contents = array ('form' => xtc_draw_form('orders', FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=deleteconfirm'));
-                    $contents[] = array ('text' => TEXT_INFO_DELETE_INTRO.'<br /><br /><b>'.$oInfo->customers_name.'</b><br /><b>'.TABLE_HEADING_ORDERS_ID.'</b>: '.$oInfo->orders_id);
-                    $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('restock').' '.TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
-                    //$contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('reverse_order', '', true).' '.TEXT_INFO_REVERSE_ORDER.xtc_cfg_pull_down_order_statuses('4')); // DokuMan - by default status '4' is reversal of an order
-                    // Paypal Express Modul
+                  case 'storno' :
+                    $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_REVERSE_ORDER.'</b>');
+                    $contents = array ('form' => xtc_draw_form('orders', FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=stornoconfirm'));
+                    $contents[] = array ('text' => TEXT_INFO_REVERSE_INTRO.'<br /><br /><b>'.$oInfo->customers_name.'</b><br /><b>'.TABLE_HEADING_ORDERS_ID.'</b>: '.$oInfo->orders_id);
+                    $contents[] = array ('text' => HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses), $oInfo->orders_status));
+                    $contents[] = array ('text' => xtc_draw_checkbox_field('restock').' '.TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
+                    ## Paypal Express Modul
                     if(defined('TABLE_PAYPAL')) {
                       $db_installed = false;
                       $tables = xtc_db_query('SHOW TABLES FROM `' . DB_DATABASE . '`');
@@ -192,17 +192,44 @@
                         }
                       }
                     }
+                    $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'. BUTTON_REVERSE .'"><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id).'">' . BUTTON_CANCEL . '</a>');
+                    break;
+                  case 'delete' :
+                    $heading[] = array ('text' => '<b>'.TEXT_INFO_HEADING_DELETE_ORDER.'</b>');
+                    $contents = array ('form' => xtc_draw_form('orders', FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=deleteconfirm'));
+                    $contents[] = array ('text' => TEXT_INFO_DELETE_INTRO.'<br /><br /><b>'.$oInfo->customers_name.'</b><br /><b>'.TABLE_HEADING_ORDERS_ID.'</b>: '.$oInfo->orders_id);
+                    $contents[] = array ('text' => '<br />'.xtc_draw_checkbox_field('restock').' '.TEXT_INFO_RESTOCK_PRODUCT_QUANTITY);
+                    ## Paypal Express Modul
+                    if(defined('TABLE_PAYPAL')) {
+                      $db_installed = false;
+                      $tables = xtc_db_query('SHOW TABLES FROM `' . DB_DATABASE . '`');
+                      while ($row = xtc_db_fetch_row($tables)) {
+                        if ($row[0] == TABLE_PAYPAL) $db_installed = true;
+                      }
+                      if ($db_installed) {
+                        $query = "-- /admin/orders.php
+                                  SELECT *
+                                    FROM " . TABLE_PAYPAL . "
+                                   WHERE xtc_order_id = '" . $oInfo->orders_id . "'";
+                        $query = xtc_db_query($query);
+                        if(xtc_db_num_rows($query)>0) {
+                          $contents[] = array ('text' => xtc_draw_checkbox_field('paypaldelete').' '.TEXT_INFO_PAYPAL_DELETE);
+                        }
+                      }
+                    }
                     $contents[] = array ('align' => 'center', 'text' => '<br /><input type="submit" class="button" value="'. BUTTON_DELETE .'"><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id).'">' . BUTTON_CANCEL . '</a>');
                     break;
                   default :
                     if (isset($oInfo) && is_object($oInfo)) {
                       $heading[] = array ('text' => '<b>['.$oInfo->orders_id.']&nbsp;&nbsp;'.xtc_datetime_short($oInfo->date_purchased).'</b>');
-                      $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=edit').'">'.BUTTON_EDIT.'</a> <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=delete').'">'.BUTTON_DELETE.'</a>');
-                      //BOF - Dokuman - 2012-06-19 - BILLSAFE payment module
+                      $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=edit').'">'.BUTTON_EDIT.'</a>
+                                                                           <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=delete').'">'.BUTTON_DELETE.'</a>
+                                                                           <a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=storno').'">'.BUTTON_REVERSE.'</a>');
+                      ## BILLSAFE payment module
                       if ($oInfo->payment_method === 'billsafe_2') {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="billsafe_orders_2.php?oID='.$oInfo->orders_id.'">BillSAFE Details</a>');
                       }
-                      //EOF - Dokuman - 2012-06-19 - BILLSAFE payment module
+                      ## BILLSAFE payment module
                       if (AFTERBUY_ACTIVATED == 'true') {
                         $contents[] = array ('align' => 'center', 'text' => '<a class="button" href="'.xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oInfo->orders_id.'&action=afterbuy_send').'">'.BUTTON_AFTERBUY_SEND.'</a>');
                       }

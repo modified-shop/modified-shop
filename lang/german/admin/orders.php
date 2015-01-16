@@ -144,4 +144,10 @@ define('TABLE_HEADING_ORDERS_ID', 'Best.Nr.');
 define('TEXT_SHIPPING_TO', 'Versand nach');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Kommentar versandt');
+
+define('TABLE_HEADING_CARRIER', 'Versandart');
+define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
+
+define('TEXT_INFO_HEADING_REVERSE_ORDER', 'Bestellung stornieren');
+define('TEXT_INFO_REVERSE_INTRO', 'Sind Sie sicher, das Sie diese Bestellung stornieren m&ouml;chten?');
 ?>

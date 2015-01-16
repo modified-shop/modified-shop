@@ -125,6 +125,10 @@
   define('TABLE_EASYBILL_DATEV', 'easybill_datev');
 	define('TABLE_EASYBILL', 'easybill');
   
+  // track & trace
+  define('TABLE_CARRIERS', 'carriers');
+  define('TABLE_ORDERS_TRACKING', 'orders_tracking');
+  
   require_once(DIR_FS_INC.'auto_include.inc.php');
   foreach(auto_include(DIR_FS_CATALOG.'includes/extra/database_tables/','php') as $file) require ($file);
 ?>

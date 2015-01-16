@@ -331,6 +331,44 @@
           /* END magnalister */
         ?>
 
+        <!-- BOC ORDER TRACK & TRACE BLOCK -->
+        <div class="heading"><?php echo TABLE_HEADING_TRACK_TRACE; ?></div>
+        <table cellspacing="0" cellpadding="2" class="table">
+          <tr>
+            <td class="main"><table border="1" width="100%" cellspacing="0" cellpadding="5">
+              <tr>
+                <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
+                <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
+                <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
+              </tr>
+              <?php
+                $tracking_links_query = xtc_db_query("SELECT * 
+                                                        FROM ".TABLE_ORDERS_TRACKING." ortr
+                                                        JOIN ".TABLE_CARRIERS." ca
+                                                             ON ortr.carrier_id = ca.carrier_id
+                                                       WHERE ortr.order_id = '".xtc_db_input($oID)."'");
+                if (xtc_db_num_rows($tracking_links_query)) {
+                  while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
+                    echo '          <tr>'.PHP_EOL;
+                    echo '            <td class="smallText" align="center">'.$tracking_link['carrier_name'].'</td>'.PHP_EOL;
+                    echo '            <td class="smallText" align="left"><a href="'.str_replace('$1',$tracking_link['parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['parcel_id'].'</a></td>'.PHP_EOL;
+                    echo '            <td class="smallText" align="center"><a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking_link['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                    echo '          <tr>'.PHP_EOL;
+                  }
+                }
+              ?>
+              <tr>
+                <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
+                  <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
+                  <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+                  <td class="smallText" align="center"><input type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
+                </form>
+              </tr>
+            </table></td>
+          </tr>
+        </table>
+        <!-- EOC ORDER TRACK & TRACE BLOCK -->
+
         <!-- BOC ORDER HISTORY BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>
         <table cellspacing="0" cellpadding="2" class="table">

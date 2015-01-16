@@ -532,6 +532,9 @@ define('DISPLAY_PER_PAGE', 'Anzeige pro Seite: ');
 define('SPECIALS_DATE_START_TT', 'Angebote startet um 00.00.00 Uhr');
 define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23.59.59 Uhr)');
 
+define('BOX_PARCEL_CARRIERS', 'Paketdienstleister');
+define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleister)');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>
