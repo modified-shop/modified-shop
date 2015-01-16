@@ -119,7 +119,7 @@ $order_select_fields = 'o.orders_id,
                         ';
 
 // invoice number and date
-include('includes/modules/invoice_number/invoice_number_functions.php');
+include(DIR_WS_MODULES.'invoice_number/invoice_number_functions.php');
 $order_select_fields = add_select_ibillnr($order_select_fields);
 
 // track & trace
@@ -164,7 +164,9 @@ if (($action == 'edit' || $action == 'update_order') && $order_exists) {
 }
 
 // invoice number and date
-action_next_ibillnr($order,$oID);
+if (isset($order) && is_object($order)) {
+  action_next_ibillnr($order,$oID);
+}
 
 // Trying to get property of non-object $order->info
 if (isset($order) && is_object($order)) {
