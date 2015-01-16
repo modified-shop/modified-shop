@@ -342,7 +342,7 @@
                 <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
               </tr>
               <?php
-                $tracking_links_query = xtc_db_query("SELECT ortr.* 
+                $tracking_links_query = xtc_db_query("SELECT *
                                                         FROM ".TABLE_ORDERS_TRACKING." ortr
                                                         JOIN ".TABLE_CARRIERS." ca
                                                              ON ortr.carrier_id = ca.carrier_id

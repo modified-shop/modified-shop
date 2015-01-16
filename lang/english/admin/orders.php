@@ -147,7 +147,7 @@ define('TEXT_SHIPPING_LANG', 'Language');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Comment is sent');
 
-define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace');
+define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace:');
 define('TABLE_HEADING_CARRIER', 'Shipping');
 define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
 
