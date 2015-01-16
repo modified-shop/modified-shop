@@ -254,7 +254,8 @@ if (xtc_not_null($action)) {
             if (is_array($_POST['dest_cat_ids'])) {
               foreach ($_POST['dest_cat_ids'] AS $dest_category_id) {
                 if ($_POST['copy_as'] == 'link') {
-                  $catfunc->copy_category($category_id, $dest_category_id, 'link');
+                  //$catfunc->copy_category($category_id, $dest_category_id, 'link');
+                  $messageStack->add_session('Copy type not allowed on categories.', 'error');
                 } elseif ($_POST['copy_as'] == 'duplicate') {
                   $catfunc->copy_category($category_id, $dest_category_id, 'duplicate');
                 } else {
@@ -264,7 +265,8 @@ if (xtc_not_null($action)) {
             } elseif (xtc_not_null($_POST['dest_category_id'])) {
               $dest_category_id = xtc_db_prepare_input($_POST['dest_category_id']); // web28 - 2012-04-14 - BUGFIX $dest_category_id
               if ($_POST['copy_as'] == 'link') {
-                $catfunc->copy_category($category_id, $dest_category_id, 'link');
+                //$catfunc->copy_category($category_id, $dest_category_id, 'link');
+                $messageStack->add_session('Copy type not allowed on categories.', 'error');
               } elseif ($_POST['copy_as'] == 'duplicate') {
                 $catfunc->copy_category($category_id, $dest_category_id, 'duplicate');
               } else {
