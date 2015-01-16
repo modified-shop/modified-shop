@@ -145,6 +145,7 @@ define('TEXT_SHIPPING_TO', 'Versand nach');
 
 define('TABLE_HEADING_COMMENTS_SENT', 'Kommentar versandt');
 
+define('TABLE_HEADING_TRACK_TRACE', 'Track &amp; Trace');
 define('TABLE_HEADING_CARRIER', 'Versandart');
 define('TABLE_HEADING_PARCEL_LINK', 'Trackinglink');
 
