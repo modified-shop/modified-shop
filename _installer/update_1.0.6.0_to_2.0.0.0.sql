@@ -243,4 +243,9 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
 ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
 
+#GTB - 2015-01-19 - change country
+ALTER TABLE orders MODIFY customers_country VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY delivery_country VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY billing_country VARCHAR(64) NOT NULL;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
