@@ -143,11 +143,10 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       'account_type' => $_SESSION['account_type'],
       'customers_ip' => ip_clearing($_SESSION['tracking']['ip']),
       'language' => $_SESSION['language'],
+      'languages_id' => $_SESSION['languages_id'],
       'comments' => $order->info['comments']
     );
-    
-  $sql_data_array['languages_id'] = $_SESSION['languages_id']; 
-
+  
   xtc_db_perform(TABLE_ORDERS, $sql_data_array);
   $insert_id = xtc_db_insert_id();
   $_SESSION['tmp_oID'] = $insert_id;
@@ -190,19 +189,23 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
     // Stock Update - Joao Correia
     if (STOCK_LIMITED == 'true') {
       if (DOWNLOAD_ENABLED == 'true') {
+        $add_stock_query_raw = '';
+        $products_attributes = $order->products[$i]['attributes'];
+        if (is_array($products_attributes)) {
+          $add_stock_query_raw .= " AND pa.options_id = '".$products_attributes[0]['option_id']."' AND pa.options_values_id = '".$products_attributes[0]['value_id']."'";
+        }
         $stock_query_raw = "-- /checkout_process.php
                             SELECT products_quantity, 
                                    pad.products_attributes_filename
                               FROM ".TABLE_PRODUCTS." p
-                         LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa ON p.products_id=pa.products_id
-                         LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad ON pa.products_attributes_id=pad.products_attributes_id
+                         LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES." pa 
+                                   ON p.products_id = pa.products_id
+                                      ".$add_stock_query_raw."
+                         LEFT JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad 
+                                   ON pa.products_attributes_id = pad.products_attributes_id
                              WHERE p.products_id = '".xtc_get_prid($order->products[$i]['id'])."'";
         // Will work with only one option for downloadable products
         // otherwise, we have to build the query dynamically with a loop
-        $products_attributes = $order->products[$i]['attributes'];
-        if (is_array($products_attributes)) {
-          $stock_query_raw .= " AND pa.options_id = '".$products_attributes[0]['option_id']."' AND pa.options_values_id = '".$products_attributes[0]['value_id']."'";
-        }
         $stock_query = xtc_db_query($stock_query_raw);
       } else {
         $stock_query = xtc_db_query(" -- /checkout_process.php
@@ -222,6 +225,7 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
         xtc_db_query("UPDATE ".TABLE_PRODUCTS."
                          SET products_quantity = '".$stock_left."'
                        WHERE products_id = '".xtc_get_prid($order->products[$i]['id'])."'");
+        
         if (($stock_left < 1) && (STOCK_CHECKOUT_UPDATE_PRODUCTS_STATUS == 'true')) {
           xtc_db_query("UPDATE ".TABLE_PRODUCTS."
                            SET products_status = '0'
@@ -287,9 +291,28 @@ if (isset($_SESSION['tmp_oID']) && is_numeric($_SESSION['tmp_oID'])) {
       for ($j = 0, $n2 = sizeof($order->products[$i]['attributes']); $j < $n2; $j ++) {
 
         // update attribute stock
+        $update_attr_stock = false;
         if (STOCK_LIMITED == 'true'
-         && isset($order->products[$i]['attributes'][$j]['value_id'])
-         && isset($order->products[$i]['attributes'][$j]['option_id'])) {
+            && isset($order->products[$i]['attributes'][$j]['value_id'])
+            && isset($order->products[$i]['attributes'][$j]['option_id'])
+            ) 
+        {
+          $update_attr_stock = true;
+          if (DOWNLOAD_ENABLED == 'true') {
+            $attr_stock_query = xtc_db_query("-- /checkout_process.php
+                                              SELECT pad.products_attributes_filename
+                                                FROM ".TABLE_PRODUCTS_ATTRIBUTES." pa 
+                                                JOIN ".TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD." pad 
+                                                     ON pa.products_attributes_id=pad.products_attributes_id
+                                               WHERE pa.products_id = '".xtc_get_prid($order->products[$i]['id'])."'
+                                                 AND pa.options_id = '".$order->products[$i]['attributes'][$j]['option_id']."'
+                                                 AND pa.options_values_id = '".$order->products[$i]['attributes'][$j]['value_id']."'");
+            $update_attr_stock = ((xtc_db_num_rows($attr_stock_query) > 0) ? false : true);
+          }
+        }
+        
+        // update attribute stock
+        if ($update_attr_stock === true) {
           xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
                            SET attributes_stock=attributes_stock - '".$order->products[$i]['qty']."'
                          WHERE products_id='".$order->products[$i]['id']."'

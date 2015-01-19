@@ -96,8 +96,7 @@ class MasterpaymentActions
 					if ($check_result['masterpayment_status'] != 1) 
 					{
             require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-            require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
-            xtc_remove_order((int)$order_id, true);
+            xtc_remove_order((int)$order_id, ((STOCK_LIMITED == 'true') ? 'on' : false));
 					} else {					
 						xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'NONSSL'));	
 						exit();				

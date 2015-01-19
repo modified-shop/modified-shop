@@ -55,8 +55,7 @@ class micropayment_method
             if ($result = xtc_db_fetch_array($check_query)) {
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
                     require_once(DIR_FS_INC.'xtc_remove_order.inc.php');
-                    require_once(DIR_FS_INC.'xtc_restock_order.inc.php');
-                    xtc_remove_order((int)$_GET['orderid'], true);
+                    xtc_remove_order((int)$_GET['orderid'], ((STOCK_LIMITED == 'true') ? 'on' : false));
                     unset($_SESSION['tmp_oID']);
                 }
             }
