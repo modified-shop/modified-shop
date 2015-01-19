@@ -16,10 +16,11 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-   define('SESSION_LIFE_ADMIN_DEFAULT', 7200);
+  define('SESSION_LIFE_ADMIN_DEFAULT', 7200);
 
-   @ini_set("session.gc_maxlifetime", 1440);
-   @ini_set("session.gc_probability", 100);
+  @ini_set("session.gc_maxlifetime", 1440);
+  @ini_set("session.gc_probability", 100);
+  @ini_set('session.cookie_httponly', true);
 
   if (STORE_SESSIONS == 'mysql') {  
     if (!$SESS_LIFE = get_cfg_var('session.gc_maxlifetime')) {
