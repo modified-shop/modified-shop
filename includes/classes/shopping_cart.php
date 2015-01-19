@@ -552,8 +552,8 @@ class shoppingCart {
                                          WHERE p.products_id='".xtc_get_prid($products_id)."'");
 
         if ($products = xtc_db_fetch_array($products_query)) {          
-          if ($products['products_status'] == 0) {
-              $this->remove($products_id);
+          if ($this->check_products_status_permission($products_id) === false) {
+            $this->remove($products_id);
           } else {
             if ($_SESSION['customers_status']['customers_status_show_price_tax'] == 1
                 && $_SESSION['customers_status']['customers_status_add_tax_ot'] == 0
@@ -563,13 +563,12 @@ class shoppingCart {
               $products['products_tax_class_id'] = xtc_get_tax_class($products['products_tax_class_id']);
             }
             
-            $products_price = $xtPrice->xtcGetPrice(
-                                  $products['products_id'],
-                                  $format = false,
-                                  $this->contents[$products_id]['qty'], //only used by xtcGetGraduatedPrice
-                                  $products['products_tax_class_id'],
-                                  $products['products_price']
-                                );
+            $products_price = $xtPrice->xtcGetPrice($products['products_id'],
+                                                    $format = false,
+                                                    $this->contents[$products_id]['qty'], //only used by xtcGetGraduatedPrice
+                                                    $products['products_tax_class_id'],
+                                                    $products['products_price']
+                                                    );
 
             $this->attributes_price($products_id);
             $products_data = array();
@@ -815,7 +814,7 @@ class shoppingCart {
   function check_products_status_permission($products_id) {
     $check_query = xtc_db_query("SELECT products_id 
                                    FROM ".TABLE_PRODUCTS."
-                                  WHERE products_id = '".(int)$products_id."'
+                                  WHERE products_id = '".xtc_get_prid($products_id)."'
                                     AND products_status = '1'
                                         ".PRODUCTS_CONDITIONS);
     if (xtc_db_num_rows($check_query) > 0) {
