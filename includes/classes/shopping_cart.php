@@ -66,7 +66,7 @@ class shoppingCart {
                                            FROM ".TABLE_CUSTOMERS_BASKET."
                                           WHERE customers_id = '".(int)$_SESSION['customer_id']."'
                                             AND products_id = '".xtc_db_input($products_id)."'");
-          if (xtc_db_num_rows($product_query) < 0) {
+          if (xtc_db_num_rows($product_query) < 1) {
             $sql_data_array = array('customers_id' => $_SESSION['customer_id'],
                                     'products_id' => $products_id,
                                     'customers_basket_quantity' => $qty,
