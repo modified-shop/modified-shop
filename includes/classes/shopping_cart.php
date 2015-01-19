@@ -110,7 +110,7 @@ class shoppingCart {
                                   ORDER BY customers_basket_id");
     if (xtc_db_num_rows($products_query) > 0) {
       while ($products = xtc_db_fetch_array($products_query)) {
-        if ($this->check_products_status_permission($products_id) === true) {
+        if ($this->check_products_status_permission($products['products_id']) === true) {
           $_SESSION['old_customers_basket'] = true;
           $this->contents[$products['products_id']] = array ('qty' => (int)$products['customers_basket_quantity']);
           // attributes
@@ -125,7 +125,7 @@ class shoppingCart {
           }
         } else {
           // no permission
-          $this->remove($products_id);
+          $this->remove($products['products_id']);
         }
       }
     }
