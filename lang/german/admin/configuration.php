@@ -598,6 +598,8 @@ define('SEARCH_IN_DESC_TITLE','Suche in Produktbeschreibungen');
 define('SEARCH_IN_DESC_DESC','Aktivieren um die Suche in den Produktbeschreibungen (Kurz + Lang) zu erm&ouml;glichen');
 define('SEARCH_IN_ATTR_TITLE','Suche in Produkt- Attributen');
 define('SEARCH_IN_ATTR_DESC','Aktivieren um die Suche in den Produktattributen (z.B. Farbe, L&auml;nge) zu erm&ouml;glichen');
+define('SEARCH_IN_MANU_TITLE','Suche in Hersteller');
+define('SEARCH_IN_MANU_DESC','Aktivieren um die Suche in den Herstellern zu erm&ouml;glichen');
 
 // changes for 3.0.4 SP2
 define('REVOCATION_ID_TITLE','Widerrufsrecht ID');

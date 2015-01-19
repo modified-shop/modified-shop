@@ -166,6 +166,7 @@ if ($errorno) {
   $from_str .= SEARCH_IN_ATTR == 'true' ? " LEFT OUTER JOIN ".TABLE_PRODUCTS_ATTRIBUTES." AS pa ON (p.products_id = pa.products_id) 
                                             LEFT OUTER JOIN ".TABLE_PRODUCTS_OPTIONS_VALUES." AS pov ON (pa.options_values_id = pov.products_options_values_id) " : "";
   $from_str .= "LEFT OUTER JOIN ".TABLE_SPECIALS." AS s ON (p.products_id = s.products_id) AND s.status = '1'";
+  $from_str .= SEARCH_IN_MANU == 'true' ? " LEFT OUTER JOIN ".TABLE_MANUFACTURERS." AS m ON (p.manufacturers_id = m.manufacturers_id) " : "";
 
   if($NeedTax) {
     if (!isset ($_SESSION['customer_country_id'])) {
@@ -179,7 +180,7 @@ if ($errorno) {
   }
 
   //where-string
-  $where_str = " WHERE p.products_status = 1"  
+  $where_str = " WHERE p.products_status = '1'"  
   .$subcat_where
   .$manu_check
   .PRODUCTS_CONDITIONS_P
@@ -211,6 +212,10 @@ if ($errorno) {
            $where_str .= $ent_keyword ? "OR pd.products_description LIKE ('%".$ent_keyword."%') " : '';
            $where_str .= "OR pd.products_short_description LIKE ('%".$keyword."%') ";
            $where_str .= $ent_keyword ? "OR pd.products_short_description LIKE ('%".$ent_keyword."%') " : '';
+        }
+        if (SEARCH_IN_MANU == 'true') {
+           $where_str .= "OR m.manufacturers_name LIKE ('%".$keyword."%') ";
+           $where_str .= $ent_keyword ? "OR pd.manufacturers_name LIKE ('%".$ent_keyword."%') " : '';
         }
         $where_str .= "OR pd.products_name LIKE ('%".$keyword."%') ";
         $where_str .= $ent_keyword ? "OR pd.products_name LIKE ('%".$ent_keyword."%') " : '';
