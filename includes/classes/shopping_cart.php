@@ -818,7 +818,7 @@ class shoppingCart {
                                   WHERE products_id = '".(int)$products_id."'
                                     AND products_status = '1'
                                         ".PRODUCTS_CONDITIONS);
-    if (xtc_db_num_row($check_query) > 0) {
+    if (xtc_db_num_rows($check_query) > 0) {
       return true;
     }
     return false;
