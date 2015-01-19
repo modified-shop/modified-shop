@@ -98,7 +98,7 @@ if (xtc_not_null($action)) {
           $catfunc->set_category_recursive($_GET['cID'], $_GET['flag']);
         }
       }
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$catfunc->page_parameter));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('action', 'flag', 'page')).$catfunc->page_parameter));
       break;
       //EOB setcflag
     case 'setpflag' :
@@ -107,11 +107,7 @@ if (xtc_not_null($action)) {
           $catfunc->set_product_status($_GET['pID'], $_GET['flag']);
         }
       }
-      if ($_GET['pID']) {
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&pID='.$_GET['pID'].$catfunc->page_parameter));
-      } else {
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$catfunc->page_parameter));
-      }
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('action', 'flag', 'page')).$catfunc->page_parameter));
       break;
       //EOB setpflag
     case 'setsflag' :
@@ -119,17 +115,10 @@ if (xtc_not_null($action)) {
         if ($_GET['pID']) {
           $catfunc->set_product_startpage($_GET['pID'], $_GET['flag']);
           if ($_GET['flag'] == '1') $catfunc->link_product($_GET['pID'], 0);
-          //BOF - Dokuman - 2009-11-12 - BUGFIX #0000351: When products disable display on startpage, should update table products_to_categories
           $catfunc->set_product_remove_startpage_sql($_GET['pID'], $_GET['flag']);
-          //if ($_GET['flag'] == '0') xtc_redirect(xtc_href_link(FILENAME_CATEGORIES));
-          //EOF - Dokuman - 2009-11-12 - BUGFIX #0000351: When products disable display on startpage, should update table products_to_categories
         }
       }
-      if ($_GET['pID']) {
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&pID='.$_GET['pID'].$catfunc->page_parameter));
-      } else {
-        xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&cID='.$_GET['cID'].$catfunc->page_parameter));
-      }
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array ('action', 'flag', 'page')).$catfunc->page_parameter));
       break;
       //EOB setsflag
     case 'update_category' :
@@ -147,12 +136,12 @@ if (xtc_not_null($action)) {
     case 'edit_crossselling' :
       $catfunc->edit_cross_sell($_GET);
       break;
-// BOF - Tomcraft - 2009-11-28 - Included xs:booster
+    // BOF - Tomcraft - 2009-11-28 - Included xs:booster
     case 'multi_action':
       // xs:booster start - multiauktion (v1.041)
       if (isset($_POST['multi_xtb'])) {
         $_SESSION['xtb1']['multi_xtb']=array();
-        require_once("../".DIR_WS_CLASSES.'xtbooster.php');
+        require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'xtbooster.php');
         $xtb = new xtbooster_base;
         $xtb->config();
         $requestx = "ACTION:TradeTemplateFetch";
@@ -197,7 +186,7 @@ if (xtc_not_null($action)) {
       }
       // xs:booster end - multiauktion (v1.041)
       break;
-// EOF - Tomcraft - 2009-11-28 - Included xs:booster
+      // EOF - Tomcraft - 2009-11-28 - Included xs:booster
     case 'multi_action_confirm' :
       // --- MULTI DELETE ---
       if (isset ($_POST['multi_delete_confirm'])) {
@@ -248,7 +237,6 @@ if (xtc_not_null($action)) {
           if (!isset($_POST['dest_cat_ids']) and isset($_POST['dest_category_id'])) {
             $_POST['dest_cat_ids'] = array($_POST['dest_category_id']);
           }
-          //EOF - DokuMan - 2010-09-27 - do not create copied categories under TOP-category, but in the chosen category
           $_SESSION['copied'] = array ();
           foreach ($_POST['multi_categories'] AS $category_id) {
             if (is_array($_POST['dest_cat_ids'])) {
