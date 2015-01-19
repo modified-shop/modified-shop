@@ -78,10 +78,12 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
           }
         }
         //BOF - DokuMan - 2010-08-31 - disable upload of php files and htaccess/htpasswd to avoid uploading of malicious scripts
+        /*
         if (in_array(strtolower(substr($file['name'], strrpos($file['name'], '.')+1)), array('php', 'php3', 'php4', 'php5', 'phtml'))) {
             $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
             return false;
         }
+        */
         if ($file['name'] == '.htaccess' || $file['name'] == '.htpasswd') {
             $messageStack->add_session(ERROR_FILETYPE_NOT_ALLOWED, 'error');
             return false;
