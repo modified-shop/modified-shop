@@ -1,5 +1,5 @@
 #  -----------------------------------------------------------------------------------------
-#  $Id: .htaccess,v 1.1 2004/03/25 14:39:58 fanta2k Exp $
+#  $Id: .htaccess,v 1.1 2003/09/06 22:13:53 fanta2k Exp $
 #
 #   XT-Commerce - ebusiness solutions
 #   http://www.xt-commerce.com
@@ -30,7 +30,7 @@
 #
 # Example: http://server/catalog/includes/application_top.php will not work
 
-<FilesMatch ".*\.(php|php3|php4|php5|phtml|htm|html|xhtml|pl)$">
+<FilesMatch ".*\.(php|php3|php4|php5|phtml|htm|html|xhtml|js|pl)$">
   Order Deny,Allow
   Deny from all
 </FilesMatch>
