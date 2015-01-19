@@ -30,11 +30,7 @@
 #
 # Example: http://server/catalog/includes/application_top.php will not work
 
-<Files *.html>
-Order Deny,Allow
-Deny from all
-</Files>
-<Files *.php>
-Order Deny,Allow
-Deny from all
-</Files>
+<FilesMatch ".*\.(php|php3|php4|php5|phtml|htm|html|xhtml|pl)$">
+  Order Deny,Allow
+  Deny from all
+</FilesMatch>
