@@ -594,10 +594,12 @@ define('AFTERBUY_IGNORE_GROUPE_TITLE', 'Customer group ignor');
 define('AFTERBUY_IGNORE_GROUPE_DESC', 'Example: <em>6,5,8</em>.');
 
 // Search-Options
-define('SEARCH_IN_DESC_TITLE','Search in Products Descriptions');
+define('SEARCH_IN_DESC_TITLE','Search in products descriptions');
 define('SEARCH_IN_DESC_DESC','Include products descriptions when searching');
-define('SEARCH_IN_ATTR_TITLE','Search in Products Attributes');
+define('SEARCH_IN_ATTR_TITLE','Search in products attributes');
 define('SEARCH_IN_ATTR_DESC','Include products attributes when searching');
+define('SEARCH_IN_MANU_TITLE','Search in products manufacturers');
+define('SEARCH_IN_MANU_DESC','Include products manufacturers when searching');
 
 // changes for 3.0.4 SP2
 define('REVOCATION_ID_TITLE','Revocation ID');
