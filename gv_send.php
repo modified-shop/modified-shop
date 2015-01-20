@@ -28,15 +28,18 @@
 
 require ('includes/application_top.php');
 
-if (ACTIVATE_GIFT_SYSTEM != 'true')
-  xtc_redirect(FILENAME_DEFAULT);
-
-require ('includes/classes/http_client.php');
-require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
-
+// smarty
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
+
+// include needed functions
+require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+
+if (ACTIVATE_GIFT_SYSTEM != 'true') {
+  xtc_redirect(FILENAME_DEFAULT);
+}
 
 // if the customer is not logged on, redirect them to the login page
 if (!isset ($_SESSION['customer_id'])) {
@@ -51,52 +54,63 @@ $error = false;
 if (isset($_GET['action']) && $_GET['action'] == 'send') {
   if (!xtc_validate_email(trim($_POST['email']))) {
     $error = true;
-    //BOF - Dokuman - 2010-10-28 - use messageStack to display error messages
-    //$error_email = ERROR_ENTRY_EMAIL_ADDRESS_CHECK;
     $messageStack->add('gv_send', ERROR_ENTRY_EMAIL_ADDRESS_CHECK);
-    //EOF - Dokuman - 2010-10-28 - use messageStack to display error messages
   }
-  $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id = '".$_SESSION['customer_id']."'");
+  $gv_query = xtc_db_query("SELECT amount 
+                              FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                             WHERE customer_id = '".$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $customer_amount = $gv_result['amount'];
   $gv_amount = trim(str_replace(",", ".", $_POST['amount']));  
-  if (preg_match('/[^0-9\.]/', $gv_amount) && trim($gv_amount) != '') { // web28 - 2011-08-19 - Bugfix send amount
-  //if (preg_match('/[^0-9/.]/', $gv_amount)) { // Hetfield - 2009-08-19 - replaced deprecated function ereg with preg_match to be ready for PHP >= 5.3  
+  if (preg_match('/[^0-9\.]/', $gv_amount) && trim($gv_amount) != '') {
     $error = true;
-    //BOF - Dokuman - 2010-10-28 - use messageStack to display error messages
-    //$error_amount = ERROR_ENTRY_AMOUNT_CHECK;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
-    //EOF - Dokuman - 2010-10-28 - use messageStack to display error messages
   }
   if ($gv_amount > $customer_amount || $gv_amount == 0) {
     $error = true;
-    //BOF - Dokuman - 2010-10-28 - use messageStack to display error messages
-    //$error_amount = ERROR_ENTRY_AMOUNT_CHECK;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
-    //EOF - Dokuman - 2010-10-28 - use messageStack to display error messages
   }
 }
+
 if (isset($_GET['action']) && $_GET['action'] == 'process') {
-  $id1 = create_coupon_code($mail['customers_email_address']);
-  $gv_query = xtc_db_query("select amount from ".TABLE_COUPON_GV_CUSTOMER." where customer_id='".$_SESSION['customer_id']."'");
+  $id1 = create_coupon_code(10);
+  $gv_query = xtc_db_query("SELECT amount 
+                              FROM ".TABLE_COUPON_GV_CUSTOMER." 
+                             WHERE customer_id='".$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $new_amount = $gv_result['amount'] - str_replace(",", ".", $_POST['amount']);
   $new_amount = str_replace(",", ".", $new_amount);
   if ($new_amount < 0) {
     $error = true;
-    //BOF - Dokuman - 2010-10-28 - use messageStack to display error messages
-    //$error_amount = ERROR_ENTRY_AMOUNT_CHECK;
     $messageStack->add('gv_send', ERROR_ENTRY_AMOUNT_CHECK);
-    //EOF - Dokuman - 2010-10-28 - use messageStack to display error messages
     $_GET['action'] = 'send';
   } else {
-    $gv_query = xtc_db_query("update ".TABLE_COUPON_GV_CUSTOMER." set amount = '".$new_amount."' where customer_id = '".$_SESSION['customer_id']."'");
-    $gv_query = xtc_db_query("select customers_firstname, customers_lastname from ".TABLE_CUSTOMERS." where customers_id = '".$_SESSION['customer_id']."'");
+    xtc_db_query("UPDATE ".TABLE_COUPON_GV_CUSTOMER." 
+                     SET amount = '".$new_amount."' 
+                   WHERE customer_id = '".$_SESSION['customer_id']."'");
+    
+    $gv_query = xtc_db_query("SELECT customers_firstname, 
+                                     customers_lastname 
+                                FROM ".TABLE_CUSTOMERS." 
+                               WHERE customers_id = '".$_SESSION['customer_id']."'");
     $gv_customer = xtc_db_fetch_array($gv_query);
-    $gv_query = xtc_db_query("insert into ".TABLE_COUPONS." (coupon_type, coupon_code, date_created, coupon_amount) values ('G', '".$id1."', NOW(), '".str_replace(",", ".", xtc_db_input($_POST['amount']))."')");
+    $sql_data_array = array('coupon_type' => 'G',
+                            'coupon_code' => $id1,
+                            'date_created' => 'now()',
+                            'coupon_amount' => str_replace(",", ".", $_POST['amount'])
+                            );
+    xtc_db_perform(TABLE_COUPONS, $sql_data_array);
     $insert_id = xtc_db_insert_id($gv_query);
-    $gv_query = xtc_db_query("insert into ".TABLE_COUPON_EMAIL_TRACK." (coupon_id, customer_id_sent, sent_firstname, sent_lastname, emailed_to, date_sent) values ('".$insert_id."' ,'".$_SESSION['customer_id']."', '".xtc_db_input($gv_customer['customers_firstname'])."', '".xtc_db_input($gv_customer['customers_lastname'])."', '".xtc_db_input($_POST['email'])."', now())");
 
+    $sql_data_array = array('coupon_id' => $insert_id,
+                            'customer_id_sent' => $_SESSION['customer_id'],
+                            'sent_firstname' => $gv_customer['customers_firstname'],
+                            'sent_lastname' => $gv_customer['customers_lastname'],
+                            'emailed_to' => $_POST['email'],
+                            'date_sent' => 'now()'
+                            );
+    xtc_db_perform(TABLE_COUPON_EMAIL_TRACK, $sql_data_array);
+    
     $gv_email_subject = sprintf(EMAIL_GV_TEXT_SUBJECT, stripslashes($_POST['send_name']));
 
     $smarty->assign('language', $_SESSION['language']);
@@ -131,6 +145,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
 
   }
 }
+
 $breadcrumb->add(NAVBAR_GV_SEND);
 
 require (DIR_WS_INCLUDES.'header.php');
@@ -139,11 +154,15 @@ if (isset($_GET['action']) && $_GET['action'] == 'process') {
   $smarty->assign('action', 'process');
   $smarty->assign('LINK_DEFAULT', '<a href="'.xtc_href_link(FILENAME_DEFAULT, '', 'NONSSL').'">'.xtc_image_button('button_continue.gif', IMAGE_BUTTON_CONTINUE).'</a>');
 }
+
 if (isset($_GET['action']) && $_GET['action'] == 'send' && !$error) {
   $smarty->assign('action', 'send');
   // validate entries
   $gv_amount = (double) $gv_amount;
-  $gv_query = xtc_db_query("select customers_firstname, customers_lastname from ".TABLE_CUSTOMERS." where customers_id = '".$_SESSION['customer_id']."'");
+  $gv_query = xtc_db_query("SELECT customers_firstname, 
+                                   customers_lastname 
+                              FROM ".TABLE_CUSTOMERS." 
+                             WHERE customers_id = '".$_SESSION['customer_id']."'");
   $gv_result = xtc_db_fetch_array($gv_query);
   $send_name = $gv_result['customers_firstname'].' '.$gv_result['customers_lastname'];
   $smarty->assign('FORM_ACTION', xtc_draw_form('gv_process', xtc_href_link(FILENAME_GV_SEND, 'action=process', 'NONSSL'), 'post'));
@@ -162,22 +181,19 @@ elseif (!isset($_GET['action']) || $_GET['action'] == '' || $error) {
   $smarty->assign('LINK_SEND', xtc_href_link(FILENAME_GV_SEND, 'action=send', 'NONSSL'));
   $smarty->assign('INPUT_TO_NAME', xtc_draw_input_field('to_name', stripslashes($_POST['to_name'])));
   $smarty->assign('INPUT_EMAIL', xtc_draw_input_field('email', $_POST['email']));
-  //$smarty->assign('ERROR_EMAIL', $error_email); //Dokuman - 2010-10-28 - use messageStack to display error messages
   $smarty->assign('INPUT_AMOUNT', xtc_draw_input_field('amount', $_POST['amount'], '', 'text', false));
-  //$smarty->assign('ERROR_AMOUNT', $error_amount); //Dokuman - 2010-10-28 - use messageStack to display error messages
   $smarty->assign('TEXTAREA_MESSAGE', xtc_draw_textarea_field('message', 'soft', 50, 15, stripslashes($_POST['message'])));
   $smarty->assign('LINK_SUBMIT', xtc_image_submit('button_continue.gif', IMAGE_BUTTON_CONTINUE));
 }
-//BOF - Dokuman - 2010-10-28 - use messageStack to display error messages
+
 if ($messageStack->size('gv_send') > 0) {
   $smarty->assign('error', $messageStack->output('gv_send'));
 }
-//EOF - Dokuman - 2010-10-28 - use messageStack to display error messages
-//BOF - Tomcraft - 2011-02-10 - Fixed GV FAQ link that never worked before
+
 $smarty->assign('GV_FAQ_LINK', $main->getContentLink(6, MORE_INFO,'NONSSL'));
-//EOF - Tomcraft - 2011-02-10 - Fixed GV FAQ link that never worked before
 $smarty->assign('FORM_END', '</form>');
 $smarty->assign('language', $_SESSION['language']);
+
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/gv_send.html');
 $smarty->assign('main_content', $main_content);
 $smarty->caching = 0;
