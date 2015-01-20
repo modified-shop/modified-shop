@@ -212,7 +212,143 @@ if(isset($_POST['repair'])  || isset($_POST['show_error'])) {
 <meta charset="utf-8" />
 <title>Administator-Login</title>
 <meta name="robots" content="noindex, nofollow, noodp" />
-<link rel="stylesheet" href="templates/tpl_modified/stylesheet.css" type="text/css" />
+
+<style type="text/css">
+<!--
+
+body {
+  font-family: Tahoma, sans-serif;
+  font-weight: normal;
+  font-size:13px;
+  background-color:#fff;
+  color:#555;
+  line-height:19px;
+}
+.clearfix, .clear, .clearer {
+  line-height:0px;
+  height:0px;
+  clear:both;   
+}
+         
+.cf:before, .cf:after { content: ""; display: table; }
+.cf:after { clear: both; }
+.cf { zoom: 1; }
+
+h1 {
+  font-family: Tahoma, sans-serif;
+  color:#444;
+  font-weight:normal;
+  font-size:18px;
+  margin:20px 0 15px 0;
+  padding:0 0 5px;
+  border:#ddd solid;
+  border-width:0 0 1px 0;
+}
+
+.fieldtext, .fieldtext_stern {
+  font-size:11px;
+  line-height:15px;
+  font-weight:bold;
+  padding: 0px 0px 2px 0px;
+  display:block;
+}
+
+input {
+  font-family: Tahoma, sans-serif;
+  font-size:13px;
+}
+input[type=text], input[type=password] {
+  background-color:#fafafa;
+  border-color: #C6C6C6 #DADADA #EAEAEA;
+  color: #999999;
+  border-style: solid;
+  border-width: 1px;
+  vertical-align: middle;
+	padding: 6px 5px 6px 5px;
+	-webkit-border-radius: 2px;
+	-moz-border-radius: 2px;
+	border-radius: 2px;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width:100%;
+  height:32px;
+}
+input[type=text]:hover, input[type=password]:hover {
+    background-color:#FFFFFF;
+    border-color: #C6C6C6 #DADADA #EAEAEA;
+    color: #666666;
+}    
+input[type=text]:focus, input[type=password]:focus {
+    background-color:#FFFFFF;
+    border-color: #659EC9 #70AEDD #A8CFEC;
+    color: #333333;
+    outline: 0 none;
+}
+table {
+  width:100%;
+  border-spacing: 0;
+  border-collapse:collapse;
+}
+table td {
+  padding:4px 0px;
+}
+
+#layout_offline {
+  width:700px;
+  margin:40px auto;
+  padding:30px;
+  border: 1px solid #ddd;
+}
+#layout_adminlogin {
+  position:relative;
+  margin: 50px auto;
+  padding:15px;
+  background:#fff;
+  border:solid #eee 1px;
+  -webkit-box-shadow: 0px 0px 15px #3d3d3d; 
+  -moz-box-shadow: 0px 0px 15px #3d3d3d; 
+  box-shadow: 0px 0px 15px #3d3d3d;
+  width:400px;
+}
+#layout_adminlogin a.help_adminlogin {
+  position:absolute;
+  width:32px;
+  height:32px;
+  outline:none;
+  top:10px;
+  right:10px;  
+  display:block;
+}
+#layout_adminlogin .login {
+  float:right;
+  margin: 10px 0 0 0;
+  font-family: Tahoma, sans-serif;
+  outline: none;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  padding: 2px 20px;
+  -webkit-border-radius: 2px;
+  -moz-border-radius: 2px;
+  border-radius: 2px;
+  color: #fff;
+  border: solid 1px #101010;
+  background: #3a3a3a;
+  background: -webkit-gradient(linear, left top, left bottom, from(#494949), to(#242424));
+  background: -moz-linear-gradient(top,  #494949,  #242424);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#494949', endColorstr='#242424');
+}
+#layout_adminlogin .login:hover {
+  text-decoration: none;
+  background: #3a3a3a;
+  background: -webkit-gradient(linear, left top, left bottom, from(#242424), to(#494949));
+  background: -moz-linear-gradient(top,  #242424,  #494949);
+  filter:  progid:DXImageTransform.Microsoft.gradient(startColorstr='#242424', endColorstr='#494949');
+}
+-->
+</style>
 </head>
 
 <body>
