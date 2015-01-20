@@ -44,8 +44,6 @@ require_once (DIR_FS_INC.'xtc_address_label.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 require_once (DIR_FS_INC.'xtc_count_shipping_modules.inc.php');
 
-require (DIR_WS_CLASSES.'http_client.php');
-
 require (DIR_WS_INCLUDES.'checkout_requirements.php');
 
 // if no shipping destination address was selected, use the customers own address as default
