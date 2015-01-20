@@ -122,11 +122,10 @@ switch(basename($PHP_SELF)) {
       }
     break;
 
-} // END SWITCH
-
+}
 ?>
 </head>
-<body<?php if(basename($PHP_SELF) == FILENAME_POPUP_IMAGE) echo ' onload="resize();"'; ?>>
+<body>
 <?php
 
 // include needed functions
@@ -208,12 +207,11 @@ if ($shop_is_offline) {
 
 // ECONDA TRACKING
 if (TRACKING_ECONDA_ACTIVE=='true') {
-  echo '<script type="text/javascript"><!--', PHP_EOL,
-       '  var emos_kdnr="', TRACKING_ECONDA_ID, '";', PHP_EOL,
-       '//--></script>', PHP_EOL,
-       '<a name="emos_sid" rel="', session_id(),'"></a>', PHP_EOL,
-       '<a name="emos_name" title="siteid" rel="', $_SESSION['languages_id'],'" rev=""></a>',
-       PHP_EOL;
+  echo '<script type="text/javascript"><!--'.PHP_EOL.
+       '  var emos_kdnr="'. TRACKING_ECONDA_ID. '";'.PHP_EOL.
+       '//--></script>'.PHP_EOL.
+       '<a name="emos_sid" rel="'. xtc_session_id().'"></a>'.PHP_EOL.
+       '<a name="emos_name" title="siteid" rel="'. $_SESSION['languages_id'].'" rev=""></a>'.PHP_EOL;
 }
 
 // GOOGLE CONV. TRACKING

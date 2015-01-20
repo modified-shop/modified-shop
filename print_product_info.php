@@ -179,12 +179,7 @@ if (!is_object($product) || !$product->isProduct()) {
     $more_images_data = array();
     foreach ($mo_images as $img) {
       $mo_img = $product->productImage($img['image_name'], 'thumbnail');
-      $more_images_data[] = array ('PRODUCTS_IMAGE' => $mo_img, 
-                                   'PRODUCTS_POPUP_LINK' => 'javascript:window.open(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')'
-                                   );
-      //next 2 lines only needed for non modified templates
-      $info_smarty->assign('PRODUCTS_IMAGE_'.$img['image_nr'], $mo_img);
-      $info_smarty->assign('PRODUCTS_POPUP_LINK_'.$img['image_nr'], 'javascript:window.open(\''.xtc_href_link(FILENAME_POPUP_IMAGE, 'pID='.$product->data['products_id'].'&imgID='.$img['image_nr']).'\', \'popup\', \'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600\')');
+      $more_images_data[] = array ('PRODUCTS_IMAGE' => $mo_img);
     }
     $info_smarty->assign('more_images', $more_images_data);
   }

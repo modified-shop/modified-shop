@@ -19,20 +19,22 @@
 require ('includes/application_top.php');
 require_once (DIR_FS_INC.'xtc_date_short.inc.php');
 
-$smarty = new Smarty;
+$popup_smarty = new Smarty;
 
-include ('includes/header.php');
-
-
-$coupon_query = xtc_db_query("select * from ".TABLE_COUPONS." where coupon_id = '".(int)$_GET['cID']."'");
+$coupon_query = xtc_db_query("SELECT * 
+                                FROM ".TABLE_COUPONS." c
+                                JOIN ".TABLE_COUPONS_DESCRIPTION." cd
+                                     ON c.coupon_id = cd.coupon_id
+                                        AND cd.language_id = '".$_SESSION['languages_id']."'
+                               WHERE c.coupon_id = '".(int)$_GET['cID']."'");
 $coupon = xtc_db_fetch_array($coupon_query);
-$coupon_desc_query = xtc_db_query("select * from ".TABLE_COUPONS_DESCRIPTION." where coupon_id = '".(int)$_GET['cID']."' and language_id = '".$_SESSION['languages_id']."'");
-$coupon_desc = xtc_db_fetch_array($coupon_desc_query);
+
 $text_coupon_help = TEXT_COUPON_HELP_HEADER;
-$text_coupon_help .= sprintf(TEXT_COUPON_HELP_NAME, $coupon_desc['coupon_name']);
-if (xtc_not_null($coupon_desc['coupon_description']))
-	$text_coupon_help .= sprintf(TEXT_COUPON_HELP_DESC, $coupon_desc['coupon_description']);
-$coupon_amount = $coupon['coupon_amount'];
+$text_coupon_help .= sprintf(TEXT_COUPON_HELP_NAME, $coupon['coupon_name']);
+if (xtc_not_null($coupon['coupon_description'])) {
+	$text_coupon_help .= sprintf(TEXT_COUPON_HELP_DESC, $coupon['coupon_description']);
+}
+
 switch ($coupon['coupon_type']) {
 	case 'F' :
 		$text_coupon_help .= sprintf(TEXT_COUPON_HELP_FIXED, $xtPrice->xtcFormat($coupon['coupon_amount'], true));
@@ -44,46 +46,58 @@ switch ($coupon['coupon_type']) {
 		$text_coupon_help .= TEXT_COUPON_HELP_FREESHIP;
 		break;
 	default :
-		}
+	  break;
+}
 
-if ($coupon['coupon_minimum_order'] > 0)
+if ($coupon['coupon_minimum_order'] > 0) {
 	$text_coupon_help .= sprintf(TEXT_COUPON_HELP_MINORDER, $xtPrice->xtcFormat($coupon['coupon_minimum_order'], true));
+}
 $text_coupon_help .= sprintf(TEXT_COUPON_HELP_DATE, xtc_date_short($coupon['coupon_start_date']), xtc_date_short($coupon['coupon_expire_date']));
 $text_coupon_help .= '<strong>'.TEXT_COUPON_HELP_RESTRICT.'</strong>';
+
 $text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_CATEGORIES;
-$coupon_get = xtc_db_query("select restrict_to_categories from ".TABLE_COUPONS." where coupon_id='".(int)$_GET['cID']."'");
-$get_result = xtc_db_fetch_array($coupon_get);
-
-$cat_ids = explode(",", $get_result['restrict_to_categories']); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
-for ($i = 0; $i < count($cat_ids); $i ++) {
-	$result = xtc_db_query("SELECT * FROM ".TABLE_CATEGORIES." c, ".TABLE_CATEGORIES_DESCRIPTION." cd WHERE c.categories_id = cd.categories_id and cd.language_id = '".$_SESSION['languages_id']."' and c.categories_id='".$cat_ids[$i]."'");
-	if ($row = xtc_db_fetch_array($result)) {
-		$cats .= '<br />'.$row["categories_name"];
-	}
+$cats = '<br />---';
+$cat_ids = explode(",", $coupon['restrict_to_categories']);
+$categories_query = xtc_db_query("SELECT categories_name
+                                    FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                   WHERE categories_id IN ('" . implode("', '", $cat_ids) . "')
+                                     AND language_id = '".$_SESSION['languages_id']."'
+                                     AND trim(categories_name) != ''");
+if (xtc_db_num_rows($categories_query) > 0) {
+  $cats = '';
+  while ($categories = xtc_db_fetch_array($categories_query)) {
+    $cats .= '<br />'.$row["categories_name"];
+  }
 }
-if ($cats == '')
-	$cats = '<br />NONE';
 $text_coupon_help .= $cats;
-$text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
-$coupon_get = xtc_db_query("select restrict_to_products from ".TABLE_COUPONS."  where coupon_id='".(int)$_GET['cID']."'");
-$get_result = xtc_db_fetch_array($coupon_get);
 
-$pr_ids = explode(",", $get_result['restrict_to_products']); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
-for ($i = 0; $i < count($pr_ids); $i ++) {
-	$result = xtc_db_query("SELECT * FROM ".TABLE_PRODUCTS." p, ".TABLE_PRODUCTS_DESCRIPTION." pd WHERE p.products_id = pd.products_id and pd.language_id = '".$_SESSION['languages_id']."'and p.products_id = '".$pr_ids[$i]."'");
-	if ($row = xtc_db_fetch_array($result)) {
-		$prods .= '<br />'.$row["products_name"];
+$text_coupon_help .= '<br /><br />'.TEXT_COUPON_HELP_PRODUCTS;
+$prods = '<br />---';
+$pr_ids = explode(",", $coupon['restrict_to_products']); // Hetfield - 2009-08-18 - replaced deprecated function split with explode to be ready for PHP >= 5.3
+$products_query = xtc_db_query("SELECT products_name
+                                  FROM ".TABLE_PRODUCTS_DESCRIPTION."
+                                 WHERE products_id IN ('" . implode("', '", $pr_ids) . "')
+                                   AND language_id = '".$_SESSION['languages_id']."'
+                                   AND trim(products_name) != ''");
+if (xtc_db_num_rows($products_query) > 0) {
+  $prods = '';
+	if ($products = xtc_db_fetch_array($products_query)) {
+		$prods .= '<br />'.$products["products_name"];
 	}
 }
-if ($prods == '')
-	$prods = '<br />NONE';
 $text_coupon_help .= $prods;
 
-$smarty->assign('TEXT_HELP', $text_coupon_help);
-$smarty->assign('link_close', 'javascript:window.close()');
-$smarty->assign('language', $_SESSION['language']);
+$popup_smarty->assign('TEXT_HELP', $text_coupon_help);
+$popup_smarty->assign('link_close', 'javascript:window.close()');
+$popup_smarty->assign('language', $_SESSION['language']);
 
-$smarty->caching = 0;
-$smarty->display(CURRENT_TEMPLATE.'/module/popup_coupon_help.html');
-//include ('includes/application_bottom.php');
+$popup_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
+$popup_smarty->assign('html_params', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' '.HTML_PARAMS : ' lang="'.$_SESSION['language_code'].'"'));
+$popup_smarty->assign('doctype', ((TEMPLATE_HTML_ENGINE == 'xhtml') ? ' PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"' : ''));
+$popup_smarty->assign('charset', $_SESSION['language_charset']);
+$popup_smarty->assign('title', htmlspecialchars($content_data['content_heading'], ENT_QUOTES, strtoupper($_SESSION['language_charset'])));
+$popup_smarty->assign('base', (($request_type == 'SSL') ? HTTPS_SERVER : HTTP_SERVER) . DIR_WS_CATALOG);
+
+$popup_smarty->caching = 0;
+$popup_smarty->display(CURRENT_TEMPLATE.'/module/popup_coupon_help.html');
 ?>
