@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: filenames.php 1295 2005-10-08 16:59:56Z mz $   
 
@@ -69,7 +68,6 @@ define('FILENAME_ORDERS', DIR_ADMIN.'orders.php');
 define('FILENAME_METATAGS', 'metatags.php');
 define('FILENAME_MINIMUM_ORDER', 'reviews.php');
 define('FILENAME_PRODUCTS_MEDIA', 'products_media.php');
-define('FILENAME_MEDIA_CONTENT', 'media_content.php');
 define('FILENAME_PASSWORD_DOUBLE_OPT', 'password_double_opt.php');
 define('FILENAME_CREATE_GUEST_ACCOUNT', 'create_guest_account.php');
 define('FILENAME_DISPLAY_VVCODES', 'display_vvcodes.php');

@@ -15,18 +15,15 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-
   // define the database table names used in the project
-  // BOF - 2010-01-20 vr - revised unified version based on database_tables.php and admin/incudes/application_top.php
   define('TABLE_ADDRESS_BOOK', 'address_book');
   define('TABLE_ADDRESS_FORMAT', 'address_format');
   define('TABLE_ADMIN_ACCESS', 'admin_access');
   define('TABLE_BANKTRANSFER','banktransfer');
-  /* added */ define('TABLE_BANKTRANSFER_BLZ','banktransfer_blz');
+  define('TABLE_BANKTRANSFER_BLZ','banktransfer_blz');
   define('TABLE_BANNERS', 'banners');
   define('TABLE_BANNERS_HISTORY', 'banners_history');
   define('TABLE_BLACKLIST', 'card_blacklist'); 
-  /* removed */ // define('TABLE_BOX_ALIGN','box_align');
   define('TABLE_CAMPAIGNS', 'campaigns');
   define('TABLE_CAMPAIGNS_IP','campaigns_ip');
   define('TABLE_CATEGORIES', 'categories');
@@ -53,14 +50,12 @@
   define('TABLE_CUSTOMERS_MEMO','customers_memo');
   define('TABLE_CUSTOMERS_STATUS', 'customers_status');
   define('TABLE_CUSTOMERS_STATUS_HISTORY', 'customers_status_history');
-  /* added */ define('TABLE_DATABASE_VERSION', 'database_version');
-  /* removed */ // define('TABLE_FORMS', 'forms'); ???
+  define('TABLE_DATABASE_VERSION', 'database_version');
   define('TABLE_GEO_ZONES', 'geo_zones');
   define('TABLE_LANGUAGES', 'languages');
   define('TABLE_MANUFACTURERS', 'manufacturers');
   define('TABLE_MANUFACTURERS_INFO', 'manufacturers_info');
-  define('TABLE_MEDIA_CONTENT','media_content');
-  define('TABLE_MODULE_NEWSLETTER','module_newsletter'); // und _temp_1/_2 ??
+  define('TABLE_MODULE_NEWSLETTER','module_newsletter');
   define('TABLE_NEWSLETTER_RECIPIENTS', 'newsletter_recipients');
   define('TABLE_NEWSLETTERS', 'newsletters');
   define('TABLE_NEWSLETTERS_HISTORY', 'newsletters_history');
@@ -78,7 +73,7 @@
   define('TABLE_PRODUCTS_ATTRIBUTES_DOWNLOAD', 'products_attributes_download');
   define('TABLE_PRODUCTS_CONTENT','products_content');
   define('TABLE_PRODUCTS_DESCRIPTION', 'products_description');
-  /* added */ define('TABLE_PRODUCTS_GRADUATED_PRICES', 'products_graduated_prices');
+  define('TABLE_PRODUCTS_GRADUATED_PRICES', 'products_graduated_prices');
   define('TABLE_PRODUCTS_IMAGES', 'products_images');
   define('TABLE_PRODUCTS_NOTIFICATIONS', 'products_notifications');
   define('TABLE_PRODUCTS_OPTIONS', 'products_options');
@@ -96,27 +91,15 @@
   define('TABLE_SPECIALS', 'specials');
   define('TABLE_TAX_CLASS', 'tax_class');
   define('TABLE_TAX_RATES', 'tax_rates');
-  /* removed */ // define('TABLE_TPL_MODULES_CONFIGURATION', 'tpl_modules_configuration'); ???
   define('TABLE_WHOS_ONLINE', 'whos_online');
   define('TABLE_ZONES', 'zones');
   define('TABLE_ZONES_TO_GEO_ZONES', 'zones_to_geo_zones');
   
-  // External Modules
-  // Moneybookers
-  define('TABLE_PAYMENT_MONEYBOOKERS','payment_moneybookers');
-  define('TABLE_PAYMENT_AMONEYBOOKERS_CURRENCIES','payment_AMONEYBOOKERS_currencies');
-  define('TABLE_PAYMENT_AMONEYBOOKERS_COUNTRIES','payment_AMONEYBOOKERS_countries');
-
-  // Sofortüberweisung
-  define('TABLE_PAYMENT_IPAYMENT', 'payment_ipayment');
-  define('TABLE_PAYMENT_IPAYMENT_LOG', 'payment_ipayment_log');
-  // EOF - 2010-01-20 vr - revised unified version based on database_tables.php and admin/incudes/application_top.php
-  
-  // BOF - web28 - 2010-05-06 - PayPal API Modul
+  ## External Modules
+  // PayPal
   define('TABLE_PAYPAL', 'paypal');
   define('TABLE_PAYPAL_STATUS_HISTORY', 'paypal_status_history');
-  // EOF - web28 - 2010-05-06 - PayPal API Modul
-
+  
 	/******** SHOPGATE **********/
 	define('TABLE_SHOPGATE_ORDERS', 'orders_shopgate_order');
 	/******** SHOPGATE **********/
