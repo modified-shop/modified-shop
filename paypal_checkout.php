@@ -49,7 +49,6 @@ require_once(DIR_FS_INC . 'xtc_get_attributes_model.inc.php');
 
 unset($_SESSION['tmp_oID']);
 
-require_once (DIR_WS_CLASSES.'http_client.php');
 require_once (DIR_WS_CLASSES.'order.php');
 
 if (isset($_GET['error_message'])) { //Dokuman - 2012-05-31 - fix paypal_checkout notices

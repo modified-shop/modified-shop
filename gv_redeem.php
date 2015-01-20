@@ -74,7 +74,7 @@ if ($error === false && isset($_SESSION['customer_id'])) {
 	$sql_data_array = array('coupon_id' => $coupon['coupon_id'],
 	                        'customer_id' => $_SESSION['customer_id'],
 	                        'redeem_date' => 'now()',
-	                        'redeem_ip' => );
+	                        'redeem_ip' => $_SESSION['tracking']['ip']);
 	xtc_db_perform(TABLE_COUPON_REDEEM_TRACK, $sql_data_array);                        
 	xtc_db_query("UPDATE ".TABLE_COUPONS." 
 	                 SET coupon_active = 'N' 
