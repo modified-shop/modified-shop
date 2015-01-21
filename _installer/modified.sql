@@ -1087,13 +1087,6 @@ CREATE TABLE cm_file_flags (
   PRIMARY KEY (file_flag)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS payment_moneybookers_currencies;
-CREATE TABLE payment_moneybookers_currencies (
-  mb_currID CHAR(3) NOT NULL DEFAULT '',
-  mb_currName VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (mb_currID)
-) ENGINE=MyISAM;
-
 DROP TABLE IF EXISTS payment_moneybookers;
 CREATE TABLE payment_moneybookers (
   mb_TRID VARCHAR(255) NOT NULL DEFAULT '',
