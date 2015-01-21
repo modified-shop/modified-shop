@@ -246,7 +246,8 @@ ALTER TABLE orders MODIFY customers_country VARCHAR(64) NOT NULL;
 ALTER TABLE orders MODIFY delivery_country VARCHAR(64) NOT NULL;
 ALTER TABLE orders MODIFY billing_country VARCHAR(64) NOT NULL;
 
-#GTB - 2015-01-21 - delete moneybookers currencies
+#GTB - 2015-01-21 - delete unused tables
 DROP TABLE IF EXISTS payment_moneybookers_currencies;
+DROP TABLE IF EXISTS media_content;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
