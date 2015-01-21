@@ -26,6 +26,7 @@ if (is_array($_POST) && count($_POST) > 0) {
       $_SESSION['CSRFToken'] = xtc_RandomString(32);
       if (defined('RUN_MODE_ADMIN')) {
         $messageStack->add('CSRFToken manipulation', 'warning');
+        $messageStack->add_session('CSRFToken manipulation', 'warning');
       }
     }
   } else {
@@ -37,6 +38,7 @@ if (is_array($_POST) && count($_POST) > 0) {
     $_SESSION['CSRFToken'] = xtc_RandomString(32);
     if (defined('RUN_MODE_ADMIN')) {
       $messageStack->add('CSRFToken not defined', 'warning');
+      $messageStack->add_session('CSRFToken not defined', 'warning');
     }
   }
 }
