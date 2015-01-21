@@ -1206,7 +1206,7 @@ INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('0', 'information'
 INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('1', 'content');
 
 # carriers
-INSERT INTO carriers VALUES (1, 'LIX', 'http://www.kinder-enduro.de/paketverfolgung.html?paketnummer=$1', '10', NOW(), '');
+INSERT INTO carriers VALUES (1, 'LIX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '10', NOW(), '');
 INSERT INTO carriers VALUES (2, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', '20', NOW(), '');
 INSERT INTO carriers VALUES (3, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', '30', NOW(), '');
 INSERT INTO carriers VALUES (4, 'GLS', 'http://www.gls-group.eu/276-I-PORTAL-WEB/content/GLS/DE03/DE/5004.htm?txtRefNo=$1&txtAction=71000', '40', NOW(), '');
