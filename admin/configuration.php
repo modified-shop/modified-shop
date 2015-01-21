@@ -56,56 +56,58 @@
         }
 
         // update changed configurations
-        $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
-        while ($configuration = xtc_db_fetch_array($configuration_query)) {
-          $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
-          if (is_array($_POST[$configuration['configuration_key']])) {
-            // multi language config
-            if (gettype(array_shift(array_keys($_POST[$configuration['configuration_key']]))) == 'string') {
-              $config_value = array();
-              foreach ($_POST[$configuration['configuration_key']] as $key => $value) {
-                if (xtc_not_null($value)) {
-                  $config_value[] =  $key . '::' . $value;
+        if (isset($_POST) && count($_POST) > 0) {
+          $configuration_query = xtc_db_query("select configuration_key,configuration_id, configuration_value, use_function,set_function from " . TABLE_CONFIGURATION . " where configuration_group_id = '" . (int)$_GET['gID'] . "' order by sort_order");
+          while ($configuration = xtc_db_fetch_array($configuration_query)) {
+            $configuration['configuration_value'] = stripslashes($configuration['configuration_value']);
+            if (is_array($_POST[$configuration['configuration_key']])) {
+              // multi language config
+              if (gettype(array_shift(array_keys($_POST[$configuration['configuration_key']]))) == 'string') {
+                $config_value = array();
+                foreach ($_POST[$configuration['configuration_key']] as $key => $value) {
+                  if (xtc_not_null($value)) {
+                    $config_value[] =  $key . '::' . $value;
+                  }
                 }
+                $_POST[$configuration['configuration_key']] = implode('||', $config_value);
+              } else {
+                $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
               }
-              $_POST[$configuration['configuration_key']] = implode('||', $config_value);
-            } else {
-              $_POST[$configuration['configuration_key']] = implode(',', $_POST[$configuration['configuration_key']]);
             }
-          }
-          if ($_POST[$configuration['configuration_key']] != $configuration['configuration_value']) {
-            //value_limits min
-            if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
-              $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
-              $messageStack->add_session(sprintf(CONFIG_MIN_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['min'] ), 'warning');
-              $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
-            }
-            //value_limits max
-            if (isset($value_limits[$configuration['configuration_key']]['max']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']) {
-              $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
-              $messageStack->add_session(sprintf(CONFIG_MAX_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['max'] ), 'warning');
-              $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
-            }
-            //check numeric input
-            if (!preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) && (isset($value_limits[$configuration['configuration_key']]['min']) || isset($value_limits[$configuration['configuration_key']]['max']))) {
-              $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
-              $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
-              $messageStack->add_session(sprintf(CONFIG_INT_VALUE_ERROR,$configuration_key_title,$_POST[$configuration['configuration_key']],''), 'error');
-            }
-            xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($_POST[$configuration['configuration_key']]) . "', last_modified = NOW() where configuration_key='" . $configuration['configuration_key'] . "'");
-            // load template config install/uninstall if exist
-            if ($configuration['configuration_key'] == 'CURRENT_TEMPLATE') {
-              $template_dir = DIR_FS_CATALOG.'templates/';
-              if (file_exists($template_dir.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php')) {
-                include($template_dir.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php');
+            if ($_POST[$configuration['configuration_key']] != $configuration['configuration_value']) {
+              //value_limits min
+              if (isset($value_limits[$configuration['configuration_key']]['min']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] < $value_limits[$configuration['configuration_key']]['min']) {
+                $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
+                $messageStack->add_session(sprintf(CONFIG_MIN_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['min'] ), 'warning');
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
               }
-              if (file_exists($template_dir.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php')) {
-                include($template_dir.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php');
+              //value_limits max
+              if (isset($value_limits[$configuration['configuration_key']]['max']) && preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) &&  (int)$_POST[$configuration['configuration_key']] > $value_limits[$configuration['configuration_key']]['max']) {
+                $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
+                $messageStack->add_session(sprintf(CONFIG_MAX_VALUE_WARNING,$configuration_key_title,$_POST[$configuration['configuration_key']],$value_limits[$configuration['configuration_key']]['max'] ), 'warning');
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
+              }
+              //check numeric input
+              if (!preg_match ("/^([0-9]+)$/", $_POST[$configuration['configuration_key']]) && (isset($value_limits[$configuration['configuration_key']]['min']) || isset($value_limits[$configuration['configuration_key']]['max']))) {
+                $_POST[$configuration['configuration_key']] = (int)$configuration['configuration_value'];
+                $configuration_key_title = constant(strtoupper($configuration['configuration_key'].'_TITLE'));
+                $messageStack->add_session(sprintf(CONFIG_INT_VALUE_ERROR,$configuration_key_title,$_POST[$configuration['configuration_key']],''), 'error');
+              }
+              xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value='" . xtc_db_input($_POST[$configuration['configuration_key']]) . "', last_modified = NOW() where configuration_key='" . $configuration['configuration_key'] . "'");
+              // load template config install/uninstall if exist
+              if ($configuration['configuration_key'] == 'CURRENT_TEMPLATE') {
+                $template_dir = DIR_FS_CATALOG.'templates/';
+                if (file_exists($template_dir.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php')) {
+                  include($template_dir.$_POST[$configuration['configuration_key']].'/source/tmpl_config_install.php');
+                }
+                if (file_exists($template_dir.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php')) {
+                  include($template_dir.$configuration['configuration_value'].'/source/tmpl_config_uninstall.php');
+                }
               }
             }
           }
         }
-
+        
         // DB Cache System [If Cache deactivated.. clean all cachefiles]
         if (isset($_POST['DB_CACHE']) && $_POST['DB_CACHE'] == 'false') {
           $handle = opendir(SQL_CACHEDIR);
