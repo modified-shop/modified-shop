@@ -11,8 +11,7 @@
 UPDATE database_version SET version = 'MOD_2.0.0.0';
 
 #Web28 - 2010-11-13 - add missing listproducts to admin_access
-ALTER TABLE admin_access
-  ADD check_update INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD check_update INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET check_update = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET check_update = 1 WHERE customers_id = 'groups' LIMIT 1;
 
@@ -103,8 +102,7 @@ INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'U','Västm
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'O','Västra Götaland');
 
 #Tomcraft - 2013-08-29 - Added easymarketing
-ALTER TABLE admin_access
-  ADD easymarketing INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD easymarketing INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
 
