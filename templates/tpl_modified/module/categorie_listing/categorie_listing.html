@@ -20,7 +20,7 @@
   {foreach name=aussen item=module_data from=$module_content key=spalten}
   <div class="subcatlist{if $smarty.foreach.aussen.iteration is div by $TR_COLS} last{/if}">
     <a href="{$module_data.CATEGORIES_LINK}">
-      <span class="subcat_image">{if $module_data.CATEGORIES_IMAGE}<img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" />{/if}</span>
+      {if $module_data.CATEGORIES_IMAGE}<span class="subcat_image"><img src="{$module_data.CATEGORIES_IMAGE}" alt="{$module_data.CATEGORIES_NAME|onlytext}" /></span>{/if}
       <span class="subcat_title">{$module_data.CATEGORIES_NAME}</span>
     </a>
     {* <span class="subcat_desc">{$module_data.CATEGORIES_DESCRIPTION}</span> *}

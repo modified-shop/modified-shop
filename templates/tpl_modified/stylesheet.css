@@ -1833,7 +1833,6 @@ a.color_more:hover {
 .subcatlist {
   float:left;
   width:139px;
-  min-height:136px;
   height:auto;
   margin: 0px 10px 10px 0px;
   border: 1px solid #ccc;
