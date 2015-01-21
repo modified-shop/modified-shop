@@ -1045,15 +1045,6 @@ CREATE TABLE content_manager (
   FULLTEXT (content_meta_title,content_meta_description,content_meta_keywords)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS media_content;
-CREATE TABLE media_content (
-  file_id INT(11) NOT NULL AUTO_INCREMENT,
-  old_filename TEXT NOT NULL,
-  new_filename TEXT NOT NULL,
-  file_comment TEXT NOT NULL,
-  PRIMARY KEY (file_id)
-) ENGINE=MyISAM;
-
 DROP TABLE IF EXISTS products_content;
 CREATE TABLE products_content (
   content_id INT(11) NOT NULL AUTO_INCREMENT,
