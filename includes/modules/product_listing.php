@@ -16,6 +16,10 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// todo: move to configuration ?
+define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
+define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false');
+
 $module_smarty = new Smarty;
 $module_smarty->caching = false;
 $module_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
@@ -67,21 +71,34 @@ if ($listing_split->number_of_rows > 0) {
     $category = xtc_db_fetch_array($category_query, true);
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-      if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
-      $image = DIR_WS_BASE . $image;
+      if (!file_exists($image)) {
+        if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
+          $image = DIR_WS_IMAGES.'categories/noimage.gif';
+        } else {
+          $image = '';
+        }
+      }
     }
   }
 
   if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-    $manu_query = xtDBquery("SELECT manufacturers_image, manufacturers_name FROM ".TABLE_MANUFACTURERS." WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
+    $manu_query = xtDBquery("SELECT manufacturers_image, 
+                                    manufacturers_name 
+                               FROM ".TABLE_MANUFACTURERS." 
+                              WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
     $manu = xtc_db_fetch_array($manu_query, true);
     $category['categories_name'] = $manu['manufacturers_name'];
 
     if ($manu['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
-      if(!file_exists($image)) $image = '';
+      if (!file_exists($image)) {
+        if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
+          $image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
+        } else {
+          $image = '';
+        }
+      }
     }
-
   }
 
   if ($current_category_id == '0' && isset($_GET['keywords'])) {
@@ -98,7 +115,7 @@ if ($listing_split->number_of_rows > 0) {
   $module_smarty->assign('CATEGORIES_NAME', isset($category['categories_name']) ? $category['categories_name'] : '');
   $module_smarty->assign('CATEGORIES_HEADING_TITLE', isset($category['categories_heading_title']) ? $category['categories_heading_title'] : '');
   $module_smarty->assign('CATEGORIES_DESCRIPTION', isset($category['categories_description']) ? $category['categories_description'] : '');
-  $module_smarty->assign('CATEGORIES_IMAGE', $image);
+  $module_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
 
   $listing_query = xtDBquery($listing_split->sql_query);
   while ($listing = xtc_db_fetch_array($listing_query, true)) {
