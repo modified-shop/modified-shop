@@ -3096,33 +3096,4 @@ INSERT INTO payment_moneybookers_countries VALUES (236, 'YUG');
 INSERT INTO payment_moneybookers_countries VALUES (238, 'ZAM');
 INSERT INTO payment_moneybookers_countries VALUES (239, 'ZIM');
 
-# Data for table payment_moneybookers_currencies
-INSERT INTO payment_moneybookers_currencies VALUES ('AUD', 'Australian Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('BGN', 'Bulgarian Lev');
-INSERT INTO payment_moneybookers_currencies VALUES ('CAD', 'Canadian Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('CHF', 'Swiss Franc');
-INSERT INTO payment_moneybookers_currencies VALUES ('CZK', 'Czech Koruna');
-INSERT INTO payment_moneybookers_currencies VALUES ('DKK', 'Danish Krone');
-INSERT INTO payment_moneybookers_currencies VALUES ('EEK', 'Estonian Koruna');
-INSERT INTO payment_moneybookers_currencies VALUES ('EUR', 'Euro');
-INSERT INTO payment_moneybookers_currencies VALUES ('GBP', 'Pound Sterling');
-INSERT INTO payment_moneybookers_currencies VALUES ('HKD', 'Hong Kong Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('HUF', 'Forint');
-INSERT INTO payment_moneybookers_currencies VALUES ('ILS', 'Shekel');
-INSERT INTO payment_moneybookers_currencies VALUES ('ISK', 'Iceland Krona');
-INSERT INTO payment_moneybookers_currencies VALUES ('JPY', 'Yen');
-INSERT INTO payment_moneybookers_currencies VALUES ('KRW', 'South-Korean Won');
-INSERT INTO payment_moneybookers_currencies VALUES ('LVL', 'Latvian Lat');
-INSERT INTO payment_moneybookers_currencies VALUES ('MYR', 'Malaysian Ringgit');
-INSERT INTO payment_moneybookers_currencies VALUES ('NOK', 'Norwegian Krone');
-INSERT INTO payment_moneybookers_currencies VALUES ('NZD', 'New Zealand Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('PLN', 'Zloty');
-INSERT INTO payment_moneybookers_currencies VALUES ('SEK', 'Swedish Krona');
-INSERT INTO payment_moneybookers_currencies VALUES ('SGD', 'Singapore Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('SKK', 'Slovak Koruna');
-INSERT INTO payment_moneybookers_currencies VALUES ('THB', 'Baht');
-INSERT INTO payment_moneybookers_currencies VALUES ('TWD', 'New Taiwan Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('USD', 'US Dollar');
-INSERT INTO payment_moneybookers_currencies VALUES ('ZAR', 'South-African Rand');
-
 # Keep an empty line at the end of this file for the installer to work properly
