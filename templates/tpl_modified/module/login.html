@@ -32,19 +32,19 @@
 
 <div class="twoColums last">
   {if $account_option == 'account' or $account_option == 'both'}
-  <div class="highlightbox">
+  <div class="highlightbox cf">
     <h4>{#title_new#}</h4>
     <p>{#text_new#}</p>
-    <p class="textright">{$BUTTON_NEW_ACCOUNT}</p>
+    <div class="button_right">{$BUTTON_NEW_ACCOUNT}</div>
   </div>
   {/if} 
 
   {if $account_option == 'both' or $account_option == 'guest'}
   <br />
-  <div class="highlightbox">
+  <div class="highlightbox cf">
     <h4>{#title_guest#}</h4>
     <p>{#text_guest#}</p>
-    <p class="textright">{$BUTTON_GUEST}</p>
+    <div class="button_right">{$BUTTON_GUEST}</div>
   </div>
   {/if}
 </div>
