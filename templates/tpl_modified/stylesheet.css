@@ -3126,11 +3126,16 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
 
 
 /* 44. START miscellaneous */
-/* START No Javascript Styles for Tabs */ 
+
+/* START No Javascript Styles for Tabs */  
+/* Moved in general.css.php as inline-style */
+/*
 ul.resp-tabs-list{
   display:none;
 }
+*/
 /* END No Javascript Styles for Tabs */
+
 
 /* START Subcontent navigation in content */
 .subcontent {

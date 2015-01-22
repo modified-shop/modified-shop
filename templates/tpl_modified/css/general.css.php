@@ -13,8 +13,18 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-   // Put CSS-Definitions here, these CSS-files will be loaded at the TOP of every page
+   // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
 ?>
 
-<link rel="stylesheet" href="<?php echo DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE; ?>/stylesheet.css" type="text/css" />
+<style>
+body { font-size:13px; line-height:19px; }
+#layout_navbar { height:38px; }
+#languages { float:right; height:12px; padding:10px 0; }
+#layout_logo { height:75px; padding:10px 0px; width:1000px; margin: 0px auto; }
+#layout_content { width:1000px; margin: 0px auto; }
+#col_left { float:left; width:235px; }
+#col_right { float:right; width:745px; }
+#content_navbar { height:40px; }
+ul.resp-tabs-list{ display:none; }
+</style>
      
