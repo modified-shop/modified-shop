@@ -16,7 +16,7 @@
    // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
 ?>
 
-<style>
+<style type="text/css">
 body { font-size:13px; line-height:19px; }
 #layout_navbar { height:38px; }
 #languages { float:right; height:12px; padding:10px 0; }
@@ -28,4 +28,3 @@ body { font-size:13px; line-height:19px; }
 #layout_footer { min-height:280px; margin: 40px 0 0 0; padding: 0 0 20px 0; }
 ul.resp-tabs-list{ display:none; }
 </style>
-     
