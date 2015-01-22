@@ -49,7 +49,7 @@
   <!--
   function go_option() {
     if (document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value != "none") {
-      location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)).'&current_product_id='. $_POST['current_product_id']; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
+      location = "<?php echo xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'option_page=' . (isset($_GET['option_page']) ? $_GET['option_page'] : 1)).'&current_product_id='. $_POST['current_product_id'].$iframe; ?>&option_order_by="+document.option_order_by.selected.options[document.option_order_by.selected.selectedIndex].value;
     }
   }
   //-->
@@ -66,7 +66,7 @@
       </form>
     </div>
 
-<?php echo xtc_draw_form('SUBMIT_ATTRIBUTES', FILENAME_NEW_ATTRIBUTES, '', 'post', 'id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"'); ?>
+<?php echo xtc_draw_form('SUBMIT_ATTRIBUTES', FILENAME_NEW_ATTRIBUTES . str_replace('&','?',$iframe), '', 'post', 'id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"'); ?>
 <input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
 <input type="hidden" name="action" value="change">
 <?php 
@@ -93,7 +93,9 @@ if ($_POST['cpath'] != '') {
     <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
     <?php
        echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
-       echo '&emsp;'. xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+			 if (!isset($_GET['iframe'])) {
+         echo '&emsp;'. xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+			 }
    ?>
 </div>
 <?php // EOC new button to send only checked post values, noRiddle ?>
@@ -235,7 +237,9 @@ if ($_POST['cpath'] != '') {
     <a class="button button_save" style="display:none;"><?php echo ATTR_SAVE_ACTIVE;?></a>
     <?php
     echo xtc_button(BUTTON_SAVE,'submit','name="button_submit"');
-    echo '&emsp;' . xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+		if (!isset($_GET['iframe'])) {
+			echo '&emsp;' . xtc_button_link(BUTTON_BACK, xtc_href_link(FILENAME_NEW_ATTRIBUTES, $param));
+		}
     echo isset($_GET['options_id']) ? '<input type="hidden" name="get_options_id" value="'.$_GET['options_id'].'">'. PHP_EOL : '';
     ?>
 </div>
