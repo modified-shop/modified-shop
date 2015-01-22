@@ -19,6 +19,8 @@
 # DANKESCHÖN AN DIE ENTWICKLER UND CODER LASSEN SIE DIESE DATEI, WIE SIE IST 
 # ODER KRATZEN SIE AUCH VON IHREN ELEKTROGERÄTEN IM HAUS DIE MARKENZEICHEN AB!!!!
 
+require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
+
 function smarty_outputfilter_note($tpl_output, &$smarty) {
   global $PHP_SELF;
   
@@ -29,6 +31,7 @@ function smarty_outputfilter_note($tpl_output, &$smarty) {
 
   // uncomment the next line to strip whitespaces (i.e. compress HTML)
   //$tpl_output =  preg_replace('!\s+!', ' ',$tpl_output);
+  $tpl_output = compressor_strip_output($tpl_output);
 
   return $tpl_output.$cop;
 }
