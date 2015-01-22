@@ -220,7 +220,7 @@ define('ICON_SUCCESS', 'Success');
 define('ICON_WARNING', 'Warning');
 define('ICON_ERROR', 'Error');
 
-define('TEXT_PRINT', 'print'); //DokuMan - 2009-05-26 - Added description for 'account_history_info.php'
+define('TEXT_PRINT', 'Print'); //DokuMan - 2009-05-26 - Added description for 'account_history_info.php'
 
 /*
  *

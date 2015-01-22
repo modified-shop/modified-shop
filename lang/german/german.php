@@ -198,7 +198,7 @@ define('IMAGE_BUTTON_IN_CART', 'In den Warenkorb');
 define('IMAGE_BUTTON_SEARCH', 'Suchen');
 define('IMAGE_BUTTON_UPDATE', 'Aktualisieren');
 define('IMAGE_BUTTON_UPDATE_CART', 'Warenkorb aktualisieren');
-define('IMAGE_BUTTON_WRITE_REVIEW', 'Bewertung schreiben');
+define('IMAGE_BUTTON_WRITE_REVIEW', 'Ihre Meinung');
 define('IMAGE_BUTTON_ADMIN', 'Admin'); 
 define('IMAGE_BUTTON_PRODUCT_EDIT', 'Produkt bearbeiten');
 define('IMAGE_BUTTON_SEND', 'Absenden');
@@ -214,7 +214,7 @@ define('ICON_SUCCESS', 'Erfolg');
 define('ICON_WARNING', 'Warnung');
 define('ICON_ERROR', 'Fehler');
 
-define('TEXT_PRINT', 'drucken');
+define('TEXT_PRINT', 'Drucken');
 
 /*
  * 
