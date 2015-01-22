@@ -25,6 +25,7 @@ body { font-size:13px; line-height:19px; }
 #col_left { float:left; width:235px; }
 #col_right { float:right; width:745px; }
 #content_navbar { height:40px; }
+#layout_footer { min-height:280px; margin: 40px 0 0 0; padding: 0 0 20px 0; }
 ul.resp-tabs-list{ display:none; }
 </style>
      
