@@ -96,7 +96,7 @@ class MySQLStorage extends PCStorage
      *
      * @var resource
      */
-    protected $link;
+    protected $link = 'db_klarna';
 
     /**
      * return the name of the storage type
@@ -116,31 +116,32 @@ class MySQLStorage extends PCStorage
      */
     protected function connect()
     {
-        $this->link = xtc_db_connect($this->addr, $this->user, $this->passwd, $this->dbName, 'db_klarna');
-        if ($this->link === false) {
+        $this->mysqllink = xtc_db_connect($this->addr, $this->user, $this->passwd, $this->dbName, $this->link);
+        if ($this->mysqllink === false) {
             throw new Klarna_DatabaseException(
                 'Failed to connect to database!'
             );
         }
 
-        xtc_db_query(
-            "CREATE TABLE IF NOT EXISTS `{$this->dbName}`.`{$this->dbTable}` (
-                `eid` int(10) unsigned NOT NULL,
-                `id` int(10) unsigned NOT NULL,
-                `type` tinyint(4) NOT NULL,
-                `description` varchar(255) NOT NULL,
-                `months` int(11) NOT NULL,
-                `interestrate` decimal(11,2) NOT NULL,
-                `invoicefee` decimal(11,2) NOT NULL,
-                `startfee` decimal(11,2) NOT NULL,
-                `minamount` decimal(11,2) NOT NULL,
-                `country` int(11) NOT NULL,
-                `expire` int(11) NOT NULL,
-                KEY `id` (`id`)
-            )", $this->link
-        );
+        if (xtc_db_num_rows(xtc_db_query("SHOW TABLES LIKE '".$this->dbTable."'", $this->link)) != '1') {
+          xtc_db_query("CREATE TABLE IF NOT EXISTS `{$this->dbName}`.`{$this->dbTable}` (
+                          `eid` int(10) unsigned NOT NULL,
+                          `id` int(10) unsigned NOT NULL,
+                          `type` tinyint(4) NOT NULL,
+                          `description` varchar(255) NOT NULL,
+                          `months` int(11) NOT NULL,
+                          `interestrate` decimal(11,2) NOT NULL,
+                          `invoicefee` decimal(11,2) NOT NULL,
+                          `startfee` decimal(11,2) NOT NULL,
+                          `minamount` decimal(11,2) NOT NULL,
+                          `country` int(11) NOT NULL,
+                          `expire` int(11) NOT NULL,
+                          KEY `id` (`id`)
+                        )", $this->link
+                      );
+        }
 
-        if (xtc_db_num_rows(xtc_db_query("SHOW TABLES LIKE '".$this->dbTable."'")) != '1') {
+        if (xtc_db_num_rows(xtc_db_query("SHOW TABLES LIKE '".$this->dbTable."'", $this->link)) != '1') {
             throw new Klarna_DatabaseException(
                 'Table not existing, failed to create Klarna table!'
             );
@@ -220,10 +221,7 @@ class MySQLStorage extends PCStorage
     {
         $this->splitURI($uri);
         $this->connect();
-        $result = xtc_db_query(
-            "SELECT * FROM `{$this->dbName}`.`{$this->dbTable}`",
-            $this->link
-        );
+        $result = xtc_db_query("SELECT * FROM `{$this->dbName}`.`{$this->dbTable}`", $this->link);
         if ($result === false) {
             throw new Klarna_DatabaseException(
                 'SELECT query from Klarna table failed!'
@@ -254,40 +252,24 @@ class MySQLStorage extends PCStorage
         foreach ($this->pclasses as $pclasses) {
             foreach ($pclasses as $pclass) {
                 //Remove the pclass if it exists.
-                xtc_db_query(
-                    "DELETE FROM `{$this->dbName}`.`{$this->dbTable}`
-                     WHERE `id` = '{$pclass->getId()}'
-                     AND `eid` = '{$pclass->getEid()}'"
-                );
+                xtc_db_query("DELETE FROM `{$this->dbName}`.`{$this->dbTable}`
+                                    WHERE `id` = '{$pclass->getId()}'
+                                      AND `eid` = '{$pclass->getEid()}'", $this->link
+                             );
+                
+                $sql_data_array = array('eid' => $pclass->getEid(),
+                                        'id' => $pclass->getId(),
+                                        'type' => $pclass->getType(),
+                                        'description' => $pclass->getDescription(),
+                                        'months' => $pclass->getMonths(),
+                                        'interestrate' => $pclass->getInterestRate(),
+                                        'invoicefee' => $pclass->getInvoiceFee(),
+                                        'startfee' => $pclass->getStartFee(),
+                                        'minamount' => $pclass->getMinAmount(),
+                                        'country' => $pclass->getCountry(),
+                                        'expire' => $pclass->getExpire());
+                xtc_db_perform("`{$this->dbName}`.`{$this->dbTable}`", 'insert', '', $this->link);
 
-                //Insert it again.
-                $result = xtc_db_query(
-                    "INSERT INTO `{$this->dbName}`.`{$this->dbTable}`
-                       (`eid`,
-                        `id`,
-                        `type`,
-                        `description`,
-                        `months`,
-                        `interestrate`,
-                        `invoicefee`,
-                        `startfee`,
-                        `minamount`,
-                        `country`,
-                        `expire`
-                        )
-                     VALUES
-                       ('{$pclass->getEid()}',
-                        '{$pclass->getId()}',
-                        '{$pclass->getType()}',
-                        '{$pclass->getDescription()}',
-                        '{$pclass->getMonths()}',
-                        '{$pclass->getInterestRate()}',
-                        '{$pclass->getInvoiceFee()}',
-                        '{$pclass->getStartFee()}',
-                        '{$pclass->getMinAmount()}',
-                        '{$pclass->getCountry()}',
-                        '{$pclass->getExpire()}')", $this->link
-                );
                 if ($result === false) {
                     throw new Klarna_DatabaseException(
                         'INSERT INTO Klarna table failed!'
@@ -312,10 +294,7 @@ class MySQLStorage extends PCStorage
             unset($this->pclasses);
             $this->connect();
 
-            xtc_db_query(
-                "DELETE FROM `{$this->dbName}`.`{$this->dbTable}`",
-                $this->link
-            );
+            xtc_db_query("DELETE FROM `{$this->dbName}`.`{$this->dbTable}`",$this->link);
         } catch(Exception $e) {
             throw new Klarna_DatabaseException(
                 $e->getMessage(), $e->getCode()
