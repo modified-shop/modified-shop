@@ -247,6 +247,7 @@ class KlarnaBase
         }
 
         // Add CSS and Javascript just once.
+        $css = $script = '';
         if (!self::$_hasRun) {
             $templateLoader = KiTT::templateLoader($this->_locale);
             $cssLoader = $templateLoader->load('css.mustache');
@@ -263,7 +264,7 @@ class KlarnaBase
             );
 
             self::$_hasRun = true;
-            echo $jsLoader->render(
+            $script = $jsLoader->render(
                 array(
                     "scripts" => array(
                         EXTERNAL_KITT . "core/v1.0/js/klarna.min.js",
@@ -273,7 +274,7 @@ class KlarnaBase
                 )
             );
 
-            echo $cssLoader->render(array('styles' => $styles));
+            $css = $cssLoader->render(array('styles' => $styles));
         }
 
         KiTT::configuration()->set(
@@ -317,7 +318,7 @@ class KlarnaBase
 
         return array(
             'id' => $this->code,
-            'module' => KITT_String::decode($view->getTitle(), "UTF-8", "ISO-8859-15"),
+            'module' => $script.$css.KITT_String::decode($view->getTitle(), "UTF-8", "ISO-8859-15"),
             'module_cost' => $view->getExtra(),
             'fields' => array(
                 array(
