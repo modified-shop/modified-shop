@@ -33,7 +33,7 @@ if (COMPRESS_STYLESHEET == 'true' && filemtime($css_min) != COMPRESS_STYLESHEET_
                      SET configuration_value = '".filemtime($css_min)."' 
                    WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME'");
   }
-} elseif (is_file($css_min)) {
+} elseif (COMPRESS_STYLESHEET == 'true' && is_file($css_min)) {
   $css_file = '/stylesheet.min.css';
 }
 ?>
