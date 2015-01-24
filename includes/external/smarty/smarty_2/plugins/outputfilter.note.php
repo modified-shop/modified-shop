@@ -19,19 +19,20 @@
 # DANKESCHÖN AN DIE ENTWICKLER UND CODER LASSEN SIE DIESE DATEI, WIE SIE IST 
 # ODER KRATZEN SIE AUCH VON IHREN ELEKTROGERÄTEN IM HAUS DIE MARKENZEICHEN AB!!!!
 
-require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
-
 function smarty_outputfilter_note($tpl_output, &$smarty) {
   global $PHP_SELF;
   
-  $cop = '<div class="copyright">'.((MODULE_SMALL_BUSINESS == 'true') ? '<span class="small_bussiness">'.TAX_INFO_SMALL_BUSINESS_FOOTER.'</span><br/>' : '').((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'<a rel="nofollow" href="http://www.modified-shop.org" target="_blank">':'').'<span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware &copy; 2009-' . date('Y') . '</span>'.((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'</a>':'').'</div>';
+  $cop = PHP_EOL.'<div class="copyright">'.((MODULE_SMALL_BUSINESS == 'true') ? '<span class="small_bussiness">'.TAX_INFO_SMALL_BUSINESS_FOOTER.'</span><br/>' : '').((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'<a rel="nofollow" href="http://www.modified-shop.org" target="_blank">':'').'<span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware &copy; 2009-' . date('Y') . '</span>'.((basename($PHP_SELF)=='index.php' && $_SERVER['QUERY_STRING']=='')?'</a>':'').'</div>';
 
   //web28 - making output W3C-Conform: replace ampersands, rest is covered by the modified shopstat_functions.php - preg_replace by cYbercOsmOnauT: don't replace &&
   $tpl_output = preg_replace("/((?<!&))&(?!(&|amp;|#[0-9]+;|[a-z0-9]+;))/i", "&amp;", $tpl_output);
 
-  // uncomment the next line to strip whitespaces (i.e. compress HTML)
-  //$tpl_output =  preg_replace('!\s+!', ' ',$tpl_output);
-  $tpl_output = compressor_strip_output($tpl_output);
+  // compress HTML
+  if (COMPRESS_HTML_OUTPUT == 'true') {
+    require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
+    $compactor = new Compactor();
+    $tpl_output = $compactor->squeeze($tpl_output);
+  }
   
   return $tpl_output.$cop;
 }

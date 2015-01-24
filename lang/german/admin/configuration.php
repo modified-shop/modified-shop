@@ -894,4 +894,9 @@ define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Anzeige des noimage.gif wenn kein Ar
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Kleinunternehmer');
 define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinunternehmer nach &sect; 19 UStG.</b>Wichtig:</b>Unter Module->Zusammenfassung muss das Modul ot_tax deaktiviert oder deinstalliert werden. Zudem muss in den einzelnen Kundengruppen die Preise inkl. MwSt. auf Nein gesetzt werden.');
+
+define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Komprimierung');
+define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden ?');
+define('COMPRESS_STYLESHEET_TITLE', 'CSS Komprimierung');
+define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden ?<br/><b>Achtung:</b>das funktioniert nur mit dem Template tpl_modified !');
 ?>
