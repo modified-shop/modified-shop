@@ -188,7 +188,7 @@ if (($registerGlobals == '1') || (strtolower($registerGlobals) == 'on')) {
  ******************************************************************************/
 if (isset($duplicate_configuration) && count($duplicate_configuration) > 0) {
   foreach ($duplicate_configuration as $key) {
-    $warnings[] = 'duplicate configuration key: '.$key
+    $warnings[] = 'duplicate configuration key: '.$key;
   }
 }
 
