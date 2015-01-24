@@ -42,11 +42,24 @@ function smarty_function_googleanalytics($params, &$smarty) {
   _gaq.push([\'_gat._anonymizeIp\']);
   _gaq.push([\'_trackPageview\']);
   ';
+
+  // chache ga.js
+  $cache_gs = DIR_FS_CATALOG.'cache/ga.js';
+  if (!is_file($cache_gs) || (filemtime($cache_gs) > (time() - 3600))) {
+    require_once(DIR_FS_INC.'get_external_content.inc.php');
+    $source_gs = get_external_content('http://www.google-analytics.com/ga.js', 2, false);
+    if (file_put_contents($cache_gs, $source_gs, LOCK_EX) !== false) {
+      $gs = xtc_href_link('cache/ga.js', '', $request_type, false);
+    }
+  } elseif (is_file($cache_gs)) {
+    $gs = xtc_href_link('cache/ga.js', '', $request_type, false);
+  }
+
   $endCode ='(function() {
     var ga = document . createElement(\'script\');
     ga.type = \'text/javascript\';
     ga.async = true;
-    ga.src = (\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\';
+    ga.src = '.((isset($gs)) ? '\''.$gs.'\'' : '(\'https:\' == document.location.protocol ? \'https://ssl\' : \'http://www\') + \'.google-analytics.com/ga.js\'').';
     var s = document.getElementsByTagName(\'script\')[0];
     s . parentNode . insertBefore(ga, s);
   })();
