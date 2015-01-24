@@ -198,6 +198,15 @@
     if (defined('STORE_DB_TRANSACTIONS') && STORE_DB_TRANSACTIONS == 'true') {    
       $queryStartTime = array_sum(explode(" ",microtime()));
     }
+
+    if (stripos(trim($query), 'INSERT INTO '.TABLE_CONFIGURATION.' ') !== false
+        || stripos(trim($query), "INSERT INTO '".TABLE_CONFIGURATION."' ") !== false
+        || stripos(trim($query), 'INSERT INTO `'.TABLE_CONFIGURATION.'` ') !== false
+        ) 
+    {
+      str_replace('INSERT INTO', 'REPLACE INTO', $query);
+      str_replace('insert into', 'REPLACE INTO', $query);
+    }
     
     $result = mysqli_query($$link, $query) or xtc_db_error($query, mysqli_errno($$link), mysqli_error($$link));
 

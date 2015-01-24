@@ -41,11 +41,11 @@
     reset($data);
 
     if ($action == 'insert') {
-      $query = 'insert into ' . $table . ' (';
+      $query = 'INSERT INTO ' . $table . ' (';
       while (list($columns, ) = each($data)) {
         $query .= $columns . ', ';
       }
-      $query = substr($query, 0, -2) . ') values (';
+      $query = substr($query, 0, -2) . ') VALUES (';
       reset($data);
       while (list(, $value) = each($data)) {
          $value = (is_float($value) && defined('PHP4_3_10') && PHP4_3_10 === true) ? sprintf("%.F",$value) : (string)($value);
@@ -63,7 +63,7 @@
       }
       $query = substr($query, 0, -2) . ')';
     } elseif ($action == 'update') {
-      $query = 'update ' . $table . ' set ';
+      $query = 'UPDATE ' . $table . ' SET ';
       while (list($columns, $value) = each($data)) {
          $value = (is_float($value) && defined('PHP4_3_10') && PHP4_3_10 === true) ? sprintf("%.F",$value) : (string)($value);
         switch ($value) {
@@ -78,7 +78,7 @@
             break;
         }
       }
-      $query = substr($query, 0, -2) . ' where ' . $parameters;
+      $query = substr($query, 0, -2) . ' WHERE ' . $parameters;
     }
 
     return xtc_db_query($query, $link);
