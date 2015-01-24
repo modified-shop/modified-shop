@@ -1,9 +1,17 @@
 <?php
-/* --------------------------------------------------------------
-   $Id: configuration_installer.php 3582 2012-08-31 09:46:45Z web28 $
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   based on:
    (c) 2012 by www.rpa-com.de
-   modified 2.00
-   --------------------------------------------------------------*/
+
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
 
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
@@ -40,6 +48,7 @@ $values_group_update = array();
 //configuration_group_id 5 --- "Kundendetails"
 
 //configuration_group_id 6 --- "Modul Optionen"
+  $values[] = "(NULL, 'COMPRESS_STYLESHEET_TIME', '', '6', '100', NULL, NOW(), NULL, NULL);";
 
 //configuration_group_id 7 --- "Versandoptionen"
   //$values[] = "(NULL, 'SHIPPING_DEFAULT_TAX_CLASS_METHOD', '1', 7, 7, NULL, NOW(), 'xtc_get_default_tax_class_method_name', 'xtc_cfg_pull_down_default_tax_class_methods(');"; //modified 1.07
@@ -166,6 +175,8 @@ $values_group_update = array();
   $values[] = "(NULL, 'DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED', 'false', '13', '6', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 14 --- "GZIP Kompression"
+  $values[] = "(NULL, 'COMPRESS_HTML_OUTPUT', 'true', 14, 3, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'COMPRESS_STYLESHEET', 'true', 14, 4, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
 //configuration_group_id 15 --- "Sessions"
   $values[] = "(NULL, 'SESSION_LIFE_CUSTOMERS', '1440', '15', '20', NULL, NOW(), NULL, NULL);";

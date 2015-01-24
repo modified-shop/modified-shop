@@ -64,6 +64,7 @@
                                           'media/content',
                                           'media/products',
                                           'media/products/backup',
+                                          'templates/tpl_modified',
                                           'templates_c',
                                      ),
                           'adirs' => array('includes/external/shopgate/shopgate_library/config',

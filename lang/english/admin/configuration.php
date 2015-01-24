@@ -896,4 +896,9 @@ define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no imag
 
 define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
 define('MODULE_SMALL_BUSINESS_DESC', 'If the store will be switched to small business according to § 19 UStG.<br/><b>Important:</b>On Module-> Summary The module ot_tax must be disabled or uninstalled. In addition to the individual customer groups the prices incl. VAT must be set to No');
+
+define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compress');
+define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template ?');
+define('COMPRESS_STYLESHEET_TITLE', 'CSS Compress');
+define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet ?<br/><b>Attention:</b>this only works with the tpl_modified Template !');
 ?>
