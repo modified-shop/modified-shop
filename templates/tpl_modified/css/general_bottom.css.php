@@ -20,7 +20,7 @@ $css_plain = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
 $css_min = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
 
 $css_file = '/stylesheet.css';
-if (COMPRESS_STYLESHEET == 'true' && filemtime($css_min) != COMPRESS_STYLESHEET_TIME) {
+if (COMPRESS_STYLESHEET == 'true' && (!is_file($css_min) || filemtime($css_min) != COMPRESS_STYLESHEET_TIME)) {
   require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
   
   if (($css_content = file_get_contents($css_plain)) !== false) {
