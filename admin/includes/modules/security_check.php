@@ -190,7 +190,15 @@ if (isset($duplicate_configuration) && count($duplicate_configuration) > 0) {
   foreach ($duplicate_configuration as $key) {
     $warnings[] = TEXT_DUPLUCATE_CONFIG_ERROR.$key.'<br/>';
   }
+} 
+/*
+else {
+  $check_unique = xtc_db_query("SHOW INDEX FROM ".TABLE_CONFIGURATION." WHERE key_name = 'idx_configuration_key'");
+  if (xtc_db_num_rows($check_unique) < 1) {
+    xtc_db_query("ALTER TABLE ".TABLE_CONFIGURATION." ADD UNIQUE idx_configuration_key (configuration_key)");
+  }
 }
+*/
 
 /*******************************************************************************
  ** output warnings:
