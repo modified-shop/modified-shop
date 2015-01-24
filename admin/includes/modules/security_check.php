@@ -188,7 +188,7 @@ if (($registerGlobals == '1') || (strtolower($registerGlobals) == 'on')) {
  ******************************************************************************/
 if (isset($duplicate_configuration) && count($duplicate_configuration) > 0) {
   foreach ($duplicate_configuration as $key) {
-    $warnings[] = TEXT_DUPLUCATE_CONFIG_ERROR.$key;
+    $warnings[] = TEXT_DUPLUCATE_CONFIG_ERROR.$key.'<br/>';
   }
 }
 
