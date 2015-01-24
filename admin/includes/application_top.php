@@ -142,10 +142,15 @@ xtc_db_connect() or die('Unable to connect to database server!');
 
 // set application wide parameters
 define('DB_CACHE', 'false');
+$duplicate_configuration = array();
 $configuration_query = xtc_db_query('select configuration_key as cfgKey, configuration_value as cfgValue from ' . TABLE_CONFIGURATION . '');
 while ($configuration = xtc_db_fetch_array($configuration_query)) {
   if ($configuration['cfgKey'] != 'DB_CACHE' && $configuration['cfgKey'] != 'STORE_DB_TRANSACTIONS') {
-    defined($configuration['cfgKey']) OR define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+    if (!defined($configuration['cfgKey'])) {
+      define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
+    } else {
+      $duplicate_configuration[] = $configuration['cfgKey'];
+    }
   }
 }
 
