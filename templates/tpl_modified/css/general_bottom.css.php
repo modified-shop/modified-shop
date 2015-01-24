@@ -23,15 +23,15 @@ $css_file = '/stylesheet.css';
 if (COMPRESS_STYLESHEET == 'true' && filemtime($css_min) != COMPRESS_STYLESHEET_TIME) {
   require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
   
-  if ($css_content = file_get_contents($css_plain) !== false) {
+  if (($css_content = file_get_contents($css_plain)) !== false) {
     $compactor = new Compactor();
     $css_content = $compactor->_simpleCodeCompress($css_content);
     if (file_put_contents($css_min, $css_content, LOCK_EX) !== false) {
       $css_file = '/stylesheet.min.css';
-      xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
-                       SET configuration_value = '".filemtime($css_min)."' 
-                     WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME'");
     }
+    xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
+                     SET configuration_value = '".filemtime($css_min)."' 
+                   WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME'");
   }
 } elseif (is_file($css_min)) {
   $css_file = '/stylesheet.min.css';
