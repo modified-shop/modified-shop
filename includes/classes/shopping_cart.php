@@ -529,7 +529,7 @@ class shoppingCart {
     $index = 0;
     while (list ($products_id,) = each($this->contents)) {
       if($this->contents[$products_id]['qty'] != 0 || $this->contents[$products_id]['qty'] !=''){
-        $products_query = xtc_db_query("SELECT ".ADD_SELECT_PRODUCT_CART."
+        $products_query = xtc_db_query("SELECT ".ADD_SELECT_CART."
                                                p.products_id,
                                                pd.products_name,
                                                pd.products_description,
