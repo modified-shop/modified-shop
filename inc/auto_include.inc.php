@@ -12,14 +12,10 @@
 
 function auto_include($dir, $ext='php') 
 {
-    $auto_include_arr = array();
-		if ( count( glob("{$dir}/*.".$ext) ) > 0 ) {
-			foreach (glob("{$dir}/*.".$ext) as $filename) {
-					$auto_include_arr[] = $filename;
-			}
-		}
+		$files = glob("{$dir}/*.".$ext);
+		$files = count($files) ? $files : array();
     if (function_exists('debugMessage')) {
-        debugMessage('auto_include',$auto_include_arr);
+        debugMessage('auto_include',$files);
     }
-    return $auto_include_arr;
+    return $files;
 }
