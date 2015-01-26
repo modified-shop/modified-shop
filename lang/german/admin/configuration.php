@@ -899,4 +899,8 @@ define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Komprimierung');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden ?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Komprimierung');
 define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden ?<br/><b>Achtung:</b>das funktioniert nur mit dem Template tpl_modified !');
+
+define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribut editieren in iframe');
+define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');
+
 ?>

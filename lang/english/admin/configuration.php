@@ -901,4 +901,7 @@ define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compress');
 define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template ?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Compress');
 define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet ?<br/><b>Attention:</b>this only works with the tpl_modified Template !');
+
+define('USE_ATTRIBUTES_IFRAME_TITLE', 'Edit Attributes in iframe');
+define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / Product view in an iframe');
 ?>
