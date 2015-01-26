@@ -13,7 +13,7 @@
 function auto_include($dir, $ext='php') 
 {
 		$files = glob("{$dir}/*.".$ext);
-		$files = count($files) ? $files : array();
+		$files = (array)$files;
     if (function_exists('debugMessage')) {
         debugMessage('auto_include',$files);
     }
