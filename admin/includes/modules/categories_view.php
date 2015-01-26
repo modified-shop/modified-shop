@@ -27,6 +27,10 @@
 
   require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/categories_specials.php');
 
+	if (is_file('includes/modules/products_attributes_iframe.php')) {
+		include_once("includes/modules/products_attributes_iframe.php");
+	} 
+
   define('CAT_VIEW_DROPDOWN', true); //remove dropdown field due to performance issues on many categories
   
   if (!defined('MAX_DISPLAY_LIST_PRODUCTS')) {
@@ -593,7 +597,11 @@
                  <td class="categories_view_data txta-l" style="padding-left: 8px;">
                    <?php
                    echo '<a href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding). '</a>';
-                   echo '<a href="'. xtc_href_link(FILENAME_NEW_ATTRIBUTES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_attr.gif', BUTTON_EDIT_ATTRIBUTES,'', '', $icon_padding). '</a>';
+                   if (function_exists('attributes_iframe_link')) {
+										 echo attributes_iframe_link($products['products_id'], true);
+									 } else {
+										 echo '<a href="'. xtc_href_link(FILENAME_NEW_ATTRIBUTES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_attr.gif', BUTTON_EDIT_ATTRIBUTES,'', '', $icon_padding). '</a>';
+									 }
                    echo '<a href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $products['products_id']) .'">' . $products['products_name'] . '</a>';
                    ?>
                  </td>
@@ -956,14 +964,15 @@
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid Black; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
-                                                 .xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+                                                 . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
+																								 xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
                                                  '<input type="hidden" name="action" value="edit">
                                                  <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                  <input type="hidden" name="cpath" value="' . $cPath . '">
-                                                 <input type="hidden" name="page" value="' . (int)$_GET['page'] . '">
+                                                 <input type="hidden" name="page" value="' . (int)$_GET['page'] . '"> 
                                                  <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_EDIT_ATTRIBUTES . '">
                                                  </form>'                                                 
-                                                 );
+                                                 ) );
                   $contents[] = array('align' => 'center', 
                                       'text' =>  xtc_draw_form('edit_crossselling', FILENAME_CATEGORIES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
                                                 '<input type="hidden" name="action" value="edit_crossselling">
