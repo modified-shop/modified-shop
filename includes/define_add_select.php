@@ -18,3 +18,7 @@
   
   // used in /includes/classes/product.php
   define('ADD_SELECT_PRODUCT', '');
+
+  // used in /includes/classes/shopping_cart.php
+  define('ADD_SELECT_CART', '');
+?>
