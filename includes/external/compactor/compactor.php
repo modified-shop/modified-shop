@@ -49,40 +49,41 @@
 		 * @access private
 		 * @var array
 		 */
-		private $_options 			= array(
+		private $_options = array(
 			// line_break; string; The type of line break used in the HTML that you are processing.
 			// ie, \r, \r\n, \n or PHP_EOL
-			'line_break' 						=> PHP_EOL,
+			'line_break' => PHP_EOL,
 			// preserved_tags; array; An array of html tags whose innerHTML contents format require preserving.
-			'preserved_tags'					=> array('textarea', 'pre', 'script', 'style', 'code'),
+			'preserved_tags' => array('textarea', 'pre', 'script', 'style', 'code'),
 			// preserved_boundry; string; The holding block that is used to replace the contents of the preserved tags
 			// while the compacting is taking place.
-			'preserved_boundry'					=> '@@PRESERVEDTAG@@',
+			'preserved_boundry' => '@@PRESERVEDTAG@@',
 			// strip_comments; boolean; This will strip html comments from the html. NOTE, if the below option 'keep_conditional_comments'
 			// is not set to true then conditional Internet Explorer comments will also be stripped.
-			'strip_comments' 					=> true,
+			'strip_comments' => true,
+			'strip_php_comments' => false,
 			// keep_conditional_comments; boolean; Only applies if the baove option 'strip_comments' is set to true.
 			// Only if the client browser is Internet Explorer then the conditional comments are kept.
-			'keep_conditional_comments'			=> true,
+			'keep_conditional_comments' => true,
 			// conditional_boundries; array; The holding block boudries that are used to replace the opening and
 			// closing tags of the conditional comments.
-			'conditional_boundries'				=> array('@@IECOND-OPEN@@', '@@IECOND-CLOSE@@'),
+			'conditional_boundries' => array('@@IECOND-OPEN@@', '@@IECOND-CLOSE@@'),
 			// compress_horizontal; boolean; Removes horizontal whitespace of the HTML, ie left to right whitespace (spaces and tabs).
-			'compress_horizontal'				=> true,
+			'compress_horizontal' => true,
 			// compress_vertical; boolean; Removes vertical whitespace of the HTML, ie line breaks.		
-			'compress_vertical'					=> true,
+			'compress_vertical' => true,
 			// compress_scripts; boolean; Compresses content from script tags using a simple algorythm. Removes javascript comments,
 			// and horizontal and vertical whitespace. Note as only a simple algorythm is used there are limitations to the script 
 			// and you may want to use a more complex script like 'minify' http://code.google.com/p/minify/ or 'jsmin'
 			// http://code.google.com/p/jsmin-php/ See test3.php for an example.
-			'compress_scripts'					=> false,
+			'compress_scripts' => false,
 			// script_compression_callback; boolean; The name of a callback for custom js compression. See test3.php for an example.	
-			'script_compression_callback' 		=> false,
+			'script_compression_callback' => false,
 			// script_compression_callback_args; array; Any additional args for the callback. The javascript will be put to the
 			// front of the array.
-			'script_compression_callback_args' 	=> array(),
+			'script_compression_callback_args' => array(),
 			// compress_css; boolean; Compresses CSS style tags.		
-			'compress_css'						=> true,
+			'compress_css' => true,
 		);
 		
 		/**
@@ -140,14 +141,18 @@
 		 */
 		public function squeeze($html=null)
 		{
-// 			unify the line breaks so we have clean html to work with
+      // unify the line breaks so we have clean html to work with
 			$html = $this->_unifyLineBreaks($html);
-// 			compress any script tags if required
+      // compress any script tags if required
 			if($this->_options['compress_scripts'] || $this->_options['compress_css'])
 			{
 				$html = $this->_compressScriptAndStyleTags($html);
 			}
-// 			make the compressions
+      // make the compressions
+			if($this->_options['strip_php_comments'])
+			{
+				$html = $this->_stripPHPComments($html);
+			}
 			if($this->_options['strip_comments'])
 			{
 				$html = $this->_stripHTMLComments($html);
@@ -160,7 +165,7 @@
 			{
 				$html = $this->_compressVertically($html);
 			}
-// 			replace the preserved blocks with their original content
+      // replace the preserved blocks with their original content
 			$html = $this->_reinstatePreservedBlocks($html);
 
 			return $html;
@@ -177,37 +182,41 @@
 		private function _stripHTMLComments($html)
 		{
 			$keep_conditionals = false;
-// 			only process if the Internet Explorer conditional statements are to be kept
+      // only process if the Internet Explorer conditional statements are to be kept
 			if($this->_options['keep_conditional_comments'])
 			{
-// 				check that the opening browser is internet explorer
+        // check that the opening browser is internet explorer
 				$msie = '/msie\s(.*).*(win)/i';
 			    $keep_conditionals = (isset($_SERVER['HTTP_USER_AGENT']) && preg_match($msie, $_SERVER['HTTP_USER_AGENT']));
-// 			    $keep_doctype = false;
-// 			    if(strpos($html, '<!DOCTYPE'))
-// 			    {
-// 					$html = str_replace('<!DOCTYPE', '--**@@DOCTYPE@@**--', $html);
-// 			   	 	$keep_doctype = true;
-// 			    }
-// 			    ie conditionals are to be kept so substitute
+          /*
+          $keep_doctype = false;
+          if(strpos($html, '<!DOCTYPE'))
+           {
+             $html = str_replace('<!DOCTYPE', '--**@@DOCTYPE@@**--', $html);
+             $keep_doctype = true;
+           }
+           */
+        // ie conditionals are to be kept so substitute
 				if($keep_conditionals)
 				{
 					$html = str_replace(array('<!--[if', '<![endif]-->'), $this->_options['conditional_boundries'], $html);
 				}
 			}			
-// 		    remove comments
-		    $html = preg_replace('/<!--(.|\s)*?-->/', '', $html);
-// 		    $html = preg_replace ('@<![\s\S]*?--[ \t\n\r]*>@', '', $html);
-// 		   	re sub-in the conditionals if required.
+      // remove comments
+		  $html = preg_replace('/<!--(.|\s)*?-->/', '', $html);
+      // $html = preg_replace ('@<![\s\S]*?--[ \t\n\r]*>@', '', $html);
+      // re sub-in the conditionals if required.
 			if($keep_conditionals)
 			{
 				$html = str_replace($this->_options['conditional_boundries'], array('<!--[if', '<![endif]-->'), $html);
 			}
-// 		    if($keep_doctype)
-// 		    {
-// 				$html = str_replace('--**@@DOCTYPE@@**--', '<!DOCTYPE', $html);
-// 		    }
-// 			return the buffer
+      /*
+      if($keep_doctype)
+      {
+      $html = str_replace('--**@@DOCTYPE@@**--', '<!DOCTYPE', $html);
+      }
+      */
+      // return the buffer
 			return $html;
 		}
 		
@@ -225,10 +234,10 @@
 				return $html;
 			}
  			$tag_string = implode('|', $this->_options['preserved_tags']);
-// 			get the textarea matches
+      // get the textarea matches
 			preg_match_all("!<(".$tag_string.")[^>]*>.*?</(".$tag_string.")>!is", $html, $preserved_area_match);
 			$this->_preserved_blocks = $preserved_area_match[0];
-// 			replace the textareas inerds with markers
+      // replace the textareas inerds with markers
 			return preg_replace("!<(".$tag_string.")[^>]*>.*?</(".$tag_string.")>!is", $this->_options['preserved_boundry'], $html);
 		}
 		
@@ -260,12 +269,12 @@
 		 * @param string $html
 		 * @return string
 		 */
-		private function _compressHorizontally($html)
+		public function _compressHorizontally($html)
 		{
 			$html = $this->_extractPreservedBlocks($html);
-// 			remove the white space
+      // remove the white space
 			$html = preg_replace('/((?<!\?>)'.$this->_options['line_break'].')[\s]+/m', '\1', $html);
-// 			Remove extra spaces
+      // Remove extra spaces
 			return preg_replace('/\t+/', '', $html);
 		}
 
@@ -281,7 +290,7 @@
 		private function _compressVertically($html)
 		{
 			$html = $this->_extractPreservedBlocks($html);
-// 			remove the line breaks
+      // remove the line breaks
 			return str_replace($this->_options['line_break'], '', $html);
 		}
 		
@@ -315,9 +324,9 @@
 			$compress_scripts = $this->_options['compress_scripts'];
 			$compress_css = $this->_options['compress_css'];
 			$use_script_callback = $this->_options['script_compression_callback'] != false;
-// 			pregmatch all the script tags
+      // pregmatch all the script tags
 			$scripts = preg_match_all("!(<(style|script)[^>]*>(?:\\s*<\\!--)?)(.*?)((?://-->\\s*)?</(style|script)>)!is", $html, $scriptparts);
-// 			collect and compress the parts
+      // collect and compress the parts
 			$compressed = array();
 			$parts = array();
 			for($i=0; $i<count($scriptparts[0]); $i++)
@@ -345,7 +354,7 @@
 					array_push($compressed, trim($scriptparts[1][$i]).$minified.trim($scriptparts[4][$i]));
 				}
 			}
-// 			do the replacements and return
+      // do the replacements and return
 			return str_replace($parts, $compressed, $html);
 		}
 		
@@ -361,17 +370,27 @@
 		 **/
 		private function _simpleCodeCompress($code)
 		{
-// 			Remove multiline comment
+      // Remove multiline comment
 			$code = preg_replace('/\/\*(?!-)[\x00-\xff]*?\*\//', '', $code);
-// 			Remove single line comment
-// 			$code = preg_replace('/[^:]\/\/.*/', '', $code);
+      // Remove single line comment
+      // $code = preg_replace('/[^:]\/\/.*/', '', $code);
 			$code = preg_replace('/\\/\\/[^\\n\\r]*[\\n\\r]/', '', $code);
 			$code = preg_replace('/\\/\\*[^*]*\\*+([^\\/][^*]*\\*+)*\\//', '', $code);
-// 			Remove extra spaces
+      // Remove extra spaces
 			$code = preg_replace('/\s+/', ' ', $code);
-// 			Remove spaces that can be removed
+      // Remove spaces that can be removed
 			return preg_replace('/\s?([\{\};\=\(\)\/\+\*-])\s?/', "\\1", $code);
 		}
-		
+
+		/**
+		 * Strips PHP Comments from the buffer 
+		 *
+		 * @access private
+		 * @param string $html The HTML string for comment removal.
+		 * @return string
+		 */
+    private function _stripPHPComments($html) {
+      return preg_replace('/\/\*.*?\*\//s', '', $html);
+    }
 	}
-?>	
+?>
