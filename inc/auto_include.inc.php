@@ -13,7 +13,7 @@
 function auto_include($dir, $ext='php') 
 {
     $auto_include_arr = array();
-		if ( count( glob("{$dir}/*.".$ext ) > 0 ) {
+		if ( count( glob("{$dir}/*.".$ext) ) > 0 ) {
 			foreach (glob("{$dir}/*.".$ext) as $filename) {
 					$auto_include_arr[] = $filename;
 			}
