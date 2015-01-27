@@ -78,7 +78,7 @@ if (!$action) {
             <td class="dataTableContent"><?php echo $content[$ii]['CONTENT_FILE']; ?></td>
             <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
             <td class="dataTableContent txta-c"><?php echo $file_flag_result['file_flag_name']; ?></td>
-            <td class="dataTableContent txta-c"><?php echo $content[$ii]['TEXT_CONTENT_META_ROBOTS']; ?>&nbsp;</td>
+            <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_META_ROBOTS']; ?>&nbsp;</td>
             <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_ACTIVE']; ?>&nbsp;</td>
             <td class="dataTableContent txta-r">
               <a href="">
