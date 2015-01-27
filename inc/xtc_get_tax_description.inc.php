@@ -16,6 +16,11 @@
    ---------------------------------------------------------------------------------------*/
    
   function xtc_get_tax_description($class_id, $country_id= -1, $zone_id= -1) {
+    
+    // VERSANDKOSTEN IM WARENKORB
+    if (isset($_SESSION['country'])) {
+      $country_id = $_SESSION['country'];
+    }
   	
   	if ( ($country_id == -1) && ($zone_id == -1) ) {
       if (!isset($_SESSION['customer_id'])) {
