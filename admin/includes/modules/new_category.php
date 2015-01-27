@@ -87,7 +87,7 @@
     echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); ?>
 
       <!-- BOF - Tomcraft - 2009-11-02 - Block1 //-->
-      <div style="padding:5px;">
+      <div style="padding:4px;">
       <table class="tableInput border0">
         <tr>
           <td class="main" style="width:204px;"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
@@ -135,7 +135,7 @@
       <?php
       if (GROUP_CHECK=='true') {
       ?>
-      <div style="padding:5px;">
+      <div style="padding:4px;">
         <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
         <div class="div_box">
           <div class="main flt-l" style="width:214px"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
@@ -160,7 +160,7 @@
       <!-- EOF Customers group block //-->
 
       <!-- BOF Block2 //-->
-      <div style="padding:5px;clear:both;">
+      <div style="padding:4px;clear:both;">
         <?php
         include('includes/lang_tabs.php');
         for ($i=0; $i<sizeof($languages); $i++) {
