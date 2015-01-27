@@ -17,8 +17,8 @@
    ---------------------------------------------------------------------------------------*/
 
 // todo: move to configuration ?
-define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
-define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false');
+defined('CATEGORIES_IMAGE_SHOW_NO_IMAGE') OR define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
+defined('MANUFACTURER_IMAGE_SHOW_NO_IMAGE') OR define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false');
 
 $module_smarty = new Smarty;
 $module_smarty->caching = false;
@@ -71,7 +71,7 @@ if ($listing_split->number_of_rows > 0) {
     $category = xtc_db_fetch_array($category_query, true);
     if ($category['categories_image'] != '') {
       $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-      if (!file_exists($image)) {
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
         if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
           $image = DIR_WS_IMAGES.'categories/noimage.gif';
         } else {
@@ -91,7 +91,7 @@ if ($listing_split->number_of_rows > 0) {
 
     if ($manu['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
-      if (!file_exists($image)) {
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
         if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
           $image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
         } else {

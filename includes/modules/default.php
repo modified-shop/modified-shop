@@ -23,9 +23,12 @@
   Released under the GNU General Public License
   ---------------------------------------------------------------------------------------*/
 
+// todo: move to configuration ?
+defined('CATEGORIES_IMAGE_SHOW_NO_IMAGE') OR define('CATEGORIES_IMAGE_SHOW_NO_IMAGE', 'true');
+
 $default_smarty = new smarty;
 $default_smarty->assign('tpl_path','templates/'.CURRENT_TEMPLATE.'/');
-$default_smarty->assign('session', session_id());
+$default_smarty->assign('session', xtc_session_id());
 
 // define defaults
 $main_content = '';
@@ -114,12 +117,17 @@ if ($category_depth == 'nested') {
       $image = '';
       if ($categories['categories_image'] != '') {
         $image = DIR_WS_IMAGES.'categories/'.$categories['categories_image'];
-        if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
-        $image = $image;
+        if (!file_exists(DIR_FS_CATALOG.$image)) {
+          if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
+            $image = DIR_WS_IMAGES.'categories/noimage.gif';
+          } else {
+            $image = '';
+          }
+        }
       }
       $categories_content[] = array ('CATEGORIES_NAME' => $categories['categories_name'],
                                      'CATEGORIES_HEADING_TITLE' => $categories['categories_heading_title'],
-                                     'CATEGORIES_IMAGE' => $image,
+                                     'CATEGORIES_IMAGE' => (($image != '') ? DIR_WS_BASE . $image : ''),
                                      'CATEGORIES_LINK' => xtc_href_link(FILENAME_DEFAULT, $cPath_new),
                                      'CATEGORIES_DESCRIPTION' => $categories['categories_description']);
     }
@@ -131,9 +139,15 @@ if ($category_depth == 'nested') {
   $image = '';
   if ($category['categories_image'] != '') {
     $image = DIR_WS_IMAGES.'categories/'.$category['categories_image'];
-    if(!file_exists($image)) $image = DIR_WS_IMAGES.'categories/noimage.gif';
-    $image = $image;
+    if (!file_exists(DIR_FS_CATALOG.$image)) {
+      if (CATEGORIES_IMAGE_SHOW_NO_IMAGE == 'true') {
+        $image = DIR_WS_IMAGES.'categories/noimage.gif';
+      } else {
+        $image = '';
+      }
+    }
   }
+
   // get default template
   if ($category['categories_template'] == '' || $category['categories_template'] == 'default') {
     $files = array ();
@@ -156,7 +170,7 @@ if ($category_depth == 'nested') {
   $default_smarty->assign('TD_WIDTH', $width);
   $default_smarty->assign('CATEGORIES_NAME', $category['categories_name']);
   $default_smarty->assign('CATEGORIES_HEADING_TITLE', $category['categories_heading_title']);
-  $default_smarty->assign('CATEGORIES_IMAGE', $image);
+  $default_smarty->assign('CATEGORIES_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
   $default_smarty->assign('CATEGORIES_DESCRIPTION', $category['categories_description']);
   $default_smarty->assign('language', $_SESSION['language']);
   $default_smarty->assign('module_content', $categories_content);
