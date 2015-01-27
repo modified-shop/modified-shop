@@ -51,6 +51,7 @@ if (defined('RUN_MODE_ADMIN')
         || strpos(basename($PHP_SELF), 'bill') !== false
         || strpos(basename($PHP_SELF), 'popup') !== false
         || strpos(basename($PHP_SELF), 'fck_wrapper') !== false
+        || strpos(basename($PHP_SELF), 'new_attributes') !== false
         )
     ) 
 {
