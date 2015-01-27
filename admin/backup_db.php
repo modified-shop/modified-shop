@@ -2,8 +2,9 @@
 /**************************************************************
 $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
 
-  * XTC Datenbank Manager Version 2.00
+  * XTC Datenbank Manager Version 2.00  UTF-8
   *(c) by  web28 - www.rpa-com.de
+  * Convert UTF-8
   * Backup pro Tabelle und limitierter Zeilenzahl (Neuladen der Seite) , einstellbar mit ANZAHL_ZEILEN_BKUP
   * Restore mit limitierter Zeilennanzahl aus SQL-Datei (Neuladen der Seite), einstellbar mit ANZAHL_ZEILEN
   * 2014-09-14 - jquery ajax handling
@@ -17,7 +18,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   define ('ANZAHL_ZEILEN_BKUP', 20000); //Anzahl der Zeilen die beim Backup pro Durchlauf maximal aus einer Tabelle  gelesen werden.
   define ('MAX_RELOADS', 600); //Anzahle der maximalen Seitenreloads beim Backup  - falls etwas nicht richtig funktioniert stoppt das Script nach 600 Seitenaufrufen
   //#################################
-  define ('VERSION', 'Database Backup Ver. 2.00');
+  define ('VERSION', 'Database Backup Ver. 2.00 UTF-8');
 
   require('includes/application_top.php');
   include ('includes/functions/db_restore.php');
@@ -80,6 +81,10 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   function WriteToDumpFile($data) {
     $df = $_SESSION['dump']['file'];
     if (isset($data) && $data!='') {
+      if (isset($_SESSION['dump']['utf8-convert']) && $_SESSION['dump']['utf8-convert'] == 'yes') {
+        $data = mb_convert_encoding($data, 'UTF-8', 'ISO-8859-15');
+        $data = mb_convert_encoding($data, 'UTF-8', 'HTML-ENTITIES');
+      }
       if ($_SESSION['dump']['compress']) {
         if ($data!='') {
           $fp=gzopen($df,'ab');
@@ -103,6 +108,14 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     $res = xtc_db_query('SHOW CREATE TABLE `'.$table.'`');
     $row = @xtc_db_fetch_row($res);
     $data .= $row[1].';'."\n\n";
+
+    if (isset($_SESSION['dump']['utf8-convert']) && $_SESSION['dump']['utf8-convert'] == 'yes') {
+      $check_utf8 = xtc_db_query("SHOW TABLE STATUS WHERE Name='".$table."'");
+      $utf8 = xtc_db_fetch_array($check_utf8);
+      if (strpos($utf8['Collation'], 'utf8') === false) {
+        $data .= "ALTER TABLE `$table` CONVERT TO CHARACTER SET utf8 COLLATE utf8_general_ci;\n\n";
+      }
+    }
     $data .= "/*!40000 ALTER TABLE `$table` DISABLE KEYS */;\n";
     //EOF NEW TABLE  STRUCTURE  - LIKE MYSQLDUMPER
 
@@ -119,7 +132,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
   function GetTableData($table) {
     global $dump;
     // Dump the data
-    if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) && ($table != TABLE_ADMIN_ACTIVITY_LOG) ) {
+    if ( ($table != TABLE_SESSIONS ) && ($table != TABLE_WHOS_ONLINE) ) {
 
       $table_list = array();
       $fields_query = xtc_db_query("SHOW COLUMNS FROM " . $table);
@@ -204,6 +217,19 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     $dump = array();
     unset($_SESSION['dump']);
     
+    if (!isset($dump['$check_utf8'])) {
+      $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
+      $utf8_array = xtc_db_fetch_array($utf8_query);
+      $check_utf8 = strpos($utf8_array['Collation'], 'utf8') === false ? false : true;
+    }
+    $charset = $check_utf8 ? 'utf8' : 'latin1';
+    if (function_exists('mysql_set_charset') == true) {
+			mysql_set_charset($charset);
+		} else {
+			xtc_db_query('set names '.$charset);
+		}
+
+    
     $dump['starttime'] = time();
 
     @xtc_set_time_limit(0);
@@ -215,8 +241,11 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     }
     //EOF Disable "STRICT" mode!
 
-    $mysql_version = '-- MySQL-Client-Version: ' . @xtc_db_get_client_info() . "\n--\n";
-    
+    if (function_exists('xtc_db_get_client_info')) {
+      $mysql_version = '-- MySQL-Client-Version: ' . xtc_db_get_client_info() . "\n--\n";
+    } else {
+      $mysql_verion = '';
+    }
     $schema = '-- Modified-Shop & compatible' . "\n" .
               '--' . "\n" .
               '-- ' . VERSION . ' (c) by web28 - www.rpa-com.de' . "\n" .
@@ -228,6 +257,9 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
               '--' . "\n" . $mysql_version .
               '-- Backup Date: ' . date(PHP_DATE_TIME_FORMAT) . "\n";
               
+    if (isset($_POST['utf8-convert']) && $_POST['utf8-convert'] == 'yes') {
+      $dump['utf8-convert']	= 'yes';
+    }
     $backup_file =  'dbd_' . DB_DATABASE . '-' . date('YmdHis');
     $dump['file'] = DIR_FS_BACKUP . $backup_file;
 

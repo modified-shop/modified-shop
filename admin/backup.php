@@ -50,12 +50,16 @@
   define('BK_FILENAME', 'backup_db.php'); //BACKUP
   define('RS_FILENAME', 'backup_restore.php'); //RESTORE
 
-  define ('VERSION', 'Database Backup/Restore Ver. 2.00');
+  define ('VERSION', 'Database Backup/Restore Ver. 2.00 UTF-8');
 
   require('includes/application_top.php');
 
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
+  $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
+  $utf8_array = xtc_db_fetch_array($utf8_query);
+  $check_utf8 = strpos($utf8_array['Collation'], 'utf8') === false ? false : true;
+  
   //Adminrechte automatisch für backup_db setzen
   $result = xtc_db_query("select * from ".TABLE_ADMIN_ACCESS."");
   if ($result_array = xtc_db_fetch_array($result)) {
@@ -207,66 +211,68 @@
                             }
                           }
                         }
-                        sort($contents);
-                        for ($files = 0, $count = sizeof($contents); $files < $count; $files++) {
-                          $entry = $contents[$files];
-                          $check = 0;
-                          if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
-                            $file_array['file'] = $entry;
-                            $file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry));
-                            $file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $entry)) . ' bytes';
-                            $file_array['table_list'] = array();
-                            $file_array['tables_row_count'] = 0;
-                            switch (substr($entry, -3)) {
-                              case 'zip': 
-                                $file_array['compression'] = 'ZIP'; 
-                                break;
-                              case '.gz': 
-                                $file_array['compression'] = 'GZIP';
-                                if ($fp = gzopen(DIR_FS_BACKUP . $entry, 'r')) {
-                                  while ( ! gzeof($fp) ) {
-                                    $line = gzgets($fp, 4096);
-                                    if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
-                                    if (substr($line, 0, 9) == "-- TABLE|") {
-                                      $table_info = explode('|',trim(substr($line, 9)));
-                                      $file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
-                                      $file_array['tables_row_count'] += $table_info[1];
-                                    }
-                                  }
-                                }                          
-                                break;
-                              default: 
-                                $file_array['compression'] = TEXT_NO_EXTENSION; 
-                                if ($fp = fopen(DIR_FS_BACKUP . $entry, 'r')) {
-                                  while ( ! feof($fp) ) {
-                                    $line = fgets($fp, 4096);
-                                    if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
-                                    if (substr($line, 0, 9) == "-- TABLE|") {
-                                      $table_info = explode('|',trim(substr($line, 9)));
-                                      $file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
-                                      $file_array['tables_row_count'] += $table_info[1];
-                                    }
-                                  }
-                                }
-                                break;
-                            }
-                            $file_array['table_list'] = !$file_array['table_list'] ? TEXT_INFO_NO_INFORMATION : $file_array['table_list'];
-                            $buInfo = new objectInfo($file_array);
-                          }
-                          if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
-                            echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'">' . "\n";
-                            $onclick_link = 'file=' . $buInfo->file . '&action=restore';
-                          } else {
-                            echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
-                            $onclick_link = 'file=' . $entry;
-                          }
-                          ?>
-                            <td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
-                            <td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
-                            <td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
-                            <td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
-                          </tr>
-                          <?php
+                        if (count($contents) > 0) {
+													sort($contents);
+													for ($files = 0, $count = sizeof($contents); $files < $count; $files++) {
+														$entry = $contents[$files];
+														$check = 0;
+														if ((!isset($_GET['file']) || ($_GET['file'] == $entry)) && !isset($buInfo) && ($action != 'backup') && ($action != 'restorelocal')) {
+															$file_array['file'] = $entry;
+															$file_array['date'] = date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry));
+															$file_array['size'] = number_format(filesize(DIR_FS_BACKUP . $entry)) . ' bytes';
+															$file_array['table_list'] = array();
+															$file_array['tables_row_count'] = 0;
+															switch (substr($entry, -3)) {
+																case 'zip': 
+																	$file_array['compression'] = 'ZIP'; 
+																	break;
+																case '.gz': 
+																	$file_array['compression'] = 'GZIP';
+																	if ($fp = gzopen(DIR_FS_BACKUP . $entry, 'r')) {
+																		while ( ! gzeof($fp) ) {
+																			$line = gzgets($fp, 4096);
+																			if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+																			if (substr($line, 0, 9) == "-- TABLE|") {
+																				$table_info = explode('|',trim(substr($line, 9)));
+																				$file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
+																				$file_array['tables_row_count'] += $table_info[1];
+																			}
+																		}
+																	}                          
+																	break;
+																default: 
+																	$file_array['compression'] = TEXT_NO_EXTENSION; 
+																	if ($fp = fopen(DIR_FS_BACKUP . $entry, 'r')) {
+																		while ( ! feof($fp) ) {
+																			$line = fgets($fp, 4096);
+																			if (substr($line, 0, 2) != "--") break; // backed up tables are in head of file
+																			if (substr($line, 0, 9) == "-- TABLE|") {
+																				$table_info = explode('|',trim(substr($line, 9)));
+																				$file_array['table_list'][]  = array('name' => $table_info[0] ,'rows' => $table_info[1]);
+																				$file_array['tables_row_count'] += $table_info[1];
+																			}
+																		}
+																	}
+																	break;
+															}
+															$file_array['table_list'] = !$file_array['table_list'] ? TEXT_INFO_NO_INFORMATION : $file_array['table_list'];
+															$buInfo = new objectInfo($file_array);
+														}
+														if (isset($buInfo) && is_object($buInfo) && ($entry == $buInfo->file)) {
+															echo '              <tr class="dataTableRowSelected" onmouseover="this.style.cursor=\'hand\'">' . "\n";
+															$onclick_link = 'file=' . $buInfo->file . '&action=restore';
+														} else {
+															echo '              <tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'hand\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
+															$onclick_link = 'file=' . $entry;
+														}
+														?>
+															<td class="dataTableContent" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'action=download&file=' . $entry) . '">' . xtc_image(DIR_WS_ICONS . 'file_download.gif', ICON_FILE_DOWNLOAD) . '</a>&nbsp;' . $entry; ?></td>
+															<td class="dataTableContent txta-c" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo date(PHP_DATE_TIME_FORMAT, filemtime(DIR_FS_BACKUP . $entry)); ?></td>
+															<td class="dataTableContent txta-r" onclick="document.location.href='<?php echo xtc_href_link(FILENAME_BACKUP, $onclick_link); ?>'"><?php echo number_format(filesize(DIR_FS_BACKUP . $entry)); ?> bytes</td>
+															<td class="dataTableContent txta-r" ><?php if ( (isset($buInfo) && is_object($buInfo)) && ($entry == $buInfo->file) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $entry) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
+														</tr>
+														<?php
+													}
                         }
                         $dir->close();
                       }
@@ -289,7 +295,10 @@
                 <?php
                   $heading = array();
                   $contents = array();
-                  $info_heading = '<b>Backup Dated: ' . $buInfo->date . ' '. ($buInfo->table_list != TEXT_INFO_NO_INFORMATION ? ' (' . count($buInfo->table_list) . ' tables)' : ''). '</b>';
+									$info_heading = '';
+									if (isset($buInfo) && is_object($buInfo)) {
+											$info_heading = '<b>Backup Dated: ' . $buInfo->date . ' '. ($buInfo->table_list != TEXT_INFO_NO_INFORMATION ? ' (' . count($buInfo->table_list) . ' tables)' : ''). '</b>';
+									}
                   switch ($action) {
                     case 'backup':
                       $heading[] = array('text' => '<b>' . TEXT_INFO_HEADING_NEW_BACKUP . '</b>');
@@ -304,6 +313,9 @@
                         }
                         $contents[] = array('text' => xtc_draw_radio_field('compress', 'no') . ' ' . TEXT_INFO_USE_NO_COMPRESSION);
                         $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('complete_inserts', 'yes', true) . ' ' . TEXT_COMPLETE_INSERTS);
+                        if (!$check_utf8) {
+                          $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_CONVERT_TO_UTF);
+                        }
                       }
                       $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_BACKUP . '"/>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP) . '">' . BUTTON_CANCEL . '</a>');
                       break;
@@ -311,6 +323,9 @@
                       $heading[] = array('text' => $info_heading);
                       //$heading[] = array('text' => '<b>' . $buInfo->date . '</b>');
                       $contents[] = array('text' => xtc_break_string(sprintf(TEXT_INFO_RESTORE, DIR_FS_BACKUP . (($buInfo->compression != TEXT_NO_EXTENSION) ? substr($buInfo->file, 0, strrpos($buInfo->file, '.')) : $buInfo->file), ($buInfo->compression != TEXT_NO_EXTENSION) ? TEXT_INFO_UNPACK : ''), 35, ' '));
+                      if (!$check_utf8) {
+                        $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('utf8-convert', 'yes', false) . ' ' . TEXT_IMPORT_UTF);
+                      }
                       $contents[] = array('align' => 'center', 'text' => '<br /><a class="button" onclick="this.blur();" href="' . xtc_href_link(RS_FILENAME, 'file=' . $buInfo->file . '&action=restorenow') . '">' . BUTTON_RESTORE . '</a>&nbsp;<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BACKUP, 'file=' . $buInfo->file) . '">' . BUTTON_CANCEL . '</a>');
                       break;
 
