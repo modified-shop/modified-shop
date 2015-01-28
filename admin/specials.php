@@ -208,15 +208,15 @@ require (DIR_WS_INCLUDES.'head.php');
           
           <table class="tableConfig">
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_PRODUCT; echo ($sInfo->products_name) ? "" :  ''; ?>&nbsp;</td>
-              <td class="dataTableConfig col-middle"><?php echo (isset($sInfo->products_name)) ? $sInfo->products_name . ' <small>(' . $xtPrice->xtcFormat($price,true). ')' . $price_netto .'</small>'.xtc_draw_hidden_field('products_id', $sInfo->products_id) : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_PRODUCT; ?></td>
+              <td class="dataTableConfig col-middle"><?php echo ((isset($sInfo->products_name)) ? $sInfo->products_name . '<br/><small>(' . $xtPrice->xtcFormat($price,true). ' )' . $price_netto .'</small>'.xtc_draw_hidden_field('products_id', $sInfo->products_id) : xtc_draw_products_pull_down('products_id', 'style="font-size:10px"', $specials_array)); echo xtc_draw_hidden_field('products_price', $sInfo->products_price); ?></td>
               <td class="dataTableConfig col-right">&nbsp;</td>
             </tr>
             <?php
             if ($form_action == 'update') {
             ?>
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?>:&nbsp;</td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_GLOBAL_PRODUCTS_MODEL; ?>:</td>
               <td class="dataTableConfig col-middle"><?php echo $sInfo->products_model;?></td>
               <td class="dataTableConfig col-right">&nbsp;</td>
             </tr>
@@ -224,22 +224,22 @@ require (DIR_WS_INCLUDES.'head.php');
             }
             ?>
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;</td>
-              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_price', $new_price).'&nbsp;&nbsp;&nbsp;' .$new_price_netto;?> </td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?></td>
+              <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_price', $new_price).'<br/>' .$new_price_netto;?></td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
             </tr>
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>&nbsp;</td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?></td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity);?> </td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_QUANTITY_TIP; ?></td>
             </tr>
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_START_DATE; ?>&nbsp;</td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_START_DATE; ?></td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart"'); ?></td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_START_DATE_TIP.SPECIALS_DATE_START_TT; ?>&nbsp;</td>
             </tr>
             <tr>
-              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
+              <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?></td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
               <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_EXPIRES_DATE_TIP.SPECIALS_DATE_END_TT; ?>&nbsp;</td>
             </tr>
