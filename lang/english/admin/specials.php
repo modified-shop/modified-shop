@@ -32,14 +32,13 @@ define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
 define('TEXT_SPECIALS_SPECIAL_QUANTITY', 'Quantity:');  
 define('TEXT_SPECIALS_START_DATE', 'Start Date: <small>(YYYY-MM-DD)</small>');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'Expiry Date: <small>(YYYY-MM-DD)</small>');
-define('TEXT_SPECIALS_PRICE_TIP', '<b>Specials Notes:</b><ul><li>You can enter a percentage to deduct in the Specials Price field, for example: <b>20%</b></li><li>If you enter a new price, the decimal separator must be a \'.\' (decimal-point), example: <b>49.99</b></li><li>Leave the expiry date empty for no expiration</li></ul><br>You can enter the item quantity in the field <strong>quantity</strong> for products the special price apply to. Remain the field empty, if you don\'t want to limit the quantity.');
 
 define('TEXT_INFO_DATE_ADDED', 'Date Added:');
 define('TEXT_INFO_LAST_MODIFIED', 'Last Modified:');
 define('TEXT_INFO_NEW_PRICE', 'New Price:');
 define('TEXT_INFO_ORIGINAL_PRICE', 'Original Price:');
 define('TEXT_INFO_PERCENTAGE', 'Percentage:');
-define('TEXT_INFO_EXPIRES_DATE', 'Start at:');
+define('TEXT_INFO_START_DATE', 'Start at:');
 define('TEXT_INFO_EXPIRES_DATE', 'Expires at:');
 define('TEXT_INFO_STATUS_CHANGE', 'Deactivated on:');
 
