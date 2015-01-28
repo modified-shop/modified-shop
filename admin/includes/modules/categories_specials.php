@@ -178,7 +178,7 @@ echo SPECIALS_TITLE;
     </tr>
     <tr>    
       <td class="main">
-        <label for="input_specials_status">&nbsp;<?php echo TEXT_EDIT_STATUS; ?></label>
+        <label for="input_specials_status"><?php echo TEXT_EDIT_STATUS; ?></label>
       </td>     
       <td class="main">
         <input type="checkbox" name="specials_status" value="1" id="input_specials_status"  style="vertical-align:middle;" <?php echo $status;?>/>
