@@ -109,7 +109,7 @@ if (!is_object($product) || !$product->isProduct()) {
       $tax_info = $main->getTaxInfo($xtPrice->TAX[$product->data['products_tax_class_id']]);
       $info_smarty->assign('PRODUCTS_TAX_INFO', $tax_info);
     }
-    $info_smarty->assign('PRODUCTS_SHIPPING_LINK', SHIPPING_EXCL.SHIPPING_COSTS);
+    $info_smarty->assign('PRODUCTS_SHIPPING_LINK', SHIPPING_EXCL.' '.SHIPPING_COSTS);
   }
 
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
@@ -168,9 +168,9 @@ if (!is_object($product) || !$product->isProduct()) {
                                   );
       }
     }
+    $info_smarty->assign('module_content', $module_content);
   }
-  $info_smarty->assign('module_content', $module_content);
-   
+  
   //canonical_link -> set canonical tag in /template/.../module/print_product_info.html
   $canonical_link = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'],$request_type,false);
   $info_smarty->assign('CanonicalLink', $canonical_link);
