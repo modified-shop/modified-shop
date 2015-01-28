@@ -75,7 +75,7 @@
                                 'status' => '1'
                                 );
                                 
-        if ($action == 'inset') {
+        if ($action == 'insert') {
           unset($sql_data_array['specials_last_modified']);
           xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
           $specials_id = xtc_db_insert_id();
