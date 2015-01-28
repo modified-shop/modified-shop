@@ -538,7 +538,7 @@ define('_SHIPPING_FREE','Versandkostenfrei');
 define('TEXT_CONTENT_NOT_FOUND', 'Diese Seite wurde nicht gefunden!');
 
 // error message for exceeded product quantity, noRiddle
-define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte Stückzahl i.H.v. ' .MAX_PRODUCTS_QTY. ' für <span style="font-style:italic;">"%s"</span>  wurde überschritten.<br />Die Stückzahl wurde automatisch auf die erlaubte Stückzahl reduziert.');
+define('MAX_PROD_QTY_EXCEEDED', 'Die maximal erlaubte St&uuml;ckzahl i.H.v. ' .MAX_PRODUCTS_QTY. ' f&uuml;r <span style="font-style:italic;">"%s"</span>  wurde &uuml;berschritten.<br />Die St&uuml;ckzahl wurde automatisch auf die erlaubte St&uuml;ckzahl reduziert.');
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Content bearbeiten');
 define('PRINTVIEW_INFO', 'Artikeldatenblatt drucken');
