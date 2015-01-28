@@ -121,10 +121,12 @@ echo SPECIALS_TITLE;
       <td class="main"><?php echo TEXT_SPECIALS_NO_PID; ?></td>             
     </tr>
     <?php } else { ?>
+    <?php /*
     <tr>
       <td class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
-      <td class="main"><?php echo $products_price_sp . $products_price_netto_sp; ?></td>
-    </tr>            
+      <td class="main"><?php echo $products_price_sp . '&nbsp;' . $products_price_netto_sp; ?></td>
+    </tr>
+    */ ?>        
     <tr>
       <td class="main" style="width:300px;">
         <?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>
