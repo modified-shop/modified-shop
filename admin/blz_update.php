@@ -80,13 +80,11 @@ require (DIR_WS_INCLUDES.'head.php');
                   $i = 0;
                   $estimated_lines = 20000;
                   $handle = @fopen($blz_file_local, "r");
-                  //$lines = @file($blz_file); //Download the file from URL bundesbank.de
                   if ($handle) {
                      while (!feof($handle)) {
                        $i++;
                        $percent = intval($i/$estimated_lines * 100)."%";
-                       //$lines[] = fgets($handle, 65535);
-                       $line = stream_get_line($handle, 65535, "\n"); //stream_get_line faster() than fgets() (PHP5+ only)
+                       $line = stream_get_line($handle, 65535, "\n");
                        $lines[]= $line;
                       // Javascript to update progress bar and information
                       echo '<script language="javascript">
@@ -157,13 +155,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   echo xtc_draw_form('blz_update', 'blz_update.php', '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
                   echo '<input type="hidden" name="action" value="do_blz">';
                   echo '<table style="empty-cells:collapse; background:#FCFCFC; border-collapse:collapse;">';
-                  //echo xtc_draw_textarea_field('blz_file','','120%','2',$blz_file_default_link);
                   echo xtc_draw_textarea_field('blz_file','','120%','2','');
-                  // check for allow_url_fopen directive - when disabled, function file() won't work
-                  if(!ini_get('allow_url_fopen')) {
-                    echo BLZ_PHP_FILE_ERROR_TEXT;
-                    $button_disabled = 'disabled'; // disable the Submit-Button
-                  }
                   echo '<tr style="text-align:right;">
                            <td colspan="2">
                              <input type="SUBMIT" class="button" value="'.BUTTON_UPDATE.'"'. $button_disabled .'>
