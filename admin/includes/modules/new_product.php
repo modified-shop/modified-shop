@@ -106,7 +106,7 @@
 <div class="div_box" style="width: 900px; margin:5px;">
       
       
-        <div style="float:left; width:58%; vertical-align:top">
+        <div style="float:left; width:57%; vertical-align:top">
           <table class="tableInput border0">
             <tr>
               <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
@@ -148,7 +148,7 @@
           </table>
         </div>
         
-        <div style="float:left;width:42%; vertical-align:top">
+        <div style="float:left;width:43%; vertical-align:top">
           <table class="tableInput border0">
             <tr>
               <td style="width:180px"><span class="main"><?php echo TEXT_PRODUCTS_QUANTITY; ?></span></td>
