@@ -60,7 +60,7 @@
   } else {
     $cat_id = $_GET['cID'];
   }
-    
+  
   $text_new_or_edit = ($_GET['action']=='new_category') ? TEXT_INFO_HEADING_NEW_CATEGORY : TEXT_INFO_HEADING_EDIT_CATEGORY;
 
   $order_array='';
@@ -82,7 +82,7 @@
                                  );
 
   $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
-  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); ?>
+  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit);
 ?>
 
   <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
@@ -101,7 +101,7 @@
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_EDIT_SORT_ORDER; ?></td>
-          <td class="main"><?php echo xtc_draw_input_field('sort_order', $cInfo->sort_order, 'style="width: 135px"'); ?></td>
+          <td class="main"><?php echo xtc_draw_input_field('sort_order', $cInfo->sort_order, 'style="width: 130px"'); ?></td>
         </tr>
       </table>
       <!-- EOF Category group block //-->

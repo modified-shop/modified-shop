@@ -232,4 +232,5 @@ define('TEXT_LINKS_COPY_INFO', 'Artikel-Verlinkungen mitkopieren<br/ >Nur bei Ei
 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
 
 define('TEXT_GRADUATED_PRICES_INFO', 'Die Anzahl der Eingabefelder f&uuml;r die Staffelpreise kann unter "<b>Konfiguration - Adminbereich Optionen - Anzahl Staffelpreise</b>" angepasst werden.');
+define('TEXT_CATEGORY_SETTINGS', 'Kategorie Einstellungen:');
 ?>
