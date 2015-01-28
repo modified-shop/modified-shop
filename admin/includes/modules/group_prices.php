@@ -44,7 +44,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
 <div class="main div_header"><?php echo HEADING_PRICES_OPTIONS. draw_tooltip(TEXT_GRADUATED_PRICES_INFO) ?></div>
 <table class="tableInput">
   <tr>
-    <td style="width:140px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
+    <td style="width:160px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
       <?php
       // calculate brutto price for display
       if (PRICE_IS_BRUTTO == 'true') {
@@ -53,8 +53,8 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
         $products_price = xtc_round($pInfo->products_price, PRICE_PRECISION);
       }
       ?>
-    <td class="main" style="width:160px;"><?php echo xtc_draw_input_field('products_price', $products_price); ?></td>
-    <td class="main" style="width:100px; white-space: nowrap;">
+    <td class="main" style="width:160px;"><?php echo xtc_draw_input_field('products_price', $products_price, 'style="width: 155px"'); ?></td>
+    <td class="main" style="width:120px; white-space: nowrap;">
       <?php
       if (PRICE_IS_BRUTTO == 'true') {
         echo TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($pInfo->products_price, false).'</strong>  ';
@@ -79,7 +79,7 @@ foreach($group_array as $group_data) {
       ?>
     <td style="border-top: 1px solid; border-color: #cccccc;" class="main">
       <?php
-        echo xtc_draw_input_field('products_price_'.$group_data['STATUS_ID'], $products_price);
+        echo xtc_draw_input_field('products_price_'.$group_data['STATUS_ID'], $products_price, 'style="width: 155px"');
       ?>
     </td>
     <td style="border-top: 1px solid; border-color: #cccccc; white-space: nowrap;" class="main">
@@ -126,7 +126,7 @@ foreach($group_array as $group_data) {
                   } else {
                     $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
                   }
-                  echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price);
+                  echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 155px"');
                   if (PRICE_IS_BRUTTO == 'true') {
                     echo '<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
                   }
@@ -147,7 +147,7 @@ foreach($group_array as $group_data) {
             ?>
             <tr>
               <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][quantity]', '', 'style="width:50px;"'); ?></td>            
-              <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][personal_offer]', ''); ?></td>
+              <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][personal_offer]', '', 'style="width: 155px"'); ?></td>
               <td class="main">&nbsp;</td>
             </tr>
             <?php
@@ -165,10 +165,10 @@ foreach($group_array as $group_data) {
   </tr>
   <tr>
     <td class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_ALLOWED; ?></td>
-    <td class="main" colspan="3"><?php echo xtc_draw_input_field('products_discount_allowed', $pInfo->products_discount_allowed); ?></td>
+    <td class="main" colspan="3"><?php echo xtc_draw_input_field('products_discount_allowed', $pInfo->products_discount_allowed, 'style="width: 155px"'); ?></td>
   </tr>
   <tr>
     <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS; ?></td>
-    <td class="main" colspan="3"><?php echo xtc_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'style="width: 140px"'); ?></td>
+    <td class="main" colspan="3"><?php echo xtc_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'style="width: 160px"'); ?></td>
   </tr>
 </table>
