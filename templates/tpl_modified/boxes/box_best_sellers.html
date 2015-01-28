@@ -10,7 +10,7 @@
     <div class="carousel_box">
       <a href="{$box_data.PRODUCTS_LINK}">
         <span class="cb_image">{if $box_data.PRODUCTS_IMAGE}<img src="{$box_data.PRODUCTS_IMAGE}" alt="" title="" />{/if}</span>
-        <span class="cb_title">{textformat wrap=18 wrap_cut=true}{$box_data.PRODUCTS_NAME}{/textformat}</span>
+        <span class="cb_title">{$box_data.PRODUCTS_NAME|mb_substr:"0":"18":"UTF-8"}</span>
       </a>
     </div>
   </li>
