@@ -81,8 +81,6 @@
   $shipping_statuses = xtc_get_shipping_status();
   $languages = xtc_get_languages();
 
-  $status = $pInfo->products_status == '0' ? false : true;
-
   $product_status_array = array(array('id'=>0,'text'=>TEXT_PRODUCT_NOT_AVAILABLE),
                                 array('id'=>1,'text'=>TEXT_PRODUCT_AVAILABLE)
                                );
@@ -110,7 +108,7 @@
           <table class="tableInput border0">
             <tr>
               <td style="width:260px"><span class="main"><?php echo TEXT_PRODUCTS_STATUS; ?></span></td>
-              <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_status', $product_status_array, $status, 'style="width: 160px"'); ?></span></td>
+              <td><span class="main"><?php echo xtc_draw_pull_down_menu('products_status', $product_status_array, $pInfo->products_status, 'style="width: 160px"'); ?></span></td>
             </tr>
             <tr>
               <td><span class="main"><?php echo TEXT_PRODUCTS_DATE_AVAILABLE; ?> <small><?php echo TEXT_PRODUCTS_DATE_FORMAT; ?></small></span></td>
