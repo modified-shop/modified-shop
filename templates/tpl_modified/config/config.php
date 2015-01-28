@@ -49,9 +49,10 @@
   }
   
   // check whats new
+  /*
   if (WHATSNEW_CATEGORIES === true) {
     require_once (DIR_FS_INC.'check_whatsnew.inc.php');
     define('WHATSNEW_EXISTS', check_whatsnew());
   }
-
+  */
 ?>

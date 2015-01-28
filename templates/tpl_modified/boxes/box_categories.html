@@ -12,9 +12,9 @@
         {/if}
       {/if}
       {if $smarty.const.WHATSNEW_CATEGORIES === true}
-        {if $smarty.const.WHATSNEW_EXISTS === true}
+        {*if $smarty.const.WHATSNEW_EXISTS === true*}
           <li class="level1{if strstr($smarty.server.PHP_SELF, $smarty.const.FILENAME_PRODUCTS_NEW)} active1{/if}"><a href="{$smarty.const.FILENAME_PRODUCTS_NEW|xtc_href_link}">{#heading_whatsnew#}</a></li>
-        {/if}
+        {*/if*}
       {/if}
     </ul>
   </div>
