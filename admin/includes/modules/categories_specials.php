@@ -184,7 +184,7 @@ function saveSpecialsData($products_id) {
                             'specials_last_modified' => 'now()',
                             'start_date' => $start_date,
                             'expires_date' => $expires_date,
-                            'status' => ((!isset($_POST['specials_status'])) ? (int)$_POST['specials_status'] : '1')
+                            'status' => ((isset($_POST['specials_status'])) ? (int)$_POST['specials_status'] : '1')
                             );
     
     if ($_POST['specials_action'] == 'insert') {
