@@ -237,7 +237,7 @@ define('TEXT_REVIEW_WORD_COUNT', '%s Worte');
 define('TEXT_REVIEW_RATING', 'Bewertung: %s [%s]');
 define('TEXT_REVIEW_DATE_ADDED', 'Hinzugef&uuml;gt am: %s');
 define('TEXT_NO_REVIEWS', 'Es liegen noch keine Bewertungen vor.');
-define('TEXT_NO_NEW_PRODUCTS', 'Keine neuen Artikel in den letzten '.MAX_DISPLAY_NEW_PRODUCTS_DAYS.' Tagen erschienen. Stattdessen sehen Sie hier die 10 zuletzt erschienenen Artikel.'); // Hetfield - 2009-08-11 - changed text for new products_new function
+define('TEXT_NO_NEW_PRODUCTS', 'Keine neuen Artikel in den letzten '.MAX_DISPLAY_NEW_PRODUCTS_DAYS.' Tagen erschienen. Stattdessen sehen Sie hier die zuletzt erschienenen Artikel.');
 define('TEXT_UNKNOWN_TAX_RATE', 'Unbekannter Steuersatz');
 
 /*
