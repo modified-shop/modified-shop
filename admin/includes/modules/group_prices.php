@@ -54,7 +54,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
       }
       ?>
     <td class="main" style="width:160px;"><?php echo xtc_draw_input_field('products_price', $products_price); ?></td>
-    <td class="main" style="width:100px; white-space: nowrap;" colspan="2">
+    <td class="main" style="width:100px; white-space: nowrap;">
       <?php
       if (PRICE_IS_BRUTTO == 'true') {
         echo TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($pInfo->products_price, false).'</strong>  ';
@@ -63,6 +63,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
       }
       ?>
     </td>
+    <td class="main"><?php require_once("includes/modules/categories_specials.php"); ?></td>
   </tr>
 <?php
 foreach($group_array as $group_data) {

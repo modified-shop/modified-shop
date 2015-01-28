@@ -207,24 +207,15 @@
         </tr>
       </table>
       
-      <?php //autoload new product addons 
+      <?php 
+      //autoload new product addons 
       require_once(DIR_FS_INC.'auto_include.inc.php');
       foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_product/','php') as $file) require ($file);
-      ?>
-
-      <?php
-      if (file_exists("includes/modules/categories_specials.php")) {
-        require_once("includes/modules/categories_specials.php");
-        showSpecialsBox();
-      ?>
-      <div class="main" style="float:left;">
-        <div id="butSpecial">&nbsp;</div>
-      </div>
-      <script type="text/javascript">
-        document.getElementById('butSpecial').innerHTML= '<a href="JavaScript:showSpecial()" class="button">Sonderangebot &raquo;</a>';
-      </script>
-      <?php } ?>
       
+      //Price options
+      include(DIR_WS_MODULES.'group_prices.php');
+      ?>
+            
       <div class="main" style="padding-bottom:5px;margin-bottom:10px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         &nbsp;&nbsp;
@@ -330,9 +321,6 @@
           </div>
           <?php
         }
-
-        //Price options
-        include(DIR_WS_MODULES.'group_prices.php');
         ?>
         
         <!-- BOF Save //-->
