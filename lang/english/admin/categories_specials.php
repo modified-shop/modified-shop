@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('SPECIALS_TITLE', 'Special');
+define('SPECIALS_TITLE', 'Create/edit Special');
 
 define('TEXT_SPECIALS_PRODUCT', 'Product:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Special Price:');
@@ -36,4 +36,5 @@ define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Delete Special');
 define('TEXT_INFO_DELETE_INTRO', 'Are you sure you want to delete the special products price?');
 
 define ('TEXT_SPECIALS_NO_PID', 'The item must first be stored, otherwise the discount can not be applied correctly');
+
 ?>
