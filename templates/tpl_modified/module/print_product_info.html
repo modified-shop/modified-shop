@@ -49,12 +49,10 @@
   {/if}
   </div>
   <div class="printColumsInfoRight">
-    {if $PRODUCTS_IMAGE != ''}
-      <img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
-      {foreach item=more_images_data from=$more_images}
-        <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
-      {/foreach}
-    {/if}
+    <img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
+    {foreach item=more_images_data from=$more_images}
+      <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
+    {/foreach}
   </div>
 
 </div>
