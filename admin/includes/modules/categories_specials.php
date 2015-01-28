@@ -130,7 +130,7 @@ echo SPECIALS_TITLE;
         <?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>
       </td>
       <td class="main" style="width:250px;">
-        <?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"'). '&nbsp;' . $new_price_netto . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_PRICE_TT);?>
+        <?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_PRICE_TT) . (($new_price_netto != '') ? '<br/>'.$new_price_netto : '');?>
       </td>
     </tr>
     <tr>
