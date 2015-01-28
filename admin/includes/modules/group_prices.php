@@ -162,11 +162,8 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
   }
   ?>
     <tr>
-      <td style="border-top: 1px solid; border-color: #cccccc;" colspan="4"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-    </tr>
-    <tr>
-      <td class="main"><?php echo TEXT_PRODUCTS_DISCOUNT_ALLOWED; ?></td>
-      <td class="main" colspan="3"><?php echo xtc_draw_input_field('products_discount_allowed', $pInfo->products_discount_allowed, 'style="width: 155px"'); ?></td>
+      <td class="main" style="border-top: 1px solid #cccccc;"><?php echo TEXT_PRODUCTS_DISCOUNT_ALLOWED; ?></td>
+      <td class="main" colspan="3" style="border-top: 1px solid #cccccc;"><?php echo xtc_draw_input_field('products_discount_allowed', $pInfo->products_discount_allowed, 'style="width: 155px"'); ?></td>
     </tr>
     <tr>
       <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS; ?></td>
