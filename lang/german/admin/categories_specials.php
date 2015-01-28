@@ -15,14 +15,13 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('SPECIALS_TITLE', 'Sonderangebot erstellen/bearbeiten');
+define('SPECIALS_TITLE', 'Sonderangebot ');
 
 define('TEXT_SPECIALS_PRODUCT', 'Artikel:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Angebotspreis:');
 define('TEXT_SPECIALS_SPECIAL_QUANTITY', 'Anzahl:');
 define('TEXT_SPECIALS_START_DATE', 'G&uuml;ltig ab: <small>(JJJJ-MM-TT)</small>');
 define('TEXT_SPECIALS_EXPIRES_DATE', 'G&uuml;ltig bis: <small>(JJJJ-MM-TT)</small>');
-define('TEXT_SPECIALS_PRICE_TIP', '<strong>Bemerkung:</strong><br>Sie k&ouml;nnen im Feld Angebotspreis auch prozentuale Werte angeben, z.B.: <strong>20%</strong><br>Wenn Sie einen neuen Preis eingeben, m&uuml;ssen die Nachkommastellen mit einem \'.\' getrennt werden, z.B.: <strong>49.99</strong><br>Lassen Sie das Feld <strong>\'G&uuml;ltig bis\'</strong> leer, wenn der Angebotspreis zeitlich unbegrenzt gelten soll.<br>Im Feld <strong>Anzahl</strong> k&ouml;nnen Sie die St&uuml;ckzahl eingeben, f&uuml;r die das Angebot gelten soll. Lassen Sie das Feld leer, wenn Sie die Anzahl nicht begrenzen wollen.');
 
 define('TEXT_INFO_DATE_ADDED', 'hinzugef&uuml;gt am:');
 define('TEXT_INFO_LAST_MODIFIED', 'letzte &Auml;nderung:');
@@ -37,4 +36,8 @@ define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie das Sonderangebot l&
 
 define('TEXT_SPECIALS_NO_PID', 'Der Artikel muss zuerst gespeichert werden, ansonsten kann das Sonderangebot nicht korrekt angelegt werden!');
 
+define('TEXT_CATSPECIALS_START_DATE_TT', '<br>Geben Sie das Datum an, ab wann der Angebotspreis gelten soll.<br>');
+define('TEXT_CATSPECIALS_EXPIRES_DATE_TT', '<br>Lassen Sie das Feld <strong>G&uuml;ltig bis</strong> leer, wenn der Angebotspreis zeitlich unbegrenzt gelten soll.<br>');
+define('TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT', 'Im Feld <strong>Anzahl</strong> k&ouml;nnen Sie die St&uuml;ckzahl eingeben, f&uuml;r die das Angebot gelten soll.<br>Lassen Sie das Feld <strong>Anzahl</strong> leer, wenn Sie die Anzahl nicht begrenzen wollen.');
+define('TEXT_CATSPECIALS_SPECIAL_PRICE_TT', 'Sie k&ouml;nnen im Feld Angebotspreis auch prozentuale Werte angeben, z.B.: <strong>20%</strong><br>Wenn Sie einen neuen Preis eingeben, m&uuml;ssen die Nachkommastellen mit einem \'.\' getrennt werden, z.B.: <strong>49.99</strong>');
 ?>
