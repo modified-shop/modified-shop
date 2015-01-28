@@ -74,45 +74,44 @@
                      array('id' => 'p.products_quantity','text'=>TXT_QTY));
   $default_value='pd.products_name';
   $order_array_desc='';
-  $order_array_desc =array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
-                          array('id' => 'DESC','text'=>TEXT_SORT_DESC));
+  $order_array_desc = array(array('id' => 'ASC','text'=>TEXT_SORT_ASC),
+                            array('id' => 'DESC','text'=>TEXT_SORT_DESC));
+
+  $category_status_array = array(array('id' => '0','text'=>TEXT_PRODUCT_NOT_AVAILABLE),
+                                 array('id' => '1','text'=>TEXT_PRODUCT_AVAILABLE)
+                                 );
+
+  $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
+  echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); ?>
 ?>
 
-    <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
-
-    <div class="div_box" style="width: 900px; margin:5px;">
-  
-    <?php
-    $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
-    echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); ?>
-
-      <!-- BOF - Tomcraft - 2009-11-02 - Block1 //-->
-      <div style="padding:4px;">
+  <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
+  <div class="div_box mrg5" style="width:900px;">
+    <!-- BOF Category group block //-->
+    <div class="main div_header"><?php echo TEXT_CATEGORY_SETTINGS; ?></div>
+    <div class="div_box">
       <table class="tableInput border0">
         <tr>
-          <td class="main" style="width:204px;"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-          <td class="main"><?php echo xtc_draw_file_field('categories_image') . '<br />' . xtc_draw_separator('pixel_trans.gif', '24', '15') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?>
-            <?php
-            if ($cInfo->categories_image) {
-              ?>
-              <br />
-              <img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" style="max-width:200px; max-height:200px">
-              <br /><?php echo '&nbsp;' .$cInfo->categories_image;
-              echo xtc_draw_selection_field('del_cat_pic', 'checkbox', 'yes').TEXT_DELETE;
-            } ?>
-          </td>
-        </tr>
-        <tr>
-          <td class="main"><?php echo TEXT_EDIT_STATUS; ?>:</td>
-          <td class="main"><?php echo xtc_draw_selection_field('status', 'checkbox', '1',$cInfo->categories_status==1 ? true : false); ?></td>
+          <td class="main" style="width:260px"><?php echo TEXT_EDIT_STATUS; ?>:</td>
+          <td class="main"><?php echo xtc_draw_pull_down_menu('status', $category_status_array, (($cInfo->categories_status == '0') ? false : true), 'style="width: 135px"'); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_EDIT_PRODUCT_SORT_ORDER; ?>:</td>
-          <td class="main"><?php echo xtc_draw_pull_down_menu('products_sorting',$order_array,((xtc_not_null($cInfo->products_sorting))?$cInfo->products_sorting:$default_value), 'style="width: 130px"'); ?>&nbsp;<?php echo xtc_draw_pull_down_menu('products_sorting2',$order_array_desc,$cInfo->products_sorting2); ?></td>
+          <td class="main"><?php echo xtc_draw_pull_down_menu('products_sorting',$order_array,((xtc_not_null($cInfo->products_sorting))?$cInfo->products_sorting:$default_value), 'style="width: 135px"'); ?>&nbsp;<?php echo xtc_draw_pull_down_menu('products_sorting2',$order_array_desc,$cInfo->products_sorting2); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_EDIT_SORT_ORDER; ?></td>
-          <td class="main"><?php echo xtc_draw_input_field('sort_order', $cInfo->sort_order, 'style="width: 130px"'); ?></td>
+          <td class="main"><?php echo xtc_draw_input_field('sort_order', $cInfo->sort_order, 'style="width: 135px"'); ?></td>
+        </tr>
+      </table>
+      <!-- EOF Category group block //-->
+
+      <!-- BOF Category template group block //-->
+      <div style="clear:both;"></div>
+      <table class="tableInput border0">
+        <tr>
+          <td class="main" style="width:260px">&nbsp;</td>
+          <td class="main">&nbsp;</td>
         </tr>
         <tr>
           <td><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE_LISTING; ?>:</span></td>
@@ -122,51 +121,66 @@
           <td><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE; ?>:</span></td>
           <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('categories_template','/module/categorie_listing/',$cInfo->categories_template, 'style="width: 200px"');?></span></td>
         </tr>
+       <tr>
+          <td class="main">&nbsp;</td>
+          <td class="main">&nbsp;</td>
+        </tr>
       </table>
-      </div>
-      <!-- EOF Block1 //-->
+      <!-- EOF Category template group block //-->
+    </div>
 
-      <?php //autoload new_category addons 
-      require_once(DIR_FS_INC.'auto_include.inc.php');
-      foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_category/','php') as $file) require ($file);
-      ?>
+    <!-- BOF Autoload new_category addons block //-->
+    <div style="clear:both;"></div>
+    <?php //autoload new_category addons 
+    require_once(DIR_FS_INC.'auto_include.inc.php');
+    foreach(auto_include(DIR_FS_ADMIN.'includes/extra/modules/new_category/','php') as $file) require ($file);
+    ?>
+    <!-- EOF Autoload new_category addons block //-->
 
-      <!-- BOF Customers group block //-->
+    <!-- BOF Customers group block //-->
+    <div style="clear:both;"></div>
+    <?php if (GROUP_CHECK=='true') {?>
+    <div style="padding:4px;">
+      <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
+      <div class="div_box">
+        <div class="main flt-l" style="width:214px"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
+        <div class="main customers-groups">
+          <?php
+          echo $catfunc->create_permission_checkboxes($category);
+          ?>
+        </div>
+        <div style="clear:both;padding:5px;"></div>
+        <div class="main flt-l" style="width:214px">&nbsp;</div>
+        <div class="main">
+          <?php          
+          echo xtc_draw_selection_field('set_groups_permissions', 'checkbox', '1', false). ' ' . TEXT_SET_GROUP_PERMISSIONS;
+          ?>           
+        </div>
+        <div style="clear:both"></div>            
+      </div>      
+    </div>
+    <?php } ?>
+    <!-- EOF Customers group block //-->
+
+    <!-- BOF Save block #1 //-->
+    <div style="clear:both;"></div>
+    <div class="txta-r mrg5">
+      <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
+      <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
+      <input type="submit" class="button" name="update_category" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
+      <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
+    </div>
+    <!-- EOF Save block #1 //-->
+
+    <!-- BOF Categories description block //-->
+    <div style="clear:both;"></div>
+    <div class="pdg2">
       <?php
-      if (GROUP_CHECK=='true') {
-      ?>
-      <div style="padding:4px;">
-        <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
-        <div class="div_box">
-          <div class="main flt-l" style="width:214px"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
-          <div class="main customers-groups">
-            <?php
-            echo $catfunc->create_permission_checkboxes($category);
-            ?>
-          </div>
-          <div style="clear:both;padding:5px;"></div>
-          <div class="main flt-l" style="width:214px">&nbsp;</div>
-          <div class="main">
-            <?php          
-            echo xtc_draw_selection_field('set_groups_permissions', 'checkbox', '1', false). ' ' . TEXT_SET_GROUP_PERMISSIONS;
-            ?>           
-          </div>
-          <div style="clear:both"></div>            
-        </div>      
-      </div>
-      <?php
-      }
-      ?>
-      <!-- EOF Customers group block //-->
-
-      <!-- BOF Block2 //-->
-      <div style="padding:4px;clear:both;">
-        <?php
-        include('includes/lang_tabs.php');
-        for ($i=0; $i<sizeof($languages); $i++) {
-          echo ('<div id="tab_lang_' . $i . '">');
-          $lng_image = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'</div>';
-          $categories_desc_fields = $catfunc->get_categories_desc_fields($cInfo->categories_id, $languages[$i]['id']);
+      include('includes/lang_tabs.php');
+      for ($i=0; $i<sizeof($languages); $i++) {
+        echo ('<div id="tab_lang_' . $i . '">');
+        $lng_image = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'</div>';
+        $categories_desc_fields = $catfunc->get_categories_desc_fields($cInfo->categories_id, $languages[$i]['id']);
         ?>
         <table class="tableInput border0">
           <tr>
@@ -197,16 +211,47 @@
             <td class="main"><?php echo xtc_draw_input_field('categories_meta_keywords[' . $languages[$i]['id'] . ']',(isset($categories_meta_keywords[$languages[$i]['id']]) ? stripslashes($categories_meta_keywords[$languages[$i]['id']]) : $categories_desc_fields['categories_meta_keywords']),'style="width:99%" maxlength="180"'); ?></td>
           </tr>
         </table>
-        <?php echo ('</div>');?>
-        <?php } ?>
       </div>
-      <!-- EOF Block2 //-->
-      <div style="clear:both;"></div>
-      <div class="txta-r pdg2 mrg5">
-        <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
-        <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
-        <input type="submit" class="button" name="update_category" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
-         <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
-      </div>
-    </form>
+      <?php } ?>
+    </div>
+    <!-- EOF Categories description block //-->
+
+    <!-- BOF Categorie images block //-->
+    <div style="clear:both;"></div>
+    <div class="main div_header"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></div>
+      <?php
+        echo '<div class="div_box">';
+        // display images fields:  
+        $rowspan = ' rowspan="'. 3 .'"';
+        ?>
+        <table class="tableConfig borderall">
+          <tr>
+            <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
+            <td class="dataTableConfig col-middle"><?php echo '&nbsp;' .$cInfo->categories_image; ?></td>
+            <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" style="max-width:200px; max-height:200px"><?php } ?></td>
+          </tr>
+          <tr>
+            <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
+            <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?></td>
+          </tr>
+          <tr>
+            <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
+            <td class="dataTableConfig col-middle"><?php echo xtc_draw_selection_field('del_cat_pic', 'checkbox', 'yes'); ?></td>
+          </tr>
+        </table>
+        <?php
+        echo '</div>';
+      ?>
+    <!-- EOF Categorie images block //-->
+
+    <!-- BOF Save block #2 //-->
+    <div style="clear:both;"></div>
+    <div class="txta-r mrg5">
+      <?php echo xtc_draw_hidden_field('categories_date_added', (($cInfo->date_added) ? $cInfo->date_added : date('Y-m-d'))) . xtc_draw_hidden_field('parent_id', $cInfo->parent_id); ?>
+      <?php echo xtc_draw_hidden_field('categories_id', $cInfo->categories_id); ?>
+      <input type="submit" class="button" name="update_category" value="<?php echo BUTTON_SAVE; ?>" style="cursor:pointer" <?php echo $confirm_save_entry;?>>&nbsp;&nbsp;
+      <a class="button" onclick="this.blur()" href="<?php echo xtc_href_link(FILENAME_CATEGORIES, 'cPath=' . $cPath . ((isset($_GET['action']) && $_GET['action']=='edit_category') ? '&cID=' . (int)$_GET['cID'] : '') . ((isset($_GET['page']) && $_GET['page']>'1') ? '&page=' . (int)$_GET['page'] : '')); ?>"><?php echo BUTTON_CANCEL ; ?></a>
+    </div>
+    <!-- EOF Save block #2 //-->
   </div>
+</form>
