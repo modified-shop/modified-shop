@@ -49,7 +49,7 @@ if (!is_object($product) || !$product->isProduct()) {
                                         FROM " . TABLE_MANUFACTURERS . " m
                                    LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi
                                           ON (m.manufacturers_id = mi.manufacturers_id
-                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "'),
+                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
                                         JOIN " . TABLE_PRODUCTS . " p
                                              ON p.manufacturers_id = m.manufacturers_id
                                        WHERE p.products_id = '" . $product->data['products_id'] . "'");
