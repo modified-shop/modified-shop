@@ -111,12 +111,10 @@ if (isset($sInfo->specials_quantity)
     $arrow = 'arrow_down_green.gif';
   }
 }
+echo SPECIALS_TITLE;
 ?>
 <img onMouseOver="javascript:this.style.cursor='pointer';" src="images/<?php echo $arrow; ?>" height="16" width="16" onclick="javascript:toggleBox('special');" style="vertical-align: middle;">
 <div id="special" class="longDescription">
-  <div class="main" style="padding: 8px 0px 3px 5px;">      
-    <strong><?php echo SPECIALS_TITLE; ?></strong>          
-  </div>
   <table class="tableInput">
     <?php if(!isset($_GET['pID'])) { ?>
     <tr>

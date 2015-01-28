@@ -15,7 +15,7 @@
    Released under the GNU General Public License 
    --------------------------------------------------------------*/
 
-define('SPECIALS_TITLE', 'Sonderangebot erstellen/bearbeiten');
+define('SPECIALS_TITLE', 'Sonderangebot');
 
 define('TEXT_SPECIALS_PRODUCT', 'Artikel:');
 define('TEXT_SPECIALS_SPECIAL_PRICE', 'Angebotspreis:');
@@ -36,5 +36,4 @@ define('TEXT_INFO_HEADING_DELETE_SPECIALS', 'Sonderangebot l&ouml;schen');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie das Sonderangebot l&ouml;schen m&ouml;chten?');
 
 define('TEXT_SPECIALS_NO_PID', 'Der Artikel muss zuerst gespeichert werden, ansonsten kann das Sonderangebot nicht korrekt angelegt werden!');
-
 ?>
