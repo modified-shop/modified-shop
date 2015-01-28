@@ -169,6 +169,6 @@ foreach($group_array as $group_data) {
   </tr>
   <tr>
     <td class="main"><?php echo TEXT_PRODUCTS_TAX_CLASS; ?></td>
-    <td class="main" colspan="3"><?php echo xtc_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id); ?></td>
+    <td class="main" colspan="3"><?php echo xtc_draw_pull_down_menu('products_tax_class_id', $tax_class_array, $pInfo->products_tax_class_id, 'style="width: 140px"'); ?></td>
   </tr>
 </table>
