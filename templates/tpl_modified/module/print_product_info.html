@@ -52,9 +52,7 @@
     {if $PRODUCTS_IMAGE != ''}
       <img src="{$PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
       {foreach item=more_images_data from=$more_images}
-        {if $more_images_data.PRODUCTS_IMAGE != 'images/product_images/thumbnail_images/noimage.gif'}         
         <img src="{$more_images_data.PRODUCTS_IMAGE}" alt="{$module_data.NAME|onlytext}" border="0" />
-        {/if}
       {/foreach}
     {/if}
   </div>
