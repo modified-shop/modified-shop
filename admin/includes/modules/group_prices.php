@@ -126,9 +126,9 @@ foreach($group_array as $group_data) {
                   } else {
                     $products_price = xtc_round($staffel_values['personal_offer'], PRICE_PRECISION);
                   }
-                  echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 155px"');
+                  echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][personal_offer]', $products_price, 'style="width: 135px"');
                   if (PRICE_IS_BRUTTO == 'true') {
-                    echo '<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
+                    echo '&nbsp;<span style="white-space: nowrap;">'.TEXT_NETTO.'<strong>'.$xtPrice->xtcFormat($staffel_values['personal_offer'], false).'</strong></span>';
                   }
                   echo xtc_draw_hidden_field('products_staffel['.$group_data['STATUS_ID'].']['.$count.'][price_id]', $staffel_values['price_id']);
                   ?>
@@ -147,7 +147,7 @@ foreach($group_array as $group_data) {
             ?>
             <tr>
               <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][quantity]', '', 'style="width:50px;"'); ?></td>            
-              <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][personal_offer]', '', 'style="width: 155px"'); ?></td>
+              <td class="main"><?php echo xtc_draw_input_field('products_staffel['.$group_data['STATUS_ID'].']['.$is.'][personal_offer]', '', 'style="width: 135px"'); ?></td>
               <td class="main">&nbsp;</td>
             </tr>
             <?php
