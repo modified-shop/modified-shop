@@ -216,7 +216,7 @@
       include(DIR_WS_MODULES.'group_prices.php');
       ?>
             
-      <div class="main" style="margin:20px 0;float:right;">
+      <div class="main" style="margin:20px 5px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         &nbsp;&nbsp;
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
