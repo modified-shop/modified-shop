@@ -41,9 +41,9 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
                            'STATUS_ID' => $group_values['customers_status_id']);
 }
 ?>
-<div class="main div_header"><?php echo HEADING_PRICES_OPTIONS. draw_tooltip(TEXT_GRADUATED_PRICES_INFO) ?></div>
-<div class="div_box">
-  <table class="tableInput border0">
+<div style="padding:5px;">
+  <div class="main div_header"><?php echo HEADING_PRICES_OPTIONS. draw_tooltip(TEXT_GRADUATED_PRICES_INFO) ?></div>
+  <table class="tableInput">
     <tr>
       <td style="width:160px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
         <?php
