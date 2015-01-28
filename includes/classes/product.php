@@ -474,8 +474,10 @@ class product {
       }
     } else {
       if (!is_file($path.$name)) {
-        if ($this->standardImage != '' && is_file($path.$this->standardImage)) {
+        if ($this->useStandardImage == 'true' && $this->standardImage != '' && is_file($path.$this->standardImage)) {
           return $path.$this->standardImage;
+        } else {
+          return;
         }
       }
       return $path.$name;

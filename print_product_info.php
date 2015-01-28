@@ -179,7 +179,9 @@ if (!is_object($product) || !$product->isProduct()) {
     $more_images_data = array();
     foreach ($mo_images as $img) {
       $mo_img = $product->productImage($img['image_name'], 'thumbnail');
-      $more_images_data[] = array ('PRODUCTS_IMAGE' => $mo_img);
+      if ($mo_img != '') {
+        $more_images_data[] = array ('PRODUCTS_IMAGE' => $mo_img);
+      }
     }
     $info_smarty->assign('more_images', $more_images_data);
   }
