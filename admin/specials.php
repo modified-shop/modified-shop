@@ -236,12 +236,12 @@ require (DIR_WS_INCLUDES.'head.php');
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_START_DATE; ?>&nbsp;</td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart"'); ?></td>
-              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_DATE_FORMAT.TEXT_SPECIALS_START_DATE_TIP.SPECIALS_DATE_START_TT; ?>&nbsp;</td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_START_DATE_TIP.SPECIALS_DATE_START_TT; ?>&nbsp;</td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
-              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_DATE_FORMAT.TEXT_SPECIALS_EXPIRES_DATE_TIP.SPECIALS_DATE_END_TT; ?>&nbsp;</td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_EXPIRES_DATE_TIP.SPECIALS_DATE_END_TT; ?>&nbsp;</td>
             </tr>
           </table>
 
