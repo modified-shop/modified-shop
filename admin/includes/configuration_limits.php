@@ -1,8 +1,16 @@
 <?php
-/* --------------------------------------------------------------
-   $Id: configuration_limits.php 3569 2012-08-30 15:39:18Z web28 $
+/* -----------------------------------------------------------------------------------------
+   $Id$
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
    (c) 2012 by www.rpa-com.de
-   --------------------------------------------------------------*/
+   
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
    
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
@@ -10,3 +18,6 @@ $value_limits['SESSION_LIFE_ADMIN'] = array('min' => 1440, 'max' => 14400);
 $value_limits['SESSION_LIFE_CUSTOMERS'] = array('min' => 1440, 'max' => 14400);
 $value_limits['WHOS_ONLINE_TIME_LAST_CLICK'] = array('min' => 900, 'max' => 43200);
 
+$value_limits['MAX_DISPLAY_SPECIAL_PRODUCTS'] = array('min' => 1);
+$value_limits['MAX_DISPLAY_SEARCH_RESULTS'] = array('min' => 1);
+$value_limits['MAX_DISPLAY_ADVANCED_SEARCH_RESULTS'] = array('min' => 1);
