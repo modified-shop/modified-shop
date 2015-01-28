@@ -121,19 +121,23 @@ background-color: #F9F0F1;
  /*text-align: left;*/
  }
  
- .dataTableConfig {
- font-family: Verdana, Arial, sans-serif; 
- font-size: 12px; 
- color: #000000;
- vertical-align: middle;
- border-bottom: 1px dashed #cccccc;
- text-align: left;
- }
+.dataTableConfig {
+font-family: Verdana, Arial, sans-serif; 
+font-size: 12px; 
+color: #000000;
+vertical-align: middle;
+border-bottom: 1px dashed #cccccc;
+text-align: left;
+}
 
- .dataTableConfig a {
- font-size: 12px; 
- }
- 
+.dataTableConfig a {
+font-size: 12px; 
+}
+
+.dataTableConfig.col-right img {
+max-height:105px;
+}
+
 td.categories_view_data {
  font-family: Verdana, Arial, sans-serif; 
  font-size: 10px; 
