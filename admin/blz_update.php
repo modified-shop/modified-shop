@@ -12,9 +12,13 @@
    --------------------------------------------------------------*/
 
 require('includes/application_top.php');
-require (DIR_WS_INCLUDES.'head.php');
 
-$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Kerngeschaeftsfelder/Unbarer_Zahlungsverkehr/Bankleitzahlen/2012_12_02/blz_2012_09_03_txt.txt?__blob=publicationFile';
+// include needed function
+require_once(DIR_FS_INC.'get_external_content.inc.php');
+
+$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2014_12_07/blz_2014_09_08_txt.txt?__blob=publicationFile';
+
+require (DIR_WS_INCLUDES.'head.php');
 ?>
 </head>
 <body>
@@ -65,9 +69,17 @@ $blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Kernge
                   echo '<div id="information"></div>';
                   echo '<br/><br/>';
 
+                  // save blz local
+                  $blz_file_local = DIR_FS_CATALOG.'cache/blz_update.txt';
+                  $blz_file_content = get_external_content($blz_file, 3, false);
+                  if (file_put_contents($blz_file_local, $blz_file_content, LOCK_EX) === false) {
+                    echo BLZ_LINK_INVALID_TEXT;
+                    break;
+                  }
+                  
                   $i = 0;
                   $estimated_lines = 20000;
-                  $handle = @fopen($blz_file, "r");
+                  $handle = @fopen($blz_file_local, "r");
                   //$lines = @file($blz_file); //Download the file from URL bundesbank.de
                   if ($handle) {
                      while (!feof($handle)) {
