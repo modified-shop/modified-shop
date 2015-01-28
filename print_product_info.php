@@ -109,7 +109,7 @@ if (!is_object($product) || !$product->isProduct()) {
       $tax_info = $main->getTaxInfo($xtPrice->TAX[$product->data['products_tax_class_id']]);
       $info_smarty->assign('PRODUCTS_TAX_INFO', $tax_info);
     }
-    $info_smarty->assign('PRODUCTS_SHIPPING_LINK',$main->getShippingLink());
+    $info_smarty->assign('PRODUCTS_SHIPPING_LINK',$main->getShippingStatusName());
   }
 
   $info_smarty->assign('PRODUCTS_DESCRIPTION', stripslashes($product->data['products_description']));
