@@ -28,7 +28,6 @@ define('HEADER_TITLE_CATALOG', 'Catalogue');
 define('HTML_PARAMS','dir="ltr" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"');
 @setlocale(LC_TIME, 'en_GB.UTF-8', 'en_GB@euro', 'en_GB', 'en-GB', 'en', 'en_GB.ISO_8859-1', 'English','en_GB.ISO_8859-15');
 
-//BOF - Dokuman - 2009-06-03 - correct english date format
 define('DATE_FORMAT_SHORT', '%d/%m/%Y');  // this is used for strftime()
 define('DATE_FORMAT_LONG', '%A %d %B, %Y'); // this is used for strftime()
 define('DATE_FORMAT', 'd/m/Y');  // this is used for strftime()
@@ -42,13 +41,10 @@ function xtc_date_raw($date, $reverse = false) {
     return substr($date, 6, 4) . substr($date, 3, 2) . substr($date, 0, 2);
   }
 }
-//EOF - Dokuman - 2009-06-03 - correct english date format
 
-// BOF - vr - 2009-12-11 - Added language dependent currency code
 // if USE_DEFAULT_LANGUAGE_CURRENCY is true, use the following currency when changing language, 
 // instead of staying with the applications default currency
 define('LANGUAGE_CURRENCY', 'EUR');
-// EOF - vr - 2009-12-11 - Added language dependent currency code
 
 define('MALE', 'Mr.');
 define('FEMALE', 'Ms./Mrs.');
@@ -96,6 +92,7 @@ define('JS_ERROR_NO_PAYMENT_MODULE_SELECTED', '* Please choose a method of payme
 define('JS_ERROR_SUBMITTED', 'This page has already been confirmed. Please click OK and wait until the process has finished.');
 define('ERROR_NO_PAYMENT_MODULE_SELECTED', 'Please choose a method of payment for your order.');
 define('JS_ERROR_NO_SHIPPING_MODULE_SELECTED', '* Please choose a method of shipping for your order.\n');
+define('JS_ERROR_CONDITIONS_NOT_ACCEPTED', '* Unfortunately we cannot accept your order\nunless you accept our terms and conditions!\n\n');
 define('JS_REVIEW_AUTHOR', '* Please enter your name.\n\n');
 
 /*
@@ -204,9 +201,6 @@ define('IMAGE_BUTTON_UPDATE_CART', 'Update shopping cart');
 define('IMAGE_BUTTON_WRITE_REVIEW', 'Write evaluation');
 define('IMAGE_BUTTON_ADMIN', 'Admin');
 define('IMAGE_BUTTON_PRODUCT_EDIT', 'Edit product');
-// BOF - vr - 2010-02-20 removed double definition 
-// define('IMAGE_BUTTON_LOGIN', 'Login');
-// EOF - vr - 2010-02-20 removed double definition 
 define('IMAGE_BUTTON_SEND', 'Send'); //DokuMan - 2010-03-15 - Added button description for contact form
 define('IMAGE_BUTTON_CONTINUE_SHOPPING', 'Continue shopping'); //Hendrik - 2010-11-12 - used in default template ...shopping_cart.html
 
@@ -436,6 +430,8 @@ define('ERROR_INVALID_USES_COUPON','This coucher can only be redeemed ');
 define('TIMES',' times.');
 define('ERROR_INVALID_STARTDATE_COUPON','Your coupon is not available yet.');
 define('ERROR_INVALID_FINISDATE_COUPON','Your voucher is already expired.');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON', 'This coupon can be redeemed only with a minimum order value of %s!');
+define('ERROR_INVALID_MINIMUM_ORDER_COUPON_ADD','<br/>You must enter the coupon code again when you reach the minimum order value!');
 define('PERSONAL_MESSAGE', '%s writes:');
 
 /*
@@ -455,7 +451,6 @@ define('TEXT_COUPON_HELP_DATE', '<br /><br />This voucher is valid from: %s to %
 define('TEXT_COUPON_HELP_RESTRICT', '<br /><br />Product / Category Restrictions');
 define('TEXT_COUPON_HELP_CATEGORIES', 'Category');
 define('TEXT_COUPON_HELP_PRODUCTS', 'Product');
-
 define('ERROR_ENTRY_AMOUNT_CHECK', 'Invalid amount');
 define('ERROR_ENTRY_EMAIL_ADDRESS_CHECK', 'Invalid e-mail address');
 
@@ -529,15 +524,21 @@ define('DOWNLOAD_NOT_ALLOWED', '<h1>Forbidden</h1>This server could not verify t
 
 define('TEXT_INFO_DETAILS', ' Details');
 define('TEXT_SAVED_BASKET', 'Please check your shopping cart. There are products from a last visit.');
-define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.');
+//define('TEXT_PRODUCTS_QTY_REDUCED', 'Maximum quantity for the last added / updated article reached. The quantity was reduced automatically.'); // Now we use MAX_PROD_QTY_EXCEEDED
 
 define('ERROR_REVIEW_TEXT', 'The text must consist of at least ' . REVIEW_TEXT_MIN_LENGTH . ' characters.');
 define('ERROR_REVIEW_RATING', 'Enter your review.');
 define('ERROR_REVIEW_AUTHOR', 'Enter your name.');
 
+define('GV_NO_PAYMENT_INFO', '<div class="infomessage">You can pay the order with your credit completely. If you do not want to redeem your balance, clear the credit selection and select a payment method!</div>');
+define('GV_ADD_PAYMENT_INFO', '<div class="errormessage">Your credit is not sufficient to pay the order completely. Please select a payment method in addition!</div>');
+
 define('_SHIPPING_FREE','Free Shipping');
 
 define('TEXT_CONTENT_NOT_FOUND', 'Page not found!');
+
+// error message for exceeded product quantity, noRiddle
+define('MAX_PROD_QTY_EXCEEDED', 'The maximum allowed number of ' .MAX_PRODUCTS_QTY. ' for <span style="font-style:italic;">"%s"</span> has been exceeded. The number was automatically reduced to the permitted quantity.');
 
 define('IMAGE_BUTTON_CONTENT_EDIT', 'Edit content');
 define('PRINTVIEW_INFO', 'Print datasheet');
