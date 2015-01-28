@@ -185,11 +185,6 @@ echo SPECIALS_TITLE;
       </td>
     </tr>
     <?php } ?>
-    <tr>
-      <td colspan="2" class="main" style="padding:3px; background: #D8D8D8;">
-        <?php echo TEXT_SPECIALS_PRICE_TIP; ?>
-      </td>
-    </tr>
     <?php } ?>
   </table>
 </div>
@@ -217,7 +212,7 @@ function saveSpecialsData($products_id) {
                             'specials_last_modified' => 'now()',
                             'start_date' => $start_date,
                             'expires_date' => $expires_date,
-                            'status' => ((isset($_POST['specials_status'])) ? (int)$_POST['specials_status'] : '1')
+                            'status' => '1'
                             );
     
     if ($_POST['specials_action'] == 'insert') {
@@ -225,6 +220,9 @@ function saveSpecialsData($products_id) {
       xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
     } else {
       unset($sql_data_array['specials_date_added']);
+      if (!isset($_POST['specials_status'])) {
+        $sql_data_array['status'] = '0';
+      }
       xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$_POST['specials_id']  . "'" );    
     }
   } 
