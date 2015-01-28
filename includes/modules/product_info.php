@@ -22,6 +22,9 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
+// todo: move to configuration ?
+defined('MANUFACTURER_IMAGE_SHOW_NO_IMAGE') OR define('MANUFACTURER_IMAGE_SHOW_NO_IMAGE', 'false');
+
 /******* SHOPGATE **********/
 if(defined('MODULE_PAYMENT_SHOPGATE_STATUS') && MODULE_PAYMENT_SHOPGATE_STATUS=='True' && strpos($_SESSION['customers_status']['customers_status_payment_unallowed'], 'shopgate') === false){
   include_once DIR_FS_CATALOG.'includes/external/shopgate/base/includes/modules/product_info.php';
@@ -95,7 +98,17 @@ if (!is_object($product) || !$product->isProduct()) {
                                                 AND p.products_id = '" . $product->data['products_id'] . "'");
   if (xtc_db_num_rows($manufacturer_query)) {
     $manufacturer = xtc_db_fetch_array($manufacturer_query);
-    $info_smarty->assign('MANUFACTURER_IMAGE', (!empty($manufacturer['manufacturers_image']) ? DIR_WS_IMAGES.$manufacturer['manufacturers_image'] : ''));
+    if ($manufacturer['manufacturers_image'] != '') {
+      $image = DIR_WS_IMAGES.$manufacturer['manufacturers_image'];
+      if (!file_exists(DIR_FS_CATALOG.$image)) {
+        if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
+          $image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
+        } else {
+          $image = '';
+        }
+      }
+    }
+    $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
   }
