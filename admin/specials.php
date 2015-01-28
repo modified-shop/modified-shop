@@ -226,26 +226,25 @@ require (DIR_WS_INCLUDES.'head.php');
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>&nbsp;</td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_price', $new_price).'&nbsp;&nbsp;&nbsp;' .$new_price_netto;?> </td>
-              <td class="dataTableConfig col-right">&nbsp;</td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_PRICE_TIP; ?></td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>&nbsp;</td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity);?> </td>
-              <td class="dataTableConfig col-right">&nbsp;</td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_QUANTITY_TIP; ?></td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_START_DATE; ?>&nbsp;</td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart"'); ?></td>
-              <td class="dataTableConfig col-right"><?php echo SPECIALS_DATE_START_TT; ?>&nbsp;</td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_DATE_FORMAT.TEXT_SPECIALS_START_DATE_TIP.SPECIALS_DATE_START_TT; ?>&nbsp;</td>
             </tr>
             <tr>
               <td class="dataTableConfig col-left"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>&nbsp;</td>
               <td class="dataTableConfig col-middle"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials"'); ?></td>
-              <td class="dataTableConfig col-right"><?php echo SPECIALS_DATE_END_TT; ?>&nbsp;</td>
+              <td class="dataTableConfig col-right"><?php echo TEXT_SPECIALS_DATE_FORMAT.TEXT_SPECIALS_EXPIRES_DATE_TIP.SPECIALS_DATE_END_TT; ?>&nbsp;</td>
             </tr>
           </table>
 
-          <div class="main" style="padding:6px;border-bottom: 1px solid #a3a3a3;"><?php echo TEXT_SPECIALS_PRICE_TIP; ?></div>
           <div class="main mrg5 nobr">
            <?php echo (($form_action == 'insert') ?
            '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/>'
@@ -275,8 +274,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 </tr>
                 <?php
                 $specials_query_raw = "-- /admin/specials.php
-                                        SELECT
-                                              p.products_id,
+                                       SELECT p.products_id,
                                               p.products_model,
                                               p.products_quantity,
                                               p.products_price,
@@ -291,12 +289,12 @@ require (DIR_WS_INCLUDES.'head.php');
                                               s.date_status_change,
                                               s.status,
                                               pd.products_name
-                                         FROM " . TABLE_PRODUCTS . " p,
-                                              " . TABLE_SPECIALS . " s,
-                                              " . TABLE_PRODUCTS_DESCRIPTION . " pd
-                                        WHERE p.products_id = pd.products_id
-                                          AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
-                                          AND p.products_id = s.products_id
+                                         FROM " . TABLE_PRODUCTS . " p
+                                         JOIN " . TABLE_SPECIALS . " s
+                                              ON p.products_id = s.products_id
+                                         JOIN " . TABLE_PRODUCTS_DESCRIPTION . " pd
+                                              ON p.products_id = pd.products_id
+                                                 AND pd.language_id = '" .(int) $_SESSION['languages_id'] . "'
                                      ORDER BY pd.products_name";
                                    
                 $specials_split = new splitPageResults($page_id, $page_max_display_results, $specials_query_raw, $specials_query_numrows);
