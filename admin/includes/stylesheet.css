@@ -136,6 +136,7 @@ font-size: 12px;
 
 .dataTableConfig.col-right img {
 max-height:105px;
+max-width:200px;
 }
 
 td.categories_view_data {
