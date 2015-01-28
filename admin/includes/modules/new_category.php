@@ -227,12 +227,12 @@
         <table class="tableConfig borderall">
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-            <td class="dataTableConfig col-middle"><?php echo '&nbsp;' .$cInfo->categories_image; ?></td>
-            <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" style="max-width:200px; max-height:200px"><?php } ?></td>
+            <td class="dataTableConfig col-middle"><?php echo $cInfo->categories_image; ?></td>
+            <td class="dataTableConfig col-right"<?php echo $rowspan;?>><?php if ($cInfo->categories_image) { ?><img src="<?php echo DIR_WS_CATALOG.'images/categories/'.$cInfo->categories_image; ?>" /><?php } ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_EDIT_CATEGORIES_IMAGE; ?></td>
-            <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?></td>
+            <td class="dataTableConfig col-middle"><?php echo xtc_draw_file_field('categories_image', false, 'class="imgupload"') . xtc_draw_hidden_field('categories_previous_image', $cInfo->categories_image); ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_DELETE; ?></td>
