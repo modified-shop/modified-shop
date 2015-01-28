@@ -27,7 +27,7 @@
     function splitPageResults($query, $page, $max_rows, $count_key = '*') {
       $this->sql_query = $query;
 
-      if (empty($page) || !is_numeric($page)) $page = 1;
+      if (empty($page) || !is_numeric($page) || $page < 0) $page = 1;
       $this->current_page_number = $page;
 
       $this->number_of_rows_per_page = $max_rows;
