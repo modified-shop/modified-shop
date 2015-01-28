@@ -84,12 +84,6 @@ if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0 and $sInfo
   $start_date = "";
 }
 
-if ($sInfo->status == 1) {
-  $status = 'checked="checked"';
-} else {
-  $status='';
-}
-
 // tell the storing script if to update existing special,
 // or to insert a new one
 echo xtc_draw_hidden_field('specials_action', ((isset($_GET['pID']) && xtc_db_num_rows($specials_query, true) > 0) ? "update" : "insert"));
@@ -128,20 +122,12 @@ echo SPECIALS_TITLE;
     </tr>
     */ ?>        
     <tr>
-      <td class="main" style="width:300px;">
-        <?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?>
-      </td>
-      <td class="main" style="width:250px;">
-        <?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_PRICE_TT) . (($new_price_netto != '') ? '<br/>'.$new_price_netto : '');?>
-      </td>
+      <td class="main" style="width:300px;"><?php echo TEXT_SPECIALS_SPECIAL_PRICE; ?></td>
+      <td class="main" style="width:250px;"><?php echo xtc_draw_input_field('specials_price', $new_price, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_PRICE_TT) . (($new_price_netto != '') ? '<br/>'.$new_price_netto : '');?></td>
     </tr>
     <tr>
-      <td class="main">
-        <?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?>
-      </td>
-      <td class="main">
-        <?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT);?>
-      </td>
+      <td class="main"><?php echo TEXT_SPECIALS_SPECIAL_QUANTITY; ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_quantity', $sInfo->specials_quantity, 'style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_SPECIAL_QUANTITY_TT);?></td>
     </tr>
     <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
       <tr>
@@ -154,37 +140,21 @@ echo SPECIALS_TITLE;
       </tr>
     <?php } ?>
     <tr>
-      <td class="main">
-        <?php echo TEXT_SPECIALS_START_DATE; ?>
-      </td>
-      <td class="main">
-        <?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_START_DATE_TT.SPECIALS_DATE_START_TT); ?>                
-      </td>
+      <td class="main"><?php echo TEXT_SPECIALS_START_DATE; ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_start', $start_date ,'id="DatepickerSpecialsStart" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_START_DATE_TT.SPECIALS_DATE_START_TT); ?></td>
     </tr>
     <tr>
-      <td class="main">
-        <?php echo TEXT_SPECIALS_EXPIRES_DATE; ?>
-      </td>
-      <td class="main">
-        <?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?>                
-      </td>
+      <td class="main"><?php echo TEXT_SPECIALS_EXPIRES_DATE; ?></td>
+      <td class="main"><?php echo xtc_draw_input_field('specials_expires', $expires_date ,'id="DatepickerSpecials" style="width: 135px"') . draw_tooltip(TEXT_CATSPECIALS_EXPIRES_DATE_TT.SPECIALS_DATE_END_TT); ?></td>
     </tr>
     <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
     <tr>
-      <td class="main">
-        <label for="input_specials_delete"><?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label>
-      </td>
-      <td class="main">
-        <input type="checkbox" name="specials_delete" value="true" id="input_specials_delete"  onclick="if(this.checked==true)return confirm('<?php echo TEXT_INFO_DELETE_INTRO; ?>');"style="vertical-align:middle;"/><label for="input_specials_delete">
-      </td>
+      <td class="main"><?php echo TEXT_EDIT_STATUS; ?></td>
+      <td class="main"><?php echo xtc_draw_pull_down_menu('specials_status', $product_status_array, $sInfo->status, 'style="width: 160px"'); ?></td>
     </tr>
-    <tr>    
-      <td class="main">
-        <label for="input_specials_status"><?php echo TEXT_EDIT_STATUS; ?></label>
-      </td>     
-      <td class="main">
-        <input type="checkbox" name="specials_status" value="1" id="input_specials_status"  style="vertical-align:middle;" <?php echo $status;?>/>
-      </td>
+    <tr>
+      <td class="main"><label for="input_specials_delete"><?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label></td>
+      <td class="main"><input type="checkbox" name="specials_delete" value="true" id="input_specials_delete"  onclick="if(this.checked==true)return confirm('<?php echo TEXT_INFO_DELETE_INTRO; ?>');"style="vertical-align:middle;"/></td>
     </tr>
     <?php } ?>
     <?php } ?>
@@ -214,7 +184,7 @@ function saveSpecialsData($products_id) {
                             'specials_last_modified' => 'now()',
                             'start_date' => $start_date,
                             'expires_date' => $expires_date,
-                            'status' => '1'
+                            'status' => ((!isset($_POST['specials_status'])) ? (int)$_POST['specials_status'] : '1')
                             );
     
     if ($_POST['specials_action'] == 'insert') {
@@ -222,9 +192,6 @@ function saveSpecialsData($products_id) {
       xtc_db_perform(TABLE_SPECIALS, $sql_data_array);
     } else {
       unset($sql_data_array['specials_date_added']);
-      if (!isset($_POST['specials_status'])) {
-        $sql_data_array['status'] = '0';
-      }
       xtc_db_perform(TABLE_SPECIALS, $sql_data_array, 'update', "specials_id = '" . (int)$_POST['specials_id']  . "'" );    
     }
   } 
