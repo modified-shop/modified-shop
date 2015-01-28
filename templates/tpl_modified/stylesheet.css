@@ -6,18 +6,7 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
-   based on:
-   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
-   (c) 2002-2003 osCommerce(stylesheet.css,v 1.54 2003/05/27); www.oscommerce.com
-   (c) 2003 nextcommerce (stylesheet.css,v 1.7 2003/08/13); www.nextcommerce.org
-   (c) 2004 XT-Commerce (stylesheet.css 1262 2005-09-30); www.xt-commerce.com
-   (c) 2007 Ing. Michael Fuerst, bluegate communications, http://www.bluegate.at - xtc5 Template & Stylesheets
-
    Released under the GNU General Public License
-   -----------------------------------------------------------------------------------------
-
-   -----------------------------------------------------------------------------------------
-   (c) 2014 modified eCommerce Shopsoftware - http://www.modified-shop.org     
    ---------------------------------------------------------------------------------------*/
 
 /* -----------------------------------------------------------------------------------------
@@ -65,16 +54,6 @@
     42. Sitemap 
     43. Product_reviews_info
     44. Miscellaneous
-    45.
-    46.
-        
-    
-    
-    
-    
-    
-    
-
    ---------------------------------------------------------------------------------------*/
 
 /* 1. START fonts */
@@ -3239,20 +3218,7 @@ ul.resp-tabs-list{
   margin: 3px 0 10px 0;
   padding: 5px;
 }
-
-
-  
-
-
 /* END Klarna */ 
 
 
-
-
-
 /* END miscellaneous */
-
-
-
-
-
