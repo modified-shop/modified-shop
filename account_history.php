@@ -95,7 +95,7 @@ if (xtc_count_customer_orders() > 0) {
                                'ORDER_PRODUCTS' => $products['count'],
                                'ORDER_TOTAL' => xtc_format_price_order($orders_total['value'], 1, $history['currency'], 1),
                                'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
-                               'ORDER_TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code'])
+                               'ORDER_TRACKING' => get_tracking_link($history['orders_id'], $_SESSION['language_code'])
                                );
   }
 }

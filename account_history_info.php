@@ -109,7 +109,7 @@ if (DOWNLOAD_ENABLED == 'true') {
   include (DIR_WS_MODULES.'downloads.php');
 }
 
-$smarty->assign('ORDER_TRACKING', get_tracking_link($orders['orders_id'], $_SESSION['language_code']));
+$smarty->assign('ORDER_TRACKING', get_tracking_link($order->info['order_id'], $_SESSION['language_code']));
 $smarty->assign('ORDER_NUMBER', $order->info['order_id']);
 $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
 $smarty->assign('ORDER_STATUS', $order->info['orders_status']);
