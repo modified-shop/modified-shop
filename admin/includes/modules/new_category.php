@@ -88,7 +88,6 @@
   <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
   <div class="div_box mrg5" style="width:900px;">
     <!-- BOF Category group block //-->
-    <div class="main div_header"><?php echo TEXT_CATEGORY_SETTINGS; ?></div>
     <div class="div_box">
       <table class="tableInput border0">
         <tr>
@@ -120,10 +119,6 @@
         <tr>
           <td><span class="main"><?php echo TEXT_CHOOSE_INFO_TEMPLATE_CATEGORIE; ?>:</span></td>
           <td><span class="main"><?php echo $catfunc->create_templates_dropdown_menu('categories_template','/module/categorie_listing/',$cInfo->categories_template, 'style="width: 200px"');?></span></td>
-        </tr>
-       <tr>
-          <td class="main">&nbsp;</td>
-          <td class="main">&nbsp;</td>
         </tr>
       </table>
       <!-- EOF Category template group block //-->
