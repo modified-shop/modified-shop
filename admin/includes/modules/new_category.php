@@ -96,7 +96,8 @@
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_EDIT_PRODUCT_SORT_ORDER; ?>:</td>
-          <td class="main"><?php echo xtc_draw_pull_down_menu('products_sorting',$order_array,((xtc_not_null($cInfo->products_sorting))?$cInfo->products_sorting:$default_value), 'style="width: 160px"'); ?>&nbsp;<?php echo xtc_draw_pull_down_menu('products_sorting2',$order_array_desc,$cInfo->products_sorting2, 'style="width: 160px"'); ?></td>
+          <td class="main"><?php echo xtc_draw_pull_down_menu('products_sorting',$order_array,((xtc_not_null($cInfo->products_sorting))?$cInfo->products_sorting:$default_value), 'style="width: 160px"'); ?><br/>
+                           <?php echo xtc_draw_pull_down_menu('products_sorting2',$order_array_desc,$cInfo->products_sorting2, 'style="width: 160px"'); ?></td>
         </tr>
         <tr>
           <td class="main"><?php echo TEXT_EDIT_SORT_ORDER; ?></td>
