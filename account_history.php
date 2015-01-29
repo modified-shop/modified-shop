@@ -20,7 +20,6 @@ include ('includes/application_top.php');
 
 // create smarty elements
 $smarty = new Smarty;
-$smarty->caching = false;
 
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
@@ -30,6 +29,7 @@ require_once (DIR_FS_INC.'xtc_count_customer_orders.inc.php');
 require_once (DIR_FS_INC.'xtc_date_long.inc.php');
 require_once (DIR_FS_INC.'xtc_image_button.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price_order.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 
 if (!isset ($_SESSION['customer_id'])) {
   xtc_redirect(xtc_href_link(FILENAME_LOGIN, '', 'SSL'));
@@ -94,16 +94,22 @@ if (xtc_count_customer_orders() > 0) {
                                'ORDER_DATE' => xtc_date_long($history['date_purchased']),
                                'ORDER_PRODUCTS' => $products['count'],
                                'ORDER_TOTAL' => xtc_format_price_order($orders_total['value'], 1, $history['currency'], 1),
-                               'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>'
+                               'ORDER_BUTTON' => '<a href="'.xtc_href_link(FILENAME_ACCOUNT_HISTORY_INFO, xtc_get_all_get_params().'order_id='.$history['orders_id'],'SSL').'">'.xtc_image_button('small_view.gif', SMALL_IMAGE_BUTTON_VIEW).'</a>',
+                               'ORDER_TRACKING' => get_tracking_link($orders['orders_id'], $_SESSION['language_code'])
                                );
   }
 }
 
 $smarty->assign('order_content', $module_content);
-$smarty->assign('language', $_SESSION['language']);
 $smarty->assign('BUTTON_BACK', '<a href="'.xtc_href_link(FILENAME_ACCOUNT, '', 'SSL').'">'.xtc_image_button('button_back.gif', IMAGE_BUTTON_BACK).'</a>');
+$smarty->assign('language', $_SESSION['language']);
+
+$smarty->caching = 0;
 $main_content = $smarty->fetch(CURRENT_TEMPLATE.'/module/account_history.html');
+
 $smarty->assign('main_content', $main_content);
+$smarty->assign('language', $_SESSION['language']);
+$smarty->caching = 0;
 if (!defined('RM'))
   $smarty->load_filter('output', 'note');
 $smarty->display(CURRENT_TEMPLATE.'/index.html');

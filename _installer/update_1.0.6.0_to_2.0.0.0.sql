@@ -224,10 +224,17 @@ CREATE TABLE IF NOT EXISTS carriers (
   PRIMARY KEY (carrier_id)
 ) ENGINE=MyISAM;
 
-INSERT INTO `carriers` (`carrier_id`, `carrier_name`, `carrier_tracking_link`, `carrier_sort_order`) VALUES (1, 'LIX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '10');
-INSERT INTO `carriers` (`carrier_id`, `carrier_name`, `carrier_tracking_link`, `carrier_sort_order`) VALUES (2, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=de&idc=$1', '20');
-INSERT INTO `carriers` (`carrier_id`, `carrier_name`, `carrier_tracking_link`, `carrier_sort_order`) VALUES (3, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=de', '30');
-INSERT INTO `carriers` (`carrier_id`, `carrier_name`, `carrier_tracking_link`, `carrier_sort_order`) VALUES (4, 'GLS', 'http://www.gls-group.eu/276-I-PORTAL-WEB/content/GLS/DE03/DE/5004.htm?txtRefNo=$1&txtAction=71000', '40');
+INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
+INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
+INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
+INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
+INSERT INTO carriers VALUES (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', '50', NOW(), '');
+INSERT INTO carriers VALUES (6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', '60', NOW(), '');
+INSERT INTO carriers VALUES (7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', '70', NOW(), '');
+INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', '80', NOW(), '');
+INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
+INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
+INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
 
 CREATE TABLE IF NOT EXISTS orders_tracking (
   tracking_id INT(11) NOT NULL AUTO_INCREMENT,

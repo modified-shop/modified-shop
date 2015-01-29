@@ -56,10 +56,14 @@
       <p>{$HISTORY_BLOCK}</p>
     </div>
 
-    {if $TRACKING_BLOCK}
+    {if count($ORDER_TRACKING) > 0}
     <div class="highlightbox plainleft">
-      <h4>{#title_tracking_history#}:</h4>
-      <p>{$TRACKING_BLOCK}</p>
+      <h4>{#label_tracking#}</h4>
+      <p>
+      {foreach name=aussen item=tracking_data from=$ORDER_TRACKING}
+        <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+      {/foreach}
+      </p>
     </div>
     {/if}  
   </div>
