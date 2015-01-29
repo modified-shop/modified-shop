@@ -506,6 +506,7 @@ DROP TABLE IF EXISTS manufacturers_info;
 CREATE TABLE manufacturers_info (
   manufacturers_id INT NOT NULL,
   languages_id INT NOT NULL,
+  manufacturers_description text,
   manufacturers_meta_title VARCHAR(100) NOT NULL,
   manufacturers_meta_description VARCHAR(255) NOT NULL,
   manufacturers_meta_keywords VARCHAR(255) NOT NULL,

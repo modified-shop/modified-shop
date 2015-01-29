@@ -251,4 +251,7 @@ ALTER TABLE orders MODIFY billing_country VARCHAR(64) NOT NULL;
 DROP TABLE IF EXISTS payment_moneybookers_currencies;
 DROP TABLE IF EXISTS media_content;
 
+#GTB - 2015-01-29 - added manufacturers description
+ALTER TABLE manufacturers_info ADD manufacturers_description text AFTER languages_id;
+
 # Keep an empty line at the end of this file for the db_updater to work properly
