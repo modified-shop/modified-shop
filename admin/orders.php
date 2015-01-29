@@ -31,6 +31,7 @@ require_once (DIR_FS_INC.'changedataout.inc.php');
 require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
 require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+require_once (DIR_FS_INC.'get_tracking_link.inc.php');
 
 /* magnalister v1.0.1 */
 if (function_exists('magnaExecute')) magnaExecute('magnaSubmitOrderStatus', array(), array('order_details.php'));
@@ -266,20 +267,10 @@ switch ($action) {
           $smarty->assign('ORDER_LINK', xtc_catalog_href_link(FILENAME_CATALOG_ACCOUNT_HISTORY_INFO, 'order_id='.$oID, 'SSL'));
         }
         // track & trace
-        $parcel_link = '';
-        $tracking_links_query = xtc_db_query("SELECT * 
-                                                FROM ".TABLE_ORDERS_TRACKING." ortr
-                                                JOIN ".TABLE_CARRIERS." ca
-                                                     ON ortr.carrier_id = ca.carrier_id
-                                               WHERE ortr.order_id = '".xtc_db_input($oID)."'");
-        $parcel_count = xtc_db_num_rows($tracking_links_query);
-        if ($parcel_count > 0) {
-          while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
-            $parcel_link .= '<a href="'.str_replace('$1', $tracking_link['parcel_id'], $tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['parcel_id'].'</a><br />';
-          }
-        }
-        $smarty->assign('PARCEL_COUNT', $parcel_count);
-        $smarty->assign('PARCEL_LINK', $parcel_link);
+        $tracking_array = get_tracking_link($oID, $lang_code);
+        $smarty->assign('PARCEL_COUNT', count($tracking_array));
+        $smarty->assign('PARCEL_ARRAY', $tracking_array);
+        
         $smarty->assign('ORDER_DATE', xtc_date_long($order->info['date_purchased']));
         $smarty->assign('NOTIFY_COMMENTS', nl2br($notify_comments));
         $smarty->assign('ORDER_STATUS', $orders_status_array[$status]);

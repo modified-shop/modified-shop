@@ -342,17 +342,13 @@
                 <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
               </tr>
               <?php
-                $tracking_links_query = xtc_db_query("SELECT *
-                                                        FROM ".TABLE_ORDERS_TRACKING." ortr
-                                                        JOIN ".TABLE_CARRIERS." ca
-                                                             ON ortr.carrier_id = ca.carrier_id
-                                                       WHERE ortr.order_id = '".xtc_db_input($oID)."'");
-                if (xtc_db_num_rows($tracking_links_query)) {
-                  while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
+                $tracking_array = get_tracking_link($_GET['oID'], $lang_code);
+                if (count($tracking_array) > 0) {
+                  foreach($tracking_array as $tracking) {
                     echo '          <tr>'.PHP_EOL;
-                    echo '            <td class="smallText" align="center">'.$tracking_link['carrier_name'].'</td>'.PHP_EOL;
-                    echo '            <td class="smallText" align="left"><a href="'.str_replace('$1',$tracking_link['parcel_id'],$tracking_link['carrier_tracking_link']).'" target="_blank">'.$tracking_link['parcel_id'].'</a></td>'.PHP_EOL;
-                    echo '            <td class="smallText" align="center"><a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking_link['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                    echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
+                    echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
+                    echo '            <td class="smallText" align="center"><a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
                     echo '          <tr>'.PHP_EOL;
                   }
                 }

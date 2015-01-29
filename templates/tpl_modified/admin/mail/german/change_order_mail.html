@@ -29,15 +29,13 @@
         <br /><br />
         Neuer Status: <b>{$ORDER_STATUS}</b>
 
-        {if $PARCEL_COUNT}
+        {if $PARCEL_COUNT > 0}
           <br /><br />
           Die Sendung besteht aus {$PARCEL_COUNT} Paket(en).<br />
-        {/if}
-
-        {if $PARCEL_LINK_HTML}
-          <br /><br />
           Sie können sich über den Zustellstatus durch einen Klick auf die nachstende(n) Paketnummer(n) informieren:<br />
-          {$PARCEL_LINK_HTML}
+          {foreach name=aussen item=tracking_data from=$PARCEL_ARRAY}
+            <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a><br />
+          {/foreach}
         {/if}
 
         <br /><br />
