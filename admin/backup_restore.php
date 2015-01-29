@@ -219,8 +219,7 @@
     $json_output['time'] = $time;
     $json_output['actual_table'] = $restore['fileEOF'] ? '' : $actual_table;
     $json_output['fileEOF'] = $restore['fileEOF'] ? 1 : 0;
-   
-    $json_output['filesize'] = filesize($restore['file']);;
+    $json_output['filesize'] = filesize($restore['file']);
     $json_output['offset'] = $restore['offset'];
     $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
     
