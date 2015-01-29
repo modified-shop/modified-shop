@@ -75,6 +75,10 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     case 'shop_offline':
       $val = 'var oFCKeditor = new FCKeditor( \'offline_msg\', \'800\', \'400\' ) ;' ;
       break;
+    // WYSIWYG editor categories_description textarea named categories_description[langID]
+    case 'manufacturers_description':
+      $val = 'var oFCKeditor = new FCKeditor( \'manufacturers_description['.$langID.']\', \'100%\', \'300\' ) ;';
+      break;
   }
 
   require_once(DIR_FS_INC.'auto_include.inc.php');
