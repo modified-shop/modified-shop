@@ -76,13 +76,16 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
     $shipping_method = FREE_SHIPPING_TITLE;
   }
   $smarty->assign('SHIPPING_METHOD', $shipping_method);
+  $smarty->assign('SHIPPING_CLASS', $shipping_class[0]);
   
   //payment method
   if ($order->info['payment_method'] != '' && $order->info['payment_method'] != 'no_payment') {    
     include_once (DIR_FS_CATALOG . 'lang/'.$order->info['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
     $payment_method = constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
+    $payment_class = $order->info['payment_class'];
   }
   $smarty->assign('PAYMENT_METHOD', $payment_method);
+  $smarty->assign('PAYMENT_CLASS', $payment_class);
   
   $smarty->assign('DATE', xtc_date_long($order->info['date_purchased']));
   $smarty->assign('NAME', $order->customer['name']);
