@@ -197,7 +197,7 @@ if (USE_WYSIWYG == 'true') {
             <div class="pdg2">
               <table class="tableInput" style="padding: 5px 12px;">
                 <tr>
-                  <td class="main" style="width:232px;"><?php echo TEXT_MANUFACTURERS_NAME; ?></td>
+                  <td class="main" style="width:185px;"><?php echo TEXT_MANUFACTURERS_NAME; ?></td>
                   <td class="main"><?php echo xtc_draw_input_field('manufacturers_name', ((isset($manufact['manufacturers_name'])) ? $manufact['manufacturers_name'] : ''), 'style="width:100%" maxlength="255"'); ?></td>
                 </tr>
               </table>
