@@ -50,7 +50,7 @@ if (defined('USE_ATTRIBUTES_IFRAME') && USE_ATTRIBUTES_IFRAME == 'true') {
 				border-radius:5px; -moz-border-radius:5px; -webkit-border-radius:5px; box-shadow: 0 0 10px #000000; -moz-box-shadow: 0 0 10px #000000; -webkit-box-shadow: 0 0 10px #000000); 
 			}
 		.bgboxshow_title { 
-				font-family: Verdana,Arial, Helvetica, sans-serif; background:#597BC6; color:#FFFFFF; font-weight:bold; padding:3px; margin-bottom:1px; border-top-left-radius:5px; border-top-right-radius:5px; -moz-border-radius-topleft:5px; -moz-border-radius-topright:5px; -webkit-border-top-right-radius:5px;  -webkit-border-top-left-radius:5px;
+				font-family: Verdana,Arial, Helvetica, sans-serif; font-size: 13px; background:#597BC6; color:#FFFFFF; font-weight:bold; padding:3px; margin-bottom:1px; border-top-left-radius:5px; border-top-right-radius:5px; -moz-border-radius-topleft:5px; -moz-border-radius-topright:5px; -webkit-border-top-right-radius:5px;  -webkit-border-top-left-radius:5px;
 			}
 		.bgboxshow_close {
 				width: 30px; height: 30px; background-image: url('images/close.png'); position: absolute; top:-10px; right:-17px; z-index: 1103; cursor: pointer; 
