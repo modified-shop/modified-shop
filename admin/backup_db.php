@@ -343,6 +343,7 @@ $Id: backup_db.php 4174 2013-01-04 15:55:13Z web28 $
     $json_output['num_tables'] = $dump['num_tables'];
     $json_output['time'] = $time;
     $json_output['actual_table'] = $dump['tables'][$nr];
+    $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
    
     //$json_output = $export;
     $json_output = json_encode($json_output);
