@@ -130,14 +130,12 @@
   }
 
   // Dadadadatenbank
-  $ml_meta_query = xtDBquery("
-    select  content_meta_title,
-            content_meta_description,
-            content_meta_keywords
-    from   ".TABLE_CONTENT_MANAGER."
-    where   ".$ml_meta_where."
-    and   languages_id = '".(int)$_SESSION['languages_id']."'
-  ");
+  $ml_meta_query = xtDBquery("SELECT content_meta_title,
+                                     content_meta_description,
+                                     content_meta_keywords
+                                FROM ".TABLE_CONTENT_MANAGER."
+                               WHERE ".$ml_meta_where."
+                                 AND languages_id = '".(int)$_SESSION['languages_id']."'");
   $ml_meta = xtc_db_fetch_array($ml_meta_query,true);
 
 // ---------------------------------------------------------------------------------------
@@ -324,17 +322,15 @@ switch(basename($PHP_SELF)) {
     $startpage = true;
     // Sind wir in einer Kategorie?
     if(!empty($current_category_id)) {
-      $categories_meta_query = xtDBquery("
-        select  categories_meta_keywords,
-                categories_meta_description,
-                categories_meta_title,
-                categories_name,
-                categories_description
-        from   ".TABLE_CATEGORIES_DESCRIPTION."
-        where   categories_id='".(int)$current_category_id."'
-        and   language_id='".(int)$_SESSION['languages_id']."'
-      ");
-      $categories_meta = xtc_db_fetch_array($categories_meta_query,true);
+      $categories_meta_query = xtDBquery("SELECT categories_meta_keywords,
+                                                 categories_meta_description,
+                                                 categories_meta_title,
+                                                 categories_name,
+                                                 categories_description
+                                            FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                           WHERE categories_id='".(int)$current_category_id."'
+                                             AND language_id='".(int)$_SESSION['languages_id']."'");
+      $categories_meta = xtc_db_fetch_array($categories_meta_query, true);
       $startpage = false;
     }
 
@@ -356,14 +352,28 @@ switch(basename($PHP_SELF)) {
 
     // ggf. Herstellernamen herausfinden ...
     if($manu_id) {
-      $manu_name_query = xtDBquery("
-        select   manufacturers_name
-        from   ".TABLE_MANUFACTURERS."
-        where   manufacturers_id ='".(int)$manu_id."'
-      ");
-      $manu_name = xtc_db_fetch_array($manu_name_query,true);
-      is_array($manu_name) ? $manu_name = implode('',$manu_name) :  $manu_name = '';
-      $metaGoWords .= ','.$manu_name; // <-- zu GoWords hinzufügen
+      $manu_name_query = xtDBquery("SELECT m.manufacturers_name,
+                                           mi.manufacturers_meta_keywords,
+                                           mi.manufacturers_meta_description,
+                                           mi.manufacturers_meta_title
+                                      FROM ".TABLE_MANUFACTURERS." m 
+                                      JOIN ".TABLE_MANUFACTURERS_INFO." mi 
+                                           ON m.manufacturers_id=mi.manufacturers_id
+                                              AND mi.languages_id = '".(int)$_SESSION['languages_id']."'
+                                     WHERE m.manufacturers_id = '".(int)$manu_id."'");
+      $manu_name = xtc_db_fetch_array($manu_name_query, true);
+  
+      if(empty($current_category_id)) {      
+        $categories_meta['categories_meta_title'] = ((!empty($manu_name['manufacturers_meta_title'])) ? $manu_name['manufacturers_meta_title'] : $manu_name['manufacturers_name']);
+        $categories_meta['categories_meta_keywords'] = ((!empty($manu_name['manufacturers_meta_keywords'])) ? $manu_name['manufacturers_meta_keywords'] : $manu_name['manufacturers_name']);
+        ((!empty($manu_name['manufacturers_meta_description'])) ? $categories_meta['categories_meta_description'] = $manu_name['manufacturers_meta_description'] : false);
+
+        $metaGoWords .= ','.$manu_name['manufacturers_name']; // <-- zu GoWords hinzuf¸gen
+        $manu_name = '';
+      } else {
+        $manu_name = $manu_name['manufacturers_name'];
+        $metaGoWords .= ','.$manu_name; // <-- zu GoWords hinzuf¸gen
+      }
     }
 
     // KeyWords ...
@@ -406,22 +416,20 @@ switch(basename($PHP_SELF)) {
 // ---------------------------------------------------------------------------------------
   case FILENAME_CONTENT :
 
-    $contents_meta_query = xtDBquery("
-      select  content_meta_title,
-              content_meta_description,
-              content_meta_keywords,
-              content_meta_robots,
-              content_title,
-              content_heading,
-              content_text,
-              content_file
-      from   ".TABLE_CONTENT_MANAGER."
-      where   content_group = '".(int)$_GET['coID']."'
-      and   languages_id = '".(int)$_SESSION['languages_id']."'
-    ");
-    $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
+    $contents_meta_query = xtDBquery("SELECT content_meta_title,
+                                             content_meta_description,
+                                             content_meta_keywords,
+                                             content_meta_robots,
+                                             content_title,
+                                             content_heading,
+                                             content_text,
+                                             content_file
+                                        FROM ".TABLE_CONTENT_MANAGER."
+                                       WHERE content_group = '".(int)$_GET['coID']."'
+                                         AND languages_id = '".(int)$_SESSION['languages_id']."'");
 
-    if(count($contents_meta) > 0) {
+    if(xtc_db_num_rows($contents_meta_query, true) > 0) {
+      $contents_meta = xtc_db_fetch_array($contents_meta_query,true);
 
       // NEU! Eingebundene Dateien auslesen
       if($contents_meta['content_file']) {
@@ -473,10 +481,9 @@ switch(basename($PHP_SELF)) {
 
     // ggf. Herstellernamen herausfinden ...
     if(!empty($_GET['manufacturers_id'])) {
-      $manu_name_query = xtDBquery("
-        select   manufacturers_name
-        from   ".TABLE_MANUFACTURERS."
-        where   manufacturers_id ='".(int)$_GET['manufacturers_id']."'
+      $manu_name_query = xtDBquery("SELECT manufacturers_name
+                                      FROM ".TABLE_MANUFACTURERS."
+                                     WHERE manufacturers_id = '".(int)$_GET['manufacturers_id']."'
       ");
       $manu_name = xtc_db_fetch_array($manu_name_query,true);
       is_array($manu_name) ? $manu_name = implode('',$manu_name) :  $manu_name = '';
@@ -484,12 +491,10 @@ switch(basename($PHP_SELF)) {
     }
     // ggf. Kategorien-Namen herausfinden ...
     if(!empty($_GET['categories_id'])) {
-      $cat_name_query = xtDBquery("
-        select   categories_name
-        from   ".TABLE_CATEGORIES_DESCRIPTION."
-        where   categories_id='".(int)$_GET['categories_id']."'
-        and   language_id='".(int)$_SESSION['languages_id']."'
-      ");
+      $cat_name_query = xtDBquery("SELECT categories_name
+                                     FROM ".TABLE_CATEGORIES_DESCRIPTION."
+                                    WHERE categories_id='".(int)$_GET['categories_id']."'
+                                      AND language_id='".(int)$_SESSION['languages_id']."'");
       $cat_name = xtc_db_fetch_array($cat_name_query,true);
       is_array($cat_name) ? $cat_name = implode('',$cat_name) :  $cat_name = '';
     }
@@ -526,7 +531,6 @@ switch(basename($PHP_SELF)) {
     break;
 // ---------------------------------------------------------------------------------------
 
-
 }
 // Ende Switch
 
@@ -547,23 +551,7 @@ switch(basename($PHP_SELF)) {
     $meta_title   = ML_TITLE;
   }
 // ---------------------------------------------------------------------------------------
-/* BOF - h-h-h - 2011-08-22 - show only defined Meta Tags
-?>
-<title><?php echo metaClean($meta_title);?></title>
-<meta http-equiv="content-language" content="<?php echo $_SESSION['language_code']; ?>" />
-<meta http-equiv="cache-control" content="no-cache" />
-<meta name="keywords" content="<?php echo metaClean($meta_keyw); ?>" />
-<meta name="description" content="<?php echo metaClean($meta_descr,$metaDesLength); ?>" />
-<meta name="robots" content="<?php echo $meta_robots; ?>" />
-<meta name="language" content="<?php echo $_SESSION['language_code']; ?>" />
-<meta name="author" content="<?php echo metaClean(META_AUTHOR); ?>" />
-<meta name="publisher" content="<?php echo metaClean(META_PUBLISHER); ?>" />
-<meta name="company" content="<?php echo metaClean(META_COMPANY); ?>" />
-<meta name="page-topic" content="<?php echo metaClean(META_TOPIC); ?>" />
-<meta name="reply-to" content="<?php echo META_REPLY_TO; ?>" />
-<meta name="distribution" content="global" />
-<meta name="revisit-after" content="<?php echo META_REVISIT_AFTER; ?>" />
-*/
+
 if (TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta http-equiv="Content-Type" content="text/html; charset='.$_SESSION['language_charset'].'" />'."\n";;
   echo '<meta http-equiv="Content-Style-Type" content="text/css" />'."\n";;
@@ -614,5 +602,4 @@ if (META_REVISIT_AFTER != '0') {
 if(isset($canonical_url)) {
   echo '<link rel="canonical" href="'.$canonical_url.'" />'."\n";
 }
-// EOF - h-h-h - 2011-08-22 - show only defined Meta Tags
 ?>

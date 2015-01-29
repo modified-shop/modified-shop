@@ -82,13 +82,17 @@ if ($listing_split->number_of_rows > 0) {
   }
 
   if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
-    $manu_query = xtDBquery("SELECT manufacturers_image, 
-                                    manufacturers_name 
-                               FROM ".TABLE_MANUFACTURERS." 
-                              WHERE manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
+    $manu_query = xtDBquery("SELECT m.manufacturers_image, 
+                                    m.manufacturers_name,
+                                    mi.manufacturers_description 
+                               FROM ".TABLE_MANUFACTURERS." m
+                               JOIN " . TABLE_MANUFACTURERS_INFO . " mi
+                                    ON (m.manufacturers_id = mi.manufacturers_id
+                                        AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
+                              WHERE m.manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
     $manu = xtc_db_fetch_array($manu_query, true);
     $category['categories_name'] = $manu['manufacturers_name'];
-
+    $category['categories_description'] = $manu['manufacturers_description'];
     if ($manu['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
       if (!file_exists(DIR_FS_CATALOG.$image)) {

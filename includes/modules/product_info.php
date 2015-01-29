@@ -88,9 +88,10 @@ if (!is_object($product) || !$product->isProduct()) {
   $manufacturer_query = xtc_db_query("SELECT m.manufacturers_id,
                                              m.manufacturers_name,
                                              m.manufacturers_image,
-                                             mi.manufacturers_url
+                                             mi.manufacturers_url,
+                                             mi.manufacturers_description
                                         FROM " . TABLE_MANUFACTURERS . " m
-                                   LEFT JOIN " . TABLE_MANUFACTURERS_INFO . " mi
+                                        JOIN " . TABLE_MANUFACTURERS_INFO . " mi
                                              ON (m.manufacturers_id = mi.manufacturers_id
                                                  AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
                                         JOIN " . TABLE_PRODUCTS . " p
@@ -110,6 +111,7 @@ if (!is_object($product) || !$product->isProduct()) {
     }
     $info_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
     $info_smarty->assign('MANUFACTURER', $manufacturer['manufacturers_name']);
+    $info_smarty->assign('MANUFACTURER_DESCRIPTION', $manufacturer['manufacturers_description']);
     $info_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manufacturer['manufacturers_id'], $manufacturer['manufacturers_name'])));
   }
 
