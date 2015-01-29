@@ -51,6 +51,11 @@ class Inputfilter {
         return preg_replace('/[^0-9a-zA-Z]/','',$value);
     }
 
+    public function validatePrice($value)
+    {
+        return str_replace(',', '.', preg_replace('/[^0-9,.%]/','',$value));
+    }
+
     private function inputValidate()
     {
         if (is_array($this->params)) {
@@ -97,6 +102,30 @@ class Inputfilter {
                   case 'MODsid':
                       $this->params[$key] = $this->validateSessionID($value);
                       break;
+                  default:
+                    //price
+                    if (defined('RUN_MODE_ADMIN')) {
+                      $keys = array('products_vpe_value',
+                                    'products_uvp',
+                                    'products_discount_allowed',
+                                    'customers_status_min_order',
+                                    'customers_status_max_order',
+                                    'customers_status_discount',
+                                    'customers_status_ot_discount',
+                                    'tax_rate',
+                                    'coupon_amount',
+                                    'coupon_min_order',
+                                    'NEW_SIGNUP_GIFT_VOUCHER_AMOUNT',
+                                    );
+                      if (in_array($key, $keys) ||
+                          substr($key, -6) == '_price' ||
+                          substr($key, -7) == '_weight' ||
+                          substr($key, 0, 14) == 'products_price' ||
+                          substr($key, 0, 14) == 'specials_price') {
+                        $this->params[$key] = $this->validatePrice($value);
+                      }
+                    }
+                  break;
                 }
             }
         }
