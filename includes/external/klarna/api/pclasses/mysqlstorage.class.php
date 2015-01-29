@@ -137,8 +137,7 @@ class MySQLStorage extends PCStorage
                           `country` int(11) NOT NULL,
                           `expire` int(11) NOT NULL,
                           KEY `id` (`id`)
-                        )", $this->link
-                      );
+                        )", $this->link);
         }
 
         if (xtc_db_num_rows(xtc_db_query("SHOW TABLES LIKE '".$this->dbTable."'", $this->link)) != '1') {
@@ -254,8 +253,7 @@ class MySQLStorage extends PCStorage
                 //Remove the pclass if it exists.
                 xtc_db_query("DELETE FROM `{$this->dbName}`.`{$this->dbTable}`
                                     WHERE `id` = '{$pclass->getId()}'
-                                      AND `eid` = '{$pclass->getEid()}'", $this->link
-                             );
+                                      AND `eid` = '{$pclass->getEid()}'", $this->link);
                 
                 $sql_data_array = array('eid' => $pclass->getEid(),
                                         'id' => $pclass->getId(),
@@ -268,7 +266,7 @@ class MySQLStorage extends PCStorage
                                         'minamount' => $pclass->getMinAmount(),
                                         'country' => $pclass->getCountry(),
                                         'expire' => $pclass->getExpire());
-                xtc_db_perform("`{$this->dbName}`.`{$this->dbTable}`", 'insert', '', $this->link);
+                xtc_db_perform("`{$this->dbName}`.`{$this->dbTable}`", $sql_data_array, 'insert', '', $this->link);
 
                 if ($result === false) {
                     throw new Klarna_DatabaseException(
@@ -293,8 +291,7 @@ class MySQLStorage extends PCStorage
             $this->splitURI($uri);
             unset($this->pclasses);
             $this->connect();
-
-            xtc_db_query("DELETE FROM `{$this->dbName}`.`{$this->dbTable}`",$this->link);
+            xtc_db_query("DELETE FROM `{$this->dbName}`.`{$this->dbTable}`", $this->link);
         } catch(Exception $e) {
             throw new Klarna_DatabaseException(
                 $e->getMessage(), $e->getCode()
