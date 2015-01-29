@@ -152,7 +152,7 @@ if (USE_WYSIWYG == 'true') {
 	$data = xtc_db_fetch_array($query);
 	// generate editor 
 	echo PHP_EOL . (!function_exists('editorJSLink') ? '<script type="text/javascript" src="includes/modules/fckeditor/fckeditor.js"></script>' : '') . PHP_EOL;
-	if ($action == 'edit' || $action == 'new') {
+	if ($_GET['action'] == 'edit' || $_GET['action'] == 'new') {
 	  for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
       echo xtc_wysiwyg('manufacturers_description', $data['code'], $languages[$i]['id']);
 	  }
