@@ -222,7 +222,8 @@
    
     $json_output['filesize'] = filesize($restore['file']);;
     $json_output['offset'] = $restore['offset'];
-
+    $json_output[$_SESSION['CSRFName']] = $_SESSION['CSRFToken'];
+    
     //$restore['fileEOF'] = true;
     if ($restore['fileEOF'])  {
       $restore= array();
