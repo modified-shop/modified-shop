@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
   
-  define('RSS_FEED_CACHEFILE', DIR_FS_CATALOG.'export/rss_cache.txt');
+  define('RSS_FEED_CACHEFILE', DIR_FS_CATALOG.'cache/rss_cache.txt');
   
   function get_external_content($url, $timeout='3', $rss=true) {
     $data = '';
