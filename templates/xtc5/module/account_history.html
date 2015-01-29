@@ -6,6 +6,11 @@
 <p>{#text_date#}{$order_data.ORDER_DATE},
 {#text_articles#}{$order_data.ORDER_PRODUCTS} <br />
 <strong>{#text_total#}</strong>{$order_data.ORDER_TOTAL}&nbsp;&nbsp;<strong>{#text_status#}</strong>{$order_data.ORDER_STATUS} 
+{if count($order_data.ORDER_TRACKING) > 0}
+  {foreach name=aussen item=tracking_data from=$order_data.ORDER_TRACKING}
+    <br />{#label_tracking#} <a target="_blank" href="{$tracking_data.tracking_link}">{$tracking_data.parcel_id}</a>
+  {/foreach}
+{/if}
 </p><p>{$order_data.ORDER_BUTTON}</p>
 </div>
 <div class="hr"></div>
