@@ -211,9 +211,8 @@ if ($category_depth == 'nested') {
 
   if (isset($_GET['manufacturers_id'])) {
     // show the products of a specified manufacturer
-    $select .= "m.manufacturers_name, mi.manufacturers_description, ";
+    $select .= "m.manufacturers_name, ";
     $from   .= "LEFT JOIN ".TABLE_MANUFACTURERS." m on p.manufacturers_id = m.manufacturers_id ";
-    $from   .= "LEFT JOIN ".TABLE_MANUFACTURERS_INFO." mi on m.manufacturers_id = mi.manufacturers_id AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "' ";
     $where  .= " AND m.manufacturers_id = '".(int) $_GET['manufacturers_id']."' ";
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
       // We are asked to show only a specific category
@@ -228,9 +227,8 @@ if ($category_depth == 'nested') {
     $where  .= "AND p2c.categories_id = '".$current_category_id."' ";
     if (isset($_GET['filter_id']) && xtc_not_null($_GET['filter_id'])) {
       // We are asked to show only specific catgeory
-      $select .= "m.manufacturers_name, mi.manufacturers_description, ";
+      $select .= "m.manufacturers_name, ";
       $from   .= "LEFT JOIN ".TABLE_MANUFACTURERS." m on p.manufacturers_id = m.manufacturers_id ";
-      $from   .= "LEFT JOIN ".TABLE_MANUFACTURERS_INFO." mi on m.manufacturers_id = mi.manufacturers_id AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "' ";
       $where  .= "AND m.manufacturers_id = '".(int)$_GET['filter_id']."' ";
     } else {
       // We show them all

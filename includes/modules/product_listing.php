@@ -81,7 +81,13 @@ if ($listing_split->number_of_rows > 0) {
     }
   }
 
-  if (isset ($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+  if (isset($_GET['manufacturers_id']) && $_GET['manufacturers_id'] > 0) {
+    $manufacturers_id = (int)$_GET['manufacturers_id'];
+  } elseif (isset($_GET['filter_id']) && $_GET['filter_id'] > 0) {
+    $manufacturers_id = (int)$_GET['filter_id'];
+  }
+  
+  if (isset($manufacturers_id)) {
     $manu_query = xtDBquery("SELECT m.manufacturers_image, 
                                     m.manufacturers_name,
                                     mi.manufacturers_description 
@@ -89,10 +95,8 @@ if ($listing_split->number_of_rows > 0) {
                                JOIN " . TABLE_MANUFACTURERS_INFO . " mi
                                     ON (m.manufacturers_id = mi.manufacturers_id
                                         AND mi.languages_id = '" . (int)$_SESSION['languages_id'] . "')
-                              WHERE m.manufacturers_id = '".(int) $_GET['manufacturers_id']."'");
+                              WHERE m.manufacturers_id = '".$manufacturers_id."'");
     $manu = xtc_db_fetch_array($manu_query, true);
-    $category['categories_name'] = $manu['manufacturers_name'];
-    $category['categories_description'] = $manu['manufacturers_description'];
     if ($manu['manufacturers_image'] != '') {
       $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
       if (!file_exists(DIR_FS_CATALOG.$image)) {
@@ -102,6 +106,15 @@ if ($listing_split->number_of_rows > 0) {
           $image = '';
         }
       }
+    }
+    if ($current_category_id != '0') {
+      $module_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+      $module_smarty->assign('MANUFACTURER_NAME', $manu['manufacturers_name']);
+      $module_smarty->assign('MANUFACTURER_DESCRIPTION', $manu['manufacturers_description']);
+      $module_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manu['manufacturers_id'], $manu['manufacturers_name']))); 
+    } else {
+      $category['categories_name'] = $manu['manufacturers_name'];
+      $category['categories_description'] = $manu['manufacturers_description'];
     }
   }
 

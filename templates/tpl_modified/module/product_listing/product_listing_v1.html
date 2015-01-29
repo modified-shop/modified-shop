@@ -17,6 +17,12 @@
 </div>
 {/if}
 
+{if $MANUFACTURER_DESCRIPTION || $MANUFACTURER_IMAGE || $MANUFACTURER_NAME}
+  {$MANUFACTURER_NAME}
+  {if $MANUFACTURER_IMAGE}<img class="manu_image" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />{/if}
+  {if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}
+{/if}
+
 {$PAGINATION}
 <div class="listingcontainer cf">
   {include file="`$smarty.const.CURRENT_TEMPLATE`/module/includes/product_listing_include.html"}
