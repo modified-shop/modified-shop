@@ -1864,6 +1864,21 @@ a.color_more:hover {
   text-decoration:none !important;
   background:#e6e6e6;
 }
+.manu_description {
+  padding: 0px 0px 25px 0px; 
+}
+.manu_description ul {
+  margin-left:15px;
+}
+.manu_description ol {
+  margin-left:28px;
+}
+.manu_image {
+  float:left;
+  margin: 6px 25px 10px 0px;
+  max-width:745px;
+  position:relative;
+}
 /* END categories listing & subcats */
 
 

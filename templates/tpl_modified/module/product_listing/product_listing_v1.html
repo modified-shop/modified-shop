@@ -18,9 +18,11 @@
 {/if}
 
 {if $MANUFACTURER_DESCRIPTION || $MANUFACTURER_IMAGE || $MANUFACTURER_NAME}
-  {$MANUFACTURER_NAME}
+<h4>{$MANUFACTURER_NAME}</h4>
+<div class="manu_description cf">
   {if $MANUFACTURER_IMAGE}<img class="manu_image" src="{$MANUFACTURER_IMAGE}" alt="{$MANUFACTURER_NAME|onlytext}" />{/if}
   {if $MANUFACTURER_DESCRIPTION}{$MANUFACTURER_DESCRIPTION}{/if}
+</div>  
 {/if}
 
 {$PAGINATION}
