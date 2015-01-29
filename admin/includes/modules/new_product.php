@@ -169,8 +169,8 @@
               <td><span class="main"><?php echo  xtc_draw_input_field('products_manufacturers_model', $pInfo->products_manufacturers_model, 'style="width: 155px"'); ?></span></td>
             </tr>
             <tr>
-              <td><span class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?></span></td>
-              <td><span class="main"><?php echo xtc_draw_input_field('products_weight', $pInfo->products_weight, 'style="width: 155px"'); ?>&nbsp;<?php echo TEXT_PRODUCTS_WEIGHT_INFO; ?></span></td>
+              <td><span class="main"><?php echo TEXT_PRODUCTS_WEIGHT; ?><?php echo TEXT_PRODUCTS_WEIGHT_INFO; ?></span></td>
+              <td><span class="main"><?php echo xtc_draw_input_field('products_weight', $pInfo->products_weight, 'style="width: 155px"'); ?></span></td>
             </tr>
             <?php if (ACTIVATE_SHIPPING_STATUS=='true') { ?>
             <tr>

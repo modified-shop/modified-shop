@@ -45,7 +45,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
   <div class="main div_header"><?php echo HEADING_PRICES_OPTIONS. draw_tooltip(TEXT_GRADUATED_PRICES_INFO) ?></div>
   <table class="tableInput">
     <tr>
-      <td style="width:160px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
+      <td style="width:165px;" class="main"><?php echo TEXT_PRODUCTS_PRICE; ?></td>
         <?php
         // calculate brutto price for display
         if (PRICE_IS_BRUTTO == 'true') {
