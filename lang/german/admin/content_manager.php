@@ -16,7 +16,7 @@
  define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Seiten Content');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
- define('TABLE_HEADING_CONTENT_ID','ID');
+ define('TABLE_HEADING_CONTENT_ID','coID');
  define('TABLE_HEADING_CONTENT_TITLE','Titel');
  define('TABLE_HEADING_CONTENT_FILE','Datei');
  define('TABLE_HEADING_CONTENT_STATUS','In Box sichtbar');
@@ -28,7 +28,7 @@
  define('TABLE_HEADING_CONTENT_NAME','Name/Dateiname');
  define('TABLE_HEADING_CONTENT_LINK','Link');
  define('TABLE_HEADING_CONTENT_HITS','Hits');
- define('TABLE_HEADING_CONTENT_GROUP','Sprachgruppe<br />coID');
+ define('TABLE_HEADING_CONTENT_GROUP','Sprachgruppe');
  define('TABLE_HEADING_CONTENT_SORT','Reihenfolge');
  define('TEXT_YES','Ja');
  define('TEXT_NO','Nein');

@@ -16,7 +16,7 @@
  define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Site content');
  define('HEADING_PRODUCTS_CONTENT','Products content');
- define('TABLE_HEADING_CONTENT_ID','LinkI D');
+ define('TABLE_HEADING_CONTENT_ID','coID');
  define('TABLE_HEADING_CONTENT_TITLE','Title');
  define('TABLE_HEADING_CONTENT_FILE','File');
  define('TABLE_HEADING_CONTENT_STATUS','Visible in box');
@@ -28,7 +28,7 @@
  define('TABLE_HEADING_CONTENT_NAME','Name/Filename');
  define('TABLE_HEADING_CONTENT_LINK','Link');
  define('TABLE_HEADING_CONTENT_HITS','Viewed');
- define('TABLE_HEADING_CONTENT_GROUP','Group');
+ define('TABLE_HEADING_CONTENT_GROUP','Language Group');
  define('TABLE_HEADING_CONTENT_SORT','Sort Order');
  define('TEXT_YES','Yes');
  define('TEXT_NO','No');
