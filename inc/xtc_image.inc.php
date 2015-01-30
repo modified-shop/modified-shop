@@ -14,41 +14,29 @@
 
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
- // include needed functions
- require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
- require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-// The HTML image wrapper function
+
+  // include needed functions
+  require_once(DIR_FS_INC . 'xtc_parse_input_field_data.inc.php');
+  require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
+
+  // The HTML image wrapper function
   function xtc_image($src, $alt = '', $width = '', $height = '', $parameters = '') {
     if ( (empty($src) || ($src == DIR_WS_IMAGES) || ( $src == DIR_WS_THUMBNAIL_IMAGES))) {
       return false;
     }
 
-// alt is added to the img tag even if it is null to prevent browsers from outputting
-// the image filename as default
+    // alt is added to the img tag even if it is null to prevent browsers from outputting
+    // the image filename as default
     $image = '<img src="' . xtc_parse_input_field_data($src, array('"' => '&quot;')) . '" alt="' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . '"';
 
-//BOF - Dokuman - 2009-10-14 - Remove title-attribute from images to avoid "keyword stuffing" (SEO), as it is identical to the alt-attribute
-    /*
-    if (xtc_not_null($alt)) {
-      $image .= ' title=" ' . xtc_parse_input_field_data($alt, array('"' => '&quot;')) . ' "';
-    }
-    */
-//EOF - Dokuman - 2009-10-14 - Remove title-attribute from images to avoid "keyword stuffing" (SEO), as it is identical to the alt-attribute
-
-    if (defined('CONFIG_CALCULATE_IMAGE_SIZE') && (CONFIG_CALCULATE_IMAGE_SIZE == 'true') && (empty($width) || empty($height)) ) {
+    if (defined('CONFIG_CALCULATE_IMAGE_SIZE') && CONFIG_CALCULATE_IMAGE_SIZE == 'true' && (empty($width) || empty($height)) && is_file($src)) {
       if ($image_size = @getimagesize($src)) {
         if (empty($width) && xtc_not_null($height)) {
           $ratio = $height / $image_size[1];
-          //BOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
-          //$width = $image_size[0] * $ratio;
           $width = (int)($image_size[0] * $ratio);
-          //EOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
         } elseif (xtc_not_null($width) && empty($height)) {
           $ratio = $width / $image_size[0];
-          //BOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
-          //$height = $image_size[1] * $ratio;
           $height = (int)($image_size[1] * $ratio);
-          //EOF - Dokuman - 2011-05-09 - make sure the values are rounded ints
         } elseif (empty($width) && empty($height)) {
           $width = $image_size[0];
           $height = $image_size[1];
@@ -67,4 +55,4 @@
     $image .= ' />';
     return $image;
   }
- ?>
+  ?>

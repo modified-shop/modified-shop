@@ -53,6 +53,7 @@ class product {
       $this->isProduct = false;
       return;
     }
+    
     // query for Product
     $product_query = xtDBquery("SELECT *
                                   FROM ".TABLE_PRODUCTS." AS p
@@ -134,11 +135,15 @@ class product {
     $data_reviews = array ();
     if (xtc_db_num_rows($reviews_query, true)) {
       while ($reviews = xtc_db_fetch_array($reviews_query, true)) {
+        $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif';
+        if (!is_file(DIR_FS_CATALOG.$img)) {
+          $img = 'templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.png';        
+        }
         $data_reviews[] = array (
             'AUTHOR' => $reviews['customers_name'],
             'DATE' => xtc_date_short($reviews['date_added']),
-            'RATING' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
-            'RATING_MICROTAG' => xtc_image('templates/'.CURRENT_TEMPLATE.'/img/stars_'.$reviews['reviews_rating'].'.gif', sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+            'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
+            'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
             'TEXT' => nl2br($reviews['reviews_text'])
           );
         if (count($data_reviews) == PRODUCT_REVIEWS_VIEW) break;
