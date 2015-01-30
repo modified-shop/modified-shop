@@ -98,23 +98,24 @@ if ($listing_split->number_of_rows > 0) {
                               WHERE m.manufacturers_id = '".$manufacturers_id."'");
     $manu = xtc_db_fetch_array($manu_query, true);
     if ($manu['manufacturers_image'] != '') {
-      $image = DIR_WS_IMAGES.$manu['manufacturers_image'];
-      if (!file_exists(DIR_FS_CATALOG.$image)) {
+      $manu_image = DIR_WS_IMAGES.$manu['manufacturers_image'];
+      if (!file_exists(DIR_FS_CATALOG.$manu_image)) {
         if (MANUFACTURER_IMAGE_SHOW_NO_IMAGE == 'true') {
-          $image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
+          $manu_image = DIR_WS_IMAGES.'manufacturers/noimage.gif';
         } else {
-          $image = '';
+          $manu_image = '';
         }
       }
     }
     if ($current_category_id != '0') {
-      $module_smarty->assign('MANUFACTURER_IMAGE', (($image != '') ? DIR_WS_BASE . $image : ''));
+      $module_smarty->assign('MANUFACTURER_IMAGE', (($manu_image != '') ? DIR_WS_BASE . $manu_image : ''));
       $module_smarty->assign('MANUFACTURER_NAME', $manu['manufacturers_name']);
       $module_smarty->assign('MANUFACTURER_DESCRIPTION', $manu['manufacturers_description']);
       $module_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manu['manufacturers_id'], $manu['manufacturers_name']))); 
-    } elseif (!isset($_GET['filter_id']) || $_GET['filter_id'] < 1) {
+    } else {
       $category['categories_name'] = $manu['manufacturers_name'];
       $category['categories_description'] = $manu['manufacturers_description'];
+      $image = $manu_image;
     }
   }
 
