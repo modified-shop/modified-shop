@@ -1836,19 +1836,29 @@ a.color_more:hover {
 }
 .subcat_image img {
   max-width:139px;
+  vertical-align:middle;
   height:auto;
   text-align:center;
 }
 .subcat_title {
-  display:block;
+  display:table;
   padding:5px 5px;
   color:#444;
   background:#f2f2f2;
   font-size:12px;
-  height:26px;
+  height:36px;
+  width:100%;
   line-height:14px;
   text-align:center;
   font-weight:bold;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.subcat_title_inner {
+  display:table-cell;
+  vertical-align:middle;
+  text-align:center;
 }
 .subcat_desc {
   display:inline-block;

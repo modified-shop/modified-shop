@@ -7,7 +7,7 @@
   <div class="subcatlist{if $smarty.foreach.aussen.iteration is div by $TR_COLS} last{/if}">
     <a href="{$categories_data.CATEGORIES_LINK}">
       {if $categories_data.CATEGORIES_IMAGE}<span class="subcat_image"><img src="{$categories_data.CATEGORIES_IMAGE}" alt="{$categories_data.CATEGORIES_NAME|onlytext}" /></span>{/if}
-      <span class="subcat_title">{$categories_data.CATEGORIES_NAME}</span>
+      <span class="subcat_title"><span class="subcat_title_inner">{$categories_data.CATEGORIES_NAME}</span></span>
     </a>
     {* <span class="subcat_desc">{$categories_data.CATEGORIES_DESCRIPTION}</span> *}
   </div>
