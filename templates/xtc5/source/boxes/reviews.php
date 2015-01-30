@@ -78,7 +78,7 @@
                           AND languages_id = '" . (int)$_SESSION['languages_id'] . "'";
       $review_query = xtDBquery($review_query);
       $reviews = xtc_db_fetch_array($review_query,true);
-      $reviews = htmlspecialchars($reviews['reviews_text']);
+      $reviews = encode_htmlspecialchars($reviews['reviews_text']);
       $reviews = xtc_break_string($reviews, 15, '-<br />');
 
       $review_image = DIR_WS_THUMBNAIL_IMAGES . $random_product['products_image'];

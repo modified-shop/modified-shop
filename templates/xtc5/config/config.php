@@ -18,16 +18,16 @@
   define('DIR_WS_BOXES', DIR_FS_CATALOG .'templates/'.CURRENT_TEMPLATE. '/source/boxes/');
 
   // popup
-  define('POPUP_SHIPPING_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-  define('POPUP_SHIPPING_LINK_CLASS', 'thickbox');
-  define('POPUP_CONTENT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-  define('POPUP_CONTENT_LINK_CLASS', 'thickbox');
-  define('POPUP_PRODUCT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=450&width=750');
-  define('POPUP_PRODUCT_LINK_CLASS', 'thickbox');
-  define('POPUP_COUPON_HELP_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
-  define('POPUP_COUPON_HELP_LINK_CLASS', 'thickbox');
-  define('POPUP_PRODUCT_PRINT_SIZE', 'width=640, height=600');
-  define('POPUP_PRINT_ORDER_SIZE', 'width=640, height=600');
+  define('TPL_POPUP_SHIPPING_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
+  define('TPL_POPUP_SHIPPING_LINK_CLASS', 'thickbox');
+  define('TPL_POPUP_CONTENT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
+  define('TPL_POPUP_CONTENT_LINK_CLASS', 'thickbox');
+  define('TPL_POPUP_PRODUCT_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=450&width=750');
+  define('TPL_POPUP_PRODUCT_LINK_CLASS', 'thickbox');
+  define('TPL_POPUP_COUPON_HELP_LINK_PARAMETERS', '&KeepThis=true&TB_iframe=true&height=400&width=600');
+  define('TPL_POPUP_COUPON_HELP_LINK_CLASS', 'thickbox');
+  define('TPL_POPUP_PRODUCT_PRINT_SIZE', 'width=640, height=600');
+  define('TPL_POPUP_PRINT_ORDER_SIZE', 'width=640, height=600');
 
   // template output
   define('TEMPLATE_ENGINE', 'smarty_2'); // smarty_3 or smarty_2

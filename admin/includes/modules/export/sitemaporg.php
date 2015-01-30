@@ -114,7 +114,7 @@ require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
 
       $content_query = xtDBquery($content_query);
       while ($content_data=xtc_db_fetch_array($content_query,true)) {
-        $link = htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group']));
+        $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group']));
         $entry=$this->xls_sitemap_entry($link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;          
       }
@@ -129,7 +129,7 @@ require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
  
       $manufacturers_query = xtDBquery($manufacturers_query);
       while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query,true)) {
-        $link = htmlspecialchars(xtc_href_link_from_admin('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id']));
+        $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id']));
         $entry=$this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;          
       }
@@ -155,7 +155,7 @@ require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
       $categories_query = xtDBquery($categories_query);
       while ($categories = xtc_db_fetch_array($categories_query,true)) {
         $catPath = xtc_get_category_path($categories['categories_id']);
-        $link = htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$catPath));
+        $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$catPath));
         $date = (empty($categories['last_modified']) ? $categories['date_added'] : $categories['last_modified'] );
         $entry=$this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
         $schema .= $entry;
@@ -177,7 +177,7 @@ require_once(DIR_FS_INC . 'xtc_get_category_path.inc.php');
                                  ORDER BY p.products_id");
 
       while ($products = xtc_db_fetch_array($export_query)) {
-          $link = htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id']));
+          $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id']));
           $entry=$this->xls_sitemap_entry( $link, $products['products_last_modified'], $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_PRODUCT']);     
           $schema .= $entry;
       }
