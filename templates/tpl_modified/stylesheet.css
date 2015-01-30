@@ -1808,7 +1808,10 @@ a.color_more:hover {
   max-width:745px;
   position:relative;
 }
-
+.ci_nomargin {
+  margin-right: 0px !important;
+  max-width:755px;
+}
 .subcats {
   margin: 0 0 25px 0;
 }
@@ -1878,6 +1881,10 @@ a.color_more:hover {
   margin: 6px 25px 10px 0px;
   max-width:745px;
   position:relative;
+}
+.mi_nomargin {
+  margin-right: 0px !important;
+  max-width:755px;
 }
 /* END categories listing & subcats */
 
