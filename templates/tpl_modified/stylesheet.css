@@ -928,6 +928,7 @@ a.show_all .arrow {
   margin: 0px auto;
   background-color:#ffffff;
   border: 1px solid #a0a0a0;
+  max-width:210px;
 }
 .box_price {
   font-family: 'fjallaoneregular', sans-serif;
