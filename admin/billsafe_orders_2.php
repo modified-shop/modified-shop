@@ -671,7 +671,7 @@
 <td class="dataTableHeadingContent"><?php echo MODULE_PAYMENT_BILLSAFE_2_DPAYMENT; ?></td>
 </tr><tr class="dataTableRow">
 <td class="dataTableContent" align="right" valign="top">
-<?php echo xtc_draw_form('dpaymentAmount', $post_url, $post_param, 'post'); ?>
+<?php echo xtc_draw_form('dpayment', $post_url, $post_param, 'post'); ?>
 <input id="dpaymentAmount" type="text" style="float:none;" maxlength="10" name="dpaymentAmount" size="4" value="" />,<input style="float:none;" id="dpaymentAmountKomma" type="text" maxlength="2" name="dpaymentAmountKomma" size="2" value="" />&nbsp;<?php echo $currency; ?>&nbsp;&nbsp;&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_DAY; ?>:&nbsp;<input style="float:none;" id="dpaymentDay" type="text" maxlength="2" name="dpaymentDay" size="2" value="" />&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_MONTH; ?>:&nbsp;<input style="float:none;" id="dpaymentMonth" type="text" maxlength="2" name="dpaymentMonth" size="2" value="" />&nbsp;<?php echo MODULE_PAYMENT_BILLSAFE_2_YEAR; ?>:&nbsp;<input style="float:none;" id="dpaymentYear" type="text" maxlength="4" name="dpaymentYear" size="4" value="" /><br /><br />
 <input type="submit" name="reportDirectPayment" value="<?php echo MODULE_PAYMENT_BILLSAFE_2_REPORT_DPAYMENT; ?>" />
 </form></td></tr></table>
