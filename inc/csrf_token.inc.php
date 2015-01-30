@@ -20,6 +20,8 @@ if (is_array($_POST) && count($_POST) > 0) {
     if ($_POST[$_SESSION['CSRFName']] != $_SESSION['CSRFToken']) {
       trigger_error("CSRFToken manipulation.\n".print_r($_POST, true), E_USER_WARNING);
       unset($_POST);
+      unset($_GET['action']);
+      unset($_GET['saction']);
       
       // create CSRF Token
       $_SESSION['CSRFName'] = xtc_RandomString(6);
@@ -32,6 +34,8 @@ if (is_array($_POST) && count($_POST) > 0) {
   } else {
     trigger_error("CSRFToken not defined.\n".print_r($_POST, true), E_USER_WARNING);
     unset($_POST);
+    unset($_GET['action']);
+    unset($_GET['saction']);
     
     // create CSRF Token
     $_SESSION['CSRFName'] = xtc_RandomString(6);
