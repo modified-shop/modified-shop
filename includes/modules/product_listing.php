@@ -112,7 +112,7 @@ if ($listing_split->number_of_rows > 0) {
       $module_smarty->assign('MANUFACTURER_NAME', $manu['manufacturers_name']);
       $module_smarty->assign('MANUFACTURER_DESCRIPTION', $manu['manufacturers_description']);
       $module_smarty->assign('MANUFACTURER_LINK', xtc_href_link(FILENAME_DEFAULT, xtc_manufacturer_link($manu['manufacturers_id'], $manu['manufacturers_name']))); 
-    } else {
+    } elseif (!isset($_GET['filter_id']) || $_GET['filter_id'] < 1) {
       $category['categories_name'] = $manu['manufacturers_name'];
       $category['categories_description'] = $manu['manufacturers_description'];
     }
