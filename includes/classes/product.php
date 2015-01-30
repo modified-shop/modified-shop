@@ -310,9 +310,10 @@ class product {
       $to_quantity = '';
       if ($staffel[$i]['stk'] == 1 || (array_key_exists($i +1, $staffel) && $staffel[$i +1]['stk'] != '')){ 
         $quantity = $staffel[$i]['stk'];
-        if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1)
+        if (array_key_exists($i + 1, $staffel) && $staffel[$i +1]['stk'] != '' && $staffel[$i +1]['stk'] != $staffel[$i]['stk'] + 1) {
           $quantity .= ' - '. ($staffel[$i +1]['stk'] - 1);
           $to_quantity = $staffel[$i +1]['stk'] - 1;
+        }
       } else {
         $quantity = GRADUATED_PRICE_MAX_VALUE.' '.$staffel[$i]['stk'];
       }
