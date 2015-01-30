@@ -20,6 +20,7 @@
   require_once(DIR_FS_INC . 'xtc_format_filesize.inc.php');
   require_once(DIR_FS_INC . 'xtc_filesize.inc.php');
   require_once(DIR_FS_INC . 'xtc_wysiwyg.inc.php');
+  require_once(DIR_FS_INC . 'xtc_href_link_from_admin.inc.php');
 
   if(!defined('CONTENT_CHILDS_ACTIV')) {
     define('CONTENT_CHILDS_ACTIV','true');

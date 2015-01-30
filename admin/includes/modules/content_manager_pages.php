@@ -48,14 +48,14 @@ if (!$action) {
         <td class="dataTableHeadingContent txta-c" style="width:10px" ><?php echo TABLE_HEADING_CONTENT_ID; ?></td>
         <td class="dataTableHeadingContent" style="width:10px" >&nbsp;</td>
         <td class="dataTableHeadingContent" style="width:30%"><?php echo TABLE_HEADING_CONTENT_TITLE; ?></td>
-        <td class="dataTableHeadingContent txta-c" style="width:1%"><?php echo TABLE_HEADING_CONTENT_GROUP; ?></td>
-        <td class="dataTableHeadingContent txta-c" style="width:1%"><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
-        <td class="dataTableHeadingContent" style="width:25%"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
-        <td class="dataTableHeadingContent nobr" style="width:5%"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
+        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_GROUP; ?></td>
+        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_SORT; ?></td>
+        <td class="dataTableHeadingContent" style="width:10%"><?php echo TABLE_HEADING_CONTENT_FILE; ?></td>
+        <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_CONTENT_STATUS; ?></td>
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_META_ROBOTS ?></td>
         <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS_ACTIVE ?></td>
-        <td class="dataTableHeadingContent txta-c nobr" style="width:30%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent txta-c nobr" style="width:45%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
       </tr>
       <?php
       for ($ii = 0, $nn = sizeof($content); $ii < $nn; $ii++) {
@@ -94,7 +94,7 @@ if (!$action) {
                   <?php
                   echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
                 ?>
-                <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link(FILENAME_CONTENT_PREVIEW,'coID='.$content[$ii]['CONTENT_ID']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
+                <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link_from_admin('popup_content.php','coID='.$content[$ii]['CONTENT_GROUP']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
                   <?php
                   echo xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','','style="cursor:pointer"').'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
                 ?>
