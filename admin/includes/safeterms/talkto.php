@@ -35,7 +35,7 @@ function talkto($params) {
 
 	// create the request body
 	foreach($params as $paramname=>$value) {
-		$reqbody.="<ENTRY name=\"".htmlspecialchars($paramname)."\">".htmlspecialchars($value)."</ENTRY>";
+		$reqbody.="<ENTRY name=\"".encode_htmlspecialchars($paramname)."\">".encode_htmlspecialchars($value)."</ENTRY>";
 	}
 
 	$reqbody = "request=".urlencode($reqbody);
@@ -99,7 +99,7 @@ function talkto($params) {
 				$entry = explode(">",$entry[1]);
 				$entry = explode("<",$entry[1]);
 				$entry_value = $entry[0];
-				$response[$entry_name]=htmlspecialchars_decode($entry_value);
+				$response[$entry_name]=decode_htmlspecialchars($entry_value);
 			}
 		}
 
