@@ -55,7 +55,7 @@ if (!$action) {
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TABLE_HEADING_CONTENT_BOX; ?></td>
         <td class="dataTableHeadingContent txta-c nobr"><?php echo TEXT_CONTENT_META_ROBOTS ?></td>
         <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS_ACTIVE ?></td>
-        <td class="dataTableHeadingContent txta-c nobr" style="width:45%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
+        <td class="dataTableHeadingContent txta-c nobr" style="width:10%"><?php echo TABLE_HEADING_CONTENT_ACTION; ?>&nbsp;</td>
       </tr>
       <?php
       for ($ii = 0, $nn = sizeof($content); $ii < $nn; $ii++) {
@@ -73,7 +73,7 @@ if (!$action) {
                 echo '<font color="#ff0000">*</font>';
               } ?>
             </td>
-            <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_GROUP']; ?></td>
+            <td class="dataTableContent txta-c nobr"><?php echo $content[$ii]['CONTENT_GROUP']; ?></td>
             <td class="dataTableContent txta-c"><?php echo $content[$ii]['SORT_ORDER']; ?>&nbsp;</td>
             <td class="dataTableContent"><?php echo $content[$ii]['CONTENT_FILE']; ?></td>
             <td class="dataTableContent txta-c"><?php if ($content[$ii]['CONTENT_STATUS']==0) { echo TEXT_NO; } else { echo TEXT_YES; } ?></td>
