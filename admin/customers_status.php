@@ -24,18 +24,22 @@
   require('includes/application_top.php');
   
   if (!function_exists('get_table_columns')) {
-    function get_table_columns($table, $col = '') {
-      $result_products_query = xtc_db_query("SHOW COLUMNS FROM ".$table);
+    function get_table_columns($table, $col = '', $like = false) {
       $columns = array();
       $test = false;
-      while($row = xtc_db_fetch_array($result_products_query)){
-        $columns[$row['Field']] = '';        
-        if ($col != '' && $col == $row['Field']) {
-          $test = true;
-          break;
-        }    
+
+      $result_query = xtc_db_query("SHOW COLUMNS FROM ".$table.(($col != '' && $like === true) ? " LIKE '".$col."'" : ''));
+      if (xtc_db_num_rows($result_query) > 0) {
+        while($row = xtc_db_fetch_array($result_query)){
+          $columns[$row['Field']] = '';        
+          if ($col != '' && $col == $row['Field'] && $like === false) {
+            $test = true;
+            break;
+          }
+        }
+      
       }
-      if ($col != '') {
+      if ($col != '' && $like === false) {
         return $test;
       }
       return $columns;
@@ -48,6 +52,7 @@
     switch ($action) {
       case 'insert':
       case 'save':
+        if (isset($_POST) && count($_POST) > 0) {
         $customers_status_id = xtc_db_prepare_input($_GET['cID']);
         $languages = xtc_get_languages();
         for ($i=0; $i < sizeof($languages); $i++) {
@@ -99,14 +104,18 @@
           // We want to create a personal offer table corresponding to each customers_status
           xtc_db_query("CREATE TABLE personal_offers_by_customers_status_" . $customers_status_id . " (price_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY, products_id int NOT NULL, quantity int, personal_offer decimal(15,4))");
 
+          // get lat group
+          $last_group_table = get_table_columns(TABLE_CATEGORIES, 'group_permission_%', true);
+          $last_group = key(array_slice($last_group_table, -1, 1, true));
+
           // Check if table column exists 
           if (!get_table_columns(TABLE_PRODUCTS,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
+            xtc_db_query("ALTER TABLE ".TABLE_PRODUCTS." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL AFTER '".$last_group."'");
           }
 
           // Check if table column exists
           if (!get_table_columns(TABLE_CATEGORIES,'group_permission_' . $customers_status_id)) {
-            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL");
+            xtc_db_query("ALTER TABLE ".TABLE_CATEGORIES." ADD group_permission_" . $customers_status_id . " TINYINT( 1 ) NOT NULL AFTER '".$last_group."'");
           }
         }
 
@@ -163,7 +172,7 @@
         if ($_POST['default'] == 'on') {
           xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " SET configuration_value = '" . xtc_db_input($customers_status_id) . "' WHERE configuration_key = 'DEFAULT_CUSTOMERS_STATUS_ID'");
         }
-
+        }
         xtc_redirect(xtc_href_link(FILENAME_CUSTOMERS_STATUS, 'page=' . $_GET['page'] . '&cID=' . $customers_status_id));
         break;
 
