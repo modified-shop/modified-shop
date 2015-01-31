@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: ssl_check.php 4221 2013-01-11 10:18:52Z gtb-modified $   
 
@@ -17,10 +16,12 @@
    ---------------------------------------------------------------------------------------*/
 
 include ('includes/application_top.php');
+
+// create smarty
 $smarty = new Smarty;
+
 // include boxes
 require (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/boxes.php');
-
 
 $breadcrumb->add(NAVBAR_TITLE_SSL_CHECK, xtc_href_link(FILENAME_SSL_CHECK));
 
