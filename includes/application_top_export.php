@@ -35,8 +35,8 @@ if (file_exists(dirname(__FILE__).'/local/configure.php')) {
 }
 
 // new error handling
-if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
-  require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
+if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_WS_INCLUDES.'error_reporting.php');
 }
 
 /*
@@ -87,7 +87,7 @@ require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // include used functions
-require_once(DIR_FS_INC . 'html_encoding.php'); //new function for PHP5.4
+require_once(DIR_FS_INC . 'html_encoding.php');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -108,6 +108,17 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
     ini_set('zlib.output_compression_level', GZIP_LEVEL);
   }
 }
+
+// security inputfilter for GET/POST/COOKIE
+require (DIR_WS_CLASSES.'class.inputfilter.php');
+$InputFilter = new InputFilter();
+
+$_GET = $InputFilter->process($_GET);
+$_POST = $InputFilter->process($_POST);
+$_REQUEST = $InputFilter->process($_REQUEST);
+$_GET = $InputFilter->safeSQL($_GET);
+$_POST = $InputFilter->safeSQL($_POST);
+$_REQUEST = $InputFilter->safeSQL($_REQUEST);
 
 foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_export_end/','php') as $file) require ($file);
 

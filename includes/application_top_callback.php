@@ -35,8 +35,8 @@ if (file_exists(dirname(__FILE__).'/local/configure.php')) {
 }
 
 // new error handling
-if (is_file(DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php')) {
-  require_once (DIR_FS_CATALOG.DIR_WS_INCLUDES.'error_reporting.php');
+if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_WS_INCLUDES.'error_reporting.php');
 }
 
 // turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
@@ -74,7 +74,6 @@ require(DIR_WS_INCLUDES . 'filenames.php');
 
 // include the list of project database tables
 require(DIR_WS_INCLUDES . 'database_tables.php');
-
 
 // Store DB-Querys in a Log File
 define('STORE_DB_TRANSACTIONS', 'false');
@@ -137,8 +136,7 @@ require_once (DIR_FS_INC.'xtc_add_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_cleanName.inc.php');
 require_once (DIR_FS_INC.'xtc_calculate_tax.inc.php');
 require_once (DIR_FS_INC.'xtc_input_validation.inc.php');
-require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
-//require_once (DIR_FS_INC.'xtc_js_lang.php');
+require_once (DIR_FS_INC.'html_encoding.php');
 
 // make a connection to the database... now
 xtc_db_connect() or die('Unable to connect to database server!');
@@ -149,6 +147,8 @@ while ($configuration = xtc_db_fetch_array($configuration_query)) {
     defined($configuration['cfgKey']) OR define($configuration['cfgKey'], stripslashes($configuration['cfgValue']));
 }
 
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback_begin/','php') as $file) require ($file);
+
 // if gzip_compression is enabled, start to buffer the output
 if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib')) && (PHP_VERSION >= '4') ) {
   if (($ini_zlib_output_compression = (int)ini_get('zlib.output_compression')) < 1) {
@@ -158,14 +158,19 @@ if ( (GZIP_COMPRESSION == 'true') && ($ext_zlib_loaded = extension_loaded('zlib'
   }
 }
 
+// security inputfilter for GET/POST/COOKIE
+require (DIR_WS_CLASSES.'class.inputfilter.php');
+$InputFilter = new InputFilter();
+
+$_GET = $InputFilter->process($_GET);
+$_POST = $InputFilter->process($_POST);
+$_REQUEST = $InputFilter->process($_REQUEST);
+$_GET = $InputFilter->safeSQL($_GET);
+$_POST = $InputFilter->safeSQL($_POST);
+$_REQUEST = $InputFilter->safeSQL($_REQUEST);
+
 // Paypal API Modul
 require (DIR_WS_FUNCTIONS.'sessions.php');
 
-// Smarty Template Engine - needed for PayPal Error notification
-if (!defined('TEMPLATE_ENGINE')) {
-  define('TEMPLATE_ENGINE','smarty_2');
-}
-
-require (DIR_FS_EXTERNAL.'smarty/'.TEMPLATE_ENGINE.'/Smarty.class.php');
-
+foreach(auto_include(DIR_FS_CATALOG.'includes/extra/application_top_callback_end/','php') as $file) require ($file);
 ?>
