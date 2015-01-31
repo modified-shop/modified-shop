@@ -17,7 +17,7 @@ include (DIR_FS_DOCUMENT_ROOT.'callback/moneybookers/moneybookers.php');
 
 $data = array ();
 
-if (count($_POST) > 0) {
+if (isset($_POST) && count($_POST) > 0) {
 
 	$mb = new moneybookers_callback();
 
@@ -38,6 +38,7 @@ if (count($_POST) > 0) {
 	if ($mb->debug) {
 		$mb->_logTransactions();
 	}
+	
 	if ($mb->repost) {
 		header('HTTP/1.0 404 Not Found');
 	} else {

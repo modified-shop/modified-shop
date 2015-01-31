@@ -19,25 +19,32 @@ class moneybookers_callback {
 		$this->Error = '';
 		$this->oID = 0;
 		$this->debug = true;
+
+		$this->PWD = _PAYMENT_MONEYBOOKERS_PWD;
+		$this->merchantID = _PAYMENT_MONEYBOOKERS_MERCHANTID;
+		$this->emailID = _PAYMENT_MONEYBOOKERS_EMAILID;
+
+		$this->statusPending = _PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID;
+		$this->statusCanceled = _PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID;
+		$this->statusProcessed = _PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID;
  	}
  	
  	function callback_process($data) {
 
 		$this->data = $data;
 
-		// order ID already inserted ?
-		$err = $this->_CheckStatus();
-		if (!$err)
-			return false;
-
 		// check if merchant ID matches
 		$err = $this->_check_Merchant();
-
 		if (!$err)
 			return false;
 
 		// validate md5signature (not implemented yet)
 		$err = $this->_check_md5sig();
+		if (!$err)
+			return false;
+
+		// order ID already inserted ?
+		$err = $this->_CheckStatus();
 		if (!$err)
 			return false;
 
@@ -50,25 +57,13 @@ class moneybookers_callback {
 		$this->_setStatus();
 		
 	}
-	
 		
-	function _getType($orders_id) {	
-		$this->statusPending=_PAYMENT_MONEYBOOKERS_PENDING_STATUS_ID;
-		$this->statusCanceled=_PAYMENT_MONEYBOOKERS_CANCELED_STATUS_ID;
-		$this->statusProcessed=_PAYMENT_MONEYBOOKERS_PROCESSED_STATUS_ID;
-		$this->PWD=_PAYMENT_MONEYBOOKERS_PWD;
-		$this->merchantID=_PAYMENT_MONEYBOOKERS_MERCHANTID;
-		$this->emailID=_PAYMENT_MONEYBOOKERS_EMAILID;
-	}
-	
 	function _CheckStatus() {
-
-		$order_query = "SELECT mb_ORDERID as oid FROM payment_moneybookers WHERE mb_TRID = '" . $this->data['transaction_id'] . "'";
+		$order_query = "SELECT mb_ORDERID as oid FROM payment_moneybookers WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'";
 		$order_query = xtc_db_query($order_query);
 		$order_data = xtc_db_fetch_array($order_query);
 
 		if ($order_data['oid'] > 0) {
-			$this->_getType($order_data['oid']);
 			return true;
 		}
 
@@ -79,14 +74,14 @@ class moneybookers_callback {
 
 	function _check_TRID() {
 		// valid trid ?
-		$query = "SELECT mb_TRID,mb_ORDERID FROM payment_moneybookers WHERE mb_TRID = '" . $this->data['transaction_id'] . "'";
+		$query = "SELECT mb_TRID, mb_ORDERID FROM payment_moneybookers WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'";
 		$query = xtc_db_query($query);
 		if (!xtc_db_num_rows($query)) {
 			$this->Error = '1002';
 			return false;
 		}
 		// ok Insert mb transaction ID
-		$query = "UPDATE payment_moneybookers SET mb_MBTID ='" . $this->data['mb_transaction_id'] . "'  WHERE mb_TRID = '" . $this->data['transaction_id'] . "'";
+		$query = "UPDATE payment_moneybookers SET mb_MBTID ='" . xtc_db_input($this->data['mb_transaction_id']) . "'  WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'";
 		$query = xtc_db_query($query);
 		return true;
 	}
@@ -96,7 +91,7 @@ class moneybookers_callback {
 		switch ($this->data['status']) {
 			// processed
 			case 2 :
-				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '200', mb_ERRTXT = 'OK', mb_MBTID = '" . $this->data['mb_transaction_id'] . "', mb_STATUS = '" . $this->data['status'] . "' WHERE mb_TRID = '" . $this->data['transaction_id'] . "'");
+				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '200', mb_ERRTXT = 'OK', mb_MBTID = '" . xtc_db_input($this->data['mb_transaction_id']) . "', mb_STATUS = '" . xtc_db_input($this->data['status']) . "' WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'");
 				$status = $this->statusProcessed;
 				$text = 'OK, Payment received';
 				break;
@@ -104,19 +99,19 @@ class moneybookers_callback {
 				// canceled
 			case -2 :
 			case -1 :
-				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '999', mb_ERRTXT = 'Transaction failed.', mb_MBTID = '" . $this->data['mb_transaction_id'] . "', mb_STATUS = '" . $this->data['status'] . "' WHERE mb_TRID = '" . $this->data['transaction_id'] . "'");
+				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '999', mb_ERRTXT = 'Transaction failed.', mb_MBTID = '" . xtc_db_input($this->data['mb_transaction_id']) . "', mb_STATUS = '" . xtc_db_input($this->data['status']) . "' WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'");
 				$status = $this->statusCanceled;
 				$text = 'ERROR, Transaction Failed';
 				break;
 
 			case 1 :
-				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '200', mb_ERRTXT = 'PENDING', mb_MBTID = '" . $this->data['mb_transaction_id'] . "', mb_STATUS = '" . $this->data['status'] . "' WHERE mb_TRID = '" . $this->data['transaction_id'] . "'");
+				$result = xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '200', mb_ERRTXT = 'PENDING', mb_MBTID = '" . xtc_db_input($this->data['mb_transaction_id']) . "', mb_STATUS = '" . xtc_db_input($this->data['status']) . "' WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'");
 				$status = $this->statusPending;
 				$text = 'WAIT, Transaction Pending';
 				break;
 		}
 
-		$order_query = "SELECT mb_ORDERID as oid FROM payment_moneybookers WHERE mb_TRID = '" . $this->data['transaction_id'] . "'";
+		$order_query = "SELECT mb_ORDERID as oid FROM payment_moneybookers WHERE mb_TRID = '" . xtc_db_input($this->data['transaction_id']) . "'";
 		$order_query = xtc_db_query($order_query);
 		$order_data = xtc_db_fetch_array($order_query);
 
@@ -190,7 +185,7 @@ class moneybookers_callback {
 
 		// update order text
 		if ($this->data['mb_transaction_id'] != '') {
-			xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '999', mb_ERRTXT = '" . $txt . "' WHERE mb_MBTID = '" . $this->data['mb_transaction_id'] . "'");
+			xtc_db_query("UPDATE payment_moneybookers SET mb_ERRNO = '999', mb_ERRTXT = '" . xtc_db_input($txt) . "' WHERE mb_MBTID = '" . xtc_db_input($this->data['mb_transaction_id']) . "'");
 		}
 
 		return $txt;
@@ -198,12 +193,13 @@ class moneybookers_callback {
 
 	function _logTransactions() {
 
-		$this->logFileMoneybookers = DIR_FS_CATALOG . 'includes/mb.log';
+		$this->logFileMoneybookers = DIR_FS_LOG . 'mb.log';
 
 		$error = $this->_getError($this->Error, $this->data);
-		if ($error == '')
+		if ($error == '') {
 			$error = 'OK';
-
+    }
+    
 		$line = 'MB TRANS|' . date("d.m.Y H:i", time()) . '|' . xtc_get_ip_address() . '|' . $error . '|';
 
 		foreach ($_POST as $key => $val) {
@@ -211,10 +207,9 @@ class moneybookers_callback {
     }
     
 		error_log($line . "\n", 3, $this->logFileMoneybookers);
-
 	}
 	
-	function _notifyTransaction($oID,$text) {
+	function _notifyTransaction($oID, $text) {
 		
 	  $email_body = "Order ID: ".$oID."\n" . 'Message: '.$text . "\n\n";
 	  	
