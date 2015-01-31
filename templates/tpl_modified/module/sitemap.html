@@ -3,8 +3,8 @@
 {if isset($herror)}<div class="errormessage">{$herror}</div>{/if}
 <div class="sitemap">
   {foreach name=aussen item=module_data from=$module_content}
-  <div class="sitemapheader"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a></div>
-  <div class="sitemapcontent">
+  <ul>
+    <li><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a>
     {if $module_data.SCATS|@sizeof!=0}
     <ul>
       {foreach key=key_data item=item_data from=$module_data.SCATS}
@@ -12,7 +12,8 @@
       {/foreach}
     </ul>
     {/if}
-  </div>
+    <li>
+  </ul>
   {/foreach}
 </div>
 <br class="clearfix" />
