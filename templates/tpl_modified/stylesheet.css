@@ -3070,7 +3070,7 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
 }
 .sitemap ul {
   list-style-type:none;
-  margin-left:0px;
+  margin-left:0px !important;
 }
 .sitemap ul > li.sitemap_header {  
   border-top: 1px solid #ddd;
