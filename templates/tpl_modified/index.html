@@ -9,7 +9,7 @@
       {if isset($account)}
         <li class="first"><a href="{$account}">{#link_account#}</a></li>
       {/if}
-      {if $smarty.session.customers_status.customers_status_id == '1'}
+      {if !isset($smarty.session.customer_id)}
         <li><a href="{$create_account}">{#new_customer#}</a></li>
       {/if}
 
