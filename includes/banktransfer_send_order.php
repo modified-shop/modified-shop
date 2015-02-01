@@ -34,11 +34,11 @@
     $total = $xtPrice->xtcFormat($order_total['total'], true);
     $smarty->assign('PAYMENT_BANKTRANSFER_TOTAL', $total);
     $smarty->assign('PAYMENT_BANKTRANSFER_MANDATE_REFERENCE', MODULE_PAYMENT_BANKTRANSFER_REFERENCE_PREFIX . $oID);
-    $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', $rec['banktransfer_iban']);
+    $smarty->assign('PAYMENT_BANKTRANSFER_IBAN', substr($rec['banktransfer_iban'], 0, 8) . str_repeat('*', (strlen($rec['banktransfer_iban']) - 10)) . substr($rec['banktransfer_iban'], -2));
     $smarty->assign('PAYMENT_BANKTRANSFER_BANKNAME', $rec['banktransfer_bankname']);
-
+    
     $sepa_info = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$order->info['language'].'/sepa_info.html');
-          
+    
     $smarty->assign('PAYMENT_INFO_HTML', $sepa_info);
     $smarty->assign('PAYMENT_INFO_TXT', str_replace("<br />", "\n", $sepa_info));
     
