@@ -58,10 +58,11 @@
 
 #js_popup_panel input[type=button]{
   cursor: pointer;
-  padding: 2px 4px;
+  padding: 5px 10px;
+  color:#666;
 }
 #js_popup_panel input[type=button]:hover{
-  background-color: #bbb;
+  color:#000;
 }
 
 #js_popup_prompt {
