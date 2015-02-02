@@ -49,6 +49,17 @@
     define('DIR_WS_BASE',''); //web28 - 2010-12-13 - FIX for $messageStack icons //moved to application.php
   }
 
+  // new error handling
+  if (!defined('DIR_FS_LOG')) {
+    define('DIR_FS_LOG', DIR_FS_CATALOG.'log/');
+  }
+  if (!defined('STORE_PARSE_DATE_TIME_FORMAT')) {
+    define('STORE_PARSE_DATE_TIME_FORMAT', '%d/%m/%Y %H:%M:%S');
+  }
+  if (is_file(DIR_FS_CATALOG.'includes/error_reporting.php')) {
+    require_once (DIR_FS_CATALOG.'includes/error_reporting.php');
+  }
+
   // set admin directory
   require_once(DIR_FS_INC.'set_admin_directory.inc.php');
 
