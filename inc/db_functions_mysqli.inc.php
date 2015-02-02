@@ -90,7 +90,7 @@
         return false;
       }
     } else {
-      xtc_db_error('', mysqli_errno(), mysqli_error());
+      xtc_db_error('', '', 'Access denied for user \''.$username.'\'@\''.$server.'\'');
       return false;
     }
 
