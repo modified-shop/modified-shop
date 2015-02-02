@@ -30,7 +30,7 @@ function xtc_db_test_create_db_permission($database, $type) {
   if (!$db_error) {
     if (!@xtc_db_select_db($database, $type)) {
       $db_created = true;
-      if (!@xtc_db_query_installer("CREATE DATABASE '" . xtc_db_input($database) . "'", $type)) {
+      if (!@xtc_db_query_installer("CREATE DATABASE '" . xtc_db_input_installer($database) . "'", $type)) {
         $db_error = xtc_db_error_installer($type);
       }
     } else {
@@ -42,7 +42,7 @@ function xtc_db_test_create_db_permission($database, $type) {
         if (@xtc_db_query_installer("CREATE TABLE temp ( temp_id int(5) )", $type)) {
           if (@xtc_db_query_installer("DROP TABLE temp", $type)) {
             if ($db_created) {
-              if (@xtc_db_query_installer("DROP DATABASE '" . xtc_db_input($database) . "'", $type)) {
+              if (@xtc_db_query_installer("DROP DATABASE '" . xtc_db_input_installer($database) . "'", $type)) {
               } else {
                 $db_error = xtc_db_error_installer($type);
               }

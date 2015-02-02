@@ -67,4 +67,25 @@
         break;
     }        
   }
+
+  function xtc_db_input_installer($string, $type, $link = 'db_link') {
+    global $$link;
+
+    switch ($type) {
+      case 'mysql':
+        if (function_exists('mysql_real_escape_string')) {
+          return mysql_real_escape_string($string, $$link);
+        } elseif (function_exists('mysql_escape_string')) {
+          return mysql_escape_string($string);
+        }
+        break;
+      case 'mysqli':
+        if (function_exists('mysqli_real_escape_string')) {
+          return mysqli_real_escape_string($$link, $string);
+        }
+        break;
+    }        
+
+    return addslashes($string);
+  }
  ?>
