@@ -17,7 +17,7 @@
 
 define('HEADING_TITLE', 'Steuers&auml;tze');
 
-define('TABLE_HEADING_TAX_RATE_PRIORITY', 'Priorit&auml;t<br/><b>WICHTIG:</b>F&uuml;r elektronisch erbrachte Leistungen muss diese auf 99 gesetzt werden.');
+define('TABLE_HEADING_TAX_RATE_PRIORITY', 'Priorit&auml;t');
 define('TABLE_HEADING_TAX_CLASS_TITLE', 'Steuerklasse');
 define('TABLE_HEADING_COUNTRIES_NAME', 'Land');
 define('TABLE_HEADING_ZONE', 'Steuerzone');
@@ -31,7 +31,7 @@ define('TEXT_INFO_CLASS_TITLE', 'Name der Steuerklasse:');
 define('TEXT_INFO_COUNTRY_NAME', 'Land:');
 define('TEXT_INFO_ZONE_NAME', 'Steuerzone:');
 define('TEXT_INFO_TAX_RATE', 'Steuersatz (%):');
-define('TEXT_INFO_TAX_RATE_PRIORITY', 'Steuers&auml;tze der selben Priorit&auml;t werden addiert, andere werden vermischt.<br /><br />Priorit&auml;t:');
+define('TEXT_INFO_TAX_RATE_PRIORITY', 'Steuers&auml;tze der selben Priorit&auml;t werden addiert, andere werden vermischt.<br/><b>WICHTIG:</b>F&uuml;r elektronisch erbrachte Leistungen muss diese auf 99 gesetzt werden.<br /><br />Priorit&auml;t:');
 define('TEXT_INFO_RATE_DESCRIPTION', 'Beschreibung:');
 define('TEXT_INFO_INSERT_INTRO', 'Bitte geben Sie den neuen Steuersatz mit allen relevanten Daten ein');
 define('TEXT_INFO_DELETE_INTRO', 'Sind Sie sicher, dass Sie diesen Steuersatz l&ouml;schen m&ouml;chten?');
