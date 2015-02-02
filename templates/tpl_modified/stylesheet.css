@@ -1827,7 +1827,7 @@ a.color_more:hover {
   margin: 0px 0px 10px 0px;
 }  
 .subcat_image {
-  display:table;
+  display:block;
   vertical-align:middle;
   text-align:center;
   width:139px;
@@ -1835,9 +1835,10 @@ a.color_more:hover {
   overflow:hidden;
 }
 .subcat_image_inner {
-  display:table-cell;
+  display:block;
   vertical-align:middle;
   text-align:center;
+  line-height:100px;
 }
 
 .subcat_image img {
