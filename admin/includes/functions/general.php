@@ -1975,7 +1975,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $name = (isset($key) ? 'configuration['.$key.']' : 'configuration_value'); //DokuMan - set undefined $key
     if ($dir = opendir(DIR_FS_CATALOG.'templates/')) {
       while (($templates = readdir($dir)) !== false) {
-        if (is_dir(DIR_FS_CATALOG.'templates/'."//".$templates) and ($templates != "CVS") and ($templates != ".") and ($templates != "..")) {
+        if (is_dir(DIR_FS_CATALOG.'templates/'.$templates) && ($templates != "CVS") && substr($templates, 0, 1) != ".") {
           $templates_array[] = array ('id' => $templates, 'text' => $templates);
         }
       }
