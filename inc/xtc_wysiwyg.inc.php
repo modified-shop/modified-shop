@@ -53,11 +53,11 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
       break;
     // WYSIWYG editor products_description textarea named products_description_langID
     case 'products_description':
-      $val =  'var oFCKeditor = new FCKeditor( \'products_description_'.$langID.'\', \'100%\', \'400\'  ) ;' ;
+      $val =  'var oFCKeditor = new FCKeditor( \'products_description['.$langID.']\', \'100%\', \'400\'  ) ;' ;
       break;
     // WYSIWYG editor products short description textarea named products_short_description_langID
     case 'products_short_description':
-      $val = 'var oFCKeditor = new FCKeditor( \'products_short_description_'.$langID.'\', \'100%\', \'300\'  ) ;' ;
+      $val = 'var oFCKeditor = new FCKeditor( \'products_short_description['.$langID.']\', \'100%\', \'300\'  ) ;' ;
       break;
     // WYSIWYG editor newsletter textarea named newsletter_body
     case 'newsletter':
