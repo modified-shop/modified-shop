@@ -79,18 +79,18 @@
       $$link = @mysql_connect($server, $username, $password);
     }
 
-    if(version_compare(@xtc_db_get_server_info(), '5.0.0', '>=')) {
-      @mysql_query("SET SESSION sql_mode=''");
-    }
-
     if ($$link) {
       if (!@mysql_select_db($database, $$link)) {
         xtc_db_error('', mysql_errno($$link), mysql_error($$link));
         return false;
       }
     } else {
-      xtc_db_error('', mysql_errno(), mysql_error());
+      xtc_db_error('', '', 'Access denied for user \''.$username.'\'@\''.$server.'\'');
       return false;
+    }
+
+    if(version_compare(@xtc_db_get_server_info(), '5.0.0', '>=')) {
+      @mysql_query("SET SESSION sql_mode=''");
     }
 
     // set charset defined in configure.php

@@ -79,11 +79,6 @@
       $$link = @mysqli_connect($server, $username, $password);
     }
 
-
-    if(version_compare(@xtc_db_get_server_info(), '5.0.0', '>=')) {
-      @mysqli_query($$link, "SET SESSION sql_mode=''");
-    }
-
     if ($$link) {
       if (!@mysqli_select_db($$link, $database)) {
         xtc_db_error('', mysqli_errno($$link), mysqli_error($$link));
@@ -92,6 +87,10 @@
     } else {
       xtc_db_error('', '', 'Access denied for user \''.$username.'\'@\''.$server.'\'');
       return false;
+    }
+
+    if(version_compare(@xtc_db_get_server_info(), '5.0.0', '>=')) {
+      @mysqli_query($$link, "SET SESSION sql_mode=''");
     }
 
     // set charset defined in configure.php
