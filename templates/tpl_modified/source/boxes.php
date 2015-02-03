@@ -70,7 +70,7 @@ $fullcontent = array(FILENAME_CHECKOUT_SHIPPING,
   require_once(DIR_FS_BOXES . 'loginbox.php');
   require_once(DIR_FS_BOXES . 'newsletter.php');
 // -----------------------------------------------------------------------------------------
-//	onyl if show price
+//	only if show price
 // -----------------------------------------------------------------------------------------
   if ($_SESSION['customers_status']['customers_status_show_price'] == '1') {
     require_once(DIR_FS_BOXES . 'add_a_quickie.php');
