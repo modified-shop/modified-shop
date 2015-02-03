@@ -1779,7 +1779,7 @@ INSERT INTO countries VALUES (70,'Faroe Islands','FO','FRO',1,1,0);
 INSERT INTO countries VALUES (71,'Fiji','FJ','FJI',1,1,0);
 INSERT INTO countries VALUES (72,'Finland','FI','FIN',1,1,0);
 INSERT INTO countries VALUES (73,'France','FR','FRA',1,1,0);
-INSERT INTO countries VALUES (74,'France, Metropolitan','FX','FXX',1,1,0);
+#INSERT INTO countries VALUES (74,'France, Metropolitan','FX','FXX',1,1,0);
 INSERT INTO countries VALUES (75,'French Guiana','GF','GUF',1,1,0);
 INSERT INTO countries VALUES (76,'French Polynesia','PF','PYF',1,1,0);
 INSERT INTO countries VALUES (77,'French Southern Territories','TF','ATF',1,1,0);
