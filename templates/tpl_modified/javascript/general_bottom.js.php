@@ -60,7 +60,7 @@
     $("html").not('.toggle_cart').bind('click',function(e) {
       $('.toggle_cart').slideUp('slow');
     });
-    <?php if (isset($_SESSION['new_products_id_in_cart'])) {
+    <?php if (DISPLAY_CART == 'false' && isset($_SESSION['new_products_id_in_cart'])) {
       unset($_SESSION['new_products_id_in_cart']); ?>
       $('.toggle_cart').slideToggle('slow');
       timer = setTimeout(function(){$('.toggle_cart').slideUp('slow');}, 3000);

@@ -37,16 +37,19 @@ if (xtc_not_null($action)) {
     xtc_redirect(xtc_href_link(FILENAME_COOKIE_USAGE));
   }
 
-  $parameters = array ('action', 'products_id', 'pid', 'info_message_3');
+  $parameters = array ('action', 'pid', 'info_message_3');
   if (DISPLAY_CART == 'true') {
     $goto = FILENAME_SHOPPING_CART;
-    $parameters[] = 'cPath';
+    array_push($parameters, 'products_id', 'cPath');
   } else {
     $goto = basename($PHP_SELF);
     if ($_GET['action'] == 'buy_now') {
+      if ($goto == FILENAME_PRODUCT_INFO) {
+        $_GET['products_id'] = $_GET['BUYproducts_id'];
+      }
       $parameters[] = 'BUYproducts_id';
     } else {
-      array_push($parameters, 'BUYproducts_id', 'info');
+      array_push($parameters, 'products_id', 'BUYproducts_id', 'info');
     }
   }
 
