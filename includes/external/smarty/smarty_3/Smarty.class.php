@@ -627,12 +627,12 @@ class Smarty extends Smarty_Compatibility {
         }
         $this->start_time = microtime(true);
         // set default dirs
-        $this->setTemplateDir(DIR_FS_CATALOG . DS . 'templates' . DS)
-            ->setCompileDir(DIR_FS_CATALOG . DS . 'templates_c' . DS)
+        $this->setTemplateDir(DIR_FS_CATALOG . 'templates' . DS)
+            ->setCompileDir(DIR_FS_CATALOG . 'templates_c' . DS)
             ->setPluginsDir(SMARTY_PLUGINS_DIR)
-            ->setCacheDir(DIR_FS_CATALOG . DS . 'cache' . DS)
-            ->setConfigDir(DIR_FS_CATALOG . DS . 'lang' . DS)
-            ->addConfigDir(DIR_FS_CATALOG . DS . 'templates' . DS . CURRENT_TEMPLATE . DS . 'lang' . DS)
+            ->setCacheDir(DIR_FS_CATALOG . 'cache' . DS)
+            ->setConfigDir(DIR_FS_CATALOG . 'lang' . DS)
+            ->addConfigDir(DIR_FS_CATALOG . 'templates' . DS . CURRENT_TEMPLATE . DS . 'lang' . DS)
             ->addPluginsDir(MY_TEMPLATE_PLUGINS);
             
         $this->debug_tpl = 'file:' . dirname(__FILE__) . '/debug.tpl';
