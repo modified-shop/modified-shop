@@ -119,12 +119,12 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             
         // WYSIWYG editor products_description textarea named products_description_langID
         case 'products_description':
-            $editorName = 'products_description_'.$langID;
+            $editorName = 'products_description['.$langID.']';
             $default_editor_height = 400;
             break;
         // WYSIWYG editor products short description textarea named products_short_description_langID
         case 'products_short_description':
-            $editorName = 'products_short_description_'.$langID;
+            $editorName = 'products_short_description['.$langID.']';
             $default_editor_height = 300;
             break;
             
