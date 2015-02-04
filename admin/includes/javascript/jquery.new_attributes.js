@@ -4,7 +4,7 @@
   (c) 2013-14 by web28 - www.rpa-com.de
 -------------------------*/
 
-var debug = true;
+var debug = false;
 
 var flag  = true;
 
