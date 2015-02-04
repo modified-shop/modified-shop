@@ -1619,6 +1619,11 @@ a.color_more:hover {
   color:#999;
   text-decoration:underline;
 }
+.lb_buttons {
+  display:block;
+  text-align:center;
+  padding-top:10px;
+}
 /* END productlist boxes */
 
 
