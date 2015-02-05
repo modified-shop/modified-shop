@@ -43,7 +43,7 @@
   define('TEXT_DB_SERVER_VERSION','Ihre MySQL-Version: ');
   // EOF - vr - 2010-01-14 - check MySQL *server* version
   // BOF - vr - 2010-01-14 - check MySQL *client* version
-  define('TEXT_DB_CLIENT_VERSION_WARNING','Ihre MySQL-Client-Version ist zu alt. Der Shop ben&ouml;tigt mindestens die Version: 4.1.2 </br></br>Sie k&ouml;nnen die Installation aber fortf&uuml;hren.</br>Wenn sich die Installation nicht fehlerfrei durchf&uuml;hren l&auml;sst, bitten Sie Ihren Provider um ein Update!');
+  define('TEXT_DB_CLIENT_VERSION_WARNING','Ihre MySQL-Client-Version ist zu alt. Der Shop ben&ouml;tigt mindestens die Version: 5.0.0 </br></br>Sie k&ouml;nnen die Installation aber fortf&uuml;hren.</br>Wenn sich die Installation nicht fehlerfrei durchf&uuml;hren l&auml;sst, bitten Sie Ihren Provider um ein Update!');
   define('TEXT_DB_CLIENT_VERSION','Ihre MySQL-Client-Version: ');
   // EOF - vr - 2010-01-14 - check MySQL *client* version
   // BOF - web28 - 2010-02-1014 - check FILE PATH
@@ -52,9 +52,9 @@
   define('TEXT_PATH_ERROR3','Bitte &uuml;berpr&uuml;fen Sie Ihre Einstellungen!<br/><br/>Hinweis: Sie k&ouml;nnen die Installation fortsetzen, allerdings kann es zu unerwarteten Problemen kommen.');
   // EOF - web28 - 2010-02-1014 - check FILE PATH
   // BOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
-  define('TEXT_WRONG_FILE_PERMISSION','FALSCHE DATEIRECHTE ');
-  define('TEXT_WRONG_FOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE ');
-  define('TEXT_WRONG_RFOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE REKURSIV (Dieser Ordner, dessen Unterordner und die darin enthaltenen Dateien)<br />');
+  define('TEXT_WRONG_FILE_PERMISSION','<strong>FALSCHE DATEIRECHTE:</strong>');
+  define('TEXT_WRONG_FOLDER_PERMISSION','<strong>FALSCHE VERZEICHNISRECHTE:</strong>');
+  define('TEXT_WRONG_RFOLDER_PERMISSION','<strong>FALSCHE VERZEICHNISRECHTE REKURSIV (Dieser Ordner, dessen Unterordner und die darin enthaltenen Dateien):</strong>');
   define('TEXT_FILE_PERMISSION_STATUS','DATEIRECHTE ');
   define('TEXT_FOLDER_PERMISSION_STATUS','VERZEICHNISRECHTE ');
   define('TEXT_ERROR','FEHLER');
@@ -79,7 +79,7 @@
 
   // index.php
   define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus!');
-  define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.0) und MySQL zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
+  define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
   define('TEXT_WELCOME_STEP1','<b>Datenbank- und Webservereinstellungen</b><br /><br />Der Installer ben&ouml;tigt hier einige Informationen bez&uuml;glich Ihrer Datenbank und Ihrer Verzeichnisstruktur.<br /><b>Hinweis:</b> Sofern die erforderlichen Rechte vorhanden sind, kann der Installer auch eine neue Datenbank erzeugen.');
   define('TEXT_WELCOME_STEP2','<b>Datenbank Installation</b><br /><br />Der modified eCommerce Shopsoftware Installer installiert automatisch die modified eCommerce Shopsoftware Datenbank.');

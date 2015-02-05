@@ -169,21 +169,21 @@
   
   $message = '';
   if (isset($message_arr['file_permission'])) {
-    $message .= TEXT_WRONG_FILE_PERMISSION . ':<br/>';
+    $message .= TEXT_WRONG_FILE_PERMISSION . '<br/>';
     foreach ($message_arr['file_permission'] as $value) {
       $message .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$value . '<br/>';
     }
   }
 
   if (isset($message_arr['folder_permission'])) {
-    $message .= (($message != '') ? '<br/>' : '') . TEXT_WRONG_FOLDER_PERMISSION . ':<br/>';
+    $message .= (($message != '') ? '<br/>' : '') . TEXT_WRONG_FOLDER_PERMISSION . '<br/>';
     foreach ($message_arr['folder_permission'] as $value) {
       $message .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$value . '<br/>';
     }
   }
 
   if (isset($message_arr['rfolder_permission'])) {
-    $message .= (($message != '') ? '<br/>' : '') . TEXT_WRONG_RFOLDER_PERMISSION . ':<br/>';
+    $message .= (($message != '') ? '<br/>' : '') . TEXT_WRONG_RFOLDER_PERMISSION . '<br/>';
     foreach ($message_arr['rfolder_permission'] as $value) {
       $message .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$value . '<br/>';
     }

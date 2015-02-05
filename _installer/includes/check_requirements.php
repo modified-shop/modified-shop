@@ -10,7 +10,7 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------*/
 
-  define('PHP_VERSION_MIN', '5.0.0');
+  define('PHP_VERSION_MIN', '5.3.0');
   define('PHP_VERSION_MAX', '5.5.99');
 
   //BOF *************  check PHP-Version *************
