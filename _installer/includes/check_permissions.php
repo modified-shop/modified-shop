@@ -64,17 +64,17 @@
                                           'media/content',
                                           'media/products',
                                           'media/products/backup',
-                                          'templates/tpl_modified',
                                           'templates_c',
                                      ),
                           'adirs' => array('includes/external/shopgate/shopgate_library/config',
+                                           'templates/tpl_modified',
                                      ),
                           'rdirs' => array('includes/external/magnalister',
                                      ),
                           );
 
   foreach ($files_to_check['adirs'] as $dir) {
-    if (file_exists(DIR_FS_CATALOG.$dir)) {
+    if (is_dir(DIR_FS_CATALOG.$dir)) {
       $files_to_check['dirs'][] = $dir;
     }
   }
