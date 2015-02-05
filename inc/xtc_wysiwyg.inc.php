@@ -20,7 +20,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
 
     $wysiwig_type = 'ckeditor';
 
-    $filemanagerurl = DIR_WS_ADMIN. 'includes/modules/kcfinder/browse.php?opener=ckeditor&cms=ModifiedShop&lang='.$lang;
+    $filemanagerurl = DIR_WS_ADMIN. 'includes/modules/kcfinder/browse.php?opener=ckeditor&cms=modifiedshop&lang='.$lang;
     $js_src = DIR_WS_MODULES .'ckeditor/ckeditor.js';
     $file_path = '&opener=ckeditor&type=files';
     $image_path = '&opener=ckeditor&type=images';

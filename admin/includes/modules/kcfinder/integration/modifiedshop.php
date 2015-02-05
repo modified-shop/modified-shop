@@ -6,7 +6,7 @@ KCFinder Version 3.12 Integration Modul for modified shop
 Version 1.00 by  web www.rpa-com.de
 -----------------------------------*/
 
-class ModifiedShop {
+class modifiedshop {
   protected static $authenticated = false;
   
   static function checkAuth() {
@@ -87,4 +87,4 @@ class ModifiedShop {
 }
 
 // call checkAuth
-\kcfinder\cms\ModifiedShop::checkAuth();
+\kcfinder\cms\modifiedshop::checkAuth();
