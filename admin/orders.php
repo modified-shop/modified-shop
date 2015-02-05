@@ -190,7 +190,7 @@ $orders_statuses = array();
 $orders_status_array = array();
 $orders_status_query = xtc_db_query("-- /admin/orders.php
                                        SELECT orders_status_id,
-                                              orders_status_name,
+                                              orders_status_name
                                          FROM ".TABLE_ORDERS_STATUS."
                                         WHERE language_id = '".$lang."'
                                      ORDER BY sort_order");
