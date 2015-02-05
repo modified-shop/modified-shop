@@ -668,6 +668,7 @@ CREATE TABLE orders_status (
   orders_status_id INT DEFAULT 0 NOT NULL,
   language_id TINYINT DEFAULT 1 NOT NULL,
   orders_status_name VARCHAR(64) NOT NULL,
+  sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (orders_status_id, language_id),
   KEY idx_orders_status_name (orders_status_name)
 ) ENGINE=MyISAM;

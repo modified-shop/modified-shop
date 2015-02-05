@@ -31,11 +31,13 @@
           $orders_status_name_array = $_POST['orders_status_name'];
           $language_id = $languages[$i]['id'];
 
-          $sql_data_array = array('orders_status_name' => xtc_db_prepare_input($orders_status_name_array[$language_id]));
+          $sql_data_array = array('orders_status_name' => xtc_db_prepare_input($orders_status_name_array[$language_id]),
+                                  'sort_order' => (int)$_POST['sort_order']
+                                  );
 
           if ($action == 'insert') {
             if (!xtc_not_null($orders_status_id)) {
-              $next_id_query = xtc_db_query("select max(orders_status_id) as orders_status_id from " . TABLE_ORDERS_STATUS . "");
+              $next_id_query = xtc_db_query("SELECT max(orders_status_id) as orders_status_id FROM " . TABLE_ORDERS_STATUS . "");
               $next_id = xtc_db_fetch_array($next_id_query);
               $orders_status_id = $next_id['orders_status_id'] + 1;
             }
@@ -45,16 +47,21 @@
             $sql_data_array = xtc_array_merge($sql_data_array, $insert_sql_data);
             xtc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array);
           } elseif ($action == 'save') {
-        //BOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
-        $orders_status_query = xtc_db_query("select * from ".TABLE_ORDERS_STATUS." where language_id = '".(int)$language_id."' and orders_status_id = '".(int)$orders_status_id."'");
-        if (xtc_db_num_rows($orders_status_query) == 0) xtc_db_perform(TABLE_ORDERS_STATUS, array ('orders_status_id' => (int)$orders_status_id, 'language_id' => (int)$language_id));
-        //EOF - web28 - 2010-07-11 - BUGFIX no entry stored for previous deactivated languages
-        xtc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array, 'update', "orders_status_id = '" . (int)$orders_status_id . "' and language_id = '" . (int)$language_id . "'");
+            $orders_status_query = xtc_db_query("SELECT * 
+                                                   FROM ".TABLE_ORDERS_STATUS." 
+                                                  WHERE language_id = '".(int)$language_id."' 
+                                                    AND orders_status_id = '".(int)$orders_status_id."'");
+            if (xtc_db_num_rows($orders_status_query) == 0) {
+              xtc_db_perform(TABLE_ORDERS_STATUS, array ('orders_status_id' => (int)$orders_status_id, 'language_id' => (int)$language_id));
+            }
+            xtc_db_perform(TABLE_ORDERS_STATUS, $sql_data_array, 'update', "orders_status_id = '" . (int)$orders_status_id . "' and language_id = '" . (int)$language_id . "'");
           }
         }
 
         if (isset($_POST['default']) && ($_POST['default'] == 'on')) {
-          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '" . xtc_db_input($orders_status_id) . "' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                           SET configuration_value = '" . xtc_db_input($orders_status_id) . "' 
+                         WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
         }
 
         xtc_redirect(xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status_id));
@@ -63,13 +70,17 @@
       case 'deleteconfirm':
         $oID = xtc_db_prepare_input($_GET['oID']);
 
-        $orders_status_query = xtc_db_query("select configuration_value from " . TABLE_CONFIGURATION . " where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
+        $orders_status_query = xtc_db_query("SELECT configuration_value 
+                                               FROM " . TABLE_CONFIGURATION . " 
+                                              WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
         $orders_status = xtc_db_fetch_array($orders_status_query);
         if ($orders_status['configuration_value'] == $oID) {
-          xtc_db_query("update " . TABLE_CONFIGURATION . " set configuration_value = '' where configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
+          xtc_db_query("UPDATE " . TABLE_CONFIGURATION . " 
+                           SET configuration_value = '' 
+                         WHERE configuration_key = 'DEFAULT_ORDERS_STATUS_ID'");
         }
 
-        xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where orders_status_id = '" . xtc_db_input($oID) . "'");
+        xtc_db_query("DELETE FROM " . TABLE_ORDERS_STATUS . " WHERE orders_status_id = '" . xtc_db_input($oID) . "'");
 
         xtc_redirect(xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']));
         break;
@@ -77,7 +88,9 @@
       case 'delete':
         $oID = xtc_db_prepare_input($_GET['oID']);
 
-        $status_query = xtc_db_query("select count(*) as count from " . TABLE_ORDERS . " where orders_status = '" . (int)$oID . "'");
+        $status_query = xtc_db_query("SELECT count(*) as count 
+                                        FROM " . TABLE_ORDERS . " 
+                                       WHERE orders_status = '" . (int)$oID . "'");
         $status = xtc_db_fetch_array($status_query);
 
         $remove_status = true;
@@ -88,7 +101,9 @@
           $remove_status = false;
           $messageStack->add(ERROR_STATUS_USED_IN_ORDERS, 'error');
         } else {
-          $history_query = xtc_db_query("select count(*) as count from " . TABLE_ORDERS_STATUS_HISTORY . " where orders_status_id = '" . xtc_db_input($oID) . "'");
+          $history_query = xtc_db_query("SELECT count(*) as count 
+                                           FROM " . TABLE_ORDERS_STATUS_HISTORY . " 
+                                          WHERE orders_status_id = '" . xtc_db_input($oID) . "'");
           $history = xtc_db_fetch_array($history_query);
           if ($history['count'] > 0) {
             $remove_status = false;
@@ -131,10 +146,14 @@
               <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_ORDERS_STATUS; ?></td>
+                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SORT; ?></td>
                 <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?>&nbsp;</td>
               </tr>
               <?php
-                $orders_status_query_raw = "select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . $_SESSION['languages_id'] . "' order by orders_status_id";
+                $orders_status_query_raw = "SELECT * 
+                                              FROM " . TABLE_ORDERS_STATUS . " 
+                                             WHERE language_id = '" . $_SESSION['languages_id'] . "' 
+                                          ORDER BY sort_order";
                 $orders_status_split = new splitPageResults($_GET['page'], MAX_DISPLAY_SEARCH_RESULTS, $orders_status_query_raw, $orders_status_query_numrows);
                 $orders_status_query = xtc_db_query($orders_status_query_raw);
                 while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
@@ -153,7 +172,8 @@
                   } else {
                     echo '                <td class="dataTableContent">' . $orders_status['orders_status_name'] . '</td>' . "\n";
                   }
-              ?>
+                ?>
+                <td class="dataTableContent txta-r"><?php echo $orders_status['sort_order']; ?></td>
                 <td class="dataTableContent" align="right"><?php if (isset($oInfo) && is_object($oInfo) && ($orders_status['orders_status_id'] == $oInfo->orders_status_id) ) { echo xtc_image(DIR_WS_IMAGES . 'icon_arrow_right.gif', ICON_ARROW_RIGHT); } else { echo '<a href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $orders_status['orders_status_id']) . '">' . xtc_image(DIR_WS_IMAGES . 'icon_info.gif', IMAGE_ICON_INFO) . '</a>'; } ?>&nbsp;</td>
               </tr>
               <?php
@@ -190,6 +210,7 @@
                 }
 
                 $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
+                $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_SORT_ORDER . xtc_draw_input_field('sort_order', ''));
                 $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_INSERT . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page']) . '">' . BUTTON_CANCEL . '</a>');
                 break;
@@ -207,6 +228,7 @@
                 }
 
                 $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_NAME . $orders_status_inputs_string);
+                $contents[] = array('text' => '<br />' . TEXT_INFO_ORDERS_STATUS_SORT_ORDER . xtc_draw_input_field('sort_order', $oInfo->sort_order));
                 if (DEFAULT_ORDERS_STATUS_ID != $oInfo->orders_status_id) $contents[] = array('text' => '<br />' . xtc_draw_checkbox_field('default') . ' ' . TEXT_SET_DEFAULT);
                 $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_UPDATE . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ORDERS_STATUS, 'page=' . $_GET['page'] . '&oID=' . $oInfo->orders_status_id) . '">' . BUTTON_CANCEL . '</a>');
                 break;
