@@ -1,6 +1,7 @@
 <?php
 $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/billsafe_orders_2hp.php',
+                     'admin/fck_wrapper.php',
                      'admin/includes/configure.org.php',
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
