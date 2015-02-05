@@ -3065,6 +3065,7 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
   column-gap: 60px;
   column-rule: 1px solid #eee;
 }
+
 .sitemap > ul.nocolumnbreak {
   break-inside: avoid-column;
   -webkit-column-break-inside:avoid;
@@ -3076,14 +3077,18 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
   margin-bottom:30px;
   list-style-type:none;
 }
+.nocolumnbreak {
+  margin-bottom: 30px !important;
+}
 .sitemap > ul > li {
   float:left;
   width:100%;
 }
 .sitemap ul {
   list-style-type:none;
-  margin-left:0px !important;
+  margin-left:0px;
 }
+
 .sitemap ul > li.sitemap_header {  
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
@@ -3101,6 +3106,7 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
   text-decoration:none !important;
   background: #f1f1f1 !important;
 }
+
 .sitemap ul li li {  
   border-top: 1px solid #ddd;
   font-size:13px;

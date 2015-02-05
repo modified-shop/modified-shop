@@ -1,7 +1,7 @@
 {config_load file="$language/lang_$language.conf" section="sitemap"}
 {config_load file="lang_`$language`.custom"}
 {if isset($herror)}<div class="errormessage">{$herror}</div>{/if}
-<div class="sitemap">
+<div class="sitemap cf">
   {foreach name=aussen item=module_data from=$module_content}
   <ul class="nocolumnbreak cf">
     <li class="sitemap_header"><a href="{$module_data.CAT_LINK}">{$module_data.CAT_NAME}</a>
@@ -16,4 +16,3 @@
   </ul>
   {/foreach}
 </div>
-<br class="clearfix" />

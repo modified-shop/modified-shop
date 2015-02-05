@@ -102,3 +102,9 @@
     });
 </script>
 <?php } ?>
+
+<?php if (strstr($PHP_SELF, FILENAME_CONTENT) && $_GET['coID'] == 8) { ?>
+  <!--[if lt IE 10]>
+  <script src="<?php echo DIR_WS_BASE.DIR_TMPL_JS; ?>jquery.css3-multi-column.js"></script>
+  <![endif]-->
+<?php } ?>
