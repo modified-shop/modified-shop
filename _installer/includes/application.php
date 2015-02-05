@@ -16,6 +16,12 @@
 
    Released under the GNU General Public License
    --------------------------------------------------------------*/
+  
+  // clear apc for installer
+  if (function_exists('apc_clear_cache')) {
+    apc_clear_cache();
+    apc_clear_cache('user');
+  }
 
   // Set the level of error reporting
   @ini_set('display_errors', true);
