@@ -85,7 +85,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     //$customConfig['contentsCss'] = "contentsCss: ['".$css_path."','".$css_path2."'],";
 
     //Smiley Path Frontend
-    $customConfig['smiley_path'] =  "smiley_path : '".DIR_WS_CATALOG."images/smiley/images/',";
+    $customConfig['smiley_path'] =  "smiley_path : '".DIR_WS_CATALOG."images/smiley/',";
 
     //Filebrowser settings
     $filebrowser_settings = PHP_EOL .
