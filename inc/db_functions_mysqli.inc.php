@@ -75,9 +75,9 @@
 
     $socket = explode(':', $server);
     if (USE_PCONNECT == 'true') {
-      $$link = @mysqli_connect('p:'.$socket[0], $username, $password, '', $socket[2], $socket[1]);
+      $$link = @mysqli_connect('p:'.$socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
     } else {
-      $$link = @mysqli_connect($socket[0], $username, $password, '', $socket[2], $socket[1]);
+      $$link = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL));
     }
 
     if ($$link) {

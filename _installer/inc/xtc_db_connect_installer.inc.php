@@ -57,7 +57,7 @@
         }
         
         $socket = explode(':', $server);
-        $$link = @mysqli_connect($socket[0], $username, $password, '', $socket[2], $socket[1]) or $db_error = mysqli_connect_error();
+        $$link = @mysqli_connect($socket[0], $username, $password, NULL, ((isset($socket[2])) ? $socket[2] : NULL), ((isset($socket[1])) ? $socket[1] : NULL)) or $db_error = mysqli_connect_error();
 
         if(version_compare(@mysqli_get_server_info($$link), '5.0.0', '>=')) {
           @mysqli_query($$link, "SET SESSION sql_mode=''");
