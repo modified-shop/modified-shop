@@ -266,5 +266,6 @@ ALTER TABLE admin_access CHANGE fck_wrapper filemanager;
 
 #GTB - 2015-02-05 - sort_order
 ALTER TABLE orders_status ADD sort_order INT(11) DEFAULT 0 NOT NULL;
+ALTER TABLE shipping_status ADD sort_order INT(11) DEFAULT 0 NOT NULL;
 
 # Keep an empty line at the end of this file for the db_updater to work properly

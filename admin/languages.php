@@ -240,12 +240,13 @@
           // create additional shipping_status records
           if (isset($_POST['s_status'])) {
             xtc_db_query("delete from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_to . "'");
-            $shipping_status_query = xtc_db_query("select shipping_status_id, shipping_status_name from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_from . "'");
+            $shipping_status_query = xtc_db_query("select * from " . TABLE_SHIPPING_STATUS . " where language_id = '" . (int)$lngID_from . "'");
             while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
               $sql_data_array = array(
                 'shipping_status_id' => (int)$shipping_status['shipping_status_id'], 
                 'language_id' => (int)$lngID_to, 
-                'shipping_status_name' => $shipping_status['shipping_status_name']
+                'shipping_status_name' => $shipping_status['shipping_status_name'],
+                'sort_order' => $shipping_status['sort_order']
               );
               xtc_db_perform(TABLE_SHIPPING_STATUS,$sql_data_array); 
             }
