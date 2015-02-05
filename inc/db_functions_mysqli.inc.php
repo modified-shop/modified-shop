@@ -73,10 +73,11 @@
       die ('Call to undefined function: mysqli_connect(). Please install the MySQL Connector for PHP');
     }
 
+    $socket = explode(':', $server);
     if (USE_PCONNECT == 'true') {
-      $$link = @mysqli_connect('p:'.$server, $username, $password);
+      $$link = @mysqli_connect('p:'.$socket[0], $username, $password, '', $socket[2], $socket[1]);
     } else {
-      $$link = @mysqli_connect($server, $username, $password);
+      $$link = @mysqli_connect($socket[0], $username, $password, '', $socket[2], $socket[1]);
     }
 
     if ($$link) {
