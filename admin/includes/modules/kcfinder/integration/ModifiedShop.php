@@ -26,8 +26,8 @@ class ModifiedShop {
                                                    FROM ".TABLE_ADMIN_ACCESS." 
                                                   WHERE customers_id = '".(int)$_SESSION['customer_id']."'");
         $access_permission = xtc_db_fetch_array($access_permission_query);
-        if (!isset($access_permission['kcfinder']) || ($access_permission['kcfinder'] != '1')) {
-          //die('Direct Access to this location is not allowed.');
+        if (!isset($access_permission['filemanager']) || ($access_permission['filemanager'] != '1')) {
+          die('Direct Access to this location is not allowed.');
         }
         
         // active 

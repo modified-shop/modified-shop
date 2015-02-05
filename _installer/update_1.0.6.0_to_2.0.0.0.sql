@@ -261,4 +261,7 @@ DROP TABLE IF EXISTS media_content;
 #GTB - 2015-01-29 - added manufacturers description
 ALTER TABLE manufacturers_info ADD manufacturers_description text AFTER languages_id;
 
+#GTB - 2015-02-05 - change fck_wrapper
+ALTER TABLE admin_access CHANGE fck_wrapper filemanager;
+
 # Keep an empty line at the end of this file for the db_updater to work properly

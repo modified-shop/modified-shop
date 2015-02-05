@@ -190,7 +190,7 @@ CREATE TABLE admin_access (
   csv_backend INT(1) NOT NULL DEFAULT 0,
   products_vpe INT(1) NOT NULL DEFAULT 0,
   cross_sell_groups INT(1) NOT NULL DEFAULT 0,
-  fck_wrapper INT(1) NOT NULL DEFAULT 0,
+  filemanager INT(1) NOT NULL DEFAULT 0,
   econda INT(1) NOT NULL DEFAULT 0,
   cleverreach INT(1) NOT NULL DEFAULT 0,
   sofortueberweisung_install INT(1) NOT NULL DEFAULT 0,
