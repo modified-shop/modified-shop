@@ -62,7 +62,7 @@
  define('ERROR_COMMENT','Bitte geben Sie eine Dateibeschreibung ein!');
  define('TEXT_FILE_FLAG','Box:');
  define('TEXT_PARENT','Hauptdokument:');
- define('TEXT_PARENT_DESCRIPTION','Diesem Dokument zuweisen');
+ define('TEXT_PARENT_DESCRIPTION','Diesem Dokument als Unter-Content zuweisen');
  define('TEXT_PRODUCT','Artikel:');
  define('TEXT_LINK','Link:');
  define('TEXT_SORT_ORDER','Sortierung:');
@@ -74,9 +74,9 @@
  define('TEXT_FILE_DESC','Beschreibung:');
  define('USED_SPACE','Verwendeter Speicherplatz:');
  define('TABLE_HEADING_CONTENT_FILESIZE','Dateigr&ouml;&szlig;e');
- define('TEXT_CONTENT_NOINDEX','noindex');
- define('TEXT_CONTENT_NOFOLLOW','nofollow');
- define('TEXT_CONTENT_NOODP','noodp');
+ define('TEXT_CONTENT_NOINDEX','noindex (Der Suchroboter soll die Webseite nicht in den Index aufnehmen. Die Webseite soll also nicht &uuml;ber Suchmaschinen auffindbar sein.)');
+ define('TEXT_CONTENT_NOFOLLOW','nofollow (Der Suchroboter darf die Webseite zwar aufnehmen, aber soll den Hyperlinks auf der Seite nicht folgen. Die Wirkung ist so, als w&auml;ren die Links auf der betreffenden Seite gar nicht vorhanden.)');
+ define('TEXT_CONTENT_NOODP','noodp (Die Suchmaschine soll auf der Ergebnisseite nicht die Beschreibungstexte des Open Directory Projects (DMOZ) verwenden &ndash; sofern die Seite dort eingetragen ist &ndash;, sondern wie bei nicht eingetragenen URLs einen Ausschnitt der Seite selbst (sog. &bdquo;Snippet&ldquo;) anzeigen. Diese Anweisung wird von Google und MSN Search unterst&uuml;tzt.)');
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
  
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');

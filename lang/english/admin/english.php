@@ -97,7 +97,7 @@ define('BOX_CONFIGURATION_10', 'Logging Options');
 define('BOX_CONFIGURATION_11', 'Cache Options');
 define('BOX_CONFIGURATION_12', 'E-Mail Options');
 define('BOX_CONFIGURATION_13', 'Download Options');
-define('BOX_CONFIGURATION_14', 'Gzip Compression');
+define('BOX_CONFIGURATION_14', 'Compression');
 define('BOX_CONFIGURATION_15', 'Sessions');
 define('BOX_CONFIGURATION_16', 'Meta-Tags/Searchengines');
 define('BOX_CONFIGURATION_17', 'Additional Modules');
