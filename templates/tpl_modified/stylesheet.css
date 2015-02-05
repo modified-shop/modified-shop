@@ -3067,12 +3067,13 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
 }
 
 .sitemap > ul.nocolumnbreak {
-  break-inside: avoid-column;
-  -webkit-column-break-inside:avoid;
+  overflow: hidden;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
   -moz-column-break-inside:avoid;
-  -o-column-break-inside:avoid;
-  -ms-column-break-inside:avoid;
   column-break-inside:avoid;
+  break-inside: avoid; 
+  break-inside: avoid-column;
   margin-left:0px;
   margin-bottom:30px;
   list-style-type:none;
