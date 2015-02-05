@@ -679,6 +679,7 @@ CREATE TABLE shipping_status (
   language_id TINYINT DEFAULT 1 NOT NULL,
   shipping_status_name VARCHAR(32) NOT NULL,
   shipping_status_image VARCHAR(32) NOT NULL,
+  sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (shipping_status_id, language_id),
   KEY idx_shipping_status_name (shipping_status_name)
 ) ENGINE=MyISAM;
@@ -1221,12 +1222,12 @@ INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand
 INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
 
 # shipping status
-INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '');
-INSERT INTO shipping_status VALUES (1, 2, '3-4 Tage', '');
-INSERT INTO shipping_status VALUES (2, 1, '1 Week', '');
-INSERT INTO shipping_status VALUES (2, 2, '1 Woche', '');
-INSERT INTO shipping_status VALUES (3, 1, '2 Weeks', '');
-INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '');
+INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);
+INSERT INTO shipping_status VALUES (1, 2, '3-4 Tage', '', 1);
+INSERT INTO shipping_status VALUES (2, 1, '1 Week', '', 2);
+INSERT INTO shipping_status VALUES (2, 2, '1 Woche', '', 2);
+INSERT INTO shipping_status VALUES (3, 1, '2 Weeks', '', 3);
+INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '', 3);
 
 # shop offline
 INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE', '');

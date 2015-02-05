@@ -963,7 +963,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $shipping_status_query = xtc_db_query("SELECT shipping_status_name
                                              FROM ".TABLE_SHIPPING_STATUS."
                                             WHERE shipping_status_id = '".(int)$shipping_status_id."'
-                                              AND language_id = '".(int)$language_id."'");
+                                              AND language_id = '".(int)$language_id."'
+                                         ORDER BY sort_order");
     $shipping_status = xtc_db_fetch_array($shipping_status_query);
     return $shipping_status['shipping_status_name'];
   }
@@ -1033,7 +1034,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                                   shipping_status_name
                                              FROM ".TABLE_SHIPPING_STATUS."
                                             WHERE language_id = '".(int)$_SESSION['languages_id']."'
-                                         ORDER BY shipping_status_id");
+                                         ORDER BY sort_order");
     while ($shipping_status = xtc_db_fetch_array($shipping_status_query)) {
       $shipping_status_array[] = array ('id' => $shipping_status['shipping_status_id'], 'text' => $shipping_status['shipping_status_name']);
     }
