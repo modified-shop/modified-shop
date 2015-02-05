@@ -54,7 +54,7 @@
   // BOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
   define('TEXT_WRONG_FILE_PERMISSION','FALSCHE DATEIRECHTE ');
   define('TEXT_WRONG_FOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE ');
-  define('TEXT_WRONG_RFOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE REKURSIV (Alle Ordner , deren Unterordner und die darin enthaltenen Dateien) ');
+  define('TEXT_WRONG_RFOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE REKURSIV (Dieser Ordner, dessen Unterordner und die darin enthaltenen Dateien)<br />');
   define('TEXT_FILE_PERMISSION_STATUS','DATEIRECHTE ');
   define('TEXT_FOLDER_PERMISSION_STATUS','VERZEICHNISRECHTE ');
   define('TEXT_ERROR','FEHLER');
