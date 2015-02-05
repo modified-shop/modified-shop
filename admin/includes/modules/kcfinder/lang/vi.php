@@ -6,6 +6,8 @@
 
 $lang = array(
 
+    '_lang' => "Vietnamese",
+    '_native' => "Việt",
     '_locale' => "vi_VN.UTF-8",  // UNIX localization code
     '_charset' => "utf-8",       // Browser charset
 
@@ -126,6 +128,5 @@ $lang = array(
     "Previous" => "Trước",
     "Next" => "Sau",
     "Confirmation" => "Xác nhận",
-    "Warning" => "Cảnh báo",);
-
-?>
+    "Warning" => "Cảnh báo",
+);

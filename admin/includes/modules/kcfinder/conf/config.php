@@ -16,7 +16,7 @@
    even if you are using session configuration.
    See http://kcfinder.sunhater.com/install for setting descriptions */
 
-$_CONFIG = array(
+return array(
 
 
 // GENERAL SETTINGS
@@ -108,21 +108,11 @@ $_CONFIG = array(
 
 // THE FOLLOWING SETTINGS CANNOT BE OVERRIDED WITH SESSION SETTINGS
 
-    '_normalizeFilenames' => false,
-    '_check4htaccess' => false, //!!! IMPORTANT MODIFIED_SHOP FIX: SET TO FALSE !!!
-    //'_tinyMCEPath' => "/tiny_mce",
-
     '_sessionVar' => "KCFINDER",
-    //'_sessionLifetime' => 30,
-    //'_sessionDir' => "/full/directory/path",
-    //'_sessionDomain' => ".mysite.com",
-    //'_sessionPath' => "/my/path",
-
+    '_check4htaccess' => false,
+    '_normalizeFilenames' => false,
+    '_dropUploadMaxFilesize' => 10485760,
+    //'_tinyMCEPath' => "/tiny_mce",
     //'_cssMinCmd' => "java -jar /path/to/yuicompressor.jar --type css {file}",
     //'_jsMinCmd' => "java -jar /path/to/yuicompressor.jar --type js {file}",
-
 );
-
-require('custom/custom_config.php');
-
-?>

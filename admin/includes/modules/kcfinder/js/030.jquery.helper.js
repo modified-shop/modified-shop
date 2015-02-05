@@ -12,6 +12,31 @@
 
 (function($) {
 
+    $.fn.fixScrollbarRadius = function() {
+        $(this).each(function() {
+            var t = this,
+                dataID = 'fixRadius',
+                vScroll = (t.clientHeight < t.scrollHeight),
+                hScroll = (t.clientWidth < t.scrollWidth);
+
+            if (!$(t).data(dataID))
+                $(t).data(dataID, {
+                    tr: $(t).css('borderTopRightRadius'),
+                    br: $(t).css('borderBottomRightRadius'),
+                    bl: $(t).css('borderBottomLeftRadius')
+                });
+
+            var data = $(t).data(dataID);
+
+            $(t).css({
+                borderTopRightRadius: vScroll ? 0 : data.tr,
+                borderBottomRightRadius: (vScroll || hScroll) ? 0 : data.br,
+                borderBottomLeftRadius: hScroll ? 0 : data.bl
+            });
+        });
+        return $(this);
+    };
+
     $.fn.selection = function(start, end) {
         var field = this.get(0);
 
@@ -34,12 +59,9 @@
         return this.each(function() {
             if ($.agent.firefox) { // Firefox
                 $(this).css('MozUserSelect', "none");
-            } else if ($.agent.msie) { // IE
-                $(this).bind('selectstart', function() {
-                    return false;
-                });
             } else { //Opera, etc.
                 $(this).mousedown(function() {
+                    $.globalBlur();
                     return false;
                 });
             }
@@ -122,6 +144,10 @@
             $(this).fullscreen();
     };
 
+    $.globalBlur = function() {
+        $('<input style="position:fixed;top:-200px;left:-200px" />').appendTo('body').trigger('focus').detach();
+    };
+
     $.exitFullscreen = function(doc) {
         var d = doc ? doc : document,
             requestMethod =
@@ -161,27 +187,21 @@
 
         htmlValue: function(value) {
             return value
-                .replace(/\&/g, "&amp;")
-                .replace(/\"/g, "&quot;")
-                .replace(/\'/g, "&#39;");
+                .replace(/&/g, "&amp;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#39;");
         },
 
         htmlData: function(value) {
-            return value.toString()
-                .replace(/\&/g, "&amp;")
-                .replace(/\</g, "&lt;")
-                .replace(/\>/g, "&gt;")
-                .replace(/\ /g, "&nbsp;")
-                .replace(/\"/g, "&quot;")
-                .replace(/\'/g, "&#39;");
+            return $('<p></p>').text(value).html();
         },
 
         jsValue: function(value) {
             return value
                 .replace(/\\/g, "\\\\")
                 .replace(/\r?\n/, "\\\n")
-                .replace(/\"/g, "\\\"")
-                .replace(/\'/g, "\\'");
+                .replace(/"/g, "\\\"")
+                .replace(/'/g, "\\'");
         },
 
         basename: function(path) {
