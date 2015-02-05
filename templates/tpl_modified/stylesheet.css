@@ -3076,6 +3076,8 @@ ul.bxcarousel_bestseller li .carousel_box a:hover {
   margin-left:0px;
   margin-bottom:30px;
   list-style-type:none;
+  display:inline-block;
+  width:100%;
 }
 .nocolumnbreak {
   margin-bottom: 30px !important;
