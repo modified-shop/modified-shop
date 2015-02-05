@@ -32,7 +32,7 @@
   // file and folder permission checks
   $error_flag = false;
   $folder_flag = false;
-  $message='';
+  $message_arr = array();
   $ok_message='';
 
   //new permission handling and auto change system
@@ -67,7 +67,6 @@
                                           'templates_c',
                                      ),
                           'adirs' => array('includes/external/shopgate/shopgate_library/config',
-                                           'templates/tpl_modified',
                                      ),
                           'rdirs' => array('includes/external/magnalister',
                                      ),
@@ -137,12 +136,12 @@
           if ($type == 'files') {
             $error_flag = true;
             $file_flag = true;
-            $message .= '<strong>'.TEXT_WRONG_FILE_PERMISSION.'</strong>'.DIR_FS_CATALOG.$file.'<br />';
+            $message_arr['file_permission'][] = DIR_FS_CATALOG.$file;
           }
           if ($type == 'dirs') {
             $error_flag = true;
             $folder_flag = true;
-            $message .= '<strong>'.TEXT_WRONG_FOLDER_PERMISSION.'</strong>'.DIR_FS_CATALOG.$file.'<br />';
+            $message_arr['folder_permission'][] = DIR_FS_CATALOG.$file;
           }
         }
       } else {
@@ -158,7 +157,7 @@
                 if (!is_writeable(DIR_FS_CATALOG.$file) && $rfolder_flag != $key) {
                   $error_flag = true;
                   $rfolder_flag = $key;
-                  $message .= '<strong>'.TEXT_WRONG_RFOLDER_PERMISSION.'</strong>'.DIR_FS_CATALOG.$key.'<br />';
+                  $message_arr['rfolder_permission'][] = DIR_FS_CATALOG.$key;
                 }
               }
             }
@@ -167,3 +166,27 @@
       }
     }
   }
+  
+  $message = '';
+  if (isset($message_arr['file_permission'])) {
+    $message .= TEXT_WRONG_FILE_PERMISSION . ':<br/>';
+    foreach ($message_arr['file_permission'] as $value) {
+      $message .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$value . '<br/>';
+    }
+  }
+
+  if (isset($message_arr['folder_permission'])) {
+    $message .= (($message != '') ? '<br/>' : '') . TEXT_WRONG_FOLDER_PERMISSION . ':<br/>';
+    foreach ($message_arr['folder_permission'] as $value) {
+      $message .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$value . '<br/>';
+    }
+  }
+
+  if (isset($message_arr['rfolder_permission'])) {
+    $message .= (($message != '') ? '<br/>' : '') . TEXT_WRONG_RFOLDER_PERMISSION . ':<br/>';
+    foreach ($message_arr['rfolder_permission'] as $value) {
+      $message .= '&nbsp;&nbsp;&nbsp;&nbsp;'.$value . '<br/>';
+    }
+  }
+  
+?>
