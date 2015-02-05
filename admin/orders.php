@@ -186,8 +186,8 @@ if (!isset($lang)) $lang = $_SESSION['languages_id'];
 if (!isset($lang_code)) $lang_code = $_SESSION['language_code'];
 if (!isset($lang_charset)) $lang_charset = $_SESSION['language_charset'];
 
-$orders_statuses = array ();
-$orders_status_array = array ();
+$orders_statuses = array();
+$orders_status_array = array();
 $orders_status_query = xtc_db_query("-- /admin/orders.php
                                        SELECT orders_status_id,
                                               orders_status_name,
