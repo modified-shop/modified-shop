@@ -609,15 +609,6 @@
               var XTB_VERSION="<?php echo XTBOOSTER_VERSION?>";
               var XTBOOSTER_VERSION=XTB_VERSION;
             </script>
-            <?php
-            // Include WYSIWYG if is activated
-            if (USE_WYSIWYG == 'true') {
-              $query = xtc_db_query("SELECT code FROM ".TABLE_LANGUAGES." WHERE languages_id='".$_SESSION['languages_id']."'");
-              $data = xtc_db_fetch_array($query);
-              $languages = xtc_get_languages();
-              echo xtc_wysiwyg('MODULE_XTBOOSTER_EMAILTEMPLATE_HTML',$data['code']);
-            }
-            ?>
           </head>
           <body>
             <div id='screen' style="display:none;height:9000;"></div>
@@ -1095,14 +1086,24 @@
                                           <tr>
                                             <td class="dataTableContent" colspan="2">
                                               <div id="DIV_TXT_MAIL" style="display:block"><textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE' id='MODULE_XTBOOSTER_EMAILTEMPLATE' cols="80" rows="12" wrap="virtual"><?php echo encode_htmlspecialchars(stripslashes($emailtemplate)); ?></textarea></div>
-                                              <div id="DIV_HTML_MAIL" style="display:block">
-                                                <textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' id='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' cols="80" rows="12" wrap="virtual"><?php echo encode_htmlspecialchars(stripslashes($emailtemplate_html)); ?></textarea>
-                                              </div>
+                                              <div id="DIV_HTML_MAIL" style="display:block"><textarea name='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' id='MODULE_XTBOOSTER_EMAILTEMPLATE_HTML' cols="80" rows="12" wrap="virtual"><?php echo encode_htmlspecialchars(stripslashes($emailtemplate_html)); ?></textarea></div>
                                             </td>
                                             <script type="text/javascript">
                                               // erst hier, denn oben sind die divs & das Textarea nicht sichtbar
                                               // aber nicht inline, denn ein 'Create' ausserhalb dieses JS-Bereichs
                                               // (beim select der email-Art) funktioniert nicht.
+                                              var emailFCKEditor = new FCKeditor('MODULE_XTBOOSTER_EMAILTEMPLATE_HTML','100%',320);
+                                              emailFCKEditor.BasePath = "<?php echo DIR_WS_MODULES .'fckeditor/'?>";
+                                              emailFCKEditor.Config["LinkBrowserURL"] = "<?php echo DIR_WS_ADMIN.'fck_wrapper.php?Connector='.DIR_WS_FILEMANAGER.'connectors/php/connector.php&ServerPath='. DIR_WS_CATALOG . '&Type=media' ?>";
+                                              emailFCKEditor.Config["ImageBrowserURL"] = "<?php echo DIR_WS_ADMIN.'fck_wrapper.php?Connector='.DIR_WS_FILEMANAGER.'connectors/php/connector.php&ServerPath='. DIR_WS_CATALOG . '&Type=images' ?>";
+                                              emailFCKEditor.Config["AutoDetectLanguage"] = false;
+                                              emailFCKEditor.Config["DefaultLanguage"] = "de";
+                                              <?php if('block' == $html_mail_display) {?>
+                                                emailFCKEditor.ReplaceTextarea();
+                                                emailFCKeditorCreated = true;
+                                              <?php } else {?>
+                                                emailFCKeditorCreated = false;
+                                              <?php }?>
                                               $('DIV_HTML_MAIL').style.display='<?php echo $html_mail_display ?>';
                                               $('DIV_TXT_MAIL').style.display='<?php echo $txt_mail_display ?>'; 
                                             </script>
