@@ -157,6 +157,12 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
             $editorName = 'manufacturers_description['.$langID.']';
             $default_editor_height = 400;
             break;
+
+        // WYSIWYG editor xtbooster
+        case 'MODULE_XTBOOSTER_EMAILTEMPLATE_HTML':
+            $editorName = 'MODULE_XTBOOSTER_EMAILTEMPLATE_HTML';
+            $default_editor_height = 320;
+            break;
     }
     
     $html = '';
