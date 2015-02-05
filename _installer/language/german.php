@@ -18,7 +18,7 @@
 
   // Box names
   define('BOX_LANGUAGE','Sprache');
-  define('BOX_DB_CONNECTION','DB Verbindung') ;
+  define('BOX_DB_CONNECTION','DB Verbindung');
   define('BOX_WEBSERVER_SETTINGS','Webserver Einstellungen');
   define('BOX_DB_IMPORT','DB Import');
   define('BOX_WRITE_CONFIG','Schreiben der Konfigurationsdatei');
@@ -54,7 +54,7 @@
   // BOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
   define('TEXT_WRONG_FILE_PERMISSION','FALSCHE DATEIRECHTE ');
   define('TEXT_WRONG_FOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE ');
-  define('TEXT_WRONG_RFOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE REKURSIV ');
+  define('TEXT_WRONG_RFOLDER_PERMISSION','FALSCHE VERZEICHNISRECHTE REKURSIV (Alle Ordner , deren Unterordner und die darin enthaltenen Dateien) ');
   define('TEXT_FILE_PERMISSION_STATUS','DATEIRECHTE ');
   define('TEXT_FOLDER_PERMISSION_STATUS','VERZEICHNISRECHTE ');
   define('TEXT_ERROR','FEHLER');
