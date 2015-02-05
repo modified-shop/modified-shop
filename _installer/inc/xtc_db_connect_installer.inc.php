@@ -55,6 +55,7 @@
           $db_error = 'Call to undefined function: mysqli_connect(). Please install the MySQL Connector for PHP';
           return false;
         }
+        
         $socket = explode(':', $server);
         $$link = @mysqli_connect($socket[0], $username, $password, '', $socket[2], $socket[1]) or $db_error = mysqli_connect_error();
 
@@ -73,7 +74,6 @@
           $collation = DB_SERVER_CHARSET == 'utf8' ? 'utf8_general_ci' : 'latin1_german1_ci';      
           mysqli_query($$link, 'SET NAMES '.DB_SERVER_CHARSET. ' COLLATE '. $collation );
         }    
-      
         break;
     }
     
