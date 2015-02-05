@@ -903,7 +903,7 @@ define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefe
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribut editieren in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');
 
-define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'eMail Kontoerstellung');
-define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine eMail and den Kunden versendet werden, wenn ein neues Kundenkonto erstellt wird?');
+define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail bei Kontoerstellung');
+define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine E-Mail and den Kunden versendet werden, wenn ein neues Kundenkonto erstellt wird?');
 
 ?>

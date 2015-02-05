@@ -905,6 +905,6 @@ define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet?<br/><b>Attention:</b> T
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Edit Attributes in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / Product view in an iframe');
 
-define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'eMail create Account');
-define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'sending an eMail to customer after new account has been created?');
+define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail upon Create Account');
+define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon account creation?');
 ?>
