@@ -226,12 +226,13 @@
           // create additional orders_status records
           if (isset($_POST['o_status'])) {
             xtc_db_query("delete from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_to . "'");
-            $orders_status_query = xtc_db_query("select orders_status_id, orders_status_name from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_from . "'");
+            $orders_status_query = xtc_db_query("select * from " . TABLE_ORDERS_STATUS . " where language_id = '" . (int)$lngID_from . "'");
             while ($orders_status = xtc_db_fetch_array($orders_status_query)) {
               $sql_data_array = array(
                 'orders_status_id' => (int)$orders_status['orders_status_id'], 
                 'language_id' => (int)$lngID_to, 
-                'orders_status_name' => $orders_status['orders_status_name']
+                'orders_status_name' => $orders_status['orders_status_name'],
+                'sort_order' => $orders_status['sort_order']
               );
               xtc_db_perform(TABLE_ORDERS_STATUS,$sql_data_array);               
             }
