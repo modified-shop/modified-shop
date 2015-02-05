@@ -51,7 +51,8 @@
         break;
       
       case 'mysqli':
-        $$link = @mysqli_connect($server, $username, $password) or $db_error = 'Access denied for user \''.$username.'\'@\''.$server.'\'';
+        $socket = explode(':', $server);
+        $$link = @mysqli_connect($socket[0], $username, $password, '', $socket[2], $socket[1]) or $db_error = mysqli_connect_error();
 
         if(version_compare(@mysqli_get_server_info($$link), '5.0.0', '>=')) {
           @mysqli_query($$link, "SET SESSION sql_mode=''");
