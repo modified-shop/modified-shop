@@ -2016,7 +2016,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                            orders_status_name
                                       FROM ".TABLE_ORDERS_STATUS."
                                      WHERE language_id = '".(int)$_SESSION['languages_id']."'
-                                  ORDER BY orders_status_name");
+                                  ORDER BY sort_order");
     while ($statuses = xtc_db_fetch_array($statuses_query)) {
       $statuses_array[] = array ('id' => $statuses['orders_status_id'], 'text' => $statuses['orders_status_name']);
     }

@@ -1958,12 +1958,12 @@ INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '&pound;', '.'
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'iso-8859-15',1,1);
 INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'iso-8859-15',1,1);
 
-INSERT INTO orders_status VALUES (1,1,'Pending');
-INSERT INTO orders_status VALUES (1,2,'Offen');
-INSERT INTO orders_status VALUES (2,1,'Processing');
-INSERT INTO orders_status VALUES (2,2,'In Bearbeitung');
-INSERT INTO orders_status VALUES (3,1,'Delivered');
-INSERT INTO orders_status VALUES (3,2,'Versendet');
+INSERT INTO orders_status VALUES (1,1,'Pending', 1);
+INSERT INTO orders_status VALUES (1,2,'Offen', 1);
+INSERT INTO orders_status VALUES (2,1,'Processing', 2);
+INSERT INTO orders_status VALUES (2,2,'In Bearbeitung', 2);
+INSERT INTO orders_status VALUES (3,1,'Delivered', 3);
+INSERT INTO orders_status VALUES (3,2,'Versendet', 3);
 
 # USA
 INSERT INTO zones VALUES (1,223,'AL','Alabama');
