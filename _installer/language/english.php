@@ -43,7 +43,7 @@
   define('TEXT_DB_SERVER_VERSION','Your MySQL version: ');
   // EOF - vr - 2010-01-14 - check MySQL *server* version
   // BOF - vr - 2010-01-14 - check MySQL *client* version
-  define('TEXT_DB_CLIENT_VERSION_WARNING','Your MySQL version is too old. The shop requires at least version: 4.1.2 </br></br>You can continue the installation.</br>If the installation can not be correctly carried out, ask your provider for an update!');
+  define('TEXT_DB_CLIENT_VERSION_WARNING','Your MySQL version is too old. The shop requires at least version: 5.0.0 </br></br>You can continue the installation.</br>If the installation can not be correctly carried out, ask your provider for an update!');
   define('TEXT_DB_CLIENT_VERSION','Your MySQL version: ');
   // EOF - vr - 2010-01-14 - check MySQL *client* version
   // BOF - web28 - 2010-02-1014 - check FILE PATH
@@ -52,9 +52,9 @@
   define('TEXT_PATH_ERROR3','Please check your settings!<br/><br/>You can continue, but it could get problems.');
   // EOF - web28 - 2010-02-1014 - check FILE PATH
   // BOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
-  define('TEXT_WRONG_FILE_PERMISSION','WRONG FILE PERMISSIONS ');
-  define('TEXT_WRONG_FOLDER_PERMISSION','WRONG FOLDER PERMISSIONS ');
-  define('TEXT_WRONG_RFOLDER_PERMISSION','WRONG FOLDER PERMISSIONS RECURSIV (This folder, its subfolders and the contained files)<br />');  
+  define('TEXT_WRONG_FILE_PERMISSION','<strong>WRONG FILE PERMISSIONS:</strong>');
+  define('TEXT_WRONG_FOLDER_PERMISSION','<strong>WRONG FOLDER PERMISSIONS:</strong>');
+  define('TEXT_WRONG_RFOLDER_PERMISSION','<strong>WRONG FOLDER PERMISSIONS RECURSIV (This folder, its subfolders and the contained files)</strong>');  
   define('TEXT_FILE_PERMISSION_STATUS','FILE PERMISSIONS ');
   define('TEXT_FOLDER_PERMISSION_STATUS','FOLDER PERMISSIONS ');
   define('TEXT_ERROR','ERROR');
@@ -79,7 +79,7 @@
 
   // index.php
   define('TITLE_SELECT_LANGUAGE','Select your language!');
-  define('TEXT_WELCOME_INDEX','<b>Welcome to modified eCommerce Shopsoftware</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.0 and MySQL, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.');
+  define('TEXT_WELCOME_INDEX','<b>Welcome to modified eCommerce Shopsoftware</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.3 and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('TEXT_WELCOME_STEP1','<b>Main database and webserver settings</b><br /><br />Please enter your Database and webserver settings.<br /><b>Note:</b> When the necessary rights exist, the installer can also create a new database.');
   define('TEXT_WELCOME_STEP2','<b>Install database</b><br /><br />The modified eCommerce Shopsoftware installer will automatically install the modified eCommerce Shopsoftware database.');
