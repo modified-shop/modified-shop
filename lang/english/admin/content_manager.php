@@ -62,7 +62,7 @@
  define('ERROR_COMMENT','Please enter a file description!');
  define('TEXT_FILE_FLAG','Box:');
  define('TEXT_PARENT','Main Document:');
- define('TEXT_PARENT_DESCRIPTION','Assign to this document');
+ define('TEXT_PARENT_DESCRIPTION','Assign to this document as sub-content');
  define('TEXT_PRODUCT','Product:');
  define('TEXT_LINK','Link:');
  define('TEXT_SORT_ORDER','Sort:'); 
@@ -74,9 +74,9 @@
  define('TEXT_FILE_DESC','Description:');
  define('USED_SPACE','Used Space:');
  define('TABLE_HEADING_CONTENT_FILESIZE','Filesize');
- define('TEXT_CONTENT_NOINDEX','noindex');
- define('TEXT_CONTENT_NOFOLLOW','nofollow');
- define('TEXT_CONTENT_NOODP','noodp');
+ define('TEXT_CONTENT_NOINDEX','noindex (Disallow search engines from showing this page in their results.)');
+ define('TEXT_CONTENT_NOFOLLOW','nofollow (Tells the search engines robots to not follow any links on the page at all.)');
+ define('TEXT_CONTENT_NOODP','noodp (Blocks search engines from using the description for this page in DMOZ (aka ODP) as the snippet for your page in the search results.)');
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
  
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');

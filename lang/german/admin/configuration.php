@@ -444,10 +444,10 @@ define('DOWNLOAD_MAX_COUNT_DESC' , 'Stellen Sie die maximale Anzahl an Downloads
 define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_TITLE' , 'Mehrfache Attribute f&uuml;r Downloads');
 define('DOWNLOAD_MULTIPLE_ATTRIBUTES_ALLOWED_DESC' , 'Sollen mehrfache Attribute bei Download Artikeln erlaubt sein, damit die Versandart &uuml;bersprungen wird.');
 
-define('GZIP_COMPRESSION_TITLE' , 'GZip Kompression einschalten');
-define('GZIP_COMPRESSION_DESC' , 'Schalten Sie HTTP GZip Kompression ein um die Seitenaufbaugeschwindigkeit zu optimieren.');
-define('GZIP_LEVEL_TITLE' , 'Kompressions Level');
-define('GZIP_LEVEL_DESC' , 'W&auml;hlen Sie einen Kompressionslevel zwischen 0-9 (0 = Minimum, 9 = Maximum).');
+define('GZIP_COMPRESSION_TITLE' , 'GZip Komprimierung einschalten');
+define('GZIP_COMPRESSION_DESC' , 'Schalten Sie HTTP GZip Komprimierung ein um die Seitenaufbaugeschwindigkeit zu optimieren.');
+define('GZIP_LEVEL_TITLE' , 'Komprimierungs-Level');
+define('GZIP_LEVEL_DESC' , 'W&auml;hlen Sie einen Komprimierung-Level zwischen 0-9 (0 = Minimum, 9 = Maximum).');
 
 define('SESSION_WARNING', '<br /><br /><font color="#FF0000"><strong>ACHTUNG:</strong></font>
 Diese Funktion kann eventuell die Funktionsf&auml;higkeit des Shops
@@ -511,7 +511,7 @@ define('DELETE_GUEST_ACCOUNT_TITLE','L&ouml;schen von Gast-Konten');
 define('DELETE_GUEST_ACCOUNT_DESC','Sollen Gast-Konten nach erfolgter Bestellung gel&ouml;scht werden? (Bestelldaten bleiben erhalten)');
 
 define('USE_WYSIWYG_TITLE','WYSIWYG-Editor aktivieren');
-define('USE_WYSIWYG_DESC','WYSIWYG-Editor f&uuml;r CMS und Artikel aktivieren ?');
+define('USE_WYSIWYG_DESC','WYSIWYG-Editor f&uuml;r CMS und Artikel aktivieren?');
 
 define('PRICE_IS_BRUTTO_TITLE','Brutto Admin');
 define('PRICE_IS_BRUTTO_DESC','Erm&ouml;glicht die Eingabe der Bruttopreise im Admin');
@@ -822,7 +822,7 @@ define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Bestellstatus welcher in de
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Hier den Bestellstatus ausw&auml;hlen f&uuml;r den die Ums&auml;tze angezeigt werden sollen.<br />(Um nur anzuzeigen was effektiv an Umsatz gemacht wurde den Status w&auml;hlen der bei abgeschlossener Bestellung verwendet wird.)');
 
 define('SAVE_IP_LOG_TITLE', 'IP-Adresse speichern');
-define('SAVE_IP_LOG_DESC', 'Soll die IP-Adresse in der Datenbank gespeichert werden ?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
+define('SAVE_IP_LOG_DESC', 'Soll die IP-Adresse in der Datenbank gespeichert werden?<br/>Bei der Option xxx werden die letzten Stellen der IP anonymisiert.');
 
 define('META_MAX_KEYWORD_LENGTH_TITLE', 'Maximum L&auml;nge Meta-Keywords');
 define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum L&auml;nge der automatisch erzeugten Meta-Keywords (Artikelbeschreibung)');
@@ -839,24 +839,24 @@ define('CSV_CATEGORY_DEFAULT_DESC','Alle Artikel, die in der CSV-Importdatei <b>
 define('CSV_TEXTSIGN_TITLE','Texterkennungszeichen');
 define('CSV_TEXTSIGN_DESC','Z.B. " &nbsp; | &nbsp;<span style="color:#c00;">Bei Semikolon als Trennzeichen sollte das Texterkennungszeichen auf " gesetzt werden!</span>');
 define('CSV_SEPERATOR_TITLE','Trennzeichen');
-define('CSV_SEPERATOR_DESC','Z.B. ; &nbsp; | &nbsp;<span style="color:#c00;">wird das Eingabefeld leer gelassen wird beim Export/Import per default \\t (= Tab) benutzt !</span>');
+define('CSV_SEPERATOR_DESC','Z.B. ; &nbsp; | &nbsp;<span style="color:#c00;">wird das Eingabefeld leer gelassen wird beim Export/Import per default \\t (= Tab) benutzt!</span>');
 define('COMPRESS_EXPORT_TITLE','Kompression');
 define('COMPRESS_EXPORT_DESC','Kompression der exportierten Daten');
 define('CSV_CAT_DEPTH_TITLE','Kategorietiefe');
-define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen ? (z.B. bei Default-Einstellung 4: Hauptkategorie und drei Unterkategorien)<br />Diese Einstellung ist wichtig um die in der CSV angelegten Kategorien auch korrekt importiert zu bekommen. Das gleiche gilt f&uuml;r den Export.<br /><span style="color:#c00;">Mehr als 4 kann zu Performance-Einbussen f&uuml;hren und ist evtl. nicht kunden-freundlich !');
+define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen? (z.B. bei Default-Einstellung 4: Hauptkategorie und drei Unterkategorien)<br />Diese Einstellung ist wichtig um die in der CSV angelegten Kategorien auch korrekt importiert zu bekommen. Das gleiche gilt f&uuml;r den Export.<br /><span style="color:#c00;">Mehr als 4 kann zu Performance-Einbussen f&uuml;hren und ist evtl. nicht kunden-freundlich!');
 //EOC added text constants for group id 20, noRiddle
 
 define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Anzahl Staffelpreise');
 define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Mindestanzahl der Staffelpreise die angezeigt werden');
 
 define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Captcha aktivieren');
-define('MODULE_CAPTCHA_ACTIVE_DESC', '');
+define('MODULE_CAPTCHA_ACTIVE_DESC', 'F&uuml;r welche Shopsektionen soll das Captcha aktiviert werden?');
 define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Angemeldete Kunden');
 define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Anzeige des Captcha f&uuml;r angemeldete Kunden');
 define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Zuf&auml;llige Farben');
 define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Anzeige der Linien und Zeichen in zuf&auml;lligen Farben');
 define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Schatten');
-define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'zus&auml;tzliche Schatten der Zeichen im Captcha.');
+define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'Zus&auml;tzliche Schatten der Zeichen im Captcha.');
 define('MODULE_CAPTCHA_CODE_LENGTH_TITLE', 'Captcha L&auml;nge');
 define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Anzahl der Zeichen im Captcha<br/>(default: 6)');
 define('MODULE_CAPTCHA_NUM_LINES_TITLE', 'Anzahl an Linien');
@@ -896,9 +896,9 @@ define('MODULE_SMALL_BUSINESS_TITLE', 'Kleinunternehmer');
 define('MODULE_SMALL_BUSINESS_DESC', 'Soll der Shop umgestellt werden auf Kleinunternehmer nach &sect; 19 UStG.</b>Wichtig:</b>Unter Module->Zusammenfassung muss das Modul ot_tax deaktiviert oder deinstalliert werden. Zudem muss in den einzelnen Kundengruppen die Preise inkl. MwSt. auf Nein gesetzt werden.');
 
 define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Komprimierung');
-define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden ?');
+define('COMPRESS_HTML_OUTPUT_DESC', 'Soll der HTML Output vom Template komprimiert ausgeliefert werden?');
 define('COMPRESS_STYLESHEET_TITLE', 'CSS Komprimierung');
-define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden ?<br/><b>Achtung:</b>das funktioniert nur mit dem Template tpl_modified !');
+define('COMPRESS_STYLESHEET_DESC', 'Soll ein komprimiertes Stylesheet ausgeliefert werden?<br/><b>Achtung:</b> Das funktioniert nur mit dem Template tpl_modified!');
 
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Attribut editieren in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', '&Ouml;ffnet die Attribut Verwaltung in der Kategorie/Artikelansicht in einem iframe');

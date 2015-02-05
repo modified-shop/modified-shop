@@ -336,14 +336,14 @@ define('STORE_PAGE_PARSE_TIME_DESC' , 'Store the time it takes to parse a page')
 define('STORE_PARSE_DATE_TIME_FORMAT_TITLE' , 'Log file date format');
 define('STORE_PARSE_DATE_TIME_FORMAT_DESC' , 'The date format (Default: %d/%m/%Y %H:%M:%S)');
 define('STORE_DB_SLOW_QUERY_TITLE' , 'Slow Query Log');
-define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queriesbe saved ?.<br/><strong>Caution: Store Database Queries must be enabled!</strong>.<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
+define('STORE_DB_SLOW_QUERY_DESC' , 'Should only slow SQL Queries be saved?<br/><strong>Caution: Store Database Queries must be enabled!</strong>.<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 define('STORE_DB_SLOW_QUERY_TIME_TITLE' , 'Slow Query Log - Time');
 define('STORE_DB_SLOW_QUERY_TIME_DESC' , 'Time for the slow querys wich should be logged.');
 
 define('DISPLAY_PAGE_PARSE_TIME_TITLE' , 'Display The Page Parse Time');
 define('DISPLAY_PAGE_PARSE_TIME_DESC' , 'Display the page parse time<br /><strong>none</strong>: deactivated<br /><strong>admin</strong>: Only the admin sees the page parse time<br /><strong>all</strong>: Everybody sees the page parse time');
 define('STORE_DB_TRANSACTIONS_TITLE' , 'Store Database Queries');
-define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file<br/><strong>Caution: File can get very big in size in long logging sessions !</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
+define('STORE_DB_TRANSACTIONS_DESC' , 'Store the database queries in the page parse time log file<br/><strong>Caution: File can get very big in size in long logging sessions!</strong>.<br/><br/>The Logfile is saved in /log in the shoproot');
 
 define('USE_CACHE_TITLE' , 'Use Cache');
 define('USE_CACHE_DESC' , 'Use caching features');
@@ -822,7 +822,7 @@ define('ORDER_STATUSES_FOR_SALES_STATISTICS_TITLE', 'Order status which shall be
 define('ORDER_STATUSES_FOR_SALES_STATISTICS_DESC', 'Choose the order status for which the sales statistics shall be displayed.<br />(To show only the real sales volume, the order status which is used for completed orders should be choosen.)');
 
 define('SAVE_IP_LOG_TITLE', 'Save IP Address');
-define('SAVE_IP_LOG_DESC', 'Save the IP Address to database ?<br/>With Option xxx the IP will be anonymous.');
+define('SAVE_IP_LOG_DESC', 'Save the IP Address to database?<br/>With Option xxx the IP will be anonymous.');
 
 define('META_MAX_KEYWORD_LENGTH_TITLE', 'Maximum Length Meta-Keywords');
 define('META_MAX_KEYWORD_LENGTH_DESC', 'Maximum Length automatic generated Meta-Keywords');
@@ -844,28 +844,28 @@ define('COMPRESS_EXPORT_TITLE','Compression');
 define('COMPRESS_EXPORT_DESC','Compress export file');
 //BOC added constants for category depth, noRiddle
 define('CSV_CAT_DEPTH_TITLE','Category depth');
-define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go ? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly !');
+define('CSV_CAT_DEPTH_DESC','How deep shall the category tree go? (e.g. with default 4: main category plus 3 sub-categories)<br />This indication is important to get the in the CSV integrated categories imported well. Same applies to the export function.<br /><span style="color:#c00;">More than 4 may result in performance loss and is probably not user friendly!');
 //EOC added constants for category depth, noRiddle
 //EOC added text constants for group id 20, noRiddle
 
 define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Graduated Price');
 define('MIN_GROUP_PRICE_STAFFEL_DESC', 'Minimum Graduated Price to show.');
 
-define('MODULE_CAPTCHA_ACTIVE_TITLE', 'activate Captcha');
-define('MODULE_CAPTCHA_ACTIVE_DESC', '');
+define('MODULE_CAPTCHA_ACTIVE_TITLE', 'Activate Captcha');
+define('MODULE_CAPTCHA_ACTIVE_DESC', 'For which shop sections shall the Captcha be activated?');
 define('MODULE_CAPTCHA_LOGGED_IN_TITLE', 'Logged in Customers');
 define('MODULE_CAPTCHA_LOGGED_IN_DESC', 'Show Captcha for logged in customers');
 define('MODULE_CAPTCHA_USE_COLOR_TITLE', 'Random Color');
-define('MODULE_CAPTCHA_USE_COLOR_DESC', 'show lines and signs in random color');
+define('MODULE_CAPTCHA_USE_COLOR_DESC', 'Show lines and signs in random color');
 define('MODULE_CAPTCHA_USE_SHADOW_TITLE', 'Shadow');
-define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'additional shadow for the signs');
+define('MODULE_CAPTCHA_USE_SHADOW_DESC', 'Additional shadow for the signs');
 define('MODULE_CAPTCHA_CODE_LENGTH_TITLE', 'Captcha Length');
 define('MODULE_CAPTCHA_CODE_LENGTH_DESC', 'Number of Signs<br/>(default: 6)');
 define('MODULE_CAPTCHA_NUM_LINES_TITLE', 'Number of lines');
 define('MODULE_CAPTCHA_NUM_LINES_DESC', 'Set number of lines<br/>(default: 70)');
-define('MODULE_CAPTCHA_MIN_FONT_TITLE', 'min font size');
+define('MODULE_CAPTCHA_MIN_FONT_TITLE', 'Min font size');
 define('MODULE_CAPTCHA_MIN_FONT_DESC', 'Set minimum font size in px.<br/>(default: 24)');
-define('MODULE_CAPTCHA_MAX_FONT_TITLE', 'max font size');
+define('MODULE_CAPTCHA_MAX_FONT_TITLE', 'Max font size');
 define('MODULE_CAPTCHA_MAX_FONT_DESC', 'Set maximum font size in px<br/>(default: 28)');
 define('MODULE_CAPTCHA_BACKGROUND_RGB_TITLE', 'Background color');
 define('MODULE_CAPTCHA_BACKGROUND_RGB_DESC', 'Set background color in RGB<br/>(default: 192,192,192)');
@@ -897,10 +897,10 @@ define('PRODUCT_IMAGE_SHOW_NO_IMAGE_DESC', 'Show noimage.gif if there is no imag
 define('MODULE_SMALL_BUSINESS_TITLE', 'Small Business');
 define('MODULE_SMALL_BUSINESS_DESC', 'If the store will be switched to small business according to § 19 UStG.<br/><b>Important:</b>On Module-> Summary The module ot_tax must be disabled or uninstalled. In addition to the individual customer groups the prices incl. VAT must be set to No');
 
-define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compress');
-define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template ?');
-define('COMPRESS_STYLESHEET_TITLE', 'CSS Compress');
-define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet ?<br/><b>Attention:</b>this only works with the tpl_modified Template !');
+define('COMPRESS_HTML_OUTPUT_TITLE', 'HTML Compression');
+define('COMPRESS_HTML_OUTPUT_DESC', 'Compress HTML Output from the Template?');
+define('COMPRESS_STYLESHEET_TITLE', 'CSS Compression');
+define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet?<br/><b>Attention:</b> This only works with the tpl_modified Template!');
 
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Edit Attributes in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / Product view in an iframe');
