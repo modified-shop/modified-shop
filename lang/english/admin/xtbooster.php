@@ -12,7 +12,7 @@ define('HEADING_TITLE', 'xs:booster eBay-Connector');
 define('TXT_CONFIG', 'Configuration');
 define('TXT_EBAYPRODUCTS_VIEW', 'View eBay products');
 define('TXT_EBAYPRODUCTS_ADD', 'Add eBay product');
-define('TXT_SHOPKEY_DESCR', 'You\'ll receive your ShopKey after registering your shop with <a href="https://www.xsbooster.com/xtb/account-create?partner=#modified#">https://www.xsbooster.com</a>');
+define('TXT_SHOPKEY_DESCR', 'You\'ll receive your ShopKey after registering your shop with <a href="http://www.xsbooster.com/xtb/account-create?partner=#modified#">http://www.xsbooster.com</a>');
 define('TXT_STDEBAYSITE', 'eBay Marketplace');
 define('TXT_STDEBAYCURRENCY', 'Default currency');
 define('TXT_NOT_YET_INSTALLED', 'xs:booster not yet installed. Please install as described in the installation guide.');
