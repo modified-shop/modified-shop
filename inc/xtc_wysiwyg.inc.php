@@ -45,7 +45,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     //$customConfig['customConfig'] = "customConfig : '../ckeditor/custom/ckeditor_config.js',";
 		
 		//skin
-		$customConfig['skin'] = "skin: 'moono',";
+		$customConfig['skin'] = "skin: 'moonocolor',";
 		
 		//extraPlugins
 		$customConfig['extraPlugins'] = "extraPlugins: '',";
