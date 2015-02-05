@@ -51,6 +51,10 @@
         break;
       
       case 'mysqli':
+        if (!function_exists('mysqli_connect')) {
+          $db_error = 'Call to undefined function: mysqli_connect(). Please install the MySQL Connector for PHP';
+          return false;
+        }
         $socket = explode(':', $server);
         $$link = @mysqli_connect($socket[0], $username, $password, '', $socket[2], $socket[1]) or $db_error = mysqli_connect_error();
 
