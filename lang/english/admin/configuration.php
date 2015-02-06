@@ -450,8 +450,7 @@ define('GZIP_COMPRESSION_DESC' , 'Enable HTTP gzip compression.');
 define('GZIP_LEVEL_TITLE' , 'Compression Level');
 define('GZIP_LEVEL_DESC' , 'Set a compression level from 0-9 (0 = minimum, 9 = maximum).');
 
-define('SESSION_WARNING', '<br /><br /><font color="#FF0000"><strong>ATTENTION:</strong></font>
-This feature might reduce the operability of the shop system. Change it only when you are aware of the following consequences and your webserver supports the corresponding feature.');
+define('SESSION_WARNING', '<br /><br /><font color="#FF0000"><strong>CAUTION:</strong></font> This feature might reduce the operability of the shop system. Change it only when you are aware of the following consequences and your webserver supports the corresponding feature.');
 
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Directory');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'If sessions are file based, store them in this directory.');
@@ -691,15 +690,15 @@ define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','If set to <strong>false</s
 // EOF - web28 - 2010-08-17 -  Bildgrößenberechnung kleinerer Bilder
 
 //BOF - hendrik - 2011-05-14 - independent invoice number and date
-define('IBN_BILLNR_TITLE', 'Next invoice number');
-define('IBN_BILLNR_DESC', 'When assigning an invoice number, this number is given next.');
-define('IBN_BILLNR_FORMAT_TITLE', 'Invoice number format');
-define('IBN_BILLNR_FORMAT_DESC', 'Format invoice number.: {n}=number, {d}=day, {m}=month, {y}=year, <br>example. "100{n}-{d}-{m}-{y}" => "10099-28-02-2007"');
+//define('IBN_BILLNR_TITLE', 'Next invoice number');
+//define('IBN_BILLNR_DESC', 'When assigning an invoice number, this number is given next.');
+//define('IBN_BILLNR_FORMAT_TITLE', 'Invoice number format');
+//define('IBN_BILLNR_FORMAT_DESC', 'Format invoice number.: {n}=number, {d}=day, {m}=month, {y}=year, <br>example. "100{n}-{d}-{m}-{y}" => "10099-28-02-2007"');
 //EOF - hendrik - 2011-05-14 - independent invoice number and date
 
 //BOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
-define('SHOW_BUTTON_BUY_NOW_TITLE', 'Show "Buy Now" in productlists');
-define('SHOW_BUTTON_BUY_NOW_DESC', '<b>Caution:</b><br /> This option is judicially critical if customers can\'t see all important informations directly in the productlists .');
+define('SHOW_BUTTON_BUY_NOW_TITLE', 'Show "Cart"-Button in product lists');
+define('SHOW_BUTTON_BUY_NOW_DESC', '<font color="#FF0000"><strong>CAUTION:</strong></font> This option is legally critical if customers can\'t see all chief product features directly in the product lists.');
 //EOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 
 //split page results

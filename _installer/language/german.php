@@ -55,8 +55,8 @@
   define('TEXT_WRONG_FILE_PERMISSION','<strong>FALSCHE DATEIRECHTE:</strong>');
   define('TEXT_WRONG_FOLDER_PERMISSION','<strong>FALSCHE VERZEICHNISRECHTE:</strong>');
   define('TEXT_WRONG_RFOLDER_PERMISSION','<strong>FALSCHE VERZEICHNISRECHTE REKURSIV (Dieser Ordner, dessen Unterordner und die darin enthaltenen Dateien):</strong>');
-  define('TEXT_FILE_PERMISSION_STATUS','DATEIRECHTE ');
-  define('TEXT_FOLDER_PERMISSION_STATUS','VERZEICHNISRECHTE ');
+  //define('TEXT_FILE_PERMISSION_STATUS','DATEIRECHTE ');
+  //define('TEXT_FOLDER_PERMISSION_STATUS','VERZEICHNISRECHTE ');
   define('TEXT_ERROR','FEHLER');
   define('TEXT_WARNING','WARNUNG');
   define('TEXT_PHPVERSION_TOO_OLD','ACHTUNG! Ihre PHP-Version ist zu alt. Der Shop setzt mindestens die Version %s voraus.<br /><br />Ihre PHP-Version: ');
