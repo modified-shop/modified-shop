@@ -28,8 +28,8 @@ if ($shop_content_data['parent_id'] == '0') {
                                                 ON c2.content_id = c1.parent_id
                                                    AND c2.content_status = '1'
                                                    AND c2.content_active = '1'
-                                                   AND c2.languages_id = '".(int)$_SESSION['languages_id']."
-                                                   ".CONTENT_CONDITIONS_C2."'
+                                                   AND c2.languages_id = '".(int)$_SESSION['languages_id']."'
+                                                   ".CONTENT_CONDITIONS_C2."
                                           WHERE c1.parent_id = '".$shop_content_data['content_id']."'
                                             AND c1.content_status = '1'
                                             AND c1.content_active = '1'
@@ -53,14 +53,14 @@ if ($shop_content_data['parent_id'] == '0') {
                                                 ON c1.parent_id = c2.parent_id
                                                    AND c2.content_status = '1'
                                                    AND c2.content_active = '1'
-                                                   AND c2.languages_id = '".(int)$_SESSION['languages_id']."
-                                                   ".CONTENT_CONDITIONS_C2."'
+                                                   AND c2.languages_id = '".(int)$_SESSION['languages_id']."'
+                                                   ".CONTENT_CONDITIONS_C2."
                                            JOIN ".TABLE_CONTENT_MANAGER." c3
                                                 ON c3.content_id = c2.parent_id
                                                    AND c3.content_status = '1'
                                                    AND c3.content_active = '1'
-                                                   AND c3.languages_id = '".(int)$_SESSION['languages_id']."
-                                                   ".CONTENT_CONDITIONS_C3."'
+                                                   AND c3.languages_id = '".(int)$_SESSION['languages_id']."'
+                                                   ".CONTENT_CONDITIONS_C3."
                                           WHERE c1.content_id = '".$shop_content_data['content_id']."'
                                                 ".CONTENT_CONDITIONS_C1."
                                        ORDER BY c2.sort_order");
