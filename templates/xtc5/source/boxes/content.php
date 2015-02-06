@@ -19,6 +19,7 @@
 $box_smarty = new smarty;
 $box_content = '';
 
+
 $box_smarty->assign('language', $_SESSION['language']);
 
 // set cache ID
@@ -33,11 +34,14 @@ if (!CacheCheck()) {
 	$cache_id = $_SESSION['language'].$_SESSION['customers_status']['customers_status_id'].(isset($coPath) ? $coPath : '0');
 }
 
+
 if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_id) || !$cache) {
 	$box_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
+
   // include needed functions
   require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_content.inc.php');
+
 
   $content_array = array();
   $content_string = '';
@@ -57,6 +61,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
                             ORDER BY sort_order");
 
   if (xtc_db_num_rows($content_query, true) > 0) {
+		unset ($prev_cid);
+		unset ($first_content_element);
     while ($content_data = xtc_db_fetch_array($content_query, true)) {
       $content_array[$content_data['content_id']] = array (
           'name' => $content_data['content_title'],
@@ -78,6 +84,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
       }
 	  }
   }
+
 
   if (isset($coPath)) {
     $new_path = '';

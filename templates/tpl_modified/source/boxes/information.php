@@ -29,7 +29,6 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
   
   $content_array = array();
   $content_string = '';
-  unset($prev_cid);
 
 	$content_query = xtDBquery("SELECT content_id,
                                      categories_id,
@@ -46,6 +45,8 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_information.html', $cac
                             ORDER BY sort_order");
 
   if (xtc_db_num_rows($content_query, true) > 0) {
+		unset ($prev_cid);
+		unset ($first_content_element);
     while ($content_data = xtc_db_fetch_array($content_query, true)) {
       $content_array[$content_data['content_id']] = array(
           'name' => $content_data['content_title'],
