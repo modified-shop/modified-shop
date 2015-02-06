@@ -55,8 +55,8 @@
   define('TEXT_WRONG_FILE_PERMISSION','<strong>WRONG FILE PERMISSIONS:</strong>');
   define('TEXT_WRONG_FOLDER_PERMISSION','<strong>WRONG FOLDER PERMISSIONS:</strong>');
   define('TEXT_WRONG_RFOLDER_PERMISSION','<strong>WRONG FOLDER PERMISSIONS RECURSIV (This folder, its subfolders and the contained files)</strong>');  
-  define('TEXT_FILE_PERMISSION_STATUS','FILE PERMISSIONS ');
-  define('TEXT_FOLDER_PERMISSION_STATUS','FOLDER PERMISSIONS ');
+  //define('TEXT_FILE_PERMISSION_STATUS','FILE PERMISSIONS ');
+  //define('TEXT_FOLDER_PERMISSION_STATUS','FOLDER PERMISSIONS ');
   define('TEXT_ERROR','ERROR');
   define('TEXT_WARNING','WARNING');
   define('TEXT_PHPVERSION_TOO_OLD','ATTENTION! Your PHP version is too old. The shop requires at least version %s!<br /><br />Your PHP version: ');
@@ -115,7 +115,7 @@
   define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both modified eCommerce Shopsoftware and Administration Tool configuration files.');
   define('TITLE_DATABASE_SETTINGS','Database Settings');
   define('TEXT_DATABASE_TYPE','Database connection');
-  define('TEXT_DATABASE_TYPE_LONG','Please choose your database connection. <b>Attention:</b> mysqli is still beta. If there are any prblems after installation, you can change it in /includes/configure.php');
+  define('TEXT_DATABASE_TYPE_LONG','Please choose your database connection. <b>Attention:</b> mysqli is still beta. If you are experiencing any problems after installation, you can change it in /includes/configure.php');
   define('TEXT_DATABASE_SERVER','Database Server');
   define('TEXT_DATABASE_SERVER_LONG','The database server can be in the form of a hostname, such as <i>db1.myserver.com</i>, or as an IP address, such as <i>192.168.0.1</i>.');
   define('TEXT_USERNAME','Username');
