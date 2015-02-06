@@ -102,6 +102,7 @@ if ($_SESSION['customer_id'] == $order_check['customers_id'] || $send_by_admin) 
   $smarty->assign('COMMENTS', $order->info['comments']);
   $smarty->assign('EMAIL', $order->customer['email_address']);
   $smarty->assign('PHONE',$order->customer['telephone']);
+  $smarty->assign('vatID', $order->customer['vat_id']);
 
   #todo: check installed
   require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_mail.php'); #BILLPAY payment module
