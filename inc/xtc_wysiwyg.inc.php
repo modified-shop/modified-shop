@@ -54,7 +54,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig['extraPlugins'] = "extraPlugins: 'wordcount,qrc,quicktable,youtube',";
     
     //Buttons entfernen
-    $customConfig['removeButtons'] = "removeButtons: 'Subscript,Superscript',";
+    $customConfig['removeButtons'] = "removeButtons: 'Subscript,Superscript,PageBreak',";
     
     //Plugins entfernen
     $customConfig['removePlugins'] = "removePlugins: 'smiley',";
@@ -69,6 +69,8 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig['allowedContent'] = "allowedContent: false,";
     
     //toolbarGroups
+    //Default Toolbar
+    /*
     $customConfig['toolbarGroups'] = "
     toolbarGroups : [
       { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
@@ -80,6 +82,27 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
       { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
       { name: 'links' },
       { name: 'insert' },
+      '/',
+      { name: 'styles' },
+      { name: 'colors' },
+      { name: 'tools' },
+      { name: 'others' },
+      { name: 'about' }
+    ],";
+    */
+    //Simple Toolbar
+    $customConfig['toolbarGroups'] = "
+    toolbarGroups : [
+      { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
+      { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+      { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+      { name: 'insert' },
+      /*{ name: 'forms' },*/
+      '/',
+      { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+      { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+      { name: 'links' },
+      /*{ name: 'insert' },*/
       '/',
       { name: 'styles' },
       { name: 'colors' },
