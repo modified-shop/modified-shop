@@ -39,48 +39,77 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
 
     //Einrückung für Code
     $codetab = '            ';  
-		
-		//Custom config
-		$customConfig = array();
+
+    //Custom config
+    $customConfig = array();
     //$customConfig['customConfig'] = "customConfig : '../ckeditor/custom/ckeditor_config.js',";
-		
-		//skin
-		$customConfig['skin'] = "skin: 'moonocolor',";
-		
-		//extraPlugins
-		$customConfig['extraPlugins'] = "extraPlugins: '',";
-		
-		//UTF-8 bzw keine Umwandlung in entities
+    
+    //skin
+    $customConfig['skin'] = "skin: 'moonocolor',";
+    
+    //Spellchecker Autostart
+    $customConfig['scayt_autoStartup'] = "scayt_autoStartup: false,";
+    
+    //extraPlugins
+    $customConfig['extraPlugins'] = "extraPlugins: 'wordcount,qrc,quicktable,youtube',";
+    
+    //Buttons entfernen
+    $customConfig['removeButtons'] = "removeButtons: 'Subscript,Superscript',";
+    
+    //Plugins entfernen
+    $customConfig['removePlugins'] = "removePlugins: 'smiley',";
+
+    //Diagloge einfacher gestalten
+    $customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:advanced;link:advanced',";
+  
+    //UTF-8 bzw keine Umwandlung in entities
     $customConfig['entities'] = "entities: false,";
 
     //CKEditor 4.1: Advanced Content Filter (ACF) - keine benutzerdefinierten Tags herausfiltern - Filter deaktivieren -> true
-		$customConfig['allowedContent'] = "allowedContent: false,";
-		
-		//toolbarGroups
-		$customConfig['toolbarGroups'] ="
-		toolbarGroups : [
-			{ name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
-			{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-			{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
-			{ name: 'forms' },
-			'/',
-			{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-			{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
-			{ name: 'links' },
-			{ name: 'insert' },
-			'/',
-			{ name: 'styles' },
-			{ name: 'colors' },
-			{ name: 'tools' },
-			{ name: 'others' },
-			{ name: 'about' }
+    $customConfig['allowedContent'] = "allowedContent: false,";
+    
+    //toolbarGroups
+    $customConfig['toolbarGroups'] = "
+    toolbarGroups : [
+      { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
+      { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+      { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+      { name: 'forms' },
+      '/',
+      { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+      { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+      { name: 'links' },
+      { name: 'insert' },
+      '/',
+      { name: 'styles' },
+      { name: 'colors' },
+      { name: 'tools' },
+      { name: 'others' },
+      { name: 'about' }
     ],";
-		
-		//Sprache aus Session
+
+    //Wordcount Settings
+    $customConfig['wordcount'] = "
+    wordcount: {
+      // Whether or not you want to show the Word Count
+      showWordCount: true,
+
+      // Whether or not you want to show the Char Count
+      showCharCount: true,
+
+      // Whether or not to include Html chars in the Char Count
+      countHTML: false
+    },";
+
+    //Eingabeoption
+    $customConfig['enterMode'] = "enterMode: CKEDITOR.ENTER_BR,";
+    $customConfig['shiftEnterMode'] = "shiftEnterMode: CKEDITOR.ENTER_P,";
+
+    //Sprache aus Session
     $customConfig['language'] = 'language: "'.$_SESSION['language_code'].'",';
 
     //CSS Dateien aus template laden
-		//$css_path = '../templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
+    //$css_path = '../templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
     //$css_path2 = '../templates/'.CURRENT_TEMPLATE.'/editor.css'; //Wichtig für Hintergrund: html,body definieren
     //$customConfig['contentsCss'] = "contentsCss: ['".$css_path."','".$css_path2."'],";
 
@@ -163,17 +192,17 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     
     require_once(DIR_FS_INC.'auto_include.inc.php');
     foreach(auto_include(DIR_FS_CATALOG.'includes/extra/wysiwyg/','php') as $file) require ($file);
-		
-		$customConfig = implode(PHP_EOL.$codetab,$customConfig);
+    
+    $customConfig = implode(PHP_EOL.$codetab,$customConfig);
     
     if ($editorName != '') {
-        $html .='
-			CKEDITOR.replace( "'.$editorName.'",
-			{ '.$customConfig.$filebrowser_settings.'
-				height: '.$default_editor_height.',
-				width: '.$default_editor_width.'
-			});
-		';
+      $html .='
+        CKEDITOR.replace( "'.$editorName.'",
+        { '.$customConfig.$filebrowser_settings.'
+          height: '.$default_editor_height.',
+          width: '.$default_editor_width.'
+        });
+      ';
     }
     
     $html .=  $add_init ; 
@@ -196,11 +225,11 @@ function editorJSLink($js_src)
 function wysiwyg_add_javascript($js_src,$html)
 {
     $html = editorJSLink($js_src).
-   '<script type="text/javascript">
-	  $(document).ready(function() {
-	   '.$html.'
-	  });
-	</script>'. PHP_EOL;
+    '<script type="text/javascript">
+      $(document).ready(function() {
+       '.$html.'
+      });
+    </script>'. PHP_EOL;
 
     return $html;
 }
