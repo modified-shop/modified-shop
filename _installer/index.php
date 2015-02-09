@@ -212,13 +212,13 @@
               <form name="language" method="post" action="index.php">
                 <table width="300" border="0" cellpadding="0" cellspacing="4">
                   <tr>
-                    <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />Deutsch</td>
+                    <td width="98"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /><?php echo TEXT_GERMAN; ?></td>
                     <td width="192"><img src="images/icons/icon-deu.gif" width="30" height="16" alt="" />
                       <?php echo xtc_draw_radio_field_installer('lg', 'german', (($lang=='german')?true:false), 'onclick="self.location.href=\''.xtc_href_link('index.php', 'lg=german', 'NONSSL').'\'"'); ?>
                     </td>
                   </tr>
                   <tr>
-                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" />English</td>
+                    <td><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /><?php echo TEXT_ENGLISH; ?></td>
                     <td><img src="images/icons/icon-eng.gif" width="30" height="16" alt="" />
                       <?php echo xtc_draw_radio_field_installer('lg', 'english', (($lang=='english')?true:false), 'onclick="self.location.href=\''.xtc_href_link('index.php', 'lg=english', 'NONSSL').'\'"'); ?> 
                     </td>
