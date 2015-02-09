@@ -69,15 +69,15 @@ define('DOB_FORMAT_STRING', 'dd/mm/yyyy');
 
 define('BOX_HEADING_CONFIGURATION','Configuration');
 define('BOX_HEADING_MODULES','Modules');
-define('BOX_HEADING_PARTNER_MODULES','Partner modules');
-define('BOX_HEADING_ZONE','Zone / Tax');
+define('BOX_HEADING_PARTNER_MODULES','Partner Modules');
+define('BOX_HEADING_ZONE','Zone/Tax');
 define('BOX_HEADING_CUSTOMERS','Customers');
 define('BOX_HEADING_PRODUCTS','Catalog');
 define('BOX_HEADING_STATISTICS','Statistics');
 define('BOX_HEADING_TOOLS','Tools');
 define('BOX_HEADING_LOCALIZATION', 'Languages/Currencies');
 define('BOX_HEADING_TEMPLATES','Templates');
-define('BOX_HEADING_LOCATION_AND_TAXES', 'Location / Tax');
+define('BOX_HEADING_LOCATION_AND_TAXES', 'Location/Tax');
 define('BOX_HEADING_CATALOG', 'Catalog');
 
 define('BOX_CONTENT','Content Manager');
@@ -113,7 +113,7 @@ define('BOX_MODULES', 'Payment-/Shipping-/Billing-Modules');
 define('BOX_PAYMENT', 'Payment Systems');
 define('BOX_SHIPPING', 'Shipping Methods');
 define('BOX_ORDER_TOTAL', 'Order Total');
-define('BOX_CATEGORIES', 'Categories / Products');
+define('BOX_CATEGORIES', 'Categories/Products');
 define('BOX_PRODUCTS_ATTRIBUTES', 'Product Options');
 define('BOX_MANUFACTURERS', 'Manufacturers');
 define('BOX_REVIEWS', 'Product Reviews');
@@ -465,7 +465,7 @@ define('BOX_CUSTOMERS_GROUP','CG-authorizations');
 
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
 define('TEXT_ADMIN_START', 'Home');
-define('BOX_HEADING_CONFIGURATION2','Advanced Configuration');
+define('BOX_HEADING_CONFIGURATION2','Adv. Configuration');
 // EOF - Tomcraft - 2009-11-02 - New admin top menu
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster

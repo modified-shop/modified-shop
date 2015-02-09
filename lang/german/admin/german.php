@@ -70,14 +70,14 @@ define('DOB_FORMAT_STRING', 'tt.mm.jjjj');
 define('BOX_HEADING_CONFIGURATION','Konfiguration');
 define('BOX_HEADING_MODULES','Module');
 define('BOX_HEADING_PARTNER_MODULES','Partner Module');
-define('BOX_HEADING_ZONE','Land / Steuer');
+define('BOX_HEADING_ZONE','Land/Steuer');
 define('BOX_HEADING_CUSTOMERS','Kunden');
-define('BOX_HEADING_PRODUCTS','Artikelkatalog');
+define('BOX_HEADING_PRODUCTS','Katalog');
 define('BOX_HEADING_STATISTICS','Statistiken');
 define('BOX_HEADING_TOOLS','Hilfsprogramme');
 define('BOX_HEADING_LOCALIZATION', 'Sprachen/W&auml;hrungen');
 define('BOX_HEADING_TEMPLATES','Templates');
-define('BOX_HEADING_LOCATION_AND_TAXES', 'Land / Steuer');
+define('BOX_HEADING_LOCATION_AND_TAXES', 'Land/Steuer');
 define('BOX_HEADING_CATALOG', 'Katalog');
 define('BOX_MODULE_NEWSLETTER','Newsletter');
 
@@ -114,7 +114,7 @@ define('BOX_MODULES', 'Zahlungs-/Versand-/Verrechnungs-Module');
 define('BOX_PAYMENT', 'Zahlungsoptionen');
 define('BOX_SHIPPING', 'Versandart');
 define('BOX_ORDER_TOTAL', 'Zusammenfassung');
-define('BOX_CATEGORIES', 'Kategorien / Artikel');
+define('BOX_CATEGORIES', 'Kategorien/Artikel');
 define('BOX_PRODUCTS_ATTRIBUTES', 'Artikelmerkmale');
 define('BOX_MANUFACTURERS', 'Hersteller');
 define('BOX_REVIEWS', 'Artikelbewertungen');
@@ -465,7 +465,7 @@ define('BOX_CUSTOMERS_GROUP','KG-Berechtigungen');
 
 // BOF - Tomcraft - 2009-11-02 - New admin top menu
 define('TEXT_ADMIN_START', 'Startseite');
-define('BOX_HEADING_CONFIGURATION2','Erweiterte Konfiguration');
+define('BOX_HEADING_CONFIGURATION2','Erw. Konfiguration');
 // EOF - Tomcraft - 2009-11-02 - New admin top menu
 
 // BOF - Tomcraft - 2009-11-28 - Included xs:booster
