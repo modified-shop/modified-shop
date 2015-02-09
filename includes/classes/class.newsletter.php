@@ -22,21 +22,21 @@
 define('NL_REG_MAIL_ADMIN', false);
 
 class newsletter {
-	var $message, $message_id;
+  var $message, $message_id;
 
 
-	function newsletter() {
-		$this->auto = false;
-	}
+  function newsletter() {
+    $this->auto = false;
+  }
 
 
-	function RemoveFromList($key, $mail) {
-		require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
+  function RemoveFromList($key, $mail) {
+    require_once (DIR_FS_INC.'xtc_validate_password.inc.php');
 
-	  if (!xtc_not_null($key)) {
-	    $this->message = TEXT_EMAIL_ACTIVE_ERROR;
-	    $this->message_id = 5;
-	  } else {
+    if (!xtc_not_null($key)) {
+      $this->message = TEXT_EMAIL_ACTIVE_ERROR;
+      $this->message_id = 5;
+    } else {
       $check_mail_query = xtc_db_query("SELECT customers_email_address,
                                                customers_id,
                                                mail_key
@@ -50,6 +50,8 @@ class newsletter {
           $this->message = TEXT_EMAIL_DEL_ERROR;
           $this->message_id = 2;
         } else {
+          // extern Mailer
+          $this->_externmailer($mail, 'unsubscribe');
           $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                            WHERE customers_email_address ='".xtc_db_input($mail)."'
                                              AND mail_key = '".xtc_db_input($key)."'
@@ -62,14 +64,14 @@ class newsletter {
         $this->message_id = 1;
       }
     }
-	}
+  }
 
 
-	function ActivateAddress($key, $email) {
-	  if (!xtc_not_null($key)) {
-	    $this->message = TEXT_EMAIL_ACTIVE_ERROR;
-	    $this->message_id = 5;
-	  } else {
+  function ActivateAddress($key, $email) {
+    if (!xtc_not_null($key)) {
+      $this->message = TEXT_EMAIL_ACTIVE_ERROR;
+      $this->message_id = 5;
+    } else {
       $check_mail_query = xtc_db_query("SELECT mail_key,
                                                mail_status
                                           FROM ".TABLE_NEWSLETTER_RECIPIENTS."
@@ -87,6 +89,8 @@ class newsletter {
         } else {
           $sql_data_array = array('mail_status' => '1');
           xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($email)."'");
+          // extern Mailer
+          $this->_externmailer($email, 'subscribe');
           $this->message = TEXT_EMAIL_ACTIVE;
           $this->message_id = 6;
         }
@@ -95,22 +99,22 @@ class newsletter {
         $this->message_id = 4;
       }
     }
-	}
+  }
 
 
-	function AddUserAuto($mail) {
-		$this->auto = true;
-		$this->AddUser('inp', '', $mail);
-	}
+  function AddUserAuto($mail) {
+    $this->auto = true;
+    $this->AddUser('inp', '', $mail);
+  }
 
 
-	function AddUser($check, $postCode, $mail) {
-	  require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
+  function AddUser($check, $postCode, $mail) {
+    require_once (DIR_FS_INC.'xtc_validate_email.inc.php');
 
-	  if ($check != 'inp' && $check != 'del') {
-	    $this->message = ERROR_MAIL;
-	  } elseif (xtc_validate_email($mail) == false) {
-	    $this->message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+    if ($check != 'inp' && $check != 'del') {
+      $this->message = ERROR_MAIL;
+    } elseif (xtc_validate_email($mail) == false) {
+      $this->message = ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
     } else {
 
       $this->generateCode();
@@ -137,6 +141,8 @@ class newsletter {
               } else {
                 $sql_data_array = array('mail_status' => '1');
                 xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
+                // extern Mailer
+                $this->_externmailer($mail, 'subscribe');
                 $this->message = TEXT_EMAIL_ACTIVE;
                 $this->message_id = 6;
               }
@@ -186,7 +192,8 @@ class newsletter {
             } else {
               $sql_data_array = array('mail_status' => '1');
               xtc_db_perform(TABLE_NEWSLETTER_RECIPIENTS, $sql_data_array, 'update', "customers_email_address = '".xtc_db_input($mail)."'");
-
+              // extern Mailer
+              $this->_externmailer($mail, 'subscribe');
               $this->message = TEXT_EMAIL_ACTIVE;
               $this->message_id = 6;
             }
@@ -200,6 +207,8 @@ class newsletter {
                                              WHERE customers_email_address = '".xtc_db_input($mail)."'
                                            ");
           if (xtc_db_num_rows($check_mail_query) > 0) {
+            // extern Mailer
+            $this->_externmailer($mail, 'unsubscribe');
             $del_query = xtc_db_query("DELETE FROM ".TABLE_NEWSLETTER_RECIPIENTS."
                                              WHERE customers_email_address ='".xtc_db_input($mail)."'
                                       ");
@@ -217,60 +226,113 @@ class newsletter {
       }
     }
     unset($_SESSION['vvcode']);
-	}
+  }
 
 
-	function sendRequestMail($mail) {
+  function sendRequestMail($mail) {
 
-		$smarty = new Smarty;
-		$link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($mail).'&key='.$this->vlCode, 'NONSSL');
+    $smarty = new Smarty;
+    $link = xtc_href_link(FILENAME_NEWSLETTER, 'action=activate&email='.xtc_db_input($mail).'&key='.$this->vlCode, 'NONSSL');
 
-		// assign language to template for caching
-		$smarty->assign('language', $_SESSION['language']);
-		$smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-		$smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
+    // assign language to template for caching
+    $smarty->assign('language', $_SESSION['language']);
+    $smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
+    $smarty->assign('logo_path', HTTP_SERVER.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 
-		// assign vars
-		$smarty->assign('EMAIL', xtc_db_input($mail));
-		$smarty->assign('LINK', $link);
+    // assign vars
+    $smarty->assign('EMAIL', xtc_db_input($mail));
+    $smarty->assign('LINK', $link);
 
-		// dont allow cache
-		$smarty->caching = false;
+    // dont allow cache
+    $smarty->caching = false;
 
-		$html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
-		$txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
+    $html_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.html');
+    $txt_mail = $smarty->fetch(CURRENT_TEMPLATE.'/mail/'.$_SESSION['language'].'/newsletter_mail.txt');
 
-		$email_subject = $mailer->subject;
+    $email_subject = $mailer->subject;
 
-		if (SEND_EMAILS == true) {
-		  xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
-		               EMAIL_SUPPORT_NAME,
-		               xtc_db_input($mail),
-		               '',
-		               '',
-		               EMAIL_SUPPORT_REPLY_ADDRESS,
-		               EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
-		               NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_ADDRESS : '',
-		               NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_NAME : '',
-		               TEXT_EMAIL_SUBJECT,
-		               $html_mail,
-		               $txt_mail
-		               );
-		}
-	}
+    xtc_php_mail(EMAIL_SUPPORT_ADDRESS,
+                 EMAIL_SUPPORT_NAME,
+                 xtc_db_input($mail),
+                 '',
+                 '',
+                 EMAIL_SUPPORT_REPLY_ADDRESS,
+                 EMAIL_SUPPORT_REPLY_ADDRESS_NAME,
+                 NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_ADDRESS : '',
+                 NL_REG_MAIL_ADMIN === true ? EMAIL_SUPPORT_NAME : '',
+                 TEXT_EMAIL_SUBJECT,
+                 $html_mail,
+                 $txt_mail
+                 );
+  }
 
 
-	function generateCode() {
-		require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+  function generateCode() {
+    require_once (DIR_FS_INC.'xtc_random_charcode.inc.php');
+    $this->vlCode = xtc_random_charcode(32);
+  }
 
-		$this->vlCode = xtc_random_charcode(32);
-	}
+
+  function RemoveLinkAdmin($key,$mail) {
+    return HTTP_CATALOG_SERVER.DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$mail.'&key='.$key;
+  }
 
 
-	function RemoveLinkAdmin($key,$mail) {
-		return HTTP_CATALOG_SERVER.DIR_WS_CATALOG.FILENAME_CATALOG_NEWSLETTER.'?action=remove&email='.$mail.'&key='.$key;
-	}
+  function _externmailer($mail, $type) {
+    $newsletter_query = xtc_db_query("SELECT * 
+                                        FROM ".TABLE_NEWSLETTER_RECIPIENTS." 
+                                       WHERE customers_email_address ='".xtc_db_input($mail)."'");
+    $newsletter = xtc_db_fetch_array($newsletter_query);
+    
+    if (MODULE_SUPERMAILER == 'true') {
+      $txt_mail_std_arr = array('EMail' => $newsletter['customers_email_address'],
+                                'RG' => MODULE_SUPERMAILER_GROUP);
+    
+      if ($type == 'subscribe') {
+        $txt_mail_add_arr['Name'] = $newsletter['customers_firstname'] . $newsletter['customers_lastname'];
+      }
+    
+      $txt_mail = '';
+      foreach(array_keys($txt_mail_arr) as $key){    
+        $txt_mail .= $key . ': ' . $txt_mail_arr[$key] . "\n";
+      }
+      $txt_mail .= '[NOSIGNATUR]';
+    
+      xtc_php_mail($mail,
+                   '',
+                   MODULE_SUPERMAILER_EMAIL_ADDRESS,
+                   '',
+                   '',
+                   $mail,
+                   '',
+                   '',
+                   '',
+                   strtoupper($type),
+                   $txt_mail,
+                   nl2br($txt_mail)
+                   );
+    }
+
+    if (MODULE_CLEVERREACH == 'true') {
+      $api = new SoapClient('http://api.cleverreach.com/soap/interface_v5.1.php?wsdl');
+      
+      switch ($type) {
+        case 'subscribe':
+          $user = array('email' => $mail,
+                        'registered' => strtotime($newsletter['date_added']),
+                        'activated' => time(),
+                        'source' => MODULE_CLEVERREACH_NAME,
+                        'attributes' => array(array('key' => 'vorname', 'value' => utf8_decode($newsletter['customers_firstname'])),
+                                              array('key' => 'nachname', 'value' => utf8_decode($newsletter['customers_lastname'])))
+                        );
+          $result = $api->receiverAdd(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $user);
+          break; 
+        case 'unsubscribe':
+          $result = $api->receiverDelete(MODULE_CLEVERREACH_APIKEY, MODULE_CLEVERREACH_GROUP, $mail);
+          break;
+      }
+    }
+  }
 
 }
-
 ?>
