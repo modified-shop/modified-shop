@@ -164,6 +164,14 @@ $values_group_update = array();
                            'configuration_key' => 'EMAIL_BILLING_ATTACHMENTS'
                            );
 
+  $values[] = "(NULL, 'MODULE_CLEVERREACH', 'false', '12', '40', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'MODULE_CLEVERREACH_APIKEY', '', '12', '41', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_CLEVERREACH_NAME', '', '12', '42', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_CLEVERREACH_GROUP', '', '12', '43', NULL, NOW(), NULL, NULL);";
+  $values[] = "(NULL, 'MODULE_SUPERMAILER', 'false', '12', '44', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'MODULE_SUPERMAILER_EMAIL_ADDRESS', '', '12', '45', NULL, NOW(), NULL, 'xtc_cfg_input_email_language;MODULE_SUPERMAILER_EMAIL_ADDRESS');";
+  $values[] = "(NULL, 'MODULE_SUPERMAILER_GROUP', '', '12', '46', NULL, NOW(), NULL, NULL);";
+
 //configuration_group_id 13 --- "Download Optionen"
   $values_update[] = array (
                            'values' => "configuration_group_id = '13', set_function = 'xtc_cfg_multi_checkbox(\'xtc_get_orders_status\', \'chr(44)\','",
