@@ -78,7 +78,9 @@
   // EOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
 
   // index.php
-  define('TITLE_SELECT_LANGUAGE','Select your language!');
+  define('TITLE_SELECT_LANGUAGE','Select your language:');
+  define('TEXT_GERMAN','German');
+  define('TEXT_ENGLISH','English');
   define('TEXT_WELCOME_INDEX','<b>Welcome to modified eCommerce Shopsoftware</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.3 and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('TEXT_WELCOME_STEP1','<b>Main database and webserver settings</b><br /><br />Please enter your Database and webserver settings.<br /><b>Note:</b> When the necessary rights exist, the installer can also create a new database.');
@@ -286,7 +288,7 @@
   define ('CONNECT_FTP', 'FTP connect');
   // EOC flth new permission change system
 
-  define('TITLE_SELECT_CHARSET', 'Select a Charset!');
+  define('TITLE_SELECT_CHARSET', 'Select a Charset:');
 
   define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Password must contain at least %s lowercase characters');
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Password must contain at least %s uppercase characters');
