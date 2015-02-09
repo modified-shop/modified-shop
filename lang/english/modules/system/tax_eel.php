@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_TAX_EEL_TEXT_TITLE', 'Tax rates for electronically supplied services');
-define('MODULE_TAX_EEL_TEXT_DESCRIPTION', 'There are inserted every tax rates in the EU Member States.');
-define('MODULE_TAX_EEL_TEXT_DESCRIPTION_PROCESSED', 'All tax rates of the EU Member States have been inserted already.<br/><br/>');
+define('MODULE_TAX_EEL_TEXT_DESCRIPTION', 'All tax rates of the EU Member States are inserted.');
+define('MODULE_TAX_EEL_TEXT_DESCRIPTION_PROCESSED', 'All tax rates of the EU Member States have already been inserted.<br/><br/>');
 
 ?>

@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_API_IT_RECHT_KANZLEI_TEXT_TITLE', 'IT-Recht Kanzlei Auto Updater');
-define('MODULE_API_IT_RECHT_KANZLEI_TEXT_DESCRIPTION', 'IT-Recht Kanzlei - Auto Updater f&uuml;r automatische Rechtstexte<br/><br/><b>WICHTIG:</b> vor der Nutzung des Moduls muss die Zuordnung der Content Seiten gemacht werden.<hr noshade>');
+define('MODULE_API_IT_RECHT_KANZLEI_TEXT_DESCRIPTION', 'IT-Recht Kanzlei - Auto Updater f&uuml;r automatische Rechtstexte<br/><br/><b>WICHTIG:</b> Vor der Nutzung des Moduls muss die Zuordnung der Content Seiten gemacht werden.<hr noshade>');
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_TITLE', 'Status');
 define('MODULE_API_IT_RECHT_KANZLEI_STATUS_DESC', 'Modulstatus');
 define('MODULE_API_IT_RECHT_KANZLEI_TOKEN_TITLE', 'Authentifizierungs-Token');

@@ -11,7 +11,7 @@
    ---------------------------------------------------------------------------------------*/
 
 define('MODULE_INVOICE_NUMBER_STATUS_TITLE','Status');
-define('MODULE_INVOICE_NUMBER_STATUS_DESC','Module status');
+define('MODULE_INVOICE_NUMBER_STATUS_DESC','Modulstatus');
 define('MODULE_INVOICE_NUMBER_STATUS_INFO','Aktiv');
 define('MODULE_INVOICE_NUMBER_TEXT_TITLE', 'Modul Neue Rechnungsnummer');
 define('MODULE_INVOICE_NUMBER_TEXT_BTN', 'Bearbeiten');

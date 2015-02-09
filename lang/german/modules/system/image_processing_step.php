@@ -29,7 +29,7 @@ Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft 
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - <b>Produktbilder</b>');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
-define('IMAGE_EXPORT','Dr&uuml;cken Sie Start um die Stapelverarbeitung zu starten, dieser Vorgang kann einige Zeit dauern, auf keinen Fall unterbrechen!.');
+define('IMAGE_EXPORT','Dr&uuml;cken Sie Start um die Stapelverarbeitung zu starten. Dieser Vorgang kann einige Zeit dauern - auf keinen Fall unterbrechen!');
 define('IMAGE_EXPORT_TYPE','<hr noshade><strong>Stapelverarbeitung:</strong>');
 
 define('IMAGE_STEP_INFO','Bilder erstellt: ');

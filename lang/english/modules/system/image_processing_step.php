@@ -25,17 +25,17 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'All Images in these direct
 /images/product_images/popup_images/<br />
 /images/product_images/info_images/<br />
 /images/product_images/thumbnail_images/ <br /> <br /> are getting processed.<br /> <br />
-To this end, the script uses only a limited number of %s images and calls himself afterwards again.<br /> <br />');
+For this purpose, the script uses only a limited number of %s images and calls himself afterwards again.<br /> <br />');
 define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - <b>product images</b>');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Module status');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
-define('IMAGE_EXPORT','Press Start to for the processing. This process may take some time, do not break in any case !');
-define('IMAGE_EXPORT_TYPE','<hr noshade><strong>batch Processing:</strong>');
+define('IMAGE_EXPORT','Press Start to start the processing. This process may take some time - do not interrupt in any case!');
+define('IMAGE_EXPORT_TYPE','<hr noshade><strong>Batch Processing:</strong>');
 
 define('IMAGE_STEP_INFO','Images created: ');
 define('IMAGE_STEP_INFO_READY',' - Finished!');
 define('TEXT_MAX_IMAGES','max. images for each reload');
-define('TEXT_ONLY_MISSING_IMAGES','create only missing images');
+define('TEXT_ONLY_MISSING_IMAGES','Create only missing images');
 define('MODULE_STEP_READY_STYLE_TEXT', '<div class="ready_info">%s</div>');
 define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
 define('TEXT_LOWER_FILE_EXT','Convert file extension to lowercase. Example: <b> JPG -> jpg</b>');
