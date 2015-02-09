@@ -287,6 +287,9 @@ if (xtc_not_null($action) && !$box) {
                         foreach ($directory_array as $directory_array) {
                           for ($i = 0, $n = sizeof($directory_array); $i < $n; $i++) {
                             $file = $directory_array[$i];
+                            if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file)) {
+                              include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $file);
+                            }
                             include_once($module_directory . $file);
                             $class = substr($file, 0, strrpos($file, '.'));
                             if (xtc_class_exists($class)) {
