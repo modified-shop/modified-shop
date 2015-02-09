@@ -168,7 +168,6 @@
       }
     }
   }
-  $messageStack = new messageStack();
   if (isset($message_arr['file_permission'])) {
     foreach ($message_arr['file_permission'] as $value) {
       $messageStack->add('file_permission', $value);
