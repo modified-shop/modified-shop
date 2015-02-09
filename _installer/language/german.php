@@ -78,7 +78,9 @@
   // EOF - DokuMan - 2010-08-16 - language dependent definitions for index.php
 
   // index.php
-  define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus!');
+  define('TITLE_SELECT_LANGUAGE','W&auml;hlen Sie eine Sprache aus:');
+  define('TEXT_GERMAN','Deutsch');
+  define('TEXT_ENGLISH','Englisch');
   define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
   define('TEXT_WELCOME_STEP1','<b>Datenbank- und Webservereinstellungen</b><br /><br />Der Installer ben&ouml;tigt hier einige Informationen bez&uuml;glich Ihrer Datenbank und Ihrer Verzeichnisstruktur.<br /><b>Hinweis:</b> Sofern die erforderlichen Rechte vorhanden sind, kann der Installer auch eine neue Datenbank erzeugen.');
@@ -288,7 +290,7 @@
   define('CONNECT_FTP', 'FTP verbinden');
   // EOC flth new permission change system
   
-  define('TITLE_SELECT_CHARSET', 'W&auml;hlen Sie ein Charset aus!');
+  define('TITLE_SELECT_CHARSET', 'W&auml;hlen Sie ein Charset aus:');
 
   define('ENTRY_PASSWORD_ERROR_MIN_LOWER', 'Ihr Passwort muss mindestens %s Kleinbuchstaben enthalten.');
   define('ENTRY_PASSWORD_ERROR_MIN_UPPER', 'Ihr Passwort muss mindestens %s Grossbuchstaben enthalten.');
