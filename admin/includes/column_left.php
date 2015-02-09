@@ -129,7 +129,7 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
         if ($admin_access['configuration'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XTBOOSTER."?xtb_module=list", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_XSBOOSTER_LISTAUCTIONS.'</a></li>';
         if ($admin_access['configuration'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XTBOOSTER."?xtb_module=add", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_XSBOOSTER_ADDAUCTIONS.'</a></li>';
         if ($admin_access['configuration'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_XTBOOSTER."?xtb_module=conf", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_XSBOOSTER_CONFIG.'</a></li>';
-      echo '  </ul></li>';
+      echo '</ul></li>';
     }
 echo endMenue(BOX_HEADING_PARTNER_MODULES);
 
