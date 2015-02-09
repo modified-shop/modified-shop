@@ -1546,7 +1546,8 @@ a.color_more:hover {
   text-align:right;
   padding: 10px 0 0 0;
   font-size: 16px;
-  line-height:20px;
+  line-height:22px;
+  height:22px;
   color:#434343;
 }
 .lb_price .new_price {
