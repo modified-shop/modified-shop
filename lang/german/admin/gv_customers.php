@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('HEADING_TITLE', 'Kunden - Guthaben');
+define('HEADING_TITLE', 'Kunden-Guthaben');
 
 define('TABLE_HEADING_GV_ID', 'ID');
 define('TABLE_HEADING_GV_NAME', 'Name');
