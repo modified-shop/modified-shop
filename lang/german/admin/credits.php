@@ -32,4 +32,5 @@ define('TEXT_INFO_THANKS', 'Wir danken allen Programmieren und Entwicklern, die 
 define('TEXT_INFO_DISCLAIMER', 'Dieses Programm wurde ver&ouml;ffentlicht, in der Hoffnung hilfreich zu sein. Wir geben jedoch keinerlei Garantie auf die fehlerfreie Implementierung.');
 define('TEXT_INFO_DONATIONS', 'Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.');
 define('TEXT_INFO_DONATIONS_IMG_ALT', 'Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
+define('BUTTON_DONATE', '<a href="http://www.modified-shop.org/spenden"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0"></a>');
 ?>

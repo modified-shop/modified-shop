@@ -126,7 +126,7 @@ require (DIR_WS_INCLUDES.'head.php');
                             <dt>&nbsp;</dt><dd>&nbsp;</dd>
                             <dt>&nbsp;</dt>
                             <dd>
-                              <a href="http://www.modified-shop.org/spenden"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0"></a>
+                              <?php echo BUTTON_DONATE; ?>
                             </dd>
                           </dl>
                         </dd>
