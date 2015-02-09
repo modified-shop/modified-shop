@@ -207,8 +207,11 @@ class categories {
                        SET categories_image = ''
                      WHERE categories_id = '".(int) $categories_id."'");
     }
-    //web28 2012-11-30 new redirect
-    if ($action == 'insert') {
+
+    //redirect by update button
+    if (isset($categories_data['update_category'])) {
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&action=edit_category&cID='.$categories_id));
+    } elseif ($action == 'insert') {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
     }
   }
