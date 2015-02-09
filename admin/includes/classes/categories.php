@@ -210,7 +210,7 @@ class categories {
 
     //redirect by update button
     if (isset($categories_data['cat_update'])) {
-      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params()));
+      xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('action')).'action=edit_category'));
     } elseif ($action == 'insert') {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($categories_id).'&cID='.$categories_id)); 
     }
