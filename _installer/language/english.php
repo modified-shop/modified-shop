@@ -186,6 +186,9 @@
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator configuration');
   define('TEXT_REQU_INFORMATION','* required information');
+  define('TEXT_GENDER','Salutation:');
+  define('TEXT_MALE','Mr.');
+  define('TEXT_FEMALE','Ms./Mrs.');
   define('TEXT_FIRSTNAME','First Name:');
   define('TEXT_LASTNAME','Last Name:');
   define('TEXT_EMAIL','E-Mail Address:');
@@ -211,6 +214,7 @@
   define('TEXT_ZONE_NO','No');
   define('TEXT_ZONE_YES','Yes');
   define('TEXT_COMPANY','Company name');
+  define('ENTRY_GENDER_ERROR','Select salutation');
   define('ENTRY_FIRST_NAME_ERROR','Firstname to short');
   define('ENTRY_LAST_NAME_ERROR','Lastname to short');
   define('ENTRY_EMAIL_ADDRESS_ERROR','Email to short');

@@ -85,7 +85,8 @@
       .popout .right { float: right; width: 300px; padding: 0 10px; }
       label { display: block; width: 290px; padding: 5px 0 2px 0; }
       <!--
-        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; background-color: #; }
+        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
+        .messageStackError img { position: relative; top: 5px; }
       -->
     </style>
   </head>
@@ -119,7 +120,22 @@
                   <?php echo TEXT_CHMOD_REMARK; ?>
                 </div><br />
                 <div style="background:#ff0000; color:#ffffff; padding:10px; border:1px solid #cf0000">
-                  <?php echo $message; ?>
+                  <?php
+                  if ($messageStack->size('file_permission') > 0) {
+                    echo TEXT_WRONG_FILE_PERMISSION . '<br/>';
+                    echo $messageStack->output('file_permission');
+                    echo '<br/>';
+                  }
+                  if ($messageStack->size('folder_permission') > 0) {
+                    echo TEXT_WRONG_FOLDER_PERMISSION . '<br/>';
+                    echo $messageStack->output('folder_permission');
+                    echo '<br/>';
+                  }
+                  if ($messageStack->size('rfolder_permission') > 0) {
+                    echo TEXT_WRONG_RFOLDER_PERMISSION . '<br/>';
+                    echo $messageStack->output('rfolder_permission');
+                  }
+                  ?>
                 </div>
               </td>
             </tr>

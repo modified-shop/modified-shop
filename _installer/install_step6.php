@@ -53,6 +53,7 @@
   if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
     $process = true;
 
+    $gender = xtc_db_prepare_input($_POST['GENDER']);
     $firstname = xtc_db_prepare_input($_POST['FIRST_NAME']);
     $lastname = xtc_db_prepare_input($_POST['LAST_NAME']);
     $email_address = xtc_db_prepare_input($_POST['EMAIL_ADRESS']);
@@ -71,6 +72,11 @@
     $company = xtc_db_prepare_input($_POST['COMPANY']);
 
     $error = false;
+
+    if ($gender == '') {
+      $error = true;
+      $messageStack->add('install_step6', ENTRY_GENDER_ERROR);
+    }
 
     if (strlen($firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
       $error = true;
@@ -199,7 +205,8 @@
                                 ('1',
                                 '0',
                                 '".xtc_db_input($firstname)."',
-                                '".xtc_db_input($lastname)."','m',
+                                '".xtc_db_input($lastname)."',
+                                '".xtc_db_input($gender)."',
                                 '".xtc_db_input($email_address)."',
                                 '1',
                                 '".xtc_db_input($telephone)."',
@@ -216,6 +223,7 @@
                                 ('1','','','now()','','')");
       xtc_db_query("insert into " .TABLE_ADDRESS_BOOK . " (
                                 customers_id,
+                                entry_gender,
                                 entry_company,
                                 entry_firstname,
                                 entry_lastname,
@@ -226,6 +234,7 @@
                                 entry_country_id,
                                 entry_zone_id) VALUES
                                 ('1',
+                                '".xtc_db_input($gender)."',
                                 '".xtc_db_input($company)."',
                                 '".xtc_db_input($firstname)."',
                                 '".xtc_db_input($lastname)."',
@@ -430,7 +439,8 @@
         font-family: Verdana, Arial, Helvetica, sans-serif;
         font-size: 1;
       }
-      .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; background-color: #; }
+      .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
+      .messageStackError img { position: relative; top: 5px; }
       -->
     </style>
   </head>
@@ -495,6 +505,12 @@
                    </table>
                    <div style="border:1px solid #ccc; background:#fff; padding:10px;">
                      <table width="100%" border="0">
+                       <tr>
+                         <td width="26%"><strong><?php echo TEXT_GENDER; ?></strong></td>
+                         <td width="74%">
+                            <?php echo xtc_draw_radio_field_installer('GENDER', 'm', (($gender=='m')?true:false)) . TEXT_MALE; ?>
+                            <?php echo xtc_draw_radio_field_installer('GENDER', 'f', (($gender=='f')?true:false)) . TEXT_FEMALE; ?>
+                       </tr>
                        <tr>
                          <td width="26%"><strong><?php echo TEXT_FIRSTNAME; ?></strong></td>
                          <td width="74%"><?php echo xtc_draw_input_field_installer('FIRST_NAME'); ?>*</td>
