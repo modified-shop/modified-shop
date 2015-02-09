@@ -375,7 +375,8 @@
         font-family: Verdana, Arial, Helvetica, sans-serif;
         font-size: 1;
       }
-      .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; background-color: #; }
+      .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
+      .messageStackError img { position: relative; top: 5px; }
     -->
   </style>
 </head>

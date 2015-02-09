@@ -188,6 +188,9 @@
   // install_step6.php
   define('TITLE_ADMIN_CONFIG','Administrator Konfiguration');
   define('TEXT_REQU_INFORMATION','* erforderliche Information');
+  define('TEXT_GENDER','Anrede:');
+  define('TEXT_MALE','Herr');
+  define('TEXT_FEMALE','Frau');
   define('TEXT_FIRSTNAME','Vorname:');
   define('TEXT_LASTNAME','Nachname:');
   define('TEXT_EMAIL','E-Mail Adresse:');
@@ -213,6 +216,7 @@
   define('TEXT_ZONE_NO','Nein');
   define('TEXT_ZONE_YES','Ja');
   define('TEXT_COMPANY','Firmenname');
+  define('ENTRY_GENDER_ERROR','Bitte w&auml;hlen Sie eine Anrede aus');
   define('ENTRY_FIRST_NAME_ERROR','Vorname ist zu kurz');
   define('ENTRY_LAST_NAME_ERROR','Nachname ist zu kurz');
   define('ENTRY_EMAIL_ADDRESS_ERROR','E-Mail Adresse ist zu kurz');
