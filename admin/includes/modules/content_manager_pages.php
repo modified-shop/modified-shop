@@ -13,6 +13,11 @@
 defined('_VALID_XTC') or die('Direct Access to this location is not allowed.');
 
 if (!$action) {
+  $icon_edit = xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"');
+  $icon_delete = xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"');
+  $icon_preview = xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','','style="cursor:pointer"');
+  $icon_status_on = xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', BUTTON_STATUS_ON);
+  $icon_status_off = xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', BUTTON_STATUS_OFF);
   ?>
   <div class="pageHeadingTab flt-l pdg2"><?php echo HEADING_CONTENT; ?></div>
   <div class="pageHeadingTaba flt-l pdg2"><a onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER, 'set=product'); ?>"><?php echo HEADING_PRODUCTS_CONTENT; ?></a></div>
@@ -37,7 +42,7 @@ if (!$action) {
       foreach($content_data as $key => $entry) {                  
         $content[$index][strtoupper($key)] = $entry;
       }
-      $content[$index]['CONTENT_ACTIVE'] = $content[$index]['CONTENT_ACTIVE'] ?  xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', BUTTON_STATUS_ON) : xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', BUTTON_STATUS_OFF);
+      $content[$index]['CONTENT_ACTIVE'] = ($content[$index]['CONTENT_ACTIVE'] ? $icon_status_on : $icon_status_off);
       $index++;
     } // while content_data
     ?>
@@ -67,6 +72,7 @@ if (!$action) {
             <td class="dataTableContent txta-c"><?php echo $content[$ii]['CONTENT_ID']; ?></td>
             <td bgcolor="<?php echo substr((6543216554/$content[$ii]['CONTENT_GROUP']),0,6); ?>" class="dataTableContent">&nbsp;</td>
             <td class="dataTableContent">
+              <?php echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content[$ii]['CONTENT_ID']).'">' . $icon_edit . '</a>';?>
               <?php echo '&nbsp;'.$content[$ii]['CONTENT_TITLE']; ?>
               <?php
               if ($content[$ii]['CONTENT_DELETE']=='0'){
@@ -87,16 +93,16 @@ if (!$action) {
                   ?>
                   <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content[$ii]['CONTENT_ID']); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
                     <?php
-                    echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+                    echo $icon_delete .'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
                 } // if content
                 ?>
                 <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content[$ii]['CONTENT_ID']); ?>">
                   <?php
-                  echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
+                  echo $icon_edit.'  '.TEXT_EDIT.'</a>';
                 ?>
                 <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link_from_admin('popup_content.php','coID='.$content[$ii]['CONTENT_GROUP']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
                   <?php
-                  echo xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','','style="cursor:pointer"').'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
+                  echo $icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
                 ?>
             </td>
           </tr>
@@ -113,7 +119,7 @@ if (!$action) {
               foreach($content_1_data as $key => $entry) {                  
                 $content_1[$index][strtoupper($key)] = $entry;
               }
-              $content_1[$index]['CONTENT_ACTIVE'] = $content_1[$index]['CONTENT_ACTIVE'] ?  xtc_image(DIR_WS_IMAGES . 'icon_lager_green.gif', BUTTON_STATUS_ON) : xtc_image(DIR_WS_IMAGES . 'icon_lager_red.gif', BUTTON_STATUS_OFF);
+              $content_1[$index]['CONTENT_ACTIVE'] = ($content_1[$index]['CONTENT_ACTIVE'] ? $icon_status_on : $icon_status_off);
               $index++;              
             }
             for ($a = 0, $x = sizeof($content_1); $a < $x; $a++) {
@@ -126,7 +132,10 @@ if (!$action) {
                     ?>
                     <td class="dataTableContent txta-c"><?php echo $content_1[$a]['CONTENT_ID']; ?></td>
                     <td class="dataTableContent">--</td>
-                    <td class="dataTableContent"><?php echo $content_1[$a]['CONTENT_TITLE']; ?></td>
+                    <td class="dataTableContent">
+                      <?php echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_1[$a]['CONTENT_ID']).'">' . $icon_edit . '</a>';?>
+                      <?php echo $content_1[$a]['CONTENT_TITLE']; ?>
+                    </td>
                     <td class="dataTableContent txta-c"><?php echo $content_1[$a]['CONTENT_GROUP']; ?></td>
                     <td class="dataTableContent txta-c"><?php echo $content_1[$a]['SORT_ORDER']; ?>&nbsp;</td>
                     <td class="dataTableContent"><?php echo $content_1[$a]['CONTENT_FILE']; ?></td>
@@ -141,16 +150,16 @@ if (!$action) {
                           ?>
                           <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'special=delete&coID='.$content_1[$a]['CONTENT_ID']); ?>" onclick="return confirm('<?php echo CONFIRM_DELETE; ?>')">
                             <?php
-                            echo xtc_image(DIR_WS_ICONS.'delete.gif', ICON_DELETE,'','','style="cursor:pointer" onclick="return confirm(\''.DELETE_ENTRY.'\')"').'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
+                            echo $icon_delete.'  '.TEXT_DELETE.'</a>&nbsp;&nbsp;';
                         } // if content
                         ?>
                         <a href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_1[$a]['CONTENT_ID']); ?>">
                         <?php
-                        echo xtc_image(DIR_WS_ICONS.'icon_edit.gif', ICON_EDIT,'','','style="cursor:pointer"').'  '.TEXT_EDIT.'</a>';
+                        echo $icon_edit.'  '.TEXT_EDIT.'</a>';
                         ?>
                         <a style="cursor:pointer" onclick="javascript:window.open('<?php echo xtc_href_link(FILENAME_CONTENT_PREVIEW,'coID='.$content_1[$a]['CONTENT_ID']); ?>', 'popup', 'toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=yes,resizable=yes,copyhistory=no, width=640, height=600')">
                           <?php
-                          echo xtc_image(DIR_WS_ICONS.'preview.gif', ICON_PREVIEW,'','','style="cursor:pointer"').'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
+                          echo $icon_preview.'&nbsp;&nbsp;'.TEXT_PREVIEW.'</a>';
                         ?>
                     </td>
                   </tr>
@@ -383,6 +392,9 @@ if (!$action) {
        
         <div class="flt-r mrg5 pdg2">
           <?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
+        </div>
+        <div class="flt-r mrg5 pdg2">
+          <input class="button" type="submit" onclick="this.blur();" value="<?php echo BUTTON_UPDATE; ?>" name="page_update">
         </div>
         <div class="flt-r mrg5 pdg2">
           <a class="button" onclick="this.blur();" href="<?php echo xtc_href_link(FILENAME_CONTENT_MANAGER); ?>"><?php echo BUTTON_BACK; ?></a>

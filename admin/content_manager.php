@@ -145,7 +145,11 @@
         xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_id = '" . $coID . "'");
       } else {
         xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array);
+        $coID = xtc_db_insert_id();
       } // if get id
+      if (isset($_POST['page_update'])) {
+        $setparam = 'action=edit&coID='.$coID;
+      }
       xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,$setparam));
     } // if error
   } // if
