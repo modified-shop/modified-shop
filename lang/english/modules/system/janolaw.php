@@ -1,0 +1,35 @@
+<?php
+/* -----------------------------------------------------------------------------------------
+   $Id: janolaw.php 2011-11-24 modified-shop $
+
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   based on:
+   (c) 2000-2001 The Exchange Project  (earlier name of osCommerce)
+   (c) 2002-2003 osCommerce(cod.php,v 1.28 2003/02/14); www.oscommerce.com
+   (c) 2003   nextcommerce (invoice.php,v 1.6 2003/08/24); www.nextcommerce.org
+   (c) 2005 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id: billiger.php 950 2005-05-14 16:45:21Z mz $)
+   (c) 2008 Gambio OHG (billiger.php 2008-11-11 gambio)
+
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
+
+define('MODULE_JANOLAW_TEXT_TITLE', 'janolaw Terms Hosting-Service');
+define('MODULE_JANOLAW_TEXT_DESCRIPTION', '<a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><img src="images/janolaw/janolaw_185x35.png" border=0></a><br /><br />Germany\'s big right portal janolaw offers customized solutions to your legal issues - from the lawyer hotline to individual contracts with attorney warranty. With the AGB hosting service for Internet stores , you can adjust the legal core documents Terms , Conditions , Disclaimer and Privacy Statement tailored to your store and update it continually through the janolaw team. More protection does not work.<br /><br /><a href="http://www.janolaw.de/internetrecht/agb/agb-hosting-service/modified/index.html?partnerid=8764#menu" target="_blank"><strong><u>Click here for the offer<u></strong></a>');
+define('MODULE_JANOLAW_USER_ID_TITLE', '<hr noshade>User-ID');
+define('MODULE_JANOLAW_USER_ID_DESC', 'Your User-ID');
+define('MODULE_JANOLAW_SHOP_ID_TITLE', '<hr noshade>Shop-ID');
+define('MODULE_JANOLAW_SHOP_ID_DESC', 'Your Shop-ID');
+define('MODULE_JANOLAW_STATUS_DESC', 'enable Module?');
+define('MODULE_JANOLAW_STATUS_TITLE', 'Status');
+define('MODULE_JANOLAW_TYPE_TITLE', 'Save as');
+define('MODULE_JANOLAW_TYPE_DESC', 'store in a file or in the database ?');
+define('MODULE_JANOLAW_FORMAT_TITLE', 'Format Type');
+define('MODULE_JANOLAW_FORMAT_DESC', 'Save as text or HTML');
+define('MODULE_JANOLAW_UPDATE_INTERVAL_TITLE', 'Update Interval');
+define('MODULE_JANOLAW_UPDATE_INTERVAL_DESC', 'How often will the data should be updated?');
+
+?>

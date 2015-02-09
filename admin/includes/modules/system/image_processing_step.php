@@ -20,31 +20,8 @@
 
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
+
 defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'Es werden alle Bilder in den Verzeichnissen<br /><br />
-
-/images/product_images/popup_images/<br />
-
-/images/product_images/info_images/<br />
-
-/images/product_images/thumbnail_images/ <br /> <br /> neu erstellt.<br /> <br />
-
-Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - <b>Produktbilder</b>');
-define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
-define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
-define('IMAGE_EXPORT','Dr&uuml;cken Sie Start um die Stapelverarbeitung zu starten, dieser Vorgang kann einige Zeit dauern, auf keinen Fall unterbrechen!.');
-define('IMAGE_EXPORT_TYPE','<hr noshade><strong>Stapelverarbeitung:</strong>');
-
-define('IMAGE_STEP_INFO','Bilder erstellt: ');
-define('IMAGE_STEP_INFO_READY',' - Fertig!');
-define('TEXT_MAX_IMAGES','max. Bilder pro Seitenreload');
-define('TEXT_ONLY_MISSING_IMAGES','Nur fehlende Bilder erstellen');
-define('MODULE_STEP_READY_STYLE_TEXT', '<div class="ready_info">%s</div>');
-define('MODULE_STEP_READY_STYLE_BACK', MODULE_STEP_READY_STYLE_TEXT);
-define('TEXT_LOWER_FILE_EXT','Dateiendung in Kleinbuchstaben umwandeln Bsp.: <b> JPG -> jpg</b>');
-define('IMAGE_COUNT_INFO','Anzahl Bilder in %s: %s Stk. ');
 
 if ( !class_exists( "image_processing_step" ) ) {
   class image_processing_step {
