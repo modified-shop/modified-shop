@@ -510,6 +510,7 @@
                          <td width="74%">
                             <?php echo xtc_draw_radio_field_installer('GENDER', 'm', (($gender=='m')?true:false)) . TEXT_MALE; ?>
                             <?php echo xtc_draw_radio_field_installer('GENDER', 'f', (($gender=='f')?true:false)) . TEXT_FEMALE; ?>
+                         </td>
                        </tr>
                        <tr>
                          <td width="26%"><strong><?php echo TEXT_FIRSTNAME; ?></strong></td>
