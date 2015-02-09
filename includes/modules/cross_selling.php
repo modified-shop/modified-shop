@@ -1,5 +1,4 @@
 <?php
-
 /* -----------------------------------------------------------------------------------------
    $Id: cross_selling.php 1243 2005-09-25 09:33:02Z mz $ 
 
@@ -20,44 +19,27 @@ $module_smarty = new Smarty;
 $module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
 
 $data = $product->getCrossSells();
-
 if (count($data) > 0) {
-
 	$module_smarty->assign('language', $_SESSION['language']);
 	$module_smarty->assign('module_content', $data);
-	// set cache ID
 
+	// set cache ID
 	$module_smarty->caching = 0;
 	$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/cross_selling.html');
 	$info_smarty->assign('MODULE_cross_selling', $module);
 }
 
 // reverse cross selling
-if (ACTIVATE_REVERSE_CROSS_SELLING=='true') {
-$module_smarty = new Smarty;
-//BOF - Dokuman - 2010-01-20: set template path also on activated cross selling
-$module_smarty->assign('tpl_path', 'templates/'.CURRENT_TEMPLATE.'/');
-//EOF - Dokuman - 2010-01-20: set template path also on activated cross selling
-
-$data = $product->getReverseCrossSells();	
-	
-
-if (count($data) > 0) {
-
-	$module_smarty->assign('language', $_SESSION['language']);
-	$module_smarty->assign('module_content', $data);
-	// set cache ID
-
-	$module_smarty->caching = 0;
-	$module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/reverse_cross_selling.html');
-
-	$info_smarty->assign('MODULE_reverse_cross_selling', $module);
+if (ACTIVATE_REVERSE_CROSS_SELLING == 'true') {
+  $data = $product->getReverseCrossSells();	
+  if (count($data) > 0) {
+    $module_smarty->assign('language', $_SESSION['language']);
+    $module_smarty->assign('module_content', $data);
+    
+    // set cache ID
+    $module_smarty->caching = 0;
+    $module = $module_smarty->fetch(CURRENT_TEMPLATE.'/module/reverse_cross_selling.html');
+    $info_smarty->assign('MODULE_reverse_cross_selling', $module);
+  }
 }
-
-
-	
-}
-
 ?>
-
-
