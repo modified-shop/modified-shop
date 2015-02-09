@@ -384,6 +384,9 @@ if (xtc_not_null($action) && !$box) {
                       $heading = array();
                       $contents = array();
                       $class = basename($module_class);
+                      if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class)) {
+                        include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . $class);
+                      }
                       include($module_directory . $class . '.php');
                       if (xtc_class_exists($class)) {
                         $module = new $class();
