@@ -71,7 +71,7 @@
                   <br />
                   <?php echo TEXT_TEAM; ?><br />
                   <br />
-                  <a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="<?php echo TEXT_INFO_DONATIONS_IMG_ALT; ?>" border="0"></a>
+                  <?php echo BUTTON_DONATE; ?>
                 </div>
                 <br />
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
