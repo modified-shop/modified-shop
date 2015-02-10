@@ -10,8 +10,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_FINDOLOGIC_TEXT_TITLE', 'CleverReach - professionelles E-Mail Marketing');
-define('MODULE_FINDOLOGIC_TEXT_DESCRIPTION', 'Die Schnittstellen ermöglicht eine direkte Anbindung an Ihren Online-Shop. Ohne manuellen Aufwand werden Empfängerdaten automatisiert in Ihren Account importiert.');
+define('MODULE_CLEVERREACH_TEXT_TITLE', 'CleverReach - professionelles E-Mail Marketing');
+define('MODULE_CLEVERREACH_TEXT_DESCRIPTION', 'Die Schnittstellen ermöglicht eine direkte Anbindung an Ihren Online-Shop. Ohne manuellen Aufwand werden Empfängerdaten automatisiert in Ihren Account importiert.');
 define('MODULE_CLEVERREACH_STATUS_TITLE', 'CleverReach');
 define('MODULE_CLEVERREACH_STATUS_DESC', 'CleverReach Newslettersystem aktivieren<br/><b>Wichtig:</b>Es ist daf&uuml;r eine Registrierung bei CleverReach erforderlich.');
 define('MODULE_CLEVERREACH_APIKEY_TITLE', 'CleverReach API');
