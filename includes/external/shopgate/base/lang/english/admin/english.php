@@ -26,7 +26,7 @@
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING', 'Shop system encoding');
 ##### XTCM BOF #####
 define('SHOPGATE_CONFIG_EXTENDED_ENCODING_DESCRIPTION', 'Choose the encoding of your shop system. This is usually "ISO-8859-15" for versions before 1.06.');
-define('SHOPGATE_CONFIG_WIKI_LINK', 'https://wiki.shopgate.com/Modified/de');
+define('SHOPGATE_CONFIG_WIKI_LINK', 'http://wiki.shopgate.com/Modified/de');
 ##### XTCM EOF #####
 
 ##### XTC3 | XTCM BOF #####
