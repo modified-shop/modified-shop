@@ -44,48 +44,48 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $customConfig = array();
     //$customConfig['customConfig'] = "customConfig : '../ckeditor/custom/ckeditor_config.js',";
 
-		//extraPlugins
-		$customConfig['extraPlugins'] = "extraPlugins: '',";
-		
-		//UTF-8 bzw keine Umwandlung in entities
+    //extraPlugins
+    $customConfig['extraPlugins'] = "extraPlugins: '',";
+    
+    //UTF-8 bzw keine Umwandlung in entities
     $customConfig['entities'] = "entities: false,";
 
     //CKEditor 4.1: Advanced Content Filter (ACF) - keine benutzerdefinierten Tags herausfiltern - Filter deaktivieren -> true
-		$customConfig['allowedContent'] = "allowedContent: false,";
+    $customConfig['allowedContent'] = "allowedContent: false,";
     
     //Buttons entfernen
     $customConfig['removeButtons'] = "removeButtons: 'PageBreak',";
     
     //Upload Tab entfernen
     $customConfig['removeDialogTabs'] = "removeDialogTabs: 'image:advanced;link:advanced',";
-		
-		//toolbarGroups
-		$customConfig['toolbarGroups'] ="
-		toolbarGroups : [
-			{ name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
-			{ name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
-			{ name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
+    
+    //toolbarGroups
+    $customConfig['toolbarGroups'] ="
+    toolbarGroups : [
+      { name: 'document',    groups: [ 'mode', 'document', 'doctools' ] },
+      { name: 'clipboard',   groups: [ 'clipboard', 'undo' ] },
+      { name: 'editing',     groups: [ 'find', 'selection', 'spellchecker' ] },
       { name: 'links' },
       { name: 'about' },
-			/*{ name: 'forms' },*/
-			'/',
-			{ name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
-			{ name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
-			/*{ name: 'links' },*/
-			{ name: 'insert' },
-			'/',
-			{ name: 'styles' },
-			{ name: 'colors' },
-			{ name: 'tools' },
-			{ name: 'others' },
-			/*{ name: 'about' }*/
+      /*{ name: 'forms' },*/
+      '/',
+      { name: 'basicstyles', groups: [ 'basicstyles', 'cleanup' ] },
+      { name: 'paragraph',   groups: [ 'list', 'indent', 'blocks', 'align' ] },
+      /*{ name: 'links' },*/
+      { name: 'insert' },
+      '/',
+      { name: 'styles' },
+      { name: 'colors' },
+      { name: 'tools' },
+      { name: 'others' },
+      /*{ name: 'about' }*/
     ],";
-		
-		//Sprache aus Session
+    
+    //Sprache aus Session
     $customConfig['language'] = 'language: "'.$_SESSION['language_code'].'",';
 
     //CSS Dateien aus template laden
-		//$css_path = '../templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
+    //$css_path = '../templates/'.CURRENT_TEMPLATE.'/stylesheet.css';
     //$css_path2 = '../templates/'.CURRENT_TEMPLATE.'/editor.css'; //Wichtig für Hintergrund: html,body definieren
     //$customConfig['contentsCss'] = "contentsCss: ['".$css_path."','".$css_path2."'],";
 
