@@ -44,7 +44,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 <table width="100%"  border="0" cellspacing="0" cellpadding="15">
                   <tr>
                     <td style="background:url(images/bg_site.png) repeat-x #e7e7e7;border:1px solid #666;">
-                      <a href="http://www.cleverreach.de/frontend/" target="_blank">
+                      <a href="http://www.cleverreach.de/" target="_blank">
                         <img src="images/bg_head.png" alt="Professionelles E-Mail Marketing f&uuml;r Ihren Online-Shop - Jetzt kostenlos &amp; unverbindlich testen!" border="0" style="margin-bottom:10px;" />
                       </a>
                       <table width="688" border="0" cellspacing="0" cellpadding="0" style="background:#fff;">
@@ -73,15 +73,15 @@ require (DIR_WS_INCLUDES.'head.php');
                             <p style="margin:3px 20px 15px 0;line-height:16px;text-align:justify;">CleverReach ist Mitglied in der "Certified Senders Alliance" und dadurch bei den teilnehmenden Mail Providern auf der Positivliste.</p>  
                             <br />
                             <STRONG>Links:</STRONG><br />
-                            <a href="http://www.cleverreach.de/frontend/" target="_blank">Weitere Informationen</a><br />
-                            <a href="http://www.cleverreach.de/frontend/features.php" target="_blank">Leistungs&uuml;bersicht</a><br />
+                            <a href="http://www.cleverreach.de/" target="_blank">Weitere Informationen</a><br />
+                            <a href="http://www.cleverreach.de/features.php" target="_blank">Leistungs&uuml;bersicht</a><br />
                           </td>
                         </tr>
                         <tr>
                           <td colspan="2" style="font:normal 11px Arial,Verdana, Helvetica, sans-serif;color:#666;">
                             <h2 style="margin:10px 0 0 0;padding:3px 0 0 10px;height:37px;background:url(images/bg_hl.png) 0 5px no-repeat;font:bold 12px Arial, Verdana, Helvetica, sans-serif;color:#666;">Jetzt kostenlos testen</h2>
                             <p style="margin:3px 20px 5px 10px;line-height:16px;text-align:justify;">CleverReach bietet Ihnen einen unverbindlichen und kostenlosen Testmonat inklusive Kontingent f&uuml;r Ihren Newsletter Versand.</p>
-                            <a href="http://www.cleverreach.de/frontend/" target="_blank"><img src="images/but_test_free.png" alt="Hier klicken &amp; kostenlosen Testzugang anfordern" hspace="5" border="0" /></a>
+                            <a href="http://www.cleverreach.de/" target="_blank"><img src="images/but_test_free.png" alt="Hier klicken &amp; kostenlosen Testzugang anfordern" hspace="5" border="0" /></a>
                             <p style="margin:5px 20px 5px 10px;line-height:16px;text-align:justify;">Nach dem kostenlosen Test ist ein Versand schon ab 15,- &euro; m&ouml;glich und der Account monatlich k&uuml;ndbar.</p>
                           </td>
                         </tr>  
