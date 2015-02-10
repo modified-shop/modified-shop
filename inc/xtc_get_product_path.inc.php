@@ -22,7 +22,7 @@ function xtc_get_product_path($products_id) {
   $cPath = '';
   if (isset($_SESSION['CatPath']) 
       && trim($_SESSION['CatPath']) != '' 
-      && !$canonical_flag) 
+      && !$canonical_flag
       && !$products_link_cat_id
       ) 
   {
