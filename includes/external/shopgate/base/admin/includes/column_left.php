@@ -21,34 +21,11 @@
 *  @author Shopgate GmbH <interfaces@shopgate.com>
 */
 
-if(empty($_SESSION['customer_id'])) {
+if (empty($_SESSION['customer_id'])) {
 	return;
 }
 
-$sgInstalledQuery 	= 'select c.configuration_value as value from configuration as c where c.configuration_key like "%MODULE_PAYMENT_INSTALLED%" LIMIT 1;';
-$sgInstalledResult	= xtc_db_query($sgInstalledQuery);
-$sgInstalled		= xtc_db_fetch_array($sgInstalledResult);
-
-if(empty($sgInstalled) || strpos($sgInstalled['value'],"shopgate") === FALSE){
-	return;
-}
-
-$result = null;
-$columnExistsQuery = "SHOW COLUMNS FROM admin_access WHERE FIELD = \"shopgate\"";
-$columnExistResult	= xtc_db_query($columnExistsQuery);
-$colResult			 	= xtc_db_fetch_array($columnExistResult);
-
-if(array_key_exists("Field",$colResult) && $colResult["Field"] == "shopgate"){
-	$query		= sprintf("SELECT shopgate FROM %s WHERE customers_id = %s LIMIT 1;",TABLE_ADMIN_ACCESS,$_SESSION['customer_id']);
-	$dbResult	= xtc_db_query($query);
-	$result 	    = xtc_db_fetch_array($dbResult);
-}
-
-if(empty($result) || count($result)==0){
-	return;
-}
-
-if((MODULE_PAYMENT_SHOPGATE_STATUS=='True') && ($result['shopgate'] == 1)) {
+if (MODULE_PAYMENT_SHOPGATE_STATUS == 'True' && $admin_access['shopgate'] == 1) {
 
 	// determine configuration language: $_GET > $_SESSION > global
 	$sg_language_get = (!empty($_GET['sg_language'])
