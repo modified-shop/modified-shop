@@ -29,6 +29,9 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
+  <?php 
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/css/','php') as $file) require ($file);
+  ?>
   
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -81,3 +84,6 @@
     }    
   /*]]>*/
   </script>
+  <?php 
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/javascript/','php') as $file) require ($file);
+  ?>
