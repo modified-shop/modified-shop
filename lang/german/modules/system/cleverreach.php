@@ -13,7 +13,7 @@
 define('MODULE_CLEVERREACH_TEXT_TITLE', 'CleverReach - professionelles E-Mail Marketing');
 define('MODULE_CLEVERREACH_TEXT_DESCRIPTION', 'Die Schnittstellen ermöglicht eine direkte Anbindung an Ihren Online-Shop. Ohne manuellen Aufwand werden Empfängerdaten automatisiert in Ihren Account importiert.<hr noshade>');
 define('MODULE_CLEVERREACH_STATUS_TITLE', 'Modul aktivieren ?');
-define('MODULE_CLEVERREACH_STATUS_DESC', 'CleverReach Newslettersystem aktivieren<br/><b>Wichtig:</b> Es ist daf&uuml;r eine <a href="http://www.cleverreach.de/frontend/" target="_blank">Registrierung bei CleverReach</a> erforderlich.');
+define('MODULE_CLEVERREACH_STATUS_DESC', 'CleverReach Newslettersystem aktivieren<br/><b>Wichtig:</b> Es ist daf&uuml;r eine <a href="http://www.cleverreach.de/frontend/" target="_blank"><strong><u>Registrierung bei CleverReach</u></strong></a> erforderlich.');
 define('MODULE_CLEVERREACH_APIKEY_TITLE', 'CleverReach API');
 define('MODULE_CLEVERREACH_APIKEY_DESC', 'Tragen sie hier den API Schl&uuml;ssel ein.');
 define('MODULE_CLEVERREACH_NAME_TITLE', 'CleverReach Projekt');
