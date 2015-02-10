@@ -112,6 +112,7 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     if (isset($admin_access['safeterms']) && $admin_access['safeterms'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SAFETERMS, '') . '" class="menuBoxContentLink"> -' . BOX_SAFETERMS . '</a></li>';
     if (isset($admin_access['easymarketing']) && $admin_access['easymarketing'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_EASYMARKETING, '') . '" class="menuBoxContentLink"> -' . BOX_EASYMARKETING . '</a></li>';
     if (isset($admin_access['protectedshops']) && $admin_access['protectedshops'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PROTECTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_PROTECTEDSHOPS . '</a></li>';
+    if (isset($admin_access['cleverreach']) && $admin_access['cleverreach'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CLEVERREACH, '') . '" class="menuBoxContentLink"> -' . BOX_CLEVERREACH . '</a></li>';
     
     ## Payone
     include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');

@@ -177,6 +177,7 @@ define('BOX_EASYMARKETING','EASYMARKETING AG'); // Tomcraft - 2013-08-29 - Added
 define('BOX_GV_CUSTOMERS','Kunden-Guthaben');
 define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
 define('BOX_PROTECTEDSHOPS', 'Protected Shops');
+define('BOX_CLEVERREACH', 'CleverReach');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');
