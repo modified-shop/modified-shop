@@ -7,7 +7,7 @@ font-family:Verdana, Geneva, Arial, Helvetica, sans-serif;
 font-size:10px;
 font-weight:bold;
 color:#333;
-min-width:1210px;
+min-width:1050px;
 border-top: 1px solid #a8a8a8;
 }
 #cssmenu img {
@@ -36,7 +36,6 @@ line-height:26px;
 padding:0px 7px;
 text-align:center;
 text-decoration:none;
-width: 70px;
 }
 #cssmenu li a:hover {
 color:#fff;
@@ -99,7 +98,7 @@ border-bottom: 0px;
 #cssmenu ul li .dataNavHeadingContent a {
 background: transparent;
 border: none;
-padding: 0px 5px;
+padding: 0px 3px;
 color:#000;
 display:inline;
 font-weight:bold;
