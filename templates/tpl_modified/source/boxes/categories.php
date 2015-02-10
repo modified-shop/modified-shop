@@ -41,16 +41,15 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cach
   $categories_query = xtDBquery("SELECT c.categories_id,
                                         cd.categories_name,
                                         c.parent_id
-                                   FROM ".TABLE_CATEGORIES." c,
-                                        ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                   FROM ".TABLE_CATEGORIES." c
+                                   JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                        ON c.categories_id = cd.categories_id
+                                           AND cd.language_id='".$_SESSION['languages_id']."'
+                                           AND trim(cd.categories_name) != ''
                                   WHERE c.categories_status = '1'
                                     AND c.parent_id = '0'
                                         ".CATEGORIES_CONDITIONS_C."
-                                    AND c.categories_id = cd.categories_id
-                                    AND cd.language_id='".$_SESSION['languages_id']."'
-                                    AND trim(cd.categories_name) != ''
-                               ORDER BY sort_order, cd.categories_name
-                                  ");
+                               ORDER BY c.sort_order, cd.categories_name");
   if (xtc_db_num_rows($categories_query, true) > 0) {
     while ($categories = xtc_db_fetch_array($categories_query, true)) {
       $categories['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($categories['categories_id'],$categories['categories_name']));
@@ -84,19 +83,17 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cach
         $categories_query = xtDBquery("SELECT c.categories_id,
                                               cd.categories_name,
                                               c.parent_id
-                                         FROM ".TABLE_CATEGORIES." c,
-                                              ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                         FROM ".TABLE_CATEGORIES." c
+                                         JOIN ".TABLE_CATEGORIES_DESCRIPTION." cd
+                                              ON c.categories_id = cd.categories_id
+                                                 AND cd.language_id='".$_SESSION['languages_id']."'
+                                                 AND trim(cd.categories_name) != ''
                                         WHERE c.categories_status = '1'
                                           AND c.parent_id = '".$value."'
-                                          ".CATEGORIES_CONDITIONS_C."
-                                          AND c.categories_id = cd.categories_id
-                                          AND cd.language_id='".$_SESSION['languages_id']."'
-                                          AND trim(cd.categories_name) != ''
-                                        ORDER BY sort_order, cd.categories_name
-                                        ");
+                                              ".CATEGORIES_CONDITIONS_C."
+                                     ORDER BY c.sort_order, cd.categories_name");
                                       
-        $category_check = xtc_db_num_rows($categories_query, true);
-        if ($category_check > 0) {
+        if (xtc_db_num_rows($categories_query, true) > 0) {
           $new_path .= $value;
           while ($row = xtc_db_fetch_array($categories_query, true)) {
             $row['cat_link'] = xtc_href_link(FILENAME_DEFAULT, xtc_category_link($row['categories_id'], $row['categories_name']));
