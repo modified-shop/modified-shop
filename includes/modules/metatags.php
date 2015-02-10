@@ -311,7 +311,9 @@ switch(basename($PHP_SELF)) {
 
       //-- Canonical-URL
       //-- http://www.linkvendor.com/blog/der-canonical-tag-%E2%80%93-was-kann-man-damit-machen.html
-      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'],$request_type,false);
+      $canonical_flag = true;
+      $canonical_url = xtc_href_link(FILENAME_PRODUCT_INFO, 'products_id='.$product->data['products_id'], $request_type, false);
+      $canonical_flag = false;
     }
     break;
 // ---------------------------------------------------------------------------------------

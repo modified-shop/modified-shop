@@ -13,9 +13,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-// redirect
-require_once(DIR_FS_BOXES_INC . 'gunnart_productRedirect.inc.php');
-
 // css buttons
 if (file_exists(DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php')) {
   require_once ('templates/'.CURRENT_TEMPLATE.'/source/inc/css_button.inc.php');

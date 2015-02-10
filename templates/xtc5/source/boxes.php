@@ -13,8 +13,6 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  require_once (DIR_FS_CATALOG . 'templates/' . CURRENT_TEMPLATE . '/source/inc/gunnart_productRedirect.inc.php');
-
 //BOC require boxes
 // -----------------------------------------------------------------------------------------
 //	Immer sichtbar
