@@ -907,15 +907,6 @@ define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / P
 define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail upon Create Account');
 define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon account creation?');
 
-define('MODULE_CLEVERREACH_TITLE', 'Cleverreach');
-define('MODULE_CLEVERREACH_DESC', 'Activate Cleverreach Newslettersystem<br/><b>Attention:</b>You have to register an Account at Cleverreach.');
-define('MODULE_CLEVERREACH_APIKEY_TITLE', 'Cleverreach API');
-define('MODULE_CLEVERREACH_APIKEY_DESC', 'API Key for Cleverreach.');
-define('MODULE_CLEVERREACH_NAME_TITLE', 'Cleverreach Project');
-define('MODULE_CLEVERREACH_NAME_DESC', 'Projectname for your Newsletter.');
-define('MODULE_CLEVERREACH_GROUP_TITLE', 'Cleverreach Group');
-define('MODULE_CLEVERREACH_GROUP_DESC', 'Group for your Newsletter.');
-
 define('MODULE_SUPERMAILER_TITLE', 'Supermailer');
 define('MODULE_SUPERMAILER_DESC', 'Activate Supermailer Newslettersystem<br/><b>Attention:</b>ou have to register an Account at Supermailer.');
 define('MODULE_SUPERMAILER_EMAIL_ADDRESS_TITLE', 'Supermailer E-Mail Adress');

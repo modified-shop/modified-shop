@@ -284,7 +284,7 @@ class newsletter {
                                        WHERE customers_email_address ='".xtc_db_input($mail)."'");
     $newsletter = xtc_db_fetch_array($newsletter_query);
     
-    if (MODULE_SUPERMAILER == 'true') {
+    if (defined('MODULE_SUPERMAILER_STATUS') && MODULE_SUPERMAILER_STATUS == 'true') {
       $txt_mail_std_arr = array('EMail' => $newsletter['customers_email_address'],
                                 'RG' => MODULE_SUPERMAILER_GROUP);
     
@@ -313,7 +313,7 @@ class newsletter {
                    );
     }
 
-    if (MODULE_CLEVERREACH == 'true') {
+    if (defined('MODULE_CLEVERREACH_STATUS') && MODULE_CLEVERREACH_STATUS == 'true') {
       $api = new SoapClient('http://api.cleverreach.com/soap/interface_v5.1.php?wsdl');
       
       switch ($type) {
