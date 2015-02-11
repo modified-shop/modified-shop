@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: set_language_sessions.php 3859 2012-11-08 10:18:16Z web28 $
 
-   Modified - community made shopping
+   modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 Modified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
