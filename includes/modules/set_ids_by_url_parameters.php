@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: set_ids_by_url_parameters.php 6052 2013-11-14 09:06:49Z web28 $
 
-   Modified - community made shopping
+   modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 Modified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

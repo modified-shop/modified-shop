@@ -2,10 +2,10 @@
 /* -----------------------------------------------------------------------------------------
    $Id: class.easybill.php 4313 2013-01-14 13:31:11Z gtb-modified $
 
-   Modified - community made shopping
+   modified eCommerce Shopsoftware
    http://www.modified-shop.org
 
-   Copyright (c) 2009 - 2012 Modified
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
    -----------------------------------------------------------------------------------------
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/

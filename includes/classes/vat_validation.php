@@ -9,7 +9,6 @@
    --------------------------------------------------------------
    based on:
    (c) 2012 Gambio GmbH - vat_validation.php 2012-05-10 gm
-   (c) 2010 xtcModified - community made shopping  http://www.xtc-modified.org ($Id$)
    (c) 2005 xtc_validate_vatid_status.inc.php 899 2005-04-29
    (c) 2003 XT-Commerce - community made shopping http://www.xt-commerce.com ($Id$)
 
