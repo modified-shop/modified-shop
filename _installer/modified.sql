@@ -340,7 +340,9 @@ CREATE TABLE countries (
   status INT(1) DEFAULT 1 NULL,
   required_zones INT(1) DEFAULT '0',
   PRIMARY KEY (countries_id),
-  KEY IDX_COUNTRIES_NAME (countries_name)
+  KEY IDX_COUNTRIES_NAME (countries_name),
+  UNIQUE (countries_iso_code_2),
+  UNIQUE (countries_iso_code_3)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS currencies;
@@ -1164,7 +1166,7 @@ CREATE TABLE coupons (
   date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   date_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (coupon_id),
-  KEY idx_coupon_code (coupon_code)
+  UNIQUE (coupon_code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupons_description;

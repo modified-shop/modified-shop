@@ -271,5 +271,9 @@ ALTER TABLE shipping_status ADD sort_order INT(11) DEFAULT 0 NOT NULL;
 #GTB - 2015-02-12 - add index
 ALTER TABLE products_vpe ADD PRIMARY KEY (products_vpe_id, language_id)
 ALTER TABLE products_xsell_grp_name ADD PRIMARY KEY (products_xsell_grp_name_id, language_id)
+ALTER TABLE coupons DROP INDEX idx_coupon_code
+ALTER TABLE coupons ADD UNIQUE (coupon_code)
+ALTER TABLE countries ADD UNIQUE (countries_iso_code_2)
+ALTER TABLE countries ADD UNIQUE (countries_iso_code_3)
     
 # Keep an empty line at the end of this file for the db_updater to work properly
