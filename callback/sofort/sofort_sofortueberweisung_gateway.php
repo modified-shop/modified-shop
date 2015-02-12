@@ -133,7 +133,8 @@ if (xtc_not_null($tID)) {
     // order is missing
     header("HTTP/1.0 404 Not Found");
     header("Status: 404 Not Found");
-
+    
+    /*
     if (MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_TMP_ORDER == 'False') {
       // transaction data
       $SofortLibTransactionData = new SofortLibTransactionData(MODULE_PAYMENT_SOFORT_SOFORTUEBERWEISUNG_GATEWAY_KEY);
@@ -150,7 +151,7 @@ if (xtc_not_null($tID)) {
       
       xtc_redirect($SofortLibTransactionData->getUserVariable(0).'&nonexistorder=true');
     }
-
+    */
     fclose($fp);
   }
 } else {

@@ -109,12 +109,14 @@ if (xtc_db_num_rows($orders_query) == 1) {
   // order is missing
   header("HTTP/1.0 404 Not Found");
   header("Status: 404 Not Found");
-
+  
+  /*
   if(constant('MODULE_PAYMENT_'.strtoupper($sofort_code).'_TMP_ORDER') == 'False') {
     // wait before redirect
     sleep(3);
     
     xtc_redirect($sofortLibNotification->getUserVariable(2).'&nonexistorder=true');
   }
+  */
 
 }
