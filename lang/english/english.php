@@ -500,7 +500,7 @@ define('NAVBAR_TITLE_PAYPAL_CHECKOUT','PayPal-Checkout');
 define('PAYPAL_ERROR','PayPal abort');
 define('PAYPAL_NOT_AVIABLE','PayPal is not available.<br />Please select another payment method <br />or try again later.<br />');
 define('ERROR_ADDRESS_NOT_ACCEPTED', 'Please confirm your address so we can process your order.');
-define('PAYPAL_FEHLER','PayPal announced an error to the completion..<br />Your order is stored, is however not implemented.<br />Please enter a new order.<br />Thanks for your understanding.<br />');
+define('PAYPAL_FEHLER','PayPal reported an error while processing the payment.<br />Your order is stored, but cannot be processed.<br />Please enter a new order.<br />Thanks for your understanding.<br />');
 define('PAYPAL_WARTEN','PayPal reported an error while processing the payment.<br />Please login to PayPal and pay the order.<br />Below you see the stored order.<br /> Thanks for your understanding.<br />');
 define('PAYPAL_NEUBUTTON','Press the button again to pay the order.<br />Any other button will cancel.');
 define('PAYPAL_GS','Coupon');
