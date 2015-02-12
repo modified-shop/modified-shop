@@ -405,7 +405,7 @@ class xtcPrice {
    * @param Integer $pID product id
    * @return Double special offer
    */
-function xtcCheckSpecial($pID) {
+  function xtcCheckSpecial($pID) {
     $product_query = xtDBquery("SELECT specials_new_products_price
                                   FROM ".TABLE_SPECIALS."
                                  WHERE products_id = '".$pID."'
