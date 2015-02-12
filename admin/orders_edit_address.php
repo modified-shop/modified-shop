@@ -29,16 +29,20 @@
 <?php
 if ($_GET['edit_action']=='address') {
   // dropdown countries boxes
-  function get_country_id($country_name) {
+  function get_country_id($country_name, $country_iso_2) {
+    $where = " WHERE countries_name = '".xtc_db_input($country_name)."'";
+    if ($country_iso_2 != '') {
+      $where = " WHERE countries_iso_code_2 = '".xtc_db_input($country_iso_2)."'";
+    }
     $countries_query = xtc_db_query("SELECT countries_id
                                        FROM ".TABLE_COUNTRIES."
-                                      WHERE countries_name = '".xtc_db_input($country_name)."'");
+                                            ".$where);
     $countries = xtc_db_fetch_array($countries_query);
     return $countries['countries_id'];
   }
-  $customer_countries_id = get_country_id($order->customer['country']);
-  $delivery_countries_id = get_country_id($order->delivery['country']);
-  $billing_countries_id = get_country_id($order->billing['country']);
+  $customer_countries_id = get_country_id($order->customer['country'], $order->customer['country_iso_2']);
+  $delivery_countries_id = get_country_id($order->delivery['country'], $order->delivery['country_iso_2']);
+  $billing_countries_id = get_country_id($order->billing['country'], $order->billing['country_iso_2']);
   
 
   echo xtc_draw_form('adress_edit', FILENAME_ORDERS_EDIT, 'action=address_edit', 'post');

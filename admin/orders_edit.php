@@ -65,7 +65,7 @@ $action = (isset($_GET['action']) ? $_GET['action'] : '');
 // Adressbearbeitung Anfang
 if ($action == 'address_edit') {
 
-  $customers_country = xtc_get_countriesList(xtc_db_prepare_input($_POST['customers_country_id']));
+  $customers_country = xtc_get_countriesList(xtc_db_prepare_input($_POST['customers_country_id']), true);
   $delivery_country = xtc_get_countriesList(xtc_db_prepare_input($_POST['delivery_country_id']), true);
   $billing_country = xtc_get_countriesList(xtc_db_prepare_input($_POST['billing_country_id']), true);
 
@@ -88,6 +88,7 @@ if ($action == 'address_edit') {
       'customers_city' => xtc_db_prepare_input($_POST['customers_city']),
       'customers_postcode' => xtc_db_prepare_input($_POST['customers_postcode']),
       'customers_country' => $customers_country['countries_name'],
+      'customers_country_iso_code_2' => $customers_country['countries_iso_code_2'],
       'customers_telephone' => xtc_db_prepare_input($_POST['customers_telephone']),
       'customers_email_address' => xtc_db_prepare_input($_POST['customers_email_address']),
       'customers_address_format_id' => xtc_get_address_format_id($_POST['customers_country_id']),
