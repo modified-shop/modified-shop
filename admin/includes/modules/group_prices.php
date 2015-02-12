@@ -40,6 +40,8 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
                            'STATUS_IMAGE' => $group_values['customers_status_image'],
                            'STATUS_ID' => $group_values['customers_status_id']);
 }
+
+$products_tax_rate = xtc_get_tax_rate($pInfo->products_tax_class_id);
 ?>
 <div style="padding:5px;">
   <div class="main div_header"><?php echo HEADING_PRICES_OPTIONS. draw_tooltip(TEXT_GRADUATED_PRICES_INFO) ?></div>
@@ -49,7 +51,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
         <?php
         // calculate brutto price for display
         if (PRICE_IS_BRUTTO == 'true') {
-          $products_price = xtc_round($pInfo->products_price * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
+          $products_price = xtc_round($pInfo->products_price * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
         } else {
           $products_price = xtc_round($pInfo->products_price, PRICE_PRECISION);
         }
@@ -73,7 +75,7 @@ while ($group_values = xtc_db_fetch_array($group_query)) {
       <td style="border-top: 1px solid; border-color: #cccccc;" class="main"><?php echo $group_data['STATUS_NAME']; ?></td>
         <?php
           if (PRICE_IS_BRUTTO == 'true') {
-            $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id) * ((100 + xtc_get_tax_rate($pInfo->products_tax_class_id)) / 100), PRICE_PRECISION);
+            $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id) * ((100 + $products_tax_rate) / 100), PRICE_PRECISION);
           } else {
             $products_price = xtc_round(get_group_price($group_data['STATUS_ID'], $pInfo->products_id), PRICE_PRECISION);
           }
