@@ -43,6 +43,7 @@ require_once (DIR_FS_INC.'xtc_remove_non_numeric.inc.php');
 require_once (DIR_FS_INC.'xtc_get_short_description.inc.php');
 require_once (DIR_FS_INC.'xtc_format_price.inc.php');
 require_once (DIR_FS_INC.'xtc_get_attributes_model.inc.php');
+require_once (DIR_FS_INC.'check_stock_specials.inc.php');
 
 $module_content = array ();
 $any_out_of_stock = '';
@@ -58,7 +59,14 @@ for ($i = 0, $n = sizeof($products); $i < $n; $i ++) {
       $_SESSION['any_out_of_stock'] = 1;
     }
   }
-
+  
+  if (STOCK_CHECK_SPECIALS == 'true' && $xtPrice->xtcCheckSpecial($products[$i]['id'])) {
+    $mark_stock = check_stock_specials($products[$i]['id'], $products[$i]['quantity']);
+    if ($mark_stock) {
+      $_SESSION['any_out_of_stock'] = 1;
+    }  
+  }
+  
   $image = '';
   if ($products[$i]['image'] != '') {
     $image = DIR_WS_THUMBNAIL_IMAGES.$products[$i]['image'];
