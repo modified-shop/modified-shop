@@ -144,7 +144,10 @@ if (xtc_not_null($tID)) {
 
       fwrite($fp, 'redirect to: '.$SofortLibTransactionData->getUserVariable(0).'&nonexistorder=true'."\n");
       fclose($fp);
-
+      
+      // wait before redirect
+      sleep(3);
+      
       xtc_redirect($SofortLibTransactionData->getUserVariable(0).'&nonexistorder=true');
     }
 
