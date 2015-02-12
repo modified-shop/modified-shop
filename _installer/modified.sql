@@ -88,7 +88,8 @@ CREATE TABLE products_xsell_grp_name (
   products_xsell_grp_name_id INT(10) NOT NULL,
   xsell_sort_order INT(10) NOT NULL DEFAULT 0,
   language_id TINYINT NOT NULL DEFAULT 1,
-  groupname VARCHAR(255) NOT NULL DEFAULT ''
+  groupname VARCHAR(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (products_xsell_grp_name_id, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS campaigns;
@@ -896,7 +897,8 @@ DROP TABLE IF EXISTS products_vpe;
 CREATE TABLE products_vpe (
   products_vpe_id INT(11) NOT NULL DEFAULT 0,
   language_id TINYINT NOT NULL DEFAULT 1,
-  products_vpe_name VARCHAR(32) NOT NULL DEFAULT ''
+  products_vpe_name VARCHAR(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (products_vpe_id, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS reviews;
