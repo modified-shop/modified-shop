@@ -418,8 +418,9 @@ if (!$tmp) {
   // NEW EMAIL configuration !
   $order_totals = $order_total_modules->apply_credit();
   include ('send_order.php');
-
-  include(DIR_WS_MODULES.'module.easybill.php'); ### easyBill
+  
+  ### easyBill
+  include(DIR_FS_EXTERNAL.'easybill/modules/module.easybill.php');
 
   // load the after_process function from the payment modules
   $payment_modules->after_process();
@@ -441,15 +442,15 @@ if (!$tmp) {
   if (isset($_SESSION['credit_covers'])) {
     unset ($_SESSION['credit_covers']);
   }
-  $order_total_modules->clear_posts(); //ICW ADDED FOR CREDIT CLASS SYSTEM
+  $order_total_modules->clear_posts();
   // GV Code End
 
-  ### Included xs:booster
+  ### xs:booster
   if(isset($_SESSION['xtb0'])) {
     define('XTB_CHECKOUT_PROCESS', __LINE__);
     require_once (DIR_FS_CATALOG.'callback/xtbooster/xtbcallback.php');
   }
-  ### Included xs:booster
+  ### xs:booster
 
   xtc_redirect(xtc_href_link(FILENAME_CHECKOUT_SUCCESS, '', 'SSL'));
 }

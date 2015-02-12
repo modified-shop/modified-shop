@@ -12,7 +12,7 @@
   
   if (MODULE_EASYBILL_STATUS=='True') {
     if (MODULE_EASYBILL_BILLCREATE == 'auto') {
-      require_once(DIR_WS_CLASSES.'class.easybill.php');
+      require_once(DIR_FS_EXTERNAL.'easybill/classes/class.easybill.php');
           
       //easyBill initial
       $easybill = new easybill();

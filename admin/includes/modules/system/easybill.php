@@ -126,6 +126,7 @@ class easybill {
   function remove() {
     xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE configuration_key in ('" . implode("', '", $this->keys()) . "')");
     xtc_db_query("DROP TABLE ".TABLE_EASYBILL);
+    xtc_db_query("DROP TABLE ".TABLE_EASYBILL_DATEV);
   }
 
   function keys() {

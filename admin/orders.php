@@ -406,7 +406,7 @@ switch ($action) {
     
 	/* easyBill */
 	case 'easybill':	
-    include (DIR_WS_MODULES.'easybill.action.php');
+    include (DIR_FS_EXTERNAL.'easybill/admin/easybill.action.php');
 		xtc_redirect(xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')).'action=edit'));
 		break;
 

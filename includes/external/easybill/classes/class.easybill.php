@@ -19,12 +19,7 @@
     var $connection = false;
 
     // multilanguage
-    if (defined('RUN_MODE_ADMIN')) {
-      require_once (DIR_FS_LANGUAGES.$this->info['language'].'/easybill.php');    
-    } else {
-      require_once (DIR_WS_LANGUAGES.$this->info['language'].'/easybill.php');
-    }
-
+    include_once (DIR_FS_EXTERNAL.'easybill/lang/'.$this->info['language'].'/easybill.php');
 
     protected function makeConnection () {
     
@@ -104,7 +99,9 @@
  
  		protected function getCustomerDatevId() {
  		
-      $datev_query = xtc_db_query("SELECT customers_datev_id FROM " . TABLE_EASYBILL_DATEV . " WHERE customers_id = '" . $this->customer['id'] . "'");
+      $datev_query = xtc_db_query("SELECT customers_datev_id 
+                                     FROM " . TABLE_EASYBILL_DATEV . " 
+                                    WHERE customers_id = '" . $this->customer['id'] . "'");
       if (xtc_db_num_rows($datev_query)>0) {
      		$datev = xtc_db_fetch_array($datev_query);
      		$this->customer['datev_id'] = $datev['customers_datev_id'];
@@ -141,7 +138,9 @@
   		  		
   		if (xtc_not_null($error)) {
 				$this->customer['datev_id'] = $search;
-				xtc_db_query("INSERT INTO ".TABLE_EASYBILL_DATEV." (customers_datev_id, customers_id) values (".$this->customer['datev_id'].", ".$this->customer['id'].")");
+				$sql_data_array = array('customers_datev_id' => $this->customer['datev_id'],
+				                        'customers_id' => $this->customer['id']);
+				xtc_db_perform(TABLE_EASYBILL_DATEV, $sql_data_array);                     
 			} else {
 				$this->getNewCustomerDatevId($search+1);
 			}
@@ -150,7 +149,9 @@
 		
     protected function getCountryIso($country_name) {
     
-      $country_query = xtc_db_query("SELECT countries_iso_code_2 FROM " . TABLE_COUNTRIES . " WHERE countries_name = '" . $country_name . "'");
+      $country_query = xtc_db_query("SELECT countries_iso_code_2 
+                                       FROM " . TABLE_COUNTRIES . " 
+                                      WHERE countries_name = '" . xtc_db_input($country_name) . "'");
       $country = xtc_db_fetch_array($country_query);
       
       return $country['countries_iso_code_2'];
@@ -402,14 +403,16 @@
 
     protected function getBankData() {
     
-      $bankdata_query = xtc_db_query("SELECT * FROM billpay_bankdata WHERE orders_id='".$this->info['order_id']."'");
+      $bankdata_query = xtc_db_query("SELECT * 
+                                        FROM billpay_bankdata 
+                                       WHERE orders_id='".$this->info['order_id']."'");
       $bankdata = xtc_db_fetch_array($bankdata_query);
       
       $bank  = $bankdata['bank_name'];
-      $bank .= ' Inhaber: '.$bankdata['account_holder'];    
-      $bank .= ' BLZ: '.$bankdata['bank_code'];    
-      $bank .= ' Konto: '.$bankdata['account_number'];    
-      $bank .= ' Verwendungszweck: '.$bankdata['invoice_reference'];    
+      $bank .= EASYBILL_INVOICE_ACCOUNT_HOLDER.$bankdata['account_holder'];    
+      $bank .= EASYBILL_INVOICE_BANK_CODE.$bankdata['bank_code'];    
+      $bank .= EASYBILL_INVOICE_ACCOUNT_NUMBER.$bankdata['account_number'];    
+      $bank .= EASYBILL_INVOICE_REFERENCE.$bankdata['invoice_reference'];    
      
       return $bank; 
     }
@@ -561,7 +564,9 @@
     
     public function checkOrder() {
       
-      $check_query = xtc_db_query("SELECT * FROM ".TABLE_EASYBILL." WHERE orders_id='".$this->info['order_id']."'");
+      $check_query = xtc_db_query("SELECT * 
+                                     FROM ".TABLE_EASYBILL." 
+                                    WHERE orders_id='".$this->info['order_id']."'");
       if (xtc_db_num_rows($check_query)>0) {
         $this->details = xtc_db_fetch_array($check_query);
         return true;

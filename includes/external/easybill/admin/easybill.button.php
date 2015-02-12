@@ -11,7 +11,8 @@
    ---------------------------------------------------------------------------------------*/
 
   if (MODULE_EASYBILL_STATUS=='True') {
-  ?>
+    include_once (DIR_FS_EXTERNAL.'easybill/lang/'.$order->info['language'].'/easybill.php');
+    ?>
     <tr>
       <td>
         <fieldset>
@@ -20,28 +21,30 @@
               <tr>
                 <td>
                   <?php
-                    $easybill_query = xtc_db_query("SELECT * FROM easybill WHERE orders_id='".$oID."'");
+                    $easybill_query = xtc_db_query("SELECT * 
+                                                      FROM ".TABLE_EASYBILL." 
+                                                     WHERE orders_id='".(int)$oID."'");
                     if (xtc_db_num_rows($easybill_query)==0) {
                     ?>
-                      <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill'); ?>"><?php echo 'Rechnung erstellen';?></a>
+                      <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill'); ?>"><?php echo EASYBILL_BUTTON_CREATE; ?></a>
                     <?php
                     } else {
                       $easybill = xtc_db_fetch_array($easybill_query);
                       if ($easybill['payment'] != '1') {
                       ?>
-                        <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill&payment=true'); ?>"><?php echo 'Rechnung bezahlt';?></a>
+                        <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill&payment=true'); ?>"><?php echo EASYBILL_BUTTON_PAYMENT; ?></a>
                       <?php
                       }
                     }
                   ?>
-                  <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill&download=true'); ?>"><?php echo 'Rechnung &ouml;ffnen';?></a>
-                  <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill&save=true'); ?>"><?php echo 'Rechnung speichern';?></a>
+                  <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill&download=true'); ?>"><?php echo EASYBILL_BUTTON_OPEN; ?></a>
+                  <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, 'oID='.$oID.'&action=easybill&save=true'); ?>"><?php echo EASYBILL_BUTTON_SAVE; ?></a>
                 </td>
               </tr>
             </table>
         </fieldset>
       </td>
     </tr>
-  <?php
+    <?php
   }
   ?>

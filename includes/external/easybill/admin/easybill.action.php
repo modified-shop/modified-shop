@@ -10,7 +10,7 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  require_once (DIR_FS_CATALOG.'includes/classes/class.easybill.php');
+  include (DIR_FS_EXTERNAL.'easybill/classes/class.easybill.php');
 
   if (isset($_GET['action']) && $_GET['action']=='easybill') {
   

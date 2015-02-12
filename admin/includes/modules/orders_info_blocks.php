@@ -109,7 +109,7 @@
                 <?php
                 
                 /* easyBill */
-                include (DIR_WS_MODULES.'easybill.info.php');
+                include (DIR_FS_EXTERNAL.'easybill/admin/easybill.info.php');
                 
                 // CC - START
                 if ($order->info['cc_type'] || $order->info['cc_owner'] || $order->info['cc_number']) {
@@ -490,7 +490,7 @@
           </tr>
           <?php
             /* easyBill */
-            include (DIR_WS_MODULES.'easybill.button.php');
+            include (DIR_FS_EXTERNAL.'easybill/admin/easybill.button.php');
           ?>
         </table>
         <!-- EOC BUTTONS BLOCK -->

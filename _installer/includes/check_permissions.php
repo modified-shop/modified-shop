@@ -48,6 +48,7 @@
                                           DIR_ADMIN.'images/icons',
                                           'cache',
                                           'export',
+                                          'export/easybill',
                                           'export/idealo_realtime',
                                           'images',
                                           'images/banner',
