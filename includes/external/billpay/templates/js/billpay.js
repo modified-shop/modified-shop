@@ -6,6 +6,7 @@
 var _bpyQry;
 var _bpyQueryLoaded = false;
 var _bpyQueryQueue = [];
+var _bpyScriptTag;
 
 /**
  * cross browser compatible event listener appending
@@ -16,12 +17,23 @@ var _bpyQueryQueue = [];
  * @private
  */
 function _bpyAddEvent(element, type, callback) {
+
     if (element.addEventListener) {
         element.addEventListener(type, callback, false);
     } else {
-        element['e' + type + callback] = callback;
-        element[type + callback] = function() { element["e" + type + callback](window.event) };
-        element.attachEvent("on" + type, element[type + callback]);
+        switch(type) {
+            case 'load':
+                var done = false;
+                element.onload = element.onreadystatechange = function() {
+                    if (!done && (!this.readyState || this.readyState == 'loaded' || this.readyState == 'complete')) {
+                        done = true; callback(); element.onload = element.onreadystatechange = null;
+                    }
+                };
+                break;
+            default:
+                console.log('bpy not added event: ' + type);
+                break;
+        }
     }
 }
 
@@ -31,11 +43,15 @@ function _bpyAddEvent(element, type, callback) {
  * @private
  */
 function _bpyLoadScript(src, callback) {
-    var script = document.createElement('script');
-    script.setAttribute('src', src);
-    script.setAttribute('id', 'bpyQuery');
-    _bpyAddEvent(script, 'load', function() {
-        _bpyQry = $.noConflict();
+    _bpyScriptTag = document.createElement('script');
+    _bpyScriptTag.setAttribute('src', src);
+
+    if (callback) {
+        bpyQuery(callback);
+    }
+
+    _bpyAddEvent(_bpyScriptTag, 'load', function() {
+        _bpyQry = jQuery.noConflict();
         _bpyQueryLoaded = true;
         if (_bpyQueryQueue.length > 0) {
             var _callback;
@@ -44,14 +60,13 @@ function _bpyLoadScript(src, callback) {
             }
         }
     });
-    _bpyAddEvent(script, 'load', callback);
+
     var _scriptElements = document.getElementsByTagName('head')[0].getElementsByTagName('script');
     if (_scriptElements.length > 0) {
-        document.getElementsByTagName('head')[0].insertBefore(script, document.getElementsByTagName('script')[0]);
+        document.getElementsByTagName('head')[0].insertBefore(_bpyScriptTag, document.getElementsByTagName('script')[0]);
     } else {
-        document.getElementsByTagName('head')[0].appendChild(script);
+        document.getElementsByTagName('head')[0].appendChild(_bpyScriptTag);
     }
-
 }
 
 _bpyLoadScript('//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js');

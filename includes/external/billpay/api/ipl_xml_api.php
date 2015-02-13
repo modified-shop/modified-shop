@@ -1,10 +1,20 @@
 <?php
+/* -----------------------------------------------------------------------------------------
+   $Id: ipl_xml_api.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
 
-/**
- * @author Jan Wehrs (jan.wehrs@billpay.de)
- * @copyright Copyright 2010 Billpay GmbH
- * @license commercial
- */
+   modified eCommerce Shopsoftware
+   http://www.modified-shop.org
+
+   Copyright (c) 2009 - 2013 [www.modified-shop.org]
+   -----------------------------------------------------------------------------------------
+   based on:
+   Copyright (c) 2012 Billpay GmbH
+   @author Jan Wehrs (jan.wehrs@billpay.de)
+   @copyright Copyright 2010 Billpay GmbH
+   @license commercial
+
+   Released under the GNU General Public License
+   ---------------------------------------------------------------------------------------*/
 
 define('IPL_CORE_XML_PROLOG', 							"<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
 define('IPL_CORE_API_VERSION', 							"1.5.8");

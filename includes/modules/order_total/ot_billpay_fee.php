@@ -59,7 +59,7 @@
 
 	function addFee() {
 		if ($_SESSION['payment'] == 'billpay' || $_POST['payment'] == 'billpay') {
-			if($this->_checkFeeGroup(0)==2)
+			if($this->_checkFeeGroup(0)===2)
 				return $_SESSION['billpay_preselect'] == 'b2c';
 			else
 				return $this->_checkFeeGroup(0);
