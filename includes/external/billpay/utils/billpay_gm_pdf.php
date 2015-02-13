@@ -140,6 +140,7 @@
 		parent::SetY($get_y + 5);			
 	} else if ($order->info['payment_method'] == 'billpaytransactioncredit') {
 		require_once(DIR_FS_DOCUMENT_ROOT . DIR_WS_INCLUDES . 'modules/payment/billpaytransactioncredit.php');
+		require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/payment/billpaytransactioncredit.php');
 		$billpay = new billpaytransactioncredit();
 		$currency 	= $order->info['currency'];
 		//$rateDetails = $billpay->buildTCPaymentInfo($_GET['oID'], $order, true);
