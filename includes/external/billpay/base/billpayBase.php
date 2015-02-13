@@ -140,10 +140,10 @@ if(!class_exists('billpayBase')) {
             $this->form_action_url = xtc_href_link(FILENAME_CHECKOUT_PROCESS, '', 'SSL');
 		}
 
-    /**
-     * @return void
-     */
-    function update_status() {
+        /**
+         * @return void
+         */
+        function update_status() {
 			global $order;
 
 			if ( ($this->enabled == true) && ((int)constant('MODULE_PAYMENT_'.$this->_paymentIdentifier.'_ZONE') > 0) ) {

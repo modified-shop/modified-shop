@@ -20,7 +20,7 @@ class ot_billpaybusiness_fee extends ot_billpay_fee{
 
 	function addFee() {
 		if ($_SESSION['payment'] == 'billpay' || $_POST['payment'] == 'billpay') {
-			if($this->_checkFeeGroup(1)==2)
+			if($this->_checkFeeGroup(1)===2)
 				return $_SESSION['billpay_preselect'] == 'b2b';
 			else
 				return $this->_checkFeeGroup(1);

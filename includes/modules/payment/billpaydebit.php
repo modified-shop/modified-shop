@@ -71,12 +71,12 @@ class billpaydebit extends billpayBase {
         );
 
         $smarty->assign(array(
-                'headline'             => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BANKDATA,
-                'account_holder_text'  => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_ACCOUNT_HOLDER,
+                'headline'             => MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BANKDATA,
+                'account_holder_text'  => MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ACCOUNT_HOLDER,
                 'account_holder_input' => $accountHolderInput,
-                'account_number_text'  => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_IBAN,
+                'account_number_text'  => MODULE_PAYMENT_BILLPAYDEBIT_TEXT_IBAN,
                 'account_number_input' => $accountNumberInput,
-                'bank_code_text'       => MODULE_PAYMENT_BILLPAYTRANSACTIONCREDIT_TEXT_BIC,
+                'bank_code_text'       => MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BIC,
                 'bank_code_input'      => $bankCodeInput,
             ));
 
@@ -184,4 +184,3 @@ class billpaydebit extends billpayBase {
         return $js;
     }
 }
-

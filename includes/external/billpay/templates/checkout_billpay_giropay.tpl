@@ -1,6 +1,6 @@
 <div class="bpy-checkout">
+    <img class="bpy-partner-logo" src="{$campaignImg}" alt="Billpay Partnerlogo"/><br/>
     {$campaignText}<br />
-    <img class="bpy-partner-logo" src="{$campaignImg}" alt="Billpay Partnerlogo"/>
     <div class="bpy-info-block">
         <dl>
             <dt>Kostenlos</dt>
@@ -10,7 +10,7 @@
             <dt>Schnell</dt>
             <dd>Keine Extra-Anmeldung oder Registrierung erforderlich</dd>
             <dt>Sicher</dt>
-            <dd>Sicheres und vertrautes Bezahlen im Online-Banink der eigenen Bank oder Sparkasse</dd>
+            <dd>Sicheres und vertrautes Bezahlen im Online-Banking der eigenen Bank oder Sparkasse</dd>
         </dl>
     </div>
     <div class="bpy-rate-plan">
