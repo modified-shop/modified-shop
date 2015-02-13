@@ -70,7 +70,7 @@ if ((STOCK_CHECK == 'true') && (STOCK_ALLOW_CHECKOUT != 'true')) {
 // Stock Check Specials
 // muss auf jeder Checkout-Seite geladen werden, damit gleichzeitige Bestellungen
 // nicht zu einem Ueberkaufen der Sonderangebote fuehrt !!!
-if (STOCK_CHECK_SPECIALS == 'true') {
+if (STOCK_CHECK_SPECIALS == 'true' && STOCK_ALLOW_CHECKOUT != 'true') {
   require_once (DIR_FS_INC.'check_stock_specials.inc.php');
   $products = $_SESSION['cart']->get_products();
   for ($i = 0, $n = sizeof($products); $i < $n; $i++) {
