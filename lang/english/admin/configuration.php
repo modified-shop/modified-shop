@@ -907,8 +907,8 @@ define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / P
 define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail upon Create Account');
 define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon account creation?');
 
-define('STOCK_CHECK_SPECIALS_TITLE', 'Check Stock Specials');
-define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b>If not enough special offers are available, the order can be processed only after a reduction of the quantity.');
+define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
+define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
 
 define('MODULE_SUPERMAILER_TITLE', 'Supermailer');
 define('MODULE_SUPERMAILER_DESC', 'Activate Supermailer Newslettersystem<br/><b>Attention:</b>ou have to register an Account at Supermailer.');

@@ -905,7 +905,7 @@ define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail bei Kontoerstellung');
 define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine E-Mail and den Kunden versendet werden, wenn ein neues Kundenkonto erstellt wird?');
 
 define('STOCK_CHECK_SPECIALS_TITLE', '&Uuml;berpr&uuml;fen der Sonderangebote');
-define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b>Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
+define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
 
 define('MODULE_SUPERMAILER_TITLE', 'Supermailer');
 define('MODULE_SUPERMAILER_DESC', 'Supermailer Newslettersystem aktivieren<br/><b>Wichtig:</b>Es ist daf&uuml;r eine Registrierung bei Supermailer erforderlich.');
