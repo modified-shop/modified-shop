@@ -83,9 +83,6 @@ $values_group_update = array();
   $values[] = "(NULL, 'SEND_EMAILS_DOUBLE_OPT_IN', 'true', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'SEND_MAIL_ACCOUNT_CREATED', 'true', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'EMAIL_WORD_WRAP', '50', '12', '18', NULL, NOW(), NULL, NULL);";
-  $values[] = "(NULL, 'MODULE_SUPERMAILER', 'false', '12', '44', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'MODULE_SUPERMAILER_EMAIL_ADDRESS', '', '12', '45', NULL, NOW(), NULL, 'xtc_cfg_input_email_language;MODULE_SUPERMAILER_EMAIL_ADDRESS');";
-  $values[] = "(NULL, 'MODULE_SUPERMAILER_GROUP', '', '12', '46', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
                            'values' => "configuration_group_id = '12', set_function = 'xtc_cfg_input_email_language;CONTACT_US_EMAIL_ADDRESS'",
