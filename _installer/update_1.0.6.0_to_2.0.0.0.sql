@@ -275,5 +275,10 @@ ALTER TABLE coupons DROP INDEX idx_coupon_code;
 ALTER TABLE coupons ADD UNIQUE (coupon_code);
 ALTER TABLE countries ADD UNIQUE (countries_iso_code_2);
 ALTER TABLE countries ADD UNIQUE (countries_iso_code_3);
+
+#Tomcraft - 2015-02-14 - add SuperMailer
+ALTER TABLE admin_access ADD supermailer INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET supermailer = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET supermailer = 1 WHERE customers_id = 'groups' LIMIT 1;
     
 # Keep an empty line at the end of this file for the db_updater to work properly
