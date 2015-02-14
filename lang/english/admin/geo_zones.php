@@ -51,6 +51,6 @@ define('TYPE_BELOW', 'All Zones');
 define('PLEASE_SELECT', 'All Zones');
 define('TEXT_ALL_COUNTRIES', 'All Countries');
 
-define('TEXT_INFO_ZONE_INFO', 'Show duty info for this zone ?');
+define('TEXT_INFO_ZONE_INFO', 'Show duty info for this zone?');
 define('TEXT_INFO_ZONE_INFO_DEFAULT', 'Duty info selected.');
 ?>

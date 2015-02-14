@@ -910,10 +910,4 @@ define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon accoun
 define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
 define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
 
-define('MODULE_SUPERMAILER_TITLE', 'Supermailer');
-define('MODULE_SUPERMAILER_DESC', 'Activate Supermailer Newslettersystem<br/><b>Attention:</b>ou have to register an Account at Supermailer.');
-define('MODULE_SUPERMAILER_EMAIL_ADDRESS_TITLE', 'Supermailer E-Mail Adress');
-define('MODULE_SUPERMAILER_EMAIL_ADDRESS_DESC', 'E-Mail Adress, to fetch Receipients.');
-define('MODULE_SUPERMAILER_GROUP_TITLE', 'Supermailer Group');
-define('MODULE_SUPERMAILER_GROUP_DESC', 'Group for your Newsletter.');
 ?>

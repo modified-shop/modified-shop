@@ -222,9 +222,9 @@ define('TEXT_PRINT', 'Print'); //DokuMan - 2009-05-26 - Added description for 'a
  *
  */
 
-define('TEXT_GREETING_PERSONAL', 'Nice to see you again <span class="greetUser">%s!</span> Would you like to view our <a href="%s">new products</a> ?');
+define('TEXT_GREETING_PERSONAL', 'Nice to see you again <span class="greetUser">%s!</span> Would you like to view our <a href="%s">new products</a>?');
 define('TEXT_GREETING_PERSONAL_RELOGON', '<small>If you are not %s , please  <a href="%s">login</a>  with your account.</small>');
-define('TEXT_GREETING_GUEST', 'Welcome  <span class="greetUser">visitor!</span> Would you like to <a href="%s">login</a>? Or would you like to create a new <a href="%s">account</a> ?');
+define('TEXT_GREETING_GUEST', 'Welcome  <span class="greetUser">visitor!</span> Would you like to <a href="%s">login</a>? Or would you like to create a new <a href="%s">account</a>?');
 
 define('TEXT_SORT_PRODUCTS', 'Sorting of the items is ');
 define('TEXT_DESCENDINGLY', 'descending');

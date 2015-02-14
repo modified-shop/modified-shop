@@ -36,7 +36,7 @@
  define('TEXT_DELETE','L&ouml;schen');
  define('TEXT_EDIT','Bearbeiten');
  define('TEXT_PREVIEW','Vorschau');
- define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen ?');
+ define('CONFIRM_DELETE','Wollen Sie den Content wirklich l&ouml;schen?');
  define('CONTENT_NOTE','Content markiert mit <font color="#ff0000">*</font> geh&ouml;rt zum System und kann nicht gel&ouml;scht werden!');
 
  

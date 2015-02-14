@@ -50,7 +50,7 @@ define('ENTRY_PASSWORD_CUSTOMER','Passwort:');
 define('TABLE_HEADING_ACCOUNT_TYPE','Konto');
 define('TEXT_ACCOUNT','Ja');
 define('TEXT_GUEST','Nein');
-define('NEW_ORDER','Neue Bestellung ?');
+define('NEW_ORDER','Neue Bestellung?');
 define('ENTRY_PAYMENT_UNALLOWED','Nicht erlaubte Zahlungsmodule:');
 define('ENTRY_SHIPPING_UNALLOWED','Nicht erlaubte Versandmodule:');
 define('ENTRY_NEW_PASSWORD','Neues Passwort:');
