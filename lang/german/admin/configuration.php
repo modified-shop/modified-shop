@@ -841,7 +841,7 @@ define('CSV_SEPERATOR_DESC','Z.B. ; &nbsp; | &nbsp;<span style="color:#c00;">wir
 define('COMPRESS_EXPORT_TITLE','Kompression');
 define('COMPRESS_EXPORT_DESC','Kompression der exportierten Daten');
 define('CSV_CAT_DEPTH_TITLE','Kategorietiefe');
-define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen? (z.B. bei Default-Einstellung 4: Hauptkategorie und drei Unterkategorien)<br />Diese Einstellung ist wichtig um die in der CSV angelegten Kategorien auch korrekt importiert zu bekommen. Das gleiche gilt f&uuml;r den Export.<br /><span style="color:#c00;">Mehr als 4 kann zu Performance-Einbussen f&uuml;hren und ist evtl. nicht kunden-freundlich!');
+define('CSV_CAT_DEPTH_DESC','Wie tief soll der Kategoriebaum gehen? (z.B. bei Default-Einstellung 4: Hauptkategorie und drei Unterkategorien)<br />Diese Einstellung ist wichtig um die in der CSV angelegten Kategorien auch korrekt importiert zu bekommen. Das gleiche gilt f&uuml;r den Export.<br /><span style="color:#c00;">Mehr als 4 kann zu Performance-Einbu&szlig;en f&uuml;hren und ist evtl. nicht kundenfreundlich!');
 //EOC added text constants for group id 20, noRiddle
 
 define('MIN_GROUP_PRICE_STAFFEL_TITLE', 'Anzahl Staffelpreise');
@@ -906,12 +906,5 @@ define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine E-Mail and den Kunden versen
 
 define('STOCK_CHECK_SPECIALS_TITLE', '&Uuml;berpr&uuml;fen der Sonderangebote');
 define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
-
-define('MODULE_SUPERMAILER_TITLE', 'Supermailer');
-define('MODULE_SUPERMAILER_DESC', 'Supermailer Newslettersystem aktivieren<br/><b>Wichtig:</b>Es ist daf&uuml;r eine Registrierung bei Supermailer erforderlich.');
-define('MODULE_SUPERMAILER_EMAIL_ADDRESS_TITLE', 'Supermailer E-Mail Adresse');
-define('MODULE_SUPERMAILER_EMAIL_ADDRESS_DESC', 'Tragen sie hier die eMail Adresse ein, von der Supermailer die Daten holt.');
-define('MODULE_SUPERMAILER_GROUP_TITLE', 'Supermailer Gruppe');
-define('MODULE_SUPERMAILER_GROUP_DESC', 'Tragen sie hier die Gruppe f&uuml;r den Newsletter ein.');
 
 ?>

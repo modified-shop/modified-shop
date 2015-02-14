@@ -28,7 +28,7 @@
   define('MODULE_ORDER_TOTAL_SHIPPING_SORT_ORDER_DESC', 'Anzeigereihenfolge.');
   
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_TITLE','Versandkostenfrei erlauben');
-  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_DESC','Versandkostenfreie Lieferung erlauben ?');
+  define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_DESC','Versandkostenfreie Lieferung erlauben?');
   
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_TITLE','Versandkostenfrei f&uuml;r nationale Bestellungen ab');
   define('MODULE_ORDER_TOTAL_SHIPPING_FREE_SHIPPING_OVER_DESC','Versandkostenfrei ab einem Bestellwert von.');
