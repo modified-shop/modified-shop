@@ -7,27 +7,30 @@
 
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    --------------------------------------------------------------
-   Released under the GNU General Public License
+   based on: 
+   (c) 2003 XT-Commerce
+
+   Released under the GNU General Public License 
 --------------------------------------------------------------*/
 /* ACHTUNG ! Texte nicht ändern da Status abfrage im Programm */
-define('HEADING_TITLE','PayPal Transaktionen');
-define('TABLE_HEADING_PAYPAL_ID','Transaktions-Id');
+define('HEADING_TITLE','PayPal Transactions');
+define('TABLE_HEADING_PAYPAL_ID','Transaction-Id');
 define('TABLE_HEADING_NAME','Name');
-define('TABLE_HEADING_TXN_TYPE','Transaktion-Typ');
+define('TABLE_HEADING_TXN_TYPE','T.-Typ');
 define('TABLE_HEADING_PAYMENT_TYPE','Payment method');
 define('TABLE_HEADING_PAYMENT_STATUS','Payment status');
 define('TABLE_HEADING_PAYMENT_AMOUNT','Amount');
 define('TABLE_HEADING_ORDERS_ID','Order ID');
-define('TABLE_HEADING_ORDERS_STATUS','Orderstatus');
-define('TABLE_HEADING_ACTION','Aktion');
-define('TEXT_PAYPAL_TRANSACTION_HISTORY','Tranksaktionsprocess');
-define('TEXT_PAYPAL_PENDING_REASON','Manner');
+define('TABLE_HEADING_ORDERS_STATUS','Order status');
+define('TABLE_HEADING_ACTION','Action');
+define('TEXT_PAYPAL_TRANSACTION_HISTORY','Transaction process');
+define('TEXT_PAYPAL_PENDING_REASON','Reason');
 define('TEXT_PAYPAL_CAPTURE_TRANSACTION','Make Capture');
-define('TEXT_PAYPAL_TRANSACTION_DETAIL','Transaktionsdetails');
+define('TEXT_PAYPAL_TRANSACTION_DETAIL','Transaction details');
 define('TEXT_PAYPAL_TXN_ID','Payment method/Code');
 define('TEXT_PAYPAL_COMPANY','Company');
 define('TEXT_PAYPAL_PAYER_EMAIL','E-Mail');
-define('TEXT_PAYPAL_RECEIVER_EMAIL','Receiver');
+define('TEXT_PAYPAL_RECEIVER_EMAIL','Payee');
 define('TEXT_PAYPAL_CARTITEM','Products count');
 define('TEXT_PAYPAL_VERSAND','Delivery');
 define('TEXT_PAYPAL_TOTAL','Total');
@@ -37,58 +40,57 @@ define('TEXT_PAYPAL_PAYMENT_STATUS','Status');
 define('TEXT_PAYPAL_PAYMENT_DATE','Date');
 define('TEXT_PAYPAL_PAYMENT_TIME','Time');
 define('TEXT_PAYPAL_KUNDE','Customer');
-define('TEXT_PAYPAL_ADRESS','Adress');
+define('TEXT_PAYPAL_ADRESS','Address');
 define('TEXT_PAYPAL_PAYMENT_TYPE','Payment type');
-define('TEXT_PAYPAL_ADRESS_STATUS','Adress status');
+define('TEXT_PAYPAL_ADRESS_STATUS','Address status');
 define('TEXT_PAYPAL_PAYER_EMAIL_STATUS','Payer status');
 define('TEXT_PAYPAL_NETTO','Netto');
-define('TEXT_PAYPAL_DETAIL','Detail');
+define('TEXT_PAYPAL_DETAIL','Details');
 define('TEXT_PAYPAL_TYPE','Type');
 define('TEXT_PAYPAL_PAYMENT_REASON','Reason');
 define('TEXT_PAYPAL_TRANSACTION_TOTAL','Original payment:');
 define('TEXT_PAYPAL_TRANSACTION_LEFT','Remainder:');
 define('TEXT_PAYPAL_AMOUNT','Amount of repayment:');
-define('TEXT_PAYPAL_REFUND_TRANSACTION','To arrange repayment');
+define('TEXT_PAYPAL_REFUND_TRANSACTION','Arrange repayment');
 define('TEXT_PAYPAL_REFUND_NOTE','Notice for Payer <br />(optional):');
-define('TEXT_PAYPAL_OPTIONS','Paymentoptionen');
+define('TEXT_PAYPAL_OPTIONS','Payment options');
 define('TEXT_PAYPAL_TRANSACTION_AUTH_TOTAL','Reserved sum:');
 define('TEXT_PAYPAL_TRANSACTION_AMOUNT','Capture Amount:');
 define('TEXT_PAYPAL_TRANSACTION_AUTH_CAPTURED','Total Capture:');
 define('TEXT_PAYPAL_TRANSACTION_AUTH_OPEN','Open Capture:');
-define('TEXT_PAYPAL_ACTION_REFUND','Payment refund (until 60 days after transaction)');
+define('TEXT_PAYPAL_ACTION_REFUND','Refund Payment (until 60 days after transaction)');
 define('TEXT_PAYPAL_ACTION_CAPTURE','Capture Amount');
 define('REFUND','Refund');
 define('TEXT_PAYPAL_PAYMENT','PayPal-Paymentstatus');
-define('TEXT_PAYPAL_TRANSACTION_CONNECTED','Connected Transaktionen');
-define('TEXT_PAYPAL_TRANSACTION_ORIGINAL','Original Transaktion');
-define('TEXT_PAYPAL_SEARCH_TRANSACTION','Search Transaktionen');
-define('TEXT_PAYPAL_FOUND_TRANSACTION','Found Transaktionen');
-define('STATUS_COMPLETED','Abgeschlossen');
-define('STATUS_VERIFIED','verifiziert');
-define('STATUS_UNVERIFIED','Nicht Verifiziert');
+define('TEXT_PAYPAL_TRANSACTION_CONNECTED','Connected Transactions');
+define('TEXT_PAYPAL_TRANSACTION_ORIGINAL','Original Transaction');
+define('TEXT_PAYPAL_SEARCH_TRANSACTION','Search Transactions');
+define('TEXT_PAYPAL_FOUND_TRANSACTION','Found Transactions');
+define('STATUS_COMPLETED','Completed');
+define('STATUS_VERIFIED','verified');
+define('STATUS_UNVERIFIED','Not verified');
 define('STATUS_PENDING','Pending');
-define('STATUS_REFUNDED','Zurückgezahlt');
+define('STATUS_REFUNDED','Refunded');
 define('STATUS_REVERSED','Reversed');
-define('STATUS_DENIED','Storniert');
-define('STATUS_CASE','Käuferkonflikt');
-define('STATUS_CANCELED_REVERSAL','Rücklastschrift');
-define('STATUS_CANCELLED_REVERSA','Rücklastschrift');
-define('STATUS_EXPIRED','Abgelaufen');
-define('STATUS_FAILED','Fehlgeschlagen');
-define('STATUS_IN-PROGRESS','In Bearbeitung');
-define('STATUS_PARTIALLY_REFUNDE','Teilweise Zurückgezahlt');
-define('STATUS_PROCESSED','Abgeschlossen');
+define('STATUS_DENIED','Denied');
+define('STATUS_CASE','Customer conflict');
+define('STATUS_CANCELED_REVERSAL','Charge back');
+define('STATUS_CANCELLED_REVERSA','Charge back');
+define('STATUS_EXPIRED','Expired');
+define('STATUS_FAILED','Failed');
+define('STATUS_IN-PROGRESS','In progress');
+define('STATUS_PARTIALLY_REFUNDE','Partially refunded');
+define('STATUS_PROCESSED','Processed');
 define('STATUS_VOIDED','Voided');
-define('STATUS_OPENCAPTURE','Reserviert');
-define('STATUS_CREATED', 'Erstellt');
-define('TYPE_INSTANT','Sofort');
-define('TYPE_ECHECK','Überweisung');
-define('REASON_NOT_AS_DESCRIBE','Produkt nicht wie beschrieben!');
-define('REASON_NON_RECEIPT','Produkt nicht erhalten!');
-define('TYPE_REFUNDED','Rückzahlung');
-define('TYPE_REVERSED','-Zahlung gesendet');
-define('TYPE_REFUNDED','Rückzahlung');
-define('TEXT_DISPLAY_NUMBER_OF_PAYPAL_TRANSACTIONS','Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Transaktionen)');
+define('STATUS_OPENCAPTURE','Withdrawn');
+define('STATUS_CREATED', 'Created');
+define('TYPE_INSTANT','Instant');
+define('TYPE_ECHECK','Bank transfer');
+define('REASON_NOT_AS_DESCRIBE','Product not as described!');
+define('REASON_NON_RECEIPT','Product not received!');
+define('TYPE_REFUNDED','Repayment');
+define('TYPE_REVERSED','-Payment sent');
+define('TEXT_DISPLAY_NUMBER_OF_PAYPAL_TRANSACTIONS','Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> Transactions)');
 // define NOTES
 define('TEXT_PAYPAL_NOTE_REFUND_INFO','Until 60 days after sending the original payment can carry you out a complete or a partial restitution. If you receive a repayment to arrange, you from PayPal a refund of charges, including the partial fees for partial restitutions.
 <br /><br />In order to arrange a repayment too, you enter the amount into the field amount of repayment, and click you on far one.');
