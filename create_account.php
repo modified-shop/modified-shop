@@ -395,7 +395,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                    EMAIL_SUPPORT_NAME, 
                    $email_address, 
                    $name, 
-                   EMAIL_SUPPORT_FORWARDING_STRING, 
+                   '', 
                    EMAIL_SUPPORT_REPLY_ADDRESS, 
                    EMAIL_SUPPORT_REPLY_ADDRESS_NAME, 
                    '', 
@@ -405,6 +405,22 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
                    $txt_mail);
     }
     
+    // send mail to admin
+    if (EMAIL_SUPPORT_FORWARDING_STRING != '') {
+      xtc_php_mail(EMAIL_SUPPORT_ADDRESS, 
+                   EMAIL_SUPPORT_NAME, 
+                   EMAIL_SUPPORT_FORWARDING_STRING, 
+                   EMAIL_SUPPORT_NAME, 
+                   '',
+                   $email_address, 
+                   $name, 
+                   '', 
+                   '', 
+                   EMAIL_SUPPORT_SUBJECT, 
+                   $html_mail, 
+                   $txt_mail);
+    }
+   
     if ($newsletter == '1') {
       require_once (DIR_WS_CLASSES.'class.newsletter.php');
       $newsletter = new newsletter;
