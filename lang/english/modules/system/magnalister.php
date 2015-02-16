@@ -21,9 +21,9 @@
  */
 
 define('MODULE_MAGNALISTER_TEXT_TITLE', 'magnalister');
-define('MODULE_MAGNALISTER_TEXT_DESCRIPTION', '<div style="margin-left: 0.5em;">magnalister - ultimative Listing-Tool for amazon, yatego, 
-	g&uuml;nstiger.de, daparto und viele mehr.<br><br>More information here: 
-	<a href="http://www.magnalister.com" target="_blank" style="text-decoration:underline">www.magnalister.com</a></div>'
+define('MODULE_MAGNALISTER_TEXT_DESCRIPTION', '<div style="margin-left: 0.5em;">magnalister - the ultimate listing tool for amazon, yatego, 
+	g&uuml;nstiger.de, daparto and many more.<br><br>More information here: 
+	<a href="https://www.magnalister.com/freetest/partner=modified" target="_blank" style="text-decoration:underline">www.magnalister.com</a></div>'
 );
 define('MODULE_MAGNALISTER_SORT_ORDER', '1');
 define('MODULE_MAGNALISTER_STATUS_DESC', 'Module status');

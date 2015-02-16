@@ -23,7 +23,7 @@
 define('MODULE_MAGNALISTER_TEXT_TITLE', 'magnalister');
 define('MODULE_MAGNALISTER_TEXT_DESCRIPTION', '<div style="margin-left: 0.5em;">magnalister - das ultimative Listing-Tool f&uuml;r amazon, yatego, 
 	g&uuml;nstiger.de, daparto und viele mehr.<br><br>Weitere Infos unter 
-	<a href="http://www.magnalister.com" target="_blank" style="text-decoration:underline">www.magnalister.com</a></div>'
+	<a href="https://www.magnalister.com/freetest/partner=modified" target="_blank" style="text-decoration:underline">www.magnalister.com</a></div>'
 );
 define('MODULE_MAGNALISTER_SORT_ORDER', '1');
 define('MODULE_MAGNALISTER_STATUS_DESC', 'Modulstatus');

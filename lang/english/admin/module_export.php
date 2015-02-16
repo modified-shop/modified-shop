@@ -26,10 +26,9 @@ define('TABLE_HEADING_ACTION', 'Action');
 define('TEXT_MODULE_DIRECTORY', 'Module Directory:');
 
 define('TABLE_HEADING_FILENAME','Modulname (for internal usage)');
-define('ERROR_EXPORT_FOLDER_NOT_WRITEABLE','export/ Folder not writeable!');
+define('ERROR_EXPORT_FOLDER_NOT_WRITEABLE','Folder "export/" is not writeable!');
+define('TEXT_MODULE_INFO','Please check the vendor of the modules for the latest version!');
 
-define('TEXT_MODULE_INFO','Please check the manufacturer of the modules for the latest version!');
 define('TABLE_HEADING_MODULES_INSTALLED', 'Modules installed');
 define('TABLE_HEADING_MODULES_NOT_INSTALLED', 'Modules not installed');
-
 ?>
