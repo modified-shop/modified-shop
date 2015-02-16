@@ -434,17 +434,16 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 			<!-- body_text //-->
 			<td class="boxCenter" width="100%" valign="top" style="height: 100%;">
 				<table border="0" width="100%" cellspacing="0" cellpadding="2" style="height:100%;">
-					<tr>
-						<td>
-<?php ##### XTC3 | XTCM BOF ##### ?>
-							<div class="pageHeading">
-<?php ##### XTC3 | XTCM EOF ##### ?>
-								<?php echo SHOPGATE_CONFIG_TITLE; ?>
-							</div>
-						</td>
-					</tr>
+          <tr>
+            <td valign="middle" class="dataTableHeadingContent" style="width:250px;">
+              <?php echo SHOPGATE_CONFIG_TITLE; ?>
+            </td>
+            <td valign="middle" class="dataTableHeadingContent">
+              <a href="<?php echo xtc_href_link('modules.php', 'set=payment&module=shopgate'); ?>"><u>Einstellungen</u></a>  
+            </td>
+          </tr>
 					<tr style="height: 100%;">
-						<td class="main" style="height: 100%; vertical-align: top;">
+						<td class="main" style="height: 100%; vertical-align: top;" colspan="2">
 							<?php if(!empty($shopgate_message)):?>
 							<div class="shopgate_red_message">
 								<strong style="color: red;"><?php echo SHOPGATE_CONFIG_ERROR; ?></strong>
@@ -452,6 +451,7 @@ echo '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN""http://www.
 							</div>
 							<?php endif; ?>
 <?php if ($_GET["sg_option"] === "info"): ?>
+
 							<iframe src="<?php echo SHOPGATE_LINK_HOME; ?>" class="shopgate_iframe"></iframe>
 <?php elseif($_GET["sg_option"] === "help"): ?>
 							<iframe src="<?php echo SHOPGATE_CONFIG_WIKI_LINK; ?>" class="shopgate_iframe"></iframe>
