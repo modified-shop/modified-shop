@@ -114,7 +114,7 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {
       if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
     } else {
-      if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=magnalister', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MAGNALISTER . '</a></li>';
+      if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system&module=magnalister', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MAGNALISTER . '</a></li>';
     }
     
     ## Payone
