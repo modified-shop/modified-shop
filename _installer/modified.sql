@@ -1976,6 +1976,8 @@ INSERT INTO orders_status VALUES (2,1,'Processing', 2);
 INSERT INTO orders_status VALUES (2,2,'In Bearbeitung', 2);
 INSERT INTO orders_status VALUES (3,1,'Delivered', 3);
 INSERT INTO orders_status VALUES (3,2,'Versendet', 3);
+INSERT INTO orders_status VALUES (4,1,'Cancelled', 4);
+INSERT INTO orders_status VALUES (4,2,'Storniert', 4);
 
 # USA
 INSERT INTO zones VALUES (1,223,'AL','Alabama');
