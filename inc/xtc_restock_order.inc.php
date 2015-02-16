@@ -20,7 +20,7 @@
       $products_update = true;
       $orders_attributes_query = xtc_db_query("SELECT pa.orders_products_options_id,
                                                       pa.orders_products_options_values_id,
-                                                      pad.products_attributes_filename
+                                                      opd.orders_products_filename
                                                  FROM ".TABLE_ORDERS_PRODUCTS_ATTRIBUTES." pa
                                             LEFT JOIN ".TABLE_ORDERS_PRODUCTS_DOWNLOAD." opd 
                                                       ON opd.orders_products_id = pa.orders_products_id
@@ -28,7 +28,7 @@
                                                   AND pa.orders_products_id = '" . $order['orders_products_id'] . "'");
       if (xtc_db_num_rows($orders_attributes_query) > 0) {
         while ($orders_attributes = xtc_db_fetch_array($orders_attributes_query)) {
-          if ($orders_attributes['products_attributes_filename'] == '') {
+          if ($orders_attributes['orders_products_filename'] == '') {
             xtc_db_query("UPDATE ".TABLE_PRODUCTS_ATTRIBUTES."
                              SET attributes_stock = attributes_stock + ".$order['products_quantity']." 
                            WHERE options_id = '" . $orders_attributes['orders_products_options_id'] . "'
