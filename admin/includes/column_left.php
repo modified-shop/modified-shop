@@ -91,21 +91,16 @@ echo endMenue(BOX_HEADING_PRODUCTS);
 
 //---------------------------MODULE
 echo mainMenue(BOX_HEADING_MODULES);
-    if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=sitemaporg', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=payment', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_PAYMENT . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=shipping', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_SHIPPING . '</a></li>';
     if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULES, 'set=ordertotal', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_ORDER_TOTAL . '</a></li>';
+    if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=sitemaporg', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_GOOGLE_SITEMAP . '</a></li>';
     if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=system', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_SYSTEM . '</a></li>';
     if ($admin_access['module_export'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MODULE_EXPORT . '</a></li>';
 echo endMenue(BOX_HEADING_MODULES);
 
 //---------------------------PARTNER
 echo mainMenue(BOX_HEADING_PARTNER_MODULES);
-    if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {
-      if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
-    } else {
-      if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=magnalister', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MAGNALISTER . '</a></li>';
-    }
     if (isset($admin_access['janolaw']) && $admin_access['janolaw'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_JANOLAW, '', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_JANOLAW . '</a></li>';
     if (isset($admin_access['it_recht_kanzlei']) && $admin_access['it_recht_kanzlei'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_IT_RECHT_KANZLEI, '') . '" class="menuBoxContentLink"> -' . BOX_IT_RECHT_KANZLEI . '</a></li>';
     if (isset($admin_access['haendlerbund']) && $admin_access['haendlerbund'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_HAENDLERBUND, '') . '" class="menuBoxContentLink"> -' . BOX_HAENDLERBUND . '</a></li>';
@@ -114,6 +109,13 @@ echo mainMenue(BOX_HEADING_PARTNER_MODULES);
     if (isset($admin_access['protectedshops']) && $admin_access['protectedshops'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_PROTECTEDSHOPS, '') . '" class="menuBoxContentLink"> -' . BOX_PROTECTEDSHOPS . '</a></li>';
     if (isset($admin_access['cleverreach']) && $admin_access['cleverreach'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_CLEVERREACH, '') . '" class="menuBoxContentLink"> -' . BOX_CLEVERREACH . '</a></li>';
     if (isset($admin_access['supermailer']) && $admin_access['supermailer'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_SUPERMAILER, '') . '" class="menuBoxContentLink"> -' . BOX_SUPERMAILER . '</a></li>';
+    
+    ## Magnalister
+    if(defined('MODULE_MAGNALISTER_STATUS') && MODULE_MAGNALISTER_STATUS=='True') {
+      if (isset($admin_access['magnalister']) && $admin_access['magnalister'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MAGNALISTER."", '', 'NONSSL') . '" class="menuBoxContentLink"> -'.BOX_MAGNALISTER.'</a></li>';
+    } else {
+      if ($admin_access['modules'] == '1') echo '<li><a href="' . xtc_href_link(FILENAME_MODULE_EXPORT, 'set=export&module=magnalister', 'NONSSL') . '" class="menuBoxContentLink"> -' . BOX_MAGNALISTER . '</a></li>';
+    }
     
     ## Payone
     include(DIR_FS_EXTERNAL.'payone/modules/column_left.php');
