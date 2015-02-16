@@ -40,7 +40,7 @@ define('MODULE_SITEMAPORG_PRIORITY_PRODUCT_DESC', '');
 define('MODULE_SITEMAPORG_GZIP_TITLE', '<b>gzip Komprimierung nutzen?</b>');
 define('MODULE_SITEMAPORG_GZIP_DESC', 'Die Endung ".gz" wird automatisch ans Ende der Datei gesetzt!');
 define('MODULE_SITEMAPORG_EXPORT_TITLE', '<hr /><b>Herunterladen?</b>');
-define('MODULE_SITEMAPORG_EXPORT_DESC', 'M&ouml;chten Sie die Datei Herunterladen?');
+define('MODULE_SITEMAPORG_EXPORT_DESC', 'M&ouml;chten Sie die Datei herunterladen?');
 define('MODULE_SITEMAPORG_YAHOO_TITLE', 'YahooID');
 define('MODULE_SITEMAPORG_YAHOO_DESC','Geben Sie hier Ihre die Yahoo ID an! Diese wird ben&ouml;tigt, um Yahoo die Sitemap mitzuteilen');
 
