@@ -146,9 +146,11 @@ class shopgate {
 ###### XTC3 | XTCM | GambioGX | osCommerce EOF #####
 		
 ##### XTC3 | XTCM | GambioGX BOF #####
+    /*
 		if( !$this->checkColumn("shopgate", TABLE_ADMIN_ACCESS) ) {
 			xtc_db_query("alter table ".TABLE_ADMIN_ACCESS." DROP COLUMN shopgate");
 		}
+		*/
 ##### XTC3 | XTCM | GambioGX EOF #####
 	}
 
