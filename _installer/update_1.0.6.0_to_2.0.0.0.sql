@@ -280,5 +280,10 @@ ALTER TABLE countries ADD UNIQUE (countries_iso_code_3);
 ALTER TABLE admin_access ADD supermailer INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET supermailer = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET supermailer = 1 WHERE customers_id = 'groups' LIMIT 1;
-    
+
+#GTB - 2015-02-16 - add shopgate
+ALTER TABLE admin_access ADD shopgate INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET shopgate = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET shopgate = 5 WHERE customers_id = 'groups' LIMIT 1;
+ 
 # Keep an empty line at the end of this file for the db_updater to work properly
