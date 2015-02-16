@@ -31,7 +31,7 @@ class PHPMailer
      * The PHPMailer Version number.
      * @type string
      */
-    public $Version = '5.2.8';
+    public $Version = '5.2.9';
 
     /**
      * Email priority.
@@ -216,6 +216,8 @@ class PHPMailer
      * You can also specify a different port
      * for each host by using this format: [hostname:port]
      * (e.g. "smtp1.example.com:25;smtp2.example.com").
+     * You can also specify encryption type, for example:
+     * (e.g. "tls://smtp1.example.com:587;ssl://smtp2.example.com:465").
      * Hosts will be tried in order.
      * @type string
      */
@@ -293,12 +295,13 @@ class PHPMailer
 
     /**
      * SMTP class debug output mode.
+     * Debug output level.
      * Options:
-     *   0: no output
-     *   1: commands
-     *   2: data and commands
-     *   3: as 2 plus connection status
-     *   4: low level data output
+     * * `0` No output
+     * * `1` Commands
+     * * `2` Data and commands
+     * * `3` As 2 plus connection status
+     * * `4` Low-level data output
      * @type integer
      * @see SMTP::$do_debug
      */
@@ -307,10 +310,15 @@ class PHPMailer
     /**
      * How to handle debug output.
      * Options:
-     *   'echo': Output plain-text as-is, appropriate for CLI
-     *   'html': Output escaped, line breaks converted to <br>, appropriate for browser output
-     *   'error_log': Output to error log as configured in php.ini
-     * @type string
+     * * `echo` Output plain-text as-is, appropriate for CLI
+     * * `html` Output escaped, line breaks converted to `<br>`, appropriate for browser output
+     * * `error_log` Output to error log as configured in php.ini
+     *
+     * Alternatively, you can provide a callable expecting two params: a message string and the debug level:
+     * <code>
+     * $mail->Debugoutput = function($str, $level) {echo "debug level $level; message: $str";};
+     * </code>
+     * @type string|callable
      * @see SMTP::$Debugoutput
      */
     public $Debugoutput = 'trigger_error';
@@ -542,39 +550,32 @@ class PHPMailer
     protected $exceptions = false;
 
     /**
-     * Error severity: message only, continue processing
+     * Error severity: message only, continue processing.
      */
     const STOP_MESSAGE = 0;
 
     /**
-     * Error severity: message, likely ok to continue processing
+     * Error severity: message, likely ok to continue processing.
      */
     const STOP_CONTINUE = 1;
 
     /**
-     * Error severity: message, plus full stop, critical error reached
+     * Error severity: message, plus full stop, critical error reached.
      */
     const STOP_CRITICAL = 2;
 
     /**
-     * SMTP RFC standard line ending
+     * SMTP RFC standard line ending.
      */
     const CRLF = "\r\n";
 
     /**
-     * Constructor
+     * Constructor.
      * @param boolean $exceptions Should we throw external exceptions?
      */
     public function __construct($exceptions = false)
     {
         $this->exceptions = ($exceptions == true);
-        //Make sure our autoloader is loaded
-        if (version_compare(PHP_VERSION, '5.1.2', '>=')) {
-            $autoload = spl_autoload_functions();
-            if ($autoload === false or !in_array('PHPMailerAutoload', $autoload)) {
-                require (DIR_FS_EXTERNAL.'phpmailer/PHPMailerAutoload.php');
-            }
-        }
     }
 
     /**
@@ -618,30 +619,46 @@ class PHPMailer
 
     /**
      * Output debugging info via user-defined method.
-     * Only if debug output is enabled.
+     * Only generates output if SMTP debug output is enabled (@see SMTP::$do_debug).
      * @see PHPMailer::$Debugoutput
      * @see PHPMailer::$SMTPDebug
      * @param string $str
      */
     protected function edebug($str)
     {
-        if (!$this->SMTPDebug) {
+        if ($this->SMTPDebug <= 0) {
+            return;
+        }
+        if (is_callable($this->Debugoutput)) {
+            call_user_func($this->Debugoutput, $str, $this->SMTPDebug);
             return;
         }
         switch ($this->Debugoutput) {
             case 'error_log':
+                //Don't output, just log
                 error_log($str);
                 break;
             case 'html':
-                //Cleans up output a bit for a better looking display that's HTML-safe
-                echo htmlentities(preg_replace('/[\r\n]+/', '', $str), ENT_QUOTES, $this->CharSet) . "<br>\n";
+                //Cleans up output a bit for a better looking, HTML-safe output
+                echo htmlentities(
+                    preg_replace('/[\r\n]+/', '', $str),
+                    ENT_QUOTES,
+                    'UTF-8'
+                )
+                . "<br>\n";
                 break;
             case 'trigger_error':
                 trigger_error($str, E_USER_WARNING);
                 break;
             case 'echo':
             default:
-                echo $str."\n";
+                //Normalize line breaks
+                $str = preg_replace('/(\r\n|\r|\n)/ms', "\n", $str);
+                echo gmdate('Y-m-d H:i:s') . "\t" . str_replace(
+                    "\n",
+                    "\n                   \t                  ",
+                    trim($str)
+                ) . "\n";
         }
     }
 
@@ -859,12 +876,18 @@ class PHPMailer
     public static function validateAddress($address, $patternselect = 'auto')
     {
         if (!$patternselect or $patternselect == 'auto') {
-            if (defined('PCRE_VERSION')) { //Check this constant so it works when extension_loaded() is disabled
-                if (version_compare(PCRE_VERSION, '8.0') >= 0) {
+            //Check this constant first so it works when extension_loaded() is disabled by safe mode
+            //Constant was added in PHP 5.2.4
+            if (defined('PCRE_VERSION')) {
+                //This pattern can get stuck in a recursive loop in PCRE <= 8.0.2
+                if (version_compare(PCRE_VERSION, '8.0.3') >= 0) {
                     $patternselect = 'pcre8';
                 } else {
                     $patternselect = 'pcre';
                 }
+            } elseif (function_exists('extension_loaded') and extension_loaded('pcre')) {
+                //Fall back to older PCRE
+                $patternselect = 'pcre';
             } else {
                 //Filter_var appeared in PHP 5.2.0 and does not require the PCRE extension
                 if (version_compare(PHP_VERSION, '5.2.0') >= 0) {
@@ -1997,17 +2020,17 @@ class PHPMailer
      */
     protected function setMessageType()
     {
-        $this->message_type = array();
+        $type = array();
         if ($this->alternativeExists()) {
-            $this->message_type[] = 'alt';
+            $type[] = 'alt';
         }
         if ($this->inlineImageExists()) {
-            $this->message_type[] = 'inline';
+            $type[] = 'inline';
         }
         if ($this->attachmentExists()) {
-            $this->message_type[] = 'attach';
+            $type[] = 'attach';
         }
-        $this->message_type = implode('_', $this->message_type);
+        $this->message_type = implode('_', $type);
         if ($this->message_type == '') {
             $this->message_type = 'plain';
         }
@@ -2160,18 +2183,19 @@ class PHPMailer
                 // Fixes a warning in IETF's msglint MIME checker
                 // Allow for bypassing the Content-Disposition header totally
                 if (!(empty($disposition))) {
-                    if (preg_match('/[ \(\)<>@,;:\\"\/\[\]\?=]/', $name)) {
+                    $encoded_name = $this->encodeHeader($this->secureHeader($name));
+                    if (preg_match('/[ \(\)<>@,;:\\"\/\[\]\?=]/', $encoded_name)) {
                         $mime[] = sprintf(
                             'Content-Disposition: %s; filename="%s"%s',
                             $disposition,
-                            $this->encodeHeader($this->secureHeader($name)),
+                            $encoded_name,
                             $this->LE . $this->LE
                         );
                     } else {
                         $mime[] = sprintf(
                             'Content-Disposition: %s; filename=%s%s',
                             $disposition,
-                            $this->encodeHeader($this->secureHeader($name)),
+                            $encoded_name,
                             $this->LE . $this->LE
                         );
                     }
@@ -2875,8 +2899,24 @@ class PHPMailer
         preg_match_all('/(src|background)=["\'](.*)["\']/Ui', $message, $images);
         if (isset($images[2])) {
             foreach ($images[2] as $imgindex => $url) {
-                // do not change urls for absolute images (thanks to corvuscorax)
-                if (!preg_match('#^[A-z]+://#', $url)) {
+                // Convert data URIs into embedded images
+                if (preg_match('#^data:(image[^;,]*)(;base64)?,#', $url, $match)) {
+                    $data = substr($url, strpos($url, ','));
+                    if ($match[2]) {
+                        $data = base64_decode($data);
+                    } else {
+                        $data = rawurldecode($data);
+                    }
+                    $cid = md5($url) . '@phpmailer.0'; // RFC2392 S 2
+                    if ($this->addStringEmbeddedImage($data, $cid, '', 'base64', $match[1])) {
+                        $message = preg_replace(
+                            '/' . $images[1][$imgindex] . '=["\']' . preg_quote($url, '/') . '["\']/Ui',
+                            $images[1][$imgindex] . '="cid:' . $cid . '"',
+                            $message
+                        );
+                    }
+                } elseif (!preg_match('#^[A-z]+://#', $url)) {
+                    // Do not change urls for absolute images (thanks to corvuscorax)
                     $filename = basename($url);
                     $directory = dirname($url);
                     if ($directory == '.') {
