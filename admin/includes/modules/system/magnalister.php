@@ -22,14 +22,6 @@
 
 defined('_VALID_XTC') OR die('Direct access to this location is not allowed.');
 
-define('MODULE_MAGNALISTER_TEXT_TITLE', 'magnalister');
-define('MODULE_MAGNALISTER_TEXT_DESCRIPTION', '<div style="margin-left: 0.5em;">magnalister - das ultimative Listing-Tool f&uuml;r amazon, yatego, 
-	g&uuml;nstiger.de, daparto und viele mehr.<br><br>Weitere Infos unter 
-	<a href="http://www.magnalister.com" target="_blank" style="text-decoration:underline">www.magnalister.com</a></div>'
-);
-define('MODULE_MAGNALISTER_SORT_ORDER', '1');
-define('MODULE_MAGNALISTER_STATUS_DESC', 'Modulstatus');
-define('MODULE_MAGNALISTER_STATUS_TITLE', 'Status');
 
 class magnalister {
 	public $code = '';
