@@ -23,7 +23,7 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-define('MODULE_SITEMAPORG_TEXT_DESCRIPTION', 'You can find standard definition here: <a href="http://www.sitemaps.org/" target="_blank">www.sitemap.org</a>');
+define('MODULE_SITEMAPORG_TEXT_DESCRIPTION', 'Standard definition can be found here: <a href="http://www.sitemaps.org/" target="_blank">www.sitemap.org</a>');
 define('MODULE_SITEMAPORG_TEXT_TITLE', 'XML Sitemap.org');
 define('MODULE_SITEMAPORG_FILE_TITLE' , '<hr />Filename');
 define('MODULE_SITEMAPORG_FILE_DESC' , 'Enter a file name four the sitemap.<br />(saved in export/)');
