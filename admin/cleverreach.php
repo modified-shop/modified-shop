@@ -56,7 +56,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <td colspan="2" style="border: 0px solid; border-color: #ffffff;">
               <table width="100%"  border="0" cellspacing="0" cellpadding="15">
                 <tr>
-                  <td style="background:url(images/bg_site.png) repeat-x #e7e7e7;border:1px solid #666;">
+                  <td>
                     <a href="http://www.cleverreach.de/" target="_blank">
                       <img src="images/bg_head.png" alt="Professionelles E-Mail Marketing f&uuml;r Ihren Online-Shop - Jetzt kostenlos &amp; unverbindlich testen!" border="0" style="margin-bottom:10px;" />
                     </a>
@@ -87,7 +87,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           <br />
                           <STRONG>Links:</STRONG><br />
                           <a href="http://www.cleverreach.de/" target="_blank">Weitere Informationen</a><br />
-                          <a href="http://www.cleverreach.de/features.php" target="_blank">Leistungs&uuml;bersicht</a><br />
+                          <a href="http://www.cleverreach.de/features" target="_blank">Leistungs&uuml;bersicht</a><br />
                         </td>
                       </tr>
                       <tr>
