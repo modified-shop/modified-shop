@@ -40,6 +40,7 @@ if (xtc_db_num_rows($content_query, true) > 0) {
     $filename = ($content_data['content_link'] != '') ? '<a href="'.$content_data['content_link'].'" target="_blank">'.$content_data['content_name'].'</a>' : $content_data['content_name'];
     
     $button = '';
+    $filesize = '';
     if ($content_data['content_link'] == '') {
       $allowed_content_types = array('html','htm','txt','bmp','jpg','jpeg','gif','png','tif');
       $content_file_parts = explode('.', $content_data['content_file']);
@@ -56,15 +57,17 @@ if (xtc_db_num_rows($content_query, true) > 0) {
                   ' class="'.$btnlink_class.'">'.
                   xtc_image_button('button_view.gif', TEXT_VIEW).
                   '</a>';
-      } else {
+        $filesize = xtc_filesize($content_data['content_file']);
+      } elseif ($content_data['content_file'] != '') {
         $button = '<a href="'.xtc_href_link('media/products/'.$content_data['content_file']).'">'.xtc_image_button('button_download.gif', TEXT_DOWNLOAD).'</a>';
+        $filesize = xtc_filesize($content_data['content_file']);
       }
     }
     $module_content[] = array (
         'ICON' => $icon,
         'FILENAME' => $filename,
         'DESCRIPTION' => $content_data['file_comment'],
-        'FILESIZE' => xtc_filesize($content_data['content_file']),
+        'FILESIZE' => $filesize,
         'BUTTON' => $button,
         'HITS' => $content_data['content_read']
       );
