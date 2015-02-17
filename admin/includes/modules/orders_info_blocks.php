@@ -110,46 +110,6 @@
                 
                 /* easyBill */
                 include (DIR_FS_EXTERNAL.'easybill/admin/easybill.info.php');
-                
-                // CC - START
-                if ($order->info['cc_type'] || $order->info['cc_owner'] || $order->info['cc_number']) {
-                  ?>
-                  <tr>
-                    <td colspan="2"><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_TYPE; ?></td>
-                    <td class="main"><?php echo $order->info['cc_type']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_OWNER; ?></td>
-                    <td class="main"><?php echo $order->info['cc_owner']; ?></td>
-                  </tr>
-                  <?php
-                  // BMC CC Mod Start
-                  if ($order->info['cc_number'] != '0000000000000000') {
-                    if (strtolower(CC_ENC) == 'true') {
-                      $cipher_data = $order->info['cc_number'];
-                      $order->info['cc_number'] = changedataout($cipher_data, CC_KEYCHAIN);
-                    }
-                  }
-                  // BMC CC Mod End
-                  ?>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_NUMBER; ?></td>
-                    <td class="main"><?php echo $order->info['cc_number']; ?></td>
-                  </tr>
-                  <tr>
-                  <td class="main"><?php echo ENTRY_CREDIT_CARD_CVV; ?></td>
-                  <td class="main"><?php echo $order->info['cc_cvv']; ?></td>
-                  </tr>
-                  <tr>
-                    <td class="main"><?php echo ENTRY_CREDIT_CARD_EXPIRES; ?></td>
-                    <td class="main"><?php echo $order->info['cc_expires']; ?></td>
-                  </tr>
-                  <?php
-                }
-                // CC - END
 
                 // Paypal Express Modul
                 if ($order->info['payment_method']=='paypal_directpayment' or $order->info['payment_method']=='paypal' or $order->info['payment_method']=='paypalexpress') {

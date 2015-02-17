@@ -2359,7 +2359,6 @@ function OrderUpdate ()
           // require functionblock for mails
           require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
           require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-          require_once(DIR_FS_INC . 'changedataout.inc.php');
           require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
           require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
           require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
@@ -2557,7 +2556,6 @@ function CustomersUpdate ()
     // generate mail for customer if customer=new
     require_once(DIR_FS_INC . 'xtc_add_tax.inc.php');
     require_once(DIR_FS_INC . 'xtc_not_null.inc.php');
-    require_once(DIR_FS_INC . 'changedataout.inc.php');
     require_once(DIR_FS_INC . 'xtc_href_link.inc.php');
     require_once(DIR_FS_INC . 'xtc_date_long.inc.php');
     require_once(DIR_FS_INC . 'xtc_check_agent.inc.php');
