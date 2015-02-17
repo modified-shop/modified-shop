@@ -96,12 +96,13 @@ DROP TABLE IF EXISTS campaigns;
 CREATE TABLE campaigns (
   campaigns_id INT(11) NOT NULL AUTO_INCREMENT,
   campaigns_name VARCHAR(32) NOT NULL DEFAULT '',
-  campaigns_refID VARCHAR(64) DEFAULT NULL,
+  campaigns_refID VARCHAR(64) NOT NULL,
   campaigns_leads INT(11) NOT NULL DEFAULT 0,
   date_added DATETIME DEFAULT NULL,
   last_modified DATETIME DEFAULT NULL,
   PRIMARY KEY (campaigns_id),
   KEY idx_campaigns_name (campaigns_name)
+  UNIQUE (campaigns_refID)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS campaigns_ip;
@@ -256,7 +257,8 @@ CREATE TABLE banners_history (
   banners_shown INT(5) NOT NULL DEFAULT 0,
   banners_clicked INT(5) NOT NULL DEFAULT 0,
   banners_history_date DATETIME NOT NULL,
-  PRIMARY KEY (banners_history_id)
+  PRIMARY KEY (banners_history_id),
+  UNIQUE (banners_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS categories;
@@ -467,7 +469,7 @@ CREATE TABLE customers_status (
   customers_status_write_reviews INT(1) NOT NULL DEFAULT 1,
   customers_status_read_reviews INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (customers_status_id,language_id),
-  KEY idx_orders_status_name (customers_status_name)
+  UNIQUE (customers_status_name, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_status_history;
@@ -493,7 +495,7 @@ CREATE TABLE languages (
   status INT(1) NOT NULL DEFAULT 1,
   status_admin INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (languages_id),
-  KEY idx_languages_name (name)
+  UNIQUE (code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS manufacturers;
@@ -1051,6 +1053,7 @@ CREATE TABLE content_manager (
   content_meta_robots VARCHAR(32) NOT NULL,
   content_active INT(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (content_id),
+  UNIQUE (content_group, languages_id),
   FULLTEXT (content_meta_title,content_meta_description,content_meta_keywords)
 ) ENGINE=MyISAM;
 
@@ -1071,7 +1074,7 @@ CREATE TABLE products_content (
 DROP TABLE IF EXISTS module_newsletter;
 CREATE TABLE module_newsletter (
   newsletter_id INT(11) NOT NULL AUTO_INCREMENT,
-  title TEXT NOT NULL,
+  title VARCHAR(255) NOT NULL,
   bc TEXT NOT NULL,
   cc TEXT NOT NULL,
   date DATETIME DEFAULT NULL,
@@ -1115,7 +1118,8 @@ CREATE TABLE coupon_email_track (
   sent_lastname VARCHAR(32) DEFAULT NULL,
   emailed_to VARCHAR(32) DEFAULT NULL,
   date_sent DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (unique_id)
+  PRIMARY KEY (unique_id),
+  UNIQUE (coupon_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupon_gv_customer;
@@ -1123,7 +1127,6 @@ CREATE TABLE coupon_gv_customer (
   customer_id INT(5) NOT NULL DEFAULT 0,
   amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
   PRIMARY KEY (customer_id),
-  KEY customer_id (customer_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupon_gv_queue;
@@ -1177,7 +1180,7 @@ CREATE TABLE coupons_description (
   language_id TINYINT NOT NULL DEFAULT 1,
   coupon_name VARCHAR(32) NOT NULL DEFAULT '',
   coupon_description text,
-  KEY coupon_id (coupon_id)
+  PRIMARY KEY (coupon_id, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS carriers;
