@@ -13,7 +13,7 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-  function get_tracking_link($order_id, $lang_code) {
+  function get_tracking_link($orders_id, $lang_code) {
     if ($lang_code != 'de' && $lang_code != 'en') {
       $lang_code == DEFAULT_LANGUAGE;
     }
@@ -22,7 +22,7 @@
                                             FROM ".TABLE_ORDERS_TRACKING." ortr
                                             JOIN ".TABLE_CARRIERS." ca
                                                  ON ortr.carrier_id = ca.carrier_id
-                                           WHERE ortr.order_id = '".(int)$order_id."'");
+                                           WHERE ortr.orders_id = '".(int)$orders_id."'");
     if (xtc_db_num_rows($tracking_links_query) > 0) {
       while ($tracking_link = xtc_db_fetch_array($tracking_links_query)) {
         $parcel_link[] = array('carrier_name' => $tracking_link['carrier_name'],
