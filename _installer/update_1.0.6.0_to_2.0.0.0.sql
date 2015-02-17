@@ -275,6 +275,19 @@ ALTER TABLE coupons DROP INDEX idx_coupon_code;
 ALTER TABLE coupons ADD UNIQUE (coupon_code);
 ALTER TABLE countries ADD UNIQUE (countries_iso_code_2);
 ALTER TABLE countries ADD UNIQUE (countries_iso_code_3);
+ALTER TABLE content_manager ADD UNIQUE (content_group, languages_id);
+ALTER TABLE coupon_gv_customer DROP INDEX customer_id;
+ALTER TABLE coupons_description DROP INDEX coupon_id;
+ALTER TABLE coupons_description ADD PRIMARY KEY (coupon_id, language_id);
+ALTER TABLE coupon_email_track ADD UNIQUE (coupon_id);
+ALTER TABLE customers_status DROP INDEX idx_orders_status_name;
+ALTER TABLE customers_status ADD UNIQUE (customers_status_name, language_id);
+ALTER TABLE module_newsletter MODIFY title VARCHAR(255) NOT NULL;
+ALTER TABLE campaigns MODIFY campaigns_refID VARCHAR(64) NOT NULL;
+ALTER TABLE campaigns ADD UNIQUE (campaigns_refID);
+ALTER TABLE banners_history ADD UNIQUE (banners_id);
+ALTER TABLE languages ADD UNIQUE (code);
+ALTER TABLE languages DROP INDEX idx_languages_name;
 
 #Tomcraft - 2015-02-14 - add SuperMailer
 ALTER TABLE admin_access ADD supermailer INT(1) NOT NULL DEFAULT 0;
