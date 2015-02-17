@@ -1125,7 +1125,7 @@ DROP TABLE IF EXISTS coupon_gv_customer;
 CREATE TABLE coupon_gv_customer (
   customer_id INT(5) NOT NULL DEFAULT 0,
   amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
-  PRIMARY KEY (customer_id),
+  PRIMARY KEY (customer_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS coupon_gv_queue;
