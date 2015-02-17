@@ -101,7 +101,7 @@ CREATE TABLE campaigns (
   date_added DATETIME DEFAULT NULL,
   last_modified DATETIME DEFAULT NULL,
   PRIMARY KEY (campaigns_id),
-  KEY idx_campaigns_name (campaigns_name)
+  KEY idx_campaigns_name (campaigns_name),
   UNIQUE (campaigns_refID)
 ) ENGINE=MyISAM;
 
