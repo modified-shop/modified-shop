@@ -51,65 +51,7 @@ CREATE TABLE address_book (
   address_date_added DATETIME DEFAULT '0000-00-00 00:00:00',
   address_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
   PRIMARY KEY (address_book_id),
-  KEY idx_address_book_customers_id (customers_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS banktransfer_blz;
-CREATE TABLE IF NOT EXISTS banktransfer_blz (
-  blz int(10) NOT NULL DEFAULT 0,
-  bankname varchar(255) NOT NULL DEFAULT '',
-  prz char(2) NOT NULL DEFAULT '',
-  PRIMARY KEY (blz)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS customers_memo;
-CREATE TABLE customers_memo (
-  memo_id INT(11) NOT NULL AUTO_INCREMENT,
-  customers_id INT(11) NOT NULL DEFAULT 0,
-  memo_date DATE NOT NULL DEFAULT '0000-00-00',
-  memo_title TEXT NOT NULL,
-  memo_text TEXT NOT NULL,
-  poster_id INT(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (memo_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS products_xsell;
-CREATE TABLE products_xsell (
-  ID int(10) NOT NULL AUTO_INCREMENT,
-  products_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
-  products_xsell_grp_name_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
-  xsell_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
-  sort_order INT(10) UNSIGNED NOT NULL DEFAULT 1,
-  PRIMARY KEY (ID)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS products_xsell_grp_name;
-CREATE TABLE products_xsell_grp_name (
-  products_xsell_grp_name_id INT(10) NOT NULL,
-  xsell_sort_order INT(10) NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
-  groupname VARCHAR(255) NOT NULL DEFAULT '',
-  PRIMARY KEY (products_xsell_grp_name_id, language_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS campaigns;
-CREATE TABLE campaigns (
-  campaigns_id INT(11) NOT NULL AUTO_INCREMENT,
-  campaigns_name VARCHAR(32) NOT NULL DEFAULT '',
-  campaigns_refID VARCHAR(64) NOT NULL,
-  campaigns_leads INT(11) NOT NULL DEFAULT 0,
-  date_added DATETIME DEFAULT NULL,
-  last_modified DATETIME DEFAULT NULL,
-  PRIMARY KEY (campaigns_id),
-  KEY idx_campaigns_name (campaigns_name),
-  UNIQUE (campaigns_refID)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS campaigns_ip;
-CREATE TABLE campaigns_ip (
-  user_ip VARCHAR(39) NOT NULL,
-  time DATETIME NOT NULL,
-  campaign VARCHAR(32) NOT NULL
+  KEY idx_customers_id (customers_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS address_format;
@@ -118,11 +60,6 @@ CREATE TABLE address_format (
   address_format VARCHAR(128) NOT NULL,
   address_summary VARCHAR(48) NOT NULL,
   PRIMARY KEY (address_format_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS database_version;
-CREATE TABLE database_version (
-  version VARCHAR(32) NOT NULL
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS admin_access;
@@ -215,7 +152,6 @@ CREATE TABLE admin_access (
   PRIMARY KEY (customers_id)
 ) ENGINE=MyISAM;
 
-
 DROP TABLE IF EXISTS banktransfer;
 CREATE TABLE banktransfer (
   orders_id INT(11) NOT NULL DEFAULT 0,
@@ -229,9 +165,16 @@ CREATE TABLE banktransfer (
   banktransfer_prz CHAR(2) DEFAULT NULL,
   banktransfer_fax CHAR(2) DEFAULT NULL,
   banktransfer_owner_email VARCHAR(96) DEFAULT NULL,
-  KEY orders_id (orders_id)
+  KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS banktransfer_blz;
+CREATE TABLE IF NOT EXISTS banktransfer_blz (
+  blz int(10) NOT NULL DEFAULT 0,
+  bankname varchar(255) NOT NULL DEFAULT '',
+  prz char(2) NOT NULL DEFAULT '',
+  PRIMARY KEY (blz)
+) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS banners;
 CREATE TABLE banners (
@@ -258,7 +201,39 @@ CREATE TABLE banners_history (
   banners_clicked INT(5) NOT NULL DEFAULT 0,
   banners_history_date DATETIME NOT NULL,
   PRIMARY KEY (banners_history_id),
-  UNIQUE (banners_id)
+  UNIQUE idx_banners_id (banners_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS campaigns;
+CREATE TABLE campaigns (
+  campaigns_id INT(11) NOT NULL AUTO_INCREMENT,
+  campaigns_name VARCHAR(32) NOT NULL DEFAULT '',
+  campaigns_refID VARCHAR(64) NOT NULL,
+  campaigns_leads INT(11) NOT NULL DEFAULT 0,
+  date_added DATETIME DEFAULT NULL,
+  last_modified DATETIME DEFAULT NULL,
+  PRIMARY KEY (campaigns_id),
+  KEY idx_campaigns_name (campaigns_name),
+  UNIQUE idx_campaigns_refID (campaigns_refID)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS campaigns_ip;
+CREATE TABLE campaigns_ip (
+  user_ip VARCHAR(39) NOT NULL,
+  time DATETIME NOT NULL,
+  campaign VARCHAR(32) NOT NULL,
+  KEY idx_campaign (campaign)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS carriers;
+CREATE TABLE carriers (
+  carrier_id INT(11) NOT NULL AUTO_INCREMENT,
+  carrier_name VARCHAR(80) NOT NULL,
+  carrier_tracking_link VARCHAR(512) NOT NULL,
+  carrier_sort_order INT(11) NOT NULL,
+  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (carrier_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS categories;
@@ -297,6 +272,13 @@ CREATE TABLE categories_description (
   KEY idx_categories_name (categories_name)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS cm_file_flags;
+CREATE TABLE cm_file_flags (
+  file_flag INT(11) NOT NULL,
+  file_flag_name VARCHAR(32) NOT NULL,
+  PRIMARY KEY (file_flag)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS configuration;
 CREATE TABLE configuration (
   configuration_id INT NOT NULL AUTO_INCREMENT,
@@ -322,16 +304,29 @@ CREATE TABLE configuration_group (
   PRIMARY KEY (configuration_group_id)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS counter;
-CREATE TABLE counter (
-  startdate CHAR(8),
-  counter INT(12)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS counter_history;
-CREATE TABLE counter_history (
-  month CHAR(8),
-  counter INT(12)
+DROP TABLE IF EXISTS content_manager;
+CREATE TABLE content_manager (
+  content_id INT(11) NOT NULL AUTO_INCREMENT,
+  categories_id INT(11) NOT NULL DEFAULT 0,
+  parent_id INT(11) NOT NULL DEFAULT 0,
+  group_ids TEXT,
+  languages_id INT(11) NOT NULL DEFAULT 0,
+  content_title TEXT NOT NULL,
+  content_heading TEXT NOT NULL,
+  content_text TEXT NOT NULL,
+  sort_order INT(4) NOT NULL DEFAULT 0,
+  file_flag INT(1) NOT NULL DEFAULT 0,
+  content_file VARCHAR(64) NOT NULL DEFAULT '',
+  content_status INT(1) NOT NULL DEFAULT 0,
+  content_group INT(11) NOT NULL,
+  content_delete INT(1) NOT NULL DEFAULT 1,
+  content_meta_title TEXT,
+  content_meta_description TEXT,
+  content_meta_keywords TEXT,
+  content_meta_robots VARCHAR(32) NOT NULL,
+  content_active INT(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (content_id),
+  KEY idx_content_group (content_group)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS countries;
@@ -344,9 +339,83 @@ CREATE TABLE countries (
   status INT(1) DEFAULT 1 NULL,
   required_zones INT(1) DEFAULT '0',
   PRIMARY KEY (countries_id),
-  KEY IDX_COUNTRIES_NAME (countries_name),
-  UNIQUE (countries_iso_code_2),
-  UNIQUE (countries_iso_code_3)
+  KEY idx_countries_name (countries_name),
+  UNIQUE idx_countries_iso_code_2 (countries_iso_code_2),
+  UNIQUE idx_countries_iso_code_3 (countries_iso_code_3)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS coupon_email_track;
+CREATE TABLE coupon_email_track (
+  unique_id INT(11) NOT NULL AUTO_INCREMENT,
+  coupon_id INT(11) NOT NULL DEFAULT 0,
+  customer_id_sent INT(11) NOT NULL DEFAULT 0,
+  sent_firstname VARCHAR(32) DEFAULT NULL,
+  sent_lastname VARCHAR(32) DEFAULT NULL,
+  emailed_to VARCHAR(32) DEFAULT NULL,
+  date_sent DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (unique_id),
+  UNIQUE idx_coupon_id (coupon_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS coupon_gv_customer;
+CREATE TABLE coupon_gv_customer (
+  customer_id INT(5) NOT NULL DEFAULT 0,
+  amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
+  PRIMARY KEY (customer_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS coupon_gv_queue;
+CREATE TABLE coupon_gv_queue (
+  unique_id INT(5) NOT NULL AUTO_INCREMENT,
+  customer_id INT(5) NOT NULL DEFAULT 0,
+  order_id INT(5) NOT NULL DEFAULT 0,
+  amount DECIMAL(8,4) NOT NULL DEFAULT '0.0000',
+  date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  ipaddr VARCHAR(39) NOT NULL DEFAULT '',
+  release_flag CHAR(1) NOT NULL DEFAULT 'N',
+  PRIMARY KEY (unique_id),
+  KEY idx_uid (unique_id, customer_id, order_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS coupon_redeem_track;
+CREATE TABLE coupon_redeem_track (
+  unique_id INT(11) NOT NULL AUTO_INCREMENT,
+  coupon_id INT(11) NOT NULL DEFAULT 0,
+  customer_id INT(11) NOT NULL DEFAULT 0,
+  redeem_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  redeem_ip VARCHAR(39) NOT NULL DEFAULT '',
+  order_id INT(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (unique_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS coupons;
+CREATE TABLE coupons (
+  coupon_id INT(11) NOT NULL AUTO_INCREMENT,
+  coupon_type CHAR(1) NOT NULL DEFAULT 'F',
+  coupon_code VARCHAR(32) NOT NULL DEFAULT '',
+  coupon_amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
+  coupon_minimum_order DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
+  coupon_start_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  coupon_expire_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  uses_per_coupon INT(5) NOT NULL DEFAULT 1,
+  uses_per_user INT(5) NOT NULL DEFAULT 0,
+  restrict_to_products VARCHAR(255) DEFAULT NULL,
+  restrict_to_categories VARCHAR(255) DEFAULT NULL,
+  restrict_to_customers TEXT,
+  coupon_active CHAR(1) NOT NULL DEFAULT 'Y',
+  date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  date_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  PRIMARY KEY (coupon_id),
+  UNIQUE idx_coupon_code (coupon_code)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS coupons_description;
+CREATE TABLE coupons_description (
+  coupon_id INT(11) NOT NULL DEFAULT 0,
+  language_id TINYINT NOT NULL DEFAULT 1,
+  coupon_name VARCHAR(32) NOT NULL DEFAULT '',
+  coupon_description text,
+  PRIMARY KEY (coupon_id, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS currencies;
@@ -394,7 +463,8 @@ CREATE TABLE customers (
   refferers_id VARCHAR(32) DEFAULT '0' NOT NULL,
   customers_date_added DATETIME DEFAULT '0000-00-00 00:00:00',
   customers_last_modified DATETIME DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (customers_id)
+  PRIMARY KEY (customers_id),
+  KEY idx_customers_email_address (customers_email_address)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_basket;
@@ -441,7 +511,18 @@ CREATE TABLE customers_ip (
   customers_advertiser VARCHAR(30) DEFAULT NULL,
   customers_referer_url VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (customers_ip_id),
-  KEY customers_id (customers_id)
+  KEY idx_customers_id (customers_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS customers_memo;
+CREATE TABLE customers_memo (
+  memo_id INT(11) NOT NULL AUTO_INCREMENT,
+  customers_id INT(11) NOT NULL DEFAULT 0,
+  memo_date DATE NOT NULL DEFAULT '0000-00-00',
+  memo_title TEXT NOT NULL,
+  memo_text TEXT NOT NULL,
+  poster_id INT(11) NOT NULL DEFAULT 0,
+  PRIMARY KEY (memo_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_status;
@@ -468,8 +549,8 @@ CREATE TABLE customers_status (
   customers_fsk18_display INT(1) NOT NULL DEFAULT 1,
   customers_status_write_reviews INT(1) NOT NULL DEFAULT 1,
   customers_status_read_reviews INT(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (customers_status_id,language_id),
-  UNIQUE (customers_status_name, language_id)
+  PRIMARY KEY (customers_status_id, language_id),
+  UNIQUE idx_customers_status (customers_status_name, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_status_history;
@@ -481,6 +562,22 @@ CREATE TABLE customers_status_history (
   date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
   customer_notified INT(1) DEFAULT 0,
   PRIMARY KEY (customers_status_history_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS database_version;
+CREATE TABLE database_version (
+  version VARCHAR(32) NOT NULL
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS geo_zones;
+CREATE TABLE geo_zones (
+  geo_zone_id INT NOT NULL AUTO_INCREMENT,
+  geo_zone_name VARCHAR(32) NOT NULL,
+  geo_zone_description VARCHAR(255) NOT NULL,
+  geo_zone_info INT(1) DEFAULT 0,
+  last_modified DATETIME NULL,
+  date_added DATETIME NOT NULL,
+  PRIMARY KEY (geo_zone_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS languages;
@@ -495,7 +592,7 @@ CREATE TABLE languages (
   status INT(1) NOT NULL DEFAULT 1,
   status_admin INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (languages_id),
-  UNIQUE (code)
+  UNIQUE idx_code (code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS manufacturers;
@@ -533,17 +630,16 @@ CREATE TABLE module_backup (
   KEY idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS newsletters;
-CREATE TABLE newsletters (
-  newsletters_id INT NOT NULL AUTO_INCREMENT,
+DROP TABLE IF EXISTS module_newsletter;
+CREATE TABLE module_newsletter (
+  newsletter_id INT(11) NOT NULL AUTO_INCREMENT,
   title VARCHAR(255) NOT NULL,
-  content text NOT NULL,
-  module VARCHAR(255) NOT NULL,
-  date_added DATETIME NOT NULL,
-  date_sent DATETIME,
-  status INT(1),
-  locked INT(1) DEFAULT 0,
-  PRIMARY KEY (newsletters_id)
+  bc TEXT NOT NULL,
+  cc TEXT NOT NULL,
+  date DATETIME DEFAULT NULL,
+  status INT(1) NOT NULL DEFAULT 0,
+  body TEXT NOT NULL,
+  PRIMARY KEY (newsletter_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS newsletter_recipients;
@@ -560,7 +656,22 @@ CREATE TABLE newsletter_recipients (
   ip_date_added varchar(32) DEFAULT NULL,
   date_confirmed datetime NOT NULL DEFAULT '0000-00-00 00:00:00',
   ip_date_confirmed varchar(32) DEFAULT NULL,
-  PRIMARY KEY (mail_id)
+  PRIMARY KEY (mail_id),
+  KEY idx_mail_key (mail_key),
+  UNIQUE idx_customers_email_address (customers_email_address)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS newsletters;
+CREATE TABLE newsletters (
+  newsletters_id INT NOT NULL AUTO_INCREMENT,
+  title VARCHAR(255) NOT NULL,
+  content text NOT NULL,
+  module VARCHAR(255) NOT NULL,
+  date_added DATETIME NOT NULL,
+  date_sent DATETIME,
+  status INT(1),
+  locked INT(1) DEFAULT 0,
+  PRIMARY KEY (newsletters_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS newsletters_history;
@@ -670,6 +781,50 @@ CREATE TABLE orders_products (
   KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS orders_products_attributes;
+CREATE TABLE orders_products_attributes (
+  orders_products_attributes_id INT NOT NULL AUTO_INCREMENT,
+  orders_id INT NOT NULL,
+  orders_products_id INT NOT NULL,
+  products_options VARCHAR(32) NOT NULL,
+  products_options_values VARCHAR(64) NOT NULL,
+  options_values_price DECIMAL(15,4) NOT NULL,
+  price_prefix CHAR(1) NOT NULL,
+  orders_products_options_id INT(11) NOT NULL,
+  orders_products_options_values_id INT(11) NOT NULL,  
+  options_values_weight DECIMAL(15,4) NOT NULL,
+  weight_prefix CHAR(1) NOT NULL,
+  PRIMARY KEY (orders_products_attributes_id),
+  KEY idx_orders_id (orders_id),
+  KEY idx_orders_products_id (orders_products_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS orders_products_download;
+CREATE TABLE orders_products_download (
+  orders_products_download_id INT NOT NULL AUTO_INCREMENT,
+  orders_id INT NOT NULL DEFAULT 0,
+  orders_products_id INT NOT NULL DEFAULT 0,
+  orders_products_filename VARCHAR(255) NOT NULL DEFAULT '',
+  download_maxdays INT(2) NOT NULL DEFAULT 0,
+  download_count INT(2) NOT NULL DEFAULT 0,
+  download_key VARCHAR(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (orders_products_download_id),
+  KEY idx_orders_id (orders_id),
+  KEY idx_orders_products_id (orders_products_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS orders_recalculate;
+CREATE TABLE orders_recalculate (
+  orders_recalculate_id INT(11) NOT NULL AUTO_INCREMENT,
+  orders_id INT(11) NOT NULL DEFAULT 0,
+  n_price DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
+  b_price DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
+  tax DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
+  tax_rate DECIMAL(7,4) NOT NULL DEFAULT '0.0000',
+  class VARCHAR(32) NOT NULL DEFAULT '',
+  PRIMARY KEY (orders_recalculate_id)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS orders_status;
 CREATE TABLE orders_status (
   orders_status_id INT DEFAULT 0 NOT NULL,
@@ -678,17 +833,6 @@ CREATE TABLE orders_status (
   sort_order INT(11) DEFAULT 0 NOT NULL,
   PRIMARY KEY (orders_status_id, language_id),
   KEY idx_orders_status_name (orders_status_name)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS shipping_status;
-CREATE TABLE shipping_status (
-  shipping_status_id INT DEFAULT 0 NOT NULL,
-  language_id TINYINT DEFAULT 1 NOT NULL,
-  shipping_status_name VARCHAR(32) NOT NULL,
-  shipping_status_image VARCHAR(32) NOT NULL,
-  sort_order INT(11) DEFAULT 0 NOT NULL,
-  PRIMARY KEY (shipping_status_id, language_id),
-  KEY idx_shipping_status_name (shipping_status_name)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS orders_status_history;
@@ -703,34 +847,6 @@ CREATE TABLE orders_status_history (
   PRIMARY KEY (orders_status_history_id)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS orders_products_attributes;
-CREATE TABLE orders_products_attributes (
-  orders_products_attributes_id INT NOT NULL AUTO_INCREMENT,
-  orders_id INT NOT NULL,
-  orders_products_id INT NOT NULL,
-  products_options VARCHAR(32) NOT NULL,
-  products_options_values VARCHAR(64) NOT NULL,
-  options_values_price DECIMAL(15,4) NOT NULL,
-  price_prefix CHAR(1) NOT NULL,
-  orders_products_options_id INT(11) NOT NULL,
-  orders_products_options_values_id INT(11) NOT NULL,  
-  options_values_weight DECIMAL(15,4) NOT NULL,
-  weight_prefix CHAR(1) NOT NULL,
-  PRIMARY KEY (orders_products_attributes_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS orders_products_download;
-CREATE TABLE orders_products_download (
-  orders_products_download_id INT NOT NULL AUTO_INCREMENT,
-  orders_id INT NOT NULL DEFAULT 0,
-  orders_products_id INT NOT NULL DEFAULT 0,
-  orders_products_filename VARCHAR(255) NOT NULL DEFAULT '',
-  download_maxdays INT(2) NOT NULL DEFAULT 0,
-  download_count INT(2) NOT NULL DEFAULT 0,
-  download_key VARCHAR(32) NOT NULL DEFAULT '',
-  PRIMARY KEY (orders_products_download_id)
-) ENGINE=MyISAM;
-
 DROP TABLE IF EXISTS orders_total;
 CREATE TABLE orders_total (
   orders_total_id INT unsigned NOT NULL AUTO_INCREMENT,
@@ -741,19 +857,29 @@ CREATE TABLE orders_total (
   class VARCHAR(32) NOT NULL,
   sort_order INT NOT NULL,
   PRIMARY KEY (orders_total_id),
-  KEY idx_orders_total_orders_id (orders_id)
+  KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
-DROP TABLE IF EXISTS orders_recalculate;
-CREATE TABLE orders_recalculate (
-  orders_recalculate_id INT(11) NOT NULL AUTO_INCREMENT,
-  orders_id INT(11) NOT NULL DEFAULT 0,
-  n_price DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-  b_price DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-  tax DECIMAL(15,4) NOT NULL DEFAULT '0.0000',
-  tax_rate DECIMAL(7,4) NOT NULL DEFAULT '0.0000',
-  class VARCHAR(32) NOT NULL DEFAULT '',
-  PRIMARY KEY (orders_recalculate_id)
+DROP TABLE IF EXISTS orders_tracking;
+CREATE TABLE orders_tracking (
+  tracking_id INT(11) NOT NULL AUTO_INCREMENT,
+  orders_id INT(11) NOT NULL,
+  carrier_id INT(11) NOT NULL,
+  parcel_id VARCHAR(80) NOT NULL,
+  PRIMARY KEY (tracking_id),
+  KEY idx_orders_id (orders_id)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS payment_moneybookers;
+CREATE TABLE payment_moneybookers (
+  mb_TRID VARCHAR(255) NOT NULL DEFAULT '',
+  mb_ERRNO SMALLINT(3) unsigned NOT NULL DEFAULT 0,
+  mb_ERRTXT VARCHAR(255) NOT NULL DEFAULT '',
+  mb_DATE DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
+  mb_MBTID BIGINT(18) unsigned NOT NULL DEFAULT 0,
+  mb_STATUS TINYINT(1) NOT NULL DEFAULT 0,
+  mb_ORDERID INT(11) unsigned NOT NULL DEFAULT 0,
+  PRIMARY KEY (mb_TRID)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products;
@@ -791,7 +917,8 @@ CREATE TABLE products (
   products_startpage_sort INT(4) NOT NULL DEFAULT 0,
   PRIMARY KEY (products_id),
   KEY idx_products_date_added (products_date_added),
-  KEY idx_products_model (products_model)
+  KEY idx_products_model (products_model),
+  KEY idx_products_status (products_status)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_attributes;
@@ -822,6 +949,21 @@ CREATE TABLE products_attributes_download (
   PRIMARY KEY (products_attributes_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS products_content;
+CREATE TABLE products_content (
+  content_id INT(11) NOT NULL AUTO_INCREMENT,
+  products_id INT(11) NOT NULL DEFAULT 0,
+  group_ids TEXT,
+  content_name VARCHAR(32) NOT NULL DEFAULT '',
+  content_file VARCHAR(64) NOT NULL,
+  content_link TEXT NOT NULL,
+  languages_id INT(11) NOT NULL DEFAULT 0,
+  content_read INT(11) NOT NULL DEFAULT 0,
+  file_comment TEXT NOT NULL,
+  PRIMARY KEY (content_id),
+  KEY idx_products_id (products_id)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS products_description;
 CREATE TABLE products_description (
   products_id INT(11) NOT NULL,
@@ -836,8 +978,16 @@ CREATE TABLE products_description (
   products_url VARCHAR(255) DEFAULT NULL,
   products_viewed INT(5) DEFAULT 0,
   products_order_description text,
-  PRIMARY KEY (products_id,language_id),
-  KEY products_name (products_name)
+  PRIMARY KEY (products_id, language_id),
+  KEY idx_products_name (products_name)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS products_graduated_prices;
+CREATE TABLE products_graduated_prices (
+  products_id INT(11) NOT NULL DEFAULT 0,
+  quantity INT(11) NOT NULL DEFAULT 0,
+  unitprice DECIMAL(15,4) NOT NULL DEFAULT 0.0000,
+  KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_images;
@@ -864,7 +1014,7 @@ CREATE TABLE products_options (
   language_id TINYINT NOT NULL DEFAULT 1,
   products_options_name VARCHAR(32) NOT NULL DEFAULT '',
   products_options_sortorder INT(11) NOT NULL,
-  PRIMARY KEY (products_options_id,language_id)
+  PRIMARY KEY (products_options_id, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_options_values;
@@ -872,7 +1022,7 @@ CREATE TABLE products_options_values (
   products_options_values_id INT NOT NULL DEFAULT 0,
   language_id TINYINT NOT NULL DEFAULT 1,
   products_options_values_name VARCHAR(64) NOT NULL DEFAULT '',
-  PRIMARY KEY (products_options_values_id,language_id)
+  PRIMARY KEY (products_options_values_id, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_options_values_to_products_options;
@@ -880,15 +1030,8 @@ CREATE TABLE products_options_values_to_products_options (
   products_options_values_to_products_options_id INT NOT NULL AUTO_INCREMENT,
   products_options_id INT NOT NULL,
   products_options_values_id INT NOT NULL,
-  PRIMARY KEY (products_options_values_to_products_options_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS products_graduated_prices;
-CREATE TABLE products_graduated_prices (
-  products_id INT(11) NOT NULL DEFAULT 0,
-  quantity INT(11) NOT NULL DEFAULT 0,
-  unitprice DECIMAL(15,4) NOT NULL DEFAULT 0.0000,
-  KEY products_id (products_id)
+  PRIMARY KEY (products_options_values_to_products_options_id),
+  KEY idx_products_options_id (products_options_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS products_to_categories;
@@ -907,6 +1050,25 @@ CREATE TABLE products_vpe (
   PRIMARY KEY (products_vpe_id, language_id)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS products_xsell;
+CREATE TABLE products_xsell (
+  ID int(10) NOT NULL AUTO_INCREMENT,
+  products_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
+  products_xsell_grp_name_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
+  xsell_id INT(10) UNSIGNED NOT NULL DEFAULT 1,
+  sort_order INT(10) UNSIGNED NOT NULL DEFAULT 1,
+  PRIMARY KEY (ID)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS products_xsell_grp_name;
+CREATE TABLE products_xsell_grp_name (
+  products_xsell_grp_name_id INT(10) NOT NULL,
+  xsell_sort_order INT(10) NOT NULL DEFAULT 0,
+  language_id TINYINT NOT NULL DEFAULT 1,
+  groupname VARCHAR(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (products_xsell_grp_name_id, language_id)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS reviews;
 CREATE TABLE reviews (
   reviews_id INT NOT NULL AUTO_INCREMENT,
@@ -917,7 +1079,8 @@ CREATE TABLE reviews (
   date_added DATETIME,
   last_modified DATETIME,
   reviews_read INT(5) NOT NULL DEFAULT 0,
-  PRIMARY KEY (reviews_id)
+  PRIMARY KEY (reviews_id),
+  KEY idx_products_id (products_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS reviews_description;
@@ -938,13 +1101,24 @@ CREATE TABLE sessions (
   KEY idx_expiry (expiry)
 ) ENGINE=MyISAM;
 
+DROP TABLE IF EXISTS shipping_status;
+CREATE TABLE shipping_status (
+  shipping_status_id INT DEFAULT 0 NOT NULL,
+  language_id TINYINT DEFAULT 1 NOT NULL,
+  shipping_status_name VARCHAR(32) NOT NULL,
+  shipping_status_image VARCHAR(32) NOT NULL,
+  sort_order INT(11) DEFAULT 0 NOT NULL,
+  PRIMARY KEY (shipping_status_id, language_id),
+  KEY idx_shipping_status_name (shipping_status_name)
+) ENGINE=MyISAM;
+
 DROP TABLE IF EXISTS shop_configuration;
 CREATE TABLE shop_configuration (
   configuration_id INT(11) NOT NULL AUTO_INCREMENT,
   configuration_key VARCHAR(255) NOT NULL DEFAULT '',
   configuration_value TEXT NOT NULL,
   PRIMARY KEY (configuration_id),
-  KEY configuration_key (configuration_key)
+  KEY idx_configuration_key (configuration_key)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS specials;
@@ -960,7 +1134,8 @@ CREATE TABLE specials (
   date_status_change DATETIME,
   status INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (specials_id),
-  KEY idx_specials_products_id (products_id)
+  KEY idx_products_id (products_id),
+  KEY idx_status (status)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS tax_class;
@@ -983,18 +1158,8 @@ CREATE TABLE tax_rates (
   tax_description VARCHAR(255) NOT NULL,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
-  PRIMARY KEY (tax_rates_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS geo_zones;
-CREATE TABLE geo_zones (
-  geo_zone_id INT NOT NULL AUTO_INCREMENT,
-  geo_zone_name VARCHAR(32) NOT NULL,
-  geo_zone_description VARCHAR(255) NOT NULL,
-  geo_zone_info INT(1) DEFAULT 0,
-  last_modified DATETIME NULL,
-  date_added DATETIME NOT NULL,
-  PRIMARY KEY (geo_zone_id)
+  PRIMARY KEY (tax_rates_id),
+  KEY idx_tax_zone_id (tax_zone_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS whos_online;
@@ -1028,179 +1193,8 @@ CREATE TABLE zones_to_geo_zones (
  geo_zone_id INT NULL,
  last_modified DATETIME NULL,
  date_added DATETIME NOT NULL,
- PRIMARY KEY (association_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS content_manager;
-CREATE TABLE content_manager (
-  content_id INT(11) NOT NULL AUTO_INCREMENT,
-  categories_id INT(11) NOT NULL DEFAULT 0,
-  parent_id INT(11) NOT NULL DEFAULT 0,
-  group_ids TEXT,
-  languages_id INT(11) NOT NULL DEFAULT 0,
-  content_title TEXT NOT NULL,
-  content_heading TEXT NOT NULL,
-  content_text TEXT NOT NULL,
-  sort_order INT(4) NOT NULL DEFAULT 0,
-  file_flag INT(1) NOT NULL DEFAULT 0,
-  content_file VARCHAR(64) NOT NULL DEFAULT '',
-  content_status INT(1) NOT NULL DEFAULT 0,
-  content_group INT(11) NOT NULL,
-  content_delete INT(1) NOT NULL DEFAULT 1,
-  content_meta_title TEXT,
-  content_meta_description TEXT,
-  content_meta_keywords TEXT,
-  content_meta_robots VARCHAR(32) NOT NULL,
-  content_active INT(1) NOT NULL DEFAULT '1',
-  PRIMARY KEY (content_id),
-  FULLTEXT (content_meta_title,content_meta_description,content_meta_keywords)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS products_content;
-CREATE TABLE products_content (
-  content_id INT(11) NOT NULL AUTO_INCREMENT,
-  products_id INT(11) NOT NULL DEFAULT 0,
-  group_ids TEXT,
-  content_name VARCHAR(32) NOT NULL DEFAULT '',
-  content_file VARCHAR(64) NOT NULL,
-  content_link TEXT NOT NULL,
-  languages_id INT(11) NOT NULL DEFAULT 0,
-  content_read INT(11) NOT NULL DEFAULT 0,
-  file_comment TEXT NOT NULL,
-  PRIMARY KEY (content_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS module_newsletter;
-CREATE TABLE module_newsletter (
-  newsletter_id INT(11) NOT NULL AUTO_INCREMENT,
-  title VARCHAR(255) NOT NULL,
-  bc TEXT NOT NULL,
-  cc TEXT NOT NULL,
-  date DATETIME DEFAULT NULL,
-  status INT(1) NOT NULL DEFAULT 0,
-  body TEXT NOT NULL,
-  PRIMARY KEY (newsletter_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS cm_file_flags;
-CREATE TABLE cm_file_flags (
-  file_flag INT(11) NOT NULL,
-  file_flag_name VARCHAR(32) NOT NULL,
-  PRIMARY KEY (file_flag)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS payment_moneybookers;
-CREATE TABLE payment_moneybookers (
-  mb_TRID VARCHAR(255) NOT NULL DEFAULT '',
-  mb_ERRNO SMALLINT(3) unsigned NOT NULL DEFAULT 0,
-  mb_ERRTXT VARCHAR(255) NOT NULL DEFAULT '',
-  mb_DATE DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  mb_MBTID BIGINT(18) unsigned NOT NULL DEFAULT 0,
-  mb_STATUS TINYINT(1) NOT NULL DEFAULT 0,
-  mb_ORDERID INT(11) unsigned NOT NULL DEFAULT 0,
-  PRIMARY KEY (mb_TRID)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS payment_moneybookers_countries;
-CREATE TABLE payment_moneybookers_countries (
-  osc_cID INT(11) NOT NULL DEFAULT 0,
-  mb_cID CHAR(3) NOT NULL DEFAULT '',
-  PRIMARY KEY (osc_cID)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS coupon_email_track;
-CREATE TABLE coupon_email_track (
-  unique_id INT(11) NOT NULL AUTO_INCREMENT,
-  coupon_id INT(11) NOT NULL DEFAULT 0,
-  customer_id_sent INT(11) NOT NULL DEFAULT 0,
-  sent_firstname VARCHAR(32) DEFAULT NULL,
-  sent_lastname VARCHAR(32) DEFAULT NULL,
-  emailed_to VARCHAR(32) DEFAULT NULL,
-  date_sent DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (unique_id),
-  UNIQUE (coupon_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS coupon_gv_customer;
-CREATE TABLE coupon_gv_customer (
-  customer_id INT(5) NOT NULL DEFAULT 0,
-  amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
-  PRIMARY KEY (customer_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS coupon_gv_queue;
-CREATE TABLE coupon_gv_queue (
-  unique_id INT(5) NOT NULL AUTO_INCREMENT,
-  customer_id INT(5) NOT NULL DEFAULT 0,
-  order_id INT(5) NOT NULL DEFAULT 0,
-  amount DECIMAL(8,4) NOT NULL DEFAULT '0.0000',
-  date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  ipaddr VARCHAR(39) NOT NULL DEFAULT '',
-  release_flag CHAR(1) NOT NULL DEFAULT 'N',
-  PRIMARY KEY (unique_id),
-  KEY uid (unique_id,customer_id,order_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS coupon_redeem_track;
-CREATE TABLE coupon_redeem_track (
-  unique_id INT(11) NOT NULL AUTO_INCREMENT,
-  coupon_id INT(11) NOT NULL DEFAULT 0,
-  customer_id INT(11) NOT NULL DEFAULT 0,
-  redeem_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  redeem_ip VARCHAR(39) NOT NULL DEFAULT '',
-  order_id INT(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (unique_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS coupons;
-CREATE TABLE coupons (
-  coupon_id INT(11) NOT NULL AUTO_INCREMENT,
-  coupon_type CHAR(1) NOT NULL DEFAULT 'F',
-  coupon_code VARCHAR(32) NOT NULL DEFAULT '',
-  coupon_amount DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
-  coupon_minimum_order DECIMAL(8,4) NOT NULL DEFAULT 0.0000,
-  coupon_start_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  coupon_expire_date DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  uses_per_coupon INT(5) NOT NULL DEFAULT 1,
-  uses_per_user INT(5) NOT NULL DEFAULT 0,
-  restrict_to_products VARCHAR(255) DEFAULT NULL,
-  restrict_to_categories VARCHAR(255) DEFAULT NULL,
-  restrict_to_customers TEXT,
-  coupon_active CHAR(1) NOT NULL DEFAULT 'Y',
-  date_created DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  date_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (coupon_id),
-  UNIQUE (coupon_code)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS coupons_description;
-CREATE TABLE coupons_description (
-  coupon_id INT(11) NOT NULL DEFAULT 0,
-  language_id TINYINT NOT NULL DEFAULT 1,
-  coupon_name VARCHAR(32) NOT NULL DEFAULT '',
-  coupon_description text,
-  PRIMARY KEY (coupon_id, language_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS carriers;
-CREATE TABLE carriers (
-  carrier_id INT(11) NOT NULL AUTO_INCREMENT,
-  carrier_name VARCHAR(80) NOT NULL,
-  carrier_tracking_link VARCHAR(512) NOT NULL,
-  carrier_sort_order INT(11) NOT NULL,
-  carrier_date_added DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  carrier_last_modified DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00',
-  PRIMARY KEY (carrier_id)
-) ENGINE=MyISAM;
-
-DROP TABLE IF EXISTS orders_tracking;
-CREATE TABLE orders_tracking (
-  tracking_id INT(11) NOT NULL AUTO_INCREMENT,
-  order_id INT(11) NOT NULL,
-  carrier_id INT(11) NOT NULL,
-  parcel_id VARCHAR(80) NOT NULL,
-  PRIMARY KEY (tracking_id),
-  KEY order_id (order_id)
+ PRIMARY KEY (association_id),
+ KEY idx_geo_zone_id (geo_zone_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS personal_offers_by_customers_status_0;
@@ -1208,60 +1202,6 @@ DROP TABLE IF EXISTS personal_offers_by_customers_status_1;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_2;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_3;
 DROP TABLE IF EXISTS personal_offers_by_customers_status_4;
-
-# database Version
-INSERT INTO database_version(version) VALUES ('MOD_2.0.0.0');
-
-# file flag
-INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('0', 'information');
-INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('1', 'content');
-
-# carriers
-INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
-INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
-INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
-INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
-INSERT INTO carriers VALUES (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', '50', NOW(), '');
-INSERT INTO carriers VALUES (6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', '60', NOW(), '');
-INSERT INTO carriers VALUES (7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', '70', NOW(), '');
-INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', '80', NOW(), '');
-INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
-INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
-INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
-
-# shipping status
-INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);
-INSERT INTO shipping_status VALUES (1, 2, '3-4 Tage', '', 1);
-INSERT INTO shipping_status VALUES (2, 1, '1 Week', '', 2);
-INSERT INTO shipping_status VALUES (2, 2, '1 Woche', '', 2);
-INSERT INTO shipping_status VALUES (3, 1, '2 Weeks', '', 3);
-INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '', 3);
-
-# shop offline
-INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE', '');
-INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE_MSG', '<p style="text-align: center;"><span style="font-size: large;"><font face="Arial">Unser Shop ist aufgrund von Wartungsarbeiten im Moment nicht erreichbar.<br /></font><font face="Arial">Bitte besuchen Sie uns zu einem sp&auml;teren Zeitpunkt noch einmal.<br /><br /><br /><br /></font></span><font><font><a href="login_admin.php"><font color="#808080">Login</font></a></font></font><span style="font-size: large;"><font face="Arial"><br /></font></span></p>');
-
-# content manager
-INSERT INTO content_manager VALUES (1, 0, 0, '', 1, 'Shipping & Returns', 'Shipping & Returns', 'Put here your Shipping &amp; Returns information.', 0, 1, '', 1, 1, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (2, 0, 0, '', 1, 'Privacy Notice', 'Privacy Notice', 'Put here your Privacy Notice information.', 0, 1, '', 1, 2, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (3, 0, 0, '', 1, 'Conditions of Use', 'Conditions of Use', 'Conditions of Use<br />Put here your Conditions of Use information.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (4, 0, 0, '', 1, 'Imprint', 'Imprint', 'Put here your Company information.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (5, 0, 0, '', 1, 'Index', 'Welcome', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (6, 0, 0, '', 2, 'Liefer- und Versandkosten', 'Liefer- und Versandkosten', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Liefer- und Versandkosten ein.', 0, 1, '', 1, 1, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (7, 0, 0, '', 2, 'Privatsphäre und Datenschutz', 'Privatsphäre und Datenschutz', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Privatsph&auml;re und Datenschutz ein.', 0, 1, '', 1, 2, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (8, 0, 0, '', 2, 'Unsere AGB', 'Allgemeine Geschäftsbedingungen', '<strong>Allgemeine Gesch&auml;ftsbedingungen<br /></strong><br />F&uuml;gen Sie hier Ihre allgemeinen Gesch&auml;ftsbedingungen ein.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (9, 0, 0, '', 2, 'Impressum', 'Impressum', 'F&uuml;gen Sie hier Ihr Impressum ein.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (10, 0, 0, '', 2, 'Index', 'Willkommen', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (11, 0, 0, '', 1, 'Coupons', 'Coupons FAQ', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Buy Gift Vouchers/Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">If the shop provided gift vouchers or coupons, You can buy them alike all other products. As soon as You have bought and payed the coupon, the shop system will activate Your coupon. You will then see the coupon amount in Your shopping cart. Then You can send the coupon via e-mail by clicking the link "Send Coupon". </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to dispatch Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">To dispatch a coupon, please click the link "Send Coupon" in Your shopping cart. To send the coupon to the correct person, we need the following details: Surname and realname of the recipient and a valid e-mail adress of the recipient, and the desired coupon amount (You can also use only parts of Your balance). Please provide also a short message for the recipient. Please check those information again before You click the "Send Coupon" button. You can change all information at any time before clicking the "Send Coupon" button. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to use Coupons to buy products. </strong></td></tr>\r\n<tr>\r\n<td class="main">As soon as You have a balance, You can use it to pay for Your orders. During the checkout process, You can redeem Your coupon. In case Your balance is less than the value of goods You ordered, You would have to choose Your preferred method of payment for the difference amount. In case Your balance is more than the value of goods You ordered, the remaining amount of Your balance will be saved for Your next order. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to redeem Coupons. </strong></td></tr>\r\n<tr>\r\n<td class="main">In case You have received a coupun via e-mail, You can: <br />1. Click on the link provided in the e-mail. If You do not have an account in this shop already, please create a personal account. <br />2. After having added a product to Your shopping cart, You can enter Your coupon code.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Problems?</strong></td></tr>\r\n<tr>\r\n<td class="main">If You have trouble or problems in using Your coupons, please check back with us via our e-mail: you@yourdomain.com. Please describe the encountered problem as detailed as possible! We need the following information to process Your request quickly: Your user id, the coupon code, error messages the shop system returned to You, and the name of the web browser You are using (e.g. "Internet Explorer 6" or "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (12, 0, 0, '', 2, 'Gutscheine', 'Gutscheine - Fragen und Antworten', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine kaufen </strong></td></tr>\r\n<tr>\r\n<td class="main">Gutscheine k&ouml;nnen, falls sie im Shop angeboten werden, wie normale Artikel gekauft werden. Sobald Sie einen Gutschein gekauft haben und dieser nach erfolgreicher Zahlung freigeschaltet wurde, erscheint der Betrag unter Ihrem Warenkorb. Nun können Sie über den Link " Gutschein versenden " den gewünschten Betrag per E-Mail versenden.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Wie man Gutscheine versendet</strong></td></tr>\r\n<tr>\r\n<td class="main">Um einen Gutschein zu versenden, klicken Sie bitte auf den Link "Gutschein versenden" in Ihrem Einkaufskorb. Um einen Gutschein zu versenden, benötigen wir folgende Angaben von Ihnen: Vor- und Nachname des Empfängers. Eine gültige E-Mail Adresse des Empfängers. Den gewünschten Betrag (Sie können auch Teilbeträge Ihres Guthabens versenden). Eine kurze Nachricht an den Empfänger. Bitte überprüfen Sie Ihre Angaben noch einmal vor dem Versenden. Sie haben vor dem Versenden jederzeit die Möglichkeit Ihre Angaben zu korrigieren.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Mit Gutscheinen einkaufen.</strong></td></tr>\r\n<tr>\r\n<td class="main">Sobald Sie über ein Guthaben verfügen, können Sie dieses zum Bezahlen Ihrer Bestellung verwenden. Während des Bestellvorganges haben Sie die Möglichkeit Ihr Guthaben einzulösen. Falls das Guthaben unter dem Warenwert liegt müssen Sie Ihre bevorzugte Zahlungsweise für den Differenzbetrag wählen. Übersteigt Ihr Guthaben den Warenwert, steht Ihnen das Restguthaben selbstverständlich für Ihre nächste Bestellung zur Verfügung.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine verbuchen. </strong></td></tr>\r\n<tr>\r\n<td class="main">Wenn Sie einen Gutschein per E-Mail erhalten haben, können Sie den Betrag wie folgt verbuchen: <br />1. Klicken Sie auf den in der E-Mail angegebenen Link. Falls Sie noch nicht über ein persönliches Kundenkonto verfügen, haben Sie die Möglichkeit ein Konto zu eröffnen. <br />2. Nachdem Sie ein Produkt in den Warenkorb gelegt haben, können Sie dort Ihren Gutscheincode eingeben.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Falls es zu Problemen kommen sollte:</strong></td></tr>\r\n<tr>\r\n<td class="main">Falls es wider Erwarten zu Problemen mit einem Gutschein kommen sollte, kontaktieren Sie uns bitte per E-Mail: you@yourdomain.com. Bitte beschreiben Sie möglichst genau das Problem, wichtige Angaben sind unter anderem: Ihre Kundennummer, der Gutscheincode, Fehlermeldungen des Systems sowie der von Ihnen benutzte Browser (z.B. "Internet Explorer 6" oder "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (13, 0, 0, '', 2, 'Kontakt', 'Kontakt', 'Ihre Kontaktinformationen', 0, 1, '', 1, 7, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (14, 0, 0, '', 1, 'Contact', 'Contact', 'Please enter your contact information.', 0, 1, '', 1, 7, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (15, 0, 0, '', 1, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (16, 0, 0, '', 2, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (17, 0, 0, '', 1, 'Right of revocation &amp; revocation form', 'Right of revocation &amp; revocation form', '<p><strong>Right of revocation<br /></strong><br />Add your right of revocation here.</p><p><strong>Revocation form</strong><br /><br />(Complete and return this form only if you wish to withdraw from the contract.)<br /><br />To<br />Max Mustermann / Muster GmbH<br />Musterstra&szlig;e 11<br />66666 Musterstadt<br />Fax: 000-777777<br />E-Mail:info@muster.de<br /><br />[enter the name, address and if appropriate, fax number and e-mail-address of the entrepreneur by the entrepreneur]:<br /><br />I/We* hereby give notice that I/We (*) withdraw from my/our (*) contract of sale of the following goods (*) / provision of the following service (*)<br />_______________________________________________<br />_______________________________________________<br /><br />Ordered on ___________________ (*)/received on _______________________(*)<br /><br />Name of the consumer(s) ______________________________________<br />Address of the consumer(s)<br />_________________________________<br />_________________________________<br />_________________________________<br /><br />_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _____________________________________________________<br />Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; signature of the consumer(s) (only with message on paper)<br /><br />_____________________________________________________________________________________<br />(*) delete as applicable</p>', 0, 1, '', 1, 9, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (18, 0, 0, '', 2, 'Widerrufsrecht &amp; Widerrufsformular', 'Widerrufsrecht &amp; Widerrufsformular', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p><p><strong>Widerrufsformular</strong><br /><br />(Wenn Sie den Vertrag widerrufen wollen, dann f&uuml;llen Sie bitte dieses Formular aus und senden Sie es zur&uuml;ck.)<br /><br />An<br />Max Mustermann / Muster GmbH<br />Musterstra&szlig;e 11<br />66666 Musterstadt<br />Fax: 000-777777<br />E-Mail:info@muster.de<br /><br />[hier ist der Name, die Anschrift und gegebenenfalls die Telefaxnummer und E-Mail-Adresse des Unternehmers durch den Unternehmer einzuf&uuml;gen]:<br /><br />Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag &uuml;ber den Kauf der folgenden Waren (*) / die Erbringung der folgenden Dienstleistung (*)<br />_______________________________________________<br />_______________________________________________<br /><br />Bestellt am ___________________ (*)/erhalten am _______________________(*)<br /><br />Name des/der Verbraucher(s) ______________________________________<br />Anschrift des/der Verbraucher(s)<br />_________________________________<br />_________________________________<br />_________________________________<br /><br />_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _____________________________________________________<br />Datum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)<br /><br />_____________________________________________________________________________________<br />(*) Unzutreffendes streichen</p>', 0, 1, '', 1, 9, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (19, 0, 0, '', 1, 'Delivery time', 'Delivery time', 'The deadline for delivery begins when paying in advance on the day after the payment order to the remitting bank or for other payments on the day to run after the conclusion and ends with the expiry of the last day of the period. Falls on a Saturday, Sunday or a public holiday delivery nationally recognized, the last day of the period, as occurs, the next business day at the place of such a day.', 0, 1, '', 1, 10, 0, '', '', '', '', '1');
-INSERT INTO content_manager VALUES (20, 0, 0, '', 2, 'Lieferzeit', 'Lieferzeit', 'Die Frist f&uuml;r die Lieferung beginnt bei Zahlung per Vorkasse am Tag nach Erteilung des Zahlungsauftrags an das &uuml;berweisende Kreditinstitut bzw. bei anderen Zahlungsarten am Tag nach Vertragsschluss zu laufen und endet mit dem Ablauf des letzten Tages der Frist. F&auml;llt der letzte Tag der Frist auf einen Samstag, Sonntag oder einen am Lieferort staatlich anerkannten allgemeinen Feiertag, so tritt an die Stelle eines solchen Tages der n&auml;chste Werktag.', 0, 1, '', 1, 10, 0, '', '', '', '', '1');
 
 # 1 - Default, 2 - USA, 3 - Spain, 4 - Singapore, 5 - Germany , 6 - Taiwan , 7 - China
 INSERT INTO address_format VALUES (1, '$firstname $lastname$cr$streets$cr$city, $postcode$cr$statecomma$country','$city / $country');
@@ -1276,6 +1216,23 @@ INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$c
 # add entry for admin_access
 INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5);
+
+# carriers
+INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
+INSERT INTO carriers VALUES (2, 'DPD', 'https://extranet.dpd.de/cgi-bin/delistrack?pknr=$1+&typ=1&lang=$2', '20', NOW(), '');
+INSERT INTO carriers VALUES (3, 'GLS', 'https://gls-group.eu/DE/de/paketverfolgung?match=$1', '30', NOW(), '');
+INSERT INTO carriers VALUES (4, 'UPS', 'http://wwwapps.ups.com/WebTracking/track?track=yes&trackNums=$1', '40', NOW(), '');
+INSERT INTO carriers VALUES (5, 'HERMES', 'http://tracking.hlg.de/Tracking.jsp?TrackID=$1', '50', NOW(), '');
+INSERT INTO carriers VALUES (6, 'FEDEX', 'http://www.fedex.com/Tracking?action=track&tracknumbers=$1', '60', NOW(), '');
+INSERT INTO carriers VALUES (7, 'TNT', 'http://www.tnt.de/servlet/Tracking?cons=$1', '70', NOW(), '');
+INSERT INTO carriers VALUES (8, 'TRANS-O-FLEX', 'http://track.tof.de/trace/tracking.cgi?barcode=$1', '80', NOW(), '');
+INSERT INTO carriers VALUES (9, 'KUEHNE-NAGEL', 'https://knlogin.kuehne-nagel.com/apps/fls.do?subevent=search&knReference=$1', '90', NOW(), '');
+INSERT INTO carriers VALUES (10, 'ILOXX', 'http://www.iloxx.de/net/einzelversand/tracking.aspx?ix=$1', '100', NOW(), '');
+INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl?q=$1', '110', NOW(), '');
+
+# file flag
+INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('0', 'information');
+INSERT INTO cm_file_flags (file_flag, file_flag_name) VALUES ('1', 'content');
 
 # configuration_group_id 1, My Shop
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'STORE_NAME', 'modified eCommerce Shopsoftware', 1, 1, NULL, NOW(), NULL, NULL);
@@ -1721,7 +1678,29 @@ INSERT INTO configuration_group VALUES (31,'Moneybookers','Moneybookers System',
 INSERT INTO configuration_group VALUES (40,'Popup Window Configuration','Popup Window Parameters',40,1);
 INSERT INTO configuration_group VALUES (1000,'Adminarea Options','Adminarea Configuration', 1000,1);
 
-#Countries
+# content manager
+INSERT INTO content_manager VALUES (1, 0, 0, '', 1, 'Shipping & Returns', 'Shipping & Returns', 'Put here your Shipping &amp; Returns information.', 0, 1, '', 1, 1, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (2, 0, 0, '', 1, 'Privacy Notice', 'Privacy Notice', 'Put here your Privacy Notice information.', 0, 1, '', 1, 2, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (3, 0, 0, '', 1, 'Conditions of Use', 'Conditions of Use', 'Conditions of Use<br />Put here your Conditions of Use information.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (4, 0, 0, '', 1, 'Imprint', 'Imprint', 'Put here your Company information.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (5, 0, 0, '', 1, 'Index', 'Welcome', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (6, 0, 0, '', 2, 'Liefer- und Versandkosten', 'Liefer- und Versandkosten', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Liefer- und Versandkosten ein.', 0, 1, '', 1, 1, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (7, 0, 0, '', 2, 'Privatsphäre und Datenschutz', 'Privatsphäre und Datenschutz', 'F&uuml;gen Sie hier Ihre Informationen &uuml;ber Privatsph&auml;re und Datenschutz ein.', 0, 1, '', 1, 2, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (8, 0, 0, '', 2, 'Unsere AGB', 'Allgemeine Geschäftsbedingungen', '<strong>Allgemeine Gesch&auml;ftsbedingungen<br /></strong><br />F&uuml;gen Sie hier Ihre allgemeinen Gesch&auml;ftsbedingungen ein.<br /><br /><ol><li>Geltungsbereich</li><li>Vertragspartner</li><li>Angebot und Vertragsschluss</li><li>Widerrufsrecht, Widerrufsbelehrung, Widerrufsfolgen</li><li>Preise und Versandkosten</li><li>Lieferung</li><li>Zahlung</li><li>Eigentumsvorbehalt</li><li>Gew&auml;hrleistung</li></ol>Weitere Informationen', 0, 1, '', 1, 3, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (9, 0, 0, '', 2, 'Impressum', 'Impressum', 'F&uuml;gen Sie hier Ihr Impressum ein.<br /><br />DemoShop GmbH<br />Gesch&auml;ftsf&uuml;hrer: Max Muster und Fritz Beispiel<br /><br />Max Muster Stra&szlig;e 21-23<br />D-0815 Musterhausen<br />E-Mail: max.muster@muster.de<br /><br />HRB 123456<br />Amtsgericht Musterhausen<br />UStid-Nr. DE 000 111 222', 0, 1, '', 1, 4, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (10, 0, 0, '', 2, 'Index', 'Willkommen', '{$greeting}<br /><br />Dies ist die Standardinstallation der <strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong>. Alle dargestellten Produkte dienen zur Demonstration der Funktionsweise. Wenn Sie Produkte bestellen, so werden diese weder ausgeliefert, noch in Rechnung gestellt. <br /><br />Sollten Sie daran interessiert sein das Programm, welches die Grundlage f&uuml;r diesen Shop bildet, einzusetzen, so besuchen Sie bitte die Webseite der <a href="http://www.modified-shop.org" target="_blank"><u><strong><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></strong></u></a>.<br /><br />Der hier dargestellte Text kann im Adminbereich unter <b>Content Manager</b> - Eintrag Index bearbeitet werden.', 0, 1, '', 0, 5, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (11, 0, 0, '', 1, 'Coupons', 'Coupons FAQ', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Buy Gift Vouchers/Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">If the shop provided gift vouchers or coupons, You can buy them alike all other products. As soon as You have bought and payed the coupon, the shop system will activate Your coupon. You will then see the coupon amount in Your shopping cart. Then You can send the coupon via e-mail by clicking the link "Send Coupon". </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to dispatch Coupons </strong></td></tr>\r\n<tr>\r\n<td class="main">To dispatch a coupon, please click the link "Send Coupon" in Your shopping cart. To send the coupon to the correct person, we need the following details: Surname and realname of the recipient and a valid e-mail adress of the recipient, and the desired coupon amount (You can also use only parts of Your balance). Please provide also a short message for the recipient. Please check those information again before You click the "Send Coupon" button. You can change all information at any time before clicking the "Send Coupon" button. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to use Coupons to buy products. </strong></td></tr>\r\n<tr>\r\n<td class="main">As soon as You have a balance, You can use it to pay for Your orders. During the checkout process, You can redeem Your coupon. In case Your balance is less than the value of goods You ordered, You would have to choose Your preferred method of payment for the difference amount. In case Your balance is more than the value of goods You ordered, the remaining amount of Your balance will be saved for Your next order. </td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>How to redeem Coupons. </strong></td></tr>\r\n<tr>\r\n<td class="main">In case You have received a coupun via e-mail, You can: <br />1. Click on the link provided in the e-mail. If You do not have an account in this shop already, please create a personal account. <br />2. After having added a product to Your shopping cart, You can enter Your coupon code.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Problems?</strong></td></tr>\r\n<tr>\r\n<td class="main">If You have trouble or problems in using Your coupons, please check back with us via our e-mail: you@yourdomain.com. Please describe the encountered problem as detailed as possible! We need the following information to process Your request quickly: Your user id, the coupon code, error messages the shop system returned to You, and the name of the web browser You are using (e.g. "Internet Explorer 6" or "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (12, 0, 0, '', 2, 'Gutscheine', 'Gutscheine - Fragen und Antworten', '<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine kaufen </strong></td></tr>\r\n<tr>\r\n<td class="main">Gutscheine k&ouml;nnen, falls sie im Shop angeboten werden, wie normale Artikel gekauft werden. Sobald Sie einen Gutschein gekauft haben und dieser nach erfolgreicher Zahlung freigeschaltet wurde, erscheint der Betrag unter Ihrem Warenkorb. Nun können Sie über den Link " Gutschein versenden " den gewünschten Betrag per E-Mail versenden.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Wie man Gutscheine versendet</strong></td></tr>\r\n<tr>\r\n<td class="main">Um einen Gutschein zu versenden, klicken Sie bitte auf den Link "Gutschein versenden" in Ihrem Einkaufskorb. Um einen Gutschein zu versenden, benötigen wir folgende Angaben von Ihnen: Vor- und Nachname des Empfängers. Eine gültige E-Mail Adresse des Empfängers. Den gewünschten Betrag (Sie können auch Teilbeträge Ihres Guthabens versenden). Eine kurze Nachricht an den Empfänger. Bitte überprüfen Sie Ihre Angaben noch einmal vor dem Versenden. Sie haben vor dem Versenden jederzeit die Möglichkeit Ihre Angaben zu korrigieren.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Mit Gutscheinen einkaufen.</strong></td></tr>\r\n<tr>\r\n<td class="main">Sobald Sie über ein Guthaben verfügen, können Sie dieses zum Bezahlen Ihrer Bestellung verwenden. Während des Bestellvorganges haben Sie die Möglichkeit Ihr Guthaben einzulösen. Falls das Guthaben unter dem Warenwert liegt müssen Sie Ihre bevorzugte Zahlungsweise für den Differenzbetrag wählen. Übersteigt Ihr Guthaben den Warenwert, steht Ihnen das Restguthaben selbstverständlich für Ihre nächste Bestellung zur Verfügung.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Gutscheine verbuchen. </strong></td></tr>\r\n<tr>\r\n<td class="main">Wenn Sie einen Gutschein per E-Mail erhalten haben, können Sie den Betrag wie folgt verbuchen: <br />1. Klicken Sie auf den in der E-Mail angegebenen Link. Falls Sie noch nicht über ein persönliches Kundenkonto verfügen, haben Sie die Möglichkeit ein Konto zu eröffnen. <br />2. Nachdem Sie ein Produkt in den Warenkorb gelegt haben, können Sie dort Ihren Gutscheincode eingeben.</td></tr></tbody></table>\r\n<table cellSpacing="0" cellPadding="0">\r\n<tbody>\r\n<tr>\r\n<td class="main"><strong>Falls es zu Problemen kommen sollte:</strong></td></tr>\r\n<tr>\r\n<td class="main">Falls es wider Erwarten zu Problemen mit einem Gutschein kommen sollte, kontaktieren Sie uns bitte per E-Mail: you@yourdomain.com. Bitte beschreiben Sie möglichst genau das Problem, wichtige Angaben sind unter anderem: Ihre Kundennummer, der Gutscheincode, Fehlermeldungen des Systems sowie der von Ihnen benutzte Browser (z.B. "Internet Explorer 6" oder "Firefox 1.5"). </td></tr></tbody></table>', 0, 1, '', 0, 6, 1, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (13, 0, 0, '', 2, 'Kontakt', 'Kontakt', 'Ihre Kontaktinformationen', 0, 1, '', 1, 7, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (14, 0, 0, '', 1, 'Contact', 'Contact', 'Please enter your contact information.', 0, 1, '', 1, 7, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (15, 0, 0, '', 1, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (16, 0, 0, '', 2, 'Sitemap', '', '', 0, 0, 'sitemap.php', 1, 8, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (17, 0, 0, '', 1, 'Right of revocation &amp; revocation form', 'Right of revocation &amp; revocation form', '<p><strong>Right of revocation<br /></strong><br />Add your right of revocation here.</p><p><strong>Revocation form</strong><br /><br />(Complete and return this form only if you wish to withdraw from the contract.)<br /><br />To<br />Max Mustermann / Muster GmbH<br />Musterstra&szlig;e 11<br />66666 Musterstadt<br />Fax: 000-777777<br />E-Mail:info@muster.de<br /><br />[enter the name, address and if appropriate, fax number and e-mail-address of the entrepreneur by the entrepreneur]:<br /><br />I/We* hereby give notice that I/We (*) withdraw from my/our (*) contract of sale of the following goods (*) / provision of the following service (*)<br />_______________________________________________<br />_______________________________________________<br /><br />Ordered on ___________________ (*)/received on _______________________(*)<br /><br />Name of the consumer(s) ______________________________________<br />Address of the consumer(s)<br />_________________________________<br />_________________________________<br />_________________________________<br /><br />_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _____________________________________________________<br />Date&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; signature of the consumer(s) (only with message on paper)<br /><br />_____________________________________________________________________________________<br />(*) delete as applicable</p>', 0, 1, '', 1, 9, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (18, 0, 0, '', 2, 'Widerrufsrecht &amp; Widerrufsformular', 'Widerrufsrecht &amp; Widerrufsformular', '<p><strong>Widerrufsrecht<br /></strong><br />F&uuml;gen Sie hier das Widerrufsrecht ein.</p><p><strong>Widerrufsformular</strong><br /><br />(Wenn Sie den Vertrag widerrufen wollen, dann f&uuml;llen Sie bitte dieses Formular aus und senden Sie es zur&uuml;ck.)<br /><br />An<br />Max Mustermann / Muster GmbH<br />Musterstra&szlig;e 11<br />66666 Musterstadt<br />Fax: 000-777777<br />E-Mail:info@muster.de<br /><br />[hier ist der Name, die Anschrift und gegebenenfalls die Telefaxnummer und E-Mail-Adresse des Unternehmers durch den Unternehmer einzuf&uuml;gen]:<br /><br />Hiermit widerrufe(n) ich/wir (*) den von mir/uns (*) abgeschlossenen Vertrag &uuml;ber den Kauf der folgenden Waren (*) / die Erbringung der folgenden Dienstleistung (*)<br />_______________________________________________<br />_______________________________________________<br /><br />Bestellt am ___________________ (*)/erhalten am _______________________(*)<br /><br />Name des/der Verbraucher(s) ______________________________________<br />Anschrift des/der Verbraucher(s)<br />_________________________________<br />_________________________________<br />_________________________________<br /><br />_________&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; _____________________________________________________<br />Datum&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Unterschrift des/der Verbraucher(s) (nur bei Mitteilung auf Papier)<br /><br />_____________________________________________________________________________________<br />(*) Unzutreffendes streichen</p>', 0, 1, '', 1, 9, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (19, 0, 0, '', 1, 'Delivery time', 'Delivery time', 'The deadline for delivery begins when paying in advance on the day after the payment order to the remitting bank or for other payments on the day to run after the conclusion and ends with the expiry of the last day of the period. Falls on a Saturday, Sunday or a public holiday delivery nationally recognized, the last day of the period, as occurs, the next business day at the place of such a day.', 0, 1, '', 1, 10, 0, '', '', '', '', '1');
+INSERT INTO content_manager VALUES (20, 0, 0, '', 2, 'Lieferzeit', 'Lieferzeit', 'Die Frist f&uuml;r die Lieferung beginnt bei Zahlung per Vorkasse am Tag nach Erteilung des Zahlungsauftrags an das &uuml;berweisende Kreditinstitut bzw. bei anderen Zahlungsarten am Tag nach Vertragsschluss zu laufen und endet mit dem Ablauf des letzten Tages der Frist. F&auml;llt der letzte Tag der Frist auf einen Samstag, Sonntag oder einen am Lieferort staatlich anerkannten allgemeinen Feiertag, so tritt an die Stelle eines solchen Tages der n&auml;chste Werktag.', 0, 1, '', 1, 10, 0, '', '', '', '', '1');
+
+# countries
 INSERT INTO countries VALUES (1,'Afghanistan','AF','AFG',1,1,0);
 INSERT INTO countries VALUES (2,'Albania','AL','ALB',1,1,0);
 INSERT INTO countries VALUES (3,'Algeria','DZ','DZA',1,1,0);
@@ -1963,15 +1942,20 @@ INSERT INTO countries VALUES (239,'Zimbabwe','ZW','ZWE',1,1,0);
 INSERT INTO countries VALUES (240,'Serbia','RS','SRB',1,1,0);
 INSERT INTO countries VALUES (241,'Montenegro','ME','MNE',1,1,0);
 
-# DEFAULT CURRENCY
+# currencies
 INSERT INTO currencies VALUES (1,'Euro','EUR','','EUR',',','.','2','1','1.0000', NOW());
 INSERT INTO currencies VALUES (2,'United States Dollar','USD', '$', '', '.', ',', '2','0','1.2978', NOW());
 INSERT INTO currencies VALUES (3,'Schweizer Franken','CHF', 'CHF', '', '.', '', '2','0','1.2044', NOW());
 INSERT INTO currencies VALUES (4,'Great Britain Pound','GBP', '', '&pound;', '.', ',', '2','0','0.8094', NOW());
 
+# database Version
+INSERT INTO database_version(version) VALUES ('MOD_2.0.0.0');
+
+# languages
 INSERT INTO languages VALUES (1,'English','en','icon.gif','english',2,'iso-8859-15',1,1);
 INSERT INTO languages VALUES (2,'Deutsch','de','icon.gif','german',1,'iso-8859-15',1,1);
 
+# orders status
 INSERT INTO orders_status VALUES (1,1,'Pending', 1);
 INSERT INTO orders_status VALUES (1,2,'Offen', 1);
 INSERT INTO orders_status VALUES (2,1,'Processing', 2);
@@ -1980,6 +1964,18 @@ INSERT INTO orders_status VALUES (3,1,'Delivered', 3);
 INSERT INTO orders_status VALUES (3,2,'Versendet', 3);
 INSERT INTO orders_status VALUES (4,1,'Reversed', 4);
 INSERT INTO orders_status VALUES (4,2,'Storniert', 4);
+
+# shipping status
+INSERT INTO shipping_status VALUES (1, 1, '3-4 Days', '', 1);
+INSERT INTO shipping_status VALUES (1, 2, '3-4 Tage', '', 1);
+INSERT INTO shipping_status VALUES (2, 1, '1 Week', '', 2);
+INSERT INTO shipping_status VALUES (2, 2, '1 Woche', '', 2);
+INSERT INTO shipping_status VALUES (3, 1, '2 Weeks', '', 3);
+INSERT INTO shipping_status VALUES (3, 2, '2 Wochen', '', 3);
+
+# shop offline
+INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE', '');
+INSERT INTO shop_configuration (configuration_id, configuration_key, configuration_value) VALUES(NULL, 'SHOP_OFFLINE_MSG', '<p style="text-align: center;"><span style="font-size: large;"><font face="Arial">Unser Shop ist aufgrund von Wartungsarbeiten im Moment nicht erreichbar.<br /></font><font face="Arial">Bitte besuchen Sie uns zu einem sp&auml;teren Zeitpunkt noch einmal.<br /><br /><br /><br /></font></span><font><font><a href="login_admin.php"><font color="#808080">Login</font></a></font></font><span style="font-size: large;"><font face="Arial"><br /></font></span></p>');
 
 # USA
 INSERT INTO zones VALUES (1,223,'AL','Alabama');
@@ -2927,203 +2923,5 @@ INSERT INTO zones VALUES (NULL,222,'WIL','Wiltshire');
 INSERT INTO zones VALUES (NULL,222,'WOR','Worcestershire');
 INSERT INTO zones VALUES (NULL,222,'YOR','York');
 
-# Data for table payment_moneybookers_countries
-INSERT INTO payment_moneybookers_countries VALUES (2, 'ALB');
-INSERT INTO payment_moneybookers_countries VALUES (3, 'ALG');
-INSERT INTO payment_moneybookers_countries VALUES (4, 'AME');
-INSERT INTO payment_moneybookers_countries VALUES (5, 'AND');
-INSERT INTO payment_moneybookers_countries VALUES (6, 'AGL');
-INSERT INTO payment_moneybookers_countries VALUES (7, 'ANG');
-INSERT INTO payment_moneybookers_countries VALUES (9, 'ANT');
-INSERT INTO payment_moneybookers_countries VALUES (10, 'ARG');
-INSERT INTO payment_moneybookers_countries VALUES (11, 'ARM');
-INSERT INTO payment_moneybookers_countries VALUES (12, 'ARU');
-INSERT INTO payment_moneybookers_countries VALUES (13, 'AUS');
-INSERT INTO payment_moneybookers_countries VALUES (14, 'AUT');
-INSERT INTO payment_moneybookers_countries VALUES (15, 'AZE');
-INSERT INTO payment_moneybookers_countries VALUES (16, 'BMS');
-INSERT INTO payment_moneybookers_countries VALUES (17, 'BAH');
-INSERT INTO payment_moneybookers_countries VALUES (18, 'BAN');
-INSERT INTO payment_moneybookers_countries VALUES (19, 'BAR');
-INSERT INTO payment_moneybookers_countries VALUES (20, 'BLR');
-INSERT INTO payment_moneybookers_countries VALUES (21, 'BGM');
-INSERT INTO payment_moneybookers_countries VALUES (22, 'BEL');
-INSERT INTO payment_moneybookers_countries VALUES (23, 'BEN');
-INSERT INTO payment_moneybookers_countries VALUES (24, 'BER');
-INSERT INTO payment_moneybookers_countries VALUES (26, 'BOL');
-INSERT INTO payment_moneybookers_countries VALUES (27, 'BOS');
-INSERT INTO payment_moneybookers_countries VALUES (28, 'BOT');
-INSERT INTO payment_moneybookers_countries VALUES (30, 'BRA');
-INSERT INTO payment_moneybookers_countries VALUES (32, 'BRU');
-INSERT INTO payment_moneybookers_countries VALUES (33, 'BUL');
-INSERT INTO payment_moneybookers_countries VALUES (34, 'BKF');
-INSERT INTO payment_moneybookers_countries VALUES (35, 'BUR');
-INSERT INTO payment_moneybookers_countries VALUES (36, 'CAM');
-INSERT INTO payment_moneybookers_countries VALUES (37, 'CMR');
-INSERT INTO payment_moneybookers_countries VALUES (38, 'CAN');
-INSERT INTO payment_moneybookers_countries VALUES (39, 'CAP');
-INSERT INTO payment_moneybookers_countries VALUES (40, 'CAY');
-INSERT INTO payment_moneybookers_countries VALUES (41, 'CEN');
-INSERT INTO payment_moneybookers_countries VALUES (42, 'CHA');
-INSERT INTO payment_moneybookers_countries VALUES (43, 'CHL');
-INSERT INTO payment_moneybookers_countries VALUES (44, 'CHN');
-INSERT INTO payment_moneybookers_countries VALUES (47, 'COL');
-INSERT INTO payment_moneybookers_countries VALUES (49, 'CON');
-INSERT INTO payment_moneybookers_countries VALUES (51, 'COS');
-INSERT INTO payment_moneybookers_countries VALUES (52, 'COT');
-INSERT INTO payment_moneybookers_countries VALUES (53, 'CRO');
-INSERT INTO payment_moneybookers_countries VALUES (54, 'CUB');
-INSERT INTO payment_moneybookers_countries VALUES (55, 'CYP');
-INSERT INTO payment_moneybookers_countries VALUES (56, 'CZE');
-INSERT INTO payment_moneybookers_countries VALUES (57, 'DEN');
-INSERT INTO payment_moneybookers_countries VALUES (58, 'DJI');
-INSERT INTO payment_moneybookers_countries VALUES (59, 'DOM');
-INSERT INTO payment_moneybookers_countries VALUES (60, 'DRP');
-INSERT INTO payment_moneybookers_countries VALUES (62, 'ECU');
-INSERT INTO payment_moneybookers_countries VALUES (64, 'EL_');
-INSERT INTO payment_moneybookers_countries VALUES (65, 'EQU');
-INSERT INTO payment_moneybookers_countries VALUES (66, 'ERI');
-INSERT INTO payment_moneybookers_countries VALUES (67, 'EST');
-INSERT INTO payment_moneybookers_countries VALUES (68, 'ETH');
-INSERT INTO payment_moneybookers_countries VALUES (70, 'FAR');
-INSERT INTO payment_moneybookers_countries VALUES (71, 'FIJ');
-INSERT INTO payment_moneybookers_countries VALUES (72, 'FIN');
-INSERT INTO payment_moneybookers_countries VALUES (73, 'FRA');
-INSERT INTO payment_moneybookers_countries VALUES (75, 'FRE');
-INSERT INTO payment_moneybookers_countries VALUES (78, 'GAB');
-INSERT INTO payment_moneybookers_countries VALUES (79, 'GAM');
-INSERT INTO payment_moneybookers_countries VALUES (80, 'GEO');
-INSERT INTO payment_moneybookers_countries VALUES (81, 'GER');
-INSERT INTO payment_moneybookers_countries VALUES (82, 'GHA');
-INSERT INTO payment_moneybookers_countries VALUES (83, 'GIB');
-INSERT INTO payment_moneybookers_countries VALUES (84, 'GRC');
-INSERT INTO payment_moneybookers_countries VALUES (85, 'GRL');
-INSERT INTO payment_moneybookers_countries VALUES (87, 'GDL');
-INSERT INTO payment_moneybookers_countries VALUES (88, 'GUM');
-INSERT INTO payment_moneybookers_countries VALUES (89, 'GUA');
-INSERT INTO payment_moneybookers_countries VALUES (90, 'GUI');
-INSERT INTO payment_moneybookers_countries VALUES (91, 'GBS');
-INSERT INTO payment_moneybookers_countries VALUES (92, 'GUY');
-INSERT INTO payment_moneybookers_countries VALUES (93, 'HAI');
-INSERT INTO payment_moneybookers_countries VALUES (95, 'HON');
-INSERT INTO payment_moneybookers_countries VALUES (96, 'HKG');
-INSERT INTO payment_moneybookers_countries VALUES (97, 'HUN');
-INSERT INTO payment_moneybookers_countries VALUES (98, 'ICE');
-INSERT INTO payment_moneybookers_countries VALUES (99, 'IND');
-INSERT INTO payment_moneybookers_countries VALUES (101, 'IRN');
-INSERT INTO payment_moneybookers_countries VALUES (102, 'IRA');
-INSERT INTO payment_moneybookers_countries VALUES (103, 'IRE');
-INSERT INTO payment_moneybookers_countries VALUES (104, 'ISR');
-INSERT INTO payment_moneybookers_countries VALUES (105, 'ITA');
-INSERT INTO payment_moneybookers_countries VALUES (106, 'JAM');
-INSERT INTO payment_moneybookers_countries VALUES (107, 'JAP');
-INSERT INTO payment_moneybookers_countries VALUES (108, 'JOR');
-INSERT INTO payment_moneybookers_countries VALUES (109, 'KAZ');
-INSERT INTO payment_moneybookers_countries VALUES (110, 'KEN');
-INSERT INTO payment_moneybookers_countries VALUES (112, 'SKO');
-INSERT INTO payment_moneybookers_countries VALUES (113, 'KOR');
-INSERT INTO payment_moneybookers_countries VALUES (114, 'KUW');
-INSERT INTO payment_moneybookers_countries VALUES (115, 'KYR');
-INSERT INTO payment_moneybookers_countries VALUES (116, 'LAO');
-INSERT INTO payment_moneybookers_countries VALUES (117, 'LAT');
-INSERT INTO payment_moneybookers_countries VALUES (141, 'MCO');
-INSERT INTO payment_moneybookers_countries VALUES (119, 'LES');
-INSERT INTO payment_moneybookers_countries VALUES (120, 'LIB');
-INSERT INTO payment_moneybookers_countries VALUES (121, 'LBY');
-INSERT INTO payment_moneybookers_countries VALUES (122, 'LIE');
-INSERT INTO payment_moneybookers_countries VALUES (123, 'LIT');
-INSERT INTO payment_moneybookers_countries VALUES (124, 'LUX');
-INSERT INTO payment_moneybookers_countries VALUES (125, 'MAC');
-INSERT INTO payment_moneybookers_countries VALUES (126, 'F.Y');
-INSERT INTO payment_moneybookers_countries VALUES (127, 'MAD');
-INSERT INTO payment_moneybookers_countries VALUES (128, 'MLW');
-INSERT INTO payment_moneybookers_countries VALUES (129, 'MLS');
-INSERT INTO payment_moneybookers_countries VALUES (130, 'MAL');
-INSERT INTO payment_moneybookers_countries VALUES (131, 'MLI');
-INSERT INTO payment_moneybookers_countries VALUES (132, 'MLT');
-INSERT INTO payment_moneybookers_countries VALUES (134, 'MAR');
-INSERT INTO payment_moneybookers_countries VALUES (135, 'MRT');
-INSERT INTO payment_moneybookers_countries VALUES (136, 'MAU');
-INSERT INTO payment_moneybookers_countries VALUES (138, 'MEX');
-INSERT INTO payment_moneybookers_countries VALUES (140, 'MOL');
-INSERT INTO payment_moneybookers_countries VALUES (142, 'MON');
-INSERT INTO payment_moneybookers_countries VALUES (143, 'MTT');
-INSERT INTO payment_moneybookers_countries VALUES (144, 'MOR');
-INSERT INTO payment_moneybookers_countries VALUES (145, 'MOZ');
-INSERT INTO payment_moneybookers_countries VALUES (76, 'PYF');
-INSERT INTO payment_moneybookers_countries VALUES (147, 'NAM');
-INSERT INTO payment_moneybookers_countries VALUES (149, 'NEP');
-INSERT INTO payment_moneybookers_countries VALUES (150, 'NED');
-INSERT INTO payment_moneybookers_countries VALUES (151, 'NET');
-INSERT INTO payment_moneybookers_countries VALUES (152, 'CDN');
-INSERT INTO payment_moneybookers_countries VALUES (153, 'NEW');
-INSERT INTO payment_moneybookers_countries VALUES (154, 'NIC');
-INSERT INTO payment_moneybookers_countries VALUES (155, 'NIG');
-INSERT INTO payment_moneybookers_countries VALUES (69, 'FLK');
-INSERT INTO payment_moneybookers_countries VALUES (160, 'NWY');
-INSERT INTO payment_moneybookers_countries VALUES (161, 'OMA');
-INSERT INTO payment_moneybookers_countries VALUES (162, 'PAK');
-INSERT INTO payment_moneybookers_countries VALUES (164, 'PAN');
-INSERT INTO payment_moneybookers_countries VALUES (165, 'PAP');
-INSERT INTO payment_moneybookers_countries VALUES (166, 'PAR');
-INSERT INTO payment_moneybookers_countries VALUES (167, 'PER');
-INSERT INTO payment_moneybookers_countries VALUES (168, 'PHI');
-INSERT INTO payment_moneybookers_countries VALUES (170, 'POL');
-INSERT INTO payment_moneybookers_countries VALUES (171, 'POR');
-INSERT INTO payment_moneybookers_countries VALUES (172, 'PUE');
-INSERT INTO payment_moneybookers_countries VALUES (173, 'QAT');
-INSERT INTO payment_moneybookers_countries VALUES (175, 'ROM');
-INSERT INTO payment_moneybookers_countries VALUES (176, 'RUS');
-INSERT INTO payment_moneybookers_countries VALUES (177, 'RWA');
-INSERT INTO payment_moneybookers_countries VALUES (178, 'SKN');
-INSERT INTO payment_moneybookers_countries VALUES (179, 'SLU');
-INSERT INTO payment_moneybookers_countries VALUES (180, 'ST.');
-INSERT INTO payment_moneybookers_countries VALUES (181, 'WES');
-INSERT INTO payment_moneybookers_countries VALUES (182, 'SAN');
-INSERT INTO payment_moneybookers_countries VALUES (183, 'SAO');
-INSERT INTO payment_moneybookers_countries VALUES (184, 'SAU');
-INSERT INTO payment_moneybookers_countries VALUES (185, 'SEN');
-INSERT INTO payment_moneybookers_countries VALUES (186, 'SEY');
-INSERT INTO payment_moneybookers_countries VALUES (187, 'SIE');
-INSERT INTO payment_moneybookers_countries VALUES (188, 'SIN');
-INSERT INTO payment_moneybookers_countries VALUES (189, 'SLO');
-INSERT INTO payment_moneybookers_countries VALUES (190, 'SLV');
-INSERT INTO payment_moneybookers_countries VALUES (191, 'SOL');
-INSERT INTO payment_moneybookers_countries VALUES (192, 'SOM');
-INSERT INTO payment_moneybookers_countries VALUES (193, 'SOU');
-INSERT INTO payment_moneybookers_countries VALUES (195, 'SPA');
-INSERT INTO payment_moneybookers_countries VALUES (196, 'SRI');
-INSERT INTO payment_moneybookers_countries VALUES (199, 'SUD');
-INSERT INTO payment_moneybookers_countries VALUES (200, 'SUR');
-INSERT INTO payment_moneybookers_countries VALUES (202, 'SWA');
-INSERT INTO payment_moneybookers_countries VALUES (203, 'SWE');
-INSERT INTO payment_moneybookers_countries VALUES (204, 'SWI');
-INSERT INTO payment_moneybookers_countries VALUES (205, 'SYR');
-INSERT INTO payment_moneybookers_countries VALUES (206, 'TWN');
-INSERT INTO payment_moneybookers_countries VALUES (207, 'TAJ');
-INSERT INTO payment_moneybookers_countries VALUES (208, 'TAN');
-INSERT INTO payment_moneybookers_countries VALUES (209, 'THA');
-INSERT INTO payment_moneybookers_countries VALUES (210, 'TOG');
-INSERT INTO payment_moneybookers_countries VALUES (212, 'TON');
-INSERT INTO payment_moneybookers_countries VALUES (213, 'TRI');
-INSERT INTO payment_moneybookers_countries VALUES (214, 'TUN');
-INSERT INTO payment_moneybookers_countries VALUES (215, 'TUR');
-INSERT INTO payment_moneybookers_countries VALUES (216, 'TKM');
-INSERT INTO payment_moneybookers_countries VALUES (217, 'TCI');
-INSERT INTO payment_moneybookers_countries VALUES (219, 'UGA');
-INSERT INTO payment_moneybookers_countries VALUES (231, 'BRI');
-INSERT INTO payment_moneybookers_countries VALUES (221, 'UAE');
-INSERT INTO payment_moneybookers_countries VALUES (222, 'GBR');
-INSERT INTO payment_moneybookers_countries VALUES (223, 'UNI');
-INSERT INTO payment_moneybookers_countries VALUES (225, 'URU');
-INSERT INTO payment_moneybookers_countries VALUES (226, 'UZB');
-INSERT INTO payment_moneybookers_countries VALUES (227, 'VAN');
-INSERT INTO payment_moneybookers_countries VALUES (229, 'VEN');
-INSERT INTO payment_moneybookers_countries VALUES (230, 'VIE');
-INSERT INTO payment_moneybookers_countries VALUES (232, 'US_');
-INSERT INTO payment_moneybookers_countries VALUES (235, 'YEM');
-INSERT INTO payment_moneybookers_countries VALUES (236, 'YUG');
-INSERT INTO payment_moneybookers_countries VALUES (238, 'ZAM');
-INSERT INTO payment_moneybookers_countries VALUES (239, 'ZIM');
 
 # Keep an empty line at the end of this file for the installer to work properly

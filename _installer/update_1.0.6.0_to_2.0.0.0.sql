@@ -238,7 +238,7 @@ INSERT INTO carriers VALUES (11, 'LogoiX', 'http://www.logoix.com/cgi-bin/tnt.pl
 
 CREATE TABLE IF NOT EXISTS orders_tracking (
   tracking_id INT(11) NOT NULL AUTO_INCREMENT,
-  order_id INT(11) NOT NULL,
+  orders_id INT(11) NOT NULL,
   carrier_id INT(11) NOT NULL,
   parcel_id VARCHAR(80) NOT NULL,
   PRIMARY KEY (tracking_id),
@@ -272,21 +272,59 @@ ALTER TABLE shipping_status ADD sort_order INT(11) DEFAULT 0 NOT NULL;
 ALTER TABLE products_vpe ADD PRIMARY KEY (products_vpe_id, language_id);
 ALTER TABLE products_xsell_grp_name ADD PRIMARY KEY (products_xsell_grp_name_id, language_id);
 ALTER TABLE coupons DROP INDEX idx_coupon_code;
-ALTER TABLE coupons ADD UNIQUE (coupon_code);
-ALTER TABLE countries ADD UNIQUE (countries_iso_code_2);
-ALTER TABLE countries ADD UNIQUE (countries_iso_code_3);
+ALTER TABLE coupons ADD UNIQUE idx_coupon_code (coupon_code);
+ALTER TABLE countries ADD UNIQUE idx_countries_iso_code_2 (countries_iso_code_2);
+ALTER TABLE countries ADD UNIQUE idx_countries_iso_code_3 (countries_iso_code_3);
 ALTER TABLE coupon_gv_customer DROP INDEX customer_id;
 ALTER TABLE coupons_description DROP INDEX coupon_id;
 ALTER TABLE coupons_description ADD PRIMARY KEY (coupon_id, language_id);
-ALTER TABLE coupon_email_track ADD UNIQUE (coupon_id);
+ALTER TABLE coupon_email_track ADD UNIQUE idx_coupon_id (coupon_id);
 ALTER TABLE customers_status DROP INDEX idx_orders_status_name;
-ALTER TABLE customers_status ADD UNIQUE (customers_status_name, language_id);
+ALTER TABLE customers_status ADD UNIQUE idx_customers_status_name (customers_status_name, language_id);
 ALTER TABLE module_newsletter MODIFY title VARCHAR(255) NOT NULL;
 ALTER TABLE campaigns MODIFY campaigns_refID VARCHAR(64) NOT NULL;
-ALTER TABLE campaigns ADD UNIQUE (campaigns_refID);
-ALTER TABLE banners_history ADD UNIQUE (banners_id);
-ALTER TABLE languages ADD UNIQUE (code);
+ALTER TABLE campaigns ADD UNIQUE idx_campaigns_refID (campaigns_refID);
+ALTER TABLE banners_history ADD UNIQUE idx_banners_id (banners_id);
+ALTER TABLE languages ADD UNIQUE idx_code (code);
 ALTER TABLE languages DROP INDEX idx_languages_name;
+ALTER TABLE content_manager DROP INDEX content_meta_title;
+ALTER TABLE content_manager DROP INDEX content_meta_description;
+ALTER TABLE content_manager DROP INDEX content_meta_keywords;
+ALTER TABLE content_manager ADD KEY idx_content_group (content_group);
+ALTER TABLE countries DROP INDEX IDX_COUNTRIES_NAME;
+ALTER TABLE countries ADD KEY idx_countries_name (countries_name);
+ALTER TABLE customers ADD KEY idx_customers_email_address (customers_email_address);
+ALTER TABLE customers_ip DROP INDEX customers_id;
+ALTER TABLE customers_ip ADD KEY idx_customers_id (customers_id);
+ALTER TABLE newsletter_recipients ADD UNIQUE idx_customers_email_address (customers_email_address);
+ALTER TABLE newsletter_recipients ADD KEY idx_mail_key (mail_key);
+ALTER TABLE orders_products_attributes ADD KEY idx_orders_id (orders_id);
+ALTER TABLE orders_products_attributes ADD KEY idx_orders_products_id (orders_products_id);
+ALTER TABLE orders_products_download ADD KEY idx_orders_id (orders_id);
+ALTER TABLE orders_products_download ADD KEY idx_orders_products_id (orders_products_id);
+ALTER TABLE orders_total DROP INDEX idx_orders_total_orders_id;
+ALTER TABLE orders_total ADD KEY idx_orders_id (orders_id);
+ALTER TABLE products ADD KEY idx_products_status (products_status);
+ALTER TABLE products_description DROP INDEX products_name;
+ALTER TABLE products_description ADD KEY idx_products_name (products_name);
+ALTER TABLE products_graduated_prices DROP INDEX products_id;
+ALTER TABLE products_graduated_prices ADD KEY idx_products_id (products_id);
+ALTER TABLE reviews ADD KEY idx_products_id (products_id);
+ALTER TABLE shop_configuration DROP INDEX configuration_key;
+ALTER TABLE shop_configuration ADD KEY idx_configuration_key (configuration_key);
+ALTER TABLE specials DROP INDEX idx_specials_products_id;
+ALTER TABLE specials ADD KEY idx_products_id (products_id);
+ALTER TABLE specials ADD KEY idx_status (status);
+ALTER TABLE products_content ADD KEY idx_products_id (products_id);
+ALTER TABLE address_book DROP INDEX idx_address_book_customers_id;
+ALTER TABLE address_book ADD KEY idx_customers_id (customers_id);
+ALTER TABLE banktransfer DROP INDEX orders_id;
+ALTER TABLE banktransfer ADD KEY idx_orders_id (orders_id);
+ALTER TABLE campaigns_ip ADD KEY idx_campaign (campaign);
+ALTER TABLE coupon_gv_queue DROP INDEX uid;
+ALTER TABLE coupon_gv_queue ADD KEY idx_uid (unique_id, customer_id, order_id);
+ALTER TABLE tax_rates ADD KEY idx_tax_zone_id (tax_zone_id);
+ALTER TABLE zones_to_geo_zones ADD KEY idx_geo_zone_id (geo_zone_id);
 
 #Tomcraft - 2015-02-14 - add SuperMailer
 ALTER TABLE admin_access ADD supermailer INT(1) NOT NULL DEFAULT 0;
@@ -304,5 +342,10 @@ INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
   SELECT MAX(orders_status_id)+1, 1, 'Reversed' FROM orders_status;
 INSERT INTO orders_status (orders_status_id, language_id, orders_status_name)
   SELECT MAX(orders_status_id)+1, 2, 'Storniert' FROM orders_status;
+
+#GTB - 2015-02-18 - remove tables
+DROP TABLE IF EXISTS counter;
+DROP TABLE IF EXISTS counter_history;
+DROP TABLE IF EXISTS payment_moneybookers_countries;
 
 # Keep an empty line at the end of this file for the db_updater to work properly
