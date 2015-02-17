@@ -275,7 +275,6 @@ ALTER TABLE coupons DROP INDEX idx_coupon_code;
 ALTER TABLE coupons ADD UNIQUE (coupon_code);
 ALTER TABLE countries ADD UNIQUE (countries_iso_code_2);
 ALTER TABLE countries ADD UNIQUE (countries_iso_code_3);
-ALTER TABLE content_manager ADD UNIQUE (content_group, languages_id);
 ALTER TABLE coupon_gv_customer DROP INDEX customer_id;
 ALTER TABLE coupons_description DROP INDEX coupon_id;
 ALTER TABLE coupons_description ADD PRIMARY KEY (coupon_id, language_id);
