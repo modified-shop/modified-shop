@@ -545,8 +545,8 @@ define('ACTIVATE_REVERSE_CROSS_SELLING_DESC','Reverse Cross-Marketing Funktion a
 
 define('DOWNLOAD_UNALLOWED_PAYMENT_TITLE', 'Unerlaubte Download-Zahlungsmodule');
 define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>NICHT</strong> Erlaubte Zahlungsweisen f&uuml;r Downloadprodukte durch Komma getrennt. Z.B. {banktransfer,cod,invoice,moneyorder}');
-define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Min. Bestellstatus');
-define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Min. Bestellstatus, ab dem bestellte Downloads freigegeben sind.');
+define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Bestellstatus');
+define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Bestellstatus, mit dem bestellte Downloads freigegeben sind.');
 
 // Vat ID
 define('STORE_OWNER_VAT_ID_TITLE' , 'UST ID des Shopbetreibers');
