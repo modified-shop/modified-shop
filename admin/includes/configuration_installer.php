@@ -43,26 +43,6 @@ $values_group_update = array();
                            'configuration_key' => 'EXPECTED_PRODUCTS_FIELD'
                            );
   $values_update[] = array (
-                           'values' => "configuration_group_id = '7'",
-                           'configuration_key' => 'STORE_COUNTRY'
-                           );
-  $values_update[] = array (
-                           'values' => "configuration_group_id = '7'",
-                           'configuration_key' => 'STORE_ZONE'
-                           );
-  $values_update[] = array (
-                           'values' => "sort_order = '3'",
-                           'configuration_key' => 'STORE_NAME_ADDRESS'
-                           );
-  $values_update[] = array (
-                           'values' => "sort_order = '4'",
-                           'configuration_key' => 'STORE_OWNER_EMAIL_ADDRESS'
-                           );
-  $values_update[] = array (
-                           'values' => "sort_order = '5'",
-                           'configuration_key' => 'EMAIL_FROM'
-                           );
-  $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '11'",
                            'configuration_key' => 'PRICE_PRECISION'
                            );
