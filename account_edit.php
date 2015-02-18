@@ -124,6 +124,17 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		                        'customers_fax' => $fax,
 		                        'customers_last_modified' => 'now()');
 
+    if(isset($customers_status)) {
+      if ($customers_status == 0) {
+        if (DEFAULT_CUSTOMERS_STATUS_ID != 0) {
+            $customers_status = DEFAULT_CUSTOMERS_STATUS_ID;
+        } else {
+            $customers_status = 2;
+        }
+      }
+      $sql_data_array['customers_status'] = (int)$customers_status;
+    }
+
 		if (ACCOUNT_GENDER == 'true') {
 			$sql_data_array['customers_gender'] = $gender;
 		}
