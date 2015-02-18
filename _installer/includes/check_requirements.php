@@ -19,18 +19,18 @@
     if(version_compare(phpversion(), PHP_VERSION_MIN, "<")){
       $error_flag = true;
       $php_flag = true;
-      $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
+      $messageStack->add('requirement', '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.');
     }
     if(version_compare(phpversion(), PHP_VERSION_MAX, ">")){
       $error_flag = true;
       $php_flag = true;
       $continue = true;
-      $message .= '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.';
+      $messageStack->add('requirement', '<strong>'.sprintf(TEXT_ERROR_PHP_MAX,PHP_VERSION_MAX) . phpversion() . '</strong>.');
     }
   } else {
     $error_flag = true;
     $php_flag = true;
-    $message .= '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.';
+    $messageStack->add('requirement', '<strong>'. sprintf(TEXT_PHPVERSION_TOO_OLD,PHP_VERSION_MIN) . phpversion() . '</strong>.');
   }
   $status='<strong>OK</strong>';
   if ($php_flag==true)
@@ -46,7 +46,7 @@
   } else {
     $status='<strong><font color="#ff0000">'.TEXT_WARNING.'</font></strong><br />'.TEXT_CURL_NOT_SUPPORTED;
   }
-  $ok_message.='CURL VERSION ............................ '.$status.' ('.$curl_version['version'].')<br /><hr noshade />';
+  $ok_message.='CURL VERSION ............................. '.$status.' ('.$curl_version['version'].')<br /><hr noshade />';
   //EOF *************  check cURL-Support *************
   
   //BOF *************  check fsockopen *************
@@ -68,4 +68,4 @@
   } else {
     $status='<strong><font color="#ff0000">'.TEXT_ERROR.'</font></strong><br />'.TEXT_GDLIB_MISSING_GIF_SUPPORT;
   }
-  $ok_message.= TEXT_GDLIB_GIF_VERSION .' .............. '.$status.'<br /><hr noshade />';
+  $ok_message.= TEXT_GDLIB_GIF_VERSION .' ................. '.$status.'<br /><hr noshade />';

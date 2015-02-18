@@ -110,8 +110,13 @@
               <br /><br /><div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?></div><br /><br />
             </td>
           </tr>
-            <?php
-              if ($error_flag==true) {
+          <?php
+          if ($error_flag === true) {
+            if ($messageStack->size('file_permission') > 0 
+                || $messageStack->size('folder_permission') > 0 
+                || $messageStack->size('rfolder_permission') > 0
+                ) 
+            {
             ?>
             <tr>
               <td>
@@ -140,8 +145,9 @@
               </td>
             </tr>
             <?php
+            }
             // BOC flth new permission fix system
-            if ($folder_flag || $file_flag) {
+            if ($folder_flag || $file_flag || $rfolder_flag) {
               $host = isset($_POST['path']) ? $_POST['host'] : rtrim(getenv('HTTP_HOST'),'/');
               $path = isset($_POST['path']) ? $_POST['path'] : basename(DIR_FS_CATALOG).'/';
               $port = isset($_POST['port']) ? $_POST['port'] : '21';
@@ -177,10 +183,27 @@
               </tr>
               <?php
             }
+
+            if ($messageStack->size('requirement') > 0) {
+            ?>
+            <tr>
+              <td>
+                <div style="background:#ff0000; color:#ffffff; padding:10px; border:1px solid #cf0000">
+                  <?php
+                  if ($messageStack->size('requirement') > 0) {
+                    echo $messageStack->output('requirement');
+                    echo '<br/>';
+                  }
+                  ?>
+                </div>
+              </td>
+            </tr>
+            <?php
+            }
             // EOC flth new permission fix system
             ?>
           <?php } ?>
-          <?php if ($ok_message!='') { ?>
+          <?php if ($ok_message != '') { ?>
             <tr>
               <td>&nbsp;</td>
             </tr>
