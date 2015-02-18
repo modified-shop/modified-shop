@@ -437,10 +437,10 @@ class categories {
     } else {
       $this->set_product_remove_startpage_sql($products_data['products_id'], 0);
     }
-
-    if (PRICE_IS_BRUTTO == 'true' && $products_data['products_price']) {
-      $products_data['products_price'] = round(($products_data['products_price'] / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100), PRICE_PRECISION);
-    }
+    
+    $products_tax_rate = xtc_get_tax_rate($products_data['products_tax_class_id']);
+    
+    $products_data['products_price'] = $this->priceCheck($products_data['products_price'],$products_tax_rate);
 
     $customers_statuses_array = xtc_get_customers_statuses();
     $permission = array ();
@@ -574,10 +574,8 @@ class categories {
         if ($personal_price == '' || $personal_price == '0.0000') {
           $personal_price = '0.00';
         } else {
-          if (PRICE_IS_BRUTTO == 'true') {
-            $personal_price = ($personal_price / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100);
-          }
-          $personal_price = xtc_round($personal_price, PRICE_PRECISION);
+          $personal_price = $this->priceCheck($personal_price,$products_tax_rate);
+          //$personal_price = xtc_round($personal_price, PRICE_PRECISION);
         }
         // first delete all 
         xtc_db_query("DELETE FROM ".TABLE_PERSONAL_OFFERS_BY.$group_data[$col]['STATUS_ID']." WHERE products_id = '".$products_id."'");
@@ -592,9 +590,7 @@ class categories {
         for ($is=0, $ns=sizeof($products_data['products_staffel'][$group_data[$col]['STATUS_ID']]); $is<$ns; $is++) {
           if ($products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'] > 0) {
             $staffelpreis = $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['personal_offer'];
-            if (PRICE_IS_BRUTTO == 'true' && $staffelpreis!='') {
-              $staffelpreis = round(($staffelpreis / (xtc_get_tax_rate($products_data['products_tax_class_id']) + 100) * 100), PRICE_PRECISION);
-            }
+            $staffelpreis = $this->priceCheck($staffelpreis,$products_tax_rate);
             $insert_array = array ('personal_offer' => $staffelpreis,
                                    'quantity' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['quantity'],
                                    'price_id' => $products_data['products_staffel'][$group_data[$col]['STATUS_ID']][$is]['price_id'],
@@ -1198,7 +1194,16 @@ class categories {
         //todo rename image
       }
     } 
-  }  
+  } 
+
+  function priceCheck($price,$products_tax_rate) {
+      if (PRICE_IS_BRUTTO == 'true' && $price) {
+          $price = round(($price / ($products_tax_rate + 100) * 100), PRICE_PRECISION);
+      } else {
+          $price = xtc_round($price, PRICE_PRECISION);
+      }
+      return $price;
+  }
   
 }
 ?>
