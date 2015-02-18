@@ -546,8 +546,8 @@ define('QUICKLINK_ACTIVATED_DESC','Allows selection of multiple categories when 
 
 define('DOWNLOAD_UNALLOWED_PAYMENT_TITLE', 'Disallowed Download Payment Modules');
 define('DOWNLOAD_UNALLOWED_PAYMENT_DESC', '<strong>DISALLOWED</strong> payment modules for downloads. Comma separated list, e.g. {banktransfer,cod,invoice,moneyorder}');
-define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Min. Order Status');
-define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'Min. order status to allow download of files.');
+define('DOWNLOAD_MIN_ORDERS_STATUS_TITLE', 'Order Status');
+define('DOWNLOAD_MIN_ORDERS_STATUS_DESC', 'order status to allow download of files.');
 
 // Vat Check
 define('STORE_OWNER_VAT_ID_TITLE' , 'VAT Reg No of Shop Owner');
