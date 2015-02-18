@@ -204,7 +204,22 @@
       
       //Price options
       include(DIR_WS_MODULES.'group_prices.php');
-      ?>
+      
+      // customers group
+      if (GROUP_CHECK=='true') {?>
+      <div style="padding:4px;">
+        <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
+        <div class="div_box" style="margin-bottom:0;">
+          <div class="main flt-l" style="width:175px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
+          <div class="main customers-groups">
+            <?php
+            echo $catfunc->create_permission_checkboxes($category);
+            ?>
+          </div>
+          <div style="clear:both;"></div>
+        </div>      
+      </div>
+      <?php } ?>
             
       <div class="main" style="margin:20px 5px;float:right;">
         <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
@@ -294,24 +309,6 @@
           ?>
         <div style="clear:both;"></div>          
         <!-- EOF Product images //-->
-
-        <?php
-        //Customers group block
-        if (GROUP_CHECK == 'true') {
-          ?>          
-          <div class="main div_header"><?php echo BOX_CUSTOMERS_STATUS; ?></div>
-          <div class="div_box">
-            <div class="main flt-l" style="width:130px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
-            <div class="main customers-groups">
-              <?php
-              echo $catfunc->create_permission_checkboxes($product);
-              ?>
-            </div>
-            <div style="clear:both"></div>            
-          </div>
-          <?php
-        }
-        ?>
         
         <!-- BOF Save //-->
         <div style="text-align:right; margin-top:10px;">
