@@ -309,8 +309,8 @@ define('SHIPPING_BOX_PADDING_TITLE' , 'Bei gr&ouml;sseren Leerpaketen - Gewichts
 define('SHIPPING_BOX_PADDING_DESC' , 'F&uuml;r etwa 10% geben Sie 10 ein');
 define('SHOW_SHIPPING_TITLE' , 'Anezige Versandkosten');
 define('SHOW_SHIPPING_DESC' , 'Verlinkte Anzeige von "zzgl. Versandkosten"');
-define('SHIPPING_INFOS_TITLE' , 'Versandkosten ID');
-define('SHIPPING_INFOS_DESC' , 'Sprachgruppen ID der Versandkosten (Default 1) f&uuml;r die Verlinkung.');
+define('SHIPPING_INFOS_TITLE' , 'Versandkosten coID');
+define('SHIPPING_INFOS_DESC' , 'coID der Versandkosten (Default 1) f&uuml;r die Verlinkung.');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Berechnungsmethode der Default-Steuerklasse');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'keine: keine Versandkostensteuer ausweisen<br />auto proportional: Versandkostensteuer anteilig zur Bestellung ausweisen<br />auto max: Steuersatz der gr&ouml;&szlig;ten Umsatzgruppe als Versandkostensteuer ausweisen');
 
@@ -600,8 +600,8 @@ define('SEARCH_IN_MANU_TITLE','Suche in Hersteller');
 define('SEARCH_IN_MANU_DESC','Aktivieren um die Suche in den Herstellern zu erm&ouml;glichen');
 
 // changes for 3.0.4 SP2
-define('REVOCATION_ID_TITLE','Widerrufsrecht Sprachgruppe');
-define('REVOCATION_ID_DESC','Sprachgruppe des Widerrufrechts');
+define('REVOCATION_ID_TITLE','Widerrufsrecht coID');
+define('REVOCATION_ID_DESC','coID des Widerrufrechts');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Anzeige Widerrufrecht?');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Widerrufrecht auf checkout_confirmation anzeigen?');
 
@@ -874,8 +874,8 @@ define('MODULE_CAPTCHA_WIDTH_DESC', 'Angabe in Pixel f&uuml;r die Breite des Cap
 define('MODULE_CAPTCHA_HEIGHT_TITLE', 'H&ouml;he');
 define('MODULE_CAPTCHA_HEIGHT_DESC', 'Angabe in Pixel f&uuml;r die H&ouml;he des Captcha.');
 
-define('SHIPPING_STATUS_INFOS_TITLE', 'Lieferzeit Sprachgruppe');
-define('SHIPPING_STATUS_INFOS_DESC', 'Sprachgruppe f&uuml;r Lieferzeiten Hinweis');
+define('SHIPPING_STATUS_INFOS_TITLE', 'Lieferzeit coID');
+define('SHIPPING_STATUS_INFOS_DESC', 'coID f&uuml;r Lieferzeiten Hinweis');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Datum im Kurzformat anzeigen');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Datum immer im Kurzformat anzeigen: <b>01.03.2014</b> anstatt <b>Samstag, 01. M&auml;rz 2014</b><br />Empfohlen bei Darstellungsfehlern mit dem langen Datumsformat, wie falscher Sprache oder Umlautproblemem!');
