@@ -12,6 +12,11 @@ class ipl_update_order_request extends ipl_xml_request {
 	var $_update_params 	= array();
 	var $_id_update_list 	= array();
 	
+	function set_update_params($bptid, $reference) {
+		$this->_update_params['bptid'] = $bptid;
+		$this->_update_params['reference'] = $reference;
+	}
+
 	function add_id_update($articleid, $updateid) {
 		$idUpdate = array();
 		
@@ -19,15 +24,11 @@ class ipl_update_order_request extends ipl_xml_request {
 		$idUpdate['updateid'] = $updateid;
 		$this->_id_update_list[] = $idUpdate;
 	}
-	
-	function set_update_params($bptid, $reference) {
-		$this->_update_params['bptid'] = $bptid;
-		$this->_update_params['reference'] = $reference;
-	}
-	
+
 	function _send() {
 		return ipl_core_send_update_order_request(
-			$this->_ipl_request_url, 
+			$this->_ipl_request_url,
+            $this->getTraceData(),
 			$this->_default_params, 
 			$this->_update_params,
 			$this->_id_update_list
@@ -40,5 +41,3 @@ class ipl_update_order_request extends ipl_xml_request {
 		}
 	}
 }
-
-?>

@@ -56,7 +56,13 @@ class ipl_validation_request extends ipl_xml_request {
 	}
 	
 	function _send() {
-		return ipl_core_send_validation_request($this->_ipl_request_url, $this->_default_params, $this->_customer_details, $this->_shippping_details);
+		return ipl_core_send_validation_request(
+            $this->_ipl_request_url,
+            $this->getTraceData(),
+            $this->_default_params,
+            $this->_customer_details,
+            $this->_shippping_details
+        );
 	}
 	
 	function _process_response_xml($data) {
@@ -64,5 +70,3 @@ class ipl_validation_request extends ipl_xml_request {
 	}
 
 }
-
-?>

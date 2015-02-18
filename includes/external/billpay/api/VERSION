@@ -1,0 +1,218 @@
+version 1.5.18
+- added ipl_create_random helper function
+
+version 1.5.17
+- additional data from transaction credit response (preauthorize) is now available
+    - get_base_amount
+    - get_cart_amount
+    - get_surcharge
+    - get_interest
+- invoiceCreated request now returns additional data from transaction credit response
+
+version 1.5.16
+- transaction credit response is now parsed and available throu the same getters as PayLater
+
+version 1.5.15
+- added ipl_calculate_rates_request.options contains rateCount which shows length of credit in rates, not months
+- added ipl_preauthorize_request.set_rate_request third parameter to allow request with different term and rateCount.
+  Both are used to serve Transaction Credit for big orders in Switzerland
+
+version 1.5.14
+- [IPL-6631] get_customer_validation_errors returns all validation errors
+- invoice_created missing prepayment field
+
+version 1.5.13
+- edit cart content does not send empty articles
+
+version 1.5.12
+- additional fee and due plan parsing for edit cart and invoice created request
+- introducing fake paylater data to module config request
+- merging changes from php5 version to php4 version and vice versa
+
+version 1.5.11
+- implemented paylater preauth logic
+- fixed some typos
+
+version 1.5.10
+- implemented real time core customer processing
+- extended the logging possibilities by introducing the "trace" node
+
+version 1.5.9
+- added giropay support for  php4/php5
+
+version 1.5.8
+- get_billpay_bank_data
+
+version 1.5.7
+
+- partial activation implemented
+- prescore request implemented
+
+version 1.5.6
+
+- get_billpay_bank_data -> NOT FOR PRODUCTIVE USAGE!
+- prescore request implemented
+
+version 1.5.5
+
+- fraud detection implemented
+
+version 1.5.4
+
+- reference2 parameter (optional) added to preauthorize request
+
+version 1.5.3
+
+- edit cart content request implemented
+
+version 1.5.2
+
+- sample application extended -> start from index.php
+- samples according to new data validation rules
+
+version 1.5.1
+
+- do not create empty tags
+
+version 1.5.0
+
+- new parameters for b2b added
+
+version 1.4.0
+
+- added support for parsing of html/plain text payment infos
+- aggregate data in module config
+- removed TERMS_AND_CONDITION_URL var from ipl_xml_request class
+- added locale to module config, partial cancel and calculate rates
+
+version 1.3.6
+
+- support auto-capture for transaction credit
+
+version 1.3.5
+
+- bug fix: wrong order of pdf documents fixed
+
+version 1.3.4
+
+- b2b module config extension
+
+version 1.3.3
+
+- bug fix: parsing of pdf documents added
+- sample api url base corrected
+
+version 1.3.2
+
+- removed parameter 'ratecount' for request 'calculateRates'
+
+version 1.3.1
+
+- handle curl errors with curl_error
+- reference parameter re-added to preauth request (to be used for auto-capture)
+
+version 1.3.0
+
+- rebate/rebategross parameters re-added for preauthorize request
+- shippingdecrease/shippingdecreasegross parameters added
+- partial cancel for transaction credit implemented
+
+version 1.2.6
+
+- process activation_performed flag
+
+version 1.2.5
+
+- B2B implemented
+
+version 1.2.1
+
+- update of article ids implemented
+
+version 1.1.9
+
+- rebate/rebategross removed from preauth. send aggregated value in shipping/shippinggross fields from now on
+
+version 1.1.8b
+
+- use absolute path for include of ipl_xml_request in order to prevent failure due to open_basedir restriction
+- server side minimum order values implemented
+- bug fix: php4/ipl_module_config_request contained php5 specific code
+- dues are returned with invoiceCreated response
+
+version 1.1.8a
+
+- module config request extended for hire purchase
+- preauth request extended for rate payment (php4/php5)
+- calculateRates request and samples for php4/php5 added
+
+version 1.1.7
+
+- invoice parameter 'delayindays' added
+- connection timeout increased for socket and curl connections
+
+version 1.1.6
+
+- sample for update order request added
+- support for php4 added (test with PHP 4.3.3)
+- xmlParser lib added
+- core lib code extracted (-> ipl_xml_api.php)
+
+version 1.1.5
+
+- auto capture for preauth request implemented
+
+version 1.1.4
+
+- capture_request_necessary parameter for preauth request added
+- payment type parameter has no default value any more 
+
+version 1.1.3
+
+- module config extended: provide static limit per payment method
+- payment type constants added
+
+version 1.1.2
+
+- additional parameters added for module config (DARF ERST MIT API-VERSION 1.1.1 FREIGEGEBEN WERDEN)
+
+version 1.1.1
+
+- trim request url in order to avoid 404 if trailing whitespace is present
+
+version 1.1.0
+
+- new api call: update order
+
+version 1.0.0
+
+- major version increased
+- made lib elv ready. payment type and bank account added. fully backwards compatible
+
+version 0.2.3
+
+- issue with CURLOPT_FOLLOWLOCATION fixed
+
+current version 0.2.2
+
+- parameter rebategross added to interface
+
+version 0.2.1 
+
+- interface changed. rebatedescrease gross added
+- check http status code and throw exception if != 200
+- exception handling for url parsing added
+
+version: 0.2.0
+
+- use curl for http messaging (new system requirement!)
+
+version: 0.1.5
+
+- new request ipl_invoice_created_request added
+
+version: 0.1.4
+
+- new request ipl_module_config_request in order to fetch modul/shop-specific parameters such as static limit 
+
+version 0.1.3

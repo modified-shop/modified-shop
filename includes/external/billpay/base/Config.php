@@ -11,22 +11,22 @@ class Billpay_Base_Config
     /**
      * @var string default config file to load
      */
-    public static $DEFAULT_CONFIG_FILE = 'billpay_conf.php';
+    var $DEFAULT_CONFIG_FILE = 'billpay_conf.php';
 
     /**
      * @var string default separator for the key
      */
-    public static $KEY_SEPARATOR = '.';
+    var $KEY_SEPARATOR = '.';
 
     /**
      * @var array holding the loaded configuration array
      */
-    protected $config = array();
+    var $config = array();
 
     /**
      * @var array used to cache config values
      */
-    protected $configCache = array();
+    var $configCache = array();
 
     /**
      * constructor which accepts a filename as parameter
@@ -35,10 +35,10 @@ class Billpay_Base_Config
      *
      * @param null|string $configFile
      */
-    public function __construct($configFile = null)
+    function __construct($configFile = null)
     {
         if ($configFile === null) {
-            $configFile = self::$DEFAULT_CONFIG_FILE;
+            $configFile = $this->DEFAULT_CONFIG_FILE;
         }
 
         // if we have a absolute path we simply include it
@@ -62,7 +62,7 @@ class Billpay_Base_Config
      *
      * @return mixed
      */
-    public function get($key = null, $default = null)
+    function get($key = null, $default = null)
     {
         if ($key === null) {
             return $this->config;
@@ -89,10 +89,10 @@ class Billpay_Base_Config
      *
      * @return array
      */
-    protected function parseKey($key)
+    function parseKey($key)
     {
         if (is_array($key) === false) {
-            $key = explode(self::$KEY_SEPARATOR, $key);
+            $key = explode($this->KEY_SEPARATOR, $key);
         }
 
         return $key;
@@ -105,10 +105,10 @@ class Billpay_Base_Config
      *
      * @return string
      */
-    protected function buildKey($key)
+    function buildKey($key)
     {
         if (is_array($key) === true) {
-            $key = implode(self::$KEY_SEPARATOR, $key);
+            $key = implode($this->KEY_SEPARATOR, $key);
         }
         return $key;
     }
@@ -123,7 +123,7 @@ class Billpay_Base_Config
      * @return mixed
      * @throws Exception if the $key contains more segments than the config array or no entry could be found for the $key
      */
-    protected function findValueForKey($key, $strict = false)
+    function findValueForKey($key, $strict = false)
     {
         $key = $this->parseKey($key);
         $subtree = $this->config;
@@ -160,7 +160,7 @@ class Billpay_Base_Config
      *
      * @return mixed
      */
-    protected function getFromCache($key)
+    function getFromCache($key)
     {
         $key = $this->buildKey($key);
         if (isset($this->configCache[$key]) === true) {
@@ -177,7 +177,7 @@ class Billpay_Base_Config
      *
      * @return Billpay_Base_Config
      */
-    protected function setToCache($key, $value)
+    function setToCache($key, $value)
     {
         $key = $this->buildKey($key);
         $this->configCache[$key] = $value;
@@ -192,7 +192,7 @@ class Billpay_Base_Config
      *
      * @return Billpay_Base_Config
      */
-    protected function flushCache($key = null)
+    function flushCache($key = null)
     {
         $key = $this->buildKey($key);
         if ($key === null) {

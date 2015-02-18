@@ -32,6 +32,7 @@ class ipl_calculate_rates_request extends ipl_xml_request {
 	function _send() {
 		return ipl_core_send_calculate_rates_request(
 			$this->_ipl_request_url,
+            $this->getTraceData(),
 			$this->_default_params,
 			$this->_rate_params,
 			$this->_locale
@@ -42,5 +43,3 @@ class ipl_calculate_rates_request extends ipl_xml_request {
 		$this->options = $data['options'];
 	}
 }
-
-?>
