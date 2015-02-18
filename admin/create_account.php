@@ -452,7 +452,6 @@ require (DIR_WS_INCLUDES.'head.php');
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
                       <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('csID', isset($customers_cid)?$customers_cid:'', 'maxlength="32"'); ?></td>
-                      
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_FIRST_NAME; ?></td>
@@ -839,7 +838,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_PASSWORD; ?></td>
-                      <td class="dataTableConfig col-single-right" style="background:#FFCC33;">
+                      <td class="dataTableConfig col-single-right bg_notice">
                         <?php
                         if (isset($error) && $error == true) {
                           if (isset($entry_password_error) && $entry_password_error == true) {

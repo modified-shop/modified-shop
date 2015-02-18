@@ -236,8 +236,8 @@
           $lng_image = xtc_image(DIR_WS_LANGUAGES . $languages[$i]['directory'] .'/admin/images/'. $languages[$i]['image'], $languages[$i]['name']);
           $products_desc_fields = $catfunc->get_products_desc_fields($pInfo->products_id, $languages[$i]['id']);
           ?>
-          <div style="background:#000000;height:10px;"></div>
-          <div class="main" style="background:#FFCC33;padding: 3px; line-height:20px;">
+          <div class="bg_notice" style="height:5px;"></div>
+          <div class="main bg_notice" style="padding:3px; line-height:20px;">
             <?php echo $lng_image ?>&nbsp;<b><?php echo TEXT_PRODUCTS_NAME; ?>&nbsp;</b><?php echo xtc_draw_input_field('products_name[' . $languages[$i]['id'] . ']', (isset($products_name[$languages[$i]['id']]) ? stripslashes($products_name[$languages[$i]['id']]) : $products_desc_fields['products_name']),'style="width:80%" maxlength="255"'); ?>
           </div>
           <div class="main" style="padding: 3px; line-height:20px;">

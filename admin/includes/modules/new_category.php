@@ -179,17 +179,17 @@
         $lng_image = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES.$languages[$i]['directory'].'/admin/images/'.$languages[$i]['image']).'</div>';
         $categories_desc_fields = $catfunc->get_categories_desc_fields($cInfo->categories_id, $languages[$i]['id']);
         ?>
-        <table class="tableInput border0">
+        <table class="tableInput border0" style="border-spacing:0;">
           <tr>
-            <td class="main" style="width:190px;"><?php echo $lng_image.TEXT_EDIT_CATEGORIES_NAME; ?></td>
-            <td class="main"><?php echo xtc_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_name']), 'style="width:99%" maxlength="255"'); ?></td>
+            <td class="main bg_notice" style="width:190px;padding-top:10px;font-weight:bold;"><?php echo $lng_image.TEXT_EDIT_CATEGORIES_NAME; ?></td>
+            <td class="main bg_notice" style="padding-top:10px;"><?php echo xtc_draw_input_field('categories_name[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_name']), 'style="width:99%" maxlength="255"'); ?></td>
           </tr>
           <tr>
             <td class="main"><?php echo $lng_image.TEXT_EDIT_CATEGORIES_HEADING_TITLE; ?></td>
             <td class="main"><?php echo xtc_draw_input_field('categories_heading_title[' . $languages[$i]['id'] . ']', (isset($categories_name[$languages[$i]['id']]) ? stripslashes($categories_name[$languages[$i]['id']]) : $categories_desc_fields['categories_heading_title']), 'style="width:99%" maxlength="255"'); ?></td>
           </tr>
           <tr>
-            <td class="main"><?php  echo $lng_image.TEXT_EDIT_CATEGORIES_DESCRIPTION; ?></td>
+            <td class="main" style="font-weight:bold;"><?php  echo $lng_image.TEXT_EDIT_CATEGORIES_DESCRIPTION; ?></td>
             <td class="main">&nbsp;</td>
           </tr>
           <tr>

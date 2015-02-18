@@ -269,7 +269,7 @@ if (xtc_not_null($action) && !$box) {
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_modules.png'); ?></div>
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?><br /></div>
           <?php if ($set == 'export' && !xtc_not_null($action)) { ?>
-          <div style="clear:both;margin:10px 0;"><span class="main" style="border: 1px red solid; padding:5px; background: #FFD6D6;"><?php echo TEXT_MODULE_INFO; ?></span></div>
+          <div style="clear:both;margin:10px 0;"><span class="main important_info"><?php echo TEXT_MODULE_INFO; ?></span></div>
           <?php } ?>
           <table class="tableCenter">
             <tr>

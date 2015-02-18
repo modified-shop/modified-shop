@@ -28,8 +28,8 @@
               <table width="100%" border="0" cellspacing="0" cellpadding="2">
                 <?php if ($order->customer['csID']!='') { ?>
                 <tr>
-                  <td class="main" valign="top" bgcolor="#FFCC33"><b><?php echo ENTRY_CID; ?></b></td>
-                  <td class="main" bgcolor="#FFCC33"><?php echo $order->customer['csID']; ?></td>
+                  <td class="main bg_notice" valign="top"><b><?php echo ENTRY_CID; ?></b></td>
+                  <td class="main bg_notice"><?php echo $order->customer['csID']; ?></td>
                 </tr>
                 <?php } ?>
                 <tr>
@@ -64,8 +64,8 @@
                   <td class="main"><?php echo $order->customer['vat_id']; ?></td>
                 </tr>
                 <tr>
-                  <td class="main" valign="top" bgcolor="#FFCC33"><b><?php echo IP; ?></b></td>
-                  <td class="main" bgcolor="#FFCC33"><b><?php echo $order->customer['cIP']; ?></b></td>
+                  <td class="main bg_notice" valign="top"><b><?php echo IP; ?></b></td>
+                  <td class="main bg_notice"><b><?php echo $order->customer['cIP']; ?></b></td>
                 </tr>
               </table>
             </td>
@@ -74,7 +74,7 @@
                   $order->delivery['postcode'] != $order->customer['postcode'] ||
                   $order->delivery['city'] != $order->customer['city'] ||
                   $order->delivery['street_address'] != $order->customer['street_address']) {
-                $address_bgcolor = ' bgcolor="#FFCC33"';
+                $address_bgcolor = ' bgcolor="#b8d3e4"';
               }
               ?>
             <td class="main" valign="top" style="border-right: 1px solid #a3a3a3;"<?php if (isset($address_bgcolor)) echo $address_bgcolor; ?>>

@@ -339,7 +339,15 @@ empty-cells:show;
 }
 
 /* Admin security messages */
-#security_info {border: 1px solid; border-color: #ff0000; background-color:#FDAC00; padding: 5px 5px 5px 5px; font-family: Verdana, Arial, sans-serif; font-size: 12px;}
+#security_info {
+border: 1px solid; 
+border-color: #DCA7A7; 
+background-color:#F2DEDE; 
+padding: 20px; 
+font-family: Verdana, Arial, sans-serif; 
+font-size: 12px;
+clear:both;
+}
 #security_info ul {list-style-position: inside; margin-top: 0px; padding-left:20px;}
 #security_info ul li{font-weight:bold;}
 
@@ -349,7 +357,7 @@ white-space: nowrap;
 
 table.option-table{
 border: 1px solid #a3a3a3;
-min-width:800px;
+min-width:1000px;
 border-collapse:collapse;
 padding:2px; 
 }
@@ -359,7 +367,7 @@ padding:2px;
 }
 table.option-values-table{
 border: 1px solid #a3a3a3;
-min-width:800px;
+min-width:1000px;
 border-collapse:collapse; 
 padding:2px;
 }
@@ -467,13 +475,16 @@ padding: 4px;
 }
 .content-manager-width{
 max-width:1240px; 
-min-width:980px;
+min-width:1000px;
 }
 .customers-groups{
 width: 380px; 
-border: 1px solid #ff0000;
-background:#FFCC33;
+border: 1px solid #94b3c7;
+background:#b8d3e4;
 float:left;
+}
+.bg_notice{
+background:#b8d3e4;
 }
 table.collapse{
 border-collapse:collapse;
@@ -578,10 +589,11 @@ background:#f3f3f3;
 margin-bottom:15px;
 }
 .important_info{
-border: 1px red solid; 
+border: 1px solid #DCA7A7; 
 padding:5px; 
-background: #FFD6D6; 
+background: #F2DEDE; 
 margin-bottom:2px;
+clear:both;
 }
 .border0{
 border:0;

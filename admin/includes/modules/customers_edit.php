@@ -115,7 +115,7 @@
             echo ($cInfo->customers_default_address_id != $cInfo->address_book_id) ? '<tr style="display:none;">' : '<tr>';
             ?>
               <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
-              <td class="dataTableConfig col-single-right" style="background:#FFCC33;">
+              <td class="dataTableConfig col-single-right bg_notice">
                 <?php
                 echo xtc_draw_input_field('csID', $cInfo->customers_cid, 'maxlength="32"', false);
                 ?>
@@ -495,7 +495,7 @@
            </tr>
            <tr>
               <td class="dataTableConfig col-left"><?php echo ENTRY_NEW_PASSWORD; ?></td>
-              <td class="dataTableConfig col-single-right" style="background:#FFCC33;">
+              <td class="dataTableConfig col-single-right bg_notice">
               <?php
                 if ($error == true) {
                   if ($entry_password_error == true) {

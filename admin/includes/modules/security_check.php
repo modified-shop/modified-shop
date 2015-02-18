@@ -206,7 +206,6 @@ else {
 if (!empty($warnings)) {
 ?>
 <div id="security_info">
-  <div style="float: left; width: 120px;"><?php echo xtc_image(DIR_WS_ICONS.'big_warning.gif', ICON_WARNING, 106, 93); ?></div>
   <div style="float: left; width: 85%;"><?php echo implode('', $warnings) ?></div>
   <div style="clear: both"></div>
 </div>
