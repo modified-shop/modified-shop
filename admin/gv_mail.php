@@ -197,7 +197,7 @@
       ?>
       <!-- body_text //-->
       <td class="boxCenter"> 
-      <div class="mrg5" style="width:850px;">
+      <div class="mrg5" style="width:1000px;">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              

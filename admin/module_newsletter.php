@@ -264,7 +264,7 @@
       ?>
       <!-- body_text //-->
       <td class="boxCenter">
-        <div style="width:900px;margin: 0 4px;">
+        <div style="width:1000px;margin: 0 4px;">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="pageHeading"><?php echo HEADING_TITLE; ?><br /></div>
         <div class="main pdg2 flt-l">Tools</div>

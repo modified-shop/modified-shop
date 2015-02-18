@@ -96,7 +96,7 @@ if (USE_WYSIWYG == 'true') {
         <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
         <div class="main pdg2 flt-l">Configuration</div>
         <div class="clear dataTableHeadingContent"><?php echo BOX_SHOP_OFFLINE; ?></div>
-        <div valign="top" class="main pdg2">
+        <div valign="top" class="main pdg2" style="width:800px;">
           <?php 
             echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
             ?>

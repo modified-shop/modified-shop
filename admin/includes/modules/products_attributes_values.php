@@ -220,7 +220,7 @@ if (xtc_db_num_rows($products)) {
                   </form>
                 </div>
               
-                <div class="smallText pdg2 mrg5" style="width:800px;"><?php echo $value_pages;?></div>
+                <div class="smallText pdg2 mrg5" style="width:1000px;"><?php echo $value_pages;?></div>
                
                 <table class="option-values-table mrg5">
                   <tr class="dataTableHeadingRow">
