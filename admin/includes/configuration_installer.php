@@ -51,7 +51,7 @@ $values_group_update = array();
                            'configuration_key' => 'STORE_ZONE'
                            );
   $values_update[] = array (
-                           'values' => "sort_order = '4'",
+                           'values' => "sort_order = '3'",
                            'configuration_key' => 'STORE_NAME_ADDRESS'
                            );
 
