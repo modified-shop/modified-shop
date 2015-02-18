@@ -16,7 +16,7 @@
  define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Site content');
  define('HEADING_PRODUCTS_CONTENT','Products content');
- define('TABLE_HEADING_CONTENT_ID','coID');
+ define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Title');
  define('TABLE_HEADING_CONTENT_FILE','File');
  define('TABLE_HEADING_CONTENT_STATUS','Visible in box');
@@ -28,7 +28,7 @@
  define('TABLE_HEADING_CONTENT_NAME','Name/Filename');
  define('TABLE_HEADING_CONTENT_LINK','Link');
  define('TABLE_HEADING_CONTENT_HITS','Viewed');
- define('TABLE_HEADING_CONTENT_GROUP','Language Group');
+ define('TABLE_HEADING_CONTENT_GROUP','coID');
  define('TABLE_HEADING_CONTENT_SORT','Sort Order');
  define('TEXT_YES','Yes');
  define('TEXT_NO','No');
@@ -66,7 +66,7 @@
  define('TEXT_PRODUCT','Product:');
  define('TEXT_LINK','Link:');
  define('TEXT_SORT_ORDER','Sort:'); 
- define('TEXT_GROUP','Language Group:');
+ define('TEXT_GROUP','coID');
  define('TEXT_GROUP_DESC','With this ID you link togehther similar subjects from different languages.');
 
  define('TEXT_CONTENT_DESCRIPTION','With this Content Manager you can add any filetype to a product, like technical sheets, productdetails, videos. These elements will be displayed on the products detailpage.<br /><br />');
@@ -80,7 +80,7 @@
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
  
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
- define('TEXT_STATUS_ACTIVE', 'Status active'); 	 
+ define('TEXT_STATUS_ACTIVE', 'Status active:'); 	 
  define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable / disable content');
 
  ?>

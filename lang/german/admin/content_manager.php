@@ -16,7 +16,7 @@
  define('HEADING_TITLE','Content Manager');
  define('HEADING_CONTENT','Seiten Content');
  define('HEADING_PRODUCTS_CONTENT','Artikel Content');
- define('TABLE_HEADING_CONTENT_ID','coID');
+ define('TABLE_HEADING_CONTENT_ID','ID');
  define('TABLE_HEADING_CONTENT_TITLE','Titel');
  define('TABLE_HEADING_CONTENT_FILE','Datei');
  define('TABLE_HEADING_CONTENT_STATUS','In Box sichtbar');
@@ -28,7 +28,7 @@
  define('TABLE_HEADING_CONTENT_NAME','Name/Dateiname');
  define('TABLE_HEADING_CONTENT_LINK','Link');
  define('TABLE_HEADING_CONTENT_HITS','Hits');
- define('TABLE_HEADING_CONTENT_GROUP','Sprachgruppe');
+ define('TABLE_HEADING_CONTENT_GROUP','coID');
  define('TABLE_HEADING_CONTENT_SORT','Reihenfolge');
  define('TEXT_YES','Ja');
  define('TEXT_NO','Nein');
@@ -66,7 +66,7 @@
  define('TEXT_PRODUCT','Artikel:');
  define('TEXT_LINK','Link:');
  define('TEXT_SORT_ORDER','Sortierung:');
- define('TEXT_GROUP','Sprachgruppe:');
+ define('TEXT_GROUP','coID:');
  define('TEXT_GROUP_DESC','Mit dieser ID verkn&uuml;pfen sie gleiche Themen unterschiedlicher Sprachen miteinander.');
  
  define('TEXT_CONTENT_DESCRIPTION','Mit diesem Content Manager haben Sie die M&ouml;glichkeit, jeden beliebige Dateityp einem Artikel hinzuzuf&uuml;gen.<br />Z.B. Artikelbeschreibungen, Handb&uuml;cher, technische Datenbl&auml;tter, H&ouml;rproben, usw...<br />Diese Elemente werden In der Artikel-Detailansicht angezeigt.<br /><br />');
@@ -80,7 +80,7 @@
  define('TEXT_CONTENT_META_ROBOTS','Meta Robots');
  
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
- define('TEXT_STATUS_ACTIVE', 'Status aktiv'); 	 
+ define('TEXT_STATUS_ACTIVE', 'Status aktiv:'); 	 
  define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Content aktivieren/deaktivieren');
  
  ?>
