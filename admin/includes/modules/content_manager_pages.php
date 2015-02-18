@@ -213,7 +213,7 @@ if (!$action) {
     <div style="padding:5px;clear:both;">
       <table class="tableConfig borderall" style="width:99%">
         <?php
-          if ($default_content[0]['content_delete'] != '0' || $action == 'new') {
+          if ($default_content['content_delete'] != '0' || $action == 'new') {
             ?>
             <tr>
               <td class="dataTableConfig col-left" style="min-width:205px;"><?php echo TEXT_GROUP; ?></td>
