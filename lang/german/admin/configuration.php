@@ -36,9 +36,9 @@ define('EMAIL_FROM_TITLE' , 'E-Mail von');
 define('EMAIL_FROM_DESC' , 'E-Mail-Adresse, die beim Versenden (sendmail) benutzt werden soll.');
 
 define('STORE_COUNTRY_TITLE' , 'Land');
-define('STORE_COUNTRY_DESC' , 'Das Land, aus dem der Versand erfolgt <br /><br /><b>Hinweis: Bitte nicht vergessen, die Region richtig anzupassen.</b>');
+define('STORE_COUNTRY_DESC' , 'Der Standort des Online Shops <br /><br /><b>Hinweis: Bitte nicht vergessen, die Region richtig anzupassen.</b>');
 define('STORE_ZONE_TITLE' , 'Region');
-define('STORE_ZONE_DESC' , 'Die Region des Landes, aus dem der Versand erfolgt.');
+define('STORE_ZONE_DESC' , 'Die Region des Online Shops');
 
 define('EXPECTED_PRODUCTS_SORT_TITLE' , 'Reihenfolge f&uuml;r Artikelank&uuml;ndigungen');
 define('EXPECTED_PRODUCTS_SORT_DESC' , 'Das ist die Reihenfolge, wie angek&uuml;ndigte Artikel angezeigt werden.');
