@@ -484,7 +484,7 @@ background:#b8d3e4;
 float:left;
 }
 .bg_notice{
-background:#b8d3e4;
+background:#b8d3e4 !important;
 }
 table.collapse{
 border-collapse:collapse;
