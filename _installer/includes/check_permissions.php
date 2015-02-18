@@ -159,7 +159,7 @@
               foreach ($files as $file) {
                 if (!is_writeable(DIR_FS_CATALOG.$file) && $rfolder_flag != $key) {
                   $error_flag = true;
-                  $rfolder_flag = $key;
+                  $rfolder_flag = true;
                   $message_arr['rfolder_permission'][] = DIR_FS_CATALOG.$key;
                 }
               }
