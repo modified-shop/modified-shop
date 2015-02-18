@@ -252,7 +252,13 @@
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($country). "' WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($postcode). "' WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'STORE_OWNER'");
-      
+
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name) . '\n' . xtc_db_input($company) . '\n' . xtc_db_input($firstname) . ' ' . xtc_db_input($lastname) . '\n' . xtc_db_input($street_address) . '\n' . xtc_db_input($postcode) . ' ' . xtc_db_input($city) . '\n\n' . xtc_db_input($telephone) . '\n' . xtc_db_input($email_address)."' WHERE configuration_key = 'STORE_NAME_ADDRESS'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($email_address). "' WHERE configuration_key = 'META_REPLY_TO'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($company). "' WHERE configuration_key = 'META_COMPANY'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($store_name). "' WHERE configuration_key = 'META_PUBLISHER'");
+      xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($firstname) . ' ' . xtc_db_input($lastname). "' WHERE configuration_key = 'META_AUTHOR'");
+
       $multilanguage_email = 'DE::'.$email_from.'||EN::'.$email_from;
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_EMAIL_ADDRESS'");
       xtc_db_query("UPDATE " .TABLE_CONFIGURATION . " SET configuration_value='". xtc_db_input($multilanguage_email). "' WHERE configuration_key = 'CONTACT_US_REPLY_ADDRESS'");
