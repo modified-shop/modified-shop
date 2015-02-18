@@ -27,7 +27,7 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     $flash_path = '&opener=ckeditor&type=flash';
     $media_path = '&opener=ckeditor&type=flash';
 
-    $default_editor_width = '870' ; //kama 850, moono 870;
+    $default_editor_width = '\'100%\''; //kama 850, moono 870;
     $default_editor_height = '400';
 
     $sid = ''; //'&'.session_name() . '=' . session_id();
