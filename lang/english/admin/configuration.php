@@ -310,8 +310,8 @@ define('SHIPPING_BOX_PADDING_TITLE' , 'Larger packages - percentage increase');
 define('SHIPPING_BOX_PADDING_DESC' , 'For 10% enter 10');
 define('SHOW_SHIPPING_TITLE' , 'Display shipping costs');
 define('SHOW_SHIPPING_DESC' , 'Show link to shipping costs');
-define('SHIPPING_INFOS_TITLE' , 'Group ID');
-define('SHIPPING_INFOS_DESC' , 'Group ID of shipping costs content');
+define('SHIPPING_INFOS_TITLE' , 'coID');
+define('SHIPPING_INFOS_DESC' , 'coID of shipping costs content');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_TITLE' , 'Calculation method of default tax class');
 define('SHIPPING_DEFAULT_TAX_CLASS_METHOD_DESC' , 'none: do not show shipping tax<br />auto proportional: show shipping tax proportional to order<br />auto max: show shipping tax, use tax rate of biggest turnover group');
 
@@ -601,8 +601,8 @@ define('SEARCH_IN_MANU_TITLE','Search in products manufacturers');
 define('SEARCH_IN_MANU_DESC','Include products manufacturers when searching');
 
 // changes for 3.0.4 SP2
-define('REVOCATION_ID_TITLE','Revocation language group');
-define('REVOCATION_ID_DESC','Language group of revocation content');
+define('REVOCATION_ID_TITLE','Revocation coID');
+define('REVOCATION_ID_DESC','coID of revocation content');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Display right of revocation?');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?');
 
@@ -877,8 +877,8 @@ define('MODULE_CAPTCHA_WIDTH_DESC', 'Set width in px');
 define('MODULE_CAPTCHA_HEIGHT_TITLE', 'Height');
 define('MODULE_CAPTCHA_HEIGHT_DESC', 'Set height in px');
 
-define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime language group');
-define('SHIPPING_STATUS_INFOS_DESC', 'Language group for Shippingtime');
+define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime coID');
+define('SHIPPING_STATUS_INFOS_DESC', 'coID for Shippingtime');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
