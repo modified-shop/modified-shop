@@ -106,8 +106,8 @@ function xtc_wysiwyg($type, $lang, $langID = '',$addonType='')
     switch($type) {
         // WYSIWYG editor content manager textarea named cont
         case 'content_manager':
-            $editorName = 'cont';
-            $default_editor_height = 400;   
+            $editorName = 'content_text['.$addonType.']['.$langID.']';
+            $default_editor_height = 400;
             break;
             
         // WYSIWYG editor content manager products content section textarea named file_comment

@@ -34,127 +34,126 @@
   $g_coID = (isset($_GET['coID']) ? (int)$_GET['coID'] : '');
   $languages = xtc_get_languages();
 
-  if ($special=='delete') {
-    xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER." where content_id='".$g_coID."'");
-    xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,$setparam));
-  } // if get special
 
-  if ($special=='delete_product') {
+  if ($special == 'delete') {
+    xtc_db_query("DELETE FROM ".TABLE_CONTENT_MANAGER." where content_group='".$g_coID."'");
+    xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,$setparam));
+  }
+
+  if ($special == 'delete_product') {
     xtc_db_query("DELETE FROM ".TABLE_PRODUCTS_CONTENT." where content_id='".$g_coID."'");
     if (isset($_GET['cPath'])) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID')) . 'action='.$_GET['last_action']));
     } else {
       xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,'pID='.(int)$_GET['pID'].$setparam));
     }
-  } // if get special
+  }
   
   if (empty($action) && isset($_GET['cPath'])) {
     xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('special', 'last_action', 'action', 'coID')) . 'action='.$_GET['last_action']));
   }
 
-  if ($id=='update' || $id=='insert') {
-    // set allowed c.groups
-    $group_ids='';
-    if(isset($_POST['groups'])) foreach($_POST['groups'] as $b){
-      $group_ids .= 'c_'.$b."_group ,";
-    }
-    $customers_statuses_array=xtc_get_customers_statuses();
-    if (strstr($group_ids,'c_all_group')) {
-      $group_ids='c_all_group,';
-      for ($i=0;$n=sizeof($customers_statuses_array),$i<$n;$i++) {
-        $group_ids .='c_'.$customers_statuses_array[$i]['id'].'_group,';
+  if ($id == 'update' || $id == 'insert') {    
+    foreach ($_POST as $key => $value) {
+      if (is_array($value)) {
+        $$key = array_map('xtc_db_prepare_input', $value);
+      } else {
+        $$key = xtc_db_prepare_input($value);
       }
     }
 
-    $content_title=xtc_db_prepare_input($_POST['cont_title']);
-    $content_header=xtc_db_prepare_input($_POST['cont_heading']);
-    $content_text=xtc_db_prepare_input($_POST['cont']);
-    $coID=xtc_db_prepare_input($_POST['coID']);
-    $upload_file=xtc_db_prepare_input($_POST['file_upload']);
-    $content_status=xtc_db_prepare_input($_POST['status']);
-    $content_language=xtc_db_prepare_input($_POST['language']);
-    $select_file=xtc_db_prepare_input($_POST['select_file']);
-    $file_flag=xtc_db_prepare_input($_POST['file_flag']);
-    $parent_check=xtc_db_prepare_input($_POST['parent_check']);
-    $parent_id=xtc_db_prepare_input($_POST['parent']);
-    $content_meta_robots = implode(', ', is_array($_POST['cont_meta_robots']) ? array_map('xtc_db_prepare_input', $_POST['cont_meta_robots']) : array());
-    $content_active=xtc_db_prepare_input($_POST['active']);
-        
-    $content_query = xtc_db_query("SELECT MAX(content_group) AS content_group FROM ".TABLE_CONTENT_MANAGER."");
-    $content_data = xtc_db_fetch_row($content_query);
-    if ($_POST['content_group'] == '0' || $_POST['content_group'] == '') {
-      $group_id = $content_data[0] + 1;
-    } else {
-      $group_id = xtc_db_prepare_input($_POST['content_group']);
+    $content_meta_robots = implode(', ', ((isset($content_meta_robots) && is_array($content_meta_robots)) ? $content_meta_robots : array()));    
+    if ($parent_check == 'yes') {                                     
+      $parent_query = xtc_db_query("SELECT c2.content_id,
+                                           c2.languages_id
+                                      FROM ".TABLE_CONTENT_MANAGER." c1
+                                      JOIN ".TABLE_CONTENT_MANAGER." c2
+                                           ON c1.content_group = c2.content_group
+                                     WHERE c1.content_id = '".(int)$parent_id."'");
+      $parent_id = array();
+      while ($parent = xtc_db_fetch_array($parent_query)) {
+        $parent_id[$parent['languages_id']] = $parent['content_id'];
+      }
     }
 
-    $group_ids = $group_ids;
-    $sort_order=xtc_db_prepare_input($_POST['sort_order']);
-    $content_meta_title = xtc_db_prepare_input($_POST['cont_meta_title']);
-    $content_meta_description = xtc_db_prepare_input($_POST['cont_meta_description']);
-    $content_meta_keywords = xtc_db_prepare_input($_POST['cont_meta_keywords']);
+    if ($content_group == '0' || $content_group == '') {
+      $content_query = xtc_db_query("SELECT MAX(content_group) AS content_group FROM ".TABLE_CONTENT_MANAGER);
+      $content_data = xtc_db_fetch_row($content_query);
+      $content_group = $content_data[0] + 1;
+    }
 
-    for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-      if ($languages[$i]['code']==$content_language) {
-       $content_language=$languages[$i]['id'];
-      }
-    } // for
-
-    $error=false; // reset error flag
-    if (strlen($content_title) < 1) {
-      $error = true;
-      $messageStack->add(ERROR_TITLE,'error');
-    }  // if
-
-    $content_status = $content_status == 'yes' ? 1 : 0;
-    $content_active = $content_active == 'yes' ? 1 : 0;
-    
-    $parent_id = $parent_check=='yes' ? $parent_id: '0';
-
-    if ($error == false) {
-      // file upload
-      if ($select_file!='default') {
-        $content_file_name=$select_file;
-      }
-      $accepted_file_upload_files_extensions = array("htm","html","txt");
-      $accepted_file_upload_files_mime_types = array("text/html","text/html","text/plain");
-      if ($content_file = xtc_try_upload('file_upload', DIR_FS_CATALOG.'media/content/','644',$accepted_file_upload_files_extensions,$accepted_file_upload_files_mime_types)) {
-        $content_file_name=$content_file->filename;
-      }
-
-      // update data in table
-      $sql_data_array = array(
-                            'languages_id' => $content_language,
-                            'content_title' => $content_title,
-                            'content_heading' => $content_header,
-                            'content_text' => $content_text,
-                            'content_file' => $content_file_name,
-                            'content_status' => $content_status,
-                            'parent_id' => $parent_id,
-                            'group_ids' => $group_ids,
-                            'content_group' => $group_id,
+    $sql_data_array = array('content_group' => (int)$content_group,
                             'sort_order' => $sort_order,
                             'file_flag' => $file_flag,
-                            'content_meta_title' => $content_meta_title,
-                            'content_meta_description' => $content_meta_description,
-                            'content_meta_keywords' => $content_meta_keywords,
                             'content_meta_robots' => $content_meta_robots,
-                            'content_active' => $content_active
                             );
-      if ($id=='update') {
-        xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array, 'update', "content_id = '" . $coID . "'");
-      } else {
-        xtc_db_perform(TABLE_CONTENT_MANAGER, $sql_data_array);
-        $coID = xtc_db_insert_id();
-      } // if get id
-      if (isset($_POST['page_update'])) {
-        $setparam = 'action=edit&coID='.$coID;
-      }
-      xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER,$setparam));
-    } // if error
-  } // if
 
-  if ($id=='update_product' || $id=='insert_product') {
+    $error = false;
+    for ($i=0; $i<$content_count; $i++) {
+      for ($l=0, $ln=count($languages); $l<$ln; $l++) {
+        if ($select_file[$i][$languages[$l]['id']] != 'default') {
+          $content_file_name = $select_file[$i][$languages[$l]['id']];
+        }
+        $accepted_file_upload_files_extensions = array("htm","html","txt");
+        $accepted_file_upload_files_mime_types = array("text/html","text/html","text/plain");
+        if ($content_file = xtc_try_upload('file_upload_'.$languages[$l]['id'], DIR_FS_CATALOG.'media/content/', '644', $accepted_file_upload_files_extensions, $accepted_file_upload_files_mime_types)) {
+          $content_file_name = $content_file->filename;
+        }
+
+        // set allowed c.groups
+        $group_ids = '';
+        if (isset($groups[$i][$languages[$l]['id']])) {
+          foreach($groups[$i][$languages[$l]['id']] as $b) {
+            $group_ids .= 'c_'.$b."_group,";
+          }
+        }
+        $customers_statuses_array = xtc_get_customers_statuses();
+        if (strstr($group_ids,'c_all_group')) {
+          $group_ids = 'c_all_group,';
+          for ($g=0, $x=count($customers_statuses_array); $g<$x; $g++) {
+            $group_ids .= 'c_'.$customers_statuses_array[$g]['id'].'_group,';
+          }
+        }
+
+        $sql_data_lang_array = array('content_status' => (int)$content_status[$i][$languages[$l]['id']],
+                                     'content_active' => (int)$content_active[$i][$languages[$l]['id']],
+                                     'languages_id' => $languages[$l]['id'],
+                                     'parent_id' => $parent_id[$languages[$l]['id']],
+                                     'group_ids' => $group_ids,
+                                     'content_title' => $content_title[$i][$languages[$l]['id']],
+                                     'content_heading' => $content_heading[$i][$languages[$l]['id']],
+                                     'content_text' => $content_text[$i][$languages[$l]['id']],
+                                     'content_meta_title' => $content_meta_title[$i][$languages[$l]['id']],
+                                     'content_meta_description' => $content_meta_description[$i][$languages[$l]['id']],
+                                     'content_meta_keywords' => $content_meta_keywords[$i][$languages[$l]['id']],
+                                     'content_file' => $content_file_name
+                                     );
+        
+        if (strlen($content_title[$i][$languages[$l]['id']]) < 1) {
+          $error = true;
+          $messageStack->add_session(strtoupper($languages[$i]['name']).': '.ERROR_TITLE, 'error');
+        }
+      
+        if ($error === false) {
+          if ($id == 'update' && $content_id[$i][$languages[$l]['id']] > 0) {
+            xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array), 'update', "content_id = '".$content_id[$i][$languages[$l]['id']]."'");
+          } else {
+            xtc_db_perform(TABLE_CONTENT_MANAGER, array_merge($sql_data_array, $sql_data_lang_array));
+          }
+        }
+      }
+    }
+
+    if (isset($page_update)) {
+      $setparam = 'action=edit&coID='.$content_group;
+    }
+    if ($error === true) {
+      $setparam = 'action=edit&coID='.(($g_coID != '') ? $g_coID : $content_group);
+    }
+    xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, $setparam));
+  }
+
+  if ($id == 'update_product' || $id == 'insert_product') {
     // set allowed c.groups
     $group_ids='';
     if(isset($_POST['groups'])) foreach($_POST['groups'] as $b){
@@ -259,8 +258,7 @@
     $contents_query = xtc_db_query("SELECT parent_id                              
                                       FROM " . TABLE_CONTENT_MANAGER . "
                                      WHERE parent_id = '" . (int) $content_id . "'
-                                       AND languages_id = '" . (int)$languages_id . "'
-                                   ");
+                                       AND languages_id = '" . (int)$languages_id . "'");
     if (xtc_db_num_rows($contents_query) > 0) {
       return true;
     }
@@ -272,12 +270,10 @@
   if (USE_WYSIWYG=='true') {
     $query=xtc_db_query("SELECT code FROM ". TABLE_LANGUAGES ." WHERE languages_id='".$_SESSION['languages_id']."'");
     $data=xtc_db_fetch_array($query);
-    if ($action =='new_products_content') {
-      echo xtc_wysiwyg('products_content',$data['code']);
-    } elseif ($action =='edit_products_content') {
-      echo xtc_wysiwyg('products_content',$data['code']);
-    } elseif ($action != '') {
-      echo xtc_wysiwyg('content_manager',$data['code']);
+    if ($action =='new_products_content' || $action =='edit_products_content') {
+      for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
+        echo xtc_wysiwyg('products_content', $data['code'], $languages[$i]['id']);
+      }
     }
   }
 ?>
