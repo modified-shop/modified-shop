@@ -34,6 +34,27 @@ $values_group_update = array();
   //$values[] = "(NULL, 'IBN_BILLNR', '1', '1', '99', NULL, NOW(), NULL, NULL);"; //modified 1.07
   //$values[] = "(NULL, 'IBN_BILLNR_FORMAT', '{n}-{d}-{m}-{y}', '1', '99', NULL, NOW(), NULL, NULL);"; //modified 1.07
 
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '8'",
+                           'configuration_key' => 'EXPECTED_PRODUCTS_SORT'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '8'",
+                           'configuration_key' => 'EXPECTED_PRODUCTS_FIELD'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '7'",
+                           'configuration_key' => 'STORE_COUNTRY'
+                           );
+  $values_update[] = array (
+                           'values' => "configuration_group_id = '7'",
+                           'configuration_key' => 'STORE_ZONE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '4'",
+                           'configuration_key' => 'STORE_NAME_ADDRESS'
+                           );
+
 //configuration_group_id 2 --- "Minimum Werte"
 
 //configuration_group_id 3 --- "Maximalwerte"
