@@ -307,7 +307,7 @@ define('SHIPPING_BOX_WEIGHT_TITLE' , 'Paketleergewicht');
 define('SHIPPING_BOX_WEIGHT_DESC' , 'Wie hoch ist das Gewicht eines durchschnittlichen kleinen bis mittleren Leerpaketes?');
 define('SHIPPING_BOX_PADDING_TITLE' , 'Bei gr&ouml;sseren Leerpaketen - Gewichtszuwachs in %');
 define('SHIPPING_BOX_PADDING_DESC' , 'F&uuml;r etwa 10% geben Sie 10 ein');
-define('SHOW_SHIPPING_TITLE' , 'Versandkosten im Warenkorb');
+define('SHOW_SHIPPING_TITLE' , 'Anezige Versandkosten');
 define('SHOW_SHIPPING_DESC' , 'Verlinkte Anzeige von "zzgl. Versandkosten" im Warenkorb.');
 define('SHIPPING_INFOS_TITLE' , 'Versandkosten ID');
 define('SHIPPING_INFOS_DESC' , 'Sprachgruppen ID der Versandkosten (Default 1) f&uuml;r die Verlinkung.');

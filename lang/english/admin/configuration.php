@@ -308,7 +308,7 @@ define('SHIPPING_BOX_WEIGHT_TITLE' , 'Package Tare weight');
 define('SHIPPING_BOX_WEIGHT_DESC' , 'What is the weight of typical packaging of small to medium packages?');
 define('SHIPPING_BOX_PADDING_TITLE' , 'Larger packages - percentage increase');
 define('SHIPPING_BOX_PADDING_DESC' , 'For 10% enter 10');
-define('SHOW_SHIPPING_TITLE' , 'Shipping Costs in Shopping Cart');
+define('SHOW_SHIPPING_TITLE' , 'Display shipping costs');
 define('SHOW_SHIPPING_DESC' , 'Show link to shipping costs in shopping cart');
 define('SHIPPING_INFOS_TITLE' , 'Group ID');
 define('SHIPPING_INFOS_DESC' , 'Group ID of shipping costs content');
