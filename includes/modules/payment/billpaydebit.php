@@ -1,53 +1,32 @@
 <?php
-/* -----------------------------------------------------------------------------------------
-   $Id: billpaydebit.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
-
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
-
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   Copyright (c) 2010 Billpay GmbH
-
-   Released under the GNU General Public License
-   ---------------------------------------------------------------------------------------*/
 
 require_once DIR_FS_CATALOG . 'includes/external/billpay/base/billpayBase.php';
 
 class billpaydebit extends billpayBase {
-	var $_paymentIdentifier = 'BILLPAYDEBIT';
+    var $_paymentIdentifier;
 
-	function _getPaymentType() {
-		return IPL_CORE_PAYMENT_TYPE_DIRECT_DEBIT;
-	}
-	
-	function _getStaticLimit($config) {
-		return $config['static_limit_directdebit'];
-	}
-	
-	/**
-	 * display input fields for customers bank data. only for direct debit
-	 */
-	function _displayBankData() {
-		global $order;
-		
-		$bankdata = '<div style="margin-top:10px; margin-left:3px; margin-bottom:3px">' . MODULE_PAYMENT_BILLPAYDEBIT_TEXT_BANKDATA . '</div>';
-		$bankdata .= '<table style="margin-bottom:5px"><tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_HOLDER;
-		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaydebit_owner', isset($_SESSION['billpaydebit_owner']) ? 
- 											$_SESSION['billpaydebit_owner'] : $order->billing['firstname'] . 
- 											' ' . $order->billing['lastname'], 'style="width:250px"');
- 		$bankdata .= '<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr><tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_ACCOUNT_NUMBER;
- 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaydebit_number', '', 'style="width:250px"');
- 		$bankdata .= '<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr><tr><td>' . MODULE_PAYMENT_BILLPAY_TEXT_BANK_CODE;
- 		$bankdata .= '</td><td>' . xtc_draw_input_field('billpaydebit_code', '', 'style="width:250px"').'<span class="inputRequirement">&nbsp;*&nbsp;</span></td></tr></table>';
+    function billpaydebit($identifier = null)
+    {
+        $this->_paymentIdentifier = constant('billpayBase_PAYMENT_METHOD_DEBIT');
+        parent::billpayBase($identifier);
+    }
 
- 		return $bankdata;
-	}
+    function _getPaymentType() {
+        return IPL_CORE_PAYMENT_TYPE_DIRECT_DEBIT;
+    }
+
+    function _getStaticLimit($config) {
+        return $config['static_limit_directdebit'];
+    }
 
     function _displaySepaBankData()
     {
-        global $smarty, $order;
+        $smarty = $GLOBALS['smarty'];
+        $order  = $GLOBALS['order'];
+        if (empty($smarty)) {
+            $smarty = new Smarty;
+            $smarty->caching = 0;
+        }
 
         $accountPreselect = isset($_SESSION['billpaydebit_owner'])
             ? $_SESSION['billpaydebit_owner']
@@ -100,68 +79,55 @@ class billpaydebit extends billpayBase {
         return $this->_buildEulaHTML($eulaText);
     }
 
-	//set bankdata if selected payment method is billpay debit
-	function _addBankData($req, $vars) {
-		/** ajax one page checkout  */
-		if (is_array($vars) && !empty($vars)) 
-		{
-	  		$data_arr = $vars;
-	  		$is_ajax = true;
-		}
-		else
-		{
-	  		$data_arr = $_POST;
-		}
-		$req->set_bank_account(utf8_encode($data_arr['billpaydebit_owner']),
-								utf8_encode($data_arr['billpaydebit_number']),
-								utf8_encode($data_arr['billpaydebit_code']));						
-		return $req;
-	}
 
-    function _checkBankValues($data_arr=array())
+    /**
+     * Process payment method input data (form), before validation
+     */
+    function onMethodInput($data)
     {
-        $_SESSION['billpaydebit_owner'] = (isset($data_arr['billpaydebit_owner'])) ? $data_arr['billpaydebit_owner'] : null;
+        $dob = $data['billpaydebit_dob_year'].'-'.$data['billpaydebit_dob_month'].'-'.$data['billpaydebit_dob_day'];
+        $this->setDateOfBirth($dob);
+        $this->setGender($data['billpaydebit_gender']);
+        $this->setPhone($data['billpaydebit_phone']);
+        $this->_setDataValue('eula', (bool)$data['billpaydebit_eula']);
 
-        //check direct debit specific values
-        $error = false;
-        $error_message = '';
+        $this->_setDataValue('account_holder', $data['billpaydebit_owner']);
+        $this->_setDataValue('account_iban', $data['billpaydebit_number']);
+        $this->_setDataValue('account_bic', $data['billpaydebit_code']);
 
-        if (isset($data_arr[strtolower($this->_paymentIdentifier).'_number'])
-            && $data_arr[strtolower($this->_paymentIdentifier).'_number'] == ''
-        ) {
-            $error = true;
-            $error_message = MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_NUMBER;
-
-        } elseif ((defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT') === false
-                || MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT != 'True')
-            && isset($data_arr[strtolower($this->_paymentIdentifier).'_code'])
-            && $data_arr[strtolower($this->_paymentIdentifier).'_code'] == ''
-        ) {
-            $error = true;
-            $error_message = MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_CODE;
-
-        } elseif (isset($data_arr[strtolower($this->_paymentIdentifier).'_owner'])
-            && $data_arr[strtolower($this->_paymentIdentifier).'_owner'] == ''
-        ) {
-            $error = true;
-            $error_message = MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_NAME;
-        }
-
-        if ($error == true) {
-            //if($is_ajax == true)
-            if($_SESSION['billpay_is_ajax'] == true) {
-                $_SESSION['checkout_payment_error'] = 'payment_error=' . $this->code . '&error=' . urlencode($error_message);
-            } else {
-                xtc_redirect(xtc_href_link(
-                        FILENAME_CHECKOUT_PAYMENT,
-                        'error_message='.urlencode($error_message), 'SSL'
-                    ));
+        $required = array(
+            'account_holder'    =>  MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_NAME,
+            'account_iban'      =>  MODULE_PAYMENT_BILLPAYDEBIT_TEXT_ERROR_NUMBER,
+        );
+        foreach ($required as $field => $error)
+        {
+            $field_val = $this->_getDataValue($field);
+            if (empty($field_val))
+            {
+                $this->error = $error;
+                return false;
             }
         }
+        return true;
+    }
+
+    /**
+     * Process payment method output data (res), before sending request
+     * @param ipl_preauthorize_request $req
+     * @return ipl_preauthorize_request
+     */
+    function onMethodOutput($req)
+    {
+        $req->set_bank_account(
+            utf8_encode($this->_getDataValue('account_holder')),
+            utf8_encode($this->_getDataValue('account_iban')),
+            utf8_encode($this->_getDataValue('account_bic'))
+        );
+        return $req;
     }
 
     function addJsBankValidation() {
-
+        // TODO: is this function used?
         $js = ' if (document.getElementById("checkout_payment").elements["billpaydebit_owner"].value == "") {
                 error_message = error_message + unescape("' . JS_BILLPAYDEBIT_NAME . '");
                 error = 1;
@@ -171,16 +137,63 @@ class billpaydebit extends billpayBase {
                 error = 1;
             }';
 
-        if (defined('MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT') === false
-            || MODULE_PAYMENT_BILLPAY_GS_SEPA_SUPPORT != 'True'
-        ) {
-            $js .= '
-            if (document.getElementById("checkout_payment").elements["billpaydebit_code"].value == "") {
-                error_message = error_message + unescape("' . JS_BILLPAYDEBIT_CODE . '");
-                error = 1;
-            }';
-        }
-
         return $js;
     }
+
+    /**
+     * Event fired when admin is looking at user's invoice.
+     * Should display additional payment method's info.
+     * @param int $orderId
+     * @return string
+     */
+    function onDisplayInvoice($orderId)
+    {
+        $bank_data_query = xtc_db_query('SELECT invoice_due_date FROM billpay_bankdata WHERE orders_id = '.(int)$orderId);
+        $bank_data = xtc_db_fetch_array($bank_data_query);
+
+        $infoText = '<br/><br/>'.MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1 . '<br/>'. MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO2 . '<br/><br/>';
+
+        if (!$bank_data['invoice_due_date']) {
+            $infoText .= '<br/>'.MODULE_PAYMENT_BILLPAYDEBIT_ACTIVATE_ORDER_WARNING;
+        }
+
+        return $infoText;
+    }
+
+    /**
+     * Event fired when admin prints a PDF.
+     * Warning: this is not a standard shop function.
+     * @param $pdf
+     * @param $orderId
+     * @param $bankDataQuery
+     * @return bool
+     */
+    function onDisplayPdf($pdf, $orderId, $bankDataQuery)
+    {
+        $pdf->SetFont($pdf->fontfamily, 'B', '9');
+        $pdf->SetLineWidth(0.4);
+        $pdf->ln(4);
+        $pdf->MultiCell(0, 1, '', 'LRT');
+        $pdf->MultiCell(0, 4, html_entity_decode(MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1), 'LR');
+        $pdf->MultiCell(0, 1, '', 'LRB');
+        $pdf->ln(3);
+        $pdf->SetLineWidth(0.1);
+    }
+
+    function getPaymentInfo($orderId = null)
+    {
+        $billpay_info_text = '<br /><br />' . MODULE_PAYMENT_BILLPAYDEBIT_TEXT_INVOICE_INFO1;
+        if(defined('EMAIL_USE_HTML') && EMAIL_USE_HTML == 'false') {
+            $billpay_info_text = utf8_decode(html_entity_decode($billpay_info_text, ENT_COMPAT | ENT_HTML401, 'UTF-8'));
+        }
+        if(defined('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE') &&
+            constant('MODULE_PAYMENT_BILLPAYDEBIT_UTF8_ENCODE') == 'True') {
+            $billpay_info_text = utf8_encode($billpay_info_text);
+        }
+        return array(
+            'html'  =>  $billpay_info_text,
+            'text'  =>  str_replace("<br />", "\n", $billpay_info_text),
+        );
+    }
+
 }

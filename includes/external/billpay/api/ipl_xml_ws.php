@@ -1,30 +1,24 @@
 <?php
-/**
- * parse the raw post data which should contain a valid xml
- *
- * @return array value of the key xmlStatus indicates if we could parse the xml
- */
-function parse_async_capture()
-{
-    // get the raw post data
-    $postdata = file_get_contents("php://input");
-
-    if (empty($postdata) === false) {
-
-        $xml = ipl_core_load_xml($postdata);
-
-        if (empty($xml) === false) {
-            $data              = ipl_core_parse_async_capture_response($xml);
-            $data['xmlStatus'] = true;
-            $data['postdata']  = $postdata;
-
-        } else {
-            $data['xmlStatus'] = false;
-            $data['postdata']  = $postdata;
+    require_once('ipl_xml_api.php');
+    function parse_async_capture($postdata = null){
+		if (empty($postdata)) {
+            $postdata = file_get_contents("php://input");
         }
-    } else {
-        $data['xmlStatus'] = false;
-        $data['postdata']  = $postdata;
-    }
-    return $data;
-}
+		if(!empty($postdata)){
+			$xml = ipl_core_load_xml($postdata);
+			if (!empty($xml)){
+				$data = ipl_core_parse_async_capture_response($xml);
+				$data['postdata'] = $postdata;
+				$data['xmlStatus'] = true;
+			}else{
+				$data['xmlStatus'] = false;
+				$data['postdata'] = $postdata;
+			}			
+		}else{
+			$data['xmlStatus'] = false;
+			$data['postdata'] = $postdata;
+		}		
+		return $data; 
+	}
+	
+

@@ -47,6 +47,7 @@ class ipl_partialcancel_request extends ipl_xml_request {
 	function _send() {
 		return ipl_core_send_partialcancel_request(
 			$this->_ipl_request_url,
+            $this->getTraceData(),
 			$this->_default_params,
 			$this->_cancel_params,
 			$this->_canceled_articles
@@ -60,5 +61,3 @@ class ipl_partialcancel_request extends ipl_xml_request {
 	}
 	
 }
-
-?>

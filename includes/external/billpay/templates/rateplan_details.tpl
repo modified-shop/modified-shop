@@ -1,6 +1,18 @@
 <div style="font-size: {$misc.font_size.big}px;">
     {$texts.top_info}
 </div>
+{if $values.account_number}
+    <div style="font-size: {$misc.font_size.big}px">
+        <strong>{$texts.account_holder}:</strong> {$values.account_holder}<br/>
+        <strong>{$texts.account_iban}:</strong> {$values.account_number}<br/>
+        <strong>{$texts.account_bic}:</strong> {$values.bank_code}<br/>
+        <strong>{$texts.bank_name}:</strong> {$values.bank_name}<br/>
+        <strong>{$texts.invoice_purpose}:</strong> {$values.invoice_reference}<br/>
+        {if $values.invoice_due_data}
+            <strong>{$texts.invoice_due_date}:</strong> {$values.invoice_due_data}<br/>
+        {/if}
+    </div>
+{/if}
 <br/>
 <table class="small" cellpadding="3" cellspacing="0" style="font-size: {$misc.font_size.big}px">
     {if $values.pre_payment|string_format:"%f" > 0}
@@ -32,29 +44,9 @@
         <td>{$texts.cart_amount}</td>
         <td>=</td>
         <td style="text-align: right;">
-            {math
-                equation="x + y"
-                x=$values.rate_base_amount|string_format:"%f"
-                y=$values.pre_payment|string_format:"%f"
-                format="%f"
-                assign="cart_amount"}
-            {$cart_amount|xtc_format_price_order:1:$misc.currency}
+            {$values.rate_base_amount|xtc_format_price_order:1:$misc.currency}
         </td>
     </tr>
-    {if $values.pre_payment|string_format:"%f" > 0}
-        <tr>
-            <td>{$texts.pre_payment}</td>
-            <td>-</td>
-            <td style="text-align: right;">{$values.pre_payment}</td>
-        </tr>
-        <tr>
-            <td>{$texts.cart_amount_without_pre_payment}</td>
-            <td>=</td>
-            <td style="text-align: right;">
-                {$values.rate_base_amount}
-            </td>
-        </tr>
-    {/if}
     <tr>
         <td style="border-top:1px double silver;">{$texts.surcharge}</td>
         <td  style="border-top:1px double silver;" colspan="2"></td>

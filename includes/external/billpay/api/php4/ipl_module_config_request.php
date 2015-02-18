@@ -10,20 +10,20 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 class ipl_module_config_request extends ipl_xml_request {
 	
 	var $invoicestatic 		   = 0;
-	var $directdebitstatic     = 0;
-	var $hirepurchasestatic    = 0;
 	var $invoicebusinessstatic = 0;
-		
+	var $directdebitstatic 	   = 0;
+	var $hirepurchasestatic    = 0;
+
 	var $invoicemin 		= 0;
+	var $invoicebusinessmin = 0;
 	var $directdebitmin 	= 0;
 	var $hirepurchasemin 	= 0;
-	var $invoicebusinessmin = 0;
 	
 	var $active 				= false;
 	var $invoiceallowed 		= false;
-	var $directdebitallowed 	= false;
+    var $invoicebusinessallowed = false;
+    var $directdebitallowed 	= false;
 	var $hirepurchaseallowed 	= false;
-	var $invoicebusinessallowed	= false;
 	
 	var $terms = array();
 
@@ -71,24 +71,65 @@ class ipl_module_config_request extends ipl_xml_request {
 	function get_terms() {
 		return $this->terms;
 	}
-	
-	function get_config_data() {
-		return array(
-			'is_active' => $this->is_active(),
-			'is_allowed_invoice' => $this->is_invoice_allowed(),
-			'is_allowed_invoicebusiness' => $this->is_invoicebusiness_allowed(),
-			'is_allowed_directdebit' => $this->is_direct_debit_allowed(),
-			'is_allowed_transactioncredit' => $this->is_hire_purchase_allowed(),
-			'minvalue_invoice' => $this->get_invoice_min_value(),
-			'minvalue_invoicebusiness' => $this->get_invoicebusiness_min_value(),
-			'minvalue_directdebit' => $this->get_direct_debit_min_value(),
-			'minvalue_transactioncredit' => $this->get_hire_purchase_min_value(),
-			'maxvalue_invoice' => $this->get_static_limit_invoice(),
-			'maxvalue_invoicebusiness' => $this->get_static_limit_invoicebusiness(),
-			'maxvalue_directdebit' => $this->get_static_limit_direct_debit(),
-			'maxvalue_transactioncredit' => $this->get_static_limit_hire_purchase()
-		);
-	}
+
+    // --------------------------------- //
+    // ---- PAYLATER STATIC OPTIONS ---- //
+    function is_paylater_allowed()
+    {
+        return true;
+    }
+
+    function is_paylaterbusiness_allowed()
+    {
+        return false;
+    }
+
+    function get_paylater_min_value()
+    {
+        return 0;
+    }
+
+    function get_paylaterbusiness_min_value()
+    {
+        return 0;
+    }
+
+    function get_static_limit_paylater()
+    {
+        return PHP_INT_MAX;
+    }
+
+    function get_static_limit_paylaterbusiness()
+    {
+        return 0;
+    }
+
+    function get_config_data()
+    {
+        return array(
+            'is_active'                    => $this->is_active(),
+            'is_allowed_invoice'           => $this->is_invoice_allowed(),
+            'is_allowed_invoicebusiness'   => $this->is_invoicebusiness_allowed(),
+            'is_allowed_directdebit'       => $this->is_direct_debit_allowed(),
+            'is_allowed_transactioncredit' => $this->is_hire_purchase_allowed(),
+            'is_allowed_paylater'          => $this->is_paylater_allowed(),
+            'is_allowed_paylaterbusiness'  => $this->is_paylaterbusiness_allowed(),
+
+            'minvalue_invoice'             => $this->get_invoice_min_value(),
+            'minvalue_invoicebusiness'     => $this->get_invoicebusiness_min_value(),
+            'minvalue_directdebit'         => $this->get_direct_debit_min_value(),
+            'minvalue_transactioncredit'   => $this->get_hire_purchase_min_value(),
+            'minvalue_paylater'            => $this->get_paylater_min_value(),
+            'minvalue_paylaterbusiness'    => $this->get_paylaterbusiness_min_value(),
+
+            'maxvalue_invoice'             => $this->get_static_limit_invoice(),
+            'maxvalue_invoicebusiness'     => $this->get_static_limit_invoicebusiness(),
+            'maxvalue_directdebit'         => $this->get_static_limit_direct_debit(),
+            'maxvalue_transactioncredit'   => $this->get_static_limit_hire_purchase(),
+            'maxvalue_paylater'            => $this->get_static_limit_hire_purchase(),
+            'maxvalue_paylaterbusiness'    => $this->get_static_limit_hire_purchase(),
+        );
+    }
 
 	function _process_response_xml($data) {
 		foreach ($data as $key => $value) {
@@ -105,10 +146,9 @@ class ipl_module_config_request extends ipl_xml_request {
 	function _send() {
 		return ipl_core_send_module_config_request(
 			$this->_ipl_request_url,
+            $this->getTraceData(),
 			$this->_default_params,
 			$this->_locale
 		);
 	}
 }
-
-?>

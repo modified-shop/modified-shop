@@ -1,20 +1,6 @@
 <?php
-/* -----------------------------------------------------------------------------------------
-   $Id: ot_billpay_fee.php 4200 2013-01-10 19:47:11Z Tomcraft1980 $
-
-   modified eCommerce Shopsoftware
-   http://www.modified-shop.org
-
-   Copyright (c) 2009 - 2013 [www.modified-shop.org]
-   -----------------------------------------------------------------------------------------
-   based on:
-   Copyright (c) 2010 Billpay GmbH
-
-   Released under the GNU General Public License
-   ---------------------------------------------------------------------------------------*/
-
-  define('MODULE_ORDER_TOTAL_BILLPAY_FEE_TITLE', 'Zahlartenzuschlag Rechnung (Billpay)');
-  define('MODULE_ORDER_TOTAL_BILLPAY_FEE_DESCRIPTION', 'Berechnung der Geb&uuml;hr f&uuml;r Bestellungen mit der Zahlart Rechnung (Billpay)');
+  define('MODULE_ORDER_TOTAL_BILLPAY_FEE_TITLE', 'Zahlartenzuschlag Rechnung (BillPay)');
+  define('MODULE_ORDER_TOTAL_BILLPAY_FEE_DESCRIPTION', 'Berechnung der Geb&uuml;hr f&uuml;r Bestellungen mit der Zahlart Rechnung (BillPay)');
 
   define('MODULE_ORDER_TOTAL_BILLPAY_FEE_STATUS_TITLE','Zahlartenzuschlag Rechnungskauf');
   define('MODULE_ORDER_TOTAL_BILLPAY_FEE_STATUS_DESC','Berechnung der Rechnungsgeb&uuml;hr');

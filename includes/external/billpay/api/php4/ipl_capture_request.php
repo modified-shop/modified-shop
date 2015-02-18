@@ -10,6 +10,7 @@ require_once(dirname(__FILE__).'/ipl_xml_request.php');
 class ipl_capture_request extends ipl_xml_request {
 	
 	var $_capture_params = array();
+    var $_payment_info_params = array();
 	
 	// bank account
 	var $account_holder;
@@ -70,7 +71,13 @@ class ipl_capture_request extends ipl_xml_request {
 	}
 	
 	function _send() {
-		return ipl_core_send_capture_request($this->_ipl_request_url, $this->_default_params, $this->_capture_params, $this->_payment_info_params);
+		return ipl_core_send_capture_request(
+            $this->_ipl_request_url,
+            $this->getTraceData(),
+            $this->_default_params,
+            $this->_capture_params,
+            $this->_payment_info_params
+        );
 	}
 	
 	function _process_response_xml($data) {
@@ -79,5 +86,3 @@ class ipl_capture_request extends ipl_xml_request {
 		}
 	}
 }
-
-?>

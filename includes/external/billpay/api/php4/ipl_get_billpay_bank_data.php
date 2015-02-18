@@ -49,7 +49,12 @@ class ipl_get_billpay_bank_data extends ipl_xml_request {
 	}
 
 	function _send() {
-		return ipl_core_send_get_billpay_bank_data_request($this->_ipl_request_url, $this->_default_params, $this->_get_billpay_bank_data_params);
+		return ipl_core_send_get_billpay_bank_data_request(
+            $this->_ipl_request_url,
+            $this->getTraceData(),
+            $this->_default_params,
+            $this->_get_billpay_bank_data_params
+        );
 	}
 	
 	function _process_response_xml($data) {
@@ -59,11 +64,9 @@ class ipl_get_billpay_bank_data extends ipl_xml_request {
 	}
 	
 	function _process_error_response_xml($data) {
-		if (key_exists('status', $data)) {
+		if (isset($data['status'])) {
 			$this->status = $data['status'];
 		}
 	}
 	
 }
-
-?>

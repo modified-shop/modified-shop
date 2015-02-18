@@ -2,7 +2,7 @@
     <div style="margin: 10px 3px 3px">{$headline}</div>
     <table style="margin-bottom:5px">
         <tr>
-            <td>{$account_holder_text}</td>
+            <td style="width: 180px;">{$account_holder_text}</td>
             <td>
                 {$account_holder_input}
                 <span class="inputRequirement">&nbsp;*&nbsp;</span>
