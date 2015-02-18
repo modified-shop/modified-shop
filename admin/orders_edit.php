@@ -57,8 +57,10 @@ require_once (DIR_FS_INC.'xtc_oe_customer_infos.inc.php');
 require_once (DIR_FS_INC.'xtc_get_countries.inc.php');
 require_once (DIR_FS_INC.'xtc_get_address_format_id.inc.php');
 // Benötigte Funktionen und Klassen Ende
-if (file_exists(DIR_FS_EXTERNAL . 'billpay/utils/billpay_edit_orders.php')) {
-  require_once (DIR_FS_EXTERNAL . 'billpay/utils/billpay_edit_orders.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+  require_once (DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php'); // DokuMan -2011-09-08 - BILLPAY payment module (in external directory)
+  $billpayOrderEdit = new BillpayOrderEdit();
+  $billpayOrderEdit->onBeforeUpdate();
 }
 $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
@@ -887,6 +889,10 @@ if ($action == 'save_order') {
                       WHERE orders_id = '".(int)($_POST['oID'])."'");
   //EOF - Web28 - 2011-01-16 -  Löschen des Zwischenspeichers
 
+  if (file_exists(DIR_FS_EXTERNAL . 'billpay/base/BillpayOrderEdit.php')) {
+    $billpayOrderEdit->onAfterUpdate();
+  }
+  
   //BOF Web28 - 2010-12-06 - read customer status earlier
   $status_query = xtc_db_query("SELECT customers_status_show_price_tax,
                                        customers_status_add_tax_ot
