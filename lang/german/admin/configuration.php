@@ -903,9 +903,9 @@ define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Soll eine E-Mail and den Kunden versen
 define('STOCK_CHECK_SPECIALS_TITLE', '&Uuml;berpr&uuml;fen der Sonderangebote');
 define('STOCK_CHECK_SPECIALS_DESC', 'Pr&uuml;fen ob noch genug Sonderangebote zum Ausliefern der Bestellung verf&uuml;gbar sind.<br/><br/><b>ACHTUNG:</b> Sollten nicht gen&uuml;gend Sonderangebote zur Verf&uuml;gung stehen, kann die Bestellung erst nach einer Reduzierung der Menge abgeschlossen werden.');
 
-define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'L&auml;nderdropdown im Warenkorb')
-define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Soll das L&auml;nderdropdown im Warenkorb angezeigt werden, wenn nur Download Artikel gekauft werden?')
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'L&auml;nderdropdown im Warenkorb');
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Soll das L&auml;nderdropdown im Warenkorb angezeigt werden, wenn nur Download Artikel gekauft werden?');
 
-define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten')
-define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?')
+define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten');
+define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?');
 ?>

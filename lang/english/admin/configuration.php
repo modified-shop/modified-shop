@@ -906,10 +906,10 @@ define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon accoun
 define('STOCK_CHECK_SPECIALS_TITLE', 'Check Specials Stock');
 define('STOCK_CHECK_SPECIALS_DESC', 'Check to see if sufficent specials stock is available<br/><br/><b>ATTENTION:</b> If there is insufficient specials stock, the order can only be processed after a reduction of the quantity.');
 
-define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'Countries dropdown in cart')
-define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if only download products are buyed?')
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_TITLE', 'Countries dropdown in cart');
+define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if only download products are buyed?');
 
-define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts')
-define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount details?')
+define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
+define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount details?');
 
 ?>
