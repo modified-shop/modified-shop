@@ -320,6 +320,9 @@ function shopstat_hrefSmallmask($string, $urlencode = false) {
   //-- Mögliches rechtstehendes Minuszeichen entfernen - wichtig für Minus Trennzeichen
   $newstring = rtrim($newstring,"-");
   
+  //Alles entfernen ausser Buchstaben, Zahlen,  Unterstrich,  Minus
+  $newstring = preg_replace("/[^a-zA-Z0-9_-]/", '', $newstring);
+  
   //string wieder auf $charset zurückkonvertieren, es sollten sich aber keine Sonderzeichen mehr im String befinden
   if ($charset != "UTF-8") {
     if (!$check_iconv) {
