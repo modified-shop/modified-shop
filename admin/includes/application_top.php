@@ -53,6 +53,9 @@ if (file_exists('../includes/local/configure.php')) {
   include_once('../includes/configure.php');
 }
 
+// set default charset
+@ini_set('default_charset', DB_SERVER_CHARSET);
+
 // default time zone
 if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
   date_default_timezone_set('Europe/Berlin');
