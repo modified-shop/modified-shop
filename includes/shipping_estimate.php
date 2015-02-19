@@ -111,6 +111,9 @@ $_SESSION['delivery_zone'] = $order->delivery['country']['iso_code_2'];
 //suppot downloads and gifts
 if ($order->content_type == 'virtual' || ($order->content_type == 'virtual_weight') || ($_SESSION['cart']->count_contents_virtual() == 0)) {
   $shipping_content = array(array('NAME' => _SHIPPING_FREE));
+  if (DOWNLOAD_SHOW_LANG_DROPDOWN == 'false') {
+    $module_smarty->clear_assign('SELECT_COUNTRY');
+  }
 } else {
   require (DIR_WS_CLASSES.'shipping.php');
   $shipping = new shipping;
