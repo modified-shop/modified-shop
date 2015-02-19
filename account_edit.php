@@ -74,7 +74,7 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 	if (ACCOUNT_COMPANY_VAT_CHECK == 'true'){
     $country = xtc_get_customers_country($_SESSION['customer_id']);
     require_once(DIR_WS_CLASSES.'vat_validation.php');
-    $vatID = new vat_validation($vat, $_SESSION['customer_id'], '', $country);
+    $vatID = new vat_validation($vat, $_SESSION['customer_id'], '', $country, ($_SESSION['account_type'] == '0'));
     $customers_status = $vatID->vat_info['status'];
     $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
     if (isset($vatID->vat_info['error']) && $vatID->vat_info['error']==1){
@@ -124,12 +124,12 @@ if (isset ($_POST['action']) && ($_POST['action'] == 'process')) {
 		                        'customers_fax' => $fax,
 		                        'customers_last_modified' => 'now()');
 
-    if(isset($customers_status)) {
-      if ($customers_status == 0) {
+    if (isset($customers_status) && $_SESSION['account_type'] == '0') {
+      if ((int)$customers_status == 0) {
         if (DEFAULT_CUSTOMERS_STATUS_ID != 0) {
-            $customers_status = DEFAULT_CUSTOMERS_STATUS_ID;
+          $customers_status = DEFAULT_CUSTOMERS_STATUS_ID;
         } else {
-            $customers_status = 2;
+          $customers_status = 2;
         }
       }
       $sql_data_array['customers_status'] = (int)$customers_status;
