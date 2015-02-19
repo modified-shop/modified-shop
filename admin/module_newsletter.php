@@ -139,6 +139,7 @@
     case 'delete':
 
       xtc_db_query("DELETE FROM ".TABLE_MODULE_NEWSLETTER." WHERE newsletter_id='".(int)$_GET['ID']."'");
+      xtc_db_query("DROP TABLE IF EXISTS module_newsletter_temp_".(int)$_GET['ID']);
       xtc_redirect(xtc_href_link(FILENAME_MODULE_NEWSLETTER));
       break;
 
