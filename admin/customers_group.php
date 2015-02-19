@@ -94,25 +94,28 @@ require (DIR_WS_INCLUDES.'head.php');
           <table class="tableCenter">      
             <tr>
               <td class="main">
-              <?php
-              echo xtc_draw_form('customers_group', 'customers_group.php', 'action=send', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-              $group_query = xtc_db_query('SELECT customers_status_id,
-                                                  customers_status_name
-                                           FROM ' . TABLE_CUSTOMERS_STATUS . '
-                                           WHERE language_id=' . (int)$_SESSION['languages_id'] . '
-                                           ORDER BY customers_status_id ASC');
-              while ($result = xtc_db_fetch_array($group_query)) {
-                  echo xtc_draw_checkbox_field('cg[' . $result['customers_status_id'].']', '1') . ' ' . $result['customers_status_name'] . '<br />';
-              }
-              echo '<br /><br />';
-              echo xtc_draw_checkbox_field('categories', '1') . ' ' . TEXT_CATEGORIES . '<br />';
-              echo xtc_draw_checkbox_field('products', '1') . ' ' . TEXT_PRODUCTS . '<br />';
-              echo xtc_draw_checkbox_field('content', '1') . ' ' . TEXT_CONTENT . '<br />';
-              echo '<br /><br />';
-              echo '<strong>' . TEXT_PERMISSION . ':</strong> ' . TEXT_SET . ' ' . xtc_draw_radio_field('permission', 'true', true) . ' ' . TEXT_UNSET . ' ' . xtc_draw_radio_field('permission', 'false', false) . '<br />';
-              echo '<br /><br />' . xtc_draw_input_field('senden', TEXT_SEND, '', false, 'submit');
-              ?>
-              </form>
+                <div class="customers-groups">
+                  <?php
+                  echo xtc_draw_form('customers_group', 'customers_group.php', 'action=send', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+                  $group_query = xtc_db_query('SELECT customers_status_id,
+                                                      customers_status_name
+                                               FROM ' . TABLE_CUSTOMERS_STATUS . '
+                                               WHERE language_id=' . (int)$_SESSION['languages_id'] . '
+                                               ORDER BY customers_status_id ASC');
+                  while ($result = xtc_db_fetch_array($group_query)) {
+                      echo xtc_draw_checkbox_field('cg[' . $result['customers_status_id'].']', '1') . ' ' . $result['customers_status_name'] . '<br />';
+                  }
+                  echo '<br /><br />';
+                  echo xtc_draw_checkbox_field('categories', '1') . ' ' . TEXT_CATEGORIES . '<br />';
+                  echo xtc_draw_checkbox_field('products', '1') . ' ' . TEXT_PRODUCTS . '<br />';
+                  echo xtc_draw_checkbox_field('content', '1') . ' ' . TEXT_CONTENT . '<br />';
+                  echo '<br /><br />';
+                  echo '<strong>&nbsp;' . TEXT_PERMISSION . ':</strong> ' . TEXT_SET . ' ' . xtc_draw_radio_field('permission', 'true', true) . ' ' . TEXT_UNSET . ' ' . xtc_draw_radio_field('permission', 'false', false) . '<br />';
+                  echo '<br /><br />&nbsp;' . xtc_draw_input_field('senden', TEXT_SEND, '', false, 'submit');
+                  echo '<br /><br />';
+                  ?>
+                  </form>
+                </div>
               </td>
             </tr>
           </table>
