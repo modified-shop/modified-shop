@@ -97,7 +97,7 @@ require (DIR_WS_INCLUDES.'head.php');
                                                 carrier_last_modified
                                            FROM " . TABLE_CARRIERS . "
                                        ORDER BY carrier_sort_order";
-                  $carriers_split = new splitPageResults($page_parcel, MAX_DISPLAY_SEARCH_RESULTS, $carriers_query_raw, $carriers_query_numrows);
+                  $carriers_split = new splitPageResults($page_parcel, '20', $carriers_query_raw, $carriers_query_numrows);
                   $carriers_query = xtc_db_query($carriers_query_raw);
                   while ($carriers = xtc_db_fetch_array($carriers_query)) {
                     if ((!isset($_GET['cID']) || (isset($_GET['cID']) && ($_GET['cID'] == $carriers['carrier_id']))) && !isset($carriersInfo) && (substr($action, 0, 3) != 'new')) {
@@ -119,8 +119,8 @@ require (DIR_WS_INCLUDES.'head.php');
                   ?>
               </table>
               
-              <div class="smallText pdg2 flt-l"><?php echo $carriers_split->display_count($carriers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, $page_parcel, TEXT_DISPLAY_NUMBER_OF_CARRIERS); ?></div>
-              <div class="smallText pdg2 flt-r"><?php echo $carriers_split->display_links($carriers_query_numrows, MAX_DISPLAY_SEARCH_RESULTS, MAX_DISPLAY_PAGE_LINKS, $page_parcel); ?></div>
+              <div class="smallText pdg2 flt-l"><?php echo $carriers_split->display_count($carriers_query_numrows, '20', $page_parcel, TEXT_DISPLAY_NUMBER_OF_CARRIERS); ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo $carriers_split->display_links($carriers_query_numrows, '20', MAX_DISPLAY_PAGE_LINKS, $page_parcel); ?></div>
 
               <?php
               if (empty($action)) {
