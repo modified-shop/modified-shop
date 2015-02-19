@@ -298,10 +298,6 @@ define('DEFAULT_LANGUAGE_DESC' , 'Language to be used as default');
 define('DEFAULT_ORDERS_STATUS_ID_TITLE' , 'Default Order Status');
 define('DEFAULT_ORDERS_STATUS_ID_DESC' , 'Default order status when a new order is placed.');
 
-define('SHIPPING_ORIGIN_COUNTRY_TITLE' , 'Country of Origin');
-define('SHIPPING_ORIGIN_COUNTRY_DESC' , 'Select the country of origin to be used in shipping quotes.');
-define('SHIPPING_ORIGIN_ZIP_TITLE' , 'Postal Code');
-define('SHIPPING_ORIGIN_ZIP_DESC' , 'Enter the Postal Code (ZIP) of the Store to be used in shipping quotes.');
 define('SHIPPING_MAX_WEIGHT_TITLE' , 'Enter the Maximum Package Weight you will ship');
 define('SHIPPING_MAX_WEIGHT_DESC' , 'Carriers have a max weight limit for a single package. This is a common one for all.');
 define('SHIPPING_BOX_WEIGHT_TITLE' , 'Package Tare weight');

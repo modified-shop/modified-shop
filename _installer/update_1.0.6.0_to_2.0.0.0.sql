@@ -348,4 +348,8 @@ DROP TABLE IF EXISTS counter;
 DROP TABLE IF EXISTS counter_history;
 DROP TABLE IF EXISTS payment_moneybookers_countries;
 
+#GTB - 2015-02-18 - remove configuration
+DELETE FROM configuration WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY';
+DELETE FROM configuration WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP';
+
 # Keep an empty line at the end of this file for the db_updater to work properly

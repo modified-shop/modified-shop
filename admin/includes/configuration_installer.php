@@ -43,6 +43,26 @@ $values_group_update = array();
                            'configuration_key' => 'EXPECTED_PRODUCTS_FIELD'
                            );
   $values_update[] = array (
+                           'values' => "sort_order = '4'",
+                           'configuration_key' => 'STORE_COUNTRY'
+                           );
+  $values_update[] = array (
+                           'values' => " sort_order = '6'",
+                           'configuration_key' => 'STORE_ZONE'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '3'",
+                           'configuration_key' => 'STORE_NAME_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '6'",
+                           'configuration_key' => 'STORE_OWNER_EMAIL_ADDRESS'
+                           );
+  $values_update[] = array (
+                           'values' => "sort_order = '7'",
+                           'configuration_key' => 'EMAIL_FROM'
+                           );
+  $values_update[] = array (
                            'values' => "configuration_group_id = '1000', sort_order = '11'",
                            'configuration_key' => 'PRICE_PRECISION'
                            );
@@ -94,7 +114,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'SHOW_IMAGES_IN_EMAIL_DIR', 'thumbnail', '12', '16', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'thumbnail\', \'info\'),');";
   $values[] = "(NULL, 'SHOW_IMAGES_IN_EMAIL_STYLE', 'max-width:90px;max-height:120px;', '12', '17', NULL, NOW(), NULL, NULL);";
   $values[] = "(NULL, 'SEND_EMAILS_DOUBLE_OPT_IN', 'true', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
-  $values[] = "(NULL, 'SEND_MAIL_ACCOUNT_CREATED', 'true', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
+  $values[] = "(NULL, 'SEND_MAIL_ACCOUNT_CREATED', 'false', '12', '14', NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
   $values[] = "(NULL, 'EMAIL_WORD_WRAP', '50', '12', '18', NULL, NOW(), NULL, NULL);";
 
   $values_update[] = array (
