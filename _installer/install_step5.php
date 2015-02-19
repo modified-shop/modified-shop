@@ -96,33 +96,33 @@
                       xtc_db_test_connection($db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
                     }
                     if ($db_error) {
-                  ?>
-                  <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td>
-                        <img src="images/icons/error.gif" width="16" height="16"><strong><?php echo TEXT_CONNECTION_ERROR; ?></strong>
-                      </td>
-                    </tr>
-                  </table>
-                  <p><strong><?php echo TEXT_DB_ERROR; ?></strong></p>
-                  <table border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
-                    <tr>
-                      <td><b><?php echo $db_error; ?></b></td>
-                    </tr>
-                  </table>
-                  <p><?php echo TEXT_DB_ERROR_1; ?></p>
-                  <p><?php echo TEXT_DB_ERROR_2; ?></p>
-                  <form name="install" action="install_step4.php" method="post">
-                  <?php echo $input_lang; 
-                        echo draw_hidden_fields(); ?>
-                    <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                      <tr>
-                        <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
-                        <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
-                      </tr>
-                    </table>
-                  </form>
-                <?php
+                      ?>
+                      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                        <tr>
+                          <td>
+                            <img src="images/icons/error.gif" width="16" height="16"><strong><?php echo TEXT_CONNECTION_ERROR; ?></strong>
+                          </td>
+                        </tr>
+                      </table>
+                      <p><strong><?php echo TEXT_DB_ERROR; ?></strong></p>
+                      <table border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
+                        <tr>
+                          <td><b><?php echo $db_error; ?></b></td>
+                        </tr>
+                      </table>
+                      <p><?php echo TEXT_DB_ERROR_1; ?></p>
+                      <p><?php echo TEXT_DB_ERROR_2; ?></p>
+                      <form name="install" action="install_step4.php" method="post">
+                      <?php echo $input_lang; 
+                            echo draw_hidden_fields(); ?>
+                        <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                          <tr>
+                            <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                            <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
+                          </tr>
+                        </table>
+                      </form>
+                      <?php
                   } else {
                     //Testpfad
                     if (defined('DISABLE_PATH_CHECK') && DISABLE_PATH_CHECK) {
@@ -143,33 +143,52 @@
                       if (trim($errmsg) =='')
                         $errmsg = $url . '   [ERROR: '. $link_status['Status-Code'] .']';
                       ?>
-                      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                      <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#ff0000; color:#ffffff; padding:10px; border:1px solid #cf0000">
                         <tr>
-                          <td>
-                            <img src="images/icons/error.gif" width="16" height="16"><strong>
-                            <div style="color:#FC0000;"><?php echo TEXT_PATH_ERROR; ?></strong></div>
+                          <td style="width:40px;">
+                            <img src="images/icons/error.gif" width="16" height="16">
+                          </td>
+                          <td style="font-weight:bold; font-size:18px;">
+                            <?php echo TEXT_PATH_ERROR; ?>
                           </td>
                         </tr>
                       </table>
-                      <p><strong><div style="color:#FC0000;"><?php echo TEXT_PATH_ERROR2; ?></div></strong></p>
-                      <table border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
+                      
+                      <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3" style="padding:10px; border:1px solid #cf0000">
+                        <tr>
+                          <td><?php echo TEXT_PATH_ERROR2; ?></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                        </tr>
                         <tr>
                           <td><b><?php echo $errmsg;?></b></td>
                         </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td><?php echo TEXT_PATH_ERROR3;?></td>
+                        </tr>
+                        <tr>
+                          <td>&nbsp;</td>
+                        </tr>
+                        <tr>
+                          <td align="center">
+                            <form name="install" action="install_step4.php" method="post">
+                              <?php echo $input_lang; 
+                                    echo draw_hidden_fields(); ?>
+                              <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                                <tr>
+                                  <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                                  <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
+                                </tr>
+                              </table>
+                            </form>
+                          </td>
+                        </tr>
                       </table>
-                      <p><?php echo TEXT_PATH_ERROR3;?></p>
-                      <form name="install" action="install_step4.php" method="post">
-                      <?php echo $input_lang; 
-                            echo draw_hidden_fields(); ?>
-                        <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                          <tr>
-                            <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
-                            <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
-                          </tr>
-                        </table>
-                      </form>
                       <?php
-                        //} else {
                       } 
                           //create  includes/configure.php
                           include ('includes/templates/configure.php');
