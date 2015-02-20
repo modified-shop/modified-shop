@@ -210,7 +210,7 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if ($error == false) {
-    $sql_data_array = array('customers_cid' => generate_customers_cid(true);
+    $sql_data_array = array('customers_cid' => generate_customers_cid(true),
                             'customers_vat_id' => $vat,
                             'customers_vat_id_status' => $customers_vat_id_status,
                             'customers_status' => $customers_status,
