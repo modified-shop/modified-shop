@@ -65,6 +65,5 @@ class customers_cid
                      'MODULE_CUSTOMERS_CID_FORMAT',
                      'MODULE_CUSTOMERS_CID_NEXT');
     }    
-  }
 }
 ?>
