@@ -27,6 +27,7 @@
   require_once (DIR_FS_INC.'xtc_create_password.inc.php');
   require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
   require_once (DIR_FS_INC.'xtc_php_mail.inc.php');
+  require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
 
   // initiate template engine for mail
   $smarty = new Smarty;
@@ -291,7 +292,7 @@
     if ($error == false) {
       $sql_data_array = array (
                                'customers_status' => $customers_status_c,
-                               'customers_cid' => $customers_cid,
+                               'customers_cid' => ((defined('MODULE_CUSTOMERS_CID_STATUS') && MODULE_CUSTOMERS_CID_STATUS == 'true') ? generate_customers_cid(true) : $customers_cid),
                                'customers_vat_id' => $customers_vat_id,
                                'customers_vat_id_status' => $customers_vat_id_status,
                                'customers_firstname' => $customers_firstname,
@@ -451,7 +452,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
-                      <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('csID', isset($customers_cid)?$customers_cid:'', 'maxlength="32"'); ?></td>
+                      <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('csID', generate_customers_cid(), 'maxlength="32"'); ?></td>
                     </tr>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_FIRST_NAME; ?></td>

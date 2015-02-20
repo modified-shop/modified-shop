@@ -49,6 +49,7 @@ require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
 require_once (DIR_FS_INC.'xtc_write_user_info.inc.php');
 require_once (DIR_FS_INC.'get_customers_gender.inc.php');
 require_once (DIR_FS_INC.'parse_multi_language_value.inc.php');
+require_once (DIR_FS_INC.'generate_customers_cid.inc.php');
 
 require_once (DIR_FS_EXTERNAL.'password_policy/password_policy.php');
 
@@ -209,7 +210,8 @@ if (isset($_POST['action']) && ($_POST['action'] == 'process')) {
   }
 
   if ($error == false) {
-    $sql_data_array = array('customers_vat_id' => $vat,
+    $sql_data_array = array('customers_cid' => generate_customers_cid(true);
+                            'customers_vat_id' => $vat,
                             'customers_vat_id_status' => $customers_vat_id_status,
                             'customers_status' => $customers_status,
                             'customers_firstname' => $firstname,
