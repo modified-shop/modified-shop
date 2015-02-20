@@ -43,7 +43,7 @@ text-decoration:none;
 }
 #cssmenu li ul {
 margin-top: 0px;
-background: #dbdbdb;
+background: #bbb;
 border-left:1px solid #999;
 border-right:1px solid #999;
 border-top:0px solid #AF417E;
@@ -127,8 +127,8 @@ min-width:190px;
 background: url("images/bullet_arrow_right.png") no-repeat center right;
 }
 #cssmenu a.menuBoxContentLinkSub:hover {
-background: #bbb url("images/bullet_arrow_right.png") no-repeat center right;
-color:#000000;
+background: #ccc url("images/bullet_arrow_right.png") no-repeat center right;
+color:#af417e;
 }
 #lang_flag {
 float: left;
@@ -147,7 +147,7 @@ border-top: 0px solid #AF417E;
   width:200px;
   display:block;
   position:absolute;
-  left:180px;
+  left:200px;
   top:0px;
 }  
 #cssmenu ul ul li:hover ul {
