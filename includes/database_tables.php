@@ -23,7 +23,6 @@
   define('TABLE_BANKTRANSFER_BLZ','banktransfer_blz');
   define('TABLE_BANNERS', 'banners');
   define('TABLE_BANNERS_HISTORY', 'banners_history');
-  define('TABLE_BLACKLIST', 'card_blacklist'); 
   define('TABLE_CAMPAIGNS', 'campaigns');
   define('TABLE_CAMPAIGNS_IP','campaigns_ip');
   define('TABLE_CATEGORIES', 'categories');

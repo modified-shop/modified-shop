@@ -209,6 +209,7 @@ ALTER TABLE orders DROP cc_expires;
 ALTER TABLE orders DROP cc_start;
 ALTER TABLE orders DROP cc_issue;
 ALTER TABLE orders DROP cc_cvv;
+ALTER TABLE admin_access DROP blacklist;
 DELETE FROM configuration WHERE configuration_key = 'CC_KEYCHAIN';
 DELETE FROM configuration WHERE configuration_key = 'CC_OWNER_MIN_LENGTH';
 DELETE FROM configuration WHERE configuration_key = 'CC_NUMBER_MIN_LENGTH';

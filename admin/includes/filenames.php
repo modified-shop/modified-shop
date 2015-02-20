@@ -70,7 +70,6 @@ define('FILENAME_POPUP_MEMO', 'popup_memo.php');
 define('FILENAME_SHIPPING_STATUS', 'shipping_status.php');
 define('FILENAME_SALES_REPORT','stats_sales_report.php');
 define('FILENAME_MODULE_EXPORT','module_export.php');
-define('FILENAME_BLACKLIST', 'blacklist.php');
 define('FILENAME_PRODUCTS_VPE','products_vpe.php');
 define('FILENAME_CAMPAIGNS_REPORT','stats_campaigns.php');
 define('FILENAME_XSELL_GROUPS','cross_sell_groups.php');
