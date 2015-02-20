@@ -22,7 +22,7 @@ class customers_cid
         $this->title = MODULE_CUSTOMERS_CID_TEXT_TITLE;
         $this->description = MODULE_CUSTOMERS_CID_TEXT_DESCRIPTION;
         $this->sort_order = MODULE_CUSTOMERS_CID_SORT_ORDER;
-        $this->enabled = ((MODULE_CUSTOMERS_CID_STATUS == 'True') ? true : false);
+        $this->enabled = ((MODULE_CUSTOMERS_CID_STATUS == 'true') ? true : false);
     }
 
     function process($file) 

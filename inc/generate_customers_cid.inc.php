@@ -22,10 +22,10 @@ function generate_customers_cid($create = false) {
   $y = date('Y');
 
   $cid = MODULE_CUSTOMERS_CID_FORMAT;
-  $cid = str_replace('{n}', $n, $d);
-  $cid = str_replace('{d}', $d, $d);
-  $cid = str_replace('{m}', $m, $d);
-  $cid = str_replace('{y}', $y, $d);
+  $cid = str_replace('{n}', $n, $cid);
+  $cid = str_replace('{d}', $d, $cid);
+  $cid = str_replace('{m}', $m, $cid);
+  $cid = str_replace('{y}', $y, $cid);
   
   if ($create === true) {
     xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".($n + 1)."' WHERE configuration_key = 'MODULE_CUSTOMERS_CID_NEXT'");
