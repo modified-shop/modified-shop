@@ -142,6 +142,7 @@ define('TABLE_CAPTION_BIRTHDAYS', 'Birthdays');
 define('TABLE_CELL_BIRTHDAYS_TODAY', 'Customers Whose Birthday is Today');
 define('TABLE_CELL_BIRTHDAYS_THIS_MONTH', 'Upcoming Birthdays Of Customers This Month');
 // EOF - vr 2010-04-01 -  Added missing definitions
+define('HEADING_CAPTION_STATISTIC', 'Statistics');
 // security check
 
 // DB Version check

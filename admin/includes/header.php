@@ -41,98 +41,98 @@
   ?>
 
 <div id="fixed-header">
-<div id="top1"><?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?></div>
+<div class="adminbar">
+  <div class="row1 cf">
+    <ul>
+      <li><span class="logo_small"><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></span></li>
+      <li><span class="lang_icons cf"><?php echo '&nbsp;&nbsp;&nbsp;'.$languages_string ;?></span></li>
+      <?php
+        $favorites = array();
 
-<div id="favorites">
-  <div id="logo">
-    <div><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></div>
-    <div><?php echo '&nbsp;&nbsp;&nbsp;'.$languages_string ;?></div>
-  </div>
-  <div class="favorites">
-<?php
+        $favorites[0] = array(
+            'file' => 'orders.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_orders.png',
+            'name' => BOX_ORDERS
+          );
+        $favorites[1] = array(
+            'file' => 'content_manager.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_content.png',
+            'name' => BOX_CONTENT
+          );
+        $favorites[2] = array(
+            'file' => 'backup.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_backup.png',
+            'name' => BOX_BACKUP
+          );
+        $favorites[3] = array(
+            'file' => 'customers.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_customers.png',
+            'name' => BOX_CUSTOMERS
+          );
+        $favorites[4] = array(
+            'file' => 'categories.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_categories.png',
+            'name' => BOX_CATEGORIES
+          );
+        $favorites[5] = array(
+            'file' => 'index.php',
+            'par'  => '', 'shop' => 1,
+            'icon'  => 'icon_shop.png',
+            'name' => BOX_SHOP
+          );
+    
+        $favorites[6] = array(
+            'file' => 'logoff.php',
+            'par'  => '', 'shop' => 1,
+            'icon'  => 'icon_logout.png',
+            'name' => BOX_LOGOUT,
+            'right' => true
+          );
+        $favorites[7] = array(
+            'file' => 'credits.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_credits.png',
+            'name' => BOX_CREDITS,
+            'right' => true
+          );
+        $favorites[8] = array(
+            'file' => 'check_update.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_update.png',
+            'name' => BOX_UPDATE,
+            'right' => true
+          );
 
-  $favorites = array();
+        // overwrite with hooks
+        $favorites = isset($own_favorites) ? array_merge($favorites, (array)$own_favorites) : $favorites;
 
-  $favorites[0] = array(
-      'file' => 'orders.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_orders.png',
-      'name' => BOX_ORDERS
-    );
-  $favorites[1] = array(
-      'file' => 'content_manager.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_content.png',
-      'name' => BOX_CONTENT
-    );
-  $favorites[2] = array(
-      'file' => 'backup.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_backup.png',
-      'name' => BOX_BACKUP
-    );
-  $favorites[3] = array(
-      'file' => 'customers.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_customers.png',
-      'name' => BOX_CUSTOMERS
-    );
-  $favorites[4] = array(
-      'file' => 'categories.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_categories.png',
-      'name' => BOX_CATEGORIES
-    );
-  $favorites[5] = array(
-      'file' => 'index.php',
-      'par'  => '', 'shop' => 1,
-      'icon'  => 'icon_shop.png',
-      'name' => BOX_SHOP
-    );
-  $favorites[6] = array(
-      'file' => 'logoff.php',
-      'par'  => '', 'shop' => 1,
-      'icon'  => 'icon_logout.png',
-      'name' => BOX_LOGOUT
-    );
-  $favorites[7] = array(
-      'file' => 'credits.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_credits.png',
-      'name' => BOX_CREDITS
-    );
-  $favorites[8] = array(
-      'file' => 'check_update.php',
-      'par'  => '', 'shop' => 0,
-      'icon'  => 'icon_update.png',
-      'name' => BOX_UPDATE
-    );
-
-  // overwrite with hooks
-  $favorites = isset($own_favorites) ? array_merge($favorites, (array)$own_favorites) : $favorites;
-
-  $page_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
-  $page_permission = xtc_db_fetch_array($page_permission_query);
+        $page_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
+        $page_permission = xtc_db_fetch_array($page_permission_query);
   
-  foreach ($favorites as $f) {
-    if (is_array($f)) {
-      if ($f['shop']) {
-        $func = 'xtc_catalog_href_link';
-      } else {
-        if ($page_permission[strtok($f['file'], '.')] != '1') continue;
-        $func = 'xtc_href_link';
-      }
-      $favoriteslink = $func($f['file'], $f['par'], 'NONSSL', true);
-      echo '    <a href="' . $favoriteslink . '">'.
-           xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
-           '<br>' . $f['name'] . '</a>' . PHP_EOL;
-    }
-  }
-?>
+        foreach ($favorites as $f) {
+          if (is_array($f)) {
+            if ($f['shop']) {
+              $func = 'xtc_catalog_href_link';
+            } else {
+              if ($page_permission[strtok($f['file'], '.')] != '1') continue;
+              $func = 'xtc_href_link';
+            }
+            $favoriteslink = $func($f['file'], $f['par'], 'NONSSL', true);
+            echo '<li'.((isset($f['right'])) ? ' style="float:right;"' : '').'><a href="' . $favoriteslink . '">'.
+                 xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
+                 '</li></a>' . PHP_EOL;
+          }
+        }
+      ?>
+    </ul>
   </div>
+  <?php include(DIR_WS_INCLUDES . "admin_search_bar.php");?>
 </div>
-
-<div id="top2" class="clear"></div>
 <?php
 if (USE_ADMIN_TOP_MENU != 'false') {
   if (defined('NEW_ADMIN_STYLE')) { 
