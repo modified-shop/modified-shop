@@ -931,10 +931,47 @@ table.admin_table tr.content_row:hover  {
   padding:4px 20px !important;
   font-size:10px;  
 } 
-
-
 input, textarea {
   -webkit-appearance: none;
   -webkit-border-radius: 0;
 }
-
+.error_message {
+  font-family: Verdana, Arial, sans-serif;
+  border:solid #DCA7A7 1px;
+  padding:10px;
+  font-size:12px !important;
+  line-height:18px;
+  color:#A94442;
+  background-color:#F2DEDE ;
+  margin-bottom:10px;
+}
+.warning_message {
+  font-family: Verdana, Arial, sans-serif;
+  border:solid #DCA7A7 1px;
+  padding:10px;
+  font-size:12px !important;
+  line-height:18px;
+  color:#A94442;
+  background-color:#F2DEDE ;
+  margin-bottom:10px;
+}
+.info_message {
+  font-family: Verdana, Arial, sans-serif;
+  border:solid #b2dba1 1px;
+  padding:10px;
+  font-size:12px !important;
+  line-height:18px;
+  background-color:#d4ebcb;
+  margin-bottom:10px;
+  color:#3C763D;
+}
+.success_message {
+  font-family: Verdana, Arial, sans-serif;
+  border:solid #b2dba1 1px;
+  padding:10px;
+  font-size:12px !important;
+  line-height:18px;
+  background-color:#d4ebcb;
+  margin-bottom:10px;
+  color:#3C763D;
+}

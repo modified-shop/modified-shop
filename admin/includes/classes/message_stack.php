@@ -22,14 +22,14 @@
    if ($messageStack->size > 0) echo $messageStack->output();
   
    --------------------------------------------------------------*/
-defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
-  class messageStack extends tableBlock {
+
+  defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+
+  class messageStack {
     var $size = 0;
 
-    function messageStack() {
-
+    function __construct() {
       $this->errors = array();
-
       if (isset($_SESSION['messageToStack'])) {
         for ($i = 0, $n = sizeof($_SESSION['messageToStack']); $i < $n; $i++) {
           $this->add($_SESSION['messageToStack'][$i]['text'], $_SESSION['messageToStack'][$i]['type']);
@@ -40,15 +40,15 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
 
     function add($message, $type = 'error') {
       if ($type == 'error') {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => xtc_image(DIR_WS_ICONS . 'error.gif', ICON_ERROR) . '&nbsp;' . $message);
+        $this->errors['error'][] = $message;
       } elseif ($type == 'warning') {
-        $this->errors[] = array('params' => 'class="messageStackWarning"', 'text' => xtc_image(DIR_WS_ICONS . 'warning.gif', ICON_WARNING) . '&nbsp;' . $message);
+        $this->errors['warning'][] = $message;
       } elseif ($type == 'success') {
-        $this->errors[] = array('params' => 'class="messageStackSuccess"', 'text' => xtc_image(DIR_WS_ICONS . 'success.gif', ICON_SUCCESS) . '&nbsp;' . $message);
+        $this->errors['success'][] = $message;
       } else {
-        $this->errors[] = array('params' => 'class="messageStackError"', 'text' => $message);
+        $this->errors['error'][] = $message;
       }
-
+      
       $this->size++;
     }
 
@@ -56,7 +56,6 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
       if (!isset($_SESSION['messageToStack'])) {
         $_SESSION['messageToStack'] = array();
       }
-
       $_SESSION['messageToStack'][] = array('text' => $message, 'type' => $type);
     }
 
@@ -66,8 +65,13 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     }
 
     function output() {
-      $this->table_data_parameters = 'class="messageBox"';
-      return $this->tableBlock($this->errors);
+      $output = '';
+      foreach ($this->errors as $key => $message) {
+        $output .= '<div class="'.$key.'_message">';
+        $output .= implode('<br/>', $message);
+        $output .= '</div>';   
+      }
+      return $output;
     }
   }
 ?>
