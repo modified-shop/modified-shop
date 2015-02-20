@@ -275,7 +275,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 color: #aaaaaa;
                 display: inline;
                 float: left;
-                padding: 8px 25px !important;
+                padding: 8px 20px !important;
                 position: relative;
                 width: auto !important;
               }
