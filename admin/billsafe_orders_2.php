@@ -448,7 +448,7 @@
   }
 </script>
 </head>
-<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF" onload="SetFocus();">
+<body marginwidth="0" marginheight="0" topmargin="0" bottommargin="0" leftmargin="0" rightmargin="0" bgcolor="#FFFFFF">
 <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
 <table border="0" width="100%" cellspacing="2" cellpadding="2"><tr>
 <td class="columnLeft2" width="<?php echo BOX_WIDTH; ?>" valign="top">

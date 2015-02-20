@@ -112,7 +112,7 @@ require (DIR_WS_INCLUDES.'head.php');
   </script>
   <?php } ?>
 </head>
-<body onLoad="SetFocus();">
+<body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

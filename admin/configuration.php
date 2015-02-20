@@ -172,7 +172,7 @@
 ?>
   <script type="text/javascript" src="includes/general.js"></script>
   </head>
-  <body onLoad="SetFocus();">
+  <body>
     <!-- header //-->
     <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
     <!-- header_eof //-->

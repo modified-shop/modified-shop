@@ -293,7 +293,7 @@ input[type=checkbox], input[type=radio] {
 }
 </style>
 </head>
-<body onload="SetFocus();">
+<body>
   <!-- header //-->
   <?php require(DIR_WS_INCLUDES . 'header.php'); ?>
   <!-- header_eof //-->
