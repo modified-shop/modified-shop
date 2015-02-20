@@ -327,9 +327,6 @@ xtc_update_whos_online();
 // split-page-results
 require (DIR_WS_CLASSES.'split_page_results.php');
 
-// infobox
-require (DIR_WS_CLASSES.'boxes.php');
-
 // auto activate and expire banners
 xtc_activate_banners();
 xtc_expire_banners();
