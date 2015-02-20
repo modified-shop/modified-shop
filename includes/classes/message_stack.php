@@ -57,18 +57,22 @@
 
     function size($class) {
       $count = 0;
-      foreach ($this->messages[$class] as $key => $messages) {
-         $count += count($messages);
+      if (isset($this->messages[$class])) {
+        foreach ($this->messages[$class] as $key => $messages) {
+           $count += count($messages);
+        }
       }
       return $count;
     }
 
     function output($class) {
       $output = '';
-      foreach ($this->messages[$class] as $key => $messages) {
-        foreach ($messages as $message) {
-          $output .= '<p>'.$message.'</p>';
-        }   
+      if ($this->size($class) > 0) {
+        foreach ($this->messages[$class] as $key => $messages) {
+          foreach ($messages as $message) {
+            $output .= '<p>'.$message.'</p>';
+          }   
+        }
       }
       return $output;
     }

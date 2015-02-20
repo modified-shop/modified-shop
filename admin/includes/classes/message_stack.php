@@ -66,10 +66,12 @@
 
     function output() {
       $output = '';
-      foreach ($this->errors as $key => $message) {
-        $output .= '<div class="'.$key.'_message">';
-        $output .= implode('<br/>', $message);
-        $output .= '</div>';   
+      if ($this->size > 0) {
+        foreach ($this->errors as $key => $message) {
+          $output .= '<div class="'.$key.'_message">';
+          $output .= implode('<br/>', $message);
+          $output .= '</div>';   
+        }
       }
       return $output;
     }
