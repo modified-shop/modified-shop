@@ -20,9 +20,9 @@
 
 require_once (dirname(__FILE__).'/payone.php');
 
-define('MODULE_PAYMENT_PAYONE_OTRANS_TEXT_TITLE', 'Onlineüberweisung');
-define('MODULE_PAYMENT_PAYONE_OTRANS_TEXT_DESCRIPTION', 'Zahlung per Onlineüberweisung über PayOne');
-define('MODULE_PAYMENT_PAYONE_OTRANS_TEXT_INFO', 'Zahlung per Onlineüberweisung');
+define('MODULE_PAYMENT_PAYONE_OTRANS_TEXT_TITLE', 'Online&uuml;berweisung');
+define('MODULE_PAYMENT_PAYONE_OTRANS_TEXT_DESCRIPTION', 'Zahlung per Online&uuml;berweisung &uuml;ber PayOne');
+define('MODULE_PAYMENT_PAYONE_OTRANS_TEXT_INFO', 'Zahlung per Online&uuml;berweisung');
 define('MODULE_PAYMENT_PAYONE_OTRANS_STATUS_TITLE', MODULE_PAYMENT_PAYONE_STATUS_TITLE);
 define('MODULE_PAYMENT_PAYONE_OTRANS_STATUS_DESC', MODULE_PAYMENT_PAYONE_STATUS_DESC);
 define('MODULE_PAYMENT_PAYONE_OTRANS_ALLOWED_TITLE', MODULE_PAYMENT_PAYONE_ALLOWED_TITLE);
