@@ -29,19 +29,17 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
-  <?php 
-  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/css/','php') as $file) require ($file);
-  ?>
-  
+
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
-    echo '<link rel="stylesheet" type="text/css" href="includes/css/topmenu.css" />';
+    echo '<link rel="stylesheet" type="text/css" href="includes/css/topmenu.css" />'. PHP_EOL;
   } else {
-    echo '<link rel="stylesheet" type="text/css" href="includes/css/liststyle_left.css" />';
+    echo '<link rel="stylesheet" type="text/css" href="includes/css/liststyle_left.css" />'. PHP_EOL;
   }
   if (USE_ADMIN_FIXED_TOP != 'true') {
-    echo '<link rel="stylesheet" type="text/css" href="includes/css/fixed_top_none.css" />';
+    echo '<link rel="stylesheet" type="text/css" href="includes/css/fixed_top_none.css" />'. PHP_EOL;
   }
+foreach(auto_include(DIR_FS_ADMIN.'includes/extra/css/','php') as $file) require ($file);
   ?>
 
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
