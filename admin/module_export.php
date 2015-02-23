@@ -63,6 +63,10 @@
   $action = (isset($_GET['action']) ? $_GET['action'] : '');
 
   if (xtc_not_null($action)) {
+    //load language file for action
+    if (file_exists(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php')) {
+      include_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/modules/' . $module_type . '/' . basename($module_class) . '.php');
+    }
     switch ($action) {
       //BOF NEW MODULE PROCESSING
       case 'module_processing_do':
