@@ -213,7 +213,7 @@
           <div class="main flt-l" style="width:175px;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></div>
           <div class="main customers-groups">
             <?php
-            echo $catfunc->create_permission_checkboxes($category);
+            echo $catfunc->create_permission_checkboxes($product);
             ?>
           </div>
           <div style="clear:both;"></div>
@@ -227,12 +227,12 @@
         <input type="submit" class="button" name="prod_update" value="<?php echo BUTTON_UPDATE; ?>" <?php echo $confirm_save_entry;?>>
         <?php
         if (isset($_GET['pID']) && $_GET['pID'] > 0) {
-					if (is_file('includes/modules/products_attributes_iframe.php')) {
-					  include_once("includes/modules/products_attributes_iframe.php");
-					}
+          if (is_file('includes/modules/products_attributes_iframe.php')) {
+            include_once("includes/modules/products_attributes_iframe.php");
+          }
           if (function_exists('attributes_iframe_link')) {
-						echo '&nbsp;&nbsp;'.attributes_iframe_link($_GET['pID']);
-					} else {
+            echo '&nbsp;&nbsp;'.attributes_iframe_link($_GET['pID']);
+          } else {
             echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link('new_attributes.php','cpath='. $cPath . $catfunc->page_parameter.'&current_product_id='.$_GET['pID'].'&action=edit&oldaction=new_product').'" onclick="this.blur()">'.BUTTON_EDIT_ATTRIBUTES.'</a>';
           }
           echo '&nbsp;&nbsp;<a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . 'last_action='.$_GET['action'].'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>';
