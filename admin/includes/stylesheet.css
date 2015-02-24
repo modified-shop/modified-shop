@@ -741,7 +741,9 @@ background-color: #FA8072;
 }
 .row1 ul li {
   float:left;
-  
+}
+.row1 ul li.right {
+  float:right;
 }
 .row1 ul li > a {
   display:block;
@@ -974,4 +976,10 @@ input, textarea {
   background-color:#d4ebcb;
   margin-bottom:10px;
   color:#3C763D;
+}
+.right {
+  float: right;
+}
+.left {
+  float: left;
 }

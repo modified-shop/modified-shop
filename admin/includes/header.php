@@ -89,23 +89,23 @@
         $favorites[6] = array(
             'file' => 'logoff.php',
             'par'  => '', 'shop' => 1,
-            'icon'  => 'icon_logout.png',
+            'icon' => 'icon_logout.png',
             'name' => BOX_LOGOUT,
-            'right' => true
+            'class'=> 'right'
           );
         $favorites[7] = array(
             'file' => 'credits.php',
             'par'  => '', 'shop' => 0,
-            'icon'  => 'icon_credits.png',
+            'icon' => 'icon_credits.png',
             'name' => BOX_CREDITS,
-            'right' => true
+            'class'=> 'right'
           );
         $favorites[8] = array(
             'file' => 'check_update.php',
             'par'  => '', 'shop' => 0,
-            'icon'  => 'icon_update.png',
+            'icon' => 'icon_update.png',
             'name' => BOX_UPDATE,
-            'right' => true
+            'class'=> 'right'
           );
 
         // overwrite with hooks
@@ -123,7 +123,7 @@
               $func = 'xtc_href_link';
             }
             $favoriteslink = $func($f['file'], $f['par'], 'NONSSL', true);
-            echo '<li'.((isset($f['right'])) ? ' style="float:right;"' : '').'><a href="' . $favoriteslink . '">'.
+            echo '<li'.((isset($f['class'])) ? ' class="'.$f['class'].'"' : '').'><a href="' . $favoriteslink . '">'.
                  xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
                  '</li></a>' . PHP_EOL;
           }
