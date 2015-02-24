@@ -58,20 +58,17 @@
 
   $smarty->assign('oID',$order->info['order_id']);
   if ($order->info['payment_method']!='' && $order->info['payment_method']!='no_payment') {
+
     include(DIR_FS_CATALOG.'lang/'.$_SESSION['language'].'/modules/payment/'.$order->info['payment_method'].'.php');
+
     $payment_method=constant(strtoupper('MODULE_PAYMENT_'.$order->info['payment_method'].'_TEXT_TITLE'));
-    // BOF - DokuMan -2012-06-06 - BILLPAY payment module (in external directory)
-    require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_bankdata.php');
-    $payment_method .= display_billpay_bankdata();
-    /*
-     * falls das Modul "pdfrechnung" eingesetzt wird muss nach der Zeile:
-     * $pdf->RechnungStart($order->customer['lastname'], $customer_gender['customers_gender'], PDF_LIEFERSCHEIN);
-     * folgendes eingefügt werden:
-     */
-    //if($order->info['payment_method'] == 'billpay' || $order->info['payment_method'] == 'billpaydebit' || $order->info['payment_method'] == 'billpaytransactioncredit')
-    //  require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_pdf_data.php');
-    //}
-    // EOF - DokuMan -2012-06-06 - BILLPAY payment module (in external directory)
+
+    // mod: BILLPAY payment module
+    if(stripos($order->info['payment_method'], 'billpay') !== false) {
+      require_once(DIR_FS_EXTERNAL . 'billpay/utils/billpay_display_bankdata.php');
+      $payment_method .= display_billpay_bankdata();
+    }
+
     $smarty->assign('PAYMENT_METHOD',$payment_method);
   }
   $smarty->assign('COMMENTS', $order->info['comments']);
@@ -79,6 +76,7 @@
   $smarty->assign('INVOICE_NUMBER', isset($order->info['ibn_billnr']) && $order->info['ibn_billnr'] != '' ? $order->info['ibn_billnr'] :  $order->info['order_id']);
   $smarty->assign('INVOICE_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
   $smarty->assign('DELIVERY_DATE', isset($order->info['ibn_billdate']) && $order->info['ibn_billdate'] != '0000-00-00' ? xtc_date_short($order->info['ibn_billdate']) :  xtc_date_short($order->info['date_purchased']));
+
   // dont allow cache
   $smarty->caching = false;
   $smarty->template_dir=DIR_FS_CATALOG.'templates';
