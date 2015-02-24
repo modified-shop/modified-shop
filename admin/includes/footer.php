@@ -37,12 +37,6 @@
     </div>  
 </div>
 <?php
-  /*
-    echo ('<font size="2" face="Verdana, Arial, Helvetica, sans-serif"><strong>Session Debug:</strong><br />');
-    echo "<pre>";
-    print_r($_SESSION);
-    echo "</pre>";
-    echo '</font>';
-    echo xtc_session_id();
-  */
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/footer/','php') as $file) require ($file);
 ?>

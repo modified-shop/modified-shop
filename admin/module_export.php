@@ -527,7 +527,12 @@ if (xtc_not_null($action) && !$box) {
     </table>
     <!-- body_eof //-->
     <!-- footer //-->
-    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
+    <?php
+    if (file_exists('includes/javascript/'.basename($module_class).'.js.php')) {
+      include_once('includes/javascript/'.basename($module_class).'.js.php');
+    }    
+    require(DIR_WS_INCLUDES . 'footer.php'); 
+    ?>
     <!-- footer_eof //-->
     <br />
   </body>
