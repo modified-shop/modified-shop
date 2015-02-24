@@ -900,6 +900,9 @@ define('COMPRESS_STYLESHEET_DESC', 'Compress Stylesheet?<br/><b>Attention:</b> T
 define('USE_ATTRIBUTES_IFRAME_TITLE', 'Edit Attributes in iframe');
 define('USE_ATTRIBUTES_IFRAME_DESC', 'Open Attribute Manager in the Category / Product view in an iframe');
 
+define('ADMIN_HEADER_X_FRAME_OPTIONS_TITLE', 'Admin Clickjacking Protection');
+define('ADMIN_HEADER_X_FRAME_OPTIONS_DESC', 'Protect Adminarea with Header "X-Frame-Options: SAMEORIGIN"<br>Supported Browsers: FF 3.6.9+ Chrome 4.1.249.1042+ IE 8+ Safari 4.0+ Opera 10.50+ ');
+
 define('SEND_MAIL_ACCOUNT_CREATED_TITLE', 'E-Mail upon Create Account');
 define('SEND_MAIL_ACCOUNT_CREATED_DESC', 'Send an E-Mail to customer upon account creation?');
 

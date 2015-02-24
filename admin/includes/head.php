@@ -18,6 +18,10 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   define('NEW_ADMIN_STYLE',true);
+
+  if (defined('ADMIN_HEADER_X_FRAME_OPTIONS') && ADMIN_HEADER_X_FRAME_OPTIONS == 'true') {
+    header('X-Frame-Options: SAMEORIGIN'); // only in an iframe of the same site
+  }
 ?>
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
