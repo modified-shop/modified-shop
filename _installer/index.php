@@ -121,20 +121,18 @@
             <tr>
               <td>
                 <h1><?php echo TEXT_CHMOD_REMARK_HEADLINE; ?>:</h1>
-                <div style="background:#fff; padding:10px; border:1px solid #ccc">
-                  <?php echo TEXT_CHMOD_REMARK; ?>
+                <div style="background:#fff; padding:0 10px; border:1px solid #cf0000">
+                  <p><?php echo TEXT_CHMOD_REMARK; ?></p>
                 </div><br />
-                <div style="background:#ff0000; color:#ffffff; padding:10px; border:1px solid #cf0000">
+                <div style="background:#ffd0d0; color:#000; padding:10px; border:1px solid #cf0000">
                   <?php
                   if ($messageStack->size('file_permission') > 0) {
                     echo TEXT_WRONG_FILE_PERMISSION . '<br/>';
                     echo $messageStack->output('file_permission');
-                    echo '<br/>';
                   }
                   if ($messageStack->size('folder_permission') > 0) {
                     echo TEXT_WRONG_FOLDER_PERMISSION . '<br/>';
                     echo $messageStack->output('folder_permission');
-                    echo '<br/>';
                   }
                   if ($messageStack->size('rfolder_permission') > 0) {
                     echo TEXT_WRONG_RFOLDER_PERMISSION . '<br/>';
