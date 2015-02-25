@@ -37,11 +37,15 @@ defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.'
     }
 
     public function infoBox($heading, $contents) {
+      if (isset($heading[0]['text'])) {
+        $heading[0]['text'] = '<div class="infoBoxHeadingTitle">'.$heading[0]['text'].'</div>';
+      }
+      
       $this->table_row_parameters = 'class="infoBoxHeading"';
       $this->table_data_parameters = 'class="infoBoxHeading"';
       $this->heading = $this->tableBlock($heading);
 
-      $this->table_row_parameters = '';
+      $this->table_row_parameters = 'class="infoBoxContent"';
       $this->table_data_parameters = 'class="infoBoxContent"';
       $this->contents = $this->tableBlock($contents);
 

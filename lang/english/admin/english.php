@@ -478,10 +478,11 @@ define('BOX_XSBOOSTER_CONFIG','Base Configuration');
 // EOF - Tomcraft - 2009-11-28 - Included xs:booster
 
 //BOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
-define('ASB_QUICK_SEARCH_CUSTOMER','Search for customer...');
-define('ASB_QUICK_SEARCH_ORDER_ID','Search for order...');
-define('ASB_QUICK_SEARCH_ARTICLE','Search for product...');
-define('ASB_QUICK_SEARCH_EMAIL', 'Search for E-Mail Address...');
+define('ASB_QUICK_SEARCH_CUSTOMER','Search customers...');
+define('ASB_QUICK_SEARCH_ORDER_ID','Search orders...');
+define('ASB_QUICK_SEARCH_ARTICLE','Search products/categories...');
+define('ASB_QUICK_SEARCH_EMAIL', 'Search E-Mail Addresses...');
+define('ASB_QUICK_SEARCH_ARTICLE_ID','Search products/categories ID...');
 //EOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
 
 //BOF - web28 - 2010.05.30 - accounting - set all checkboxes , countries - set all flags

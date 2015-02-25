@@ -3,7 +3,7 @@ width: 100%;
 }
 
 .modulbox{
-  width: 850px;
+  width: 1000px;
   margin: 20px 4px;
 }
 .modulbox .contentTable{
@@ -42,7 +42,7 @@ width: 100%;
 }
 
 .modulbox .infoBoxContent hr{
-background:#a3a3a3;
+background:#af417e;
 height:2px;
 margin-bottom:5px;
 border: none;

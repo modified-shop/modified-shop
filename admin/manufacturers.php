@@ -193,11 +193,11 @@ if (USE_WYSIWYG == 'true') {
           }
           echo xtc_draw_form('manufacturers', FILENAME_MANUFACTURERS, 'page=' . (int)$_GET['page'] . ((isset($_GET['mID'])) ? '&mID=' . (int)$_GET['mID'] : ''). '&action='.(($_GET['action']=='new') ? 'insert' : 'save'), 'post', 'enctype="multipart/form-data"');
           ?>
-          <div class="div_box mrg5" style="width:900px;">       
+          <div class="div_box mrg5">       
             <div class="pdg2">
-              <table class="tableInput" style="padding: 5px 12px;">
+              <table class="tableInput bg_notice" style="padding: 5px 12px;">
                 <tr>
-                  <td class="main" style="width:185px;"><?php echo TEXT_MANUFACTURERS_NAME; ?></td>
+                  <td class="main" style="width:185px;"><b><?php echo TEXT_MANUFACTURERS_NAME; ?></b></td>
                   <td class="main"><?php echo xtc_draw_input_field('manufacturers_name', ((isset($manufact['manufacturers_name'])) ? $manufact['manufacturers_name'] : ''), 'style="width:100%" maxlength="255"'); ?></td>
                 </tr>
               </table>
@@ -217,26 +217,26 @@ if (USE_WYSIWYG == 'true') {
                 ?>
                 <table class="tableInput border0">
                   <tr>
-                    <td class="main" style="width:190px;"><?php echo $lng_image.TEXT_MANUFACTURERS_URL; ?></td>
+                    <td class="main" style="width:190px;"><b><?php echo $lng_image.TEXT_MANUFACTURERS_URL; ?></b></td>
                     <td class="main"><?php echo xtc_draw_input_field('manufacturers_url[' . $languages[$i]['id'] . ']', xtc_get_manufacturer_url($manufacturer['manufacturers_id'], $languages[$i]['id']), 'style="width:99%" maxlength="255"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><?php  echo $lng_image.TEXT_MANUFACTURERS_DESCRIPTION; ?></td>
+                    <td class="main"><b><?php  echo $lng_image.TEXT_MANUFACTURERS_DESCRIPTION; ?></b></td>
                     <td class="main">&nbsp;</td>
                   </tr>
                   <tr>
                     <td class="main" colspan="2"><?php echo xtc_draw_textarea_field('manufacturers_description[' . $languages[$i]['id'] . ']', 'soft', '100', '25', ((isset($manufacturer['manufacturers_description'])) ? stripslashes($manufacturer['manufacturers_description']) : ''), 'style="width:99%"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><?php  echo $lng_image.TEXT_META_TITLE .'<br /> (max. 50 '. TEXT_CHARACTERS .')'; ?></td>
+                    <td class="main"><b><?php  echo $lng_image.TEXT_META_TITLE .'<br /> (max. 50 '. TEXT_CHARACTERS .')'; ?></b></td>
                     <td class="main"><?php echo xtc_draw_input_field('manufacturers_meta_title[' . $languages[$i]['id'] . ']', ((isset($manufacturer['manufacturers_meta_title'])) ? stripslashes($manufacturer['manufacturers_meta_title']) : ''), 'style="width:99%" maxlength="50"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><?php  echo $lng_image.TEXT_META_DESCRIPTION .'<br /> (max. 140 '. TEXT_CHARACTERS .')'; ?></td>
+                    <td class="main"><b><?php  echo $lng_image.TEXT_META_DESCRIPTION .'<br /> (max. 140 '. TEXT_CHARACTERS .')'; ?></b></td>
                     <td class="main"><?php echo xtc_draw_input_field('manufacturers_meta_description[' . $languages[$i]['id'] . ']', ((isset($manufacturer['manufacturers_meta_description'])) ? stripslashes($manufacturer['manufacturers_meta_description']) : ''),'style="width:99%" maxlength="140"'); ?></td>
                   </tr>
                   <tr>
-                    <td class="main"><?php  echo $lng_image.TEXT_META_KEYWORDS .'<br /> (max. 180 '. TEXT_CHARACTERS .')'; ?></td>
+                    <td class="main"><b><?php  echo $lng_image.TEXT_META_KEYWORDS .'<br /> (max. 180 '. TEXT_CHARACTERS .')'; ?></b></td>
                     <td class="main"><?php echo xtc_draw_input_field('manufacturers_meta_keywords[' . $languages[$i]['id'] . ']', ((isset($manufacturer['manufacturers_meta_keywords'])) ? stripslashes($manufacturer['manufacturers_meta_keywords']) : ''),'style="width:99%" maxlength="180"'); ?></td>
                   </tr>
                 </table>

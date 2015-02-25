@@ -38,13 +38,21 @@
       }
     }
   }
+  
+  // newsfeed
+  require_once(DIR_FS_INC.'get_newsfeed.inc.php');
+  get_newsfeed();
+  
+  // news count
+  $num_news_query = xtc_db_query("SELECT count(*) as total FROM newsfeed WHERE news_date > '".NEWSFEED_LAST_READ."'");
+  $num_news = xtc_db_fetch_array($num_news_query);
   ?>
-
+ 
 <div id="fixed-header">
 <div class="adminbar">
   <div class="row1 cf">
     <ul>
-      <li><span class="logo_small"><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></span></li>
+      <li><span class="logo_small"><a href="<?php echo xtc_href_link(FILENAME_START); ?>"><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></a></span></li>
       <li><span class="lang_icons cf"><?php echo '&nbsp;&nbsp;&nbsp;'.$languages_string ;?></span></li>
       <?php
         $favorites = array();
@@ -62,22 +70,22 @@
             'name' => BOX_CONTENT
           );
         $favorites[2] = array(
-            'file' => 'backup.php',
-            'par'  => '', 'shop' => 0,
-            'icon'  => 'icon_backup.png',
-            'name' => BOX_BACKUP
-          );
-        $favorites[3] = array(
             'file' => 'customers.php',
             'par'  => '', 'shop' => 0,
             'icon'  => 'icon_customers.png',
             'name' => BOX_CUSTOMERS
           );
-        $favorites[4] = array(
+        $favorites[3] = array(
             'file' => 'categories.php',
             'par'  => '', 'shop' => 0,
             'icon'  => 'icon_categories.png',
             'name' => BOX_CATEGORIES
+          );
+        $favorites[4] = array(
+            'file' => 'backup.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_backup.png',
+            'name' => BOX_BACKUP
           );
         $favorites[5] = array(
             'file' => 'index.php',
@@ -89,23 +97,31 @@
         $favorites[6] = array(
             'file' => 'logoff.php',
             'par'  => '', 'shop' => 1,
-            'icon' => 'icon_logout.png',
+            'icon'  => 'icon_logout.png',
             'name' => BOX_LOGOUT,
-            'class'=> 'right'
+            'right' => true
           );
         $favorites[7] = array(
-            'file' => 'credits.php',
+            'file' => 'newsfeed.php',
             'par'  => '', 'shop' => 0,
-            'icon' => 'icon_credits.png',
-            'name' => BOX_CREDITS,
-            'class'=> 'right'
+            'icon'  => 'icon_feed.png',
+            'name' => 'News',
+            'right' => true,
+            'count' => $num_news['total']
           );
         $favorites[8] = array(
+            'file' => 'credits.php',
+            'par'  => '', 'shop' => 0,
+            'icon'  => 'icon_credits.png',
+            'name' => BOX_CREDITS,
+            'right' => true
+          );
+        $favorites[9] = array(
             'file' => 'check_update.php',
             'par'  => '', 'shop' => 0,
-            'icon' => 'icon_update.png',
+            'icon'  => 'icon_update.png',
             'name' => BOX_UPDATE,
-            'class'=> 'right'
+            'right' => true
           );
 
         // overwrite with hooks
@@ -123,8 +139,8 @@
               $func = 'xtc_href_link';
             }
             $favoriteslink = $func($f['file'], $f['par'], 'NONSSL', true);
-            echo '<li'.((isset($f['class'])) ? ' class="'.$f['class'].'"' : '').'><a href="' . $favoriteslink . '">'.
-                 xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
+            echo '<li'.((isset($f['right'])) ? ' style="float:right;"' : '').'><a href="' . $favoriteslink . '">'.
+                 xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).((isset($f['count']) && $f['count'] > 0) ? '<div class="icon_count">'.$f['count'].'</div>' : '').
                  '</li></a>' . PHP_EOL;
           }
         }

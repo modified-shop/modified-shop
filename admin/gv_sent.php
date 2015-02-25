@@ -106,27 +106,28 @@ require (DIR_WS_INCLUDES.'head.php');
           
           </td>
           <?php
-            $heading = array();
-            $contents = array();
+            if (isset($gInfo) && is_object($gInfo)) {
+              $heading = array();
+              $contents = array();
 
-            $heading[] = array('text' => '[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount));
-            $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gInfo->coupon_id . "'");
-            $redeemed = 'No';
-            if (xtc_db_num_rows($redeem_query) > 0) $redeemed = 'Yes';
-            $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
-            $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
-            $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . xtc_date_short($gInfo->date_sent));
-            $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
-            $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
-            if ($redeemed=='Yes') {
-              $redeem = xtc_db_fetch_array($redeem_query);
-              $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . xtc_date_short($redeem['redeem_date']));
-              $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem['redeem_ip']);
-              $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem['customer_id']);
-            } else {
-              $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
+              $heading[] = array('text' => '<b>[' . $gInfo->coupon_id . '] ' . ' ' . $currencies->format($gInfo->coupon_amount).'</b>');
+              $redeem_query = xtc_db_query("select * from " . TABLE_COUPON_REDEEM_TRACK . " where coupon_id = '" . $gInfo->coupon_id . "'");
+              $redeemed = 'No';
+              if (xtc_db_num_rows($redeem_query) > 0) $redeemed = 'Yes';
+              $contents[] = array('text' => TEXT_INFO_SENDERS_ID . ' ' . $gInfo->customer_id_sent);
+              $contents[] = array('text' => TEXT_INFO_AMOUNT_SENT . ' ' . $currencies->format($gInfo->coupon_amount));
+              $contents[] = array('text' => TEXT_INFO_DATE_SENT . ' ' . xtc_date_short($gInfo->date_sent));
+              $contents[] = array('text' => TEXT_INFO_VOUCHER_CODE . ' ' . $gInfo->coupon_code);
+              $contents[] = array('text' => TEXT_INFO_EMAIL_ADDRESS . ' ' . $gInfo->emailed_to);
+              if ($redeemed=='Yes') {
+                $redeem = xtc_db_fetch_array($redeem_query);
+                $contents[] = array('text' => '<br />' . TEXT_INFO_DATE_REDEEMED . ' ' . xtc_date_short($redeem['redeem_date']));
+                $contents[] = array('text' => TEXT_INFO_IP_ADDRESS . ' ' . $redeem['redeem_ip']);
+                $contents[] = array('text' => TEXT_INFO_CUSTOMERS_ID . ' ' . $redeem['customer_id']);
+              } else {
+                $contents[] = array('text' => '<br />' . TEXT_INFO_NOT_REDEEMED);
+              }
             }
-
             if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
               echo '            <td class="boxRight">' . "\n";
               $box = new box;

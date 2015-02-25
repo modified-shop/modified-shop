@@ -95,8 +95,8 @@ if (USE_WYSIWYG == 'true') {
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_configuration.png'); ?></div>
         <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>       
         <div class="main pdg2 flt-l">Configuration</div>
-        <div class="clear dataTableHeadingContent"><?php echo BOX_SHOP_OFFLINE; ?></div>
-        <div valign="top" class="main pdg2" style="width:800px;">
+        <div valign="top" class="clear div_box mrg5">
+          <div class="important_info"><?php echo BOX_SHOP_OFFLINE; ?></div>
           <?php 
             echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
             ?>

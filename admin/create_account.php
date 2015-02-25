@@ -75,114 +75,155 @@
       $customers_password_encrypted =  xtc_RandomString(8);
       $customers_password = xtc_encrypt_password($customers_password_encrypted);
     }
-
     $error = false; // reset error flag
 
-    $entry_gender_error = false;
-    if (ACCOUNT_GENDER == 'true' && $customers_gender != 'm' && $customers_gender != 'f') {
-        $error = $entry_gender_error = true;
+    if (ACCOUNT_GENDER == 'true') {
+      if (($customers_gender != 'm') && ($customers_gender != 'f')) {
+        $error = true;
+        $entry_gender_error = true;
+      } else {
+        $entry_gender_error = false;
+      }
     }
 
-    $entry_password_error = false;
     if (strlen($customers_password) < ENTRY_PASSWORD_MIN_LENGTH) {
-      $error = $entry_password_error = true;
+      $error = true;
+      $entry_password_error = true;
+    } else {
+      $entry_password_error = false;
     }
 
-    $entry_mail_error = false;
-    if ($customers_send_mail != 'yes' && $customers_send_mail != 'no') {
-      $error = $entry_mail_error = true;
+    if (($customers_send_mail != 'yes') && ($customers_send_mail != 'no')) {
+      $error = true;
+      $entry_mail_error = true;
+    } else {
+      $entry_mail_error = false;
     }
 
-    $entry_firstname_error = false;
     if (strlen($customers_firstname) < ENTRY_FIRST_NAME_MIN_LENGTH) {
-      $error = $entry_firstname_error = true;
+      $error = true;
+      $entry_firstname_error = true;
+    } else {
+      $entry_firstname_error = false;
     }
 
-    $entry_lastname_error = false;
     if (strlen($customers_lastname) < ENTRY_LAST_NAME_MIN_LENGTH) {
-      $error = $entry_lastname_error = true;
+      $error = true;
+      $entry_lastname_error = true;
+    } else {
+      $entry_lastname_error = false;
     }
 
-    $entry_date_of_birth_error = false;
-    if (ACCOUNT_DOB == 'true' && !checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
-      $error = $entry_date_of_birth_error = true;
+    if (ACCOUNT_DOB == 'true') {
+      if (checkdate(substr(xtc_date_raw($customers_dob), 4, 2), substr(xtc_date_raw($customers_dob), 6, 2), substr(xtc_date_raw($customers_dob), 0, 4))) {
+        $entry_date_of_birth_error = false;
+      } else {
+        $error = true;
+        $entry_date_of_birth_error = true;
+      }
     }
 
-    // VAT Check
+    // New VAT Check
     if (xtc_get_geo_zone_code($entry_country_id) != '6') {
       require_once(DIR_FS_CATALOG.DIR_WS_CLASSES.'vat_validation.php');
       $vatID = new vat_validation($customers_vat_id, '', '', $entry_country_id);
       $customers_vat_id_status = isset($vatID->vat_info['vat_id_status']) ? $vatID->vat_info['vat_id_status'] : '';
-      // display correct error code of VAT ID check
+
+      // BOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
       switch ($customers_vat_id_status) {
-        case '0': // VAT invalid
+        // 0 = 'VAT invalid'
+        // 1 = 'VAT valid'
+        // 2 = 'SOAP ERROR: Connection to host not possible, europe.eu down?'
+        // 8 = 'unknown country'
+        //94 = 'INVALID_INPUT'       => 'The provided CountryCode is invalid or the VAT number is empty',
+        //95 = 'SERVICE_UNAVAILABLE' => 'The SOAP service is unavailable, try again later',
+        //96 = 'MS_UNAVAILABLE'      => 'The Member State service is unavailable, try again later or with another Member State',
+        //97 = 'TIMEOUT'             => 'The Member State service could not be reached in time, try again later or with another Member State',
+        //98 = 'SERVER_BUSY'         => 'The service cannot process your request. Try again later.'
+        //99 = 'no PHP5 SOAP support'
+        case '0' :
           $entry_vat_error_text = TEXT_VAT_FALSE;
           break;
-        case '1': // VAT valid
+        case '1' :
           $entry_vat_error_text = TEXT_VAT_TRUE;
           break;
-        case '2': // SOAP ERROR: Connection to host not possible, europe.eu down?
+        case '2' :
           $entry_vat_error_text = TEXT_VAT_CONNECTION_NOT_POSSIBLE;
           break;
-        case '8': // unknown country
+        case '8' :
           $entry_vat_error_text = TEXT_VAT_UNKNOWN_COUNTRY;
           break;
-        case '94': // INVALID_INPUT => The provided CountryCode is invalid or the VAT number is empty
+        case '94' :
           $entry_vat_error_text = TEXT_VAT_INVALID_INPUT;
           break;
-        case '95': // SERVICE_UNAVAILABLE => The SOAP service is unavailable, try again later
+        case '95' :
           $entry_vat_error_text = TEXT_VAT_SERVICE_UNAVAILABLE;
           break;
-        case '96': // MS_UNAVAILABLE => The Member State service is unavailable, try again later or with another Member State
+        case '96' :
           $entry_vat_error_text = TEXT_VAT_MS_UNAVAILABLE;
           break;
-        case '97': // TIMEOUT => The Member State service could not be reached in time, try again later or with another Member State
+        case '97' :
           $entry_vat_error_text = TEXT_VAT_TIMEOUT;
           break;
-        case '98': // SERVER_BUSY => The service cannot process your request. Try again later
+        case '98' :
           $entry_vat_error_text = TEXT_VAT_SERVER_BUSY;
           break;
-        case '99': // no PHP5 SOAP support
+        case '99' :
           $entry_vat_error_text = TEXT_VAT_NO_PHP5_SOAP_SUPPORT;
           break;
         default:
           $entry_vat_error_text = '';
           break;
       }
+      // EOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
+
       if($vatID->vat_info['error']==1){
         $entry_vat_error = true;
         $error = true;
       }
     }
+    // New VAT CHECK END
 
-    $entry_email_address_error = false;
     if (strlen($customers_email_address) < ENTRY_EMAIL_ADDRESS_MIN_LENGTH) {
-      $error = $entry_email_address_error = true;
+      $error = true;
+      $entry_email_address_error = true;
+    } else {
+      $entry_email_address_error = false;
     }
 
-    $entry_email_address_check_error = false;
     if (!xtc_validate_email($customers_email_address)) {
-      $error = $entry_email_address_check_error = true;
+      $error = true;
+      $entry_email_address_check_error = true;
+    } else {
+      $entry_email_address_check_error = false;
     }
 
-    $entry_street_address_error = false;
     if (strlen($entry_street_address) < ENTRY_STREET_ADDRESS_MIN_LENGTH) {
-      $error = $entry_street_address_error = true;
+      $error = true;
+      $entry_street_address_error = true;
+    } else {
+      $entry_street_address_error = false;
     }
 
-    $entry_post_code_error = false;
     if (strlen($entry_postcode) < ENTRY_POSTCODE_MIN_LENGTH) {
-      $error = $entry_post_code_error = true;
+      $error = true;
+      $entry_post_code_error = true;
+    } else {
+      $entry_post_code_error = false;
     }
 
-    $entry_city_error = false;
     if (strlen($entry_city) < ENTRY_CITY_MIN_LENGTH) {
-      $error = $entry_city_error = true;
+      $error = true;
+      $entry_city_error = true;
+    } else {
+      $entry_city_error = false;
     }
 
-    $entry_country_error = false;
     if ($entry_country_id == false) {
-      $error = $entry_country_error = true;
+      $error = true;
+      $entry_country_error = true;
+    } else {
+      $entry_country_error = false;
     }
 
     if (ACCOUNT_STATE == 'true') {
@@ -229,38 +270,42 @@
       }
     }
 
-    $entry_telephone_error = false;
     if (strlen($customers_telephone) < ENTRY_TELEPHONE_MIN_LENGTH) {
-      $error = $entry_telephone_error = true;
+      $error = true;
+      $entry_telephone_error = true;
+    } else {
+      $entry_telephone_error = false;
     }
 
-    $entry_email_address_exists = false;
     $check_email = xtc_db_query("-- /admin/create_account.php
                                  SELECT customers_email_address
                                    FROM ".TABLE_CUSTOMERS."
                                   WHERE customers_email_address = '".xtc_db_input($customers_email_address)."'
                                     AND customers_id <> '".xtc_db_input($customers_id)."'");
     if (xtc_db_num_rows($check_email)) {
-      $error = $entry_email_address_exists = true;
+      $error = true;
+      $entry_email_address_exists = true;
+    } else {
+      $entry_email_address_exists = false;
     }
 
     if ($error == false) {
       $sql_data_array = array (
-          'customers_status' => $customers_status_c,
-          'customers_cid' => ((defined('MODULE_CUSTOMERS_CID_STATUS') && MODULE_CUSTOMERS_CID_STATUS == 'true') ? generate_customers_cid(true) : $customers_cid),
-          'customers_vat_id' => $customers_vat_id,
-          'customers_vat_id_status' => $customers_vat_id_status,
-          'customers_firstname' => $customers_firstname,
-          'customers_lastname' => $customers_lastname,
-          'customers_email_address' => $customers_email_address,
-          'customers_telephone' => $customers_telephone,
-          'customers_fax' => $customers_fax,
-          'payment_unallowed' => $payment_unallowed,
-          'shipping_unallowed' => $shipping_unallowed,
-          'customers_password' => $customers_password,
-          'customers_date_added' => 'now()',
-          'customers_last_modified' => 'now()'
-        );
+                               'customers_status' => $customers_status_c,
+                               'customers_cid' => ((defined('MODULE_CUSTOMERS_CID_STATUS') && MODULE_CUSTOMERS_CID_STATUS == 'true') ? generate_customers_cid(true) : $customers_cid),
+                               'customers_vat_id' => $customers_vat_id,
+                               'customers_vat_id_status' => $customers_vat_id_status,
+                               'customers_firstname' => $customers_firstname,
+                               'customers_lastname' => $customers_lastname,
+                               'customers_email_address' => $customers_email_address,
+                               'customers_telephone' => $customers_telephone,
+                               'customers_fax' => $customers_fax,
+                               'payment_unallowed' => $payment_unallowed,
+                               'shipping_unallowed' => $shipping_unallowed,
+                               'customers_password' => $customers_password,
+                               'customers_date_added' => 'now()',
+                               'customers_last_modified' => 'now()'
+                              );
 
       if (ACCOUNT_GENDER == 'true')
         $sql_data_array['customers_gender'] = $customers_gender;
@@ -269,18 +314,15 @@
 
       xtc_db_perform(TABLE_CUSTOMERS, $sql_data_array);
       $cc_id = xtc_db_insert_id();
-
-      $sql_data_array = array (
-          'customers_id' => $cc_id,
-          'entry_firstname' => $customers_firstname,
-          'entry_lastname' => $customers_lastname,
-          'entry_street_address' => $entry_street_address,
-          'entry_postcode' => $entry_postcode,
-          'entry_city' => $entry_city,
-          'entry_country_id' => $entry_country_id,
-          'address_date_added' => 'now()',
-          'address_last_modified' => 'now()'
-        );
+      $sql_data_array = array ('customers_id' => $cc_id,
+                                'entry_firstname' => $customers_firstname,
+                                'entry_lastname' => $customers_lastname,
+                                'entry_street_address' => $entry_street_address,
+                                'entry_postcode' => $entry_postcode,
+                                'entry_city' => $entry_city,
+                                'entry_country_id' => $entry_country_id,
+                                'address_date_added' => 'now()',
+                                'address_last_modified' => 'now()');
 
       if (ACCOUNT_GENDER == 'true')
         $sql_data_array['entry_gender'] = $customers_gender;
@@ -289,30 +331,36 @@
       if (ACCOUNT_SUBURB == 'true')
         $sql_data_array['entry_suburb'] = $entry_suburb;
       if (ACCOUNT_STATE == 'true') {
-        $sql_data_array['entry_zone_id'] = '0';
-        $sql_data_array['entry_state'] = $entry_state;
         if ($zone_id > 0) {
           $sql_data_array['entry_zone_id'] = $entry_zone_id;
           $sql_data_array['entry_state'] = '';
+        } else {
+          $sql_data_array['entry_zone_id'] = '0';
+          $sql_data_array['entry_state'] = $entry_state;
         }
       }
       xtc_db_perform(TABLE_ADDRESS_BOOK, $sql_data_array);
       $address_id = xtc_db_insert_id();
-
       xtc_db_query("UPDATE ".TABLE_CUSTOMERS." SET customers_default_address_id = '".$address_id."' WHERE customers_id = '".$cc_id."'");
-
       xtc_db_query("INSERT INTO ".TABLE_CUSTOMERS_INFO." (customers_info_id, customers_info_number_of_logons, customers_info_date_account_created) VALUES ('".$cc_id."', '0', now())");
-
       // Create insert into admin access table if admin is created.
       if ($customers_status_c == '0') {
         xtc_db_query("INSERT INTO ".TABLE_ADMIN_ACCESS." (customers_id,start) VALUES ('".$cc_id."','1')");
       }
-
       // Create eMail
       if (($customers_send_mail == 'yes')) {
 
-        $smarty->assign('GENDER', ($customers_gender == 'f' ? FEMALE : ($customers_gender == 'm' ? MALE : '')));
+        //BOF - DokuMan - 2011-02-02 - Fix for more personalized e-mails to the customer (show salutation and surname)
+        if ($customers_gender =='f') {
+          $smarty->assign('GENDER', FEMALE);
+        } elseif ($customers_gender =='m') {
+          $smarty->assign('GENDER', MALE);
+        } else {
+          $smarty->assign('GENDER', '');
+        }
         $smarty->assign('LASTNAME',$customers_lastname);
+        //EOF - DokuMan - 2011-02-02 - Fix for more personalized e-mails to the customer (show salutation and surname)
+
         // assign language to template for caching
         $smarty->assign('language', $_SESSION['language']);
         // set dirs manual
@@ -373,74 +421,117 @@ require (DIR_WS_INCLUDES.'head.php');
         <td class="boxCenter">
           <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_customers.png'); ?></div>
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-          <div class="mrg5" style="width:850px;">
+          <div class="clear div_box mrg5">
             <?php echo xtc_draw_form('customers', FILENAME_CREATE_ACCOUNT, xtc_get_all_get_params(array('action')) . 'action=edit', 'post', 'onSubmit="return check_form();"') . xtc_draw_hidden_field('default_address_id', isset($customers_default_address_id)?$customers_default_address_id:''); ?>
               <div class="formAreaTitle"><span class="title"><?php echo CATEGORY_PERSONAL; ?></span></div>
               <div class="formAreaC">
                 <table class="tableConfig borderall">
-
-                    <?php if (ACCOUNT_GENDER == 'true') { ?>
+                    <?php
+                    if (ACCOUNT_GENDER == 'true') {
+                      ?>
                       <tr>
                         <td class="dataTableConfig col-left"><?php echo ENTRY_GENDER; ?></td>
                         <td class="dataTableConfig col-single-right">
-                        <?php
-                          echo '<label>'.xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'</label>&nbsp;&nbsp;';
-                          echo '<label>'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE.'</label>';
-                          if ($error && $entry_gender_error) echo '&nbsp;'.ENTRY_GENDER_ERROR;
-                        ?>
-                        </td>                        
+                          <?php
+                          if (isset($error) && $error == true) {
+                            if (isset($entry_gender_error) && $entry_gender_error == true) {
+                              echo xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE.'&nbsp;'.ENTRY_GENDER_ERROR;
+                            } else {
+                              //echo ($customers_gender == 'm') ? MALE : FEMALE; //web28 2012-12-31 - fix twice display
+                              echo xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE;
+                            }
+                          } else {
+                            echo xtc_draw_radio_field('customers_gender', 'm', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.MALE.'&nbsp;&nbsp;'.xtc_draw_radio_field('customers_gender', 'f', false, isset($customers_gender)?$customers_gender:'').'&nbsp;&nbsp;'.FEMALE;
+                          }
+                          ?>
+                        </td>
+                        
                       </tr>
-                    <?php } ?>
-
+                      <?php
+                    }
+                    ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_CID; ?></td>
-                      <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('csID', generate_customers_cid(), 'maxlength="32"'); ?></td>
+                      <td class="dataTableConfig col-single-right bg_notice"><?php echo xtc_draw_input_field('csID', generate_customers_cid(), 'maxlength="32"'); ?></td>
                     </tr>
-
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_FIRST_NAME; ?></td>
                       <td class="dataTableConfig col-single-right">
-                      <?php
-                        echo xtc_draw_input_field('customers_firstname', isset($customers_firstname)?$customers_firstname:'', 'maxlength="64"');
-                        if ($error && $entry_firstname_error) echo '&nbsp;'.ENTRY_FIRST_NAME_ERROR;
-                      ?>
+                        <?php
+                        if (isset($error) && $error == true) {
+                          if (isset($entry_firstname_error) && $entry_firstname_error == true) {
+                            echo xtc_draw_input_field('customers_firstname', isset($customers_firstname)?$customers_firstname:'', 'maxlength="64"').'&nbsp;'.ENTRY_FIRST_NAME_ERROR;
+                          } else {
+                            echo xtc_draw_input_field('customers_firstname', isset($customers_firstname)?$customers_firstname:'', 'maxlength="64"');
+                          }
+                        } else {
+                          echo xtc_draw_input_field('customers_firstname', isset($customers_firstname)?$customers_firstname:'', 'maxlength="64"');
+                        }
+                        ?>
                       </td>
+                      
                     </tr>
-
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_LAST_NAME; ?></td>
                       <td class="dataTableConfig col-single-right">
-                      <?php
-                        echo xtc_draw_input_field('customers_lastname', isset($customers_lastname)?$customers_lastname:'', 'maxlength="64"');
-                        if ($error && $entry_lastname_error) echo '&nbsp;'.ENTRY_LAST_NAME_ERROR;
-                      ?>
+                        <?php
+                        if (isset($error) && $error == true) {
+                          if (isset($entry_lastname_error) && $entry_lastname_error == true) {
+                            echo xtc_draw_input_field('customers_lastname', isset($customers_lastname)?$customers_lastname:'', 'maxlength="64"').'&nbsp;'.ENTRY_LAST_NAME_ERROR;
+                          } else {
+                            echo xtc_draw_input_field('customers_lastname', isset($customers_lastname)?$customers_lastname:'', 'maxlength="64"');
+                          }
+                        } else {
+                          echo xtc_draw_input_field('customers_lastname', isset($customers_lastname)?$customers_lastname:'', 'maxlength="64"');
+                        }
+                        ?>
                       </td>
+                      
                     </tr>
-
-                    <?php if (ACCOUNT_DOB == 'true') { ?>
-                    <tr>
-                      <td class="dataTableConfig col-left"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
-                      <td class="dataTableConfig col-single-right">
-                      <?php
-                        echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), 'maxlength="10"');
-                        if ($error && $entry_date_of_birth_error) '&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
+                    <?php
+                    if (ACCOUNT_DOB == 'true') {
                       ?>
-                      </td>
-                    </tr>
-                    <?php } ?>
-
+                      <tr>
+                        <td class="dataTableConfig col-left"><?php echo ENTRY_DATE_OF_BIRTH; ?></td>
+                        <td class="dataTableConfig col-single-right">
+                          <?php
+                          if (isset($error) && $error == true) {
+                            if (isset($entry_date_of_birth_error) && $entry_date_of_birth_error == true) {
+                              echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), 'maxlength="10"').'&nbsp;'.ENTRY_DATE_OF_BIRTH_ERROR;
+                            } else {
+                              echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), 'maxlength="10"');
+                            }
+                          } else {
+                            echo xtc_draw_input_field('customers_dob', xtc_date_short(isset($customers_dob)?$customers_dob:''), 'maxlength="10"');
+                          }
+                          ?>
+                        </td>
+                        
+                      </tr>
+                      <?php
+                    }
+                    ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_EMAIL_ADDRESS; ?></td>
                       <td class="dataTableConfig col-single-right">
-                      <?php
-                        echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"');
-                        if ($error && $entry_email_address_error) echo '&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
-                        if ($error && $entry_email_address_check_error) echo '&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
-                        if ($error && $entry_email_address_exists) echo '&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
-                      ?>
+                        <?php
+                          if (isset($error) && $error == true) {
+                            if (isset($entry_email_address_error) && $entry_email_address_error == true) {
+                              echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR;
+                            } elseif ($entry_email_address_check_error == true) {
+                              echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_CHECK_ERROR;
+                            } elseif ($entry_email_address_exists == true) {
+                              echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"').'&nbsp;'.ENTRY_EMAIL_ADDRESS_ERROR_EXISTS;
+                            } else {
+                              echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"');
+                            }
+                          } else {
+                            echo xtc_draw_input_field('customers_email_address', isset($customers_email_address)?$customers_email_address:'', 'maxlength="96"');
+                          }
+                        ?>
                       </td>
+                      
                     </tr>
-
                   </table>
                 </div>
               

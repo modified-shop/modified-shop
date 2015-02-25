@@ -88,7 +88,7 @@ require (DIR_WS_INCLUDES.'head.php');
             $rInfo = new objectInfo($rInfo_array);
         ?>
         <?php echo xtc_draw_form('review', FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=preview'); ?>
-        <div class="mrg5" style="width:850px;">
+        <div class="div_box mrg5">
           <table class="tableConfig borderall">
             <tr>
               <td class="dataTableConfig col-left"><b><?php echo ENTRY_PRODUCT; ?></b></td>
@@ -139,7 +139,7 @@ require (DIR_WS_INCLUDES.'head.php');
           $rInfo = new objectInfo($rInfo_array);
         }
     ?>
-      <div class="mrg5" style="width:850px;">
+      <div class="div_box mrg5">
       <?php echo xtc_draw_form('update', FILENAME_REVIEWS, 'page=' . $_GET['page'] . '&rID=' . $_GET['rID'] . '&action=update', 'post', 'enctype="multipart/form-data"'); ?>
         <table class="tableConfig borderall">
           <tr>

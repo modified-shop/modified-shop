@@ -26,7 +26,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'Es werden alle Bilder in d
 /images/product_images/info_images/<br />
 /images/product_images/thumbnail_images/ <br /> <br /> neu erstellt.<br /> <br />
 Hierzu verarbeitet das Script nur eine begrenzte Anzahl von %s Bildern und ruft sich danach selbst wieder auf.<br /> <br />');
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - <b>Produktbilder</b>');
+define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - Produktbilder');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Modulstatus');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
 define('IMAGE_EXPORT','Dr&uuml;cken Sie Start um die Stapelverarbeitung zu starten. Dieser Vorgang kann einige Zeit dauern - auf keinen Fall unterbrechen!');
