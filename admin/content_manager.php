@@ -91,6 +91,7 @@
     $error = false;
     for ($i=0; $i<$content_count; $i++) {
       for ($l=0, $ln=count($languages); $l<$ln; $l++) {
+        $content_file_name = '';
         if ($select_file[$i][$languages[$l]['id']] != 'default') {
           $content_file_name = $select_file[$i][$languages[$l]['id']];
         }
@@ -169,7 +170,7 @@
 
     $content_title=xtc_db_prepare_input($_POST['cont_title']);
     $content_link=xtc_db_prepare_input($_POST['cont_link']);
-    $content_language=xtc_db_prepare_input($_POST['language']);
+    $content_language_code=xtc_db_prepare_input($_POST['language_code']);
     $product=xtc_db_prepare_input($_POST['product']);
     $upload_file=xtc_db_prepare_input($_POST['file_upload']);
     $filename=xtc_db_prepare_input($_POST['file_name']);
@@ -180,7 +181,8 @@
     $error=false; // reset error flag
 
     for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
-      if ($languages[$i]['code']==$content_language) $content_language=$languages[$i]['id'];
+      if ($languages[$i]['code'] == $content_language_code) 
+          $content_language_id = $languages[$i]['id'];
     } // for
 
     if (strlen($content_title) < 1) {
@@ -235,7 +237,7 @@
                               'content_file' => $content_file_name,
                               'content_link' => $content_link,
                               'file_comment' => $file_comment,
-                              'languages_id' => $content_language);
+                              'languages_id' => $content_language_id);
 
       if ($id=='update_product') {
         xtc_db_perform(TABLE_PRODUCTS_CONTENT, $sql_data_array, 'update', "content_id = '" . $coID . "'");

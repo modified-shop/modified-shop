@@ -332,6 +332,7 @@ if (!$action) {
     for ($i=0; $i<$content_count; $i++) {
       for ($l=0; $l < $languages_count; $l++) {
         echo ('<div id="tab_lang_' . $cnt . '" style="padding:0px;">');
+        $content_lang = array();
         if (isset($content[$i][$languages[$l]['id']]['content_id'])) {
           //$content_lang = get_content_details($content[$i][$languages[$l]['id']]['content_id']);
           $content_lang = $content[$i][$languages[$l]['id']];

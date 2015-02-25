@@ -236,7 +236,7 @@ if (!$action) {
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo TEXT_LANGUAGE; ?></td>
-            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language',$languages_array,$languages_selected); ?></td>
+            <td class="dataTableConfig col-single-right"><?php echo xtc_draw_pull_down_menu('language_code',$languages_array,$languages_selected); ?></td>
           </tr>
           <?php
             if (GROUP_CHECK=='true') {
