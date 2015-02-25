@@ -97,7 +97,7 @@
         }
         $accepted_file_upload_files_extensions = array("htm","html","txt");
         $accepted_file_upload_files_mime_types = array("text/html","text/html","text/plain");
-        if ($content_file = xtc_try_upload('file_upload_'.$languages[$l]['id'], DIR_FS_CATALOG.'media/content/', '644', $accepted_file_upload_files_extensions, $accepted_file_upload_files_mime_types)) {
+        if ($content_file = xtc_try_upload('file_upload_'.$i.'_'.$languages[$l]['id'], DIR_FS_CATALOG.'media/content/', '644', $accepted_file_upload_files_extensions, $accepted_file_upload_files_mime_types)) {
           $content_file_name = $content_file->filename;
         }
 
@@ -154,6 +154,7 @@
     xtc_redirect(xtc_href_link(FILENAME_CONTENT_MANAGER, $setparam));
   }
 
+
   if ($id == 'update_product' || $id == 'insert_product') {
     // set allowed c.groups
     $group_ids='';
@@ -167,6 +168,7 @@
         $group_ids .='c_'.$customers_statuses_array[$i]['id'].'_group,';
      }
     }
+
 
     $content_title=xtc_db_prepare_input($_POST['cont_title']);
     $content_link=xtc_db_prepare_input($_POST['cont_link']);
