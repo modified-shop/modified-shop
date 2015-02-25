@@ -55,7 +55,9 @@ define('SUCCESS_BACKUP_UPLOAD', 'Success: The backup file has been uploaded.');
 
 //TEXT_COMPLETE_INSERTS
 define('TEXT_COMPLETE_INSERTS', "<b>Complete 'INSERT's</b><br> - field names are entered into each row INSERT (increased backup)");
-
 define('TEXT_INFO_TABLES_IN_BACKUP', '<br />' . "\n" .'<b>Tables in this backup:</b>' . "\n");
 define('TEXT_INFO_NO_INFORMATION', 'No information available');
+//UTF-8 convert
+define('TEXT_CONVERT_TO_UTF', 'Convert database to UTF-8');
+define('TEXT_IMPORT_UTF', 'Restore UTF-8 database');
 ?>

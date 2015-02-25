@@ -58,4 +58,7 @@ define('TEXT_COMPLETE_INSERTS', "<b>Vollst&auml;ndige 'INSERT's</b><br> - Feldna
 
 define('TEXT_INFO_TABLES_IN_BACKUP', '<br />' . "\n" .'<b>Tabellen in diesem Backup:</b>' . "\n");
 define('TEXT_INFO_NO_INFORMATION', 'Kein Informationen vorhanden');
+//UTF-8 convert
+define('TEXT_CONVERT_TO_UTF', 'Datenbank auf UTF-8 konvertieren');
+define('TEXT_IMPORT_UTF', 'UTF-8 Datenbank wiederherstellen');
 ?>
