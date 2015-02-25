@@ -92,7 +92,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     $stock_values = xtc_db_fetch_array($stock_query);
     if ($stock_values['products_quantity'] <= '0') {
       $stock_flag = 'true';
-      $stock_warn = TEXT_WARN_MAIN;
+      $stock_warn = '<li>'.TEXT_WARN_MAIN.'</li>';
       $attribute_stock_query = xtc_db_query("SELECT attributes_stock,
                                                     options_values_id
                                                FROM ".TABLE_PRODUCTS_ATTRIBUTES."
@@ -105,12 +105,12 @@ function xtc_output_string($string, $translate = false, $protected = false) {
                                                WHERE products_options_values_id = '".$attribute_stock_values['options_values_id']."'
                                                  AND language_id = '".(int)$_SESSION['languages_id']."'");
           $which_attribute = xtc_db_fetch_array($which_attribute_query,true);
-          $stock_warn .= ', '.$which_attribute['products_options_values_name'];
+          $stock_warn .= '<li>'.$which_attribute['products_options_values_name'].'</li>';
         }
       }
     }
     if (isset($stock_flag) && $stock_flag == 'true' && $products_id != '') {
-      return '<div class="stock_warn">'.$stock_warn.'</div>';
+      return '<div class="stock_warn"><ul>'.TEXT_WARN.$stock_warn.'</ul></div>';
     } else {
       return xtc_image(DIR_WS_IMAGES.'icon_status_green.gif', $stock_values['products_quantity'].' '.IMAGE_ICON_STATUS_GREEN_STOCK, 10, 10);
     }
