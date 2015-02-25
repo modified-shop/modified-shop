@@ -1340,8 +1340,8 @@ margin-top: 0;
 line-height: 14px;
 }
 td.infoBoxContent hr {
-background:#af417e;
-height:2px;
+background:#aaa;
+height:1px;
 margin-bottom:5px;
 border: none;
 }
