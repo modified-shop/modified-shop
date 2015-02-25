@@ -44,7 +44,8 @@ define('TEXT_MARKED_ELEMENTS','Markierte Elemente');
 define('TEXT_INFORMATIONS','Informationen');
 define('TEXT_INSERT_ELEMENT','Neues Element');
 
-define('TEXT_WARN_MAIN','Haupt');
+define('TEXT_WARN','Bestandswarnung:');
+define('TEXT_WARN_MAIN','Hauptartikel');
 define('TEXT_NEW_PRODUCT', 'Neuer Artikel in &quot;%s&quot;');
 define('TEXT_EDIT_PRODUCT', 'Artikel bearbeiten in &quot;%s&quot;');
 define('TEXT_CATEGORIES', 'Kategorien:');
