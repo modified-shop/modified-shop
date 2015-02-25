@@ -1051,6 +1051,9 @@ margin: 6px 5px 0px 0px;
 width:17px;
 height:12px;
 }
+.row1 ul li.right {
+  float:right;
+}
 
 .row1 ul {
 display:block;
