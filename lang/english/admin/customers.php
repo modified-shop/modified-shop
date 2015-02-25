@@ -19,9 +19,9 @@ define('HEADING_TITLE', 'Customers');
 define('HEADING_TITLE_SEARCH', 'Search:');
 
 define('TABLE_HEADING_CUSTOMERSCID','Customer ID');
-define('TABLE_HEADING_FIRSTNAME', 'First Name');
-define('TABLE_HEADING_LASTNAME', 'Last Name');
-define('TABLE_HEADING_ACCOUNT_CREATED', 'Account Created');
+define('TABLE_HEADING_FIRSTNAME', 'Firstname');
+define('TABLE_HEADING_LASTNAME', 'Lastname');
+define('TABLE_HEADING_ACCOUNT_CREATED', 'created');
 define('TABLE_HEADING_ACTION', 'Action');
 
 define('TEXT_DATE_ACCOUNT_CREATED', 'Account Created:');
