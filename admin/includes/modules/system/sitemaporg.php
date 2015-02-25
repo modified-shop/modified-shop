@@ -95,7 +95,7 @@ class sitemaporg {
     $content_query = xtDBquery($content_query);
     while ($content_data=xtc_db_fetch_array($content_query,true)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('shop_content.php','coID='.$content_data['content_group']));
-      $entry=$this->xls_sitemap_entry($link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
+      $entry = $this->xls_sitemap_entry($link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
       $schema .= $entry;          
     }
   }
@@ -110,7 +110,7 @@ class sitemaporg {
     $manufacturers_query = xtDBquery($manufacturers_query);
     while ($manufacturers_data=xtc_db_fetch_array($manufacturers_query,true)) {
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php','manufacturers_id='.$manufacturers_data['manufacturers_id']));
-      $entry=$this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
+      $entry = $this->xls_sitemap_entry( $link, '', $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
       $schema .= $entry;          
     }
     
@@ -137,7 +137,7 @@ class sitemaporg {
       $catPath = xtc_get_category_path($categories['categories_id']);
       $link = encode_htmlspecialchars(xtc_href_link_from_admin('index.php', 'cPath='.$catPath));
       $date = (empty($categories['last_modified']) ? $categories['date_added'] : $categories['last_modified'] );
-      $entry=$this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
+      $entry = $this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_LIST'] );     
       $schema .= $entry;
     }
   }
@@ -147,7 +147,8 @@ class sitemaporg {
   function process_products( &$schema ) {      
     global $_POST;
     $export_query =xtc_db_query("SELECT p.products_id,
-                                        p.products_last_modified, 
+                                        p.products_last_modified,
+                                        p.products_date_added,
                                         pd.products_name
                                    FROM " . TABLE_PRODUCTS . " p, 
                                         " . TABLE_PRODUCTS_DESCRIPTION . " pd
@@ -157,9 +158,10 @@ class sitemaporg {
                                ORDER BY p.products_id");
 
     while ($products = xtc_db_fetch_array($export_query)) {
-        $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id']));
-        $entry=$this->xls_sitemap_entry( $link, $products['products_last_modified'], $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_PRODUCT']);     
-        $schema .= $entry;
+      $link = encode_htmlspecialchars(xtc_href_link_from_admin('product_info.php', 'products_id='.$products['products_id']));
+      $date = (empty($products['products_last_modified']) ? $products['products_date_added'] : $products['products_last_modified'] );
+      $entry = $this->xls_sitemap_entry( $link, $date, $_POST['configuration']['MODULE_SITEMAPORG_PRIORITY_PRODUCT']);     
+      $schema .= $entry;
     }
   }
 
