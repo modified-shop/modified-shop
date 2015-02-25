@@ -21,7 +21,7 @@ define('HEADING_TITLE_SEARCH', 'Suche:');
 define('TABLE_HEADING_CUSTOMERSCID','Kundennummer');
 define('TABLE_HEADING_FIRSTNAME', 'Vorname');
 define('TABLE_HEADING_LASTNAME', 'Nachname');
-define('TABLE_HEADING_ACCOUNT_CREATED', 'Zugang erstellt am');
+define('TABLE_HEADING_ACCOUNT_CREATED', 'erstellt am');
 define('TABLE_HEADING_ACTION', 'Aktion');
 
 define('TEXT_DATE_ACCOUNT_CREATED', 'Zugang erstellt am:');
