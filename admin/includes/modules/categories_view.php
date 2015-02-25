@@ -917,7 +917,7 @@
               if ($rows > 0) {
                 if (isset($cInfo) && is_object($cInfo)) {
                   // category info box contents
-                  $heading[]  = array('align' => 'center', 'text' => '<b>' . $cInfo->categories_name . '</b>');
+                  $heading[]  = array('text' => '<b>' . $cInfo->categories_name . '</b>');
                   //Multi Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<input type="submit" class="button" name="multi_delete" onclick="this.blur();" value="'. BUTTON_DELETE . '">&nbsp;<input type="submit" class="button" onclick="this.blur();" name="multi_move" value="' . BUTTON_MOVE . '">&nbsp;<input type="submit" class="button" onclick="this.blur();" name="multi_copy" value="' . BUTTON_COPY . '">');
@@ -929,12 +929,12 @@
                   // EOF - Tomcraft - 2009-11-28 - Included xs:booster
                   $contents[] = array('text'  => '</form>');
                   //Single Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 2px solid #af417e; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>
                                                                       <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '_' . $cInfo->categories_id . '&action=new_product') . '">' . BUTTON_NEW_PRODUCTS . '</a>');
                   //Insert new Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 2px solid #af417e; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {
                     $buttons_new_elements = '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>';
                     if ($cPath != '0') {
@@ -944,15 +944,15 @@
                     $contents[] = array('align' => 'center', 'text' => $buttons_new_elements);
                   }
                   //Informations
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 2px solid #af417e; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
-                  $contents[] = array('text'  => '<div style="padding-left: 50px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($cInfo->date_added) . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
+                  $contents[] = array('text'  => '<div style="padding-left: 10px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($cInfo->date_added) . '</div>');
                   if (xtc_not_null($cInfo->last_modified)) {
-                    $contents[] = array('text' => '<div style="padding-left: 50px;">' . TEXT_LAST_MODIFIED . ' ' . xtc_date_short($cInfo->last_modified) . '</div>');
+                    $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_LAST_MODIFIED . ' ' . xtc_date_short($cInfo->last_modified) . '</div>');
                   }
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_info_image_c($cInfo->categories_image, $cInfo->categories_name, '','',$box_cat_image_size)   . '</div><div style="padding-bottom: 10px;">' . $cInfo->categories_image . '</div>');
                 } elseif (isset($pInfo) && is_object($pInfo)) {
                   // product info box contents
-                  $heading[]  = array('align' => 'center', 'text' => '<b>' . xtc_get_products_name($pInfo->products_id, $_SESSION['languages_id']) . '</b>');
+                  $heading[]  = array('text' => '<b>' . xtc_get_products_name($pInfo->products_id, $_SESSION['languages_id']) . '</b>');
                   //Multi Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%;">' . TEXT_MARKED_ELEMENTS . '</div>');
                   $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_DELETE, 'submit', 'name="multi_delete"').'&nbsp;'.xtc_button(BUTTON_MOVE, 'submit', 'name="multi_move"').'&nbsp;'.xtc_button(BUTTON_COPY, 'submit', 'name="multi_copy"'));
@@ -964,7 +964,7 @@
                   // EOF - Tomcraft - 2009-11-28 - Included xs:booster
                   $contents[] = array('text'  => '</form>');
                   //Single Product Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 2px solid #af417e; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
@@ -1000,7 +1000,7 @@
                   }
                   // EOC Included xs:booster                  
                   //Insert new Element Actions
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 2px solid #af417e; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INSERT_ELEMENT . '</div>');
                   if (!xtc_not_null($search)) {
                     $buttons_new_elements = '<a class="button" onclick="this.blur()" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&action=new_category') . '">' . BUTTON_NEW_CATEGORIES . '</a>';
                     if ($cPath != '0') {
@@ -1010,13 +1010,13 @@
                     $contents[] = array('align' => 'center', 'text' => $buttons_new_elements);
                   }
                   //Informations
-                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 2px solid #af417e; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
-                  $contents[] = array('text'  => '<div style="padding-left: 30px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($pInfo->products_date_added) . '</div>');
+                  $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_INFORMATIONS . '</div>');
+                  $contents[] = array('text'  => '<div style="padding-left: 10px;">' . TEXT_DATE_ADDED . ' ' . xtc_date_short($pInfo->products_date_added) . '</div>');
                   if (xtc_not_null($pInfo->products_last_modified)) {
-                    $contents[] = array('text' => '<div style="padding-left: 30px;">' . TEXT_LAST_MODIFIED . '&nbsp;' . xtc_date_short($pInfo->products_last_modified) . '</div>');
+                    $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_LAST_MODIFIED . '&nbsp;' . xtc_date_short($pInfo->products_last_modified) . '</div>');
                   }
                   if (date('Y-m-d') < $pInfo->products_date_available) {
-                    $contents[] = array('text' => '<div style="padding-left: 30px;">' . TEXT_DATE_AVAILABLE . ' ' . xtc_date_short($pInfo->products_date_available) . '</div>');
+                    $contents[] = array('text' => '<div style="padding-left: 10px;">' . TEXT_DATE_AVAILABLE . ' ' . xtc_date_short($pInfo->products_date_available) . '</div>');
                   }
 
                   // START IN-SOLUTION Berechung des Bruttopreises
@@ -1028,7 +1028,7 @@
                     $price = ($price*(xtc_get_tax_rate($pInfo->products_tax_class_id)+100)/100);
                     $price_string = '' . TEXT_PRODUCTS_PRICE_INFO . '&nbsp;' . $currencies->format($price) . '<br/>' . TXT_NETTO . $currencies->format($price_netto);
                   }
-                  $contents[] = array('text' => '<div style="padding-left: 30px;">' . $price_string.  '</div><div style="padding-left: 30px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . ' %</div><div style="padding-left: 30px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
+                  $contents[] = array('text' => '<div style="padding-left: 10px;">' . $price_string.  '</div><div style="padding-left: 10px;">' . TEXT_PRODUCTS_DISCOUNT_ALLOWED_INFO . '&nbsp;' . $pInfo->products_discount_allowed . ' %</div><div style="padding-left: 10px;">' .  TEXT_PRODUCTS_QUANTITY_INFO . '&nbsp;' . $pInfo->products_quantity . '</div>');
                   // END IN-SOLUTION
 
                   //SPECIALS
@@ -1041,14 +1041,14 @@
                       $special_price = ($special_price*(xtc_get_tax_rate($pInfo->products_tax_class_id)+100)/100);
                       $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price) . '<br/>' . TXT_NETTO . $currencies->format($special_price_netto);
                     }
-                    $contents[] = array('text' => '<div style="padding-left: 30px;color:red;">' . $specials_price_string .  '</div>'.
-                                                  '<div style="padding-left: 30px;color:red;">' . TEXT_INFO_EXPIRES_DATE . '&nbsp;' . $pInfo->expires_date . '</div>'.
-                                                  ($pInfo->specials_quantity > 0 ? '<div style="padding-left: 30px;color:red;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
+                    $contents[] = array('text' => '<div style="padding-left: 10px;color:red;">' . $specials_price_string .  '</div>'.
+                                                  '<div style="padding-left: 10px;color:red;">' . TEXT_INFO_EXPIRES_DATE . '&nbsp;' . $pInfo->expires_date . '</div>'.
+                                                  ($pInfo->specials_quantity > 0 ? '<div style="padding-left: 10px;color:red;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
                                         );
                   }
                   //$contents[] = array('text' => '<br />' . TEXT_PRODUCTS_PRICE_INFO . ' ' . $currencies->format($pInfo->products_price) . '<br />' . TEXT_PRODUCTS_QUANTITY_INFO . ' ' . $pInfo->products_quantity);
-                  $contents[] = array('text' => '<div style="padding-left: 30px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . number_format($pInfo->average_rating, 2) . '</div>');
-                  $contents[] = array('text' => '<div style="padding-left: 30px; padding-bottom: 10px;">' . TEXT_PRODUCT_LINKED_TO . '<br />' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</div>');
+                  $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCTS_AVERAGE_RATING . ' ' . number_format($pInfo->average_rating, 2) . '</div>');
+                  $contents[] = array('text' => '<div style="padding-left: 10px; padding-bottom: 10px;">' . TEXT_PRODUCT_LINKED_TO . '<br />' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding: 10px;">' . xtc_product_thumb_image($pInfo->products_image, $pInfo->products_name)  . '</div><div style="padding-bottom: 10px;">' . $pInfo->products_image.'</div>');
                 }
               } else {
