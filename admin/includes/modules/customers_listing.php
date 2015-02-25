@@ -22,12 +22,7 @@
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
           <div class="main pdg2"><?php echo BOX_HEADING_CUSTOMERS; ?></div>
         </div>
-
-
-        <?php echo xtc_draw_form('search', FILENAME_CUSTOMERS, '', 'get'); ?>
         <div class="pageHeading flt-l" style="margin: 0 40px;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CREATE_ACCOUNT) . '">' . BUTTON_CREATE_ACCOUNT . '</a>'; ?></div>
-        <div class="smallText flt-l mrg5"><?php echo HEADING_TITLE_SEARCH . ' ' . xtc_draw_input_field('search').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?></div>
-        </form>
 
         <?php echo xtc_draw_form('status', FILENAME_CUSTOMERS, '', 'get');
           $select_data = array ();

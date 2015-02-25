@@ -335,7 +335,7 @@ UPDATE admin_access SET supermailer = 1 WHERE customers_id = 'groups' LIMIT 1;
 #GTB - 2015-02-16 - add shopgate
 ALTER TABLE admin_access ADD shopgate INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET shopgate = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET shopgate = 5 WHERE customers_id = 'groups' LIMIT 1;
+UPDATE admin_access SET shopgate = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Tomcraft - 2015-02-16 - Added status for cancelled orders
 #(Set next available number for status ID in both languages)
@@ -352,5 +352,19 @@ DROP TABLE IF EXISTS payment_moneybookers_countries;
 #GTB - 2015-02-18 - remove configuration
 DELETE FROM configuration WHERE configuration_key = 'SHIPPING_ORIGIN_COUNTRY';
 DELETE FROM configuration WHERE configuration_key = 'SHIPPING_ORIGIN_ZIP';
+
+#GTB - 2015-02-25 - add newsfeed
+CREATE TABLE newsfeed (
+  news_id INT( 11 ) NOT NULL AUTO_INCREMENT,
+  news_title VARCHAR( 128 ) NULL,
+  news_text TEXT NULL,
+  news_link VARCHAR( 128 ) NULL,
+  news_date INT( 11 ) NULL,
+  PRIMARY KEY (news_id),
+  UNIQUE idx_news_link (news_link)
+) ENGINE=MyISAM;
+ALTER TABLE admin_access ADD newsfeed INT(1) NOT NULL DEFAULT 0;
+UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 # Keep an empty line at the end of this file for the db_updater to work properly

@@ -432,9 +432,10 @@ switch ($action) {
   require (DIR_WS_INCLUDES.'head.php');
 ?>
 <style type="text/css">
-.table{width: 850px; border: 1px solid #a3a3a3; margin-bottom:20px; background: #f3f3f3; padding:2px;}
+.table{width: 100%; border: 1px solid #a3a3a3; margin-bottom:20px; background: #f3f3f3; padding:2px;}
 .heading{font-family: Verdana, Arial, sans-serif; font-size: 12px; font-weight: bold; padding:2px; }
-.last_row{background-color: #D9E9FF;}
+.last_row{background-color: #ffdead;}
+textarea#comments{width:99%;}
 </style>
 
 <script type="text/javascript" src="includes/modules/email_preview/email_preview.js"></script>

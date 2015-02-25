@@ -18,10 +18,6 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   define('NEW_ADMIN_STYLE',true);
-
-  if (defined('ADMIN_HEADER_X_FRAME_OPTIONS') && ADMIN_HEADER_X_FRAME_OPTIONS == 'true') {
-    header('X-Frame-Options: SAMEORIGIN'); // only in an iframe of the same site
-  }
 ?>
 <!DOCTYPE html>
 <html <?php echo HTML_PARAMS; ?>>
@@ -33,6 +29,7 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/minimal/minimal.css" />
 
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -43,12 +40,12 @@
   if (USE_ADMIN_FIXED_TOP != 'true') {
     echo '<link rel="stylesheet" type="text/css" href="includes/css/fixed_top_none.css" />'. PHP_EOL;
   }
-foreach(auto_include(DIR_FS_ADMIN.'includes/extra/css/','php') as $file) require ($file);
+  foreach(auto_include(DIR_FS_ADMIN.'includes/extra/css/','php') as $file) require ($file);
   ?>
 
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   
-  <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
   
   <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
   <script type="text/javascript">

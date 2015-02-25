@@ -94,7 +94,7 @@ require (DIR_WS_INCLUDES.'head.php');
           <table class="tableCenter">      
             <tr>
               <td class="main">
-                <div class="customers-groups">
+                <div class="customers-groups pdg2">
                   <?php
                   echo xtc_draw_form('customers_group', 'customers_group.php', 'action=send', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
                   $group_query = xtc_db_query('SELECT customers_status_id,
@@ -111,7 +111,7 @@ require (DIR_WS_INCLUDES.'head.php');
                   echo xtc_draw_checkbox_field('content', '1') . ' ' . TEXT_CONTENT . '<br />';
                   echo '<br /><br />';
                   echo '<strong>&nbsp;' . TEXT_PERMISSION . ':</strong> ' . TEXT_SET . ' ' . xtc_draw_radio_field('permission', 'true', true) . ' ' . TEXT_UNSET . ' ' . xtc_draw_radio_field('permission', 'false', false) . '<br />';
-                  echo '<br /><br />&nbsp;' . xtc_draw_input_field('senden', TEXT_SEND, '', false, 'submit');
+                  echo '<br /><br />&nbsp;<input class="button" type="submit" value="'.TEXT_SEND.'" name="'.TEXT_SEND.'">';
                   echo '<br /><br />';
                   ?>
                   </form>

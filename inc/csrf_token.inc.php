@@ -13,9 +13,19 @@
 // include needed function
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 
+// keep Token for popups 
+$CSRFKeep = false;
+if (defined('RUN_MODE_ADMIN')) {
+  $exclusion = array('print_order', 'print_packingslip', 'bill', 'popup');
+  foreach ($exclusion as $filename) {
+    if (strpos(basename($PHP_SELF), $filename) !== false) {
+      $CSRFKeep = true;
+    }
+  }
+}
+
 // verfiy CSRF Token
 if (is_array($_POST) && count($_POST) > 0) {
-
   if (isset($_POST[$_SESSION['CSRFName']])) {
     if ($_POST[$_SESSION['CSRFName']] != $_SESSION['CSRFToken']) {
       trigger_error("CSRFToken manipulation.\n".print_r($_POST, true), E_USER_WARNING);
@@ -45,24 +55,7 @@ if (is_array($_POST) && count($_POST) > 0) {
       $messageStack->add_session('CSRFToken not defined', 'warning');
     }
   }
-}
-
-// keep Token for popups
-$CSRFKeep = false;
-if (defined('RUN_MODE_ADMIN') 
-    && (strpos(basename($PHP_SELF), 'print_order') !== false  
-        || strpos(basename($PHP_SELF), 'print_packingslip') !== false
-        || strpos(basename($PHP_SELF), 'bill') !== false
-        || strpos(basename($PHP_SELF), 'popup') !== false
-        || strpos(basename($PHP_SELF), 'new_attributes') !== false
-        )
-    ) 
-{
-  $CSRFKeep = true;
-}
-
-// create CSRF Token
-if ($CSRFKeep === false) {
+} elseif ($CSRFKeep === false) {
   $_SESSION['CSRFName'] = xtc_RandomString(6);
   $_SESSION['CSRFToken'] = xtc_RandomString(32);
 }

@@ -869,84 +869,88 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
             $heading = array();
             $contents = array();
             switch ($_GET['action']) {
-            case 'release':
-              break;
-            case 'voucherreport':
-              $heading[] = array('text' => '<b>' . TEXT_HEADING_COUPON_REPORT . '</b>');
-              $contents[] = array('text' => TEXT_NEW_INTRO);
-              break;
-            case 'new':
-              $heading[] = array('text' => '<b>' . TEXT_HEADING_NEW_COUPON . '</b>');
-              $contents[] = array('text' => TEXT_NEW_INTRO);
-              $contents[] = array('text' => '<br />' . COUPON_NAME . '<br />' . xtc_draw_input_field('name'));
-              $contents[] = array('text' => '<br />' . COUPON_AMOUNT . '<br />' . xtc_draw_input_field('voucher_amount'));
-              $contents[] = array('text' => '<br />' . COUPON_CODE . '<br />' . xtc_draw_input_field('voucher_code'));
-              $contents[] = array('text' => '<br />' . COUPON_USES_COUPON . '<br />' . xtc_draw_input_field('voucher_number_of'));
-              break;
-            default:
-              $heading[] = array('text'=>'['.$cInfo->coupon_id.']  '.$cInfo->coupon_code);
-              $amount = $cInfo->coupon_amount;
-              if ($cInfo->coupon_type == 'P') {
-                $amount .= '%';
-                // BOF - web28 - 2010-07-22 - FIX coupon_amount
-              } elseif ($cInfo->coupon_type == 'S') {
-                $amount = TEXT_FREE_SHIPPING;
-                // EOF - web28 - 2010-07-22 - FIX coupon_amount
-              } else {
-                $amount = $currencies->format($amount);
-              }
-              if ($_GET['action'] == 'voucherdelete') {
-                $contents[] = array('text'=> TEXT_CONFIRM_DELETE . '</br></br><div style="text-align:center;">' .
-                                    '<a class="button" onclick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=confirmdelete&cid='.(int)$_GET['cid'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
-                                    '<a class="button" onclick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a></div>'
-                                   );
-              } else {
-                $prod_details = TEXT_NONE;
-                if ($cInfo->restrict_to_products) {
-                  $prod_details = '<a href="listproducts.php?cid=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listproducts.php?cid=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
-                }
-                $cat_details = TEXT_NONE;
-                if ($cInfo->restrict_to_categories) {
-                  $cat_details = '<a href="listcategories.php?cid=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listcategories.php?cid=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
-                }
-                $coupon_name_query = xtc_db_query("SELECT coupon_name FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id = '" . (int)$cInfo->coupon_id . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
-                $coupon_name = xtc_db_fetch_array($coupon_name_query);
+              case 'release':
+                break;
+              case 'voucherreport':
+                $heading[] = array('text' => '<b>' . TEXT_HEADING_COUPON_REPORT . '</b>');
+                $contents[] = array('text' => TEXT_NEW_INTRO);
+                break;
+              case 'new':
+                $heading[] = array('text' => '<b>' . TEXT_HEADING_NEW_COUPON . '</b>');
+                $contents[] = array('text' => TEXT_NEW_INTRO);
+                $contents[] = array('text' => '<br />' . COUPON_NAME . '<br />' . xtc_draw_input_field('name'));
+                $contents[] = array('text' => '<br />' . COUPON_AMOUNT . '<br />' . xtc_draw_input_field('voucher_amount'));
+                $contents[] = array('text' => '<br />' . COUPON_CODE . '<br />' . xtc_draw_input_field('voucher_code'));
+                $contents[] = array('text' => '<br />' . COUPON_USES_COUPON . '<br />' . xtc_draw_input_field('voucher_number_of'));
+                break;
+              default:
+                if (isset($cInfo) && is_object($cInfo)) {
+                  $heading[] = array('text'=>'<b>['.$cInfo->coupon_id.']  '.$cInfo->coupon_code.'</b>');
+                  $amount = $cInfo->coupon_amount;
+                  if ($cInfo->coupon_type == 'P') {
+                    $amount .= '%';
+                    // BOF - web28 - 2010-07-22 - FIX coupon_amount
+                  } elseif ($cInfo->coupon_type == 'S') {
+                    $amount = TEXT_FREE_SHIPPING;
+                    // EOF - web28 - 2010-07-22 - FIX coupon_amount
+                  } else {
+                    $amount = $currencies->format($amount);
+                  }
+                  if ($_GET['action'] == 'voucherdelete') {
+                    $contents[] = array('text'=> TEXT_CONFIRM_DELETE . '</br></br><div style="text-align:center;">' .
+                                        '<a class="button" onclick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=confirmdelete&cid='.(int)$_GET['cid'],'NONSSL').'">'.BUTTON_CONFIRM.'</a>' .
+                                        '<a class="button" onclick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_CANCEL.'</a></div>'
+                                       );
+                  } else {
+                    $prod_details = TEXT_NONE;
+                    if ($cInfo->restrict_to_products) {
+                      $prod_details = '<a href="listproducts.php?cid=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listproducts.php?cid=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
+                    }
+                    $cat_details = TEXT_NONE;
+                    if ($cInfo->restrict_to_categories) {
+                      $cat_details = '<a href="listcategories.php?cid=' . $cInfo->coupon_id . '" target="_blank" onclick="window.open(\'listcategories.php?cid=' . $cInfo->coupon_id . '\', \'Valid_Categories\', \'scrollbars=yes,resizable=yes,menubar=yes,width=600,height=600\'); return false"><strong>' . TEXT_VIEW_SHORT .'</strong></a>';
+                    }
+                    $coupon_name_query = xtc_db_query("SELECT coupon_name FROM " . TABLE_COUPONS_DESCRIPTION . " WHERE coupon_id = '" . (int)$cInfo->coupon_id . "' AND language_id = '" . (int)$_SESSION['languages_id'] . "'");
+                    $coupon_name = xtc_db_fetch_array($coupon_name_query);
                 
-                $coupon_status = '';
-                if($cInfo->coupon_active == 'N'){
-                  $change_coupon_status = '<a class="button nobr" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_active&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_ON.'</a>';
-                  $coupon_status = '&status=N';
-                } else {
-                  $change_coupon_status = '<a class="button nobr" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_inactive&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_OFF.'</a>';             
+                    $coupon_status = '';
+                    if($cInfo->coupon_active == 'N'){
+                      $change_coupon_status = '<a class="button nobr" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_active&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_ON.'</a>';
+                      $coupon_status = '&status=N';
+                    } else {
+                      $change_coupon_status = '<a class="button nobr" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action')). 'action=voucher_set_inactive&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_STATUS_OFF.'</a>';             
+                    }
+
+                    $contents[] = array('text'=>COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
+                      COUPON_AMOUNT . ':&nbsp;<strong><span style="color:red">' . $amount . '</span></strong><br /><br />' .
+                      COUPON_STARTDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_start_date) . '<br />' .
+                      COUPON_FINISHDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_expire_date) . '<br /><br />' .
+                      COUPON_USES_COUPON . ':&nbsp;<strong>' . $cInfo->uses_per_coupon . '</strong><br />' .
+                      COUPON_USES_USER . ':&nbsp;<strong>' . $cInfo->uses_per_user . '</strong><br /><br />' .
+                      COUPON_PRODUCTS . ':&nbsp;' . $prod_details . '<br />' .
+                      COUPON_CATEGORIES . ':&nbsp;' . $cat_details . '<br /><br />' .
+                      DATE_CREATED . ':&nbsp;' . xtc_date_short($cInfo->date_created) . '<br />' .
+                      DATE_MODIFIED . ':&nbsp;' . xtc_date_short($cInfo->date_modified) . '<br /><br />');
+
+                    $contents[] = array('text'=> '<div style="text-align:center;">'.'
+                                 <a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EMAIL.'</a>' .
+                                 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')).'action=voucheredit&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EDIT.'</a>' .
+                                 $change_coupon_status .
+                                 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherdelete&cid='.$cInfo->coupon_id.$coupon_status,'NONSSL').'">'.BUTTON_DELETE.'</a>' .
+                                 '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('page','cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id.'&cpage='.$_GET['page'],'NONSSL').'">'.BUTTON_REPORT.'</a></div>'
+                                 );
+                  }
                 }
-
-                $contents[] = array('text'=>COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
-                  COUPON_AMOUNT . ':&nbsp;<strong><span style="color:red">' . $amount . '</span></strong><br /><br />' .
-                  COUPON_STARTDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_start_date) . '<br />' .
-                  COUPON_FINISHDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_expire_date) . '<br /><br />' .
-                  COUPON_USES_COUPON . ':&nbsp;<strong>' . $cInfo->uses_per_coupon . '</strong><br />' .
-                  COUPON_USES_USER . ':&nbsp;<strong>' . $cInfo->uses_per_user . '</strong><br /><br />' .
-                  COUPON_PRODUCTS . ':&nbsp;' . $prod_details . '<br />' .
-                  COUPON_CATEGORIES . ':&nbsp;' . $cat_details . '<br /><br />' .
-                  DATE_CREATED . ':&nbsp;' . xtc_date_short($cInfo->date_created) . '<br />' .
-                  DATE_MODIFIED . ':&nbsp;' . xtc_date_short($cInfo->date_modified) . '<br /><br />');
-
-                $contents[] = array('text'=> '<div style="text-align:center;">'.'
-                             <a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=email&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EMAIL.'</a>' .
-                             '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')).'action=voucheredit&cid='.$cInfo->coupon_id,'NONSSL').'">'.BUTTON_EDIT.'</a>' .
-                             $change_coupon_status .
-                             '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('cid', 'action', 'oldaction')). 'action=voucherdelete&cid='.$cInfo->coupon_id.$coupon_status,'NONSSL').'">'.BUTTON_DELETE.'</a>' .
-                             '<a class="button" onClick="this.blur();" href="'.xtc_href_link('coupon_admin.php', xtc_get_all_get_params(array('page','cid', 'action', 'oldaction')). 'action=voucherreport&cid='.$cInfo->coupon_id.'&cpage='.$_GET['page'],'NONSSL').'">'.BUTTON_REPORT.'</a></div>'
-                             );
+                break;
               }
-              break;
-              }
-
+              
               //BOX RIGHT
-              echo '<td class="boxRight">'. PHP_EOL;
-              $box = new box;
-              echo $box->infoBox($heading, $contents);  
-              echo '</td>'. PHP_EOL;
+              if ( (xtc_not_null($heading)) && (xtc_not_null($contents)) ) {
+                echo '<td class="boxRight">'. PHP_EOL;
+                $box = new box;
+                echo $box->infoBox($heading, $contents);  
+                echo '</td>'. PHP_EOL;
+              }
             }
             ?>
           </tr>

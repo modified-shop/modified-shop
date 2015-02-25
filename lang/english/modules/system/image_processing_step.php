@@ -26,7 +26,7 @@ define('MODULE_STEP_IMAGE_PROCESS_TEXT_DESCRIPTION', 'All Images in these direct
 /images/product_images/info_images/<br />
 /images/product_images/thumbnail_images/ <br /> <br /> are getting processed.<br /> <br />
 For this purpose, the script uses only a limited number of %s images and calls himself afterwards again.<br /> <br />');
-define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - <b>product images</b>');
+define('MODULE_STEP_IMAGE_PROCESS_TEXT_TITLE', 'Imageprocessing - product images');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_DESC','Module status');
 define('MODULE_STEP_IMAGE_PROCESS_STATUS_TITLE','Status');
 define('IMAGE_EXPORT','Press Start to start the processing. This process may take some time - do not interrupt in any case!');

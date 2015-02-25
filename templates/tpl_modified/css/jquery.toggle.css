@@ -5,12 +5,19 @@
 
 /* TOGGLE MENU CSS */
 #admin{
+  background: #45484d; /* Old browsers */
+  background: -moz-linear-gradient(top, #45484d 0%, #000000 95%); /* FF3.6+ */
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#45484d), color-stop(95%,#000000)); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(top, #45484d 0%,#000000 95%); /* Chrome10+,Safari5.1+ */
+  background: -o-linear-gradient(top, #45484d 0%,#000000 95%); /* Opera 11.10+ */
+  background: -ms-linear-gradient(top, #45484d 0%,#000000 95%); /* IE10+ */
+  background: linear-gradient(to bottom, #45484d 0%,#000000 95%); /* W3C */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#45484d', endColorstr='#000000',GradientType=0 ); /* IE6-9 */
 	position: fixed;
 	display: block;
 	left: 0px;
 	top: 0px;
 	width: 100%;
-	background: #1c1c1c;
 	z-index: 100000 !important;
 	height:35px;
 }
@@ -31,15 +38,20 @@
 	list-style: none;
 	position: relative;
 }
+#admin ul li.logo {
+	display: block;
+  padding: 8px 30px 0px 0px;
+}
+
 
 #admin ul li a.togglelink{
 	display: block;
 	font-size: 12px;
 	font-weight: bold;
 	color: #fff;
-	padding: 8px 15px;
+	padding: 8px 10px;
 	float: left;
-	margin-right: 5px;
+	margin-right: 0px;
 	border: 1px solid transparent;
 	line-height:18px;
 }
@@ -48,8 +60,8 @@
 	background: #282828;
 	text-decoration: none;
 	border: 1px solid transparent;
-	padding: 3px 15px 6px 15px;
-	margin-top: 7px;
+	padding: 3px 10px 5px 10px;
+	margin-top: 5px;
 	border-bottom: 0;
 	color: #aaa;
 }
@@ -132,6 +144,36 @@
 	background: #0c0;
 }
 
-#admin ul li.logoff {
+#admin ul li.right {
   float:right;
+}
+
+.icon_count {
+    background: none repeat scroll 0 0 #dc143c;
+    border-radius: 50%;
+    color: #fff;
+    font-family: Verdana;
+    font-size: 8px;
+    height: 14px;
+    line-height: 13px;
+    margin: 2px 0 0 20px;
+    padding: 0;
+    position: absolute;
+    text-align: center;
+    top: 14px;
+    width: 14px;
+}
+#admin ul.cf li.language {
+    margin-right:10px;
+}
+#admin ul.cf li.language a {
+    border: 1px solid transparent;
+    color: #fff;
+    display: block;
+    float: left;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 18px;
+    margin-right: 0;
+    padding: 8px 2px;
 }

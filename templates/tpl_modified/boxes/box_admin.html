@@ -1,35 +1,51 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
 {config_load file="lang_`$language`.custom"}
 <div id="admin">
-<ul>
-  <li class="start">
-    <a class="togglelink" href="{$START}">Admin</a>
+<ul class="cf">
+  <li class="logo">
+    <a href="{$START}"><img src="{$tpl_path}img/adminbar_logo.png" alt="Modified eCommerce" /></a>
   </li>
+  {if $LANGUAGES != ''}
+    <li class="language togglemenu">{$LANGUAGES}</li>
+  {/if}
   <li class="orders togglemenu">
-    <a class="togglelink" href="{$ORDERS}">Bestellungen</a>
+    <a class="togglelink" href="{$ORDERS}"><img src="{$tpl_path}img/adminbar_orders.png" alt="" /></a>
     <ul>
       {$ORDERS_CONTENT}
     </ul>
   </li>
-  {if $EDIT_CONTENT || $EDIT_PRODUCT || $EDIT_CATEGORY}
-    <li class="orders togglemenu">
-      <a class="togglelink" href="">Bearbeiten</a>
-      <ul>  
-        {if $EDIT_CONTENT}
-          <li><a href="{$EDIT_CONTENT}">Content</a></li>
-        {/if}  
+  <li class="orders togglemenu">
+    <a class="togglelink" href="{$CONTENT_MANAGER}"><img src="{$tpl_path}img/adminbar_content.png" alt="" /></a>
+    {if $EDIT_CONTENT}
+    <ul>
+      <li><a href="{$EDIT_CONTENT}">Content bearbeiten</a></li>
+    </ul>
+    {/if}
+  </li>
+  <li class="orders togglemenu">
+    <a class="togglelink" href="{$CUSTOMERS}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
+  </li>
+  <li class="orders togglemenu">
+    <a class="togglelink" href="{$CATEGORIES}"><img src="{$tpl_path}img/adminbar_categories.png" alt="" /></a>
+    {if $EDIT_PRODUCT || $EDIT_CATEGORY}
+      <ul>
         {if $EDIT_PRODUCT}
-          <li><a href="{$EDIT_PRODUCT}">Artikel</a></li>
+          <li><a href="{$EDIT_PRODUCT}">Artikel bearbeiten</a></li>
           <li><a href="{$EDIT_PRODUCT_ATTRIBUTES}">Attribute editieren</a></li>
         {/if}
         {if $EDIT_CATEGORY}
-          <li><a href="{$EDIT_CATEGORY}">Kategorie</a></li>
+          <li><a href="{$EDIT_CATEGORY}">Kategorie bearbeiten</a></li>
         {/if}
       </ul>
-    </li>
-  {/if}
-  <li class="logoff">
-    <a class="togglelink" href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}">Abmelden</a>
+    {/if}
+  </li>
+
+  <li class="right neqmargin">
+    <a class="togglelink" href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}"><img src="{$tpl_path}img/adminbar_logoff.png" alt="" /></a>
+  </li>
+  <li class="right">
+    <a class="togglelink" href="{$NEWSFEED}"><img src="{$tpl_path}img/adminbar_feed.png" alt="" /></a>
+    {if $NEWSFEED_COUNT > 0}<div class="icon_count">{$NEWSFEED_COUNT}</div>{/if}
   </li>
 </ul>
 </div>

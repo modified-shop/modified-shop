@@ -23,6 +23,31 @@ $box_smarty->assign('tpl_path', DIR_WS_BASE.'templates/'.CURRENT_TEMPLATE.'/');
 // include needed functions
 require_once(DIR_FS_INC.'xtc_image_button.inc.php');
 
+// newsfeed
+require_once(DIR_FS_INC.'get_newsfeed.inc.php');
+get_newsfeed();
+
+// news count
+$num_news_query = xtc_db_query("SELECT count(*) as total FROM newsfeed WHERE news_date > '".NEWSFEED_LAST_READ."'");
+$num_news = xtc_db_fetch_array($num_news_query);
+$box_smarty->assign('NEWSFEED_COUNT', $num_news['total']);
+
+// Admin Language Switch
+$languages_string = '';
+if (!isset($lng) || (isset($lng) && !is_object($lng))) {
+  require_once(DIR_WS_CLASSES . 'language.php');
+  $lng = new language;
+}
+
+if (count($lng->catalog_languages) > 1) {
+  reset($lng->catalog_languages);
+  while (list($key, $value) = each($lng->catalog_languages)) {
+    $lng_link_txt = file_exists('lang/' .  $value['directory'] .'/' . $value['image']) ? xtc_image('lang/' .  $value['directory'] .'/' . $value['image'], $value['name']) : $value['name'];
+    $languages_string .= '&nbsp;<a href="' . xtc_href_link(basename($PHP_SELF), xtc_get_all_get_params(array('language', 'currency')) . 'language=' . $key, $request_type) . '">' . $lng_link_txt . '</a> ';
+  }
+}
+$box_smarty->assign('LANGUAGES', $languages_string);
+
 $orders_contents = '';
 $orders_status_validating = xtc_db_num_rows(xtc_db_query("SELECT orders_status FROM ".TABLE_ORDERS ." WHERE orders_status ='0'"));
 $orders_contents .='<li><a href="'.xtc_href_link_admin(FILENAME_ORDERS, 'selected_box=customers&status=0', 'NONSSL').'"><em>'.$orders_status_validating.'</em>'.TEXT_VALIDATING.'</a></li>';
@@ -59,6 +84,11 @@ if ($product->isProduct()) {
 
 // NEW ADMIN
 $box_smarty->assign('START', xtc_href_link_admin(FILENAME_START,'', 'NONSSL'));
+$box_smarty->assign('ORDERS', xtc_href_link_admin(FILENAME_ORDERS,'', 'NONSSL'));
+$box_smarty->assign('NEWSFEED', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'newsfeed.php','', 'NONSSL'));
+$box_smarty->assign('CATEGORIES', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'categories.php','', 'NONSSL'));
+$box_smarty->assign('CUSTOMERS', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'customers.php','', 'NONSSL'));
+$box_smarty->assign('CONTENT_MANAGER', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'content_manager.php','', 'NONSSL'));
 $box_smarty->assign('ORDERS', xtc_href_link_admin(FILENAME_ORDERS,'', 'NONSSL'));
 $box_smarty->assign('ORDERS_CONTENT', $orders_contents);
 

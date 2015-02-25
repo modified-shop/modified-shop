@@ -12,15 +12,15 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 ?>
  
-        <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
-        <div class="pageHeading pdg2"><?php echo HEADING_TITLE . '<span style="font-size:13px"> - '.TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . $order->info['date_purchased'] ; ?></span></div>
-        <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
-        <div class="clear">     
+      <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
+      <div class="pageHeading pdg2"><?php echo HEADING_TITLE . '<span style="font-size:13px"> - '.TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . $order->info['date_purchased'] ; ?></span></div>
+      <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
+      <div class="clear" style="margin-left: 5px;">     
         <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
         <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.$oID.'&cID=' . $order->customer['ID']);?>"><?php echo BUTTON_EDIT ?></a>        
-        </div>
-        <br />
+      </div>
 
+      <div class="div_box mrg5">
         <!-- BOC CUSTOMERS INFO BLOCK -->
         <table cellspacing="0" cellpadding="2" class="table">
           <tr>
@@ -293,44 +293,37 @@
 
         <!-- BOC ORDER TRACK & TRACE BLOCK -->
         <div class="heading"><?php echo TABLE_HEADING_TRACK_TRACE; ?></div>
-        <table cellspacing="0" cellpadding="2" class="table">
+        <table cellspacing="0" cellpadding="5" class="table borderall">
           <tr>
-            <td class="main"><table border="1" width="100%" cellspacing="0" cellpadding="5">
-              <tr>
-                <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
-                <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
-                <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
-              </tr>
-              <?php
-                $tracking_array = get_tracking_link($_GET['oID'], $lang_code);
-                if (count($tracking_array) > 0) {
-                  foreach($tracking_array as $tracking) {
-                    echo '          <tr>'.PHP_EOL;
-                    echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
-                    echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
-                    echo '            <td class="smallText" align="center"><a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
-                    echo '          <tr>'.PHP_EOL;
-                  }
-                }
-              ?>
-              <tr>
-                <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
-                  <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
-                  <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
-                  <td class="smallText" align="center"><input type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
-                </form>
-              </tr>
-            </table></td>
+            <td class="smallText" align="center" style="width:100px;"><strong><?php echo TABLE_HEADING_CARRIER; ?></strong></td>
+            <td class="smallText" align="center"><strong><?php echo TABLE_HEADING_PARCEL_LINK; ?></strong></td>
+            <td class="smallText" align="center" style="width:150px;"><strong><?php echo TABLE_HEADING_ACTION; ?></strong></td>
+          </tr>
+          <?php
+            $tracking_array = get_tracking_link($_GET['oID'], $lang_code);
+            if (count($tracking_array) > 0) {
+              foreach($tracking_array as $tracking) {
+                echo '          <tr>'.PHP_EOL;
+                echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
+                echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
+                echo '            <td class="smallText" align="center"><a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                echo '          <tr>'.PHP_EOL;
+              }
+            }
+          ?>
+          <tr>
+            <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
+              <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
+              <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
+              <td class="smallText" align="center"><input type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
+            </form>
           </tr>
         </table>
         <!-- EOC ORDER TRACK & TRACE BLOCK -->
 
         <!-- BOC ORDER HISTORY BLOCK -->
         <div class="heading"><?php echo TEXT_ORDER_HISTORY; ?></div>
-        <table cellspacing="0" cellpadding="2" class="table">
-          <tr>
-            <td class="main">
-              <table border="1" width="100%" cellspacing="0" cellpadding="5">
+        <table cellspacing="0" cellpadding="5" class="table borderall">
                 <tr>
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_DATE_ADDED; ?></b></td>
                   <td class="smallText" align="center"><b><?php echo TABLE_HEADING_CUSTOMER_NOTIFIED; ?></b></td>
@@ -381,8 +374,6 @@
                   echo '                <tr>'.PHP_EOL.'            <td class="smallText" colspan="5">'.TEXT_NO_ORDER_HISTORY.'</td>'.PHP_EOL.'                </tr>'.PHP_EOL;
                 }
                 ?>
-              </table>
-            </td>
           </tr>
         </table>
         <!-- EOC ORDER HISTORY BLOCK -->
@@ -393,12 +384,9 @@
           <tr>
             <td class="main"><b><?php echo TABLE_HEADING_COMMENTS; ?></b></td>
           </tr>
-          <tr>
-            <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '5'); ?></td>
-          </tr>
           <?php echo xtc_draw_form('status', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=update_order'); ?>
           <tr>
-            <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '5', $order->info['comments']); ?></td>
+            <td class="main"><?php echo xtc_draw_textarea_field('comments', 'soft', '60', '8', $order->info['comments']); ?></td>
           </tr>
           <tr>
             <td><?php echo xtc_draw_separator('pixel_trans.gif', '1', '10'); ?></td>
@@ -432,7 +420,7 @@
         <!-- EOC ORDER STATUS BLOCK -->
 
         <!-- BOC BUTTONS BLOCK -->
-        <table cellspacing="0" cellpadding="2" style="width:850px; margin-bottom:10px;">
+        <table cellspacing="0" cellpadding="2" style="margin-bottom:10px;">
           <tr>
             <td align="right">
               <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array ('oID', 'action')).'oID='.$oID.'&action=send&sta=0&stc=1&site=1'); ?>"><?php echo BUTTON_ORDER_CONFIRMATION; ?></a>
@@ -454,4 +442,4 @@
           ?>
         </table>
         <!-- EOC BUTTONS BLOCK -->
-
+      </div>

@@ -145,6 +145,7 @@ CREATE TABLE admin_access (
   parcel_carriers INT(1) NOT NULL DEFAULT 0,
   supermailer INT(1) NOT NULL DEFAULT 0,
   shopgate INT(1) NOT NULL DEFAULT 0,
+  newsfeed INT(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (customers_id)
 ) ENGINE=MyISAM;
 
@@ -624,6 +625,17 @@ CREATE TABLE module_backup (
   last_modified datetime DEFAULT NULL,
   PRIMARY KEY (configuration_id),
   KEY idx_configuration_key (configuration_key)
+) ENGINE=MyISAM;
+
+DROP TABLE IF EXISTS newsfeed;
+CREATE TABLE newsfeed (
+  news_id INT( 11 ) NOT NULL AUTO_INCREMENT,
+  news_title VARCHAR( 128 ) NULL,
+  news_text TEXT NULL,
+  news_link VARCHAR( 128 ) NULL,
+  news_date INT( 11 ) NULL,
+  PRIMARY KEY (news_id),
+  UNIQUE idx_news_link (news_link)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS module_newsletter;
@@ -1210,8 +1222,8 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr
 INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
 
 # add entry for admin_access
-INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5);
+INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 # carriers
 INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
@@ -1374,6 +1386,8 @@ INSERT INTO configuration (configuration_id, configuration_key, configuration_va
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_STATUS', 'true', 6, 1, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'MODULE_ORDER_TOTAL_SUBTOTAL_NO_TAX_SORT_ORDER','40', 6, 2, NULL, NOW(), NULL, NULL);
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'COMPRESS_STYLESHEET_TIME', '', 6, 100, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'NEWSFEED_LAST_READ', '', 6, 100, NULL, NOW(), NULL, NULL);
+INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'NEWSFEED_LAST_UPDATE', '', 6, 100, NULL, NOW(), NULL, NULL);
 
 # configuration_group_id 7, Shipping/Packaging
 INSERT INTO configuration (configuration_id, configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES (NULL, 'SHIPPING_MAX_WEIGHT', '50', 7, 3, NULL, NOW(), NULL, NULL);

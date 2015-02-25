@@ -197,12 +197,12 @@
       ?>
       <!-- body_text //-->
       <td class="boxCenter"> 
-      <div class="mrg5" style="width:1000px;">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
         <div class="flt-l">
           <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>              
         </div>
         <div class="clear"></div>
+      <div class="div_box mrg5">
         <?php
         if ($_GET['action'] == 'preview' && ($_POST['customers_email_address'] || $_POST['email_to']) ) {
           switch ($_POST['customers_email_address']) {
@@ -307,7 +307,7 @@
                 </tr>                
               </table> 
 
-              <div class="smallText flt-r mrg5"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
+              <div class="smallText mrg5 txta-r"><?php echo '<input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_SEND_EMAIL . '"/>'; ?></div>
           </form>
       <?php
         }

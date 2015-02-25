@@ -312,7 +312,7 @@ if (xtc_not_null($action) && !$box) {
                               if ($module->check() > 0 && !$installed) {
                                 $installed = true;
                                 ?>
-                                <tr class="dataTableHeadingRow">
+                                <tr class="dataTableHeadingRow sub">
                                   <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_INSTALLED; ?></td>
                                 </tr>
                                 <?php
@@ -325,7 +325,7 @@ if (xtc_not_null($action) && !$box) {
                                   <td class="dataTableHeadingContent txta-c"><?php echo TABLE_HEADING_STATUS; ?>&nbsp;</td>
                                   <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ACTION; ?> </td>
                                 </tr>
-                                <tr class="dataTableHeadingRow">
+                                <tr class="dataTableHeadingRow sub">
                                   <td colspan="3" class="dataTableHeadingContent txta-c" ><?php echo TABLE_HEADING_MODULES_NOT_INSTALLED; ?></td>
                                 </tr>
                                 <?php
@@ -527,12 +527,7 @@ if (xtc_not_null($action) && !$box) {
     </table>
     <!-- body_eof //-->
     <!-- footer //-->
-    <?php
-    if (file_exists('includes/javascript/'.basename($module_class).'.js.php')) {
-      include_once('includes/javascript/'.basename($module_class).'.js.php');
-    }    
-    require(DIR_WS_INCLUDES . 'footer.php'); 
-    ?>
+    <?php require(DIR_WS_INCLUDES . 'footer.php'); ?>
     <!-- footer_eof //-->
     <br />
   </body>

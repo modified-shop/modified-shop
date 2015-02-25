@@ -16,11 +16,6 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
 
-define('RSS_FEED_TITLE', 'modified eCommerce Shopsoftware Support Forum - Ank&uuml;ndigungen / Neuigkeiten');
-define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsoftware Support Forum');
-define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
-define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtssprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
-
 require ('includes/application_top.php');
 require_once (DIR_FS_INC.'xtc_validate_vatid_status.inc.php');
 require_once (DIR_FS_INC.'xtc_get_geo_zone_code.inc.php');
@@ -490,41 +485,34 @@ require (DIR_WS_INCLUDES.'head.php');
           ?>
           </div>
           <div class="admincol_right">
-          <?php
-            $feed = get_external_content('http://www.modified-shop.org/feed/', 2);    
-            if ($feed && class_exists('SimpleXmlElement')) {
-              $rss = new SimpleXmlElement($feed, LIBXML_NOCDATA);
-              $rss->addAttribute('encoding', 'UTF-8');
+            <div class="admin_headline"><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a></div>
+            <div class="admin_contentbox">
+              <?php
+              $news_query = xtc_db_query("SELECT * FROM newsfeed");
+              if (xtc_db_num_rows($news_query) > 0) {
+                $i = 0;
+                while ($news = xtc_db_fetch_array($news_query)) {
+                  $pagebreak = strpos($news['news_text'], '<tt class="bbc_tt"></tt>');
+                  ?>
+                  <div class="blog_title<?php echo (($i == 0) ? ' active' : ''); ?>"><?php echo $news['news_title']; ?></div>                          
+                  <div class="blogentry" <?php echo (($i != 0) ? ' style="display:none; margin-top:2px;"' : ''); ?>>
+                    <div class="blog_date"><?php echo date('d.m.Y', $news['news_date']); ?></div>                                      
+                    <div class="blog_desc"><?php echo (($pagebreak !== false) ? substr($news['news_text'], 0, $pagebreak) : $news['news_text']); ?></div>
+                    <div class="blog_read_more"><a target="_blank" href="<?php echo $news['news_link']; ?>">weiterlesen &raquo;</a></div>
+                  </div>
+                  <?php
+                  $i ++;
+                }
+              } else {
               ?>
-              <div class="admin_headline"><a target="_blank" href="<?php echo $rss->channel->link; ?>"><?php echo convert_utf8($rss->channel->description); ?></a></div>
-              <div class="admin_contentbox">
-              <?php
-              for ($i=0; $i<=9; $i++) {
-                $pagebreak = strpos($rss->channel->item[$i]->description, '<tt class="bbc_tt"></tt>');
-                ?>
-                <div class="blog_title<?php echo (($i == 0) ? ' active' : ''); ?>"><?php echo convert_utf8($rss->channel->item[$i]->title); ?></div>                          
-                <div class="blogentry" <?php echo (($i != 0) ? ' style="display:none; margin-top:2px;"' : ''); ?>>
-                  <div class="blog_date"><?php echo date('d.m.Y', (strtotime($rss->channel->item[$i]->pubDate))); ?></div>                                      
-                  <div class="blog_desc"><?php echo convert_utf8((($pagebreak !== false) ? substr($rss->channel->item[$i]->description, 0, $pagebreak) : $rss->channel->item[$i]->description)); ?></div>
-                  <div class="blog_read_more"><a target="_blank" href="<?php echo $rss->channel->item[$i]->link; ?>">weiterlesen &raquo;</a></div>
-                </div>
-              <?php
-              }
-              ?>
-              <?php
-            } else {
-            ?>
-              <div class="admin_headline"><a target="_blank" href="<?php echo RSS_FEED_LINK; ?>"><?php echo RSS_FEED_TITLE; ?></a></div>
-              <div class="admin_contentbox">
                 <div class="blogentry">
                   <div class="blog_title"><?php echo RSS_FEED_ALTERNATIVE; ?></div>                          
                   <div class="blog_desc"><?php echo RSS_FEED_DESCRIPTION; ?></div>
                 </div>
-              </div>
-            <?php
-            }
-          ?>           
-          </div>
+              <?php
+              }
+            ?>           
+            </div>
         </div>
       </td>
       <!-- body_text_eof //-->

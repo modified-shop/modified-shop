@@ -478,10 +478,11 @@ define('BOX_XSBOOSTER_CONFIG','Grundkonfiguration');
 // EOF - Tomcraft - 2009-11-28 - Included xs:booster
 
 //BOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
-define('ASB_QUICK_SEARCH_CUSTOMER','Suche nach Kunde...');
-define('ASB_QUICK_SEARCH_ORDER_ID','Suche nach Bestellnummer...');
-define('ASB_QUICK_SEARCH_ARTICLE','Suche nach Artikel...');
-define('ASB_QUICK_SEARCH_EMAIL', 'Suche nach E-Mail-Adresse...');
+define('ASB_QUICK_SEARCH_CUSTOMER','Suche Kunde...');
+define('ASB_QUICK_SEARCH_ORDER_ID','Suche Bestellnummer...');
+define('ASB_QUICK_SEARCH_ARTICLE','Suche Artikel/Kategorie...');
+define('ASB_QUICK_SEARCH_EMAIL', 'Suche E-Mail-Adresse...');
+define('ASB_QUICK_SEARCH_ARTICLE_ID','Suche Artikel/Kategorie ID...');
 //EOF - web28 - 2010-04-10 - ADMIN SEARCH BAR
 
 //BOF - web28 - 2010.05.30 - accounting - set all checkboxes , countries - set all flags
@@ -536,6 +537,12 @@ define('SPECIALS_DATE_END_TT', 'Angebote enden um Mitternacht (23.59.59 Uhr)');
 
 define('BOX_PARCEL_CARRIERS', 'Paketdienstleister');
 define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> Paketdienstleister)');
+
+define('RSS_FEED_TITLE', 'Aktuelle Information von modified eCommerce Shopsoftware Blog');
+define('RSS_FEED_DESCRIPTION', 'Aktuelle Information von modified eCommerce Shopsoftware Support Forum');
+define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
+define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtssprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
+define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> News)');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
