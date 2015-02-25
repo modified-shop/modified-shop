@@ -132,7 +132,7 @@
         
         if (strlen($content_title[$i][$languages[$l]['id']]) < 1) {
           $error = true;
-          $messageStack->add_session(strtoupper($languages[$i]['name']).': '.ERROR_TITLE, 'error');
+          $messageStack->add_session(strtoupper($languages[$l]['name']).': '.ERROR_TITLE, 'error');
         }
       
         if ($error === false) {
