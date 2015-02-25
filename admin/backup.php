@@ -50,7 +50,7 @@
   define('BK_FILENAME', 'backup_db.php'); //BACKUP
   define('RS_FILENAME', 'backup_restore.php'); //RESTORE
 
-  define ('VERSION', 'Database Backup/Restore Ver. 2.00 UTF-8');
+  define ('VERSION', 'Database Backup/Restore Ver. 2.00');
 
   require('includes/application_top.php');
 
@@ -58,7 +58,8 @@
 
   $utf8_query = xtc_db_query("SHOW TABLE STATUS WHERE Name='customers'");
   $utf8_array = xtc_db_fetch_array($utf8_query);
-  $check_utf8 = strpos($utf8_array['Collation'], 'utf8') === false ? false : true;
+  $check_utf8 = (strpos($utf8_array['Collation'], 'utf8') === false ? false : true);
+  $check_utf8 = ($check_utf8 && isset($_GET['utf8convert']) && $_GET['utf8convert'] = '1' ? true : false);
   
   //Adminrechte automatisch für backup_db setzen
   $result = xtc_db_query("select * from ".TABLE_ADMIN_ACCESS."");
