@@ -29,7 +29,6 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
-  <link rel="stylesheet" type="text/css" href="includes/css/minimal/minimal.css" />
 
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
