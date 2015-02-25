@@ -21,11 +21,6 @@
           <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
         </div>
 
-        <div class="main flt-l pdg2" style="margin-left:40px;">
-          <?php echo xtc_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
-          <?php echo HEADING_TITLE_SEARCH . ' ' . xtc_draw_input_field('oID', '', 'size="12"') . xtc_draw_hidden_field('action', 'edit').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
-          </form>
-        </div>
         <div class="main flt-l pdg2" style="margin-left:20px;">
           <?php echo xtc_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo ASB_QUICK_SEARCH_CUSTOMER . ' ' . xtc_draw_input_field('customer', '', 'size="12"') . xtc_draw_hidden_field('action', 'search').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
