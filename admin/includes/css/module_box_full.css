@@ -47,3 +47,7 @@ height:1px;
 margin-bottom:5px;
 border: none;
 }
+
+.modulbox .infoBoxHeadingTitle {
+border-bottom: 0;
+}

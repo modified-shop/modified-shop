@@ -1378,3 +1378,15 @@ text-align: center;
 top: 17px;
 width: 18px;
 }
+
+/*buttons in module right box*/
+a.btnbox,
+a.btnbox:link,
+a.btnbox:visited,
+a.btnbox:active,
+a.btnbox:hover,
+span.btnbox {
+margin: 7px auto;
+width: 120px;
+display: block;
+}
