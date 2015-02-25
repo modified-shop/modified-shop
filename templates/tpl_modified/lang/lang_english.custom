@@ -7,3 +7,16 @@ last = 'last &raquo;'
 
 heading_miscellaneous = 'Payment methods'
 text_miscellaneous = 'Die Box kann unter tpl_modified/boxes/box__miscellaneous.html ver&auml;ndert werden. Die Sprachvariablen befinden sich in der Datei tpl_modified/lang/german/lang_german.custom.'
+
+ab_admin = 'Admin area'
+ab_orders = 'Orders'
+ab_contentmanager = Content Manager'
+ab_customers = 'Customers'
+ab_category = 'Category/products'
+ab_logoff = 'Logoff'
+ab_news = 'News'
+
+ab_edit_content = 'Edit content'
+ab_edit_product = 'Edit product'
+ab_edit_attributes = 'Edit product attributes'
+ab_edit_category = 'Edit category'

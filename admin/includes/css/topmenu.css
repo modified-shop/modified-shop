@@ -36,7 +36,7 @@ background: #AF417E /*url(images/current-bg.gif) top left repeat-x*/;
 color:#fff;
 display:block;
 font-weight:bold;
-line-height:23px;
+line-height:22px;
 padding:6px 7px;
 text-align:center;
 text-decoration:none;
@@ -73,8 +73,8 @@ padding:0px;
 }
 #cssmenu li ul a {
 background: #bbb /*url(images/menu-bg-li.gif) repeat-x bottom*/;
-line-height:29px;
-height:29px;
+line-height:30px;
+height:30px;
 color:#000;
 display:block;
 font-size:10px;
@@ -114,11 +114,11 @@ border-bottom: 0px;
 #cssmenu ul li .dataNavHeadingContent a {
 background: transparent;
 border: none;
-padding: 5px 3px 4px 3px;
+padding: 5px 3px 5px 3px;
 color:#000;
 display:inline-block;
 font-weight:bold;
-line-height:15px;
+line-height:14px;
 text-align:center;
 text-decoration:none;
 white-space: nowrap;
