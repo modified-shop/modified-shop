@@ -33,6 +33,17 @@ function xss_secure($params_arr, $ip, $type)
     foreach ($params_arr as $secvalue) 
     {
         if (!is_array($secvalue)) {
+         #hs - speed improvement
+         #stackoverflow.com/questions/14342427
+          if (strpos($secvalue, '<') !== false ||
+              ( (
+                strpos($secvalue, '=') !== false ||
+                stripos($secvalue, 'like') !== false
+              ) && (
+                stripos($secvalue, ' or ') !== false ||
+                stripos($secvalue, ' and ') !== false
+              ) )
+             )#hs
           xss_secure_params($secvalue, $ip, $type);
         } else {
           xss_secure($secvalue, $ip, $type);
