@@ -17,21 +17,21 @@
   $css_min = DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/stylesheet.min.css';
 
   $css_file = '/stylesheet.css';
-  if (COMPRESS_STYLESHEET == 'true' && (!is_file($css_min) || filemtime($css_plain) != COMPRESS_STYLESHEET_TIME)) {
-    require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
-  
-    if (($css_content = file_get_contents($css_plain)) !== false) {
-    $compactor = new Compactor(array('strip_php_comments' => true));
-    $css_content = $compactor->squeeze($css_content);
-      if (file_put_contents($css_min, $css_content, LOCK_EX) !== false) {
-        $css_file = '/stylesheet.min.css';
-        xtc_db_query("UPDATE ".TABLE_CONFIGURATION." 
-                         SET configuration_value = '".filemtime($css_plain)."' 
-                       WHERE configuration_key = 'COMPRESS_STYLESHEET_TIME'");
+  if (COMPRESS_STYLESHEET == 'true') {
+    $css_plain_ts = filemtime($css_plain);
+    $css_min_ts = is_writeable($css_min) ? filemtime($css_min) : false;
+    if ($css_min_ts && ( $css_plain_ts > $css_min_ts ) ) {
+      require_once(DIR_FS_EXTERNAL.'compactor/compactor.php');
+      if (($css_content = file_get_contents($css_plain)) !== false) {
+        $compactor = new Compactor(array('strip_php_comments' => true));
+        $css_content = $compactor->squeeze($css_content);
+        if (file_put_contents($css_min, $css_content, LOCK_EX) !== false) {
+          $css_file = '/stylesheet.min.css?v='.$css_min_ts;
+        }
       }
+    } elseif ($css_min_ts) {
+      $css_file = '/stylesheet.min.css?v='.$css_min_ts;
     }
-  } elseif (COMPRESS_STYLESHEET == 'true' && is_file($css_min)) {
-    $css_file = '/stylesheet.min.css';
   }
 
   // Put CSS-Inline-Definitions here, these CSS-files will be loaded at the TOP of every page
