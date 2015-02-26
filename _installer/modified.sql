@@ -1190,7 +1190,8 @@ CREATE TABLE zones (
   zone_country_id INT NOT NULL,
   zone_code VARCHAR(32) NOT NULL,
   zone_name VARCHAR(64) NOT NULL,
-  PRIMARY KEY (zone_id)
+  PRIMARY KEY (zone_id),
+  UNIQUE idx_country_code (zone_country_id, zone_code);
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS zones_to_geo_zones;
@@ -2086,7 +2087,7 @@ INSERT INTO zones VALUES (109,204,'BS','Basel-Stadt');
 INSERT INTO zones VALUES (110,204,'FR','Freiburg');
 INSERT INTO zones VALUES (111,204,'GE','Genf');
 INSERT INTO zones VALUES (112,204,'GL','Glarus');
-INSERT INTO zones VALUES (113,204,'JU','Graubünden');
+INSERT INTO zones VALUES (113,204,'GR','Graubünden');
 INSERT INTO zones VALUES (114,204,'JU','Jura');
 INSERT INTO zones VALUES (115,204,'LU','Luzern');
 INSERT INTO zones VALUES (116,204,'NE','Neuenburg');
@@ -2206,7 +2207,7 @@ INSERT INTO zones VALUES (NULL,30,'DF','Distrito Federal');
 INSERT INTO zones VALUES (NULL,30,'RO','Rondonia');
 INSERT INTO zones VALUES (NULL,30,'AC','Acre');
 INSERT INTO zones VALUES (NULL,30,'AP','Amapa');
-INSERT INTO zones VALUES (NULL,30,'RO','Roraima');
+INSERT INTO zones VALUES (NULL,30,'RR','Roraima');
 INSERT INTO zones VALUES (NULL,30,'AL','Alagoas');
 INSERT INTO zones VALUES (NULL,30,'CE','Ceará');
 INSERT INTO zones VALUES (NULL,30,'MA','Maranhão');
@@ -2247,7 +2248,7 @@ INSERT INTO zones VALUES (NULL,47,'COR','Cordoba');
 INSERT INTO zones VALUES (NULL,47,'CUN','Cundinamarca');
 INSERT INTO zones VALUES (NULL,47,'HUI','Huila');
 INSERT INTO zones VALUES (NULL,47,'GUA','Guainia');
-INSERT INTO zones VALUES (NULL,47,'GUA','Guajira');
+INSERT INTO zones VALUES (NULL,47,'LAG','Guajira');
 INSERT INTO zones VALUES (NULL,47,'GUV','Guaviare');
 INSERT INTO zones VALUES (NULL,47,'MAG','Magdalena');
 INSERT INTO zones VALUES (NULL,47,'MET','Meta');
@@ -2833,7 +2834,7 @@ INSERT INTO zones VALUES (NULL,222,'BDF','Bedfordshire');
 INSERT INTO zones VALUES (NULL,222,'WBK','Berkshire');
 INSERT INTO zones VALUES (NULL,222,'BBD','Blackburn with Darwen');
 INSERT INTO zones VALUES (NULL,222,'BPL','Blackpool');
-INSERT INTO zones VALUES (NULL,222,'BPL','Bournemouth');
+INSERT INTO zones VALUES (NULL,222,'BMH','Bournemouth');
 INSERT INTO zones VALUES (NULL,222,'BNH','Brighton and Hove');
 INSERT INTO zones VALUES (NULL,222,'BST','Bristol');
 INSERT INTO zones VALUES (NULL,222,'BKM','Buckinghamshire');
@@ -2869,7 +2870,7 @@ INSERT INTO zones VALUES (NULL,222,'LUT','Luton');
 INSERT INTO zones VALUES (NULL,222,'MDW','Medway');
 INSERT INTO zones VALUES (NULL,222,'MER','Merseyside');
 INSERT INTO zones VALUES (NULL,222,'MDB','Middlesbrough');
-INSERT INTO zones VALUES (NULL,222,'MDB','Milton Keynes');
+INSERT INTO zones VALUES (NULL,222,'MIK','Milton Keynes');
 INSERT INTO zones VALUES (NULL,222,'NFK','Norfolk');
 INSERT INTO zones VALUES (NULL,222,'NTH','Northamptonshire');
 INSERT INTO zones VALUES (NULL,222,'NEL','North East Lincolnshire');
