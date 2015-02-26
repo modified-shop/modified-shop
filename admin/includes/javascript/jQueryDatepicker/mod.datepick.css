@@ -1,10 +1,11 @@
 .calbtn{
+
 padding-bottom: 0px;
 cursor: pointer;
 vertical-align: bottom;
 }
 .hasDatepick{
-background: #ffc;
+background: #ffc!important;
 border: 1px solid #a3a3a3;
 }
 
@@ -64,7 +65,7 @@ border: 1px solid #a3a3a3;
 }
 .datepick-cmd {
 	width: 30%;
-  padding-top: 3px;
+  padding-top: 5px;
 }
 .datepick-cmd:hover {
 	background-color: #777;
@@ -76,8 +77,8 @@ border: 1px solid #a3a3a3;
 	width: 8%;
 }
 a.datepick-cmd {
-	height: 1.6em;
-  font-size: 0.9em;
+	height: 1.8em;
+  font-size: 1.0em;
   font-weight: bold;
 }
 button.datepick-cmd {
@@ -138,14 +139,15 @@ button.datepick-cmd {
 	text-align: center;
 }
 .datepick-month-header, .datepick-month-header select, .datepick-month-header input {
-	height: 1.5em;
+	height: 2.0em;
 	background-color: #777;
+
 	color: #fff;
 	font-weight: bold;
   border-bottom: 1px solid #000;
 }
 .datepick-month-header select, .datepick-month-header input {
-	height: 1.4em;
+	height: 2.0em;
 	border: none;
 	font-size: 100%;
 }
@@ -218,6 +220,7 @@ button.datepick-cmd {
 }
 .datepick-month td .datepick-selected {
 	background-color: #ffa;
+
 	color: #000;
 }
 .datepick-month th.datepick-week {
