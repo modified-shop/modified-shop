@@ -85,8 +85,8 @@ define('TEXT_NEW_INTRO', 'Bitte geben Sie die folgende Informationen f&uuml;r de
 define('COUPON_NAME_HELP', 'Eine Kurzbezeichnung f&uuml;r den Coupon');
 define('COUPON_AMOUNT_HELP', 'Tragen Sie hier den Rabatt f&uuml;r diesen Coupon ein. Entweder einen festen Betrag oder einen prozentualen Rabatt wie z.B. 10%');
 define('COUPON_CODE_HELP', 'Hier k&ouml;nnen Sie einen eigenen Code eintragen (max. 16 Zeichen). Lassen Sie das Feld frei, dann wird dieser Code automatisch generiert.');
-define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist');
-define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft');
+define('COUPON_STARTDATE_HELP', 'Das Datum ab dem der Coupon g&uuml;ltig ist.<br>');
+define('COUPON_FINISHDATE_HELP', 'Das Datum an dem der Coupon abl&auml;uft.<br>');
 define('COUPON_FREE_SHIP_HELP', 'Coupon f&uuml;r eine versandkostenfreie Lieferung. <strong>Achtung:</strong> Der Coupon Wert wird <b>nicht</b> ber&uuml;cksichtigt! Der Mindestbestellwert bleibt g&uuml;ltig.');
 define('COUPON_DESC_HELP', 'Beschreibung des Coupons f&uuml;r den Kunden');
 define('COUPON_MIN_ORDER_HELP', 'Mindestbestellwert ab dem dieser Coupon g&uuml;ltig ist');
@@ -121,4 +121,7 @@ define('COUPON_NO_RESTRICT', '\nG&uuml;ltig f&uuml;r alle Artikel');;
 define('ERROR_NO_COUPON_NAME', 'FEHLER: Kein Couponname ');
 define('ERROR_NO_COUPON_AMOUNT', 'FEHLER: Kein Couponwert ');
 //EOF - web28 - 2011-07-05 - ADD error message
+
+define('COUPON_DATE_START_TT', 'Beginnt um 00:00:00 Uhr');
+define('COUPON_DATE_END_TT', 'Endet um Mitternacht (23:59:59 Uhr)');
 ?>
