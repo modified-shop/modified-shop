@@ -335,4 +335,24 @@
     $output = '<span class="tooltip"><span>'.xtc_image(DIR_WS_ICONS.'tooltip_icon.png').'<em>'.$text.'</em></span></span>'. PHP_EOL; 
     return $output;
   }
+  
+  /**
+   * draw_on_off_selection()
+   *
+   * @param string $name
+   * @param array $select_array
+   * @param mixed $key_value
+   * @param string $params
+   * @return string
+   */
+  function draw_on_off_selection($name, $select_array, $key_value, $params = '') {
+    $string = '<span class="cfg_select_option">';
+    for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
+      $string .= '<input id="cfg_so_'.strtolower($name).($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i]['id'].'"';
+      if ($key_value == $select_array[$i]['id']) $string .= ' checked';
+      $string .= '><label for="cfg_so_'.strtolower($name).($i?"_$i":'').'" class="'.($key_value == $select_array[$i]['id'] ? 'cfg_so_before ':'').'cfg_sov_'.($select_array[$i]['id'] ? 'true' : 'false').'">';
+      $string .= $select_array[$i]['text'] . '</label>';
+    }
+    return $string.'</span>';
+  }
 ?>
