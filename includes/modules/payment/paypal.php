@@ -36,8 +36,8 @@ class paypal {
 		$this->order_status_rejected = PAYPAL_ORDER_STATUS_REJECTED_ID;
 		$this->order_status_pending = PAYPAL_ORDER_STATUS_PENDING_ID;
 		$this->order_status_tmp = PAYPAL_ORDER_STATUS_TMP_ID;
-		$this->tmpOrders = false;
 		$this->tmpStatus = PAYPAL_ORDER_STATUS_TMP_ID;
+		$this->tmpOrders = false;
 		
 		if (is_object($order)) {
 			$this->update_status();
@@ -237,11 +237,7 @@ class paypal {
 		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '84.0' WHERE configuration_key = 'PAYPAL_API_VERSION'");
 		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = 'False' WHERE configuration_key = 'SESSION_CHECK_USER_AGENT'");
 		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = 'False' WHERE configuration_key = 'SESSION_CHECK_IP_ADDRESS'");
-		
-		$check_query = xtc_db_query("SELECT configuration_group_title FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_title = 'PayPal'");
-		if (xtc_db_num_rows($check_query) == 0) {
-			xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION_GROUP." (configuration_group_id, configuration_group_title, configuration_group_description, sort_order, visible) VALUES (111125, 'PayPal', 'PayPal', 25, 1 )");
-		}
+				
 		$check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ADDRESS_BOOK." LIKE 'address\_class'");
 		if (xtc_db_num_rows($check_query) < 1) {
 			xtc_db_query("ALTER TABLE ".TABLE_ADDRESS_BOOK." ADD address_class VARCHAR(32) NOT NULL");
@@ -344,7 +340,6 @@ class paypal {
 		$check_query = xtc_db_query("SELECT configuration_key FROM ".TABLE_CONFIGURATION." WHERE configuration_key = 'MODULE_PAYMENT_PAYPALEXPRESS_STATUS'");
 		if (xtc_db_num_rows($check_query) == 0) {
 			xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION." WHERE configuration_key LIKE 'PAYPAL\_%'");
-			xtc_db_query("DELETE FROM ".TABLE_CONFIGURATION_GROUP." WHERE configuration_group_title = 'PayPal'");
 			$check_query = xtc_db_query("SHOW COLUMNS FROM ".TABLE_ADMIN_ACCESS." LIKE 'paypal'");
 			if (xtc_db_num_rows($check_query) > 0) {
 				xtc_db_query("ALTER TABLE ".TABLE_ADMIN_ACCESS." DROP COLUMN paypal");
