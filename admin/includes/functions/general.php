@@ -1422,25 +1422,16 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return
    */
   function xtc_cfg_select_option($select_array, $key_value, $key = '') {
-    $string = '';
-    for ($i = 0, $n = sizeof($select_array); $i < $n; $i ++) {
-      $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
-      // BOF vr - 2010-02-04 admin configuration pages 3 column layout - modified by web28 2010-06-09
-      /*$string .= '<br /><input type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
-      if ($key_value == $select_array[$i])
-        $string .= ' CHECKED';
-      $string .= '> '.$select_array[$i];*/
-      if ($i == 0) {
-        $string .= '<input type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
-      } else {
-        $string .= '<br /><input type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
-      }
-      if ($key_value == $select_array[$i])
-        $string .= ' CHECKED';
-      $string .= '> '.$select_array[$i];
-      // EOF vr - 2010-02-04 admin configuration pages 3 column layout - modified by web28 2010-06-09
+    $string = '<span class="cfg_select_option">';
+    $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
+    $name_clean = strtolower($name);
+    for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
+      $string .= '<input id="cfg_so_'.$name_clean.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
+      if ($key_value == $select_array[$i]) $string .= ' checked';
+      $string .= '><label for="cfg_so_'.$name_clean.($i?"_$i":'').'"'.($key_value == $select_array[$i]?' class="cfg_so_before"':'').'>';
+      $string .= xtc_multi_lang_values($select_array[$i]) . '</label>';
     }
-    return $string;
+    return $string.'</span>';
   }
 
   // Alias function for module configuration keys
@@ -2612,21 +2603,21 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * $response = xtc_get_geoip_data(192.168.0.1);
    * $data = unserialize($response);
    * returns an array (
-      'geoplugin_city' => 'Mannheim',
-      'geoplugin_region' => 'Baden-Württemberg',
-      'geoplugin_areaCode' => '0',
-      'geoplugin_dmaCode' => '0',
-      'geoplugin_countryCode' => 'DE',
-      'geoplugin_countryName' => 'Germany',
-      'geoplugin_continentCode' => 'EU',
-      'geoplugin_latitude' => '49.488300323486',
-      'geoplugin_longitude' => '8.4646997451782',
-      'geoplugin_regionCode' => '01',
-      'geoplugin_regionName' => 'Baden-Württemberg',
-      'geoplugin_currencyCode' => 'EUR',
-      'geoplugin_currencySymbol' => '€',
-      'geoplugin_currencyConverter' => 0.7195162136,
-    )
+   *   'geoplugin_city' => 'Mannheim',
+   *   'geoplugin_region' => 'Baden-Württemberg',
+   *   'geoplugin_areaCode' => '0',
+   *   'geoplugin_dmaCode' => '0',
+   *   'geoplugin_countryCode' => 'DE',
+   *   'geoplugin_countryName' => 'Germany',
+   *   'geoplugin_continentCode' => 'EU',
+   *   'geoplugin_latitude' => '49.488300323486',
+   *   'geoplugin_longitude' => '8.4646997451782',
+   *   'geoplugin_regionCode' => '01',
+   *   'geoplugin_regionName' => 'Baden-Württemberg',
+   *   'geoplugin_currencyCode' => 'EUR',
+   *   'geoplugin_currencySymbol' => '€',
+   *  'geoplugin_currencyConverter' => 0.7195162136,
+   * )
    *
    */
   function xtc_get_geoip_data($ip) {
@@ -2826,4 +2817,37 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       $value
     );
   }
+
+  /**
+   * xtc_multi_lang_values()
+   *
+   * @author h-h-h
+   * @param string $value
+   * @return string
+   */
+  function xtc_multi_lang_values($value) {
+    #$value = strtoupper($value);
+    #return defined('CFG_TXT_'.$value) ? constant('CFG_TXT_'.$value) : $value;
+    switch($value) {
+      case 'true': return CFG_TXT_YES; break;
+      case 'True': return CFG_TXT_YES; break;
+      case 'false': return CFG_TXT_NO; break;
+      case 'False': return CFG_TXT_NO; break;
+      case 'asc': return CFG_TXT_ASC; break;
+      case 'desc': return CFG_TXT_DESC; break;
+      case 'products_name': return CFG_TXT_PRODUCTS_NAME; break;
+      case 'products_model': return CFG_TXT_PRODUCTS_MODEL; break;
+      case 'date_expected': return CFG_TXT_DATE_EXPECTED; break;
+      case 'account': return CFG_TXT_ACCOUNT; break;
+      case 'guest': return CFG_TXT_GUEST; break;
+      case 'both': return CFG_TXT_BOTH; break;
+      case 'or': return CFG_TXT_OR; break;
+      case 'and': return CFG_TXT_AND; break;
+      case 'none': return CFG_TXT_NONE; break;
+      case 'admin': return CFG_TXT_ADMIN; break;
+      case 'all': return CFG_TXT_ALL; break;
+      default: return $value;
+    }
+  }
+
 ?>

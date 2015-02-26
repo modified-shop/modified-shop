@@ -911,4 +911,21 @@ define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Soll das L&auml;nderdropdown im Ware
 
 define('GUEST_ACCOUNT_EDIT_TITLE', 'Gastkonten bearbeiten');
 define('GUEST_ACCOUNT_EDIT_DESC', 'D&uuml;rfen G&auml;ste ihre Accountdetails sehen und bearbeiten?');
+
+define('CFG_TXT_YES', 'Ja');
+define('CFG_TXT_NO', 'Nein');
+define('CFG_TXT_OR', 'oder');
+define('CFG_TXT_AND', 'und');
+define('CFG_TXT_ASC', 'aufsteigend');
+define('CFG_TXT_DESC', 'absteigend');
+define('CFG_TXT_PRODUCTS_NAME', 'Artikelname');
+define('CFG_TXT_PRODUCTS_MODEL', 'Artikelnummer');
+define('CFG_TXT_DATE_EXPECTED', 'verf&uuml;gbar ab');
+define('CFG_TXT_ACCOUNT', 'Kundenkonto');
+define('CFG_TXT_GUEST', 'Gastkonto');
+define('CFG_TXT_BOTH', 'beides');
+define('CFG_TXT_NONE', 'deaktiviert');
+define('CFG_TXT_ADMIN', 'Admin');
+define('CFG_TXT_ALL', 'alle');
+
 ?>

@@ -1393,3 +1393,41 @@ margin: 7px auto;
 width: 120px;
 display: block;
 }
+
+/*configuration select options*/
+.cfg_select_option {
+background: none repeat scroll 0 0 #fafafa;
+display: inline-block;
+height: 28px;
+border-color: #c6c6c6 #dadada #eaeaea;
+border-style: solid;
+border-width: 1px;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+.cfg_select_option label {
+height: 28px;
+line-height: 26px;
+padding: 0 10px;
+background: #fafafa;
+display: inline-block;
+vertical-align: middle;
+border-left: 1px solid #eaeaea;
+cursor: pointer;
+}
+.cfg_select_option label:first-child {
+border-left-width: 0;
+}
+.cfg_so_before {
+text-decoration: underline;
+}
+.cfg_select_option input[type="radio"]:checked + label {
+background:#6e9c25;
+color: #fff;
+}
+.cfg_select_option input[type="radio"] {
+margin: -2px 4px 0 0;
+vertical-align: middle;
+display: none;
+}
