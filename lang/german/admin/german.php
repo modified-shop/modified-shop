@@ -559,7 +559,9 @@ define('CFG_TXT_BOTH', 'beides');
 define('CFG_TXT_NONE', 'deaktiviert');
 define('CFG_TXT_ADMIN', 'Admin');
 define('CFG_TXT_ALL', 'alle');
-
+define('CFG_TXT_WEIGHT', 'Gewicht');
+define('CFG_TXT_PRICE', 'Preis');
+define('CFG_TXT_ITEM', 'St&uuml;ck');
 
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);

@@ -1411,6 +1411,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       @ set_time_limit($limit);
     }
   }
+  
 
   // Alias function for Store configuration values in the Administration Tool
   /**
@@ -2825,28 +2826,15 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @return string
    */
   function xtc_multi_lang_values($value) {
-    #$value = strtoupper($value);
-    #return defined('CFG_TXT_'.$value) ? constant('CFG_TXT_'.$value) : $value;
+    $upperValue = strtoupper($value);
+    if (defined('CFG_TXT_'.$upperValue)) {
+      return constant('CFG_TXT_'.$upperValue);
+    }
     switch($value) {
       case 'true': return CFG_TXT_YES; break;
       case 'True': return CFG_TXT_YES; break;
       case 'false': return CFG_TXT_NO; break;
       case 'False': return CFG_TXT_NO; break;
-      case 'asc': return CFG_TXT_ASC; break;
-      case 'desc': return CFG_TXT_DESC; break;
-      case 'products_name': return CFG_TXT_PRODUCTS_NAME; break;
-      case 'products_model': return CFG_TXT_PRODUCTS_MODEL; break;
-      case 'date_expected': return CFG_TXT_DATE_EXPECTED; break;
-      case 'account': return CFG_TXT_ACCOUNT; break;
-      case 'guest': return CFG_TXT_GUEST; break;
-      case 'both': return CFG_TXT_BOTH; break;
-      case 'or': return CFG_TXT_OR; break;
-      case 'and': return CFG_TXT_AND; break;
-      case 'none': return CFG_TXT_NONE; break;
-      case 'admin': return CFG_TXT_ADMIN; break;
-      case 'all': return CFG_TXT_ALL; break;
-      case 'yes': return CFG_TXT_YES; break;
-      case 'no': return CFG_TXT_NO; break;
       default: return $value;
     }
   }
