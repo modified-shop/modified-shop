@@ -1373,7 +1373,6 @@ text-align: center;
 top: 17px;
 width: 18px;
 }
-
 .configPartner {
 margin:0px 10px 0px 10px;
 border-bottom: 1px solid #aaa;
@@ -1412,6 +1411,11 @@ padding:10px;
 .dataTableConfig.col-middle select {
 width:100%;
 }
+} 
+.row1 ul li.right { 
+float:right; 
+}
+ 
 /*buttons in module right box*/
 a.btnbox,
 a.btnbox:link,
