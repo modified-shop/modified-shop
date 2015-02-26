@@ -150,6 +150,7 @@ button.datepick-cmd {
 	height: 2.0em;
 	border: none;
 	font-size: 100%;
+	padding: 0px;
 }
 .datepick-month-header input {
 	position: absolute;
