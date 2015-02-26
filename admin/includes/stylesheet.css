@@ -252,6 +252,7 @@ background-color: #ddd;
 border-bottom: 1px solid #aaa;
 border-color: #aaa #000000;
 border-top: 1px solid #aaa;
+border-right: 0;
 color: #000000;
 }
 .dataTableHeadingContent {
@@ -262,6 +263,7 @@ padding: 10px 5px!important;
 background-color: #ccc;
 border-bottom: 1px solid #aaa;
 border-top: 1px solid #aaa;
+border-right: 1px solid #aaa;
 vertical-align: top;
 }
 .dataTableRow {
