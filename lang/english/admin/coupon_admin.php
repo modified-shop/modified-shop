@@ -85,8 +85,8 @@ define('TEXT_NEW_INTRO', 'Please fill out the following information for the new 
 define('COUPON_NAME_HELP', 'A short name for the coupon');
 define('COUPON_AMOUNT_HELP', 'The value of the discount for the coupon, either fixed or add a % on the end for a percentage discount.');
 define('COUPON_CODE_HELP', 'You can enter your own code here, or leave blank for an auto generated one.');
-define('COUPON_STARTDATE_HELP', 'The date the coupon will be valid from');
-define('COUPON_FINISHDATE_HELP', 'The date the coupon expires');
+define('COUPON_STARTDATE_HELP', 'The date the coupon will be valid from.<br>');
+define('COUPON_FINISHDATE_HELP', 'The date the coupon expires.<br>');
 define('COUPON_FREE_SHIP_HELP', 'The coupon gives free shipping on an order. Note. This overrides the coupon_amount figure but respects the minimum order value');
 define('COUPON_DESC_HELP', 'A description of the coupon for the customer');
 define('COUPON_MIN_ORDER_HELP', 'The minimum order value before the coupon is valid');
@@ -123,4 +123,7 @@ define('COUPON_NO_RESTRICT', '\nValid for all products');;
 define('ERROR_NO_COUPON_NAME', 'ERROR: No Coupon Name ');
 define('ERROR_NO_COUPON_AMOUNT', 'ERROR: No Coupon Amount ');
 //EOF - web28 - 2011-07-05 - ADD error message
+
+define('COUPON_DATE_START_TT', 'Starting at 00:00:00');
+define('COUPON_DATE_END_TT', 'Ending at midnight (23:59:59)');
 ?>

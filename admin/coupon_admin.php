@@ -759,12 +759,12 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
           <tr>
             <td class="dataTableConfig col-left"><?php echo COUPON_STARTDATE; ?></td>
             <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_startdate', $coupon_startdate ,'id="Datepicker1"'); ?></td>
-            <td class="dataTableConfig col-right"><?php echo COUPON_STARTDATE_HELP; ?></td>
+            <td class="dataTableConfig col-right"><?php echo COUPON_STARTDATE_HELP.COUPON_DATE_START_TT; ?></td>
           </tr>
           <tr>
             <td class="dataTableConfig col-left"><?php echo COUPON_FINISHDATE; ?></td>
             <td class="dataTableConfig col-middle nobr"><?php echo xtc_draw_input_field('coupon_finishdate', $coupon_finishdate ,'id="Datepicker2"'); ?></td>
-            <td class="dataTableConfig col-right"><?php echo COUPON_FINISHDATE_HELP; ?></td>
+            <td class="dataTableConfig col-right"><?php echo COUPON_FINISHDATE_HELP.COUPON_DATE_END_TT; ?></td>
           </tr>
         </table>
         <div class="mrg5">
