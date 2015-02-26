@@ -367,4 +367,27 @@ ALTER TABLE admin_access ADD newsfeed INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 'groups' LIMIT 1;
 
+#GTB - 2015-02-25 - remove image options
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_BEVEL';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_GREYSCALE';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_ELLIPSE';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_ROUND_EDGES';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_FRAME';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_DROP_SHADOW';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_THUMBNAIL_MOTION_BLUR';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_BEVEL';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_GREYSCALE';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_ELLIPSE';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_ROUND_EDGES';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_FRAME';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_DROP_SHADOW';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_INFO_MOTION_BLUR';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_BEVEL';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_GREYSCALE';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_ELLIPSE';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_ROUND_EDGES';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_FRAME';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_DROP_SHADOW';
+DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_MOTION_BLUR';
+
 # Keep an empty line at the end of this file for the db_updater to work properly
