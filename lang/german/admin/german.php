@@ -544,6 +544,23 @@ define('RSS_FEED_LINK', 'http://www.modified-shop.org/blog');
 define('RSS_FEED_ALTERNATIVE', 'Leider k&ouml;nnen die aktuellen Neuigkeiten nicht im RSS Feed dargestellt werden. Bitte besuchen sie unseren Blog unter <a href="'.RSS_FEED_LINK.'">www.modified-shop.org/blog</a> um wichtige Informationen f&uuml;r Shopbetreiber zu diesen Themen zu erfahren: <ul><li>Wichtige Updates und Fixes</li><li>Funktionserweiterungen</li><li>Rechtssprechungen</li><li>Neuigkeiten</li><li>Klatsch und Tratsch</li></ul>');
 define('TEXT_DISPLAY_NUMBER_OF_NEWSFEED', 'Angezeigt werden <b>%d</b> bis <b>%d</b> (von insgesamt <b>%d</b> News)');
 
+define('CFG_TXT_YES', 'Ja');
+define('CFG_TXT_NO', 'Nein');
+define('CFG_TXT_OR', 'oder');
+define('CFG_TXT_AND', 'und');
+define('CFG_TXT_ASC', 'aufsteigend');
+define('CFG_TXT_DESC', 'absteigend');
+define('CFG_TXT_PRODUCTS_NAME', 'Artikelname');
+define('CFG_TXT_PRODUCTS_MODEL', 'Artikelnummer');
+define('CFG_TXT_DATE_EXPECTED', 'verf&uuml;gbar ab');
+define('CFG_TXT_ACCOUNT', 'Kundenkonto');
+define('CFG_TXT_GUEST', 'Gastkonto');
+define('CFG_TXT_BOTH', 'beides');
+define('CFG_TXT_NONE', 'deaktiviert');
+define('CFG_TXT_ADMIN', 'Admin');
+define('CFG_TXT_ALL', 'alle');
+
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>

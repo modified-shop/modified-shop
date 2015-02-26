@@ -538,6 +538,22 @@ define('SPECIALS_DATE_END_TT', 'Offers end at midnight (23.59.59)');
 define('BOX_PARCEL_CARRIERS', 'Parcel carriers');
 define('TEXT_DISPLAY_NUMBER_OF_CARRIERS', 'Displaying <b>%d</b> to <b>%d</b> (of <b>%d</b> carriers)');
 
+define('CFG_TXT_YES', 'Yes');
+define('CFG_TXT_NO', 'No');
+define('CFG_TXT_OR', 'or');
+define('CFG_TXT_AND', 'and');
+define('CFG_TXT_ASC', 'ascending');
+define('CFG_TXT_DESC', 'descending');
+define('CFG_TXT_PRODUCTS_NAME', 'Product name');
+define('CFG_TXT_PRODUCTS_MODEL', 'Product model');
+define('CFG_TXT_DATE_EXPECTED', 'Date Expected');
+define('CFG_TXT_ACCOUNT', 'Account');
+define('CFG_TXT_GUEST', 'Guest');
+define('CFG_TXT_BOTH', 'both');
+define('CFG_TXT_NONE', 'none');
+define('CFG_TXT_ADMIN', 'admin');
+define('CFG_TXT_ALL', 'all');
+
 require_once(DIR_FS_INC.'auto_include.inc.php');
 foreach(auto_include(DIR_FS_LANGUAGES.$_SESSION['language'].'/extra/admin/','php') as $file) require ($file);
 ?>

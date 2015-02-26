@@ -914,21 +914,4 @@ define('DOWNLOAD_SHOW_LANG_DROPDOWN_DESC', 'Show countries dropdown in cart if o
 
 define('GUEST_ACCOUNT_EDIT_TITLE', 'Edit guest accounts');
 define('GUEST_ACCOUNT_EDIT_DESC', 'enable guest accounts to see and edit avvount details?');
-
-define('CFG_TXT_YES', 'Yes');
-define('CFG_TXT_NO', 'No');
-define('CFG_TXT_OR', 'or');
-define('CFG_TXT_AND', 'and');
-define('CFG_TXT_ASC', 'ascending');
-define('CFG_TXT_DESC', 'descending');
-define('CFG_TXT_PRODUCTS_NAME', 'Product name');
-define('CFG_TXT_PRODUCTS_MODEL', 'Product model');
-define('CFG_TXT_DATE_EXPECTED', 'Date Expected');
-define('CFG_TXT_ACCOUNT', 'Account');
-define('CFG_TXT_GUEST', 'Guest');
-define('CFG_TXT_BOTH', 'both');
-define('CFG_TXT_NONE', 'none');
-define('CFG_TXT_ADMIN', 'admin');
-define('CFG_TXT_ALL', 'all');
-
 ?>
