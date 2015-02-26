@@ -390,4 +390,14 @@ DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_FRAME';
 DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_DROP_SHADOW';
 DELETE FROM configuration WHERE configuration_key = 'PRODUCT_IMAGE_POPUP_MOTION_BLUR';
 
+#Tomcraft - 2015-02-25 - Fix zones iso codes
+UPDATE zones SET zone_code = 'GR' WHERE zone_name = 'Graubünden';
+UPDATE zones SET zone_code = 'RR' WHERE zone_name = 'Roraima';
+UPDATE zones SET zone_code = 'LAG' WHERE zone_name = 'Guajira';
+UPDATE zones SET zone_code = 'BMH' WHERE zone_name = 'Bournemouth';
+UPDATE zones SET zone_code = 'MIK' WHERE zone_name = 'Milton Keynes';
+
+#Tomcraft - 2015-02-25 - add index
+ALTER TABLE zones ADD UNIQUE idx_country_code (zone_country_id, zone_code);
+
 # Keep an empty line at the end of this file for the db_updater to work properly
