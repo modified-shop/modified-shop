@@ -237,7 +237,7 @@ class paypalexpress {
 			$old_config=$this->mn_confsearch($v1[1], $rest_array);
 			xtc_db_query("INSERT INTO ".TABLE_CONFIGURATION." (configuration_key, configuration_value, configuration_group_id, sort_order, last_modified, date_added, use_function, set_function) VALUES ('".(($old_config) ? $old_config[1] : $v1[1])."', '".(($old_config) ? $old_config[2] : $v1[2])."', ".(($old_config)?$old_config[3]:$v1[3]).", ".$v1[4].", NULL, now(), '".$v1[5]."', '".$v1[6]."')");
 		}
-		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '84.0' WHERE configuration_key = 'PAYPAL_API_VERSION'");
+		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '119.0' WHERE configuration_key = 'PAYPAL_API_VERSION'");
 		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = 'False' WHERE configuration_key = 'SESSION_CHECK_USER_AGENT'");
 		xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = 'False' WHERE configuration_key = 'SESSION_CHECK_IP_ADDRESS'");
 				
