@@ -48,7 +48,6 @@ class ShopgateModifiedPlugin extends ShopgatePlugin {
 		$requiredFiles = array(
 			'inc/xtc_validate_password.inc.php',
 			'inc/xtc_format_price_order.inc.php',
-			'inc/xtc_db_prepare_input.inc.php',
 			'includes/classes/xtcPrice.php',
 		);
 
