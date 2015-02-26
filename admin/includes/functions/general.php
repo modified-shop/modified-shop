@@ -2845,6 +2845,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
       case 'none': return CFG_TXT_NONE; break;
       case 'admin': return CFG_TXT_ADMIN; break;
       case 'all': return CFG_TXT_ALL; break;
+      case 'yes': return CFG_TXT_YES; break;
+      case 'no': return CFG_TXT_NO; break;
       default: return $value;
     }
   }
