@@ -617,7 +617,7 @@ define('PAYPAL_API_SANDBOX_PWD_DESC','Tragen Sie hier das Passwort ein.');
 define('PAYPAL_API_SANDBOX_SIGNATURE_TITLE','PayPal-API-Signatur (Sandbox)');
 define('PAYPAL_API_SANDBOX_SIGNATURE_DESC','Tragen Sie hier die API Signatur ein.');
 define('PAYPAL_API_VERSION_TITLE','PayPal-API-Version');
-define('PAYPAL_API_VERSION_DESC','Tragen Sie hier die aktuelle PayPal API Version ein - z.B.: 84.0');
+define('PAYPAL_API_VERSION_DESC','Tragen Sie hier die aktuelle PayPal API Version ein - z.B.: 119.0');
 define('PAYPAL_API_IMAGE_TITLE','PayPal Shop-Logo');
 define('PAYPAL_API_IMAGE_DESC','Tragen Sie hier die Logo-Datei ein, die bei PayPal angezeigt werden soll.<br />Achtung: Wird nur &uuml;bertragen, wenn der Shop mit SSL arbeitet.<br />Das Bild darf max. 750px breit und 90px hoch sein.<br />Aufgerufen wird die Datei aus: '.DIR_WS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/img/');
 define('PAYPAL_API_CO_BACK_TITLE','PayPal Hintergrund-Farbe');
