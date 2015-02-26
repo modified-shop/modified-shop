@@ -1410,7 +1410,8 @@ border-radius: 2px;
 height: 28px;
 line-height: 26px;
 padding: 0 10px;
-background: #fafafa;
+background: #fff;
+color: #626262;
 display: inline-block;
 vertical-align: middle;
 border-left: 1px solid #eaeaea;
@@ -1419,16 +1420,30 @@ cursor: pointer;
 .cfg_select_option label:first-child {
 border-left-width: 0;
 }
+/*momentary condition*/
 .cfg_select_option .cfg_so_before {
 text-decoration: underline;
 }
+/*checked*/
 .cfg_select_option input[type="radio"]:checked + label {
 text-decoration: none;
+background:#c1c1c1;
+color: #000;
+}
+/*checked true*/
+.cfg_select_option input[type="radio"]:checked + label.cfg_sov_true {
 background:#6e9c25;
 color: #fff;
 }
+/*checked false*/
+.cfg_select_option input[type="radio"]:checked + label.cfg_sov_false {
+background:#d34040;
+color: #fff;
+}
+/*radio button*/
 .cfg_select_option input[type="radio"] {
 margin: -2px 4px 0 0;
 vertical-align: middle;
+
 display: none;
 }
