@@ -853,10 +853,10 @@ background-color:#F1F1F1;
 }
 .tableConfig td.col-middle{
 background-color:#e8e8e8;
-width:20%;
+width:30%;
 }
 .tableConfig td.col-right{
-width:60%;
+width:50%;
 empty-cells: show;
 background-color:#F1F1F1;
 }
@@ -869,11 +869,6 @@ background-color:#c8c8c8;
 }
 .valign_m td.col-left, .valign_m td.col-middle{
 vertical-align: middle;
-}
-.configPartner{
-float:left;
-width: 150px;
-text-align: center;
 }
 .mrg5{
 margin:5px;
@@ -1014,7 +1009,7 @@ background-color: #FA8072;
 
 /* New Admin Style */
 
-.cf:before, .cf:after { content: ""; display: table; }
+.cf:before, .cf:after { content: ""; display: block; }
 .cf:after { clear: both; }
 .cf { zoom: 1; }
 
@@ -1050,9 +1045,6 @@ float:left;
 margin: 6px 5px 0px 0px;
 width:17px;
 height:12px;
-}
-.row1 ul li.right {
-  float:right;
 }
 
 .row1 ul {
@@ -1382,68 +1374,41 @@ top: 17px;
 width: 18px;
 }
 
-/*buttons in module right box*/
-a.btnbox,
-a.btnbox:link,
-a.btnbox:visited,
-a.btnbox:active,
-a.btnbox:hover,
-span.btnbox {
-margin: 7px auto;
-width: 120px;
-display: block;
+.configPartner {
+margin:0px 10px 0px 10px;
+border-bottom: 1px solid #aaa;
+border-left: 1px solid #aaa;
+}
+.configPartner a.configtab {
+font-family: Verdana,Arial,Helvetica,sans-serif;
+font-size: 12px !important;
+font-weight: bold;
+line-height: 16px;
+border-right: 1px solid #aaaaaa;
+border-top: 1px solid #aaaaaa;
+color: #aaaaaa;
+display: inline;
+float: left;
+padding: 8px 20px !important;
+position: relative;
+width: auto !important;
 }
 
-/*configuration select options*/
-.cfg_select_option {
-background: none repeat scroll 0 0 #fafafa;
-display: inline-block;
-min-height: 28px;
-border-color: #c6c6c6 #dadada #eaeaea;
-border-style: solid;
-border-width: 1px;
--webkit-border-radius: 2px;
--moz-border-radius: 2px;
-border-radius: 2px;
+.configPartner a.activ {
+background: none repeat scroll 0 0 #d0d0d0;
+color: #000000;
 }
-.cfg_select_option label {
-height: 28px;
-line-height: 26px;
-padding: 0 10px;
-background: #fff;
-color: #626262;
-display: inline-block;
-vertical-align: middle;
-border-left: 1px solid #eaeaea;
-cursor: pointer;
+.configPartner a.configtab:hover {
+text-decoration:none;
+color:#af417e;
 }
-.cfg_select_option label:first-child {
-border-left-width: 0;
+.configPartner.content {
+margin:0px 10px 10px 10px;
+border-bottom: 1px solid #aaa;
+border-left: 1px solid #aaa;
+border-right: 1px solid #aaa;
+padding:10px;
 }
-/*momentary condition*/
-.cfg_select_option .cfg_so_before {
-text-decoration: underline;
-}
-/*checked*/
-.cfg_select_option input[type="radio"]:checked + label {
-text-decoration: none;
-background:#c1c1c1;
-color: #000;
-}
-/*checked true*/
-.cfg_select_option input[type="radio"]:checked + label.cfg_sov_true {
-background:#6e9c25;
-color: #fff;
-}
-/*checked false*/
-.cfg_select_option input[type="radio"]:checked + label.cfg_sov_false {
-background:#d34040;
-color: #fff;
-}
-/*radio button*/
-.cfg_select_option input[type="radio"] {
-margin: -2px 4px 0 0;
-vertical-align: middle;
-
-display: none;
+.dataTableConfig.col-middle select {
+width:100%;
 }
