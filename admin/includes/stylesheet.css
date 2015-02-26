@@ -1398,7 +1398,7 @@ display: block;
 .cfg_select_option {
 background: none repeat scroll 0 0 #fafafa;
 display: inline-block;
-height: 28px;
+min-height: 28px;
 border-color: #c6c6c6 #dadada #eaeaea;
 border-style: solid;
 border-width: 1px;
@@ -1419,10 +1419,11 @@ cursor: pointer;
 .cfg_select_option label:first-child {
 border-left-width: 0;
 }
-.cfg_so_before {
+.cfg_select_option .cfg_so_before {
 text-decoration: underline;
 }
 .cfg_select_option input[type="radio"]:checked + label {
+text-decoration: none;
 background:#6e9c25;
 color: #fff;
 }
