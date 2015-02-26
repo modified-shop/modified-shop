@@ -224,16 +224,16 @@
                                 'coupon_minimum_order' => xtc_db_prepare_input($_POST['coupon_min_order']),
                                 'restrict_to_products' => xtc_db_prepare_input($_POST['coupon_products']),
                                 'restrict_to_categories' => xtc_db_prepare_input($_POST['coupon_categories']),
-                                'coupon_start_date' => $_POST['coupon_startdate'],
-                                'coupon_expire_date' => $_POST['coupon_finishdate'],
+                                'coupon_start_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_startdate'])).' 00:00:00'),
+                                'coupon_expire_date' => xtc_db_prepare_input(date('Y-m-d', strtotime($_POST['coupon_finishdate'])).' 23:59:59'),
                                 'date_created' => 'now()',
                                 'date_modified' => 'now()');
         $languages = xtc_get_languages();
         for ($i = 0, $n = sizeof($languages); $i < $n; $i++) {
           $language_id = $languages[$i]['id'];
           $sql_data_marray[$i] = array('coupon_name' => xtc_db_prepare_input($_POST['coupon_name'][$language_id]),
-                                 'coupon_description' => xtc_db_prepare_input($_POST['coupon_desc'][$language_id])
-                                 );
+                                       'coupon_description' => xtc_db_prepare_input($_POST['coupon_desc'][$language_id])
+                                       );
         }
 
         if ($_GET['oldaction']=='voucheredit') {
