@@ -1462,8 +1462,8 @@ text-decoration: underline;
 /*checked*/
 .cfg_select_option input[type="radio"]:checked + label {
 text-decoration: none;
-background:#c1c1c1;
-color: #000;
+background:#6e9c25;
+color: #fff;
 }
 /*checked true*/
 .cfg_select_option input[type="radio"]:checked + label.cfg_sov_true {
