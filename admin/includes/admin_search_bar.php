@@ -19,6 +19,7 @@
   $search_email = '';
   $search_ord = '';
   $search_cat = '';
+  $search_id = '';
   if (strpos($page_filename, 'customers.php') !== false) {
     $search_cus = htmlentities(isset($_GET['search']) ? $_GET['search'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
     $search_email = htmlentities(isset($_GET['search_email']) ? $_GET['search_email'] : '',ENT_COMPAT,strtoupper($_SESSION['language_charset'])); 
