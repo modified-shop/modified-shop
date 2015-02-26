@@ -1412,3 +1412,67 @@ padding:10px;
 .dataTableConfig.col-middle select {
 width:100%;
 }
+/*buttons in module right box*/
+a.btnbox,
+a.btnbox:link,
+a.btnbox:visited,
+a.btnbox:active,
+a.btnbox:hover,
+span.btnbox {
+margin: 7px auto;
+width: 120px;
+display: block;
+}
+
+/*configuration select options*/
+.cfg_select_option {
+background: none repeat scroll 0 0 #fafafa;
+display: inline-block;
+min-height: 28px;
+border-color: #c6c6c6 #dadada #eaeaea;
+border-style: solid;
+border-width: 1px;
+-webkit-border-radius: 2px;
+-moz-border-radius: 2px;
+border-radius: 2px;
+}
+.cfg_select_option label {
+height: 28px;
+line-height: 26px;
+padding: 0 10px;
+background: #fff;
+color: #626262;
+display: inline-block;
+vertical-align: middle;
+border-left: 1px solid #eaeaea;
+cursor: pointer;
+}
+.cfg_select_option label:first-child {
+border-left-width: 0;
+}
+/*momentary condition*/
+.cfg_select_option .cfg_so_before {
+text-decoration: underline;
+}
+/*checked*/
+.cfg_select_option input[type="radio"]:checked + label {
+text-decoration: none;
+background:#c1c1c1;
+color: #000;
+}
+/*checked true*/
+.cfg_select_option input[type="radio"]:checked + label.cfg_sov_true {
+background:#6e9c25;
+color: #fff;
+}
+/*checked false*/
+.cfg_select_option input[type="radio"]:checked + label.cfg_sov_false {
+background:#d34040;
+color: #fff;
+}
+/*radio button*/
+.cfg_select_option input[type="radio"] {
+margin: -2px 4px 0 0;
+vertical-align: middle;
+display: none;
+}
