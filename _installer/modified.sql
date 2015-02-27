@@ -574,7 +574,8 @@ CREATE TABLE geo_zones (
   geo_zone_info INT(1) DEFAULT 0,
   last_modified DATETIME NULL,
   date_added DATETIME NOT NULL,
-  PRIMARY KEY (geo_zone_id)
+  PRIMARY KEY (geo_zone_id),
+  UNIQUE idx_geo_zone_name (geo_zone_name)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS languages;
@@ -1191,7 +1192,7 @@ CREATE TABLE zones (
   zone_code VARCHAR(32) NOT NULL,
   zone_name VARCHAR(64) NOT NULL,
   PRIMARY KEY (zone_id),
-  UNIQUE idx_country_code (zone_country_id, zone_code);
+  UNIQUE idx_country_code (zone_country_id, zone_code),
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS zones_to_geo_zones;
