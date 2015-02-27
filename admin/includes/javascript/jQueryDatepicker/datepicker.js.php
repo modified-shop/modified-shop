@@ -6,6 +6,7 @@
 ?>
 
 <link type="text/css" href="includes/javascript/jQueryDatepicker/mod.datepick.css" rel="stylesheet" />
+<script type="text/javascript" src="includes/javascript/jQueryDatepicker/jquery.plugin.min.js"></script>
 <script type="text/javascript" src="includes/javascript/jQueryDatepicker/jquery.datepick.min.js"></script>
 
 <?php
