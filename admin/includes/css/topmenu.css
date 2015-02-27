@@ -22,7 +22,7 @@ border-bottom: 2px solid #AF417E;
 min-height:34px;
 }
 
-#cssmenu > li {
+#cssmenu > ul > li {
   border-bottom:2px solid #AF417E;
 }
 #cssmenu li {
@@ -143,6 +143,7 @@ color:#af417e;
 #lang_flag {
 float: left;
 margin: 14px 6px 0 6px;
+height:20px;
 }
 #top1 {
 margin-top: 0px;
