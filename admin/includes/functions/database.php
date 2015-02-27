@@ -16,8 +16,8 @@
    --------------------------------------------------------------*/
 
   // File will be deleted...
-  die('Deprecated File. Use Shopfunction instead.');
-
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
   
   function xtc_db_connect($server = DB_SERVER, $username = DB_SERVER_USERNAME, $password = DB_SERVER_PASSWORD, $database = DB_DATABASE, $link = 'db_link') {
@@ -195,4 +195,5 @@
       return $string;
     }
   }
+*/
 ?>

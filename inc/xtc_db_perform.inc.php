@@ -16,8 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  die('Deprecated File. Use db_functions_mysql(i) instead.');
-
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   function xtc_db_perform($table, $data, $action = 'insert', $parameters = '', $link = 'db_link') {
     global $$link;
     
@@ -66,4 +66,5 @@
 
     return xtc_db_query($query, $link);
   }
+*/
 ?>
