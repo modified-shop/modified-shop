@@ -31,6 +31,7 @@
  * define smarty plugindir in template
  */
 define('MY_TEMPLATE_PLUGINS', DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/smarty');
+define('MY_SHOP_PLUGINS', DIR_FS_EXTERNAL.'smarty/plugins');
 
 /**
  * define shorthand directory separator constant
@@ -698,6 +699,7 @@ class Smarty extends Smarty_Compatibility
              ->setConfigDir(DIR_FS_CATALOG . 'lang' . DS)
              ->addConfigDir(DIR_FS_CATALOG . 'templates' . DS . CURRENT_TEMPLATE . DS . 'lang' . DS)
              ->addPluginsDir(MY_TEMPLATE_PLUGINS);
+             ->addPluginsDir(MY_SHOP_PLUGINS);
 
         $this->debug_tpl = 'file:' . dirname(__FILE__) . '/debug.tpl';
         if (isset($_SERVER['SCRIPT_NAME'])) {
