@@ -3,7 +3,7 @@
 	font-family: Verdana, Arial, Helvetica, sans-serif;	
 	font-size: 10px;
 	font-weight: bold;
-	height: 25px;
+	height: 34px;
 	line-height: 16px;	
 	border-left: 1px solid #aaaaaa;	
 }
@@ -16,7 +16,7 @@
 
 /*Top level list items*/
 .tablangmenu ul li{
-	padding: 5px 5px 3px 5px;
+	padding: 8px 20px;
 	position: relative;
 	display: inline;
 	float: left;
