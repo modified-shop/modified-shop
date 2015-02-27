@@ -1020,6 +1020,7 @@ background: #222;
 margin-bottom:0px;
 min-width:1024px;
 width:100%;
+position: relative;
 }
 
 .row1 {
