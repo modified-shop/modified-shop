@@ -19,7 +19,7 @@
 // Allgemeine Texte
 define('TABLE_HEADING', 'Edit Order');
 define('TABLE_HEADING_ORDER', 'Order #:&nbsp;');
-define('TEXT_SAVE_ORDER', 'Finish Editing and Recalculate Order');
+define('TEXT_SAVE_ORDER', 'Finish editing and recalculate order.&nbsp;');
 
 define('TEXT_EDIT_ADDRESS', 'Address and customer details');
 define('TEXT_EDIT_PRODUCTS', 'Products, products options and prices');
@@ -64,7 +64,7 @@ define('TEXT_PRODUCT_SEARCH', 'Search Products:');
 define('TEXT_PRODUCT_OPTION', 'Attributes:');
 define('TEXT_PRODUCT_OPTION_VALUE', 'Option Value:');
 define('TEXT_PRICE_PREFIX', 'Price Prefix:');
-define('TEXT_SAVE_ORDER', 'Finish and Recalculate');
+define('TEXT_SAVE_ORDER', 'Finish and recalculate');
 define('TEXT_INS', 'Add:');
 define('TEXT_SHIPPING', 'Shipping Costs');
 define('TEXT_COD_COSTS', 'COD Costs');
@@ -119,6 +119,6 @@ define('TEXT_PRODUCTS_IMAGE', 'Product images:');
 define('TEXT_PRODUCTS_QTY', 'Stock:');
 define('TEXT_PRODUCTS_EAN', 'EAN:');
 define('TEXT_PRODUCTS_TAX_RATE', 'Tax:');
-define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date Available:');
+define('TEXT_PRODUCTS_DATE_AVAILABLE', 'Date available:');
 define('TEXT_IMAGE_NONEXISTENT', '---');
 ?>
