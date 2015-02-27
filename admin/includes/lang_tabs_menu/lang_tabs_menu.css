@@ -39,3 +39,8 @@
   background: #d0d0d0;
   color: #000000;
 }
+
+.tablangmenu ul li img {
+  vertical-align: middle;
+  margin-top: -2px;
+}
