@@ -18,6 +18,7 @@
 
   require('includes/application_top.php');
 
+  $confirm_save_entry = ' onclick="ButtonClicked(this);"';
   $confirm_submit = defined('CONFIRM_SAVE_ENTRY') && CONFIRM_SAVE_ENTRY == 'true' ? ' onsubmit="return confirmSubmit(\'\',\''. SAVE_ENTRY .'\',this)"' : '';
 
   if ($_GET['action']) {
@@ -142,12 +143,12 @@ require (DIR_WS_INCLUDES.'head.php');
           </table>
         </div>
         <br/>
-        <?php echo xtc_draw_form('accounting', FILENAME_ACCOUNTING, xtc_get_all_get_params(array('action'))  . 'action=new');?>
+        <?php echo xtc_draw_form('accounting', FILENAME_ACCOUNTING, xtc_get_all_get_params(array('action'))  . 'action=new', 'post',  $confirm_submit);?>
           <table class="tableBoxCenter collapse">
             <tr class="dataTableHeadingRow">
               <td class="dataTableHeadingContent" style="vertical-align:middle;"><?php echo TEXT_ACCESS . ' ' . BUTTON_INSERT; ?></td>
               <td class="dataTableHeadingContent"><?php echo  xtc_draw_input_field('admin_access', '', 'style="width: 250px"'); ?></td>
-              <td class="dataTableHeadingContent"><input type="submit" class="button" onclick="return confirm('<?php echo SAVE_ENTRY; ?>')" value="<?php echo BUTTON_INSERT; ?>"></td>
+              <td class="dataTableHeadingContent"><input type="submit" class="button" value="<?php echo BUTTON_INSERT; ?>" <?php echo $confirm_save_entry;?>></td>
             </tr>
           </table>
         </form>
@@ -221,7 +222,7 @@ require (DIR_WS_INCLUDES.'head.php');
             ?>
           </table>
           <a class="button" href="<?php echo xtc_href_link(FILENAME_CUSTOMERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
-          <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>">
+          <input type="submit" class="button" value="<?php echo BUTTON_SAVE; ?>" <?php echo $confirm_save_entry;?>>
         </form>
           
       </div>
