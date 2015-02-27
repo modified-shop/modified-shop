@@ -16,8 +16,8 @@
    Released under the GNU General Public License
    ---------------------------------------------------------------------------------------*/
 
-  die('Deprecated File. Use db_functions_mysql(i) instead.');
-
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*
   function xtc_db_num_rows($db_query,$cq=false) {
   
     //BOF - DokuMan - 2010-08-30 - if db_query not a valid result, return false
@@ -41,5 +41,6 @@
     if (!count($db_query)) return false;
      return count($db_query);
     */
-  }
+  //}
+*/
 ?>

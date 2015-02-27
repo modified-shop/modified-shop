@@ -16,8 +16,8 @@
    Released under the GNU General Public License 
    ---------------------------------------------------------------------------------------*/
 
-  die('Deprecated File. Use db_functions_mysql(i) instead.');
-   
+  die('Deprecated File: '.basename(__FILE__).'. Use db_functions_mysql(i) instead.');
+/*   
   //fix for conectors like facturama
   if (!function_exists('encode_htmlspecialchars')) {
     require_once (DIR_FS_INC.'html_encoding.php'); //new function for PHP5.4
@@ -26,4 +26,5 @@
   function xtc_db_output($string) {
     return encode_htmlspecialchars($string);
   }
+*/
  ?>
