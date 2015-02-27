@@ -150,7 +150,7 @@ echo SPECIALS_TITLE;
     <?php if(isset($_GET['pID']) and xtc_db_num_rows($specials_query, true) > 0) { ?>
     <tr>
       <td class="main"><?php echo TEXT_EDIT_STATUS; ?></td>
-      <td class="main"><?php echo xtc_draw_pull_down_menu('specials_status', $product_status_array, $sInfo->status, 'style="width: 140px"'); ?></td>
+      <td class="main"><?php echo draw_on_off_selection('specials_status', $product_status_array, $sInfo->status, 'style="width: 140px"'); ?></td>
     </tr>
     <tr>
       <td class="main"><label for="input_specials_delete"><?php echo TEXT_INFO_HEADING_DELETE_SPECIALS; ?></label></td>
