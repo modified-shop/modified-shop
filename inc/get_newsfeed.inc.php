@@ -25,26 +25,21 @@
                                                news_text, 
                                                news_link, 
                                                news_date) 
-                                       VALUES ('".xtc_db_input(decode_htmlentities(trim(utf8_decode($rss->channel->item[$i]->title))))."', 
-                                               '".xtc_db_input(decode_htmlentities(trim(utf8_decode($rss->channel->item[$i]->description))))."',
-                                               '".xtc_db_input(utf8_decode($rss->channel->item[$i]->link))."',
+                                       VALUES ('".xtc_db_input(decode_htmlentities(trim(convert_feed($rss->channel->item[$i]->title))))."', 
+                                               '".xtc_db_input(decode_htmlentities(trim(convert_feed($rss->channel->item[$i]->description))))."',
+                                               '".xtc_db_input(convert_feed($rss->channel->item[$i]->link))."',
                                                '".xtc_db_input(strtotime($rss->channel->item[$i]->pubDate))."')");
         }
       }
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".time()."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
     }
   }
-  
-  /*
-  DROP TABLE IF EXISTS newsfeed;
-  CREATE TABLE newsfeed (
-  news_id INT( 11 ) NOT NULL AUTO_INCREMENT,
-  news_title VARCHAR( 128 ) NULL,
-  news_text TEXT NULL,
-  news_link VARCHAR( 128 ) NULL,
-  news_date INT( 11 ) NULL,
-  PRIMARY KEY (news_id)
-  ) ENGINE=MyISAM;
-  */
 
+  function convert_feed($string) {
+    if (strtolower($_SESSION['language_charset']) == 'utf-8') {
+      return $string;
+    } else {
+      return utf8_decode($string);
+    }
+  }
 ?>
