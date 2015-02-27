@@ -84,7 +84,15 @@
 	list-style: none;
 	position: relative;
 }
-
+#admin ul ul li.info {
+  background: #3a3a3a;
+  clear: both;
+  color: #fff;
+  display: block;
+  line-height: 25px;
+  margin-bottom: 5px;
+  padding: 0 0 0 5px;
+}
 #admin ul ul a{
 	display: block;
 	padding: 0;
@@ -170,3 +178,4 @@
     margin-right: 0;
     padding: 8px 2px;
 }
+
