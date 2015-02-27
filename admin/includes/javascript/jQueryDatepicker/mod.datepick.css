@@ -4,8 +4,10 @@
   vertical-align: bottom;
 }
 .hasDatepick{
+/*
   background: #ffc !important;
   border: 1px solid #a3a3a3;
+*/
 }
 
 /* Mod styling for jQuery Datepicker v4.1.0. */
