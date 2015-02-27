@@ -34,7 +34,7 @@
       <li class="orders togglemenu">
         <a class="togglelink" href="{$CUSTOMERS}" title="{#ab_customers#}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
         <ul>
-          <li>{$CUSTOMERS_INFO}</li>
+          <li class="info">{$CUSTOMERS_INFO}</li>
         </ul>
       </li>
     {/if}
@@ -42,19 +42,19 @@
     {if isset($CATEGORIES)}
       <li class="orders togglemenu">
         <a class="togglelink" href="{$CATEGORIES}" title="{#ab_category#}"><img src="{$tpl_path}img/adminbar_categories.png" alt="" /></a>
-        {if $EDIT_PRODUCT || $EDIT_CATEGORY}
-          <ul>
+        <ul>
+          {if $EDIT_PRODUCT || $EDIT_CATEGORY}
             {if $EDIT_PRODUCT}
               <li><a href="{$EDIT_PRODUCT}">{#ab_edit_product#}</a></li>
               <li><a href="{$EDIT_PRODUCT_ATTRIBUTES}">{#ab_edit_attributes#}</a></li>
-              <li>{$PRODUCTS_INFO}</li>
-              <li>{$REVIEWS_INFO}</li>
             {/if}
             {if $EDIT_CATEGORY}
               <li><a href="{$EDIT_CATEGORY}">{#ab_edit_category#}</a></li>
             {/if}
-          </ul>
-        {/if}
+          {/if}
+          <li class="info">{$PRODUCTS_INFO}</li>
+          <li class="info">{$REVIEWS_INFO}</li>
+        </ul>
       </li>
     {/if}
   
