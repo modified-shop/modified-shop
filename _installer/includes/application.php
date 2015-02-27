@@ -126,6 +126,9 @@
      define('DB_SERVER_CHARSET',$character_set);
   }
 
+  // set default charset
+  @ini_set('default_charset', $charset);
+
   $lang = '';
   if (isset($_GET['lg']) && $_GET['lg'] != '') {
     $lang = $_GET['lg'];
