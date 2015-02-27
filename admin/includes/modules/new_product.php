@@ -59,6 +59,9 @@
     $text_new_or_edit = TEXT_NEW_PRODUCT;
   }
 
+  $prod_quantity_query = xtc_db_query("SELECT products_quantity FROM ".TABLE_PRODUCTS." WHERE products_id = '".$pInfo->products_id."'");
+  $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
+
   $manufacturers_array = array (array ('id' => '', 'text' => TEXT_NONE));
   $manufacturers_query = xtc_db_query("SELECT manufacturers_id, manufacturers_name FROM ".TABLE_MANUFACTURERS." ORDER BY manufacturers_name");
   while ($manufacturers = xtc_db_fetch_array($manufacturers_query)) {
@@ -98,6 +101,7 @@
   <?php
   $form_action = isset($_GET['pID']) ? 'update_product' : 'insert_product';
   echo xtc_draw_form('new_product', FILENAME_CATEGORIES, 'cPath=' . $_GET['cPath'] . $catfunc->page_parameter . '&pID=' . $_GET['pID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit); 
+  echo xtc_draw_hidden_field('products_quantity_before_edit', $prod_quantity['products_quantity']);
   ?>
   
 <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>

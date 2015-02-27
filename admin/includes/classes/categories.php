@@ -426,6 +426,8 @@ class categories {
 
   // inserts / updates a product from given data
   function insert_product($products_data, $dest_category_id, $action = 'insert') {
+    global $messageStack;
+    
     $products_id = xtc_db_prepare_input($products_data['products_id']);
     $products_date_available = xtc_db_prepare_input($products_data['products_date_available']);
     $products_date_available = (date('Y-m-d') < $products_date_available) ? $products_date_available : 'null';
@@ -498,6 +500,16 @@ class categories {
     if (trim(ADD_PRODUCTS_FIELDS) != '') {
       $sql_data_array = array_merge($sql_data_array, $this->add_data_fields(ADD_PRODUCTS_FIELDS,$products_data));
     }
+
+    $error = false;
+    $prod_quantity_query = xtc_db_query("SELECT products_quantity FROM ".TABLE_PRODUCTS." WHERE products_id = '".$products_id."'");
+    $prod_quantity = xtc_db_fetch_array($prod_quantity_query);
+    if ($prod_quantity['products_quantity'] != $products_data['products_quantity_before_edit']) {
+      unset($sql_data_array['products_quantity']);
+      $error = true;
+      $messageStack->add_session(ERROR_QTY_SAVE_CHANGED, 'error');
+    }
+
     //echo print_r($sql_data_array); EXIT;
     $sql_data_array = array_merge($sql_data_array, $permission_array);
     //get the next ai-value from table products if no products_id is set
@@ -678,7 +690,7 @@ class categories {
     }
 
     //redirect by update button
-    if(isset($products_data['prod_update'])) {
+    if(isset($products_data['prod_update']) || $error === true) {
       xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, 'cPath='.$_GET['cPath'].'&action=new_product&pID='.$products_id.$this->page_parameter));
     }
     xtc_redirect(xtc_href_link(FILENAME_CATEGORIES, xtc_get_path($dest_categories_id).'&pID='.$products_id.$this->page_parameter));

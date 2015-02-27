@@ -234,4 +234,6 @@ define('TEXT_LINKS_COPY_INFO', 'Product links also copy <br/> Only single-copy (
 
 define('TEXT_GRADUATED_PRICES_INFO', 'The number of input fields for the Graduated Prices may be "<b>Configuration - Admin Options area - Number Graduated Price</b>" to be adjusted.');
 define('TEXT_CATEGORY_SETTINGS', 'Category Settings:');
+
+define('ERROR_QTY_SAVE_CHANGED', 'While editing the article, the inventory has been changed and not saved.');
 ?>
