@@ -1192,7 +1192,7 @@ CREATE TABLE zones (
   zone_code VARCHAR(32) NOT NULL,
   zone_name VARCHAR(64) NOT NULL,
   PRIMARY KEY (zone_id),
-  UNIQUE idx_country_code (zone_country_id, zone_code),
+  UNIQUE idx_country_code (zone_country_id, zone_code)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS zones_to_geo_zones;
