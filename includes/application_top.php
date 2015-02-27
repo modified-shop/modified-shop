@@ -43,9 +43,6 @@ if (file_exists('includes/local/configure.php')) {
   include_once ('includes/configure.php');
 }
 
-// set default charset
-@ini_set('default_charset', DB_SERVER_CHARSET);
-
 // call Installer
 if (DB_DATABASE == '' && is_dir('./_installer')) {
   header("Location: ./_installer");
