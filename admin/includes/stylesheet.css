@@ -1482,3 +1482,34 @@ margin: -2px 4px 0 0;
 vertical-align: middle;
 display: none;
 }
+
+
+/*  */
+.pageHeading {
+    color: #000000;
+    font-family: Verdana,Arial,sans-serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-top: 5px;
+}
+.pageHeading.pdg2 {
+    padding: 0 2px;
+}
+.main.pdg2 {
+    padding: 0 2px;
+}
+.pageHeadingImage {
+    background: none repeat scroll 0 0 #fff;
+    border: 1px solid #eaeaea;
+    float: left;
+    height: 36px;
+    line-height: 35px;
+    margin: 5px;
+    padding: 2px;
+    text-align: center;
+    width: 36px;
+}
+.pageHeadingImage > img {
+    border: 0 none;
+    vertical-align: middle;
+}

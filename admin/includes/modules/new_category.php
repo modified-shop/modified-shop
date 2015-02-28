@@ -34,7 +34,8 @@
                                     TABLE_CATEGORIES . " c, " .
                                     TABLE_CATEGORIES_DESCRIPTION . " cd
                                     where c.categories_id = cd.categories_id
-                                    and c.categories_id = '" . (int)$_GET['cID'] . "'");
+                                    and c.categories_id = '" . (int)$_GET['cID'] . "'
+                                    AND cd.language_id = '".$_SESSION['languages_id']."'");
 
     $category = xtc_db_fetch_array($category_query);
 
@@ -84,9 +85,10 @@
   $form_action = isset($_GET['cID']) ? 'update_category' : 'insert_category';    
   echo xtc_draw_form('new_category', FILENAME_CATEGORIES, 'cPath=' . $cPath . '&cID=' . (int)$_GET['cID'] . '&action='.$form_action, 'post', 'enctype="multipart/form-data"' . $confirm_submit);
 ?>
-
-  <div class="pageHeading pdg2"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($cat_id)); ?></div>
-  <div class="div_box mrg5">
+<div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_news.png'); ?></div>
+<div class="pageHeading"><?php echo $cInfo->categories_name; ?><br /></div>
+<div class="main pdg2 flt-l"><?php echo sprintf($text_new_or_edit, xtc_output_generated_category_path($current_category_id)); ?></div>
+<div class="clear div_box mrg5">
     <div>
       <table class="tableInput border0">
         <tr>
