@@ -232,7 +232,7 @@
 
             </tr>
             <?php
-            if(ACCOUNT_COMPANY_VAT_CHECK == 'true'){
+            if(ACCOUNT_COMPANY_VAT_CHECK == 'true' && ACCOUNT_COMPANY == 'true'){
               // BOF - Dokuman - 2011-08-26 - show error code of VAT ID check FROM DB (only in 'edit' process, not in 'update')  //web28 - 2012-04-08 - and only when customers_vat_id is not empty
               if ($action == 'edit' && $cInfo->customers_vat_id != '') {
                 // BOF - Dokuman - 2011-09-13 - display correct error code of VAT ID check
