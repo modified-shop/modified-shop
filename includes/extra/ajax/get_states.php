@@ -7,11 +7,6 @@
  *
  * Copyright (c) 2009 - 2013 [www.modified-shop.org]
  *
- *
- * Hacker Solutions - AJAX GET STATES
- * web: www.hackersolutions.com 
- * mail: support@hackersolutions.com
- * 
  * Released under the GNU General Public License
  */
 require (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
