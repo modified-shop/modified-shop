@@ -31,6 +31,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_categories.html', $cach
 
   // include needed functions
   require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_category.inc.php');
+  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/close_ul_tags.inc.php');
   require_once (DIR_FS_INC.'xtc_has_category_subcategories.inc.php');
   require_once (DIR_FS_INC.'xtc_count_products_in_category.inc.php');
   

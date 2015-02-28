@@ -41,6 +41,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
 
   // include needed functions
   require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/xtc_show_content.inc.php');
+  require_once (DIR_FS_CATALOG.'templates/'.CURRENT_TEMPLATE.'/source/inc/close_ul_tags.inc.php');
 
 
   $content_array = array();
@@ -57,6 +58,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
                                  ".CONTENT_CONDITIONS."
                                  AND content_status='1'
                                  AND content_active='1'
+                                 AND trim(content_title) != ''
                                  AND parent_id='0'
                             ORDER BY sort_order");
 
@@ -100,6 +102,7 @@ if (!$box_smarty->is_cached(CURRENT_TEMPLATE.'/boxes/box_content.html', $cache_i
                                         ".CONTENT_CONDITIONS."
                                         AND content_status='1'
                                         AND content_active='1'
+                                        AND trim(content_title) != ''
                                         AND parent_id='".$value."'
                                    ORDER BY sort_order");
 

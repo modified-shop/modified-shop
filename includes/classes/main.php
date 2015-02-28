@@ -194,8 +194,9 @@ class main {
                                               content_file
                                          FROM " . TABLE_CONTENT_MANAGER . "
                                         WHERE content_group='". (int)$coID ."'
-                                          " . $group_check . "
+                                              " . $group_check . "
                                           AND content_active = '1'
+                                          AND trim(content_title) != ''
                                           AND languages_id='" . (int)$lang_id . "'
                                         LIMIT 1
                                       ");
