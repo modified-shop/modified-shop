@@ -47,7 +47,7 @@
                    <td class="dataTableHeadingContent"><?php echo TABLE_HEADING_UMSATZ; ?></td>
                   <td class="dataTableHeadingContent"><?php echo HEADING_TITLE_STATUS; ?></td>
                   <?php
-                  if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+                  if (ACCOUNT_COMPANY_VAT_CHECK == 'true' && ACCOUNT_COMPANY == 'true') {
                   ?>
                   <td class="dataTableHeadingContent"><?php echo HEADING_TITLE_VAT; ?></td>
                   <?php
@@ -224,7 +224,7 @@
                   ?>
                   <td class="dataTableContent"><?php echo $customers_statuses_id_array[$customers['customers_status']]['text'] . ' (' . $customers['customers_status'] . ')' ; ?></td><?php // web28 - 2011-10-31 - change  $customers_statuses_array  to $customers_statuses_id_array ?>
                   <?php
-                    if (ACCOUNT_COMPANY_VAT_CHECK == 'true') {
+                    if (ACCOUNT_COMPANY_VAT_CHECK == 'true' && ACCOUNT_COMPANY == 'true') {
                       echo '<td class="dataTableContent">';
                       if ($customers['customers_vat_id']) {
                         $vatid_title = strip_tags(xtc_validate_vatid_status($customers['customers_id']));
