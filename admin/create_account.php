@@ -462,7 +462,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                     </tr>
 
-                    <?php if (ACCOUNT_COMPANY_VAT_CHECK == 'true' && ACCOUNT_COMPANY == 'true') { ?>
+                    <?php if (ACCOUNT_COMPANY_VAT_CHECK == 'true') { ?>
                     <tr>
                       <td class="dataTableConfig col-left"><?php echo ENTRY_VAT_ID; ?></td>
                       <td class="dataTableConfig col-single-right">
