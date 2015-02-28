@@ -43,7 +43,7 @@
  // edit
  define('TEXT_LANGUAGE','Language:');
  define('TEXT_STATUS','Visible:');
- define('TEXT_STATUS_DESCRIPTION','If checked, a link will be displayed in the information box');
+ define('TEXT_STATUS_DESCRIPTION','Show link in the information box?');
  define('TEXT_TITLE','Title:');
  define('TEXT_TITLE_FILE','Title/Filename:');
  define('TEXT_SELECT','-Select-');
@@ -81,6 +81,6 @@
  
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
  define('TEXT_STATUS_ACTIVE', 'Status active:'); 	 
- define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable / disable content');
+ define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Enable content?');
 
  ?>

@@ -126,6 +126,10 @@ if (!$action) {
 
 <?php
 } else {
+
+  $content_status_array = array(array('id'=>0,'text'=>CFG_TXT_NO),
+                                array('id'=>1,'text'=>CFG_TXT_YES)
+                               );
   
   // content array
   $content = array();
@@ -337,16 +341,16 @@ if (!$action) {
           //$content_lang = get_content_details($content[$i][$languages[$l]['id']]['content_id']);
           $content_lang = $content[$i][$languages[$l]['id']];
           echo xtc_draw_hidden_field('content_id['.$i.']['.$languages[$l]['id'].']', $content_lang['content_id']);
-        }
+        }        
         ?>
         <table class="tableConfig" style="margin-top:0;">
         <tr>
           <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo TEXT_STATUS_ACTIVE; ?></td>
-          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo xtc_draw_checkbox_field('content_active['.$i.']['.$languages[$l]['id'].']', '1', ((isset($content_lang['content_active']) && $content_lang['content_active'] == '1') ? true : false)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
+          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active'])) ? $content_lang['content_active'] : 0)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_STATUS; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo xtc_draw_checkbox_field('content_status['.$i.']['.$languages[$l]['id'].']', '1', ((isset($content_lang['content_status']) && $content_lang['content_status'] == '1') ? true : false)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
+          <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status'])) ? $content_lang['content_status'] : 0)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
         </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_TITLE; ?></td>

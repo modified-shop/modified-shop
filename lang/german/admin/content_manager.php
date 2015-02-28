@@ -43,7 +43,7 @@
  // edit
  define('TEXT_LANGUAGE','Sprache:');
  define('TEXT_STATUS','Sichtbar:');
- define('TEXT_STATUS_DESCRIPTION','Wenn ausgew&auml;hlt, wird ein Link in der Info Box angezeigt');
+ define('TEXT_STATUS_DESCRIPTION','Link in der Info Box angezeigen?');
  define('TEXT_TITLE','Titel:');
  define('TEXT_TITLE_FILE','Titel/Dateiname:');
  define('TEXT_SELECT','-Bitte w&auml;hlen-');
@@ -81,6 +81,6 @@
  
  define('TABLE_HEADING_STATUS_ACTIVE', 'Status');
  define('TEXT_STATUS_ACTIVE', 'Status aktiv:'); 	 
- define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Content aktivieren/deaktivieren');
+ define('TEXT_STATUS_ACTIVE_DESCRIPTION', 'Content aktivieren?');
  
  ?>
