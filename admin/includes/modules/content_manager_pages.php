@@ -346,11 +346,11 @@ if (!$action) {
         <table class="tableConfig" style="margin-top:0;">
         <tr>
           <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo TEXT_STATUS_ACTIVE; ?></td>
-          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active'])) ? $content_lang['content_active'] : 0)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
+          <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active']) && $content_lang['content_active'] != '') ? $content_lang['content_active'] : 0)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
         </tr>
         <tr>
           <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_STATUS; ?></td>
-          <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status'])) ? $content_lang['content_status'] : 0)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
+          <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status']) && $content_lang['content_status'] != '') ? $content_lang['content_status'] : 0)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
         </tr>
           <tr>
             <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_TITLE; ?></td>
