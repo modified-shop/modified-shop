@@ -904,7 +904,7 @@
                                   );
                                 }
                               </script>
-                              <?php echo xtc_draw_form('xtbooster', 'xtbooster.php', '', 'post', 'enctype="multipart/form-data"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                              <?php echo xtc_draw_form('xtbooster', 'xtbooster.php', '', 'post', 'enctype="multipart/form-data"'); ?>
                                 <input type="hidden" name="xtb_module" value="conf" />
                                 <table border="0" cellpadding="2" cellspacing="0" width="100%">
                                   <tr class="dataTableRow">
@@ -1751,7 +1751,7 @@
                                     var TXT_WRONG_DATA="<?php echo TXT_WRONG_DATA?>";
                                     var TXT_WARNING_NOT_ALL_AUCTIONS_SUBMITTED="<?php echo TXT_WARNING_NOT_ALL_AUCTIONS_SUBMITTED?>";
                                   </script>
-                                    <?php echo xtc_draw_form('sd', 'xtbooster.php', '', 'post', 'id="xsb_add_form" onsubmit="xsb.post(this);return false;"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                                    <?php echo xtc_draw_form('sd', 'xtbooster.php', '', 'post', 'id="xsb_add_form" onsubmit="xsb.post(this);return false;"'); ?>
                                     <input type="hidden" name="xtb_module" id="xtb_module" value="add">
                                     <input type="hidden" name="current_product_id" id="current_product_id" value="<?php echo $_POST['current_product_id']?>">
                                     <input type="hidden" name="multi_xtb" id="multi_xtb" value="<?php echo $multi_xtb?'1':'0'; ?>">
@@ -2477,7 +2477,7 @@
                               $sites = ceil($num_rows/$items_per_site);
                               ?>
                               <div>
-                                <?php echo xtc_draw_form('xtb', 'xtbooster.php', '', 'get', 'style="border:0;margin:0;padding:0;"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                                <?php echo xtc_draw_form('xtb', 'xtbooster.php', '', 'get', 'style="border:0;margin:0;padding:0;"'); ?>
                                   <input type="hidden" name="xtb_module" value="list" />
                                   <input type="hidden" name="filter" value="<?php echo $filter?>" />
                                   <strong><?php echo TXT_AUCTION_SEARCH?>:</strong>&nbsp;&nbsp;
@@ -2546,7 +2546,7 @@
                               }
                               ?>
                               <div style="border-bottom:1px solid gray;margin-top:10px;margin-bottom:10px;"></div>
-                              <?php echo xtc_draw_form('xtb_list', 'xtbooster.php', '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                              <?php echo xtc_draw_form('xtb_list', 'xtbooster.php', '', 'post'); ?>
                                 <table border="0" cellpadding="2" cellspacing="1" width="100%">
                                   <tr>
                                     <td class="smallText" style="font-weight:bold;">pID</td>

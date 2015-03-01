@@ -48,9 +48,6 @@
       <tr class="dataTableRow">
         <?php
         echo xtc_draw_form('product_option_edit', FILENAME_ORDERS_EDIT, 'action=product_option_edit', 'post');
-          //BOF - web28 - 2011-01-16 - FIX missing sessions id
-          echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-          //EOF - web28 - 2011-01-16 - FIX missing sessions id
           echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
           echo xtc_draw_hidden_field('opID', (int)$_GET['opID']);
           echo xtc_draw_hidden_field('pID', (int)$_GET['pID']);
@@ -75,9 +72,6 @@
         <td class="dataTableContent">
           <?php
           echo xtc_draw_form('product_option_delete', FILENAME_ORDERS_EDIT, 'action=product_option_delete', 'post');
-            //BOF - web28 - 2011-01-16 - FIX missing sessions id
-            echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-            //EOF - web28 - 2011-01-16 - FIX missing sessions id
             echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
             echo xtc_draw_hidden_field('opID',(int) $_GET['opID']);
             echo xtc_draw_hidden_field('opAID', (int)$attributes['orders_products_attributes_id']);
@@ -119,9 +113,6 @@
     <tr class="dataTableRow">
       <?php
       echo xtc_draw_form('product_option_ins', FILENAME_ORDERS_EDIT, 'action=product_option_ins', 'post');
-        //BOF - web28 - 2011-01-16 - FIX missing sessions id
-        echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-        //EOF - web28 - 2011-01-16 - FIX missing sessions id
         echo xtc_draw_hidden_field('oID', (int)$_GET['oID']);
         echo xtc_draw_hidden_field('opID', (int)$_GET['opID']);
         echo xtc_draw_hidden_field('pID', (int)$_GET['pID']);

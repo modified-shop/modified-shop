@@ -209,7 +209,7 @@ require (DIR_WS_INCLUDES.'head.php');
 								<p class="message"><?php echo $msg; ?></p>
 								<?php } ?>
 
-                <?php echo xtc_draw_form('log', basename($PHP_SELF), '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                <?php echo xtc_draw_form('log', basename($PHP_SELF), '', 'get'); ?>
                   <table style="border: 1px solid #cccccc; width:100%; padding:5px; background:#f1f1f1;">
                     <tr>
                       <td class="menuBoxHeading">

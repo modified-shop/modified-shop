@@ -18,71 +18,13 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   // The HTML href link wrapper function
-  function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = true) {
-  
-    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
-  
-    if (!xtc_not_null($page)) {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine the page link!<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
-    }
-    if ($connection == 'NONSSL') {
-      $link = HTTP_SERVER . DIR_WS_ADMIN;
-    } elseif ($connection == 'SSL') {
-      if (defined('ENABLE_SSL') && ENABLE_SSL == 'true') {
-        $link = (defined('HTTPS_SERVER') ? HTTPS_SERVER : HTTPS_CATALOG_SERVER) . DIR_WS_ADMIN;
-      } else {
-        $link = HTTP_SERVER . DIR_WS_ADMIN;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
-    }
-    if ($parameters == '') {
-      $link .= $page . (($add_session === true) ? '?' . SID : '');
-    } else {
-      $link .= $page . '?' . $parameters . (($add_session === true) ? '&' . SID : '');
-    }
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
-      $link = substr($link, 0, -1);
-    
-    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
-  
-    return $link;
-  }
+  if (!function_exists('xtc_href_link')) require DIR_FS_INC . 'xtc_href_link.inc.php';
 
   // The HTML href link wrapper function for frontend
   function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
-  
-    $parameters = str_replace('&amp;', '&', $parameters); //  making link W3C-Conform
-
-    if (!xtc_not_null($page)) {
-      $page = 'index.php';
-    }
-    
-    if ($page == 'index.php' && !xtc_not_null($parameters)) {
-      $page = '';
-    }
-
-    if ($connection == 'NONSSL') {
-      $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-    } elseif ($connection == 'SSL') {
-      if (ENABLE_SSL_CATALOG == 'true') {
-        $link = HTTPS_CATALOG_SERVER . DIR_WS_CATALOG;
-      } else {
-        $link = HTTP_CATALOG_SERVER . DIR_WS_CATALOG;
-      }
-    } else {
-      die('</td></tr></table></td></tr></table><br /><br /><font color="#ff0000"><strong>Error!</strong></font><br /><br /><strong>Unable to determine connection method on a link!<br /><br />Known methods: NONSSL SSL<br /><br />Function used:<br /><br />xtc_href_link(\'' . $page . '\', \'' . $parameters . '\', \'' . $connection . '\')</strong>');
-    }
-    if ($parameters == '') {
-      $link .= $page . (($add_session === true) ? '?' . SID : '');
-    } else {
-      $link .= $page . '?' . $parameters . (($add_session === true) ? '&' . SID : '');
-    }
-    while ( (substr($link, -1) == '&') || (substr($link, -1) == '?') )
-      $link = substr($link, 0, -1);
-      
-    $link = str_replace('&', '&amp;', $link); // making link W3C-Conform
-  
+    $_POST['catalog_link'] = true;
+    $link = xtc_href_link($page, $parameters, $connection, $add_session);
+    unset($_POST['catalog_link']);
     return $link;
   }
 
@@ -153,9 +95,9 @@
   function xtc_draw_form($name, $action, $parameters = '', $method = 'post', $params = '') {
     $form = '<form name="' . $name . '" action="';
     if ($parameters) {
-      $form .= xtc_href_link($action, $parameters);
+      $form .= xtc_href_link($action, $parameters, 'NONSSL' , false);
     } else {
-      $form .= xtc_href_link($action);
+      $form .= xtc_href_link($action, '', 'NONSSL' , false);
     }
     $form .= '" method="' . $method . '"';
     if ($params) {
@@ -163,6 +105,10 @@
     }
     $form .= '>';
     
+    // add session if is in url
+    if (isset($_GET[xtc_session_name()]) && $_GET[xtc_session_name()] == xtc_session_id()) {
+      $form .= '<input type="hidden" name="'.xtc_session_name().'" value="'.xtc_session_id().'">';
+    }
     // secure form with a random token
     if (isset($_SESSION['CSRFToken']) && isset($_SESSION['CSRFName']) && $method == 'post') {
       $form .= '<input type="hidden" name="'.$_SESSION['CSRFName'].'" value="'.$_SESSION['CSRFToken'].'">';

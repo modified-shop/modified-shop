@@ -100,8 +100,6 @@ class splitPageResults {
                 }
             }
 
-            if (SID) $display_links .= xtc_draw_hidden_field(session_name(), session_id());
-
             $display_links .= '</form>';
         } else {
             $display_links = sprintf(TEXT_RESULT_PAGE, $num_pages, $num_pages);

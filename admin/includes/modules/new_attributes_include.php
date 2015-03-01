@@ -60,7 +60,7 @@
     <div class="pageHeading pdg2"><?php echo $pageTitle; ?></div>
     <div class="main pdg2">
       <?php echo SORT_ORDER;
-      echo xtc_draw_form('option_order_by', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+      echo xtc_draw_form('option_order_by', FILENAME_NEW_ATTRIBUTES, '', 'post');
       ?>
       <?php echo $options_dropdown_order; ?>
       </form>
@@ -69,9 +69,7 @@
 <?php echo xtc_draw_form('SUBMIT_ATTRIBUTES', FILENAME_NEW_ATTRIBUTES . str_replace('&','?',$iframe), '', 'post', 'id="SUBMIT_ATTRIBUTES" enctype="multipart/form-data"'); ?>
 <input type="hidden" name="current_product_id" value="<?php echo $_POST['current_product_id']; ?>">
 <input type="hidden" name="action" value="change">
-<?php 
-echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
-
+<?php
 //BOF - web28 - 2010-12-14 - NEW edit products attributes
 echo '<input type="hidden" name="products_options_id" value="' . (isset($products_options_id) ? $products_options_id : '')  . '">';
 echo '<input type="hidden" name="option_order_by" value="' . $option_order_by . '">';
