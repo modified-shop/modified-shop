@@ -353,7 +353,7 @@ table td {
 
 <body>
 <div id="layout_adminlogin" class="cf">
-  <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Repataturoptionen" /></a>
+  <a class="help_adminlogin" href="http://www.modified-shop.org/wiki/Login_in_den_Administrationsbereich_nach_%C3%84nderungen_nicht_mehr_m%C3%B6glich" target="_blank"><img src="images/icons/question.png" width="32" height="32" title="Eingabehilfe und Reparaturoptionen" /></a>
   <form name="login" method="post" action="<?php echo $action; ?>">
     <h1>Administrator-Login</h1>
     <table>
