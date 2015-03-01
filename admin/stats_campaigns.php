@@ -150,7 +150,7 @@ require (DIR_WS_INCLUDES.'header.php');
 
 if ($srExp < 1) {
 
-    echo xtc_draw_form('campaigns_report', FILENAME_CAMPAIGNS_REPORT, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+    echo xtc_draw_form('campaigns_report', FILENAME_CAMPAIGNS_REPORT, '', 'get');
 ?>
         <tr>
           <td colspan="2">

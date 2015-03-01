@@ -136,27 +136,25 @@
   // EOF DokuMan - 2011-03-05 - show category name in heading title
   ?>
   <!-- categories_view HTML part begin -->
- 
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
-      <div class="pageHeading pdg2 flt-l" style="margin-right:50px;">
-        <?php echo HEADING_TITLE. ' - '.((xtc_not_null($category_name['categories_name'])) ? $category_name['categories_name'] : TEXT_TOP); //DokuMan - 2011-03-05 - show category name in heading title ?>
-      </div>
-      <div class="smallText pdg2 flt-l">
+      <div class="pageHeading"><?php echo ($category_name['categories_name'] ? $category_name['categories_name'] : TEXT_TOP); ?><br /></div>
+      <div class="main pdg2 flt-l"><?php echo HEADING_TITLE; ?></div>
+
+      <div class="smallText pdg2 flt-r">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
         echo '<label for="search_inactive" style="vertical-align:middle;line-height:28px;" >'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
         echo '<div style="display:inline;margin:0px 10px 0px 5px;">' . xtc_draw_selection_field('search_inactive', 'checkbox', '1', $search_inactive, '', 'style="vertical-align:middle;" onclick="this.form.submit();"'). '</div>';
-        echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
         ?>
         </form>
       </div>
       <?php
       if (CAT_VIEW_DROPDOWN) {
       ?>
-        <div class="smallText pdg2 flt-l">
+        <div class="smallText pdg2 flt-r">
          <?php
             echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
-            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+            echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
           ?>
           </form>
         </div>
@@ -164,7 +162,7 @@
       }
       ?> 
 
-      <table class="tableCenter collapse">
+      <table class="clear tableCenter collapse">
         <tr>
           <!-- categories & products column STARTS -->
           <td class="boxCenterLeft">
@@ -222,7 +220,7 @@
              } else {
                $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
              }
-             echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+             echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
              //add current category id in $_POST
              if (isset($_GET['cPath'])) {
                echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
@@ -681,7 +679,7 @@
             case 'copy_to':
               //close multi-action form, not needed here
               $heading[] = array('text' => '</form><b>' . TEXT_INFO_HEADING_COPY_TO . '</b>');
-              $contents   = array('form' => xtc_draw_form('copy_to', FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath) . xtc_draw_hidden_field('products_id', $pInfo->products_id).xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()));
+              $contents   = array('form' => xtc_draw_form('copy_to', FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath) . xtc_draw_hidden_field('products_id', $pInfo->products_id));
               $contents[] = array('text' => TEXT_INFO_COPY_TO_INTRO);
               $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENT_CATEGORIES . '<br /><b>' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</b>');
 
@@ -968,7 +966,7 @@
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
-																								 xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+																								 xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').
                                                  '<input type="hidden" name="action" value="edit">
                                                  <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                  <input type="hidden" name="cpath" value="' . $cPath . '">
@@ -977,7 +975,7 @@
                                                  </form>'                                                 
                                                  ) );
                   $contents[] = array('align' => 'center', 
-                                      'text' =>  xtc_draw_form('edit_crossselling', FILENAME_CATEGORIES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+                                      'text' =>  xtc_draw_form('edit_crossselling', FILENAME_CATEGORIES, '', 'get').
                                                 '<input type="hidden" name="action" value="edit_crossselling">
                                                  <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                  <input type="hidden" name="cpath" value="' . $cPath  . '">
@@ -989,7 +987,7 @@
                   // BOC Included xs:booster                  
                   if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS=='True') {
                     $contents[] = array('align' => 'center', 
-                                        'text' =>  xtc_draw_form('edit_xtbooster', FILENAME_XTBOOSTER, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).
+                                        'text' =>  xtc_draw_form('edit_xtbooster', FILENAME_XTBOOSTER, '', 'post').
                                                   '<input type="hidden" name="action" value="edit_xtbooster">
                                                    <input type="hidden" name="xtb_module" value="add">
                                                    <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">

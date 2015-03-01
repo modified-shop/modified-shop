@@ -176,10 +176,10 @@ while ($products_values = xtc_db_fetch_array($products)) {
                   
                   <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_OPT; ?>&nbsp;                          
                       <?php  
-                        echo xtc_draw_form('option_order_by', FILENAME_PRODUCTS_ATTRIBUTES, '', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+                        echo xtc_draw_form('option_order_by', FILENAME_PRODUCTS_ATTRIBUTES, '', 'post');
                         echo $options_dropdown_order; ?>
                         </form>&nbsp;&nbsp;
-                        <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                        <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get'); ?>
                           <span class="main"><?php echo TEXT_SEARCH; ?></span> 
                           <input type="text" name="searchoption" size="20" value="<?php echo $_GET['searchoption']; ?>">
                         </form>
@@ -210,7 +210,7 @@ if ($_GET['action'] != 'update_option') {
     $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
   }
   ?>
-                    <?php echo xtc_draw_form('options', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_options&option_page=' . $option_page, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                    <?php echo xtc_draw_form('options', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_options&option_page=' . $option_page, 'post'); ?>
                     <input type="hidden" name="products_options_id" value="<?php echo $next_id;?>">
                     <tr class="dataTableRowSelected">
                       <td align="center" class="dataTableContent">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
@@ -244,7 +244,7 @@ while ($options_values = xtc_db_fetch_array($options)) {
       $inputs.= $lang_img . '&nbsp;<input type="text" name="option_name[' . $languages[$i]['id'] . ']" style="width:200px;" value="' . $option_name['products_options_name'] . '">&nbsp;<br />';
     }
   ?>
-                    <?php echo xtc_draw_form('option', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_name&option_page='.$_GET['option_page'], 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                    <?php echo xtc_draw_form('option', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_option_name&option_page='.$_GET['option_page'], 'post'); ?>
                     <tr class="dataTableRowSelected">
                       <td class="dataTableContent txta-c">
                         <?php echo $options_values['products_options_id']; ?><input type="hidden" name="option_id" value="<?php echo $options_values['products_options_id']; ?>">

@@ -214,7 +214,7 @@ if (xtc_db_num_rows($products)) {
                     <option value="" name="">---</option>
                     <?php echo $options_dropdown_select;?>
                   </select>
-                  <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                  <?php echo xtc_draw_form('search', FILENAME_PRODUCTS_ATTRIBUTES, '', 'get'); ?>
                     <span  class="main"><?php  echo  TEXT_SEARCH;  ?></span> 
                     <input type="text" name="search_optionsname" size="20" value="<?php echo $_GET['search_optionsname']; ?>">
                   </form>
@@ -245,7 +245,7 @@ if (xtc_db_num_rows($products)) {
       $inputs.= $lang_img . '&nbsp;<input type="text" name="value_name[' . $languages[$i]['id'] . ']" style="width:200px;">&nbsp;<br />';
     }
     ?>
-                  <?php echo xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                  <?php echo xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'post'); ?>
                   <tr class="dataTableRowSelected">
                     <td class="dataTableContent txta-c">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
                     <td align="left" class="dataTableContent">&nbsp;<select name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
@@ -279,7 +279,7 @@ while ($values_values = xtc_db_fetch_array($values)) {
       $inputs .= $lang_img . '&nbsp;<input type="text" name="value_name[' . $languages[$i]['id'] . ']" style="width:200px;" value="' . $value_name['products_options_values_name'] . '">&nbsp;<br />';
     }
 ?>
-                    <?php echo xtc_draw_form('value', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&'.$page_info, 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()); ?>
+                    <?php echo xtc_draw_form('value', FILENAME_PRODUCTS_ATTRIBUTES, 'action=update_value&'.$page_info, 'post'); ?>
                     <tr class="dataTableRowSelected">
                       <td class="dataTableContent txta-c">&nbsp;<?php echo $values_values['products_options_values_id']; ?>
                         <input type="hidden" name="value_id" value="<?php echo $values_values['products_options_values_id']; ?>">

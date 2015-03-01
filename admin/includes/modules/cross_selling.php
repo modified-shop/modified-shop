@@ -55,7 +55,6 @@
 
       <?php
       echo xtc_draw_form('cross_selling', FILENAME_CATEGORIES, '', 'GET', '');
-        echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
         echo xtc_draw_hidden_field('action', 'edit_crossselling');
         echo xtc_draw_hidden_field('special', 'edit');
         echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']);
@@ -122,7 +121,6 @@
       <?php
         echo xtc_draw_form('product_search', FILENAME_CATEGORIES, '', 'GET').PHP_EOL;
         echo xtc_draw_hidden_field('action', 'edit_crossselling').PHP_EOL;
-        echo xtc_draw_hidden_field(xtc_session_name(), xtc_session_id()).PHP_EOL;
         echo xtc_draw_hidden_field('current_product_id', $_GET['current_product_id']).PHP_EOL;
         echo xtc_draw_hidden_field('cpath', $_GET['cpath']).PHP_EOL;
       ?>

@@ -247,7 +247,7 @@
 <!-- header //-->
 <?php
   require(DIR_WS_INCLUDES . 'header.php');
-  echo xtc_draw_form('newsletter_send', FILENAME_MODULE_NEWSLETTER, 'send='.($limits + NEWSLETTER_EXECUTE_LIMIT).'&ID='.(int)$_GET['ID'], 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+  echo xtc_draw_form('newsletter_send', FILENAME_MODULE_NEWSLETTER, 'send='.($limits + NEWSLETTER_EXECUTE_LIMIT).'&ID='.(int)$_GET['ID'], 'post');
   echo '</form>';
 ?>
 <!-- header_eof //-->

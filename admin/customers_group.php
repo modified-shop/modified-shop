@@ -96,7 +96,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <td class="main">
                 <div class="customers-groups pdg2">
                   <?php
-                  echo xtc_draw_form('customers_group', 'customers_group.php', 'action=send', 'post').xtc_draw_hidden_field(xtc_session_name(), xtc_session_id());
+                  echo xtc_draw_form('customers_group', 'customers_group.php', 'action=send', 'post');
                   $group_query = xtc_db_query('SELECT customers_status_id,
                                                       customers_status_name
                                                FROM ' . TABLE_CUSTOMERS_STATUS . '

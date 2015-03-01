@@ -29,13 +29,12 @@ if (function_exists('session_set_cookie_params')) {
 if (isset ($_POST[xtc_session_name()])) {
   xtc_session_id($_POST[xtc_session_name()]);
 }
-elseif (($request_type == 'SSL') && isset ($_GET[xtc_session_name()])) {
+elseif (isset ($_GET[xtc_session_name()])) {#WHY ? => ($request_type == 'SSL') && 
   xtc_session_id($_GET[xtc_session_name()]);
 }
 
 // start the session
 $session_started = false;
-$truncate_session_id = false;
 if (SESSION_FORCE_COOKIE_USE == 'True') {
   xtc_setcookie('cookie_test', 'please_accept_for_session', time()+60*60*24*30, DIR_WS_CATALOG, (xtc_not_null($current_domain) ? $current_domain : ''));
   if (isset($_COOKIE['cookie_test'])) {
@@ -43,7 +42,6 @@ if (SESSION_FORCE_COOKIE_USE == 'True') {
     $session_started = true;
   }
 } elseif (CHECK_CLIENT_AGENT == 'true' && xtc_check_agent() == 1) {
-  $truncate_session_id == true;
   $session_started = false;
   // Redirect search engines with session id to the same url without session id to prevent indexing session id urls
   if (strpos($_SERVER['REQUEST_URI'], xtc_session_name()) !== false || preg_match('/XTCsid/i', $_SERVER['REQUEST_URI'])) {
