@@ -1,5 +1,13 @@
 <?php
-class micropayment_method
+/**
+ *
+ * @package    micropayment
+ * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ */
+require_once(dirname(__FILE__).'/class.micropayment_helper.php');
+require_once(dirname(__FILE__).'/../../../lang/german/modules/payment/mcp_service.php');
+class micropayment_method extends micropayment_helper
 {
 
     var $code;
@@ -9,15 +17,17 @@ class micropayment_method
     var $sort_order;
     var $enabled = true;
     var $info;
-    var $version = '1.1';
-    // var $form_action_url=null;
+    var $version = '2.0.0';
     var $_check;
     var $rslcode = 'r120';
     var $get_url_called = false;
+    static $versionInfoShow = false;
+    static $registerInfoShow = false;
+
 
     function micropayment_method()
     {
-        $this->form_action_url = $this->getWebUrl();
+        $this->form_action_url = 'not_used';
         $this->tmpOrders = true;
         $this->tmpStatus = MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID;
         $this->check_enabled();
@@ -26,6 +36,22 @@ class micropayment_method
 
     function check()
     {
+
+        if(isset($_SESSION['customers_status']) &&
+            isset($_SESSION['customers_status']['customers_status_id']) &&
+            $_SESSION['customers_status']['customers_status_id'] == 0) {
+            if(!MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID && !self::$registerInfoShow) {
+                echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $this->rslcode);
+                self::$registerInfoShow = true;
+            }
+            if(defined(self::CONFIG_NAME_CURRENT_VERSION)) {
+                if(version_compare($this->version,constant(self::CONFIG_NAME_CURRENT_VERSION),'<') && !self::$versionInfoShow) {
+                    echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NEW_VERSION,MODULE_PAYMENT_MCP_SERVICE_CSS,constant(self::CONFIG_NAME_CURRENT_VERSION));
+                    self::$versionInfoShow = true;
+                }
+            }
+        }
+
         if ($this->check_is_service_installed()) {
             $check_query = xtc_db_query("SELECT `configuration_value` FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` = 'MODULE_PAYMENT_" . strtoupper($this->code) . "_STATUS'");
             $this->_check = xtc_db_num_rows($check_query);
@@ -39,6 +65,9 @@ class micropayment_method
         $check_query = xtc_db_query("SELECT `configuration_value` FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` = 'MODULE_PAYMENT_" . strtoupper($this->code) . "_STATUS' AND configuration_value = 'True'");
         $check = xtc_db_num_rows($check_query);
         $this->enabled = ($check != 0) ? true : false;
+        if(!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
+            $this->enabled = false;
+        }
         return $this->enabled;
     }
 
@@ -54,7 +83,9 @@ class micropayment_method
             $check_query = xtc_db_query("SELECT orders_status FROM " . TABLE_ORDERS . " WHERE orders_id = '" . (int)$_GET['orderid'] . "' LIMIT 1");
             if ($result = xtc_db_fetch_array($check_query)) {
                 if ($result['orders_status'] == MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID) {
-                    $this->mcp_remove_order((int)$_GET['orderid'], true);
+                    if(isset($_GET['orderid']) && in_array($this->getLastEventFromMicropaymentLog((int) $_GET['orderid']),array('new','error'))) {
+                        $this->mcp_remove_order((int) $_GET['orderid'], true);
+                    }
                     unset($_SESSION['tmp_oID']);
                 }
             }
@@ -66,8 +97,8 @@ class micropayment_method
     function confirmation()
     {
         $selection = array(
-            'id' => $this->code,
-            'module' => $this->title_extern,
+            'id'          => $this->code,
+            'module'      => $this->title_extern,
             'description' => $this->info
         );
         return $selection;
@@ -92,41 +123,10 @@ class micropayment_method
     public function payment_action()
     {
         global $insert_id;
-
         $order = new order($insert_id);
-        $params = array(
-            'shop_version' => 'modified-shop:'.$this->version,
-            'project' => MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE,
-            'amount' => $order->info['pp_total'] * 100,
-            'orderid' => $insert_id,
-            'title' => MODULE_PAYMENT_MCP_SERVICE_PAYTEXT,
-            'theme' => MODULE_PAYMENT_MCP_SERVICE_THEME,
-            'currency' => $order->info['currency'],
-            xtc_session_name() => xtc_session_id(),
-
-            'mp_user_email' => $order->customer['email_address'],
-            'mp_user_firstname' => $order->customer['firstname'],
-            'mp_user_surname' => $order->customer['lastname'],
-            'mp_user_address' => $order->customer['street_address'],
-            'mp_user_zip' => $order->customer['postcode'],
-            'mp_user_city' => $order->customer['city']
-        );
-
-        if (defined('MODULE_PAYMENT_MCP_SERVICE_GFX') && MODULE_PAYMENT_MCP_SERVICE_GFX != null) {
-            $params['gfx'] = MODULE_PAYMENT_MCP_SERVICE_GFX;
-        }
-        if (defined('MODULE_PAYMENT_MCP_SERVICE_BGGFX') && MODULE_PAYMENT_MCP_SERVICE_BGGFX != null) {
-            $params['bggfx'] = MODULE_PAYMENT_MCP_SERVICE_BGGFX;
-        }
-        if (defined('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR') && MODULE_PAYMENT_MCP_SERVICE_BGCOLOR) {
-            $params['bgcolor'] = MODULE_PAYMENT_MCP_SERVICE_BGCOLOR;
-        }
-
-        $urlParams = http_build_query($params, null, '&');
-
-        $seal = md5($urlParams . MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY);
-        $urlParams .= '&seal=' . $seal;
-        $url = $this->form_action_url . '?' . $urlParams;
+        $url = $this->generateBillingUrl($order);
+        $this->addToMicropaymentOrders($insert_id,$this->code);
+        $this->addToMicropaymentLog($insert_id,'new');
 
         xtc_redirect($url);
     }
@@ -143,16 +143,13 @@ class micropayment_method
 
     function update_status()
     {
-        /**
-         * @var $order order;
-         */
         global $order;
 
         if (!$this->check()) {
             $this->enabled = false;
         }
-        $minimumAmount = $this->getConfig('MODULE_PAYMENT_".$this->code."_MINIMUM_AMOUNT');
-        $maximumAmount = $this->getConfig('MODULE_PAYMENT_".$this->code."_MAXIMUM_AMOUNT');
+        $minimumAmount = $this->getConfig('MODULE_PAYMENT_'.$this->code.'_MINIMUM_AMOUNT');
+        $maximumAmount = $this->getConfig('MODULE_PAYMENT_'.$this->code.'_MAXIMUM_AMOUNT');
         $order_total = $order->info['total'];
 
         if (($minimumAmount > 0 && $order_total < $minimumAmount) || ($maximumAmount > 0 && $order_total > $maximumAmount)) {
@@ -171,28 +168,89 @@ class micropayment_method
     function install()
     {
         if (!$this->check_is_service_installed()) {
+            require_once( dirname(__FILE__) .'/../../../lang/english/modules/payment/mcp_service.php');
             $lastStatusArray = xtc_db_query('SELECT MAX(`orders_status_id`) last_id FROM ' . TABLE_ORDERS_STATUS);
             $t = xtc_db_fetch_array($lastStatusArray);
-            $lastStatusId = $t['last_id'] + 1;
-            xtc_db_query("INSERT INTO " . TABLE_ORDERS_STATUS . " (`orders_status_id`,`language_id`,`orders_status_name`) VALUES ('" . $lastStatusId . "',1,'Cancelled')");
-            xtc_db_query("INSERT INTO " . TABLE_ORDERS_STATUS . " (`orders_status_id`,`language_id`,`orders_status_name`) VALUES ('" . $lastStatusId . "',2,'Storniert')");
+            $nextId = $t['last_id'] + 1;
 
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `set_function`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_STATUS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_THEME', 'x1', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_GFX', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_BGGFX', '', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD', '" . md5(rand(10293, 298437)) . "', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE', '" . md5(rand(10293, 298437)) . "', '6', '0', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `set_function`, `use_function`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID', '0',  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `set_function`, `use_function`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID', '0',  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', NOW())");
-            xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `set_function`, `use_function`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID', '" . $lastStatusId . "',  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name', NOW())");
+            $pendingPaymentId = $nextId + 1;
+            $partPayId        = $nextId + 2;
+            $processingId     = $nextId + 3;
+            $cancelledId      = $nextId + 4;
+            $paymentReviewId  = $nextId + 5;
+            $conflictId       = $nextId + 6;
+
+
+            $this->_createOrderStatus($pendingPaymentId,2,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_GERMAN_TITLE);
+            $pendingPaymentId = $this->_createOrderStatus($pendingPaymentId,1,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ENGLISH_TITLE);
+
+            $this->_createOrderStatus($partPayId,2,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_GERMAN_TITLE);
+            $partPayId = $this->_createOrderStatus($partPayId,1,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ENGLISH_TITLE);
+
+            $this->_createOrderStatus($processingId,2,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_GERMAN_TITLE);
+            $processingId = $this->_createOrderStatus($processingId,1,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ENGLISH_TITLE);
+
+            $this->_createOrderStatus($cancelledId,2,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_GERMAN_TITLE);
+            $cancelledId = $this->_createOrderStatus($cancelledId,1,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ENGLISH_TITLE);
+
+            $this->_createOrderStatus($paymentReviewId,2,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_GERMAN_TITLE);
+            $paymentReviewId = $this->_createOrderStatus($paymentReviewId,1,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ENGLISH_TITLE);
+
+            $this->_createOrderStatus($conflictId,2,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_GERMAN_TITLE);
+            $conflictId = $this->_createOrderStatus($conflictId,1,MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ENGLISH_TITLE);
+
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SORT_ORDER', '0', '6','0');
+            $this->createConfigParameter(self::CONFIG_NAME_BILLING_URL_CREDITCARD, '0', '6', '0');
+            $this->createConfigParameter(self::CONFIG_NAME_BILLING_URL_DEBIT, '0', '6', '0');
+            $this->createConfigParameter(self::CONFIG_NAME_BILLING_URL_SOFORT, '0', '6', '0');
+            $this->createConfigParameter(self::CONFIG_NAME_BILLING_URL_PREPAY, '0', '6', '0');
+            $this->createConfigParameter(self::CONFIG_NAME_REFRESH_INTERVAL, '0', '6', '0');
+            $this->createConfigParameter(self::CONFIG_NAME_CURRENT_VERSION, '2.0.0', '6', '0');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID', '', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ACCESS_KEY', '', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_PROJECT_CODE', '', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_PAYTEXT', '#ORDER#', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_THEME', 'x1', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_GFX', '', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_BGCOLOR', '', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_BGGFX', '', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD', md5(time()), '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE',  md5(time()+rand(10000,99999999)) , '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_STATUS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\',\'False\'),');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS', '30', '6', '0','');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID', $pendingPaymentId ,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID', $processingId ,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID', $cancelledId ,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID', $paymentReviewId ,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID', $conflictId,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+            $this->createConfigParameter('MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID', $partPayId,  '6', '0', 'xtc_cfg_pull_down_order_statuses(', 'xtc_get_order_status_name');
+
+
+
+            xtc_db_query("
+                CREATE TABLE IF NOT EXISTS
+                  `micropayment_log` (
+                      `id`       INT(11)     NOT NULL AUTO_INCREMENT PRIMARY KEY ,
+                      `order_id` INT(11)     NOT NULL ,
+                      `auth`     VARCHAR(64) NOT NULL ,
+                      `amount`   INT(11)     NOT NULL ,
+                      `function` VARCHAR(10) NOT NULL ,
+                      `created`  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+                      INDEX (`order_id`)
+                  )"
+            );
+            xtc_db_query("
+                CREATE TABLE IF NOT EXISTS
+                  `micropayment_orders` (
+                      `order_id`        INT(11)     NOT NULL PRIMARY KEY,
+                      `payment_method`  VARCHAR(20) NOT NULL,
+                      `createdon`         TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP
+
+                  )"
+            );
         }
     }
+
 
     function check_is_service_installed()
     {
@@ -212,121 +270,24 @@ class micropayment_method
             'MODULE_PAYMENT_MCP_SERVICE_GFX',
             'MODULE_PAYMENT_MCP_SERVICE_BGGFX',
             'MODULE_PAYMENT_MCP_SERVICE_BGCOLOR',
+            'MODULE_PAYMENT_MCP_SERVICE_EXPIRE_DAYS',
             'MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD',
             'MODULE_PAYMENT_MCP_SERVICE_SECRET_FIELD_VALUE',
             'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PENDING_PAYMENT_ID',
             'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PROCESSING_ID',
-            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID'
+            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CANCELLED_ID',
+            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PAYMENT_REVIEW_ID',
+            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_CONFLICT_ID',
+            'MODULE_PAYMENT_MCP_SERVICE_ORDER_STATUS_PARTPAY_ID'
         );
     }
 
-    function getConfig($key)
-    {
-        $query = xtc_db_query("SELECT configuration_value FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` = '" . $key . "'");
-        $result = xtc_db_fetch_array($query);
-        if (!empty($result['configuration_value'])) {
-            return $result['configuration_value'];
-        } else {
-            return null;
-        }
-
-    }
-
-    // Return if the Submodul is the last vom Micropayment
-    function isLastModul()
-    {
-        $check_query = xtc_db_query("SELECT configuration_key,configuration_value FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` LIKE 'MODULE_PAYMENT_MCP_%STATUS'");
-        return (xtc_db_num_rows($check_query) > 1) ? false : true;
-
-    }
 
     function remove()
     {
         if ($this->isLastModul()) {
             xtc_db_query("DELETE FROM " . TABLE_CONFIGURATION . " WHERE `configuration_key` LIKE 'MODULE_PAYMENT_MCP_SERVICE_%'");
         }
-    }
-
-    function getWebUrl()
-    {
-        // only 1 Call needed to prevent multiple calls to micropayment servers
-
-
-        if(defined('MODULE_PAYMENT_MCP_SERVICE_URL_CALL')) { return $this->form_action_url; }
-        define('MODULE_PAYMENT_MCP_SERVICE_URL_CALL',true);
-
-        if (!$this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')) {
-            if ($this->check_is_service_installed()) {
-                if ($this->rslcode) {
-                    $url = 'https://' . $this->rslcode . '.micropayment.de';
-                } else {
-                    $url = 'https://www.micropayment.de';
-                }
-                echo sprintf(MODULE_PAYMENT_MCP_SERVICE_NO_ACCOUNT, MODULE_PAYMENT_MCP_SERVICE_CSS, $url);
-            }
-            return false;
-        }
-
-        if ($this->getConfig('MODULE_PAYMENT_MCP_SERVICE_URL')) {
-            return $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_URL') . $this->url;
-        }
-        $service_url = 'http://webservices.micropayment.de/public/info/index.php';
-
-        $url_params = array(
-            'action' => 'GenerateUrl',
-            'format' => 'json',
-            'account_id' => $this->getConfig('MODULE_PAYMENT_MCP_SERVICE_ACCOUNT_ID')
-        );
-
-        if (extension_loaded('curl')) {
-            $r = curl_init($service_url);
-            curl_setopt($r, CURLOPT_POST, 1);
-            curl_setopt($r, CURLOPT_POSTFIELDS, $url_params);
-            curl_setopt($r, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($r);
-
-            curl_close($r);
-        } else {
-            // we using HTTP without curl
-
-            // parse the url to get
-            // host, path and query
-            $url3 = parse_url($service_url);
-            $host = $url3["host"];
-            $path = $url3["path"];
-
-            // open the connection
-            $fp = fsockopen($host, 80, $errno, $errstr, 10);
-            if ($fp) {
-                // send the request
-                fputs($fp, "GET " . $path . "?" . http_build_query($url_params) . " HTTP/1.0\nHost: " . $host . "\n\n");
-                while (!feof($fp)) {
-                    $buf .= fgets($fp, 128);
-                }
-                $lines = explode("\n", $buf);
-                // get the content
-                $response = $lines[count($lines) - 1];
-
-                //close the connection
-                fclose($fp);
-            }
-        }
-
-        try {
-            $json = json_decode($response);
-        } catch (Exception $e) {
-            var_dump($e->getMessage());
-        }
-
-        if (!empty($json) && $json->billing) {
-            $url = 'https://' . $json->billing;
-            xtc_db_query('INSERT INTO ' . TABLE_CONFIGURATION . ' (configuration_key,configuration_value,configuration_group_id,date_added) VALUES ("MODULE_PAYMENT_MCP_SERVICE_URL","' . $url . '",6,now())');
-            return $url . $this->url;
-        } else {
-            echo 'Critical: Cannot get URL for Payment !!! Did you have inserted the Account-ID ?';
-        }
-
-        //return 'https://billing.micropayment.de';
     }
 
     function mcp_remove_order($order_id, $restock = false)
@@ -377,3 +338,7 @@ class micropayment_method
         xtc_db_query("DELETE FROM " . TABLE_ORDERS_TOTAL . " WHERE orders_id = '" . (int)$order_id . "'");
     }
 }
+
+$mcp = new micropayment_method();
+$mcp->refreshShopModule();
+unset($mcp);

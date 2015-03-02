@@ -1,18 +1,35 @@
 <?php
+/**
+ *
+ * @package    micropayment
+ * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ */
 require_once('mcp_service.php');
-define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; direct banking module');
+define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_DESCRIPTION', 'micropayment&trade; direct banking module
+<br /><br />
+links<br />
+<b>tools</b><br />
+<a target="_new" href="../callback/micropayment/cleanup.php">
+    <input type="button" value="clear old orders">
+</a><br />
+<br />
+<b>Extern</b><br />
+<a href="http://ecommerce.micropayment.de/download/modified/micropayment_modified-shop_current.pdf">
+    <input type="button" value="Manual">
+</a>&nbsp;
+<a target="_new" href="https://r120.micropayment.de">
+    <input type="button" value="Micropayment register">
+    </a>
+');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE', 'micropayment&trade; direct banking<br /><img src="http://www.micropayment.de/resources/?what=img&group=eb2p&show=type-h.4" />');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_TITLE_EXTERN', 'Direct banking');
 define('MODULE_PAYMENT_MCP_EBANK2PAY_TEXT_INFO', '
 <div style="margin:10px;">
 <div style="float:right;"><img src="./images/micropayment/logo_small.png" width="150"/></div><div style="float:left;">
-Your advantages:<br />
-- Certified Payment Provider<br />
-- Secure data transfer (128-Bit SSL)<br />
-- No registration required<br /><br />
-</div>
-<div style="clear:both;"></div>
-You are being forwarded to micropayment&trade;. Your order will be processed immediately after the payment process has been successfully completed!
+<b>Please have your online banking details at hand.</b><br />
+To conclude your order, you will now be forwarded to our payment service provider, micropayment&trade; in cooperation with sofort.de.<br /><br />
+&#10004; secure &nbsp; &#10004; simple &nbsp; &#10004; no registration needed
 </div>
 ');
 

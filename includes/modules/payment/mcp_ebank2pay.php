@@ -1,14 +1,16 @@
 <?php
-$method_class_file = dirname(__FILE__).'/../../external/micropayment/class.micropayment_method.php';
-if (file_exists($method_class_file)) {
+/**
+ *
+ * @package    micropayment
+ * @copyright  Copyright (c) 2015 Micropayment GmbH (http://www.micropayment.de)
+ * @author     micropayment GmbH <shop-plugins@micropayment.de>
+ */
+if(!class_exists('micropayment_method',false)) {
+    $method_class_file = dirname(__FILE__).'/../../external/micropayment/class.micropayment_method.php';
     require_once($method_class_file);
-} else {
-    echo '<font color="red">Micropayment&trade; Modul ist nicht vollst&auml;ndig installiert!</font>';
-    return false;
 }
-
-class mcp_ebank2pay extends micropayment_method {
-    var $version = '1.0';
+class mcp_ebank2pay extends micropayment_method
+{
     var $code = 'mcp_ebank2pay';
     var $url = '/ebank2pay/event';
 
@@ -28,11 +30,11 @@ class mcp_ebank2pay extends micropayment_method {
             parent::install();
         }
 
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `set_function`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\', \'False\'), ', NOW())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT', '0', '6', '0', NOW())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT', '500', '6', '0', NOW())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) VALUES ('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER', '3', '6', '0', NOW())");
-        xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " ( `configuration_key`, `configuration_value`, `configuration_group_id`, `sort_order`, `date_added`) values ('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED', '', '6', '0', NOW())");
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_STATUS', 'False', '6', '1', 'xtc_cfg_select_option(array(\'True\',\'False\'),');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_MINIMUM_AMOUNT', '0', '6', '0');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_MAXIMUM_AMOUNT', '500', '6', '0');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_SORT_ORDER', '3', '6', '0');
+        $this->createConfigParameter('MODULE_PAYMENT_MCP_EBANK2PAY_ALLOWED', '', '6', '0');
 
 
     }
