@@ -243,7 +243,7 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   carrier_id INT(11) NOT NULL,
   parcel_id VARCHAR(80) NOT NULL,
   PRIMARY KEY (tracking_id),
-  KEY order_id (order_id)
+  KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
 ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0;
