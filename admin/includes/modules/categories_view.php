@@ -27,9 +27,9 @@
 
   require_once(DIR_FS_LANGUAGES . $_SESSION['language'] . '/admin/categories_specials.php');
 
-	if (is_file('includes/modules/products_attributes_iframe.php')) {
-		include_once("includes/modules/products_attributes_iframe.php");
-	} 
+  if (is_file('includes/modules/products_attributes_iframe.php')) {
+    include_once("includes/modules/products_attributes_iframe.php");
+  } 
 
   define('CAT_VIEW_DROPDOWN', true); //remove dropdown field due to performance issues on many categories
   
@@ -137,10 +137,12 @@
   ?>
   <!-- categories_view HTML part begin -->
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_categories.png'); ?></div>
-      <div class="pageHeading"><?php echo ($category_name['categories_name'] ? $category_name['categories_name'] : TEXT_TOP); ?><br /></div>
-      <div class="main pdg2 flt-l"><?php echo HEADING_TITLE; ?></div>
+      <div class="flt-l">
+        <div class="pageHeading pdg2"><?php echo ($category_name['categories_name'] ? $category_name['categories_name'] : TEXT_TOP); ?></div>
+        <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
 
-      <div class="smallText pdg2 flt-r">
+      </div>
+      <div class="smallText pdg2 flt-l" style="margin-left:80px;">
         <?php
         echo xtc_draw_form('forminactive', FILENAME_CATEGORIES, '', 'get');
         echo '<label for="search_inactive" style="vertical-align:middle;line-height:28px;" >'. HEADING_TITLE_ONLY_INACTIVE_PRODUCTS .'</label>';
@@ -151,7 +153,7 @@
       <?php
       if (CAT_VIEW_DROPDOWN) {
       ?>
-        <div class="smallText pdg2 flt-r">
+        <div class="smallText pdg2 flt-l">
          <?php
             echo xtc_draw_form('goto', FILENAME_CATEGORIES, '', 'get');
             echo HEADING_TITLE_GOTO . ' ' . xtc_draw_pull_down_menu('cPath', xtc_get_category_tree(), $current_category_id, 'onchange="this.form.submit();"');
@@ -599,10 +601,10 @@
                    <?php
                    echo '<a href="'. xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $products['products_id'] ) . '&action=new_product' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit.gif', ICON_EDIT, '', '', $icon_padding). '</a>';
                    if (function_exists('attributes_iframe_link')) {
-										 echo attributes_iframe_link($products['products_id'], true);
-									 } else {
-										 echo '<a href="'. xtc_href_link(FILENAME_NEW_ATTRIBUTES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_attr.gif', BUTTON_EDIT_ATTRIBUTES,'', '', $icon_padding). '</a>';
-									 }
+                     echo attributes_iframe_link($products['products_id'], true);
+                   } else {
+                     echo '<a href="'. xtc_href_link(FILENAME_NEW_ATTRIBUTES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cpath=' . $cPath . '&current_product_id=' . $products['products_id'] ) . '&action=edit' . '">' . xtc_image(DIR_WS_ICONS . 'icon_edit_attr.gif', BUTTON_EDIT_ATTRIBUTES,'', '', $icon_padding). '</a>';
+                   }
                    echo '<a href="'.xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $products['products_id']) .'">' . $products['products_name'] . '</a>';
                    ?>
                  </td>
@@ -966,7 +968,7 @@
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
-																								 xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').
+                                                 xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').
                                                  '<input type="hidden" name="action" value="edit">
                                                  <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
                                                  <input type="hidden" name="cpath" value="' . $cPath . '">
