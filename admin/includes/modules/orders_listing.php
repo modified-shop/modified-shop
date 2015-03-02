@@ -21,12 +21,12 @@
           <div class="main pdg2"><?php echo TABLE_HEADING_CUSTOMERS ?></div>
         </div>
 
-        <div class="main flt-l pdg2" style="margin-left:20px;">
+        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('orders', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo ASB_QUICK_SEARCH_CUSTOMER . ' ' . xtc_draw_input_field('customer', '', 'size="12"') . xtc_draw_hidden_field('action', 'search'); ?>
           </form>
         </div>
-        <div class="main flt-l pdg2" style="margin-left:20px;">
+        <div class="main flt-l pdg2 mrg5" style="margin-left:20px;">
           <?php echo xtc_draw_form('status', FILENAME_ORDERS, '', 'get'); ?>
           <?php echo HEADING_TITLE_STATUS . ' ' . xtc_draw_pull_down_menu('status', array_merge(array(array('id' => '', 'text' => TEXT_ALL_ORDERS)),array(array('id' => '0', 'text' => TEXT_VALIDATING)), $orders_statuses),(isset($_GET['status']) && xtc_not_null($_GET['status']) ? (int)$_GET['status'] : ''),'onchange="this.form.submit();"'); ?>
           </form>        
