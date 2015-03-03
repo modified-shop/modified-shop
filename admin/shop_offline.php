@@ -139,8 +139,9 @@ if (USE_WYSIWYG == 'true') {
             </div>
             <div class="clear"></div>
             <br />
-            <br />
-            <?php echo '<input type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
+            <div class="txta-r">
+              <?php echo '<input type="submit" name="go" class="button" onclick="this.blur();" value="' . BUTTON_SAVE . '"/>'; ?>
+            </div>
           </form>
         </div>                 
         </td>
