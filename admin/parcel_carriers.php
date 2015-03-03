@@ -126,13 +126,13 @@ require (DIR_WS_INCLUDES.'head.php');
               if (empty($action)) {
               ?>
               <div class="clear"></div>
-              <div class="pdg2 customers-groups smallText" style="width:100%;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&action=new') . '">' . BUTTON_NEW_CARRIER . '</a>'; ?></div>
+              <div class="pdg2 flt-r smallText"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&action=new') . '">' . BUTTON_NEW_CARRIER . '</a>'; ?></div>
               <?php
               }
               ?>
               <div class="clear"></div>
               <br/>
-              <div class="pdg2 contentTable smallText"><?php echo TEXT_CARRIER_LINK_DESCRIPTION; ?></div>
+              <div class="pdg2 customers-groups smallText" style="width:100%;"><?php echo TEXT_CARRIER_LINK_DESCRIPTION; ?></div>
             </td>
             <?php
             $heading = array();
