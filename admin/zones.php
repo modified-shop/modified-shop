@@ -118,8 +118,7 @@ require (DIR_WS_INCLUDES.'head.php');
             <?php
             if (!$_GET['action']) {
             ?>
-              <div class="clear"></div>  
-              <div class="pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_ZONE . '</a>'; ?></div>
+              <div class="smallText pdg2 flt-r"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_ZONES, 'page=' . $_GET['page'] . '&action=new') . '">' . BUTTON_NEW_ZONE . '</a>'; ?></div>
             <?php
             }
             ?>
