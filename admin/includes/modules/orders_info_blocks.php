@@ -13,8 +13,8 @@
 ?>
  
       <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_orders.png'); ?></div>
-      <div class="pageHeading pdg2"><?php echo HEADING_TITLE; ?></div>
-      <div class="main pdg2"><?php echo TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . xtc_datetime_short($order->info['date_purchased']); ?></div>
+      <div class="pageHeading pdg2"><?php echo TABLE_HEADING_ORDERS_ID.': ' . $oID . ' - ' . xtc_datetime_short($order->info['date_purchased']); ?></div>
+      <div class="main pdg2"><?php echo HEADING_TITLE; ?></div>
       <div class="clear" style="margin-left: 5px;">     
         <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS, xtc_get_all_get_params(array('action')));?>"><?php echo BUTTON_BACK; ?></a>
         <a class="button" href="<?php echo xtc_href_link(FILENAME_ORDERS_EDIT, 'oID='.$oID.'&cID=' . $order->customer['ID']);?>"><?php echo BUTTON_EDIT ?></a>        
