@@ -403,141 +403,141 @@
                   ?>
                   
                       
-                            <table class="tableCenter collapse">
-                              <tr class="dataTableHeadingRow">
-                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE; ?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ORDERS;?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ITEMS; ?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_REVENUE;?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SHIPPING;?></td>
-                              </tr>
-                              <?php
-                            } // end of if $srExp < 2 csv export
+                <table class="tableCenter collapse">
+                  <tr class="dataTableHeadingRow">
+                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_DATE; ?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ORDERS;?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_ITEMS; ?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_REVENUE;?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo TABLE_HEADING_SHIPPING;?></td>
+                  </tr>
+                  <?php
+                } // end of if $srExp < 2 csv export
 
-                            $total_order = 0;
-                            $total_item = 0;
-                            $total_total = 0;
-                            $total_shipping = 0;
-                      
-                            while ($sr->actDate < $sr->endDate) {
-                              $info = $sr->getNext($srDetail);
-                              $last = sizeof($info) - 1;
-                              if ($srExp < 2) {
-                                ?>
-                                <tr class="dataTableRow"onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
-                                  <?php
-                                  switch ($srView) {
-                                    case '3':
-                                      ?>
-                                      <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
-                                      <?php
-                                      break;
-                                    case '4':
-                                      ?>
-                                      <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
-                                      <?php
-                                      break;
-                                    default;
-                                      ?>
-                                      <td class="dataTableContent txta-r"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
-                                     <?php
+                $total_order = 0;
+                $total_item = 0;
+                $total_total = 0;
+                $total_shipping = 0;
+        
+                while ($sr->actDate < $sr->endDate) {
+                  $info = $sr->getNext($srDetail);
+                  $last = sizeof($info) - 1;
+                  if ($srExp < 2) {
+                    ?>
+                    <tr class="dataTableRow"onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
+                      <?php
+                      switch ($srView) {
+                        case '3':
+                          ?>
+                          <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                          <?php
+                          break;
+                        case '4':
+                          ?>
+                          <td class="dataTableContent txta-r"><?php echo xtc_date_long(date("Y-m-d H:i:s", $sr->showDate)); ?></td>
+                          <?php
+                          break;
+                        default;
+                          ?>
+                          <td class="dataTableContent txta-r"><?php echo xtc_date_short(date("Y-m-d H:i:s", $sr->showDate)) . " - " . xtc_date_short(date("Y-m-d H:i:s", $sr->showDateEnd)); ?></td>
+                         <?php
+                      }
+                      ?>
+                      <td class="dataTableContent txta-r"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
+                      <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
+                      <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
+                      <td class="dataTableContent txta-r"><?php echo (isset($info[0]['shipping']) ? $currencies->format($info[0]['shipping']) : '&nbsp;' ); ?></td>
+                    </tr>
+                    <?php
+                      $total_order += (isset($info[0]['order']) ? $info[0]['order'] : 0);
+                      $total_item += (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : 0);
+                      $total_total += (isset($info[$last]['totsum']) ? $info[$last]['totsum'] : 0);
+                      $total_shipping += (isset($info[0]['shipping']) ? $info[0]['shipping'] : 0);
+                 } else {
+                    // csv export
+                    ('Content-type: application/x-octet-stream');
+                    header('Content-disposition: attachment; filename=stats_sales_report.csv');
+                    echo date(DATE_FORMAT, $sr->showDate) . SR_SEPARATOR1 . date(DATE_FORMAT, $sr->showDateEnd) . SR_SEPARATOR1;
+                    echo $info[0]['order'] . SR_SEPARATOR1;
+                    echo $info[$last]['totitem'] . SR_SEPARATOR1;
+                    echo number_format($info[$last]['totsum'], 2, '.', '') . SR_SEPARATOR1;
+                    echo number_format($info[0]['shipping'], 2, '.', '') . "\n";
+                  }
+                  if ($srDetail) {
+                    for ($i = 0; $i <= $last; $i++) {
+                      if ($srMax == 0 or $i < $srMax) {
+                        if ($srExp < 2) {
+                          ?>
+                          <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
+                            <td class="dataTableContent">&nbsp;</td>
+                            <td class="dataTableContent txta-l">
+                              <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
+                              <?php
+                              if (is_array($info[$i]['attr'])) {
+                                foreach ($info[$i]['attr'] as $attr) {
+                                  $price = 0;
+                                  echo '<div style="font-style:italic; text-indent:10px;">';
+                                  for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
+                                    if ($x > 0) echo '<br/>';
+                                    echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
+                                    echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . $currencies->format($attr['price'][$x]) . ')' : '');
                                   }
-                                  ?>
-                                  <td class="dataTableContent txta-r"><?php echo (isset($info[0]['order']) ? $info[0]['order'] : '&nbsp;'); ?></td>
-                                  <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : '&nbsp;'); ?></td>
-                                  <td class="dataTableContent txta-r"><?php echo (isset($info[$last]['totsum']) ? $currencies->format($info[$last]['totsum']) : '&nbsp;' ); ?></td>
-                                  <td class="dataTableContent txta-r"><?php echo (isset($info[0]['shipping']) ? $currencies->format($info[0]['shipping']) : '&nbsp;' ); ?></td>
-                                </tr>
-                                <?php
-                                  $total_order += (isset($info[0]['order']) ? $info[0]['order'] : 0);
-                                  $total_item += (isset($info[$last]['totitem']) ? $info[$last]['totitem'] : 0);
-                                  $total_total += (isset($info[$last]['totsum']) ? $info[$last]['totsum'] : 0);
-                                  $total_shipping += (isset($info[0]['shipping']) ? $info[0]['shipping'] : 0);
-                             } else {
-                                // csv export
-                                ('Content-type: application/x-octet-stream');
-                                header('Content-disposition: attachment; filename=stats_sales_report.csv');
-                                echo date(DATE_FORMAT, $sr->showDate) . SR_SEPARATOR1 . date(DATE_FORMAT, $sr->showDateEnd) . SR_SEPARATOR1;
-                                echo $info[0]['order'] . SR_SEPARATOR1;
-                                echo $info[$last]['totitem'] . SR_SEPARATOR1;
-                                echo number_format($info[$last]['totsum'], 2, '.', '') . SR_SEPARATOR1;
-                                echo number_format($info[0]['shipping'], 2, '.', '') . "\n";
-                              }
-                              if ($srDetail) {
-                                for ($i = 0; $i <= $last; $i++) {
-                                  if ($srMax == 0 or $i < $srMax) {
-                                    if ($srExp < 2) {
-                                      ?>
-                                      <tr class="dataTableRow" onMouseOver="this.className='dataTableRowOver';this.style.cursor='pointer'" onMouseOut="this.className='dataTableRow'">
-                                        <td class="dataTableContent">&nbsp;</td>
-                                        <td class="dataTableContent txta-l">
-                                          <a href="<?php echo xtc_catalog_href_link("product_info.php?products_id=" . $info[$i]['pid']) ?>" target="_blank"><?php echo ((xtc_not_null($info[$i]['pmodel'])) ? $info[$i]['pmodel'].' : ' : '').$info[$i]['pname']; ?></a>
-                                          <?php
-                                          if (is_array($info[$i]['attr'])) {
-                                            foreach ($info[$i]['attr'] as $attr) {
-                                              $price = 0;
-                                              echo '<div style="font-style:italic; text-indent:10px;">';
-                                              for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
-                                                if ($x > 0) echo '<br/>';
-                                                echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
-                                                echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . $currencies->format($attr['price'][$x]) . ')' : '');
-                                              }
-                                              echo '</div>';
-                                            }
-                                          }
-                                          ?>
-                                        </td>
-                                        <td class="dataTableContent txta-r"><?php echo $info[$i]['pquant']; ?></td>
-                                        <?php
-                                        if ($srDetail == 2) {?>
-                                          <td class="dataTableContent txta-r"><?php echo $currencies->format($info[$i]['psum']); ?></td>
-                                          <?php
-                                        } else {
-                                          ?>
-                                          <td class="dataTableContent">&nbsp;</td>
-                                          <?php
-                                        }
-                                        ?>
-                                        <td class="dataTableContent">&nbsp;</td>
-                                      </tr>
-                                      <?php
-                                    } else {
-                                      // csv export details
-                                      echo $info[$i]['pmodel'] . SR_SEPARATOR2 . $info[$i]['pname'] . SR_SEPARATOR2;
-                                      if (is_array($info[$i]['attr'])) {
-                                        foreach ($info[$i]['attr'] as $attr) {
-                                          for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
-                                            if ($x > 0) echo ', ';
-                                            echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
-                                            echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . number_format($attr['price'][$x], 2, '.', '') . ')' : '');
-                                          }
-                                        }
-                                      }
-                                      echo SR_SEPARATOR2;
-                                      if ($srDetail == 2) {
-                                        echo $info[$i]['pquant'] . SR_SEPARATOR2;
-                                        echo number_format($info[$i]['psum'], 2, '.', '') . SR_SEPARATOR2;
-                                      } else {
-                                        echo $info[$i]['pquant'] . SR_SEPARATOR2;
-                                        echo SR_SEPARATOR2;
-                                      }
-                                      echo "\n";
-                                    }
-                                  }
+                                  echo '</div>';
                                 }
                               }
+                              ?>
+                            </td>
+                            <td class="dataTableContent txta-r"><?php echo $info[$i]['pquant']; ?></td>
+                            <?php
+                            if ($srDetail == 2) {?>
+                              <td class="dataTableContent txta-r"><?php echo $currencies->format($info[$i]['psum']); ?></td>
+                              <?php
+                            } else {
+                              ?>
+                              <td class="dataTableContent">&nbsp;</td>
+                              <?php
                             }
-                            if ($srExp < 2) {
                             ?>
-                              <tr class="dataTableHeadingRow">
-                                <td class="dataTableHeadingContent txta-r"><?php echo BOX_ORDER_TOTAL; ?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo $total_order;?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo $total_item; ?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_total);?></td>
-                                <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_shipping);?></td>
-                              </tr>
-                          </table>
-                        
+                            <td class="dataTableContent">&nbsp;</td>
+                          </tr>
+                          <?php
+                        } else {
+                          // csv export details
+                          echo $info[$i]['pmodel'] . SR_SEPARATOR2 . $info[$i]['pname'] . SR_SEPARATOR2;
+                          if (is_array($info[$i]['attr'])) {
+                            foreach ($info[$i]['attr'] as $attr) {
+                              for ($x=0, $n=sizeof($attr['options_values']); $x<$n; $x++) {
+                                if ($x > 0) echo ', ';
+                                echo $attr['options'][$x] . ': ' . $attr['options_values'][$x];
+                                echo (($attr['price'][$x]>0) ? ' (' . $attr['price_prefix'][$x] . number_format($attr['price'][$x], 2, '.', '') . ')' : '');
+                              }
+                            }
+                          }
+                          echo SR_SEPARATOR2;
+                          if ($srDetail == 2) {
+                            echo $info[$i]['pquant'] . SR_SEPARATOR2;
+                            echo number_format($info[$i]['psum'], 2, '.', '') . SR_SEPARATOR2;
+                          } else {
+                            echo $info[$i]['pquant'] . SR_SEPARATOR2;
+                            echo SR_SEPARATOR2;
+                          }
+                          echo "\n";
+                        }
+                      }
+                    }
+                  }
+                }
+                if ($srExp < 2) {
+                ?>
+                  <tr class="dataTableHeadingRow">
+                    <td class="dataTableHeadingContent txta-r"><?php echo BOX_ORDER_TOTAL; ?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo $total_order;?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo $total_item; ?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_total);?></td>
+                    <td class="dataTableHeadingContent txta-r"><?php echo $currencies->format($total_shipping);?></td>
+                  </tr>
+              </table>
+          
             </td>
             <!-- body_text_eof //-->
           </tr>
