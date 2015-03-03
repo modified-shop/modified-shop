@@ -48,11 +48,23 @@
       list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection);
     }
 
-    // Add the session ID to URL when session is started and not use cookies only and is not a admin link and SID is defined or change http<>https
-    if ($add_session_id && $session_started
-        && ( SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie) )
-        && ( (defined('SID') && constant('SID') != '') || ( ENABLE_SSL && $request_type != $connection && $http_domain != $https_domain )           )
-       ) $link .= $separator . session_name() . '=' . session_id();
+    // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
+    if ( (!isset($truncate_session_id) || $truncate_session_id === false) # no session if useragent is a known Spider
+        && $add_session_id == true && $session_started == true
+        && (SESSION_FORCE_COOKIE_USE == 'False' && ($admin || !$cookie))
+       ) 
+    {
+      if (defined('SID')
+          && constant('SID') != '')
+      {
+        $link .= $separator . session_name() . '=' . session_id();
+      } elseif ( 
+        ( ( ($request_type == 'NONSSL') && ($connection == 'SSL') && (ENABLE_SSL == true) )
+          || ( ($request_type == 'SSL') && ($connection == 'NONSSL') )
+        ) && $http_domain != $https_domain) {
+        $link .= $separator . session_name() . '=' . session_id();
+      }
+    }
 
     // W3C-Conform
     $link = ($urlencode !== false ? encode_htmlentities($link) : str_replace('&', '&amp;', $link));
