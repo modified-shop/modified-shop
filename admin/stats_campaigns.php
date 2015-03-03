@@ -269,18 +269,18 @@ require (DIR_WS_INCLUDES.'head.php');
             <table class="tableCenter collapse"> 
               <tr class="dataTableHeadingRow"> 
                 <td class="dataTableHeadingContent" colspan="2" width="25%"><?php echo HEADING_TOTAL; ?></td>
-                <td class="dataTableHeadingContent" width="10%">&nbsp;</td>
-                <td class="dataTableHeadingContent" width="15%"><?php echo $campaign->total['leads']; ?></td>
-                <td class="dataTableHeadingContent" colspan="2" width="30%"><?php echo $campaign->total['sells']; ?></td>
-                <td class="dataTableHeadingContent" width="20%"><?php echo $campaign->total['sum']; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="10%">&nbsp;</td>
+                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo $campaign->total['leads']; ?></td>
+                <td class="dataTableHeadingContent txta-r" colspan="2" width="30%"><?php echo $campaign->total['sells']; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="20%"><?php echo $campaign->total['sum']; ?></td>
               </tr>
               <tr class="dataTableHeadingRow"> 
                 <td class="dataTableHeadingContent" colspan="2" width="25%">&nbsp;</td>
-                <td class="dataTableHeadingContent" width="10%"><?php echo HEADING_HITS; ?></td>
-                <td class="dataTableHeadingContent" width="15%"><?php echo HEADING_LEADS; ?></td>
-                <td class="dataTableHeadingContent" width="15%"><?php echo HEADING_SELLS; ?></td>
-                <td class="dataTableHeadingContent" width="15%"><?php echo HEADING_LATESELLS; ?></td>
-                <td class="dataTableHeadingContent" width="20%"><?php echo HEADING_SUM; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="10%"><?php echo HEADING_HITS; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_LEADS; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_SELLS; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="15%"><?php echo HEADING_LATESELLS; ?></td>
+                <td class="dataTableHeadingContent txta-r" width="20%"><?php echo HEADING_SUM; ?></td>
               </tr>
               <?php
               // show campaigns
@@ -296,23 +296,22 @@ require (DIR_WS_INCLUDES.'head.php');
                   <tr class="dataTableRow"> 
                     <td class="dataTableContent">&nbsp;</td>
                     <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['range']; ?></td>
-                    <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['hits']; ?></td>
-                    <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['leads'].' ('.$campaign->result[$n]['result'][$nn]['leads_p'].'%)'; ?></td>
-                    <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['sells'].' ('.$campaign->result[$n]['result'][$nn]['sells_p'].'%)'; ?></td>
-                    <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['late_sells'].' ('.$campaign->result[$n]['result'][$nn]['late_sells_p'].'%)'; ?></td>
-                    <td class="dataTableContent"><?php echo $campaign->result[$n]['result'][$nn]['sum'].' ('.$campaign->result[$n]['result'][$nn]['sum_p'].'%)'; ?></td>
+                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['hits']; ?></td>
+                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['leads'].' ('.$campaign->result[$n]['result'][$nn]['leads_p'].'%)'; ?></td>
+                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sells'].' ('.$campaign->result[$n]['result'][$nn]['sells_p'].'%)'; ?></td>
+                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['late_sells'].' ('.$campaign->result[$n]['result'][$nn]['late_sells_p'].'%)'; ?></td>
+                    <td class="dataTableContent txta-r"><?php echo $campaign->result[$n]['result'][$nn]['sum'].' ('.$campaign->result[$n]['result'][$nn]['sum_p'].'%)'; ?></td>
                   </tr>
                   <?php
                 }
                 ?>
-                <tr class="dataTableRow"> 
-                  <td class="dataTableContent"><strong><?php echo HEADING_SUM; ?></strong></td>
-                  <td class="dataTableContent">&nbsp;</td>
-                  <td class="dataTableContent"><strong><?php echo $campaign->result[$n]['hits_s']; ?></strong></td>
-                  <td class="dataTableContent"><strong><?php echo $campaign->result[$n]['leads_s'].' ('.($campaign->total['leads']> 0 ? ($campaign->result[$n]['leads_s']/$campaign->total['leads']*100):'0').'%)'; ?></strong></td>
-                  <td class="dataTableContent"><strong><?php echo $campaign->result[$n]['sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
-                  <td class="dataTableContent"><strong><?php echo $campaign->result[$n]['late_sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['late_sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
-                  <td class="dataTableContent"><strong><?php echo $campaign->result[$n]['sum_s'].' ('.($campaign->total['sum_plain']> 0 ? round(($campaign->result[$n]['sum_s']/$campaign->total['sum_plain']*100),0):'0').'%)'; ?></strong></td>
+                <tr class="dataTableHeadingRow"> 
+                  <td class="dataTableHeadingContent" colspan="2"><strong><?php echo HEADING_SUM; ?></strong></td>
+                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['hits_s']; ?></strong></td>
+                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['leads_s'].' ('.($campaign->total['leads']> 0 ? ($campaign->result[$n]['leads_s']/$campaign->total['leads']*100):'0').'%)'; ?></strong></td>
+                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
+                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['late_sells_s'].' ('.($campaign->total['sells']> 0 ? ($campaign->result[$n]['late_sells_s']/$campaign->total['sells']*100):'0').'%)'; ?></strong></td>
+                  <td class="dataTableHeadingContent txta-r"><strong><?php echo $campaign->result[$n]['sum_s'].' ('.($campaign->total['sum_plain']> 0 ? round(($campaign->result[$n]['sum_s']/$campaign->total['sum_plain']*100),0):'0').'%)'; ?></strong></td>
                 </tr>
                 <?php
               }
