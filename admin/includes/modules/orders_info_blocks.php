@@ -306,7 +306,7 @@
                 echo '          <tr>'.PHP_EOL;
                 echo '            <td class="smallText" align="center">'.$tracking['carrier_name'].'</td>'.PHP_EOL;
                 echo '            <td class="smallText" align="left"><a href="'.$tracking['tracking_link'].'" target="_blank">'.$tracking['parcel_id'].'</a></td>'.PHP_EOL;
-                echo '            <td class="smallText" align="center"><a href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
+                echo '            <td class="smallText" align="center"><a class="button" href="'.xtc_href_link(FILENAME_ORDERS, 'oID='.$_GET['oID'].'&tID='.$tracking['tracking_id'].'&action=deletetracking').'">'.xtc_image(DIR_WS_ICONS.'cross.gif', ICON_CROSS).'</td>'.PHP_EOL;
                 echo '          <tr>'.PHP_EOL;
               }
             }
@@ -315,7 +315,7 @@
             <?php echo xtc_draw_form('carriers', FILENAME_ORDERS, xtc_get_all_get_params(array('action')) . 'action=inserttracking'); ?>
               <td class="smallText" align="center"><?php echo xtc_draw_pull_down_menu('carrier_id', $carriers, $carriers[0]); ?></td>
               <td class="smallText" align="center"><?php echo  xtc_draw_input_field('parcel_id', '' ,'style="width: 99%"'); ?></td>
-              <td class="smallText" align="center"><input type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
+              <td class="smallText" align="center"><input class="button" type="submit" value="<?php echo BUTTON_UPDATE; ?>"></td>
             </form>
           </tr>
         </table>
