@@ -361,7 +361,6 @@ require (DIR_WS_INCLUDES.'head.php');
               <?php
               if (empty($action)) {
               ?>
-                <div class="clear"></div>
                 <div class="smallText flt-r pdg2"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_SPECIALS, 'page=' . $page_id . '&action=new') . '">' . BUTTON_NEW_PRODUCTS . '</a>'; ?></div>
               <?php
               }
