@@ -1499,8 +1499,8 @@ display: none;
     padding: 0 2px;
 }
 .pageHeadingImage {
-    background: none repeat scroll 0 0 #fff;
-    border: 1px solid #eaeaea;
+    background: none;
+    border: none;
     float: left;
     height: 36px;
     line-height: 35px;
