@@ -97,14 +97,14 @@
       <td class="boxCenter">
         <div class="pageHeadingImage"><?php echo xtc_image(DIR_WS_ICONS.'heading/icon_content.png'); ?></div>
         <div class="pageHeading"><?php echo HEADING_TITLE; ?></div>  
-        
         <div class="clear main mrg5"><?php echo LINK_INFO_TEXT; ?></div>
-                 
         <div class="main mrg5">
-          <a class="button" href="./removeoldpics.php?action=delete&path=original"><?php echo LINK_ORIGINAL; ?></a>&nbsp;|&nbsp;
-          <a class="button" href="./removeoldpics.php?action=delete&path=info"><?php echo LINK_INFO; ?></a>&nbsp;|&nbsp;
-          <a class="button" href="./removeoldpics.php?action=delete&path=thumbnail"><?php echo LINK_THUMBNAIL; ?></a>&nbsp;|&nbsp;
-          <a class="button" href="./removeoldpics.php?action=delete&path=popup"><?php echo LINK_POPUP; ?></a>
+        <?php
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=original').'">'.LINK_ORIGINAL.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=info').'">'.LINK_INFO.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=thumbnail').'">'.LINK_THUMBNAIL.'</a>';
+          echo '<a class="button" href="'.xtc_href_link('removeoldpics.php', 'action=delete&path=popup').'">'.LINK_POPUP.'</a>';
+        ?>
         </div>
       </td>
       <!-- body_text_eof //-->
