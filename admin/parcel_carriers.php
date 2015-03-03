@@ -126,7 +126,7 @@ require (DIR_WS_INCLUDES.'head.php');
               if (empty($action)) {
               ?>
               <div class="clear"></div>
-              <div class="pdg2 flt-r smallText"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&action=new') . '">' . BUTTON_NEW_CARRIER . '</a>'; ?></div>
+              <div class="pdg2 customers-groups smallText" style="width:100%;"><?php echo '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_PARCEL_CARRIERS, 'page=' . $page_parcel . '&action=new') . '">' . BUTTON_NEW_CARRIER . '</a>'; ?></div>
               <?php
               }
               ?>
