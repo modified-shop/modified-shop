@@ -24,10 +24,9 @@
 
     $link = $connection == 'SSL' && ENABLE_SSL ? HTTPS_SERVER : HTTP_SERVER;
 
-    $page = ($page == '' ? FILENAME_DEFAULT : $page);
-
-    if (defined('RUN_MODE_ADMIN') && !isset($_POST['catalog_link'])) {
-      $link .= DIR_WS_ADMIN; $admin = true;
+    if (defined('RUN_MODE_ADMIN') && $admin === true) {
+      $link .= DIR_WS_ADMIN;
+      $page = ($page == '' ? FILENAME_START : $page);
     } else {
       $link .= DIR_WS_CATALOG;
       $page = ($page == FILENAME_DEFAULT && !xtc_not_null($parameters) ? '' : $page);
@@ -43,9 +42,9 @@
 
     $link = rtrim($link, '&?'); // strip ?/& from the end of link
 
-    if (!$admin && SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe) {
-      if (!function_exists('seo_url_mod')) require DIR_FS_INC . 'seo_url_mod.php';
-      list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection);
+    if ($admin === false && SEARCH_ENGINE_FRIENDLY_URLS == 'true' && $search_engine_safe === true) {
+      require_once (DIR_FS_INC . 'seo_url_mod.php');
+      list($link, $separator) = seo_url_mod($link, $page, $parameters, $connection, $separator);
     }
 
     // Add the session ID when moving from different HTTP and HTTPS servers, or when SID is defined
