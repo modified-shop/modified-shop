@@ -139,10 +139,6 @@ require (DIR_WS_INCLUDES.'head.php');
     });
   </script>
   <style type="text/css">
-    body {
-      font-family:Verdana;
-      font-size:12px;
-    }
     h1 {
       font-size:18px;
       font-weight:bold;
