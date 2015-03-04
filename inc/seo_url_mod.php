@@ -14,7 +14,8 @@
 function seo_url_mod($link, $page, $parameters, $connection, $separator) {
   require_once(DIR_FS_INC . 'shopstat_functions.inc.php');
   $mode = (!defined('RUN_MODE_ADMIN') ? 'user' : 'admin');
-  if ($link = shopstat_getSEO($page, $parameters, $connection, true, true, $mode)) {
+  if ($seolink = shopstat_getSEO($page, $parameters, $connection, true, true, $mode)) {
+    $link = $seolink;
     $elements  = parse_url($link);
     $separator = (isset($elements['query']) ? '&' : '?');
   }  
