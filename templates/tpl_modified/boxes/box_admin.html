@@ -1,5 +1,6 @@
 {config_load file="$language/lang_$language.conf" section="boxes"}
 {config_load file="lang_`$language`.custom"}
+
 <div id="admin">
   <ul class="cf">
     <li class="logo">
@@ -7,11 +8,17 @@
     </li>
   
     {if isset($LANGUAGES) && $LANGUAGES != ''}
-      <li class="language togglemenu">{$LANGUAGES}</li>
+      <li class="language">{$LANGUAGES}</li>
     {/if}
   
+    {if isset($START)}
+      <li>
+        <a class="togglelink" href="{$START}" title="{#ab_admin#}"><img src="{$tpl_path}img/adminbar_adminarea.png" alt="Modified eCommerce" /></a>
+      </li>
+    {/if}
+
     {if isset($ORDERS)}
-      <li class="orders togglemenu">
+      <li class="togglemenu">
         <a class="togglelink" href="{$ORDERS}" title="{#ab_orders#}"><img src="{$tpl_path}img/adminbar_orders.png" alt="" /></a>
         <ul>
           {$ORDERS_CONTENT}
@@ -19,28 +26,8 @@
       </li>
     {/if}
   
-    {if isset($CONTENT_MANAGER)}
-      <li class="orders togglemenu">
-        <a class="togglelink" href="{$CONTENT_MANAGER}" title="{#ab_contentmanager#}"><img src="{$tpl_path}img/adminbar_content.png" alt="" /></a>
-        {if $EDIT_CONTENT}
-        <ul>
-          <li><a href="{$EDIT_CONTENT}">{#ab_edit_content#}</a></li>
-        </ul>
-        {/if}
-      </li>
-    {/if}
-  
-    {if isset($CUSTOMERS)}
-      <li class="orders togglemenu">
-        <a class="togglelink" href="{$CUSTOMERS}" title="{#ab_customers#}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
-        <ul>
-          <li class="info">{$CUSTOMERS_INFO}</li>
-        </ul>
-      </li>
-    {/if}
-  
     {if isset($CATEGORIES)}
-      <li class="orders togglemenu">
+      <li class="togglemenu">
         <a class="togglelink" href="{$CATEGORIES}" title="{#ab_category#}"><img src="{$tpl_path}img/adminbar_categories.png" alt="" /></a>
         <ul>
           {if $EDIT_PRODUCT || $EDIT_CATEGORY}
@@ -57,15 +44,36 @@
         </ul>
       </li>
     {/if}
+
+    {if isset($CONTENT_MANAGER)}
+      <li class="togglemenu">
+        <a class="togglelink" href="{$CONTENT_MANAGER}" title="{#ab_contentmanager#}"><img src="{$tpl_path}img/adminbar_content.png" alt="" /></a>
+        {if $EDIT_CONTENT}
+        <ul>
+          <li><a href="{$EDIT_CONTENT}">{#ab_edit_content#}</a></li>
+        </ul>
+        {/if}
+      </li>
+    {/if}
   
-    <li class="right neqmargin">
+    {if isset($CUSTOMERS)}
+      <li class="togglemenu">
+        <a class="togglelink" href="{$CUSTOMERS}" title="{#ab_customers#}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
+        <ul>
+          <li class="info">{$CUSTOMERS_INFO}</li>
+        </ul>
+      </li>
+    {/if}
+    
+    <li class="right nomargin">
       <a class="togglelink" href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}" title="{#ab_logoff#}"><img src="{$tpl_path}img/adminbar_logoff.png" alt="" /></a>
     </li>
-  
+    
     {if isset($NEWSFEED)}
       <li class="right">
-        <a class="togglelink" href="{$NEWSFEED}" title="{#ab_news#}"><img src="{$tpl_path}img/adminbar_feed.png" alt="" /></a>
-        {if $NEWSFEED_COUNT > 0}<div class="icon_count">{$NEWSFEED_COUNT}</div>{/if}
+        <a class="togglelink" href="{$NEWSFEED}" title="{#ab_news#}"><img src="{$tpl_path}img/adminbar_feed.png" alt="" />
+        {if $NEWSFEED_COUNT > 0}<span class="icon_count">{$NEWSFEED_COUNT}</span>{/if}
+        </a>
       </li>
     {/if}
   </ul>

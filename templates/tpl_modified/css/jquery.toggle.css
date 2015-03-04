@@ -1,6 +1,6 @@
 /* SPECIAL CSS */
 .adminspacer {
-  height:35px;
+  height:36px;
 }
 
 /* TOGGLE MENU CSS */
@@ -12,9 +12,8 @@
 	top: 0px;
 	width: 100%;
 	z-index: 100000 !important;
-	height:35px;
+  height:36px;
 }
-
 #admin ul{
 	display: block;
 	margin: 0;
@@ -22,7 +21,6 @@
 	width: 1000px;
 	margin: 0 auto;
 }
-
 #admin ul li{
 	display: block;
 	float: left;
@@ -31,38 +29,61 @@
 	list-style: none;
 	position: relative;
 }
+#admin ul li img{
+  float:left;
+}
 #admin ul li.logo {
 	display: block;
-  padding: 8px 30px 0px 0px;
+  padding: 10px 40px 0px 0px;
 }
-
-
+#admin ul li.language {
+  padding: 12px 20px 0px 0px;
+}
+#admin ul li.language img {
+  float:left;
+  margin: 0px 10px 0px 0px;
+}
 #admin ul li a.togglelink{
 	display: block;
 	font-size: 12px;
 	font-weight: bold;
 	color: #fff;
-	padding: 8px 10px;
+	padding: 10px 10px;
 	float: left;
 	margin-right: 0px;
-	border: 1px solid transparent;
-	line-height:18px;
+	line-height:16px;
 }
-
 #admin ul li:hover a.togglelink{
-	background: #282828;
+	background: #333;
 	text-decoration: none;
-	border: 1px solid transparent;
-	padding: 3px 10px 5px 10px;
-	margin-top: 5px;
-	border-bottom: 0;
 	color: #aaa;
 }
-
+#admin ul li.right {
+  float:right;
+}
+#admin ul li.right.nomargin {
+  margin-right:-10px;
+}
+.icon_count { 
+  display:block;
+  background: none repeat scroll 0 0 #dc143c;
+  border-radius: 50%;
+  color: #fff;
+  font-family: Verdana;
+  font-size: 8px;
+  height: 14px;
+  line-height: 13px;
+  margin: 1px 0 0 8px;
+  padding: 0;
+  position: absolute;
+  text-align: center;
+  top: 14px;
+  width: 14px;
+}
 #admin ul ul{
 	z-index: 100001 !important;
 	position: absolute;
-	background: #282828;
+	background: #333;
 	padding: 15px;
 	width: 250px;
 	display: none;
@@ -71,11 +92,9 @@
 	border: 1px solid transparent;
 	border-top: 0;   
 }
-
 #admin ul li:hover ul{
 	display: block;
 }
-
 #admin ul ul li{
 	display: block;
 	float: none;
@@ -87,7 +106,7 @@
 #admin ul ul li.info {
   background: #3a3a3a;
   clear: both;
-  color: #fff;
+  color: #999;
   display: block;
   line-height: 25px;
   margin-bottom: 5px;
@@ -123,59 +142,19 @@
 	font-weight: bold;
 	font-style: normal;
 }
-
 #admin ul ul li a:hover em{
 	background: #999;
 	color: #fff;
 }
-
 #admin ul ul li.attention em{
 	background: #fbdc88;
 }
-
 #admin ul ul li.attention a:hover em{
 	background: #ff9900;
 }
-
 #admin ul ul li.finish em{
 	background: #b0fc9c;
 }
-
 #admin ul ul li.finish a:hover em{
 	background: #0c0;
 }
-
-#admin ul li.right {
-  float:right;
-}
-
-.icon_count {
-    background: none repeat scroll 0 0 #dc143c;
-    border-radius: 50%;
-    color: #fff;
-    font-family: Verdana;
-    font-size: 8px;
-    height: 14px;
-    line-height: 13px;
-    margin: 2px 0 0 20px;
-    padding: 0;
-    position: absolute;
-    text-align: center;
-    top: 14px;
-    width: 14px;
-}
-#admin ul.cf li.language {
-    margin-right:10px;
-}
-#admin ul.cf li.language a {
-    border: 1px solid transparent;
-    color: #fff;
-    display: block;
-    float: left;
-    font-size: 12px;
-    font-weight: bold;
-    line-height: 18px;
-    margin-right: 0;
-    padding: 8px 2px;
-}
-
