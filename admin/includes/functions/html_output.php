@@ -18,14 +18,11 @@
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
 
   // The HTML href link wrapper function
-  if (!function_exists('xtc_href_link')) require DIR_FS_INC . 'xtc_href_link.inc.php';
+  require_once (DIR_FS_INC . 'xtc_href_link.inc.php');
 
   // The HTML href link wrapper function for frontend
   function xtc_catalog_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session = false) {
-    $_POST['catalog_link'] = true;
-    $link = xtc_href_link($page, $parameters, $connection, $add_session);
-    unset($_POST['catalog_link']);
-    return $link;
+    return xtc_href_link($page, $parameters, $connection, $add_session, false, true, true);
   }
 
   // The HTML image wrapper function
