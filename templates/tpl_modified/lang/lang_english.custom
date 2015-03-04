@@ -10,7 +10,7 @@ text_miscellaneous = 'Die Box kann unter tpl_modified/boxes/box__miscellaneous.h
 
 ab_admin = 'Admin area'
 ab_orders = 'Orders'
-ab_contentmanager = Content Manager'
+ab_contentmanager = 'Content Manager'
 ab_customers = 'Customers'
 ab_category = 'Category/products'
 ab_logoff = 'Logoff'
