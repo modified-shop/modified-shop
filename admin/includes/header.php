@@ -97,13 +97,7 @@
               'icon'  => 'icon_backup.png',
               'name'  => BOX_BACKUP
             );
-          $favorites[5] = array(
-              'file'  => 'index.php',
-              'par'   => '', 'shop' => 1,
-              'icon'  => 'icon_shop.png',
-              'name'  => BOX_SHOP
-            );
-    
+
           $favorites[6] = array(
               'file'  => 'logoff.php',
               'par'   => '', 'shop' => 1,
