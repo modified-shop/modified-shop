@@ -29,18 +29,18 @@
   ((isset($_GET['search_email']) && strip_tags($_GET['search_email']) != $_GET['search_email']) ? $_GET['search_email'] = NULL : false);
   
   // Admin Language Switch
-  $languages_string = '';
-  
-  $ls_languages = xtc_get_languages();
+  $ls_languages = xtc_get_languages();  
+  $languages_array = array();
   if (count($ls_languages) > 1) {
     while (list($key, $value) = each($ls_languages)) {
       if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
-        $languages_string .= '&nbsp;<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
+        $languages_array[] = '<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
       } else {
-        $languages_string .= '&nbsp;' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']);
+        $languages_array[] = '<span class="nolink">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']).'</span>';
       }
     }
   }
+  $languages_string = implode('&nbsp;', $languages_array);
   
   // newsfeed
   require_once(DIR_FS_INC.'get_newsfeed.inc.php');

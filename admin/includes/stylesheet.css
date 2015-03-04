@@ -1583,4 +1583,14 @@ display: none;
 .row_adminbar ul li.logo a:hover {
   background:#222 !important;
 }
+.row_adminbar ul li.language span.nolink {
+  padding: 10px 5px !important;
+}
+.row_adminbar ul li span.nolink {
+  color: #fff;
+  display: inline-block;
+  height: 22px;
+  line-height: 22px;
+  padding: 10px;
+}
 
