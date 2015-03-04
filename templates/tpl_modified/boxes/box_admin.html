@@ -19,7 +19,7 @@
 
     {if isset($ORDERS)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$ORDERS}" title="{#ab_orders#}"><img src="{$tpl_path}img/adminbar_orders.png" alt="" /></a>
+        <a class="togglelink" href="{$ORDERS}"><img src="{$tpl_path}img/adminbar_orders.png" alt="" /></a>
         <ul>
           {$ORDERS_CONTENT}
         </ul>
@@ -28,7 +28,7 @@
   
     {if isset($CATEGORIES)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$CATEGORIES}" title="{#ab_category#}"><img src="{$tpl_path}img/adminbar_categories.png" alt="" /></a>
+        <a class="togglelink" href="{$CATEGORIES}"><img src="{$tpl_path}img/adminbar_categories.png" alt="" /></a>
         <ul>
           {if $EDIT_PRODUCT || $EDIT_CATEGORY}
             {if $EDIT_PRODUCT}
@@ -47,7 +47,7 @@
 
     {if isset($CONTENT_MANAGER)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$CONTENT_MANAGER}" title="{#ab_contentmanager#}"><img src="{$tpl_path}img/adminbar_content.png" alt="" /></a>
+        <a class="togglelink" href="{$CONTENT_MANAGER}" {if !$EDIT_CONTENT}title="{#ab_contentmanager#}"{/if}><img src="{$tpl_path}img/adminbar_content.png" alt="" /></a>
         {if $EDIT_CONTENT}
         <ul>
           <li><a href="{$EDIT_CONTENT}">{#ab_edit_content#}</a></li>
@@ -58,7 +58,7 @@
   
     {if isset($CUSTOMERS)}
       <li class="togglemenu">
-        <a class="togglelink" href="{$CUSTOMERS}" title="{#ab_customers#}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
+        <a class="togglelink" href="{$CUSTOMERS}"><img src="{$tpl_path}img/adminbar_customers.png" alt="" /></a>
         <ul>
           <li class="info">{$CUSTOMERS_INFO}</li>
         </ul>
