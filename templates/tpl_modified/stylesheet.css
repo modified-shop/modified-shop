@@ -2415,6 +2415,15 @@ ul.pd_iconlist li.vote {
 .pd_description ol{
   margin: 8px 0px 8px 15px;
 }
+.pd_inforow .pd_reviews_image {
+  display:inline-block;
+}
+.pd_inforow .pd_reviews_image img {
+  position:relative;
+  vertical-align:-2px;
+  height:13px;
+  width:auto;
+}
 /* END Product details */
 
 

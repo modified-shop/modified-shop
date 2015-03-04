@@ -207,6 +207,10 @@ if (!is_object($product) || !$product->isProduct()) {
   } elseif ($product->data['products_date_added'] != '0000-00-00 00:00:00') {
     $info_smarty->assign('PRODUCTS_ADDED', sprintf(TEXT_DATE_ADDED, xtc_date_long($product->data['products_date_added'])));
   }
+  
+  // mircrotags
+  $info_smarty->assign('PRODUCTS_AVERAGE_RATING', $product->getReviewsAverage());
+  $info_smarty->assign('PRODUCTS_RATING_COUNT', $product->getReviewsCount());
 
   /*
    * assign smarty additional variables or overwrite them

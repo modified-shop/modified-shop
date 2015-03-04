@@ -17,16 +17,17 @@
       {/if}
     </ul>
   </div>
-</div><!-- ENDE layout_navbar -->
+</div>
+{* ENDE layout_navbar *}
 
 <div id="layout_logo">
   <div id="logo"><a href="{$index}" title="{#link_index#} &bull; {$store_name}">&nbsp;</a></div>
   <div id="search">{if isset($box_SEARCH)}{$box_SEARCH}{/if}</div>
-</div><!-- ENDE layout_logo -->
+</div>
+{* ENDE layout_logo *}
 
 <div id="layout_content" class="cf">
   {if $home}
-
     <div id="col_left">
       {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
       {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
@@ -39,7 +40,8 @@
       {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
       {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
       {if isset($box_HISTORY)}{$box_HISTORY}{/if}
-    </div><!-- ENDE col_left -->
+    </div>
+    {* ENDE col_left *}
     <div id="col_right">
       <div id="content_navbar">
         <ul class="contentnavigation"> 
@@ -52,10 +54,9 @@
       {if isset($BANNER)}{$BANNER}{/if}
       {if isset($main_content)}{$main_content}{/if}
       {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
-    </div><!-- ENDE col_right -->
-
+    </div>
+    {* ENDE col_right *}
   {elseif $fullcontent}
-
     <div id="col_full" class="cf">
       <div id="content_navbar">
         <ul class="contentnavigation"> 
@@ -65,15 +66,14 @@
           <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
         </ul>
       </div>
-      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span> {$navtrail}{/if}</div>
+      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:"<a href":"<span itemscope itemtype=\"http://data-vocabulary.org/Breadcrumb\"><a itemprop=\"url\" href"|replace:"Navigation\">":"Navigation\"><span itemprop=\"title\">"|replace:"</a>":"</span></a></span>"}{/if}</div>
       {if isset($main_content)}{$main_content}{/if}
       {if $bestseller}
         {if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}
       {/if}
-    </div><!-- ENDE col_full -->
-
+    </div>
+    {* ENDE col_full *}
   {else}
-
     <div id="col_left">
       {if isset($box_CATEGORIES)}{$box_CATEGORIES}{/if}
       {if isset($box_ADD_QUICKIE)}{$box_ADD_QUICKIE}{/if}
@@ -86,7 +86,8 @@
       {if isset($box_MANUFACTURERS_INFO)}{$box_MANUFACTURERS_INFO}{/if}
       {if isset($box_CURRENCIES)}{$box_CURRENCIES}{/if}
       {if isset($box_HISTORY)}{$box_HISTORY}{/if}
-    </div><!-- ENDE col_left -->
+    </div>
+    {* ENDE col_left *}
     <div id="col_right">
       <div id="content_navbar">
         <ul class="contentnavigation"> 
@@ -96,14 +97,14 @@
           <li class="cart">{if isset($box_CART)}{$box_CART}{/if}</li>
         </ul>
       </div>
-      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span> {$navtrail}{/if}</div>
+      <div id="breadcrumb">{if isset($navtrail)}<span class="breadcrumb_info">{#text_here#}</span>{$navtrail|replace:"<a href":"<span itemscope itemtype=\"http://data-vocabulary.org/Breadcrumb\"><a itemprop=\"url\" href"|replace:"Navigation\">":"Navigation\"><span itemprop=\"title\">"|replace:"</a>":"</span></a></span>"}{/if}</div>
       {if isset($main_content)}{$main_content}{/if}
       {if $bestseller}{if isset($box_BESTSELLERS)}{$box_BESTSELLERS}{/if}{/if}
-
-    </div><!-- ENDE col_right -->
-
+    </div>
+    {* ENDE col_right *}
   {/if}        
-</div><!-- ENDE layout_content -->
+</div>
+{* ENDE layout_content *}
 
 <div id="layout_footer">
   <div id="layout_footer_inner" class="cf">
@@ -112,13 +113,8 @@
     <div class="footer_box">{if isset($box_MISCELLANEOUS)}{$box_MISCELLANEOUS}{/if}</div>
     <div class="footer_box">{if isset($box_NEWSLETTER)}{$box_NEWSLETTER}{/if}</div>
   </div>
-
-
   <div class="mod_copyright">{$smarty.const.TITLE} &copy; {$smarty.now|date_format:"%Y"} | Template &copy; 2009-{$smarty.now|date_format:"%Y"} by <span class="cop_magenta">mod</span><span class="cop_grey">ified eCommerce Shopsoftware</span></div>
-
 </div>
-
-
 
 
 {if ($smarty.const.TRACKING_COUNT_ADMIN_ACTIVE == 'true' and $smarty.session.customers_status.customers_status_id == '0')

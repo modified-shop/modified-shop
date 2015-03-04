@@ -113,8 +113,24 @@ class product {
     return $reviews['total'];
   }
 
+
   /**
    * getReviewsAverage
+   *
+   * @return string
+   */
+  function getReviewsAverage() {
+    $avg_reviews_query = xtc_db_query("SELECT avg(reviews_rating) AS avg_rating 
+                                         FROM ".TABLE_REVIEWS."
+                                        WHERE products_id='".$this->pID."'");
+    $avg_reviews = xtc_db_fetch_array($avg_reviews_query);
+
+    return round($avg_reviews['avg_rating'], 0);
+  } 
+
+
+  /**
+   * getReviews
    *
    * @return array
    */
@@ -144,6 +160,7 @@ class product {
             'DATE' => xtc_date_short($reviews['date_added']),
             'RATING' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating'])),
             'RATING_MICROTAG' => xtc_image($img, sprintf(TEXT_OF_5_STARS, $reviews['reviews_rating']),'','','itemprop="rating"'),
+            'RATING_VOTE' => $reviews['reviews_rating'],
             'TEXT' => nl2br($reviews['reviews_text'])
           );
         if (count($data_reviews) == PRODUCT_REVIEWS_VIEW) break;
