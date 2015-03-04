@@ -13,6 +13,14 @@
 
 require('includes/application_top.php');
 
+function convert_blz($string) {
+  if (strtolower($_SESSION['language_charset']) == 'utf-8') {
+    return utf8_encode($string);
+  } else {
+    return $string;
+  }
+}
+
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
@@ -106,9 +114,9 @@ require (DIR_WS_INCLUDES.'head.php');
                     // "bankleitzahlführender Zahlungsdienstleister" will be queried
                     if (substr($line, 8, 1) == '1') {                //leading payment provider for bank code number (only one per bank code)
                       $blz['blz'] = substr($line, 0, 8);             //bank code number(8)
-                      $blz['bankname'] = trim(substr($line, 9, 58)); //bank name(58)
+                      $blz['bankname'] = convert_blz(trim(substr($line, 9, 58))); //bank name(58)
                       $blz['prz'] = substr($line, 150, 2);           //checksum(2)
-                      $blz['aenderungskennzeichen'] = substr($line, 158, 1); //change code(1)
+                      $kennzeichen = substr($line, 158, 1); //change code(1)
 
                       /*
                       // check the change code of the bank code number
@@ -117,7 +125,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       // "M" = Modified
                       // "U" = Unchanged
                       */
-                      if ($blz['aenderungskennzeichen']!= 'D' && ($blz['aenderungskennzeichen']== 'A' || $blz['aenderungskennzeichen'] == 'U' || $blz['aenderungskennzeichen'] == 'M')) {
+                      if ($kennzeichen!= 'D' && ($kennzeichen== 'A' || $kennzeichen == 'U' || $kennzeichen == 'M')) {
                         // Add the bank code number to the import array
                         $banktransfer[] = $blz;
                       }
@@ -131,13 +139,11 @@ require (DIR_WS_INCLUDES.'head.php');
                   // update the table only when the download of the bank code number file was successfull
                   if (count($banktransfer) > 1) {
                     // clear table banktransfer_blz
-                    xtc_db_query("delete from ".TABLE_BANKTRANSFER_BLZ);
+                    xtc_db_query("DELETE FROM ".TABLE_BANKTRANSFER_BLZ);
                     $j = 0;
                     // and fill it with the the content from the downloaded file
-                    foreach ($banktransfer as $rec) {
-                      $sql = sprintf('insert into banktransfer_blz (blz, bankname, prz) values (%s, \'%s\', \'%s\')',
-                     (int)$rec['blz'], xtc_db_input($rec['bankname']), xtc_db_input($rec['prz']));
-                      xtc_db_query($sql);
+                    foreach ($banktransfer as $sql_data_array) {                      
+                      xtc_db_perform(TABLE_BANKTRANSFER_BLZ, $sql_data_array);
                       if(xtc_db_affected_rows() != 0) {
                         $j = $j + xtc_db_affected_rows(); // sum up affected rows
                       }
