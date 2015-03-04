@@ -30,10 +30,13 @@
   
   // Admin Language Switch
   $languages_string = '';
-  if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
-    $ls_languages = xtc_get_languages();
-    if (count($ls_languages) > 1) {
-      while (list($key, $value) = each($ls_languages)) {
+  
+  $ls_languages = xtc_get_languages();
+  if (count($ls_languages) > 1) {
+    while (list($key, $value) = each($ls_languages)) {
+      if (!isset($_GET['action']) || $_GET['action'] == 'edit') {
+        $languages_string .= '&nbsp;' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']);
+      } else {
         $languages_string .= '&nbsp;<a href="' . xtc_href_link($current_page, xtc_get_all_get_params(array('language', 'currency')).'language=' . $value['code'], 'NONSSL') . '">' . xtc_image('../lang/' .  $value['directory'] .'/admin/images/' . $value['image'], $value['name']) . '</a>';
       }
     }
