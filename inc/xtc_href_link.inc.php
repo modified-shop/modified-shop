@@ -20,11 +20,13 @@
   function xtc_href_link($page = '', $parameters = '', $connection = 'NONSSL', $add_session_id = true, $search_engine_safe = true, $urlencode = false, $admin = false) {
     global $request_type, $session_started, $http_domain, $https_domain, $truncate_session_id, $cookie;
 
+
     $parameters = str_replace('&amp;', '&', $parameters); // undo W3C-Conform link
 
     $link = $connection == 'SSL' && ENABLE_SSL ? HTTPS_SERVER : HTTP_SERVER;
 
-    if (defined('RUN_MODE_ADMIN') && $admin === true) {
+    if (defined('RUN_MODE_ADMIN') || $admin === true) {
+      $admin = true;
       $link .= DIR_WS_ADMIN;
       $page = ($page == '' ? FILENAME_START : $page);
     } else {
@@ -33,6 +35,7 @@
     }
 
     $link .= $page;
+
 
     $separator = '?';
     if (xtc_not_null($parameters)) {
@@ -66,8 +69,10 @@
     }
 
     // W3C-Conform
-    $link = ($urlencode !== false ? encode_htmlentities($link) : str_replace('&', '&amp;', $link));
-
+    if ($admin === false) {
+      $link = ($urlencode !== false ? encode_htmlentities($link) : str_replace('&', '&amp;', $link));
+    }
+    
     return $link;
   }
 
