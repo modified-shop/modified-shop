@@ -1463,8 +1463,18 @@ color: #fff;
 background:#6e9c25;
 color: #fff;
 }
+/*checked yes*/
+.cfg_select_option input[type="radio"]:checked + label.cfg_sov_yes {
+background:#6e9c25;
+color: #fff;
+}
 /*checked false*/
 .cfg_select_option input[type="radio"]:checked + label.cfg_sov_false {
+background:#d34040;
+color: #fff;
+}
+/*checked no*/
+.cfg_select_option input[type="radio"]:checked + label.cfg_sov_no {
 background:#d34040;
 color: #fff;
 }
