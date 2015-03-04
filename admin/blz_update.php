@@ -24,7 +24,7 @@ function convert_blz($string) {
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
-$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2014_12_07/blz_2014_09_08_txt.txt?__blob=publicationFile';
+$blz_file_default_link = 'http://www.bundesbank.de/Redaktion/DE/Downloads/Aufgaben/Unbarer_Zahlungsverkehr/Bankleitzahlen/2015_06_07/blz_2015_03_09_txt.txt?__blob=publicationFile';
 
 require (DIR_WS_INCLUDES.'head.php');
 ?>
