@@ -22,7 +22,7 @@ border-bottom: 2px solid #AF417E;
 min-height:34px;
 }
 
-#cssmenu > ul > li {
+#cssmenu > li {
   border-bottom:2px solid #AF417E;
 }
 #cssmenu li {
@@ -84,7 +84,7 @@ text-align:left;
 }
 #cssmenu li ul a:hover {
 background:#ccc;
-color:#af417e;
+color:#6d2551;
 }
 #cssmenu p {
 clear:left;
@@ -143,7 +143,6 @@ color:#af417e;
 #lang_flag {
 float: left;
 margin: 14px 6px 0 6px;
-height:20px;
 }
 #top1 {
 margin-top: 0px;
@@ -175,7 +174,7 @@ width:100%;
 background-color:#fff;
 }
 .fixed-header-height{
-height:119px;
+height:126px;
 }
 .fixed_messageStack{
 margin-top:120px; 
