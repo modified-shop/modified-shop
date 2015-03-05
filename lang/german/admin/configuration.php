@@ -445,7 +445,7 @@ define('GZIP_COMPRESSION_DESC' , 'Schalten Sie HTTP GZip Komprimierung ein um di
 define('GZIP_LEVEL_TITLE' , 'Komprimierungs-Level');
 define('GZIP_LEVEL_DESC' , 'W&auml;hlen Sie einen Komprimierung-Level zwischen 0-9 (0 = Minimum, 9 = Maximum).');
 
-define('SESSION_WARNING', '<br /><br /><font color="#FF0000"><strong>ACHTUNG:</strong></font> Diese Funktion kann eventuell die Funktionsf&auml;higkeit des Shops beeinflussen. Bitte nur &auml;ndern, wenn man sich &uuml;ber die m&ouml;glichen Folgen im Klaren ist und der Server diese Funktion auch wirklich unterst&uuml;tzt!');
+define('SESSION_WARNING', '<br /><br /><span class="col-red"><strong>ACHTUNG:</strong></span> Diese Funktion kann eventuell die Funktionsf&auml;higkeit des Shops beeinflussen. Bitte nur &auml;ndern, wenn man sich &uuml;ber die m&ouml;glichen Folgen im Klaren ist und der Server diese Funktion auch wirklich unterst&uuml;tzt!');
 
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Speicherort');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'Wenn Sessions als Files gespeichert werden sollen, benutzen Sie folgenden Ordner.');
@@ -693,7 +693,7 @@ define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','Aktivieren Sie die Einstel
 
 //BOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 define('SHOW_BUTTON_BUY_NOW_TITLE', 'Zeige "Warenkorb"-Button in den Produktlisten');
-define('SHOW_BUTTON_BUY_NOW_DESC', '<font color="#FF0000"><strong>ACHTUNG:</strong></font> Dies kann zu Abmahnungen f&uuml;hren, wenn dem Kunden nicht alle wesentlichen Artikelmerkmale bereits in den Produktlisten-Seiten gezeigt werden!');
+define('SHOW_BUTTON_BUY_NOW_DESC', '<span class="col-red"><strong>ACHTUNG:</strong></span> Dies kann zu Abmahnungen f&uuml;hren, wenn dem Kunden nicht alle wesentlichen Artikelmerkmale bereits in den Produktlisten-Seiten gezeigt werden!');
 //EOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 
 //split page results

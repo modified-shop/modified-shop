@@ -79,13 +79,13 @@ require (DIR_WS_INCLUDES.'head.php');
         while ($products = xtc_db_fetch_array($products_query)) {
           $rows++;
           $rows = str_pad($rows, strlen($page_max_display_results), '0', STR_PAD_LEFT);
-          echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_STOCK_WARNING . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL') . '\'">
+          echo '<tr class="dataTableRow brd-t" onmouseover="this.className=\'dataTableRowOver brd-t\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow brd-t\'" onclick="document.location.href=\'' . xtc_href_link(FILENAME_CATEGORIES, 'action=new_product_preview&read=only&pID=' . $products['products_id'] . '&origin=' . FILENAME_STATS_STOCK_WARNING . '&page=' . $_GET['page'] . '&cPath='.xtc_get_category_path($products['categories_id']), 'NONSSL') . '\'">
                   <td class="dataTableContent">' . $rows . '.</td>
                   <td class="dataTableContent">' .  $products['products_model'] . '</td>
                   <td class="dataTableContent"><b>' . $products['products_name'] . '</b></td>
                   <td class="dataTableContent txta-c">';
           if ($products['products_quantity'] <='0') {
-            echo '<font color="#ff0000"><b>'.$products['products_quantity'].'</b></font>';
+            echo '<span class="col-red"><b>'.$products['products_quantity'].'</b></span>';
           } else {
             echo $products['products_quantity'];
           }
@@ -102,13 +102,13 @@ require (DIR_WS_INCLUDES.'head.php');
                                                          pa.products_id = '".$products['products_id'] . "' AND pov.products_options_values_id = pa.options_values_id AND pov.language_id = '" . $_SESSION['languages_id'] . "' ORDER BY pa.attributes_stock");
               
           while ($products_attributes_values = xtc_db_fetch_array($products_attributes_query)) {
-            echo '<tr>
-                    <td class="dataTableContent">&nbsp;</td>
-                    <td class="dataTableContent">' .  $products_attributes_values['attributes_model'] . '</td>
-                    <td class="dataTableContent">&nbsp;&nbsp;&nbsp;&nbsp;-' . $products_attributes_values['products_options_values_name'] . '</td>
-                    <td class="dataTableContent txta-c">';
+            echo '<tr class="dataTableRowSub" onmouseover="this.className=\'dataTableRowSubOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRowSub\'">
+                    <td class="dataTableContentSub">&nbsp;</td>
+                    <td class="dataTableContentSub">' .  $products_attributes_values['attributes_model'] . '</td>
+                    <td class="dataTableContentSub">&nbsp;&nbsp;&nbsp;&nbsp;-' . $products_attributes_values['products_options_values_name'] . '</td>
+                    <td class="dataTableContentSub txta-c">';
             if ($products_attributes_values['attributes_stock'] <= '0') {
-              echo '<font color="#ff0000"><b>' . $products_attributes_values['attributes_stock'] . '</b></font>';
+              echo '<span class="col-red"><b>' . $products_attributes_values['attributes_stock'] . '</b></span>';
             } else {
               echo $products_attributes_values['attributes_stock'];
             }

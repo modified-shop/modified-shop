@@ -358,7 +358,7 @@
                     if($orders_history['orders_status_id']!='0') {
                       echo $orders_status_array[$orders_history['orders_status_id']];
                     }else{
-                      echo '<font color="#FF0000">'.TEXT_VALIDATING.'</font>';
+                      echo '<span class="col-red">'.TEXT_VALIDATING.'</span>';
                     }
                     echo '</td>'.PHP_EOL;
                     echo '                  <td class="smallText'.$class.'">'.nl2br(xtc_db_output($orders_history['comments'])).'&nbsp;</td>'. PHP_EOL;                 

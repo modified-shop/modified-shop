@@ -59,7 +59,7 @@ if (!$action) {
           <?php
             echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$content_data['content_group']).'">' . $icon_edit . '</a>';
             echo '&nbsp;'.$content_data['content_title'];
-            echo (($content_data['content_delete'] == '0') ? ' <font color="#ff0000">*</font>' : '');
+            echo (($content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
           ?>
           </td>
           <td class="dataTableContent txta-c"><?php echo $content_data['content_group']; ?></td>
@@ -97,7 +97,7 @@ if (!$action) {
             <?php
               echo '<a href="'.xtc_href_link(FILENAME_CONTENT_MANAGER,'action=edit&coID='.$sub_content_data['content_group']).'">' . $icon_edit . '</a>';
               echo '&nbsp;'.$sub_content_data['content_title'];
-              echo (($sub_content_data['content_delete'] == '0') ? ' <font color="#ff0000">*</font>' : '');
+              echo (($sub_content_data['content_delete'] == '0') ? ' <span class="col-red">*</span>' : '');
             ?>
             </td>
             <td class="dataTableContent txta-c"><?php echo $sub_content_data['content_group']; ?></td>

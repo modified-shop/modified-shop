@@ -37,7 +37,7 @@
  define('TEXT_EDIT','Edit');
  define('TEXT_PREVIEW','Preview');
  define('CONFIRM_DELETE','Delete Content?');
- define('CONTENT_NOTE','Content marked with <font color="#ff0000">*</font> is a part of the system and cannot be deleted!');
+ define('CONTENT_NOTE','Content marked with <span class="col-red">*</span> is a part of the system and cannot be deleted!');
 
 
  // edit
