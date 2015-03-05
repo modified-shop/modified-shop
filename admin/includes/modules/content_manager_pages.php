@@ -342,7 +342,7 @@ if (!$action) {
           $content_lang = $content[$i][$languages[$l]['id']];
           echo xtc_draw_hidden_field('content_id['.$i.']['.$languages[$l]['id'].']', $content_lang['content_id']);
         }
-        $lang_img = xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']);   
+        $lang_img = '<div style="float:left;margin-right:5px;">'.xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']).'</div>';   
         ?>
         <table class="tableConfig" style="margin-top:0;">
         <tr>
