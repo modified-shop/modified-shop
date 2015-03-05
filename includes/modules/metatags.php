@@ -586,10 +586,10 @@ if ($meta_robots != '') {
 if (metaClean(META_AUTHOR) != '') {
   echo '<meta name="author" content="'.metaClean(META_AUTHOR) .'" />'."\n";
 }
-if (metaClean(META_PUBLISHER) != '') {
+if (metaClean(META_PUBLISHER) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="publisher" content="'. metaClean(META_PUBLISHER) .'" />'."\n";
 }
-if (metaClean(META_COMPANY) != '') {
+if (metaClean(META_COMPANY) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
   echo '<meta name="company" content="'. metaClean(META_COMPANY) .'" />'."\n";
 }
 if (metaClean(META_TOPIC) != '' && TEMPLATE_HTML_ENGINE == 'xhtml') {
