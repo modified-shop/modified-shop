@@ -2846,7 +2846,8 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param string $key
    * @return pulldown
    */
-  function xtc_cfg_select_content($configuration, $key) {
+  function xtc_cfg_select_content($cfg_key, $cfg_value, $name = '%s') {
+    $content_array = array(array('id' => '', 'text' => TEXT_SELECT));
     $content_query = xtc_db_query("SELECT content_group, 
                                           content_title 
                                      FROM ".TABLE_CONTENT_MANAGER." 
@@ -2855,7 +2856,18 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     while ($content = xtc_db_fetch_array($content_query)) {
       $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title']);
     }
-    return xtc_draw_pull_down_menu('configuration['.$key.']', $content_array, $configuration);
+    return xtc_draw_pull_down_menu(sprintf($module, $cfg_key), $content_array, $cfg_value);
+  }
+
+  /**
+   * xtc_cfg_select_content_module()
+   *
+   * @param string $configuration
+   * @param string $key
+   * @return pulldown
+   */
+  function xtc_cfg_select_content_module($cfg_key, $cfg_value) {
+    return xtc_cfg_select_content($cfg_key, $cfg_value, 'configuration[%s]');
   }
 
   /**

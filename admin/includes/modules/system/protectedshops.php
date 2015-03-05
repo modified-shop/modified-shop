@@ -91,7 +91,7 @@ class protectedshops {
       foreach ($this->content['DocumentDate'] as $type => $date) {
         $check_type_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."'");
         if (xtc_db_num_rows($check_type_query) < 1) {
-          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."', '',  '6', '1', 'xtc_cfg_select_content_ps(', 'xtc_cfg_display_content_ps', now())");
+          xtc_db_query("INSERT INTO " . TABLE_CONFIGURATION . " (configuration_key, configuration_value,  configuration_group_id, sort_order, set_function, use_function, date_added) VALUES ('MODULE_PROTECTEDSHOPS_TYPE_".strtoupper($type)."', '',  '6', '1', 'xtc_cfg_select_content_module(', 'xtc_cfg_display_content', now())");
         }
         $check_pdf_query = xtc_db_query("SELECT * FROM " . TABLE_CONFIGURATION . " WHERE configuration_key = 'MODULE_PROTECTEDSHOPS_PDF_".strtoupper($type)."'");
         if (xtc_db_num_rows($check_pdf_query) < 1) {
