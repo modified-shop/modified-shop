@@ -332,6 +332,9 @@
                             $value_field = xtc_draw_input_field($configuration['configuration_key'], $configuration['configuration_value'],'style="width:380px;"');
                           }
                         }
+                        if (strstr($value_field,'cfg_so_k')) {
+                          $value_field=str_replace('cfg_so_k',strtolower($configuration['configuration_key']),$value_field);
+                        }
                         if (strstr($value_field,'configuration_value')) {
                           $value_field=str_replace('configuration_value',$configuration['configuration_key'],$value_field);
                         }

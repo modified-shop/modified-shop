@@ -1425,10 +1425,11 @@ function xtc_output_string($string, $translate = false, $protected = false) {
   function xtc_cfg_select_option($select_array, $key_value, $key = '') {
     $string = '<span class="cfg_select_option">';
     $name = (($key) ? 'configuration['.$key.']' : 'configuration_value');
+    $name_lower = (($key) ? 'cfg_so_k_'.strtolower($key) : 'cfg_so_k');
     for ($i = 0, $n = sizeof($select_array); $i < $n; $i++) {
-      $string .= '<input id="cfg_so_'.strtolower($name).($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
+      $string .= '<input id="'.$name_lower.($i?"_$i":'').'" type="radio" name="'.$name.'" value="'.$select_array[$i].'"';
       if ($key_value == $select_array[$i]) $string .= ' checked';
-      $string .= '><label for="cfg_so_'.strtolower($name).($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($select_array[$i]).'">';
+      $string .= '><label for="'.$name_lower.($i?"_$i":'').'" class="'.($key_value == $select_array[$i]?'cfg_so_before ':'').'cfg_sov_'.strtolower($select_array[$i]).'">';
       $string .= xtc_multi_lang_values($select_array[$i]) . '</label>';
     }
     return $string.'</span>';
