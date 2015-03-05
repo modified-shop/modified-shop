@@ -19,7 +19,7 @@ define('NAVBAR_TITLE', 'Konto erstellen');
 
 define('HEADING_TITLE', 'Kundenkonto Admin');
 
-define('TEXT_ORIGIN_LOGIN', '<font color="#FF0000"><small><b>ACHTUNG:</b></font></small> Wenn Sie bereits ein Konto besitzen, melden Sie sich bitte <a href="%s"><u><b>hier</b></u></a> an.');
+define('TEXT_ORIGIN_LOGIN', '<span class="col-red"><small><b>ACHTUNG:</b></small></span> Wenn Sie bereits ein Konto besitzen, melden Sie sich bitte <a href="%s"><u><b>hier</b></u></a> an.');
 
 define('EMAIL_SUBJECT', 'Willkommen bei ' . STORE_NAME);
 define('EMAIL_GREET_MR', 'Sehr geehrter Herr ' . stripslashes($HTTP_POST_VARS['lastname']) . ',' . "\n\n");

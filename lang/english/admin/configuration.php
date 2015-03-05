@@ -446,7 +446,7 @@ define('GZIP_COMPRESSION_DESC' , 'Enable HTTP gzip compression.');
 define('GZIP_LEVEL_TITLE' , 'Compression Level');
 define('GZIP_LEVEL_DESC' , 'Set a compression level from 0-9 (0 = minimum, 9 = maximum).');
 
-define('SESSION_WARNING', '<br /><br /><font color="#FF0000"><strong>CAUTION:</strong></font> This feature might reduce the operability of the shop system. Change it only when you are aware of the following consequences and your webserver supports the corresponding feature.');
+define('SESSION_WARNING', '<br /><br /><span class="col-red"><strong>CAUTION:</strong></span> This feature might reduce the operability of the shop system. Change it only when you are aware of the following consequences and your webserver supports the corresponding feature.');
 
 define('SESSION_WRITE_DIRECTORY_TITLE' , 'Session Directory');
 define('SESSION_WRITE_DIRECTORY_DESC' , 'If sessions are file based, store them in this directory.');
@@ -694,7 +694,7 @@ define('PRODUCT_IMAGE_NO_ENLARGE_UNDER_DEFAULT_DESC','If set to <strong>false</s
 
 //BOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 define('SHOW_BUTTON_BUY_NOW_TITLE', 'Show "Cart"-Button in product lists');
-define('SHOW_BUTTON_BUY_NOW_DESC', '<font color="#FF0000"><strong>CAUTION:</strong></font> This option is legally critical if customers can\'t see all chief product features directly in the product lists.');
+define('SHOW_BUTTON_BUY_NOW_DESC', '<span class="col-red"><strong>CAUTION:</strong></span> This option is legally critical if customers can\'t see all chief product features directly in the product lists.');
 //EOC - h-h-h - 2011-12-23 - Button "Buy Now" optional - default off
 
 //split page results
