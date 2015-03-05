@@ -130,7 +130,6 @@ CREATE TABLE admin_access (
   cleverreach INT(1) NOT NULL DEFAULT 0,
   sofortueberweisung_install INT(1) NOT NULL DEFAULT 0,
   shop_offline INT(1) NOT NULL DEFAULT 0,
-  xajax INT(1) NOT NULL DEFAULT 0,
   blz_update INT(1) NOT NULL DEFAULT 0,
   removeoldpics INT(1) NOT NULL DEFAULT 0,
   janolaw INT(1) NOT NULL DEFAULT 0,
@@ -425,9 +424,9 @@ CREATE TABLE currencies (
   decimal_point CHAR(1),
   thousands_point CHAR(1),
   decimal_places CHAR(1),
-  status INT(1) DEFAULT 0 NOT NULL,
   value FLOAT(13,8),
   last_updated DATETIME NULL,
+  status INT(1) DEFAULT 1 NOT NULL,
   PRIMARY KEY (currencies_id),
   UNIQUE KEY idx_code (code)
 ) ENGINE=MyISAM;
@@ -547,7 +546,7 @@ CREATE TABLE customers_status (
   customers_status_write_reviews INT(1) NOT NULL DEFAULT 1,
   customers_status_read_reviews INT(1) NOT NULL DEFAULT 1,
   PRIMARY KEY (customers_status_id, language_id),
-  UNIQUE idx_customers_status (customers_status_name, language_id)
+  UNIQUE idx_customers_status_name (customers_status_name, language_id)
 ) ENGINE=MyISAM;
 
 DROP TABLE IF EXISTS customers_status_history;
@@ -704,7 +703,7 @@ CREATE TABLE orders (
   customers_name VARCHAR(64) NOT NULL,
   customers_firstname VARCHAR(64) NOT NULL,
   customers_lastname VARCHAR(64) NOT NULL,
-  customers_gender VARCHAR(1) NOT NULL,
+  customers_gender CHAR(1) NOT NULL,
   customers_company VARCHAR(64),
   customers_street_address VARCHAR(64) NOT NULL,
   customers_suburb VARCHAR(32),
@@ -719,7 +718,7 @@ CREATE TABLE orders (
   delivery_name VARCHAR(64) NOT NULL,
   delivery_firstname VARCHAR(64) NOT NULL,
   delivery_lastname VARCHAR(64) NOT NULL,
-  delivery_gender VARCHAR(1) NOT NULL,
+  delivery_gender CHAR(1) NOT NULL,
   delivery_company VARCHAR(64),
   delivery_street_address VARCHAR(64) NOT NULL,
   delivery_suburb VARCHAR(32),
@@ -732,7 +731,7 @@ CREATE TABLE orders (
   billing_name VARCHAR(64) NOT NULL,
   billing_firstname VARCHAR(64) NOT NULL,
   billing_lastname VARCHAR(64) NOT NULL,
-  billing_gender VARCHAR(1) NOT NULL,
+  billing_gender CHAR(1) NOT NULL,
   billing_company VARCHAR(64),
   billing_street_address VARCHAR(64) NOT NULL,
   billing_suburb VARCHAR(32),
@@ -1222,8 +1221,8 @@ INSERT INTO address_format VALUES (7, '$firstname $lastname$cr$streets, $city$cr
 INSERT INTO address_format VALUES (8, '$firstname $lastname$cr$streets$cr$city$cr$state$cr$postcode$cr$country','$postcode / $country');
 
 # add entry for admin_access
-INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
-INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
+INSERT INTO admin_access VALUES ('groups', 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2, 2, 2, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 2, 4, 2, 2, 2, 2, 5, 5, 5, 5, 5, 5, 5, 5, 5, 5, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1);
 
 # carriers
 INSERT INTO carriers VALUES (1, 'DHL', 'http://nolp.dhl.de/nextt-online-public/set_identcodes.do?lang=$2&idc=$1', '10', NOW(), '');
