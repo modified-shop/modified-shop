@@ -1041,9 +1041,9 @@
                       $special_price = ($special_price*(xtc_get_tax_rate($pInfo->products_tax_class_id)+100)/100);
                       $specials_price_string = '' . TEXT_SPECIALS_SPECIAL_PRICE . '&nbsp;' . $currencies->format($special_price) . '<br/>' . TXT_NETTO . $currencies->format($special_price_netto);
                     }
-                    $contents[] = array('text' => '<div style="padding-left: 10px;color:red;">' . $specials_price_string .  '</div>'.
-                                                  '<div style="padding-left: 10px;color:red;">' . TEXT_INFO_EXPIRES_DATE . '&nbsp;' . $pInfo->expires_date . '</div>'.
-                                                  ($pInfo->specials_quantity > 0 ? '<div style="padding-left: 10px;color:red;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
+                    $contents[] = array('text' => '<div class="col-red" style="padding-left: 10px;">' . $specials_price_string .  '</div>'.
+                                                  '<div class="col-red" style="padding-left: 10px;">' . TEXT_INFO_EXPIRES_DATE . '&nbsp;' . $pInfo->expires_date . '</div>'.
+                                                  ($pInfo->specials_quantity > 0 ? '<div class="col-red" style="padding-left: 10px;">' .  TEXT_SPECIALS_SPECIAL_QUANTITY . '&nbsp;' . $pInfo->specials_quantity . '</div>' : '')
                                         );
                   }
                   //$contents[] = array('text' => '<br />' . TEXT_PRODUCTS_PRICE_INFO . ' ' . $currencies->format($pInfo->products_price) . '<br />' . TEXT_PRODUCTS_QUANTITY_INFO . ' ' . $pInfo->products_quantity);
