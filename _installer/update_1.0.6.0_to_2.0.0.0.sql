@@ -10,15 +10,15 @@
 #Tomcraft - 2010-07-19 - changed database_version
 UPDATE database_version SET version = 'MOD_2.0.0.0';
 
-#Web28 - 2010-11-13 - add missing listproducts to admin_access
-ALTER TABLE admin_access ADD check_update INT(1) NOT NULL DEFAULT 0;
-UPDATE admin_access SET check_update = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET check_update = 1 WHERE customers_id = 'groups' LIMIT 1;
-
 #Tomcraft - 2013-06-21 - Added Safeterms module
 ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#Web28 - 2010-11-13 - add missing listproducts to admin_access
+ALTER TABLE admin_access ADD check_update INT(1) NOT NULL DEFAULT 0 AFTER safeterms;
+UPDATE admin_access SET check_update = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET check_update = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2013-10-24
 ALTER TABLE admin_access ADD gv_customers INT(1) NOT NULL DEFAULT 0 AFTER gv_sent;
