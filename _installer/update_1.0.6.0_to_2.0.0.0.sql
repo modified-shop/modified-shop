@@ -258,7 +258,7 @@ DROP TABLE IF EXISTS media_content;
 ALTER TABLE manufacturers_info ADD manufacturers_description text AFTER languages_id;
 
 #GTB - 2015-02-05 - change fck_wrapper
-ALTER TABLE admin_access CHANGE fck_wrapper filemanager;
+ALTER TABLE admin_access CHANGE fck_wrapper filemanager INT(1) NOT NULL DEFAULT 0;
 
 #GTB - 2015-02-05 - sort_order
 ALTER TABLE orders_status ADD sort_order INT(11) DEFAULT 0 NOT NULL;
@@ -284,8 +284,6 @@ ALTER TABLE banners_history ADD UNIQUE idx_banners_id (banners_id);
 ALTER TABLE languages ADD UNIQUE idx_code (code);
 ALTER TABLE languages DROP INDEX idx_languages_name;
 ALTER TABLE content_manager DROP INDEX content_meta_title;
-ALTER TABLE content_manager DROP INDEX content_meta_description;
-ALTER TABLE content_manager DROP INDEX content_meta_keywords;
 ALTER TABLE content_manager ADD KEY idx_content_group (content_group);
 ALTER TABLE countries DROP INDEX IDX_COUNTRIES_NAME;
 ALTER TABLE countries ADD KEY idx_countries_name (countries_name);
