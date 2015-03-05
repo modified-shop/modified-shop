@@ -81,7 +81,7 @@ if ($_GET['action'] != 'delete_product_option') {
     if ($i != $option_page) {
       $option_pages .= '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_page=' . $i . '&searchoption=' . $_GET['searchoption']) . '">' . $i . '</a> | ';
     } else {
-      $option_pages .= '<strong><font color=red>' . $i . '</font></strong> | ';
+      $option_pages .= '<strong><span class="col-red">' . $i . '</span></strong> | ';
     }
   }
   // Next
