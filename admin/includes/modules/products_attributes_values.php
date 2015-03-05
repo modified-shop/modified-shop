@@ -103,7 +103,7 @@
       if ($i != $_GET['value_page']) {
         $value_pages .= '<a href="' . xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'option_order_by=' . $option_order_by . '&value_page=' . $i.'&search_optionsname='.$_GET['search_optionsname'].$option_filter) . '">' . $i . '</a> | ';
       } else {
-        $value_pages .= '<strong><font color=red>' . $i . '</font></strong> | ';
+        $value_pages .= '<strong><span class="col-red">' . $i . '</span></strong> | ';
       }
     }
 
