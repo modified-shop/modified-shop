@@ -762,8 +762,6 @@ CREATE TABLE orders (
   refferers_id VARCHAR(32) NOT NULL,
   conversion_type INT(1) DEFAULT 0 NOT NULL,
   orders_ident_key VARCHAR(128),
-  ibn_billnr VARCHAR(32) default '',
-  ibn_billdate DATE NOT NULL,
   PRIMARY KEY (orders_id),
   KEY idx_customers_id (customers_id),
   KEY idx_orders_status (orders_status)
