@@ -2856,7 +2856,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
     while ($content = xtc_db_fetch_array($content_query)) {
       $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title']);
     }
-    return xtc_draw_pull_down_menu(sprintf($module, $cfg_key), $content_array, $cfg_value);
+    return xtc_draw_pull_down_menu(sprintf($name, $cfg_key), $content_array, $cfg_value);
   }
 
   /**
