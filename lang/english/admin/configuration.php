@@ -597,8 +597,8 @@ define('SEARCH_IN_MANU_TITLE','Search in products manufacturers');
 define('SEARCH_IN_MANU_DESC','Include products manufacturers when searching');
 
 // changes for 3.0.4 SP2
-define('REVOCATION_ID_TITLE','Revocation coID');
-define('REVOCATION_ID_DESC','coID of revocation content');
+define('REVOCATION_ID_TITLE','Revocation');
+define('REVOCATION_ID_DESC','Select content to display revocation');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_TITLE','Display right of revocation?');
 define('DISPLAY_REVOCATION_ON_CHECKOUT_DESC','Display right of revocation on checkout_confirmation?');
 
@@ -873,8 +873,8 @@ define('MODULE_CAPTCHA_WIDTH_DESC', 'Set width in px');
 define('MODULE_CAPTCHA_HEIGHT_TITLE', 'Height');
 define('MODULE_CAPTCHA_HEIGHT_DESC', 'Set height in px');
 
-define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime coID');
-define('SHIPPING_STATUS_INFOS_DESC', 'coID for Shippingtime');
+define('SHIPPING_STATUS_INFOS_TITLE', 'Shippingtime');
+define('SHIPPING_STATUS_INFOS_DESC', 'Select content to display Information for Shippingtime');
 
 define('USE_SHORT_DATE_FORMAT_TITLE', 'Show Date in short format');
 define('USE_SHORT_DATE_FORMAT_DESC', 'Always show date in short format: <b> 01/03/2014 </ b> instead <b> Saturday 01 March 2014 </ b> <br /> Recommended for display errors with the long date format as incorrect language or special signs!');
