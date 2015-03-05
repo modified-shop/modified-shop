@@ -1470,6 +1470,10 @@ cursor: pointer;
 .cfg_select_option label:first-child {
 border-left-width: 0;
 }
+.cfg_select_option input + label:first-of-type {
+border-left-width: 0;
+}
+
 /*momentary condition*/
 .cfg_select_option .cfg_so_before {
 text-decoration: underline;
