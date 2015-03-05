@@ -553,7 +553,7 @@ define('DEFAULT_CUSTOMERS_VAT_STATUS_ID_DESC' , 'Customers group for customers w
 define('ACCOUNT_COMPANY_VAT_CHECK_TITLE' , 'Validate VAT Reg No');
 define('ACCOUNT_COMPANY_VAT_CHECK_DESC' , 'Customers may enter a VAT Registration number. If false, the box disappears');
 define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_TITLE' , 'Validate VAT Reg No online for plausability');
-define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausability using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support!<br/><br/><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span>');
+define('ACCOUNT_COMPANY_VAT_LIVE_CHECK_DESC' , 'Validate VAT Registration number online for plausability using the webservice of the taxation portal of the EU (<a href="http://ec.europa.eu/taxation_customs" style="font-style:italic">http://ec.europa.eu/taxation_customs</a>).<br/>Requires PHP5 with activated "SOAP" support!<br/><br/><span class="messageStackSuccess">The "PHP5 SOAP"-support is actually '.(in_array ('soap', get_loaded_extensions()) ? '' : '<span class="messageStackError">NOT</span>').' active!</span><br/><br/>');
 define('ACCOUNT_COMPANY_VAT_GROUP_TITLE' , 'Automatic Pruning?');
 define('ACCOUNT_COMPANY_VAT_GROUP_DESC' , 'Set to true, the customers group will be changed automatically if a valid VAT Reg No is used');
 define('ACCOUNT_VAT_BLOCK_ERROR_TITLE' , 'Allow Invalid VAT Reg No?');
