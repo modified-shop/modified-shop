@@ -229,6 +229,7 @@
   define('ENTRY_STATE_ERROR','Check State');
   define('ENTRY_TELEPHONE_NUMBER_ERROR','Telephone number to short');
   define('ENTRY_PASSWORD_ERROR','Check Password');
+  define('ENTRY_PASSWORD_ERROR_NOT_MATCHING','Please enter the same password twice');
   define('ENTRY_STORE_NAME_ERROR','Store name to short');
   define('ENTRY_COMPANY_NAME_ERROR','Company name to short');
   define('ENTRY_EMAIL_ADDRESS_FROM_ERROR','Email-From to short');
