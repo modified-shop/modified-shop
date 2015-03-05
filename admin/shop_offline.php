@@ -62,6 +62,11 @@
   //echo '<pre>'.print_r($customers_statuses_array,1).'</pre>';
   $customers_statuses_array = array_merge($customers_statuses_array);
  
+  $offline_status_array = array(
+      array('id' => 'checked','text'=> CFG_TXT_YES),
+      array('id' => '','text'=> CFG_TXT_NO)
+  );
+ 
   require (DIR_WS_INCLUDES.'head.php');
 ?>
 <script type="text/javascript" src="includes/general.js"></script>
@@ -98,10 +103,14 @@ if (USE_WYSIWYG == 'true') {
         <div valign="top" class="clear div_box mrg5">
           <div class="important_info"><?php echo BOX_SHOP_OFFLINE; ?></div>
           <?php 
-            echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"');
+            echo xtc_draw_form('offline', 'shop_offline.php', '', 'post', 'enctype="multipart/form-data"').PHP_EOL;
+            echo '<div style="margin: 10px 0 0">'.PHP_EOL;
+            echo SETTINGS_OFFLINE.PHP_EOL;
+            echo '<div style="margin: 10px 0 20px">'.PHP_EOL;
+            echo draw_on_off_selection('shop_offline', $offline_status_array, ((xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') ? true : false)).PHP_EOL;
+            echo '</div>'.PHP_EOL;
+            echo '</div>'.PHP_EOL;
             ?>
-            <input type="checkbox" name="shop_offline" value="checked" <?php echo xtc_get_shop_conf('SHOP_OFFLINE'); ?>>
-            <?php echo SETTINGS_OFFLINE ?><br /><br />
             <?php echo SETTINGS_OFFLINE_MSG ?>:<br />
             <?php
               echo xtc_draw_textarea_field('offline_msg', 'soft', '150', '20', stripslashes(xtc_get_shop_conf('SHOP_OFFLINE_MSG')));
