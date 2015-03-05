@@ -415,6 +415,9 @@ class product {
       $buy_now = $this->getBuyNowButton($array['products_id'], $array['products_name']);
     }
 
+    //create products link
+    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
+
     //get $shipping_status_name, $shipping_status_image
     $shipping_status_name = $shipping_status_image = $shipping_status_link = '';
     if (isset($array['products_shippingtime']) && ACTIVATE_SHIPPING_STATUS == 'true') {
@@ -436,10 +439,7 @@ class product {
     foreach((array)$array as $key => $entry) {                  
       $productData[strtoupper($key)] = $entry;
     }
-    
-    // get products link
-    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
-    
+        
     $productDataAdds = array (
         'PRODUCTS_PRICE' => $products_price['formated'],
         'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
