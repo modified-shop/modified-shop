@@ -922,7 +922,7 @@ if (USE_WYSIWYG=='true' && $_GET['action'] == 'email') {
                     }
 
                     $contents[] = array('text'=>COUPON_NAME . ':&nbsp;' . $coupon_name['coupon_name'] . '<br />' .
-                      COUPON_AMOUNT . ':&nbsp;<strong><span style="color:red">' . $amount . '</span></strong><br /><br />' .
+                      COUPON_AMOUNT . ':&nbsp;<strong><span class="col-red">' . $amount . '</span></strong><br /><br />' .
                       COUPON_STARTDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_start_date) . '<br />' .
                       COUPON_FINISHDATE . ':&nbsp;' . xtc_date_short($cInfo->coupon_expire_date) . '<br /><br />' .
                       COUPON_USES_COUPON . ':&nbsp;<strong>' . $cInfo->uses_per_coupon . '</strong><br />' .
