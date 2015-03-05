@@ -130,7 +130,11 @@
             );
 
           // overwrite with hooks
-          $favorites = isset($own_favorites) ? array_merge($favorites, (array)$own_favorites) : $favorites;
+          if(isset($own_favorites) && is_array($own_favorites)) {
+            foreach ($own_favorites as $key => $value) {
+              $favorites[$key] = $value;
+            }
+          }
 
           $page_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
           $page_permission = xtc_db_fetch_array($page_permission_query);
