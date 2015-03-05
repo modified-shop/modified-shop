@@ -25,14 +25,6 @@ require_once (DIR_FS_INC.'get_external_content.inc.php');
 require_once (DIR_WS_CLASSES . 'currencies.php');
 $currencies = new currencies();
 
-function convert_utf8 ($string) {
-  if (strtolower($_SESSION['language_charset'] == 'utf-8')) {
-    return $string;
-  } else {
-    return utf8_decode($string);
-  }
-}
-
 $time_last_click = 900;
 if (defined('WHOS_ONLINE_TIME_LAST_CLICK')) {
   $time_last_click = (int)WHOS_ONLINE_TIME_LAST_CLICK;

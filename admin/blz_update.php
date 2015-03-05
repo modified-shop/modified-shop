@@ -13,14 +13,6 @@
 
 require('includes/application_top.php');
 
-function convert_blz($string) {
-  if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-    return utf8_encode($string);
-  } else {
-    return $string;
-  }
-}
-
 // include needed function
 require_once(DIR_FS_INC.'get_external_content.inc.php');
 
@@ -114,7 +106,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     // "bankleitzahlführender Zahlungsdienstleister" will be queried
                     if (substr($line, 8, 1) == '1') {                //leading payment provider for bank code number (only one per bank code)
                       $blz['blz'] = substr($line, 0, 8);             //bank code number(8)
-                      $blz['bankname'] = convert_blz(trim(substr($line, 9, 58))); //bank name(58)
+                      $blz['bankname'] = encode_utf8(trim(substr($line, 9, 58))); //bank name(58)
                       $blz['prz'] = substr($line, 150, 2);           //checksum(2)
                       $kennzeichen = substr($line, 158, 1); //change code(1)
 

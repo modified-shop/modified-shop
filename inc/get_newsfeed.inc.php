@@ -25,21 +25,13 @@
                                                news_text, 
                                                news_link, 
                                                news_date) 
-                                       VALUES ('".xtc_db_input(decode_htmlentities(trim(convert_feed($rss->channel->item[$i]->title))))."', 
-                                               '".xtc_db_input(decode_htmlentities(trim(convert_feed($rss->channel->item[$i]->description))))."',
-                                               '".xtc_db_input(convert_feed($rss->channel->item[$i]->link))."',
+                                       VALUES ('".xtc_db_input(decode_htmlentities(trim(decode_utf8($rss->channel->item[$i]->title))))."', 
+                                               '".xtc_db_input(decode_htmlentities(trim(decode_utf8($rss->channel->item[$i]->description))))."',
+                                               '".xtc_db_input(decode_utf8($rss->channel->item[$i]->link))."',
                                                '".xtc_db_input(strtotime($rss->channel->item[$i]->pubDate))."')");
         }
       }
       xtc_db_query("UPDATE ".TABLE_CONFIGURATION." SET configuration_value = '".time()."' WHERE configuration_key = 'NEWSFEED_LAST_UPDATE'");
-    }
-  }
-
-  function convert_feed($string) {
-    if (strtolower($_SESSION['language_charset']) == 'utf-8') {
-      return $string;
-    } else {
-      return utf8_decode($string);
     }
   }
 ?>
