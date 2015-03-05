@@ -84,19 +84,4 @@ class it_recht_kanzlei {
   }
 }
 
-// additional function
-function xtc_cfg_select_content($configuration, $key) {
-  $content_query = xtc_db_query("SELECT content_group, content_title FROM ".TABLE_CONTENT_MANAGER." WHERE languages_id = '".$_SESSION['languages_id']."'");
-  while ($content = xtc_db_fetch_array($content_query)) {
-    $content_array[] = array('id' => $content['content_group'], 'text' => $content['content_title']);
-  }
-  return xtc_draw_pull_down_menu('configuration['.$key.']', $content_array, $configuration);
-}
-
-function xtc_cfg_display_content($content_group) {
-  $content_query = xtc_db_query("SELECT content_title FROM ".TABLE_CONTENT_MANAGER." WHERE languages_id = '".$_SESSION['languages_id']."' AND content_group = '".$content_group."'");
-  $content = xtc_db_fetch_array($content_query);
-  return $content['content_title'];
-}
-
 ?>
