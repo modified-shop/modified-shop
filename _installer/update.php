@@ -143,7 +143,7 @@ a {text-decoration: none;}
               echo '<form name="update" method="post">';
               $d = opendir(DIR_FS_DOCUMENT_ROOT.'_installer/');
               while($f = readdir($d)) {
-                if (strpos($f, '.sql') !== false && $f != 'modified.sql') {
+                if ((strpos($f, '.sql') !== false && strpos($f, 'update') !== false) || $f == 'banktransfer_blz.sql') {
                   echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/'.$f.'"> '.$f.'<br>';
                 }
               }
