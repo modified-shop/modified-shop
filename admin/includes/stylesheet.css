@@ -619,7 +619,7 @@ border:1px solid #aaa;
 
 /* miscellaneous */
 .specialPrice { 
-color: #ff0000; 
+color: #d34040; 
 }
 .oldPrice { 
 text-decoration: line-through; 
@@ -627,7 +627,7 @@ text-decoration: line-through;
 .fieldRequired { 
 font-family: Verdana, Arial, sans-serif; 
 font-size: 10px; 
-color: #ff0000; 
+color: #d34040; 
 }
 .smallText { 
 font-family: Verdana, Arial, sans-serif; 
@@ -645,7 +645,7 @@ font-size: 12px;
 .errorText { 
 font-family: Verdana, Arial, sans-serif; 
 font-size: 10px; 
-color: #ff0000; 
+color: #d34040; 
 }
 
 /*Eingabefelder Zahlungs- u. Versandmodule*/
@@ -917,7 +917,7 @@ background-color:#e8e8e8;
 min-width:50%;
 }
 .colorRed{
-color:#ff0000;
+color:#d34040;
 }
 .tableInput{
 width: 100%; 
