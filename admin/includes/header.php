@@ -16,6 +16,8 @@
    Released under the GNU General Public License
    --------------------------------------------------------------*/
   defined( '_VALID_XTC' ) or die( 'Direct Access to this location is not allowed.' );
+  
+  require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
 
   if ($messageStack->size > 0) {
     echo '<div class="fixed_messageStack">'.$messageStack->output().'</div>';
@@ -62,45 +64,52 @@
 
           $favorites[0] = array(
               'file'  => 'index.php',
-              'par'   => '', 'shop' => 1,
-              'icon'  => 'icon_shop.png',
+              'par'   => '', 
+              'shop' => 1,
+              'icon'  => (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' ? 'icon_shop_closed.png' : 'icon_shop_open.png'),
               'name'  => BOX_SHOP,
             );
 
           $favorites[1] = array(
               'file'  => 'orders.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_orders.png',
               'name'  => BOX_ORDERS
             );
           $favorites[2] = array(
               'file'  => 'categories.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_categories.png',
               'name'  => BOX_CATEGORIES
             );
           $favorites[3] = array(
               'file'  => 'content_manager.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_content.png',
               'name'  => BOX_CONTENT
             );
           $favorites[4] = array(
               'file'  => 'customers.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_customers.png',
               'name'  => BOX_CUSTOMERS
             );
           $favorites[5] = array(
               'file'  => 'backup.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_backup.png',
               'name'  => BOX_BACKUP
             );
 
           $favorites[6] = array(
               'file'  => 'logoff.php',
-              'par'   => '', 'shop' => 1,
+              'par'   => '', 
+              'shop' => 1,
               'icon'  => 'icon_logout.png',
               'name'  => BOX_LOGOUT,
               'right' => true,
@@ -108,7 +117,8 @@
     
           $favorites[7] = array(
               'file' => 'newsfeed.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_feed.png',
               'name'  => 'News',
               'right' => true,
@@ -116,14 +126,16 @@
             );
           $favorites[8] = array(
               'file'  => 'credits.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_credits.png',
               'name'  => BOX_CREDITS,
               'right' => true
             );
           $favorites[9] = array(
               'file'  => 'check_update.php',
-              'par'   => '', 'shop' => 0,
+              'par'   => '', 
+              'shop' => 0,
               'icon'  => 'icon_update.png',
               'name'  => BOX_UPDATE,
               'right' => true
