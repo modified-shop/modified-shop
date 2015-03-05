@@ -436,7 +436,10 @@ class product {
     foreach((array)$array as $key => $entry) {                  
       $productData[strtoupper($key)] = $entry;
     }
-
+    
+    // get products link
+    $products_link = xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name']));
+    
     $productDataAdds = array (
         'PRODUCTS_PRICE' => $products_price['formated'],
         'PRICE_ALLOWED' => (($_SESSION['customers_status']['customers_status_show_price'] != '0') ? 'true' : 'false'),
@@ -447,7 +450,7 @@ class product {
         'PRODUCTS_IMAGE' => $products_image,
         'PRODUCTS_IMAGE_SIZE' => $img_attr,
         'PRODUCTS_IMAGE_TITLE' => str_replace(array('"', "'"), array('&quot;', '&apos;'), $array['products_name']),
-        'PRODUCTS_LINK' => xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])),
+        'PRODUCTS_LINK' => $products_link,
         'PRODUCTS_TAX_INFO' => $main->getTaxInfo($tax_rate),
         'PRODUCTS_SHIPPING_LINK' => $main->getShippingLink(),
         'PRODUCTS_BUTTON_BUY_NOW' => $buy_now,
@@ -456,7 +459,7 @@ class product {
         'PRODUCTS_SHIPPING_NAME_LINK' => $shipping_status_link,
         'PRODUCTS_EXPIRES' => isset($array['expires_date']) ? $array['expires_date'] : 0,
         'PRODUCTS_CATEGORY_URL' => isset($array['cat_url']) ? $array['cat_url'] : '',
-        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.xtc_href_link(FILENAME_PRODUCT_INFO, xtc_product_link($array['products_id'], $array['products_name'])).'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>'
+        'PRODUCTS_BUTTON_DETAILS' => '<a href="'.$products_link.'">'.xtc_image_button('button_product_more.gif', TEXT_INFO_DETAILS).'</a>'
       );
 
     $productData = array_merge($productData,$productDataAdds);                     
