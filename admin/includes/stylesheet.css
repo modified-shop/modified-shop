@@ -1467,10 +1467,7 @@ vertical-align: middle;
 border-left: 1px solid #eaeaea;
 cursor: pointer;
 }
-.cfg_select_option label:first-child {
-border-left-width: 0;
-}
-.cfg_select_option input + label:first-of-type {
+.cfg_select_option label:first-of-type {
 border-left-width: 0;
 }
 
