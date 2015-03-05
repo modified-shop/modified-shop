@@ -21,9 +21,9 @@ UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2013-10-24
-ALTER TABLE admin_access ADD gv_customers INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD gv_customers INT(1) NOT NULL DEFAULT 0 AFTER gv_sent;
 UPDATE admin_access SET gv_customers = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET gv_customers = 1 WHERE customers_id = 'groups' LIMIT 1;
+UPDATE admin_access SET gv_customers = 4 WHERE customers_id = 'groups' LIMIT 1;
 
 #web28 - 2013-07-21 - Add content_meta_robots option to content_manager
 ALTER TABLE content_manager ADD content_meta_robots VARCHAR(32) NOT NULL;
@@ -108,11 +108,6 @@ UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #Web28 - 2013-09-28 - Added required_zones
 ALTER TABLE countries ADD required_zones INT(1) DEFAULT '0';
-
-#Web28 - 2013-10-24 - Added gv_customers
-ALTER TABLE admin_access ADD gv_customers INT(1) NOT NULL DEFAULT 0 AFTER gv_sent;
-UPDATE admin_access SET gv_customers = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET gv_customers = 4 WHERE customers_id = 'groups' LIMIT 1;
 
 #Web28 - 2013-10-27 - Added gender
 ALTER TABLE orders ADD customers_gender char(1) NOT NULL AFTER customers_lastname;
