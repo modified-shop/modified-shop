@@ -237,7 +237,7 @@ $values_group_update = array();
   $values[] = "(NULL, 'MODULE_SMALL_BUSINESS', 'false', 17, 9, NULL, NOW(), NULL, 'xtc_cfg_select_option(array(\'true\', \'false\'),');";
 
   $values_update[] = array (
-                           'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\''",
+                           'values' => "set_function = 'xtc_cfg_select_content(\'REVOCATION_ID\','",
                            'configuration_key' => 'REVOCATION_ID'
                            );
 
