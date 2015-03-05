@@ -341,23 +341,24 @@ if (!$action) {
           //$content_lang = get_content_details($content[$i][$languages[$l]['id']]['content_id']);
           $content_lang = $content[$i][$languages[$l]['id']];
           echo xtc_draw_hidden_field('content_id['.$i.']['.$languages[$l]['id'].']', $content_lang['content_id']);
-        }        
+        }
+        $lang_img = xtc_image(DIR_WS_LANGUAGES . $languages[$l]['directory'] .'/admin/images/'. $languages[$l]['image'], $languages[$l]['name']);   
         ?>
         <table class="tableConfig" style="margin-top:0;">
         <tr>
-          <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo TEXT_STATUS_ACTIVE; ?></td>
+          <td class="dataTableConfig col-left" style="min-width:205px;border-top:0;border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS_ACTIVE; ?></td>
           <td class="dataTableConfig col-single-right" style="border-top:0;"><?php echo draw_on_off_selection('content_active['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_active']) && $content_lang['content_active'] != '') ? $content_lang['content_active'] : 0)).' '.TEXT_STATUS_ACTIVE_DESCRIPTION ;?></td>
         </tr>
         <tr>
-          <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_STATUS; ?></td>
+          <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_STATUS; ?></td>
           <td class="dataTableConfig col-single-right"><?php echo draw_on_off_selection('content_status['.$i.']['.$languages[$l]['id'].']', $content_status_array, ((isset($content_lang['content_status']) && $content_lang['content_status'] != '') ? $content_lang['content_status'] : 0)).' '.TEXT_STATUS_DESCRIPTION ;?></td>
         </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_TITLE; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_TITLE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_title'])) ? $content_lang['content_title'] : ''), 'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_HEADING; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_HEADING; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_heading['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_heading'])) ? $content_lang['content_heading'] : ''), 'size="60"'); ?></td>
           </tr>
           <?php
@@ -366,7 +367,7 @@ if (!$action) {
             $customers_statuses_array = array_merge(array(array('id'=>'all', 'text'=>TXT_ALL)), $customers_statuses_array);
             ?>
             <tr>
-              <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo ENTRY_CUSTOMERS_STATUS; ?></td>
+              <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.ENTRY_CUSTOMERS_STATUS; ?></td>
               <td class="dataTableConfig col-single-right">
                 <div class="customers-groups">
                   <?php
@@ -386,23 +387,23 @@ if (!$action) {
           }
           ?>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo 'Meta Title:'; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Title:'; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_title['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_title'])) ? $content_lang['content_meta_title'] : ''), 'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo 'Meta Description:'; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Description:'; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_description['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_description'])) ? $content_lang['content_meta_description'] : ''), 'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo 'Meta Keywords:'; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.'Meta Keywords:'; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_input_field('content_meta_keywords['.$i.']['.$languages[$l]['id'].']', ((isset($content_lang['content_meta_keywords'])) ? $content_lang['content_meta_keywords'] : ''), 'size="60"'); ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_UPLOAD_FILE; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_UPLOAD_FILE; ?></td>
             <td class="dataTableConfig col-single-right"><?php echo xtc_draw_file_field('file_upload_'.$i.'_'.$languages[$l]['id']).' '.TEXT_UPLOAD_FILE_LOCAL; ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo TEXT_CHOOSE_FILE; ?></td>
+            <td class="dataTableConfig col-left" style="border-right:1px solid #a3a3a3;"><?php echo $lang_img.TEXT_CHOOSE_FILE; ?></td>
             <td class="dataTableConfig col-single-right">
               <?php
                 echo TEXT_CHOOSE_FILE_SERVER.'</br>';
@@ -418,7 +419,7 @@ if (!$action) {
             <td class="dataTableConfig col-single-right"><?php echo TEXT_FILE_DESCRIPTION; ?></td>
           </tr>
           <tr>
-            <td class="dataTableConfig col-left" style="border-bottom:0;border-right:1px solid #a3a3a3;"><?php echo TEXT_CONTENT; ?></td>
+            <td class="dataTableConfig col-left" style="border-bottom:0;border-right:1px solid #a3a3a3;vertical-align:top;"><?php echo $lang_img.TEXT_CONTENT; ?></td>
             <td class="dataTableConfig col-single-right" style="border-bottom:0;"><?php  echo xtc_draw_textarea_field('content_text['.$i.']['.$languages[$l]['id'].']', $languages[$l]['id'], '100%', '35', ((isset($content_lang['content_text'])) ? $content_lang['content_text'] : '')); ?>
             </td>
           </tr>          
