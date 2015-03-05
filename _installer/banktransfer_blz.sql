@@ -10,7 +10,13 @@
 -- Einträge für Bankleitzahlen für die Tabelle banktransfer_blz
 -- Gültig vom 09.03.2015 bis 07.06.2015
 -- --------------------------------------------------------
-DELETE FROM banktransfer_blz;
+DROP TABLE IF EXISTS banktransfer_blz;
+CREATE TABLE IF NOT EXISTS banktransfer_blz (
+  blz int(10) NOT NULL DEFAULT 0,
+  bankname varchar(255) NOT NULL DEFAULT '',
+  prz char(2) NOT NULL DEFAULT '',
+  PRIMARY KEY (blz)
+) ENGINE=MyISAM;
 
 -- 
 -- Daten für Tabelle `banktransfer_blz`
