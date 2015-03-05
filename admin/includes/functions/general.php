@@ -2866,7 +2866,7 @@ function xtc_output_string($string, $translate = false, $protected = false) {
    * @param string $key
    * @return pulldown
    */
-  function xtc_cfg_select_content_module($cfg_key, $cfg_value) {
+  function xtc_cfg_select_content_module($cfg_value, $cfg_key) {
     return xtc_cfg_select_content($cfg_key, $cfg_value, 'configuration[%s]');
   }
 
