@@ -179,6 +179,7 @@ define('BOX_IT_RECHT_KANZLEI', 'IT Recht Kanzlei');
 define('BOX_PROTECTEDSHOPS', 'Protected Shops');
 define('BOX_CLEVERREACH', 'CleverReach');
 define('BOX_SUPERMAILER', 'SuperMailer');
+define('BOX_OFFLINE', 'Shop offline');
 
 define('TXT_GROUPS','<b>Gruppen</b>:');
 define('TXT_SYSTEM','System');

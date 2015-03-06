@@ -141,7 +141,7 @@
             $favorites[5] = array(
                 'file' => 'shop_offline.php',
                 'par'  => '', 'shop' => 0,
-                'icon'  => 'cross_shield.png',
+                'icon'  => 'icon_offline.png',
                 'name' => BOX_OFFLINE
               );
           }
