@@ -177,8 +177,7 @@ background-color:#fff;
 height:126px;
 }
 .fixed_messageStack{
-margin-top:120px; 
-margin-bottom:-120px;
+margin: 0 5px 6px;
 }
 
 .columnLeft2 {
