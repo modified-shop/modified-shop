@@ -10,6 +10,104 @@
 #Tomcraft - 2010-07-19 - changed database_version
 UPDATE database_version SET version = 'MOD_2.0.0.0';
 
+# DokuMan - 2013-03-20 - change address format to 5 for Luxembourg
+UPDATE countries SET address_format_id = 5 WHERE countries_id = 124;
+
+#Tomcraft -2015-03-05 - Drop obsolete tables from old GLS shipping module
+DROP TABLE gls_country_to_postal;
+DROP TABLE gls_postal_to_weight;
+DROP TABLE gls_weight;
+
+### Subsequent bugfixes for update_xtc3.0.4sp2.1_to_1.0.1.0.sql
+ALTER TABLE campaigns DROP INDEX IDX_CAMPAIGNS_NAME;
+ALTER TABLE `campaigns`
+ ADD KEY `idx_campaigns_name` (`campaigns_name`);
+ALTER TABLE manufacturers DROP INDEX IDX_MANUFACTURERS_NAME;
+ALTER TABLE `manufacturers`
+ ADD KEY `idx_manufacturers_name` (`manufacturers_name`);
+
+### Subsequent bugfixes for update_1.0.2.0_to_1.0.3.0.sql
+ALTER TABLE `languages` MODIFY `status` INT( 1 ) NOT NULL DEFAULT 1;
+
+### Subsequent bugfixes for update_1.0.3.0_to_1.0.4.0.sql
+ALTER TABLE whos_online MODIFY http_referer varchar(255) NOT NULL;
+
+### Subsequent bugfixes for update_1.0.4.0_to_1.0.5.0.sql
+#UPDATE admin_access SET shop_offline = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+### Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql
+ALTER TABLE address_book MODIFY entry_firstname VARCHAR(64) NOT NULL;
+ALTER TABLE address_book MODIFY entry_lastname VARCHAR(64) NOT NULL;
+ALTER TABLE address_book MODIFY entry_street_address VARCHAR(64) NOT NULL;
+ALTER TABLE address_book MODIFY entry_city VARCHAR(64) NOT NULL;
+ALTER TABLE customers MODIFY customers_firstname VARCHAR(64) NOT NULL;
+ALTER TABLE customers MODIFY customers_lastname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY customers_firstname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY customers_lastname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY customers_street_address VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY customers_city VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY delivery_firstname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY delivery_lastname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY delivery_street_address VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY delivery_city VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY billing_firstname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY billing_lastname VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY billing_street_address VARCHAR(64) NOT NULL;
+ALTER TABLE orders MODIFY billing_city VARCHAR(64) NOT NULL;
+ALTER TABLE newsletter_recipients MODIFY customers_firstname VARCHAR(64) NOT NULL DEFAULT '';
+ALTER TABLE newsletter_recipients MODIFY customers_lastname VARCHAR(64) NOT NULL DEFAULT '';
+ALTER TABLE products_description MODIFY products_name varchar(255) NOT NULL DEFAULT '';
+ALTER TABLE categories_description MODIFY categories_name VARCHAR(255) NOT NULL;
+ALTER TABLE campaigns_ip MODIFY user_ip VARCHAR (39) NOT NULL;
+ALTER TABLE coupon_gv_queue MODIFY ipaddr VARCHAR (39) NOT NULL DEFAULT '';
+ALTER TABLE customers_ip MODIFY customers_ip VARCHAR (39) NOT NULL DEFAULT '';
+ALTER TABLE orders MODIFY customers_ip VARCHAR (39) NOT NULL;
+ALTER TABLE whos_online MODIFY ip_address VARCHAR (39) NOT NULL;
+ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39) NOT NULL DEFAULT '';
+
+### Subsequent bugfixes for update_1.0.6.0_to_2.0.0.0.sql
+#ALTER TABLE admin_access DROP xajax; # Does not exist on updated databases! Only on newly installed shops since 1.05 SP1e
+ALTER TABLE orders_status MODIFY orders_status_name VARCHAR(64) NOT NULL;
+ALTER TABLE `currencies`
+ ADD UNIQUE KEY `idx_code` (`code`);
+ALTER TABLE `products_options_values_to_products_options`
+ ADD KEY `idx_products_options_id` (`products_options_id`);
+
+### Bugfixes from bugfixes_106beta.sql
+ALTER TABLE `campaigns` CHANGE `campaigns_refid` `campaigns_refID` VARCHAR( 64 ) NOT NULL;
+ALTER TABLE `products_xsell` CHANGE `id` `ID` INT( 10 ) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `campaigns_ip` CHANGE `TIME` `time` DATETIME NOT NULL;
+#DELETE FROM `configuration` WHERE `configuration_key` = 'haendlerbund_rueckgabe'; # Not needed any more with the new haendlerbund module
+#INSERT INTO `configuration` ( `configuration_key` ) VALUES  ( 'haendlerbund_rueckgabe' ); # Not needed any more with the new haendlerbund module
+DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_DEALERS';
+DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_IGNORE_GROUPE';
+DELETE FROM `configuration` WHERE `configuration_key` = 'SEARCH_HIGHLIGHT';
+DELETE FROM `configuration` WHERE `configuration_key` = 'SEARCH_HIGHLIGHT_STYLE';
+
+### Bugfixes from bugfixes_106r4356.sql
+#ALTER TABLE campaigns_ip MODIFY user_ip VARCHAR (39) NOT NULL; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
+#ALTER TABLE coupon_gv_queue MODIFY ipaddr VARCHAR (39) NOT NULL DEFAULT ''; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
+#ALTER TABLE customers_ip MODIFY customers_ip VARCHAR (39) NOT NULL DEFAULT ''; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
+#ALTER TABLE orders MODIFY customers_ip VARCHAR (39) NOT NULL; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
+#ALTER TABLE whos_online MODIFY ip_address VARCHAR (39) NOT NULL; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
+#ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39) NOT NULL DEFAULT ''; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
+
+### Bugfixes from bugfixes_106r4642.sql
+#Web28 - 2012-12-30 - set new sort_order by configuration_group_id 5 , Customer Details
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '10', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_GENDER'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '20', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_DOB'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '30', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_COMPANY'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '50', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_SUBURB'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '60', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_STATE'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '100', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_OPTIONS'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE configuration SET configuration_group_id = '5', sort_order = '110', last_modified = NOW() WHERE configuration_key = 'DELETE_GUEST_ACCOUNT'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#Web28 - 2012-12-31 - add comments_sent for correct representation of the comments in the customers account
+#ALTER TABLE orders_status_history ADD comments_sent INT( 1 )  NULL DEFAULT '0'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+#UPDATE orders_status_history SET comments_sent = '1' WHERE customer_notified = '1'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
+# ABER BEREITS IN bugfixes_106beta.sql enthalten!!!
+#DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_DEALERS';
+#DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_IGNORE_GROUPE';
+
 #Tomcraft - 2013-06-21 - Added Safeterms module
 ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
@@ -398,103 +496,5 @@ ALTER TABLE geo_zones ADD UNIQUE idx_geo_zone_name (geo_zone_name);
 
 #Tomcraft - 2015-02-25 - change geo_zone_name
 UPDATE geo_zones SET geo_zone_name = 'Steuerzone Nicht-EU-Ausland', geo_zone_description = 'Steuerzone für Nicht-EU-Ausland' WHERE geo_zone_name = 'Steuerzone EU-Ausland';
-
-# DokuMan - 2013-03-20 - change address format to 5 for Luxembourg
-UPDATE countries SET address_format_id = 5 WHERE countries_id = 124;
-
-#Tomcraft -2015-03-05 - Drop obsolete tables from old GLS shipping module
-DROP TABLE gls_country_to_postal;
-DROP TABLE gls_postal_to_weight;
-DROP TABLE gls_weight;
-
-### Subsequent bugfixes for update_xtc3.0.4sp2.1_to_1.0.1.0.sql
-ALTER TABLE campaigns DROP INDEX IDX_CAMPAIGNS_NAME;
-ALTER TABLE `campaigns`
- ADD KEY `idx_campaigns_name` (`campaigns_name`);
-ALTER TABLE manufacturers DROP INDEX IDX_MANUFACTURERS_NAME;
-ALTER TABLE `manufacturers`
- ADD KEY `idx_manufacturers_name` (`manufacturers_name`);
-
-### Subsequent bugfixes for update_1.0.2.0_to_1.0.3.0.sql
-ALTER TABLE `languages` MODIFY `status` INT( 1 ) NOT NULL DEFAULT 1;
-
-### Subsequent bugfixes for update_1.0.3.0_to_1.0.4.0.sql
-ALTER TABLE whos_online MODIFY http_referer varchar(255) NOT NULL;
-
-### Subsequent bugfixes for update_1.0.4.0_to_1.0.5.0.sql
-#UPDATE admin_access SET shop_offline = 1 WHERE customers_id = 'groups' LIMIT 1;
-
-### Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql
-ALTER TABLE address_book MODIFY entry_firstname VARCHAR(64) NOT NULL;
-ALTER TABLE address_book MODIFY entry_lastname VARCHAR(64) NOT NULL;
-ALTER TABLE address_book MODIFY entry_street_address VARCHAR(64) NOT NULL;
-ALTER TABLE address_book MODIFY entry_city VARCHAR(64) NOT NULL;
-ALTER TABLE customers MODIFY customers_firstname VARCHAR(64) NOT NULL;
-ALTER TABLE customers MODIFY customers_lastname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY customers_firstname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY customers_lastname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY customers_street_address VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY customers_city VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY delivery_firstname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY delivery_lastname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY delivery_street_address VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY delivery_city VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY billing_firstname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY billing_lastname VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY billing_street_address VARCHAR(64) NOT NULL;
-ALTER TABLE orders MODIFY billing_city VARCHAR(64) NOT NULL;
-ALTER TABLE newsletter_recipients MODIFY customers_firstname VARCHAR(64) NOT NULL DEFAULT '';
-ALTER TABLE newsletter_recipients MODIFY customers_lastname VARCHAR(64) NOT NULL DEFAULT '';
-ALTER TABLE products_description MODIFY products_name varchar(255) NOT NULL DEFAULT '';
-ALTER TABLE categories_description MODIFY categories_name VARCHAR(255) NOT NULL;
-ALTER TABLE campaigns_ip MODIFY user_ip VARCHAR (39) NOT NULL;
-ALTER TABLE coupon_gv_queue MODIFY ipaddr VARCHAR (39) NOT NULL DEFAULT '';
-ALTER TABLE customers_ip MODIFY customers_ip VARCHAR (39) NOT NULL DEFAULT '';
-ALTER TABLE orders MODIFY customers_ip VARCHAR (39) NOT NULL;
-ALTER TABLE whos_online MODIFY ip_address VARCHAR (39) NOT NULL;
-ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39) NOT NULL DEFAULT '';
-
-### Subsequent bugfixes for update_1.0.6.0_to_2.0.0.0.sql
-#ALTER TABLE admin_access DROP xajax; # Does not exist on updated databases! Only on newly installed shops since 1.05 SP1e
-ALTER TABLE orders_status MODIFY orders_status_name VARCHAR(64) NOT NULL;
-ALTER TABLE `currencies`
- ADD UNIQUE KEY `idx_code` (`code`);
-ALTER TABLE `products_options_values_to_products_options`
- ADD KEY `idx_products_options_id` (`products_options_id`);
-
-### Bugfixes from bugfixes_106beta.sql
-ALTER TABLE `campaigns` CHANGE `campaigns_refid` `campaigns_refID` VARCHAR( 64 ) NOT NULL;
-ALTER TABLE `products_xsell` CHANGE `id` `ID` INT( 10 ) NOT NULL AUTO_INCREMENT;
-ALTER TABLE `campaigns_ip` CHANGE `TIME` `time` DATETIME NOT NULL;
-#DELETE FROM `configuration` WHERE `configuration_key` = 'haendlerbund_rueckgabe'; # Not needed any more with the new haendlerbund module
-#INSERT INTO `configuration` ( `configuration_key` ) VALUES  ( 'haendlerbund_rueckgabe' ); # Not needed any more with the new haendlerbund module
-DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_DEALERS';
-DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_IGNORE_GROUPE';
-DELETE FROM `configuration` WHERE `configuration_key` = 'SEARCH_HIGHLIGHT';
-DELETE FROM `configuration` WHERE `configuration_key` = 'SEARCH_HIGHLIGHT_STYLE';
-
-### Bugfixes from bugfixes_106r4356.sql
-#ALTER TABLE campaigns_ip MODIFY user_ip VARCHAR (39) NOT NULL; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
-#ALTER TABLE coupon_gv_queue MODIFY ipaddr VARCHAR (39) NOT NULL DEFAULT ''; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
-#ALTER TABLE customers_ip MODIFY customers_ip VARCHAR (39) NOT NULL DEFAULT ''; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
-#ALTER TABLE orders MODIFY customers_ip VARCHAR (39) NOT NULL; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
-#ALTER TABLE whos_online MODIFY ip_address VARCHAR (39) NOT NULL; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
-#ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39) NOT NULL DEFAULT ''; # Already part of "Subsequent bugfixes for update_1.0.5.0_to_1.0.6.0.sql"
-
-### Bugfixes from bugfixes_106r4642.sql
-#Web28 - 2012-12-30 - set new sort_order by configuration_group_id 5 , Customer Details
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '10', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_GENDER'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '20', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_DOB'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '30', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_COMPANY'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '50', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_SUBURB'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '60', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_STATE'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '100', last_modified = NOW() WHERE configuration_key = 'ACCOUNT_OPTIONS'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE configuration SET configuration_group_id = '5', sort_order = '110', last_modified = NOW() WHERE configuration_key = 'DELETE_GUEST_ACCOUNT'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#Web28 - 2012-12-31 - add comments_sent for correct representation of the comments in the customers account
-#ALTER TABLE orders_status_history ADD comments_sent INT( 1 )  NULL DEFAULT '0'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-#UPDATE orders_status_history SET comments_sent = '1' WHERE customer_notified = '1'; # Already included in "update_1.0.5.0_to_1.0.6.0.sql"
-# ABER BEREITS IN bugfixes_106beta.sql enthalten!!!
-DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_DEALERS';
-DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_IGNORE_GROUPE';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
