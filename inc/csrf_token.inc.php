@@ -13,11 +13,23 @@
 // include needed function
 require_once (DIR_FS_INC . 'xtc_create_password.inc.php');
 
-// keep Token for popups 
+if (defined('CSRF_TOKEN_EXCLUSIONS') && CSRF_TOKEN_EXCLUSIONS != '') {
+  $user_exclusions  = preg_replace("'[\r\n\s]+'",'',CSRF_TOKEN_EXCLUSIONS);
+  $user_exclusions = explode(',',$user_exclusions);
+}
+
+if (!isset($module_exclusions) || !is_array($module_exclusions) {
+  $module_exclusions = array();
+}
+
+// keep Token for popups, user_exclusions, module_exclusions
 $CSRFKeep = false;
 if (defined('RUN_MODE_ADMIN')) {
-  $exclusion = array('print_order', 'print_packingslip', 'bill', 'popup');
-  foreach ($exclusion as $filename) {
+  $exclusions = array('print_order', 'print_packingslip', 'bill', 'popup');
+  if (isset($user_exclusions) && is_array($user_exclusions)) {
+    $exclusion = array_merge($exclusions,$user_exclusions,$module_exclusions);
+  }
+  foreach ($exclusions as $filename) {
     if (strpos(basename($PHP_SELF), $filename) !== false) {
       $CSRFKeep = true;
     }
