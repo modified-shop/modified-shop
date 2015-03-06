@@ -29,6 +29,15 @@ if ($_SESSION['customers_status']['customers_status'] == '0') {
   $admin_access = xtc_db_fetch_array($admin_access_query); 
 }
 
+// offline/online
+require_once(DIR_FS_INC . 'xtc_get_shop_conf.inc.php'); 
+if (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') {
+  $box_smarty->assign('SHOP_OFFLINE', true);
+  if ($admin_access['shop_offline'] == '1') {
+    $box_smarty->assign('SHOP_OFFLINE_LINK', xtc_href_link_admin((defined('DIR_ADMIN') ? DIR_ADMIN : 'admin/').'shop_offline.php','', 'NONSSL'));
+  }
+}
+
 // newsfeed
 if ($admin_access['newsfeed'] == '1') {
   $num_news_query = xtc_db_query("SELECT count(*) as total FROM newsfeed WHERE news_date > '".NEWSFEED_LAST_READ."'");
