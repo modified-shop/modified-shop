@@ -24,10 +24,7 @@
                                         AND banners_group = '" . xtc_db_input($identifier) . "'");
       $banners = xtc_db_fetch_array($banners_query);
       if ($banners['count'] > 0) {
-        $banner = xtc_random_select("SELECT banners_id, 
-                                            banners_title, 
-                                            banners_image, 
-                                            banners_html_text 
+        $banner = xtc_random_select("SELECT *
                                        FROM " . TABLE_BANNERS . " 
                                       WHERE status = '1' 
                                         AND banners_group = '" . xtc_db_input($identifier) . "'");
@@ -36,10 +33,7 @@
       if (is_array($identifier)) {
         $banner = $identifier;
       } else {
-        $banner_query = xtc_db_query("SELECT banners_id, 
-                                             banners_title, 
-                                             banners_image, 
-                                             banners_html_text 
+        $banner_query = xtc_db_query("SELECT *
                                         FROM " . TABLE_BANNERS . " 
                                        WHERE status = '1' 
                                          AND banners_id = '" . (int)$identifier . "'");
@@ -51,8 +45,10 @@
     
     if (xtc_not_null($banner['banners_html_text'])) {
       $banner_string = $banner['banners_html_text'];
-    } else {
+    } elseif (xtc_not_null($banner['banners_url'])) {
       $banner_string = '<a href="' . xtc_href_link(FILENAME_REDIRECT, 'action=banner&goto=' . $banner['banners_id']) . '" onclick="window.open(this.href); return false;">' . xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']) . '</a>';
+    } else {
+      $banner_string = xtc_image(DIR_WS_IMAGES.'banner/' . $banner['banners_image'], $banner['banners_title']);
     }
 
     xtc_update_banner_display_count($banner['banners_id']);

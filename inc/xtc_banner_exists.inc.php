@@ -19,18 +19,12 @@
   
   function xtc_banner_exists($action, $identifier) {
     if ($action == 'dynamic') {
-      return xtc_random_select("SELECT banners_id, 
-                                       banners_title, 
-                                       banners_image, 
-                                       banners_html_text 
+      return xtc_random_select("SELECT *
                                   FROM " . TABLE_BANNERS . " 
                                  WHERE status = '1' 
                                    AND banners_group = '" . xtc_db_input($identifier) . "'");
     } elseif ($action == 'static') {
-      $banner_query = xtc_db_query("SELECT banners_id, 
-                                           banners_title, 
-                                           banners_image, 
-                                           banners_html_text 
+      $banner_query = xtc_db_query("SELECT *
                                       FROM " . TABLE_BANNERS . " 
                                      WHERE status = '1' 
                                        AND banners_id = '" . (int)$identifier . "'");
