@@ -8,10 +8,49 @@
    Copyright (c) 2009 - 2013 [www.modified-shop.org]
    Stand 04.03.2012
    ---------------------------------------------------------------------------------------*/
+
 error_reporting(0);
 chdir('../');
-include ('includes/application_top.php');
 
+// Set the local configuration parameters - mainly for developers or the main-configure
+if (file_exists('includes/local/configure.php')) {
+  include('includes/local/configure.php');
+} else {
+  require('includes/configure.php');
+}
+
+//check for modified 2.00
+if (defined('DB_MYSQL_TYPE')) {
+  // include functions
+  require_once(DIR_FS_INC.'auto_include.inc.php');
+  require_once(DIR_WS_INCLUDES . 'database_tables.php');
+
+  // Database
+  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+  require_once (DIR_FS_INC.'db_functions.inc.php');
+} else {
+  // include functions
+  require_once(DIR_WS_INCLUDES . 'database_tables.php');
+
+  // Database
+  require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_queryCached.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
+  require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
+}
+
+
+// include functions
 require_once(DIR_FS_DOCUMENT_ROOT.'_installer/includes/functions.php');
 
 // set all files to be deleted
@@ -139,12 +178,18 @@ a {text-decoration: none;}
               </tr>
               <?php 
             } else {
-             
               echo '<form name="update" method="post">';
+              $sql_files_array = array();
               $d = opendir(DIR_FS_DOCUMENT_ROOT.'_installer/');
               while($f = readdir($d)) {
                 if ((strpos($f, '.sql') !== false && strpos($f, 'update') !== false) || $f == 'banktransfer_blz.sql') {
-                  echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/'.$f.'"> '.$f.'<br>';
+                  $sql_files_array[] = $f;
+                }
+              }
+              sort($sql_files_array);              
+              if (count($sql_files_array) > 0) {
+                foreach ($sql_files_array as $sql_files) {
+                  echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/'.$sql_files.'"> '.$sql_files.'<br>';
                 }
               }
             }
