@@ -111,7 +111,7 @@
               'right' => true,
             );
     
-          $favorites[7] = array(
+          $favorites[8] = array(
               'file'  => 'newsfeed.php',
               'par'   => '', 
               'shop'  => 0,
@@ -120,7 +120,7 @@
               'right' => true,
               'count' => $num_news['total']
             );
-          $favorites[8] = array(
+          $favorites[9] = array(
               'file'  => 'credits.php',
               'par'   => '', 
               'shop'  => 0,
@@ -128,7 +128,7 @@
               'name'  => BOX_CREDITS,
               'right' => true
             );
-          $favorites[9] = array(
+          $favorites[10] = array(
               'file'  => 'check_update.php',
               'par'   => '', 
               'shop'  => 0,
