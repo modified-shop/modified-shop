@@ -15,6 +15,7 @@ ab_customers = 'Customers'
 ab_category = 'Category/Products'
 ab_logoff = 'Logoff'
 ab_news = 'News'
+ab_offline = 'Shop Offline'
 
 ab_edit_content = 'Edit content'
 ab_edit_product = 'Edit product'
