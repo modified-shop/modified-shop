@@ -3301,4 +3301,14 @@ ul.resp-tabs-list{
 /* END Klarna */ 
 
 
+/* START Bannermanager */
+.content_banner {
+  margin: 20px 0 20px 0;
+}
+.content_banner img {
+  float:left;
+  max-width:100%;
+  height:auto;
+}
+
 /* END miscellaneous */
