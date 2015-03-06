@@ -94,13 +94,22 @@
               'icon'  => 'icon_customers.png',
               'name'  => BOX_CUSTOMERS
             );
-          $favorites[6] = array(
+          $favorites[5] = array(
               'file'  => 'backup.php',
               'par'   => '', 
               'shop'  => 0,
               'icon'  => 'icon_backup.png',
               'name'  => BOX_BACKUP
             );
+
+          if (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') {
+            $favorites[6] = array(
+                'file' => 'shop_offline.php',
+                'par'  => '', 'shop' => 0,
+                'icon'  => 'icon_offline.png',
+                'name' => BOX_OFFLINE
+              );
+          }
 
           $favorites[7] = array(
               'file'  => 'logoff.php',
@@ -137,22 +146,12 @@
               'right' => true
             );
 
-          if (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') {
-            $favorites[5] = array(
-                'file' => 'shop_offline.php',
-                'par'  => '', 'shop' => 0,
-                'icon'  => 'icon_offline.png',
-                'name' => BOX_OFFLINE
-              );
-          }
-
           // overwrite with hooks
           if(isset($own_favorites) && is_array($own_favorites)) {
             foreach ($own_favorites as $key => $value) {
               $favorites[$key] = $value;
             }
           }
-          ksort($favorites);
 
           $page_permission_query = xtc_db_query("SELECT * FROM ".TABLE_ADMIN_ACCESS." WHERE customers_id = '".$_SESSION['customer_id']."'");
           $page_permission = xtc_db_fetch_array($page_permission_query);
