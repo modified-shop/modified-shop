@@ -64,6 +64,12 @@
         </ul>
       </li>
     {/if}
+
+    {if isset($SHOP_OFFLINE)}
+      <li class="togglemenu">
+        {if isset($SHOP_OFFLINE_LINK)}<a class="togglelink" href="{$SHOP_OFFLINE_LINK}" title="{#ab_offline#}">{/if}<img src="{$tpl_path}img/adminbar_offline.png" alt="" />{if isset($SHOP_OFFLINE_LINK)}</a>{/if}
+      </li>
+    {/if}
     
     <li class="right nomargin">
       <a class="togglelink" href="{$smarty.const.FILENAME_LOGOFF|xtc_href_link}" title="{#ab_logoff#}"><img src="{$tpl_path}img/adminbar_logoff.png" alt="" /></a>
