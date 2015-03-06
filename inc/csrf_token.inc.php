@@ -18,7 +18,7 @@ if (defined('CSRF_TOKEN_EXCLUSIONS') && CSRF_TOKEN_EXCLUSIONS != '') {
   $user_exclusions = explode(',',$user_exclusions);
 }
 
-if (!isset($module_exclusions) || !is_array($module_exclusions) {
+if ( !isset($module_exclusions) || !is_array($module_exclusions) ) {
   $module_exclusions = array();
 }
 
