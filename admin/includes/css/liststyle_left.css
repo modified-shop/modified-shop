@@ -16,6 +16,10 @@
 	outline: none;
 	letter-spacing: normal;		
 }
+.suckertreemenu li li a{
+padding: 5px 0px;
+text-indent: 3px;
+}
 ul#treemenu1 li ul li ul {
   text-indent: 10px;
 }
@@ -67,4 +71,9 @@ li{
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 4px;
+}
+
+#cssmenu li ul a:hover {
+background:#eee;
+color:#6d2551;
 }
