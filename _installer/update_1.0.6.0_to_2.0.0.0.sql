@@ -65,14 +65,6 @@ ALTER TABLE orders MODIFY customers_ip VARCHAR (39) NOT NULL;
 ALTER TABLE whos_online MODIFY ip_address VARCHAR (39) NOT NULL;
 ALTER TABLE coupon_redeem_track MODIFY redeem_ip VARCHAR (39) NOT NULL DEFAULT '';
 
-### Subsequent bugfixes for update_1.0.6.0_to_2.0.0.0.sql
-#ALTER TABLE admin_access DROP xajax; # Does not exist on updated databases! Only on newly installed shops since 1.05 SP1e
-ALTER TABLE orders_status MODIFY orders_status_name VARCHAR(64) NOT NULL;
-ALTER TABLE `currencies`
- ADD UNIQUE KEY `idx_code` (`code`);
-ALTER TABLE `products_options_values_to_products_options`
- ADD KEY `idx_products_options_id` (`products_options_id`);
-
 ### Bugfixes from bugfixes_106beta.sql
 ALTER TABLE `campaigns` CHANGE `campaigns_refid` `campaigns_refID` VARCHAR( 64 ) NOT NULL;
 ALTER TABLE `products_xsell` CHANGE `id` `ID` INT( 10 ) NOT NULL AUTO_INCREMENT;
@@ -108,10 +100,50 @@ DELETE FROM `configuration` WHERE `configuration_key` = 'SEARCH_HIGHLIGHT_STYLE'
 #DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_DEALERS';
 #DELETE FROM `configuration` WHERE `configuration_key` = 'AFTERBUY_IGNORE_GROUPE';
 
+### Subsequent updates for 1.06 rev 4642 to 1.06 rev 4642 SP1
+#Web28 - 2013-10-27 - added IBAN and BIC in banktransfer payment module
+ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
+ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
+ALTER TABLE banktransfer ADD banktransfer_owner_email VARCHAR(96) DEFAULT NULL;
+
+### Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2
 #Tomcraft - 2013-06-21 - Added Safeterms module
-ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0 AFTER haendlerbund;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#Tomcraft - 2013-08-29 - Added easymarketing
+ALTER TABLE admin_access ADD easymarketing INT(1) NOT NULL DEFAULT 0 AFTER safeterms;
+UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#Tomcraft - 2014-04-08 - Added it_recht_kanzlei
+ALTER TABLE admin_access ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0 AFTER easymarketing;
+UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#GTB - 2014-07-01 - added payone
+ALTER TABLE admin_access ADD payone_config INT(1) NOT NULL DEFAULT 0 AFTER it_recht_kanzlei;
+UPDATE admin_access SET payone_config = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET payone_config = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+#GTB - 2014-07-01 - added payone
+ALTER TABLE admin_access ADD payone_logs INT(1) NOT NULL DEFAULT 0 AFTER payone_config;
+UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 1 LIMIT 1;
+UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1;
+
+### Subsequent bugfixes for update_1.0.6.0_to_2.0.0.0.sql
+#ALTER TABLE admin_access DROP xajax; # Does not exist on updated databases! Only on newly installed shops since 1.05 SP1e
+ALTER TABLE orders_status MODIFY orders_status_name VARCHAR(64) NOT NULL;
+ALTER TABLE `currencies`
+ ADD UNIQUE KEY `idx_code` (`code`);
+ALTER TABLE `products_options_values_to_products_options`
+ ADD KEY `idx_products_options_id` (`products_options_id`);
+
+#Tomcraft - 2013-06-21 - Added Safeterms module
+#ALTER TABLE admin_access ADD safeterms INT(1) NOT NULL DEFAULT 0; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET safeterms = 1 WHERE customers_id = 1 LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET safeterms = 1 WHERE customers_id = 'groups' LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
 
 #Web28 - 2010-11-13 - add missing listproducts to admin_access
 ALTER TABLE admin_access ADD check_update INT(1) NOT NULL DEFAULT 0 AFTER safeterms;
@@ -200,9 +232,9 @@ INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'U','Västm
 INSERT INTO zones (zone_country_id, zone_code, zone_name) VALUES (203,'O','Västra Götaland');
 
 #Tomcraft - 2013-08-29 - Added easymarketing
-ALTER TABLE admin_access ADD easymarketing INT(1) NOT NULL DEFAULT 0;
-UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1;
+#ALTER TABLE admin_access ADD easymarketing INT(1) NOT NULL DEFAULT 0; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 1 LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET easymarketing = 1 WHERE customers_id = 'groups' LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
 
 #Web28 - 2013-09-28 - Added required_zones
 ALTER TABLE countries ADD required_zones INT(1) DEFAULT '0';
@@ -213,9 +245,9 @@ ALTER TABLE orders ADD delivery_gender char(1) NOT NULL AFTER delivery_lastname;
 ALTER TABLE orders ADD billing_gender char(1) NOT NULL AFTER billing_lastname;
 
 #Web28 - 2013-10-27 - added IBAN and BIC in banktransfer payment module
-ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz;
-ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban;
-ALTER TABLE banktransfer ADD banktransfer_owner_email VARCHAR(96) DEFAULT NULL;
+#ALTER TABLE banktransfer ADD banktransfer_iban VARCHAR(34) DEFAULT NULL AFTER banktransfer_blz; # Already part of section "Subsequent updates for 1.06 rev 4642 to 1.06 rev 4642 SP1"
+#ALTER TABLE banktransfer ADD banktransfer_bic VARCHAR(11) DEFAULT NULL AFTER banktransfer_iban; # Already part of section "Subsequent updates for 1.06 rev 4642 to 1.06 rev 4642 SP1"
+#ALTER TABLE banktransfer ADD banktransfer_owner_email VARCHAR(96) DEFAULT NULL; # Already part of section "Subsequent updates for 1.06 rev 4642 to 1.06 rev 4642 SP1"
 
 ALTER TABLE configuration MODIFY configuration_value text NOT NULL;
 ALTER TABLE orders MODIFY payment_method varchar(128) NOT NULL;
@@ -257,19 +289,19 @@ INSERT INTO `content_manager` (`languages_id`, `content_title`, `content_heading
 ALTER TABLE content_manager ADD content_active int(1) NOT NULL DEFAULT '1';
 
 #Tomcraft - 2014-04-08 - Added it_recht_kanzlei
-ALTER TABLE admin_access ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0;
-UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1;
+#ALTER TABLE admin_access ADD it_recht_kanzlei INT(1) NOT NULL DEFAULT 0; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 1 LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET it_recht_kanzlei = 1 WHERE customers_id = 'groups' LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
 
 #GTB - 2014-07-01 - added payone
-ALTER TABLE admin_access ADD payone_config INT(1) NOT NULL DEFAULT 0;
-UPDATE admin_access SET payone_config = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET payone_config = 1 WHERE customers_id = 'groups' LIMIT 1;
+#ALTER TABLE admin_access ADD payone_config INT(1) NOT NULL DEFAULT 0; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET payone_config = 1 WHERE customers_id = 1 LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET payone_config = 1 WHERE customers_id = 'groups' LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
 
 #GTB - 2014-07-01 - added payone
-ALTER TABLE admin_access ADD payone_logs INT(1) NOT NULL DEFAULT 0;
-UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 1 LIMIT 1;
-UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1;
+#ALTER TABLE admin_access ADD payone_logs INT(1) NOT NULL DEFAULT 0; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 1 LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
+#UPDATE admin_access SET payone_logs = 1 WHERE customers_id = 'groups' LIMIT 1; # Already part of section "Subsequent updates for 1.06 rev 4642 SP1 to 1.06 rev 4642 SP2"
 
 #GTB - 2014-07-01 - delete configuration
 DELETE FROM configuration WHERE configuration_key = 'STORE_PAGE_PARSE_TIME_LOG';
@@ -281,7 +313,7 @@ ALTER TABLE geo_zones ADD geo_zone_info INT(1) DEFAULT 0 AFTER geo_zone_descript
 ALTER TABLE currencies ADD status INT(1) NOT NULL DEFAULT 1;
 
 #Tomcraft - 2014-08-20 - added protectedshops
-ALTER TABLE admin_access ADD protectedshops INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD protectedshops INT(1) NOT NULL DEFAULT 0 AFTER payone_logs;
 UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET protectedshops = 1 WHERE customers_id = 'groups' LIMIT 1;
 
@@ -339,7 +371,7 @@ CREATE TABLE IF NOT EXISTS orders_tracking (
   KEY idx_orders_id (orders_id)
 ) ENGINE=MyISAM;
 
-ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD parcel_carriers INT(1) NOT NULL DEFAULT 0 AFTER protectedshops;
 UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET parcel_carriers = 1 WHERE customers_id = 'groups' LIMIT 1;
 
@@ -421,12 +453,12 @@ ALTER TABLE tax_rates ADD KEY idx_tax_zone_id (tax_zone_id);
 ALTER TABLE zones_to_geo_zones ADD KEY idx_geo_zone_id (geo_zone_id);
 
 #Tomcraft - 2015-02-14 - add SuperMailer
-ALTER TABLE admin_access ADD supermailer INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD supermailer INT(1) NOT NULL DEFAULT 0 AFTER parcel_carriers;
 UPDATE admin_access SET supermailer = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET supermailer = 1 WHERE customers_id = 'groups' LIMIT 1;
 
 #GTB - 2015-02-16 - add shopgate
-ALTER TABLE admin_access ADD shopgate INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD shopgate INT(1) NOT NULL DEFAULT 0 AFTER supermailer;
 UPDATE admin_access SET shopgate = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET shopgate = 1 WHERE customers_id = 'groups' LIMIT 1;
 
@@ -456,7 +488,7 @@ CREATE TABLE newsfeed (
   PRIMARY KEY (news_id),
   UNIQUE idx_news_link (news_link)
 ) ENGINE=MyISAM;
-ALTER TABLE admin_access ADD newsfeed INT(1) NOT NULL DEFAULT 0;
+ALTER TABLE admin_access ADD newsfeed INT(1) NOT NULL DEFAULT 0 AFTER shopgate;
 UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 1 LIMIT 1;
 UPDATE admin_access SET newsfeed = 1 WHERE customers_id = 'groups' LIMIT 1;
 
