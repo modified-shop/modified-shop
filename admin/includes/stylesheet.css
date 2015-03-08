@@ -1540,8 +1540,8 @@ vertical-align: middle;
 }
 
 
-.searchbar_new {
-margin-top:42px;
+#searchbar_new {
+display: none;
 }
 
 
@@ -1571,6 +1571,9 @@ padding: 0px;
 float:left;   
 padding: 0px;
 margin: 0px;    
+}
+.row_adminbar ul li.right {
+float:right;
 }
 .row_adminbar ul li a {
 display:inline-block;
