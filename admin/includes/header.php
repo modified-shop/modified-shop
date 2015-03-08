@@ -60,90 +60,105 @@
 
           $favorites[0] = array(
               'file'  => 'index.php',
-              'par'   => '', 
-              'shop'  => 1,
+              'par'  => '', 
+              'mode'  => 1,
               'icon'  => (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked' ? 'icon_shop_closed.png' : 'icon_shop_open.png'),
               'name'  => BOX_SHOP,
+              'class' => ''
             );
 
           $favorites[1] = array(
               'file'  => 'orders.php',
-              'par'   => '', 
-              'shop'  => 0,
+              'par'  => '', 
+              'mode'  => 0,
               'icon'  => 'icon_orders.png',
-              'name'  => BOX_ORDERS
+              'name'  => BOX_ORDERS,
+              'class' => ''
             );
           $favorites[2] = array(
               'file'  => 'categories.php',
-              'par'   => '', 
-              'shop'  => 0,
+              'par'  => '', 
+              'mode'  => 0,
               'icon'  => 'icon_categories.png',
-              'name'  => BOX_CATEGORIES
+              'name'  => BOX_CATEGORIES,
+              'class' => ''
             );
           $favorites[3] = array(
               'file'  => 'content_manager.php',
-              'par'   => '', 
-              'shop'  => 0,
+              'par'  => '', 
+              'mode'  => 0,
               'icon'  => 'icon_content.png',
-              'name'  => BOX_CONTENT
+              'name'  => BOX_CONTENT,
+              'class' => ''
             );
           $favorites[4] = array(
               'file'  => 'customers.php',
-              'par'   => '', 
-              'shop'  => 0,
+              'par'  => '', 
+              'mode'  => 0,
               'icon'  => 'icon_customers.png',
-              'name'  => BOX_CUSTOMERS
+              'name'  => BOX_CUSTOMERS,
+              'class' => ''
             );
           $favorites[5] = array(
               'file'  => 'backup.php',
-              'par'   => '', 
-              'shop'  => 0,
+              'par'  => '', 
+              'mode'  => 0,
               'icon'  => 'icon_backup.png',
-              'name'  => BOX_BACKUP
+              'name'  => BOX_BACKUP,
+              'class' => ''
             );
 
           if (xtc_get_shop_conf('SHOP_OFFLINE') == 'checked') {
             $favorites[6] = array(
                 'file' => 'shop_offline.php',
-                'par'  => '', 'shop' => 0,
-                'icon'  => 'icon_offline.png',
-                'name' => BOX_OFFLINE
+                'par' => '',
+                'mode' => 0,
+                'icon' => 'icon_offline.png',
+                'name' => BOX_OFFLINE,
+                'class' => ''
               );
           }
 
           $favorites[7] = array(
-              'file'  => 'logoff.php',
-              'par'   => '', 
-              'shop'  => 1,
-              'icon'  => 'icon_logout.png',
-              'name'  => BOX_LOGOUT,
-              'right' => true,
+              'file' => "javascript:void(0)\" onclick=\"var yourUl=document.getElementById('searchbar_new');yourUl.style.display=yourUl.style.display==='block'?'':'block';return false;",
+              'par' => '',
+              'mode' => 2,
+              'icon' => 'icon_search.png',
+              'name' => BUTTON_SEARCH,
+              'class' => ''
             );
-    
           $favorites[8] = array(
+              'file' => 'logoff.php',
+              'par' => '', 
+              'mode' => 1,
+              'icon' => 'icon_logout.png',
+              'name' => BOX_LOGOUT,
+              'class' => 'right'
+            );    
+          $favorites[9] = array(
               'file'  => 'newsfeed.php',
               'par'   => '', 
-              'shop'  => 0,
+              'mode'  => 0,
               'icon'  => 'icon_feed.png',
               'name'  => 'News',
-              'right' => true,
+              'class' => 'right',
               'count' => $num_news['total']
             );
-          $favorites[9] = array(
+          $favorites[10] = array(
               'file'  => 'credits.php',
               'par'   => '', 
-              'shop'  => 0,
+              'mode'  => 0,
               'icon'  => 'icon_credits.png',
               'name'  => BOX_CREDITS,
-              'right' => true
+              'class' => 'right'
             );
-          $favorites[10] = array(
+          $favorites[11] = array(
               'file'  => 'check_update.php',
               'par'   => '', 
-              'shop'  => 0,
+              'mode'  => 0,
               'icon'  => 'icon_update.png',
               'name'  => BOX_UPDATE,
-              'right' => true
+              'class' => 'right'
             );
 
           // overwrite with hooks
@@ -158,15 +173,17 @@
   
           foreach ($favorites as $f) {
             if (is_array($f)) {
-              if ($f['shop']) {
-                $func = 'xtc_catalog_href_link';
+              if ($f['mode'] == 2) {
+                $link = $f['file'].$f['par'];
+              } else if ($f['mode'] == 1) {
+                $link = xtc_catalog_href_link($f['file'], $f['par'], 'NONSSL', true);
               } else {
                 if ($page_permission[strtok($f['file'], '.')] != '1') continue;
-                $func = 'xtc_href_link';
+                $link = xtc_href_link($f['file'], $f['par'], 'NONSSL', true);
               }
-              $favoriteslink = $func($f['file'], $f['par'], 'NONSSL', true);
-              echo '<li'.((isset($f['right'])) ? ' style="float:right;"' : '').'><a href="' . $favoriteslink . '">'.
-                   xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).((isset($f['count']) && $f['count'] > 0) ? '<div class="icon_count">'.$f['count'].'</div>' : '').
+              echo '<li'.($f['class'] ? ' class="'.$f['class'].'"' : '').'><a href="' . $link . '">'.
+                   xtc_image(DIR_WS_ICONS.'fastnav/'.$f['icon'], $f['name'], 32, 32).
+                   (isset($f['count']) && $f['count'] ? '<div class="icon_count">'.$f['count'].'</div>' : '').
                    '</li></a>' . PHP_EOL;
             }
           }

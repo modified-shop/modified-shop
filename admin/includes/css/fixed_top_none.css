@@ -6,6 +6,7 @@ z-index:100;
 height:auto;
 width:100%;
 background-color:#fff;
+padding-top:42px;
 }
 .fixed-header-height{
 height:0;

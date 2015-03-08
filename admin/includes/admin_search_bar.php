@@ -39,7 +39,7 @@
   }
   ?>
 
-  <div class="row2 searchbar_new cf">
+  <div class="row2 cf" id="searchbar_new">
     <div class="col25">
       <?php echo xtc_draw_form('search_customer', FILENAME_CUSTOMERS, '', 'get'); ?>
         <input name="search" type="text" value="<?php echo $search_cus;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_CUSTOMER; ?>" />
