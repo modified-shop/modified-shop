@@ -1,11 +1,36 @@
 <?php
 $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/billsafe_orders_2hp.php',
+                     'admin/blacklist.php', // neu
+                     'admin/cleverreach.html', // neu
+                     'admin/sofortueberweisung_install.php', // neu
+                     'admin/stock_list.php', // neu
                      'admin/fck_wrapper.php',
+                     'admin/images/icons/heading_configuration.gif', // neu
+                     'admin/images/icons/heading_content.gif', // neu
+                     'admin/images/icons/heading_customers.gif', // neu
+                     'admin/images/icons/heading_modules.gif', // neu
+                     'admin/images/icons/heading_news.gif', // neu
+                     'admin/images/icons/heading_statistic.gif', // neu
+                     'admin/images/icons/sofortueberweisung_autoinstaller.gif', // neu
+                     'admin/images/icons/sofortueberweisung_icon.gif', // neu
+                     'admin/images/icon_info.gif.jpg', // neu
+                     'admin/images/top_credits.gif', // neu
+                     'admin/images/top_end.jpg', // neu
+                     'admin/images/top_index.gif', // neu
+                     'admin/images/top_logout.gif', // neu
+                     'admin/images/top_shop.gif', // neu
+                     'admin/images/top_support.gif', // neu
+                     'admin/includes/classes/sessions.php', // neu
                      'admin/includes/configure.org.php',
-                     'admin/includes/modules/easybill.action.php ',
-                     'admin/includes/modules/easybill.button.php ',
-                     'admin/includes/modules/easybill.info.php ',
+                     'admin/includes/modules/easybill.action.php',
+                     'admin/includes/modules/easybill.button.php',
+                     'admin/includes/modules/easybill.info.php',
+                     'admin/includes/modules/export/froogle.php', // neu
+                     'admin/includes/modules/export/image_processing_step.php', // neu
+                     'admin/includes/modules/export/tag_cloud.php', // neu
+                     'admin/includes/stylesheet_stocklist.css', // neu
+                     'admin/includes/stylesheet_stocklist_print.css', // neu
                      'admin/includes/modules/carp/carp.php',
                      'admin/includes/modules/carp/carpconf.php',
                      'admin/includes/modules/carp/carpinc.php',
@@ -33,12 +58,18 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'admin/rss/xtc.cache',
                      'checkout_iclear.php',
                      'copyright.php',
+                     'google_sitemap.php', // neu
+                     'images/icons/luupay.gif', // neu
+                     'images/icons/sofortueberweisung_icon.gif', // neu
+                     'inc/xtc_convert_linefeeds.inc.php', // neu
+                     'inc/xtc_delete_file.inc.php', // neu
                      'inc/xtc_db_connect_installer.inc.php',
                      'inc/xtc_db_install.inc.php',
                      'inc/xtc_db_query_installer.inc.php',
                      'inc/xtc_db_select_db.inc.php',
                      'inc/xtc_db_test_connection.inc.php',
                      'inc/xtc_db_test_create_db_permission.inc.php',
+                     'inc/xtc_delete_file.inc.php', // neu
                      'inc/xtc_draw_box_content_bullet.inc.php',
                      'inc/xtc_draw_box_contents.inc.php',
                      'inc/xtc_draw_box_heading.inc.php',
@@ -48,32 +79,45 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'inc/xtc_draw_password_field_installer.inc.php',
                      'inc/xtc_draw_radio_field_installer.inc.php',
                      'inc/xtc_draw_selection_field_installer.inc.php',
+                     'inc/xtc_exit.inc.php', // neu
                      'inc/xtc_gdlib_check.inc.php',
+                     'inc/xtc_show_category_content.inc.php', // neu
                      'inc/base64todec.inc.php',
                      'inc/changedatain.inc.php',
                      'inc/changedataout.inc.php',
                      'inc/dectobase64.inc.php',
-                     'includes/classes/class.easybill.php ',
+                     'includes/classes/class.easybill.php',
+                     'includes/classes/class.phpmailer.php', // neu
+                     'includes/classes/class.smtp.php', // neu
+                     'includes/classes/outputfilter.note.php', // neu
+                     'includes/classes/phpmailer.lang-de.php', // neu
+                     'includes/classes/phpmailer.lang-en.php', // neu
+                     'includes/classes/sessions.php', // neu
                      'includes/classes/cc_validation.php',
                      'includes/configure.org.php',
-                     'includes/modules/reviews.php ',
-                     'includes/modules/module.easybill.php ',
+                     'includes/modules/reviews.php',
+                     'includes/modules/module.easybill.php',
                      'includes/modules/payment/billsafe_2hp.php',
                      'includes/modules/payment/cc.php',
                      'includes/modules/payment/iclear.php',
+                     'INFO.txt', // neu
+                     'lang/english/admin/blacklist.php', // neu
                      'lang/english/easybill.php',
                      'lang/english/modules/payment/billsafe_2hp.php',
                      'lang/english/modules/payment/cc.php',
                      'lang/english/modules/payment/iclear.php',
+                     'lang/german/admin/blacklist.php', // neu
                      'lang/german/easybill.php',
                      'lang/german/modules/payment/billsafe_2hp.php',
                      'lang/german/modules/payment/cc.php',
                      'lang/german/modules/payment/iclear.php',
+                     'LICENSE', // neu
                      'media_content.php',
                      'popup_cvv.php',
                      'popup_image.php',
                      'shopstat/.htaccess',
                      'show_product_thumbs.php',
+                     'sitemap1.xml', // neu
                      'templates/xtc5/css/no_javascript.css',
                      'templates/xtc5/mail/german/widerruf.txt',
                      'templates/xtc5/mail/german/widerruf.html',
@@ -88,6 +132,7 @@ $unlink_file = array('_unterverzeichnis_.htaccess',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.piwik.php',
                      'templates/'.CURRENT_TEMPLATE.'/smarty/function.onlytext.php',
                      'update_1.0.5.0_to_1.0.6.0.sql',
+                     'wpcallback.php', // neu
                      'wsdl_iclear_order.php',
                      'xtbcallback.php',
                      );
