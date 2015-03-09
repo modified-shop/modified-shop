@@ -796,9 +796,9 @@ define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In for Newsletter registrat
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','If "true" an eMail will be send where the Registration have to be confirmed. This  only works if send eMails is activated.');
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Fixate admin page header?'); 
-define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header allways be visable when scrolling?');
+define('USE_ADMIN_FIXED_TOP_DESC', 'Shall the page header always be visable when scrolling?');
 define('USE_ADMIN_FIXED_SEARCH_TITLE', 'Always display admin searchbar?'); 
-define('USE_ADMIN_FIXED_SEARCH_DESC', 'Shall the admin searchbar allways be visable?');
+define('USE_ADMIN_FIXED_SEARCH_DESC', 'Shall the admin searchbar always be visable?');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
 define('SMTP_SECURE_DESC' , 'Does the SMTP server require a secure connection? Contact your ISP for the appropriate settings.');
