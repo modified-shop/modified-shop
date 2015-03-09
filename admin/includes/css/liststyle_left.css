@@ -49,20 +49,30 @@ li{
 }
 
 /*FIXED HEADER*/
-#fixed-header{
-  position:fixed; 
-  top:0px;
-  z-index:100;
-  height:112px;
-  width:100%;
-  background-color:#fff;
+#fixed-header {
+  background-color: #fff;
+  height: 48px;
+  position: fixed !important;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  padding-top: 0px !important;
 }
-.fixed-header-height{
-  height:112px;
+#fixed-header.active {
+  height: 88px;
 }
+.fixed-header-height {
+  height: 46px !important;
+}
+.fixed-header-height.active {
+  height: 84px !important;
+}
+.admin_spacer {
+  height: 42px !important;
+}
+
 .fixed_messageStack{
-  margin-top:112px; 
-  margin-bottom:-114px;
+  margin: 5px;
 }
 .columnLeft2 {
   display: block;
