@@ -51,6 +51,7 @@
  
 <div id="fixed-header">
   <div class="adminbar">
+    <div class="admin_spacer"></div>
     <div class="row_adminbar cf">
       <ul class="cf">
         <li class="logo"><a href="<?php echo xtc_catalog_href_link('index.php'); ?>"><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></a></li>
@@ -120,7 +121,7 @@
           }
 
           $favorites[7] = array(
-              'file' => "javascript:void(0)\" onclick=\"var yourUl=document.getElementById('searchbar_new');yourUl.style.display=yourUl.style.display==='block'?'':'block';return false;",
+              'file' => "javascript:void(0)\" onclick=\"$('#searchbar_new').toggle('fast');$('#fixed-header').toggleClass('active');$('.fixed-header-height').toggleClass('active');",
               'par' => '',
               'mode' => 2,
               'icon' => 'icon_search.png',

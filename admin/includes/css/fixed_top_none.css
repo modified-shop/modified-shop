@@ -14,3 +14,12 @@ height:0;
 .fixed_messageStack{
 margin: 0 5px 6px;
 }
+.admin_spacer{
+height: 0px;
+}
+.fixed-header-height.active {
+height: 0px;
+}
+#fixed-header.active {
+height: 84px;
+}
