@@ -39,7 +39,7 @@
   }
   ?>
 
-  <div class="row2 cf" id="searchbar_new">
+  <div class="row2 cf" id="searchbar_new"<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' style="display:block;"' : ''); ?>>
     <div class="col25">
       <?php echo xtc_draw_form('search_customer', FILENAME_CUSTOMERS, '', 'get'); ?>
         <input name="search" type="text" value="<?php echo $search_cus;?>" size="15" placeholder="<?php echo ASB_QUICK_SEARCH_CUSTOMER; ?>" />
