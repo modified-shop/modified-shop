@@ -40,24 +40,9 @@
     }
   }  
 
+  require ('includes/header.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>modified eCommerce Shopsoftware Installer - STEP 5 / Write Config Files</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <style type="text/css">
-      body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-      table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-      h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-      <!--
-        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
-        .messageStackError img { position: relative; top: 5px; }
-      -->
-    </style>
-  </head>
-  <body>
-    <table width="800" bgcolor="#f3f3f3" style="border:30px solid #fff;" height="80%" border="0" align="center" cellpadding="0" cellspacing="0">
+    <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -68,21 +53,31 @@
         </td>
       </tr>
       <tr>
-        <td align="center" valign="top">
-          <br />
+        <td align="left" valign="top">
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <img src="images/step5.gif" width="705" height="180" border="0"><br />
-                <br />
+                <ul id="navigation" class="cf">
+                  <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
+                  <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
+                  <li class="inactive"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
+                  <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
+                  <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
+                  <li class="active second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
+                  <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
+                  <!--
+                  <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
+                  //-->
+                  <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
+                </ul>
                 <br />
               </td>
             </tr>
           </table>
-          <table width="95%" border="0" cellpadding="0" cellspacing="0">
+          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                   <?php
                     $db = array();
                     $db['DB_MYSQL_TYPE'] = trim(stripslashes($_POST['DB_MYSQL_TYPE']));
@@ -97,17 +92,15 @@
                     }
                     if ($db_error) {
                       ?>
-                      <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                      <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#F2DEDE; color:#a94442; padding:10px; border:1px solid #DCA7A7">
                         <tr>
                           <td>
-                            <img src="images/icons/error.gif" width="16" height="16"><strong><?php echo TEXT_CONNECTION_ERROR; ?></strong>
+                            <img src="images/icons/error.png" width="18" height="16">&nbsp;<strong><?php echo TEXT_CONNECTION_ERROR; ?></strong>
                           </td>
                         </tr>
-                      </table>
-                      <p><strong><?php echo TEXT_DB_ERROR; ?></strong></p>
-                      <table border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
+                      
                         <tr>
-                          <td><b><?php echo $db_error; ?></b></td>
+                          <td><p><strong><?php echo TEXT_DB_ERROR; ?></strong></p><b><?php echo $db_error; ?></b></td>
                         </tr>
                       </table>
                       <p><?php echo TEXT_DB_ERROR_1; ?></p>
@@ -117,8 +110,8 @@
                             echo draw_hidden_fields(); ?>
                         <table border="0" width="100%" cellspacing="0" cellpadding="0">
                           <tr>
-                            <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
-                            <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
+                            <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                            <td align="center"><input type="image" src="images/buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
                           </tr>
                         </table>
                       </form>
@@ -143,10 +136,10 @@
                       if (trim($errmsg) =='')
                         $errmsg = $url . '   [ERROR: '. $link_status['Status-Code'] .']';
                       ?>
-                      <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#ff0000; color:#ffffff; padding:10px; border:1px solid #cf0000">
+                      <table width="100%" border="0" cellpadding="0" cellspacing="0" style="background:#F2DEDE; color:#a94442; padding:10px; border:1px solid #DCA7A7">
                         <tr>
                           <td style="width:40px;">
-                            <img src="images/icons/error.gif" width="16" height="16">
+                            <img src="images/icons/error.png" width="18" height="16" style="position: relative; top: -6px;" />
                           </td>
                           <td style="font-weight:bold; font-size:18px;">
                             <?php echo TEXT_PATH_ERROR; ?>
@@ -154,7 +147,7 @@
                         </tr>
                       </table>
                       
-                      <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3" style="padding:10px; border:1px solid #cf0000">
+                      <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4" style="padding:10px; border:1px solid #DCA7A7">
                         <tr>
                           <td><?php echo TEXT_PATH_ERROR2; ?></td>
                         </tr>
@@ -180,8 +173,8 @@
                                     echo draw_hidden_fields(); ?>
                               <table border="0" width="100%" cellspacing="0" cellpadding="0">
                                 <tr>
-                                  <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
-                                  <td align="center"><input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
+                                  <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                                  <td align="center"><input type="image" src="images/buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
                                 </tr>
                               </table>
                             </form>
@@ -230,7 +223,7 @@
                           <?php //BOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>
                             <td align="center">
                               <a href="<?php echo $step;?>.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>">
-                                <img src="buttons/<?php echo $lang;?>/button_continue.gif" border="0">
+                                <img src="images/buttons/<?php echo $lang;?>/button_continue.gif" border="0">
                               </a>
                             </td>
                           <?php //EOF - web28 - 2010-03-18 NEW HANDLING FOR NO DB INSTALL ?>

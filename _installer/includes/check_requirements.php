@@ -34,7 +34,7 @@
   }
   $status='<strong>OK</strong>';
   if ($php_flag==true)
-    $status='<strong><font color="#ff0000">'.TEXT_ERROR.'</font></strong>';
+    $status='<strong><font color="#A94442">'.TEXT_ERROR.'</font></strong>';
   $ok_message.='PHP VERSION ............................... '.$status.' ('.phpversion().')<br /><hr noshade />';
   //EOF *************  check PHP-Version *************
   
@@ -44,7 +44,7 @@
     $status='<strong>OK</strong>';
     $curl_version = curl_version();
   } else {
-    $status='<strong><font color="#ff0000">'.TEXT_WARNING.'</font></strong><br />'.TEXT_CURL_NOT_SUPPORTED;
+    $status='<strong><font color="#A94442">'.TEXT_WARNING.'</font></strong><br />'.TEXT_CURL_NOT_SUPPORTED;
   }
   $ok_message.='CURL VERSION ............................. '.$status.' ('.$curl_version['version'].')<br /><hr noshade />';
   //EOF *************  check cURL-Support *************
@@ -53,19 +53,19 @@
   if (function_exists('fsockopen')) {
     $status='<strong>OK</strong>';
   } else {
-    $status='<strong><font color="#ff0000">'.TEXT_WARNING.'</font></strong><br />'.TEXT_FSOCKOPEN_NOT_SUPPORTED;
+    $status='<strong><font color="#A94442">'.TEXT_WARNING.'</font></strong><br />'.TEXT_FSOCKOPEN_NOT_SUPPORTED;
   }
   $ok_message.='FSOCKOPEN ................................. '.$status.'<br /><hr noshade />';
   //EOF *************  check fsockopen *************
   $gd=gd_info();
   if ($gd['GD Version']=='')
-    $gd['GD Version']='<strong><font color="#ff0000">'.TEXT_ERROR.TEXT_NO_GDLIB_FOUND.'</font></strong>';
+    $gd['GD Version']='<strong><font color="#A94442">'.TEXT_ERROR.TEXT_NO_GDLIB_FOUND.'</font></strong>';
   $status= '<strong>'.$gd['GD Version'].'</strong> ('.TEXT_GDLIBV2_SUPPORT.')';
   // display GDlibversion
   $ok_message.='GDlib VERSION .............................. '.$status.'<br /><hr noshade />';
   if ($gd['GIF Read Support']==1 or $gd['GIF Support']==1) {
     $status='<strong>OK</strong>';
   } else {
-    $status='<strong><font color="#ff0000">'.TEXT_ERROR.'</font></strong><br />'.TEXT_GDLIB_MISSING_GIF_SUPPORT;
+    $status='<strong><font color="#A94442">'.TEXT_ERROR.'</font></strong><br />'.TEXT_GDLIB_MISSING_GIF_SUPPORT;
   }
   $ok_message.= TEXT_GDLIB_GIF_VERSION .' ................. '.$status.'<br /><hr noshade />';
