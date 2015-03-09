@@ -19,36 +19,14 @@ if (file_exists('includes/local/configure.php')) {
   require('includes/configure.php');
 }
 
-//check for modified 2.00
-if (defined('DB_MYSQL_TYPE')) {
-  // include functions
-  require_once(DIR_FS_INC.'auto_include.inc.php');
-  require_once(DIR_WS_INCLUDES . 'database_tables.php');
+// include functions
+require_once(DIR_FS_INC.'auto_include.inc.php');
+require_once(DIR_WS_INCLUDES . 'database_tables.php');
 
-  // Database
-  require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
-  require_once (DIR_FS_INC.'db_functions.inc.php');
-} else {
-  // include functions
-  require_once(DIR_WS_INCLUDES . 'database_tables.php');
-
-  // Database
-  require_once(DIR_FS_INC . 'xtc_db_connect.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_close.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_error.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_query.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_queryCached.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_perform.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_array.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_num_rows.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_data_seek.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_insert_id.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_free_result.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_fetch_fields.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_output.inc.php');
-  require_once(DIR_FS_INC . 'xtc_db_input.inc.php');
-}
-
+// Database
+defined('DB_MYSQL_TYPE') OR define('DB_MYSQL_TYPE', 'mysql');
+require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
+require_once (DIR_FS_INC.'db_functions.inc.php');
 
 // include functions
 require_once(DIR_FS_DOCUMENT_ROOT.'_installer/includes/functions.php');
