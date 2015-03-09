@@ -53,7 +53,7 @@
                   <li class="active second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
                 </ul>
                 <br />
-                <div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_FINISHED; ?></div>
+                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><?php echo TEXT_WELCOME_FINISHED; ?></div>
               </td>
             </tr>
           </table>
@@ -61,7 +61,7 @@
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                   <?php echo TEXT_SHOP_CONFIG_SUCCESS; ?><br />
                   <br />
                   <?php echo TEXT_TEAM; ?><br />
