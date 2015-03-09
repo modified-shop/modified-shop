@@ -23,7 +23,7 @@ defined('TEMPLATE_HTML_ENGINE') or define('TEMPLATE_HTML_ENGINE', 'xhtml');
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
     <?php
-    echo '<title>'.constant('TITLE_'.strtoupper(substr(basename($_SERVER['PHP_SELF']), -4))).'</title>';
+    echo '<title>'.constant('TITLE_'.strtoupper(substr(basename($_SERVER['PHP_SELF']), 0, -4))).'</title>';
     if (basename($_SERVER['PHP_SELF']) == 'install_step6.php' || basename($_SERVER['PHP_SELF']) == 'install_step7.php') {
       require('includes/form_check.js.php');
     }
