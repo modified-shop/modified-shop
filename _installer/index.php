@@ -45,12 +45,12 @@
 
   //BOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
   include(DIR_FS_CATALOG.'/includes/configure.php');
-  $upgrade = true;;
-  if (DB_SERVER_USERNAME == 'root' && DB_SERVER_PASSWORD == 'root' && DB_DATABASE == 'modified-shop') {
+  $upgrade = true;
+  if (DB_SERVER_USERNAME == '' && DB_SERVER_PASSWORD == '' && DB_DATABASE == '') {
     $upgrade = false;
   }
   if (isset($_POST['db_upgrade']) && ($_POST['db_upgrade'] == true)) {
-    xtc_redirect('db_upgrade.php?upgrade_redir=1', '', 'NONSSL');
+    xtc_redirect(xtc_href_link('update.php', 'action=sql_update', 'NONSSL'));
   }
   //EOF - web28 - 2010-12-13 - redirect to db_upgrade.php, if database is already set up (do an update instead of a new installation)
 
@@ -213,8 +213,8 @@
             </tr>
           <?php } ?>
         </table>
-        <p><img src="images/break-el.gif" width="100%" height="1" alt="" /></p>
-        <table width="98%" border="0" align="right" cellpadding="0" cellspacing="0">
+        <br/>
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td>
               <strong><?php echo TITLE_SELECT_LANGUAGE; ?></strong><br />
@@ -258,16 +258,24 @@
                     <?php echo xtc_draw_radio_field_installer('char', 'utf8', ((INSTALL_CHARSET=='utf8')?true:false)); ?> </td>
                   </tr>
                 </table>
+                <?php  if($upgrade) { ?>
+                  <br/>
+                  <strong><?php echo TITLE_UPGRADE; ?></strong><br />
+                  <img src="images/break-el.gif" width="100%" height="1" alt="" /><br />
+                  <table width="100%" border="0" cellpadding="0" cellspacing="4">
+                    <tr>
+                      <td style="padding-left:4px"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /></td>
+                      <td  style="padding-right:10px"><?php echo xtc_draw_checkbox_field_installer('db_upgrade','',true); ?></td>
+                      <td><?php echo TEXT_DB_UPGRADE; ?></td>
+                    </tr>
+                  </table>
+                  <br/>
+                <?php } ?>
                 <?php // BOF - web28 - 2010.12.13 - NEW db-upgrade ?>
                   <?php if ($error_flag==false || $continue==true) { ?>
                   <input type="hidden" name="action" value="process" />
                   <table width="95%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                      <?php /* if($upgrade) { ?>
-                        <td style="padding-left:4px"><img src="images/icons/arrow02.gif" width="13" height="6" alt="" /></td>
-                        <td><?php echo TEXT_DB_UPGRADE; ?></td>
-                        <td  style="padding-right:10px"><?php echo xtc_draw_checkbox_field_installer('db_upgrade','',true); //enable upgrade by default ?></td>
-                      <?php } */ ?>
                       <td align="right"><input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif"></td>
                     </tr>
                   </table>

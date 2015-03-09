@@ -92,14 +92,14 @@
                       <td style="border-bottom: 1px solid; border-color: #CFCFCF">
                         <h1><?php echo TEXT_TITLE_ERROR; ?></h1>
                       </td>
-                      <td style="border-bottom: 1px solid; border-color: #CFCFCF">&nbsp;</td>
                     </tr>
                   </table>
-                  <table border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
+                  <table width="100%" border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
                     <tr>
-                      <td><b><?php echo $db_error; ?></b></td>
+                      <td><div style="background:#F2DEDE; color:#A94442; padding:10px; border:1px solid #DCA7A7"><b><?php echo $db_error; ?></b></div></td>
                     </tr>
                   </table>
+                  <br />
                   <form name="install" action="install_step3.php" method="post">
                   <?php echo $input_lang; 
                         echo draw_hidden_fields(); ?>

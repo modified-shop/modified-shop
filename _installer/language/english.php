@@ -26,6 +26,7 @@
   define('TITLE_INSTALL_STEP6','modified eCommerce Shopsoftware Installer - Step 6 / Shopinformation');
   define('TITLE_INSTALL_STEP7','modified eCommerce Shopsoftware Installer - Step 7 / Success');
   define('TITLE_INSTALL_FINISHED','modified eCommerce Shopsoftware Installer - Finished');
+  define('TITLE_UPDATE','modified eCommerce Shopsoftware Updater');
 
   // Navigation
   define('NAV_TITLE_INDEX','Start');
@@ -67,7 +68,7 @@
   define('TEXT_DB_ERROR_1','Please click on the <i>Back</i> graphic to review your database server settings.');
   define('TEXT_DB_ERROR_2','If you require help with your database server settings, please consult your hosting company.');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
-  define('TEXT_DB_UPGRADE','<strong>Only perform database upgrade on already installed modified eCommerce Shopsoftware</strong>!');
+  define('TEXT_DB_UPGRADE','Only perform database upgrade on already installed modified eCommerce Shopsoftware!');
   // BOF - web28 - 2010.12.13 - NEW db-upgrade
   // BOF - vr - 2010-01-14 - check MySQL *server* version
   define('TEXT_DB_SERVER_VERSION_ERROR','Your MySQL version is too old. The shop requires at least version: ');
@@ -112,6 +113,7 @@
   define('TITLE_SELECT_LANGUAGE','Select your language:');
   define('TEXT_GERMAN','German');
   define('TEXT_ENGLISH','English');
+  define('TITLE_UPGRADE','Database Update:');
   define('TEXT_INFO_DONATIONS_IMG_ALT', 'Please support this project with your donation.');
   define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/en_US/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
   define('TEXT_WELCOME_INDEX','<b>Welcome to the modified eCommerce Shopsoftware installation process</b><br /><br />The modified eCommerce Shopsoftware is an open source e-commerce solution under on going development by the modified eCommerce Shopsoftware Team and its community.<br /> Its feature packed out-of-the-box installation allows store owners to setup, run, and maintain their online stores with minimum effort and with no costs involved.<br />The modified eCommerce Shopsoftware combines open source solutions to provide a free and open development platform, which includes the powerful PHP web scripting language, the stable Apache web server, and the fast MySQL database server.<br /><br />With no restrictions or special requirements, the modified eCommerce Shopsoftware can be installed on on any environment that supports PHP 5.3 and MySQL 5.0.0, which includes Linux, Solaris, BSD, and Microsoft Windows environments.<br /><br />The modified eCommerce Shopsoftware is an open source project, yet a lot of work and spare time go into this project. Therefore we would be grateful if you show your appreciation by <b>donating</b> to the project.<br /><br />' . BUTTON_DONATE);
@@ -144,7 +146,7 @@
   // install_step1.php
   define('TITLE_CUSTOM_SETTINGS','Custom Settings');
   define('TEXT_IMPORT_DB','Install the modified eCommerce Shopsoftware Database');
-  define('TEXT_IMPORT_DB_LONG','Install the modified eCommerce Shopsoftware database structure which includes tables and sample data. <b>(Mandatory on initial setup!</b>');
+  define('TEXT_IMPORT_DB_LONG','Install the modified eCommerce Shopsoftware database structure which includes tables and sample data.<br /><b>(Mandatory on initial setup!)</b><br /><div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><b>ATTENTION:</b> Existing database tables are exhausted!</div>');
   define('TEXT_AUTOMATIC','Automatic Configuration');
   define('TEXT_AUTOMATIC_LONG','The information you submit regarding the web server and database server will be automatically saved into both modified eCommerce Shopsoftware and Administration Tool configuration files.');
   define('TITLE_DATABASE_SETTINGS','Database Settings');

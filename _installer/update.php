@@ -107,160 +107,184 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
   }
 }
 
+  $lang = 'german';
+  include(DIR_FS_DOCUMENT_ROOT.'_installer/language/'.$lang.'.php');
+  $charset = 'iso-8859-15';
+  // set default charset
+  @ini_set('default_charset', $charset);
+  require (DIR_FS_DOCUMENT_ROOT.'_installer/includes/header.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>modified eCommerce Shopsoftware Updater</title>
-    <meta http-equiv="content-type" content="text/html; charset=iso-8859-1">
-    <style type="text/css">
-    body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-    table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-    h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-    a {text-decoration: none;}
-    </style>
-  </head>
-  <body>
-  <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="20" cellspacing="0">
+  <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td height="95" colspan="2">
-        <table border="0" cellpadding="0" cellspacing="0">
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td><img src="http://www.modified-shop.org/forum/Themes/modified/images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
           </tr>
         </table>
       </td>
     </tr>
-    <tr><td colspan="2" height="20px" style="border-top:1px solid #ccc; width:100%;"></td></tr>
     <tr>
-      <td colspan="2">
-        <table width="100%" border="0" cellpadding="10" cellspacing="0">
-          <?php
-          switch ($_GET['action']) {
-            case 'unlink':
-              if (!empty($success)) {
-              ?>
-              <tr>
-                <td valign="top">Erfolgreich gel&ouml;scht:</td>
-                <td><?php echo $success; ?></td>
-              </tr>
-              <?php } elseif ($clean === false && !$_POST) { ?>
-              <form name="update" method="post">
-              <tr>
-                <td valign="top">Diese Dateien m&uuml;ssen gel&ouml;scht werden:</td>
-                <td><?php echo implode('<br/>', $unlink_file); ?></td>
-              </tr>
-              <?php }
-              if (!empty($error)) {
-              ?>
-              <tr>
-                <td valign="top">Bitte diese Dateien und Verzeichnisse manuell l&ouml;schen:</td>
-                <td><?php echo $error; ?></td>
-              </tr>
-              <?php } elseif ($clean === false && !$_POST) { ?>
-              <tr>
-                <td valign="top">Diese Verzeichnisse m&uuml;ssen gel&ouml;scht werden:</td>
-                <td><?php echo implode('<br/>', $unlink_dir); ?></td>
-              </tr>
-              <?php } elseif ($clean === true) { ?>
-              <tr>
-                <td valign="top" colspan="2" align="center" style="border:1px solid green; width:100%;">Es wurden die Dateien und Verzeichnisse erfolgreich gel&ouml;scht.<br/>Bitte stellen Sie sicher, dass auch die Datei &quot;update.php&quot; vom Server entfernt wurde.</td>
-              </tr>
-              <?php } 
-              break;
-
-            case 'sql_update':
-              if (!empty($success)) {
-                ?>
-                <tr>
-                  <td valign="top">Erfolgreich ausgef&uuml;hrt:</td>
-                  <td><?php echo $success; ?></td>
-                </tr>
-                <?php 
-              } else {
-                echo '<form name="update" method="post">';
-                $sql_files_array = array();
-                $d = opendir(DIR_FS_DOCUMENT_ROOT.'_installer/update/');
-                while($f = readdir($d)) {
-                  //if ((strpos($f, '.sql') !== false && strpos($f, 'update') !== false) || $f == 'banktransfer_blz.sql') {
-                  if (strpos($f, '.sql') !== false && strpos($f, 'update') !== false) {
-                    $sql_files_array[] = $f;
-                  }
-                }
-                sort($sql_files_array);              
-                if (count($sql_files_array) > 0) {
-                  foreach ($sql_files_array as $sql_files) {
-                    echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/update/'.$sql_files.'"> '.$sql_files.'<br>';
-                  }
-                }
-              }
-              break;
-          
-            case 'sql_manual':
-              if (!empty($success)) {
-                unset($_POST['sql_manual']);
-                ?>
-                <tr>
-                  <td valign="top">Erfolgreich ausgef&uuml;hrt:</td>
-                  <td><?php echo $success; ?></td>
-                </tr>
-                <?php 
-              }
-              echo '<form name="update" method="post">';
-              echo '<tr><td colspan="2"><div style="width:100%; color:red; text-align:center">SQL Befehle m&uuml;ssen mit einem  ;  abgeschlossen werden !</div><br/><textarea name="sql_manual" style="width:100%; height:300px;">'.(isset($_POST['sql_manual']) ? $_POST['sql_manual'] : '').'</textarea></td></tr>';
-              break;
-              
-            default:
-              echo '<form name="update" method="get">' .
-                   '<input type="radio" name="action" value="unlink"> Dateien und Verzeichnise l&ouml;schen<br>' .
-                   '<input type="radio" name="action" value="sql_update"> Datenbank Update<br>' .
-                   '<input type="radio" name="action" value="sql_manual"> Manuelle SQL';
-            break;
-          }
-          ?>     
+      <td height="20px" colspan="2">
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="2" height="20px" style="border-top:0px solid #ccc; width:100%;">&nbsp;</td>
+          </tr>
         </table>
       </td>
     </tr>
     <tr>
       <td colspan="2">
-        <?php
-        switch ($_GET['action']) {
-          case 'unlink':
-            echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
-            if ($clean === false && !$_POST) {
-              echo '<input type="hidden" name="update" value="true" />' .
-                   '<input type="submit" value="Ausf&uuml;hren" />' .
-                   '</form>';
-            }
-            break;
-          
-          case 'sql_update':
-            echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
-            if (!$clean) {
-              echo '<input type="hidden" name="update" value="true" />' .
-                   '<input type="submit" value="Ausf&uuml;hren" />' .
-                   '</form>';
-            }
-            break;
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="2">
+              <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
+                <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                  <?php
+                  switch ($_GET['action']) {
+                    case 'unlink':
+                      if (!empty($success)) {
+                      ?>
+                      <tr>
+                        <td valign="top">Erfolgreich gel&ouml;scht:</td>
+                        <td><?php echo $success; ?></td>
+                      </tr>
+                      <?php } elseif ($clean === false && !$_POST) { ?>
+                      <form name="update" method="post">
+                      <tr>
+                        <td width="20%" valign="top">Diese Dateien m&uuml;ssen gel&ouml;scht werden:</td>
+                        <td><?php echo implode('<br/>', $unlink_file); ?></td>
+                      </tr>
+                      <?php }
+                      if (!empty($error)) {
+                      ?>
+                      <tr>
+                        <td width="20%" valign="top">Bitte diese Dateien und Verzeichnisse manuell l&ouml;schen:</td>
+                        <td><?php echo $error; ?></td>
+                      </tr>
+                      <?php } elseif ($clean === false && !$_POST) { ?>
+                      <tr>
+                        <td width="20%" valign="top">Diese Verzeichnisse m&uuml;ssen gel&ouml;scht werden:</td>
+                        <td><?php echo implode('<br/>', $unlink_dir); ?></td>
+                      </tr>
+                      <?php } elseif ($clean === true) { ?>
+                      <tr>
+                        <td valign="top" colspan="2" align="center" bgcolor="#d4ebcb" style="border: 1px solid; border-color: #b2dba1; padding:10px; color: #3C763D;">Es wurden die Dateien und Verzeichnisse erfolgreich gel&ouml;scht.<br/>Bitte stellen Sie sicher, dass auch die Datei &quot;update.php&quot; vom Server entfernt wurde.</td>
+                      </tr>
+                      <?php } 
+                      break;
 
-          case 'sql_manual':
-            echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
-            echo '<input type="hidden" name="update" value="true" />' .
-                 '<input type="submit" value="Ausf&uuml;hren" />' .
-                 '</form>';
-            break;
+                    case 'sql_update':
+                      if (!empty($success)) {
+                        ?>
+                        <tr>
+                          <td width="20%" valign="top">Erfolgreich ausgef&uuml;hrt:</td>
+                          <td><?php echo $success; ?></td>
+                        </tr>
+                        <?php 
+                      } else {
+                        echo '<form name="update" method="post">';
+                        $sql_files_array = array();
+                        $d = opendir(DIR_FS_DOCUMENT_ROOT.'_installer/update/');
+                        while($f = readdir($d)) {
+                          //if ((strpos($f, '.sql') !== false && strpos($f, 'update') !== false) || $f == 'banktransfer_blz.sql') {
+                          if (strpos($f, '.sql') !== false && strpos($f, 'update') !== false) {
+                            $sql_files_array[] = $f;
+                          }
+                        }
+                        sort($sql_files_array);              
+                        if (count($sql_files_array) > 0) {
+                          foreach ($sql_files_array as $sql_files) {
+                            echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/update/'.$sql_files.'"> '.$sql_files.'<br>';
+                          }
+                        }
+                      }
+                      break;
+          
+                    case 'sql_manual':
+                      if (!empty($success)) {
+                        unset($_POST['sql_manual']);
+                        ?>
+                        <tr>
+                          <td valign="top">Erfolgreich ausgef&uuml;hrt:</td>
+                          <td><?php echo $success; ?></td>
+                        </tr>
+                        <?php 
+                      }
+                      echo '<form name="update" method="post">';
+                      echo '<tr><td colspan="2"><div style="width:100%; color:red; text-align:center">SQL Befehle m&uuml;ssen mit einem  ;  abgeschlossen werden !</div><br/><textarea name="sql_manual" style="width:100%; height:300px;">'.(isset($_POST['sql_manual']) ? $_POST['sql_manual'] : '').'</textarea></td></tr>';
+                      break;
+              
+                    default:
+                      echo '<form name="update" method="get">' .
+                           '<input type="radio" name="action" value="unlink"> Alte Dateien und Verzeichnise l&ouml;schen<br>' .
+                           '<input type="radio" name="action" value="sql_update"> Datenbank Update<br>' .
+                           '<input type="radio" name="action" value="sql_manual"> Manuelle SQL-Eingabe';
+                    break;
+                  }
+                  ?>
+                </table>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td height="20px" colspan="2">
+        <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td colspan="2" height="20px" style="border-top:0px solid #ccc; width:100%;">&nbsp;</td>
+          </tr>
+        </table>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2">
+        <table width="95%" cellspacing="0" cellpadding="0" border="0" align="center">
+          <tr>
+            <td>
+              <?php
+              switch ($_GET['action']) {
+                case 'unlink':
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
+                  if ($clean === false && !$_POST) {
+                    echo '<input type="hidden" name="update" value="true" />' .
+                         '<input type="submit" value="Ausf&uuml;hren" />' .
+                         '</form>';
+                  }
+                  break;
+          
+                case 'sql_update':
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
+                  if (!$clean) {
+                    echo '<input type="hidden" name="update" value="true" />' .
+                         '<input type="submit" value="Ausf&uuml;hren" />' .
+                         '</form>';
+                  }
+                  break;
+
+                case 'sql_manual':
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
+                  echo '<input type="hidden" name="update" value="true" />' .
+                       '<input type="submit" value="Ausf&uuml;hren" />' .
+                       '</form>';
+                  break;
             
-          default:
-            echo '<input type="submit" value="Ausf&uuml;hren" />' .
-                 '</form>';
+                default:
+                  echo '<input type="submit" value="Ausf&uuml;hren" />' .
+                       '</form>';
         
-            break;
-        }
-        ?>   
+                  break;
+              }
+              ?>
+            </td>
+          </tr>
+        </table>
       </td>
     </tr>
   </table>
   <br />
-  <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo '<a href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y'); ?></div>
+  <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
   </body>
 </html>
