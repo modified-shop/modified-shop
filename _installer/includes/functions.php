@@ -145,8 +145,11 @@ function sql_update($file, $plain=false) {
         $sql = mb_convert_encoding($sql, 'utf-8', 'ISO-8859-15');
       }
       xtc_db_query($sql);
+      
+      if (xtc_db_affected_rows() > 0) {
+        $success .= ' - <span style="color:red;">Success!</span><br/>';
+      }
     }
-    $success .= ' - <span style="color:red;">Success!</span><br/>';
   }
 }
 ?>
