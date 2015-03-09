@@ -19,6 +19,20 @@ if (file_exists('includes/local/configure.php')) {
   require('includes/configure.php');
 }
 
+// default time zone
+if (version_compare(PHP_VERSION, '5.1.0', '>=')) {
+  date_default_timezone_set('Europe/Berlin');
+}
+
+// new error handling
+if (is_file(DIR_WS_INCLUDES.'error_reporting.php')) {
+  require_once (DIR_WS_INCLUDES.'error_reporting.php');
+}
+
+// turn off magic-quotes support, for both runtime and sybase, as both will cause problems if enabled
+if (version_compare(PHP_VERSION, 5.3, '<') && function_exists('set_magic_quotes_runtime')) set_magic_quotes_runtime(0);
+if (version_compare(PHP_VERSION, 5.4, '<') && @ini_get('magic_quotes_sybase') != 0) @ini_set('magic_quotes_sybase', 0);
+
 // include functions
 require_once(DIR_FS_INC.'auto_include.inc.php');
 require_once(DIR_WS_INCLUDES . 'database_tables.php');
@@ -27,6 +41,15 @@ require_once(DIR_WS_INCLUDES . 'database_tables.php');
 defined('DB_MYSQL_TYPE') OR define('DB_MYSQL_TYPE', 'mysql');
 require_once (DIR_FS_INC.'db_functions_'.DB_MYSQL_TYPE.'.inc.php');
 require_once (DIR_FS_INC.'db_functions.inc.php');
+
+// make a connection to the database... now
+xtc_db_connect() or die('Unable to connect to database server!');
+
+// load configuration
+$configuration_query = xtc_db_query('SELECT configuration_key, configuration_value FROM '.TABLE_CONFIGURATION);
+while ($configuration = xtc_db_fetch_array($configuration_query)) {
+  defined($configuration['configuration_key']) OR define($configuration['configuration_key'], stripslashes($configuration['configuration_value']));
+}
 
 // include functions
 require_once(DIR_FS_DOCUMENT_ROOT.'_installer/includes/functions.php');
