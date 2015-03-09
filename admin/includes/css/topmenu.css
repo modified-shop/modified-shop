@@ -169,13 +169,22 @@ border-top: 0px solid #AF417E;
 position:fixed; 
 top:0px;
 z-index:100;
-height:119px;
+height:77px;
 width:100%;
 background-color:#fff;
 }
+#fixed-header.active {
+    height: 119px !important;
+}
 .fixed-header-height{
+height:84px;
+}
+.fixed-header-height.active{
 height:126px;
 }
+
+
+
 .fixed_messageStack{
 margin: 0 5px 6px;
 }
