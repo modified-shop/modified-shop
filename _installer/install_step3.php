@@ -81,7 +81,7 @@
                   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
                   $db_error = false;
-                  $sql_file_array = array(MODIFIED_SQL, 'banktransfer_blz.sql');
+                  $sql_file_array = array(MODIFIED_SQL, 'includes/banktransfer_blz.sql');
                   foreach ($sql_file_array as $sql_file) {
                     xtc_db_install($db['DB_DATABASE'], $db['DB_MYSQL_TYPE'], DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.$sql_file);
                   }
