@@ -174,10 +174,10 @@ width:100%;
 background-color:#fff;
 }
 #fixed-header.active {
-    height: 119px !important;
+height: 119px;
 }
 .fixed-header-height{
-height:84px;
+height:88px;
 }
 .fixed-header-height.active{
 height:126px;
