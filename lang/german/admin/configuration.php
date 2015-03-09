@@ -795,7 +795,9 @@ define('SEND_EMAILS_DOUBLE_OPT_IN_TITLE','Double-Opt-In f&uuml;r Newsletteranmel
 define('SEND_EMAILS_DOUBLE_OPT_IN_DESC','Bei "true" wird eine E-Mail an den Kunden geschickt, in der die Newsletteranmeldung best&auml;tigt werden muss. Es muss hierf&uuml;r das Senden von E-Mails aktiviert sein.');
 
 define('USE_ADMIN_FIXED_TOP_TITLE', 'Admin Seitenkopf fixieren?');
-define('USE_ADMIN_FIXED_TOP_DESC', 'Soll der Seitenkopf beim Scrollen immer sichtbar sein? Standard: true (ja)');
+define('USE_ADMIN_FIXED_TOP_DESC', 'Soll der Seitenkopf beim Scrollen immer sichtbar sein?');
+define('USE_ADMIN_FIXED_SEARCH_TITLE', 'Admin Suchleiste anzeigen?');
+define('USE_ADMIN_FIXED_SEARCH_DESC', 'Soll die Suchleiste immer sichtbar sein?');
 
 define('SMTP_SECURE_TITLE' , 'SMTP SECURE');
 define('SMTP_SECURE_DESC' , 'Erfordert der SMTP-Server eine sichere Verbindung? Die notwendigen Einstellungen erfahren Sie bei Ihrem Provider.');

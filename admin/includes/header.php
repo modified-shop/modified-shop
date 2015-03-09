@@ -49,7 +49,7 @@
   $num_news = xtc_db_fetch_array($num_news_query);
   ?>
  
-<div id="fixed-header">
+<div id="fixed-header"<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' class="active"' : ''); ?>>
   <div class="admin_spacer"></div>
   <div class="adminbar">
     <div class="row_adminbar cf">
@@ -119,15 +119,18 @@
                 'class' => ''
               );
           }
-
-          $favorites[7] = array(
-              'file' => "javascript:void(0)\" onclick=\"$('#searchbar_new').toggle('fast');$('#fixed-header').toggleClass('active');$('.fixed-header-height').toggleClass('active');",
-              'par' => '',
-              'mode' => 2,
-              'icon' => 'icon_search.png',
-              'name' => BUTTON_SEARCH,
-              'class' => ''
-            );
+          
+          if (USE_ADMIN_FIXED_SEARCH == 'false') {
+            $favorites[7] = array(
+                'file' => "javascript:void(0)\" onclick=\"$('#searchbar_new').toggle('fast');$('#fixed-header').toggleClass('active');$('.fixed-header-height').toggleClass('active');",
+                'par' => '',
+                'mode' => 2,
+                'icon' => 'icon_search.png',
+                'name' => BUTTON_SEARCH,
+                'class' => ''
+              );
+          }
+          
           $favorites[8] = array(
               'file' => 'logoff.php',
               'par' => '', 
@@ -210,7 +213,7 @@
   }
   ?>
 </div>
-<div class="fixed-header-height">&nbsp;</div>
+<div class="fixed-header-height<?php echo ((USE_ADMIN_FIXED_SEARCH == 'true') ? ' active' : ''); ?>">&nbsp;</div>
 
 <?php
   if ($messageStack->size > 0) {
