@@ -176,18 +176,10 @@
   }
 
 require (DIR_WS_INCLUDES.'head.php');
+
+//jQueryDatepicker
+require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
 ?>
-    <script type="text/javascript">
-      <!--
-        function popupImageWindow(url) {
-          window.open(url,'popupImageWindow','toolbar=no,location=no,directories=no,status=no,menubar=no,scrollbars=no,resizable=yes,copyhistory=no,width=100,height=100,screenX=150,screenY=150,top=150,left=150')
-        }
-      //-->
-    </script>
-    <?php
-    //jQueryDatepicker
-    require (DIR_WS_INCLUDES.'javascript/jQueryDatepicker/datepicker.js.php');
-    ?>
 </head>
 <body>
     <!-- header //-->
@@ -352,7 +344,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         }
                         ?>
                         <tr <?php echo $tr_attributes;?>>
-                          <td class="dataTableContent"><?php echo '<a href="javascript:popupImageWindow(\'' . FILENAME_POPUP_IMAGE . '?banner=' . $banners['banners_id'] . '\')">' . xtc_image(DIR_WS_IMAGES . 'icon_popup.gif', ICON_POPUP) . '</a>&nbsp;' . $banners['banners_title']; ?></td>
+                          <td class="dataTableContent"><?php echo $banners['banners_title']; ?></td>
                           <?php /* <td class="dataTableContent txta-r"><?php echo $banners['banners_group']; ?></td> */ ?>
                           <td class="dataTableContent txta-r"><?php echo $banners_shown . ' / ' . $banners_clicked; ?></td>
                           <td class="dataTableContent txta-r">
@@ -396,6 +388,9 @@ require (DIR_WS_INCLUDES.'head.php');
                         $heading[] = array('text' => '<b>' . $bInfo->banners_title . '</b>');
                         $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=new') . '">' . BUTTON_EDIT . '</a> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_BANNER_MANAGER, 'page=' . $_GET['page'] . '&bID=' . $bInfo->banners_id . '&action=delete') . '">' . BUTTON_DELETE . '</a>');
                         $contents[] = array('text' => '<br />' . TEXT_BANNERS_DATE_ADDED . ' ' . xtc_date_short($bInfo->date_added));
+                        if ($bInfo->banners_image != '') {
+                           $contents[] = array('align' => 'center', 'text' => '<img style="max-width:250px; margin-bottom:10px;" src="'.DIR_WS_CATALOG_IMAGES . 'banner/'.$bInfo->banners_image.'" />');
+                        }
                         if ( (function_exists('imagecreate')) && ($dir_ok) && ($banner_extension) ) {
                           $banner_id = $bInfo->banners_id;
                           $days = '3';
