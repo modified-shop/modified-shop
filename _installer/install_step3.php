@@ -81,65 +81,67 @@
                   @xtc_db_query_installer('SET NAMES '.$character_set.' COLLATE '.$collation, $db['DB_MYSQL_TYPE']);
 
                   $db_error = false;
-                  $sql_file = DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL;
-                  xtc_db_install($db['DB_DATABASE'], $db['DB_MYSQL_TYPE'], $sql_file);
+                  $sql_file_array = array(MODIFIED_SQL, 'banktransfer_blz.sql');
+                  foreach ($sql_file_array as $sql_file) {
+                    xtc_db_install($db['DB_DATABASE'], $db['DB_MYSQL_TYPE'], DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.$sql_file);
+                  }
                   if ($db_error) {
-                ?>
-                <table width="100%" border="0" cellpadding="0" cellspacing="0">
-                  <tr>
-                    <td style="border-bottom: 1px solid; border-color: #CFCFCF">
-                      <h1><?php echo TEXT_TITLE_ERROR; ?></h1>
-                    </td>
-                    <td style="border-bottom: 1px solid; border-color: #CFCFCF">&nbsp;</td>
-                  </tr>
-                </table>
-                <table border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
-                  <tr>
-                    <td><b><?php echo $db_error; ?></b></td>
-                  </tr>
-                </table>
-                <form name="install" action="install_step3.php" method="post">
-                <?php echo $input_lang; 
-                      echo draw_hidden_fields(); ?>
-                  <table border="0" width="100%" cellspacing="0" cellpadding="0">
-                    <tr>
-                      <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
-                      <td align="center"><input type="image" src="images/buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry"></td>
-                    </tr>
-                  </table>
-                </form>
-                <?php
-                  } else {
-                ?>
+                  ?>
                   <table width="100%" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                      <td align="center"><div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><h1><?php echo TEXT_TITLE_SUCCESS; ?></h1></div></td>
+                      <td style="border-bottom: 1px solid; border-color: #CFCFCF">
+                        <h1><?php echo TEXT_TITLE_ERROR; ?></h1>
+                      </td>
+                      <td style="border-bottom: 1px solid; border-color: #CFCFCF">&nbsp;</td>
                     </tr>
                   </table>
-                  <form name="install" action="install_step4.php" method="post">
+                  <table border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
+                    <tr>
+                      <td><b><?php echo $db_error; ?></b></td>
+                    </tr>
+                  </table>
+                  <form name="install" action="install_step3.php" method="post">
                   <?php echo $input_lang; 
                         echo draw_hidden_fields(); ?>
-                    <br />
                     <table border="0" width="100%" cellspacing="0" cellpadding="0">
                       <tr>
-                      <?php                        
-                        if($_POST['install_cfg'] == 1) {                         
-                      ?>
-                          <td align="right"><input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif"></td>
-                      <?php
-                        } else {
-                      ?>
-                          <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_continue.gif"></a></td>
-                      <?php
-                        }
-                      ?>
+                        <td align="center"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a></td>
+                        <td align="center"><input type="image" src="images/buttons/<?php echo $lang;?>/button_retry.gif" border="0" alt="Retry"></td>
                       </tr>
                     </table>
                   </form>
-                 <?php
+                  <?php
+                  } else {
+                  ?>
+                    <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                      <tr>
+                        <td align="center"><div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><h1><?php echo TEXT_TITLE_SUCCESS; ?></h1></div></td>
+                      </tr>
+                    </table>
+                    <form name="install" action="install_step4.php" method="post">
+                    <?php echo $input_lang; 
+                          echo draw_hidden_fields(); ?>
+                      <br />
+                      <table border="0" width="100%" cellspacing="0" cellpadding="0">
+                        <tr>
+                        <?php                        
+                          if($_POST['install_cfg'] == 1) {                         
+                        ?>
+                            <td align="right"><input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif"></td>
+                        <?php
+                          } else {
+                        ?>
+                            <td align="right"><a href="index.php?lg=<?php echo $lang .'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_continue.gif"></a></td>
+                        <?php
+                          }
+                        ?>
+                        </tr>
+                      </table>
+                    </form>
+                   <?php
+                   }
                  }
-               }
-               ?>
+                 ?>
                </td>
              </tr>
            </table>
