@@ -122,7 +122,7 @@
           
           if (USE_ADMIN_FIXED_SEARCH == 'false') {
             $favorites[7] = array(
-                'file' => "javascript:void(0)\" onclick=\"$('#searchbar_new').toggle('fast');$('#fixed-header').toggleClass('active');$('.fixed-header-height').toggleClass('active');",
+                'file' => "javascript:void(0)\" onclick=\"$('#searchbar_new').toggle('fast').parent('#fixed-header').toggleClass('active').siblings('.fixed-header-height').toggleClass('active');",
                 'par' => '',
                 'mode' => 2,
                 'icon' => 'icon_search.png',
