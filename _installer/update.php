@@ -167,7 +167,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                 sort($sql_files_array);              
                 if (count($sql_files_array) > 0) {
                   foreach ($sql_files_array as $sql_files) {
-                    echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/'.$sql_files.'"> '.$sql_files.'<br>';
+                    echo '<input type="checkbox" name="sql[]" value="'.DIR_FS_DOCUMENT_ROOT.'_installer/update/'.$sql_files.'"> '.$sql_files.'<br>';
                   }
                 }
               }
