@@ -50,8 +50,8 @@
   ?>
  
 <div id="fixed-header">
+  <div class="admin_spacer"></div>
   <div class="adminbar">
-    <div class="admin_spacer"></div>
     <div class="row_adminbar cf">
       <ul class="cf">
         <li class="logo"><a href="<?php echo xtc_catalog_href_link('index.php'); ?>"><?php echo xtc_image(DIR_WS_IMAGES . 'logo.png', 'modified eCommerce Shopsoftware');?></a></li>
