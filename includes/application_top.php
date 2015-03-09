@@ -44,7 +44,7 @@ if (file_exists('includes/local/configure.php')) {
 }
 
 // call Installer
-if (DB_DATABASE == '' && is_dir('./_installer')) {
+if ((DB_DATABASE == '' || !defined('DB_MYSQL_TYPE')) && is_dir('./_installer')) {
   header("Location: ./_installer");
   exit();
 }
