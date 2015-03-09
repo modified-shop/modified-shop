@@ -106,24 +106,9 @@
     xtc_db_test_create_db_permission($db['DB_DATABASE'], $db['DB_MYSQL_TYPE']);
   }
 
+  require ('includes/header.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <title>modified eCommerce Shopsoftware Installer - STEP 2 / DB Connection</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <style type="text/css">
-      body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-      table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-      h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-      <!--
-        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
-        .messageStackError img { position: relative; top: 5px; }
-      -->
-    </style>
-  </head>
-  <body>
-    <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="0" cellspacing="0">
+    <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
       <tr>
         <td height="95" colspan="2" >
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -134,27 +119,37 @@
         </td>
       </tr>
       <tr>
-        <td align="center" valign="top">
-          <br />
+        <td align="left" valign="top">
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <img src="images/step2.gif" width="705" height="180" border="0"><br />
+                <ul id="navigation" class="cf">
+                  <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
+                  <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
+                  <li class="active"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
+                  <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
+                  <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
+                  <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
+                  <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
+                  <!--
+                  <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
+                  //-->
+                  <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
+                </ul>
                 <br />
-                <br />
-                <div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo $test_welcome_step2; ?></div>
+                <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><?php echo $test_welcome_step2; ?></div>
               </td>
             </tr>
           </table>
           <br />
-          <table width="95%" border="0" cellpadding="0" cellspacing="0">
+          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
                 <?php
                   if ($db_error) {
                 ?>
                 <br />
-                <table width="95%" border="0" cellpadding="0" cellspacing="0">
+                <table width="95%" border="0" align="left" cellpadding="0" cellspacing="0">
                   <tr>
                     <td><h1><?php echo TEXT_CONNECTION_ERROR; ?></h1></td>
                   </tr>
@@ -162,21 +157,21 @@
                 <table width="100%" cellpadding="0" cellspacing="0">
                   <tr>
                     <td>
-                      <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+                      <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                         <p><?php echo TEXT_DB_ERROR; ?></p>
                       </div>
                       <p class="boxme">
-                        <table border="0" width="100%" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
+                        <table border="0" width="100%" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
                           <tr>
                             <td>
-                              <div style="border:1px solid #ccc; background:#ff0000; color:#fff; padding:10px;">
+                              <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">
                                 <?php echo $db_error; ?>
                               </div>
                             </td>
                           </tr>
                         </table>
                       </p>
-                      <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+                      <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">
                         <p><?php echo TEXT_DB_ERROR_1; ?></p>
                         <p><?php echo TEXT_DB_ERROR_2; ?></p>
                       </div>
@@ -186,7 +181,7 @@
                         <br />
                         <table border="0" width="100%" cellspacing="0" cellpadding="0">
                           <tr>
-                            <td align="right"><a href="index.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
+                            <td align="right"><a href="index.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a> <input type="image" src="images/buttons/<?php echo $lang;?>/button_back.gif" border="0" alt="Back"></td>
                           </tr>
                         </table>
                       </form>
@@ -205,7 +200,7 @@
                 <?php
                   if($_POST['install_db'] == 1) {
                 ?>
-                  <div style="border:1px solid #ccc; background:#fff; padding:10px;">
+                  <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;">
                     <p><?php echo TEXT_PROCESS_1; ?></p>
                     <p><?php echo TEXT_PROCESS_2; ?></p>
                     <p><?php echo TEXT_PROCESS_3; ?> <b><?php echo DIR_FS_CATALOG . DIR_MODIFIED_INSTALLER.'/'.MODIFIED_SQL; ?></b>.</p>
@@ -215,7 +210,7 @@
                  // DB CLIENT WARNING
                   if ($db_warning != '') {
                 ?>
-                  <div style="border:1px solid #ccc; background:#ff0000; color:#fff; padding:10px;"><?php echo $db_warning; ?></div>
+                  <div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;"><?php echo $db_warning; ?></div>
                 <?php
                   }
                   if($_POST['install_db'] == 1) {
@@ -234,8 +229,8 @@
                 <table border="0" width="100%" cellspacing="0" cellpadding="0">
                   <tr>
                     <td align="right">
-                      <a href="install_step1.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>&db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>"><img src="buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a>
-                      <input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif">
+                      <a href="install_step1.php?lg=<?php echo $lang.'&char='.INSTALL_CHARSET; ?>&db=<?php echo $install_db;?>&cfg=<?php echo $create_config;?>"><img src="images/buttons/<?php echo $lang;?>/button_cancel.gif" border="0" alt="Cancel"></a>
+                      <input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif">
                     </td>
                   </tr>
                 </table>

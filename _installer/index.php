@@ -69,29 +69,9 @@
 
   include ('includes/check_permissions.php');
   include ('includes/check_requirements.php');
-
+  require ('includes/header.php');
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-    <title>modified eCommerce Shopsoftware Installer</title>
-    <style type="text/css">
-      body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-      table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-      h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-      .popout { border:1px solid #ff0000; margin:0; padding:10px; }
-      .popout .left { float: left; width: 300px; padding: 0 10px; text-align: justify; }
-      .popout .right { float: right; width: 300px; padding: 0 10px; }
-      label { display: block; width: 290px; padding: 5px 0 2px 0; }
-      <!--
-        .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
-        .messageStackError img { position: relative; top: 5px; }
-      -->
-    </style>
-  </head>
-  <body>
-  <table width="800" style="border:30px solid #fff;" border="0" align="center" cellpadding="0" cellspacing="0">
+  <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td height="95" colspan="2" >
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -102,12 +82,25 @@
       </td>
     </tr>
     <tr>
-      <td align="right" valign="top">
-        <br />
+      <td align="left" valign="top">
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
-            <td><img src="images/title_index.gif" width="705" height="180" border="0" alt="" /><br />
-              <br /><br /><div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?></div><br /><br />
+            <td>
+              <ul id="navigation" class="cf">
+                <li class="active"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
+                <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
+                <li class="inactive"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
+                <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
+                <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
+                <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
+                <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
+                <!--
+                <li class="inactive second_line"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
+                //-->
+                <li class="inactive second_line last"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
+              </ul>
+              <br />
+              <div style="border:1px solid #ccc; background:#f4f4f4; padding:10px;"><?php echo TEXT_WELCOME_INDEX; ?></div>
             </td>
           </tr>
           <?php
@@ -120,11 +113,11 @@
             ?>
             <tr>
               <td>
-                <h1><?php echo TEXT_CHMOD_REMARK_HEADLINE; ?>:</h1>
-                <div style="background:#fff; padding:0 10px; border:1px solid #cf0000">
+                <br /><h1><?php echo TEXT_CHMOD_REMARK_HEADLINE; ?>:</h1>
+                <div style="background:#fff; padding:0 10px; border:1px solid #DCA7A7">
                   <p><?php echo TEXT_CHMOD_REMARK; ?></p>
                 </div><br />
-                <div style="background:#ffd0d0; color:#000; padding:10px; border:1px solid #cf0000">
+                <div style="background:#F2DEDE; color:#a94442; padding:10px; border:1px solid #DCA7A7" class="messageStackError">
                   <?php
                   if ($messageStack->size('file_permission') > 0) {
                     echo TEXT_WRONG_FILE_PERMISSION . '<br/>';
@@ -186,13 +179,17 @@
             ?>
             <tr>
               <td>
-                <div style="background:#ff0000; color:#ffffff; padding:10px; border:1px solid #cf0000">
-                  <?php
-                  if ($messageStack->size('requirement') > 0) {
-                    echo $messageStack->output('requirement');
-                    echo '<br/>';
-                  }
-                  ?>
+                <br />
+                <div style="background:#F2DEDE; color:#A94442; padding:10px; border:1px solid #DCA7A7">
+                  <div style="float: left; width: 125px;">
+                    <img height="93" width="106" style="border:0;" title="Warnung" alt="Warnung" src="images/icons/big_warning.png">
+                  </div>
+                  <div style="float: left; width: 82%;">
+                    <?php
+                      echo $messageStack->output('requirement');
+                    ?>
+                  </div>
+                  <div style="clear: both"></div>
                 </div>
               </td>
             </tr>
@@ -206,7 +203,7 @@
               <td>&nbsp;</td>
             </tr>
             <tr>
-              <td style="border: 1px solid; border-color: #4CC534; padding:10px;" bgcolor="#C2FFB6">
+              <td style="border: 1px solid; border-color: #b2dba1; padding:10px; color: #3C763D;" bgcolor="#d4ebcb">
                 <strong><?php echo TEXT_CHECKING; ?>:</strong>
                 <br /><br />
                 <?php
@@ -224,7 +221,7 @@
               <img src="images/break-el.gif" width="100%" height="1" alt="" /><br />
               <?php if ($messageStack->size('index') > 0) { ?>
                   <br />
-                    <table border="0" cellpadding="0" cellspacing="0" bgcolor="f3f3f3">
+                    <table border="0" cellpadding="0" cellspacing="0" bgcolor="f4f4f4">
                       <tr>
                         <td><?php echo $messageStack->output('index'); ?></td>
                       </tr>
@@ -271,12 +268,12 @@
                         <td><?php echo TEXT_DB_UPGRADE; ?></td>
                         <td  style="padding-right:10px"><?php echo xtc_draw_checkbox_field_installer('db_upgrade','',true); //enable upgrade by default ?></td>
                       <?php } */ ?>
-                      <td align="right"><input type="image" src="buttons/<?php echo $lang;?>/button_continue.gif"></td>
+                      <td align="right"><input type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif"></td>
                     </tr>
                   </table>
                   <?php // EOF - web28 - 2010.12.13 - NEW db-upgrade ?>
                 <?php } else {
-                  echo '<br/><strong>'. TEXT_INSTALLATION_NOT_POSSIBLE .'</strong><br/><br/><input type="image" src="buttons/'.$lang.'/button_retry.gif" alt="refresh page">';
+                  echo '<br/><strong>'. TEXT_INSTALLATION_NOT_POSSIBLE .'</strong><br/><br/><input type="image" src="images/buttons/'.$lang.'/button_retry.gif" alt="refresh page">';
                 } ?>
                 <br />
               </form>

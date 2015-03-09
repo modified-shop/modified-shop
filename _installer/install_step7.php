@@ -359,29 +359,10 @@
       xtc_redirect(xtc_href_link(DIR_MODIFIED_INSTALLER.'/install_finished.php', 'lg='.$lang.'&char='.INSTALL_CHARSET, 'NONSSL'));
     }
   }
+
+  require ('includes/header.php')
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <title>modified eCommerce Shopsoftware Installer - STEP 7 / Success</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=<?php echo $charset;?>" />
-  <?php require('includes/form_check.js.php'); ?>
-  <style type="text/css">
-    body { background: #eee; font-family: Arial, sans-serif; font-size: 12px;}
-    table,td,div { font-family: Arial, sans-serif; font-size: 12px;}
-    h1 { font-size: 18px; margin: 0; padding: 0; margin-bottom: 10px; }
-    <!--
-      .messageBox {
-        font-family: Verdana, Arial, Helvetica, sans-serif;
-        font-size: 1;
-      }
-      .messageStackError, .messageStackWarning { font-family: Verdana, Arial, sans-serif; font-weight: bold; font-size: 10px; color: #fff; background-color: #; }
-      .messageStackError img { position: relative; top: 5px; }
-    -->
-  </style>
-</head>
-<body>
-  <table width="800" style="border:30px solid #fff;" bgcolor="#f3f3f3" border="0" align="center" cellpadding="0" cellspacing="0">
+  <table width="803" style="border:10px solid #fff;" bgcolor="#ffffff" border="0" align="center" cellpadding="0" cellspacing="0">
     <tr>
       <td height="95" colspan="2" >
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
@@ -391,20 +372,28 @@
         </table>
     </tr>
     <tr>
-      <td align="center" valign="top">
-        <br />
+      <td align="left" valign="top">
           <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
-                <img src="images/step7.gif" width="705" height="180" border="0"><br />
-                <br />
+                <ul id="navigation" class="cf">
+                  <li class="inactive"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_INDEX; ?></span><br /><span class="description"><?php echo NAV_DESC_INDEX; ?></span></li>
+                  <li class="inactive"><span class="number">1.</span> <span class="title"><?php echo NAV_TITLE_STEP1; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP1; ?></span></li>
+                  <li class="inactive"><span class="number">2.</span> <span class="title"><?php echo NAV_TITLE_STEP2; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP2; ?></span></li>
+                  <li class="inactive last"><span class="number">3.</span> <span class="title"><?php echo NAV_TITLE_STEP3; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP3; ?></span></li>
+                  <li class="inactive second_line"><span class="number">4.</span> <span class="title"><?php echo NAV_TITLE_STEP4; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP4; ?></span></li>
+                  <li class="inactive second_line"><span class="number">5.</span> <span class="title"><?php echo NAV_TITLE_STEP5; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP5; ?></span></li>
+                  <li class="inactive second_line"><span class="number">6.</span> <span class="title"><?php echo NAV_TITLE_STEP6; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP6; ?></span></li>
+                  <li class="active second_line last"><span class="number">7.</span> <span class="title"><?php echo NAV_TITLE_STEP7; ?></span><br /><span class="description"><?php echo NAV_DESC_STEP7; ?></span></li>
+                  <li class="inactive second_line"><span class="number">&raquo;</span> <span class="title"><?php echo NAV_TITLE_FINISHED; ?></span><br /><span class="description"><?php echo NAV_DESC_FINISHED; ?></span></li>
+                </ul>
                 <br />
                 <div style="border:1px solid #ccc; background:#fff; padding:10px;"><?php echo TEXT_WELCOME_STEP7; ?></div>
               </td>
             </tr>
           </table>
           <br />
-          <table width="95%" border="0" cellpadding="0" cellspacing="0">
+          <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
             <tr>
               <td>
                 <form name="install" action="install_step7.php" method="post" onSubmit="return check_form(install_step6);">
@@ -521,7 +510,7 @@
                     </table>
                   </div>
                   <br />
-                  <input name="image" type="image" src="buttons/<?php echo $lang;?>/button_continue.gif" align="right" />
+                  <input name="image" type="image" src="images/buttons/<?php echo $lang;?>/button_continue.gif" align="right" />
                   <br />
                   <br />
                 </form>

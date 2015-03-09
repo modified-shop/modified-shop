@@ -144,12 +144,12 @@
           if ($type == 'files') {
             $error_flag = true;
             $file_flag = true;
-            $message_arr['file_permission'][] = DIR_FS_CATALOG.$file;
+            $message_arr['file_permission'][] = '<img src="images/icons/error.png" />&nbsp;'.DIR_FS_CATALOG.$file;
           }
           if ($type == 'dirs') {
             $error_flag = true;
             $folder_flag = true;
-            $message_arr['folder_permission'][] = DIR_FS_CATALOG.$file;
+            $message_arr['folder_permission'][] = '<img src="images/icons/error.png" />&nbsp;'.DIR_FS_CATALOG.$file;
           }
         }
       } else {
@@ -165,7 +165,7 @@
                 if (!is_make_writeable(DIR_FS_CATALOG.$file) && $rfolder_flag != $key) {
                   $error_flag = true;
                   $rfolder_flag = true;
-                  $message_arr['rfolder_permission'][] = DIR_FS_CATALOG.$key;
+                  $message_arr['rfolder_permission'][] = '<img src="images/icons/error.png" />&nbsp;'.DIR_FS_CATALOG.$key;
                 }
               }
             }

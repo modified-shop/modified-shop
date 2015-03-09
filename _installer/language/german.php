@@ -16,6 +16,37 @@
   // Global
   define('TEXT_FOOTER','<a style="text-decoration:none;" href="http://www.modified-shop.org" target="_blank"><span style="color:#B0347E;">mod</span><span style="color:#6D6D6D;">ified eCommerce Shopsoftware</span></a><span style="color:#555555;">' . '&nbsp;' . '&copy;2009-' . date('Y'));
 
+  // meta title
+  define('TITLE_INDEX','modified eCommerce Shopsoftware Installer');
+  define('TITLE_INSTALL_STEP1','modified eCommerce Shopsoftware Installer - Step 1 / Settings');
+  define('TITLE_INSTALL_STEP2','modified eCommerce Shopsoftware Installer - Step 2 / DB Connection');
+  define('TITLE_INSTALL_STEP3','modified eCommerce Shopsoftware Installer - Step 3 / DB Import');
+  define('TITLE_INSTALL_STEP4','modified eCommerce Shopsoftware Installer - Step 4 / Webserver Configuration');
+  define('TITLE_INSTALL_STEP5','modified eCommerce Shopsoftware Installer - Step 5 / Write Config Files');
+  define('TITLE_INSTALL_STEP6','modified eCommerce Shopsoftware Installer - Step 6 / Shopinformation');
+  define('TITLE_INSTALL_STEP7','modified eCommerce Shopsoftware Installer - Step 7 / Success');
+  define('TITLE_INSTALL_FINISHED','modified eCommerce Shopsoftware Installer - Finished');
+
+  // Navigation
+  define('NAV_TITLE_INDEX','Start');
+  define('NAV_DESC_INDEX','Systemvorraussetzungen &uuml;berpr&uuml;fen');
+  define('NAV_TITLE_STEP1','Schritt');
+  define('NAV_DESC_STEP1','Datenbank-Verbindung herstellen');
+  define('NAV_TITLE_STEP2','Schritt');
+  define('NAV_DESC_STEP2','Datenbank-Import vorbereiten');
+  define('NAV_TITLE_STEP3','Schritt');
+  define('NAV_DESC_STEP3','Datenbank-Import abgeschlossen');
+  define('NAV_TITLE_STEP4','Schritt');
+  define('NAV_DESC_STEP4','Konfiguration vorbereiten');
+  define('NAV_TITLE_STEP5','Schritt');
+  define('NAV_DESC_STEP5','Konfiguration abgeschlossen');
+  define('NAV_TITLE_STEP6','Schritt');
+  define('NAV_DESC_STEP6','Shopinformationen');
+  define('NAV_TITLE_STEP7','Schritt');
+  define('NAV_DESC_STEP7','Kundengruppen-Einstellungen');
+  define('NAV_TITLE_FINISHED','Fertig!');
+  define('NAV_DESC_FINISHED','Wir w&uuml;nschen gute Gesch&auml;fte!');
+
   // Box names
   define('BOX_LANGUAGE','Sprache');
   define('BOX_DB_CONNECTION','DB Verbindung');
@@ -83,17 +114,17 @@
   define('TEXT_ENGLISH','Englisch');
   define('TEXT_INFO_DONATIONS_IMG_ALT','Unterst&uuml;tzen Sie dieses Projekt mit Ihrer Spende');
   define('BUTTON_DONATE','<a href="http://www.modified-shop.org/spenden" target="_blank"><img src="https://www.paypal.com/de_DE/DE/i/btn/btn_donateCC_LG.gif" alt="' . TEXT_INFO_DONATIONS_IMG_ALT . '" border="0" /></a>');
-  define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
+  define('TEXT_WELCOME_INDEX','<b>Willkommen zur modified eCommerce Shopsoftware Installation</b><br /><br />Die modified eCommerce Shopsoftware ist eine Open-Source e-commerce L&ouml;sung, die st&auml;ndig vom modified eCommerce Shopsoftware Team und einer grossen Gemeinschaft weiterentwickelt wird.<br /> Seine out-of-the-box Installation erlaubt es dem Shop-Besitzer seinen Online-Shop mit einem Minimum an Aufwand und Kosten zu installieren, zu betreiben und zu verwalten.<br /><br />Die modified eCommerce Shopsoftware ist auf jedem System lauff&auml;hig, welches eine PHP Umgebung (ab PHP 5.3.0) und MySQL (ab MySQL 5.0.0) zur Verf&uuml;gung stellt, wie zum Beispiel Linux, Solaris, BSD, und Microsoft Windows.<br /><br />Die modified eCommerce Shopsoftware ist ein OpenSource-Projekt &ndash; wir stecken jede Menge Arbeit und Freizeit in dieses Projekt und w&uuml;rden uns daher &uuml;ber eine Spende als kleine Anerkennung freuen.<br /><br />' . BUTTON_DONATE);
   define('TEXT_WELCOME_STEP1','<b>Datenbank- und Webservereinstellungen</b><br /><br />Der Installer ben&ouml;tigt hier einige Informationen bez&uuml;glich Ihrer Datenbank und Ihrer Verzeichnisstruktur.<br /><b>Hinweis:</b> Sofern die erforderlichen Rechte vorhanden sind, kann der Installer auch eine neue Datenbank erzeugen.');
   define('TEXT_WELCOME_STEP2','<b>Datenbank Installation</b><br /><br />Der modified eCommerce Shopsoftware Installer installiert automatisch die modified eCommerce Shopsoftware Datenbank.');
   // BOF - web28 - 2010.02.20 - NEW STEP2-4 Handling
   define('TEXT_WELCOME_STEP2A','<b>Datenbank Installation wurde deaktiviert</b><br /><br />Die Installation der modified eCommerce Shopsoftware Datenbank in Step3 wird &uuml;bersprungen!.');
   // EOF - web28 - 2010.02.20 - NEW STEP2-4 Handling
   define('TEXT_WELCOME_STEP3','<b>Datenbank Import.</b><br /><br />Die Daten der modified eCommerce Shopsoftware Datenbank werden automatisch in die Datenbank importiert.');
-  define('TEXT_WELCOME_STEP4','<b>Erstellen der modified eCommerce Shopsoftware Konfigurations-Dateien</b><br /><br /><b>Wenn bereits configure Dateien aus einer fr&uuml;heren Installation vorhanden sind, wird die modified eCommerce Shopsoftware diese L&ouml;schen.</b><br /><br />Der Installer schreibt automatisch die Konfigurationsdateien f&uuml;r die Dateistruktur und die Datenbankanbindung.<br /><br />Sie k&ouml;nnen zwischen verschiedenen Session-Handling_systemen w&auml;hlen.');
+  define('TEXT_WELCOME_STEP4','<b>Erstellen der modified eCommerce Shopsoftware Konfigurations-Dateien</b><br /><br /><b>Wenn bereits configure Dateien aus einer fr&uuml;heren Installation vorhanden sind, wird die modified eCommerce Shopsoftware diese l&ouml;schen.</b><br /><br />Der Installer schreibt automatisch die Konfigurationsdateien f&uuml;r die Dateistruktur und die Datenbankanbindung.');
   define('TEXT_WELCOME_STEP5','<b>Webserver Konfiguration</b><br /><br />');
   // BOF - web28 - 2010-02-1014 - CORRECT TO GERMAN
-  define('TEXT_WELCOME_STEP6','<b>Grunds&auml;tzliche Shopkonfiguration</b><br /><br />Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand und Steuerberechnungen genutzt.<br /><br />Wenn Sie w&uuml;nschen, kann die modified eCommerce Shopsoftware automatisch die Zonen, Steuers&auml;tze und Steuerklassen f&uuml;r Versand und Verkauf innerhalb der EU einrichten.<br />Markieren Sie nur <b>automatisches Einstellen der Steuerzonen</b> - <b>Ja</b>.');
+  define('TEXT_WELCOME_STEP6','<b>Grunds&auml;tzliche Shopkonfiguration</b><br /><br />Der Installer richtet den Admin-Account ein und schreibt noch diverse Daten in die Datenbank.<br />Die angegebenen Daten f&uuml;r <b>Land</b> und <b>PLZ</b> werden f&uuml;r die Versand- und Steuerberechnungen genutzt.<br /><br />Wenn Sie w&uuml;nschen, kann die modified eCommerce Shopsoftware automatisch die Zonen, Steuers&auml;tze und Steuerklassen f&uuml;r Versand und Verkauf innerhalb der EU einrichten.<br />Markieren Sie nur <b>automatisches Einstellen der Steuerzonen</b> - <b>Ja</b>.');
   // EOF - web28 - 2010-02-1014 - CORRECT TO GERMAN
   define('TEXT_WELCOME_STEP7','<b>Setup f&uuml;r G&auml;ste und Standardkunden</b><br /><br />Das modified eCommerce Shopsoftware Gruppen und Preissystem bietet Ihnen unbegrenzte M&ouml;glichkeiten der Preisgebung.<br /><br />
     <b>% Rabatt auf ein einzelnes Produkt</b><br />
@@ -120,7 +151,7 @@
   define('TEXT_AUTOMATIC_LONG','Ihre Informationen bez&uuml;glich Webserver und Datenbank werden automatisch in die ben&ouml;tigten Catalog und Admin Konfigurations-Dateien geschrieben, bestehende Dateien werden dabei &uuml;berschrieben!');
   define('TITLE_DATABASE_SETTINGS','Datenbank Informationen');
   define('TEXT_DATABASE_TYPE','Datenbankverbindung');
-  define('TEXT_DATABASE_TYPE_LONG','Bitte w&auml;hlen sie die Datenbankverbindung. <b>Wichtig:</b> mysqli ist noch in der Beta Phase. Sollte es nach der Installation zu Problemem kommen, kann das in der /includes/configure.php umgestellt werden.');
+  define('TEXT_DATABASE_TYPE_LONG','Bitte w&auml;hlen sie die Datenbankverbindung.<br /><b>Wichtig:</b> mysqli ist noch in der Beta Phase. Sollte es nach der Installation zu Problemem kommen, kann das in der /includes/configure.php umgestellt werden.');
   define('TEXT_DATABASE_SERVER','Datenbankserver');
   define('TEXT_DATABASE_SERVER_LONG','Der Datenbankserver kann entweder in Form eines Hostnamens, wie zum Beispiel <i>db1.myserver.com</i> oder <i>localhost</i>, oder als IP-Adresse, wie <i>192.168.0.1</i> angegeben werden.');
   define('TEXT_USERNAME','Benutzername');
@@ -182,7 +213,7 @@
   //EOF - GTB - 2010-08-31 - Layout correction
   //EOF - web28 - 2010-03-02 - New SSL-PROXY info
   define('TEXT_ADMIN_DIRECTORY','Admin Verzeichnis');
-  define('TEXT_ADMIN_DIRECTORY_LONG', '<span style="color:red;">Bitte &auml;ndern sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.</span><br/>Hier ein per Zufallsgenerator generierter Vorschlag: ');
+  define('TEXT_ADMIN_DIRECTORY_LONG', '<div style="border:1px solid #DCA7A7; background:#F2DEDE; color:#A94442; padding:10px;">Bitte &auml;ndern sie aus Sicherheitsgr&uuml;nden den Namen des Admin Verzeichnisses.</div><br/>Hier ein per Zufallsgenerator generierter Vorschlag: ');
 
   // install_step5.php
   define('TEXT_WS_CONFIGURATION_SUCCESS','Die <strong>modified eCommerce Shopsoftware</strong> Webserver Konfiguration war erfolgreich');
