@@ -33,6 +33,7 @@
   <link rel="stylesheet" type="text/css" href="includes/searchbar_menu/searchbar_menu.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/sumoselect.css" />
 
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -49,7 +50,13 @@
   <!--[if lt IE 9]><script src="includes/javascript/html5.js"></script><![endif]-->
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
-  
+  <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
+  <script type="text/javascript">
+    $(document).ready(function () {
+      $('.SlectBox').SumoSelect();
+    });
+  </script>
+    
   <script type="text/javascript" src="includes/javascript/jquery.alerts.min.js"></script>
   <script type="text/javascript">
   /* <![CDATA[ */
