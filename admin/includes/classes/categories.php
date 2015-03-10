@@ -1070,7 +1070,7 @@ class categories {
 
   function create_permission_checkboxes($t_array) {
     $customers_statuses_array = xtc_get_customers_statuses();
-    $input = '<label><input type="checkbox" name="groups[]" value="all"> '.TXT_ALL.'</label><br />'. PHP_EOL;
+    $input = '<label>' . xtc_draw_checkbox_field('groups[]', 'all', '','', 'id="cgAll"').TXT_ALL.'</label><br />'. PHP_EOL;
     for ($i = 0, $n = sizeof($customers_statuses_array); $i < $n; $i ++) {
       $checked = ($t_array['group_permission_'.$customers_statuses_array[$i]['id']] == 1)? ' checked' : '';
       $preselect = $i==0 ? true : false; //preselect all
@@ -1078,7 +1078,7 @@ class categories {
       if( !isset($_GET['pID']) && !isset($_GET['cID']) && $preselect) {
         $checked = ' checked';
       }
-      $input .= '<label><input type="checkbox" name="groups[]" value="'.$customers_statuses_array[$i]['id'].'"'.$checked.'> '.$customers_statuses_array[$i]['text'].'</label><br />'. PHP_EOL;
+      $input .= '<label>'.  xtc_draw_checkbox_field('groups[]', $customers_statuses_array[$i]['id'], $checked,'', 'id="cgAll"') . $customers_statuses_array[$i]['text'].'</label><br />'. PHP_EOL;
     }
     return $input;
   }
