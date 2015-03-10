@@ -220,7 +220,7 @@
   function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
     $field = '<select name="' . $name . '"';
     $params  = preg_replace("'\s+=\s+'",'=',$params);
-    $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : 'class="SlectBox"');
+    $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : $params . ' class="SlectBox"');
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if (is_array($values)) {
