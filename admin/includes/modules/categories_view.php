@@ -164,29 +164,31 @@
       }
       ?> 
 
+      <?php
+        //multi-actions form STARTS
+        if ((isset($_POST['multi_categories']) && xtc_not_null($_POST['multi_categories'])) || (isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products']))) {
+          $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action_confirm' . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
+        } else {
+          $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
+        }
+        echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
+        //add current category id in $_POST
+        if (isset($_GET['cPath'])) {
+          echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
+        }
+      ?>
       <table class="clear tableCenter collapse">
         <tr>
-          <?php
-            //multi-actions form STARTS
-            if ((isset($_POST['multi_categories']) && xtc_not_null($_POST['multi_categories'])) || (isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products']))) {
-              $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action_confirm' . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
-            } else {
-              $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
-            }
-            echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
-            //add current category id in $_POST
-            if (isset($_GET['cPath'])) {
-              echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
-            }
-          ?>
           <!-- categories & products column STARTS -->
           <td class="boxCenterLeft">
             <!-- categories and products table -->
             <table class="tableBoxCenter collapse">
               <tr class="dataTableHeadingRow">
                 <td class="dataTableHeadingContent txta-c" style="width:4%">
-                  <?php echo TABLE_HEADING_EDIT; ?>
-                  <input type="checkbox" onclick="javascript:CheckAll(this.checked);">
+                  <?php 
+                    echo TABLE_HEADING_EDIT; 
+                    echo xtc_draw_checkbox_field('select_all', '1', false, '', 'onclick="javascript:CheckAll(this.checked);"');   
+                  ?>
                 </td>
                 <td class="dataTableHeadingContent txta-c" style="width:10%">
                   <?php echo TABLE_HEADING_PRODUCTS_MODEL.xtc_sorting(FILENAME_CATEGORIES,'model'); ?>
@@ -344,9 +346,9 @@
                  } else {
                      echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'">' . "\n";
                  }
-                 $checked = isset($_POST['multi_categories']) && is_array($_POST['multi_categories']) && in_array($categories['categories_id'], $_POST['multi_categories']) ? 'checked="checked"' : ''; 
+                 $checked = isset($_POST['multi_categories']) && is_array($_POST['multi_categories']) && in_array($categories['categories_id'], $_POST['multi_categories']) ? true : false; 
                  ?>
-                   <td class="categories_view_data"><input type="checkbox" name="multi_categories[]" value="<?php echo $categories['categories_id'];?>"<?php echo $checked;?>></td>
+                   <td class="categories_view_data"><?php echo xtc_draw_checkbox_field('multi_categories[]', $categories['categories_id'], $checked); ?></td>
                    <td class="categories_view_data">--</td>
                    <td class="categories_view_data"><?php echo $categories['sort_order']; ?></td>
                    <?php
@@ -557,15 +559,15 @@
                  echo '<tr class="dataTableRow" onmouseover="this.className=\'dataTableRowOver\';this.style.cursor=\'pointer\'" onmouseout="this.className=\'dataTableRow\'" >' . "\n";
                }
                  //checkbox again after submit and before final submit
-                 unset($is_checked);
+                 $is_checked = false;
                  if (isset($_POST['multi_products']) && is_array($_POST['multi_products'])) {
                    if (in_array($products['products_id'], $_POST['multi_products'])) {
-                     $is_checked = ' checked="checked"';
+                     $is_checked = true;
                    }
                  }
                  ?>
                  <td class="categories_view_data">
-                   <input type="checkbox" name="multi_products[]" value="<?php echo $products['products_id']; ?>" <?php echo (isset($is_checked) ? $is_checked : ''); ?>>
+                   <?php echo xtc_draw_checkbox_field('multi_products[]', $products['products_id'], $is_checked); ?>
                  </td>
                  <?php
                  if ($products['products_model'] !='' ){
@@ -859,7 +861,7 @@
                   }
                   $tree='';
                   for ($i=0;$n=sizeof($cat_tree),$i<$n;$i++) {
-                    $tree .= '<input type="checkbox" name="dest_cat_ids[]" value="'.$cat_tree[$i]['id'].'"><font size="1">'.$cat_tree[$i]['text'].'</font><br />';
+                    $tree .= xtc_draw_checkbox_field('dest_cat_ids[]', $cat_tree[$i]['id']).'<font size="1">'.$cat_tree[$i]['text'].'</font><br />';
                   }
                   $contents[] = array('text' => $tree.'<br /><hr noshade>');
                   $contents[] = array('text' => '<b>'.TEXT_SINGLECOPY.'</b><br />'.TEXT_SINGLECOPY_DESC);
@@ -871,11 +873,11 @@
                 }
                 $contents[] = array('text' => '<br />' . TEXT_SINGLECOPY_CATEGORY . '<br />' . xtc_draw_pull_down_menu('dest_category_id', $category_tree, $current_category_id) . '<br /><hr noshade>');
                 $contents[] = array('text' => '<strong>' . TEXT_HOW_TO_COPY . '</strong><br />' . xtc_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . xtc_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE . '<br /><hr noshade>');
-                $contents[] = array('text' => '<br />' . TEXT_HOW_TO_LINK . '<br />' . '<input type="checkbox" name="link_to_product" value="link_to_product" checked="checked"><font size="1">'.TEXT_HOW_TO_LINK_INFO.'</font><br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . '<input type="checkbox" name="attr_copy" value="attr_copy"><font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br /><hr noshade>');
+                $contents[] = array('text' => '<br />' . TEXT_HOW_TO_LINK . '<br />' . xtc_draw_checkbox_field('link_to_product', 'link_to_product', true).'<font size="1">'.TEXT_HOW_TO_LINK_INFO.'</font><br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_ATTRIBUTE_COPY . '</strong><br />' . xtc_draw_checkbox_field('attr_copy', 'attr_copy', false).'<font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br /><hr noshade>');
                 // BOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
-                $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . '<input type="checkbox" name="cnt_copy" value="cnt_copy"><font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br /><hr noshade>');
-                $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . '<input type="checkbox" name="links_copy" value="links_copy"><font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_CONTENT_COPY . '</strong><br />' . xtc_draw_checkbox_field('cnt_copy', 'cnt_copy', false).'<font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br /><hr noshade>');
+                $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . xtc_draw_checkbox_field('links_copy', 'links_copy', false).'<font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
                 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
               }
