@@ -1,35 +1,52 @@
 
 /*Credits: Dynamic Drive CSS Library */
 /*URL: http://www.dynamicdrive.com/style/ */
-
+.columnLeft2 {
+  display: block;
+}
 .suckertreemenu ul{
 	list-style-type: none;
    margin: 0;
    padding: 0;
-   width: 150px;
+   width: 190px;
+}
+.suckertreemenu li {
+  border-top: 1px solid #ddd;
+}
+.suckertreemenu ul > li:first-child {
+  border-top: 0px;
+}
+.suckertreemenu ul ul  {
+  border-top: 1px solid #ddd;
 }
 .suckertreemenu li a{
 	display: block;
 	width: 100%;
-	padding: 1px 0px 1px 0px;
+	padding: 3px 0px 3px 0px;
 	text-decoration: none;
 	outline: none;
-	letter-spacing: normal;		
-}
-.suckertreemenu li li a{
-padding: 5px 0px;
-text-indent: 3px;
+	letter-spacing: normal;
+  font-size:12px !important; 
+  line-height:16px; 		
 }
 ul#treemenu1 li ul li ul {
   text-indent: 10px;
 }
-
 /*Top level menu link items style*/
 .suckertreemenu li a:hover, .buttonmenu li a:active{
-	color: black;
+	color: #af417e;
 	background-color: #eeeeee;
 	outline: none;
 }
+#cssmenu ul li .dataNavHeadingContent {
+  background-color: #eee;
+  margin-top:15px;
+  border-top: 1px solid #ddd;
+  border-left: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  padding: 4px;
+}
+
 #top1{
   margin-top: 0px;
 	margin-bottom: 5px;	
@@ -73,17 +90,4 @@ li{
 
 .fixed_messageStack{
   margin: 5px;
-}
-.columnLeft2 {
-  display: block;
-}
-#cssmenu ul li .dataNavHeadingContent {
-  background-color: #eee;
-  border: 1px solid #ccc;
-  padding: 4px;
-}
-
-#cssmenu li ul a:hover {
-background:#eee;
-color:#6d2551;
 }
