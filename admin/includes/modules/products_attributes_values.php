@@ -210,7 +210,7 @@ if (xtc_db_num_rows($products)) {
                   
                 <div class="pageHeading">&nbsp;<?php echo HEADING_TITLE_VAL; ?>&nbsp;&nbsp;&nbsp;
                   <span  class="main"><?php echo TEXT_OPTION_ID_FILTER;?></span>
-                  <select name="option_id_filter" onchange="option_filter(this)">
+                  <select class="SlectBox" name="option_id_filter" onchange="option_filter(this)">
                     <option value="" name="">---</option>
                     <?php echo $options_dropdown_select;?>
                   </select>
@@ -248,7 +248,7 @@ if (xtc_db_num_rows($products)) {
                   <?php echo xtc_draw_form('values', FILENAME_PRODUCTS_ATTRIBUTES, 'action=add_product_option_values&value_page=' . $_GET['value_page'].$option_filter, 'post'); ?>
                   <tr class="dataTableRowSelected">
                     <td class="dataTableContent txta-c">&nbsp;<?php echo $next_id; ?>&nbsp;</td>
-                    <td align="left" class="dataTableContent">&nbsp;<select name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
+                    <td align="left" class="dataTableContent">&nbsp;<select class="SlectBox" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
                     <td class="dataTableContent"><input type="hidden" name="value_id" value="<?php echo $next_id; ?>"><?php echo $inputs; ?></td>
                     <td class="dataTableContent txta-c">&nbsp;<?php echo xtc_button(BUTTON_INSERT); ?>&nbsp;</td>
                   </tr>
@@ -285,7 +285,7 @@ while ($values_values = xtc_db_fetch_array($values)) {
                         <input type="hidden" name="value_id" value="<?php echo $values_values['products_options_values_id']; ?>">
                         <input type="hidden" name="option_id" value="<?php echo $values_values['products_options_id']; ?>">
                       </td>
-                      <td align="center" class="dataTableContent">&nbsp;<select name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
+                      <td align="center" class="dataTableContent">&nbsp;<select class="SlectBox" name="option_id"><?php echo $options_dropdown_select;?></select>&nbsp;</td>
                       <td class="dataTableContent"><?php echo $inputs; ?></td>
                       <td class="dataTableContent txta-c update">&nbsp;<?php echo xtc_button(BUTTON_UPDATE); ?>&nbsp;<?php echo xtc_button_link(BUTTON_CANCEL, xtc_href_link(FILENAME_PRODUCTS_ATTRIBUTES, 'value_page='.$_GET['value_page'].$option_filter, 'NONSSL')); ?>&nbsp;</td>
                     </tr>

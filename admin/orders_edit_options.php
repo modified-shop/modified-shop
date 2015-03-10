@@ -58,7 +58,7 @@
           <td class="dataTableContent"><?php echo xtc_draw_input_field('options_values_price',$attributes['options_values_price'], 'size="10"');?></td>
           <td class="dataTableContent txta-c"><?php echo $attributes['price_prefix'];?></td>
           <td class="dataTableContent">
-            <select name="prefix">
+            <select class="SlectBox" name="prefix">
               <option value="+">+
               <option value="-">-
             </select>

@@ -229,7 +229,7 @@
                               </td>
                               <td class="menuBoxHeading">
                                 <?php echo REPORT_START_DATE;?><br />
-                                <select name="startD" size="1">
+                                <select class="SlectBox" name="startD" size="1">
                                   <?php                                  
                                   if ($startDate) {
                                     $j = date("j", $startDate);                                    
@@ -243,7 +243,7 @@
                                   }
                                   ?>
                                 </select>
-                                <select name="startM" size="1">
+                                <select class="SlectBox" name="startM" size="1">
                                   <?php
                                   if ($startDate) {
                                     $m = date("n", $startDate);
@@ -257,7 +257,7 @@
                                   }
                                   ?>
                                 </select>
-                                <select name="startY" size="1">
+                                <select class="SlectBox" name="startY" size="1">
                                   <?php
                                   if ($startDate) {
                                     $y = date("Y") - date("Y", $startDate);
@@ -274,14 +274,14 @@
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
                                 <?php echo REPORT_DETAIL; ?><br />
-                                <select name="detail" size="1">
+                                <select class="SlectBox" name="detail" size="1">
                                   <option value="0"<?php if ($srDetail == 0) echo "selected"; ?>><?php echo DET_HEAD_ONLY; ?></option>
                                   <option value="1"<?php if ($srDetail == 1) echo " selected"; ?>><?php echo DET_DETAIL; ?></option>
                                   <option value="2"<?php if ($srDetail == 2) echo " selected"; ?>><?php echo DET_DETAIL_ONLY; ?></option>
                                 </select>
                                 <br />
                                 <?php echo REPORT_MAX; ?><br />
-                                <select name="max" size="1">
+                                <select class="SlectBox" name="max" size="1">
                                   <option value="0"><?php echo REPORT_ALL; ?></option>
                                   <option<?php if ($srMax == 1) echo " selected"; ?>>1</option>
                                   <option<?php if ($srMax == 3) echo " selected"; ?>>3</option>
@@ -293,7 +293,7 @@
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
                                 <?php echo REPORT_STATUS_FILTER; ?><br />
-                                <select name="status" size="1">
+                                <select class="SlectBox" name="status" size="1">
                                   <option value="0"><?php echo REPORT_ALL; ?></option>
                                   <option value="<?php echo ORDER_STATUSES_FOR_SALES_STATISTICS . '"'.($srStatus == ORDER_STATUSES_FOR_SALES_STATISTICS ? ' selected':'').'>' . REPORT_SALES_STATISTICS; ?></option>
                                   <?php
@@ -306,7 +306,7 @@
                                 </select>
                                 <br />
                                 <?php echo REPORT_PAYMENT_FILTER; ?><br />
-                                <select name="payment" size="1">
+                                <select class="SlectBox" name="payment" size="1">
                                   <option value="0" <?php if ($srPayment === 0) echo " selected"; ?>><?php echo REPORT_ALL; ?></option>
                                   <?php
                                   $payments = explode(';', MODULE_PAYMENT_INSTALLED);
@@ -324,14 +324,14 @@
                               </td>
                               <td rowspan="2" class="menuBoxHeading txta-l">
                                 <?php echo REPORT_EXP; ?><br />
-                                <select name="export" size="1">
+                                <select class="SlectBox" name="export" size="1">
                                   <option value="0" selected><?php echo EXP_NORMAL; ?></option>
                                   <option value="1"><?php echo EXP_HTML; ?></option>
                                   <option value="2"><?php echo EXP_CSV; ?></option>
                                 </select>
                                 <br />
                                 <?php echo REPORT_SORT; ?><br />
-                                <select name="sort" size="1">
+                                <select class="SlectBox" name="sort" size="1">
                                   <option value="0"<?php if ($srSort == 0) echo " selected"; ?>><?php echo SORT_VAL0; ?></option>
                                   <option value="1"<?php if ($srSort == 1) echo " selected"; ?>><?php echo SORT_VAL1; ?></option>
                                   <option value="2"<?php if ($srSort == 2) echo " selected"; ?>><?php echo SORT_VAL2; ?></option>
@@ -346,7 +346,7 @@
                             <tr>
                               <td class="menuBoxHeading">
                                 <?php echo REPORT_END_DATE; ?><br />
-                                <select name="endD" size="1">
+                                <select class="SlectBox" name="endD" size="1">
                                   <?php
                                   echo $endDate;
                                   
@@ -362,7 +362,7 @@
                                   }
                                   ?>
                                 </select>
-                                <select name="endM" size="1">
+                                <select class="SlectBox" name="endM" size="1">
                                   <?php
                                   if ($endDate) {
                                     $m = date("n", $endDate - 60* 60 * 24);
@@ -376,7 +376,7 @@
                                   }
                                   ?>
                                 </select>
-                                <select name="endY" size="1">
+                                <select class="SlectBox" name="endY" size="1">
                                   <?php
                                   if ($endDate) {
                                     $y = date("Y") - date("Y", $endDate - 60* 60 * 24);
