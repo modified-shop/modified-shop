@@ -218,7 +218,8 @@
 
   // Output a form pull down menu
   function xtc_draw_pull_down_menu($name, $values, $default = '', $params = '', $required = false) {
-    $field = '<select class="SlectBox" name="' . $name . '"';
+    $field = '<select name="' . $name . '"';
+    $params = (strpos($params,'class="') !== false ? str_replace('class="', 'class="SlectBox ',$params) : 'class="SlectBox"');
     if ($params) $field .= ' ' . $params;
     $field .= '>';
     if (is_array($values)) {
