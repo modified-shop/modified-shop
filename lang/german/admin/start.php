@@ -109,7 +109,7 @@ define('TOTAL_TURNOVER', 'Umsatz gesamt');
 // main heading
 define('HEADING_TITLE', 'Willkommen im Adminbereich');
 // users online
-define('TABLE_CAPTION_USERS_ONLINE', 'User Online');
+define('TABLE_CAPTION_USERS_ONLINE', 'Online');
 define('TABLE_CAPTION_USERS_ONLINE_HINT', '***f&uuml;r Infos zu einem User - auf Namen des Users klicken***');
 define('TABLE_HEADING_USERS_ONLINE_SINCE', 'Online seit');
 define('TABLE_HEADING_USERS_ONLINE_NAME', 'Name');
@@ -117,7 +117,7 @@ define('TABLE_HEADING_USERS_ONLINE_LAST_CLICK', 'Letzter Klick');
 define('TABLE_HEADING_USERS_ONLINE_INFO', 'Infos');
 define('TABLE_CELL_USERS_ONLINE_INFO', 'mehr...');
 // new customers
-define('TABLE_CAPTION_NEW_CUSTOMERS', 'Neue Kunden');
+define('TABLE_CAPTION_NEW_CUSTOMERS', 'Kunden');
 define('TABLE_CAPTION_NEW_CUSTOMERS_COMMENT', '(die letzten 15)');
 define('TABLE_HEADING_NEW_CUSTOMERS_LASTNAME', 'Name');
 define('TABLE_HEADING_NEW_CUSTOMERS_FIRSTNAME', 'Vorname');
@@ -128,7 +128,7 @@ define('TABLE_CELL_NEW_CUSTOMERS_EDIT', 'bearbeiten...');
 define('TABLE_CELL_NEW_CUSTOMERS_DELETE', 'l&ouml;schen...');
 define('TABLE_CELL_NEW_CUSTOMERS_ORDERS', 'anzeigen...');
 // new orders
-define('TABLE_CAPTION_NEW_ORDERS', 'Neue Bestellungen');
+define('TABLE_CAPTION_NEW_ORDERS', 'Bestellungen');
 define('TABLE_CAPTION_NEW_ORDERS_COMMENT', '(die letzten 20)');
 define('TABLE_HEADING_NEW_ORDERS_ORDER_NUMBER', 'Bestellnummer');
 define('TABLE_HEADING_NEW_ORDERS_ORDER_DATE', 'Bestelldatum');
