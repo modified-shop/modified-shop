@@ -346,6 +346,7 @@ define('ERROR_FILE_NOT_SAVED', 'Error: File upload not saved.');
 define('ERROR_FILETYPE_NOT_ALLOWED', 'Error: File upload type not allowed.');
 define('SUCCESS_FILE_SAVED_SUCCESSFULLY', 'Success: File upload saved successfully.');
 define('WARNING_NO_FILE_UPLOADED', 'Warnung: No file uploaded.');
+define('ERROR_FILE_NOT_REMOVEABLE', 'Error: File not removed.');
 
 define('DELETE_ENTRY','Delete entry?');
 define('TEXT_PAYMENT_ERROR','<b>WARNING:</b> Please activate a Payment Module!');
