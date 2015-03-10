@@ -166,6 +166,19 @@
 
       <table class="clear tableCenter collapse">
         <tr>
+          <?php
+            //multi-actions form STARTS
+            if ((isset($_POST['multi_categories']) && xtc_not_null($_POST['multi_categories'])) || (isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products']))) {
+              $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action_confirm' . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
+            } else {
+              $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
+            }
+            echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
+            //add current category id in $_POST
+            if (isset($_GET['cPath'])) {
+              echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
+            }
+          ?>
           <!-- categories & products column STARTS -->
           <td class="boxCenterLeft">
             <!-- categories and products table -->
@@ -216,17 +229,6 @@
                </td>
              </tr>
              <?php
-             //multi-actions form STARTS
-             if ((isset($_POST['multi_categories']) && xtc_not_null($_POST['multi_categories'])) || (isset($_POST['multi_products']) && xtc_not_null($_POST['multi_products']))) {
-               $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action_confirm' . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
-             } else {
-               $action_multi = xtc_get_all_get_params(array('cPath', 'action')) . 'action=multi_action'  . (isset($_GET['cPath']) ? '&cPath=' . $cPath : '');
-             }
-             echo xtc_draw_form('multi_action_form', FILENAME_CATEGORIES, $action_multi, 'post', 'onsubmit="javascript:return CheckMultiForm()"');
-             //add current category id in $_POST
-             if (isset($_GET['cPath'])) {
-               echo '<input type="hidden" id="cPath" name="cPath" value="' . $cPath . '">';
-             }
 
             if($display_categories){
                // ----------------------------------------------------------------------------------------------------- //
@@ -678,33 +680,6 @@
           $contents = array();
 
           switch ($action) {
-            case 'copy_to':
-              //close multi-action form, not needed here
-              $heading[] = array('text' => '</form><b>' . TEXT_INFO_HEADING_COPY_TO . '</b>');
-              $contents   = array('form' => xtc_draw_form('copy_to', FILENAME_CATEGORIES, 'action=copy_to_confirm&cPath=' . $cPath) . xtc_draw_hidden_field('products_id', $pInfo->products_id));
-              $contents[] = array('text' => TEXT_INFO_COPY_TO_INTRO);
-              $contents[] = array('text' => '<br />' . TEXT_INFO_CURRENT_CATEGORIES . '<br /><b>' . xtc_output_generated_category_path($pInfo->products_id, 'product') . '</b>');
-
-              if (QUICKLINK_ACTIVATED=='true') {
-                $contents[] = array('text' => '<hr noshade>');
-                $contents[] = array('text' => '<b>'.TEXT_MULTICOPY.'</b><br />'.TEXT_MULTICOPY_DESC);
-                $cat_tree=xtc_get_category_tree('0','','0');
-                $tree='';
-                for ($i=0;$n=sizeof($cat_tree),$i<$n;$i++) {
-                  $tree .='<input type="checkbox" name="cat_ids[]" value="'.$cat_tree[$i]['id'].'"><font size="1">'.$cat_tree[$i]['text'].'</font><br />';
-                }
-                $contents[] = array('text' => $tree.'<br /><hr noshade>');
-                $contents[] = array('text' => '<b>'.TEXT_SINGLECOPY.'</b><br />'.TEXT_SINGLECOPY_DESC);
-              }
-              $contents[] = array('text' => '<br />' . TEXT_CATEGORIES . '<br />' . xtc_draw_pull_down_menu('categories_id', xtc_get_category_tree('0','','0'), $current_category_id));
-              $contents[] = array('text' => '<br />' . TEXT_HOW_TO_COPY . '<br />' . xtc_draw_radio_field('copy_as', 'link', true) . ' ' . TEXT_COPY_AS_LINK . '<br />' . xtc_draw_radio_field('copy_as', 'duplicate') . ' ' . TEXT_COPY_AS_DUPLICATE);
-              $contents[] = array('text' => '<br />' . TEXT_HOW_TO_LINK . '<br />' . '<input type="checkbox" name="link_to_product" value="link_to_product" checked="checked"><font size="1">'.TEXT_HOW_TO_LINK_INFO.'</font><br />');
-              $contents[] = array('text' => '<br />' . TEXT_ATTRIBUTE_COPY . '<br />' . '<input type="checkbox" name="attr_copy" value="attr_copy"><font size="1">'.TEXT_ATTRIBUTE_COPY_INFO.'</font><br />');
-              $contents[] = array('text' => '<br />' . TEXT_CONTENT_COPY . '<br />' . '<input type="checkbox" name="cnt_copy" value="cnt_copy"><font size="1">'.TEXT_CONTENT_COPY_INFO.'</font><br />');
-              $contents[] = array('text' => '<br />' . TEXT_LINKS_COPY . '<br />' . '<input type="checkbox" name="links_copy" value="links_copy"><font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br />');
-              $contents[] = array('align' => 'center', 'text' => '<br /><input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_COPY . '"/> <a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id) . '">' . BUTTON_CANCEL . '</a>');
-              break;
-
             case 'multi_action':
               // --------------------
               // multi_move confirm
@@ -759,8 +734,6 @@
                 //add current category id, for moving products
                 $contents[] = array('text' => '<input type="hidden" name="src_category_id" value="' . $current_category_id . '">');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_move_confirm" value="' . BUTTON_MOVE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . (isset($_GET['cPath']) ? 'cPath=' . $cPath : '') . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
-                //close multi-action form
-                $contents[] = array('text' => '</form>');
               }
               // multi_move confirm ENDS
 
@@ -824,8 +797,6 @@
                 //close list table
                 $contents[] = array('text' => '</table>');
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_delete_confirm" value="' . BUTTON_DELETE . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
-                //close multi-action form
-                $contents[] = array('text' => '</form>');
               }
               // multi_delete confirm ENDS
 
@@ -907,8 +878,6 @@
                 $contents[] = array('text' => '<strong>' . TEXT_LINKS_COPY . '</strong><br />' . '<input type="checkbox" name="links_copy" value="links_copy"><font size="1">'.TEXT_LINKS_COPY_INFO.'</font><br /><hr noshade>');
                 // EOF - Timo Paul (mail[at]timopaul[dot]biz) - 2014-01-17 - duplicate products content and links
                 $contents[] = array('align' => 'center', 'text' => '<input class="button" type="submit" name="multi_copy_confirm" value="' . BUTTON_COPY . '"> <a class="button" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&cID=' . $cInfo->categories_id) . '">' . BUTTON_CANCEL . '</a>');
-                //close multi-action form
-                $contents[] = array('text' => '</form>');
               }
               // multi_copy confirm ENDS
               break;
@@ -927,7 +896,6 @@
                     $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_XTBOOSTER_MULTI, 'submit', 'name="multi_xtb"'));
                   }
                   // EOF - Tomcraft - 2009-11-28 - Included xs:booster
-                  $contents[] = array('text'  => '</form>');
                   //Single Element Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&cID=' . $cInfo->categories_id . '&action=edit_category') . '">' . BUTTON_EDIT . '</a>');
@@ -962,40 +930,22 @@
                     $contents[] = array('align' => 'center', 'text' => xtc_button(BUTTON_XTBOOSTER_MULTI, 'submit', 'name="multi_xtb"'));
                   }
                   // EOF - Tomcraft - 2009-11-28 - Included xs:booster
-                  $contents[] = array('text'  => '</form>');
                   //Single Product Actions
                   $contents[] = array('align' => 'center', 'text' => '<div style="padding-top: 5px; font-weight: bold; width: 100%; border-top: 1px solid #aaa; margin-top: 5px;">' . TEXT_ACTIVE_ELEMENT . '</div>');
                   $contents[] = array('align' => 'center', 
                                       'text' => '<a class="button" onclick="this.blur();" href="' . xtc_href_link(FILENAME_CATEGORIES, xtc_get_all_get_params(array('cPath', 'action', 'pID', 'cID')) . 'cPath=' . $cPath . '&pID=' . $pInfo->products_id . '&action=new_product') . '">' . BUTTON_EDIT . '</a>'
                                                  . (function_exists('attributes_iframe_link') ? attributes_iframe_link($pInfo->products_id) :
-                                                 xtc_draw_form('edit_attributes', FILENAME_NEW_ATTRIBUTES, '', 'post').
-                                                 '<input type="hidden" name="action" value="edit">
-                                                 <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
-                                                 <input type="hidden" name="cpath" value="' . $cPath . '">
-                                                 <input type="hidden" name="page" value="' . (int)$_GET['page'] . '"> 
-                                                 <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_EDIT_ATTRIBUTES . '">
-                                                 </form>'                                                 
-                                                 ) );
+                                                 '<a href="'.xtc_href_link(FILENAME_NEW_ATTRIBUTES, 'action=edit&current_product_id='.$pInfo->products_id.'&cpath='.$cPath.'&page='.(int)$_GET['page']).'"> class="button" onclick="this.blur();">' . BUTTON_EDIT_ATTRIBUTES . '</a>'                                                 
+                                                 ));
                   $contents[] = array('align' => 'center', 
-                                      'text' =>  xtc_draw_form('edit_crossselling', FILENAME_CATEGORIES, '', 'get').
-                                                '<input type="hidden" name="action" value="edit_crossselling">
-                                                 <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
-                                                 <input type="hidden" name="cpath" value="' . $cPath  . '">
-                                                 <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_EDIT_CROSS_SELLING . '">
-                                                 </form>                                                   
-                                                 <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'] : '') .'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
+                                      'text' =>  '<a href="'.xtc_href_link(FILENAME_CATEGORIES, 'action=edit_crossselling&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'"> class="button" onclick="this.blur();">' . BUTTON_EDIT_CROSS_SELLING . '</a>
+                                                  <a class="button" href="' . xtc_href_link(FILENAME_CONTENT_MANAGER, xtc_get_all_get_params(array('action')) . (isset($_GET['action']) ? 'last_action='.$_GET['action'] : '') .'&action=new_products_content'.'&set=product') . '">' . BUTTON_NEW_CONTENT . '</a>'
                                                  );
                   
                   // BOC Included xs:booster                  
                   if (defined('MODULE_XTBOOSTER_STATUS') && MODULE_XTBOOSTER_STATUS=='True') {
                     $contents[] = array('align' => 'center', 
-                                        'text' =>  xtc_draw_form('edit_xtbooster', FILENAME_XTBOOSTER, '', 'post').
-                                                  '<input type="hidden" name="action" value="edit_xtbooster">
-                                                   <input type="hidden" name="xtb_module" value="add">
-                                                   <input type="hidden" name="current_product_id" value="' . $pInfo->products_id . '">
-                                                   <input type="hidden" name="cpath" value="' . $cPath  . '">
-                                                   <input type="submit" class="button" onclick="this.blur();" value="' . BUTTON_EDIT_XTBOOSTER . '">
-                                                   </form>'
+                                        'text' =>  '<a href="'.xtc_href_link(FILENAME_XTBOOSTER, 'action=edit_xtbooster&xtb_module=add&current_product_id='.$pInfo->products_id.'&cpath='.$cPath).'"> class="button" onclick="this.blur();">' . BUTTON_EDIT_XTBOOSTER . '</a>'
                                                    );
                   }
                   // EOC Included xs:booster                  
@@ -1072,6 +1022,7 @@
             echo '</td>' . "\n";
           }
           ?>
+          </form>
         </tr>
         <tr>
           <td>
