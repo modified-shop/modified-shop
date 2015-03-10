@@ -555,7 +555,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         <label for="orders_status_tmp"><?php echo ORDERS_STATUS_TMP; ?></label>
                       </dt>
                       <dd>
-                        <select name="config[orders_status][tmp]">
+                        <select class="SlectBox" name="config[orders_status][tmp]">
                           <?php foreach($orders_status_hidden as $orders_status_id => $orders_status_name) { ?>
                             <option value="<?php echo $orders_status_id ?>" <?php echo $config['orders_status']['tmp'] == $orders_status_id ? 'selected="selected"' : '' ?>>
                               <?php echo $orders_status_name ?>
@@ -582,7 +582,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												<label for="orders_status_<?php echo $p1_status ?>"><?php echo constant('ORDERS_STATUS_'.strtoupper($p1_status)); ?></label>
 											</dt>
 											<dd>
-												<select name="config[orders_status][<?php echo $p1_status ?>]">
+												<select class="SlectBox" name="config[orders_status][<?php echo $p1_status ?>]">
 													<?php foreach($orders_status as $orders_status_id => $orders_status_name) { ?>
 														<option value="<?php echo $orders_status_id ?>" <?php echo $config['orders_status'][$p1_status] == $orders_status_id ? 'selected="selected"' : '' ?>>
 															<?php echo $orders_status_name ?>
@@ -722,7 +722,7 @@ require (DIR_WS_INCLUDES.'head.php');
 											<dl class="adminform">
 												<dt><label for="ac_pstatus_nopcheck"><?php echo AC_PSTATUS_NOPCHECK; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_nopcheck" name="config[address_check][pstatus][nopcheck]">
+													<select class="SlectBox" id="ac_pstatus_nopcheck" name="config[address_check][pstatus][nopcheck]">
 														<option <?php echo $config['address_check']['pstatus']['nopcheck'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['nopcheck'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['nopcheck'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -730,7 +730,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_fullnameknown"><?php echo AC_PSTATUS_FULLNAMEKNOWN; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_fullnameknown" name="config[address_check][pstatus][fullnameknown]">
+													<select class="SlectBox" id="ac_pstatus_fullnameknown" name="config[address_check][pstatus][fullnameknown]">
 														<option <?php echo $config['address_check']['pstatus']['fullnameknown'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['fullnameknown'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['fullnameknown'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -738,7 +738,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_lastnameknown"><?php echo AC_PSTATUS_LASTNAMEKNOWN; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_lastnameknown" name="config[address_check][pstatus][lastnameknown]">
+													<select class="SlectBox" id="ac_pstatus_lastnameknown" name="config[address_check][pstatus][lastnameknown]">
 														<option <?php echo $config['address_check']['pstatus']['lastnameknown'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['lastnameknown'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['lastnameknown'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -746,7 +746,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_nameunknown"><?php echo AC_PSTATUS_NAMEUNKNOWN; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_nameunknown" name="config[address_check][pstatus][nameunknown]">
+													<select class="SlectBox" id="ac_pstatus_nameunknown" name="config[address_check][pstatus][nameunknown]">
 														<option <?php echo $config['address_check']['pstatus']['nameunknown'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['nameunknown'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['nameunknown'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -754,7 +754,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_nameaddrambiguity"><?php echo AC_PSTATUS_NAMEADDRAMBIGUITY; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_nameaddrambiguity" name="config[address_check][pstatus][nameaddrambiguity]">
+													<select class="SlectBox" id="ac_pstatus_nameaddrambiguity" name="config[address_check][pstatus][nameaddrambiguity]">
 														<option <?php echo $config['address_check']['pstatus']['nameaddrambiguity'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['nameaddrambiguity'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['nameaddrambiguity'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -762,7 +762,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_undeliverable"><?php echo AC_PSTATUS_UNDELIVERABLE; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_undeliverable" name="config[address_check][pstatus][undeliverable]">
+													<select class="SlectBox" id="ac_pstatus_undeliverable" name="config[address_check][pstatus][undeliverable]">
 														<option <?php echo $config['address_check']['pstatus']['undeliverable'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['undeliverable'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['undeliverable'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -770,7 +770,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_dead"><?php echo AC_PSTATUS_DEAD; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_dead" name="config[address_check][pstatus][dead]">
+													<select class="SlectBox" id="ac_pstatus_dead" name="config[address_check][pstatus][dead]">
 														<option <?php echo $config['address_check']['pstatus']['dead'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['dead'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['dead'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -778,7 +778,7 @@ require (DIR_WS_INCLUDES.'head.php');
 												</dd>
 												<dt><label for="ac_pstatus_postalerror"><?php echo AC_PSTATUS_POSTALERROR; ?></label></dt>
 												<dd>
-													<select id="ac_pstatus_postalerror" name="config[address_check][pstatus][postalerror]">
+													<select class="SlectBox" id="ac_pstatus_postalerror" name="config[address_check][pstatus][postalerror]">
 														<option <?php echo $config['address_check']['pstatus']['postalerror'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['postalerror'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 														<option <?php echo $config['address_check']['pstatus']['postalerror'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -842,7 +842,7 @@ require (DIR_WS_INCLUDES.'head.php');
 											<label for="cr_newclientdefault"><?php echo CR_NEWCLIENTDEFAULT; ?></label>
 										</dt>
 										<dd>
-											<select id="cr_newclientdefault" name="config[credit_risk][newclientdefault]">
+											<select class="SlectBox" id="cr_newclientdefault" name="config[credit_risk][newclientdefault]">
 												<option <?php echo $config['credit_risk']['newclientdefault'] == 'green' ? 'selected="selected"' : '' ?> value="green"><?php echo PG_GREEN; ?></option>
 												<option <?php echo $config['credit_risk']['newclientdefault'] == 'yellow' ? 'selected="selected"' : '' ?> value="yellow"><?php echo PG_YELLOW; ?></option>
 												<option <?php echo $config['credit_risk']['newclientdefault'] == 'red' ? 'selected="selected"' : '' ?> value="red"><?php echo PG_RED; ?></option>
@@ -879,7 +879,7 @@ require (DIR_WS_INCLUDES.'head.php');
 										</dt>
 										<dd>
 										<?php /*
-											<select name="config[credit_risk][checkforgenre][]" multiple size="5">
+											<select class="SlectBox" name="config[credit_risk][checkforgenre][]" multiple size="5">
 												<?php foreach($genres_config as $topkey => $gconfig) { ?>
 													<option value="<?php echo $topkey ?>" <?php echo in_array($topkey, $config['credit_risk']['checkforgenre']) ? 'selected="selected"' : '' ?>><?php echo $gconfig['name'] ?></option>
 												<?php } ?>

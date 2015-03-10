@@ -214,7 +214,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     <tr>
                       <td class="menuBoxHeading">
                         <?php echo START_DATE;?>
-                        <select name="startD" size="1">
+                        <select class="SlectBox" name="startD" size="1">
                           <?php                                  
                           if ($startDate) {
                             $j = date("j", $startDate);                                    
@@ -228,7 +228,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
                           ?>
                         </select>
-                        <select name="startM" size="1">
+                        <select class="SlectBox" name="startM" size="1">
                           <?php
                           if ($startDate) {
                             $m = date("n", $startDate);
@@ -242,7 +242,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
                           ?>
                         </select>
-                        <select name="startY" size="1">
+                        <select class="SlectBox" name="startY" size="1">
                           <?php
                           if ($startDate) {
                             $y = date("Y") - date("Y", $startDate);
@@ -259,7 +259,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                       <td class="menuBoxHeading">
                         <?php echo END_DATE; ?>
-                        <select name="endD" size="1">
+                        <select class="SlectBox" name="endD" size="1">
                           <?php
                           echo $endDate;
                         
@@ -275,7 +275,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
                           ?>
                         </select>
-                        <select name="endM" size="1">
+                        <select class="SlectBox" name="endM" size="1">
                           <?php
                           if ($endDate) {
                             $m = date("n", $endDate - 60* 60 * 24);
@@ -289,7 +289,7 @@ require (DIR_WS_INCLUDES.'head.php');
                           }
                           ?>
                         </select>
-                        <select name="endY" size="1">
+                        <select class="SlectBox" name="endY" size="1">
                           <?php
                           if ($endDate) {
                             $y = date("Y") - date("Y", $endDate - 60* 60 * 24);
@@ -305,7 +305,7 @@ require (DIR_WS_INCLUDES.'head.php');
                         </select>
                       </td>
                       <td class="menuBoxHeading">
-                        <select name="mode">
+                        <select class="SlectBox" name="mode">
                           <option value="api" <?php echo $_GET['mode'] == 'api' ? 'selected="selected"' : '' ?>><?php echo API; ?></option>
                           <option value="transactions" <?php echo $_GET['mode'] == 'transactions' ? 'selected="selected"' : '' ?>><?php echo TRANSACTIONS; ?></option>
                         </select>
@@ -318,7 +318,7 @@ require (DIR_WS_INCLUDES.'head.php');
                       </td>
                       <td class="menuBoxHeading">
                         <?php echo PAGE; ?>
-                        <select name="page" id="pageselect">
+                        <select class="SlectBox" name="page" id="pageselect">
                           <?php for($pageno = 1; $pageno <= $total_pages; $pageno++) { ?>
                             <option value="<?php echo $pageno; ?>" <?php echo (($pageno == $page) ? 'selected="selected"' : ''); ?>><?php echo $pageno ?></option>
                           <?php } ?>

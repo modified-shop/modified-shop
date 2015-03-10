@@ -155,7 +155,7 @@ require (DIR_WS_INCLUDES.'head.php');
                 </td>
                 <td class="menuBoxHeading">
                   <?php echo REPORT_START_DATE;?><br />
-                  <select name="startD" size="1">
+                  <select class="SlectBox" name="startD" size="1">
                     <?php                                  
                     if ($startDate) {
                       $j = date("j", $startDate);                                    
@@ -169,7 +169,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     ?>
                   </select>
-                  <select name="startM" size="1">
+                  <select class="SlectBox" name="startM" size="1">
                     <?php
                     if ($startDate) {
                       $m = date("n", $startDate);
@@ -183,7 +183,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     ?>
                   </select>
-                  <select name="startY" size="1">
+                  <select class="SlectBox" name="startY" size="1">
                     <?php
                     if ($startDate) {
                       $y = date("Y") - date("Y", $startDate);
@@ -210,7 +210,7 @@ require (DIR_WS_INCLUDES.'head.php');
               <tr>
                 <td class="menuBoxHeading">
                   <?php echo REPORT_END_DATE; ?><br />
-                  <select name="endD" size="1">
+                  <select class="SlectBox" name="endD" size="1">
                     <?php
                     echo $endDate;
                     
@@ -226,7 +226,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     ?>
                   </select>
-                  <select name="endM" size="1">
+                  <select class="SlectBox" name="endM" size="1">
                     <?php
                     if ($endDate) {
                       $m = date("n", $endDate - 60* 60 * 24);
@@ -240,7 +240,7 @@ require (DIR_WS_INCLUDES.'head.php');
                     }
                     ?>
                   </select>
-                  <select name="endY" size="1">
+                  <select class="SlectBox" name="endY" size="1">
                     <?php
                     if ($endDate) {
                       $y = date("Y") - date("Y", $endDate - 60* 60 * 24);
