@@ -52,7 +52,7 @@
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
   <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
-  <script type="text/javascript" src="includes/javascript/fm.ckeckator.jquery.js"></script>
+  <script type="text/javascript" src="includes/javascript/fm.checkator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       $('.SlectBox').SumoSelect();
