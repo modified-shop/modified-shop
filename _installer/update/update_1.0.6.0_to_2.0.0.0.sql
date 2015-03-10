@@ -526,7 +526,7 @@ UPDATE zones SET zone_code = 'MIK' WHERE zone_name = 'Milton Keynes';
 ALTER TABLE zones ADD UNIQUE idx_country_code (zone_country_id, zone_code);
 ALTER TABLE geo_zones ADD UNIQUE idx_geo_zone_name (geo_zone_name);
 
-#Tomcraft - 2015-02-25 - change geo_zone_name
-UPDATE geo_zones SET geo_zone_name = 'Steuerzone Nicht-EU-Ausland', geo_zone_description = 'Steuerzone für Nicht-EU-Ausland' WHERE geo_zone_name = 'Steuerzone EU-Ausland';
+#Tomcraft - 2015-02-25 - change geo_zone_name/geo_zone_info
+UPDATE geo_zones SET geo_zone_name = 'Steuerzone Nicht-EU-Ausland', geo_zone_description = 'Steuerzone für Nicht-EU-Ausland', geo_zone_info = '1' WHERE geo_zone_name = 'Steuerzone EU-Ausland';
 
 # Keep an empty line at the end of this file for the db_updater to work properly
