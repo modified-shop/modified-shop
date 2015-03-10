@@ -34,6 +34,7 @@
   <link rel="stylesheet" type="text/css" href="includes/css/tooltip.css">
   <link rel="stylesheet" type="text/css" href="includes/css/jquery.alerts.css" />
   <link rel="stylesheet" type="text/css" href="includes/css/sumoselect.css" />
+  <link rel="stylesheet" type="text/css" href="includes/css/fm.checkator.jquery.css" />
 
   <?php 
   if (USE_ADMIN_TOP_MENU != 'false') {
@@ -51,9 +52,11 @@
   
   <script type="text/javascript" src="includes/javascript/jquery-1.8.3.min.js"></script>  
   <script type="text/javascript" src="includes/javascript/jquery.sumoselect.min.js"></script>
+  <script type="text/javascript" src="includes/javascript/fm.ckeckator.jquery.js"></script>
   <script type="text/javascript">
     $(document).ready(function () {
       $('.SlectBox').SumoSelect();
+      $('.fmChkBox').checkator();
     });
   </script>
     
