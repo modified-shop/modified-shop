@@ -120,6 +120,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
         <table width="95%" border="0" align="center" cellpadding="0" cellspacing="0">
           <tr>
             <td><img src="http://www.modified-shop.org/forum/Themes/modified/images/logo.png" alt="modified eCommerce Shopsoftware" /></td>
+            <td style="vertical-align:top;"><a style="float:right;margin-top: 9px;" href="<?php echo dirname($_SERVER['PHP_SELF']); ?>"><img style="border: 0;" src="images/buttons/german/button_installer.gif"/></a></td>
           </tr>
         </table>
       </td>
@@ -247,32 +248,32 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
               <?php
               switch ($_GET['action']) {
                 case 'unlink':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
                   if ($clean === false && !$_POST) {
                     echo '<input type="hidden" name="update" value="true" />' .
-                         '<input type="submit" value="Ausf&uuml;hren" />' .
+                         '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
                          '</form>';
                   }
                   break;
           
                 case 'sql_update':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif" /></a>';
                   if (!$clean) {
                     echo '<input type="hidden" name="update" value="true" />' .
-                         '<input type="submit" value="Ausf&uuml;hren" />' .
+                         '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
                          '</form>';
                   }
                   break;
 
                 case 'sql_manual':
-                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><input type="button" value="Zur&uuml;ck" /></a>';
+                  echo '<a href="'.$_SERVER['PHP_SELF'].'"><img style="border: 0;" src="images/buttons/german/button_cancel.gif"/></a>';
                   echo '<input type="hidden" name="update" value="true" />' .
-                       '<input type="submit" value="Ausf&uuml;hren" />' .
+                       '<input style="float:right" type="image" src="images/buttons/german/button_execute.gif">' .
                        '</form>';
                   break;
             
                 default:
-                  echo '<input type="submit" value="Ausf&uuml;hren" />' .
+                  echo '<input type="image" src="images/buttons/german/button_continue.gif">' .
                        '</form>';
         
                   break;
@@ -283,6 +284,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
         </table>
       </td>
     </tr>
+    <tr><td>&nbsp;</td></tr>
   </table>
   <br />
   <div align="center" style="font-family:Arial, sans-serif; font-size:11px;"><?php echo TEXT_FOOTER; ?></div>
