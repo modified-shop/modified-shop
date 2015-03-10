@@ -185,11 +185,12 @@ require (DIR_WS_INCLUDES.'head.php');
               if ($field['Field'] != 'customers_id') {
                 echo '<tr class="dataTableRow">';
                 
-                $checked = '';
+                $params = '';
+                $checked = false;
                 if ($admin_access[$field['Field']] == '1') {
-                  $checked = 'checked';
+                  $checked = true;
                   if ($_GET['cID'] == '1') {
-                    $checked .= ' disabled';
+                    $params = ' disabled="disabled"';
                     echo xtc_draw_hidden_field('access[]', $field['Field']);
                   }
                 }
@@ -215,7 +216,7 @@ require (DIR_WS_INCLUDES.'head.php');
               
                 echo '<td class="dataTableContent" style="width:18px; background:'.$color.';"></td>
                       <td class="dataTableContent" style="width:200px;">'.$field['Field'].'</td>
-                      <td class="dataTableContent" colspan="2"><input type="checkbox" name="access[]" value="'.$field['Field'].'"'.$checked.'></td>
+                      <td class="dataTableContent" colspan="2">'.xtc_draw_checkbox_field('access[]', $field['Field'], $checked, '', $params).'</td>
                     </tr>';
               }
             }
