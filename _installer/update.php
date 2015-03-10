@@ -212,7 +212,7 @@ if (isset($_POST['update']) && $_POST['update']=='true') {
                         <?php 
                       }
                       echo '<form name="update" method="post">';
-                      echo '<tr><td colspan="2"><div style="width:100%; color:red; text-align:center">SQL Befehle m&uuml;ssen mit einem  ;  abgeschlossen werden !</div><br/><textarea name="sql_manual" style="width:100%; height:300px;">'.(isset($_POST['sql_manual']) ? $_POST['sql_manual'] : '').'</textarea></td></tr>';
+                      echo '<tr><td colspan="2"><div style="background:#F2DEDE; color:#A94442; padding:10px; border:1px solid #DCA7A7">SQL Befehle m&uuml;ssen mit einem  ;  abgeschlossen werden !</div><br/><textarea name="sql_manual" style="width:100%; height:300px;">'.(isset($_POST['sql_manual']) ? $_POST['sql_manual'] : '').'</textarea></td></tr>';
                       break;
               
                     default:
